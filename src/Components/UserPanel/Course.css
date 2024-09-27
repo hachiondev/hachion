@@ -246,17 +246,44 @@ padding: 10px;
     background-color: #fff;
   }
   
-  @media (max-width: 968px) {
+  @media (min-width:768px) and (max-width: 1025px) {
     .sidebar-card {
-      flex: 1 1 calc(50% - 20px);
-      max-width: calc(50% - 20px);
+      flex: 1 1 calc(50% - 10px);
+      max-width: calc(50% - 10px);
+    }
+    .sidebar{
+      margin-left: 10px;
+      width: 300px;
+    }
+    .sidebar-right-all{
+      gap: 5px;
+    }
+    .course-banner{
+      height: 220px;
+    }
+    .course-banner-content{
+     text-align: center;
+   margin-top: -40px;
     }
   }
   
-  @media (max-width: 768px) {
+  @media (min-width: 481px) and (max-width: 767px) {
     .sidebar-card {
       flex: 1 1 100%; 
       max-width: 100%;
+    }
+    .sidebar{
+      margin-left: 10px;
+     
+    }
+  }
+  @media (max-width:480px){
+    .sidebar{
+      width: 90%;
+      margin-left: 5px;
+    }
+    .sidebar-right-all{
+      display: none;
     }
   }
 .qa-automation{

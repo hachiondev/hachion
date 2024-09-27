@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -8,6 +8,9 @@ import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 
 const Blogs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
     <>
     <Topbar/>

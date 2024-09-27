@@ -40,8 +40,6 @@
 }
 .contact-us-corporate{
     margin-top:8vh;
-    height: 8.4vh;
-    width: 13.7vw;
     border-radius: 10px;
     border: 1px solid white;
     padding: 1.5vh 5vh 1.5vh 5vh;
@@ -86,7 +84,7 @@
     gap: 4vh;
 }
 .customize-training-div{
-    height: 35.7vh;
+    
     width: 33.5vw;
     border-radius: 20px;
     background-color: #fff;
@@ -94,7 +92,7 @@
  
 }
 .customize-training-div img{
-    height:27vh;
+   
     width:25.2vw;
     margin-left: 3.15vw;
     margin-top: 2vh;

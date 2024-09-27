@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import { Navbar } from 'react-bootstrap'
 import NavbarTop from './NavbarTop'
@@ -19,6 +19,9 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 
 const ContactUs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
    <>
    <Topbar/>

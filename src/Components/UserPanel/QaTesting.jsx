@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -11,6 +11,9 @@ import RecentEntriesCard from './RecentEntriesCard';
 import automation from '../../Assets/automationtesting.png';
 
 const QaTesting = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
     <>
     <Topbar/>

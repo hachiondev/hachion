@@ -494,8 +494,10 @@
       }
     
     .btn-search-home{
-        margin-left: 1vh;
-        height: 3vh;
+        height: 35px;
+        width: 35px;
+        border-radius: 5px;
+        margin-left: 40px;
     }
   
     .navbar-left {

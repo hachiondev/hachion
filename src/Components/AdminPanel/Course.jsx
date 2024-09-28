@@ -329,7 +329,7 @@ export default function Course() {
           <StyledTableCell>{row.action}</StyledTableCell>
         </>
       )}
-      {/* Repeat similar conditional rendering for other tabs */}
+     
     </StyledTableRow>
   ))}
           </TableBody>

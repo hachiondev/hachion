@@ -725,35 +725,28 @@ input[type="radio"] {
   
   }
   .corporate {
-    
-    background: linear-gradient(to right, #006489, #00AEEF, #006489);
     position: relative;
-    padding: 2vh;
-    display:flex;
-    margin-bottom: 5vh;
-    justify-content:space-evenly;
+    width: 100%;
   }
   
   .corporate-content {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     position: relative;
-    padding: 2vh;
-    text-align: center;
   }
   
-  .corporate-para {
-    color: white;
-    font-size: 2rem;
-    font-weight: 700;
-    position: relative;
-    z-index: 1; 
+  .corporate-image {
+    width: 100%; /* Make the image take full width */
+    height: auto; /* Adjust height automatically */
+    object-fit: cover; /* Ensure the image covers the container without stretching */
   }
   
   .know-more {
-  padding: 0.2vh;
-
+    position: absolute;
+    right: 5%; /* Position button towards the right of the image */
+    bottom: 20%; /* Position button slightly above the bottom */
+    padding: 10px 20px;
     border-radius: 10px;
     background-color: #ffffff;
     box-shadow: 2px 2px 2px black;
@@ -761,72 +754,26 @@ input[type="radio"] {
     font-size: 1.5rem;
     font-weight: 700;
     border: none;
-    margin:2vh;
+    transition: all 0.3s ease;
   }
-  .know-more:hover{
+  
+  .know-more:hover {
     background-color: #000;
     border: 2px solid white;
     box-shadow: 2px 2px 2px white;
-    color:white;
+    color: white;
   }
-  .corporate-para-span {
-    color: black;
-    font-size: 2rem;
-    font-weight: 700;
-  }
-  @media screen and (max-width: 480px){
-    .corporate-para{
-      font-size: 0.8rem;
-    }
-    .corporate-para-span{
-      font-size: 0.8rem;
-    }
-  }
-  @media screen and (max-width: 768px){
-    .corporate-para{
-      font-size: 20px;
-    }
-    .corporate-para-span{
-      font-size: rem;
-    }
-    .quote-left,.quote-right{
-      font-size: 10px;
-    
-    }
-    .corporate-content{
+  @media (min-width: 481px) and (max-width: 768px){
+    .know-more{
+      font-size: 16px;
       padding: 5px;
     }
   }
-  @media screen and (max-width: 1024px){
-    .corporate-para{
-      font-size: 20px;
+  @media (max-width: 480px) {
+    .know-more{
+      font-size: 12px;
+      padding: 1px 2px;
     }
-    .corporate-para-span{
-      font-size: 20px;
-    }
-    .quote-left,.quote-right{
-      font-size: 20px;
-    
-    }
-    .corporate-content{
-      padding: 1vh;
-    }
-  }
-  
-  .quote-left {
-    position: absolute;
-    top: 0px; 
-    left: -20px; 
-    font-size: 40px; 
-    color: white;
-  }
-  
-  .quote-right {
-    position: absolute;
-    top: 0px; 
-    right: -20px; 
-    font-size: 40px; 
-    color: white;
   }
   .schedule{
     text-align:center;

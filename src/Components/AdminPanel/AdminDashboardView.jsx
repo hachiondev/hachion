@@ -12,26 +12,40 @@ import ScheduleRequest from './ScheduleRequest';
 import Blogs from './Blogs';
 import Support from './Support';
 import Course from './Course';
+import AddCourseCategory from './AddCourseCategory';
 
 
 const AdminDashboardView = () => {
   // State to store the selected category from the sidebar
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
+  
+  // New state to control whether to show AddCourseCategory
+  const [showAddCategory, setShowAddCategory] = useState(false);
 
   // Function to handle category selection from sidebar
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    setShowAddCategory(false); // Reset to not show AddCourseCategory when switching categories
   };
 
-  // Function to render components based on the selected category
+  // Function to handle the 'Add Course Category' button click
+  const handleAddCategoryClick = () => {
+    setShowAddCategory(true); // Show the AddCourseCategory component
+  };
+
+  // Function to render components based on the selected category and showAddCategory state
   const renderContent = () => {
+    if (showAddCategory) {
+      return <AddCourseCategory />; // If the "Add" button is clicked, show this component
+    }
+
     switch (selectedCategory) {
       case 'Dashboard':
         return <AdminDashboard />;
       case 'Course Category':
-        return <CategoryTable />;
+        return <CategoryTable onAddCategoryClick={handleAddCategoryClick} />; // Pass the handler
       case 'Trending Courses':
-        return <TrendingCourseTable/>
+        return <TrendingCourseTable />;
         case 'Trainer':
           return <Trainer/>
           case 'Certificate':

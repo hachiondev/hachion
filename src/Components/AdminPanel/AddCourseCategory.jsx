@@ -4,12 +4,20 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoIosArrowForward } from "react-icons/io";
-
+import AdminNavbar from './AdminNavbar';
+import AdminSidebar from './AdminSidebar';
 import TextField from '@mui/material/TextField';
 
 const AddCourseCategory = () => {
   return (<>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
+   <AdminNavbar />
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      
+        <AdminSidebar />
+        <div style={{ flexGrow: 1, padding: '20px' }}>
+        
+      
   <div className='course-category'>
 <p>View Course Category list <IoIosArrowForward/> Add Category </p>
 <div className='category'>
@@ -32,6 +40,8 @@ const AddCourseCategory = () => {
   <button className='reset-btn'>Reset</button>
   </div>
   </div>
+</div>
+</div>
 </div>
 </div>
  

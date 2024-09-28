@@ -17,6 +17,7 @@ const CourseCategory = ({
 }) => {
   const navigate = useNavigate();
 
+
   const handleAdd = () => {
     if (onAdd) {
       onAdd();
@@ -24,6 +25,7 @@ const CourseCategory = ({
       navigate('/addcourse');
     }
   }
+  
 
   return (
     <>

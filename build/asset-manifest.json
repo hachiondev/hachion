@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4e05f790.css",
-    "main.js": "/static/js/main.ab91cbe1.js",
+    "main.css": "/static/css/main.c58ecccd.css",
+    "main.js": "/static/js/main.65ab987b.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
     "static/media/Group 39809.png": "/static/media/Group 39809.88bf930e4bf2b59cb676.png",
@@ -33,6 +33,7 @@
     "static/media/course_card2.png": "/static/media/course_card2.973f29b0ce0dc8bcd32e.png",
     "static/media/salesforceinterview.png": "/static/media/salesforceinterview.8f448d71a8a46adc7dc4.png",
     "static/media/salesforceadmin.png": "/static/media/salesforceadmin.be9260a8b913e4aa6217.png",
+    "static/media/corporate.jpg": "/static/media/corporate.c2718b989f963cdf7b0d.jpg",
     "static/media/blogcardimage2.png": "/static/media/blogcardimage2.b62663236a0e62afe149.png",
     "static/media/blogcardimage1.png": "/static/media/blogcardimage1.00115abd96511106247e.png",
     "static/media/image 133.png": "/static/media/image 133.7f4f92001a79811305b6.png",
@@ -41,12 +42,12 @@
     "static/media/USA.png": "/static/media/USA.48935fc1562b7b30a39b.png",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.4e05f790.css.map": "/static/css/main.4e05f790.css.map",
-    "main.ab91cbe1.js.map": "/static/js/main.ab91cbe1.js.map",
+    "main.c58ecccd.css.map": "/static/css/main.c58ecccd.css.map",
+    "main.65ab987b.js.map": "/static/js/main.65ab987b.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4e05f790.css",
-    "static/js/main.ab91cbe1.js"
+    "static/css/main.c58ecccd.css",
+    "static/js/main.65ab987b.js"
   ]
 }

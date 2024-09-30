@@ -56,19 +56,7 @@ const Sidebar = ({ onSelectCategory }) => {
             >
               {item.title} <IoIosArrowForward />
             </button>
-            {/* {dropdownOpen[index] && item.submenu.length > 0 && (
-              <ul className="submenu">
-                {item.submenu.map((subitem, subIndex) => (
-                  <li
-                    key={subIndex}
-                    className="submenu-item"
-                    onClick={() => onSelectCategory(subitem)} // Pass selected subcategory to parent
-                  >
-                    {subitem}
-                  </li>
-                ))}
-              </ul>
-            )} */}
+            
           </li>
         ))}
       </ul>

@@ -1382,14 +1382,14 @@ width: auto;}
 }
 
 .footer-link img {
-    height: 4vh;
-    width: 2vw;
+    height: 40px;
+    width: 40px;
     cursor: pointer;
 }
 
 .footer-linkedin {
-    height: 3vh !important;
-    width: 1.5vw !important;
+    height: 30px !important;
+    width: 30px !important;
     margin-top: 0.5vh;
 }
 
@@ -1411,12 +1411,12 @@ width: auto;}
         font-size: 0.8rem;
     }
     .footer-link img{
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
     }
     .footer-linkedin{
-        height: 42px !important;
-        width: 42px !important;
+        height: 32px !important;
+        width: 32px !important;
       
     }
     .footer-bottom{

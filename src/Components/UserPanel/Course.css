@@ -24,7 +24,7 @@
     color: white;
     font-weight: 600;
     font-size: 36px;
-    padding-top: 130px;
+    padding-top: 190px;
 
   }
   .pagination{
@@ -114,7 +114,7 @@ color: black;
     color:rgba(255, 255, 255, 1);
   }
   .course-banner{
-height:40vh;
+height:432px;
 width: 120vw;
 background-image: url('../../Assets/course_banner.png');
 background-repeat: no-repeat;
@@ -279,12 +279,62 @@ padding: 10px;
   }
   @media (max-width:480px){
     .sidebar{
-      width: 90%;
-      margin-left: 5px;
+      width: 100%;
     }
-    .sidebar-right-all{
-      display: none;
+    .sidebar-right-all {
+      display: inline; /* Cards display below category for mobile */
     }
+  
+    .sidebar-card {
+      flex-direction: row; /* Set to row for mobile view */
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+    }
+  
+    .sidebar-card-header-div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .sidebar-course-details {
+      flex-grow: 1;
+      padding-left: 10px;
+      text-align: left;
+    }
+  
+    /* Limit the number of visible cards on mobile */
+    .sidebar-right-all {
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      max-height: 350px; /* Limit height to show only a few cards at once */
+      position: relative;
+    }
+  
+    .sidebar-right-all::after {
+      content: '→';
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+  
+    .sidebar-right-all::before {
+      content: '←';
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      cursor: pointer;
+    }
+  
+    /* Scrollable feature for mobile view with left-right navigation */
+    .sidebar-right-all {
+      overflow-x: scroll;
+      scroll-behavior: smooth;
+    }
+  
   }
 .qa-automation{
 
@@ -301,8 +351,8 @@ padding: 10px;
  margin-left:10vw;
  margin-right: 10vw;
  box-shadow: 5px 5px 5px #D3D3D3;
- margin-top: 5vh;
- margin-bottom: 5vh;
+ margin-top: 50px;
+ margin-bottom: 50px;
  
 }
 .qa-automation-left{
@@ -312,13 +362,12 @@ padding: 10px;
 
 }
 .qa-automation-left img{
-  margin-right: -2vh;
-  height:18vh;
+  margin-right: -20px;
+  height:180px;
 
 }
 .video-btn{
-  
-  width:20vw;
+
   border-radius: 10px;
   padding: 5px 10px 5px 10px;
   border: 1px solid white;
@@ -336,7 +385,7 @@ padding: 10px;
   background-color: #0D6EFD;
 }
 .fee{
-  padding-top: 5vh;
+  padding-top: 50px;
   font-size: 1rem;
   font-weight: 500;
 }
@@ -352,17 +401,15 @@ padding: 10px;
   flex-direction: column;
 }
 .qa-content{
-  height:15vh;
+  height:150px;
   width:700px;
   font-size:1rem;
   font-weight:500;
 text-align:right;
-padding-top: 1vh;
-margin-left: 4vh;
+padding-top: 10px;
+margin-left: 40px;
 }
 .enroll-now{
-  height:10vh;
-  width:18vw;
   border-radius: 10px;
   border:1px;
   background-color: #00AEEF;
@@ -380,7 +427,6 @@ margin-left: 4vh;
 }
 .download{
   
-  width:18vw;
   border-radius: 10px;
   border: 4px solid #00AEEF;
   padding:5px 20px 5px 20px;
@@ -403,7 +449,7 @@ margin-left: 4vh;
   display:flex;
   flex-direction:column;
   justify-content: space-evenly;
-  margin-right: 13vh;
+  margin-right: 130px;
 }
 .qa-right img{
   width:540px;
@@ -417,6 +463,51 @@ margin-left: 4vh;
   color: white;
   text-align: right;
 }
+@media (min-width: 481px) and (max-width: 1180px) {
+.qa-right img{
+  height: 220px !important;
+  width: 320px !important;
+}
+.qa-automation-left img{
+  height: 100px;
+}
+.qa-automation{
+  width: 95%;
+  margin-left: 20px;
+}
+.qa-right{
+  margin-right: 0px;
+}
+.video-btn{
+  margin-top: 2px;
+  font-size: 16px;
+}
+.certified{
+  font-size: 16px;
+}
+.fee{
+  padding-top: 5px;
+}
+.enroll-now,.download{
+  margin: 5px;
+  font-size: 22px;
+}
+.qa-content{
+  width: 400px !important;
+  margin-left: 0px;
+  padding-top: 0px;
+  font-size: 14px;
+}
+.qa-automation{
+  height: 345px;
+  padding: 0px;
+  justify-content: space-evenly;
+}
+.qa-automation-left{
+  margin-left: 0px;
+}
+
+}
 .key-highlights{
  margin-bottom: 5vh;
   padding:3vh;
@@ -428,7 +519,7 @@ margin-left: 4vh;
   border-radius:10px;
 }
 .key-highlights-content{
-  height: 13vh;
+
   width:8.5vw;
   display: flex;
   flex-direction: column;
@@ -441,8 +532,8 @@ font-weight: 600;
 text-align:center;
 }
 .key-icons{
-  height:6vh;
-  width:3vw;
+  height:60px;
+  width:60px;
   margin-left: 6vh;
   background: linear-gradient(to right, #00AEEF,#006489);
   -webkit-background-clip: text;
@@ -455,6 +546,20 @@ text-align:center;
 /* Add smooth scrolling behavior to the entire page */
 html {
   scroll-behavior: smooth;
+}
+@media (min-width: 481px) and (max-width: 1180px){
+  .key-highlights{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .key-icons{
+    height: 45px;
+    width: 45px;
+    margin-left: 10px;
+  }
+  .key-highlights-para{
+    font-size: 12px;
+  }
 }
 
 .upcoming-header {
@@ -476,7 +581,7 @@ html {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  padding: 2.5vh;
+  padding: 25px;
 }
 
 .upcoming-link {
@@ -585,9 +690,9 @@ text-align: center;
 
 }
 .profile-building-div img{
-  height: 5vh;
-  width:2.5vw;
-  margin-right: 5vh;
+  height: 50px;
+  width:50px;
+  margin-right: 50px;
 }
 .profile-building-div h5{
   font-weight: 700;
@@ -724,6 +829,27 @@ input[type="radio"] {
     -webkit-text-fill-color: transparent;
   
   }
+  @media (min-width: 481px) and (max-width: 1180px){
+    .upcoming-batch{
+      width: 95%;
+      margin-left: 20px;
+    }
+    .batch-type{
+      margin-left: 5px;
+    }
+    .separator{
+      margin: 1px;
+    }
+    .batch-schedule{
+      width: 95%;
+      margin-left: 5px;
+    }
+    .qa-course-heading img{
+      height: 600px;
+      width: 80%;
+    }  
+  
+  }
   .corporate {
     position: relative;
     width: 100%;
@@ -763,10 +889,25 @@ input[type="radio"] {
     box-shadow: 2px 2px 2px white;
     color: white;
   }
+  .qa-course-heading img{
+    padding: 5vh;
+  }
   @media (min-width: 481px) and (max-width: 768px){
     .know-more{
       font-size: 16px;
       padding: 5px;
+    }
+    .features-icon{
+      width: 30px !important;
+      height: 22px !important;
+      padding: 0px;
+    }
+    .career-support{
+      margin-left: 10px;
+    }
+    .profile-building-div img{
+      height: 30px;
+      width: 42px;
     }
   }
   @media (max-width: 480px) {
@@ -952,8 +1093,8 @@ input[type="radio"] {
  }
  .features-icon{
   padding-top: 1vh;
-  width:auto;
-  height:auto;
+  width:50px;
+  height:50px;
   
  }
  .live-mode-feature{

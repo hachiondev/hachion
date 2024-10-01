@@ -533,10 +533,10 @@
   @media (max-width: 480px) {
     .learner-card {
       width: 85vw;
-      height: 300px; 
+      height: 350px; 
     }
     .learner-cover{
-        height: 350px;
+        height: 400px;
     }
     .name{
         font-size: 16px;
@@ -563,7 +563,7 @@
         margin-left: 2vh;
     }
     .carousel-indicators{
-        margin-top: -170px;
+        margin-top: -10px;
     }
   }
   

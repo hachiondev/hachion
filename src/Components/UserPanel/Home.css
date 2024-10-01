@@ -309,7 +309,7 @@
     }
 
     .query-content, .whatsapp-number, .training-email {
-        font-size: 0.7rem; 
+        font-size: 12px; 
         text-align: center; 
     }
 
@@ -338,7 +338,7 @@
 }
     .topbar-left {
         flex-direction:row;
-        width: 100%;
+    width: 200%;
         align-items: center;
         justify-content: space-evenly;
        padding: 0;
@@ -352,6 +352,7 @@
     .query-content{
       font-size: 10px;
       padding-top: 10px;
+      padding-bottom: 5px;
     }
 
     .whatsapp, .training-mail {
@@ -477,7 +478,7 @@
     color:white;
     background-color: #00AEEF;
   }
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 580px) {
   .drawer-toggle-btn {
     display: block; 
     margin-right: 2px !important; /* Show toggle button only on mobile */
@@ -544,7 +545,7 @@
 }
 
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1025px) */
-@media (min-width: 481px) and (max-width: 1025px) {
+@media (min-width: 581px) and (max-width: 1025px) {
   .navbar {
     height: 10vh;
     flex-direction: row;
@@ -552,20 +553,20 @@
   }
 
   .search-div-home {
-    width: 35vw;
-    margin-left: 0;
+    width: 180px;
+    margin-left: 0px !important;
   }
 
   .navbar-nav {
     display: flex;
-    flex-direction: row; /* Ensure all items are in a single row */
-    gap: 1vh; /* Add gap between the items */
-    font-size: 0.8rem;
+    flex-direction: row !important; /* Ensure all items are in a single row */
+    gap: 5px; /* Add gap between the items */
+    font-size: 12px;
     margin: 0;
   }
-
-  .nav-item-link {
-    height: 5vh;
+  .nav-item-link{
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
   /* Hide drawer on tablet */
@@ -1153,8 +1154,8 @@ color: white !important;
       .dropdown-list {
      
         
-        right: 5px;
-        width:160px;
+        right: -10px;
+        width:200px;
         padding:5px;
         /* border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);

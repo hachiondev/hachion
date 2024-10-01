@@ -25,6 +25,9 @@ const CourseCard = ({heading,month,time,image,onClick}) => {
 < MdOutlineStar className='star-icon'/>< MdOutlineStar className='star-icon'/>
 < MdOutlineStar className='star-icon'/>< MdOutlineStar className='star-icon'/> 100(5.0) </h6>
 <button className='enroll-btn'>View Details</button>
+<div className='new-batch'>
+  <p className='new-batch-para'>New Batch : <span> In 5 days (4th Aug)</span></p>
+</div>
  </div>
 </div>
 </>

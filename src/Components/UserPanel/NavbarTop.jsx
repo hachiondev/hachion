@@ -3,7 +3,7 @@ import logo from '../../Assets/logo.png';
 import { IoSearch } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
-
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -66,18 +66,18 @@ const navigate=useNavigate();
               aria-label="Search"
             />
             <button className="btn-search-home" onClick={toggleSearch}>
-              <IoSearch style={{ fontSize: '2rem' }} />
+              <IoSearch style={{ fontSize: '1.8rem' }} />
             </button>
           </div>
         ) : (
           <button className="btn-search-home" onClick={toggleSearch}>
-            <IoSearch style={{ fontSize: '2rem' }} />
+            <IoSearch style={{ fontSize: '1.8rem' }} />
           </button>
         )}
 
         {/* Drawer toggle button */}
         <button className="drawer-toggle-btn" onClick={toggleDrawer}>
-          ☰
+          <GiHamburgerMenu style={{fontSize:'2rem',marginLeft:'1px'}}/>
         </button>
 
         {/* Drawer content, only visible when isDrawerOpen is true */}

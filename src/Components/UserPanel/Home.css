@@ -7,13 +7,13 @@
 }
 /* Base styles for large screens (desktop, laptop) */
 .topbar {
-    height: 8vh;
+    height: 80px;
     background-color: rgba(0, 174, 239, 1);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 1vw;
-    font-size: 1.25rem;
+    padding: 0 20px;
+    font-size: 24px;
   }
   
   .topbar-left {
@@ -35,7 +35,7 @@
     color: white;
     cursor: pointer;
     justify-content: center;
-    padding-top: 2.2vh;
+    padding-top: 22px;
     font-size: 1.15rem;
   }
   
@@ -70,7 +70,7 @@
   @media screen and (max-width: 1025px) {
     .topbar {
       padding: 0 5vw; /* Reduce space between left and right */
-      height: 6vh;
+      height: 60px;
     }
     
     .topbar-left {
@@ -82,7 +82,7 @@
     }
     
     .whatsapp-number {
-      font-size: 0.7rem;
+      font-size: 16px;
     }
     
     .whatsapp-icon {
@@ -91,11 +91,11 @@
     }
     
     .training-email {
-      font-size: 1rem;
+      font-size: 16px;
     }
     
     .query-content {
-      font-size: 0.9rem;
+      font-size: 14px;
     }
   }
   
@@ -104,7 +104,7 @@
     .topbar {
       justify-content: center;
       padding: 0 2vw;
-      height: 5vh;
+      height: 50px;
     }
   
     .topbar-left {
@@ -116,7 +116,7 @@
     }
     
     .query-content {
-      font-size: 0.8rem;
+      font-size: 14px;
     }
     
     .training-mail-icon {
@@ -126,27 +126,10 @@
   
   /* Small Mobile Screen (max-width: 480px) */
   @media screen and (max-width: 480px) {
-    .topbar {
-      padding: 0;
-      justify-content: center;
-    }
+
+ 
     
-    .topbar-left {
-      width: 100%; /* Make topbar-left full width */
-      justify-content: center;
-    }
-    
-    .query-content {
-      font-size: 0.75rem;
-    }
-    
-    .whatsapp-number {
-      font-size: 0.65rem;
-    }
-    
-    .training-email {
-      font-size: 0.75rem;
-    }
+
     
     .whatsapp-icon {
       height: 15px;
@@ -348,10 +331,10 @@
     .topbar {
         flex-direction: row; 
         align-items: center;
-        font-size: 0.5rem;
+        
     }
 .training-mail-icon{
-    font-size: 0.8rem;
+    font-size: 2rem;
 }
     .topbar-left {
         flex-direction:row;
@@ -359,14 +342,16 @@
         align-items: center;
         justify-content: space-evenly;
        padding: 0;
-       font-size: 0.5rem;
+      
     }
-.recover{
-  font-size: 1.25rem;
-}
-    .query-content, .training-email,.whatsapp-number {
-        font-size: 0.5rem; 
+
+    .training-email,.whatsapp-number {
+        font-size: 12px; 
         text-align: center; 
+    }
+    .query-content{
+      font-size: 10px;
+      padding-top: 10px;
     }
 
     .whatsapp, .training-mail {
@@ -472,110 +457,126 @@
   .mobile-drawer {
     display: none; /* Hidden by default */
     position: absolute;
-    right: 2vw;
-    top: 10vh; /* Adjust top positioning */
+    left: 0px;
+    top: 0vh; /* Adjust top positioning */
     background-color: #ffffff;
-    width: 60vw;
+    width: 40vw;
+    height: 100vh;
     padding: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure it's above other elements */
   }
   
   .drawer-item {
-    padding: 10px 0;
+    padding: 5px 0;
     border-bottom: 1px solid #eeeeee;
     cursor: pointer;
   }
   
   .drawer-item:hover {
-    color: #00aeef;
+    color:white;
+    background-color: #00AEEF;
   }
-  
-  
-@media screen and (max-width: 480px) {
+  @media screen and (max-width: 480px) {
+  .drawer-toggle-btn {
+    display: block; 
+    margin-right: 2px !important; /* Show toggle button only on mobile */
+  }
 
-    .drawer-toggle-btn {
-        display: block; /* Show toggle button only on mobile */
-      }
-    
-      .mobile-drawer {
-        display: block; /* Drawer becomes visible when toggled */
-      }
-    
-      .navbar-nav {
-        display: none; /* Hide the normal navbar items on mobile */
-      }
-    
-    .btn-search-home{
-        height: 35px;
-        width: 35px;
-        border-radius: 5px;
-        margin-left: 40px;
-    }
-  
-    .navbar-left {
-      width: 80%;
-    }
-  
-    .navbar img {
-      width: 30vw;
-    }
-  
-    .navbar-nav {
-      display: none; /* Hide navbar items on mobile */
-    }
-  
-    .btn-search-home {
-      height: 6vh;
-      width: 10vw;
-      margin-left: 6vw;
-    }
-  
-    .nav-item-link {
-      display: none; /* Hide links on mobile */
-    }
-  
-    /* Add styles for the drawer menu */
-  
+  .mobile-drawer {
+    display: block; /* Drawer becomes visible when toggled */
   }
-  
-  /* Styles for Tablet/iPad (min-width: 481px and max-width: 1025px) */
-  @media (min-width: 481px) and (max-width: 1025px) {
-  
-    .navbar {
-      height: 10vh;
-      flex-direction: row;
-      justify-content: space-evenly;
-    }
-  
-    .search-div-home {
-      width: 35vw;
-      margin-left: 0;
-    }
-  
-    .navbar-nav {
-      display: flex;
-      flex-direction: row; /* Ensure all items are in a single row */
-      gap: 1vh; /* Add gap between the items */
-      font-size: 0.8rem;
-      margin: 0;
-    }
-  
-    .nav-item-link {
-      height: 5vh;
-    }
-  
-    /* Hide drawer on tablet */
-    .drawer-toggle-btn {
-        display: none; /* Hide the drawer toggle button on tablet and larger screens */
-      }
-    
-      .mobile-drawer {
-        display: none; /* Ensure drawer is not visible on tablet and larger screens */
-      }
-    
+
+  .navbar-nav {
+    display: none; /* Hide the normal navbar items on mobile */
   }
-  
+
+  .navbar img {
+    margin-left: 2px;
+    height: 42px;
+  }
+
+  .navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mobile-expanded-search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    z-index: 999;
+  }
+
+  .search-input-home {
+    width: 80px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .close-search-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .btn-search-home {
+    height: 42px;
+    width: 42px;
+    border-radius: 5px;
+    float: left;
+    margin-left: 50px;
+  }
+
+  .nav-item-link {
+    display: none; /* Hide links on mobile */
+  }
+}
+
+/* Styles for Tablet/iPad (min-width: 481px and max-width: 1025px) */
+@media (min-width: 481px) and (max-width: 1025px) {
+  .navbar {
+    height: 10vh;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .search-div-home {
+    width: 35vw;
+    margin-left: 0;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: row; /* Ensure all items are in a single row */
+    gap: 1vh; /* Add gap between the items */
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .nav-item-link {
+    height: 5vh;
+  }
+
+  /* Hide drawer on tablet */
+  .drawer-toggle-btn {
+    display: none; /* Hide the drawer toggle button on tablet and larger screens */
+  }
+
+  .mobile-drawer {
+    display: none; /* Ensure drawer is not visible on tablet and larger screens */
+  }
+}
   
 
 #autoScrollingBanner .carousel-indicators {
@@ -657,10 +658,15 @@ padding:1vh;
     }
 
     .coupon-btn, .register-now-btn {
-        font-size: 0.9rem;
-        padding: 0.7vh;
+        font-size: 12px;
+        padding: 2px;
         margin-bottom: -30px !important;
     }
+ .d-block{
+  height: 142px;
+  
+ }
+
 }
     
 .association{
@@ -704,6 +710,23 @@ padding:1vh;
 }
 .logos:hover .logos-slide{
     animation-play-state: paused;
+}
+@media screen and (max-width: 480px) {
+.association{
+  height: 10px;
+  margin-top: 0px !important;
+}
+.association-head{
+  font-size: 16px;
+  margin-top: 0px;
+}
+.logos{
+  padding: 2px 0;
+}
+.logos-slide img{
+  margin: 0px 10px;
+  height: 30px;
+}
 }
 .login-div-content{
     position: relative;
@@ -759,7 +782,7 @@ padding:1vh;
    
     
     border-radius: 10px;
-    padding: 1.5vh;
+    padding: 15px;
     background-color: rgba(0, 174, 239, 1);
     color:rgba(255, 255, 255, 1);
     font-weight:700;
@@ -788,8 +811,8 @@ padding:1vh;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
-     margin-right: 27vh; 
-    margin-top:-8vh; 
+     margin-right: 250px; 
+    margin-top:-80px; 
    
 }
 .view-btn:hover{
@@ -965,10 +988,40 @@ color: white !important;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; 
-    gap: 1.2vh; 
+    gap: 12px; 
     margin: 5px auto;
-    max-width: 75vw; 
+    max-width: 70vw; 
+    overflow-x: auto;
+    scroll-behavior: smooth;
 }
+/* .training-card-holder {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  gap: 15px;
+  scrollbar-width: none; /* For Firefox */
+*/
+
+
+
+.scroll-arrow-left, .scroll-arrow-right {
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00AEEF;
+}
+
+.scroll-arrow-left {
+  left: 10px;
+}
+
+.scroll-arrow-right {
+  right: 10px;
+}
+
 .card {
     width: calc(25% - 10px); 
     border: none !important;
@@ -982,7 +1035,9 @@ color: white !important;
     border-radius: 20px 20px 50px 50px; /* Ensure that the card has rounded corners */
     
 }
-
+.new-batch{
+  display: none;
+}
 .card-image {
     display: block;
     width: 100%;
@@ -1004,9 +1059,12 @@ color: white !important;
         gap: 1vh;
         max-width: 95vw !important;
     }
+    .new-batch{
+      display: none;
+    }
     .view-btn{
-        margin-right: 1vh;
-       font-size: 0.8rem;
+        margin-right: 10px;
+       font-size: 12px;
 
     }
     .view-all{
@@ -1014,36 +1072,14 @@ color: white !important;
         
     }
     .card-header{
-        font-size: 0.8rem;
+        font-size: 12px;
         top: 0vh;
         padding: 0vh;
         width: auto;
     }
 }
 
-/* @media (max-width: 768px) {
-    .card {
-        width: calc(50% - 10px); 
-    }
-    .card-header{
-        font-size: .6rem;
-    top: 0vh;
-padding: 0vh;
-width: auto;}
-    .view-btn{
-        margin-right:5vh ;
-        font-size: 0.7rem;
-        
-    }
-    .view-all{
-        width: auto;
-      
-        
-    } */
-    /* .training-card-holder{
-        width: 90vw;
-    }
-} */
+
 
 @media (max-width: 480px) {
     .card {
@@ -1052,6 +1088,9 @@ width: auto;}
         margin-top: 1vh;
        
     }
+ .new-batch-para{
+  font-size: 12px;
+ }
     .card-image{
         border-radius: 0px;
         width: 120px;
@@ -1060,20 +1099,30 @@ width: auto;}
         display: none;
     }
     .view-btn{
-        margin-right: 45px;
+        margin-right: 50px;
         margin-left: 10px;
-        
+       
+    margin-top:-60px; 
        
     }
+    .course-details{
+      padding: 15px;
+   
+    }
     .view-all{
-        font-size: 0.8rem;
-        padding: 0.5vh;
+        font-size: 12px;
+        padding: 5px;
+     
+    }
+    .card-icon{
+      width: 120px;
     }
     
     .card-header{
-        font-size: 0.5rem;
+        font-size: 10px;
         padding: 0vh;
-        width:80px;
+      margin: 0px;
+      top: 5px;
     }
     .course-name{
         font-size: 0.9rem;
@@ -1084,7 +1133,7 @@ width: auto;}
         font-size: 10px;
     }
     .association-head{
-        font-size: 14px !important ;
+        font-size: 16px !important ;
      margin-left: -10px;
     }
     .training-events-head{
@@ -1101,7 +1150,21 @@ width: auto;}
       .menu-icon {
         display: block; /* Show only "All" and menu icon */
       }
- 
+      .dropdown-list {
+     
+        
+        right: 5px;
+        width:160px;
+        padding:5px;
+        /* border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000; */
+      }
+      .dropdown-item:hover {
+        background-color: #00AEEF !important;
+        color: white !important;
+      }
+    
 }
 
     .courses-list{
@@ -1143,7 +1206,7 @@ width: auto;}
     }
 
 .course-review{
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: 600;
     font-style: italic;
 }
@@ -1153,11 +1216,11 @@ width: auto;}
     color:rgba(251, 188, 5, 1);
 }
 .course-month{
-    font-size:1rem;
+    font-size:16px;
     font-weight:400;
 
 }
-.dropdown-container {
+/* .dropdown-container {
   position: relative;
 }
 
@@ -1179,7 +1242,7 @@ width: auto;}
 
 .dropdown-item:hover {
   background-color: #f0f0f0;
-}
+} */
 
 @media screen and (max-width: 480px) {
   .courses-list {
@@ -1194,7 +1257,15 @@ width: auto;}
  .menu-icon{
   margin-left: 300px;
  }
-
+  .course-date{
+        font-size: 12px;
+      }
+      .course-month{
+        font-size: 12px;
+      }
+      .course-review{
+        font-size: 14px;
+      }
 }
   @media screen and (max-width: 768px) {
     .courses-list {
@@ -1299,13 +1370,17 @@ width: auto;}
     }
 
     .online-training-div {
-        width: 90vw; /* Full width for mobile screens */
-        margin-bottom: 2vh;
+        width: 40vw; 
+        height: 230px;/* Full width for mobile screens */
+        margin-bottom: 10px;
+  
+        padding: 0px;
+        height: 250px;
     }
 
     .online-training-div img {
-        height: 12vh;
-        width: 10vw;
+        height: 50px;
+        width: 50px;
     }
     .whatsapp-number-footer{
         font-size: 0.6rem;
@@ -1429,6 +1504,12 @@ width: auto;}
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+    }
+    .Live-online{
+      font-size: 14px;
+    }
+    .training-content{
+      font-size: 12px;
     }
     
     .footer-head {

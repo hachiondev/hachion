@@ -898,14 +898,6 @@ color: white !important;
     overflow-x: auto;
     scroll-behavior: smooth;
 }
-/* .training-card-holder {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 10px 0;
-  gap: 15px;
-  scrollbar-width: none; /* For Firefox */
-*/
 
 
 
@@ -929,14 +921,14 @@ color: white !important;
 .card {
     width: calc(25% - 10px); 
     border: none !important;
-    overflow: hidden !important; /* Ensure that any overflow is hidden */
+    overflow: hidden !important; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     justify-items: space-between;
     transition: all 0.3s ease;
     cursor: pointer;
-    border-radius: 20px 20px 50px 50px; /* Ensure that the card has rounded corners */
+    border-radius: 20px 20px 50px 50px; 
     
 }
 .new-batch{
@@ -947,7 +939,7 @@ color: white !important;
     width: 100%;
     height: 16.5vh;
     object-fit: cover;
-    border-radius: 0px 0px 50px 50px; /* Adjust the border radius */
+    border-radius: 0px 0px 50px 50px; 
     transition: all 0.3s ease;
     z-index: 0;
 }
@@ -1053,16 +1045,14 @@ color: white !important;
     .training-events-head{
         padding-top: 5px;
      
-       /* margin-bottom: 0px; */
-        /* margin-bottom: 10px; */
     }
     .course-item {
-        display: none; /* Hide all course items */
+        display: none; 
       }
     
       .course-item.all,
       .menu-icon {
-        display: block; /* Show only "All" and menu icon */
+        display: block; 
       }
       .dropdown-list {
      
@@ -1070,9 +1060,7 @@ color: white !important;
         right: -10px;
         width:200px;
         padding:5px;
-        /* border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        z-index: 1000; */
+        
       }
       .dropdown-item:hover {
         background-color: #00AEEF !important;
@@ -1134,29 +1122,6 @@ color: white !important;
     font-weight:400;
 
 }
-/* .dropdown-container {
-  position: relative;
-}
-
-.dropdown-list {
-  position: absolute;
-  top: 2.5rem;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  z-index: 1;
-}
-
-.dropdown-item {
-  padding: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-} */
 
 @media screen and (max-width: 480px) {
   .courses-list {
@@ -1208,17 +1173,17 @@ color: white !important;
 .career-div {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5vh; /* Adjust gap between each div */
+    gap: 1.5vh; 
     margin-left: auto;
     margin-right: auto;
     justify-content: center;
     padding: 2vh;
-    width: 80%; /* Set a default width for larger screens */
+    width: 80%; 
 }
 
-/* Desktop and Laptop screens: Show 4 divs in a row */
+
 .online-training-div {
-    width: 18vw; /* Adjust width to fit 4 in a row */
+    width: 18vw; 
     box-shadow: 5px 5px 5px #d3d3d3;
     border-radius: 10px;
     border-left: 10px solid rgba(0, 174, 239, 1);
@@ -1236,14 +1201,14 @@ color: white !important;
 }
 @media  (min-width:1025px) and (max-width: 1366px)  {
     .career-div {
-        width: 95%; /* Occupy 95% of the screen */
-        margin-left: auto; /* Center horizontally */
+        width: 95%; 
+        margin-left: auto;
         margin-right: auto;
         justify-content: center;
     }
 
     .online-training-div {
-        width: 40vw; /* Adjust width to show 2 in a row */
+        width: 40vw; 
         margin-bottom: 2vh;
     }
 
@@ -1253,17 +1218,17 @@ color: white !important;
     }
 }
 
-/* Tablet screens: Show 2 divs per row */
+
 @media (min-width: 481px) and (max-width: 1025px)  {
     .career-div {
-        width: 95%; /* Occupy 95% of the screen */
-        margin-left: auto; /* Center horizontally */
+        width: 95%; 
+        margin-left: auto; 
         margin-right: auto;
         justify-content: center;
     }
 
     .online-training-div {
-        width: 40vw; /* Adjust width to show 2 in a row */
+        width: 40vw; 
         margin-bottom: 2vh;
     }
 
@@ -1273,10 +1238,10 @@ color: white !important;
     }
 }
 
-/* Mobile screens: Show 1 div per row */
+
 @media screen and (max-width: 480px) {
     .career-div {
-        width: 95%; /* Occupy 95% width of the screen */
+        width: 95%; 
         flex-wrap: wrap;
         justify-content: center;
         margin-left: auto;
@@ -1285,7 +1250,7 @@ color: white !important;
 
     .online-training-div {
         width: 40vw; 
-        height: 230px;/* Full width for mobile screens */
+        height: 230px;
         margin-bottom: 10px;
   
         padding: 0px;
@@ -1332,7 +1297,7 @@ color: white !important;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    flex-wrap: wrap; /* Allow wrapping of items */
+    flex-wrap: wrap; 
 }
 .footer hr{
     width: 95%;
@@ -1427,8 +1392,8 @@ color: white !important;
     }
     
     .footer-head {
-        width: 45%; /* Ensures two footer headings fit in one row */
-        margin-bottom: 3vh; /* Adds spacing between rows */
+        width: 45%; 
+        margin-bottom: 3vh; 
     }
     
     .footer-heading {

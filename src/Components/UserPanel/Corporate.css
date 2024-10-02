@@ -536,12 +536,12 @@
    }
    
    .carousel-indicators li {
-       background-color: grey ; /* Default color */
-       width: 2.5vw;  /* Indicator width */
-       height: 3vh; /* Indicator height */
-       border-radius: 10px; /* Rounded edges */
-       margin: 5px; /* Spacing between indicators */
-       transition: background-color 0.3s ease; /* Smooth transition for color change */
+       background-color: grey ; 
+       width: 2.5vw;  
+       height: 3vh; 
+       border-radius: 10px; 
+       margin: 5px; 
+       transition: background-color 0.3s ease; 
    }
    
    .carousel-indicators .active {
@@ -573,7 +573,7 @@
   @media (max-width: 1180px) {
     .learner-card-item {
       justify-content: center;
-      gap: 20vw; /* To have space between the two cards */
+      gap: 20vw; 
     }
     .learner-card{
         width: 70vw;
@@ -717,8 +717,8 @@
     width: 100vw;
     background-image: url('../../Assets/blogbanner.png');
     background-repeat: no-repeat;
-    background-size: cover; /* Ensure the image covers the entire container */
-    background-position: center; /* Centers the image */
+    background-size: cover; 
+    background-position: center; 
     display: flex;
     justify-content: center;
     align-items: center;

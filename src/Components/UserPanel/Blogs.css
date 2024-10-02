@@ -144,19 +144,61 @@
         flex-direction: row;
         justify-content: space-evenly !important;
        
-        gap: 6vw;
+    
         
       }
       .about-us-top img{
-        height: 34vh;
-        margin: 4vh;
+        height: 340px;
+        margin: 40px;
       }
       .about-us-left-content{
         font-size: 1.20rem;
         font-weight: 400;
-        padding: 1vh;
+        padding-top: 20px;
         padding-left: 4vh;
         padding-right: 4vh;
+      }
+      
+      @media  (min-width:1025px) and (max-width: 1366px){
+        .about-us-content{
+          width: 95%;
+          margin-left: 20px;
+
+        }
+        .about-us-top{
+          justify-content: space-between;
+      
+        }
+        .about-us-left-content{
+          font-size: 18px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        .about-us-top img{
+        margin: 10px;
+          height: 320px;
+        }
+      }
+      
+      @media  (min-width:480px) and (max-width: 1024px){
+        .about-us-content{
+          width: 100%;
+          margin-left: 0px;
+
+        }
+        .about-us-top{
+          justify-content: space-between;
+      
+        }
+        .about-us-left-content{
+          font-size: 16px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        .about-us-top img{
+        margin: 0px;
+          height: 280px;
+        }
       }
       .our-story{
         background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);

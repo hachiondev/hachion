@@ -65,7 +65,7 @@ const Advisor = () => {
             </label>
             <input type="text" className="form-control" id="inputCourse4" placeholder='Enter preferred course'/>
           </div>
-          <div className="col-12">
+          <div className="col-10">
             <label htmlFor="Textarea" className="form-label">Comments</label>
             <textarea className="form-control" id="Textarea" placeholder="Enter comments here"></textarea>
           </div>

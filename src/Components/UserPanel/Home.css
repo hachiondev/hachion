@@ -7,136 +7,165 @@
 }
 /* Base styles for large screens (desktop, laptop) */
 .topbar {
-    height: 80px;
-    background-color: rgba(0, 174, 239, 1);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 20px;
-    font-size: 24px;
+  height: 80px;
+  background-color: rgba(0, 174, 239, 1);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 24px;
+  align-items: center; /* Ensure items are vertically centered */
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  white-space: nowrap; /* Prevent text breaking into new lines */
+  overflow: hidden; /* Hide overflow if the content is too wide */
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.query-content {
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 1.15rem;
+  white-space: nowrap; /* Prevent text from breaking */
+  padding-top: 15px;
+}
+
+.whatsapp-number,
+.training-email {
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: white;
+  padding: 0 10px;
+  padding-top: 15px;
+  cursor: pointer;
+}
+
+.whatsapp-icon {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.training-mail-icon {
+  margin-left: 10px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+}
+
+.login-link-home {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: white;
+}
+
+.login-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .topbar {
+    height: 60px;
+    padding: 0 5vw;
   }
-  
+
   .topbar-left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 40vw; /* For large screens */
+    width: auto; /* Allow auto width to fit content */
   }
-  
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* Space between elements inside topbar-right */
-  }
-  
+
+  .whatsapp-number,
+  .training-email,
   .query-content {
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-    justify-content: center;
-    padding-top: 22px;
-    font-size: 1.15rem;
+    font-size: 16px;
   }
-  
-  .whatsapp-icon {
-    margin-top: 0.5vh;
-    margin-left: 0.5vh;
-  }
-  
-  .whatsapp-number {
-    font-weight: 500;
-    font-size: 1.15rem;
-    color: white;
-    padding-top: 2vh;
-  }
-  
-  .training-email {
-    font-weight: 500;
-    font-size: 1.25rem;
-    cursor: pointer;
-    color: white;
-    padding-top: 2vh;
-  }
-  
+
   .training-mail-icon {
-    margin-top: 0.7vh;
+    font-size: 1.5rem;
+  }
+
+  .login-div-content {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .topbar {
+    height: 50px;
+    padding: 0 2vw;
+  }
+
+  .topbar-left {
+    width: auto;
+  }
+
+  .query-content {
+    font-size: 14px;
+  }
+
+  .training-mail-icon {
+    font-size: 1.5rem;
+  }
+
+  .whatsapp-number,
+  .training-email {
+    font-size: 14px;
+  }
+
+  .login-div-content {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .topbar {
+    height: 50px;
+    padding: 0 2vw;
+  }
+
+  .topbar-left {
+    width: auto;
+    justify-content: space-between;
+  }
+
+  .query-content {
+    font-size: 10px;
+    padding: 5px;
+  }
+.topbar-right{
+  display: none;
+}
+  .whatsapp-number,
+  .training-email {
+    font-size: 10px;
+  }
+
+  .training-mail-icon {
     font-size: 2rem;
   }
-  
-  /* Media Queries */
-  
-  /* Tablet Screen (max-width: 1024px) */
-  @media screen and (max-width: 1025px) {
-    .topbar {
-      padding: 0 5vw; /* Reduce space between left and right */
-      height: 60px;
-    }
-    
-    .topbar-left {
-      width: 80vw; /* Increase width of topbar-left */
-    }
-    
-    .topbar-right {
-      padding-right: 5vw; /* Reduce space on the right */
-    }
-    
-    .whatsapp-number {
-      font-size: 16px;
-    }
-    
-    .whatsapp-icon {
-      height: 20px;
-      width: 20px;
-    }
-    
-    .training-email {
-      font-size: 16px;
-    }
-    
-    .query-content {
-      font-size: 14px;
-    }
-  }
-  
-  /* Mobile Screen (max-width: 768px) */
-  @media screen and (max-width: 768px) {
-    .topbar {
-      justify-content: center;
-      padding: 0 2vw;
-      height: 50px;
-    }
-  
-    .topbar-left {
-      width: 70vw;
-    }
-    
-    .topbar-right {
-      width: 25vw;
-    }
-    
-    .query-content {
-      font-size: 14px;
-    }
-    
-    .training-mail-icon {
-      font-size: 2.5rem;
-    }
-  }
-  
-  /* Small Mobile Screen (max-width: 480px) */
-  @media screen and (max-width: 480px) {
 
- 
-    
-
-    
-    .whatsapp-icon {
-      height: 15px;
-      width: 15px;
-    }
+  .login-div {
+    display: none; /* Hide login and register links */
   }
-  
+
+  .logout-right {
+    display: none; /* Hide logout button on small screens */
+  }
+}
 
 .whatsapp-number-footer{
     font-weight: 500;
@@ -249,7 +278,7 @@
 .login-link-home{
     font-size: 1.1rem;
     font-weight: 500;
-  padding-top: 0.5vh;
+  padding:5px;
    
     text-decoration: none;
     color:white;
@@ -262,128 +291,24 @@
     color: white;
     font-weight: 700;
    gap:1rem;
-   padding: 1vh;
+   padding: 10px;
 
-}
-.training-mail-icon{
-    color: white;
-    font-size:2rem; 
-    margin-right: 1vh }
-@media screen and (max-width: 1024px) {
-    
- 
-.training-mail-icon{
-    font-size: 1.5rem;
-}
-    .whatsapp-number, .training-email, .query-content {
-        font-size: 1rem;
-    }
-
-    .login-div-content {
-        padding-right: 4vh; 
-        font-size: 1rem;
-        padding: 0.5vh;
-    }
-   .success-gif{
-    height: 50px;
-    width: 50px;
-   }
-}
-
-@media screen and (max-width: 768px) {
-    .topbar {
-        flex-direction: row; 
-        align-items: center;
-        font-size: 0.7rem;
-    }
-    .training-mail-icon{
-        font-size: 1rem;
-    }
-
-    .topbar-left {
-        flex-direction:row;
-        width: 70%;
-        align-items: center;
-        justify-content: space-evenly;
-        padding: 0;
-    }
-
-    .query-content, .whatsapp-number, .training-email {
-        font-size: 12px; 
-        text-align: center; 
-    }
-
-    .whatsapp, .training-mail {
-        margin: 0; 
-    }
-
-    .login-div {
-        padding:  0;
-        flex-direction: row;
-        align-items: center;
-    }
-    .login-div-content{
-        font-size: 0.8rem;
-    }
-
-}
-@media screen and (max-width: 480px) {
-    .topbar {
-        flex-direction: row; 
-        align-items: center;
-        
-    }
-.training-mail-icon{
-    font-size: 2rem;
-}
-    .topbar-left {
-        flex-direction:row;
-    width: 200%;
-        align-items: center;
-        justify-content: space-evenly;
-       padding: 0;
-      
-    }
-
-    .training-email,.whatsapp-number {
-        font-size: 12px; 
-        text-align: center; 
-    }
-    .query-content{
-      font-size: 10px;
-      padding-top: 10px;
-      padding-bottom: 5px;
-    }
-
-    .whatsapp, .training-mail {
-        margin: 0; 
-    }
-
-  
-
-    .login-div {
-  display: none;
-        
-    }
-    .logout-right{
-        display: none;
-    }
 }
 
   
   /* Navbar items */
   .navbar {
-   height: 12vh;
+    height: 120px;
     background-color: #EEEEEE !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+    flex-wrap: nowrap; /* Prevent wrapping */
   }
   
   .search-div-home {
-    height: 6vh;
-    width: 30vw;
+    height: 60px;
+    width: 600px;
     border-radius: 20px;
     box-shadow: 5px 5px 5px #BABABA;
     display: flex;
@@ -401,8 +326,8 @@
   }
   
   .btn-search-home {
-    width: 5vw;
-    height: 6vh;
+    width: 100px;
+    height: 60px;
     background-color: rgba(0, 174, 239, 1);
     color: white;
     border-radius: 0px 10px 10px 0px;
@@ -410,13 +335,12 @@
     cursor: pointer;
   }
   
-  /* Navbar items */
   .navbar-nav {
     display: flex;
     justify-content: space-evenly;
     flex-direction: row;
-    margin-left: 3vh;
-    flex-wrap: nowrap; /* Ensure items do not wrap */
+    margin-left: 30px;
+    flex-wrap: nowrap;
   }
   
   .nav-item-link {
@@ -450,6 +374,7 @@
     padding-right: 0.5vh;
     font-weight: 500;
   }
+  
   .drawer-toggle-btn {
     display: none; /* Hidden by default, only shown on mobile */
   }
@@ -462,7 +387,7 @@
     top: 0vh; /* Adjust top positioning */
     background-color: #ffffff;
     width: 40vw;
-    height: 100vh;
+    height: 150vh;
     padding: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure it's above other elements */
@@ -475,109 +400,87 @@
   }
   
   .drawer-item:hover {
-    color:white;
+    color: white;
     background-color: #00AEEF;
   }
-  @media screen and (max-width: 580px) {
-  .drawer-toggle-btn {
-    display: block; 
-    margin-right: 2px !important; /* Show toggle button only on mobile */
+  
+  /* Styles for Mobile (max-width: 480px) */
+  @media screen and (max-width: 480px) {
+    .drawer-toggle-btn {
+      display: block; 
+      margin-right: 2px !important; /* Show toggle button only on mobile */
+    }
+  
+    .mobile-drawer {
+      display: block; /* Drawer becomes visible when toggled */
+    }
+  
+    .navbar img {
+      margin-left: 2px;
+      height: 42px;
+    }
+  
+    .navbar .container-fluid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .search-div-home {
+      width: 60%;
+      margin-left: 0;
+    }
+  
+    .search-input-home {
+      width: 80px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  
+    .btn-search-home {
+      height: 42px;
+      width: 42px;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+  
+    .navbar-nav {
+      display: none !important; /* Hide the normal navbar items on mobile */
+    }
   }
-
-  .mobile-drawer {
-    display: block; /* Drawer becomes visible when toggled */
+  
+  /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
+  @media (min-width: 481px) and (max-width: 1024px) {
+    .navbar {
+      height: 10vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px; /* Add padding to reduce the space */
+    }
+  
+    .search-div-home {
+      width: 250px; /* Reduce width for tablet screens */
+      margin-left: 0 !important; /* Remove margin for better alignment */
+    }
+  
+    .navbar-nav {
+      gap: 2px; /* Add gap between the items */
+      font-size: 12px;
+      margin: 0;
+      margin-left: 0px;
+    }
+  
+    .drawer-toggle-btn {
+      display: none; /* Hide the drawer toggle button on tablet */
+    }
+  
+    .mobile-drawer {
+      display: none; /* Ensure drawer is not visible on tablet */
+    }
   }
-
-  .navbar-nav {
-    display: none; /* Hide the normal navbar items on mobile */
-  }
-
-  .navbar img {
-    margin-left: 2px;
-    height: 42px;
-  }
-
-  .navbar .container-fluid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .mobile-expanded-search {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 5px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: #fff;
-    z-index: 999;
-  }
-
-  .search-input-home {
-    width: 80px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  .close-search-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-
-  .btn-search-home {
-    height: 42px;
-    width: 42px;
-    border-radius: 5px;
-    float: left;
-    margin-left: 50px;
-  }
-
-  .nav-item-link {
-    display: none; /* Hide links on mobile */
-  }
-}
-
-/* Styles for Tablet/iPad (min-width: 481px and max-width: 1025px) */
-@media (min-width: 581px) and (max-width: 1025px) {
-  .navbar {
-    height: 10vh;
-    flex-direction: row;
-    justify-content: space-evenly;
-  }
-
-  .search-div-home {
-    width: 180px;
-    margin-left: 0px !important;
-  }
-
-  .navbar-nav {
-    display: flex;
-    flex-direction: row !important; /* Ensure all items are in a single row */
-    gap: 5px; /* Add gap between the items */
-    font-size: 12px;
-    margin: 0;
-  }
-  .nav-item-link{
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-
-  /* Hide drawer on tablet */
-  .drawer-toggle-btn {
-    display: none; /* Hide the drawer toggle button on tablet and larger screens */
-  }
-
-  .mobile-drawer {
-    display: none; /* Ensure drawer is not visible on tablet and larger screens */
-  }
-}
   
 
 #autoScrollingBanner .carousel-indicators {
@@ -732,7 +635,7 @@ padding:1vh;
 .login-div-content{
     position: relative;
     display: inline-block;
-    height:4vh;
+    height:40px;
     padding: 5px;
     font-size: 1.25rem;
     border-radius: 10px;
@@ -1048,7 +951,17 @@ color: white !important;
     transition: all 0.3s ease;
     z-index: 0;
 }
+@media (min-width: 1181px) and (max-width: 1366px){
+  .training-card-holder{
+    max-width: 95vw;
+    gap: 10px;
+  }
+  .card {
+    width: calc(33.33% - 10px); 
+    
+}
 
+}
 
 @media (min-width: 481px) and (max-width: 1025px) {
     .card {
@@ -1321,7 +1234,7 @@ color: white !important;
     height: 9vh;
     width: 4.5vw;
 }
-@media  (max-width: 1180px)  {
+@media  (min-width:1025px) and (max-width: 1366px)  {
     .career-div {
         width: 95%; /* Occupy 95% of the screen */
         margin-left: auto; /* Center horizontally */

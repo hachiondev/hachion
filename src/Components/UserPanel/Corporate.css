@@ -10,7 +10,7 @@
 }
 .corporate-banner{
     width: 100%; 
-    height: 65vh; 
+    height: 650px; 
     background-image: url('../../Assets/Group 39809.png');
     background-size: cover;
     background-position: center;
@@ -39,7 +39,7 @@
     color: #fff;
 }
 .contact-us-corporate{
-    margin-top:8vh;
+    margin-top:80px;
     border-radius: 10px;
     border: 1px solid white;
     padding: 1.5vh 5vh 1.5vh 5vh;
@@ -48,21 +48,36 @@
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
-    margin-left: 35vw;
+    margin-left: 700px;
 }
 
 .hachion-content{
-    height: 40vh;
+   
     background-color: white;
     align-items: center;
     justify-content: center;
     margin-left:15vw;
-    
-    width:68vw;
+    width:70vw;
+    padding: 20px;
     border-radius: 20px;
     box-shadow:5px 5px 5px #d3d3d3;
 
 }
+.about-us-div-content h6{
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .about-us-div-content p{
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+  }
+  .about-us-div-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 .association{
     height: 15vh;
     display: flex;
@@ -85,7 +100,7 @@
 }
 .customize-training-div{
     
-    width: 33.5vw;
+    width: 34vw;
     border-radius: 20px;
     background-color: #fff;
     box-shadow:5px 5px 5px #d3d3d3;
@@ -93,8 +108,7 @@
 }
 .customize-training-div img{
    
-    width:25.2vw;
-    margin-left: 3.15vw;
+   padding: 2vw;
     margin-top: 2vh;
     margin-bottom: 2vh;
 }
@@ -123,7 +137,7 @@
 }
 
 .leading-expert-card img {
-    height: 10vh;
+    height: 100px;
     width: auto;
     margin-bottom: 1vh; 
 }
@@ -138,7 +152,7 @@
 
 .view-details-corporate {
    
-    width: 9vw;
+   padding: 10px;
     border-radius: 10px;
     padding: 5px 20px;
     background-color: #00AEEF;
@@ -155,18 +169,21 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-   justify-content: center; 
+   justify-content: space-evenly;
+
+   max-width: 73%;
+   margin-left: 15vw;
 }
 .view-all-div{
     display: flex;
     flex-direction: row-reverse;
-    margin-right: 16vw;
+    margin-right: 13vw;
     margin-top: -9vh;
 }
 
 .view-all-corporate {
    padding: 1vh;
-    width: 7.5vw;
+   
     border-radius: 10px;
     padding: 5px 20px;
     background-color: #00AEEF;
@@ -182,7 +199,7 @@
     background-color: #0d6efd;
 }
 .corporate-training-features {
-    height: 63.4vh;
+   padding: 2vw;
     background-color: #fff;
     margin-left: 15vw;
     width: 70vw;
@@ -197,13 +214,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    margin-top: 4.5vh;
-    margin-bottom: 4.5vh;
+   gap: 10px;
 }
 
 .customized-content {
-    height: 13.4vh;
-    width: 14vw;
+    height: 134px;
+    width: 280px;
     border-radius: 10px;
     padding: 10px 0px 10px 0px;
     box-shadow: 5px 5px 10px #d3d3d3;
@@ -220,8 +236,8 @@
 }
 
 .customized-content img {
-    height: 6vh;
-    width: 3vw;
+    height: 60px;
+    width: 60px;
 }
 
 .customized-content-para {
@@ -230,31 +246,31 @@
 }
 
 .training-img {
-    width: 29.25vw;
-    height: 48vh;
+    width: 420px;
+  
     align-self: center;
 }
 
 .advisor {
-    height: 110vh;
+  
     background-image: url('../../Assets/Group\ 39810.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 4vh;
+    padding: 40px;
 }
 
 .advisor-form {
-    height: 97vh;
-    margin-left: 15vw;
-    margin-right: 15vw;
+   
+    margin-left: 10vw;
+    margin-right: 10vw;
     border-radius: 20px;
     background-color: white;
 }
 
 
 .advisor-head {
-    height: 10vh;
+    height: 100px;
     border-radius: 20px 20px 0px 0px;
     background: linear-gradient(#006489, #00AEEF, #006489);
     color: white;
@@ -278,30 +294,23 @@
     color: red;
 }
 
-.form-control,.form-select {
-    height: 5vh ;
-    width: 26vw;
-}
+
 .form-select{
-    margin-left:3.5vh;
+    margin-left:20px;
 }
 
 #Textarea {
-    height: 12vh;
+    height: 120px;
     width: 100%;
 }
 
-.row {
-    padding: 5vh;
-}
-
 .row .col-md-6 {
-    margin-bottom: 2vh;
+    margin-bottom: 20px;
 }
 
 .submit-btn {
-    width: 12.5vw;
-    height: 6vh;
+  
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid #fff;
     background-color: #00AEEF;
@@ -312,7 +321,108 @@
     justify-content: center;
     display: inline-block;
     text-align: center;
+    margin-bottom: 10px;
 }
+@media  (min-width:1180px) and (max-width: 1366px){
+.contact-us-corporate{
+    margin-left: 480px;
+    margin-top: 50px;
+}
+.hachion-content{
+    width: 85vw;
+    margin-left: 80px;
+}
+.customize-training-div{
+    width: 520px;
+}
+.customize-training-div img{
+    padding: 10px;
+}
+.leading-expert {
+   max-width: 90%;
+   margin-left: 50px;
+}
+.leading-expert-card{
+    width: 320px;
+}
+
+.view-all-div {
+    margin-right: 10vw;
+}
+.leading-expert{
+    width: 95%;
+}
+.corporate-training-features{
+    width: 90vw;
+    margin-left: 50px;
+}
+.training-img{
+    height: 360px;
+}
+.advisor-form{
+    margin:10px;
+}
+
+.form-select{
+    margin-left: 0px;
+}
+.row .col-md-6 {
+    margin-bottom: 10px;
+}
+}
+
+@media  (min-width:480px) and (max-width: 1179px){
+    .contact-us-corporate{
+        margin-left: 300px;
+        margin-top: 50px;
+    }
+    .training-img{
+        height: 350px;
+    }
+    .hachion-content{
+        width: 95%;
+        margin-left: 10px;
+    }
+    
+.customize-training-div{
+    width: 50vw;
+}
+.customize-training-div img{
+    padding: 0px;
+}
+.leading-expert {
+   max-width: 100%;
+   margin-left: 0px;
+}
+.leading-expert-card{
+    width: 40vw;
+   
+}
+
+.view-all-div {
+    margin-right: 10vw;
+}
+.leading-expert{
+    width: 95%;
+}
+.corporate-training-features{
+    width: 100vw;
+    margin-left: 0px;
+}
+.training-img{
+    height: 360px;
+}
+.advisor-form{
+    margin:10px;
+}
+
+.form-select{
+    margin-left: 0px;
+}
+.row .col-md-6 {
+    margin-bottom: 10px;
+}
+    }
 .learner-cover{
   
     height: 500px;
@@ -329,7 +439,7 @@
    }
    .learner-card{
        height: 430px;
-       width: 33vw;
+       width: 40vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
@@ -338,16 +448,16 @@
       
    }
    .learner-image{
-       height: 14vh;
-       width:7vw;
+       height: 140px;
+       width:140px;
        border-radius: 50%;
        border:4px solid white;
-       margin-left: 2.55vw;
+       margin-left: 20px;
        margin-top: -1.25vh;
    }
    .profile-image{
-       height: 12vh !important;
-       width: 6.5vw !important;
+       height: 120px !important;
+       width: 130px !important;
      
    }
    .learner-top{
@@ -366,14 +476,14 @@
       flex-direction: row;
    }
    .learner-name img{
-       height: 3.3vh;
-       width: 1.5vw;
+       height: 33px;
+       width: 33px;
        margin-left: 2vh;
        margin-top:3vh;
    }
    .learner-info{
-       height: 18.5vh;
-       margin-left: 14vh;
+       height: 180px;
+       margin-left: 100px;
        margin-top: 2vh !important;
        display: flex;
        flex-direction: column; 
@@ -462,14 +572,19 @@
   
   @media (max-width: 1180px) {
     .learner-card-item {
-      justify-content: center; /* To have space between the two cards */
+      justify-content: center;
+      gap: 20vw; /* To have space between the two cards */
     }
     .learner-card{
-        width: 85vw;
+        width: 70vw;
+    }
+    .learner-name{
+        margin-top: -80px;
     }
     .custom-prev-icon{
         margin-left: -12vh;
     }
+ 
     .left-quotes{
         margin-top: -5vh;
     }
@@ -480,8 +595,16 @@
     .learner-name img{
         height: 40px;
         width: 40px;
-        margin-top: 1.8vh;
+
     }
+ .learner-image{
+    height: 140px;
+    width: 140px;
+ }
+ .profile-image{
+    height: 136px;
+    width: 136px;
+ }
   }
  
   @media (max-width: 1024px) {
@@ -491,7 +614,7 @@
     }
   
     .learner-card {
-      width: 85vw; 
+      width: 65vw; 
     }
     .left-quotes{
         margin-left: 4vh;

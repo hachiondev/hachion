@@ -24,8 +24,6 @@ const LeadingExpert = () => {
     <LeadingExpertCard CourseName='Google Cloud' image={card1}/> 
     <LeadingExpertCard CourseName='Python' image={card4}/>
     <LeadingExpertCard CourseName='Load Runner' image={card3}/>
- </div>
- <div className='leading-expert'>
     <LeadingExpertCard CourseName='ServiceNow' image={card6}/>
     <LeadingExpertCard CourseName='QA Automation' image={card5}/> 
     <LeadingExpertCard CourseName='QA Manual Testing' image={card8}/>

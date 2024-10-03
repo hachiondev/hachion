@@ -43,8 +43,8 @@
     font-size: 1.5rem;
 }
 .salesforce-right img{
-    height: 4vh;
-    width: 2vw;
+    height: 40px;
+    width: 40px;
 }
 .salesforce-middle h1{
     font-weight: 700;
@@ -61,7 +61,7 @@
 }
 .salesforce-middle img{
     height: auto;
-    width: 20vw;
+ 
 }
 .topics{
     padding-left: 4vh;
@@ -107,6 +107,19 @@
     padding-left: 12vw;
     padding-bottom: 5vh;
     background-color: #EEEEEE;
+}
+@media (min-width: 481px) and (max-width: 1025px){
+  .salesforce-blog-left{
+    width: 25%;
+    padding: 10px;
+  }
+  .salesforce-blog-right{
+    width: 70%;
+  }
+  .salesforce-blog{
+    padding-left: 0px;
+    gap: 10px;
+  }
 }
 .about-banner{
  
@@ -200,6 +213,20 @@
           height: 280px;
         }
       }
+        @media (max-width:480px){
+          .about-us-top{
+            flex-direction: column;
+            
+          }
+          .about-us-content{
+            width: 98%;
+            margin-left: 10px;
+          }
+          .about-us-left-content{
+            font-size: 14px;
+          }
+        }
+      
       .our-story{
         background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
         color: white;
@@ -225,6 +252,30 @@
         font-size: 5rem;
         text-align: center;
       }
+      @media (max-width:480px){
+        .our-story{
+          justify-content: flex-start; 
+          overflow-x: auto; 
+          white-space: nowrap; 
+          padding: 20px;
+          gap: 10px;
+          font-size: 14px;
+          width: 100%;
+          margin-left: 5px;
+        }
+        .story-content{
+          font-size: 16px;
+        
+        }
+        .number{
+          margin-left: 15px;
+          font-size: 14px;
+        }
+        .story-icon{
+          font-size: 1.25rem;
+       margin-left: 15px;
+        }
+      }
 .contact-us-div{
   background-color: #ffffff;
   padding: 2vh;
@@ -246,8 +297,7 @@ margin-bottom: 0;
   margin-left: 8vw;
 }
 .contact-us-left{
-  height: 60vh;
-  width: 25vw;
+height: 371px;
   background-color: #ffffff;
   margin-top: 4vh;
   margin-left: 12vw;
@@ -268,9 +318,9 @@ align-items: center;
   padding-top: 2vh;
 }
 .contact-us-icon{
-padding-top: 30vh;
+padding-top: 20px;
  justify-content: space-evenly;
- gap: 4vw !important;
+
 }
 .contact-us-icon img{
  width: 2vw;
@@ -324,4 +374,30 @@ padding-top: 30vh;
   font-size: 1rem;
   font-weight: 400;
   text-align: center;
+}
+.about-us-div {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap into multiple rows */
+  justify-content: space-evenly;
+}
+
+.about-us-div-content {
+  flex-basis: 45%; /* This makes two items per row for larger screens */
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .about-us-div-content {
+    flex-basis: 100%; /* One item per row for mobile screens */
+  }
+  .about-us-div-content img{
+    width: 300px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .about-us-div-content {
+    flex-basis: 45%; /* Two items per row for tablet and laptop screens */
+  }
+  
 }

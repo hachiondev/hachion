@@ -5,11 +5,11 @@
     font-family:  'Open Sans', sans-serif;
 }
 .sidebar {
-    width: 420px;
+width: 420px;
     background-color: white;
     color: black;
-    left: 0;
     min-width: 420px;
+    left: 0;
     right:5px;
   overflow-y: auto;
   height:1450px;
@@ -115,7 +115,7 @@ color: black;
   }
   .course-banner{
 height:432px;
-width: 120vw;
+width: 100%;;
 background-image: url('../../Assets/course_banner.png');
 background-repeat: no-repeat;
 background-size: cover;
@@ -234,8 +234,6 @@ padding: 10px;
     flex: 1 1 calc(25% - 10px);
     box-sizing: border-box;
     max-width: calc(30% - 20px); 
-    width: 320px;
-    height: 340px;
     min-height: 340px;
     min-width: 320px; 
     border-radius: 20px;
@@ -246,15 +244,23 @@ padding: 10px;
     justify-content: space-evenly;
     background-color: #fff;
   }
-  
-  @media (min-width:768px) and (max-width: 1025px) {
+  @media (min-width:1025px) and (max-width: 1366px) {
     .sidebar-card {
       flex: 1 1 calc(50% - 10px);
       max-width: calc(50% - 10px);
     }
+
+  }
+  @media (min-width:481px) and (max-width: 1024px) {
+    .sidebar-card {
+      flex: 1 1 calc(50% - 10px);
+      max-width: calc(45% - 10px);
+       
+    }
     .sidebar{
       margin-left: 10px;
-      width: 300px;
+      width: 250px;
+      min-width: 250px;
     }
     .sidebar-right-all{
       gap: 5px;
@@ -268,16 +274,6 @@ padding: 10px;
     }
   }
   
-  @media (min-width: 481px) and (max-width: 767px) {
-    .sidebar-card {
-      flex: 1 1 100%; 
-      max-width: 100%;
-    }
-    .sidebar{
-      margin-left: 10px;
-     
-    }
-  }
   @media (max-width:480px){
     .sidebar{
       width: 100%;
@@ -334,6 +330,9 @@ padding: 10px;
     .sidebar-right-all {
       overflow-x: scroll;
       scroll-behavior: smooth;
+    }
+    .course-banner{
+      height: 197px;
     }
   
   }
@@ -402,7 +401,7 @@ padding: 10px;
   flex-direction: column;
 }
 .qa-content{
-  height:150px;
+  /* height:150px; */
   width:700px;
   font-size:1rem;
   font-weight:500;
@@ -554,7 +553,72 @@ margin-left: 40px;
 .qa-automation-left{
   margin-left: 0px;
 }
+}
+@media (max-width: 480px) {
+  .qa-automation {
+    width: 95%;
+    background-color: white; /* Replace background image with white */
+    flex-direction: column; /* Change flex direction to column */
+    margin-left: 5px;
+    margin-right: 5px;
+    background-image: none;
+  }
 
+  .qa-automation-left {
+    flex-direction: row; /* Make the content stack vertically */
+    margin-left: 0;
+    justify-content: space-around !important;
+  }
+
+  .qa-automation-left img {
+    margin-right: -48px;
+    height:137px;
+    margin-left: -10px;
+  }
+
+  .qa-content {
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+
+  .qa-button {
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .enroll-now,
+  .download {
+    width: 95%;
+    margin: 1vh 0;
+    padding: 10px;
+    font-size: 1.2rem;
+  }
+
+  .qa-right img {
+ width: 300px;
+    height: 247px; /* Ensure image remains responsive */
+    border-radius: 10px;
+    margin-left: 30px;
+  }
+
+  .certified {
+    font-size: 1rem;
+    text-align: left;
+  }
+.fee{
+  padding-top: 5px;
+}
+  .video-btn {
+    margin-left: 0;
+    width: 300px;
+    padding: 5px;
+    margin-left: 30px;
+  }
 }
 .key-highlights{
  margin-bottom: 5vh;
@@ -590,6 +654,7 @@ text-align:center;
 .key-highlights-header{
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 /* Add smooth scrolling behavior to the entire page */
 html {
@@ -615,7 +680,34 @@ html {
     font-size: 12px;
   }
 }
+@media (max-width: 480px) {
+  .key-highlights {
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+  }
 
+  .key-highlights-header {
+    justify-content: center;
+  }
+
+  .key-highlights-content {
+    width: 30%; 
+    margin-bottom: 2vh; 
+    
+  }
+
+  .key-icons {
+    margin-left: 0; 
+    align-self: center; 
+    height: 30px;
+    width: 30px;
+  }
+
+  .key-highlights-para {
+    font-size: 12px;
+  }
+}
 .upcoming-header {
   margin-top: 2vh;
   margin-bottom: 5vh;
@@ -656,7 +748,26 @@ html {
   height: 4px;
   background-color: white;
 }
+@media (max-width: 480px) {
+  .upcoming-header-content {
+    justify-content: flex-start; /* Align items to the left */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks */
+    padding: 10px;
+    font-size: 14px;
+  }
 
+  .upcoming-link {
+    margin-right: 20px; /* Spacing between each category link */
+  }
+
+  .upcoming-header {
+    padding-left: 5vw; /* Padding to ensure some space at the start */
+  }
+  .amount{
+    font-size: 16px;
+  }
+}
 .upcoming-batch {
   
   width: 80%;
@@ -921,6 +1032,70 @@ input[type="radio"] {
     }  
   
   }
+  @media screen and (max-width: 480px) {
+    .batch-type {
+      justify-content: flex-start; /* Align items to the left */
+      overflow-x: auto; /* Enable horizontal scrolling */
+      white-space: nowrap; /* Prevent line breaks */
+      padding: 10px;
+      font-size: 14px;
+      width: 100%;
+      margin-left: 5px;
+    }
+    .batch-schedule {
+      flex-direction: column; 
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  
+    .left, .right {
+      flex: 1; 
+      width: 100%; 
+      padding: 10px; 
+    }
+  
+    .partition-schedule {
+      flex-direction: row; 
+      gap: 10px; 
+      margin-top: 1vh;
+    }
+  
+    .custom-radio {
+      width: 20px; 
+      height: 20px;
+      margin-right: 10px; 
+    }
+  
+    .batch-date {
+      font-size: 12px; 
+    }
+    .qa-heading{
+      font-size: 14px !important;
+    }
+  
+    .date-span {
+      font-size: 14px; 
+    }
+  
+    .demo {
+      font-size: 12px; 
+    }
+  
+    .free {
+      font-size: 14px; 
+    }
+  
+    .enroll-now {
+      width: 100%; 
+      padding: 10px; 
+    }
+    .qa-course-heading img{
+      height: 200px;
+      width: 90%;
+    }
+  }
+  
   .corporate {
     position: relative;
     width: 100%;
@@ -992,7 +1167,7 @@ input[type="radio"] {
     font-size:22px;
   }
   .schedule-span{
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: 600;
     background: linear-gradient( #00AEEF,#006489);
     -webkit-background-clip: text;
@@ -1078,8 +1253,6 @@ input[type="radio"] {
     list-style-type: disc;
   }
   .btn-curriculum{
-    width:15vw;
-   
     border-radius: 10px;
     padding:5px 10px 5px 10px;
     box-shadow: 5px 5px 10px #d3d3d3;
@@ -1134,7 +1307,7 @@ input[type="radio"] {
     box-shadow: 5px 5px 5px #D3D3D3;
   }
   .mode-of-training-head{
-    height: 60vh;
+    height: 600px;
    
   }
   .live-mode{
@@ -1262,6 +1435,56 @@ input[type="radio"] {
 @media screen and (max-width: 1024px){
   .contact-info{
      gap: 3vw;
+  }
+}
+@media screen and (max-width:480px){
+  .curriculum{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .btn-curriculum{
+    padding: 2px;
+  }
+  .mode-of-training{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .batch-type{
+    width: 100%;
+    margin-left: 5px;
+  }
+  .live-mode{
+    padding-left: 10px;
+    font-size: 12px;
+  }
+  .features-icon{
+    height: 30px;
+    width: 30px;
+  }
+  .feature-content{
+    font-size: 12px;
+    padding-top: 0px;
+  }
+  .career-support{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .career-support-head{
+    font-size: 16px;
+  }
+  .profile-building{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .profile-building-div h5{
+    font-size: 14px;
+  }
+  .profile-building-div p{
+    font-size: 12px;
+  }
+  .profile-building-div img{
+    height: 30px;
+    width: 30px;
   }
 }
 .mentoring-mode-content{

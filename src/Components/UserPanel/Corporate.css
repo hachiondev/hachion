@@ -768,6 +768,8 @@
   @media (max-width: 480px) {
     .blogs-container {
       grid-template-columns: repeat(2, 1fr); 
+      width: 95%;
+      margin-left: 10px;
     }
   }
   
@@ -796,55 +798,62 @@
     font-weight: 500;
     color:#00AAEF;
   }
-  .recent-card {
-    width: 18vw;
-    
+  .recent-entries {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2vh;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
+}
+
+.recent-entries::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.recent-card {
+    min-width: 20%; /* Adjust width to display 2 cards on mobile */
+    flex: 0 0 auto; /* Prevent cards from shrinking */
+    margin-right: 10px; /* Add some space between cards */
     background-color: white;
     box-shadow: 5px 5px 5px #d3d3d3;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-  }
-  
-  .recent-card-image {
-    flex: 1; 
+}
+
+.recent-card-image {
+    flex: 1;
     width: 100%;
-    object-fit: cover; 
-  }
-  
-  .content-block {
-    flex: 1; 
+    object-fit: cover;
+}
+
+.content-block {
+    flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding:2vh;
-  }
-  
-  .content {
+    padding: 2vh;
+}
+
+.content {
     font-size: 1rem;
     font-weight: 700;
-    
-  }
-  
-  .bottom-content {
+}
+
+.bottom-content {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
     font-weight: 400;
     color: #6A6A6A;
-   
-  }
-  
-  .date {
+}
+
+.date {
     color: #6A6A6A;
-  }
-  .recent-entries{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 2vh;
-  }
+}
   .blog-bottom{
     margin: 4vh;
     width: 80%;
@@ -858,4 +867,17 @@
     justify-content: space-between;
     margin: 4vh;
     margin-left: 10vw;
+}
+@media only screen and (max-width: 480px) {
+    .recent-entries {
+        justify-content: flex-start; 
+    }
+
+    .recent-card {
+        min-width: 30%; 
+    }
+    .blog-bottom{
+        width: 100%;
+        margin-left: 0;
+    }
 }

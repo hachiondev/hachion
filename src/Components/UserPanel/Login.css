@@ -486,14 +486,14 @@ cursor: pointer;
 }
 
 .icon-text-img{
-    height: 6.5vh;
-    width: 3.25vw;
+    height: 65px;
+    width: 65px;
     margin-right:-8px;
     z-index: 1;   
 }
 .icon-text-img-linkedin{
-    height: 7vh;
-    width: 3.5vw;
+    height: 60px;
+    width: 60px;
     margin-right:-8px;
     z-index: 1;   
 }
@@ -615,6 +615,20 @@ cursor: pointer;
     text-decoration-line: none;
     font-weight: bold;
 }
+@media (max-width: 1366px){
+    .icon-text img{
+        height: 90px;
+        width: 90px;
+    }
+    .icon-text-holder-google, .icon-text-holder-facebook, 
+    .icon-text-holder-linkedin, .icon-text-holder-apple, 
+    .icon-text-holder-email {
+       height: 60px;
+        width: 275px;
+        font-size: 0.9rem;
+        
+    }
+}
 @media (max-width: 1024px) {
 
 
@@ -632,12 +646,12 @@ cursor: pointer;
     }
 
     .icon-text-img {
-        height: 6vh;
-        width: 6vw !important;
+        height: 60px !important;
+        width: 60px !important;
     }
     .icon-text-img-linkedin{
-        height: 7vh;
-        width: 6vw;
+        height: 65px !important;
+        width: 65px !important;
     }
     .icon-text-holder-google, .icon-text-holder-facebook, 
     .icon-text-holder-linkedin, .icon-text-holder-apple, 
@@ -645,6 +659,7 @@ cursor: pointer;
         padding: 1vh;
         width: 275px;
         font-size: 0.9rem;
+        height: 50px;
         
     }
     
@@ -681,8 +696,12 @@ cursor: pointer;
         width: 80vw;
     }
 .icon-text-img{
-    height: 8vh;
-    width: 10vw;
+    height: 70px !important;
+    width: 70px !important;
+}
+.icon-text-img-linkedin{
+    height: 75px !important;
+    width: 75px !important;
 }
 .icon-places{
     width: 100%;
@@ -707,8 +726,8 @@ padding: 1vh;
 }
 
 .icon-text-img-linkedin{
-    height: 7vh;
-    width: 7vw;
+    height: 70px;
+    width: 70px;
 }
   
     .login-left h4 {
@@ -742,8 +761,12 @@ padding: 1vh;
     height: 50px;
   }
   .icon-text-img{
-    height: 70px;
-    width: 80px;
+    height: 60px !important;
+    width: 60px !important;
+  }
+  .icon-text-img-linkedin{
+    height: 65px;
+    width: 65px;
   }
 .login-link{
     font-size: 0.8rem;

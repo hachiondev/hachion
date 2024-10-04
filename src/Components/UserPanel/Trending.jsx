@@ -22,8 +22,8 @@ const Trending = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleCardClick = (path) => {
-    navigate(path);
+  const handleCardClick = (qaautomation) => {
+    navigate('/qaautomation');
   };
 
   // Categories and associated cards
@@ -144,6 +144,7 @@ const Trending = () => {
               month='3 months'
               time='80 hours'
               image={card.image}
+             
               onClick={() => handleCardClick(`/${card.heading.toLowerCase().replace(/\s+/g, '')}`)}
             />
           ))}

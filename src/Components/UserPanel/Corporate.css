@@ -815,7 +815,7 @@
 
   }
   .blog-banner {
-    height: 40vh;
+    height: 400px;
     width: 100vw;
     background-image: url('../../Assets/blogbanner.png');
     background-repeat: no-repeat;

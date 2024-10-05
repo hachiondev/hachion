@@ -7,6 +7,7 @@ import BlogCardHolder from './BlogCardHolder';
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 
+
 const Blogs = () => {
   useEffect(() => {
     window.scrollTo(0, 0);  // This will scroll to the top of the page

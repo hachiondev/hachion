@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.db3e9304.css",
-    "main.js": "/static/js/main.d2b37b11.js",
+    "main.css": "/static/css/main.9ce7fbcb.css",
+    "main.js": "/static/js/main.1e4da875.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
     "static/media/Group 39809.png": "/static/media/Group 39809.88bf930e4bf2b59cb676.png",
@@ -39,21 +39,39 @@
     "static/media/expertHelp.png": "/static/media/expertHelp.1e249606910658a07980.png",
     "static/media/flexibleSchedule.png": "/static/media/flexibleSchedule.a73d8edb53b0a47977b0.png",
     "static/media/slashTraining.png": "/static/media/slashTraining.054d610ea54d3c7853bf.png",
+    "static/media/machineLearningBlog.png": "/static/media/machineLearningBlog.3c6239fc5179a7fb0ac2.png",
+    "static/media/CybersecurityBlog.png": "/static/media/CybersecurityBlog.8c2876696405a29c6899.png",
+    "static/media/DataScienceBlog.png": "/static/media/DataScienceBlog.e84a7d5489b447dcad27.png",
+    "static/media/dataWarehousingBlog.png": "/static/media/dataWarehousingBlog.861845f5119e4b64ad56.png",
+    "static/media/blockchainBlog.png": "/static/media/blockchainBlog.5537cb109e4727de4fa8.png",
+    "static/media/CloudComputingBlog.png": "/static/media/CloudComputingBlog.3f6926d05f82e1d2cd44.png",
+    "static/media/deepLearningBlog.png": "/static/media/deepLearningBlog.394fe3fa9fd2a3ce8280.png",
+    "static/media/microsoftBlog.png": "/static/media/microsoftBlog.211be9b648ed765d1fe3.png",
+    "static/media/ScrumBlog.png": "/static/media/ScrumBlog.d8d6b11f6123e55eeca5.png",
     "static/media/corporate.jpg": "/static/media/corporate.c2718b989f963cdf7b0d.jpg",
+    "static/media/mobileDevelopment.png": "/static/media/mobileDevelopment.15bce700548f3f487121.png",
+    "static/media/MulesoftBlog.png": "/static/media/MulesoftBlog.6dba40aeda352b8907f0.png",
     "static/media/blogcardimage2.png": "/static/media/blogcardimage2.b62663236a0e62afe149.png",
+    "static/media/rpaBlog.png": "/static/media/rpaBlog.1cc220db74899fd7b294.png",
     "static/media/blogcardimage1.png": "/static/media/blogcardimage1.00115abd96511106247e.png",
+    "static/media/pegaBlog.png": "/static/media/pegaBlog.a05cad6dfbfb05727f5a.png",
     "static/media/image 133.png": "/static/media/image 133.7f4f92001a79811305b6.png",
     "static/media/image 95.png": "/static/media/image 95.5f9bf776eaeb1cc3531e.png",
+    "static/media/bigdataBlog.png": "/static/media/bigdataBlog.2f0f935ed63775ce8510.png",
+    "static/media/salesforceBlog.png": "/static/media/salesforceBlog.deb8e19caff6e63b5e08.png",
+    "static/media/flutterBlog.png": "/static/media/flutterBlog.4955a31ed34a28c99d3b.png",
     "static/media/salesforce.png": "/static/media/salesforce.21c43a75943eb7ee107b.png",
+    "static/media/WorkdayBlog.png": "/static/media/WorkdayBlog.af3c863223108538e6f9.png",
+    "static/media/ProgrammingBlog.png": "/static/media/ProgrammingBlog.6923c5e24337b143f062.png",
     "static/media/USA.png": "/static/media/USA.48935fc1562b7b30a39b.png",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.db3e9304.css.map": "/static/css/main.db3e9304.css.map",
-    "main.d2b37b11.js.map": "/static/js/main.d2b37b11.js.map",
+    "main.9ce7fbcb.css.map": "/static/css/main.9ce7fbcb.css.map",
+    "main.1e4da875.js.map": "/static/js/main.1e4da875.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.db3e9304.css",
-    "static/js/main.d2b37b11.js"
+    "static/css/main.9ce7fbcb.css",
+    "static/js/main.1e4da875.js"
   ]
 }

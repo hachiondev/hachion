@@ -969,6 +969,7 @@
     justify-content: space-between;
     margin: 4vh;
     margin-left: 10vw;
+    cursor: pointer;
 }
 @media only screen and (max-width: 480px) {
     .recent-entries {

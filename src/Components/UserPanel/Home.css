@@ -143,11 +143,16 @@
   }
 
   .query-content {
-    font-size: 10px;
-    padding: 5px;
+    font-size: 12px;
+  margin-top: 14px;
+  padding: 0 5px;
   }
 .topbar-right{
   display: none;
+}
+.whatsapp-icon{
+  height: 20px;
+  width: 20px;
 }
   .whatsapp-number,
   .training-email {
@@ -155,7 +160,7 @@
   }
 
   .training-mail-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .login-div {
@@ -388,7 +393,7 @@
     background-color: #ffffff;
     width: 40vw;
     height: 150vh;
-    padding: 10px;
+   
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure it's above other elements */
   }
@@ -408,7 +413,7 @@
   @media screen and (max-width: 480px) {
     .drawer-toggle-btn {
       display: block; 
-      margin-right: 2px !important; /* Show toggle button only on mobile */
+      margin-right: 0px !important; /* Show toggle button only on mobile */
     }
   
     .mobile-drawer {
@@ -416,18 +421,21 @@
     }
   
     .navbar img {
-      margin-left: 2px;
+      margin-left: -18px;
       height: 42px;
+    }
+    .navbar{
+      height: 80px;
     }
   
     .navbar .container-fluid {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-evenly;
       align-items: center;
     }
   
     .search-div-home {
-      width: 60%;
+      width: 50%;
       margin-left: 0;
     }
   
@@ -443,7 +451,7 @@
       height: 42px;
       width: 42px;
       border-radius: 5px;
-      margin-left: 10px;
+      margin-left: 80px !important;
     }
   
     .navbar-nav {
@@ -567,14 +575,14 @@ padding:1vh;
         margin-bottom: -30px !important;
     }
  .d-block{
-  height: 142px;
+  height: 130px;
   
  }
 
 }
     
 .association{
-    height: 15vh;
+    height: 7px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -596,8 +604,8 @@ padding:1vh;
     }
 }
 .logos-slide img{
-    height:5vh;
-    margin: -15px 30px;
+    height:50px;
+    margin: -15px 10px;
 }
 
 .logos-slide{
@@ -608,7 +616,7 @@ padding:1vh;
 
 .logos{
     overflow:hidden;
-    padding: 30px 0;
+    padding: 20px 0;
     background-color: #EEEEEE;
     white-space: nowrap;
 }
@@ -617,12 +625,12 @@ padding:1vh;
 }
 @media screen and (max-width: 480px) {
 .association{
-  height: 10px;
+  height: 50px !important;
   margin-top: 0px !important;
 }
 .association-head{
   font-size: 16px;
-  margin-top: 0px;
+  margin-top:-20px;
 }
 .logos{
   padding: 2px 0;
@@ -945,14 +953,20 @@ color: white !important;
 }
 @media (min-width: 1181px) and (max-width: 1366px){
   .training-card-holder{
-    max-width: 95vw;
+    max-width: 85vw;
     gap: 10px;
   }
   .card {
     width: calc(33.33% - 10px); 
     
 }
+.view-btn{
 
+   margin-right: 100px; 
+  margin-top:-100px; 
+ 
+
+}
 }
 
 @media (min-width: 481px) and (max-width: 1025px) {
@@ -1005,11 +1019,15 @@ color: white !important;
         display: none;
     }
     .view-btn{
-        margin-right: 50px;
+        margin-right: 60px;
         margin-left: 10px;
        
-    margin-top:-60px; 
+    margin-top:-45px; 
        
+    }
+    .training-events-head{
+      margin-bottom: 10px;
+      margin-top: 20px;
     }
     .course-details{
       padding: 15px;
@@ -1017,11 +1035,11 @@ color: white !important;
     }
     .view-all{
         font-size: 12px;
-        padding: 5px;
+        padding: 3px;
      
     }
     .card-icon{
-      width: 120px;
+      padding: 10px;
     }
     
     .card-header{
@@ -1039,8 +1057,8 @@ color: white !important;
         font-size: 10px;
     }
     .association-head{
-        font-size: 16px !important ;
-     margin-left: -10px;
+        font-size: 14px !important ;
+     margin-left: 20px;
     }
     .training-events-head{
         padding-top: 5px;

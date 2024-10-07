@@ -473,7 +473,7 @@ margin-left: 40px;
     height: 100px;
   }
   .qa-automation{
-    width: 85%;
+    width: 90%;
     margin-left: 50px;
   }
   .qa-right{
@@ -646,7 +646,7 @@ text-align:center;
 .key-icons{
   height:60px;
   width:60px;
-  margin-left: 6vh;
+margin-left: 30px;
   background: linear-gradient(to right, #00AEEF,#006489);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -662,7 +662,7 @@ html {
 }
 @media (min-width: 1181px) and (max-width: 1366px){
 .key-highlights{
-  width: 85%;
+  width: 90%;
   margin-left: 50px;
 }
 }
@@ -996,7 +996,7 @@ input[type="radio"] {
   }
   @media (min-width: 1181px) and (max-width: 1366px){
     .upcoming-batch{
-      width: 85%;
+      width: 90%;
       margin-left: 50px;
     }
     .batch-schedule{
@@ -1099,6 +1099,7 @@ input[type="radio"] {
   .corporate {
     position: relative;
     width: 100%;
+
   }
   
   .corporate-content {
@@ -1106,12 +1107,14 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
     position: relative;
+  
   }
   
   .corporate-image {
     width: 100%; /* Make the image take full width */
     height: auto; /* Adjust height automatically */
     object-fit: cover; /* Ensure the image covers the container without stretching */
+   
   }
   
   .know-more {
@@ -1158,9 +1161,10 @@ input[type="radio"] {
   }
   @media (max-width: 480px) {
     .know-more{
-      font-size: 12px;
-      padding: 1px 2px;
+      font-size: 13px;
+      padding: 2px 4px;
     }
+   
   }
   .schedule{
     text-align:center;
@@ -1431,6 +1435,16 @@ input[type="radio"] {
   color:white;
   font-weight: bold; 
   border:2px solid white;
+}
+@media screen and (max-width:1366px){
+  .qa-course{
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+  .curriculum{
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 }
 @media screen and (max-width: 1024px){
   .contact-info{

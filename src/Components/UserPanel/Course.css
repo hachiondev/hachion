@@ -249,16 +249,19 @@ padding: 10px;
       flex: 1 1 calc(50% - 10px);
       max-width: calc(50% - 10px);
     }
+    .sidebar-right{
+      margin-right: 10px;
+    }
 
   }
   @media (min-width:481px) and (max-width: 1024px) {
     .sidebar-card {
-      flex: 1 1 calc(50% - 10px);
-      max-width: calc(45% - 10px);
+      flex: 1 1 calc(50% - 20px);
+      max-width: calc(45% - 20px);
        
     }
     .sidebar{
-      margin-left: 10px;
+      margin-left: 5px;
       width: 250px;
       min-width: 250px;
     }
@@ -473,8 +476,8 @@ margin-left: 40px;
     height: 100px;
   }
   .qa-automation{
-    width: 90%;
-    margin-left: 50px;
+    width: 85%;
+    margin-left: 80px;
   }
   .qa-right{
     margin-right: 0px;
@@ -662,8 +665,8 @@ html {
 }
 @media (min-width: 1181px) and (max-width: 1366px){
 .key-highlights{
-  width: 90%;
-  margin-left: 50px;
+  width: 85%;
+  margin-left: 80px;
 }
 }
 @media (min-width: 481px) and (max-width: 1180px){
@@ -996,8 +999,8 @@ input[type="radio"] {
   }
   @media (min-width: 1181px) and (max-width: 1366px){
     .upcoming-batch{
-      width: 90%;
-      margin-left: 50px;
+      width: 85%;
+      margin-left: 80px;
     }
     .batch-schedule{
       width: 95%;
@@ -1438,12 +1441,12 @@ input[type="radio"] {
 }
 @media screen and (max-width:1366px){
   .qa-course{
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: 80px;
+   width: 85%;
   }
   .curriculum{
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: 80px;
+    width: 85%;
   }
 }
 @media screen and (max-width: 1024px){

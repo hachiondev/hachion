@@ -280,7 +280,7 @@
   background-color: #ffffff;
   padding: 2vh;
   box-shadow: 5px 5px 10px #d3d3d3;
-  width: 25vw;
+width: 24vw;
   
  
 }
@@ -399,5 +399,70 @@ padding-top: 20px;
   .about-us-div-content {
     flex-basis: 45%; /* Two items per row for tablet and laptop screens */
   }
+  .contact-us{
+    margin-left: 10px;
   
+  }
+}
+@media (min-width: 1024px) and (max-width: 1366px) {
+.contact-us{
+  margin-left: 10px;
+
+}
+.contact-us-div{
+  width: 300px;
+  padding: 5px;
+}
+.contact-us-left{
+  margin-left: 10px;
+}
+}
+.enrollment{
+  padding: 10px;
+  background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
+  color: white;
+ font-size: 36px;
+ font-weight: 700;
+ padding-left: 40px;
+ align-items: center;
+  
+}
+.personal-details{
+  width: 85%;
+  height: 400px;
+  background-color: white;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  border: 1px solid #b3b3b3;
+  margin: 10px;
+
+  margin-left: 12vw;
+}
+.personal-details-header{
+  height: 80px;
+  background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  padding-left: 30px;
+  align-content: center;
+  margin-bottom: 20px;
+}
+.enrollment-details{
+  background-color: #d3d3d3;
+}
+.coupon-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.apply-btn{
+  border-radius: 10px;
+  background-color: #00AEEF;
+  color: white;
+ padding: 5px 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
 }

@@ -28,6 +28,7 @@ import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
+import Enrollment from './Components/UserPanel/Enrollment';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
+      <Route path='/enroll' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/qatestingblog' element={<QaTestingBlog/>}/>
       <Route path='/aboutus' element={<Aboutus/>}/>

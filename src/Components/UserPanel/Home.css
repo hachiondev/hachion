@@ -108,7 +108,10 @@
     height: 50px;
     padding: 0 2vw;
   }
-
+.whatsapp-icon{
+  height: 25px !important;
+  width: 25px !important;
+}
   .topbar-left {
     width: auto;
   }
@@ -118,7 +121,7 @@
   }
 
   .training-mail-icon {
-    font-size: 1.5rem;
+    font-size: 2.2rem;
   }
 
   .whatsapp-number,
@@ -323,7 +326,7 @@
   
   .search-input-home {
     flex: 1;
-    padding-left: 1vw;
+    padding-left: 20px;
     border-radius: 10px 0px 0px 10px;
     border: 1px solid rgba(186, 186, 186, 1);
     outline: none;
@@ -350,7 +353,7 @@
   
   .nav-item-link {
     height: 8vh;
-    font-size: 1.1rem;
+    font-size: 18px;
     font-weight: 400;
     cursor: pointer;
     color: black;
@@ -468,9 +471,15 @@
       justify-content: space-between;
       padding: 0 10px; /* Add padding to reduce the space */
     }
-  
+  .search-input-home{
+    padding-left: 10px !important;
+    width: 180px;
+  }
+  .navbar img{
+    margin-left: -15px;
+  }
     .search-div-home {
-      width: 250px; /* Reduce width for tablet screens */
+      width: 240px; 
       margin-left: 0 !important; /* Remove margin for better alignment */
     }
   
@@ -490,7 +499,20 @@
     }
   }
   
+  @media (min-width: 1025px) and (max-width: 1366px) {
+.search-div-home{
+  margin-left: 0px;
+  width: 380px;
+}
+  .navbar-nav{
+margin-left: 10px;
+  }
+  .nav-item-link{
+    font-size: 16px;
+  }
+ 
 
+  }
 #autoScrollingBanner .carousel-indicators {
     position: absolute; /* Ensure the indicators are positioned relative to the banner */
     top:59vh; /* Set 20px margin from the bottom of the banner */
@@ -951,7 +973,7 @@ color: white !important;
     transition: all 0.3s ease;
     z-index: 0;
 }
-@media (min-width: 1181px) and (max-width: 1366px){
+@media (min-width: 1025px) and (max-width: 1366px){
   .training-card-holder{
     max-width: 85vw;
     gap: 10px;
@@ -969,7 +991,7 @@ color: white !important;
 }
 }
 
-@media (min-width: 481px) and (max-width: 1025px) {
+@media (min-width: 481px) and (max-width: 1024px) {
     .card {
         width: calc(33.33% - 10px); 
         
@@ -977,13 +999,13 @@ color: white !important;
     .training-card-holder {
        
         gap: 1vh;
-        max-width: 95vw !important;
+        max-width: 90vw !important;
     }
     .new-batch{
       display: none;
     }
     .view-btn{
-        margin-right: 10px;
+        margin-right: 50px;
        font-size: 12px;
 
     }
@@ -1092,7 +1114,7 @@ color: white !important;
         flex-direction: row;
         justify-content:center;
         margin-top: 2vh;
-        gap: 4vh;
+        gap: 40px;
       
         
         
@@ -1145,7 +1167,7 @@ color: white !important;
   .courses-list {
     flex-direction: row;
     justify-content: space-between;
-    gap: 0.5vh;
+    gap: 5px;
   }
 
   .course-names {
@@ -1168,7 +1190,7 @@ color: white !important;
     .courses-list {
       flex-direction: row;
       justify-content: space-between;
-      gap: 1vh;
+      gap: 10px;
     }
   
     .course-names {
@@ -1179,13 +1201,15 @@ color: white !important;
 @media screen and (max-width: 1024px) {
     .courses-list {
       flex-direction: row;
-      justify-content: space-between;
-      gap: 1vh;
+      justify-content: space-evenly;
+      gap: 10px;
+      margin-left: 50px;
+      width: 85vw;
     }
   
     .course-names {
       font-size: 0.9rem;
-      margin: 0.5vh 0.5vw;
+      margin: 5px;
     }
 }
 .career-div {
@@ -1201,7 +1225,7 @@ color: white !important;
 
 
 .online-training-div {
-    width: 18vw; 
+    width: 300px; 
     box-shadow: 5px 5px 5px #d3d3d3;
     border-radius: 10px;
     border-left: 10px solid rgba(0, 174, 239, 1);
@@ -1210,12 +1234,12 @@ color: white !important;
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
-    padding: 1vh;
+    padding: 10px;
 }
 
 .online-training-div img {
-    height: 9vh;
-    width: 4.5vw;
+   height: 90px;
+   width: 90px;
 }
 @media  (min-width:1025px) and (max-width: 1366px)  {
     .career-div {
@@ -1226,8 +1250,9 @@ color: white !important;
     }
 
     .online-training-div {
-        width: 40vw; 
-        margin-bottom: 2vh;
+        width: 390px; 
+        margin-bottom: 5px;
+        padding: 5px;
     }
 
     .online-training-div img {

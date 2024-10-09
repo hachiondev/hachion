@@ -1564,7 +1564,7 @@ input[type="radio"] {
 
 /* Style for request batch modal */
 .request-batch {
-  height: 672px;
+  
   width: 600px;
   border-radius: 20px !important;
   background-color: white;
@@ -1653,4 +1653,5 @@ input[type="radio"] {
   margin-left: 4vh;
   width: calc(100% - 8vh);
   background-color: #00AEEF;
+  margin-bottom: 20px;
 }

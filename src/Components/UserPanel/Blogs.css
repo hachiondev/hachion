@@ -429,7 +429,7 @@ padding-top: 20px;
 }
 .personal-details{
   width: 85%;
-  height: 400px;
+ padding: 20px;
   background-color: white;
   box-shadow: 5px 5px 10px #d3d3d3;
   border: 1px solid #b3b3b3;
@@ -465,4 +465,29 @@ padding-top: 20px;
   border: none;
   font-size: 16px;
   font-weight: 600;
+}
+.net-amount{
+margin-left: 50px;
+width: 480px;
+ padding: 5px ;
+  background-color: #CCEFFC;
+  color: black;
+  font-size: 32px;
+  margin: 20px;
+  text-align: center;
+}
+.radio-group{
+  margin: 30px;
+}
+.payment-btn{
+  border-radius: 10px;
+  background-color: #00AEEF;
+  border: none;
+  color: white;
+  font-size: 30px;
+  padding: 5px 30px ;
+  font-weight: 700;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  margin-left: 30px;
+
 }

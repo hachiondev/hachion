@@ -30,7 +30,7 @@ const NavbarTop = () => {
   // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const isMobile = window.matchMedia('(max-width: 480px)').matches;
       if (isMobile) {
         setSearchVisible(false); // Hide search bar on mobile screens
       } else {

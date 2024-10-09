@@ -6,6 +6,7 @@ import {MdKeyboardArrowRight} from 'react-icons/md';
 import BlogCardHolder from './BlogCardHolder';
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
+import StickyBar from './StickyBar';
 
 
 const Blogs = () => {
@@ -32,6 +33,7 @@ const Blogs = () => {
 </div>
 
 <Footer/>
+<StickyBar/>
 </div>
     </>
   )

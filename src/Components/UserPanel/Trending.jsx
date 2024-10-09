@@ -10,6 +10,7 @@ import card6 from '../../Assets/image 107.png';
 import card7 from '../../Assets/image 110.png';
 import card8 from '../../Assets/image 95.png';
 import { useNavigate } from 'react-router-dom';
+import './Home.css';
 
 const Trending = () => {
   const navigate = useNavigate();

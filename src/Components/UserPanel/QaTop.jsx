@@ -4,8 +4,10 @@ import { MdOutlineStar } from "react-icons/md";
 import qaheader from '../../Assets/qa-video.png';
 import { IoPlayCircleOutline } from 'react-icons/io5';
 import './Course.css';
+import { useNavigate } from 'react-router-dom';
 
 const QaTop = ({ onVideoButtonClick }) => {
+ const navigate=useNavigate();
   return (
     <>
       <div className='qa-automation'>
@@ -27,7 +29,7 @@ const QaTop = ({ onVideoButtonClick }) => {
               the United States, equipping you with the skills and information required to flourish in this crucial profession.</p>
           </div>
           <div className='qa-button'>
-            <button className='enroll-now'>Enroll Now</button>
+            <button className='enroll-now' onClick={()=>navigate('/enroll')} >Enroll Now</button>
             <button className='download'>Download Brochure</button>
           </div>
         </div>

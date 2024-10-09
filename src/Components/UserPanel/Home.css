@@ -518,9 +518,9 @@ display: inline-block;
 
 .dropdown-list {
 position: absolute;
-top: 2rem;
+top: 3.5rem;
 right: 0;
-width:12.5vw;
+width:250px;
 padding:2vh;
 background-color: white;
 border: 1px solid #ccc;
@@ -682,7 +682,7 @@ display: flex;
 flex-direction: row;
 justify-content:center;
 margin-top: 2vh;
-gap: 4vh; 
+gap: 40px; 
 }
 
 .course-names {
@@ -832,19 +832,19 @@ cursor: pointer;
 }
 
 .footer-linkedin {
-height: 30px !important;
-width: 30px !important;
+height: 35px !important;
+width: 35px !important;
 margin-top: 0.5vh;
 }
 
 .footer-linkedin:hover {
-height: 2.8vh;
-width: 1.3vw;
+height: 38px;
+width: 38px;
 }
 
 .footer-link img:hover {
-height: 3.2vh;
-width: 1.6vw;
+height: 42px;
+width: 42px;
 }
 
 .user-info {
@@ -920,7 +920,10 @@ gap:1vh;
     margin-right: auto;
     justify-content: center;
 }
-
+.search-div-home{
+  margin-left: 0px;
+  width: 450px;
+}
 .online-training-div {
     width: 40vw; 
     margin-bottom: 2vh;
@@ -932,7 +935,7 @@ gap:1vh;
 }
 }
 
-@media (min-width: 1181px) and (max-width: 1366px){
+@media (min-width: 1025px) and (max-width: 1366px){
 .training-card-holder{
   max-width: 85vw;
   gap: 10px;
@@ -940,6 +943,15 @@ gap:1vh;
 .card {
   width: calc(33.33% - 10px); 
   
+}
+.view-btn{
+  margin-right: 95px; 
+margin-top:-100px; 
+}
+.courses-list{
+  max-width: 70%;
+  margin-left: 130px;
+  gap: 4px;
 }
 
 }
@@ -983,7 +995,9 @@ gap:1vh;
 .courses-list {
 flex-direction: row;
 justify-content: space-between;
-gap: 1vh;
+gap: 10px;
+max-width: 90%;
+margin-left: 50px;
 }
 
 .course-names {
@@ -992,8 +1006,8 @@ margin: 0.5vh 0.5vw;
 }
 
 .view-btn{
-margin-right: 100px; 
-margin-top:-100px; 
+margin-right: 30px;
+margin-top:-80px; 
 }
 }
 
@@ -1007,10 +1021,7 @@ margin-top:-100px;
   padding: 0 10px; /* Add padding to reduce the space */
 }
 
-.search-div-home {
-  width: 250px; /* Reduce width for tablet screens */
-  margin-left: 0 !important; /* Remove margin for better alignment */
-}
+
 
 .navbar-nav {
   gap: 2px; /* Add gap between the items */
@@ -1019,13 +1030,30 @@ margin-top:-100px;
   margin-left: 0px;
 }
 
-.drawer-toggle-btn {
-  display: none; /* Hide the drawer toggle button on tablet */
+
+.search-div-home{
+  margin-left: -100px;
+  width: 260px;
+}
+.navbar img{
+  margin-left: -15px;
 }
 
-.mobile-drawer {
-  display: none; /* Ensure drawer is not visible on tablet */
-}
+  .navbar-nav {
+    gap: 2px; /* Add gap between the items */
+    font-size: 12px;
+    margin: 0;
+    margin-left: 0px;
+  }
+
+  .drawer-toggle-btn {
+    display: none; /* Hide the drawer toggle button on tablet */
+  }
+
+  .mobile-drawer {
+    display: none; /* Ensure drawer is not visible on tablet */
+  }
+
 
 .card {
   width: calc(33.33% - 10px); 
@@ -1038,14 +1066,6 @@ margin-top:-100px;
 
 .new-batch{
 display: none;
-}
-
-.view-btn{
-margin-right: 60px;
-margin-left: 10px;
-margin-top:-45px; 
-font-size: 12px;
-
 }
 .view-all{
   width: auto;  
@@ -1138,11 +1158,7 @@ height: 40px;
 width: 40px;
 }
 
-.courses-list {
-flex-direction: row;
-justify-content: space-between;
-gap: 1vh;
-}
+
 
 .course-names {
 font-size: 0.6rem;

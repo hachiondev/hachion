@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Sidebar from './Sidebar';
@@ -10,10 +10,14 @@ import StickyBar from './StickyBar';
 
 const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
- 
+  const bannerRef = useRef(null);
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    window.scrollTo(0, 0); 
+    if (bannerRef.current) {
+      const bannerHeight = bannerRef.current.clientHeight;
+      window.scrollTo(0, bannerHeight); // Scroll to just below the banner
+    }
   };
 
   useEffect(() => {
@@ -25,7 +29,7 @@ const Course = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        <div className='course-banner'>
+        <div className='course-banner' ref={bannerRef}>
           <h3 className='course-banner-content'>Courses</h3>
         </div>
         <div className='sidebar-top'>

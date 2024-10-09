@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../../Assets/logo.png';
 import { IoSearch } from "react-icons/io5";
+import { MdCancel } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
-import './Home.css';
 import { GiHamburgerMenu } from "react-icons/gi";
+import './Home.css';
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
-  const [searchVisible, setSearchVisible] = useState(true);
+  const [searchVisible, setSearchVisible] = useState(true); // Controls search bar visibility on larger screens
+  const [isMobileSearchOpen, setMobileSearchOpen] = useState(false); // Controls mobile search bar visibility
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-const navigate=useNavigate();
-  // Function to toggle search bar visibility
-  const toggleSearch = () => {
-    setSearchVisible(!searchVisible);
-  };
+  const navigate = useNavigate();
 
   // Function to toggle drawer
   const toggleDrawer = () => {
@@ -24,6 +22,7 @@ const navigate=useNavigate();
   const handleNavClick = (link) => {
     setActiveLink(link);
   };
+
   const handleClick = () => {
     navigate('/');
   };
@@ -31,11 +30,12 @@ const navigate=useNavigate();
   // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.matchMedia('(max-width: 480px)').matches;
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
       if (isMobile) {
         setSearchVisible(false); // Hide search bar on mobile screens
       } else {
         setSearchVisible(true); // Show search bar on larger screens
+        setMobileSearchOpen(false); // Reset mobile search state
       }
     };
 
@@ -54,8 +54,20 @@ const navigate=useNavigate();
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <img src={logo} alt="logo"  onClick={()=>handleClick()} style={{ cursor: 'pointer' }} />
+        {/* Logo */}
+        {!isMobileSearchOpen && (
+          <>
+            <img
+              src={logo}
+              alt="logo"
+              onClick={handleClick}
+              style={{ cursor: 'pointer' }}
+            />
+          </>
+        )}
 
+         {/* Right section containing search and hamburger */}
+        <div className="right-icons">
         {/* Search bar visibility based on screen size */}
         {searchVisible ? (
           <div className="search-div-home" role="search">
@@ -65,29 +77,69 @@ const navigate=useNavigate();
               placeholder="Enter Courses, Category or Keywords"
               aria-label="Search"
             />
-            <button className="btn-search-home" onClick={toggleSearch}>
+            <button className="btn-search-home">
               <IoSearch style={{ fontSize: '1.8rem' }} />
             </button>
           </div>
+        ) : isMobileSearchOpen ? (
+            <div className="search-div-mobile">
+            <input
+              className="search-input-mobile"
+              type="search"
+              placeholder="Enter Courses, Category or Keywords"
+              aria-label="Search"
+            />
+            <button className="btn-search-mobile">
+              <IoSearch style={{ fontSize: '24px' }} />
+            </button>
+            <button
+              className="btn-cancel-mobile"
+              onClick={() => setMobileSearchOpen(false)}
+            >
+              <MdCancel style={{ fontSize: '20px' }} />
+            </button>
+          </div>
         ) : (
-          <button className="btn-search-home" onClick={toggleSearch}>
-            <IoSearch style={{ fontSize: '1.8rem' }} />
+          <button
+            className="btn-search-icon-mobile"
+            onClick={() => setMobileSearchOpen(true)}
+          >
+            <IoSearch style={{ fontSize: '24px' }} />
           </button>
         )}
 
-        {/* Drawer toggle button */}
-        <button className="drawer-toggle-btn" onClick={toggleDrawer}>
-          <GiHamburgerMenu style={{fontSize:'2rem',marginLeft:'1px'}}/>
-        </button>
+        {/* Hamburger menu */}
+        {!isMobileSearchOpen && (
+          <>
+            <button className="drawer-toggle-btn" onClick={toggleDrawer}>
+              <GiHamburgerMenu style={{ fontSize: '24px', marginLeft: '1px' }} />
+            </button>
+          </>
+        )}
+        </div>
 
         {/* Drawer content, only visible when isDrawerOpen is true */}
         {isDrawerOpen && (
           <div className="mobile-drawer">
-            <div className="drawer-item" onClick={()=>navigate('/corporate')} >Corporate Training</div>
-            <div className="drawer-item" onClick={()=>navigate('/course')}>Courses</div>
+          <img
+          src={logo}
+          alt="logo"
+          onClick={handleClick}
+          style={{ cursor: 'pointer' }}
+        />
+            <div className="drawer-item" onClick={() => navigate('/corporate')}>
+              Corporate Training
+            </div>
+            <div className="drawer-item" onClick={() => navigate('/course')}>
+              Courses
+            </div>
             <div className="drawer-item">Hire from Us</div>
-            <div className="drawer-item" onClick={()=>navigate('/login')}>Login</div>
-            <div className="drawer-item" onClick={()=>navigate('/register')}>Register</div>
+            <div className="drawer-item" onClick={() => navigate('/login')}>
+              Login
+            </div>
+            <div className="drawer-item" onClick={() => navigate('/register')}>
+              Register
+            </div>
           </div>
         )}
 

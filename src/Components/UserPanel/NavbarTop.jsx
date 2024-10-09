@@ -134,11 +134,13 @@ const NavbarTop = () => {
               Courses
             </div>
             <div className="drawer-item">Hire from Us</div>
-            <div className="drawer-item" onClick={() => navigate('/login')}>
-              Login
+            <div>
+              <button className="drawer-button" onClick={() => navigate('/login')}>Login
+              </button>
             </div>
-            <div className="drawer-item" onClick={() => navigate('/register')}>
-              Register
+            <div>
+              <button className="drawer-button" onClick={() => navigate('/register')}> Register
+              </button>
             </div>
           </div>
         )}

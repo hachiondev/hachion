@@ -276,8 +276,21 @@ z-index: 1000; /* Ensure it's above other elements */
 }
 
 .drawer-item {
-padding: 5px 0;
+padding: 5px 15px;
 border-bottom: 1px solid #eeeeee;
+cursor: pointer;
+}
+
+.drawer-button {
+width: 90%;
+border-radius: 5px;
+margin: 5px;
+background-color: rgba(0, 174, 239, 1);
+color:rgba(255, 255, 255, 1);
+font-weight:700;
+font-size: 16px;
+border: none;
+box-shadow:5px 5px 5px #d3d3d3;
 cursor: pointer;
 }
 

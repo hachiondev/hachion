@@ -29,6 +29,7 @@ import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Enrollment from './Components/UserPanel/Enrollment';
+import UserWriteReview from './Components/UserPanel/UserWriteReview';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
+      <Route path='/review' element={<UserWriteReview/>}/>
       </Routes></BrowserRouter>
     </>
   );

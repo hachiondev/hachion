@@ -13,7 +13,7 @@ import { IoMdSettings } from "react-icons/io";
 
 const Topbar = () => {
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleLogout = () => {
    
@@ -40,10 +40,9 @@ const Topbar = () => {
         {isLoggedIn ? (
           <>
           <div className='topbar-right'>
-          <div className='logout-right'>          <button className='logout-btn'><IoLogOut style={{fontSize:'2rem',gap:'0.5vh'}}/>Logout</button>
+        
           <div className='user-info'>
             <div className="btn-group">
-            
               <Avatar alt="user_name" src={profile1} />
               <div class="dropdown">
   <Link className="btn-logout dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,9 +56,6 @@ const Topbar = () => {
     <li><Link className="dropdown-item" href="#" onClick={handleLogout}> <IoLogOut style={{color:'#00AEEF'}}/> Logout</Link></li>
   </ul>
 </div>
-  
-            
-            </div>
           </div>
           </div>
           </div>

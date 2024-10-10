@@ -196,8 +196,7 @@
   .dashboard-div {
     display: flex;
     align-items: center;
-    height: 14vh;
-    width: 13vw;
+ 
     border-radius: 20px;
     padding: 15px;
     box-shadow: 5px 5px 5px #d3d3d3;

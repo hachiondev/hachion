@@ -36,7 +36,7 @@ const Aboutus = () => {
       <div className='about-us'>
         <p>Home <MdKeyboardArrowRight /> About Us</p>
         <div className='about-us-content'>
-          <h1 className='about-us-heading'>About us</h1>
+          <h1 className='about-us-heading'>About Hachion</h1>
           <div className='about-us-top'>
             <p className='about-us-left-content'>
             Hachion is an organization that has been set up with the purpose of bridging the gap between graduates and corporate. In terms of entry or multi level seniority the industry has been transforming very quickly. Traditional and conventional hiring practices are becoming obsolete in the dynamic economic conditions globally. Corporate have been benefiting from our Just-In-Time skilled resource pool which can be deployed and be market ready in just a few days than the campus pool being hired in the conventional method. Our content and delivery methodology adopt the best practices followed by the industry which focuses on equipping students with the necessary skills to succeed.

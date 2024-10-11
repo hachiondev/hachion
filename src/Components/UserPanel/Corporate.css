@@ -527,7 +527,7 @@
     }
 .learner-cover{
   
-    height: 500px;
+    padding: 20px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -540,11 +540,10 @@
   
    }
    .learner-card{
-       height: 430px;
-       width: 40vw;
+       width: 35vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
-       margin-top:2vh;
+      margin-top: 10px;
        margin-left: 8vw;
        
       
@@ -556,6 +555,7 @@
        border:4px solid white;
        margin-left: 20px;
        margin-top: -1.25vh;
+       margin-bottom: 0px;
    }
    .profile-image{
        height: 120px !important;
@@ -569,24 +569,25 @@
    }
    .name{
        font-weight:600;
-       font-size: 1.5rem;
-       padding-bottom: 0vh;
-       padding-top: 2vh;
+       font-size: 1.25rem;
+       
+       
    }
    .learner-name{
       display: flex;
       flex-direction: row;
+      justify-content: space-evenly;
+      gap: 10px;
    }
    .learner-name img{
        height: 33px;
        width: 33px;
-       margin-left: 2vh;
-       margin-top:3vh;
+      
+      
    }
    .learner-info{
-       height: 180px;
-       margin-left: 100px;
-       margin-top: 2vh !important;
+      padding: 5px;
+       margin-left: 50px;
        display: flex;
        flex-direction: column; 
        justify-content: center;
@@ -594,19 +595,17 @@
    }
    .job-profile{
        font-weight:400;
-       font-size:1.5rem;
+       font-size:1.1rem;
        font-style: italic;
    }
    .job-location{
        font-weight: 400;
-       font-size: 1.2rem;
+       font-size: 1rem;
    }
    .learner-description{
        font-weight: 400;
-       font-size: 1.2rem;
-       margin-left: 4vh;
-       margin-right: 4vh;
-       margin-top: 0vh;
+       font-size: 1rem;
+   margin: 20px;
    }
    .custom-prev-icon
   {
@@ -629,7 +628,7 @@
      }
    
      .carousel-indicators {
-       top: 52vh;
+       top: 35vh;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -657,16 +656,16 @@
     justify-content: center;
   }
   .left-quotes{
-    height: 113.97px;
+    height: 90px;
      z-index: 1;
-      width: 148.59px;
+      width: 90px;
        color: rgba(0, 174, 239, 1);
-        margin-bottom: -8vh; 
+        margin-bottom: -6vh; 
   }
   .right-quotes{
-    height: 113.97px;
+    height: 90px;
      z-index: 1;
-      width: 148.59px;
+      width: 90px;
        color: rgba(0, 174, 239, 1);
         margin-top: -8vh; 
         margin-left: 90vw;
@@ -815,7 +814,7 @@
 
   }
   .blog-banner {
-    height: 400px;
+    height: 200px;
     width: 100vw;
     background-image: url('../../Assets/blogbanner.png');
     background-repeat: no-repeat;
@@ -855,7 +854,9 @@
     width: 75%;
     margin-left: 12vw;
   }
-  
+  .blogs-header{
+    margin-left: 180px;
+  }
   @media (max-width: 1024px) {
     .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
@@ -915,7 +916,7 @@
 }
 
 .recent-card {
-    min-width: 20%; /* Adjust width to display 2 cards on mobile */
+    width:310px;
     flex: 0 0 auto; /* Prevent cards from shrinking */
     margin-right: 10px; /* Add some space between cards */
     background-color: white;

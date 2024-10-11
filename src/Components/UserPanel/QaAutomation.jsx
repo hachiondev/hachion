@@ -15,6 +15,7 @@ import Learners from './Learners';
 import StickyBar from './StickyBar';
 import CurriculumMain from './CurriculumMain';
 import QaAutomationFaq from './QaAutomationFaq';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
@@ -37,6 +38,7 @@ const QaAutomation = () => {
         <div className='course-banner'>
           <h3 className='course-banner-content'>QA Automation</h3>
         </div>
+        <p className='blogs-header'>Courses <MdKeyboardArrowRight/> QA Testing <MdKeyboardArrowRight/> QA Automation</p> 
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
         <KeyHighlights />
 

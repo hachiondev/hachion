@@ -1004,7 +1004,11 @@ margin-right: 30px;
 margin-top:-80px; 
 }
 }
-
+@media only screen and (min-width: 1700px) and (max-width: 1920px){
+  .view-btn{
+    margin-right: 280px;
+  }
+}
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
 .navbar {

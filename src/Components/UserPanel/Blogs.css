@@ -127,6 +127,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        height: 500px;
       }
       
       .about-banner img {

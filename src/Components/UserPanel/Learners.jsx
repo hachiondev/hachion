@@ -50,7 +50,7 @@ const Learners = () => {
                   name='Henry Lee'
                   profile='IOS app developer'
                   location='USA'
-                  content='The best training and placement institute that I came across, created a good platform for achieving my dream as an IOS developer.'
+                  content='The best training and placement institute that I came across, created a good platform for achieving my dream as an IOS developer. '
                 />
               )}
             </div>
@@ -61,14 +61,14 @@ const Learners = () => {
                 name='John Doe'
                 profile='Web Developer'
                 location='UK'
-                content='Excellent learning experience, great instructors, and fantastic career support.'
+                content='Excellent learning experience, great instructors, and fantastic career support. You can learn alongwith your work because of flexible timing.'
               />
               {!isMobile && (
                 <LearnerCard
                   name='Jane Smith'
                   profile='Data Scientist'
                   location='Australia'
-                  content='The training was comprehensive and the placement support was exceptional.'
+                  content='The training was comprehensive and the placement support was exceptional.This is best learning platform for any individual to boost technical skills.'
                 />
               )}
             </div>

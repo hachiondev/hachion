@@ -21,7 +21,7 @@ const Blogs = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Blogs</h3>
     </div>
-    <p>Home <MdKeyboardArrowRight/> Blogs</p>
+    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs</p>
    <div className='blog-header'>
     <h1 className='blog-heading'>Knowledge hub</h1>
     

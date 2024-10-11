@@ -21,7 +21,6 @@ export const LiveOnlineFees = () => {
             </label>
           </div>
 
-          <div className='separator'></div>
 
           {/* Second batch */}
           <div className='partition'>
@@ -36,7 +35,7 @@ export const LiveOnlineFees = () => {
             </label>
           </div>
 
-          <div className='separator'></div>
+        
 
           {/* Third batch */}
           <div className='partition'>
@@ -51,7 +50,7 @@ export const LiveOnlineFees = () => {
             </label>
           </div>
         </div>
-        
+        <div className='separator'></div>
         <LiveOnlineFeesRight fee="Free" enrollText="Enroll Now" />
       </div>
     </>

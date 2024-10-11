@@ -16,7 +16,7 @@ const Course = () => {
     setSelectedCategory(category);
     if (bannerRef.current) {
       const bannerHeight = bannerRef.current.clientHeight;
-      window.scrollTo(0, bannerHeight); // Scroll to just below the banner
+      window.scrollTo(0, 400); // Scroll to just below the banner
     }
   };
 

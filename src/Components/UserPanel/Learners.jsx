@@ -24,8 +24,8 @@ const Learners = () => {
   return (
     <>
       <div className='training-events'>
-        <div className='training-events-head'>
-          <h1 className='association-head'>Our Learners Speak on QA Automation</h1>
+        <div className='association'>
+          <h1 className='association-head'>Our Students Feedback</h1>
         </div>
         
         <ImQuotesLeft className='left-quotes' />

@@ -275,8 +275,10 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 z-index: 1000; /* Ensure it's above other elements */
 }
 
+
 .drawer-item {
-padding: 5px 15px;
+padding: 5px 10px;
+font-size: 14px;
 border-bottom: 1px solid #eeeeee;
 cursor: pointer;
 }
@@ -298,6 +300,19 @@ cursor: pointer;
 color: white;
 background-color: #00AEEF;
 }
+
+.drawer-button {
+  width: 90%;
+  border-radius: 5px;
+  margin: 10px 5px 5px 5px;
+  padding: 2px;
+  background-color: rgba(0, 174, 239, 1);
+  color:rgba(255, 255, 255, 1);
+  font-weight:500;
+  font-size: 14px;
+  border: none;
+  box-shadow:5px 5px 5px #d3d3d3;
+  }
 
 #autoScrollingBanner .carousel-indicators {
 position: absolute; /* Ensure the indicators are positioned relative to the banner */
@@ -1164,7 +1179,7 @@ margin: 0.5vh 0.5vw;
 }
 
 /* Styles for Mobile (max-width: 480px) */
-@media screen and (max-width: 480px) {
+@media (min-width: 350px) and (max-width: 480px) {
 
 /* TopBar */
 .topbar {
@@ -1196,7 +1211,7 @@ display: none;
 }
 
 .training-mail-icon {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 .line-vertical {
@@ -1214,7 +1229,6 @@ display: none;
 .button-login{
   margin-left: 200px;
   width:100px;
-  
   font-size: 0.6rem;
 }
 .modal-fade{
@@ -1348,10 +1362,10 @@ height: 50px !important;
 margin-top: 0px !important;
 }
 
-.association-head{
+/* .association-head{
 font-size: 16px;
 margin-top:-20px;
-}
+} */
 
 .logos{
 padding: 2px 0;
@@ -1374,14 +1388,16 @@ font-size: 12px;
 .card-image{
 border-radius: 0px;
 width: 120px;
+height: 100%;
 }
+
 .enroll-btn{
 display: none;
 }
 
 .view-btn{
-margin-right: 50px;
-margin-left: 10px;
+margin-right: 72px;
+margin-left: 5px;
 margin-top:-60px; 
 
 }
@@ -1390,8 +1406,8 @@ padding: 15px;
 
 }
 .view-all{
-font-size: 12px;
-padding: 3px;
+font-size: 10px;
+padding: 3px 5px;
 border-radius: 5px;
 
 }
@@ -1401,10 +1417,14 @@ padding: 10px;
 
 .card-header{
 font-size: 10px;
+font-style: italic;
 padding: 0vh;
 margin: 0px;
 top: 5px;
+color: #15750C;
+white-space: nowrap;
 }
+
 .course-name{
 font-size: 0.9rem;
 }
@@ -1415,7 +1435,7 @@ font-size: 10px;
 }
 
 .association-head{
-font-size: 14px !important ;
+font-size: 16px !important ;
 margin-left: 20px;
 }
 
@@ -1423,8 +1443,10 @@ margin-left: 20px;
 padding-top: 5px;
 margin-bottom: 30px;
 margin-top: 20px;
-
+margin-left: 13%;
+justify-content: space-between;
 }
+
 .course-item {
 display: none; 
 }
@@ -1480,11 +1502,10 @@ margin-right: auto;
 }
 
 .online-training-div {
-width: 40vw; 
-height: 230px;
+width: 180px;
 margin-bottom: 10px;
-padding: 0px;
-height: 250px;
+padding-top: 10px;
+height: 180px;
 }
 
 .online-training-div img {
@@ -1507,6 +1528,7 @@ font-size: 14px;
 
 .training-content{
 font-size: 12px;
+padding: 5px;
 }
 
 /* FooterBar */

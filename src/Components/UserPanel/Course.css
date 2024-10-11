@@ -1664,7 +1664,7 @@ input[type="radio"] {
 
 .btn-submit {
   margin-left: 4vh;
-  width: calc(100% - 8vh);
+  width: 520px !important;
   background-color: #00AEEF;
   margin-bottom: 20px;
 }

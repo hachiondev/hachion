@@ -38,17 +38,20 @@ const Advisor = () => {
               <input type="email" className="form-control" id="inputEmail4" placeholder='abc@gmail.com' required />
             </div>
             <div className="col-md-6">
-              <label htmlFor="inputNumber4" className="form-label">
-                Mobile Number<span className="required">*</span>
-              </label>
-              <div className="form-group col-10 mobile-number-container">
-                <select className="form-select">
-                  <option>+1</option>
-                  <option>+91</option>
-                  <option>+44</option>
-                </select>
-                <input type="number" className="form-control" id="inputNumber" placeholder="Enter your number" required />
-              </div>
+            <label className='form-label'>Mobile Number</label>
+<div class="input-group mb-3 custom-width">
+  <button type="button" class="btn btn-outline-secondary">+91</button>
+  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">select</span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">+91</a></li>
+    <li><a class="dropdown-item" href="#">+66</a></li>
+    <li><a class="dropdown-item" href="#">+11</a></li>
+    <li><a class="dropdown-item" href="#">+20</a></li>
+  </ul>
+  <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
+</div>
             </div>
             <div className="col-md-6">
               <label htmlFor="inputState" className="form-label">

@@ -941,6 +941,12 @@ justify-content: flex-end;
 gap:1vh;
 }
 
+@media only screen and (min-width: 1700px) and (max-width: 1920px){
+  .view-btn{
+    margin-right: 280px;
+  }
+}
+
 @media  (min-width:1025px) and (max-width: 1366px)  {
 .career-div {
     width: 95%; 

@@ -6,6 +6,7 @@ import {MdKeyboardArrowRight} from 'react-icons/md';
 import BlogCardHolder from './BlogCardHolder';
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
+import StickyBar from './StickyBar';
 
 
 const Blogs = () => {
@@ -20,7 +21,7 @@ const Blogs = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Blogs</h3>
     </div>
-    <p>Home <MdKeyboardArrowRight/> Blogs</p>
+    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs</p>
    <div className='blog-header'>
     <h1 className='blog-heading'>Knowledge hub</h1>
     
@@ -32,6 +33,7 @@ const Blogs = () => {
 </div>
 
 <Footer/>
+<StickyBar/>
 </div>
     </>
   )

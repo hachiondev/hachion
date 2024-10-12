@@ -42,7 +42,7 @@ const UpcomingBatch = () => {
           <p className='batch-type-content' onClick={() => setActiveComponent('SelfPlacedFees')}>Self-placed Learning</p>
           <p className='batch-type-content' onClick={() => setActiveComponent('CorporateFees')}>Corporate Training</p>
         </div>
-        
+        <div className='batch-content-background'>
         {/* Render the selected batch type */}
         {renderComponent()}
 
@@ -59,7 +59,7 @@ const UpcomingBatch = () => {
           </span>
         </p>
       </div>
-
+      </div>
       
       {isModalOpen && (
         <div className="modal-request">

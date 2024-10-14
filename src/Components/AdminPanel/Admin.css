@@ -355,3 +355,16 @@
   .lead-form button{
     margin-left: 9vw;
   }
+.form-control{
+width: 340px;
+}
+.row{
+  gap: 40px;
+}
+#inputTime4{
+  width: 240px;
+}
+.row{
+  flex-direction: row;
+ 
+}

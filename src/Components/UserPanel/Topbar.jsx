@@ -44,7 +44,7 @@ const Topbar = () => {
           <div className='user-info'>
             <div className="btn-group">
               <Avatar alt="user_name" src={profile1} />
-              <div class="dropdown">
+              <div className="dropdown">
   <Link className="btn-logout dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Hachion
   </Link>

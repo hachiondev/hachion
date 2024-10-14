@@ -118,7 +118,6 @@ const Trending = () => {
           ))}
           <div className='dropdown-container'>
             <RiMenuUnfold3Line className='menu-icon'
-              style={{ fontSize: '2rem', cursor: 'pointer',marginTop:'1.3vh' }} 
               onClick={handleDropdownClick} 
             />
             {dropdownVisible && (

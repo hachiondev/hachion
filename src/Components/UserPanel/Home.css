@@ -924,6 +924,19 @@ padding-top: 4vh !important;
 margin: 0;
 }
 
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 1.3vh;
+  color: #333;
+}
+.selected-course {
+  font-size: 16px;
+  margin-right: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
 .logout-btn{
 /* height: 5vh; */
 margin:1.5vh;
@@ -1457,8 +1470,8 @@ justify-content: space-between;
 display: none; 
 }
 
-.course-item.all,
-.menu-icon {
+.course-item.all {
+  font-size: 16px;
 display: block; 
 }
 
@@ -1483,8 +1496,12 @@ gap: 0.5vh;
 display: none;
 }
 
-.menu-icon{
-margin-left: 300px;
+.menu-icon {
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 300px;
+  margin-top:1.3vh;
+  color: #333;
 }
 
 .course-date{

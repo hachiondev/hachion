@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FcCalendar } from 'react-icons/fc';
+import calendar from '../../Assets/calendar.png';
 import './Course.css';
 import LiveOnlineFees from './LiveOnlineFees';
 import CorporateFees from './CorporateFees';
@@ -48,7 +48,7 @@ const UpcomingBatch = () => {
 
         {/* Request Batch link */}
         <p className='schedule'>
-          <FcCalendar />
+        <img src={calendar} alt='calendar'/>
           Schedule your way? 
           <span 
             className='schedule-span' 

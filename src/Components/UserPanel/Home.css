@@ -878,10 +878,9 @@ font-weight: 600;
 border: none;
 cursor: pointer;
 margin-left: 20px;
-margin-top:10px;
-padding: 20px;
+padding: 10px;
+padding-bottom: 20px;
 text-decoration: none;
-padding-bottom: 2vh;
 }
 
 .btn-group {
@@ -890,7 +889,7 @@ align-items: center;
 }
 
 .dropdown-menu {
-padding-top: 0px;
+padding-top: 10px;
 }
 
 .dropdown-divider {
@@ -1441,7 +1440,7 @@ display: block;
 
 .dropdown-list {
 right: -10px;
-width:200px;
+width:220px;
 padding:5px;
 
 }

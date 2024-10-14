@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2cdd9783.css",
-    "main.js": "/static/js/main.96852f38.js",
+    "main.css": "/static/css/main.8b7259d6.css",
+    "main.js": "/static/js/main.42cd0e0e.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
     "static/media/Group 39809.png": "/static/media/Group 39809.88bf930e4bf2b59cb676.png",
@@ -63,15 +63,15 @@
     "static/media/salesforce.png": "/static/media/salesforce.21c43a75943eb7ee107b.png",
     "static/media/WorkdayBlog.png": "/static/media/WorkdayBlog.af3c863223108538e6f9.png",
     "static/media/ProgrammingBlog.png": "/static/media/ProgrammingBlog.6923c5e24337b143f062.png",
-    "static/media/USA.png": "/static/media/USA.48935fc1562b7b30a39b.png",
+    "static/media/usflag.jpg": "/static/media/usflag.f1c957ad98d5d5be7112.jpg",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.2cdd9783.css.map": "/static/css/main.2cdd9783.css.map",
-    "main.96852f38.js.map": "/static/js/main.96852f38.js.map",
+    "main.8b7259d6.css.map": "/static/css/main.8b7259d6.css.map",
+    "main.42cd0e0e.js.map": "/static/js/main.42cd0e0e.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2cdd9783.css",
-    "static/js/main.96852f38.js"
+    "static/css/main.8b7259d6.css",
+    "static/js/main.42cd0e0e.js"
   ]
 }

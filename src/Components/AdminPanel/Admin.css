@@ -196,8 +196,7 @@
   .dashboard-div {
     display: flex;
     align-items: center;
-    height: 14vh;
-    width: 13vw;
+ 
     border-radius: 20px;
     padding: 15px;
     box-shadow: 5px 5px 5px #d3d3d3;
@@ -356,3 +355,16 @@
   .lead-form button{
     margin-left: 9vw;
   }
+.form-control{
+width: 340px;
+}
+.row{
+  gap: 40px;
+}
+#inputTime4{
+  width: 240px;
+}
+.row{
+  flex-direction: row;
+ 
+}

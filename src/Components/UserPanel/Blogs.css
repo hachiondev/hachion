@@ -122,61 +122,61 @@
 }
 }
 .about-banner{
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      height: 500px;
-    }
-    
-    .about-banner img {
-      width: 100%;
+ 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        height: 500px;
+      }
       
-      object-fit: cover; 
-    }
-    .about-us{
-      background-color: #EEEEEE;
-      padding: 4vh;
-    }
-    .about-us-content{
-      width: 80%;
-      margin-left: 10vw;
-      background-color: #ffffff;
-      box-shadow: 5px 5px 10px #d3d3d3;
-    }
-    .about-us-heading{
-      background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  font-weight: 700;
-  text-align: center;
-  padding: 2vh;
-    }
-    .about-us-top{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly !important;
-     
-  
-      
-    }
-    .about-us-top img{
-      height: 340px;
-      margin: 40px;
-    }
-    .about-us-left-content{
-      font-size: 1.20rem;
-      font-weight: 400;
-      padding-top: 20px;
-      padding-left: 4vh;
-      padding-right: 4vh;
-    }
-    
-    @media  (min-width:1025px) and (max-width: 1366px){
+      .about-banner img {
+        width: 100%;
+        
+        object-fit: cover; 
+      }
+      .about-us{
+        background-color: #EEEEEE;
+        padding: 4vh;
+      }
       .about-us-content{
-        width: 95%;
-        margin-left: 20px;
+        width: 80%;
+        margin-left: 10vw;
+        background-color: #ffffff;
+        box-shadow: 5px 5px 10px #d3d3d3;
+      }
+      .about-us-heading{
+        background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-weight: 700;
+    text-align: center;
+    padding: 2vh;
+      }
+      .about-us-top{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly !important;
+       
+    
+        
+      }
+      .about-us-top img{
+        height: 340px;
+        margin: 40px;
+      }
+      .about-us-left-content{
+        font-size: 1.20rem;
+        font-weight: 400;
+        padding-top: 20px;
+        padding-left: 4vh;
+        padding-right: 4vh;
+      }
+      
+      @media  (min-width:1025px) and (max-width: 1366px){
+        .about-us-content{
+          width: 95%;
+          margin-left: 20px;
 
       }
       .about-us-top{
@@ -351,13 +351,13 @@ padding: 2vh;
 align-items: center;
 }
 .submit-button{
-background-color: #00AEEF;
-color: white;
-padding: 2vh;
-margin-left: 30px;
-width: 70%;
-border: none;
-border-radius: 5px;
+  background-color: #00AEEF;
+  color: white;
+  padding: 2vh;
+  margin-left: 30px;
+  width: 70%;
+  border: none;
+  border-radius: 5px;
 }
 .form-check{
 
@@ -429,14 +429,13 @@ align-items: center;
 
 }
 .personal-details{
-width: 85%;
-padding: 20px;
-background-color: white;
-box-shadow: 5px 5px 10px #d3d3d3;
-border: 1px solid #b3b3b3;
-margin: 10px;
-
-margin-left: 12vw;
+  width: 85%;
+ padding: 20px;
+  background-color: white;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  border: 1px solid #b3b3b3;
+  margin: 20px;
+  margin-left: 10vw;
 }
 .personal-details-header{
 height: 80px;
@@ -470,41 +469,41 @@ font-weight: 600;
 .net-amount{
 margin-left: 50px;
 width: 480px;
-padding: 5px ;
-background-color: #CCEFFC;
-color: black;
-font-size: 32px;
-margin: 20px;
-text-align: center;
+ padding: 5px ;
+  background-color: #CCEFFC;
+  color: black;
+  font-size: 32px;
+  margin: 20px;
+  text-align: center;
 }
 .radio-group{
-margin: 30px;
+  margin: 30px;
 }
 .payment-btn{
-border-radius: 10px;
-background-color: #00AEEF;
-border: none;
-color: white;
-font-size: 30px;
-padding: 5px 30px ;
-font-weight: 700;
-box-shadow: 5px 5px 10px #d3d3d3;
-margin-left: 30px;
+  border-radius: 10px;
+  background-color: #00AEEF;
+  border: none;
+  color: white;
+  font-size: 30px;
+  padding: 5px 30px ;
+  font-weight: 700;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  margin-left: 30px;
 
 }
 .custom-width .btn, 
 .custom-width .form-control {
-  width: 60px !important; /* Adjust width as needed */
-  margin-left: 40px;
+    width: 60px !important; /* Adjust width as needed */
+    margin-left: 40px;
 }
 
 .custom-width .dropdown-menu {
-  min-width: 100px; /* Adjust dropdown menu width if necessary */
+    min-width: 100px; /* Adjust dropdown menu width if necessary */
 }
 .mobile-number{
-width: 400px;
+  width: 400px;
 }
 .flag{
-height: 100px;
-width: 100px;
+  height: 100px;
+  width: 100px;
 }

@@ -2,9 +2,11 @@ import React from 'react'
 import './Home.css';
 import { FaCircle } from "react-icons/fa";
 import imageUrl from '../../Assets/course_card2.png';
+import { useNavigate } from 'react-router-dom';
 
 
  const TrainingCard = (props) => {
+  const navigate=useNavigate();
   return (
   <>
 <div className="card" >
@@ -26,7 +28,7 @@ import imageUrl from '../../Assets/course_card2.png';
 
 </div>
 <h6 className='course-date'>{props.duration}</h6>
-<button className='enroll-btn'>View Details</button>
+<button className='enroll-btn' onClick={()=>navigate('/qaautomation')}>View Details</button>
  </div>
 </div>
   </>

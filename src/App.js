@@ -29,6 +29,11 @@ import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Enrollment from './Components/UserPanel/Enrollment';
+import UserWriteReview from './Components/UserPanel/UserWriteReview';
+import AddTrendingCourse from './Components/AdminPanel/AddTrendingCourse';
+import AddTrainer from './Components/AdminPanel/AddTrainer';
+import AddCertificate from './Components/AdminPanel/AddCertificate';
+import AddStudent from './Components/AdminPanel/AddStudent';
 
 function App() {
   return (
@@ -62,6 +67,11 @@ function App() {
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
+      <Route path='/review' element={<UserWriteReview/>}/>
+      <Route path='/addtrending' element={<AddTrendingCourse/>}/>
+      <Route path='/addtrainer' element={<AddTrainer/>}/>
+      <Route path='/addcertificate' element={<AddCertificate/>}/>
+      <Route path='/addstudent' element={<AddStudent/>}/>
       </Routes></BrowserRouter>
     </>
   );

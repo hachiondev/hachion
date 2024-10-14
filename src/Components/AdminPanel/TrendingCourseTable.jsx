@@ -52,18 +52,16 @@ const rows = [
   createData(10, 'Cloud Computing','Enable', '2019-06-11', <><FaEdit className='edit'/> <RiDeleteBin6Line className='delete' /></>),
 ];
 
-export default function TrendingCourseTable() {
+export default function TrendingCourseTable({ onAddTrendingCourseClick }) {
   return (
     <>   
     <CourseCategory
   pageTitle="Trending Courses"
   headerTitle="View Trending Courses"
   buttonLabel="Add Trending Courses"
-  onAdd={() => {
-    // Navigate or perform another action
-    console.log('Navigating to Add Product Category Page');
-  }}
-></CourseCategory> <TableContainer component={Paper}>
+  onAdd={onAddTrendingCourseClick}
+/>
+ <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>

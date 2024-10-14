@@ -1,13 +1,12 @@
 import React,{useEffect} from 'react'
 import Topbar from './Topbar'
-import { Navbar } from 'react-bootstrap'
 import NavbarTop from './NavbarTop'
 import contactUsBanner from '../../Assets/contactus.png';
 import {MdKeyboardArrowRight} from 'react-icons/md';
-import UsaFlag from '../../Assets/USA.png';
+import UsaFlag from '../../Assets/usflag.jpg';
 import './Blogs.css';
-import indiaFlag from '../../Assets/IndiaFlag.png';
-import dubaiFlag from '../../Assets/DubaiFlag.png';
+import indiaFlag from '../../Assets/india.jpg';
+import dubaiFlag from '../../Assets/canada.jpg';
 import whatsappIcon from '../../Assets/logos_whatsapp-icon.png';
 import mailIcon from '../../Assets/uiw_mail.png';
 import facebookIcon from '../../Assets/facebook_symbol.svg.png';
@@ -37,7 +36,7 @@ const ContactUs = () => {
     <div className='contact-us-div'>
         <h3>Head Quarters</h3>
         <div style={{display:'flex', flexDirection:'row',padding:'2vh',justifyContent:'space-evenly'}}>
-            <img src={UsaFlag} alt='usa'/>
+            <img src={UsaFlag} alt='usa' className='flag'/>
             <div className='office-location'>
                 <p>New Jersey, USA</p>
                 <p>HACH Technologies 239 US Highway 22 green Brook Township,
@@ -49,7 +48,7 @@ ZIP 08812.</p>
     
     <div className='contact-us-div'>
         <div style={{display:'flex', flexDirection:'row',padding:'2vh',paddingTop:'8vh', justifyContent:'space-evenly'}}>
-            <img src={indiaFlag} alt='usa'/>
+            <img src={indiaFlag} alt='usa' className='flag'/>
             <div className='office-location'>
                 <p>Hyderabad, India</p>
                 <p>HACH Technologies GP Rao Enclaves, 301, 3rd floor
@@ -60,7 +59,7 @@ Hyderabad 500072.</p>
     </div>
     <div className='contact-us-div'>
         <div style={{display:'flex', flexDirection:'row',padding:'2vh', paddingTop:'8vh',justifyContent:'space-evenly'}}>
-            <img src={dubaiFlag} alt='usa'/>
+            <img src={dubaiFlag} alt='usa' className='flag'/>
             <div className='office-location'>
                 <p>Dubai, UAE</p>
                 <p>Sports City
@@ -102,9 +101,19 @@ Hyderabad 500072.</p>
   <label for="exampleFormControlInput1" class="form-label">Email Id</label>
   <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="Enter your emailid"/>
 </div>
-<div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
-  <input type="number" className="form-control" id="exampleFormControlInput1" placeholder="Enter your mobile number"/>
+<label className='form-label'>Mobile Number</label>
+<div class="input-group mb-3 custom-width">
+  <button type="button" class="btn btn-outline-secondary">+91</button>
+  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">select</span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">+91</a></li>
+    <li><a class="dropdown-item" href="#">+66</a></li>
+    <li><a class="dropdown-item" href="#">+11</a></li>
+    <li><a class="dropdown-item" href="#">+20</a></li>
+  </ul>
+  <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Comments</label>

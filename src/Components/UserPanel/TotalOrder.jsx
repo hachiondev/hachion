@@ -6,74 +6,66 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Radio from '@mui/material/Radio';
+import payumoney from '../../Assets/payumoney.png';
 
-const TAX_RATE = 0.07;
-
-function ccyFormat(num) {
-  return `${num.toFixed(2)}`;
-}
-
-function priceRow(qty, unit) {
-  return qty * unit;
-}
-
-function createRow(course_name,fee,discount,total,gst) {
-  const price = priceRow(course_name,fee,discount,total,gst);
-  return { course_name,fee,discount,total,gst };
-}
-
-function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+function createData(course_name, qa_automation) {
+  return { course_name, qa_automation };
 }
 
 const rows = [
-  createRow('Qa Automation', 37383, 0,37383,2000)
+  createData('Fee:', 37383),
+  createData('%Discount:', 0),
+  createData('Total:', 37383),
+  createData('GST(18%):', 2000),
 ];
 
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
 export default function TotalOrder() {
-  return (
+  const [selectedValue, setSelectedValue] = React.useState('a');
+
+const handleChange = (event) => {
+  setSelectedValue(event.target.value);
+};
+  return (<>
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+      <Table sx={{ maxWidth: 450, borderCollapse: 'collapse',marginLeft:'40px' }} aria-label="simple table">
         <TableHead>
-          
           <TableRow>
-            <TableCell>Course Name</TableCell>
-            <TableCell align="right">Fee</TableCell>
-            <TableCell align="right">% Discount</TableCell>
-            <TableCell align="right">Total</TableCell>
-            <TableCell align="right">GST(18%)</TableCell>
+            <TableCell sx={{ border: 'none', padding: '4px 8px',fontWeight:'700' }}>Course Name</TableCell>
+            <TableCell align="right" sx={{ border: 'none', padding: '4px 8px' }}>Qa Automation</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.desc}>
-              <TableCell>{row.course_name}</TableCell>
-              <TableCell align="right">{row.fee}</TableCell>
-              <TableCell align="right">{row.discount}</TableCell>
-              <TableCell align="right">{row.total}</TableCell>
-              <TableCell align="right">{ccyFormat(row.gst)}</TableCell>
+            <TableRow
+              key={row.course_name}
+              sx={{ '&:last-child td, &:last-child th': { border: 'none' } }}
+            >
+              <TableCell component="th" scope="row" sx={{ border: 'none', padding: '4px 8px',fontWeight:'700' }}>
+                {row.course_name}
+              </TableCell>
+              <TableCell align="right" sx={{ border: 'none', padding: '4px 8px' }}>
+                {row.qa_automation}
+              </TableCell>
             </TableRow>
           ))}
-          <TableRow>
-            <TableCell rowSpan={3} />
-            <TableCell colSpan={2}>Subtotal</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Tax</TableCell>
-            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>Total</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
-          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
-  );
+    <div className='net-amount'>
+     <p>Net Payable amount: 39383</p>
+    </div>
+    <div className='radio-group'>
+    <Radio
+        checked={selectedValue === 'a'}
+        onChange={handleChange}
+        value="a"
+        name="radio-buttons"
+        inputProps={{ 'aria-label': 'A' }}
+      />
+      <img src={payumoney} alt='payumoney'/>
+      </div>
+      <button className='payment-btn'>Proceed to Pay</button>
+  </>);
 }

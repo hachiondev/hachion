@@ -9,15 +9,17 @@ import card5 from '../../Assets/image 80.png';
 import card6 from '../../Assets/image 107.png';
 import card7 from '../../Assets/image 110.png';
 import card8 from '../../Assets/image 95.png';
+import { useNavigate } from 'react-router-dom';
 
 const LeadingExpert = () => {
+   const navigate=useNavigate();
   return (
  <>
  <div className='association'>
     <h1 className='association-head'>Skill-Building Curriculum's by Leading Experts</h1>
     </div>
     <div className='view-all-div'>
- <button className='view-all-corporate'>View All</button>
+ <button className='view-all-corporate' onClick={()=>navigate('/course')} >View All</button>
  </div>
  <div className='leading-expert'>
     <LeadingExpertCard CourseName='AWS Developer' image={card2}/>

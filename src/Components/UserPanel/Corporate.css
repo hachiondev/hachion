@@ -456,9 +456,9 @@
      }
    
      .carousel-indicators {
-       top: 52vh;
+       top: 55vh;
        display: flex;
-       left: 10%;
+       /* left: 10%; */
        transform: translateX(10%);
        justify-content: center;
        z-index: 1;
@@ -1033,27 +1033,21 @@
         margin-left:5px;
         margin-top:30px;
       }
-    
-      /* Show the quotes for smaller screens */
-      .left-quotes, .right-quotes {
-        display: block;
-        width: 20px;
-        height: auto;
-        color: rgba(97, 97, 97, 1);
+
+      .left-quotes{
+        height: 60px;
+        width: 60px;
+        margin-left: 3vw;
+        position: absolute; 
+        z-index: 10;
       }
-    
-      .left-quotes {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        font-size: 30px;
-      }
-    
-      .right-quotes {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        font-size: 30px;
+      .right-quotes{
+        height: 60px;
+        width: 60px;
+        margin-top: -6vh; 
+        margin-left: 82vw;
+        position: absolute; 
+        z-index: 10;
       }
     
       .custom-prev-icon, .custom-next-icon {
@@ -1096,6 +1090,7 @@
         height: 350px;
         position: relative;
         display: block;
+        z-index: 1;
       }
       
     /* .learner-card {

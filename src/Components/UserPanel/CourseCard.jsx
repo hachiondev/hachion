@@ -3,6 +3,7 @@ import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar } from "react-icons/md";
 import cardbackground from '../../Assets/course2.png';
+import './Home.css';
 
 const CourseCard = ({heading,month,time,image,onClick}) => {
   return (

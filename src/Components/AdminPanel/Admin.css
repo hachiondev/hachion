@@ -368,3 +368,23 @@ width: 340px;
   flex-direction: row;
  
 }
+.course-row{
+  display: flex;
+  flex-direction: row;
+  justify-items: space-evenly;
+  gap: 10px;
+}
+.course-details{
+  box-shadow: 5px 5px 10px #d3d3d3;
+
+  margin: 10px;
+}
+.course-col{
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+}
+#exampleFormControlTextarea1{
+  height: 150px;
+  width: 1100px;
+}

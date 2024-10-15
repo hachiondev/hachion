@@ -13,6 +13,8 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
+import AddTrendingCourse from './AddTrendingCourse'; // Import the AddTrendingCourse component
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,8 +37,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, course_name, status,created_date, Action) {
-  return { S_No, course_name,status,created_date, Action };
+function createData(S_No, course_name, status, created_date, Action) {
+  return { S_No, course_name, status, created_date, Action };
 }
 
 const rows = [
@@ -51,46 +53,53 @@ const rows = [
   createData(9, 'ServiceNow','Enable', '2019-06-11', <><FaEdit className='edit'/> <RiDeleteBin6Line className='delete'/></>),
   createData(10, 'Cloud Computing','Enable', '2019-06-11', <><FaEdit className='edit'/> <RiDeleteBin6Line className='delete' /></>),
 ];
+export default function TrendingCourseTable() {
+  const [showAddForm, setShowAddForm] = React.useState(false); // Step 1: State to show the form
+const navigate=useNavigate();
 
-export default function TrendingCourseTable({ onAddTrendingCourseClick }) {
+const onAddTrendingCourseClick=()=>{
+  navigate('/addtrending')
+}
   return (
-    <>   
-    <CourseCategory
-  pageTitle="Trending Courses"
-  headerTitle="View Trending Courses"
-  buttonLabel="Add Trending Courses"
-  onAdd={onAddTrendingCourseClick}
-/>
- <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>
-              <Checkbox />
-            </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
-            <StyledTableCell align="center">Course Name</StyledTableCell>
-            <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Date</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.S_No}</StyledTableCell>
-              <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.status}</StyledTableCell>
-              <StyledTableCell align="center">{row.created_date}</StyledTableCell>
-              <StyledTableCell align="center">{row.Action}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    <div className='pagination'>
-      <Pagination count={10} color="primary" />
-      </div>
- </> );
+  
+     
+        <>
+          <CourseCategory
+        pageTitle="Trending Courses"
+        headerTitle="View Trending Courses"
+        buttonLabel="Add Trending Courses"
+        onAdd={onAddTrendingCourseClick} // Call the function passed from parent
+      />
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell><Checkbox /></StyledTableCell>
+                  <StyledTableCell>S.No.</StyledTableCell>
+                  <StyledTableCell align="center">Course Name</StyledTableCell>
+                  <StyledTableCell align="center">Status</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                  <StyledTableCell align="center">Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <StyledTableRow key={row.S_No}>
+                    <StyledTableCell><Checkbox /></StyledTableCell>
+                    <StyledTableCell>{row.S_No}</StyledTableCell>
+                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+                    <StyledTableCell align="center">{row.status}</StyledTableCell>
+                    <StyledTableCell align="center">{row.created_date}</StyledTableCell>
+                    <StyledTableCell align="center">{row.Action}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div className='pagination'>
+            <Pagination count={10} color="primary" />
+          </div>
+        </>
+   
+  );
 }

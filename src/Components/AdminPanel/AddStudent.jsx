@@ -100,6 +100,10 @@ const AddStudent = () => {
         <FormControlLabel value="male" control={<Radio />} label="Send details via email and whtsapp" />
       
       </RadioGroup>
+      <div style={{display:'flex',flexDirection:'row'}}> 
+  <button className='submit-btn'>Submit</button>
+  <button className='reset-btn'>Reset</button>
+  </div>
   </form>
 </div>
    

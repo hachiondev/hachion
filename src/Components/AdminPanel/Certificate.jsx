@@ -12,6 +12,7 @@ import certificateImage from '../../Assets/certificateImage.png';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -66,11 +67,13 @@ const candidateCertificateRows = [
 
 export default function Certificate() {
   const [activeTab, setActiveTab] = useState('courseCertificate'); // Default tab is Course Certificate
-
+const navigate=useNavigate();
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
+const handleAdd=()=>{
+navigate('/addcertificate')
+}
   return (
     <>   
       <div className="certificate-tabs">
@@ -91,9 +94,8 @@ export default function Certificate() {
         pageTitle="Certificate"
         headerTitle="Course Certificate"
         buttonLabel="Add Course Certificate"
-        onAdd={() => {
-          console.log('Navigating to Add Certificate Page');
-        }}
+        onAdd={handleAdd}
+        
       />
 
       {/* Tab Navigation */}

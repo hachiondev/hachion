@@ -11,8 +11,8 @@ const Career = () => {
   return (
    <>
    <div className='training-events'>
-    <div className='training-events-head'>
-<h1 className='association-head'>Hachion enhances career advancement</h1></div>
+    <div className='association'>
+   <h1 className='association-head'>Hachion enhances career advancement</h1></div>
 <div className='career-div'>
 <div className='online-training-div'>
    <img src={img1} alt='image1'/>

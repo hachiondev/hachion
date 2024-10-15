@@ -9,10 +9,9 @@ const AddCertificate = () => {
    <AdminNavbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
       
-        <AdminSidebar />
+        <AdminSidebar  />
         <div style={{ flexGrow: 1, padding: '20px' }}>
-        
-      
+       
   <div className='course-category'>
 <p>Course Certificate <IoIosArrowForward/> Add course certificate </p>
 <div className='category'>
@@ -63,6 +62,7 @@ const AddCertificate = () => {
 </div>
 </div>
 </div>
+
 </>)
 }
 

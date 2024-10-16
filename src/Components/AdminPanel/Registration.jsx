@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,12 +51,15 @@ const studentdetails = [
 ];
 
 export default function Registration() {
+  const navigate=useNavigate();
   const [activeTab, setActiveTab] = useState('registerlist'); // Default tab is Register List
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
+const handleAdd=()=>{
+navigate('/addstudent')
+}
   return (
     <>   
       <div className="certificate-tabs">
@@ -82,9 +86,8 @@ export default function Registration() {
         pageTitle="Registration"
         headerTitle={activeTab === 'registerlist' ? 'Register List' : activeTab === 'studentdetails' ? 'Student Details' : 'Import Lead'}
         buttonLabel={activeTab === 'importlead' ? 'Upload Leads' : 'Add Student'}
-        onAdd={() => {
-          console.log('Navigating to Add Student Page');
-        }}
+        onAdd={handleAdd
+        }
       />
 
       {/* Table Content */}

@@ -670,6 +670,13 @@ text-align: center;
   cursor: pointer;
   padding: 1vh;
   position: relative;
+ 
+}
+.batch-content-background{
+  background-color: #EEEEEE;
+  margin-left: 40px;
+  margin-right: 25px;
+  padding-bottom: 10px;
 }
 
 .batch-type-content.active::after {
@@ -723,8 +730,8 @@ text-align: center;
 .batch-schedule {
   
   display: flex;
- margin-left: 5px;
-  width: 99%;
+ margin-left: 5vh;
+  width: 95%;
   height: auto;
   border-radius: 10px;
 padding-top: 25px;
@@ -1740,6 +1747,9 @@ input[type="radio"] {
   .button-close {
     font-size: 16px; /* Reduce close button size for mobile */
   }
+}
+.blogs-header{
+  margin-left: 10vw;
 }
 
 

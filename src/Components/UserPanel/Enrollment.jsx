@@ -21,7 +21,7 @@ const Enrollment = () => {
         <div className='personal-details-header'>
             <p>1. Personal Details</p>
         </div>
-        <div class="mb-3">
+      
         <form class="row g-3">
   <div class="col-md-6">
     <label for="inputEmail4" class="form-label">Full Name*</label>
@@ -52,7 +52,7 @@ const Enrollment = () => {
     <input type="text" class="form-control" id="inputCity" placeholder='India'/>
   </div>
   </form>
-  </div>
+  
         </div>
         <div className='personal-details'>
         <div className='personal-details-header'>

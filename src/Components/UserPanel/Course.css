@@ -20,12 +20,9 @@ width: 420px;
     border-top-right-radius: 10px;
   }
   .course-banner-content{
-  
     color: white;
     font-weight: 600;
     font-size: 36px;
-
-
   }
   .pagination{
     display: flex;
@@ -84,7 +81,6 @@ color: black;
     font-weight: 600;
     text-align: center;
     padding: 1vh;
-
   }
   
   .menu-item:hover {
@@ -1507,8 +1503,24 @@ input[type="radio"] {
     margin-left: 30px;
   }
 
+  .sidebar-heading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    height: 60px;
+  }
+
+  .menu-item {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
   .sidebar{
     width: 100%;
+    height: auto;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
   }
   .sidebar-right-all {
     display: inline; /* Cards display below category for mobile */
@@ -1564,7 +1576,13 @@ input[type="radio"] {
     scroll-behavior: smooth;
   }
   .course-banner{
-    height: 197px;
+    height: 100px;
+  }
+
+  .course-banner-content{
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
   }
 
   .key-highlights {
@@ -1721,26 +1739,27 @@ input[type="radio"] {
   }
 
   .form-control {
-    width: 330px; /* Set input field width to 330px */
-    height: 40px; /* Set input field height to 40px */
-    margin: 1.5vh auto 1.5vh auto; /* Center input fields and adjust margin */
+    width: 320px; /* Set input field width to 330px */
+    height: 35px; /* Set input field height to 40px */
+    margin: 10px; /* Center input fields and adjust margin */
   }
 
   .mobile-number-container {
-    margin-left: 0; /* Center align mobile number field */
+    margin-left: 10px; /* Center align mobile number field */
   }
 
   .mobile-number-container input,
   .mobile-number-container select {
-    width: 330px; /* Set width of input and select fields to 330px */
-    height: 40px; /* Set height to 40px */
-    margin-bottom: 2vh; /* Adjust margin */
+    width: 320px; /* Set width of input and select fields to 330px */
+    height: 35px; /* Set height to 40px */
+    margin-bottom: 10px; /* Adjust margin */
+    border-color: #333;
   }
 
   .btn-submit {
-    width: 330px; /* Set button width to 330px */
-    height: 40px; /* Set button height to 40px */
-    margin: 2vh auto; /* Center button */
+    width: 320px; /* Set button width to 330px */
+    height: 35px; /* Set button height to 40px */
+    margin: 10px; /* Center button */
     background-color: #00AEEF; /* Keep the existing background color */
   }
 

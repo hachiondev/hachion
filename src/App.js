@@ -38,6 +38,13 @@ import AddCourseDetails from './Components/AdminPanel/AddCourseDetails';
 import AddSchedule from './Components/AdminPanel/AddSchedule';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
 import AddFaq from './Components/AdminPanel/AddFaq';
+import Addvideo from './Components/AdminPanel/Addvideo';
+import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
+import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
+import AddResume from './Components/AdminPanel/AddResume';
+import AddReview from './Components/AdminPanel/AddReview';
+import AddBlog from './Components/AdminPanel/AddBlog';
+import AddSupport from './Components/AdminPanel/AddSupport';
 
 function App() {
   return (
@@ -80,6 +87,13 @@ function App() {
       <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addcurriculum' element={<AddCurriculum/>}/>
       <Route path='/addfaq' element={<AddFaq/>}/>
+      <Route path='/addvideo' element={<Addvideo/>}/>
+      <Route path='/addregularvideo' element={<AddRegularVideos/>}/>
+      <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
+      <Route path='/addresume' element={<AddResume/>}/>
+      <Route path='/addreview' element={<AddReview/>}/>
+      <Route path='/addblog' element={<AddBlog/>}/>
+      <Route path='/addsupport' element={<AddSupport/>}/>
       </Routes></BrowserRouter>
     </>
   );

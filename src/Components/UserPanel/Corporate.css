@@ -333,7 +333,7 @@
 
 .learner-cover{
   
-    height: 500px;
+    height: 320px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -346,12 +346,12 @@
   
    }
    .learner-card{
-       height: 430px;
-       width: 40vw;
+       height: 260px;
+       width: 38vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
-       margin-left: 8vw;
+       margin-left: 7vw;
        
       
    }
@@ -405,9 +405,7 @@
     }
 
    .learner-info{
-       height: 160px;
        margin-left: 100px;
-       margin-top: 2vh !important;
        display: flex;
        flex-direction: column; 
        justify-content: center; 
@@ -443,7 +441,7 @@
      cursor: pointer;
      z-index: 1;
      border-radius: 50%;
-     margin-left: 1vh;
+     margin-left: -20px;
    }
    .custom-next-icon {
        font-size: 2.25rem;
@@ -456,10 +454,10 @@
      }
    
      .carousel-indicators {
-       top: 52vh;
+       top: 33vh;
        display: flex;
-       left: 10%;
-       transform: translateX(10%);
+       left: 5%;
+       transform: translateX(5%);
        justify-content: center;
        z-index: 1;
    }
@@ -484,18 +482,18 @@
     justify-content: center;
   }
   .left-quotes{
-    height: 113.97px;
+    height: 80px;
      z-index: 1;
-      width: 148.59px;
+      width: 80px;
        color: rgba(0, 174, 239, 1);
-        margin-bottom: -8vh; 
+        margin-bottom: -4vh; 
   }
   .right-quotes{
-    height: 113.97px;
+    height: 80px;
      z-index: 1;
-      width: 148.59px;
+      width: 80px;
        color: rgba(0, 174, 239, 1);
-        margin-top: -8vh; 
+        margin-top: -6vh; 
         margin-left: 90vw;
   }
 
@@ -719,27 +717,33 @@
     }
   }
 
-@media (max-width: 1180px) {
+@media (max-width: 1366px) {
     .learner-card-item {
       justify-content: center;
-      gap: 20vw; 
+      gap: 0vw; 
     }
     .learner-card{
-        width: 70vw;
+        width: 40vw;
     }
     .learner-name{
-        margin-top: -80px;
+        margin-top: -40px;
     }
     .custom-prev-icon{
-        margin-left: -12vh;
+        margin-left: -5vh;
     }
- 
+    .custom-next-icon{
+        margin-right: -220px;
+    }
+ .learner-info{
+    margin-left: 10px;
+    margin-top: 20px;
+ }
     .left-quotes{
         margin-top: -5vh;
     }
     .right-quotes{
-        margin-left: 85vw;
-        margin-top: -4vh;
+        margin-left: 92vw;
+        margin-top: -2vh;
     }
     .learner-name img{
         height: 40px;
@@ -754,9 +758,13 @@
     height: 136px;
     width: 136px;
  }
+ .carousel-indicators{
+    top: 90%;
+    left: 0%;
+ }
   }
  
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
@@ -767,11 +775,20 @@
     }
   
     .learner-card {
-      width: 65vw; 
+      width: 68vw; 
+      margin-left:160px;
     }
     .left-quotes{
-        margin-left: 4vh;
+        margin-left: 2vh;
     }
+    .learner-info{
+        margin-top: 20px;
+    }
+    .right-quotes{
+        margin-left: 90vw;
+    }
+
+ 
   }
   
 @media (max-width: 768px) {
@@ -780,7 +797,7 @@
       }
 
     .learner-card {
-      width: 80vw; 
+      width: 70vw; 
     }
     .custom-prev-icon{
         margin-left: -10vh;
@@ -799,9 +816,12 @@
         margin-top: 2vh;
     }
     .left-quotes{
-        height: 50px;
-        width: 50px;
-        margin-left: 6vh;
+        height: 60px;
+        width: 60px;
+        margin-left: 3vh;
+    }
+    .learner-info{
+        margin-top: 20px;
     }
     .right-quotes{
         height: 50px;

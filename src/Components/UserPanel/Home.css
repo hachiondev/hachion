@@ -988,10 +988,14 @@ gap:1vh;
   width: calc(33.33% - 10px); 
   
 }
+.view-btn{
+  margin-right: 100px;
+  margin-top: -100px;
+}
 
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1180px) {
 .topbar {
   height: 60px;
   padding: 0 5vw;
@@ -1039,11 +1043,21 @@ margin: 0.5vh 0.5vw;
 }
 
 .view-btn{
-margin-right: 100px; 
+margin-right: 35px; 
 margin-top:-100px; 
 }
+.training-card-holder{
+  max-width: 94vw;
+  gap: 10px;
 }
+}
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .search-div-home {
+    width: 430px; /* Reduce width for tablet screens */
+    margin-left: 0 !important /* Remove margin for better alignment */
+  }
 
+}
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
 .navbar {
@@ -1056,7 +1070,7 @@ margin-top:-100px;
 
 .search-div-home {
   width: 250px; /* Reduce width for tablet screens */
-  margin-left: 0 !important; /* Remove margin for better alignment */
+  margin-left: 0 !important /* Remove margin for better alignment */
 }
 
 .navbar-nav {
@@ -1088,9 +1102,9 @@ display: none;
 }
 
 .view-btn{
-margin-right: 60px;
+margin-right: 30px;
 margin-left: 10px;
-margin-top:-45px; 
+margin-top:-85px; 
 font-size: 12px;
 
 }

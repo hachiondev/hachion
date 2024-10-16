@@ -346,27 +346,25 @@
   
    }
    .learner-card{
-       height: 430px;
+       height: auto;
        width: 40vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
        margin-left: 8vw;
-       
-      
-   }
-   .learner-image{
-       height: 140px;
-       width:140px;
-       border-radius: 50%;
-       border:4px solid white;
-       margin-left: 20px;
-       margin-top: -1.25vh;
    }
    .profile-image{
        height: 120px !important;
-       width: 120px !important;
+       width:120px !important;
+       border-radius: 50%;
+       border:4px solid white;
+       margin-left: 20px;
+       margin-top: -2vh;
    }
+   /* .profile-image{
+       height: 120px !important;
+       width: 120px !important;
+   } */
    .learner-top{
        display: flex;
        flex-direction: row;
@@ -456,9 +454,9 @@
      }
    
      .carousel-indicators {
-       top: 55vh;
+       top: 45vh;
        display: flex;
-       /* left: 10%; */
+       left: 10%;
        transform: translateX(10%);
        justify-content: center;
        z-index: 1;
@@ -905,16 +903,16 @@
       }
     
       .learner-card-item {
-        display: flex;
+        display: block;
         justify-content: center;
-        width: 400px;
+        align-content: center;
+        max-width: 400px;
         height: 320px;
-        margin-left: 30px;
         margin-top: 20px;
       }
     
       .learner-card {
-        width: 340px;
+        max-width: 340px;
         height: 250px;
         /* margin-bottom: 10px; */
         position: relative;

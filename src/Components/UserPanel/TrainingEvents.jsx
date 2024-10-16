@@ -12,12 +12,12 @@ const TrainingEvents = () => {
   return (
     <>
 <div className='training-events'>
-<div>
+
     <div className='training-events-head'>
 <h1 className='association-head'>Upcoming Training Events</h1></div>
 <div className='view-btn'>
 <button className='view-all' onClick={()=>navigate('/course')}>View All</button>
-</div>
+
 </div>
 <div className='training-card-holder'>
   

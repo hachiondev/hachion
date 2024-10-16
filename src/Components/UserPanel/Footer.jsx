@@ -6,8 +6,8 @@ import linkedin from '../../Assets/linkedin.png';
 import instagram from '../../Assets/instagram.png';
 import quora from '../../Assets/Component 141.png';
 import {  useNavigate } from 'react-router-dom';
-
 import './Home.css';
+
 const Footer = () => {
   const navigate= useNavigate();
   const handleBlog=()=>{
@@ -70,7 +70,7 @@ const Footer = () => {
       <div className='footer-link'>
       <img src={facebook} alt='facebook'/>
       <img src={twitter} alt='twitter'/>
-      <img src={linkedin} alt='linkedin' className='footer-linkedin'/>
+      <img src={linkedin} alt='linkedin'/>
       <img src={instagram} alt='instagram'/>
       <img src={quora} alt='dribble'/>
       <img src={youtube} alt='youtube'/>

@@ -1287,21 +1287,23 @@ input[type="radio"] {
 
   .qa-right img{
     height: 220px !important;
-    width: 320px !important;
+    width: 280px !important;
   }
   .qa-automation-left img{
     height: 100px;
   }
   .qa-automation{
-    width: 95%;
-    margin-left: 20px;
+    width: 98%;
+    margin-left: 10px;
+gap: 10px;
   }
   .qa-right{
-    margin-right: 0px;
+    margin-right: 10px;
   }
   .video-btn{
     margin-top: 2px;
     font-size: 16px;
+    margin-left: 20px;
   }
   .certified{
     font-size: 16px;
@@ -1320,8 +1322,8 @@ input[type="radio"] {
     font-size: 14px;
   }
   .qa-automation{
-    height: 345px;
-    padding: 0px;
+   
+    padding: 10px;
     justify-content: space-evenly;
   }
   .qa-automation-left{

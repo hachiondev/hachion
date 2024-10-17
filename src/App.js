@@ -15,7 +15,7 @@ import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
-import CourseCategory from './Components/AdminPanel/CourseCategory';
+//import CourseCategory from './Components/AdminPanel/CourseCategory';
 import Blogs from './Components/UserPanel/Blogs';
 import QaTesting from './Components/UserPanel/QaTesting';
 import Salesforce from './Components/UserPanel/Salesforce';

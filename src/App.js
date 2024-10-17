@@ -1,4 +1,3 @@
-
 import './App.css';
 import { Home } from './Components/UserPanel/Home';
 import Login from './Components/UserPanel/Login';
@@ -72,6 +71,7 @@ function App() {
       <Route path='/addtrainer' element={<AddTrainer/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addstudent' element={<AddStudent/>}/>
+  
       </Routes></BrowserRouter>
     </>
   );

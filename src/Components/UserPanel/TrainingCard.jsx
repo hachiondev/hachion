@@ -15,12 +15,12 @@ import { useNavigate } from 'react-router-dom';
  <img src={imageUrl} alt="Card" className="card-image" />
  <div className='card-header'>
   {/* <p className='card-header-content'> */}
-  <FaCircle style={{color:'rgba(16, 201, 0, 1)',marginRight:'1vh',height:'1.5vh',width:'0.8vw'}}/>Live Demo</div>
+  <FaCircle className='card-header-icon'/>Live Demo</div>
   {/* <div className='card-img-div'>
  </div>  */}
   <img src={props.image} alt='card-img' className='card-icon'/>
  </div>
- <div className='course-details'>
+ <div className='card-course-details'>
  <h5 className='course-name'>{props.heading}</h5>
 <div className='course-time'>
     <h6 className='course-date' >{props.date}</h6>

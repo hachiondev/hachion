@@ -125,7 +125,6 @@ height: 8vh;
 width:6.85vw;
 padding: 5px;
 border-radius:5px;
-
 background-color: rgba(0, 174, 239, 1);
 color:white;
 font-weight: 700;
@@ -133,7 +132,6 @@ font-size:1.1rem;
 border:none;
 margin-left: 250px;
 margin-bottom: 2vh;
-
 }
 
 .modal-footer{
@@ -141,30 +139,32 @@ display: flex;
 justify-items: center;
 }
 
-
 .modal fade{
 width: 21.5vw;
 height:29.4vh ;
 border-radius: 20px 20px 20px 20px;
 }
+
 .modal-para{
 font-size:1.25rem;
 font-weight: 400;
 color:rgba(22, 159, 44, 1);
 }
+
 .recover{
 font-weight:400 ;
 font-size: 2.25rem;
 margin: 4vh;
 }
+
 .login-link-home{
 font-size: 1.1rem;
 font-weight: 500;
 padding:5px;
-
 text-decoration: none;
 color:white;
 }
+
 .login-div{
 display:flex;
 justify-content: center;
@@ -174,7 +174,6 @@ color: white;
 font-weight: 700;
 gap:1rem;
 padding: 10px;
-
 }
 
 
@@ -337,13 +336,16 @@ border-color: #000;
 .carousel-btn{
 display: flex;
 justify-content: center;
+padding-bottom: 5%;
+padding-right: 50%;
 }
 
 .coupon-btn{
 background-color: #000000;
 color: white;
 border-radius: 30px;
-padding:1vh;
+padding: 3px 15px;
+border: none;
 font-size: 1.1rem;
 font-weight: 600;
 }
@@ -351,19 +353,17 @@ font-weight: 600;
 background-color: #EA4335;
 }
 
-
 .home-background{
 background-color:#EEEEEE;
 }
 .register-now-btn{
-
 border-radius: 30px;
-padding:1vh;
+padding: 3px 15px;
 background-color: #ECC963;
 color: #000000;
 border: none;
 margin-top: 2vh;
-font-size: 1.25rem;
+font-size: 1.1rem;
 font-weight: 600;
 }
 .register-now-btn:hover{
@@ -455,7 +455,7 @@ font-weight: 500;
 
 .view-all{
 border-radius: 10px;
-padding: 15px;
+padding: 5px 10px;
 background-color: rgba(0, 174, 239, 1);
 color:rgba(255, 255, 255, 1);
 font-weight:700;
@@ -474,19 +474,21 @@ margin-top: 3vh;
 }
 
 .training-events-head{
+margin-top: 50px;
+margin-left: 40%;
+justify-content: space-between;
 display: flex;
-align-items: center;
-justify-content: center;
-padding-top: 2vh;
-margin-bottom: 2vh;
+padding-top: 20px;
+margin-bottom: 50px;
 }
 
 .view-btn{
 display: flex;
-align-items: flex-end;
+align-items: center;
 justify-content: flex-end;
- margin-right: 250px; 
-margin-top:-80px; 
+margin-right: 60px;
+margin-top:-100px;
+margin-bottom: 50px;
 }
 
 .view-btn:hover{
@@ -495,7 +497,7 @@ font-size:1.1rem;
 
 .card-header-div{
 position:relative;
-display:inline-block; 
+display: flex; 
 }
 
 .card-img-div{
@@ -525,19 +527,39 @@ transition: all 0.3s ease;
 }
 .card-header{
 font-weight: 600;
-font-size: 1.1rem;
+font-size: 16px;
 font-style:italic;
 position: absolute;
 left: 47%;
 border-radius:10px;
-top:1vh;
-margin-top: 1vh;
+top: 0;
+margin-top: 2vh;
 transform: translate(-50%,-50%);
-padding:5px 5px;
+padding:3px 8px !important;
 text-align: center;
 background-color: white !important;
-color: rgba(16, 201, 0, 1);
+color: rgba(16, 201, 0, 1) ;
+white-space: nowrap;
 }
+
+.card-header-icon{
+  margin-right:10px;
+  font-size:10px;
+  color: rgba(16, 201, 0, 1);
+  animation: growShrink 2s infinite ease-in-out;
+  }
+
+  @keyframes growShrink {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.4); /* Grow */
+    }
+    100% {
+      transform: scale(1); /* Shrink back to original size */
+    }
+  }
 
 .dropdown-container {
 position: relative;
@@ -594,7 +616,7 @@ text-align: center;
   box-shadow:5px 5px 5px #d3d3d3;
   }
 
-.course-details{
+.card-course-details{
 padding: 1vh;
 text-align: center;
 transition: all 0.3s ease;
@@ -612,7 +634,7 @@ transition: all 0.3s ease;
 }
 .enroll-btn{
 border-radius:10px;
-padding:1vh 2vh;
+padding: 5px 10px;
 font-size:1.1rem;
 font-weight: 700;
 background-color: rgba(0, 174, 239, 1);
@@ -623,7 +645,7 @@ margin-top: 0.5vh;
 transition: all 0.3s ease
 }
 .enroll-btn:hover{
-background-color: darkblue;
+background-color: #0D6EFD;
 }
 .card:hover .card-img-div{
 width:7vw;
@@ -636,10 +658,19 @@ border-bottom-right-radius: 0;
 border-top-left-radius: 0;
 border-top-right-radius: 0;
 }
-.card:hover .course-details
+.card:hover .card-course-details
 {
 background-color:rgba(0, 174, 239, 1) ;
 color: white !important;
+}
+.card:hover .course-review
+{
+display: none;
+}
+.card:hover .new-batch-para
+{
+color: white !important;
+display: block;
 }
 .card:hover .course-date
 {
@@ -648,11 +679,9 @@ color: white !important;
 }
 .card:hover .course-name
 {
-
 color: white !important;
 }
 .card:hover .card-icon{
-
 height: 10vh;
 }
 .card:hover .enroll-btn{
@@ -705,9 +734,10 @@ cursor: pointer;
 border-radius: 20px 20px 50px 50px; 
 
 }
-.new-batch{
+.new-batch-para{
 display: none;
 }
+
 .card-image {
 display: block;
 width: 100%;
@@ -1392,16 +1422,36 @@ display: none !important; /* Hide the normal navbar items on mobile */
 }
 
 #autoScrollingBanner .carousel-indicators {
+  position: absolute; /* Ensure the indicators are positioned relative to the banner */
+  top:59vh; /* Set 20px margin from the bottom of the banner */
+  left: 35%; /* Center the indicators horizontally */
+  transform: translateX(-35%); /* Centering adjustment */
+  }
+  
+  #autoScrollingBanner .carousel-indicators button {
+  width: 5px;
+  height: 5px;
+  }
+  
+  .carousel-btn{
+    margin-bottom: -40px !important; 
+  padding-right: 50%;
+  }
+  
+#autoScrollingBanner .carousel-indicators {
+  display: flex;
+  justify-content: center;
 top: auto;
 bottom: 0vh; /* 2vh from bottom */
-left: 50%;
+/* left: 50%; */
 transform: translateX(-50%);
 }
 
 .coupon-btn, .register-now-btn {
-font-size: 12px;
-padding: 2px;
-margin-bottom: -30px !important;
+font-size: 10px;
+padding: 2px 5px;
+border-radius: 20px;
+/* margin-bottom: -30px !important; */
 }
 .d-block{
 height: 130px;
@@ -1411,11 +1461,6 @@ height: 130px;
 height: 50px !important;
 margin-top: 0px !important;
 }
-
-/* .association-head{
-font-size: 16px;
-margin-top:-20px;
-} */
 
 .logos{
 padding: 2px 0;
@@ -1431,8 +1476,10 @@ flex-direction: row !important;
 margin-top: 1vh;
 }
 
-.new-batch-para{
+.new-batch-para {
+  display: block;
 font-size: 12px;
+white-space: nowrap;
 }
 
 .card-image{
@@ -1446,37 +1493,67 @@ display: none;
 }
 
 .view-btn{
-margin-right: 72px;
+margin-right: 8%;
 margin-left: 5px;
-margin-top:-60px; 
-
+margin-top:-30px; 
 }
-.course-details{
-padding: 15px;
 
-}
 .view-all{
 font-size: 10px;
 padding: 3px 5px;
 border-radius: 5px;
 }
 
-.card-icon{
-padding: 10px;
-}
+.card{
+  max-Width: 380px;
+  height: 125px;
+  background-color: white;
+  border-radius: 10px;
+  }
 
-.card-header{
-font-size: 10px;
-font-style: italic;
-padding: 0vh;
-margin: 0px;
-top: 5px;
-color: #15750C;
-white-space: nowrap;
+.card-icon{
+  padding: 10px;
+  height: 70px;
+  width: auto;
 }
+  
+.card-header-icon{
+   margin-right:5px;
+    font-size:5px;
+    color: rgba(16, 201, 0, 1);
+    animation: growShrink 2s infinite ease-in-out;
+    }   
+.card-header{
+  font-size: 10px;
+  font-style: italic;
+  padding: 2px 4px !important;
+  margin: 5px;
+  top: 5px;
+  border-radius: 5px;
+  color: #15750C;
+  white-space: nowrap;
+  }
+
+.card-image{
+  width: 150px;
+  height: 125px;
+  }
+
+.card-course-details{
+  padding: 10px;
+  width: auto;
+  height: 125px;
+  }
 
 .course-name{
-font-size: 0.9rem;
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Limits the text to 2 lines */
+  overflow: hidden; /* Hides overflowing text */
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  max-height: 3em;
 }
 
 .course-time{
@@ -1491,9 +1568,9 @@ margin-left: 20px;
 
 .training-events-head{
 padding-top: 5px;
-margin-bottom: 30px;
-margin-top: 20px;
-margin-left: 13%;
+margin-bottom: 0px;
+margin-top: 0px;
+margin-left: 6%;
 justify-content: space-between;
 }
 
@@ -1501,7 +1578,6 @@ justify-content: space-between;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
   padding: 5px;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -1509,7 +1585,7 @@ justify-content: space-between;
 
 .course-title{
   font-size: 14px !important ;
-  margin-left: 13%;
+  margin-left: 8%;
   color: #000;
   font-weight: 700;
   letter-spacing: 2%;
@@ -1577,7 +1653,7 @@ display: none;
 .course-menu-icon {
   font-size: 20px;
   cursor: pointer;
-  margin-right: 55px;
+  margin-right: 30px;
   margin-top: 0;
 }
 
@@ -1587,6 +1663,7 @@ display: none;
   flex-direction: column;
   font-size: 12px;
   text-align: center;
+  max-width: 380px;
   }
 
   .course-card {
@@ -1620,7 +1697,8 @@ font-size: 12px;
 }
 
 .course-review{
-font-size: 14px;
+font-size: 12px;
+white-space: nowrap;
 }
 
 .career-div {

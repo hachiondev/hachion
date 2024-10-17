@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -12,6 +12,9 @@ import salesforceinterview from '../../Assets/salesforceinterview.png';
 
 
 const Salesforce = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
     <>
     <Topbar/>

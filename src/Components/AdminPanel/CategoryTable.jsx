@@ -13,6 +13,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',

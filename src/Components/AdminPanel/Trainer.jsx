@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,16 +52,17 @@ const rows = [
 ];
 
 export default function Trainer() {
+  const navigate=useNavigate();
+  const handleAdd=()=>{
+    navigate('/addtrainer');
+  }
   return (
     <>   
     <CourseCategory
   pageTitle="Trainer"
   headerTitle="View Trainer"
   buttonLabel="Add Trainer"
-  onAdd={() => {
-    // Navigate or perform another action
-    console.log('Navigating to Add Trainer Category Page');
-  }}
+  onAdd={handleAdd}
 ></CourseCategory> <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>

@@ -1,4 +1,3 @@
-
 import './App.css';
 import { Home } from './Components/UserPanel/Home';
 import Login from './Components/UserPanel/Login';
@@ -16,7 +15,7 @@ import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
-import CourseCategory from './Components/AdminPanel/CourseCategory';
+//import CourseCategory from './Components/AdminPanel/CourseCategory';
 import Blogs from './Components/UserPanel/Blogs';
 import QaTesting from './Components/UserPanel/QaTesting';
 import Salesforce from './Components/UserPanel/Salesforce';
@@ -28,6 +27,12 @@ import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
+import Enrollment from './Components/UserPanel/Enrollment';
+import UserWriteReview from './Components/UserPanel/UserWriteReview';
+import AddTrendingCourse from './Components/AdminPanel/AddTrendingCourse';
+import AddTrainer from './Components/AdminPanel/AddTrainer';
+import AddCertificate from './Components/AdminPanel/AddCertificate';
+import AddStudent from './Components/AdminPanel/AddStudent';
 
 function App() {
   return (
@@ -53,6 +58,7 @@ function App() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
+      <Route path='/enroll' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/qatestingblog' element={<QaTestingBlog/>}/>
       <Route path='/aboutus' element={<Aboutus/>}/>
@@ -60,6 +66,12 @@ function App() {
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
+      <Route path='/review' element={<UserWriteReview/>}/>
+      <Route path='/addtrending' element={<AddTrendingCourse/>}/>
+      <Route path='/addtrainer' element={<AddTrainer/>}/>
+      <Route path='/addcertificate' element={<AddCertificate/>}/>
+      <Route path='/addstudent' element={<AddStudent/>}/>
+  
       </Routes></BrowserRouter>
     </>
   );

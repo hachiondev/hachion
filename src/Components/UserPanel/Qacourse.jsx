@@ -14,7 +14,7 @@ const Qacourse = () => {
         <h3 className='qa-subheading'>Automated QA Testing</h3>
         <p className='qa-sub-content'>Automated QA testing has become vital in modern development techniques, especially inside continuous integration and continuous deployment (CI/CD) pipelines. Our training emphasizes the value of automated testing for preserving software quality, speeding up regression testing, and lowering the expenses associated with manual testing efforts. You will learn how to create powerful automated test suites that verify new code modifications do not cause faults in current functionalities. QA Automation Engineer Jobs</p>
         <p className='qa-sub-content'>The need for qualified QA Automation Engineers is increasing, with opportunities in finance, healthcare, technology, and retail. Our training prepares you for a variety of  QA Automation jobs.</p>
-        <img src={image1} alt='key-benefits' style={{padding:'5vh'}}/>
+        <img src={image1} alt='key-benefits'/>
         <h3 className='qa-subheading'>Why Choose Hachion?</h3>
         <p className='qa-sub-content'>Hachion provides the best QA automation course in the USA, designed to fulfill industry requirements. In Hachion we provide a hands-on training approach that will excel in the field of QA Automation.</p>
         <h3 className='qa-subheading'>Conclusion</h3>

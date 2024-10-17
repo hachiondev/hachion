@@ -16,7 +16,7 @@ import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
-import CourseCategory from './Components/AdminPanel/CourseCategory';
+//import CourseCategory from './Components/AdminPanel/CourseCategory';
 import Blogs from './Components/UserPanel/Blogs';
 import QaTesting from './Components/UserPanel/QaTesting';
 import Salesforce from './Components/UserPanel/Salesforce';
@@ -34,6 +34,10 @@ import AddTrendingCourse from './Components/AdminPanel/AddTrendingCourse';
 import AddTrainer from './Components/AdminPanel/AddTrainer';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddStudent from './Components/AdminPanel/AddStudent';
+import AddCourseDetails from './Components/AdminPanel/AddCourseDetails';
+import AddSchedule from './Components/AdminPanel/AddSchedule';
+import AddCurriculum from './Components/AdminPanel/AddCurriculum';
+import AddFaq from './Components/AdminPanel/AddFaq';
 
 function App() {
   return (
@@ -72,6 +76,10 @@ function App() {
       <Route path='/addtrainer' element={<AddTrainer/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addstudent' element={<AddStudent/>}/>
+      <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
+      <Route path='/addschedule' element={<AddSchedule/>}/>
+      <Route path='/addcurriculum' element={<AddCurriculum/>}/>
+      <Route path='/addfaq' element={<AddFaq/>}/>
       </Routes></BrowserRouter>
     </>
   );

@@ -333,7 +333,7 @@
 
 .learner-cover{
   
-    height: 320px;
+    height: 350px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -1225,4 +1225,9 @@
             margin-top: -4vh;
         }
     
+}
+.input-group custom-width{
+    width: 30px !important;
+    display: flex;
+    flex-direction: row !important;
 }

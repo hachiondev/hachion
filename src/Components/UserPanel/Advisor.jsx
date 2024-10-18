@@ -19,27 +19,27 @@ const Advisor = () => {
             <p>Talk to our Advisor</p>
           </div>
           <form className="row g-3" onSubmit={handleSubmit}>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
               </label>
               <input type="text" className="form-control" id="inputName4" placeholder='Enter your full name' required />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label htmlFor="inputCompany4" className="form-label">
                 Company Name<span className="required">*</span>
               </label>
               <input type="text" className="form-control" id="inputCompany4" placeholder='Enter your company name' required />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label htmlFor="inputEmail4" className="form-label">
                 Email ID<span className="required">*</span>
               </label>
               <input type="email" className="form-control" id="inputEmail4" placeholder='abc@gmail.com' required />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
             <label className='form-label'>Mobile Number</label>
-<div class="input-group mb-3 custom-width">
+<div class="input-group custom-width">
   <button type="button" class="btn btn-outline-secondary">+91</button>
   <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="visually-hidden">select</span>
@@ -53,7 +53,7 @@ const Advisor = () => {
   <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
 </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label htmlFor="inputState" className="form-label">
                 No. of People<span className="required">*</span>
               </label>
@@ -64,7 +64,7 @@ const Advisor = () => {
                 ))}
               </select>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label htmlFor="inputCourse4" className="form-label">
                 Training Course<span className="required">*</span>
               </label>

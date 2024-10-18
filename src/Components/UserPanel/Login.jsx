@@ -91,9 +91,9 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
+                  {/* <span className="input-group-text" onClick={togglePasswordVisibility}>
                     {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span>
+                  </span> */}
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 

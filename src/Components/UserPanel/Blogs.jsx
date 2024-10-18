@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -6,8 +6,13 @@ import {MdKeyboardArrowRight} from 'react-icons/md';
 import BlogCardHolder from './BlogCardHolder';
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
+import StickyBar from './StickyBar';
+
 
 const Blogs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
     <>
     <Topbar/>
@@ -16,7 +21,7 @@ const Blogs = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Blogs</h3>
     </div>
-    <p>Home <MdKeyboardArrowRight/> Blogs</p>
+    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs</p>
    <div className='blog-header'>
     <h1 className='blog-heading'>Knowledge hub</h1>
     
@@ -28,6 +33,7 @@ const Blogs = () => {
 </div>
 
 <Footer/>
+<StickyBar/>
 </div>
     </>
   )

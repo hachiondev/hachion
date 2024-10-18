@@ -10,7 +10,7 @@ const Career = () => {
     
   return (
    <>
-   <div className='training-events'>
+   
     <div className='association'>
    <h1 className='association-head'>Hachion enhances career advancement</h1></div>
 <div className='career-div'>
@@ -39,7 +39,6 @@ const Career = () => {
 
 </div>
    </div>
-</div>
 
    
    </>

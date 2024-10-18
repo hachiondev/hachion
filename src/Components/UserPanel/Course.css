@@ -24,8 +24,8 @@
 .sidebar-right-container {
   flex: 3; /* Adjust the flex value to your needs */
   display: flex;
-  flex-direction: column; /* Make the pagination sit below the cards */
-  align-items: center; /* Center align pagination */
+  flex-direction: column; /* Make the course-pagination sit below the cards */
+  align-items: center; /* Center align course-pagination */
   padding: 10px; /* Add some padding for better aesthetics */
 }
 
@@ -35,21 +35,21 @@
   margin: 10px; /* Add margin for spacing */
 }
 
-.pagination-container {
-  position: sticky; /* Keep the pagination fixed at the bottom */
+/* course-pagination for course page */
+.course-pagination-container {
+  position: sticky; /* Keep the course-pagination fixed at the bottom */
   bottom: 20px; /* Space from the bottom */
   width: 100%; /* Full width of the container */
-  text-align: center; /* Center align pagination */
+  text-align: center; /* Center align course-pagination */
   z-index: 10; /* Ensure it's on top of other elements */
 }
-
-.pagination {
+.course-pagination {
   display: flex;
-  justify-content: center; /* Center the pagination buttons */
+  justify-content: center; /* Center the course-pagination buttons */
   margin: 30px 0; /* Add margin for spacing */
 }
 
-.pagination button {
+.course-pagination button {
   font-size: 24px;
   width: 50px;
   height: 50px;
@@ -63,7 +63,7 @@
   transition: background-color 0.3s; /* Smooth color transition */
 }
 
-.pagination .arrow {
+.course-pagination .arrow {
   font-size: 24px;
   width: 50px;
   height: 50px;
@@ -77,17 +77,17 @@
   transition: background-color 0.3s; /* Smooth color transition */
 }
 
-.pagination button:hover {
+.course-pagination button:hover {
   background-color:  #0056b3; /* Darker shade on hover */
 }
 
-.pagination button:disabled {
+.course-pagination button:disabled {
   color: #6a6a6a;
   background-color: #D9D9D9; /* Gray background for disabled */
   cursor: not-allowed; /* Not-allowed cursor */
 }
 
-.pagination .active {
+.course-pagination .active {
   background-color: #00AEEF; /* Active page button color */
   color: #fff;
 }
@@ -186,7 +186,7 @@ color: black;
 }
 .course-banner{
 height:200px;
-width: 100%;;
+width: 100%;
 background-image: url('../../Assets/course_banner.png');
 background-repeat: no-repeat;
 background-size: cover;
@@ -1265,225 +1265,274 @@ color:white;
 font-weight: bold; 
 border:2px solid white;
 }
+.blogs-header{
+  margin-left: 10vw;
+}
+.batch-content-background{
+  background-color: #EEEEEE;
+  margin-left: 40px;
+  margin-right: 25px;
+}
 
 @media screen and (max-width:1366px){
-.qa-course{
-  margin-left: 80px;
- width: 85%;
-}
-.curriculum{
-  margin-left: 80px;
-  width: 85%;
-}
-}
-
+  .qa-course{
+    margin-left: 30px;
+   width: 94%;
+  }
+  .curriculum{
+    margin-left: 30px;
+    width: 94%;
+  }
+  .batch-content-background{
+  
+    margin-left: 2px;
+    margin-right: 40px;
+  }
+  }
+  
 @media (min-width: 1181px) and (max-width: 1366px){
-.upcoming-batch{
-  width: 85%;
-  margin-left: 80px;
+  .upcoming-batch{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .curriculum{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .batch-schedule{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .batch-type{
+    margin-left: 5px;
+  }
+  .mode-of-training{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .career-support{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .qa-course-heading img{
+    height: 600px;
+    width: 90%;
+  }
+  
+  .key-highlights{
+    width: 85%;
+    margin-left: 80px;
+  }
+  
+  .qa-right img{
+    height: 250px !important;
+    width: 320px !important;
+  }
+  .qa-automation-left img{
+    height: 100px;
+  }
+  .qa-automation{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .qa-course{
+    width: 85%;
+    margin-left: 80px;
+  }
+  .qa-right{
+    margin-right: 0px;
+  }
+  
+  .video-btn{
+    margin-top: 20px;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  .certified{
+    font-size: 16px;
+  }
+  .fee{
+    padding-top: 5px;
+  }
+  .enroll-now,.download{
+    margin: 5px;
+    font-size: 22px;
+  }
+  .qa-content{
+    width: 400px !important;
+    margin-left: 0px;
+    padding-top: 0px;
+    font-size: 14px;
+  }
+  .qa-automation{
+    height: 345px;
+    padding: 0px;
+    justify-content: space-evenly;
+  }
+  .qa-automation-left{
+    margin-left: 0px;
+  }
+  }
+@media (min-width: 780px) and (max-width: 1180px){
+  .upcoming-batch{
+    width: 95%;
+    margin-left: 20px;
+    padding-left: 20px;
+  }
+  .batch-type{
+    margin-left: 5px;
+  }
+  .separator{
+    margin: 1px;
+  }
+  .batch-schedule{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .qa-course-heading img{
+    height: 600px;
+    width: 80%;
+  }
+  
+  .key-highlights{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .key-icons{
+    height: 45px;
+    width: 45px;
+    margin-left: 10px;
+  }
+  .key-highlights-para{
+    font-size: 12px;
+  }
+  
+  .qa-right img{
+    height: 220px !important;
+    width: 320px !important;
+  }
+  .qa-automation-left img{
+    height: 100px;
+  }
+  .qa-automation{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .qa-right{
+    margin-right: 0px;
+  }
+  .video-btn{
+    margin-top: 2px;
+    font-size: 16px;
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+  .certified{
+    font-size: 16px;
+  }
+  .blogs-header{
+    margin-left: 2vw;
+  }
+  .fee{
+    padding-top: 5px;
+  }
+  .enroll-now,.download{
+    margin: 5px;
+    font-size: 22px;
+  }
+  .qa-content{
+    width: 400px !important;
+    margin-left: 0px;
+    padding-top: 0px;
+    font-size: 14px;
+  }
+  .qa-automation{
+    height: 345px;
+    padding: 0px;
+    justify-content: space-evenly;
+  }
+  .qa-automation-left{
+    margin-left: 0px;
+  }
+  .mode-of-training{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .career-support{
+    width: 95%;
+    margin-left: 20px;
+  }
 }
-.batch-schedule{
-  width: 95%;
-  margin-left: 5px;
-}
-.batch-type{
-  margin-left: 5px;
-}
-.qa-course-heading img{
-  height: 600px;
-  width: 90%;
-}
-
-.key-highlights{
-  width: 85%;
-  margin-left: 80px;
-}
-
-.qa-right img{
-  height: 250px !important;
-  width: 320px !important;
-}
-.qa-automation-left img{
-  height: 100px;
-}
-.qa-automation{
-  width: 85%;
-  margin-left: 80px;
-}
-.qa-right{
-  margin-right: 0px;
-}
-.video-btn{
-  margin-top: 10px;
-  font-size: 16px;
-}
-.certified{
-  font-size: 16px;
-}
-.fee{
-  padding-top: 5px;
-}
-.enroll-now,.download{
-  margin: 5px;
-  font-size: 22px;
-}
-.qa-content{
-  width: 400px !important;
-  margin-left: 0px;
-  padding-top: 0px;
-  font-size: 14px;
-}
-.qa-automation{
-  height: 345px;
-  padding: 0px;
-  justify-content: space-evenly;
-}
-.qa-automation-left{
-  margin-left: 0px;
-}
-}
-@media (min-width: 481px) and (max-width: 1180px){
-.upcoming-batch{
-  width: 95%;
-  margin-left: 20px;
-}
-.batch-type{
-  margin-left: 5px;
-}
-.separator{
-  margin: 1px;
-}
-.batch-schedule{
-  width: 95%;
-  margin-left: 5px;
-}
-.qa-course-heading img{
-  height: 600px;
-  width: 80%;
-}
-
-.key-highlights{
-  width: 95%;
-  margin-left: 20px;
-}
-.key-icons{
-  height: 45px;
-  width: 45px;
-  margin-left: 10px;
-}
-.key-highlights-para{
-  font-size: 12px;
-}
-
-.qa-right img{
-  height: 220px !important;
-  width: 320px !important;
-}
-.qa-automation-left img{
-  height: 100px;
-}
-.qa-automation{
-  width: 95%;
-  margin-left: 20px;
-}
-.qa-right{
-  margin-right: 0px;
-}
-.video-btn{
-  margin-top: 2px;
-  font-size: 16px;
-}
-.certified{
-  font-size: 16px;
-}
-.fee{
-  padding-top: 5px;
-}
-.enroll-now,.download{
-  margin: 5px;
-  font-size: 22px;
-}
-.qa-content{
-  width: 400px !important;
-  margin-left: 0px;
-  padding-top: 0px;
-  font-size: 14px;
-}
-.qa-automation{
-  height: 345px;
-  padding: 0px;
-  justify-content: space-evenly;
-}
-.qa-automation-left{
-  margin-left: 0px;
-}
-}
-
+  
 @media (min-width:1025px) and (max-width: 1366px) {
-.sidebar-card {
-  flex: 1 1 calc(50% - 10px);
-  max-width: calc(50% - 10px);
+  .sidebar-card {
+    flex: 1 1 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+  }
+  .sidebar-right{
+    margin-right: 10px;
+  }
+  .sidebar-right-all{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
 }
-.sidebar-right{
-  margin-right: 10px;
-}
-
-}
-
+  
 @media screen and (max-width: 1024px){
-.contact-info{
-   gap: 3vw;
-}
-}
-
+  .contact-info{
+     gap: 3vw;
+  }
+ }
+  
 @media (min-width: 481px) and (max-width: 768px){
-.know-more{
-  font-size: 16px;
-  padding: 5px;
+  .know-more{
+    font-size: 16px;
+    padding: 5px;
+  }
+  .features-icon{
+    width: 30px !important;
+    height: 22px !important;
+    padding: 0px;
+  }
+  .career-support{
+    margin-left: 10px;
+  }
+  .profile-building-div img{
+    height: 30px;
+    width: 42px;
+  }
 }
-.features-icon{
-  width: 30px !important;
-  height: 22px !important;
-  padding: 0px;
-}
-.career-support{
-  margin-left: 10px;
-}
-.profile-building-div img{
-  height: 30px;
-  width: 42px;
-}
-}
-
+  
 @media (min-width:481px) and (max-width: 1024px) {
-.sidebar-card {
-  /* flex: 1 1 calc(50% - 20px);
-  max-width: calc(45% - 20px); */
-  width: 280px;
-  height: 300px;
-   
-}
-.sidebar{
-  margin-left: 5px;
-  width: 250px;
-  min-width: 250px;
-  margin-bottom: 30px;
-  margin-top: 20px;
-  overflow-y: visible;
-}
-.sidebar-right-all{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-}
-.course-banner{
-  height: 220px;
-}
-.course-banner-content{
- text-align: center;
-margin-top: -40px;
-}
-}
+  .sidebar-card {
+    /* flex: 1 1 calc(50% - 20px);
+    max-width: calc(45% - 20px); */
+    width: 280px;
+    height: 300px;
+     
+  }
+  .sidebar{
+    margin-left: 5px;
+    width: 250px;
+    min-width: 250px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    overflow-y: visible;
+  }
+  .sidebar-right-all{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  .course-banner{
+    height: 220px;
+  }
+  .course-banner-content{
+   text-align: center;
+  margin-top: -40px;
+  }
+}  
 
 @media (min-width:350px) and (max-width:480px){
 .curriculum{
@@ -1600,6 +1649,10 @@ padding-top: 5px;
   margin-left: 30px;
 }
 
+.course-content {
+  display: block;
+}
+
 .sidebar-heading{
   display: flex;
   align-items: center;
@@ -1611,10 +1664,17 @@ padding-top: 5px;
 .menu-item {
   padding: 10px 20px;
   font-size: 14px;
+  width: 100%;
+}
+
+.submenu-item {
+  padding: 3px 0;
 }
 
 .sidebar {
-  width: 380px;
+  min-width: 100%;
+  max-width: 380px;
+  width: 100%;
   height: auto;
   padding-bottom: 30px;
   margin-bottom: 30px;
@@ -1629,8 +1689,16 @@ padding-top: 5px;
   margin-top: 10px;
 }
 
+.sidebar-right-container {
+  display: block;
+  max-width: 100%;
+  width: 380px;
+  margin-top: 10px; /* Add some space below the sidebar */
+}
+
 .sidebar-right{
-  max-width: 380px;
+  max-width: 100%;
+  width: 380px;
   margin-top: 10px; /* Add some space between sidebar and cards */
   display: none; /* Hide cards by default */
  }
@@ -1642,7 +1710,9 @@ padding-top: 5px;
 .sidebar-card {
   flex-direction: row;
   max-Width: 380px;
+  min-width: 100%;
   max-height: 125px;
+  padding: 10px;
   background-color: white;
   border-radius: 10px;
   align-items: flex-start;
@@ -1714,13 +1784,45 @@ max-height: 3em;
   /* position: relative; */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  overflow-x: scroll;
+  align-items: center;
+  /* overflow-x: scroll; */
   scroll-behavior: smooth;
   margin-top: 10px;
   max-width: 380px;
+  min-width: 100%;
+  width: 100%;
   padding-bottom: 10px;
   gap: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* course-pagination for course page */
+.course-pagination-container {
+  position: sticky; /* Keep the course-pagination fixed at the bottom */
+  bottom: 10px; /* Space from the bottom */
+  width: 100%; /* Full width of the container */
+  text-align: center; /* Center align course-pagination */
+  z-index: 10; /* Ensure it's on top of other elements */
+}
+.course-pagination {
+  display: flex;
+  justify-content: center; /* Center the course-pagination buttons */
+  margin: 10px 0; /* Add margin for spacing */
+}
+
+.course-pagination button {
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  margin: 0 10px; /* Space between buttons */
+}
+
+.course-pagination .arrow {
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  margin: 0 10px; /* Space between buttons */
 }
 
 /* .sidebar-right-all::after {

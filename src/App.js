@@ -1,4 +1,3 @@
-
 import './App.css';
 import { Home } from './Components/UserPanel/Home';
 import Login from './Components/UserPanel/Login';
@@ -34,10 +33,20 @@ import AddTrendingCourse from './Components/AdminPanel/AddTrendingCourse';
 import AddTrainer from './Components/AdminPanel/AddTrainer';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddStudent from './Components/AdminPanel/AddStudent';
-import AddCourseDetails from './Components/AdminPanel/AddCourseDetails';
-import AddSchedule from './Components/AdminPanel/AddSchedule';
+import AddBanner from './Components/AdminPanel/AddBanner';
+import AddBlog from './Components/AdminPanel/AddBlog';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
 import AddFaq from './Components/AdminPanel/AddFaq';
+import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
+import AddResume from './Components/AdminPanel/AddResume';
+import AddReview from './Components/AdminPanel/AddReview';
+import AddSchedule from './Components/AdminPanel/AddSchedule';
+import AddSupport from './Components/AdminPanel/AddSupport';
+import AddCourseDetails from './Components/AdminPanel/AddCourseDetails'
+import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
+import Addvideo from './Components/AdminPanel/Addvideo';
+
+
 
 function App() {
   return (
@@ -76,10 +85,20 @@ function App() {
       <Route path='/addtrainer' element={<AddTrainer/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addstudent' element={<AddStudent/>}/>
+      <Route path='/addbanner' element={<AddBanner/>}/>
+      <Route path='/addblog' element={<AddBlog/>}/>
       <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
-      <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addcurriculum' element={<AddCurriculum/>}/>
       <Route path='/addfaq' element={<AddFaq/>}/>
+      <Route path='/addregularvideo' element={<AddRegularVideos/>}/>
+      <Route path='/addresume' element={<AddResume/>}/>
+      <Route path='/addreview' element={<AddReview/>}/>
+      <Route path='/addschedule' element={<AddSchedule/>}/>
+      <Route path='/addsupport' element={<AddSupport/>}/>
+      <Route path='/addtrendingcourse' element={<AddTrendingCourse/>}/>
+      <Route path='/addvideo' element={<Addvideo/>}/>
+      <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
+  
       </Routes></BrowserRouter>
     </>
   );

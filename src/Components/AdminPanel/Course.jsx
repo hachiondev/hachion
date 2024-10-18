@@ -16,6 +16,7 @@ import CourseCategory from './CourseCategory';
 import automation from '../../Assets/image 80.png';
 import python from '../../Assets/image 90.png';
 import profileImage from '../../Assets/Ellipse 18.png';
+import { useNavigate } from 'react-router-dom';
 
 // Styling the table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -27,6 +28,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     borderRight: '1px solid #e0e0e0',
+    wordWrap: 'break-word', // Allows text to wrap to the next line
+    whiteSpace: 'normal',  // Ensures text breaks onto new lines
+    maxWidth: 400,  
   },
 }));
 
@@ -118,7 +122,41 @@ const reviewRows =  [
 
 export default function Course() {
   const [activeTab, setActiveTab] = useState('courseDetails'); // Default tab is Course Details
+const navigate=useNavigate();
 
+const handleAdd=()=>{
+  switch (activeTab) {
+    case 'courseDetails':
+      navigate('/addcoursedetail');
+      break;
+      case 'schedule':
+        navigate('/addschedule');
+        break;
+    case 'curriculum':
+      navigate('/addcurriculum');
+      break;
+      case 'faq':
+        navigate('/addfaq');
+        break;
+        case 'demoVideos':
+          navigate('/addvideo');
+          break;
+          case 'regularVideos':
+            navigate('/addregularvideo');
+            break;
+            case 'videoAccess':
+              navigate('/addvideoaccess');
+              break;
+              case 'resume':
+                navigate('/addresume');
+                break;
+                case 'review':
+                  navigate('/addreview');
+                  break;
+    default:
+      navigate('/addcoursedetail')
+  }
+}
   const tableHeadings = {
     courseDetails: ['S.No', 'Image', 'Course Name', 'Date', 'Action'],
     schedule: ['S.No', 'Category Name', 'Schedule Course Name', 'Schedule Date', 'Week', 'Time', 'Duration','Mode','Trainer','Created Date','Action'],
@@ -214,9 +252,7 @@ export default function Course() {
         pageTitle="Course"
         headerTitle={activeTab.replace(/([A-Z])/g, ' $1')} // Dynamically updates the header title
         buttonLabel={`Add ${activeTab.replace(/([A-Z])/g, ' $1')}`} // Dynamic button label
-        onAdd={() => {
-          console.log(`Navigating to Add ${activeTab} Page`);
-        }}
+        onAdd={handleAdd}
       />
 
       {/* Table Content */}

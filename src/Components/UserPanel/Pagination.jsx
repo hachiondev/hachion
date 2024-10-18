@@ -107,7 +107,7 @@ const Pagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => 
   };
 
   return (
-    <div className="pagination">
+    <div className="course-pagination">
       <button className="arrow"
         onClick={() => handlePageChange(currentPage - 1)} 
         disabled={currentPage === 1}

@@ -14,6 +14,7 @@ import Support from './Support';
 import Course from './Course';
 import AddCourseCategory from './AddCourseCategory';
 import AddTrendingCourse from './AddTrendingCourse';
+import Other from './Other';
 
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
@@ -66,6 +67,8 @@ const AdminDashboardView = () => {
         return <Support />;
       case 'Course':
         return <Course />;
+        case 'Other':
+          return <Other/>
       default:
         return <AdminDashboard />;
     }

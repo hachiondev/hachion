@@ -82,6 +82,9 @@ const Course = () => {
         setCardsPerPage(4); // Mobile view
       } else if (width <= 1024) {
         setCardsPerPage(8); // Tablet view
+      }
+      else if (width <= 1366) {
+        setCardsPerPage(8); // Tablet view
       } else {
         setCardsPerPage(12); // Desktop view
       }

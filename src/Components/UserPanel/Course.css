@@ -580,12 +580,7 @@ padding-left: 10px;
 border: none;
 border-radius: 5px;
 }
-@media  (min-width:1025px) and (max-width: 1366px){
-  .sidebar-right-container{
-    flex: 2;
-    padding: 5px;
-  }
-}
+
 
 /* Time input adjustments */
 /* .time-picker {
@@ -1271,15 +1266,28 @@ color:white;
 font-weight: bold; 
 border:2px solid white;
 }
+.blogs-header{
+  margin-left: 10vw;
+}
+.batch-content-background{
+  background-color: #EEEEEE;
+  margin-left: 40px;
+  margin-right: 25px;
+}
 
 @media screen and (max-width:1366px){
 .qa-course{
-  margin-left: 80px;
- width: 85%;
+  margin-left: 30px;
+ width: 94%;
 }
 .curriculum{
-  margin-left: 80px;
-  width: 85%;
+  margin-left: 30px;
+  width: 94%;
+}
+.batch-content-background{
+
+  margin-left: 2px;
+  margin-right: 40px;
 }
 }
 
@@ -1288,12 +1296,24 @@ border:2px solid white;
   width: 85%;
   margin-left: 80px;
 }
+.curriculum{
+  width: 85%;
+  margin-left: 80px;
+}
 .batch-schedule{
   width: 95%;
-  margin-left: 5px;
+  margin-left: 20px;
 }
 .batch-type{
   margin-left: 5px;
+}
+.mode-of-training{
+  width: 85%;
+  margin-left: 80px;
+}
+.career-support{
+  width: 85%;
+  margin-left: 80px;
 }
 .qa-course-heading img{
   height: 600px;
@@ -1316,12 +1336,18 @@ border:2px solid white;
   width: 85%;
   margin-left: 80px;
 }
+.qa-course{
+  width: 85%;
+  margin-left: 80px;
+}
 .qa-right{
   margin-right: 0px;
 }
+
 .video-btn{
-  margin-top: 10px;
+  margin-top: 20px;
   font-size: 16px;
+  margin-left: 10px;
 }
 .certified{
   font-size: 16px;
@@ -1348,10 +1374,11 @@ border:2px solid white;
   margin-left: 0px;
 }
 }
-@media (min-width: 481px) and (max-width: 1180px){
+@media (min-width: 780px) and (max-width: 1180px){
 .upcoming-batch{
   width: 95%;
   margin-left: 20px;
+  padding-left: 20px;
 }
 .batch-type{
   margin-left: 5px;
@@ -1361,7 +1388,7 @@ border:2px solid white;
 }
 .batch-schedule{
   width: 95%;
-  margin-left: 5px;
+  margin-left: 20px;
 }
 .qa-course-heading img{
   height: 600px;
@@ -1398,9 +1425,14 @@ border:2px solid white;
 .video-btn{
   margin-top: 2px;
   font-size: 16px;
+  margin-left: 10px;
+  margin-top: 20px;
 }
 .certified{
   font-size: 16px;
+}
+.blogs-header{
+  margin-left: 2vw;
 }
 .fee{
   padding-top: 5px;
@@ -1423,7 +1455,16 @@ border:2px solid white;
 .qa-automation-left{
   margin-left: 0px;
 }
+.mode-of-training{
+  width: 95%;
+  margin-left: 20px;
 }
+.career-support{
+  width: 95%;
+  margin-left: 20px;
+}
+}
+
 
 @media (min-width:1025px) and (max-width: 1366px) {
 .sidebar-card {
@@ -1433,7 +1474,11 @@ border:2px solid white;
 .sidebar-right{
   margin-right: 10px;
 }
-
+.sidebar-right-all{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
 }
 
 @media screen and (max-width: 1024px){

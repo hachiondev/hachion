@@ -580,6 +580,12 @@ padding-left: 10px;
 border: none;
 border-radius: 5px;
 }
+@media  (min-width:1025px) and (max-width: 1366px){
+  .sidebar-right-container{
+    flex: 2;
+    padding: 5px;
+  }
+}
 
 /* Time input adjustments */
 /* .time-picker {
@@ -760,22 +766,9 @@ background-color: white;
 }
 
 .batch-type-content {
-<<<<<<< HEAD
-  cursor: pointer;
-  padding: 1vh;
-  position: relative;
- 
-}
-.batch-content-background{
-  background-color: #EEEEEE;
-  margin-left: 40px;
-  margin-right: 25px;
-  padding-bottom: 10px;
-=======
 cursor: pointer;
 padding: 1vh;
 position: relative;
->>>>>>> a948e47efe7d4ab3d5889cf42199f808e033e0ce
 }
 
 .batch-type-content.active::after {
@@ -827,21 +820,12 @@ padding-top: 4vh;
 }
 
 .batch-schedule {
-<<<<<<< HEAD
   
   display: flex;
  margin-left: 5vh;
   width: 95%;
   height: auto;
   border-radius: 10px;
-=======
-
-display: flex;
-margin-left: 5px;
-width: 99%;
-height: auto;
-border-radius: 10px;
->>>>>>> a948e47efe7d4ab3d5889cf42199f808e033e0ce
 padding-top: 25px;
 }
 
@@ -1397,52 +1381,6 @@ border:2px solid white;
   font-size: 12px;
 }
 
-<<<<<<< HEAD
-  .qa-right img{
-    height: 220px !important;
-    width: 280px !important;
-  }
-  .qa-automation-left img{
-    height: 100px;
-  }
-  .qa-automation{
-    width: 98%;
-    margin-left: 10px;
-gap: 10px;
-  }
-  .qa-right{
-    margin-right: 10px;
-  }
-  .video-btn{
-    margin-top: 2px;
-    font-size: 16px;
-    margin-left: 20px;
-  }
-  .certified{
-    font-size: 16px;
-  }
-  .fee{
-    padding-top: 5px;
-  }
-  .enroll-now,.download{
-    margin: 5px;
-    font-size: 22px;
-  }
-  .qa-content{
-    width: 400px !important;
-    margin-left: 0px;
-    padding-top: 0px;
-    font-size: 14px;
-  }
-  .qa-automation{
-   
-    padding: 10px;
-    justify-content: space-evenly;
-  }
-  .qa-automation-left{
-    margin-left: 0px;
-  }
-=======
 .qa-right img{
   height: 220px !important;
   width: 320px !important;
@@ -1485,7 +1423,6 @@ gap: 10px;
 .qa-automation-left{
   margin-left: 0px;
 }
->>>>>>> a948e47efe7d4ab3d5889cf42199f808e033e0ce
 }
 
 @media (min-width:1025px) and (max-width: 1366px) {

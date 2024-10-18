@@ -371,7 +371,6 @@ background-color: #EA4335;
 }
 
 .association{
-height: 7px;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -486,7 +485,7 @@ margin-bottom: 50px;
 display: flex;
 align-items: center;
 justify-content: flex-end;
-margin-right: 60px;
+margin-right: 255px;
 margin-top:-100px;
 margin-bottom: 50px;
 }
@@ -753,7 +752,7 @@ display: flex;
 flex-direction: row;
 justify-content:center;
 margin-top: 2vh;
-gap: 4vh; 
+gap: 40px; 
 }
 
 .course-names {
@@ -815,7 +814,7 @@ gap: 1.5vh;
 margin-left: auto;
 margin-right: auto;
 justify-content: center;
-padding: 2vh;
+padding: 20px;
 width: 80%; 
 }
 
@@ -833,10 +832,6 @@ align-items: center;
 padding: 1vh;
 }
 
-.online-training-div img {
-height: 9vh;
-width: 4.5vw;
-}
 
 .Live-online{
 font-weight: 700;
@@ -1023,11 +1018,6 @@ gap:1vh;
     width: 40vw; 
     margin-bottom: 2vh;
 }
-
-.online-training-div img {
-    height: 12vh;
-    width: 10vw;
-}
 }
 
 @media (min-width: 1181px) and (max-width: 1366px){
@@ -1039,11 +1029,18 @@ gap:1vh;
   width: calc(33.33% - 10px); 
   
 }
+
 .view-btn{
-  margin-right: 100px;
-  margin-top: -100px;
+  margin-right: 105px;
+  margin-top: -120px;
 }
 
+.whatsapp-number,
+.training-email,
+.query-content {
+  font-size: 28px;
+ 
+}
 }
 
 @media screen and (max-width: 1180px) {
@@ -1059,7 +1056,7 @@ gap:1vh;
 .whatsapp-number,
 .training-email,
 .query-content {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .training-mail-icon {
@@ -1081,22 +1078,6 @@ gap:1vh;
   font-size: 1rem; /* Adjust button font size for smaller screens */
   padding: 0.8vh;
 }
-
-.courses-list {
-flex-direction: row;
-justify-content: space-between;
-gap: 1vh;
-}
-
-.course-names {
-font-size: 0.9rem;
-margin: 0.5vh 0.5vw;
-}
-
-.view-btn{
-margin-right: 35px; 
-margin-top:-100px; 
-}
 .training-card-holder{
   max-width: 94vw;
   gap: 10px;
@@ -1107,7 +1088,16 @@ margin-top:-100px;
     width: 430px; /* Reduce width for tablet screens */
     margin-left: 0 !important /* Remove margin for better alignment */
   }
+.courses-list{
+  gap: 15px;
+  margin-left: 20px;
+}
 
+.course-names {
+  font-size: 24px;
+  margin: 15px;
+  gap: 15px;
+  }
 }
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
@@ -1131,6 +1121,20 @@ margin-top:-100px;
   margin-left: 0px;
 }
 
+.training-events{
+  margin-bottom:10px;
+  margin-top: 10px;
+  }
+  
+  .training-events-head{
+  margin-top: 50px;
+  margin-left: 25%;
+  justify-content: space-between;
+  display: flex;
+ 
+  margin-bottom: 50px;
+  }
+
 .drawer-toggle-btn {
   display: none; /* Hide the drawer toggle button on tablet */
 }
@@ -1144,18 +1148,20 @@ margin-top:-100px;
   }
 
 .training-card-holder {
-  gap: 1vh;
-  max-width: 95vw !important;
+  gap: 5px;
+  max-width: 90vw !important;
 }
 
 .new-batch{
 display: none;
 }
-
+.courses-list{
+  font-size: 20px;
+}
 .view-btn{
-margin-right: 30px;
+margin-right: 60px;
 margin-left: 10px;
-margin-top:-85px; 
+margin-top:-105px; 
 font-size: 12px;
 
 }
@@ -1195,11 +1201,6 @@ justify-content: center;
 .online-training-div {
 width: 40vw; 
 margin-bottom: 2vh;
-}
-
-.online-training-div img {
-height: 12vh;
-width: 10vw;
 }
 }
 
@@ -1561,10 +1562,7 @@ gap: 5px;
 font-size: 10px;
 }
 
-.association-head{
-font-size: 16px !important ;
-margin-left: 20px;
-}
+
 
 .training-events-head{
 padding-top: 5px;

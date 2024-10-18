@@ -117,7 +117,7 @@ Hyderabad 500072.</p>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
 </div>
 <div class="mb-3">
 <button type="button" class="submit-button">Submit</button>

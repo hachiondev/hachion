@@ -37,9 +37,9 @@ const Advisor = () => {
               </label>
               <input type="email" className="form-control" id="inputEmail4" placeholder='abc@gmail.com' required />
             </div>
-            <div className="col-md-4">
+            <div className='col-md-4'>
             <label className='form-label'>Mobile Number</label>
-<div class="input-group custom-width">
+<div class="input-group mb-3 custom-width">
   <button type="button" class="btn btn-outline-secondary">+91</button>
   <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="visually-hidden">select</span>
@@ -51,7 +51,7 @@ const Advisor = () => {
     <li><a class="dropdown-item" href="#">+20</a></li>
   </ul>
   <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
-</div>
+  </div>
             </div>
             <div className="col-md-4">
               <label htmlFor="inputState" className="form-label">

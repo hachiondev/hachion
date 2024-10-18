@@ -379,8 +379,9 @@ color:white;
 font-size: 1.5rem;
 font-weight: 700;
 margin-top: 2vh;
-margin-left: 7vw;
+margin-left: 3vw;
 margin-bottom: 3vh;
+margin-right: 3vw;
 }
 
 .video-btn:hover{
@@ -459,7 +460,7 @@ justify-content: space-evenly;
 display:flex;
 flex-direction:column;
 justify-content: space-evenly;
-margin-right: 130px;
+margin-right: 50px;
 
 }
 
@@ -1305,7 +1306,7 @@ border:2px solid white;
   margin-left: 20px;
 }
 .batch-type{
-  margin-left: 5px;
+  margin-left: 25px;
 }
 .mode-of-training{
   width: 85%;
@@ -1347,7 +1348,7 @@ border:2px solid white;
 .video-btn{
   margin-top: 20px;
   font-size: 16px;
-  margin-left: 10px;
+  margin-left: 40px;
 }
 .certified{
   font-size: 16px;
@@ -1468,8 +1469,8 @@ border:2px solid white;
 
 @media (min-width:1025px) and (max-width: 1366px) {
 .sidebar-card {
-  flex: 1 1 calc(50% - 10px);
-  max-width: calc(50% - 10px);
+ width: 320px;
+ height: 300px;
 }
 .sidebar-right{
   margin-right: 10px;
@@ -1479,7 +1480,28 @@ border:2px solid white;
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;
 }
+
 }
+@media (min-width:780px) and (max-width: 1024px) {
+  .sidebar-card {
+   width: 280px;
+   height: 260px;
+  }
+  .sidebar-right{
+    margin-right: 10px;
+  }
+  .sidebar-right-all{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  
+  }
+  .sidebar{
+    width: 300px;
+  }
+  
+  }
+
+
 
 @media screen and (max-width: 1024px){
 .contact-info{
@@ -1506,7 +1528,7 @@ border:2px solid white;
 }
 }
 
-@media (min-width:481px) and (max-width: 1024px) {
+@media (min-width:780px) and (max-width: 1024px) {
 .sidebar-card {
   /* flex: 1 1 calc(50% - 20px);
   max-width: calc(45% - 20px); */
@@ -1764,7 +1786,7 @@ max-height: 3em;
   /* overflow: hidden;
   display: flex;
   flex-direction: row; */
-  /* max-height: 350px; Limit height to show only a few cards at once */
+  /* max-height: 350px; */
   /* position: relative; */
   display: flex;
   flex-direction: column;

@@ -167,7 +167,9 @@
 }
 
 .menu-item-admin .menu-icon {
-  margin-right: 0.5vw;
+ margin-right: 10px;
+  color: white;
+  margin-top: 5px;
 }
 
 .menu-item-admin:hover {

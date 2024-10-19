@@ -159,11 +159,11 @@ color: black;
 }
 
 .menu-item:hover {
-  background-color: rgba(0, 174, 239, 1);
+  background-color: #00AEEF;
   color:rgba(255, 255, 255, 1);
 }
 .menu-item.active {
-  background-color: rgba(0, 174, 239, 1);
+  background-color: #00AEEF;
   color: rgba(255, 255, 255, 1);
 }
 
@@ -296,18 +296,21 @@ padding: 10px;
   display: flex;
   flex-direction: column;
   margin-left:10px;
-  margin-right:4vw;
+  margin-right: 10px;
  }
 
 .sidebar-right-all {
-display: flex;
+/* display: flex;
 flex-wrap: wrap;
 justify-content: flex-start; 
 align-items: stretch; 
-gap: 20px; 
+gap: 20px;  */
 margin: 0 auto; 
 max-width: 1600px;
 padding-left: 20px;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 5px;
 }
 
 /* .sidebar-card {
@@ -1274,105 +1277,6 @@ border:2px solid white;
   margin-right: 25px;
 }
 
-@media screen and (max-width:1366px){
-  .qa-course{
-    margin-left: 30px;
-   width: 94%;
-  }
-  .curriculum{
-    margin-left: 30px;
-    width: 94%;
-  }
-  .batch-content-background{
-  
-    margin-left: 2px;
-    margin-right: 40px;
-  }
-  }
-  
-@media (min-width: 1181px) and (max-width: 1366px){
-  .upcoming-batch{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .curriculum{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .batch-schedule{
-    width: 95%;
-    margin-left: 20px;
-  }
-  .batch-type{
-    margin-left: 5px;
-  }
-  .mode-of-training{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .career-support{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .qa-course-heading img{
-    height: 600px;
-    width: 90%;
-  }
-  
-  .key-highlights{
-    width: 85%;
-    margin-left: 80px;
-  }
-  
-  .qa-right img{
-    height: 250px !important;
-    width: 320px !important;
-  }
-  .qa-automation-left img{
-    height: 100px;
-  }
-  .qa-automation{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .qa-course{
-    width: 85%;
-    margin-left: 80px;
-  }
-  .qa-right{
-    margin-right: 0px;
-  }
-  
-  .video-btn{
-    margin-top: 20px;
-    font-size: 16px;
-    margin-left: 10px;
-  }
-  .certified{
-    font-size: 16px;
-  }
-  .fee{
-    padding-top: 5px;
-  }
-  .enroll-now,.download{
-    margin: 5px;
-    font-size: 22px;
-  }
-  .qa-content{
-    width: 400px !important;
-    margin-left: 0px;
-    padding-top: 0px;
-    font-size: 14px;
-  }
-  .qa-automation{
-    height: 345px;
-    padding: 0px;
-    justify-content: space-evenly;
-  }
-  .qa-automation-left{
-    margin-left: 0px;
-  }
-  }
 @media (min-width: 780px) and (max-width: 1180px){
   .upcoming-batch{
     width: 95%;
@@ -1462,49 +1366,100 @@ border:2px solid white;
     width: 95%;
     margin-left: 20px;
   }
-}
+  }
   
-@media (min-width:1025px) and (max-width: 1366px) {
-  .sidebar-card {
-    flex: 1 1 calc(50% - 10px);
-    max-width: calc(50% - 10px);
-  }
-  .sidebar-right{
-    margin-right: 10px;
-  }
-  .sidebar-right-all{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-  }
-}
   
-@media screen and (max-width: 1024px){
-  .contact-info{
-     gap: 3vw;
+  @media (min-width:1025px) and (max-width: 1366px) {
+    .sidebar-card {
+     height: 320px;
+     width: 300px;
+    }
+    .sidebar-right{
+      margin-right: 10px;
+    }
+    .sidebar-right-all{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+    }
   }
- }
+    
   
-@media (min-width: 481px) and (max-width: 768px){
-  .know-more{
-    font-size: 16px;
-    padding: 5px;
-  }
-  .features-icon{
-    width: 30px !important;
-    height: 22px !important;
-    padding: 0px;
-  }
-  .career-support{
-    margin-left: 10px;
-  }
-  .profile-building-div img{
-    height: 30px;
-    width: 42px;
-  }
-}
+  @media (min-width:780px) and (max-width: 1024px) {
+    .sidebar-card {
+     width: 280px;
+     height: 260px;
+    }
+    .sidebar-right{
+      margin-right: 10px;
+    }
+    .sidebar-right-all{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    
+    }
+    .sidebar{
+      width: 300px;
+    }
+    
+    }
   
-@media (min-width:481px) and (max-width: 1024px) {
+  @media screen and (max-width: 1024px){
+    .contact-info{
+       gap: 3vw;
+    }
+   }
+    
+  @media (min-width: 481px) and (max-width: 768px){
+    .know-more{
+      font-size: 16px;
+      padding: 5px;
+    }
+    .features-icon{
+      width: 30px !important;
+      height: 22px !important;
+      padding: 0px;
+    }
+    .career-support{
+      margin-left: 10px;
+    }
+    .profile-building-div img{
+      height: 30px;
+      width: 42px;
+    }
+  }
+    
+  @media (min-width:481px) and (max-width: 1024px) {
+    .sidebar-card {
+      /* flex: 1 1 calc(50% - 20px);
+      max-width: calc(45% - 20px); */
+      width: 280px;
+      height: 300px;
+       
+    }
+    .sidebar{
+      margin-left: 5px;
+      width: 250px;
+      min-width: 250px;
+      margin-bottom: 30px;
+      margin-top: 20px;
+      overflow-y: visible;
+    }
+    .sidebar-right-all{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+    }
+    .course-banner{
+      height: 220px;
+    }
+    .course-banner-content{
+     text-align: center;
+    margin-top: -40px;
+    }
+  }  
+  
+  @media (min-width:780px) and (max-width: 1024px) {
   .sidebar-card {
     /* flex: 1 1 calc(50% - 20px);
     max-width: calc(45% - 20px); */
@@ -1532,7 +1487,7 @@ border:2px solid white;
    text-align: center;
   margin-top: -40px;
   }
-}  
+  }  
 
 @media (min-width:350px) and (max-width:480px){
 .curriculum{
@@ -1658,7 +1613,11 @@ padding-top: 5px;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  height: 60px;
+  height: 50px;
+  width: auto;
+  margin: 0 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
 
 .menu-item {
@@ -1671,13 +1630,25 @@ padding-top: 5px;
   padding: 3px 0;
 }
 
-.sidebar {
+/* .sidebar {
   min-width: 100%;
   max-width: 380px;
   width: 100%;
   height: auto;
   padding-bottom: 30px;
   margin-bottom: 30px;
+} */
+
+.mobile-dropdown {
+  width: auto;
+  margin: 10px;
+}
+
+.dropdown-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-color: #00AEEF;
 }
 
 .sidebar-top{
@@ -1691,16 +1662,16 @@ padding-top: 5px;
 
 .sidebar-right-container {
   display: block;
+  width: auto;
   max-width: 100%;
-  width: 380px;
-  margin-top: 10px; /* Add some space below the sidebar */
+  padding: 0 10px;
 }
 
 .sidebar-right{
   max-width: 100%;
   width: 380px;
   margin-top: 10px; /* Add some space between sidebar and cards */
-  display: none; /* Hide cards by default */
+  display: block; /* Hide cards by default */
  }
 
 .sidebar-enroll-btn {
@@ -1710,6 +1681,7 @@ padding-top: 5px;
 .sidebar-card {
   flex-direction: row;
   max-Width: 380px;
+  width: 100%;
   min-width: 100%;
   max-height: 125px;
   padding: 10px;
@@ -1785,12 +1757,13 @@ max-height: 3em;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-wrap: nowrap;
   /* overflow-x: scroll; */
   scroll-behavior: smooth;
   margin-top: 10px;
-  max-width: 380px;
+  max-width: 100%;
   min-width: 100%;
-  width: 100%;
+  width: auto;
   padding-bottom: 10px;
   gap: 10px;
   padding-left: 5px;

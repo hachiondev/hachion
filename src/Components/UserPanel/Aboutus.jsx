@@ -34,7 +34,7 @@ const Aboutus = () => {
         <img src={aboutUsBanner} alt='about-us' />
       </div>
       <div className='about-us'>
-        <p>Home <MdKeyboardArrowRight /> About Us</p>
+        <p className='blogs-header'>Home <MdKeyboardArrowRight /> About Us</p>
         <div className='about-us-content'>
           <h1 className='about-us-heading'>About Hachion</h1>
           <div className='about-us-top'>

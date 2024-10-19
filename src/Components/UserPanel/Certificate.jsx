@@ -57,7 +57,7 @@ export default function Certificate() {
             <StyledTableCell align="right">Course Name</StyledTableCell>
             <StyledTableCell align="right">Course Status</StyledTableCell>
             <StyledTableCell align="right">Date</StyledTableCell>
-            <StyledTableCell align="right">Certificate</StyledTableCell>
+            <StyledTableCell align="center">Certificate</StyledTableCell>
           
           </TableRow>
         </TableHead>
@@ -69,7 +69,7 @@ export default function Certificate() {
               <StyledTableCell align="right">{row.course_name}</StyledTableCell>
               <StyledTableCell align="right">{row.course_status}</StyledTableCell>
               <StyledTableCell align="right">{row.Date}</StyledTableCell>
-              <StyledTableCell align="right">{row.Certificate}</StyledTableCell>
+              <StyledTableCell align="center">{row.Certificate}</StyledTableCell>
 
             
             </StyledTableRow>

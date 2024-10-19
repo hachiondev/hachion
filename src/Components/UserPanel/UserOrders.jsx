@@ -59,7 +59,7 @@ export default function UserOrders() {
             <StyledTableCell align="right">Course Name</StyledTableCell>
             <StyledTableCell align="right">Duration</StyledTableCell>
             <StyledTableCell align="right">Fee</StyledTableCell>
-            <StyledTableCell align="right">Invoice Bill</StyledTableCell>
+            <StyledTableCell align="center">Invoice Bill</StyledTableCell>
           
           </TableRow>
         </TableHead>
@@ -71,7 +71,7 @@ export default function UserOrders() {
               <StyledTableCell align="right">{row.course_name}</StyledTableCell>
               <StyledTableCell align="right">{row.Duration}</StyledTableCell>
               <StyledTableCell align="right">{row.Fee}</StyledTableCell>
-              <StyledTableCell align="right">{row.Invoice_Bill}</StyledTableCell>
+              <StyledTableCell align="center">{row.Invoice_Bill}</StyledTableCell>
 
             
             </StyledTableRow>

@@ -61,7 +61,7 @@ export default function UserReviews() {
                     <StyledTableCell>S.No.</StyledTableCell>
                     <StyledTableCell align="right">Course Name</StyledTableCell>
                     <StyledTableCell align="right">Rating</StyledTableCell>
-                    <StyledTableCell align="right">Reviews</StyledTableCell>
+                    <StyledTableCell align="center">Reviews</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -70,7 +70,7 @@ export default function UserReviews() {
                       <StyledTableCell>{row.S_No}</StyledTableCell>
                       <StyledTableCell align="right">{row.course_name}</StyledTableCell>
                       <StyledTableCell align="right">{row.Rating}</StyledTableCell>
-                      <StyledTableCell align="right">{row.Reviews}</StyledTableCell>
+                      <StyledTableCell align="center">{row.Reviews}</StyledTableCell>
                     </StyledTableRow>
                   ))}
                 </TableBody>

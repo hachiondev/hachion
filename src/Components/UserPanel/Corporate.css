@@ -715,6 +715,13 @@
     .row .col-md-6 {
         margin-bottom: 10px;
     }
+}
+
+@media  (min-width:780px) and (max-width: 1179px){
+    .association-head{
+        font-size: 28px;
+        margin-left: 10px;
+    }
   }
 
 @media (max-width: 1180px) {
@@ -740,9 +747,30 @@
     .right-quotes{
         margin-left: 90vw;
     }
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
 
+    .learner-card-item {
+      display: flex;
+      justify-content: center; 
+    }
+  
+    .learner-card {
+      width: 68vw; 
+      margin-left:160px;
+    }
+    .left-quotes{
+        margin-left: 2vh;
+    }
+    .learner-info{
+        margin-top: 20px;
+    }
+    .right-quotes{
+        margin-left: 90vw;
+    }
  
-  }
+}
  
 @media (max-width: 1024px) {
     .blogs-container {
@@ -760,7 +788,7 @@
     .left-quotes{
         margin-left: 4vh;
     }
-  }
+}
   
 @media (max-width: 768px) {
     .blogs-container {
@@ -799,60 +827,60 @@
         width: 50px;
         margin-left: 87vw;
     }
-  }
+}
 
 @media  (min-width:480px) and (max-width: 1179px){
-        .contact-us-corporate{
-            margin-left: 300px;
-            margin-top: 50px;
-        }
-        .training-img{
-            height: 350px;
-        }
-        .hachion-content{
-            width: 95%;
-            margin-left: 10px;
-        }
-        
-    .customize-training-div{
-        width: 50vw;
-    }
-    .customize-training-div img{
-        padding: 0px;
-    }
-    .leading-expert {
-       max-width: 100%;
-       margin-left: 0px;
-    }
-    .leading-expert-card{
-        width: 40vw;
-       
-    }
-    
-    .view-all-div {
-        margin-right: 10vw;
-    }
-    .leading-expert{
-        width: 95%;
-    }
-    .corporate-training-features{
-        width: 100vw;
-        margin-left: 0px;
+    .contact-us-corporate{
+        margin-left: 300px;
+        margin-top: 50px;
     }
     .training-img{
-        height: 360px;
+        height: 350px;
     }
-    .advisor-form{
-        margin:10px;
+    .hachion-content{
+        width: 95%;
+        margin-left: 10px;
     }
     
-    .form-select{
-        margin-left: 0px;
-    }
-    .row .col-md-6 {
-        margin-bottom: 10px;
-    }
-  }
+.customize-training-div{
+    width: 50vw;
+}
+.customize-training-div img{
+    padding: 0px;
+}
+.leading-expert {
+   max-width: 100%;
+   margin-left: 0px;
+}
+.leading-expert-card{
+    width: 40vw;
+   
+}
+
+.view-all-div {
+    margin-right: 10vw;
+}
+.leading-expert{
+    width: 95%;
+}
+.corporate-training-features{
+    width: 100vw;
+    margin-left: 0px;
+}
+.training-img{
+    height: 360px;
+}
+.advisor-form{
+    margin:10px;
+}
+
+.form-select{
+    margin-left: 0px;
+}
+.row .col-md-6 {
+    margin-bottom: 10px;
+}
+}
 
 @media (min-width:350px) and (max-width:480px){
     .hachion-content {
@@ -941,14 +969,15 @@
         flex-direction: column;         
         justify-content: center;
         align-items: flex-start;
-        height: 150px;
-        margin-top: -10px !important;
+        height: 100px;
+        margin-top: 0px !important;
+        margin-bottom: 20px;
         margin-left: 10px; /* Adjusted to match the smaller image size */
       }
     
       .learner-name {
         font-size: 16px;
-        white-space: nowrap; /* Prevents name from wrapping */
+        flex-wrap: wrap;
         margin-left: 0px; /* Move the name away from the image */
         z-index: 0; /* To ensure the image is above the name */
       }   
@@ -958,6 +987,7 @@
         font-size: 16px;
         padding-bottom: 0vh;
         padding-top: 5px;
+        margin-bottom: 5px;
     }
 
     .learner-name img{
@@ -970,8 +1000,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top:-10px;
-        margin-left: 5px;
       }
 
       .star-icon{
@@ -984,18 +1012,20 @@
         text-align: center;
         font-size: 14px;
         margin-left: 0px;
+        margin-bottom: 5px;
       }
 
       .job-location {
         text-align: center;
         font-size: 14px;
         margin-left: 0px;
+        margin-bottom: 5px;
       }
     
       .learner-description-bottom {
         display: flex;
         justify-content: center;
-        margin-top: 20px;
+     
       }
     
       .learner-description {
@@ -1003,7 +1033,7 @@
         text-align:justify; /* Center the text for a balanced look */
         margin-left: 5px;
         margin-right: 5px;
-        margin-top: -40px;
+        
       }
 
       .quotesleft-icon{
@@ -1012,7 +1042,7 @@
         display: flex;
         color: rgba(97, 97, 97, 1);
         margin: 0 5px;
-        margin-top:-50px;
+        
       }
     
       .quotesright-icon{
@@ -1021,20 +1051,21 @@
         color: rgba(97, 97, 97, 1);
          margin: 0 5px;
         margin-left:5px;
-        margin-top:30px;
+        margin-top:70px;
       }
 
       .left-quotes{
         height: 60px;
         width: 60px;
         margin-left: 3vw;
+        margin-top: -30px;
         position: absolute; 
         z-index: 10;
       }
       .right-quotes{
         height: 60px;
         width: 60px;
-        margin-top: -6vh; 
+        margin-top: -30px; 
         margin-left: 82vw;
         position: absolute; 
         z-index: 10;

@@ -4,6 +4,13 @@
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif;
 }
+.admin-login{
+  background-color: #00AEEF;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+}
 
 .admin-nav {
     height: 8vh;

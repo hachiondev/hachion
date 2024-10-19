@@ -29,7 +29,7 @@ const ContactUs = () => {
 <img src={contactUsBanner} alt='contact-us-banner'/>
   </div>
   <div className='contact-us-all'>
-  <p>Home <MdKeyboardArrowRight/> Contact Us</p>
+  <p className='blogs-header'>Home <MdKeyboardArrowRight/> Contact Us</p>
   <h1 className='about-us-heading'>Office Location</h1>
  
 <div className='contact-us'>
@@ -117,7 +117,7 @@ Hyderabad 500072.</p>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
 </div>
 <div class="mb-3">
 <button type="button" class="submit-button">Submit</button>

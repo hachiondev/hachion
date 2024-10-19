@@ -51,7 +51,7 @@ const Advisor = () => {
     <li><a class="dropdown-item" href="#">+20</a></li>
   </ul>
   <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
-</div>
+  </div>
             </div>
             <div className="col-md-4">
               <label htmlFor="inputState" className="form-label">

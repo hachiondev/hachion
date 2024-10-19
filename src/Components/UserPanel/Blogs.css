@@ -13,6 +13,7 @@
   flex-direction: column;
   padding: 2vh;
 }
+
 .salesforce-blog-left h3{
   font-size: 1.5rem;
   font-weight: 700;
@@ -122,12 +123,11 @@
 }
 }
 .about-banner{
- 
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        height: 500px;
+       
       }
       
       .about-banner img {
@@ -138,6 +138,7 @@
       .about-us{
         background-color: #EEEEEE;
         padding: 4vh;
+    
       }
       .about-us-content{
         width: 80%;
@@ -294,7 +295,6 @@ margin-bottom: 0;
 display: flex;
 flex-direction: row;
 justify-content: space-evenly;
-
 margin-left: 8vw;
 }
 .contact-us-left{
@@ -506,4 +506,7 @@ width: 480px;
 .flag{
   height: 100px;
   width: 100px;
+}
+.form-label-comment{
+  width: 450px;
 }

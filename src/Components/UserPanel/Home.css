@@ -1012,34 +1012,96 @@ gap:1vh;
 }
 
 @media  (min-width:1025px) and (max-width: 1366px)  {
-.career-div {
-    width: 95%; 
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
+  .career-div {
+      width: 95%; 
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+  }
+  
+  .online-training-div {
+      width: 40vw; 
+      margin-bottom: 2vh;
+  }
+
+  .search-div-home {
+    width: 430px; /* Reduce width for tablet screens */
+    margin-left: 0 !important /* Remove margin for better alignment */
+  }
+.courses-list{
+  gap: 15px;
+  margin-left: 20px;
 }
 
-.online-training-div {
-    width: 40vw; 
-    margin-bottom: 2vh;
-}
-
-.online-training-div img {
-    height: 12vh;
-    width: 10vw;
-}
-}
+.course-names {
+  font-size: 24px;
+  margin: 15px;
+  gap: 15px;
+  }
+  }
 
 @media (min-width: 1181px) and (max-width: 1366px){
-.training-card-holder{
-  max-width: 85vw;
-  gap: 10px;
-}
-.card {
-  width: calc(33.33% - 10px); 
-  
+    .training-card-holder{
+      max-width: 85vw;
+      gap: 10px;
+    }
+    .card {
+      width: calc(33.33% - 10px); 
+      
+    }
+    
+    .view-btn{
+      margin-right: 105px;
+      margin-top: -120px;
+    }
+    
+    .whatsapp-number,
+    .training-email,
+    .query-content {
+      font-size: 28px;
+     
+    }
 }
 
+@media screen and (max-width: 1180px) {
+      .topbar {
+        height: 60px;
+        padding: 0 5vw;
+      }
+      
+      .topbar-left {
+        width: auto; /* Allow auto width to fit content */
+      }
+      
+      .whatsapp-number,
+      .training-email,
+      .query-content {
+        font-size: 20px;
+      }
+      
+      .training-mail-icon {
+        font-size: 1.5rem;
+      }
+      
+      .login-div-content {
+        font-size: 1rem;
+      }
+      
+      #autoScrollingBanner .carousel-indicators {
+        top: auto; /* Reset top */
+        bottom: 2vh; /* Position 2vh from the bottom */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%);
+      }
+      
+      .coupon-btn, .register-now-btn {
+        font-size: 1rem; /* Adjust button font size for smaller screens */
+        padding: 0.8vh;
+      }
+      .training-card-holder{
+        max-width: 94vw;
+        gap: 10px;
+      }
 }
 
 @media screen and (max-width: 1024px) {
@@ -1097,152 +1159,163 @@ margin-top:-100px;
 
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
-.navbar {
-  height: 10vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px; /* Add padding to reduce the space */
-}
-
-.search-div-home {
-  width: 250px; /* Reduce width for tablet screens */
-  margin-left: 0 !important; /* Remove margin for better alignment */
-}
-
-.navbar-nav {
-  gap: 2px; /* Add gap between the items */
+  .navbar {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px; /* Add padding to reduce the space */
+  }
+  
+  .search-div-home {
+    width: 250px; /* Reduce width for tablet screens */
+    margin-left: 0 !important /* Remove margin for better alignment */
+  }
+  
+  .navbar-nav {
+    gap: 2px; /* Add gap between the items */
+    font-size: 12px;
+    margin: 0;
+    margin-left: 0px;
+  }
+  
+  .training-events{
+    margin-bottom:10px;
+    margin-top: 10px;
+    }
+    
+    .training-events-head{
+    margin-top: 50px;
+    margin-left: 25%;
+    justify-content: space-between;
+    display: flex;
+   
+    margin-bottom: 50px;
+    }
+  
+  .drawer-toggle-btn {
+    display: none; /* Hide the drawer toggle button on tablet */
+  }
+  
+  .mobile-drawer {
+    display: none; /* Ensure drawer is not visible on tablet */
+  }
+  
+  .card {
+    width: calc(33.33% - 10px); 
+    }
+  
+  .training-card-holder {
+    gap: 5px;
+    max-width: 90vw !important;
+  }
+  
+  .new-batch{
+  display: none;
+  }
+  .courses-list{
+    font-size: 20px;
+  }
+  .view-btn{
+  margin-right: 60px;
+  margin-left: 10px;
+  margin-top:-105px; 
   font-size: 12px;
-  margin: 0;
-  margin-left: 0px;
-}
-
-.drawer-toggle-btn {
-  display: none; /* Hide the drawer toggle button on tablet */
-}
-
-.mobile-drawer {
-  display: none; /* Ensure drawer is not visible on tablet */
-}
-
-.card {
-  width: calc(33.33% - 10px); 
+  
+  }
+  .view-all{
+    width: auto;  
+  }
+  
+  .card-header{
+    font-size: 12px;
+    top: 0vh;
+    padding: 0vh;
+    width: auto;
+  }
+  
+  .footer-heading {
+  font-size: 1rem;
+  }
+  .footer-content {
+  font-size: 0.8rem;
+  }
+  .footer-link img{
+  height: 40px;
+  width: 40px;
+  }
+  
+  .footer-bottom{
+  justify-content: space-evenly;
+  }
+  
+  .career-div {
+  width: 95%; 
+  margin-left: auto; 
+  margin-right: auto;
+  justify-content: center;
+  }
+  
+  .online-training-div {
+  width: 40vw; 
+  margin-bottom: 2vh;
+  }
   }
 
-.training-card-holder {
-  gap: 1vh;
-  max-width: 95vw !important;
-}
-
-.new-batch{
-display: none;
-}
-
-.view-btn{
-margin-right: 60px;
-margin-left: 10px;
-margin-top:-45px; 
-font-size: 12px;
-
-}
-.view-all{
-  width: auto;  
-}
-
-.card-header{
-  font-size: 12px;
-  top: 0vh;
-  padding: 0vh;
-  width: auto;
-}
-
-.footer-heading {
-font-size: 1rem;
-}
-.footer-content {
-font-size: 0.8rem;
-}
-.footer-link img{
-height: 40px;
-width: 40px;
-}
-
-.footer-bottom{
-justify-content: space-evenly;
-}
-
-.career-div {
-width: 95%; 
-margin-left: auto; 
-margin-right: auto;
-justify-content: center;
-}
-
-.online-training-div {
-width: 40vw; 
-margin-bottom: 2vh;
-}
-
-.online-training-div img {
-height: 12vh;
-width: 10vw;
-}
-}
-
 @media screen and (max-width: 768px) {
-.topbar {
-  height: 50px;
-  padding: 0 2vw;
-}
-
-.topbar-left {
-  width: auto;
-}
-
-.query-content {
-  font-size: 14px;
-}
-
-.training-mail-icon {
-  font-size: 1.5rem;
-}
-
-.whatsapp-number,
-.training-email {
-  font-size: 14px;
-}
-
-.login-div-content {
-  font-size: 0.9rem;
-}
-
-.button-login{
-  margin-left: 35vw;
-  width:8vw;
-  height:4vh;
-  font-size: 0.7rem;
-}
-.modal fade{
-  width: 400px;
-  height:300px ;
-  font-size: 0.8rem;
-}
-.success-gif{
-height: 40px;
-width: 40px;
-}
-
-.courses-list {
-flex-direction: row;
-justify-content: space-between;
-gap: 1vh;
-}
-
-.course-names {
-font-size: 0.6rem;
-margin: 0.5vh 0.5vw;
-}
-}
+  .topbar {
+    height: 50px;
+    padding: 0 2vw;
+  }
+  
+  .topbar-left {
+    width: auto;
+  }
+  
+  .query-content {
+    font-size: 14px;
+  }
+  
+  .training-mail-icon {
+    font-size: 1.5rem;
+  }
+  
+  .whatsapp-number,
+  .training-email {
+    font-size: 14px;
+  }
+  
+  .login-div-content {
+    font-size: 0.9rem;
+  }
+  
+  .button-login{
+    margin-left: 35vw;
+    width:8vw;
+    height:4vh;
+    font-size: 0.7rem;
+  }
+  .modal fade{
+    width: 400px;
+    height:300px ;
+    font-size: 0.8rem;
+  }
+  .success-gif{
+  height: 40px;
+  width: 40px;
+  }
+  
+  .courses-list {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1vh;
+  }
+  
+  .course-names {
+  font-size: 0.6rem;
+  margin: 0.5vh 0.5vw;
+  }
+  }
 
 /* Styles for Mobile (max-width: 480px) */
 @media (min-width: 350px) and (max-width: 480px) {

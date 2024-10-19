@@ -29,7 +29,7 @@ const ContactUs = () => {
 <img src={contactUsBanner} alt='contact-us-banner'/>
   </div>
   <div className='contact-us-all'>
-  <p>Home <MdKeyboardArrowRight/> Contact Us</p>
+  <p className='blogs-header'>Home <MdKeyboardArrowRight/> Contact Us</p>
   <h1 className='about-us-heading'>Office Location</h1>
  
 <div className='contact-us'>

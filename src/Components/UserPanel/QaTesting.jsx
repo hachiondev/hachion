@@ -24,7 +24,7 @@ const QaTesting = () => {
         <div className='blog-banner'>
           <h3 className='blog-banner-content'>QA Testing</h3>
         </div>
-        <p>Home <MdKeyboardArrowRight /> Blogs <MdKeyboardArrowRight /> Qa Testing</p>
+        <p className='blogs-header'>Home <MdKeyboardArrowRight /> Blogs <MdKeyboardArrowRight /> Qa Testing</p>
       
         <div className='batch-type' style={{ width: '80%', marginLeft: '10vw' }}>
           <p className='batch-type-content'>Publications</p>

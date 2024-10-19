@@ -23,7 +23,7 @@ const Salesforce = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Salesforce</h3>
     </div>
-    <p>Home <MdKeyboardArrowRight/> Blogs <MdKeyboardArrowRight/> Salesforce</p>
+    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs <MdKeyboardArrowRight/> Salesforce</p>
    
    <div className='batch-type' style={{width:'80%',marginLeft:'10vw'}}>
  <p className='batch-type-content'>Publications</p>

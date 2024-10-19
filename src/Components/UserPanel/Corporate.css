@@ -348,6 +348,7 @@
 .learner-cover{
   
     height: 350px;
+    height: 350px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -742,51 +743,31 @@
     }
   }
 
-@media (max-width: 1366px) {
+@media (max-width: 1180px) {
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+
     .learner-card-item {
-      justify-content: center;
-      gap: 0vw; 
+      display: flex;
+      justify-content: center; 
     }
-    .learner-card{
-        width: 40vw;
+  
+    .learner-card {
+      width: 68vw; 
+      margin-left:160px;
     }
-    .learner-name{
-        margin-top: -40px;
-    }
-    .custom-prev-icon{
-        margin-left: -5vh;
-    }
-    .custom-next-icon{
-        margin-right: -220px;
-    }
- .learner-info{
-    margin-left: 10px;
-    margin-top: 20px;
- }
     .left-quotes{
-        margin-top: -5vh;
+        margin-left: 2vh;
+    }
+    .learner-info{
+        margin-top: 20px;
     }
     .right-quotes{
-        margin-left: 92vw;
-        margin-top: -2vh;
+        margin-left: 90vw;
     }
-    .learner-name img{
-        height: 40px;
-        width: 40px;
 
-    }
- .learner-image{
-    height: 140px;
-    width: 140px;
- }
- .profile-image{
-    height: 136px;
-    width: 136px;
- }
- .carousel-indicators{
-    top: 90%;
-    left: 0%;
- }
+ 
   }
  
 @media (max-width: 1180px) {
@@ -827,13 +808,13 @@
     .custom-prev-icon{
         margin-left: -10vh;
     }
-    .learner-image{
+    /* .learner-image{
         height: 90px;
         width: 100px;
-    }
+    } */
     .profile-image{
-        height: 88px !important;
-        width: 98px !important;
+        height: 80px !important;
+        width: 80px !important;
     }
     .learner-name img{
         height: 30px;
@@ -973,39 +954,37 @@
     
       .learner-top {
         display: flex;
-        justify-content: flex-start;
-        align-items: center;
+        /* justify-content: flex-start; */
+        /* align-items: center; */
+        flex-direction: row;
+        margin-top: -10px;
       }
     
-      .learner-image {
+      .profile-image {
         position: absolute;
-        top: -40px;
+        top: -20px;
         margin-left: 5px;
-        width: 90px;
-        height: 90px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%; /* Make the image circular */
         border: 3px solid #fff;
         z-index: 1; /* Ensure the image is above other content */
       }
 
-      .profile-image{
-        height: 85px !important;
-        width: 85px !important;
-    }
-
       .learner-info {
         display: flex;
         flex-direction: column;         
         justify-content: center;
-        align-items: center;
-        margin-top: 10px !important;
-        margin-left: 60px; /* Adjusted to match the smaller image size */
+        align-items: flex-start;
+        height: 150px;
+        margin-top: -10px !important;
+        margin-left: 10px; /* Adjusted to match the smaller image size */
       }
     
       .learner-name {
         font-size: 16px;
         white-space: nowrap; /* Prevents name from wrapping */
-        margin-left: 60px; /* Move the name away from the image */
+        margin-left: 0px; /* Move the name away from the image */
         z-index: 0; /* To ensure the image is above the name */
       }   
 
@@ -1039,18 +1018,19 @@
       .job-profile{
         text-align: center;
         font-size: 14px;
-        margin-left: 10px;
+        margin-left: 0px;
       }
 
       .job-location {
         text-align: center;
         font-size: 14px;
-        margin-left: -70px;
+        margin-left: 0px;
       }
     
       .learner-description-bottom {
         display: flex;
         justify-content: center;
+        margin-top: 20px;
       }
     
       .learner-description {

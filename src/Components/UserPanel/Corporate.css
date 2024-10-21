@@ -10,7 +10,7 @@
 }
 .corporate-banner{
     width: 100%; 
-    height: 650px; 
+    height: 570px; 
     background-image: url('../../Assets/Group 39809.png');
     background-size: cover;
     background-position: center;
@@ -19,7 +19,7 @@
 .corporate-banner-heading{
     font-size: 2.1rem;
     font-weight: 700;
-    padding-top: 8vh;
+    padding-top: 5vh;
     padding-left: 8.3vw;
     color: #fff;
 }
@@ -27,7 +27,7 @@
     font-size: 2.8rem;
     font-weight: 700;
     color:#fff;
-    padding-top: 8vh;
+    padding-top: 6vh;
     text-align: center;
 
 }
@@ -59,7 +59,21 @@
     border-radius: 20px;
     box-shadow: 5px 5px 5px #d3d3d3;
 }
+.custom-width .btn, 
+.custom-width .form-control {
+    width: 60px !important; /* Adjust width as needed */
+}
 
+.custom-width .dropdown-menu {
+    min-width: 100px; /* Adjust dropdown menu width if necessary */
+}
+.mobile-number{
+  width: 220px !important;
+}
+.flag{
+  height: 100px;
+  width: 100px;
+}
 .about-us-row {
     display: flex;
     flex-wrap: wrap; 
@@ -268,9 +282,8 @@
 }
 
 .advisor-form {
-   
-    margin-left: 10vw;
-    margin-right: 10vw;
+   width: 80%;
+   margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
 }
@@ -302,18 +315,6 @@
 }
 
 
-.form-select{
-    margin-left:20px;
-}
-
-#Textarea {
-    height: 120px;
-    width: 100%;
-}
-
-.row .col-md-6 {
-    margin-bottom: 20px;
-}
 
 .submit-btn {
   
@@ -333,7 +334,7 @@
 
 .learner-cover{
   
-    height: 350px;
+    height: 380px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -347,7 +348,7 @@
    }
    .learner-card{
        height: auto;
-       width: 40vw;
+       width: 38vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
@@ -403,9 +404,7 @@
     }
 
    .learner-info{
-       height: 160px;
        margin-left: 100px;
-       margin-top: 2vh !important;
        display: flex;
        flex-direction: column; 
        justify-content: center; 
@@ -441,7 +440,7 @@
      cursor: pointer;
      z-index: 1;
      border-radius: 50%;
-     margin-left: 1vh;
+     margin-left: -20px;
    }
    .custom-next-icon {
        font-size: 2.25rem;
@@ -454,7 +453,7 @@
      }
    
      .carousel-indicators {
-       top: 45vh;
+       top: 37vh;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -482,19 +481,19 @@
     justify-content: center;
   }
   .left-quotes{
-    height: 113.97px;
+    height: 80px;
      z-index: 1;
-      width: 148.59px;
+      width: 80px;
        color: rgba(0, 174, 239, 1);
-        margin-bottom: -8vh; 
+        margin-bottom: -4vh; 
   }
   .right-quotes{
-    height: 113.97px;
+    height: 80px;
      z-index: 1;
-      width: 148.59px;
+      width: 80px;
        color: rgba(0, 174, 239, 1);
-        margin-top: -8vh; 
-        margin-left: 90vw;
+        margin-top: -6vh; 
+        margin-left: 94vw;
   }
 
   .quotesleft-icon{
@@ -531,7 +530,7 @@
     font-size: 2.15rem;
   }
   .blog-banner {
-    height: 400px;
+    height: 220px;
     width: 100vw;
     background-image: url('../../Assets/blogbanner.png');
     background-repeat: no-repeat;
@@ -556,6 +555,9 @@
 }
 .blog-header{
     text-align: center;
+}
+.blogs-header{
+    margin-left: 10vw;
 }
 .blog-content{
     font-size: 1.5rem;
@@ -659,6 +661,10 @@
     margin-left: 10vw;
 
   }
+  .training-events{
+    background-color: #EEEEEE;
+    margin: 0px;
+  }
 .card-holder{
     width: 80%;
     display: flex;
@@ -715,6 +721,18 @@
     .row .col-md-6 {
         margin-bottom: 10px;
     }
+
+    .learner-info{
+        margin-left: 10px;
+        margin-top: -15px;
+    }
+    .left-quotes{
+        margin-top: -40px;
+    }
+    .right-quotes{
+        margin-bottom: -50px;
+        margin-left: 92vw;
+    }
 }
 
 @media  (min-width:780px) and (max-width: 1179px){
@@ -724,7 +742,7 @@
     }
   }
 
-@media (max-width: 1180px) {
+  @media (max-width: 1180px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
@@ -740,12 +758,14 @@
     }
     .left-quotes{
         margin-left: 2vh;
+        margin-top: -30px;
     }
     .learner-info{
-        margin-top: 20px;
+        margin-left: 10px;
     }
     .right-quotes{
         margin-left: 90vw;
+        margin-bottom: -40px;
     }
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
@@ -823,9 +843,10 @@
         margin-top: 20px;
     }
     .right-quotes{
-        height: 50px;
-        width: 50px;
-        margin-left: 87vw;
+        height: 60px;
+        width: 60px;
+        margin-left: 90vw;
+        margin-bottom: -30px;
     }
 }
 
@@ -929,7 +950,7 @@
         align-content: center;
         max-width: 400px;
         height: 320px;
-        margin-top: 20px;
+        margin-top: 0px;
       }
     
       .learner-card {
@@ -969,7 +990,7 @@
         flex-direction: column;         
         justify-content: center;
         align-items: flex-start;
-        height: 100px;
+        height: auto;
         margin-top: 0px !important;
         margin-bottom: 20px;
         margin-left: 10px; /* Adjusted to match the smaller image size */
@@ -1000,6 +1021,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-left: 0;
+        
       }
 
       .star-icon{
@@ -1013,6 +1036,7 @@
         font-size: 14px;
         margin-left: 0px;
         margin-bottom: 5px;
+        white-space: nowrap;
       }
 
       .job-location {
@@ -1029,7 +1053,7 @@
       }
     
       .learner-description {
-        font-size: 14px;
+        font-size: 12px;
         text-align:justify; /* Center the text for a balanced look */
         margin-left: 5px;
         margin-right: 5px;
@@ -1066,7 +1090,7 @@
         height: 60px;
         width: 60px;
         margin-top: -30px; 
-        margin-left: 82vw;
+        margin-left: 75%;
         position: absolute; 
         z-index: 10;
       }
@@ -1233,4 +1257,21 @@
     width: 30px !important;
     display: flex;
     flex-direction: row !important;
+}
+
+#advisor1{
+    height: 50px !important;
+    width: 450px !important;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    gap: 50px !important;
+}
+#advisor2{
+    width: 200px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 976px !important;
 }

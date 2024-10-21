@@ -352,7 +352,6 @@ margin:1vh;
 padding:1vh;
 display: flex;
 flex-direction: row;
-justify-content: space-evenly;
 gap: 60px;
 margin-left:10vw;
 margin-right: 10vw;
@@ -364,7 +363,6 @@ margin-bottom: 50px;
 .qa-automation-left{
 display: flex;
 flex-direction: row;
-margin-left: 1vh;
 }
 
 .qa-automation-left img{
@@ -382,8 +380,9 @@ color:white;
 font-size: 1.5rem;
 font-weight: 700;
 margin-top: 2vh;
-margin-left: 7vw;
+margin-left: 3vw;
 margin-bottom: 3vh;
+margin-right: 3vw;
 }
 
 .video-btn:hover{
@@ -462,7 +461,7 @@ justify-content: space-evenly;
 display:flex;
 flex-direction:column;
 justify-content: space-evenly;
-margin-right: 130px;
+margin-right: 50px;
 
 }
 
@@ -539,8 +538,7 @@ cursor: pointer;
 
 /* Style for request batch modal */
 .request-batch {
-height: 672px;
-width: 600px;
+padding-bottom: 20px;
 border-radius: 20px !important;
 background-color: white;
 }
@@ -562,7 +560,7 @@ justify-content: center;
 .date-picker-wrapper {
 position: relative;
 display: flex;
-align-items: center;
+
 }
 
 .black-calendar {
@@ -579,10 +577,12 @@ background: linear-gradient(45deg, #00AEEF, #006489);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 color: white;
-padding-left: 10px;
+right: 10px;
+top: 50%;
 border: none;
 border-radius: 5px;
 }
+
 
 /* Time input adjustments */
 /* .time-picker {
@@ -595,38 +595,11 @@ padding-left: 10px;
 } */
 
 /* Input field styling */
-.form-control {
-padding-right: 40px;
-margin: 0 4vh;
-padding: 1.5vh;
-color: #fff;
-}
 
-.form-label {
-margin: 0 4vh;
-padding: 1.5vh;
-}
-
-.mobile-number-container {
-display: flex;
-align-items: center;
-margin-left: 4vh;
-}
-
-.mobile-number-container select {
-height: 44px;
-margin-bottom: 3vh;
-}
-
-.mobile-number-container input {
-flex-grow: 1;
-height: 44px;
-margin-bottom: 3vh;
-}
 
 .btn-submit {
-margin-left: 4vh;
-width: calc(100% - 8vh);
+
+width: 520px !important;
 background-color: #00AEEF;
 }
 
@@ -817,12 +790,12 @@ padding-top: 4vh;
 }
 
 .batch-schedule {
-
-display: flex;
-margin-left: 5px;
-width: 99%;
-height: auto;
-border-radius: 10px;
+  
+  display: flex;
+ margin-left: 5vh;
+  width: 95%;
+  height: auto;
+  border-radius: 10px;
 padding-top: 25px;
 }
 
@@ -1227,7 +1200,7 @@ font-weight: 600;
 font-size: 14px;
 position: fixed;
 bottom: 0;
-width: 100%;
+width: 100vw;
 height: 50px;
 background-color: #000000; 
 color: white;
@@ -1273,8 +1246,8 @@ border:2px solid white;
 }
 .batch-content-background{
   background-color: #EEEEEE;
-  margin-left: 40px;
-  margin-right: 25px;
+  margin-left: 25px;
+  margin-right: 45px;
 }
 
 @media (min-width: 780px) and (max-width: 1180px){
@@ -1319,6 +1292,46 @@ border:2px solid white;
     height: 100px;
   }
   .qa-automation{
+    width: 98% !important;
+    margin-left: 10px;
+  }
+  .qa-right{
+    margin-right: 0px;
+  }
+  .video-btn{
+    margin-top: 2px;
+    font-size: 16px;
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+  .certified{
+    font-size: 16px;
+  }
+  .blogs-header{
+    margin-left: 2vw;
+  }
+  .fee{
+    padding-top: 5px;
+  }
+  .enroll-now,.download{
+    margin: 5px;
+    font-size: 22px;
+  }
+  .qa-content{
+    width: 400px !important;
+    margin-left: 0px;
+    padding-top: 0px;
+    font-size: 14px;
+  }
+  .qa-automation{
+    height: 345px;
+    padding: 0px;
+    justify-content: space-evenly;
+  }
+  .qa-automation-left{
+    margin-left: 0px;
+  }
+  .mode-of-training{
     width: 95%;
     margin-left: 20px;
   }
@@ -1366,100 +1379,49 @@ border:2px solid white;
     width: 95%;
     margin-left: 20px;
   }
+}
+  
+@media (min-width:1025px) and (max-width: 1366px) {
+  .sidebar-card {
+    flex: 1 1 calc(50% - 10px);
+    max-width: calc(50% - 10px);
   }
-  
-  
-  @media (min-width:1025px) and (max-width: 1366px) {
-    .sidebar-card {
-     height: 320px;
-     width: 300px;
-    }
-    .sidebar-right{
-      margin-right: 10px;
-    }
-    .sidebar-right-all{
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 5px;
-    }
+  .sidebar-right{
+    margin-right: 10px;
   }
-    
-  
-  @media (min-width:780px) and (max-width: 1024px) {
-    .sidebar-card {
-     width: 280px;
-     height: 260px;
-    }
-    .sidebar-right{
-      margin-right: 10px;
-    }
-    .sidebar-right-all{
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-    
-    }
-    .sidebar{
-      width: 300px;
-    }
-    
-    }
-  
-  @media screen and (max-width: 1024px){
-    .contact-info{
-       gap: 3vw;
-    }
-   }
-    
-  @media (min-width: 481px) and (max-width: 768px){
-    .know-more{
-      font-size: 16px;
-      padding: 5px;
-    }
-    .features-icon{
-      width: 30px !important;
-      height: 22px !important;
-      padding: 0px;
-    }
-    .career-support{
-      margin-left: 10px;
-    }
-    .profile-building-div img{
-      height: 30px;
-      width: 42px;
-    }
+  .sidebar-right-all{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
   }
-    
-  @media (min-width:481px) and (max-width: 1024px) {
-    .sidebar-card {
-      /* flex: 1 1 calc(50% - 20px);
-      max-width: calc(45% - 20px); */
-      width: 280px;
-      height: 300px;
-       
-    }
-    .sidebar{
-      margin-left: 5px;
-      width: 250px;
-      min-width: 250px;
-      margin-bottom: 30px;
-      margin-top: 20px;
-      overflow-y: visible;
-    }
-    .sidebar-right-all{
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 5px;
-    }
-    .course-banner{
-      height: 220px;
-    }
-    .course-banner-content{
-     text-align: center;
-    margin-top: -40px;
-    }
-  }  
+}
   
-  @media (min-width:780px) and (max-width: 1024px) {
+@media screen and (max-width: 1024px){
+  .contact-info{
+     gap: 3vw;
+  }
+ }
+  
+@media (min-width: 481px) and (max-width: 768px){
+  .know-more{
+    font-size: 16px;
+    padding: 5px;
+  }
+  .features-icon{
+    width: 30px !important;
+    height: 22px !important;
+    padding: 0px;
+  }
+  .career-support{
+    margin-left: 10px;
+  }
+  .profile-building-div img{
+    height: 30px;
+    width: 42px;
+  }
+}
+  
+@media (min-width:481px) and (max-width: 1024px) {
   .sidebar-card {
     /* flex: 1 1 calc(50% - 20px);
     max-width: calc(45% - 20px); */
@@ -1487,7 +1449,7 @@ border:2px solid white;
    text-align: center;
   margin-top: -40px;
   }
-  }  
+}  
 
 @media (min-width:350px) and (max-width:480px){
 .curriculum{
@@ -1608,7 +1570,10 @@ padding-top: 5px;
   display: block;
 }
 
-.sidebar-heading{
+.mob-sidebar-heading{
+  background-color: rgba(0, 174, 239, 1);
+  color:rgba(255, 255, 255, 1);
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1618,6 +1583,15 @@ padding-top: 5px;
   margin: 0 10px;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
+}
+
+.mob-sidebar-text{
+  color: #000;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  width: auto;
 }
 
 .menu-item {
@@ -1656,8 +1630,8 @@ padding-top: 5px;
 }
 
 .sidebar.show-cards .sidebar-right {
-  display: block; /* Show cards when a menu is clicked */
-  margin-top: 10px;
+  display: none; /* Show cards when a menu is clicked */
+  /* margin-top: 10px; */
 }
 
 .sidebar-right-container {
@@ -1688,6 +1662,7 @@ padding-top: 5px;
   background-color: white;
   border-radius: 10px;
   align-items: flex-start;
+  margin: 5px;
 }
 
 .sidebar-card-header-div {
@@ -1765,7 +1740,7 @@ max-height: 3em;
   min-width: 100%;
   width: auto;
   padding-bottom: 10px;
-  gap: 10px;
+  gap: 0px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -1852,7 +1827,10 @@ max-height: 3em;
 
 .know-more{
   font-size: 12px;
-  padding: 2px 5px;
+  right: 2%; 
+  bottom: 7%;
+  border-radius: 10px;
+  padding: 1px 5px;
   border-radius: 5px;
 }
 
@@ -2006,4 +1984,49 @@ max-height: 3em;
 .button-close {
   font-size: 16px; /* Reduce close button size for mobile */
 }
+  /* popup */
+#query1{
+  width: 300px !important;
+ }
+ #query2{
+  width: 160px !important;
+  height: 50px;
+ }
+ #query3{
+  width: 300px !important;
+  height: 60px;
+ }
+ .btn-submit{
+  width: 300px !important;
+  margin-left: 25px;
+ }
+ .request-batch{
+  padding-bottom: 5px;
+ }
+}
+
+query1{
+  width: 520px ;
+  height: 50px ;
+}
+.query-form{
+  margin-left: 20px;
+  padding: 20px;
+}
+#query2{
+  width: 400px !important;
+}
+#query3{
+  width: 520px;
+  height: 100px;
+}
+.request-form{
+  margin-left: 20px;
+  padding: 20px;
+}
+@media (min-width:540px) and (max-width:1024px){
+  #query2{
+    width: 375px !important;
+    height: 50px;
+  }
 }

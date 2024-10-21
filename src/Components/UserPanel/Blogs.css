@@ -494,7 +494,7 @@ width: 480px;
 .custom-width .btn, 
 .custom-width .form-control {
     width: 60px !important; /* Adjust width as needed */
-    margin-left: 40px;
+  
 }
 
 .custom-width .dropdown-menu {
@@ -509,4 +509,8 @@ width: 480px;
 }
 .form-label-comment{
   width: 450px;
+}
+.row{
+  display: flex;
+  flex-direction: row !important;
 }

@@ -19,23 +19,26 @@ const Advisor = () => {
             <p>Talk to our Advisor</p>
           </div>
           <form className="row g-3" onSubmit={handleSubmit}>
+            <div className='row'>
             <div className="col-md-4">
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="inputName4" placeholder='Enter your full name' required />
+              <input type="text" className="form-control" id="advisor1" placeholder='Enter your full name' required />
             </div>
             <div className="col-md-4">
               <label htmlFor="inputCompany4" className="form-label">
                 Company Name<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="inputCompany4" placeholder='Enter your company name' required />
+              <input type="text" className="form-control" id="advisor1" placeholder='Enter your company name' required />
             </div>
+            </div>
+            <div className='row'>
             <div className="col-md-4">
               <label htmlFor="inputEmail4" className="form-label">
                 Email ID<span className="required">*</span>
               </label>
-              <input type="email" className="form-control" id="inputEmail4" placeholder='abc@gmail.com' required />
+              <input type="email" className="form-control" id="advisor1" placeholder='abc@gmail.com' required />
             </div>
             <div className="col-md-4">
             <label className='form-label'>Mobile Number</label>
@@ -50,14 +53,16 @@ const Advisor = () => {
     <li><a class="dropdown-item" href="#">+11</a></li>
     <li><a class="dropdown-item" href="#">+20</a></li>
   </ul>
-  <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
+  <input type="number" className="mobile-number" id='advisor2' aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
+  </div>
   </div>
             </div>
+            <div className='row'>
             <div className="col-md-4">
               <label htmlFor="inputState" className="form-label">
                 No. of People<span className="required">*</span>
               </label>
-              <select id="inputState" className="form-select" required>
+              <select id="advisor1" className="form-select" required>
                 <option selected disabled>Select number</option>
                 {[...Array(10)].map((_, i) => (
                   <option key={i + 1}>{i + 1}</option>
@@ -68,11 +73,12 @@ const Advisor = () => {
               <label htmlFor="inputCourse4" className="form-label">
                 Training Course<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="inputCourse4" placeholder='Enter preferred course' required />
+              <input type="text" className="form-control" id="advisor1" placeholder='Enter preferred course' required />
+            </div>
             </div>
             <div className="col-10">
               <label htmlFor="Textarea" className="form-label">Comments</label>
-              <textarea className="form-control" id="Textarea" placeholder="Enter comments here"></textarea>
+              <textarea className="form-control" id="advisor3" placeholder="Enter comments here"></textarea>
             </div>
             <div className="col-12 text-center">
               <button type="submit" className='submit-btn'>Submit</button>

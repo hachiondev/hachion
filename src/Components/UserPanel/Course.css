@@ -349,7 +349,6 @@ margin:1vh;
 padding:1vh;
 display: flex;
 flex-direction: row;
-justify-content: space-evenly;
 gap: 60px;
 margin-left:10vw;
 margin-right: 10vw;
@@ -361,7 +360,6 @@ margin-bottom: 50px;
 .qa-automation-left{
 display: flex;
 flex-direction: row;
-margin-left: 1vh;
 }
 
 .qa-automation-left img{
@@ -537,8 +535,7 @@ cursor: pointer;
 
 /* Style for request batch modal */
 .request-batch {
-height: 672px;
-width: 600px;
+padding-bottom: 20px;
 border-radius: 20px !important;
 background-color: white;
 }
@@ -560,7 +557,7 @@ justify-content: center;
 .date-picker-wrapper {
 position: relative;
 display: flex;
-align-items: center;
+
 }
 
 .black-calendar {
@@ -577,7 +574,8 @@ background: linear-gradient(45deg, #00AEEF, #006489);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 color: white;
-padding-left: 10px;
+right: 10px;
+top: 50%;
 border: none;
 border-radius: 5px;
 }
@@ -594,38 +592,11 @@ padding-left: 10px;
 } */
 
 /* Input field styling */
-.form-control {
-padding-right: 40px;
-margin: 0 4vh;
-padding: 1.5vh;
-color: #fff;
-}
 
-.form-label {
-margin: 0 4vh;
-padding: 1.5vh;
-}
-
-.mobile-number-container {
-display: flex;
-align-items: center;
-margin-left: 4vh;
-}
-
-.mobile-number-container select {
-height: 44px;
-margin-bottom: 3vh;
-}
-
-.mobile-number-container input {
-flex-grow: 1;
-height: 44px;
-margin-bottom: 3vh;
-}
 
 .btn-submit {
-margin-left: 4vh;
-width: calc(100% - 8vh);
+
+width: 520px !important;
 background-color: #00AEEF;
 }
 
@@ -1226,7 +1197,7 @@ font-weight: 600;
 font-size: 14px;
 position: fixed;
 bottom: 0;
-width: 100%;
+width: 100vw;
 height: 50px;
 background-color: #000000; 
 color: white;
@@ -1272,18 +1243,12 @@ border:2px solid white;
 }
 .batch-content-background{
   background-color: #EEEEEE;
-  margin-left: 40px;
-  margin-right: 25px;
+  margin-left: 25px;
+  margin-right: 45px;
 }
 .blogs-header{
   margin-left: 10vw;
 }
-.batch-content-background{
-  background-color: #EEEEEE;
-  margin-left: 40px;
-  margin-right: 25px;
-}
-
 @media screen and (max-width:1366px){
   .qa-course{
     margin-left: 30px;
@@ -1295,8 +1260,8 @@ border:2px solid white;
   }
   .batch-content-background{
   
-    margin-left: 2px;
-    margin-right: 40px;
+    margin-left: 25px;
+    margin-right: 25px;
   }
   }
   
@@ -1308,12 +1273,6 @@ border:2px solid white;
   margin-left: 30px;
   width: 94%;
 }
-.batch-content-background{
-
-  margin-left: 2px;
-  margin-right: 40px;
-}
-
 @media (min-width: 1181px) and (max-width: 1366px){
   .upcoming-batch{
     width: 85%;
@@ -1439,8 +1398,8 @@ border:2px solid white;
     height: 100px;
   }
   .qa-automation{
-    width: 95%;
-    margin-left: 20px;
+    width: 98% !important;
+    margin-left: 10px;
   }
   .qa-right{
     margin-right: 0px;
@@ -1487,14 +1446,83 @@ border:2px solid white;
     margin-left: 20px;
   }
 }
+@media(min-width:481px) and (max-width:779px){
+  .upcoming-batch{
+    width: 98%;
+    margin-left: 10px;
+  }
+  .curriculum{
+    width: 98%;
+    margin-left: 10px;
+  }
+  .batch-schedule{
+    width: 95%;
+    margin-left: 20px;
+  }
+  .batch-type{
+    margin-left: 25px;
+  }
+  .mode-of-training{
+    width: 98%;
+    margin-left: 10px;
+  }
+  .career-support{
+    width: 98%;
+    margin-left: 10px;
+  }
+  .qa-course-heading img{
+    height: 600px;
+    width: 90%;
+  }
+  
+  .key-highlights{
+    width: 98%;
+    margin-left: 10px;
+  }
+  
+  .qa-right img{
+    height: 250px !important;
+    width: 320px !important;
+  }
+  .qa-automation-left img{
+    height: 100px;
+  }
+  .qa-automation{
+    width: 98% !important;
+    margin-left: 10px;
+  }
+  .qa-course{
+    width: 98%;
+    margin-left: 10px;
+  }
+  .qa-right{
+    margin-right: 0px;
+  }
+  
+  .video-btn{
+    margin-top: 20px;
+    font-size: 16px;
+    margin-left: 40px;
+  }
+  .certified{
+    font-size: 16px;
+  }
+  .fee{
+    padding-top: 5px;
+  }
+  .enroll-now,.download{
+    margin: 5px;
+    font-size: 22px;
+  }
+}
   
 .upcoming-batch{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .curriculum{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .batch-schedule{
   width: 95%;
@@ -1504,12 +1532,12 @@ border:2px solid white;
   margin-left: 25px;
 }
 .mode-of-training{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .career-support{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .qa-course-heading img{
   height: 600px;
@@ -1517,31 +1545,31 @@ border:2px solid white;
 }
 
 .key-highlights{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 
 .qa-right img{
-  height: 250px !important;
-  width: 320px !important;
+  height: 270px !important;
+  width: 360px !important;
 }
 .qa-automation-left img{
   height: 100px;
 }
 .qa-automation{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .qa-course{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 140px;
 }
 .qa-right{
   margin-right: 0px;
 }
 
 .video-btn{
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 16px;
   margin-left: 40px;
 }
@@ -1556,7 +1584,7 @@ border:2px solid white;
   font-size: 22px;
 }
 .qa-content{
-  width: 400px !important;
+  
   margin-left: 0px;
   padding-top: 0px;
   font-size: 14px;
@@ -1794,6 +1822,25 @@ border:2px solid white;
  text-align: center;
 margin-top: -40px;
 }
+}
+@media (min-width:481px) and (max-width:1024px){
+  .contact-info img,        /* WhatsApp icon */
+.contact-info .whatsapp-number-footer,  /* WhatsApp number */
+.contact-info .training-email-footer,   /* Email text */
+.contact-info svg {       /* Icons */
+  display: none;          /* Hide in mobile view */
+}
+
+.query-content { 
+  font-size: 16px;        /* Adjust text size if needed */
+  margin-right: 5px;        /* Optional: adjust margins */
+}
+
+.contact-button {
+  font-size: 14px;        /* Adjust button size if needed */
+  margin:5px;
+}
+
 }
 
 @media (min-width:350px) and (max-width:480px){
@@ -2298,4 +2345,49 @@ max-height: 3em;
 .button-close {
   font-size: 16px; /* Reduce close button size for mobile */
 }
+}
+#query1{
+  width: 520px ;
+  height: 50px ;
+}
+.query-form{
+  margin-left: 20px;
+  padding: 20px;
+}
+#query2{
+  width: 400px !important;
+}
+#query3{
+  width: 520px;
+  height: 100px;
+}
+.request-form{
+  margin-left: 20px;
+  padding: 20px;
+}
+@media (min-width:540px) and (max-width:1024px){
+  #query2{
+    width: 375px !important;
+    height: 50px;
+  }
+}
+@media (min-width:350px) and (max-width:480px){
+ #query1{
+  width: 300px !important;
+ }
+ #query2{
+  width: 160px !important;
+  height: 50px;
+ }
+ #query3{
+  width: 300px !important;
+  height: 60px;
+ }
+ .btn-submit{
+  width: 300px !important;
+  margin-left: 25px;
+ }
+ .request-batch{
+  padding-bottom: 5px;
+ }
 }

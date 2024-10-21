@@ -282,9 +282,8 @@
 }
 
 .advisor-form {
-   
-    margin-left: 10vw;
-    margin-right: 10vw;
+   width: 80%;
+   margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
 }
@@ -316,18 +315,6 @@
 }
 
 
-.form-select{
-    margin-left:20px;
-}
-
-#Textarea {
-    height: 120px;
-    width: 100%;
-}
-
-.row .col-md-6 {
-    margin-bottom: 20px;
-}
 
 .submit-btn {
   
@@ -347,8 +334,7 @@
 
 .learner-cover{
   
-    height: 350px;
-    height: 350px;
+    height: 380px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -688,7 +674,19 @@
     margin-left: 10vw;
     cursor: pointer;
 }
-
+@media  (min-width:1180px) and (max-width: 1366px){
+.learner-info{
+    margin-left: 10px;
+    margin-top: -15px;
+}
+.left-quotes{
+    margin-top: -40px;
+}
+.right-quotes{
+    margin-bottom: -50px;
+    margin-left: 92vw;
+}
+}
 @media  (min-width:1180px) and (max-width: 1366px){
     .contact-us-corporate{
         margin-left: 480px;
@@ -741,6 +739,7 @@
         font-size: 28px;
         margin-left: 10px;
     }
+
   }
 
 @media (max-width: 1180px) {
@@ -759,39 +758,14 @@
     }
     .left-quotes{
         margin-left: 2vh;
+        margin-top: -30px;
     }
     .learner-info{
-        margin-top: 20px;
+        margin-left: 10px;
     }
     .right-quotes{
         margin-left: 90vw;
-    }
-
- 
-  }
- 
-@media (max-width: 1180px) {
-    .blogs-container {
-        grid-template-columns: repeat(4, 1fr); 
-      }
-
-    .learner-card-item {
-      display: flex;
-      justify-content: center; 
-    }
-  
-    .learner-card {
-      width: 68vw; 
-      margin-left:160px;
-    }
-    .left-quotes{
-        margin-left: 2vh;
-    }
-    .learner-info{
-        margin-top: 20px;
-    }
-    .right-quotes{
-        margin-left: 90vw;
+        margin-bottom: -40px;
     }
 
  
@@ -830,9 +804,10 @@
         margin-top: 20px;
     }
     .right-quotes{
-        height: 50px;
-        width: 50px;
-        margin-left: 87vw;
+        height: 60px;
+        width: 60px;
+        margin-left: 90vw;
+        margin-bottom: -30px;
     }
   }
 
@@ -1237,4 +1212,21 @@
     width: 30px !important;
     display: flex;
     flex-direction: row !important;
+}
+
+#advisor1{
+    height: 50px !important;
+    width: 450px !important;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    gap: 50px !important;
+}
+#advisor2{
+    width: 200px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 976px !important;
 }

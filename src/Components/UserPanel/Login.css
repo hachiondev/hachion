@@ -77,21 +77,8 @@ background-size:cover;
     justify-content: center;
     align-items: center;
 }
-.social-login-btn-linkedin {
-    width: 5vh;
-    height: 5vh;
-    padding: 0; 
-    background: none; 
-    border: none; 
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-
-
-.social-login-btn img,.social-login-btn-linkedin img {
+.social-login-btn img {
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
@@ -135,6 +122,7 @@ background-size:cover;
     font-weight: 400;
     color: rgba(0,0,0,1);
    padding: 1.5vh;
+   white-space: nowrap;
 }
 .go-to-register{
     padding: 1vh;
@@ -183,6 +171,7 @@ background-size:cover;
     position: absolute;
     right: 1.8vw;
     top: 50%;
+    color: #00AEEF;
     transform: translateY(-50%);
     background-color: transparent;
     border: none;
@@ -384,29 +373,44 @@ background-size:cover;
   }
   
   /* Small Mobile Phones */
-  @media (max-width: 480px) {
+  @media (min-width: 350px) and (max-width: 480px) {
     .login{
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 6vh;
     }
+
+    .input-group-text {
+        position: absolute;
+        right: 1.8vw;
+        top: 50%;
+       color: #00AEEF;
+       transform: none;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
     .captcha{
         margin-left: 2vh;
-        height: 4vh;
-        width: 10vw;
+        height: 50px;
+        width: 50px;
     }
     .login-option{
-        font-size: 0.9rem;
+        font-size: 12px;
     }
     .forgot-password{
-        margin-top: 2vh;
+        margin-top: 5px;
+        font-size: 12px;
+        justify-content: flex-end;
+        margin-right: 3%;
     }
       .login-left
        {
         width:100%;
         height: 100%;
-    
+        margin-top: 0px;
       }
       .login-with hr{
         width: 15%;
@@ -417,7 +421,14 @@ background-size:cover;
 
     .login-top {
      margin-top: 1vh;
+     padding-top: 1vh;
     }
+
+    .login-label{
+    margin-top: 0;
+    font-size: 14px;
+    }  
+
   .icon-holder{
     display: flex;
     justify-content: space-evenly;
@@ -433,8 +444,8 @@ background-size:cover;
   }
     .login-logo {
      height: auto;
-   margin-left: 2vh;
-      justify-content: center;
+    margin-left: 10%;
+    justify-content: center;
     }
   
     .welcome-back {
@@ -449,22 +460,37 @@ background-size:cover;
     .input-group,
     .form-control,
     .btn {
-      width: 80vw;
-      font-size: 0.8rem;
+      width: 90vw;
+      height: 50px;
+      font-size: 14px;
       border-radius: 5px;
-      margin-bottom: 2vh !important;
+      margin-bottom: 20px !important;
       
     }
     .login-mid{
         gap:2vw;
     }
   
- 
-  
     .go-to-register {
-      font-size: 0.9rem;
+      font-size: 12px;
+    }
+
+    .link-to-register{
+        color:#00AEEF;
+        text-decoration-line: none;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .register-btn {
+        padding: 0.4vh 0.8vh;
+        font-size: 20px;
+        height: 50px;
+        width: 90%;
+        margin: 0;
     }
   }
+
 .register-head{
     padding-top: 1.5vh;
     padding-bottom: 1.5vh;
@@ -487,17 +513,12 @@ cursor: pointer;
 }
 
 .icon-text-img{
-    height: 65px;
-    width: 65px;
+    height: 50px;
+    width: 50px;
     margin-right:-8px;
     z-index: 1;   
 }
-.icon-text-img-linkedin{
-    height: 60px;
-    width: 60px;
-    margin-right:-8px;
-    z-index: 1;   
-}
+
 .icon-text-holder-google {
     margin-left: -5px;
     height: 5vh;
@@ -632,8 +653,6 @@ cursor: pointer;
     }
 }
 @media (max-width: 1024px) {
-
-
     .icon-places {
         padding-top: 1vh;
         flex-direction: column;
@@ -665,9 +684,6 @@ cursor: pointer;
         margin-top: 1vh;
         
     }
-    
-     
-   
 
     .register-head {
         font-size: 1.6rem;
@@ -967,12 +983,6 @@ hr {
     hr {
         width: 80%;
     }
-
-    .register-btn {
-        padding: 0.4vh 0.8vh;
-        font-size: 0.85rem;
-        height: 6vh;
-    }
 }
 .enter-otp{
    display:flex;
@@ -1002,7 +1012,7 @@ box-shadow: darkgrey;
 }
 .register-btn{
     width: 520px;
-    height: 60px;
+    height: 50px;
     background-color: #00AEEF;
     color: white;
     font-weight: bold;
@@ -1036,7 +1046,7 @@ box-shadow: darkgrey;
 }
     .register-btn {
         width: 100%;
-        height: 6vh;
+        height: 50px;
         font-size: 1rem;
     }
     .otp{
@@ -1083,14 +1093,9 @@ box-shadow: darkgrey;
         height: 4vh;
         width: 12vw;
     }
-   
-.login-label{
-    font-size: 0.6rem;
-}
-  
 
-    .register-btn {
+    /* .register-btn {
         font-size: 0.85rem;
         height: 5.5vh;
-    }
+    } */
 }

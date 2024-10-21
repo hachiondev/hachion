@@ -510,7 +510,3 @@ width: 480px;
 .form-label-comment{
   width: 450px;
 }
-.row{
-  display: flex;
-  flex-direction: row !important;
-}

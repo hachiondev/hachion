@@ -22,7 +22,8 @@ const Enrollment = () => {
             <p>1. Personal Details</p>
         </div>
       
-        <form class="row g-3">
+        <form>
+          <div className="row">
   <div class="col-md-6">
     <label for="inputEmail4" class="form-label">Full Name*</label>
     <input type="text" class="form-control" id="inputEmail4" placeholder='Enter your full name'/>
@@ -31,6 +32,8 @@ const Enrollment = () => {
     <label for="inputPassword4" class="form-label">Email Id*</label>
     <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'/>
   </div>
+  </div>
+  <div className='row'>
   <div className="col-md-6">
   <label className='form-label'>Mobile Number</label>
 <div class="input-group mb-3 custom-width">
@@ -50,6 +53,7 @@ const Enrollment = () => {
           <div class="col-md-6">
     <label for="inputCity" class="form-label">Country</label>
     <input type="text" class="form-control" id="inputCity" placeholder='India'/>
+  </div>
   </div>
   </form>
   

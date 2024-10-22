@@ -18,15 +18,15 @@ const Advisor = () => {
           <div className='advisor-head'>
             <p>Talk to our Advisor</p>
           </div>
-          <form className="row g-3" onSubmit={handleSubmit}>
+          <form className="enquiry-form" onSubmit={handleSubmit}>
             <div className='row'>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
               </label>
               <input type="text" className="form-control" id="advisor1" placeholder='Enter your full name' required />
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <label htmlFor="inputCompany4" className="form-label">
                 Company Name<span className="required">*</span>
               </label>
@@ -34,13 +34,13 @@ const Advisor = () => {
             </div>
             </div>
             <div className='row'>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <label htmlFor="inputEmail4" className="form-label">
                 Email ID<span className="required">*</span>
               </label>
               <input type="email" className="form-control" id="advisor1" placeholder='abc@gmail.com' required />
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
             <label className='form-label'>Mobile Number</label>
 <div class="input-group custom-width">
   <button type="button" class="btn btn-outline-secondary">+91</button>
@@ -58,7 +58,7 @@ const Advisor = () => {
   </div>
             </div>
             <div className='row'>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <label htmlFor="inputState" className="form-label">
                 No. of People<span className="required">*</span>
               </label>
@@ -69,7 +69,7 @@ const Advisor = () => {
                 ))}
               </select>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <label htmlFor="inputCourse4" className="form-label">
                 Training Course<span className="required">*</span>
               </label>

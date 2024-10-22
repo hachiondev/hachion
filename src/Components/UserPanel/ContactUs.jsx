@@ -95,14 +95,14 @@ Hyderabad 500072.</p>
 <form className='contact-form'>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Full Name</label>
-  <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Enter your full name"/>
+  <input type="text" className="form-control" id="contact1" placeholder="Enter your full name"/>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Email Id</label>
-  <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="Enter your emailid"/>
+  <input type="email" className="form-control" id="contact1" placeholder="Enter your emailid"/>
 </div>
 <label className='form-label'>Mobile Number</label>
-<div class="input-group mb-3 custom-width">
+<div class="input-group custom-width">
   <button type="button" class="btn btn-outline-secondary">+91</button>
   <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="visually-hidden">select</span>
@@ -113,11 +113,11 @@ Hyderabad 500072.</p>
     <li><a class="dropdown-item" href="#">+11</a></li>
     <li><a class="dropdown-item" href="#">+20</a></li>
   </ul>
-  <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
+  <input type="number" className="mobile-number" id='contact2' aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'/>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-  <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+  <textarea class="form-control" id="contact3" rows="3"></textarea>
 </div>
 <div class="mb-3">
 <button type="button" class="submit-button">Submit</button>

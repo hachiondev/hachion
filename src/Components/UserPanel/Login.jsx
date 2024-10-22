@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logo from '../../Assets/logo.png';
-import linkedin from '../../Assets/linkedin.png';
+import linkedin from '../../Assets/linkedins.png';
 import apple from '../../Assets/Apple.png';
 import { Link } from 'react-router-dom';
 import LoginSide from './LoginSide';
@@ -12,6 +12,7 @@ import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
 import { useNavigate } from 'react-router-dom';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
+//import ReCAPTCHA from 'react-google-recaptcha'; // Add this for reCAPTCHA
 
 const initialValues = {
   email: "",
@@ -20,12 +21,17 @@ const initialValues = {
 
 const Login = () => {
   const [passwordType, setPasswordType] = useState('password');
+  //const [captchaVerified, setCaptchaVerified] = useState(false); // State to track captcha status
   const navigate = useNavigate();
 
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values) => {
+      // if (!captchaVerified) {
+      //   alert('Please verify the CAPTCHA');
+      //   return;
+      // }
       navigate('/login');
       console.log(values);
     }
@@ -57,6 +63,15 @@ const Login = () => {
   const handleAdminLogin=()=>{
     navigate('/adminlogin')
   }
+
+  // Handle CAPTCHA verification
+  // const handleCaptchaChange = (value) => {
+  //   if (value) {
+  //     setCaptchaVerified(true); 
+  //   } else {
+  //     setCaptchaVerified(false); 
+  //   }
+  // };
 
   return (
     <>
@@ -94,9 +109,9 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  {/* <span className="input-group-text" onClick={togglePasswordVisibility}>
+                  <span className="input-group-text" onClick={togglePasswordVisibility}>
                     {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span> */}
+                  </span>
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 
@@ -115,6 +130,13 @@ const Login = () => {
                   </label>
                   <img src={captcha} alt='captcha' className='captcha' />
                 </div>
+
+              {/* <div className="form-check">
+                  <ReCAPTCHA
+                    sitekey="YOUR_SITE_KEY" 
+                    onChange={handleCaptchaChange}
+                  />
+                </div> */}
 
                 <div className="d-grid gap-2">
                   <button className="register-btn" type="submit" onClick={handleLogin}>Login</button>
@@ -135,7 +157,7 @@ const Login = () => {
               <button className="social-login-btn" onClick={facebookLogin}>
                 <img src={facebook} alt='facebook'/>
               </button>
-              <button className="social-login-btn-linkedin" onClick={linkedinLogin}>
+              <button className="social-login-btn" onClick={linkedinLogin}>
                 <img src={linkedin} alt='linkedin' />
               </button>
               <button className="social-login-btn" onClick={appleLogin}>

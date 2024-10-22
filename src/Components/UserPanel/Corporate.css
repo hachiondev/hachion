@@ -59,17 +59,7 @@
     border-radius: 20px;
     box-shadow: 5px 5px 5px #d3d3d3;
 }
-.custom-width .btn, 
-.custom-width .form-control {
-    width: 60px !important; /* Adjust width as needed */
-}
 
-.custom-width .dropdown-menu {
-    min-width: 100px; /* Adjust dropdown menu width if necessary */
-}
-.mobile-number{
-  width: 220px !important;
-}
 .flag{
   height: 100px;
   width: 100px;
@@ -78,7 +68,7 @@
     display: flex;
     flex-wrap: wrap; 
     justify-content: space-between;
-    gap: 10px;
+   
 }
 
 .about-us-div-content {
@@ -102,7 +92,7 @@
 }
 
 .association{
-    height: 15vh;
+ 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -286,9 +276,12 @@
    margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
+    
 }
+.enquiry-form{
+    padding: 40px;
 
-
+}
 .advisor-head {
     height: 100px;
     border-radius: 20px 20px 0px 0px;
@@ -686,6 +679,9 @@
     margin-bottom: -50px;
     margin-left: 92vw;
 }
+.custom-next-icon{
+    margin-right: -220px;
+}
 }
 @media  (min-width:1180px) and (max-width: 1366px){
     .contact-us-corporate{
@@ -712,6 +708,7 @@
     
     .view-all-div {
         margin-right: 10vw;
+        margin-top: -5vh;
     }
     .leading-expert{
         width: 95%;
@@ -740,14 +737,12 @@
         font-size: 28px;
         margin-left: 10px;
     }
-  }
-  @media  (min-width:780px) and (max-width: 1179px){
-    .association-head{
-        font-size: 28px;
-        margin-left: 10px;
+    .view-all-div{
+        margin-top: -5vh;
+        margin-right: 10vw;
     }
-
   }
+
 
 @media (max-width: 1180px) {
     .blogs-container {
@@ -862,19 +857,30 @@
         margin-left: 300px;
         margin-top: 50px;
     }
-    .training-img{
-        height: 350px;
-    }
+
     .hachion-content{
         width: 95%;
         margin-left: 10px;
     }
-    
+ 
 .customize-training-div{
-    width: 50vw;
+    width: 40vw;
+    height: 250px;
+    align-items: center;
+    justify-items: center;
 }
 .customize-training-div img{
     padding: 0px;
+    width: 240px;
+   
+}
+.customized-content{
+    width: 210px;
+    height: 150px;
+}
+.training-img{
+    height: 450px;
+    width: 290px;
 }
 .leading-expert {
    max-width: 100%;
@@ -885,9 +891,7 @@
    
 }
 
-.view-all-div {
-    margin-right: 10vw;
-}
+
 .leading-expert{
     width: 95%;
 }
@@ -895,9 +899,7 @@
     width: 100vw;
     margin-left: 0px;
 }
-.training-img{
-    height: 360px;
-}
+
 .advisor-form{
     margin:10px;
 }
@@ -1257,11 +1259,6 @@
         }
     
 }
-.input-group custom-width{
-    width: 30px !important;
-    display: flex;
-    flex-direction: row !important;
-}
 
 #advisor1{
     height: 50px !important;
@@ -1273,9 +1270,55 @@
     gap: 50px !important;
 }
 #advisor2{
-    width: 200px !important;
+    width: 330px !important;
+}
+.input-group custom-width{
+    margin-left: 0px;
+    height: 50px !important;
 }
 #advisor3{
     height: 120px;
-    width: 976px !important;
+    width: 1000px !important;
+}
+@media(min-width:1181px) and (max-width:1366px){
+   .advisor-form{
+    width: 90%;
+    margin-left: 80px;
+   }
+#advisor1{
+    height: 50px !important;
+    width: 300px !important;
+}
+.row{
+    gap: 10px !important;
+}
+.input-group custom-width{
+    margin-left: 0px;
+}
+#advisor2{
+    width: 180px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 720px !important;
+} 
+}
+@media(min-width:768px) and (max-width:1180px){
+   .advisor-form{
+    width: 98%;
+    margin-left: 20px;
+   }
+   .enquiry-form{
+    padding: 10px;
+   }
+   #advisor1{
+    width: 300px !important;
+   }
+   #advisor2{
+    width: 180px !important;
+    height: 50px;
+   }
+   #advisor3{
+    width: 660px !important;
+   }
 }

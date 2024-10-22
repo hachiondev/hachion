@@ -371,9 +371,11 @@ background-color: #EA4335;
 }
 
 .association{
+  
 display: flex;
 justify-content: center;
 align-items: center;
+margin: 20px;
 }
 .association-head{
 font-size: 1.9rem;
@@ -386,7 +388,7 @@ background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
 
 .logos-slide img{
 height: 50px;
-margin: -15px 10px;
+margin: 20px 10px;
 }
 
 .logos-slide{
@@ -1035,7 +1037,7 @@ gap:1vh;
   }
   }
 
-@media (min-width: 1181px) and (max-width: 1366px){
+@media (min-width: 1025px) and (max-width: 1366px){
     .training-card-holder{
       max-width: 85vw;
       gap: 10px;
@@ -1163,6 +1165,7 @@ gap:1vh;
   gap: 15px;
   }
 }
+
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
   .navbar {

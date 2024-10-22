@@ -328,12 +328,16 @@ width: 2vw;
 }
 .contact-us-right{
 
-width: 50vw;
+width: 668px;
 background-color: #ffffff;
 margin-top: 4vh;
 border-radius: 20px;
 border: 1px solid #b3b3b3;
 box-shadow: 5px 5px 10px #d3d3d3;
+}
+.contact-form{
+  margin-left: 40px;
+  padding: 10px;
 }
 .contact-us-bottom-div{
 display: flex;
@@ -354,8 +358,7 @@ align-items: center;
   background-color: #00AEEF;
   color: white;
   padding: 2vh;
-  margin-left: 30px;
-  width: 70%;
+width: 550px;;
   border: none;
   border-radius: 5px;
 }
@@ -363,9 +366,7 @@ align-items: center;
 
 margin-bottom: 2vh;
 }
-.contact-form{
-margin-left: 4vw;
-}
+
 .about-us-div-content h6{
 font-size: 1.25rem;
 font-weight: 700;
@@ -401,13 +402,28 @@ margin-bottom: 20px;
   flex-basis: 45%; /* Two items per row for tablet and laptop screens */
 }
 .contact-us{
-  margin-left: 10px;
+  margin-left: 0px !important;
 
 }
+.contact-us-div{
+  width: 30vw;
+  padding: 10px;
+}
+#contact2{
+  width: 410px !important;
+  height: 50px;
+}
+.contact-us-left{
+  margin-left: 10px;
+}
+.contact-us-bottom-div{
+flex-direction: column;
+}
+
 }
 @media (min-width: 1024px) and (max-width: 1366px) {
 .contact-us{
-margin-left: 10px;
+margin-left: 10px !important;
 
 }
 .contact-us-div{
@@ -415,7 +431,7 @@ width: 300px;
 padding: 5px;
 }
 .contact-us-left{
-margin-left: 10px;
+margin-left: 0px;
 }
 }
 .enrollment{
@@ -500,13 +516,14 @@ width: 480px;
 .custom-width .dropdown-menu {
     min-width: 100px; /* Adjust dropdown menu width if necessary */
 }
-.mobile-number{
-  width: 400px;
+#contact1{
+  width: 550px;
+  height: 50px;
 }
-.flag{
+#contact2{
+  width: 430px;
+}
+#contact3{
+  width: 550px;
   height: 100px;
-  width: 100px;
-}
-.form-label-comment{
-  width: 450px;
 }

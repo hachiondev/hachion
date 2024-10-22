@@ -80,8 +80,6 @@ const Course = () => {
       const width = window.innerWidth;
       if (width <= 480) {
         setCardsPerPage(4); // Mobile view
-      } else if (width <= 1024) {
-        setCardsPerPage(8); // Tablet view
       }
       else if (width <= 1366) {
         setCardsPerPage(8); // Tablet view

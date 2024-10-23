@@ -371,10 +371,6 @@ background-color: #EA4335;
 }
 
 .association{
-<<<<<<< HEAD
-  
-=======
->>>>>>> 9bce469600974a3fadbd0670f2e286e1db1c928f
 display: flex;
 justify-content: center;
 align-items: center;
@@ -1168,10 +1164,6 @@ gap:1vh;
   gap: 15px;
   }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 9bce469600974a3fadbd0670f2e286e1db1c928f
 /* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
   .navbar {

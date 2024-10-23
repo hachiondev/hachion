@@ -657,15 +657,29 @@ scroll-behavior: smooth;
 }
 
 .upcoming-header {
-margin-top: 2vh;
-margin-bottom: 5vh;
-padding:2vh;
-background: linear-gradient(to right, #006489, #00AEEF, #006489);
-box-shadow: 5px 5px 5px hsl(0, 0%, 83%);
-position: -webkit-sticky;
-position: sticky;
-top: 0;
-z-index: 1000;
+  margin-top: 2vh;
+  margin-bottom: 5vh;
+  background: linear-gradient(to right, #006489, #00AEEF, #006489);
+  box-shadow: 5px 5px 5px hsl(0, 0%, 83%);
+  z-index: 1000;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slide-down 0.3s ease-in-out;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .upcoming-header-content {

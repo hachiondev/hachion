@@ -622,7 +622,7 @@
 }
 
 .recent-card {
-    min-width: 20%; /* Adjust width to display 2 cards on mobile */
+    width: 330px; /* Adjust width to display 2 cards on mobile */
     flex: 0 0 auto; /* Prevent cards from shrinking */
     margin-right: 10px; /* Add some space between cards */
     background-color: white;

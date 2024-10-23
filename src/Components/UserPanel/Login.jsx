@@ -11,8 +11,6 @@ import facebook from '../../Assets/facebook_symbol.svg.png';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
 import { useNavigate } from 'react-router-dom';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
-//import ReCAPTCHA from 'react-google-recaptcha'; // Add this for reCAPTCHA
 
 const initialValues = {
   email: "",
@@ -109,9 +107,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
-                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span>
+  
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 

@@ -100,13 +100,18 @@
     font-weight: 400;
     text-align: center;
 }
-
+#querymodal{
+    height: 262px !important;
+    width: 430px;
+    border-radius: 20px;
+}
 .association{
  
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .association-head{
     font-size: 1.9rem;
     font-weight: 700;

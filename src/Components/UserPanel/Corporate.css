@@ -939,17 +939,40 @@
 }
 }
 
+
 @media (min-width:350px) and (max-width:480px){
     .hachion-content {
         margin-left: 10px;
+        margin-bottom: 20px;
         width: 95%;
     }
 
+    .about-us-row {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
     .about-us-div-content {
-        flex: 1 1 calc(50% - 20px); /* 2 items in a row for mobile */
+        flex: 1 1 calc(50% - 20px); 
+        margin-bottom: 10px !important;
     }
     .about-us-div-content img{
-        width: 120px;
+        width: auto !important;
+        height: 110px !important;
+        padding-bottom: 10px;
+    }
+
+    .about-us-div-content h6 {
+        font-size: 12px !important;
+        margin-bottom: 5px;
+    }
+
+    .about-us-div-content p {
+        font-size: 10px !important;
     }
 
     .recent-entries {
@@ -973,11 +996,20 @@
       .training-events {
         padding: 10px;
       }
+
+      .association{
+       margin: 5px;
+    }
     
       .association-head {
         font-size: 16px;
         text-align: center;
-        margin-bottom: 10px;
+        /* margin-bottom: 5px; */
+        padding-top: 5px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        margin-left: 3%;
+        justify-content: space-between;
       }
     
       .learner-card-item {
@@ -1117,7 +1149,7 @@
       .left-quotes{
         height: 60px;
         width: 60px;
-        margin-left: 3vw;
+        margin-left: 2%;
         margin-top: -30px;
         position: absolute; 
         z-index: 10;
@@ -1126,7 +1158,7 @@
         height: 60px;
         width: 60px;
         margin-top: -30px; 
-        margin-left: 75%;
+        margin-left: 77%;
         position: absolute; 
         z-index: 10;
       }
@@ -1215,10 +1247,10 @@
     .corporate-banner-heading{
         font-size: 16px;
         padding-top: 10px;
-        padding-left: 0px;
+        padding-left: 10px;
     }
     .corporate-banner-content{
-        font-size: 14px;
+        font-size: 16px;
         padding-top: 5px;
     }
     .corporate-banner-bottom-content{
@@ -1227,9 +1259,10 @@
     }
     .contact-us-corporate{
         margin-top: 0px;
-        margin-left: 180px;
+        margin-left: 50%;
         font-size: 16px;
-        padding: 8px;
+        padding: 5px 10px;
+        border-radius: 5px;
     }
     .advisor-form{
         margin-left: 5px;
@@ -1241,14 +1274,24 @@
 
     .customize-training{
         flex-direction: column;
+        gap: 10px;
     }
     .customize-training-div{
         width: 95%;
-        margin-left: 20px;
+        border-radius: 10px;
+        margin-left: 10px;
         padding: 5px;
+        margin-bottom: 20px;
     }
     .customize-training-div img{
-        width: 93%;
+        width: 330px;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .customize-training-div-content{
+        font-size: 16px;
+        margin-bottom: 10px;
     }
     .corporate-training-features {
         flex-direction: column; /* Stack elements vertically */
@@ -1275,18 +1318,46 @@
         margin-top: 20px; /* Add some space between the columns and the image */
     }
     
-        .leading-expert {
-            justify-content: center;
-            max-width: 100%;
-            margin-left: 0;
-        }
-        .leading-expert-card {
-            width: 42%; /* Adjust card width to fit 2 cards per row */
-        }
-        .view-all-div {
-            margin-right: 5vw;
-            margin-top: -4vh;
-        }
+    .leading-expert {
+        justify-content: center;
+        max-width: 100%;
+        margin-left: 0;
+        gap: 5px;
+    } 
+
+    .leading-expert-card {
+        width: 160px;
+        height: 160px;
+        border-radius: 10px;
+        margin: 5px;
+    }
+    
+    .leading-expert-card img {
+        height: 60px;
+        width: auto;
+        margin-bottom: 10px; 
+    }
+    
+    .leading-expert-card-content {
+        font-size: 14px;
+        margin-bottom: 1vh; 
+    }
+  
+    .view-all-corporate {
+         border-radius: 5px;
+         padding: 3px 10px;
+         font-size: 10px;
+     }
+
+    .view-details-corporate {
+         display: none;
+     }
+    .view-all-div {
+    margin-right: 2%;
+    margin-left: 60px;
+    margin-top: 15px; 
+    margin-bottom: 10px;
+    }        
     
 }
 

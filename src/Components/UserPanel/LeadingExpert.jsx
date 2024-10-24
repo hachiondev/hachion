@@ -17,9 +17,9 @@ const LeadingExpert = () => {
  <>
  <div className='association'>
     <h1 className='association-head'>Skill-Building Curriculum</h1>
-    </div>
     <div className='view-all-div'>
  <button className='view-all-corporate' onClick={()=>navigate('/course')} >View All</button>
+ </div>
  </div>
  <div className='leading-expert'>
     <LeadingExpertCard CourseName='AWS Developer' image={card2}/>

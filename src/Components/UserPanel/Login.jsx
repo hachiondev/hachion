@@ -145,9 +145,9 @@ const Login = () => {
             </div>
 
             <div className='login-with'>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr size='2' style={{ marginTop: '2vh' }}></hr>
               <p className='login-option'>Or Login with</p>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr size='2' style={{ marginTop: '2vh' }}></hr>
             </div>
 
             <div className='icon-holder'>
@@ -165,7 +165,7 @@ const Login = () => {
               </button>
             </div>
 
-            <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
+            <p className='go-to-register'>Don't have an account?  <Link to='/register' className='link-to-register'> Register </Link></p>
           <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button>
           </div>
         </div>

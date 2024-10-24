@@ -14,10 +14,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white',
+    fontSize:18, // Add vertical lines
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 16,
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -46,36 +47,34 @@ export default function UserCategoryTable() {
  <div className='courses-enrolled'>
     <h6>Courses Enrolled</h6>
     </div>
-    <div className='resume-div'>
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 1300 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>S.No.</StyledTableCell>
-            <StyledTableCell align="right">Course Name</StyledTableCell>
-            <StyledTableCell align="right">Date</StyledTableCell>
-            <StyledTableCell align="right">Week</StyledTableCell>
-            <StyledTableCell align="right">Time</StyledTableCell>
-            <StyledTableCell align="right">Mode</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              
-              <StyledTableCell>{row.S_No}</StyledTableCell>
-              <StyledTableCell align="right">{row.course_name}</StyledTableCell>
-              <StyledTableCell align="right">{row.Date}</StyledTableCell>
-              <StyledTableCell align="right">{row.Day}</StyledTableCell>
-              <StyledTableCell align="right">{row.Time}</StyledTableCell>
-              <StyledTableCell align="right">{row.Demo}</StyledTableCell>
-            
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </div>
+    <div className="resume-div">
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 300 }} aria-label="customized table"> {/* Adjust minWidth to a lower value */}
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>S.No.</StyledTableCell>
+          <StyledTableCell align="right">Course Name</StyledTableCell>
+          <StyledTableCell align="right">Date</StyledTableCell>
+          <StyledTableCell align="right">Week</StyledTableCell>
+          <StyledTableCell align="right">Time</StyledTableCell>
+          <StyledTableCell align="right">Mode</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {rows.map((row) => (
+          <StyledTableRow key={row.S_No}>
+            <StyledTableCell>{row.S_No}</StyledTableCell>
+            <StyledTableCell align="right">{row.course_name}</StyledTableCell>
+            <StyledTableCell align="right">{row.Date}</StyledTableCell>
+            <StyledTableCell align="right">{row.Day}</StyledTableCell>
+            <StyledTableCell align="right">{row.Time}</StyledTableCell>
+            <StyledTableCell align="right">{row.Demo}</StyledTableCell>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</div>
     
     </>
 

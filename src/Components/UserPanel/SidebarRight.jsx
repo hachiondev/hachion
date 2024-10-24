@@ -1,40 +1,53 @@
-import React from 'react'
+import React from 'react';
 import SidebarCard from './SidebarCard';
+import './Course.css';
 
 const cardData = {
-    'All': ['AWS Developer', 'QA Automation', 'PMP', 'Java Full Stack', 'Salesforce Developer', 'ServiceNow', 'Python', 'RPA UI Path', 'Big Data Hadoop', 'Blue Prism', 'Subitem 1', 'Subitem 2'],
-    'Project Management': ['PMP', 'Business Analyst'],
-    'QA Testing': ['QA Automation', 'Load Runner', 'QA Manual Testing', 'Mobile App Testing'],
-    'Data Science': ['Python', 'DataScience with Python', 'Data Science with R'],
-    'Programming': ['Java Full Stack Development', 'PHP with MySQL','UI/UX Design','Microsoft .NET','Angular JS Training','Node js','MongoDB Training','JavaScript Course','JQuery Training','React JS Training','SQL'],
-      'Salesforce': ['Salesforce Developer', 'Salesforce Admin','Salesforce Lightning','Salesforce Admin Developer','Salesforce Admin Developer'],
-    'ServiceNow' : ['ServiceNow'],
-      'Cloud Computing': ['AWS Solution Architecture', 'AWS Developer','AWS SysOps Admin','Google Cloud','DevOps','Internet of Things','Snowflake'],
-    'Workday': ['Subitem 1', 'Subitem 2'],
-      'Mulesoft': ['Subitem 1', 'Subitem 2'],
-      'Cyber Security': ['Subitem 1', 'Subitem 2'],
-      'Machine learning':['Subitem 1', 'Subitem 2'],
-      'BlockChain': ['Subitem 1', 'Subitem 2'],
-      'Deep Learning': ['Subitem 1', 'Subitem 2'],
-      'Data Warehousing & ETL': ['Subitem 1', 'Subitem 2'],
-      'Mobile Development': ['Subitem 1', 'Subitem 2'],
-      'Big Data': ['Big Data Hadoop', 'Spark and Scala'],
-      'RPA': ['Blue Prism', 'Automation Anywhere','RPA UI Path'],
-      'BPM': ['Subitem 1', 'Subitem 2'],
-      'Flutter': ['Subitem 1', 'Subitem 2'],
-      'Microsoft': ['Subitem 1', 'Subitem 2'],
-      'Scrum Master': ['Subitem 1', 'Subitem 2'],
-      
-}
-const SidebarRight = ({ category }) => {
-    const cardsToDisplay = cardData[category] || []; // Get cards for the selected category
+  'All': ['AWS Developer', 'QA Automation', 'PMP', 'Java Full Stack', 'Salesforce Developer', 'ServiceNow', 'Python', 'RPA UI Path', 'Big Data Hadoop', 'Blue Prism', 'Subitem 1', 'Subitem 2', 'Subitem 3', 'Subitem 4', 'Subitem 5', 'Subitem 6'],
+  'Project Management': ['PMP', 'Business Analyst'],
+  'QA Testing':['Qa Automation','Load Runner','Qa Manual Testing','Mobile App Testing'],
+  'Business Intelligence':['Tableau','TIBCO','Talend','Cognos','Qilk Sense'],
+  'Data Science':['Python','Data Science with Python','Data Science with R'],
+  'Programming':['Java Full Stack Development','PHP with MySQL','UI/UX Design','Microsoft .NET','Angular JS Training','Node JS'],
+  'Salesforce':['Salesforce Developer','Salesforce Admin','Salesforce Lightning','Salesforce Admin Developer Lightning'],
+  'ServiceNow':['Service Now','Service Now Developer', 'Service Now Admin'],
+  'Cloud Computing':['AWS Solution Architecture','AWS Developer','AWS SysOps Admin','Google Cloud', 'DevOps','Internet of things','Snowflake'],
+  'WorkDay':['WorkDay'],
+  'Mulesoft':['Mulesoft'],
+  'Cyber Security':['Cyber Security'],
+  'Machine learning':['Machine Learning'],
+  'BlockChain':['BlockChain'],
+  'Deep Learning':['Deep Learning with TendorFlow'],
+  'Data Warehousing & ETL':['Informatica'],
+  'Mobile Development':['Ios AppDevelopment','Android App Development'],
+  'Big Data':['Big Data Hadoop','Spark and Scala'],
+  'RPA':['Blue Prism','Automation Anywhere','RPA UI Path'],
+  'BPM':['Pega'],
+  'Flutter':['Flutter'],
+  'Microsoft':['Microsoft Azure Administrator','Azure Solution Architect','Azure Developer Associate'],
+  'Scrum Master':['Scrum Master']
+};
+
+const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
+  const cardsToDisplay = cardData[category] || [];
+  
+  // Calculate pagination
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = cardsToDisplay.slice(indexOfFirstCard, indexOfLastCard);
 
   return (
-    <div className="sidebar-right-all">
-      {cardsToDisplay.map((cardTitle, index) => (
+    <div className={`sidebar-right-all ${category === 'All' ? 'display-all' : ''}`}>
+      {currentCards.map((cardTitle, index) => (
         <SidebarCard key={index} title={cardTitle} />
       ))}
     </div>
   );
 };
-export default SidebarRight
+
+// Function to get total number of cards (for pagination purposes)
+export const getTotalCards = (category) => {
+  return cardData[category] ? cardData[category].length : 0;
+};
+
+export default SidebarRight;

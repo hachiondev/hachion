@@ -14,7 +14,7 @@ const RequestBatch = ({ closeModal }) => {
     <>
       <div className='request-batch'>
         <div className='request-header'>Let us know your preferred start date</div>
-        <form>
+        <form className='request-form'>
           <AiOutlineCloseCircle onClick={closeModal} className='button-close' />
 
           <div className='form-group col-10'>
@@ -22,12 +22,14 @@ const RequestBatch = ({ closeModal }) => {
               Preferred batch start date
             </label>
             <div className='date-picker-wrapper'>
-              <DatePicker
+              <input
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 dateFormat='dd/MM/yyyy'
                 placeholderText='DD/MM/YYYY'
                 className='form-control date-picker'
+                id='query1'
+              
               />
               <img
                 src={calendar}
@@ -48,6 +50,7 @@ const RequestBatch = ({ closeModal }) => {
               value={time}
               onChange={(e) => setTime(e.target.value)}
               className='form-control time-picker'
+              id='query1'
             />
           </div>
 
@@ -55,20 +58,23 @@ const RequestBatch = ({ closeModal }) => {
             <label htmlFor='inputEmail' className='form-label'>
               Email ID
             </label>
-            <input type='email' className='form-control' id='inputEmail' placeholder='abc@gmail.com' />
+            <input type='email' className='form-control' id='query1' placeholder='abc@gmail.com'  />
           </div>
 
-          <label htmlFor='inputNumber' className='form-label'>
-            Mobile Number
-          </label>
-          <div className='form-group col-10 mobile-number-container'>
-            <select className='form-select'>
-              <option>+1</option>
-              <option>+91</option>
-              <option>+44</option>
-            </select>
-            <input type='number' className='form-control' id='inputNumber' placeholder='Enter your number' />
-          </div>
+          <label className='form-label'>Mobile Number</label>
+<div class="input-group mb-3 custom-width">
+  <button type="button" class="btn btn-outline-secondary">+91</button>
+  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">select</span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">+91</a></li>
+    <li><a class="dropdown-item" href="#">+66</a></li>
+    <li><a class="dropdown-item" href="#">+11</a></li>
+    <li><a class="dropdown-item" href="#">+20</a></li>
+  </ul>
+  <input type="number" className="mobile-number" aria-label="Text input with segmented dropdown button" id='query2' placeholder='Enter your mobile number'/>
+</div>
 
           <button className='btn btn-primary btn-submit' type='button'>
             Submit Request

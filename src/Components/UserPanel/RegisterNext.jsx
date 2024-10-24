@@ -81,9 +81,9 @@ const RegisterNext = () => {
                     onChange={handleChange} 
                     onBlur={handleBlur} 
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
+                  {/* <span className="input-group-text" onClick={togglePasswordVisibility}>
                     {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span>
+                  </span> */}
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>):null}
 
@@ -98,9 +98,9 @@ const RegisterNext = () => {
                     onChange={handleChange} 
                     onBlur={handleBlur} 
                   />
-                  <span className="input-group-text" onClick={toggleConfirmPasswordVisibility}>
+                  {/* <span className="input-group-text" onClick={toggleConfirmPasswordVisibility}>
                     {confirmPasswordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span>
+                  </span> */}
                 </div>
                 {errors.confirm_password && touched.confirm_password ? (<p className='form-error'>{errors.confirm_password}</p>):null}
               </div>

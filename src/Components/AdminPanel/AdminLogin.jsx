@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import '../UserPanel/Home.css';
+import './Admin.css';
 import logo from '../../Assets/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginSide from '../UserPanel/LoginSide';
-import lock from '../../Assets/Component 1.png';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
 
@@ -13,6 +12,7 @@ const initialValues = {
 };
 
 const Login = () => {
+  const navigate=useNavigate();
   const [passwordType, setPasswordType] = useState('password');
  
 
@@ -26,8 +26,8 @@ const Login = () => {
   });
 
 
-  const togglePasswordVisibility = () => {
-    setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
+  const handleLogin = () => {
+    navigate('/admindashboardview');
   };
 
   return (
@@ -66,9 +66,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
-                    <img src={lock} alt='lock' />
-                  </span>
+                 
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 
@@ -77,7 +75,7 @@ const Login = () => {
                 </Link>
  
                 <div className="d-grid gap-2">
-                  <button className="admin-login" type="submit" >Login</button>
+                  <button className="admin-login" type="submit" onClick={handleLogin} >Login</button>
                 </div>
               </form>
     </div>

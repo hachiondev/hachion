@@ -78,6 +78,7 @@
     display: flex;
     flex-wrap: wrap; 
     justify-content: space-between;
+   
 }
 
 .about-us-div-content {
@@ -99,12 +100,18 @@
     font-weight: 400;
     text-align: center;
 }
-
+#querymodal{
+    height: 262px !important;
+    width: 430px;
+    border-radius: 20px;
+}
 .association{
+ 
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .association-head{
     font-size: 1.9rem;
     font-weight: 700;
@@ -615,7 +622,7 @@
 }
 
 .recent-card {
-    min-width: 20%; /* Adjust width to display 2 cards on mobile */
+    width: 330px; /* Adjust width to display 2 cards on mobile */
     flex: 0 0 auto; /* Prevent cards from shrinking */
     margin-right: 10px; /* Add some space between cards */
     background-color: white;
@@ -910,6 +917,7 @@
    
 }
 
+
 .leading-expert{
     width: 95%;
 }
@@ -929,6 +937,7 @@
     margin-bottom: 10px;
 }
 }
+
 
 @media (min-width:350px) and (max-width:480px){
     .hachion-content {
@@ -1358,21 +1367,54 @@
 .row{
     display: flex;
     flex-direction: row !important;
-}
-
-#advisor1{
-    height: 50px !important;
-    width: 450px !important;
-}
-.row{
-    display: flex;
-    flex-direction: row;
     gap: 50px !important;
 }
 #advisor2{
-    width: 200px !important;
+    width: 330px !important;
 }
 #advisor3{
     height: 120px;
-    width: 976px !important;
+    width: 995px !important;
 }
+@media(min-width:1180px) and (max-width:1367px){
+    
+#advisor1{
+    
+    width: 400px !important;
+}
+.row{
+
+    gap: 10px !important;
+}
+#advisor2{
+    width: 220px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 800px !important;
+}
+.advisor-form{
+    width: 95%;
+}
+}
+@media(min-width:768px) and (max-width:1179px){
+    
+    #advisor1{
+        
+        width: 300px !important;
+    }
+    .row{
+    
+        gap: 10px !important;
+    }
+    #advisor2{
+        width: 180px !important;
+    }
+    #advisor3{
+        height: 120px;
+        width: 600px !important;
+    }
+    .advisor-form{
+        width: 98%;
+    }
+    }

@@ -9,9 +9,13 @@ import RecentEntriesCard from './RecentEntriesCard';
 import salesforce from '../../Assets/salesforce.png';
 import salesforceadmin from '../../Assets/salesforceadmin.png';
 import salesforceinterview from '../../Assets/salesforceinterview.png';
+import { useNavigate } from 'react-router-dom';
 
 
 const Salesforce = () => {
+  const navigate=useNavigate();
+
+
   useEffect(() => {
     window.scrollTo(0, 0);  // This will scroll to the top of the page
   }, []);
@@ -33,7 +37,7 @@ const Salesforce = () => {
    </div>
    <div className='card-holder'>
   <RecentEntriesCard imageSrc={salesforce} content='7 Reasons to Learn Salesforce in 2023 By' 
-     username='Sandeep' date='24-09-10'/>
+     username='Sandeep' date='24-09-10' onClick={() => navigate('/salesforceblog')}/>
      <RecentEntriesCard imageSrc={salesforceadmin} content='Salesforce admin Interview FAQs' 
      username='Pushpa' date='24-09-10'/>
      <RecentEntriesCard imageSrc={salesforceinterview} content='Salesforce Developer Interview FAQs' 

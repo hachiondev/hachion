@@ -397,3 +397,27 @@ width: 340px;
   height: 150px;
   width: 1100px;
 }
+.dialog-title{
+  background: linear-gradient(45deg,#006489,#00AEEF);
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  display: flex;
+  justify-items: space-between !important;
+}
+.update-btn{
+width: 180px;
+  background-color: #00AEEF !important;
+  color: white !important;
+  font-size: 24px;
+  font-weight: 700 !important;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  align-items: center;
+  margin-right: 120px !important;
+}
+.close-btn{
+  display: flex;
+  justify-items: flex-end;
+}

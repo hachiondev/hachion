@@ -1570,9 +1570,9 @@ display: none;
 }
 
 .view-btn{
-margin-right: 8%;
+margin-right: 4%;
 margin-left: 5px;
-margin-top:-30px; 
+margin-top:-20px; 
 margin-bottom: 10px;
 }
 
@@ -1609,8 +1609,6 @@ border-radius: 5px;
     color: rgba(16, 201, 0, 1);
     animation: growShrink 2s infinite ease-in-out;
     }
-
-
 
 .mob-card-header{
   position:relative;
@@ -1661,8 +1659,6 @@ gap: 5px;
 font-size: 10px;
 }
 
-
-
 .training-events{
   margin-bottom: 0px;
   margin-top: 0px;
@@ -1672,7 +1668,7 @@ font-size: 10px;
 padding-top: 5px;
 margin-bottom: 0px;
 margin-top: 0px;
-margin-left: 3%;
+margin-left: 2%;
 justify-content: space-between;
 }
 

@@ -604,6 +604,13 @@ padding-left: 10px;
 
 /* Input field styling */
 
+
+.btn-submit {
+
+width: 520px !important;
+background-color: #00AEEF;
+}
+
 .key-highlights{
 margin-bottom: 5vh;
 padding:3vh;
@@ -650,15 +657,29 @@ scroll-behavior: smooth;
 }
 
 .upcoming-header {
-margin-top: 2vh;
-margin-bottom: 5vh;
-padding:2vh;
-background: linear-gradient(to right, #006489, #00AEEF, #006489);
-box-shadow: 5px 5px 5px hsl(0, 0%, 83%);
-position: -webkit-sticky;
-position: sticky;
-top: 0;
-z-index: 1000;
+  margin-top: 2vh;
+  margin-bottom: 5vh;
+  background: linear-gradient(to right, #006489, #00AEEF, #006489);
+  box-shadow: 5px 5px 5px hsl(0, 0%, 83%);
+  z-index: 1000;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slide-down 0.3s ease-in-out;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .upcoming-header-content {
@@ -1618,6 +1639,7 @@ border:2px solid white;
   margin-top: -40px;
   }
 }  
+ 
 
 @media (min-width:350px) and (max-width:480px){
 .curriculum{
@@ -1904,7 +1926,7 @@ max-height: 3em;
   flex-direction: column;
   align-items: center;
   flex-wrap: nowrap;
-  /* overflow-x: scroll; */
+  overflow-y:visible;
   scroll-behavior: smooth;
   margin-top: 10px;
   max-width: 100%;
@@ -1914,6 +1936,7 @@ max-height: 3em;
   gap: 0px;
   padding-left: 5px;
   padding-right: 5px;
+  height: auto;
 }
 
 /* course-pagination for course page */

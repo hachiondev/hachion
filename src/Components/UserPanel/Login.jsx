@@ -11,8 +11,6 @@ import facebook from '../../Assets/facebook_symbol.svg.png';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
 import { useNavigate } from 'react-router-dom';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
-//import ReCAPTCHA from 'react-google-recaptcha'; // Add this for reCAPTCHA
 
 const initialValues = {
   email: "",
@@ -109,9 +107,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
-                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </span>
+  
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 
@@ -145,9 +141,9 @@ const Login = () => {
             </div>
 
             <div className='login-with'>
-              <hr size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
               <p className='login-option'>Or Login with</p>
-              <hr size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
             </div>
 
             <div className='icon-holder'>
@@ -165,7 +161,7 @@ const Login = () => {
               </button>
             </div>
 
-            <p className='go-to-register'>Don't have an account?  <Link to='/register' className='link-to-register'> Register </Link></p>
+            <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
           <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button>
           </div>
         </div>

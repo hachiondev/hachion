@@ -13,7 +13,7 @@
 }
 
 .login-left{
-    width: 50vw;
+    width: 55vw;
     height: 100%;
  
 }
@@ -24,7 +24,7 @@
     flex-direction: row;
 }
 .login-right{
-   width: 50vw;
+   width: 45vw;
  height: 120vh;
    background-image: url('../../Assets/sider.png');
     background-repeat: no-repeat;
@@ -97,7 +97,7 @@ background-size:cover;
     font-weight: 500;
     color:#00AEEF;
     cursor: pointer;
-    margin-right: 40px;
+    margin-right: 1% !important;
 }
 
 .login-right-header{
@@ -145,7 +145,7 @@ background-size:cover;
   }
   
   .form-control {
-    width: 520px;
+    width: 500px;
     height: 50px;
     border-radius: 5px;
     margin-bottom: 0.5dvh;

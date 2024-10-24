@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Course.css';
@@ -19,9 +19,51 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
+  const upcomingHeaderRef = useRef(null);
+  const footerRef = useRef(null); // Footer reference for intersection observer
+  const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  // Sticky logic
+  useEffect(() => {
+    const handleScroll = () => {
+      if (upcomingHeaderRef.current) {
+        const { top } = upcomingHeaderRef.current.getBoundingClientRect();
+        setIsSticky(top <= 0); // Set sticky if the header's top reaches 0 or less
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Intersection Observer to detect when footer is in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsSticky(false); // Unstick the header when the footer comes into view
+          }
+        });
+      },
+      { rootMargin: '0px', threshold: 0.1 }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
   }, []);
 
   const handleVideoButtonClick = () => {
@@ -38,20 +80,29 @@ const QaAutomation = () => {
         <div className='course-banner'>
           <h3 className='course-banner-content'>QA Automation</h3>
         </div>
-        <p className='blogs-header'>Courses <MdKeyboardArrowRight/> QA Testing <MdKeyboardArrowRight/> QA Automation</p> 
+        <p className='blogs-header'>
+          Courses <MdKeyboardArrowRight /> QA Testing <MdKeyboardArrowRight /> QA Automation
+        </p>
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
         <KeyHighlights />
 
+        {/* Sticky Header applies to the entire section below */}
+        <div ref={upcomingHeaderRef}>
+          <div className={isSticky ? 'sticky upcoming-header' : 'upcoming-header'}>
+            <UpcomingHeader />
+        
+        </div>
+
         <div id="upcoming-batch">
-          <UpcomingHeader />
           <UpcomingBatch />
         </div>
 
         <div id="corporate">
           <Corporate />
         </div>
+
         <div id="qa-course">
-          <Qacourse/>
+          <Qacourse />
         </div>
 
         <div id="curriculum" ref={curriculumRef}>
@@ -73,12 +124,15 @@ const QaAutomation = () => {
         <div id="qa-faq">
           <QaAutomationFaq />
         </div>
-
-        <Footer />
+        </div>
+        {/* Footer section to stop the sticky behavior */}
+        <div ref={footerRef}>
+          <Footer />
+        </div>
         <StickyBar />
       </div>
     </>
   );
-}
+};
 
 export default QaAutomation;

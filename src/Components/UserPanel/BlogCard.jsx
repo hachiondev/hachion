@@ -1,13 +1,13 @@
 import React from 'react';
 import './Corporate.css';
 
-const BlogCard = ({ imageSrc, content }) => {
+const BlogCard = ({ imageSrc, content, onClick }) => {
   return (
-    <div className='blog-card'>
-      <img src={imageSrc} alt='blog-image' className='blog-card-image' />
-      <p className='blog-content'>{content}</p>
+    <div className="blog-card" onClick={onClick}>
+      <img src={imageSrc} alt={content} />
+      <h3>{content}</h3>
     </div>
   );
-}
+};
 
 export default BlogCard;

@@ -295,7 +295,6 @@
 }
 .enquiry-form{
     padding: 40px;
-
 }
 .advisor-head {
     height: 100px;
@@ -1043,7 +1042,7 @@
     
       .profile-image {
         position: absolute;
-        top: -20px;
+        top: -10px;
         margin-left: 5px;
         width: 70px;
         height: 70px;
@@ -1258,32 +1257,127 @@
     }
     .contact-us-corporate{
         margin-top: 0px;
-        margin-left: 50%;
-        font-size: 16px;
-        padding: 5px 10px;
+        margin-left: 40%;
+        font-size: 14px;
+        padding: 3px 8px;
         border-radius: 5px;
     }
+
+    /* Talk to our advisor form */
     .advisor-form{
-        margin-left: 5px;
-        margin-right: 5px;
+        margin: 20px;
+        width: auto;
     }
     .advisor{
-        padding: 10px;
+        padding: 5px;
+        margin-top: 20px;
     }
+
+    .enquiry-form{
+        /* padding: 5px; */
+        padding-top: 10px;
+        padding-bottom: 5px;
+        width: auto;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .advisor-head {
+        height: 60px;
+        border-radius: 10px 10px 0px 0px;
+        font-size: 16px;
+        width: auto;
+    }
+
+    #advisor1.form-control{
+        height: 30px !important;
+        width: 280px !important;
+        border-color: #b3b3b3;
+        font-size: 12px;
+        margin: 5px;
+    }
+
+    #advisor1.form-select{
+        height: 30px !important;
+        width: 280px !important;
+        border-color: #b3b3b3;
+        margin-left: 10px;
+        font-size: 12px;
+        margin: 5px;
+    }
+
+    .row {
+        flex-direction: column !important; /* Stack the form fields vertically */
+        gap: 0px !important; /* Reduce gap between elements for mobile */
+      }
+
+    #advisor2.mobile-number{
+        width: 160px !important;
+        height: 30px;
+        border-radius: 0px 5px 5px 0px;
+        border-color: #b3b3b3;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    #advisor3.form-control{
+        height: 80px;
+        width: 280px !important;
+        font-size: 12px;
+        border-color: #b3b3b3;
+        margin: 5px;
+    }
+
+    .submit-btn {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        width: 280px;
+        margin: 5px;
+        margin-bottom: 20px;
+    }
+
+    .modal-content {
+        width: 90% !important; /* Adjust modal size for mobile */
+        margin: auto;
+      }
+    
+      .success-gif {
+        width: 100px !important; /* Reduce GIF size for mobile */
+      }
+    
+      .modal-para {
+        font-size: 12px !important; /* Adjust text size for better readability */
+      }
+    
+      .close-btn {
+        font-size: 20px !important; /* Adjust close button size */
+      }
+
+      .btn.btn-outline-secondary {
+        height: 30px;
+        width: 30px;
+        border-radius: 5px 0px 0px 5px;
+        margin-bottom: 5px;
+        }
 
     .customize-training{
         flex-direction: column;
         gap: 10px;
     }
     .customize-training-div{
-        width: 95%;
+        width: 350px;
+        max-width: 100%;
         border-radius: 10px;
-        margin-left: 10px;
+        /* margin-left: 10px; */
         padding: 5px;
         margin-bottom: 20px;
     }
     .customize-training-div img{
         width: 330px;
+        max-width: 90%;
+        margin-left: 10px;
         padding: 5px;
         margin-bottom: 10px;
     }
@@ -1292,29 +1386,65 @@
         font-size: 16px;
         margin-bottom: 10px;
     }
+    /* Corporate training features */          
+     .customized-content {
+         height: 90px;
+         width: 160px;
+         max-width: 100%;
+         border-radius: 10px;
+         padding: 5px 0px 5px 0px;
+         gap: 5px;
+     }
+     
+     .customized-content-heading {
+         font-weight: 600;
+         font-size: 12px;
+         text-align: left;
+         margin-bottom: 5px;
+         margin-top: 5px;
+     }
+     
+     .customized-content img {
+         height: 60px;
+         width: auto;
+     }
+     
+     .customized-content-para {
+         font-weight: 400;
+         font-size: 10px;
+         margin-bottom: 5px;
+         padding-right: 5px;
+     }
+     
     .corporate-training-features {
-        flex-direction: column; /* Stack elements vertically */
-        justify-content: center;
+        margin-left: 5%;
+        margin-right: 5px;
+        width: 350px; /* Full width for mobile */
+        padding: 5px;
+        display: flex;
         align-items: center;
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%; /* Full width for mobile */
-        padding: 2vh;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 10px;
     }
 
     .customized-column {
-        width: 100%; /* Make columns full width */
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); 
+        width: 90%; /* Make columns full width */
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
         align-items: center;
-    }
-
-    .customized-content {
-        width: 90%; /* Adjust width of content to fit mobile screens */
+        justify-content: center;
+        gap: 5px;
     }
 
     .training-img {
-        width: 100%; /* Full width for the image */
-        max-width: 420px; /* Maintain the image's aspect ratio */
+        width: 320px; /* Full width for the image */
+        max-width: 100%; /* Maintain the image's aspect ratio */
         margin-top: 20px; /* Add some space between the columns and the image */
+        margin-bottom: 20px;
     }
     
     .leading-expert {
@@ -1367,7 +1497,7 @@
 .row{
     display: flex;
     flex-direction: row !important;
-    gap: 50px !important;
+    /* gap: 50px !important; */
 }
 #advisor2{
     width: 330px !important;

@@ -34,7 +34,15 @@ const Aboutus = () => {
         <img src={aboutUsBanner} alt='about-us' />
       </div>
       <div className='about-us'>
-        <p className='blogs-header'>Home <MdKeyboardArrowRight /> About Us</p>
+      <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight/>            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              About Us
+            </li>
+          </ol>
+        </nav>
         <div className='about-us-content'>
           <h1 className='about-us-heading'>About Hachion</h1>
           <div className='about-us-top'>

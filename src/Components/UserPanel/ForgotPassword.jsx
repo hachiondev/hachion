@@ -19,10 +19,9 @@ const ForgotPassword = () => {
   };
 
   const handleSendClick = () => {
-    // Trigger the modal and after it closes, navigate to /login
-    setTimeout(() => {
-      handleLogin();
-    }, 2000); // Adjust delay as needed or add event listener for modal close
+    // setTimeout(() => {
+    //   handleLogin();
+    // }, 2000); 
   };
 
   return (
@@ -71,6 +70,7 @@ const ForgotPassword = () => {
                         data-bs-dismiss='modal'
                         className='close-btn'
                         aria-label='Close'
+                        onClick={handleLogin}
                       >
                         <RiCloseCircleLine />
                       </button>

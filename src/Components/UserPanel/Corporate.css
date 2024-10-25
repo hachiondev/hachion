@@ -1344,16 +1344,8 @@
         margin: auto;
       }
     
-      .success-gif {
-        width: 100px !important; /* Reduce GIF size for mobile */
-      }
-    
       .modal-para {
         font-size: 12px !important; /* Adjust text size for better readability */
-      }
-    
-      .close-btn {
-        font-size: 20px !important; /* Adjust close button size */
       }
 
       .btn.btn-outline-secondary {
@@ -1507,6 +1499,11 @@
     height: 120px;
     width: 995px !important;
 }
+.close-btn{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px;
+    }
 @media(min-width:1180px) and (max-width:1367px){
     
 #advisor1{

@@ -80,9 +80,20 @@ const QaAutomation = () => {
         <div className='course-banner'>
           <h3 className='course-banner-content'>QA Automation</h3>
         </div>
-        <p className='blogs-header'>
-          Courses <MdKeyboardArrowRight /> QA Testing <MdKeyboardArrowRight /> QA Automation
-        </p>
+        <div className='blogs-header'>
+          {/* Courses <MdKeyboardArrowRight /> QA Testing <MdKeyboardArrowRight /> QA Automation */}
+          <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/Course">Courses</a> <MdKeyboardArrowRight/> </li>
+              <li className="breadcrumb-item">
+              <a href="/Course">QA Testing</a> <MdKeyboardArrowRight/></li>
+            <li className="breadcrumb-item active" aria-current="page">
+            QA Automation
+            </li>
+          </ol>
+        </nav>
+        </div>
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
         <KeyHighlights />
 

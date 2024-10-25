@@ -161,12 +161,14 @@
         font-size: 16px;
         padding-left: 0;
       }
-      .breadcrumb-item.active::before {
+      /* .breadcrumb-item.active::before {
        display: none;
-      }
-      
+      } */
+      .breadcrumb-item::before {
+        display: none;
+       }
       .breadcrumb-item svg {
-        margin: 0 5px;
+        margin: 0 3px;
       }
       .about-us-content{
         width: 80%;

@@ -12,6 +12,7 @@ const QaTop = ({ onVideoButtonClick }) => {
     <>
       <div className='qa-automation'>
         <div className='qa-left-part'>
+        <p className='mob-cert'>Certified-students: 57</p>
           <div className='qa-automation-left'>
             <img src={image} alt='qa-image' />
             <div className='qa-automation-middle'>
@@ -37,7 +38,7 @@ const QaTop = ({ onVideoButtonClick }) => {
           <p className='certified'>Certified-students: 57</p>
           <img src={qaheader} alt='video-frame' />
           <button className='video-btn' onClick={onVideoButtonClick}>
-            <IoPlayCircleOutline style={{ color: 'white', fontSize: '1.8rem', fontWeight: '700',marginRight:'10px' }} />
+            <IoPlayCircleOutline className='video-btn-icon'  />
             Watch Demo Videos
           </button>
         </div>

@@ -592,6 +592,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    cursor: pointer;
   }
   
   .blog-card-image {

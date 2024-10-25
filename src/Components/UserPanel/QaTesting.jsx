@@ -12,6 +12,10 @@ import { useNavigate } from 'react-router-dom';
 const QaTesting = () => {
   const navigate = useNavigate();
 
+  const handleqatesting = () => {
+    console.log('Navigating to QA Testing Blog');
+    navigate('/qatestingblog');
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -39,7 +43,7 @@ const QaTesting = () => {
             content='Importance of Automation in Software Testing' 
             username='Srilatha' 
             date='24-09-10' 
-            onClick={() => navigate('/qatestingblog')} 
+            onClick={handleqatesting} 
           />
         </div>
         

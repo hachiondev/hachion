@@ -17,7 +17,13 @@ import automation from '../../Assets/image 80.png';
 import python from '../../Assets/image 90.png';
 import profileImage from '../../Assets/Ellipse 18.png';
 import { useNavigate } from 'react-router-dom';
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { IoMdCloseCircleOutline } from "react-icons/io";
 // Styling the table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -123,7 +129,32 @@ const reviewRows =  [
 export default function Course() {
   const [activeTab, setActiveTab] = useState('courseDetails'); // Default tab is Course Details
 const navigate=useNavigate();
+const [open, setOpen] = React.useState(false);
 
+  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  
+  const handleClickOpen = (row) => {
+    setSelectedRow(row); // Set the selected row data
+    setOpen(true); // Open the modal
+  };
+  
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+  
+  const handleSave = () => {
+    // Logic to handle saving the updated category and date
+    console.log('Saved:', selectedRow);
+    setOpen(false);
+  };
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 const handleAdd=()=>{
   switch (activeTab) {
     case 'courseDetails':
@@ -275,7 +306,10 @@ const handleAdd=()=>{
           <StyledTableCell>{row.image}</StyledTableCell>
           <StyledTableCell>{row.course_name}</StyledTableCell>
           <StyledTableCell>{row.date}</StyledTableCell>
-          <StyledTableCell>{row.action}</StyledTableCell>
+          <StyledTableCell align="center">
+                  <FaEdit className="edit" onClick={() => handleClickOpen(row)}  />
+                  <RiDeleteBin6Line className="delete" />
+                </StyledTableCell>
         </>
       )}
       {activeTab === 'schedule' && (
@@ -376,6 +410,42 @@ const handleAdd=()=>{
       <div className='pagination'>
         <Pagination count={10} color="primary" />
       </div>
+      <Dialog open={open} onClose={handleClose}>
+        <div className='dialog-title'>
+
+        <DialogTitle>Edit Category  </DialogTitle>
+        <Button onClick={handleClose} className='close-btn'>
+            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
+          </Button>
+        </div>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="category_name"
+            label="Category Name"
+            type="text"
+            fullWidth
+            value={selectedRow.category_name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="Date"
+            label="Date"
+            type="date"
+            fullWidth
+            value={selectedRow.Date}
+            onChange={handleInputChange}
+          />
+        </DialogContent>
+        <DialogActions>
+         
+          <Button onClick={handleSave} className='update-btn'>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -154,6 +154,14 @@
   padding: 0;
   margin: 0;
 }
+.admin-right{
+  flexGrow: 1;
+   padding:20px;
+   width: 1450px;
+   overflow-y: auto;
+   height: 85vh;
+   overflow-x: auto;
+}
 
 .menu-item-container {
   display: flex;
@@ -418,6 +426,5 @@ width: 180px;
   margin-right: 120px !important;
 }
 .close-btn{
-  display: flex;
-  justify-items: flex-end;
+margin-left: 200px !important;
 }

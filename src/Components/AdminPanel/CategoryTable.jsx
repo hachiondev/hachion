@@ -26,6 +26,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    position: 'sticky',             // Make header sticky
+    top: 0,                         // Stick to the top of the container
+    zIndex: 1,         
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,

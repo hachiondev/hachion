@@ -392,6 +392,12 @@ margin-right: 3vw;
 background-color: #0D6EFD;
 }
 
+.video-btn-icon {
+  font-size: 1.8rem;
+  margin-right: 10px;
+  color: #fff;
+}
+
 .fee{
 padding-top: 50px;
 font-size: 1rem;
@@ -465,8 +471,6 @@ margin: 2vh;
 display:flex;
 flex-direction:column;
 justify-content: space-evenly;
-
-
 }
 
 .qa-right img{
@@ -481,6 +485,10 @@ font-size:24px;
 color: white;
 text-align: right;
 }
+
+.mob-cert{
+  display: none;
+  }
 
 .mentoring-mode-content{
 font-size: 20px;
@@ -543,6 +551,12 @@ font-weight: 700;
 color: white;
 cursor: pointer;
 }
+
+.btn.btn-outline-secondary {
+  height: 30px;
+  border-radius: 5px 0px 0px 5px;
+  margin-bottom: 5px;
+  }
 
 /* Style for request batch modal */
 .request-batch {
@@ -1692,12 +1706,15 @@ border:2px solid white;
 }
 
 .qa-automation {
-  width: 95%;
+  width: 90%;
   background-color: white; /* Replace background image with white */
   flex-direction: column; /* Change flex direction to column */
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 5%;
+  margin-right: 5%;
   background-image: none;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 5px;
 }
 
 .qa-automation-left {
@@ -1708,52 +1725,84 @@ border:2px solid white;
 
 .qa-automation-left img {
   margin-right: -48px;
-  height:137px;
+  height: 80px;
   margin-left: -10px;
 }
 
 .qa-content {
   width: 100%;
-  text-align: left;
+  text-align: justify;
   margin-left: 0;
   padding: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 0;
+  font-size: 10px;
+}
+
+.qa-content p{
+  padding: 5px;
+  margin-bottom: 0;
 }
 
 .qa-button {
   flex-direction: column;
-  width: 100%;
+  width: 95%;
   justify-content: center;
   align-items: center;
+  margin: 5px;
+  margin-top: 0;
 }
 
 .enroll-now,
 .download {
-  width: 95%;
-  margin: 1vh 0;
-  padding: 10px;
-  font-size: 1.2rem;
+  width: 100%;
+  height: 40px;
+  margin: 10px;
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
 }
+
+.qa-right{
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  }
 
 .qa-right img {
-width: 300px;
-  height: 247px; /* Ensure image remains responsive */
+  width: 310px;
+  height: auto; /* Ensure image remains responsive */
   border-radius: 10px;
-  margin-left: 30px;
+  margin-left: 0px;
 }
 
-.certified {
-  font-size: 1rem;
-  text-align: left;
+.mob-cert {
+  display: flex;
+  font-size: 10px;
+  justify-content: flex-end;
+  font-weight: 700;
+  color: #000;
+  margin: 0 10px 0 0;
 }
+
+.certified{
+ display: none;
+  }
 .fee{
 padding-top: 5px;
+font-size: 10px;
 }
 .video-btn {
-  margin-left: 0;
-  width: 300px;
+  width: 100%;
+  height: 35px;
+  margin: 10px;
   padding: 5px;
-  margin-left: 30px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.video-btn-icon {
+  font-size: 24px;
 }
 
 .course-content {
@@ -1877,6 +1926,7 @@ padding-top: 5px;
     padding: 10px;
     height: 70px;
     width: auto;
+    top: 30px;
    }
 
 .sidebar-course-details {
@@ -1886,7 +1936,7 @@ padding-top: 5px;
   padding-left: 0;
 }
 .blogs-header{
-  margin-left: 10vw;
+  margin-left: 20px;
 }
 
 .sidebar-course-name{
@@ -1909,7 +1959,7 @@ max-height: 3em;
   white-space: nowrap;
 }
 .sidebar-course-review{  
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   font-style: italic;
   white-space: nowrap;
@@ -1994,9 +2044,10 @@ max-height: 3em;
 }
 
 .key-highlights {
-  width: 95%;
-  margin-left: 2.5%;
-  margin-right: 2.5%;
+  width: 90%;
+  padding: 10px;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .key-highlights-header {
@@ -2005,7 +2056,8 @@ max-height: 3em;
 
 .key-highlights-content {
   width: 30%; 
-  margin-bottom: 2vh; 
+  gap: 5px;
+  margin-bottom: 10px; 
 }
 
 .key-icons {
@@ -2100,10 +2152,6 @@ max-height: 3em;
   font-size: 14px; 
 }
 
-.enroll-now {
-  width: 100%; 
-  padding: 10px; 
-}
 .qa-course-heading img{
   height: 200px;
   width: 90%;
@@ -2132,7 +2180,7 @@ max-height: 3em;
 
  /* Have any query popup */
  .modal-content {
-  width: 350px; /* Adjust width for mobile view */
+  width: 350px !important; /* Adjust width for mobile view */
   height: auto;
 }
 
@@ -2188,7 +2236,7 @@ max-height: 3em;
 
   .input-group, .form-control {
     width: 320px;
-    height: 50px;
+    height: 30px;
     font-size: 14px;
     border-radius: 5px;
     margin-bottom: 10px !important;
@@ -2196,7 +2244,7 @@ max-height: 3em;
 
 .input-group.custom-width {
   width: 320px;
-  height: 50px;
+  height: 30px;
   font-size: 14px;
   border-radius: 5px;
   flex-wrap: nowrap;
@@ -2206,11 +2254,12 @@ max-height: 3em;
 
 #query1.form-control{
   width: 320px!important;
+  height: 30px;
   margin-bottom: 10px !important;
  }
  #query2.mobile-number{
   width: auto;
-  height: 50px;
+  height: 30px;
   border-radius: 0 5px 5px 0;
   margin-bottom: 10px;
  }

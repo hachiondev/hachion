@@ -138,7 +138,37 @@
       .about-us{
         background-color: #EEEEEE;
         padding: 4vh;
-    
+      }
+      .breadcrumb {
+        display: flex;
+        list-style: none;
+        padding: 0;
+      }
+      
+      .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+      }
+      
+      .breadcrumb-item a {
+        text-decoration: none;
+        color: #00AEEF;
+      }
+      
+      .breadcrumb-item.active {
+        color: #6c757d;
+        font-size: 16px;
+        padding-left: 0;
+      }
+      /* .breadcrumb-item.active::before {
+       display: none;
+      } */
+      .breadcrumb-item::before {
+        display: none;
+       }
+      .breadcrumb-item svg {
+        margin: 0 3px;
       }
       .about-us-content{
         width: 80%;
@@ -216,16 +246,43 @@
       }
     }
       @media (max-width:480px){
+        .about-us{
+          padding: 25px;
+          padding-top: 5px;
+        }
+
+        .breadcrumb-item {
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+        }
+        
+        .breadcrumb-item.active {
+          color: #6c757d;
+          font-size: 12px;
+        }
+        .about-us-heading{
+        font-size: 16px;
+        padding: 20px 5px 5px 5px;
+        }
         .about-us-top{
           flex-direction: column;
-          
         }
         .about-us-content{
           width: 98%;
           margin-left: 10px;
         }
         .about-us-left-content{
-          font-size: 14px;
+          font-size: 10px;
+          padding: 0 25px 0 25px ;
+          line-height: 16px;
+          text-align: justify;
+        }
+
+        .about-us-top img{
+          max-width: 320px;
+          height: auto;
+          margin: 10px;
         }
       }
     
@@ -259,23 +316,30 @@
         justify-content: flex-start; 
         overflow-x: auto; 
         white-space: nowrap; 
-        padding: 20px;
+        padding: 10px;
         gap: 10px;
-        font-size: 14px;
+        font-size: 10px;
         width: 100%;
-        margin-left: 5px;
+      }
+      .story-div{
+        align-items: center;
       }
       .story-content{
-        font-size: 16px;
-      
+        font-size: 10px;
+        font-weight: 400;
+        white-space: wrap;
+        line-height: 12px;
+        text-align: center;
+        margin-bottom: 5px;
       }
       .number{
-        margin-left: 15px;
         font-size: 14px;
+        margin-bottom: 5px;
       }
       .story-icon{
-        font-size: 1.25rem;
-     margin-left: 15px;
+        font-size: 30px;
+        margin-bottom: 5px;
+        margin-top: 5px;
       }
     }
 .contact-us-div{

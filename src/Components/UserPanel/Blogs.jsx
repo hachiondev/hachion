@@ -9,7 +9,6 @@ import StickyBar from './StickyBar';
 import BlogCard from './BlogCard';
 import blogImage1 from '../../Assets/blogcardimage1.png';
 import blogImage2 from '../../Assets/blogcardimage2.png';
-import './Corporate.css';
 import dataScienceBlog from '../../Assets/DataScienceBlog.png';
 import programmingBlog from '../../Assets/ProgrammingBlog.png';
 import salesforceblog from '../../Assets/salesforceBlog.png';
@@ -53,10 +52,20 @@ const Blogs = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Blogs</h3>
     </div>
-    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs</p>
+    <div className='blogs-header'>
+      <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight/> </li>
+            <li className="breadcrumb-item active" aria-current="page">
+            Blog
+            </li>
+          </ol>
+        </nav>
+        </div>
    <div className='blog-header'>
     <h1 className='blog-heading'>Knowledge hub</h1>
-    
+
    </div>
    <div className='blogs-container'>
 <BlogCard imageSrc={blogImage1} content="Project Management" />

@@ -15,7 +15,7 @@ const RecentEntries = () => {
       <RecentEntriesCard 
         imageSrc={automation} 
         content='Importance of Automation in Software Testing' 
-        username='Srilatha' 
+        views='100' 
         date='24-09-10' 
         onClick={() => {
           console.log('Card clicked!'); 
@@ -25,21 +25,21 @@ const RecentEntries = () => {
       <RecentEntriesCard 
         imageSrc={salesforce} 
         content='7 Reasons to Learn Salesforce in 2023' 
-        username='Sandeep' 
+        views='100' 
         date='24-09-10' 
         onClick={() => navigate('/salesforceblog')} 
       />
       <RecentEntriesCard 
         imageSrc={salesforceadmin} 
         content='Salesforce Admin Interview FAQs' 
-        username='Pushpa' 
+        views='100' 
         date='24-09-10' 
         onClick={() => navigate('/salesforceadminblog')} // Update this to the correct route
       />
       <RecentEntriesCard 
         imageSrc={salesforceinterview} 
         content='Salesforce Developer Interview FAQs' 
-        username='Ramkrishna' 
+        views='100' 
         date='24-09-10' 
         onClick={() => navigate('/salesforcedeveloperblog')} // Update this to the correct route
       />

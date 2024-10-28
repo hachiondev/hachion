@@ -80,7 +80,7 @@ const AdminDashboardView = () => {
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         {/* Ensure onSelectCategory is passed */}
         <AdminSidebar onSelectCategory={handleCategorySelect} />
-        <div style={{ flexGrow: 1, padding: '20px' }}>
+        <div className='admin-right'>
           {renderContent()}
         </div>
       </div>

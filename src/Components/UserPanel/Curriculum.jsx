@@ -131,7 +131,7 @@ const Curriculum = ({ heading, topics, buttonText, additionalTopics }) => {
       <div className='curriculum-head'>
         <h1 className='qa-heading'>{heading}</h1>
         <button className='btn-curriculum'>
-          <BsFileEarmarkPdfFill style={{ height: '40px', width: '30px', color: 'red' }} /> {buttonText}
+          <BsFileEarmarkPdfFill className='btn-pdf-icon'  /> {buttonText}
         </button>
       </div>
       <div className='curriculum-topic'>

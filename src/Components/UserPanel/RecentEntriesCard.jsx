@@ -1,17 +1,17 @@
 import React from 'react';
 import './Corporate.css';
-import {FaUser} from 'react-icons/fa';
+import { GrFormView } from "react-icons/gr";
 
 
 
-const RecentEntriesCard = ({ imageSrc, content, username, date, onClick }) => {
+const RecentEntriesCard = ({ imageSrc, content, views, date, onClick }) => {
   return (
     <div className='recent-card' onClick={onClick}> 
       <img src={imageSrc} alt='card-image' className='Recent-card-image' />
       <div className='content-block'>
         <p className='content'>{content}</p>
         <div className='bottom-content'>
-          <p className='user'><FaUser/>  {username}</p>
+          <p className='views'><GrFormView className='views-icon'/>  {views}</p>
           <p className='date'>{date}</p>
         </div>
       </div>

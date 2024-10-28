@@ -531,7 +531,6 @@
    }
 
    .blog-banner-content{
-  
     color: white;
     font-weight: 600;
     font-size: 2.15rem;
@@ -593,6 +592,20 @@
     align-items: center;
     justify-content: space-evenly;
     cursor: pointer;
+    width: 300px;
+    height: 215px;
+  }
+
+  .blog-card img {
+    width: 110px;
+    height: auto;
+    margin-bottom: 0;
+  }
+  
+  .blog-card h3 {
+    font-size: 24px;
+    color: #00AEEF;
+    font-weight: 700;
   }
   
   .blog-card-image {
@@ -667,8 +680,17 @@
     margin: 4vh;
     width: 80%;
     margin-left: 10vw;
-
   }
+
+  .views {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .views-icon {
+    font-size: 24px;
+    color: #000;
+}
   .training-events{
     background-color: #EEEEEE;
     margin: 0px;
@@ -914,9 +936,7 @@
 }
 .leading-expert-card{
     width: 40vw;
-   
 }
-
 
 .leading-expert{
     width: 95%;
@@ -981,16 +1001,56 @@
     .recent-card {
         min-width: 30%; 
     }
+
+    /* Blog page */
+    .blog-banner-content{
+        font-size: 16px;
+      }
+      .blog-banner {
+        height: 100px;
+    }
+    .blog-heading{
+        font-size: 16px;        
+    }
     .blog-bottom{
         width: 100%;
-        margin-left: 0;
+        margin-left: 10px;
     }
 
     .blogs-container {
         grid-template-columns: repeat(2, 1fr); 
         width: 95%;
-        margin-left: 10px;
+        margin-left: 0;
+        gap: 10px;
       }
+
+      .blog-card {
+        border-radius: 10px;
+        padding: 5px;
+        width: 165px;
+        height: 165px;
+      }
+      
+      .blog-card img {
+        width: 90px;
+        height: auto;
+        margin-bottom: 0;
+      }
+      
+      .blog-card h3 {
+        font-size: 14px;
+        color: #00AEEF;
+        font-weight: 700;
+      }
+
+      .bottom-content {
+        font-size: 16px;
+    }
+
+    .views-icon {
+        font-size: 24px;
+        color: #000;
+    }
       
       .training-events {
         padding: 10px;
@@ -1205,41 +1265,6 @@
         display: block;
         z-index: 1;
       }
-      
-    /* .learner-card {
-        width: 85vw;
-        height: 350px; 
-      }
-      .learner-cover{
-          height: 400px;
-      }
-      .name{
-          font-size: 16px;
-          margin-top: 2vh;
-         
-      }
-      .learner-name img{
-          margin-top: 3vh !important;
-      }
-      .learner-info{
-          margin-left: 3vh;
-      }
-      .job-profile{
-          font-size: 1rem;
-      }
-      .job-location{
-          font-size: 1rem;
-      }
-    
-      .learner-description{
-          font-size: 16px;
-      }
-      .left-quotes{
-          margin-left: 2vh;
-      }
-      .carousel-indicators{
-          margin-top: -10px;
-      } */
 
     .corporate-banner{
         height: 179px;

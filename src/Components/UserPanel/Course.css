@@ -918,7 +918,31 @@ color: #F4111F;
   font-size: 8px;
   animation: growShrink 2s infinite ease-in-out;
   }
-
+  .custom-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #006489; /* Outer circle border */
+    margin-right: 10px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  
+  .custom-radio::after {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: transparent; /* Hidden initially */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+  }
+ 
+  
 .demo {
 color: #FF5C01;
 font-size: 20px;

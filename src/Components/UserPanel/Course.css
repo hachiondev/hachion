@@ -896,83 +896,9 @@ display: flex;
 flex-direction: row;
 justify-items:space-evenly;
 align-items: center;
-<<<<<<< HEAD
 width: 100%;
 padding: 1vh;
 gap: 10vh;
-=======
-margin-top: 2vh;
-}
-
-/* .custom-radio {
-width: 25px;
-height: 25px;
-border-radius: 50%;
-background-color: white;
-border: 2px solid grey;
-margin-right: 15px;
-position: relative;
-cursor: pointer;
-}
-
-.custom-radio::after {
-content: '';
-width: 14px;
-height: 14px;
-background: transparent; 
-border-radius: 50%;
-position: absolute;
-top: 4px;
-left: 4px;
-display: none;
-}
-
-input[type="radio"]:checked + .custom-radio::after {
-display: block; 
-background: linear-gradient(to right, #006489, #00AEEF, #006489); 
-}
-
-input[type="radio"] {
-display: none; 
-} */
-
-.hidden-radio {
-  display: none; /* Hide the default radio button */
-}
-
-.radio-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.custom-radio {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #006489; /* Outer circle border */
-  margin-right: 10px;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.custom-radio::after {
-  content: '';
-  display: block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: transparent; /* Hidden initially */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: background 0.3s ease;
-}
-
-.hidden-radio:checked + .custom-radio::after {
-  background: linear-gradient(#00AEEF, #006489); /* Inner circle gradient when checked */
->>>>>>> b3cb04845df15ddb26d494293bc9ded49ae1e256
 }
 
 .batch-date {

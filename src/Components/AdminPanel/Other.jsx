@@ -150,7 +150,6 @@ const handleInputChange = (e) => {
 </div>
 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
 
-
 <div class="col-md-4">
     <label for="inputState" class="form-label">Country</label>
     <select id="inputState" class="form-select">

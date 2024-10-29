@@ -728,8 +728,8 @@ background-color: white;
 .upcoming-batch { 
 width: 80%;
 margin: 2vh;
-margin-left: 8vw;
-margin-right:8vw;
+margin-left: 10vw;
+margin-right:10vw;
 align-items: center;
 border-radius: 10px;
 background-color: #FFFFFF;
@@ -866,7 +866,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 align-items: center;
-padding: 1.5vh;
+padding: 1vh;
 box-sizing: border-box;
 border: 2px solid #d3d3d3;
 margin-bottom: 10px;
@@ -876,7 +876,8 @@ border-radius: 10px;
 .partition label {
 display: flex;
 align-items: center;
-width: 100%;
+width: 30vw;
+gap: 2vh;
 }
 
 
@@ -884,41 +885,10 @@ width: 100%;
 display: flex;
 flex-direction: row;
 justify-items:space-evenly;
-gap:10vh;
 align-items: center;
-margin-top: 2vh;
-}
-
-.custom-radio {
-width: 25px;
-height: 25px;
-border-radius: 50%;
-background-color: white;
-border: 2px solid grey;
-margin-right: 15px;
-position: relative;
-cursor: pointer;
-}
-
-.custom-radio::after {
-content: '';
-width: 14px;
-height: 14px;
-background: transparent; 
-border-radius: 50%;
-position: absolute;
-top: 4px;
-left: 4px;
-display: none;
-}
-
-input[type="radio"]:checked + .custom-radio::after {
-display: block; 
-background: linear-gradient(to right, #006489, #00AEEF, #006489); 
-}
-
-input[type="radio"] {
-display: none; 
+width: 100%;
+padding: 1vh;
+gap: 10vh;
 }
 
 .batch-date {
@@ -1155,7 +1125,7 @@ text-align: center;
 }
 
 .live-mode{
-  padding-top: 2vh;
+  padding-top: 10px;
   padding-left: 7vh;
   font-size: 16px;
   font-weight: 400;
@@ -1179,12 +1149,12 @@ padding-right: 4vh;
 .feature-content{
 font-weight: 400;
 font-size: 1rem;
-padding-top: 2vh;
+padding-top: 1vh;
 cursor: pointer;
 }
 
 .features-icon{
-padding-top: 1vh;
+
 width:50px;
 height:50px;
 }

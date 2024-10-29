@@ -205,8 +205,8 @@
 .view-all-div{
     display: flex;
     flex-direction: row-reverse;
-    margin-right: 13vw;
-    margin-top: -9vh;
+    margin-right: -15vw !important;
+    margin-top: -1vh;
 }
 
 .view-all-corporate {
@@ -243,7 +243,10 @@
     justify-content: space-evenly;
    gap: 10px;
 }
-
+.customized-row{
+    display: flex;
+    flex-direction: row ;
+}
 .customized-content {
     height: 134px;
     width: 280px;
@@ -616,7 +619,15 @@
     scrollbar-width: none; /* Hide scrollbar for Firefox */
     -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
 }
-
+.card-holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2vh;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; 
+}
 .recent-entries::-webkit-scrollbar {
     display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }

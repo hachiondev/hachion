@@ -1,55 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Course.css';
 import { FaCircle } from "react-icons/fa";
 import LiveOnlineFeesRight from './LiveOnlineFeesRight';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
 
 export const LiveOnlineFees = () => {
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const handleChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
   return (
     <>
       <div className='batch-schedule'>
         <div className='left'>
-          {/* First batch */}
-          <div className='partition'>
-          <label>
-  <input type="radio" name="radio" />
-  <span className="custom-radio"></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Aug 8 2024 <span className='date-span'>(Thursday)</span></p>
-                <p className='batch-date'>09:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='demo'><FaCircle style={{ marginRight:'1vh', height:'20px', width:'20px' }}/>Live Demo</p>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="batch-selection-radio-group"
+              name="batch-selection"
+              value={selectedDate}
+              onChange={handleChange}
+            >
+              {/* First batch */}
+              <div className='partition'>
+                <FormControlLabel
+                  value="Aug 8 2024"
+                  control={<Radio />}
+                  label="Aug 8 2024"
+                />
+                <div className='partition-schedule'>
+                  <p className='batch-date'>09:00 PM IST <span className='date-span'>(1 hour)</span></p>
+                  <p className='demo'><FaCircle style={{ marginRight: '1vh', height: '20px', width: '20px' }} />Live Demo</p>
+                </div>
               </div>
-            </label>
-          </div>
 
-
-          {/* Second batch */}
-          <div className='partition'>
-            <label>
-             
-              <span className='custom-radio'></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Sep 1 2024 <span className='date-span'>(Sunday)</span></p>
-                <p className='batch-date'>07:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='demo'><FaCircle style={{ marginRight:'1vh', height:'20px', width:'20px' }}/>Live Demo</p>
+              {/* Second batch */}
+              <div className='partition'>
+                <FormControlLabel
+                  value="Sep 1 2024"
+                  control={<Radio />}
+                  label="Sep 1 2024"
+                />
+                <div className='partition-schedule'>
+                  <p className='batch-date'>07:00 PM IST <span className='date-span'>(1 hour)</span></p>
+                  <p className='demo'><FaCircle style={{ marginRight: '1vh', height: '20px', width: '20px' }} />Live Demo</p>
+                </div>
               </div>
-            </label>
-          </div>
 
-        
-
-          {/* Third batch */}
-          <div className='partition'>
-            <label>
-             
-              <span className='custom-radio'></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Oct 5 2024 <span className='date-span'>(Saturday)</span></p>
-                <p className='batch-date'>05:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='demo'><FaCircle style={{ marginRight:'1vh', height:'20px', width:'20px' }}/>Live Demo</p>
+              {/* Third batch */}
+              <div className='partition'>
+                <FormControlLabel
+                  value="Oct 5 2024"
+                  control={<Radio />}
+                  label="Oct 5 2024"
+                />
+                <div className='partition-schedule'>
+                  <p className='batch-date'>05:00 PM IST <span className='date-span'>(1 hour)</span></p>
+                  <p className='demo'><FaCircle style={{ marginRight: '1vh', height: '20px', width: '20px' }} />Live Demo</p>
+                </div>
               </div>
-            </label>
-          </div>
+
+            </RadioGroup>
+          </FormControl>
         </div>
+        
         <div className='separator'></div>
         <LiveOnlineFeesRight fee="Free" enrollText="Enroll Now" />
       </div>

@@ -1050,12 +1050,7 @@ gap:1vh;
       margin-top: -120px;
     }
     
-    .whatsapp-number,
-    .training-email,
-    .query-content {
-      font-size: 28px;
-     
-    }
+
 }
 
 @media screen and (max-width: 1180px) {

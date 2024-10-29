@@ -5,7 +5,7 @@ import './Corporate.css';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
-import RecentEntriesCard from './RecentEntriesCard';
+import BlogCourseCards from './BlogCourseCards';
 import automation from '../../Assets/automationtesting.png';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,21 +28,43 @@ const QaTesting = () => {
         <div className='blog-banner'>
           <h3 className='blog-banner-content'>QA Testing</h3>
         </div>
-        <p className='blogs-header'>Home <MdKeyboardArrowRight /> Blogs <MdKeyboardArrowRight /> Qa Testing</p>
-      
-        <div className='batch-type' style={{ width: '80%', marginLeft: '10vw' }}>
-          <p className='batch-type-content'>Publications</p>
-          <p className='batch-type-content'>Interview Questions</p>
-          <p className='batch-type-content'>FAQ's</p>
-          <p className='batch-type-content'>Videos</p>
+        <div className='blogs-header'>
+          <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight/> </li>
+              <li className="breadcrumb-item">
+              <a href="./Blogs">Blogs</a> <MdKeyboardArrowRight/></li>
+            <li className="breadcrumb-item active" aria-current="page">
+            Qa Testing
+            </li>
+          </ol>
+        </nav>
+        </div>
+        <div className='blog-batch-type'>
+          <p className='blog-batch-type-content'>Publications</p>
+          <p className='blog-batch-type-content'>Interview Questions</p>
+          <p className='blog-batch-type-content'>FAQ's</p>
+          <p className='blog-batch-type-content'>Videos</p>
         </div>
         
         <div className='card-holder'>
-          <RecentEntriesCard 
+          <BlogCourseCards 
             imageSrc={automation} 
             content='Importance of Automation in Software Testing' 
             username='Srilatha' 
+            views={100}
+            messages={100}
             date='24-09-10' 
+            onClick={handleqatesting} 
+          />
+          <BlogCourseCards 
+            imageSrc={automation} 
+            content='Importance of Automation in Software Testing' 
+            username='Navya' 
+            views={120}
+            messages={120}
+            date='20-09-23' 
             onClick={handleqatesting} 
           />
         </div>

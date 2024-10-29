@@ -1,8 +1,6 @@
 import React from 'react';
 import './Corporate.css';
-import { GrFormView } from "react-icons/gr";
-
-
+import { HiEye } from "react-icons/hi";
 
 const RecentEntriesCard = ({ imageSrc, content, views, date, onClick }) => {
   return (
@@ -11,7 +9,7 @@ const RecentEntriesCard = ({ imageSrc, content, views, date, onClick }) => {
       <div className='content-block'>
         <p className='content'>{content}</p>
         <div className='bottom-content'>
-          <p className='views'><GrFormView className='views-icon'/>  {views}</p>
+          <p className='views'><HiEye className='views-icon'/>  {views}</p>
           <p className='date'>{date}</p>
         </div>
       </div>

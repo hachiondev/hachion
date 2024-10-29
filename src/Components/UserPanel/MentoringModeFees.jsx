@@ -6,7 +6,7 @@ const MentoringModeFees = () => {
   return (
     <>
    <div className='batch-schedule'>
-    <div className='left'>
+    <div className='left-mode'>
         <h2 className='mentoring-mode-heading'>
             Self-Paced Videos + Trainer Support
         </h2>

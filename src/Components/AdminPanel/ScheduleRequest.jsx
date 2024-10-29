@@ -11,6 +11,8 @@ import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
+import { useNavigate } from 'react-router-dom';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,34 +35,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No,email,mobile,country,course_name,schedule_date) {
-  return { S_No,email,mobile,country,course_name,schedule_date };
+function createData(S_No,email,mobile,country,course_name,schedule_date,time,mode,action) {
+  return { S_No,email,mobile,country,course_name,schedule_date,time,mode,action };
 }
 
 const rows = [
-  createData(1,'Pritivisa@gmail.com','2019181555','United States', 'QA Automation', '2024-11-25'),
-  createData(2,'raknmit2000@gmail.com','6157055334','Bangladesh', 'Python', '2024-12-11'),
-  createData(3,'Mahartejraj@gmail.com' ,'8133003767','India','Tableau', '2024-02-15'),
-  createData(4,'Simrannagpal@gmail.com', '6786900208','India','Big data Hadoop', '2024-05-12'),
-  createData(5, 'abc@gmail.com','6786900208','Latvia','Salesforce Developer', '2024-06-11'),
-  createData(6,'bhatacharjee.attreya@gmail.com' ,'6786900208','Canada','Data Science with Python', '2024-05-21'),
-  createData(7, 'Swatikulkarni07@gmail.com','6786900208','Canada','Blue Prism', '2024-05-18'),
-  createData(8,'Anishpatel_03@gmail.com' ,'6786900208','India','Load Runner','2024-04-13'),
-  createData(9, 'bhalerao_01@yahoo.com','6786900208','India','ServiceNow', '2024-06-11'),
-  createData(10,'Laxmidon@gmail.com', '6786900208','India','Cloud Computing', '2024-06-11'),
+  createData(1,'Pritivisa@gmail.com','2019181555','United States', 'QA Automation', '2024-11-25','07:30:00 PM IST','Live Demo'),
+  createData(2,'raknmit2000@gmail.com','6157055334','Bangladesh', 'Python', '2024-12-11','07:30:00 PM CST','Live Demo'),
+  createData(3,'Mahartejraj@gmail.com' ,'8133003767','India','Tableau', '2024-02-15','07:30:00 PM IST','Live Class'),
+  createData(4,'Simrannagpal@gmail.com', '6786900208','India','Big data Hadoop', '2024-05-12','07:30:00 PM CST','Live Demo'),
+  createData(5, 'abc@gmail.com','6786900208','Latvia','Salesforce Developer', '2024-06-11','07:30:00 PM IST','Live Class'),
+  createData(6,'bhatacharjee.attreya@gmail.com' ,'6786900208','Canada','Data Science with Python', '2024-05-21','07:30:00 PM CST','Live Demo'),
+  createData(7, 'Swatikulkarni07@gmail.com','6786900208','Canada','Blue Prism', '2024-05-18','07:30:00 PM IST','Live Class'),
+  createData(8,'Anishpatel_03@gmail.com' ,'6786900208','India','Load Runner','2024-04-13','07:30:00 PM CST','Live Demo'),
+  createData(9, 'bhalerao_01@yahoo.com','6786900208','India','ServiceNow', '2024-06-11','07:30:00 PM IST','Live Class'),
+  createData(10,'Laxmidon@gmail.com', '6786900208','India','Cloud Computing', '2024-06-11','07:30:00 PM CST','Live Demo'),
 ];
 
 export default function ScheduleRequest() {
+  const navigate=useNavigate();
+  const handleAdd=()=>{
+navigate('/addschedule')
+  }
   return (
     <>   
     <CourseCategory
   pageTitle="Schedule Request"
   headerTitle="View Schedule"
   buttonLabel="Add"
-  onAdd={() => {
-    // Navigate or perform another action
-    console.log('Navigating to Add Trainer Category Page');
-  }}
+  onAdd={handleAdd}
 
 ></CourseCategory> <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -75,6 +78,9 @@ export default function ScheduleRequest() {
             <StyledTableCell align="center">Country</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Schedule Date</StyledTableCell>
+            <StyledTableCell align="center">Time Zone</StyledTableCell>
+            <StyledTableCell align="center">Mode</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -87,6 +93,12 @@ export default function ScheduleRequest() {
               <StyledTableCell align="left">{row.country}</StyledTableCell>
               <StyledTableCell align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell align="center">{row.schedule_date}</StyledTableCell>
+              <StyledTableCell align="center">{row.time}</StyledTableCell>
+              <StyledTableCell align="center">{row.mode}</StyledTableCell>
+              <StyledTableCell align="center">
+              
+                  <RiDeleteBin6Line className="delete" />
+                </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -6,7 +6,7 @@ const LiveOnlineFeesRight = ({ fee, enrollText }) => {
       <div className='right'>
         <p className='batch-date'>Fee : </p>
         <p className='free'>{fee}</p>
-        <button className='enroll-now'>{enrollText}</button>
+        <button className='fee-enroll-now'>{enrollText}</button>
       </div>
     </>
   );

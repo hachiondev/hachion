@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -9,9 +9,16 @@ import RecentEntriesCard from './RecentEntriesCard';
 import salesforce from '../../Assets/salesforce.png';
 import salesforceadmin from '../../Assets/salesforceadmin.png';
 import salesforceinterview from '../../Assets/salesforceinterview.png';
+import { useNavigate } from 'react-router-dom';
 
 
 const Salesforce = () => {
+  const navigate=useNavigate();
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
   return (
     <>
     <Topbar/>
@@ -20,7 +27,7 @@ const Salesforce = () => {
     <div className='blog-banner'>
         <h3 className='blog-banner-content'>Salesforce</h3>
     </div>
-    <p>Home <MdKeyboardArrowRight/> Blogs <MdKeyboardArrowRight/> Salesforce</p>
+    <p className='blogs-header'>Home <MdKeyboardArrowRight/> Blogs <MdKeyboardArrowRight/> Salesforce</p>
    
    <div className='batch-type' style={{width:'80%',marginLeft:'10vw'}}>
  <p className='batch-type-content'>Publications</p>
@@ -30,7 +37,7 @@ const Salesforce = () => {
    </div>
    <div className='card-holder'>
   <RecentEntriesCard imageSrc={salesforce} content='7 Reasons to Learn Salesforce in 2023 By' 
-     username='Sandeep' date='24-09-10'/>
+     username='Sandeep' date='24-09-10' onClick={() => navigate('/salesforceblog')}/>
      <RecentEntriesCard imageSrc={salesforceadmin} content='Salesforce admin Interview FAQs' 
      username='Pushpa' date='24-09-10'/>
      <RecentEntriesCard imageSrc={salesforceinterview} content='Salesforce Developer Interview FAQs' 

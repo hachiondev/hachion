@@ -11,7 +11,16 @@ import Checkbox from '@mui/material/Checkbox';
 import certificateImage from '../../Assets/certificateImage.png';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
+import { FaEdit } from 'react-icons/fa';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import CourseCategory from './CourseCategory';
+import { useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,43 +43,72 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, course_name, certificate_title, certificate_image, description, student_name, email, status) {
-  return { S_No, course_name, certificate_title, certificate_image, description, student_name, email, status };
+function createData(S_No, course_name, certificate_title, certificate_image, description,created_date, student_name, email, status) {
+  return { S_No, course_name, certificate_title, certificate_image, description,created_date ,student_name, email, status };
 }
 
 const courseCertificateRows = [
-    createData(1, 'Qa Automation','Qa Automation', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(2,'Python','Python', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate' ),
-    createData(3, 'Tableau','Tableau',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(4,'Big Data Hadoop','Big Data Hadoop',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate' ),
-    createData(5,'Salesforce Developer','Salesforce Developer', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate' ),
-    createData(6, 'Salesforce Admin','Salesforce Admin',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(7, 'Data Science with Python','Data Science with Python',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(8, 'Blue Prism','Blue Prism',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(9, 'Load Runner','Load Runner',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate'),
-    createData(10, 'Service now','Service now', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate'),
+    createData(1, 'Qa Automation','Qa Automation', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(2,'Python','Python', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(3, 'Tableau','Tableau',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(4,'Big Data Hadoop','Big Data Hadoop',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(5,'Salesforce Developer','Salesforce Developer', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(6, 'Salesforce Admin','Salesforce Admin',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(7, 'Data Science with Python','Data Science with Python',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(8, 'Blue Prism','Blue Prism',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(9, 'Load Runner','Load Runner',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(10, 'Service now','Service now', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
 ];
 
 const candidateCertificateRows = [
-    createData(1, ' Qa Automation',null,null,null,'Priti Visaria','Pritivisa@gmail.com','Completed'),
-    createData(2, 'Python',null,null,null,'Mita Shah','raknmit2000@yahoo.com','Completed' ),
-    createData(3,  'Tableau',null,null,null,'Manhar','Manhartej@gmail.com','Completed'),
-    createData(4, 'Big Data Hadoop',null,null,null,'abc','abc@gmail.com','Completed' ),
-    createData(5, 'Salesforce Developer',null,null,null,'def','def@gmail.com','Completed' ),
-    createData(6,  'Salesforce Admin',null,null,null,'xyz','xyz@gmail.com','Completed'),
-    createData(7,  'Data Science with Python',null,null,null,'ghi','ghi@gmail.com','Completed'),
-    createData(8,  'Blue Prism',null,null,null,'Jkl','Jkl@gmail.com','Completed'),
-    createData(9,  'Load Runner',null,null,null,'Mno','Mno@gmail.com','Completed'),
-    createData(10,  'Service now',null,null,null,'Pqr','Pqr@gmail.com','Completed')
+    createData(1, ' Qa Automation',null,null,null,null,'Priti Visaria','Pritivisa@gmail.com','Completed'),
+    createData(2, 'Python',null,null,null,null,'Mita Shah','raknmit2000@yahoo.com','Completed' ),
+    createData(3,  'Tableau',null,null,null,null,'Manhar','Manhartej@gmail.com','Completed'),
+    createData(4, 'Big Data Hadoop',null,null,null,null,'abc','abc@gmail.com','Completed' ),
+    createData(5, 'Salesforce Developer',null,null,null,null,'def','def@gmail.com','Completed' ),
+    createData(6,  'Salesforce Admin',null,null,null,null,'xyz','xyz@gmail.com','Completed'),
+    createData(7,  'Data Science with Python',null,null,null,null,'ghi','ghi@gmail.com','Completed'),
+    createData(8,  'Blue Prism',null,null,null,null,'Jkl','Jkl@gmail.com','Completed'),
+    createData(9,  'Load Runner',null,null,null,null,'Mno','Mno@gmail.com','Completed'),
+    createData(10,  'Service now',null,null,null,null,'Pqr','Pqr@gmail.com','Completed')
 ];
 
 export default function Certificate() {
   const [activeTab, setActiveTab] = useState('courseCertificate'); // Default tab is Course Certificate
+  const [open, setOpen] = React.useState(false);
 
+  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  
+  const handleClickOpen = (row) => {
+    setSelectedRow(row); // Set the selected row data
+    setOpen(true); // Open the modal
+  };
+  
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+  
+  const handleSave = () => {
+    // Logic to handle saving the updated category and date
+    console.log('Saved:', selectedRow);
+    setOpen(false);
+  };
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const navigate=useNavigate();
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
+const handleAdd=()=>{
+navigate('/addcertificate')
+}
   return (
     <>   
       <div className="certificate-tabs">
@@ -91,9 +129,8 @@ export default function Certificate() {
         pageTitle="Certificate"
         headerTitle="Course Certificate"
         buttonLabel="Add Course Certificate"
-        onAdd={() => {
-          console.log('Navigating to Add Certificate Page');
-        }}
+        onAdd={handleAdd}
+        
       />
 
       {/* Tab Navigation */}
@@ -113,6 +150,8 @@ export default function Certificate() {
                   <StyledTableCell align="center">Certificate Title</StyledTableCell>
                   <StyledTableCell align="center">Certificate Image</StyledTableCell>
                   <StyledTableCell align="center">Description</StyledTableCell>
+                  <StyledTableCell align="center">Created Date</StyledTableCell>
+                  <StyledTableCell align="center">Action</StyledTableCell>
                 </>
               ) : (
                 <>
@@ -136,6 +175,11 @@ export default function Certificate() {
                     <StyledTableCell align="left">{row.certificate_title}</StyledTableCell>
                     <StyledTableCell align="center">{row.certificate_image}</StyledTableCell>
                     <StyledTableCell align="center">{row.description}</StyledTableCell>
+                    <StyledTableCell align="center">{row.created_date}</StyledTableCell>
+                    <StyledTableCell align="center">
+                  <FaEdit className="edit" onClick={() => handleClickOpen(row)} /> {/* Open modal on edit click */}
+                  <RiDeleteBin6Line className="delete" />
+                </StyledTableCell>
                   </>
                 ) : (
                   <>
@@ -153,6 +197,77 @@ export default function Certificate() {
       <div className='pagination'>
       <Pagination count={10} color="primary" />
       </div>
+      <Dialog open={open} onClose={handleClose}>
+            <div className='dialog-title'>
+        <DialogTitle >Edit Course Certificate   <Button onClick={handleClose} className='close-btn'>
+            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
+          </Button></DialogTitle>
+          </div>
+        <DialogContent>
+        <div className='row'>
+<div class="col">
+    <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>{selectedRow.category_name}</option>
+      <option>QA Testing</option>
+      <option>Project Management</option>
+      <option>Business Intelligence</option>
+      <option>Data Science</option>
+    </select>
+  </div>
+  <div class="col">
+    <label for="inputState" class="form-label">Course Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>{selectedRow.course_name}</option>
+      <option>QA Automation</option>
+      <option>Load Runner</option>
+      <option>QA Automation Testing</option>
+      <option>Mobile App Testing</option>
+    </select>
+  </div>
+  </div>
+          <div className="row">
+            <div className="col">
+              <label htmlFor="certificate_title" className="form-label">Certificate Title</label>
+              <input
+                type="text"
+                className="form-control"
+                id="certificate_title"
+                name="certificate_title"
+                value={selectedRow.certificate_title}
+                onChange={handleInputChange}
+                placeholder="Enter title"
+              />
+            </div>
+            <div className="col">
+              <label htmlFor="certificate_image" className="form-label">Certificate Image</label>
+              <input
+                type="file"
+                className="form-control"
+                id="certificate_image"
+                name="certificate_image"
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="description" className="form-label">Description</label>
+            <textarea
+              className="form-control"
+              id="description"
+              name="description"
+              rows="3"
+              value={selectedRow.description}
+              onChange={handleInputChange}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSave} className="update-btn">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

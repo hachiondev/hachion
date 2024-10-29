@@ -10,8 +10,18 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { IoMdCloseCircleOutline } from "react-icons/io";
 import CourseCategory from './CourseCategory';
-
+import { useNavigate } from 'react-router-dom';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { FaEdit } from 'react-icons/fa';
+import { IoMdEye } from "react-icons/io";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -33,29 +43,58 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, student_name, email, mobile, country, state, location, date, time_zone, status) {
-  return { S_No, student_name, email, mobile, country, state, location, date, time_zone, status };
+function createData(S_No, student_name, email, mobile, country, state, location, date, time_zone, status,course_name,status_date,live_demo,live_class,mentoring_mode,self_placed) {
+  return { S_No, student_name, email, mobile, country, state, location, date, time_zone, status,course_name,status_date,live_demo,live_class,mentoring_mode,self_placed };
 }
 
 const registerlist = [
-  createData(1, 'Priti Visara', 'Pritivisa@gmail.com', '201918555', 'United States', 'Massachusetts', 'Mansfield'),
-  createData(2, 'Mita Shah', 'rakanmit2000@yahoo.com', '6157011665', 'Bangladesh', null, 'Not Defined'),
-  createData(3, 'Manhar', 'Manhartejraj@gmail.com', '6178098765', 'India', null, 'Not Defined'),
+  createData(1, 'Priti Visara', 'Pritivisa@gmail.com', '201918555', 'United States', 'Massachusetts', 'Mansfield','2024-07-05','07:30 PM CEST','QA Automation','Active','2024-07-05'),
+  createData(2, 'Mita Shah', 'rakanmit2000@yahoo.com', '6157011665', 'Bangladesh', null, 'Not Defined','2024-07-05','07:30 PM CEST','QA Automation','Active','2024-07-05'),
+  createData(3, 'Manhar', 'Manhartejraj@gmail.com', '6178098765', 'India', null, 'Not Defined','2024-07-05','07:30 PM CEST','QA Automation','Active','2024-07-05'),
 ];
 
 const studentdetails = [
-  createData(1, 'Priti Visara', 'Pritivisa@gmail.com', '201918555', 'United States', null, null, '25-01-2019', 'CET', 'Active'),
-  createData(2, 'Mita Shah', 'rakanmit2000@yahoo.com', '6157011665', 'Bangladesh', null, null, '12-5-2023', 'PDT', 'Inactive'),
-  createData(3, 'Manhar', 'Manhartejraj@gmail.com', '6178098765', 'India', null, null, '01-04-2021', 'CST', 'Active'),
+  createData(1, 'Priti Visara', 'Pritivisa@gmail.com', '201918555', 'United States', null, null, '25-01-2019', 'CET', 'Active','Qa Automation',0,0,1,0,0),
+  createData(2, 'Mita Shah', 'rakanmit2000@yahoo.com', '6157011665', 'Bangladesh', null, null, '12-5-2023', 'PDT', 'Inactive','Python',0,0,0,0,0),
+  createData(3, 'Manhar', 'Manhartejraj@gmail.com', '6178098765', 'India', null, null, '01-04-2021', 'CST', 'Active','Tableau',0,2,0,0,0),
 ];
 
 export default function Registration() {
+  const navigate=useNavigate();
   const [activeTab, setActiveTab] = useState('registerlist'); // Default tab is Register List
+  const [open, setOpen] = React.useState(false);
+
+  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  
+  const handleClickOpen = (row) => {
+    setSelectedRow(row); // Set the selected row data
+    setOpen(true); // Open the modal
+  };
+  
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+  
+  const handleSave = () => {
+    // Logic to handle saving the updated category and date
+    console.log('Saved:', selectedRow);
+    setOpen(false);
+  };
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
+const handleAdd=()=>{
+navigate('/addstudent')
+}
   return (
     <>   
       <div className="certificate-tabs">
@@ -82,9 +121,8 @@ export default function Registration() {
         pageTitle="Registration"
         headerTitle={activeTab === 'registerlist' ? 'Register List' : activeTab === 'studentdetails' ? 'Student Details' : 'Import Lead'}
         buttonLabel={activeTab === 'importlead' ? 'Upload Leads' : 'Add Student'}
-        onAdd={() => {
-          console.log('Navigating to Add Student Page');
-        }}
+        onAdd={handleAdd
+        }
       />
 
       {/* Table Content */}
@@ -120,6 +158,13 @@ export default function Registration() {
                     <StyledTableCell align="center">Country</StyledTableCell>
                     <StyledTableCell align="center">State</StyledTableCell>
                     <StyledTableCell align="center">Location</StyledTableCell>
+                    <StyledTableCell align="center">Date</StyledTableCell>
+                    <StyledTableCell align="center">Time</StyledTableCell>
+                    <StyledTableCell align="center">Course Name</StyledTableCell>
+                    <StyledTableCell align="center">Status</StyledTableCell>
+                    <StyledTableCell align="center">Status Date</StyledTableCell>
+                    <StyledTableCell align="center">Action</StyledTableCell>
+
                   </>
                 ) : (
                   <>
@@ -130,6 +175,15 @@ export default function Registration() {
                     <StyledTableCell align="center">Date</StyledTableCell>
                     <StyledTableCell align="center">Time-zone</StyledTableCell>
                     <StyledTableCell align="center">Status</StyledTableCell>
+                    <StyledTableCell align="center">Course Name</StyledTableCell>
+                    <StyledTableCell align="center">Live Demo</StyledTableCell>
+                    <StyledTableCell align="center">Live Class</StyledTableCell>
+                    <StyledTableCell align="center">Mentoring Mode</StyledTableCell>
+                    <StyledTableCell align="center">Self Placed</StyledTableCell>
+                    <StyledTableCell align="center">View Live demo</StyledTableCell>
+                    <StyledTableCell align="center">View Live Class</StyledTableCell>
+                    <StyledTableCell align="center">View Mentoring Mode </StyledTableCell>
+                    <StyledTableCell align="center">View Self Placed</StyledTableCell>
                   </>
                 )}
               </TableRow>
@@ -147,6 +201,16 @@ export default function Registration() {
                       <StyledTableCell align="center">{row.country}</StyledTableCell>
                       <StyledTableCell align="center">{row.state}</StyledTableCell>
                       <StyledTableCell align="center">{row.location}</StyledTableCell>
+                      <StyledTableCell align="center">{row.date}</StyledTableCell>
+                      <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
+                      <StyledTableCell align="center">{row.course_name}</StyledTableCell>
+                      <StyledTableCell align="center">{row.status}</StyledTableCell>
+                      <StyledTableCell align="center">{row.status_date}</StyledTableCell>
+                      <StyledTableCell align="center">
+                  <FaEdit className="edit" onClick={() => handleClickOpen(row)}  />
+                  <RiDeleteBin6Line className="delete" />
+                </StyledTableCell>
+                      
                     </>
                   ) : (
                     <>
@@ -157,6 +221,16 @@ export default function Registration() {
                       <StyledTableCell align="center">{row.date}</StyledTableCell>
                       <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
                       <StyledTableCell align="center">{row.status}</StyledTableCell>
+                      <StyledTableCell align="center">{row.course_name}</StyledTableCell>
+                      <StyledTableCell align="center">{row.live_demo}</StyledTableCell>
+                      <StyledTableCell align="center">{row.live_class}</StyledTableCell>
+                      <StyledTableCell align="center">{row.mentoring_mode}</StyledTableCell>
+                      <StyledTableCell align="center">{row.self_placed}</StyledTableCell>
+                      <StyledTableCell align="center"><IoMdEye style={{color:'#00AEEF'}}/></StyledTableCell>
+                      <StyledTableCell align="center"><IoMdEye style={{color:'#00AEEF'}}/></StyledTableCell>
+                      <StyledTableCell align="center"><IoMdEye style={{color:'#00AEEF'}}/></StyledTableCell>
+                      <StyledTableCell align="center"><IoMdEye style={{color:'#00AEEF'}}/></StyledTableCell>
+
                     </>
                   )}
                 </StyledTableRow>
@@ -171,6 +245,119 @@ export default function Registration() {
           <Pagination count={10} color="primary" />
         </div>
       )}
+      <Dialog open={open} onClose={handleClose}>
+            <div className='dialog-title'>
+        <DialogTitle >Edit Registered Student   <Button onClick={handleClose} className='close-btn'>
+            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
+          </Button></DialogTitle>
+          </div>
+        <DialogContent>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        <TextField
+            autoFocus
+            margin="dense"
+            name="student_name"
+            label="Student Name"
+            type="text"
+            fullWidth
+            value={selectedRow.student_name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="mobile"
+            label="Mobile"
+            type="number"
+            fullWidth
+            value={selectedRow.mobile}
+            onChange={handleInputChange}
+          />
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            value={selectedRow.email}
+            onChange={handleInputChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="password"
+            label="Password"
+            type="text"
+            fullWidth
+          />
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="location"
+            label="Location"
+            type="text"
+            fullWidth
+            value={selectedRow.location}
+            onChange={handleInputChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="state"
+            label="State"
+            type="text"
+            fullWidth
+            value={selectedRow.state}
+            onChange={handleInputChange}
+          />
+          
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+ <label for="inputEmail4" class="form-label">Time Zone</label>
+ <input type="text" class="form-control" id="inputTime4" value={selectedRow.time_zone} onChange={handleInputChange}/>
+<label for="inputState" class="form-label">Course Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>{selectedRow.course_name}</option>
+      <option>Qa Automation</option>
+      <option>Load Runner</option>
+      <option>QA Manual Testing</option>
+      <option>Mobile App Testing</option>
+    </select>
+</div>
+<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="email"
+            label="Additional Email"
+            type="email"
+            fullWidth
+            
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="mobile"
+            label="Additional Mobile"
+            type="number"
+            fullWidth
+           
+          />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSave} className="update-btn">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+  
     </>
+
   );
 }

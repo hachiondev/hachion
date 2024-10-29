@@ -4,6 +4,13 @@
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif;
 }
+.admin-login{
+  background-color: #00AEEF;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+}
 
 .admin-nav {
     height: 8vh;
@@ -147,6 +154,14 @@
   padding: 0;
   margin: 0;
 }
+.admin-right{
+  flexGrow: 1;
+   padding:20px;
+   width: 1450px;
+   overflow-y: auto;
+   height: 85vh;
+   overflow-x: auto;
+}
 
 .menu-item-container {
   display: flex;
@@ -167,7 +182,9 @@
 }
 
 .menu-item-admin .menu-icon {
-  margin-right: 0.5vw;
+ margin-right: 10px;
+  color: white;
+  margin-top: 5px;
 }
 
 .menu-item-admin:hover {
@@ -196,8 +213,7 @@
   .dashboard-div {
     display: flex;
     align-items: center;
-    height: 14vh;
-    width: 13vw;
+ 
     border-radius: 20px;
     padding: 15px;
     box-shadow: 5px 5px 5px #d3d3d3;
@@ -356,3 +372,59 @@
   .lead-form button{
     margin-left: 9vw;
   }
+.form-control{
+width: 340px;
+}
+.row{
+  gap: 40px;
+}
+#inputTime4{
+  width: 240px;
+}
+.row{
+  flex-direction: row;
+ 
+}
+.course-row{
+  display: flex;
+  flex-direction: row;
+  justify-items: space-evenly;
+  gap: 10px;
+}
+.course-details{
+  box-shadow: 5px 5px 10px #d3d3d3;
+
+  margin: 10px;
+}
+.course-col{
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+}
+#exampleFormControlTextarea1{
+  height: 150px;
+  width: 1100px;
+}
+.dialog-title{
+  background: linear-gradient(45deg,#006489,#00AEEF);
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  display: flex;
+  justify-items: space-between !important;
+}
+.update-btn{
+width: 180px;
+  background-color: #00AEEF !important;
+  color: white !important;
+  font-size: 24px;
+  font-weight: 700 !important;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  align-items: center;
+  margin-right: 120px !important;
+}
+.close-btn{
+margin-left: 200px !important;
+}

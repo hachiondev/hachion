@@ -1,39 +1,82 @@
 import React, { useState, useRef } from 'react';
+import './Course.css';
+import { AiOutlineCloseCircle, AiFillCaretDown } from 'react-icons/ai';
+import { Menu, MenuItem, Button } from '@mui/material';
+import Flag from 'react-world-flags';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import calendar from '../../Assets/calendar.png'; // Black calendar icon
-import './Course.css';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 const RequestBatch = ({ closeModal }) => {
   const [startDate, setStartDate] = useState(null);
-  const [time, setTime] = useState(''); // State for time
-  const timeInputRef = useRef(null); // Ref for time input
+  const [time, setTime] = useState('');
+  const timeInputRef = useRef(null);
+  const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const mobileInputRef = useRef(null);
+  const datePickerRef = useRef(null);
+  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+
+  const countries = [
+    { name: 'India', code: '+91', flag: 'IN' },
+    { name: 'United States', code: '+1', flag: 'US' },
+    { name: 'United Kingdom', code: '+44', flag: 'GB' },
+    { name: 'Thailand', code: '+66', flag: 'TH' },
+    { name: 'Canada', code: '+1', flag: 'CA' },
+    { name: 'Australia', code: '+61', flag: 'AU' },
+    { name: 'Germany', code: '+49', flag: 'DE' },
+    { name: 'France', code: '+33', flag: 'FR' },
+    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
+    { name: 'Qatar', code: '+974', flag: 'QA' },
+    { name: 'Japan', code: '+81', flag: 'JP' },
+    { name: 'China', code: '+86', flag: 'CN' },
+    { name: 'Russia', code: '+7', flag: 'RU' },
+    { name: 'South Korea', code: '+82', flag: 'KR' },
+    { name: 'Brazil', code: '+55', flag: 'BR' },
+    { name: 'Mexico', code: '+52', flag: 'MX' },
+    { name: 'South Africa', code: '+27', flag: 'ZA' },
+  ];
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    closeMenu();
+    mobileInputRef.current?.focus();
+  };
+
+  const openMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <>
-      <div className='request-batch'>
+    <div className='request-batch'>
         <div className='request-header'>Let us know your preferred start date</div>
-        <form>
+        <form className='request-form'>
           <AiOutlineCloseCircle onClick={closeModal} className='button-close' />
 
           <div className='form-group col-10'>
-            <label htmlFor='inputDate' className='form-label'>
-              Preferred batch start date
-            </label>
-            <div className='date-picker-wrapper'>
-              <DatePicker
+             <label htmlFor='inputDate' className='form-label'>
+               Preferred batch start date
+             </label>
+             <div className='date-picker-wrapper'>
+             <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 dateFormat='dd/MM/yyyy'
                 placeholderText='DD/MM/YYYY'
                 className='form-control date-picker'
+                id='query1'
+                ref={datePickerRef}
               />
               <img
                 src={calendar}
                 alt='calendar'
                 className='icon-right black-calendar'
-                onClick={() => document.querySelector('.react-datepicker__input-container input').focus()}
+                onClick={() => datePickerRef.current.setFocus()}
               />
             </div>
           </div>
@@ -48,34 +91,68 @@ const RequestBatch = ({ closeModal }) => {
               value={time}
               onChange={(e) => setTime(e.target.value)}
               className='form-control time-picker'
+              placeholder='HH:MM'
+              id='query1'
             />
           </div>
 
-          <div className='form-group col-10'>
-            <label htmlFor='inputEmail' className='form-label'>
-              Email ID
-            </label>
-            <input type='email' className='form-control' id='inputEmail' placeholder='abc@gmail.com' />
-          </div>
+        <div className='form-group col-10'>
+          <label htmlFor='inputEmail' className='form-label'>Email ID</label>
+          <input
+            id='query1'
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className='form-control'
+            placeholder='abc@gmail.com'
+          />
+        </div>
 
-          <label htmlFor='inputNumber' className='form-label'>
-            Mobile Number
-          </label>
-          <div className='form-group col-10 mobile-number-container'>
-            <select className='form-select'>
-              <option>+1</option>
-              <option>+91</option>
-              <option>+44</option>
-            </select>
-            <input type='number' className='form-control' id='inputNumber' placeholder='Enter your number' />
-          </div>
+        <label className='form-label'>Mobile Number</label>
+       <div class="input-group mb-3 custom-width">
+          <div className='input-group'>
+            <Button
+              variant="outlined"
+              onClick={openMenu}
+              className="country-code-dropdown"
+              endIcon={<AiFillCaretDown />}
+            >
+              <Flag code={selectedCountry.flag} className='country-flag' />
+              {selectedCountry.code}
+            </Button>
 
-          <button className='btn btn-primary btn-submit' type='button'>
-            Submit Request
-          </button>
-        </form>
-      </div>
-    </>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={closeMenu}
+            >
+              {countries.map((country) => (
+                <MenuItem
+                  key={country.code}
+                  onClick={() => handleCountrySelect(country)}
+                >
+                  <Flag code={country.flag} className='country-flag' />
+                  {country.name} ({country.code})
+                </MenuItem>
+              ))}
+            </Menu>
+
+            <input
+              type='tel'
+              className="mobile-number" 
+              ref={mobileInputRef}
+              aria-label="Text input with segmented dropdown button"
+              id='query2'
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              placeholder='Enter your mobile number'
+            />
+          </div>
+        </div>
+
+        <button className='btn btn-primary btn-submit' type='button'>Submit Request</button>
+      </form>
+    </div>
   );
 };
 

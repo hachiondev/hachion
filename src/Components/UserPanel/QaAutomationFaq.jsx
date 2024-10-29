@@ -1,6 +1,7 @@
 import React from 'react'
 import Curriculum from './Curriculum';
 import QaFaqMain from './QaFaqMain';
+import './Course.css';
 
 const topics3 = [
     'What is Selenium 1.0 and Selenium 2.0?',

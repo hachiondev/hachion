@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 import './Course.css';
-import { IoIosArrowForward } from 'react-icons/io';
 
 const Sidebar = ({ onSelectCategory }) => {
-  const [dropdownOpen, setDropdownOpen] = useState({});
-  const [activeIndex, setActiveIndex] = useState(null); // State to track active menu item
-
-  const toggleDropdown = (index) => {
-    setDropdownOpen((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
-  };
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All'); // Default category
+  const [activeIndex, setActiveIndex] = useState(null); // Track active main menu item
+  const [openSubmenuIndex, setOpenSubmenuIndex] = useState(null); // Track open submenu
 
   const menuItems = [
     { title: 'All', submenu: [] },
@@ -38,40 +33,89 @@ const Sidebar = ({ onSelectCategory }) => {
     { title: 'Scrum Master', submenu: ['Subitem 1', 'Subitem 2'] },
   ];
 
+  // Check if mobile view is active (max-width: 480px)
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 480);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleCategoryChange = (e) => {
+    const selected = e.target.value;
+    setSelectedCategory(selected);
+    onSelectCategory(selected); // Update category and display corresponding cards
+  };
+
   const handleMenuItemClick = (index, title) => {
-    setActiveIndex(index); // Set the active index
-    onSelectCategory(title); // Pass selected category to parent
-    toggleDropdown(index);
+    setActiveIndex(index);
+    onSelectCategory(title); // Update selected category and show cards
+    setOpenSubmenuIndex(null); // Close submenu if open
+  };
+
+  const handleSubmenuToggle = (index) => {
+    setOpenSubmenuIndex(openSubmenuIndex === index ? null : index);
   };
 
   return (
-    <div className="sidebar">
-      <h3 className='sidebar-heading'>Categories</h3>
-      <ul className="menu">
-        {menuItems.map((item, index) => (
-          <li key={index}>
-            <button
-              onClick={() => handleMenuItemClick(index, item.title)}
-              className={`menu-item ${activeIndex === index ? 'active' : ''}`} // Add 'active' class if the item is selected
-            >
-              {item.title} <IoIosArrowForward />
-            </button>
-            {/* {dropdownOpen[index] && item.submenu.length > 0 && (
-              <ul className="submenu">
-                {item.submenu.map((subitem, subIndex) => (
-                  <li
-                    key={subIndex}
-                    className="submenu-item"
-                    onClick={() => onSelectCategory(subitem)} // Pass selected subcategory to parent
-                  >
-                    {subitem}
-                  </li>
-                ))}
-              </ul>
-            )} */}
-          </li>
-        ))}
-      </ul>
+    <div>
+      {isMobileView ? (
+        // Dropdown for mobile view
+        <div>
+          <h3 className="mob-sidebar-heading">Categories</h3>
+        <div className="mobile-dropdown">
+        <h3 className="mob-sidebar-text">Please select Category from the below dropdown</h3>
+          <select
+            onChange={handleCategoryChange}
+            className="dropdown-select"
+            value={selectedCategory}
+          >
+            {menuItems.map((item, index) => (
+              <option key={index} value={item.title}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        </div>
+      ) : (
+        // Sidebar for desktop view
+        <div className={`sidebar ${activeIndex !== null ? 'show-cards' : ''}`}>
+          <h3 className="sidebar-heading">Categories</h3>
+          <ul className="menu">
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <button
+                  onClick={() => handleMenuItemClick(index, item.title)}
+                  className={`menu-item ${activeIndex === index ? 'active' : ''}`}
+                >
+                  {item.title}
+                  {item.submenu.length > 0 && (
+                    <span onClick={() => handleSubmenuToggle(index)}>
+                      {openSubmenuIndex === index ? <IoIosArrowDown /> : <IoIosArrowForward />}
+                    </span>
+                  )}
+                </button>
+
+                {/* Show submenu items when toggled */}
+                {openSubmenuIndex === index && item.submenu.length > 0 && (
+                  <ul className="submenu">
+                    {item.submenu.map((subitem, subIndex) => (
+                      <li key={subIndex} className="submenu-item">
+                        <button onClick={() => onSelectCategory(subitem)}>{subitem}</button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

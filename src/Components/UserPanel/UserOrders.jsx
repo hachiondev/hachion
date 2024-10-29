@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FiDownload } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,9 +17,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    fontSize: 18,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 16,
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -43,6 +45,7 @@ const rows = [
 ];
 
 export default function UserOrders() {
+  const navigate=useNavigate();
   return (<>  
    <div className='courses-enrolled'>
     <h6>My orders</h6>
@@ -56,7 +59,7 @@ export default function UserOrders() {
             <StyledTableCell align="right">Course Name</StyledTableCell>
             <StyledTableCell align="right">Duration</StyledTableCell>
             <StyledTableCell align="right">Fee</StyledTableCell>
-            <StyledTableCell align="right">Invoice Bill</StyledTableCell>
+            <StyledTableCell align="center">Invoice Bill</StyledTableCell>
           
           </TableRow>
         </TableHead>
@@ -68,7 +71,7 @@ export default function UserOrders() {
               <StyledTableCell align="right">{row.course_name}</StyledTableCell>
               <StyledTableCell align="right">{row.Duration}</StyledTableCell>
               <StyledTableCell align="right">{row.Fee}</StyledTableCell>
-              <StyledTableCell align="right">{row.Invoice_Bill}</StyledTableCell>
+              <StyledTableCell align="center">{row.Invoice_Bill}</StyledTableCell>
 
             
             </StyledTableRow>
@@ -76,6 +79,7 @@ export default function UserOrders() {
         </TableBody>
       </Table>
     </TableContainer>
+    <button className='explore-btn'  onClick={()=>navigate('/course')}>Explore All Courses</button>
     </div>
     </>
 

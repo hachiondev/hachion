@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Corporate.css';
 import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 import { Carousel } from 'react-bootstrap';
@@ -7,14 +7,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6'; // Custom Icons
 
 const Learners = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);  // Tablet and Mobile devices
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call it initially to set the right state
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       <div className='training-events'>
-        <div className='training-events-head'>
-          <h1 className='association-head'>Our Learners Speak on QA Automation</h1>
+        <div className='association'>
+          <h1 className='association-head'>Our Students Feedback</h1>
         </div>
         
-        <ImQuotesLeft style={{ height: '113.97px', zIndex: '1', width: '148.59px', color: 'rgba(0, 174, 239, 1)', marginBottom: '-8vh' }} />
+        <ImQuotesLeft className='left-quotes' />
         <div className='learner-cover'>
         <Carousel
           indicators={true} 
@@ -30,13 +44,16 @@ const Learners = () => {
                 location='Canada'
                 content='Hachion is a great place for fresher’s can learn good communication skills and subjects in this institute and they will place you according to your talent.'
               />
-              <LearnerCard
-                name='Henry Lee'
-                profile='IOS app developer'
-                location='USA'
-                content='The best training and placement institute that I came across, created a good platform for achieving my dream as an IOS developer.'
-              />
-           </div>
+              {/* Conditionally render the second card for desktop/laptop */}
+              {!isMobile && (
+                <LearnerCard
+                  name='Henry Lee'
+                  profile='IOS app developer'
+                  location='USA'
+                  content='The best training and placement institute that I came across, created a good platform for achieving my dream as an IOS developer. '
+                />
+              )}
+            </div>
           </Carousel.Item>
           <Carousel.Item>
             <div className='learner-card-item'>
@@ -44,35 +61,21 @@ const Learners = () => {
                 name='John Doe'
                 profile='Web Developer'
                 location='UK'
-                content='Excellent learning experience, great instructors, and fantastic career support.'
+                content='Excellent learning experience, great instructors, and fantastic career support. You can learn alongwith your work because of flexible timing.'
               />
-              <LearnerCard
-                name='Jane Smith'
-                profile='Data Scientist'
-                location='Australia'
-                content='The training was comprehensive and the placement support was exceptional.'
-              />
-            </div>
-          </Carousel.Item>
-          <Carousel.Item>
-          <div className='learner-card-item'>
-              <LearnerCard
-                name='John Doe'
-                profile='Web Developer'
-                location='UK'
-                content='Excellent learning experience, great instructors, and fantastic career support.'
-              />
-              <LearnerCard
-                name='Jane Smith'
-                profile='Data Scientist'
-                location='Australia'
-                content='The training was comprehensive and the placement support was exceptional.'
-              />
+              {!isMobile && (
+                <LearnerCard
+                  name='Jane Smith'
+                  profile='Data Scientist'
+                  location='Australia'
+                  content='The training was comprehensive and the placement support was exceptional.This is best learning platform for any individual to boost technical skills.'
+                />
+              )}
             </div>
           </Carousel.Item>
         </Carousel>
         </div>
-        <ImQuotesRight style={{ height: '113.97px', zIndex: '1', width: '148.59px', color: 'rgba(0, 174, 239, 1)', marginTop: '-8vh', marginLeft: '90vw' }} />
+        <ImQuotesRight className='right-quotes' />
       </div>
     </>
   );

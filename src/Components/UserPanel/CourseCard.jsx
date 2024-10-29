@@ -3,6 +3,7 @@ import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar } from "react-icons/md";
 import cardbackground from '../../Assets/course2.png';
+import './Home.css';
 
 const CourseCard = ({heading,month,time,image,onClick}) => {
   return (
@@ -14,7 +15,7 @@ const CourseCard = ({heading,month,time,image,onClick}) => {
  <img src={image} alt='card-img' className='card-icon'/>  
     </div>
  
- <div className='course-details'>
+ <div className='card-course-details'>
  <h5 className='course-name'>{heading}</h5>
 <div className='course-time'>
     <h6 className='course-month' ><RxCalendar/>   {month}</h6>
@@ -24,6 +25,9 @@ const CourseCard = ({heading,month,time,image,onClick}) => {
 <h6 className='course-review'>Rating: < MdOutlineStar className='star-icon'/> 
 < MdOutlineStar className='star-icon'/>< MdOutlineStar className='star-icon'/>
 < MdOutlineStar className='star-icon'/>< MdOutlineStar className='star-icon'/> 100(5.0) </h6>
+<div className='new-batch'>
+  <p className='new-batch-para'>New Batch : <span> In 5 days (4th Aug)</span></p>
+</div>
 <button className='enroll-btn'>View Details</button>
  </div>
 </div>

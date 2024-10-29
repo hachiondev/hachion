@@ -10,7 +10,7 @@
 }
 .corporate-banner{
     width: 100%; 
-    height: 65vh; 
+    height: 570px; 
     background-image: url('../../Assets/Group 39809.png');
     background-size: cover;
     background-position: center;
@@ -19,7 +19,7 @@
 .corporate-banner-heading{
     font-size: 2.1rem;
     font-weight: 700;
-    padding-top: 8vh;
+    padding-top: 5vh;
     padding-left: 8.3vw;
     color: #fff;
 }
@@ -27,7 +27,7 @@
     font-size: 2.8rem;
     font-weight: 700;
     color:#fff;
-    padding-top: 8vh;
+    padding-top: 6vh;
     text-align: center;
 
 }
@@ -39,9 +39,7 @@
     color: #fff;
 }
 .contact-us-corporate{
-    margin-top:8vh;
-    height: 8.4vh;
-    width: 13.7vw;
+    margin-top:80px;
     border-radius: 10px;
     border: 1px solid white;
     padding: 1.5vh 5vh 1.5vh 5vh;
@@ -50,27 +48,70 @@
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
-    margin-left: 35vw;
+    margin-left: 700px;
+}
+.hachion-content {
+    background-color: white;
+  
+    margin-left: 15vw;
+    width: 70vw;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #d3d3d3;
+}
+.custom-width .btn, 
+.custom-width .form-control {
+    width: 60px !important; /* Adjust width as needed */
 }
 
-.hachion-content{
-    height: 40vh;
-    background-color: white;
-    align-items: center;
-    justify-content: center;
-    margin-left:15vw;
-    
-    width:68vw;
-    border-radius: 20px;
-    box-shadow:5px 5px 5px #d3d3d3;
+.custom-width .dropdown-menu {
+    min-width: 100px; /* Adjust dropdown menu width if necessary */
+}
+.mobile-number{
+  width: 220px !important;
+}
+.flag{
+  height: 100px;
+  width: 100px;
+}
+.about-us-row {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+   
+}
 
+.about-us-div-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 calc(30% - 20px); /* 3 items in a row for desktop and laptop */
+   
+}
+
+.about-us-div-content h6 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.about-us-div-content p {
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+}
+#querymodal{
+    height: 262px !important;
+    width: 430px;
+    border-radius: 20px;
 }
 .association{
-    height: 15vh;
+ 
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .association-head{
     font-size: 1.9rem;
     font-weight: 700;
@@ -86,17 +127,16 @@
     gap: 4vh;
 }
 .customize-training-div{
-    height: 35.7vh;
-    width: 33.5vw;
+    
+    width: 34vw;
     border-radius: 20px;
     background-color: #fff;
     box-shadow:5px 5px 5px #d3d3d3;
  
 }
 .customize-training-div img{
-    height:27vh;
-    width:25.2vw;
-    margin-left: 3.15vw;
+   
+   padding: 2vw;
     margin-top: 2vh;
     margin-bottom: 2vh;
 }
@@ -125,7 +165,7 @@
 }
 
 .leading-expert-card img {
-    height: 10vh;
+    height: 100px;
     width: auto;
     margin-bottom: 1vh; 
 }
@@ -137,28 +177,10 @@
     color: #00AEEF;
     margin-bottom: 1vh; 
 }
-/* Corporate.css */
 
-/* Desktop and Laptop (2 cards per row) */
-@media (min-width: 1024px) {
-    .learner-card-item {
-      display: flex;
-      justify-content: space-around;
-    }
-  }
-  
-  /* Tablet and Mobile (1 card per row) */
-  @media (max-width: 1024px) {
-    .learner-card-item {
-      display: flex;
-      justify-content: center;
-    
-    }
-  }
-  
 .view-details-corporate {
    
-    width: 9vw;
+   padding: 10px;
     border-radius: 10px;
     padding: 5px 20px;
     background-color: #00AEEF;
@@ -175,18 +197,20 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-   justify-content: center; 
+   justify-content: space-evenly;
+
+   max-width: 73%;
+   margin-left: 15vw;
 }
 .view-all-div{
     display: flex;
     flex-direction: row-reverse;
-    margin-right: 16vw;
+    margin-right: 13vw;
     margin-top: -9vh;
 }
 
 .view-all-corporate {
    padding: 1vh;
-    width: 7.5vw;
     border-radius: 10px;
     padding: 5px 20px;
     background-color: #00AEEF;
@@ -202,7 +226,7 @@
     background-color: #0d6efd;
 }
 .corporate-training-features {
-    height: 63.4vh;
+   padding: 2vw;
     background-color: #fff;
     margin-left: 15vw;
     width: 70vw;
@@ -217,13 +241,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    margin-top: 4.5vh;
-    margin-bottom: 4.5vh;
+   gap: 10px;
 }
 
 .customized-content {
-    height: 13.4vh;
-    width: 14vw;
+    height: 134px;
+    width: 280px;
     border-radius: 10px;
     padding: 10px 0px 10px 0px;
     box-shadow: 5px 5px 10px #d3d3d3;
@@ -240,8 +263,8 @@
 }
 
 .customized-content img {
-    height: 6vh;
-    width: 3vw;
+    height: 60px;
+    width: 60px;
 }
 
 .customized-content-para {
@@ -250,31 +273,31 @@
 }
 
 .training-img {
-    width: 29.25vw;
-    height: 48vh;
+    width: 420px;
     align-self: center;
 }
 
 .advisor {
-    height: 110vh;
+  
     background-image: url('../../Assets/Group\ 39810.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 4vh;
+    padding: 40px;
 }
 
 .advisor-form {
-    height: 97vh;
-    margin-left: 15vw;
-    margin-right: 15vw;
+   width: 80%;
+   margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
+    
 }
-
-
+.enquiry-form{
+    padding: 40px;
+}
 .advisor-head {
-    height: 10vh;
+    height: 100px;
     border-radius: 20px 20px 0px 0px;
     background: linear-gradient(#006489, #00AEEF, #006489);
     color: white;
@@ -298,30 +321,11 @@
     color: red;
 }
 
-.form-control,.form-select {
-    height: 5vh ;
-    width: 26vw;
-}
-.form-select{
-    margin-left:3.5vh;
-}
 
-#Textarea {
-    height: 12vh;
-    width: 100%;
-}
-
-.row {
-    padding: 5vh;
-}
-
-.row .col-md-6 {
-    margin-bottom: 2vh;
-}
 
 .submit-btn {
-    width: 12.5vw;
-    height: 6vh;
+  
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid #fff;
     background-color: #00AEEF;
@@ -332,10 +336,12 @@
     justify-content: center;
     display: inline-block;
     text-align: center;
+    margin-bottom: 10px;
 }
+
 .learner-cover{
   
-    height: 65vh;
+    height: 380px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
@@ -348,27 +354,25 @@
   
    }
    .learner-card{
-       height: 48vh;
-       width: 33vw;
+       height: auto;
+       width: 38vw;
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
        margin-left: 8vw;
-      
-   }
-   .learner-image{
-       height: 14vh;
-       width:7vw;
-       border-radius: 50%;
-       border:4px solid white;
-       margin-left: 2.55vw;
-       margin-top: -1.25vh;
    }
    .profile-image{
-       height: 12vh !important;
-       width: 6.5vw !important;
-     
+       height: 120px !important;
+       width:120px !important;
+       border-radius: 50%;
+       border:4px solid white;
+       margin-left: 20px;
+       margin-top: -2vh;
    }
+   /* .profile-image{
+       height: 120px !important;
+       width: 120px !important;
+   } */
    .learner-top{
        display: flex;
        flex-direction: row;
@@ -385,20 +389,34 @@
       flex-direction: row;
    }
    .learner-name img{
-       height: 3.3vh;
-       width: 1.5vw;
+       height: 32px;
+       width: 32px;
        margin-left: 2vh;
-       margin-top:3vh;
+       margin-top:2vh;
    }
+
+   .rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    margin-top:0px;
+    margin-left: 5px;
+  }
+
+  .star-icon{
+    height:24px;
+    width: 24px;
+    color:rgba(251, 188, 5, 1);
+    }
+
    .learner-info{
-       height: 18.5vh;
-       margin-left: 14vh;
-       margin-top: 2vh !important;
+       margin-left: 100px;
        display: flex;
        flex-direction: column; 
-       justify-content: center;
-     
+       justify-content: center; 
    }
+
    .job-profile{
        font-weight:400;
        font-size:1.5rem;
@@ -408,12 +426,18 @@
        font-weight: 400;
        font-size: 1.2rem;
    }
+
+   .learner-description-bottom {
+    display: flex;
+    justify-content: center;
+  }
+  
    .learner-description{
        font-weight: 400;
        font-size: 1.2rem;
-       margin-left: 4vh;
-       margin-right: 4vh;
-       margin-top: 0vh;
+       margin-left: 30px;
+       margin-right: 30px;
+       margin-top: 0;
    }
    .custom-prev-icon
   {
@@ -423,7 +447,7 @@
      cursor: pointer;
      z-index: 1;
      border-radius: 50%;
-     margin-left: 12vh;
+     margin-left: -20px;
    }
    .custom-next-icon {
        font-size: 2.25rem;
@@ -436,7 +460,7 @@
      }
    
      .carousel-indicators {
-       top: 52vh;
+       top: 37vh;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -445,12 +469,12 @@
    }
    
    .carousel-indicators li {
-       background-color: grey ; /* Default color */
-       width: 2.5vw;  /* Indicator width */
-       height: 3vh; /* Indicator height */
-       border-radius: 10px; /* Rounded edges */
-       margin: 5px; /* Spacing between indicators */
-       transition: background-color 0.3s ease; /* Smooth transition for color change */
+       background-color: grey ; 
+       width: 2.5vw;  
+       height: 3vh; 
+       border-radius: 10px; 
+       margin: 5px; 
+       transition: background-color 0.3s ease; 
    }
    
    .carousel-indicators .active {
@@ -459,8 +483,42 @@
        height: 3vh; 
        border-radius: 10px; 
    }
-   
-  
+   .learner-card-item {
+    display: flex;
+    justify-content: center;
+  }
+  .left-quotes{
+    height: 80px;
+     z-index: 1;
+      width: 80px;
+       color: rgba(0, 174, 239, 1);
+        margin-bottom: -4vh; 
+  }
+  .right-quotes{
+    height: 80px;
+     z-index: 1;
+      width: 80px;
+       color: rgba(0, 174, 239, 1);
+        margin-top: -6vh; 
+        margin-left: 94vw;
+  }
+
+  .quotesleft-icon{
+    height: 32px;
+    width: 32px;
+    color: rgba(97, 97, 97, 1);
+    margin-left: 30px;
+    margin-top: -5px;
+  }
+
+  .quotesright-icon{
+    height: 32px;
+    width: 32px;
+    color: rgba(97, 97, 97, 1);
+    margin-right:30px;
+    margin-top:90px;
+  }
+
    .carousel-indicators li,
    .carousel-indicators .active {
        transition: background-color 0.3s ease;
@@ -472,85 +530,18 @@
     box-shadow: 5px 5px 5px #d3d3d3;
    }
 
-   @media screen and (max-width:1024px) {
-    .learner-card{
-        width: 60vw;
-    }
-    .name{
-        padding-top: 2vh;
-        font-size: 1.25rem;
-    }
-    .learner-image{
-        height: 10vh;
-        width: 5vw;
-    }
-    .learner-image img{
-        height: 10vh;
-        width: 5vw;
-    }
-    
-   }
-   @media screen and (max-width:768px) {
-    .learner-card{
-        width: 60vw;
-    }
-    .learner-image{
-        height: 8vh;
-        width: 4vw;
-    }
-    .learner-image img{
-        height: 8vh;
-        width: 4vw;
-    }
-    .name{
-        padding-top: 2vh;
-        font-size: 1rem;
-    }
-    .carousel .carousel-item{
-        display: flex;
-        justify-content: center;
-    }
-   
-   }
-   @media screen and (max-width:480px) {
-    .learner-card{
-        width: 40vw;
-        font-size: 0.8rem;
-    }
-    .learner-image{
-        height: 8vh;
-        width: 4vw;
-    }
-    .learner-image img{
-        height: 8vh;
-        width: 4vw;
-    }
-    .name{
-        padding-top: 1vh;
-        font-size: 0.8rem;
-    }
-    .carousel .carousel-item{
-        display: flex;
-        justify-content: center;
-    }
-   
-   }
    .blog-banner-content{
-  
     color: white;
     font-weight: 600;
     font-size: 2.15rem;
-   
-  
-
   }
   .blog-banner {
-    height: 40vh;
+    height: 220px;
     width: 100vw;
     background-image: url('../../Assets/blogbanner.png');
     background-repeat: no-repeat;
-    background-size: cover; /* Ensure the image covers the entire container */
-    background-position: center; /* Centers the image */
+    background-size: cover; 
+    background-position: center; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -571,6 +562,9 @@
 .blog-header{
     text-align: center;
 }
+.blogs-header{
+    margin-left: 10vw;
+}
 .blog-content{
     font-size: 1.5rem;
     font-weight: 700;
@@ -586,23 +580,6 @@
     margin-left: 12vw;
   }
   
-  @media (max-width: 1024px) {
-    .blogs-container {
-      grid-template-columns: repeat(4, 1fr); 
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .blogs-container {
-      grid-template-columns: repeat(3, 1fr); 
-    }
-  }
-  @media (max-width: 480px) {
-    .blogs-container {
-      grid-template-columns: repeat(2, 1fr); 
-    }
-  }
-  
   .blog-card {
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -614,6 +591,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    cursor: pointer;
+    width: 300px;
+    height: 215px;
+  }
+
+  .blog-card img {
+    width: 110px;
+    height: auto;
+    margin-bottom: 0;
+  }
+  
+  .blog-card h3 {
+    font-size: 24px;
+    color: #00AEEF;
+    font-weight: 700;
   }
   
   .blog-card-image {
@@ -628,60 +620,80 @@
     font-weight: 500;
     color:#00AAEF;
   }
-  .recent-card {
-    width: 18vw;
-    
+  .recent-entries {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2vh;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
+}
+
+.recent-entries::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.recent-card {
+    width: 330px; /* Adjust width to display 2 cards on mobile */
+    flex: 0 0 auto; /* Prevent cards from shrinking */
+    margin-right: 10px; /* Add some space between cards */
     background-color: white;
     box-shadow: 5px 5px 5px #d3d3d3;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-  }
-  
-  .recent-card-image {
-    flex: 1; 
+}
+
+.recent-card-image {
+    flex: 1;
     width: 100%;
-    object-fit: cover; 
-  }
-  
-  .content-block {
-    flex: 1; 
+    object-fit: cover;
+}
+
+.content-block {
+    flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding:2vh;
-  }
-  
-  .content {
+    padding: 2vh;
+}
+
+.content {
     font-size: 1rem;
     font-weight: 700;
-    
-  }
-  
-  .bottom-content {
+}
+
+.bottom-content {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
     font-weight: 400;
     color: #6A6A6A;
-   
-  }
-  
-  .date {
+}
+
+.date {
     color: #6A6A6A;
-  }
-  .recent-entries{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 2vh;
-  }
+}
   .blog-bottom{
     margin: 4vh;
     width: 80%;
     margin-left: 10vw;
+  }
 
+  .views {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .views-icon {
+    font-size: 24px;
+    color: #000;
+}
+  .training-events{
+    background-color: #EEEEEE;
+    margin: 0px;
   }
 .card-holder{
     width: 80%;
@@ -690,4 +702,875 @@
     justify-content: space-between;
     margin: 4vh;
     margin-left: 10vw;
+    cursor: pointer;
 }
+@media  (min-width:1180px) and (max-width: 1366px){
+.learner-info{
+    margin-left: 10px;
+    margin-top: -15px;
+}
+.left-quotes{
+    margin-top: -40px;
+}
+.right-quotes{
+    margin-bottom: -50px;
+    margin-left: 92vw;
+}
+.custom-next-icon{
+    margin-right: -220px;
+}
+}
+@media  (min-width:1180px) and (max-width: 1366px){
+    .contact-us-corporate{
+        margin-left: 480px;
+        margin-top: 50px;
+    }
+    .hachion-content{
+        width: 85vw;
+        margin-left: 80px;
+    }
+    .customize-training-div{
+        width: 520px;
+    }
+    .customize-training-div img{
+        padding: 10px;
+    }
+    .leading-expert {
+       max-width: 90%;
+       margin-left: 50px;
+    }
+    .leading-expert-card{
+        width: 320px;
+    }
+    
+    .view-all-div {
+        margin-right: 10vw;
+        margin-top: -5vh;
+    }
+    .leading-expert{
+        width: 95%;
+    }
+    .corporate-training-features{
+        width: 90vw;
+        margin-left: 50px;
+    }
+    .training-img{
+        height: 360px;
+    }
+    .advisor-form{
+        margin:10px;
+    }
+    
+    .form-select{
+        margin-left: 0px;
+    }
+    .row .col-md-6 {
+        margin-bottom: 10px;
+    }
+
+    .learner-info{
+        margin-left: 10px;
+        margin-top: -15px;
+    }
+    .left-quotes{
+        margin-top: -40px;
+    }
+    .right-quotes{
+        margin-bottom: -50px;
+        margin-left: 92vw;
+    }
+}
+
+@media  (min-width:780px) and (max-width: 1179px){
+    .association-head{
+        font-size: 28px;
+        margin-left: 10px;
+    }
+    .view-all-div{
+        margin-top: -5vh;
+        margin-right: 10vw;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+
+    .learner-card-item {
+      display: flex;
+      justify-content: center; 
+    }
+  
+    .learner-card {
+      width: 68vw; 
+      margin-left:160px;
+    }
+    .left-quotes{
+        margin-left: 2vh;
+        margin-top: -30px;
+    }
+    .learner-info{
+        margin-left: 10px;
+    }
+    .right-quotes{
+        margin-left: 90vw;
+        margin-bottom: -40px;
+    }
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+
+    .learner-card-item {
+      display: flex;
+      justify-content: center; 
+    }
+  
+    .learner-card {
+      width: 68vw; 
+      margin-left:160px;
+    }
+    .left-quotes{
+        margin-left: 2vh;
+    }
+    .learner-info{
+        margin-top: 20px;
+    }
+    .right-quotes{
+        margin-left: 90vw;
+    }
+ 
+}
+ 
+@media (max-width: 1024px) {
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+
+    .learner-card-item {
+      display: flex;
+      justify-content: center; 
+    }
+  
+    .learner-card {
+      width: 65vw; 
+    }
+    .left-quotes{
+        margin-left: 4vh;
+    }
+}
+  
+@media (max-width: 768px) {
+    .blogs-container {
+        grid-template-columns: repeat(3, 1fr); 
+      }
+
+    .learner-card {
+      width: 70vw; 
+    }
+    .custom-prev-icon{
+        margin-left: -10vh;
+    }
+    /* .learner-image{
+        height: 90px;
+        width: 100px;
+    } */
+    .profile-image{
+        height: 80px !important;
+        width: 80px !important;
+    }
+    .learner-name img{
+        height: 30px;
+        width: 30px;
+        margin-top: 2vh;
+    }
+    .left-quotes{
+        height: 60px;
+        width: 60px;
+        margin-left: 3vh;
+    }
+    .learner-info{
+        margin-top: 20px;
+    }
+    .right-quotes{
+        height: 60px;
+        width: 60px;
+        margin-left: 90vw;
+        margin-bottom: -30px;
+    }
+}
+
+@media  (min-width:480px) and (max-width: 1179px){
+    .contact-us-corporate{
+        margin-left: 300px;
+        margin-top: 50px;
+    }
+
+    .hachion-content{
+        width: 95%;
+        margin-left: 10px;
+    }
+ 
+.customize-training-div{
+    width: 40vw;
+    height: 250px;
+    align-items: center;
+    justify-items: center;
+}
+.customize-training-div img{
+    padding: 0px;
+    width: 240px;
+   
+}
+.customized-content{
+    width: 210px;
+    height: 150px;
+}
+.training-img{
+    height: 450px;
+    width: 290px;
+}
+.leading-expert {
+   max-width: 100%;
+   margin-left: 0px;
+}
+.leading-expert-card{
+    width: 40vw;
+}
+
+.leading-expert{
+    width: 95%;
+}
+.corporate-training-features{
+    width: 100vw;
+    margin-left: 0px;
+}
+
+.advisor-form{
+    margin:10px;
+}
+
+.form-select{
+    margin-left: 0px;
+}
+.row .col-md-6 {
+    margin-bottom: 10px;
+}
+}
+
+
+@media (min-width:350px) and (max-width:480px){
+    .hachion-content {
+        margin-left: 10px;
+        margin-bottom: 20px;
+        width: 95%;
+    }
+
+    .about-us-row {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .about-us-div-content {
+        flex: 1 1 calc(50% - 20px); 
+        margin-bottom: 10px !important;
+    }
+    .about-us-div-content img{
+        width: auto !important;
+        height: 110px !important;
+        padding-bottom: 10px;
+    }
+
+    .about-us-div-content h6 {
+        font-size: 12px !important;
+        margin-bottom: 5px;
+    }
+
+    .about-us-div-content p {
+        font-size: 10px !important;
+    }
+
+    .recent-entries {
+        justify-content: flex-start; 
+    }
+
+    .recent-card {
+        min-width: 30%; 
+    }
+
+    /* Blog page */
+    .blog-banner-content{
+        font-size: 16px;
+      }
+      .blog-banner {
+        height: 100px;
+    }
+    .blog-heading{
+        font-size: 16px;        
+    }
+    .blog-bottom{
+        width: 100%;
+        margin-left: 10px;
+    }
+
+    .blogs-container {
+        grid-template-columns: repeat(2, 1fr); 
+        width: 95%;
+        margin-left: 0;
+        gap: 10px;
+      }
+
+      .blog-card {
+        border-radius: 10px;
+        padding: 5px;
+        width: 165px;
+        height: 165px;
+      }
+      
+      .blog-card img {
+        width: 90px;
+        height: auto;
+        margin-bottom: 0;
+      }
+      
+      .blog-card h3 {
+        font-size: 14px;
+        color: #00AEEF;
+        font-weight: 700;
+      }
+
+      .bottom-content {
+        font-size: 16px;
+    }
+
+    .views-icon {
+        font-size: 24px;
+        color: #000;
+    }
+      
+      .training-events {
+        padding: 10px;
+      }
+
+      .association{
+       margin: 5px;
+    }
+    
+      .association-head {
+        font-size: 16px;
+        text-align: left;
+        /* margin-bottom: 5px; */
+        padding-top: 5px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        margin-left: 5%;
+        margin-right: 5px;
+        justify-content: space-between;
+      }
+    
+      .learner-card-item {
+        display: block;
+        justify-content: center;
+        align-content: center;
+        max-width: 400px;
+        height: 320px;
+        margin-top: 0px;
+      }
+    
+      .learner-card {
+        max-width: 340px;
+        height: 250px;
+        /* margin-bottom: 10px; */
+        position: relative;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 10px;
+        margin: 50px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    
+      .learner-top {
+        display: flex;
+        /* justify-content: flex-start; */
+        /* align-items: center; */
+        flex-direction: row;
+        margin-top: -10px;
+      }
+    
+      .profile-image {
+        position: absolute;
+        top: -10px;
+        margin-left: 5px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%; /* Make the image circular */
+        border: 3px solid #fff;
+        z-index: 1; /* Ensure the image is above other content */
+      }
+
+      .learner-info {
+        display: flex;
+        flex-direction: column;         
+        justify-content: center;
+        align-items: flex-start;
+        height: auto;
+        margin-top: 0px !important;
+        margin-bottom: 20px;
+        margin-left: 10px; /* Adjusted to match the smaller image size */
+      }
+    
+      .learner-name {
+        font-size: 16px;
+        flex-wrap: wrap;
+        margin-left: 0px; /* Move the name away from the image */
+        z-index: 0; /* To ensure the image is above the name */
+      }   
+
+      .name{
+        font-weight:600;
+        font-size: 16px;
+        padding-bottom: 0vh;
+        padding-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .learner-name img{
+        height: 24px;
+        width: 24px;
+        margin-left: 5px;
+        margin-top:5px;
+    }
+      .rating {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0;
+        
+      }
+
+      .star-icon{
+        height: 14px;
+        width: 14px;
+        color:rgba(251, 188, 5, 1);
+        }
+    
+      .job-profile{
+        text-align: center;
+        font-size: 14px;
+        margin-left: 0px;
+        margin-bottom: 5px;
+        white-space: nowrap;
+      }
+
+      .job-location {
+        text-align: center;
+        font-size: 14px;
+        margin-left: 0px;
+        margin-bottom: 5px;
+      }
+    
+      .learner-description-bottom {
+        display: flex;
+        justify-content: center;
+     
+      }
+    
+      .learner-description {
+        font-size: 12px;
+        text-align:justify; /* Center the text for a balanced look */
+        margin-left: 5px;
+        margin-right: 5px;
+        
+      }
+
+      .quotesleft-icon{
+        height: 20px;
+        width: 20px;
+        display: flex;
+        color: rgba(97, 97, 97, 1);
+        margin: 0 5px;
+        
+      }
+    
+      .quotesright-icon{
+        height: 20px;
+        width: 20px;
+        color: rgba(97, 97, 97, 1);
+         margin: 0 5px;
+        margin-left:5px;
+        margin-top:70px;
+      }
+
+      .left-quotes{
+        height: 60px;
+        width: 60px;
+        margin-left: 2%;
+        margin-top: -30px;
+        position: absolute; 
+        z-index: 10;
+      }
+      .right-quotes{
+        height: 60px;
+        width: 60px;
+        margin-top: -30px; 
+        margin-left: 77%;
+        position: absolute; 
+        z-index: 10;
+      }
+    
+      .custom-prev-icon, .custom-next-icon {
+        font-size: 20px;
+        color: #000;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+        /* padding: 5px; */
+      }
+
+      .carousel-control-prev-icon {
+        padding-left: 10px;
+        font-size: 20px;
+      }
+    
+      .carousel-control-next-icon {
+        padding-right: 10px;
+        font-size: 20px;
+      }
+    
+      /* Ensure carousel indicators are visible and positioned below the card */
+      .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        top: 300px;
+      }
+    
+      .carousel-indicators li {
+        background-color: #000;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }    
+    
+      .learner-cover {
+        width: 100%;
+        height: 350px;
+        position: relative;
+        display: block;
+        z-index: 1;
+      }
+
+    .corporate-banner{
+        height: 179px;
+    }
+    .corporate-banner-heading{
+        font-size: 16px;
+        padding-top: 10px;
+        padding-left: 10px;
+    }
+    .corporate-banner-content{
+        font-size: 16px;
+        padding-top: 5px;
+    }
+    .corporate-banner-bottom-content{
+        font-size: 14px;
+        padding-top: 5px;
+    }
+    .contact-us-corporate{
+        margin-top: 0px;
+        margin-left: 40%;
+        font-size: 14px;
+        padding: 3px 8px;
+        border-radius: 5px;
+    }
+
+    /* Talk to our advisor form */
+    .advisor-form{
+        margin: 20px;
+        width: auto;
+    }
+    .advisor{
+        padding: 5px;
+        margin-top: 20px;
+    }
+
+    .enquiry-form{
+        /* padding: 5px; */
+        padding-top: 10px;
+        padding-bottom: 5px;
+        width: auto;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .advisor-head {
+        height: 60px;
+        border-radius: 10px 10px 0px 0px;
+        font-size: 16px;
+        width: auto;
+    }
+
+    #advisor1.form-control{
+        height: 30px !important;
+        width: 280px !important;
+        border-color: #b3b3b3;
+        font-size: 12px;
+        margin: 5px;
+    }
+
+    #advisor1.form-select{
+        height: 30px !important;
+        width: 280px !important;
+        border-color: #b3b3b3;
+        margin-left: 10px;
+        font-size: 12px;
+        margin: 5px;
+    }
+
+    .row {
+        flex-direction: column !important; /* Stack the form fields vertically */
+        gap: 0px !important; /* Reduce gap between elements for mobile */
+      }
+
+    #advisor2.mobile-number{
+        width: 160px !important;
+        height: 30px;
+        border-radius: 0px 5px 5px 0px;
+        border-color: #b3b3b3;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    #advisor3.form-control{
+        height: 80px;
+        width: 280px !important;
+        font-size: 12px;
+        border-color: #b3b3b3;
+        margin: 5px;
+    }
+
+    .submit-btn {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        width: 280px;
+        margin: 5px;
+        margin-bottom: 20px;
+    }
+
+    .modal-content {
+        width: 90% !important; /* Adjust modal size for mobile */
+        margin: auto;
+      }
+    
+      .modal-para {
+        font-size: 12px !important; /* Adjust text size for better readability */
+      }
+
+      .btn.btn-outline-secondary {
+        height: 30px;
+        width: 30px;
+        border-radius: 5px 0px 0px 5px;
+        margin-bottom: 5px;
+        }
+
+    .customize-training{
+        flex-direction: column;
+        gap: 5px;
+    }
+    .customize-training-div{
+        width: 350px;
+        max-width: 100%;
+        border-radius: 10px;
+        /* margin-left: 10px; */
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+    .customize-training-div img{
+        width: 330px;
+        max-width: 90%;
+        margin-left: 10px;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .customize-training-div-content{
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    /* Corporate training features */          
+     .customized-content {
+         height: 90px;
+         width: 160px;
+         max-width: 100%;
+         border-radius: 10px;
+         padding: 5px 0px 5px 0px;
+         gap: 5px;
+     }
+     
+     .customized-content-heading {
+         font-weight: 600;
+         font-size: 12px;
+         text-align: left;
+         margin-bottom: 5px;
+         margin-top: 5px;
+     }
+     
+     .customized-content img {
+         height: 60px;
+         width: auto;
+     }
+     
+     .customized-content-para {
+         font-weight: 400;
+         font-size: 10px;
+         margin-bottom: 5px;
+         padding-right: 5px;
+     }
+     
+    .corporate-training-features {
+        margin-left: 5%;
+        margin-right: 5px;
+        width: 350px; /* Full width for mobile */
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+
+    .customized-column {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); 
+        width: 90%; /* Make columns full width */
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
+        padding: 5px;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .training-img {
+        width: 320px; /* Full width for the image */
+        max-width: 100%; /* Maintain the image's aspect ratio */
+        margin-top: 20px; /* Add some space between the columns and the image */
+        margin-bottom: 20px;
+    }
+    
+    .leading-expert {
+        justify-content: center;
+        max-width: 100%;
+        margin-left: 0;
+        gap: 5px;
+    } 
+
+    .leading-expert-card {
+        width: 160px;
+        height: 160px;
+        border-radius: 10px;
+        margin: 5px;
+    }
+    
+    .leading-expert-card img {
+        height: 60px;
+        width: auto;
+        margin-bottom: 10px; 
+    }
+    
+    .leading-expert-card-content {
+        font-size: 14px;
+        margin-bottom: 1vh; 
+    }
+  
+    .view-all-corporate {
+         border-radius: 5px;
+         padding: 3px 10px;
+         font-size: 10px;
+         white-space: nowrap;
+     }
+
+    .view-details-corporate {
+         display: none;
+     }
+    .view-all-div {
+    margin-right: 5%;
+    margin-left: 0px;
+    margin-top: 15px; 
+    margin-bottom: 10px;
+    }        
+    
+}
+
+#advisor1{
+    height: 50px !important;
+    width: 450px !important;
+}
+.row{
+    display: flex;
+    flex-direction: row !important;
+    /* gap: 50px !important; */
+}
+#advisor2{
+    width: 330px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 995px !important;
+}
+.close-btn{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px;
+    }
+@media(min-width:1180px) and (max-width:1367px){
+    
+#advisor1{
+    
+    width: 400px !important;
+}
+.row{
+
+    gap: 10px !important;
+}
+#advisor2{
+    width: 220px !important;
+}
+#advisor3{
+    height: 120px;
+    width: 800px !important;
+}
+.advisor-form{
+    width: 95%;
+}
+}
+@media(min-width:768px) and (max-width:1179px){
+    
+    #advisor1{
+        
+        width: 300px !important;
+    }
+    .row{
+    
+        gap: 10px !important;
+    }
+    #advisor2{
+        width: 180px !important;
+    }
+    #advisor3{
+        height: 120px;
+        width: 600px !important;
+    }
+    .advisor-form{
+        width: 98%;
+    }
+    }

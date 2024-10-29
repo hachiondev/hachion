@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FcCalendar } from 'react-icons/fc';
+import calendar from '../../Assets/calendar.png';
 import './Course.css';
 import LiveOnlineFees from './LiveOnlineFees';
 import CorporateFees from './CorporateFees';
@@ -42,13 +42,13 @@ const UpcomingBatch = () => {
           <p className='batch-type-content' onClick={() => setActiveComponent('SelfPlacedFees')}>Self-placed Learning</p>
           <p className='batch-type-content' onClick={() => setActiveComponent('CorporateFees')}>Corporate Training</p>
         </div>
-        
+        <div className='batch-content-background'>
         {/* Render the selected batch type */}
         {renderComponent()}
 
         {/* Request Batch link */}
         <p className='schedule'>
-          <FcCalendar />
+        <img src={calendar} alt='calendar'/>
           Schedule your way? 
           <span 
             className='schedule-span' 
@@ -59,7 +59,7 @@ const UpcomingBatch = () => {
           </span>
         </p>
       </div>
-
+      </div>
       
       {isModalOpen && (
         <div className="modal-request">

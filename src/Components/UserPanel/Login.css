@@ -13,7 +13,7 @@
 }
 
 .login-left{
-    width: 50vw;
+    width: 55vw;
     height: 100%;
  
 }
@@ -24,7 +24,7 @@
     flex-direction: row;
 }
 .login-right{
-   width: 50vw;
+   width: 45vw;
  height: 120vh;
    background-image: url('../../Assets/sider.png');
     background-repeat: no-repeat;
@@ -77,21 +77,8 @@ background-size:cover;
     justify-content: center;
     align-items: center;
 }
-.social-login-btn-linkedin {
-    width: 5vh;
-    height: 5vh;
-    padding: 0; 
-    background: none; 
-    border: none; 
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-
-
-.social-login-btn img,.social-login-btn-linkedin img {
+.social-login-btn img {
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
@@ -110,6 +97,7 @@ background-size:cover;
     font-weight: 500;
     color:#00AEEF;
     cursor: pointer;
+    margin-right: 1% !important;
 }
 
 .login-right-header{
@@ -134,6 +122,7 @@ background-size:cover;
     font-weight: 400;
     color: rgba(0,0,0,1);
    padding: 1.5vh;
+   white-space: nowrap;
 }
 .go-to-register{
     padding: 1vh;
@@ -156,8 +145,8 @@ background-size:cover;
   }
   
   .form-control {
-    width: 26vw;
-    height: 6vh;
+    width: 500px;
+    height: 50px;
     border-radius: 5px;
     margin-bottom: 0.5dvh;
     
@@ -171,8 +160,8 @@ background-size:cover;
   }
   
   .input-group .form-control {
-    width: 26vw;
-    height: 6vh;
+    width: 520px;
+    height: 50px;
     margin-left: 0vh;
    border:1px solid #d3d3d3;
     
@@ -182,6 +171,7 @@ background-size:cover;
     position: absolute;
     right: 1.8vw;
     top: 50%;
+    color: #00AEEF;
     transform: translateY(-50%);
     background-color: transparent;
     border: none;
@@ -240,8 +230,8 @@ background-size:cover;
         height: 6vh;
       }
       .captcha{
-        height: 4vh;
-        width: 4vw;
+        height: 40px;
+        width: 40px;
       }
       .login-left {
         width: 100%;
@@ -273,14 +263,14 @@ background-size:cover;
       .input-group,
       .form-control,
       .btn {
-        width: 50vw;
+        width: 520px;
         font-size: 1rem;
-       height: 4.5vh;
+       height: 50px;
         border-radius: 5px;
         margin-bottom: 0.5vh;
       }
       .login-top {
-        padding-top: 0vh;
+        padding-top: 8vh;
       }
       .login-label{
         font-size: 1.15rem;
@@ -291,13 +281,13 @@ background-size:cover;
       }
     
       .welcome-back {
-        font-size: 1.25rem;
-        margin-top: 0vh;
+        font-size: 2.25rem;
+        margin-top: 1vh;
         margin-right: 4vh;
       }
     
       .login-continue {
-        font-size: 1rem;
+        font-size: 1.5rem;
         margin-right: 4vh;
       }
     .login-with hr{
@@ -383,32 +373,51 @@ background-size:cover;
   }
   
   /* Small Mobile Phones */
-  @media (max-width: 480px) {
+  @media (min-width: 350px) and (max-width: 480px) {
     .login{
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 6vh;
     }
+
+    .input-group-text {
+        position: absolute;
+        right: 1.8vw;
+        top: 50%;
+       color: #00AEEF;
+       transform: none;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
     .captcha{
         margin-left: 2vh;
-        height: 4vh;
-        width: 10vw;
+        height: 50px;
+        width: 50px;
     }
     .login-option{
-        font-size: 0.9rem;
+        font-size: 12px;
     }
     .forgot-password{
-        margin-top: 2vh;
+        margin-top: 10px;
+        margin-bottom: 0;
+        font-size: 12px;
+        justify-content: flex-end;
+        margin-right: 1%;
     }
       .login-left
        {
         width:100%;
         height: 100%;
-    
+        margin-top: 0px;
+        padding: 5px !important;
       }
       .login-with hr{
-        width: 15%;
+        width: 20%;
+        border: 1px solid #6A6A6A;
+        background: #6A6A6A;
       }
       .login-right{
         display: none;
@@ -416,7 +425,14 @@ background-size:cover;
 
     .login-top {
      margin-top: 1vh;
+     padding-top: 1vh;
     }
+
+    .login-label{
+    margin-top: 0;
+    font-size: 14px;
+    }  
+
   .icon-holder{
     display: flex;
     justify-content: space-evenly;
@@ -425,45 +441,59 @@ background-size:cover;
   .social-login-btn{
     height: 50px;
     width: 50px;
-  }
-  .social-login-btn-linkedin{
-    height: 55px;
-    width: 55px;
+    margin-bottom: 5px;
   }
     .login-logo {
      height: auto;
-   margin-left: 2vh;
-      justify-content: center;
+    margin-left: 10%;
+    justify-content: center;
     }
   
     .welcome-back {
-      font-size: 2rem;
-      margin-top: 3vh;
+      font-size: 32px;
+      margin-top: 10px;
     }
   
     .login-continue {
-      font-size: 1.25rem;
+      font-size: 20px;
     }
   
     .input-group,
     .form-control,
     .btn {
-      width: 80vw;
-      font-size: 0.8rem;
+      width: 90vw;
+      height: 50px;
+      font-size: 14px;
       border-radius: 5px;
-      margin-bottom: 2vh !important;
+      margin-bottom: 20px !important;
       
     }
     .login-mid{
         gap:2vw;
     }
   
- 
-  
     .go-to-register {
-      font-size: 0.9rem;
+      font-size: 12px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    .link-to-register{
+        color:#00AEEF;
+        text-decoration-line: none;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .register-btn {
+        padding: 0.4vh 0.8vh;
+        font-size: 20px;
+        height: 50px;
+        width: 90%;
+        margin: 0;
     }
   }
+
 .register-head{
     padding-top: 1.5vh;
     padding-bottom: 1.5vh;
@@ -486,17 +516,12 @@ cursor: pointer;
 }
 
 .icon-text-img{
-    height: 6.5vh;
-    width: 3.25vw;
+    height: 50px;
+    width: 50px;
     margin-right:-8px;
     z-index: 1;   
 }
-.icon-text-img-linkedin{
-    height: 7vh;
-    width: 3.5vw;
-    margin-right:-8px;
-    z-index: 1;   
-}
+
 .icon-text-holder-google {
     margin-left: -5px;
     height: 5vh;
@@ -615,9 +640,22 @@ cursor: pointer;
     text-decoration-line: none;
     font-weight: bold;
 }
+@media (max-width: 1366px){
+    .icon-text img{
+        height: 75px;
+        width: 75px;
+        margin-top: 5px;
+    }
+    .icon-text-holder-google, .icon-text-holder-facebook, 
+    .icon-text-holder-linkedin, .icon-text-holder-apple, 
+    .icon-text-holder-email {
+       height: 60px;
+        width: 275px;
+        font-size: 0.9rem;
+        
+    }
+}
 @media (max-width: 1024px) {
-
-
     .icon-places {
         padding-top: 1vh;
         flex-direction: column;
@@ -632,12 +670,12 @@ cursor: pointer;
     }
 
     .icon-text-img {
-        height: 6vh;
-        width: 6vw !important;
+        height: 60px !important;
+        width: 60px !important;
     }
     .icon-text-img-linkedin{
-        height: 7vh;
-        width: 6vw;
+        height: 65px !important;
+        width: 65px !important;
     }
     .icon-text-holder-google, .icon-text-holder-facebook, 
     .icon-text-holder-linkedin, .icon-text-holder-apple, 
@@ -645,11 +683,10 @@ cursor: pointer;
         padding: 1vh;
         width: 275px;
         font-size: 0.9rem;
+        height: 50px;
+        margin-top: 1vh;
         
     }
-    
-     
-   
 
     .register-head {
         font-size: 1.6rem;
@@ -681,8 +718,12 @@ cursor: pointer;
         width: 80vw;
     }
 .icon-text-img{
-    height: 8vh;
-    width: 10vw;
+    height: 70px !important;
+    width: 70px !important;
+}
+.icon-text-img-linkedin{
+    height: 75px !important;
+    width: 75px !important;
 }
 .icon-places{
     width: 100%;
@@ -707,8 +748,8 @@ padding: 1vh;
 }
 
 .icon-text-img-linkedin{
-    height: 7vh;
-    width: 7vw;
+    height: 70px;
+    width: 70px;
 }
   
     .login-left h4 {
@@ -723,30 +764,40 @@ padding: 1vh;
 }
 @media (max-width: 480px) {
     .register-head {
-        font-size: 1.6rem;
-      margin-right: 3vh;
-        margin-top: 3vh;
+        font-size: 30px;
+        white-space: nowrap;
+      /* margin-right: 10px; */
+        margin-top: 10px;
+        padding-top: 10px;
+        padding-bottom: 0;
     }
     .option{
-        font-size: 0.7rem;
-        margin-right: 1vh;
+        font-size: 16px;
+        /* margin-right: 1vh; */
         
     }
     .icon-text{
         width: 300px;
         height: 70px;
+        align-items: center;
     }
   .icon-text-holder-apple,.icon-text-holder-google,.icon-text-holder-email,
   .icon-text-holder-facebook,.icon-text-holder-linkedin{
     width: 250px;
     height: 50px;
+    font-size: 16px;
   }
   .icon-text-img{
-    height: 70px;
-    width: 80px;
+    height: 60px !important;
+    width: 60px !important;
   }
+
 .login-link{
-    font-size: 0.8rem;
+    font-size: 12px;
+}
+
+.link-to{
+    font-size: 12px !important;
 }
  
 }
@@ -774,12 +825,12 @@ padding: 1vh;
 
 
 
-.login-link {
+/* .login-link {
     display: flex;
     justify-content: center;
     font-weight: 400;
     font-size: 1rem;
-}
+} */
 .link-to{
     color:#00AEEF;
     text-decoration-line: none;
@@ -846,9 +897,9 @@ padding: 1vh;
 }
 
 hr {
-    border: 0;
+    border: 1px solid #6A6A6A;
     height: 2px;
-    background: #d3d3d3;
+    background: #6A6A6A;
     width: 35%;
     margin: 0 auto; 
 }
@@ -878,8 +929,8 @@ hr {
 
    
     .register-btn {
-        padding: 0.5vh 1vh;
-        font-size: 0.9rem;
+        padding: 5px 10px;
+        font-size: 1rem;
     }
 
     .register-learning {
@@ -915,37 +966,50 @@ hr {
 
 }
 
-@media screen and (max-width: 480px) {
+@media (min-width: 350px) and (max-width: 480px) {
    
 
     .steps {
         flex-direction: row;
         align-items: center;
-        padding: 2vh 0;
+        padding: 10px 0;
+        max-width: 60%;
     }
 
     .step-one, .step-two {
-        height: 3vh;
-        width: 1.5vw;
+        height: 28px;
+        width: 28px;
     }
 
     .steps-head {
-        font-size: 0.85rem;
-        padding-right: 0;
+        font-size: 16px !important;
+        padding-right: 5px;
+        margin-bottom: 0;
     }
 
     .steps-head-one, .steps-head-two {
-        font-size: 0.85rem;
+        font-size: 16px;
+        margin-bottom: 5px;
+        padding: 2px;
     }
 
     hr {
         width: 80%;
     }
 
-    .register-btn {
-        padding: 0.4vh 0.8vh;
-        font-size: 0.85rem;
-        height: 6vh;
+    .register-learning{
+        font-size: 30px;
+        margin-top: 10px;
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+
+    .login-mid-name{
+    padding-top: 15px;
+    }
+
+    .login-with-hachion{
+        font-size: 12px !important;
     }
 }
 .enter-otp{
@@ -960,7 +1024,7 @@ hr {
 .otp-number{
     height:5vh;
 width: 2.5vw;
-border:1px solid #D3D3D3;
+border:1px solid #6A6A6A;
 border-radius:5%;
 box-shadow: darkgrey;
 
@@ -971,12 +1035,11 @@ box-shadow: darkgrey;
     height: 5vh;
     display: flex;
     flex-direction: row;
-    
     justify-content: space-evenly;
 }
 .register-btn{
-    width: 26vw;
-    height: 6vh;
+    width: 520px;
+    height: 50px;
     background-color: #00AEEF;
     color: white;
     font-weight: bold;
@@ -1010,7 +1073,7 @@ box-shadow: darkgrey;
 }
     .register-btn {
         width: 100%;
-        height: 6vh;
+        height: 50px;
         font-size: 1rem;
     }
     .otp{
@@ -1045,26 +1108,29 @@ box-shadow: darkgrey;
 }
 
 @media screen and (max-width: 480px) {
+    .otp-verify{
+        margin-top: 0vh;
+        padding: 10px;
+    }
    
     .otp {
-        width: 100%;
+        width: auto;
+        height: 50px;
         justify-content: space-between;
-    }
-    .otp{
-        width: 60vw;
-    }
-    .otp-number{
-        height: 4vh;
-        width: 12vw;
-    }
-   
-.login-label{
-    font-size: 0.6rem;
-}
-  
+        gap: 20px;
 
-    .register-btn {
+    }
+    /* .otp{
+        width: 60vw;
+    } */
+    .otp-number{
+        height: 50px;
+        width: 50px;
+        border-radius: 10px;
+    }
+
+    /* .register-btn {
         font-size: 0.85rem;
         height: 5.5vh;
-    }
+    } */
 }

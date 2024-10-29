@@ -16,9 +16,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+   fontSize:18,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 16,
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -56,7 +57,7 @@ export default function Certificate() {
             <StyledTableCell align="right">Course Name</StyledTableCell>
             <StyledTableCell align="right">Course Status</StyledTableCell>
             <StyledTableCell align="right">Date</StyledTableCell>
-            <StyledTableCell align="right">Certificate</StyledTableCell>
+            <StyledTableCell align="center">Certificate</StyledTableCell>
           
           </TableRow>
         </TableHead>
@@ -68,7 +69,7 @@ export default function Certificate() {
               <StyledTableCell align="right">{row.course_name}</StyledTableCell>
               <StyledTableCell align="right">{row.course_status}</StyledTableCell>
               <StyledTableCell align="right">{row.Date}</StyledTableCell>
-              <StyledTableCell align="right">{row.Certificate}</StyledTableCell>
+              <StyledTableCell align="center">{row.Certificate}</StyledTableCell>
 
             
             </StyledTableRow>

@@ -11,8 +11,16 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
+import TextField from '@mui/material/TextField';
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
+import { useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,29 +48,57 @@ function createData(S_No,name,email,password,mobile,address,created_date,action)
 }
 
 const rows = [
-  createData(1,'Hach Prasad','laxmi.veena@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(2,'support1','hachion@gmail.com','hachion@321','61570553345','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(3,'Havila','havila@hachion.co','hachion@321','8133005987','Hyderabad','25-11-2017',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(4,'Vineetha','vineetha.v@gmail.com','hachion@321','2045681555','Hyderabad','25-1-2019',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(5, 'navitha','navithahachion@gmail.com','hachion@321','2019181555','Hyderabad','15-1-2019',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(6,'Ramakrishan','ramakrishan.hachion@gmail.com','hachion@321','6175081555','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(7, 'Srilatha','srilatha.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2023',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(8,'Pushpa','Pushpanjali.ahach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(9, 'shoeb','shoeb.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(10,'Suryansh','Suryansh.hach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
+  createData(1,'Hach Prasad','laxmi.veena@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
+  createData(2,'support1','hachion@gmail.com','hachion@321','61570553345','Hyderabad','25-11-2015'),
+  createData(3,'Havila','havila@hachion.co','hachion@321','8133005987','Hyderabad','25-11-2017'),
+  createData(4,'Vineetha','vineetha.v@gmail.com','hachion@321','2045681555','Hyderabad','25-1-2019'),
+  createData(5, 'navitha','navithahachion@gmail.com','hachion@321','2019181555','Hyderabad','15-1-2019'),
+  createData(6,'Ramakrishan','ramakrishan.hachion@gmail.com','hachion@321','6175081555','Hyderabad','25-11-2015'),
+  createData(7, 'Srilatha','srilatha.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2023'),
+  createData(8,'Pushpa','Pushpanjali.ahach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
+  createData(9, 'shoeb','shoeb.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
+  createData(10,'Suryansh','Suryansh.hach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
 ];
 
 export default function Support() {
+  const navigate=useNavigate();
+  const [open, setOpen] = React.useState(false);
+
+  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  
+  const handleClickOpen = (row) => {
+    setSelectedRow(row); // Set the selected row data
+    setOpen(true); // Open the modal
+  };
+  
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+  
+  const handleSave = () => {
+    // Logic to handle saving the updated category and date
+    console.log('Saved:', selectedRow);
+    setOpen(false);
+  };
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleAdd=()=>{
+    navigate('/addsupport')
+  }
   return (
+
     <>   
     <CourseCategory
   pageTitle="Support"
   headerTitle="Support Details"
   buttonLabel="Add Support"
-  onAdd={() => {
-    // Navigate or perform another action
-    console.log('Navigating to Add Trainer Category Page');
-  }}
+  onAdd={handleAdd}
 
 ></CourseCategory> <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -92,7 +128,10 @@ export default function Support() {
               <StyledTableCell align="left">{row.mobile}</StyledTableCell>
               <StyledTableCell align="center">{row.address}</StyledTableCell>
               <StyledTableCell align="center">{row.created_date}</StyledTableCell>
-              <StyledTableCell align="center">{row.action}</StyledTableCell>
+              <StyledTableCell align="center">
+                  <FaEdit className="edit" onClick={() => handleClickOpen(row)}  />
+                  <RiDeleteBin6Line className="delete" />
+                </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -101,5 +140,67 @@ export default function Support() {
     <div className='pagination'>
       <Pagination count={10} color="primary" />
       </div>
+      <Dialog open={open} onClose={handleClose}>
+            <div className='dialog-title'>
+        <DialogTitle >Edit Registered Student   <Button onClick={handleClose} className='close-btn'>
+            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
+          </Button></DialogTitle>
+          </div>
+          <DialogContent>
+  <div style={{ display: 'flex', gap: '1rem' }}>
+    <TextField
+      autoFocus
+      margin="dense"
+      name="student_name"
+      label="Student Name"
+      type="text"
+      fullWidth
+      value={selectedRow.student_name}
+      onChange={handleInputChange}
+    />
+    <TextField
+      margin="dense"
+      name="mobile"
+      label="Mobile"
+      type="number"
+      fullWidth
+      value={selectedRow.mobile}
+      onChange={handleInputChange}
+    />
+  </div>
+  <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+    <TextField
+      margin="dense"
+      name="email"
+      label="Email"
+      type="email"
+      fullWidth
+      value={selectedRow.email}
+      onChange={handleInputChange}
+    />
+    <TextField
+      margin="dense"
+      name="password"
+      label="Password"
+      type="text"
+      fullWidth
+    />
+  </div>
+  <TextField
+    margin="dense"
+    name="address"
+    label="Address"
+    type="text"
+    fullWidth
+    value={selectedRow.address}
+    onChange={handleInputChange}
+  />
+</DialogContent>
+        <DialogActions>
+          <Button onClick={handleSave} className="update-btn">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
  </> );
 }

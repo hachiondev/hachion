@@ -8,7 +8,9 @@ import { IoMdNotifications } from "react-icons/io";
 import ProfileImage from '../../Assets/profile1.jfif';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-
+import { FaUserAlt } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
+import { IoLogOut } from "react-icons/io5";
 
 
 const AdminNavbar = () => {
@@ -48,10 +50,10 @@ const AdminNavbar = () => {
   </Link>
 
   <ul className="dropdown-menu">
-    <li><Link className="dropdown-item" to={'/userdashboard'}>Dashboard</Link></li>
-    <li><Link className="dropdown-item" href="#">Settings</Link></li>
+    <li><Link className="dropdown-item" to={'/userdashboard'}> <FaUserAlt style={{color:'#00AEEF'}}/> Dashboard</Link></li>
+    <li><Link className="dropdown-item" href="#"> <IoMdSettings style={{color:'#00AEEF'}}/> Settings</Link></li>
     <li><a className="dropdown-divider" /></li>
-    <li><Link className="dropdown-item" href="#" onClick={handleLogout}>Logout</Link></li>
+    <li><Link className="dropdown-item" href="#" onClick={handleLogout}><IoLogOut style={{color:'#00AEEF'}}/> Logout</Link></li>
   </ul>
 </div>
   

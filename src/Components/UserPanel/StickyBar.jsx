@@ -21,18 +21,17 @@ const StickyBar = () => {
       <div className="sticky-bar">
         <div className="contact-info">
           <p className='query-content'>Have any query ?</p>
-          <div className='training-mail'>
+         
             <img src={whatsapp} alt='whatsapp-icon' style={{height:'30px',width:'30px'}}/>
             <p className='whatsapp-number-footer'> +91 9490323388</p>
             <PiLineVerticalThin style={{color:'white',fontSize:'2rem'}}/>
-          </div>
-          <div className='training-mail'>
+       
             <IoIosMail style={{color:'white',fontSize:'2rem',marginRight:'1vh'}}/>
             <p className='training-email-footer'>trainings@hachion.co</p>
           </div>
-        </div>
+       
         <button className="contact-button" onClick={openModal}>Contact Us</button>
-      </div>
+  </div>
 
       {isModalOpen && <HaveAnyQuery closeModal={closeModal} />}
     </>

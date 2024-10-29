@@ -435,9 +435,19 @@ color: white;
 padding:5px 30px 5px 30px;
 font-weight: 700;
 font-size: 1.5rem;
-
 box-shadow: 5px 5px 5px #d3d3d3;
 }
+
+.fee-enroll-now{
+  border-radius: 10px;
+  border:1px;
+  background-color: #00AEEF;
+  color: white;
+  padding:5px 30px 5px 30px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  }
 
 .enroll-now:hover{
 background-color: #0D6EFD;
@@ -886,9 +896,83 @@ display: flex;
 flex-direction: row;
 justify-items:space-evenly;
 align-items: center;
+<<<<<<< HEAD
 width: 100%;
 padding: 1vh;
 gap: 10vh;
+=======
+margin-top: 2vh;
+}
+
+/* .custom-radio {
+width: 25px;
+height: 25px;
+border-radius: 50%;
+background-color: white;
+border: 2px solid grey;
+margin-right: 15px;
+position: relative;
+cursor: pointer;
+}
+
+.custom-radio::after {
+content: '';
+width: 14px;
+height: 14px;
+background: transparent; 
+border-radius: 50%;
+position: absolute;
+top: 4px;
+left: 4px;
+display: none;
+}
+
+input[type="radio"]:checked + .custom-radio::after {
+display: block; 
+background: linear-gradient(to right, #006489, #00AEEF, #006489); 
+}
+
+input[type="radio"] {
+display: none; 
+} */
+
+.hidden-radio {
+  display: none; /* Hide the default radio button */
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #006489; /* Outer circle border */
+  margin-right: 10px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.custom-radio::after {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent; /* Hidden initially */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s ease;
+}
+
+.hidden-radio:checked + .custom-radio::after {
+  background: linear-gradient(#00AEEF, #006489); /* Inner circle gradient when checked */
+>>>>>>> b3cb04845df15ddb26d494293bc9ded49ae1e256
 }
 
 .batch-date {
@@ -901,6 +985,13 @@ font-size: 16px;
 font-weight: 300;
 color: #F4111F;
 }
+
+.demo-icon {
+  color: #FF5C01;
+  margin-right: 1vh;
+  font-size: 8px;
+  animation: growShrink 2s infinite ease-in-out;
+  }
 
 .demo {
 color: #FF5C01;
@@ -1031,7 +1122,6 @@ padding-bottom: 1.5vh;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;    
-  
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -1051,6 +1141,7 @@ text-align: center;
   border-radius: 10px;
   margin-bottom: 1vh;
   font-size: 1.2rem;
+  font-weight: 600;
   color: #333;
 }
 
@@ -1063,6 +1154,12 @@ text-align: center;
   margin-bottom: 5px;
   list-style-type: disc;
 }
+
+.btn-pdf-icon{
+  font-size: 30px;
+  color: red;
+  }
+
 .btn-curriculum{
   border-radius: 10px;
   padding:5px 10px 5px 10px;
@@ -1626,53 +1723,81 @@ border:2px solid white;
  
 
 @media (min-width:350px) and (max-width:480px){
-.curriculum{
-  margin-left: 10px;
-  margin-right: 10px;
-}
+  .curriculum {
+    width: 90%;
+    margin: 5px;
+    margin-bottom: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 20px;
+  }
+
+  .btn-pdf-icon{
+  font-size: 12px;
+  }
+
 .btn-curriculum{
   padding: 2px;
+  font-size: 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  white-space: nowrap;
 }
 .mode-of-training{
-  margin-left: 10px;
-  margin-right: 10px;
-}
-.batch-type{
-  width: 100%;
-  margin-left: 5px;
-}
+  width: 90%;
+  margin: 5px;
+  margin-left: 5%;
+  margin-right: 5%;
+  padding: 10px;
+  margin-bottom: 20px;
+}            
 .live-mode{
-  padding-left: 10px;
-  font-size: 12px;
+  padding: 10px;
+  font-size: 10px;
+  text-align: justify;
+  margin-bottom: 0;
 }
-.features-icon{
-  height: 30px;
-  width: 30px;
-}
+
 .feature-content{
-  font-size: 12px;
-  padding-top: 0px;
+  font-size: 10px;
+  padding: 5px 5px 5px 0;
+  white-space: nowrap;
+  margin-bottom: 0;
 }
 .career-support{
-  margin-left: 10px;
-  margin-right: 10px;
+  width: 90%;
+  margin: 5px;
+  margin-left: 5%;
+  margin-right: 5%;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 .career-support-head{
-  font-size: 16px;
+  font-size: 16px !important;
+  padding-bottom: 5px;
+  padding-left: 0;
+  margin-bottom: 10px;
 }
 .profile-building{
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.profile-building-div{
+  padding-top: 10px;
+  }
+
 .profile-building-div h5{
-  font-size: 14px;
+  font-size: 12px;
 }
 .profile-building-div p{
-  font-size: 12px;
+  font-size: 10px;
+  text-align: justify;
 }
 .profile-building-div img{
   height: 30px;
   width: 30px;
+  margin-right: 10px;
 }
 
 .qa-automation {
@@ -2018,6 +2143,7 @@ max-height: 3em;
   padding: 10px;
   margin-left: 5%;
   margin-right: 5%;
+  margin-bottom: 20px;
 }
 
 .key-highlights-header {
@@ -2054,8 +2180,8 @@ max-height: 3em;
   justify-content: flex-start; /* Align items to the left */
   overflow-x: auto; /* Enable horizontal scrolling */
   white-space: nowrap; /* Prevent line breaks */
-  padding: 10px;
-  font-size: 14px;
+  padding: 15px;
+  font-size: 12px;
 }
 
 .upcoming-link {
@@ -2063,7 +2189,9 @@ max-height: 3em;
 }
 
 .upcoming-header {
-  padding-left: 5vw; /* Padding to ensure some space at the start */
+  padding-left: 0px; /* Padding to ensure some space at the start */
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 .amount{
   font-size: 16px;
@@ -2073,58 +2201,277 @@ max-height: 3em;
   justify-content: flex-start; /* Align items to the left */
   overflow-x: auto; /* Enable horizontal scrolling */
   white-space: nowrap; /* Prevent line breaks */
-  padding: 10px;
-  font-size: 14px;
+  padding: 15px;
+  font-size: 12px;
   width: 100%;
-  margin-left: 5px;
+  margin-left: 0px;
 }
+
+.batch-type-content {
+  padding: 0px;
+  padding-bottom: 5px;
+  margin-bottom: 0;
+  margin-right: 15px;
+  margin-left: 5px;
+  }
+  
 .batch-schedule {
   flex-direction: column; 
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
+  width: 95%;
+  margin: 5px;
+  padding-top: 5px;
 }
+
+.batch-content-background{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.modal-request-content {
+  background-color: white;
+  border-radius: 20px;
+  width: 350px; /* Adjust width as needed */
+  position: relative;
+  }
 
 .left, .right {
   flex: 1; 
   width: 100%; 
-  padding: 10px; 
+  padding: 0px; 
 }
 
 .partition-schedule {
   flex-direction: row; 
   gap: 10px; 
-  margin-top: 1vh;
+  margin-top: 5px;
 }
 
-.custom-radio {
+/* .custom-radio {
   width: 20px; 
   height: 20px;
   margin-right: 10px; 
+} */
+
+.custom-radio {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #006489; /* Outer circle border */
+}
+
+.custom-radio::after {
+  width: 8px;
+  height: 8px;
 }
 
 .batch-date {
   font-size: 12px; 
 }
 .qa-heading{
-  font-size: 14px !important;
+  font-size: 16px !important;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  white-space: nowrap;
 }
 
+.upcoming-batch { 
+  width: 90%;
+  margin: 5px;
+  margin-left: 5%;
+  margin-right:5%;
+  padding: 10px;
+  margin-bottom: 20px;
+  }
+
 .date-span {
-  font-size: 14px; 
+  font-size: 10px; 
 }
 
 .demo {
   font-size: 12px; 
+  white-space: nowrap;
 }
 
 .free {
-  font-size: 14px; 
+  font-size: 20px; 
 }
 
+.fee-enroll-now {
+  width: 100%;
+  height: 40px;
+  margin: 0px;
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.schedule img{
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.schedule{
+  font-size:10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.schedule-span{
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.left-mode{
+  padding: 10px;
+}
+
+.mentoring-mode-content{
+  font-size: 10px;
+  font-weight: 400;
+  text-align: justify;
+  margin-bottom: 10px;
+  }
+  .mentoring-mode-heading{
+    font-size: 12px;
+    font-weight: 600;
+    }
+
+    .qa-course{
+      margin: 0px;
+      margin-left: 5%;
+      margin-right: 5%;
+      padding:20px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .qa-subheading{
+      font-size: 12px;
+      padding-bottom: 5px;
+      margin-bottom: 0;
+    }
+    
+    .qa-sub-content{
+      font-size: 10px;
+      text-align: justify;
+    }
+    
+    .curriculum-expanded {
+      height: auto; 
+    }
+    
+    .curriculum-content {
+      border-radius: 5px;
+      padding: 10px; 
+      margin-bottom: 0; 
+      font-size: 12px; 
+      text-align: left;   
+    }
+
+    .curriculum-content p{
+      margin-bottom: 0;
+    }
+    
+    .topic-details {
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      font-size: 10px;
+      text-align: justify;
+    }
+    
+    .bullet-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .bullet-list li {
+      margin-bottom: 5px;
+      list-style-type: disc;
+    }
+    
+    .curriculum-topic{
+      gap: 10px;
+    }
+    
+    .view-more-btn{
+      height: auto;
+      width: auto;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 12px;
+    }
+
+    .mode-of-training-head{
+      height: 600px;
+    }
+    
+    .features-icon {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 32px;
+    height: auto;
+    padding-left: 10px;
+    padding-top: 5px;
+    }
+    
+    .live-head{
+    font-size:12px;
+    padding: 0 10px;
+    margin-bottom: 0px;
+    }
+    
+    .live-mode-feature{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    }
+    
+    .career-support-content{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    padding-left: 6vh;
+    padding-top: 2vh;
+    gap:2vh;
+    }
+    
+    .career-support-content img{
+    height:4vh;
+    width: 2vw;
+    }
+    
+    .career-support-content-header{
+    font-size: 1.25rem;
+    font-weight: 400;
+    }
+    
+    .career-support-content-para{
+    font-size: 1rem;
+    font-weight: 600;
+    }
+    
+    .contact-info {
+    display: flex;
+    align-items: center;
+    gap:1.5vw;
+    }
+    
+    .contact-item {
+    margin-right: 20px; 
+    font-size: 16px;
+    }
+    .blogs-header{
+      margin-left: 10vw;
+    }
+
 .qa-course-heading img{
-  height: 200px;
-  width: 90%;
+  height: auto;
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .sticky-bar {
@@ -2196,7 +2543,7 @@ max-height: 3em;
 }
 
 .button-close {
-  font-size: 16px; /* Reduce close button size for mobile */
+  font-size: 16px !important; /* Reduce close button size for mobile */
 }
   /* popup */
   .query-form{
@@ -2219,7 +2566,8 @@ max-height: 3em;
   border-radius: 5px;
   flex-wrap: nowrap;
   margin-left: 10px;
-  margin-bottom: 10px !important;
+  margin-top: 20px;
+  /* margin-bottom: 10px !important; */
 }
 
 #query1.form-control{
@@ -2227,11 +2575,29 @@ max-height: 3em;
   height: 30px;
   margin-bottom: 10px !important;
  }
+
+ .black-calendar {
+  width: 20px;
+  height: 20px;
+  margin-right: 0px;
+  }
+
+  .date-picker-wrapper{
+    width: 320px !important;
+  }
+
+ #query1.form-control.date-picker,
+ #query1.form-control.time-picker{
+  width: 320px!important;
+  height: 30px !important;
+  margin-bottom: 10px !important;
+ }
+
  #query2.mobile-number{
-  width: auto;
-  height: 30px;
+  width: 220px !important;
+  height: 30px !important;
   border-radius: 0 5px 5px 0;
-  margin-bottom: 10px;
+  padding: 5px;
  }
  #query3.form-control{
   width: 320px!important;
@@ -2245,11 +2611,71 @@ max-height: 3em;
  .request-batch{
   padding-bottom: 5px;
  }
+ .request-form{
+  margin-left: 5px !important;
+  padding: 10px !important;
 }
+
+.country-code-dropdown {
+  font-size: 12px;
+  height: 30px !important;
+  padding: 0 3px;
+  width: 100px !important;
+}
+
+.country-flag {
+  width: 20px;
+  margin-right: 5px;
+}
+}
+
+.country-code-dropdown {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  height: 50px;
+  padding: 0 6px;
+  width: 120px;
+  border-color: #6a6a6a !important;
+  display: flex; /* Ensure content is centered */
+  align-items: center; /* Center icon and text vertically */
+}
+
+.country-flag {
+  width: 20px;
+  margin-right: 5px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.date-picker-wrapper{
+  width: 520px ;
+}
+
+#query1.form-control.date-picker,
+#query1.form-control.time-picker{
+width: 520px;
+height: 50px;
+margin-bottom: 10px;
+border: 1px solid #6a6a6a;
+}
+
+#query2.mobile-number{
+  width: 410px;
+  height: 50px;
+  border-radius: 0 5px 5px 0;
+  outline: none;
+  border: 1px solid #6a6a6a;
+  padding: 10px;
+ }
 
 #query1{
   width: 520px ;
   height: 50px ;
+  border-color: #6a6a6a;
 }
 .query-form{
   margin-left: 20px;

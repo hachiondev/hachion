@@ -85,9 +85,9 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <a href="/Course">Courses</a> <MdKeyboardArrowRight/> </li>
+              <a href="./Course">Courses</a> <MdKeyboardArrowRight/> </li>
               <li className="breadcrumb-item">
-              <a href="/Course">QA Testing</a> <MdKeyboardArrowRight/></li>
+              <a href="./Course">QA Testing</a> <MdKeyboardArrowRight/></li>
             <li className="breadcrumb-item active" aria-current="page">
             QA Automation
             </li>

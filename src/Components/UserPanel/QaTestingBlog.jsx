@@ -5,12 +5,13 @@ import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import './Blogs.css';
 import facebook from '../../Assets/facebook.png';
 import twitter from '../../Assets/twitter.png';
-import linkedin from '../../Assets/linkedin (1).png';
+import linkedin from '../../Assets/linkedin.png';
 import salesforce from '../../Assets/salesforce.png';
-import { FaUser } from "react-icons/fa";
+import { FaUserTie } from "react-icons/fa6";
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
+import {MdKeyboardArrowRight} from 'react-icons/md';
 import automation from '../../Assets/automationtesting.png';
 
 const QaTestingBlog = () => {
@@ -18,6 +19,21 @@ const QaTestingBlog = () => {
     <>
     <Topbar/>
     <NavbarTop/>
+    <div className='blogs-header'>
+      <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight/> </li>
+              <li className="breadcrumb-item">
+              <a href="./Blog">Blog</a> <MdKeyboardArrowRight/> </li>
+              <li className="breadcrumb-item">
+              <a href="./QATesting">QA Testing</a> <MdKeyboardArrowRight/> </li>
+            <li className="breadcrumb-item active" aria-current="page">
+            Importance of Automation in Software Testing
+            </li>
+          </ol>
+        </nav>
+        </div>
     <div className='salesforce-blog'>
     <div className='salesforce-blog-left'>
  <h3>Recommended Publications</h3>
@@ -27,19 +43,21 @@ const QaTestingBlog = () => {
 <div className='salesforce-blog-right'>
     <div className='salesforce-right'>
 <button className='btn-curriculum'>
-          <BsFileEarmarkPdfFill style={{ height: '40px', width: '30px', color: 'red' }} />Download
+          <BsFileEarmarkPdfFill className='btn-pdf-icon' />Download
         </button>
+        <div className='salesforce-right-icon'>
         <p>Share :</p>
         <img src={facebook} alt='facebook' />
         <img src={twitter} alt='twitter'/>
         <img src={linkedin} alt='linkedin'/>
         </div>
+        </div>
         <div className='salesforce-middle'>
             <img src={automation} alt='salesforce'/>
             <div>
             <h1>Importance of Automation in Software Testing</h1>
-            <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-              <h5><FaUser/>  Srilatha P</h5>
+            <div className='salesforce-top' >
+              <h5><FaUserTie className='user-icon'/>  Srilatha P</h5>
               <h5>105 Views</h5>
               <h5>24-09-10</h5>
            </div>
@@ -135,7 +153,7 @@ Automation testing is important because it enables the organization to achieve t
 <div className='salesforce-blog-bottom'>
   <h3>Importance of automation in software testing</h3>
   <button className='btn-curriculum'>
-          <BsFileEarmarkPdfFill style={{ height: '40px', width: '30px', color: 'red' }} />Download
+          <BsFileEarmarkPdfFill className='btn-pdf-icon' />Download
         </button>
 </div>
 
@@ -144,7 +162,7 @@ Automation testing is important because it enables the organization to achieve t
 
     </div>
     <div className='salesforce-entries'>
-      <h1>Recent Entries</h1>
+      <h1 className='salesforce-entries-heading'>Recent Entries</h1>
  <RecentEntries/>
  </div>
  <Footer/>

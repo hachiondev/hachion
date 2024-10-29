@@ -81,7 +81,6 @@ const QaAutomation = () => {
           <h3 className='course-banner-content'>QA Automation</h3>
         </div>
         <div className='blogs-header'>
-          {/* Courses <MdKeyboardArrowRight /> QA Testing <MdKeyboardArrowRight /> QA Automation */}
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">

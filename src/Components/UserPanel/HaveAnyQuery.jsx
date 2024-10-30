@@ -1,6 +1,8 @@
-import React,{useState} from 'react';
+import React,{ useState, useRef } from 'react';
 import './Course.css';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
+import { AiOutlineCloseCircle, AiFillCaretDown } from 'react-icons/ai';
+import { Menu, MenuItem, Button } from '@mui/material';
+import Flag from 'react-world-flags';
 import success from '../../Assets/success.gif';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useFormik } from 'formik';
@@ -15,6 +17,44 @@ const initialValues = {
 
 const HaveAnyQuery = ({ closeModal }) => {
   const [showModal, setShowModal] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const mobileInputRef = useRef(null);
+  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+
+  const countries = [
+    { name: 'India', code: '+91', flag: 'IN' },
+    { name: 'United States', code: '+1', flag: 'US' },
+    { name: 'United Kingdom', code: '+44', flag: 'GB' },
+    { name: 'Thailand', code: '+66', flag: 'TH' },
+    { name: 'Canada', code: '+1', flag: 'CA' },
+    { name: 'Australia', code: '+61', flag: 'AU' },
+    { name: 'Germany', code: '+49', flag: 'DE' },
+    { name: 'France', code: '+33', flag: 'FR' },
+    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
+    { name: 'Qatar', code: '+974', flag: 'QA' },
+    { name: 'Japan', code: '+81', flag: 'JP' },
+    { name: 'China', code: '+86', flag: 'CN' },
+    { name: 'Russia', code: '+7', flag: 'RU' },
+    { name: 'South Korea', code: '+82', flag: 'KR' },
+    { name: 'Brazil', code: '+55', flag: 'BR' },
+    { name: 'Mexico', code: '+52', flag: 'MX' },
+    { name: 'South Africa', code: '+27', flag: 'ZA' },
+  ];
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    closeMenu();
+    mobileInputRef.current?.focus();
+  };
+
+  const openMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
 
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
     initialValues: initialValues,
@@ -63,24 +103,47 @@ const handleContact=(e)=>{
             {errors.email && touched.email ? (<p className='form-error'>{errors.email}</p>) : null}
             
             <label className='form-label'>Mobile Number</label>
-<div class="input-group custom-width">
-  <button type="button" class="btn btn-outline-secondary">+91</button>
-  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="visually-hidden">select</span>
-  </button>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">+91</a></li>
-    <li><a class="dropdown-item" href="#">+66</a></li>
-    <li><a class="dropdown-item" href="#">+11</a></li>
-    <li><a class="dropdown-item" href="#">+20</a></li>
-  </ul>
-  <input type="number" className="mobile-number" id='query2' aria-label="Text input with segmented dropdown button" placeholder='Enter your mobile number'
-   name='number'
-   value={values.number}
-   onChange={handleChange}
-   onBlur={handleBlur}/>
-</div>
-{errors.number && touched.number ? (<p className='form-error'>{errors.number}</p>) : null}
+       <div class="input-group mb-3 custom-width">
+          <div className='input-group'>
+            <Button
+              variant="outlined"
+              onClick={openMenu}
+              className="country-code-dropdown"
+              endIcon={<AiFillCaretDown />}
+            >
+              <Flag code={selectedCountry.flag} className='country-flag' />
+              {selectedCountry.code}
+            </Button>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={closeMenu}
+            >
+              {countries.map((country) => (
+                <MenuItem
+                  key={country.code}
+                  onClick={() => handleCountrySelect(country)}
+                >
+                  <Flag code={country.flag} className='country-flag' />
+                  {country.name} ({country.code})
+                </MenuItem>
+              ))}
+            </Menu>
+
+            <input
+              type='tel'
+              className="mobile-number" 
+              ref={mobileInputRef}
+              aria-label="Text input with segmented dropdown button"
+              id='query2'
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              placeholder='Enter your mobile number'
+            />
+          </div>
+          </div>
+        {errors.number && touched.number ? (<p className='form-error'>{errors.number}</p>) : null}
             <div className="mb-4">
               <label htmlFor="exampleFormControlTextarea1" className="form-label">Comments</label>
               <textarea className="form-control" id="query3" rows="4"

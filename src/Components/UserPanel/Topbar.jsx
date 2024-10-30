@@ -13,7 +13,7 @@ import { IoMdSettings } from "react-icons/io";
 
 const Topbar = () => {
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleLogout = () => {
    

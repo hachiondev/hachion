@@ -55,7 +55,7 @@
   
     margin-left: 15vw;
     width: 70vw;
-    padding: 10px;
+    padding: 5px;
     border-radius: 20px;
     box-shadow: 5px 5px 5px #d3d3d3;
 }
@@ -321,10 +321,7 @@
     color: red;
 }
 
-
-
 .submit-btn {
-  
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #fff;
@@ -336,11 +333,11 @@
     justify-content: center;
     display: inline-block;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .learner-cover{
-  
     height: 380px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
@@ -1169,9 +1166,11 @@
 
     .blogs-container {
         grid-template-columns: repeat(2, 1fr); 
-        width: 95%;
-        margin-left: 0;
+        width: auto;
+        margin: 0 auto;
+        padding: 10px;
         gap: 10px;
+        justify-items: center;
       }
 
       .blog-card {
@@ -1577,7 +1576,7 @@
     }
 
     #advisor1.form-control{
-        height: 30px !important;
+        height: 35px !important;
         width: 280px !important;
         border-color: #b3b3b3;
         font-size: 12px;
@@ -1585,7 +1584,7 @@
     }
 
     #advisor1.form-select{
-        height: 30px !important;
+        height: 35px !important;
         width: 280px !important;
         border-color: #b3b3b3;
         margin-left: 10px;
@@ -1598,13 +1597,25 @@
         gap: 0px !important; /* Reduce gap between elements for mobile */
       }
 
+      .country-code-dropdown {
+        font-size: 12px;
+        height: 30px !important;
+        padding: 0 3px;
+        width: 90px !important;
+      }
+
+      .country-flag {
+        width: 18px;
+        margin-right: 3px;
+      }
+
     #advisor2.mobile-number{
-        width: 160px !important;
-        height: 30px;
+        width: 180px !important;
+        height: 35px;
         border-radius: 0px 5px 5px 0px;
         border-color: #b3b3b3;
         font-size: 12px;
-        margin-bottom: 5px;
+        margin-bottom: 0px;
     }
     #advisor3.form-control{
         height: 80px;
@@ -1619,10 +1630,9 @@
         border-radius: 5px;
         font-size: 16px;
         font-weight: 600;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         width: 280px;
         margin: 5px;
-        margin-bottom: 20px;
     }
 
     .modal-content {
@@ -1696,9 +1706,10 @@
      }
      
     .corporate-training-features {
-        margin-left: 5%;
-        margin-right: 5px;
+        /* margin-left: 5%;
+        margin-right: 5px; */
         width: 350px; /* Full width for mobile */
+        margin: 0 auto;
         padding: 5px;
         display: flex;
         align-items: center;
@@ -1710,9 +1721,10 @@
     .customized-column {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
-        width: 90%; /* Make columns full width */
-        margin-left: 5px;
-        margin-right: 5px;
+        width: auto; /* Make columns full width */
+        margin: 5px auto;
+        /* margin-left: 5px;
+        margin-right: 5px; */
         margin-top: 10px;
         padding: 5px;
         align-items: center;
@@ -1723,8 +1735,7 @@
     .training-img {
         width: 320px; /* Full width for the image */
         max-width: 100%; /* Maintain the image's aspect ratio */
-        margin-top: 20px; /* Add some space between the columns and the image */
-        margin-bottom: 20px;
+        margin: 20px auto;
     }
     
     .leading-expert {
@@ -1774,18 +1785,49 @@
 #advisor1{
     height: 50px !important;
     width: 450px !important;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 .row{
     display: flex;
     flex-direction: row !important;
     /* gap: 50px !important; */
 }
+  
+  .country-code-dropdown {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    height: 50px;
+    padding: 0 px;
+    width: 120px;
+    border: 1px solid #b3b3b3 !important;
+    display: flex; /* Ensure content is centered */
+    align-items: center; /* Center icon and text vertically */
+  }
+
+  .country-flag {
+    width: 20px;
+    margin-right: 5px;
+  }
+
 #advisor2{
     width: 330px !important;
+    height: 50px;
+    border-radius: 0 5px 5px 0;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 #advisor3{
     height: 120px;
     width: 995px !important;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 .close-btn{
     display: flex;

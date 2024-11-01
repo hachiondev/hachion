@@ -68,12 +68,12 @@ font-size: 2rem;
  color: white;
 }
 
-.login-link-home {
+/* .login-link-home {
 font-size: 1.1rem;
 font-weight: 500;
 text-decoration: none;
 color: white;
-}
+} */
 
 .login-div {
 display: flex;
@@ -912,7 +912,6 @@ width: 45px;
 .user-info {
 display: flex;
 align-items: center;
-
 }
 
 .image-block {
@@ -1477,6 +1476,7 @@ background-color: white;
 height: 32px;
 padding: 5px;
 font-size: 10px;
+margin-left: 5px;
 }
 
 .btn-search-mobile {
@@ -1490,12 +1490,24 @@ cursor: pointer;
 }
 
 .btn-cancel-mobile {
+  font-size: 20px;
 color: rgba(0, 174, 239, 1);
 /* color: white; */
 border: none;
 cursor: pointer;
 margin-left: 10px;
 }
+
+.drawer-cancel-icon {
+  font-size: 16px;
+  color: rgba(0, 174, 239, 1);
+  border: none;
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background: none;
+  cursor: pointer;
+  }
 
 .btn-search-icon-mobile {
 height: 32px;
@@ -1510,6 +1522,29 @@ cursor: pointer;
 .navbar-nav {
 display: none !important; /* Hide the normal navbar items on mobile */
 }
+
+.profile {
+  display: block;
+  align-items: center;
+  }
+
+.user-name{
+  background-color: #00AEEF;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-left: 0;
+  margin-top: 5px;
+  padding: 5px;
+  text-decoration: none;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  }
 
 #autoScrollingBanner .carousel-indicators {
   position: absolute; /* Ensure the indicators are positioned relative to the banner */

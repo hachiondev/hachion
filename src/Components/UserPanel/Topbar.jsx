@@ -40,7 +40,6 @@ const Topbar = () => {
         {isLoggedIn ? (
           <>
           <div className='topbar-right'>
-        
           <div className='user-info'>
             <div className="btn-group">
               <Avatar alt="user_name" src={profile1} />

@@ -2495,6 +2495,10 @@ max-height: 3em;
 .button-close {
   font-size: 16px !important; /* Reduce close button size for mobile */
 }
+
+.btn-close {
+  display: none;
+}
   /* popup */
   .query-form{
     margin-left: 0px !important;
@@ -2522,7 +2526,7 @@ max-height: 3em;
 
 #query1.form-control{
   width: 320px!important;
-  height: 30px;
+  height: 35px;
   margin-bottom: 10px !important;
  }
 
@@ -2539,13 +2543,13 @@ max-height: 3em;
  #query1.form-control.date-picker,
  #query1.form-control.time-picker{
   width: 320px!important;
-  height: 30px !important;
+  height: 35px !important;
   margin-bottom: 10px !important;
  }
 
  #query2.mobile-number{
-  width: 220px !important;
-  height: 30px !important;
+  width: 230px !important;
+  height: 35px !important;
   border-radius: 0 5px 5px 0;
   padding: 5px;
  }
@@ -2586,7 +2590,7 @@ max-height: 3em;
   height: 50px;
   padding: 0 6px;
   width: 120px;
-  border-color: #6a6a6a !important;
+  border-color: #b3b3b3 !important;
   display: flex; /* Ensure content is centered */
   align-items: center; /* Center icon and text vertically */
 }
@@ -2610,7 +2614,7 @@ max-height: 3em;
 width: 520px;
 height: 50px;
 margin-bottom: 10px;
-border: 1px solid #6a6a6a;
+border: 1px solid #b3b3b3;
 }
 
 #query2.mobile-number{
@@ -2618,14 +2622,14 @@ border: 1px solid #6a6a6a;
   height: 50px;
   border-radius: 0 5px 5px 0;
   outline: none;
-  border: 1px solid #6a6a6a;
+  border: 1px solid #b3b3b3;
   padding: 10px;
  }
 
 #query1{
   width: 520px ;
   height: 50px ;
-  border-color: #6a6a6a;
+  border: 1px solid #b3b3b3;
 }
 .query-form{
   margin-left: 20px;
@@ -2633,10 +2637,12 @@ border: 1px solid #6a6a6a;
 }
 #query2{
   width: 400px !important;
+  border: 1px solid #b3b3b3;
 }
 #query3{
   width: 520px;
   height: 100px;
+  border: 1px solid #b3b3b3;
 }
 .request-form{
   margin-left: 20px;

@@ -40,12 +40,38 @@
   padding: 0.5vh;
   gap: 3vh;
 }
+
+.salesforce-right-icon{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 10px;
+}
 .salesforce-right p{
   font-size: 1.5rem;
 }
 .salesforce-right img{
   height: 40px;
   width: 40px;
+}
+
+.salesforce-top{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+ .salesforce-top h5{
+   font-size: 16px;
+   margin-bottom: 0;
+   padding: 10px;
+ }
+
+ .user-icon {
+  font-size: 16px;
+  margin-right: 5px;
 }
 .salesforce-middle h1{
   font-weight: 700;
@@ -59,13 +85,16 @@
   display: flex;
   flex-direction: row;
   margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 .salesforce-middle img{
   height: auto;
-
+  padding-right: 10px;
 }
 .topics{
   padding-left: 4vh;
+  margin-top: 2vh;
+
 }
 .topics h2{
   color: #006489;
@@ -95,19 +124,18 @@
   background-color: #EEEEEE;
   cursor: pointer;
 }
-.salesforce-entries h1{
-  background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  font-size: 2rem;
-  font-weight: 700;
+.salesforce-entries-heading{
+  font-size: 2.25rem;
+    font-weight: 700;
+    background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
 
 }
 .salesforce-entries{
- padding-right: 12vw;
-  padding-left: 12vw;
-  padding-bottom: 5vh;
-  background-color: #EEEEEE;
+  margin: 4vh;
+  width: 80%;
+  margin-left: 10vw;
 }
 @media (min-width: 481px) and (max-width: 1025px){
 .salesforce-blog-left{
@@ -143,6 +171,8 @@
         display: flex;
         list-style: none;
         padding: 0;
+        flex-wrap: nowrap;
+        overflow:hidden;
       }
       
       .breadcrumb-item {
@@ -154,12 +184,18 @@
       .breadcrumb-item a {
         text-decoration: none;
         color: #00AEEF;
+        white-space: nowrap;
       }
       
       .breadcrumb-item.active {
         color: #6c757d;
         font-size: 16px;
         padding-left: 0;
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow: ellipsis;
+        max-width: 145px;
+        display: inline-block;
       }
       /* .breadcrumb-item.active::before {
        display: none;
@@ -168,7 +204,9 @@
         display: none;
        }
       .breadcrumb-item svg {
+        font-size: 24px;
         margin: 0 3px;
+        color: #00AEEF;
       }
       .about-us-content{
         width: 80%;
@@ -243,7 +281,7 @@
         height: 280px;
       }
     }
-      @media (max-width:480px){
+      @media (min-width:350px) and (max-width:480px){
         .about-us{
           padding: 25px;
           padding-top: 5px;
@@ -254,10 +292,17 @@
           align-items: center;
           font-size: 12px;
         }
+
+        .breadcrumb-item svg {
+          font-size: 16px;
+          margin: 0;
+        }
         
         .breadcrumb-item.active {
           color: #6c757d;
           font-size: 12px;
+          flex-wrap: nowrap;
+          overflow-x: hidden;
         }
         .about-us-heading{
         font-size: 16px;
@@ -309,7 +354,8 @@
       font-size: 5rem;
       text-align: center;
     }
-    @media (max-width:480px){
+
+    @media (min-width:350px) and (max-width:480px){
       .our-story{
         justify-content: flex-start; 
         overflow-x: auto; 
@@ -339,15 +385,152 @@
         margin-bottom: 5px;
         margin-top: 5px;
       }
+
+      
+    .salesforce-blog-left{
+      display: none;
+     }
+     
+     .salesforce-blog{
+       background-color: #EEEEEE;
+       display: flex;
+       flex-direction: row;
+       gap: 0;
+       padding: 0;
+       padding-left: 0;
+       margin: 10px;
+     }
+     .salesforce-blog-right{
+       width: 100%;
+       background-color: #ffffff;
+       box-shadow: 5px 5px 10px #d3d3d3;
+       padding: 10px;
+     }
+     .salesforce-right{
+       display: flex;
+       flex-direction: row;
+       justify-content: flex-end;
+       padding: 5px;
+       gap: 20px;
+     }
+ 
+     .salesforce-right-icon{
+       display: flex;
+       flex-direction: row;
+       justify-content: flex-end;
+       gap: 5px;
+     }
+ 
+     .salesforce-right p{
+       font-size: 12px;
+       margin-bottom: 5px;
+     }
+     .salesforce-right img{
+       height: 25px;
+       width: 25px;
+     }
+     .salesforce-middle h1{
+       font-weight: 700;
+       font-size: 16px;
+       background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
+       -webkit-text-fill-color: transparent;
+       -webkit-background-clip: text;
+     
+     }
+     .salesforce-middle{
+       display: flex;
+       flex-direction: row;
+       margin-top: 10px;
+       margin-bottom: 10px;
+     }
+
+     .salesforce-top{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      white-space: nowrap;
+      padding: 5px;
+    }
+ 
+     .salesforce-top h5{
+       font-size: 12px;
+       margin-bottom: 0;
+       padding: 5px;
+     }
+ 
+     .user-icon {
+       font-size: 12px;
+       margin-right: 3px;
+   }
+ 
+     .salesforce-middle img{
+       height: 50px;
+       width: 100px;
+       padding-right: 10px;
+     }
+     .topics{
+       padding-left: 0px;
+     }
+ 
+     .topics p{
+       font-size: 10px;
+       margin-bottom: 5px;
+     }
+     .topics h2{
+       font-size: 16px;
+       color: #006489;
+     }
+     .topic-content{
+       font-size: 10px;
+       font-weight: 400;
+       padding: 5px;
+     }
+     .topic-content-span{
+       font-size: 16px;
+       font-weight: 700;
+       padding-top: 10px;
+       padding-bottom: 10px;
+     }
+     .salesforce-blog-bottom{
+       display: flex;
+       flex-direction: row;
+       justify-content: space-between;
+       align-items: center;
+       margin-top: 5px;
+     }
+     .salesforce-blog-bottom h3{
+       font-size: 12px;
+       margin-top: 3px;
+       flex-wrap: wrap;
+       font-weight: 400;
+       color: #006489;
+     }
+     .recent-entries{
+       background-color: #EEEEEE;
+       cursor: pointer;
+     }
+     .salesforce-entries-heading{
+      font-size: 16px;      
+     }
+     .salesforce-entries{
+      width: 100%;
+      margin-left: 10px;
+     }
     }
 .contact-us-div{
 background-color: #ffffff;
 padding: 2vh;
 box-shadow: 5px 5px 10px #d3d3d3;
 width: 24vw;
-
-
 }
+
+.contact-us-box{
+  display:'flex';
+   flex-direction:'row';
+   padding:'2vh';
+   padding-top:'8vh',;
+  justify-content:'space-evenly';
+  }
 .contact-us-all{
 background-color: #EEEEEE;
 padding: 2vh; 
@@ -388,6 +571,11 @@ justify-content: space-evenly;
 .contact-us-icon img{
 width: 2vw;
 }
+
+.flag{
+  height: 100px;
+  width: 100px;
+}
 .contact-us-right{
 
 width: 668px;
@@ -420,7 +608,7 @@ align-items: center;
   background-color: #00AEEF;
   color: white;
   padding: 2vh;
-width: 550px;;
+  width: 550px;;
   border: none;
   border-radius: 5px;
 }
@@ -450,13 +638,184 @@ flex-basis: 45%; /* This makes two items per row for larger screens */
 margin-bottom: 20px;
 }
 
-@media (max-width: 480px) {
+@media (min-width:350px) and (max-width:480px){
 .about-us-div-content {
   flex-basis: 100%; /* One item per row for mobile screens */
 }
 .about-us-div-content img{
   width: 300px;
 }
+
+.contact-us-div{
+  width: 340px;
+  height: 180px;
+  }
+
+  .contact-us-div h3{
+    font-size: 16px;
+    font-weight: 600;
+    }
+
+  .contact-us-div p{
+    font-size: 12px;
+    margin-bottom: 10px;
+    }
+
+    .contact-us-box{
+      display:flex;
+       flex-direction: row;
+       padding: 5px;
+       padding-top: 20px;
+       gap: 20px;
+      align-items: center;
+      }
+
+  .contact-us-all{
+  background-color: #EEEEEE;
+  padding: 10px; 
+  margin-bottom: 0;
+  }
+  .contact-us{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+  gap: 10px;
+  }
+  .contact-us-left{
+  width: 340px;
+  height: auto;
+  background-color: #ffffff;
+  margin-top: 10px;
+  margin-left: 0px;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  }
+
+  .contact-us-left h3{
+    font-size: 16px;
+    font-weight: 600;
+    }
+
+  .contact-info{
+  font-size: 14px;
+  font-weight: 400;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 5px;
+  }
+  .contact-block{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-top: 20px;
+  padding-left: 20%;
+  }
+  .contact-us-icon{
+  padding-top: 10px;
+  justify-content: space-evenly;
+  
+  }
+  .contact-us-icon img{
+  width: 30px;
+  margin: 5px;
+  }
+
+  .flag{
+    height: 100px;
+    width: 100px;
+  }
+  .contact-us-right{ 
+  width: 340px;
+  background-color: #ffffff;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #b3b3b3;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  }
+  .contact-form{
+    margin-left: 5px;
+    padding: 10px;
+  }
+  .contact-us-bottom-div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  }
+  .contact-us-right-header{
+  display: flex;
+  border-radius: 10px  10px 0 0;
+  background: linear-gradient(90deg, #006489 0%, #00AEEF 49.5%, #006489 100%);
+  color:white;
+  font-size: 16px;
+  height: 60px;
+  font-weight: 600;
+  justify-content: center;
+  padding: 10px;
+  align-items: center;
+  }
+
+  .contact-us-right-header p{
+    margin-bottom: 0;
+    }
+
+    #contact1.form-control{
+      width: 300px;
+      height: 35px;
+      font-size: 12px;
+    }
+    .country-code-dropdown {
+      font-size: 12px;
+      height: 35px !important;
+      padding: 0 3px;
+      width: 90px !important;
+    }
+
+    .country-flag {
+      width: 18px;
+      margin-right: 3px;
+    }
+    #contact2.mobile-number{
+      width: 210px !important;
+      height: 35px;
+      padding: 5px;
+      border-radius: 0px 5px 5px 0px;
+      border-color: #b3b3b3;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    #contact3.form-control{
+      width: 300px;
+      height: 80px;
+      font-size: 12px;
+    }
+
+    .submit-button{
+      padding: 10px;
+      width: 300px; /* Set button width to 330px */
+      height: 50px; /* Set button height to 40px */
+      margin: 10px; /* Center button */
+      /* margin-left: 5px !important; */
+    }
+    .form-check{
+    margin-bottom: 10px;
+    }
+
+    .form-check-input{
+      font-size: 16px !important;
+      }
+
+    .form-check-label{
+      font-size: 10px !important;
+      padding-top: 0;
+      margin-top: 0;
+      }
 }
 
 @media (min-width: 481px) and (max-width: 1024px) {
@@ -471,9 +830,8 @@ margin-bottom: 20px;
   width: 30vw;
   padding: 10px;
 }
-#contact2{
-  width: 410px !important;
-  height: 50px;
+#contact2.mobile-number{
+  width: 415px !important;
 }
 .contact-us-left{
   margin-left: 10px;
@@ -581,11 +939,52 @@ width: 480px;
 #contact1{
   width: 550px;
   height: 50px;
+  outline: none;
+  border: 1px solid #b3b3b3;
 }
+
+.country-code-dropdown {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  height: 50px;
+  padding: 0px;
+  width: 120px;
+  border: 1px solid #b3b3b3 !important;
+  display: flex; /* Ensure content is centered */
+  align-items: center; /* Center icon and text vertically */
+}
+
+.country-flag {
+  width: 20px;
+  margin-right: 5px;
+}
+
 #contact2{
-  width: 430px;
+  width: 430px !important;
+  height: 50px;
+  border-radius: 0 5px 5px 0;
+  outline: none;
+  border: 1px solid #b3b3b3;
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 #contact3{
   width: 550px;
   height: 100px;
+  outline: none;
+  border: 1px solid #b3b3b3;
 }
+.form-check{
+margin-left: 10px;
+margin-bottom: 20px;
+}
+.form-check-input{
+  font-size: 20px;
+  border: 1px solid #b3b3b3;
+  }
+  .form-check-label{
+    font-size: 14px;
+    padding-top: 5px;
+    }

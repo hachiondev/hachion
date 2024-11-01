@@ -55,7 +55,7 @@
   
     margin-left: 15vw;
     width: 70vw;
-    padding: 10px;
+    padding: 5px;
     border-radius: 20px;
     box-shadow: 5px 5px 5px #d3d3d3;
 }
@@ -324,10 +324,7 @@
     color: red;
 }
 
-
-
 .submit-btn {
-  
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #fff;
@@ -339,11 +336,11 @@
     justify-content: center;
     display: inline-block;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .learner-cover{
-  
     height: 380px;
     width: 100%;
     background-image: url('../../Assets/rectangle123.png');
@@ -699,7 +696,89 @@
   }
 
   .views-icon {
-    font-size: 24px;
+    font-size: 16px;
+    color: #000;
+}
+
+.main-card {
+    width: 330px; /* Adjust width to display 2 cards on mobile */
+    flex: 0 0 auto; /* Prevent cards from shrinking */
+    margin-right: 10px; /* Add some space between cards */
+    background-color: white;
+    box-shadow: 5px 5px 5px #d3d3d3;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.main-card-image {
+    flex: 1;
+    width: 100%;
+    object-fit: cover;
+}
+
+.main-content-block {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2vh;
+}
+
+.main-content {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.bottom-main-content {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #6A6A6A;
+}
+
+.bottom-sub-content {
+    display: flex;
+    gap: 30px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #6A6A6A;
+}
+
+.main-date {
+    font-size: 16px;
+    color: #6A6A6A;
+}
+
+  .user {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .user-icon {
+    font-size: 16px;
+    color: #000;
+}
+
+  .main-views {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .main-views-icon {
+    font-size: 16px;
+    color: #000;
+}
+
+.messages {
+    font-size: 16px;
+    color: #000;
+  }
+
+  .messages-icon {
+    font-size: 16px;
     color: #000;
 }
   .training-events{
@@ -710,11 +789,74 @@
     width: 80%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: 4vh;
     margin-left: 10vw;
     cursor: pointer;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
 }
+
+.blog-batch-type{
+    padding: 1vh;
+    border-radius: 10px 10px 0px 0px;
+    background: linear-gradient(to right,#006489,#00AEEF,#006489);
+    display: flex;
+    justify-content: space-between;
+    color:white;
+    font-size: 1.25rem;
+    font-weight: 400;
+    text-align: center;
+    width: 80%;
+    margin-left: 10vw;
+}
+
+.blog-batch-type p{
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    }
+    
+    .blog-batch-type p:hover::after{
+    content: '';
+    font-weight: 600 important;
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    height: 4px;
+    background-color: white;
+    }
+    
+    .blog-batch-type-content {
+    cursor: pointer;
+    padding: 1vh;
+    position: relative;
+    }
+    
+    .blog-batch-type-content.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: white;
+    transition: width 0.3s ease-in-out;
+    }
+    
+    .blog-batch-type-content:hover {
+    color: white;
+    transition: background-color 0.3s ease;
+    }
+    
+    .blog-batch-type-content.active:hover::after {
+    width: 100%;
+    }
+
 @media  (min-width:1180px) and (max-width: 1366px){
 .learner-info{
     margin-left: 10px;
@@ -1010,7 +1152,12 @@
     }
 
     .recent-card {
-        min-width: 30%; 
+        width: 170px;
+        height: 200px;
+    }
+
+    .recent-card-image {
+        width: 170px !important;
     }
 
     /* Blog page */
@@ -1030,9 +1177,11 @@
 
     .blogs-container {
         grid-template-columns: repeat(2, 1fr); 
-        width: 95%;
-        margin-left: 0;
+        width: auto;
+        margin: 0 auto;
+        padding: 10px;
         gap: 10px;
+        justify-items: center;
       }
 
       .blog-card {
@@ -1055,13 +1204,123 @@
       }
 
       .bottom-content {
-        font-size: 16px;
+        font-size: 14px;
     }
 
-    .views-icon {
-        font-size: 24px;
+    .content-block {
+        flex: 1;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .content {
+        font-size: 14px;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3; /* Limits the text to 2 lines */
+        overflow: hidden; /* Hides overflowing text */
+        text-overflow: ellipsis;
+        line-height: 1.5;
+        max-height: 4.5em;
+    }
+    
+    .date {
+        color: #6A6A6A;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+      .views {
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+
+      .views-icon {
+        font-size: 12px;
         color: #000;
     }
+
+    .main-card {
+        width: 330px; /* Adjust width to display 2 cards on mobile */
+        flex: 0 0 auto; /* Prevent cards from shrinking */
+        margin-right: 10px; /* Add some space between cards */
+    }
+    
+    .main-content {
+        font-size: 14px;
+    }
+    
+    .bottom-main-content {
+        font-size: 14px;
+    }
+    
+    .bottom-sub-content {
+        font-size: 14px;
+    }
+
+    .main-date {
+        font-size: 14px;
+    }
+    
+      .user {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+    
+      .user-icon {
+        font-size: 14px;
+        margin-right: 5px;
+    }
+    
+      .main-views {
+        font-size: 14px;
+      }
+    
+      .main-views-icon {
+        font-size: 14px;
+    }
+    
+    .messages {
+        font-size: 14px;
+      }
+    
+      .messages-icon {
+        font-size: 14px;
+    }
+
+    .blog-batch-type {
+        justify-content: space-between; /* Align items to the left */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap; /* Prevent line breaks */
+        padding: 15px;
+        font-size: 12px;
+        width: 95%;
+        margin-left: 10px;
+      }
+
+      .blog-batch-type-content {
+        padding: 0px;
+        padding-bottom: 5px;
+        margin-bottom: 0;
+        margin-right: 15px;
+        margin-left: 5px;
+        }
+
+        .card-holder{
+            width: 95%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin: 15px;
+            cursor: pointer;
+            margin-left: 10px;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
+        }
       
       .training-events {
         padding: 10px;
@@ -1328,7 +1587,7 @@
     }
 
     #advisor1.form-control{
-        height: 30px !important;
+        height: 35px !important;
         width: 280px !important;
         border-color: #b3b3b3;
         font-size: 12px;
@@ -1336,7 +1595,7 @@
     }
 
     #advisor1.form-select{
-        height: 30px !important;
+        height: 35px !important;
         width: 280px !important;
         border-color: #b3b3b3;
         margin-left: 10px;
@@ -1349,13 +1608,25 @@
         gap: 0px !important; /* Reduce gap between elements for mobile */
       }
 
+      .country-code-dropdown {
+        font-size: 12px;
+        height: 30px !important;
+        padding: 0 3px;
+        width: 90px !important;
+      }
+
+      .country-flag {
+        width: 18px;
+        margin-right: 3px;
+      }
+
     #advisor2.mobile-number{
-        width: 160px !important;
-        height: 30px;
+        width: 180px !important;
+        height: 35px;
         border-radius: 0px 5px 5px 0px;
         border-color: #b3b3b3;
         font-size: 12px;
-        margin-bottom: 5px;
+        margin-bottom: 0px;
     }
     #advisor3.form-control{
         height: 80px;
@@ -1370,10 +1641,9 @@
         border-radius: 5px;
         font-size: 16px;
         font-weight: 600;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         width: 280px;
         margin: 5px;
-        margin-bottom: 20px;
     }
 
     .modal-content {
@@ -1447,9 +1717,10 @@
      }
      
     .corporate-training-features {
-        margin-left: 5%;
-        margin-right: 5px;
+        /* margin-left: 5%;
+        margin-right: 5px; */
         width: 350px; /* Full width for mobile */
+        margin: 0 auto;
         padding: 5px;
         display: flex;
         align-items: center;
@@ -1461,9 +1732,10 @@
     .customized-column {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
-        width: 90%; /* Make columns full width */
-        margin-left: 5px;
-        margin-right: 5px;
+        width: auto; /* Make columns full width */
+        margin: 5px auto;
+        /* margin-left: 5px;
+        margin-right: 5px; */
         margin-top: 10px;
         padding: 5px;
         align-items: center;
@@ -1474,8 +1746,7 @@
     .training-img {
         width: 320px; /* Full width for the image */
         max-width: 100%; /* Maintain the image's aspect ratio */
-        margin-top: 20px; /* Add some space between the columns and the image */
-        margin-bottom: 20px;
+        margin: 20px auto;
     }
     
     .leading-expert {
@@ -1525,18 +1796,49 @@
 #advisor1{
     height: 50px !important;
     width: 450px !important;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 .row{
     display: flex;
     flex-direction: row !important;
     /* gap: 50px !important; */
 }
+  
+  .country-code-dropdown {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    height: 50px;
+    padding: 0 px;
+    width: 120px;
+    border: 1px solid #b3b3b3 !important;
+    display: flex; /* Ensure content is centered */
+    align-items: center; /* Center icon and text vertically */
+  }
+
+  .country-flag {
+    width: 20px;
+    margin-right: 5px;
+  }
+
 #advisor2{
     width: 330px !important;
+    height: 50px;
+    border-radius: 0 5px 5px 0;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 #advisor3{
     height: 120px;
     width: 995px !important;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #b3b3b3;
+    padding: 5px;
 }
 .close-btn{
     display: flex;

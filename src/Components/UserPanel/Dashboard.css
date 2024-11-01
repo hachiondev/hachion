@@ -19,9 +19,14 @@
   overflow: hidden;
 }
 
+.sidebar-user.collapsed {
+  width: 60px; /* Collapsed width */
+}
+
 .menu-list-user {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .menu-item-container {
@@ -38,6 +43,7 @@
   padding-left: 5vw;
   display: flex;
   align-items: center;
+  transition: padding 0.3s ease;
 }
 
 .menu-item-user .menu-icon {
@@ -57,6 +63,24 @@
   color: white;
   border-radius: 0px 20px 20px 0px;
 
+}
+
+.sidebar-user.collapsed .menu-item-user {
+  justify-content: center;
+}
+
+.sidebar-user.collapsed .menu-item-user span:not(.menu-icon) {
+  display: none; /* Hide text in collapsed mode */
+}
+
+.toggle-sidebar-btn {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
 }
 .user-dashboard{
   display: flex;
@@ -325,7 +349,7 @@ table {
 }
 
 /* For very small screens (phones) */
-@media (max-width: 480px) {
+@media (min-width: 350px) and (max-width: 480px) {
 .resume-div {
   width: 100vw; /* Use full width */
   padding: 0.5vh;

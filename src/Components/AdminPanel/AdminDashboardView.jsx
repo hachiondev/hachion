@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
-import AdminDashboard from './AdminDashboard'; // Default or dashboard component
+import AdminDashboard from './AdminDashboard';
 import CategoryTable from './CategoryTable';
 import TrendingCourseTable from './TrendingCourseTable';
 import Trainer from './Trainer';
@@ -13,35 +13,25 @@ import Blogs from './Blogs';
 import Support from './Support';
 import Course from './Course';
 import AddCourseCategory from './AddCourseCategory';
-import AddTrendingCourse from './AddTrendingCourse';
 import Other from './Other';
 
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
-  const [showAddCourse, setShowAddCourse] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
 
-  // Function to handle category selection from sidebar
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setShowAddCategory(false);
-    setShowAddCourse(false);
+    setShowAddCategory(false); // Reset Add Category view when changing categories
   };
 
   const handleAddCategoryClick = () => {
-    setShowAddCategory(true); // Show the AddCourseCategory component
+    setShowAddCategory(true);
   };
 
-  const handleAddTrendingCourseClick = () => {
-    setShowAddCourse(true);
-  };
-
+  // Render the correct component based on `selectedCategory` and `showAddCategory`
   const renderContent = () => {
     if (showAddCategory) {
-      return <AddCourseCategory />; // If the "Add" button is clicked, show this component
-    }
-    if (showAddCourse) {
-      return <AddTrendingCourse />;
+      return <AddCourseCategory onSelectCategory={handleCategorySelect} />;
     }
 
     switch (selectedCategory) {
@@ -67,8 +57,8 @@ const AdminDashboardView = () => {
         return <Support />;
       case 'Course':
         return <Course />;
-        case 'Other':
-          return <Other/>
+      case 'Other':
+        return <Other />;
       default:
         return <AdminDashboard />;
     }
@@ -78,7 +68,6 @@ const AdminDashboardView = () => {
     <>
       <AdminNavbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        {/* Ensure onSelectCategory is passed */}
         <AdminSidebar onSelectCategory={handleCategorySelect} />
         <div className='admin-right'>
           {renderContent()}
@@ -89,4 +78,3 @@ const AdminDashboardView = () => {
 };
 
 export default AdminDashboardView;
-

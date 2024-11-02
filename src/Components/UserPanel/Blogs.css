@@ -863,14 +863,19 @@ font-weight: 700;
 padding-left: 40px;
 align-items: center;
 
+
+}
+.enrollment-details{
+background-color: #EEEEEE;
+
 }
 .personal-details{
+
   width: 85%;
  padding: 20px;
   background-color: white;
   box-shadow: 5px 5px 10px #d3d3d3;
   border: 1px solid #b3b3b3;
-  margin: 20px;
   margin-left: 10vw;
 }
 .personal-details-header{

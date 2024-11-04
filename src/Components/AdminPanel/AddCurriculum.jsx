@@ -12,11 +12,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-<<<<<<< HEAD
-
-=======
-import {  color } from '@mui/system';
->>>>>>> 41338ce19b569886d1ed37aa29792a51999a30a0
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {

@@ -9,18 +9,20 @@
   padding: 1.5vh;
   text-align: center;
 }
+
+.user-dashboard-heading h3{
+  font-weight: 600;
+  }
 /* Sidebar styles */
 .sidebar-user {
-  width: 400px;
+  width: 250px;
   background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
   left: 0;
-  min-width: 300px;
-  margin-top: 1vh;
   overflow: hidden;
 }
 
 .sidebar-user.collapsed {
-  width: 60px; /* Collapsed width */
+  width: 80px; /* Collapsed width */
 }
 
 .menu-list-user {
@@ -32,15 +34,16 @@
 .menu-item-container {
   display: flex;
   align-items: center;
+  background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
 }
 
 .menu-item-user {
-  background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
+  background: transparent;
   width: 100%;
   height: 7vh;
   border: none;
   text-align: center;
-  padding-left: 5vw;
+  padding-left: 25px;
   display: flex;
   align-items: center;
   transition: padding 0.3s ease;
@@ -54,19 +57,21 @@
 .menu-item-user:hover {
   background: linear-gradient(90deg, #000000 0%, #666666 49.5%);
   color: white;
-  border-radius: 0px 20px 20px 0px;
+  border-radius: 0px 30px 30px 0px;
  
 }
 
 .menu-item-user.active {
   background: linear-gradient(90deg, #000000 0%, #666666 49.5%);
   color: white;
-  border-radius: 0px 20px 20px 0px;
+  border-radius: 0px 30px 30px 0px;
 
 }
 
 .sidebar-user.collapsed .menu-item-user {
-  justify-content: center;
+  width: 80px; /* Width of the button in collapsed mode */
+  justify-content: flex-start;
+  padding-left: 25px;
 }
 
 .sidebar-user.collapsed .menu-item-user span:not(.menu-icon) {
@@ -75,7 +80,7 @@
 
 .toggle-sidebar-btn {
   display: block;
-  width: 100%;
+  width: 80px;
   padding: 5px;
   background: none;
   border: none;
@@ -128,7 +133,6 @@
     padding: 1vh;
     font-size: 1.25rem;
  font-weight: 700;
-
  margin: 2vh;
 }
 .formgroup-checkbox{
@@ -160,65 +164,6 @@ font-weight: 600;
   gap: 50px;
 }
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family:  'Open Sans', sans-serif;
-}
-.user-dashboard-heading{
-  background: linear-gradient(90deg, #00AEEF 0%, #FFFFFF 100%);
-padding: 1.5vh;
-text-align: center;
-}
-/* Sidebar styles */
-.sidebar-user {
-width: 400px;
-background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
-left: 0;
-min-width: 300px;
-margin-top: 1vh;
-overflow: hidden;
-}
-
-.menu-list-user {
-list-style-type: none;
-padding: 0;
-}
-
-.menu-item-container {
-display: flex;
-align-items: center;
-}
-
-.menu-item-user {
-background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
-width: 100%;
-height: 7vh;
-border: none;
-text-align: center;
-padding-left: 5vw;
-display: flex;
-align-items: center;
-}
-
-.menu-item-user .menu-icon {
-margin-right: 0.5vw;
-font-size: 2rem;
-}
-
-.menu-item-user:hover {
-background: linear-gradient(90deg, #000000 0%, #666666 49.5%);
-color: white;
-border-radius: 0px 20px 20px 0px;
-}
-
-.menu-item-user.active {
-background: linear-gradient(90deg, #000000 0%, #666666 49.5%);
-color: white;
-border-radius: 0px 20px 20px 0px;
-}
-
 .user-dashboard {
 display: flex;
 flex-direction: row;
@@ -234,7 +179,6 @@ padding: 10px;
 @media only screen and (max-width: 1366px) {
 .sidebar-user {
   width: 25vw;
-  min-width: 25vw;
 }
 
 .menu-item-user {
@@ -247,7 +191,6 @@ padding: 10px;
 @media only screen and (max-width: 1024px) {
 .sidebar-user {
   width: 25vw;
-  min-width: 25vw;
 }
 
 .menu-item-user {
@@ -270,7 +213,6 @@ padding: 10px;
 @media only screen and (max-width: 768px) {
 .sidebar-user {
   width: 30vw;
-  min-width: 25vw;
 }
 .menu-item-user{
   font-size: 1.4rem;
@@ -350,6 +292,77 @@ table {
 
 /* For very small screens (phones) */
 @media (min-width: 350px) and (max-width: 480px) {
+
+.user-dashboard-heading h3{
+font-size: 16px;
+}
+
+/* Sidebar styles */
+.sidebar-user {
+  width: 180px;
+  background: linear-gradient(88.34deg, #00AEEF 2.64%, #FFFFFF 99.83%);
+  left: 0;
+  overflow: hidden;
+}
+
+.sidebar-user.collapsed {
+  width: 50px; /* Collapsed width */
+}
+
+.menu-item-container {
+  display: flex;
+  align-items: center;
+}
+
+.menu-item-user {
+  background: transparent;
+  width: 100%;
+  height: 50px;
+  padding-left: 18px;
+}
+
+.menu-item-user .menu-icon {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.menu-item-container span {
+  font-size: 14px;
+}
+
+.menu-item-user.active {
+  background: linear-gradient(90deg, #000000 0%, #666666 49.5%);
+  color: white;
+  border-radius: 0px 30px 30px 0px;
+
+}
+
+.sidebar-user.collapsed .menu-item-user {
+  width: 50px; /* Width of the button in collapsed mode */
+  justify-content: flex-start;
+  padding-left: 18px;
+}
+
+.sidebar-user.collapsed .menu-item-user .menu-icon {
+  margin-right: 0; /* Remove icon margin in collapsed mode */
+}
+
+.sidebar-user.collapsed .menu-item-user span:not(.menu-icon) {
+  display: none; /* Hide text in collapsed mode */
+}
+
+.toggle-sidebar-btn {
+  width: 50px;
+  font-size: 20px;
+}
+.user-dashboard{
+  display: flex;
+  flex-direction: row;
+  background-color: #EEEEEE;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
 .resume-div {
   width: 100vw; /* Use full width */
   padding: 0.5vh;
@@ -377,32 +390,4 @@ th, td {
 text-align: center; /* Center align text */
 padding: 10px;
 white-space: nowrap; /* Prevent wrapping of table content */
-}
-.formgroup-checkbox{
-display: flex;
-margin-left: 7vw;
-margin-top: 3vh;
-font-size: 1rem;
-font-weight: 600;
-}
-.explore-btn{
-padding: 5px 10px;
-background-color: #00AEEF;
-color: #FFFFFF;
-border-radius: 10px;
-border: none;
-box-shadow: 5px 5px 5px #d3d3d3;
-margin: 20px;
-font-size: 20px;
-font-weight: 700;
-margin-left: 500px;
-}
-.review-form{
-padding: 20px;
-}
-.resume-div-top{
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 50px;
 }

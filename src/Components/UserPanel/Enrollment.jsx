@@ -10,12 +10,28 @@ import Footer from './Footer'
 import { AiFillCaretDown } from 'react-icons/ai';
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
+import { useFormik } from 'formik';
+import { LoginSchema } from '../Schemas';
+
+const initialValues = {
+  name: "",
+  email: "",
+  number:"",
+  country:""
+};
 
 const Enrollment = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
+    initialValues: initialValues,
+    validationSchema: LoginSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    }
+  });
 
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
@@ -64,26 +80,36 @@ const Enrollment = () => {
             <p>1. Personal Details</p>
         </div>
       
-        <form>
-          <div className="row">
-  <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Full Name*</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter your full name'/>
-  </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Email Id*</label>
-    <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'/>
-  </div>
+        <form className='details'>
+        
+        <div className='row'>
+            <div className="col-md-5">
+              <label htmlFor="inputName4" className="form-label">
+                Full Name<span className="required">*</span>
+              </label>
+              <input type="text" className="form-control" id="enroll1" placeholder='Enter your full name' 
+             required/>
+            </div>
+            <div className="col-md-5">
+              <label htmlFor="inputEmail4" className="form-label">
+                Email ID<span className="required">*</span>
+              </label>
+              <input type="email" className="form-control" id="enroll1" placeholder='abc@gmail.com'
+               name='email'
+               value={values.email}
+               onChange={handleChange}
+               onBlur={handleBlur} />
+            </div>
   </div>
   <div className="row">
-  <div className="col-md-6">
-  <label className='form-label'>Mobile Number</label>
-<div class="input-group mb-3 custom-width">
-  <div className='input-group'>
+  <div className="col-md-5">
+            <label className='form-label'>Mobile Number</label>
+          <div class="input-group custom-width">
+          <div className='input-group'>
             <Button
               variant="outlined"
               onClick={openMenu}
-              className="country-code"
+              className="country-code-dropdown"
               endIcon={<AiFillCaretDown />}
             >
               <Flag code={selectedCountry.flag} className='country-flag' />
@@ -105,24 +131,26 @@ const Enrollment = () => {
                 </MenuItem>
               ))}
             </Menu>
-          <input 
-          type='tel'
-          class="form-control"
-          ref={mobileInputRef}
-          id="inputMobile4"
-          aria-label="Text input with segmented dropdown button"
-          value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
-          placeholder='Enter your mobile number'/>
-        </div>
+            <input type='tel'
+            className="mobile-number"
+            ref={mobileInputRef}
+              id='enroll2'
+              aria-label="Text input with segmented dropdown button" 
+              placeholder='Enter your mobile number' 
+            name='name'
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}/>
+            </div>
       </div>
       </div>
-          <div class="col-md-6">
-    <label for="inputCity" class="form-label">Country</label>
-    <input type="text" class="form-control" id="inputCity" placeholder='India'/>
+      <div className="col-md-5">
+              <label for="inputCity" className="form-label">
+              Country<span className="required">*</span>
+              </label>
+              <input type="text" className="form-control" id="enroll1" placeholder='India'
+             required/>
+            </div>
   </div>
-  </div>
-
   </form>
   
         </div>
@@ -130,19 +158,23 @@ const Enrollment = () => {
         <div className='personal-details-header'>
             <p>1. Course Details</p>
             </div>
+            <div className='enroll-table'>
             <EnrollmentTable/>
+            </div>
             <div className='coupon-div'>
             <p>Have a coupon code ?</p>
+            <div className='coupon'>
             <TextField
          placeholder='Enter coupon code'
           id="filled-start-adornment"
-          sx={{ m: 1, width: '25ch' }}
+          className='coupon-field'
           slotProps={{
           
           }}
           variant="filled"
         />
         <button className='apply-btn'>Apply</button>
+        </div>
         </div>
             </div>
             <div className='personal-details'>

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -56,13 +58,15 @@ const rows = [
 export default function Other() {
   const navigate=useNavigate();
   const [open, setOpen] = React.useState(false);
-
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [course, setCourse] = useState('');
 const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
 
 const handleClickOpen = (row) => {
   setSelectedRow(row); // Set the selected row data
   setOpen(true); // Open the modal
 };
+const handleAddTrendingCourseClick = () => setShowAddCourse(true);
 
 const handleClose = () => {
   setOpen(false); // Close the modal
@@ -81,16 +85,46 @@ const handleInputChange = (e) => {
     [name]: value,
   }));
 };
-  const handleAdd=()=>{
-    navigate('/addbanner');
-  }
+const handleCourseChange = (event) => setCourse(event.target.value);
+  
   return (
-    <>   
+    <>  
+     {showAddCourse?(<div className='course-category'>
+<p>Banner/Amount Conversion Details <IoIosArrowForward/> Add Banner/Amount Conversion </p>
+<div className='category'>
+<div className='category-header'>
+<p>Add Banner/Amount Conversion</p>
+</div>
+<div className='course-row'>
+<div className='course-details'>
+
+<div class="col">
+  <label for="formFile" class="form-label">Blog Image</label>
+  <input class="form-control" type="file" id="formFile"/>
+</div>
+<button className='submit-btn'>Upload</button>
+</div>
+<div className='course-details'>
+<div class="col-md-10">
+    <label for="inputState" class="form-label">Country</label>
+    <select id="inputState" class="form-select">
+      <option selected>Select Country</option>
+      <option>...</option>
+    </select>
+  </div>
+  <div class="col">
+    <label for="inputEmail4" class="form-label">Amount Conversion</label>
+    <input type="text" class="form-control" id="inputEmail4"/>
+  </div>
+  <button className='submit-btn'>Add Amount</button>
+</div>
+</div></div>
+</div>):(<div> 
     <CourseCategory
   pageTitle="Banner/Amount Conversion"
   headerTitle="Banner/Amount Conversion Details"
   buttonLabel="Add Banner/Amount"
-  onAdd={handleAdd}
+  onAddCategoryClick={handleAddTrendingCourseClick}
 ></CourseCategory> <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -172,5 +206,6 @@ const handleInputChange = (e) => {
           </Button>
         </DialogActions>
       </Dialog>
+      </div>)}
  </> );
 }

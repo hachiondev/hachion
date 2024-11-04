@@ -1,35 +1,19 @@
+// CourseCategory.js
 import React from 'react';
-import './Admin.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoSearch } from "react-icons/io5";
 import { FiPlus } from 'react-icons/fi';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 
 const CourseCategory = ({
   pageTitle = "Course Category",
-  headerTitle = "View Course Category List", 
-  buttonLabel = "Add Category", 
-  onAdd,
+  headerTitle = "View Course Category List",
+  buttonLabel = "Add Category",
   onAddCategoryClick,
   children
-}) => 
-  
-  {
-    const navigate=useNavigate()
-  const handleAdd = () => {
-   
-    if (onAdd) {
-      onAdd();
-    } else if (onAddCategoryClick) {
-      onAddCategoryClick();
-    } else {
-     navigate('/addcourse')
-    }
-  };
-
+}) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
@@ -64,7 +48,7 @@ const CourseCategory = ({
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search" />
                 <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
-              <button type="button" className="btn-category" onClick={handleAdd}>
+              <button type="button" className="btn-category" onClick={onAddCategoryClick}>
                 <FiPlus /> {buttonLabel}
               </button>
             </div>

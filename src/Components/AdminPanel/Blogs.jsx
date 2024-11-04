@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
+import { IoIosArrowForward } from 'react-icons/io'
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
 import automation from '../../Assets/automationtesting.png';
@@ -63,9 +65,38 @@ const rows = [
 export default function Blogs() {
   const navigate=useNavigate();
   const [editRow, setEditRow] = React.useState(null);
-  const handleAdd=()=>{
-    navigate('/addblog');
-  }
+  const [open, setOpen] = React.useState(false);
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [course, setCourse] = useState('');
+
+  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
+
+const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+
+const handleClickOpen = (row) => {
+  setSelectedRow(row); // Set the selected row data
+  setOpen(true); // Open the modal
+};
+
+const handleClose = () => {
+  setOpen(false); // Close the modal
+};
+
+const handleSave = () => {
+  // Logic to handle saving the updated category and date
+  console.log('Saved:', selectedRow);
+  setOpen(false);
+};
+
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setSelectedRow((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+const handleCourseChange = (event) => setCourse(event.target.value);
+
   const handleEdit = (rowId) => {
     setEditRow(rowId);  // Set the clicked row's ID in the state
   };
@@ -75,11 +106,58 @@ export default function Blogs() {
     {editRow ? (
         <EditBlog rowId={editRow} />  // Pass the row ID to the EditBlogForm
       ) : (<> 
+      {showAddCourse?(<div className='course-category'>
+<p>Blog Details <IoIosArrowForward/> Add Blog </p>
+<div className='category'>
+<div className='category-header'>
+<p>Add Blog</p>
+</div>
+<div class="row">
+<div class="col">
+    <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>Select Category</option>
+      <option>QA Testing</option>
+      <option>Project Management</option>
+      <option>Business Intelligence</option>
+      <option>Data Science</option>
+    </select>
+  </div>
+  <div class="col">
+    <label className='form-label'>Blog Title</label>
+    <input type="select" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+  </div>
+  </div>
+  <div className='course-row'>
+  <div class="col">
+    <label className='form-label'>Author</label>
+    <input type="text" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+  </div>
+  <div class="col">
+  <label for="formFile" class="form-label">Blog Image</label>
+  <input class="form-control" type="file" id="formFile"/>
+</div>
+<div class="col">
+  <label for="formFile" class="form-label">Blog PDF</label>
+  <input class="form-control" type="file" id="formFile"/>
+</div>
+</div>
+
+  <div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+
+  <div style={{display:'flex',flexDirection:'row'}}> 
+  <button className='submit-btn'>Submit</button>
+  <button className='reset-btn'>Reset</button>
+</div>
+</div></div>):(<>
     <CourseCategory
   pageTitle="Blog"
   headerTitle="Blog Details"
   buttonLabel="Add new Blog"
-  onAdd={handleAdd}
+  onAddCategoryClick={handleAddTrendingCourseClick}
 />
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -120,6 +198,7 @@ export default function Blogs() {
             </TableBody>
           </Table>
         </TableContainer>
+        </>)}
     </>  )}
       <div className='pagination'>
         <Pagination count={10} color="primary" />

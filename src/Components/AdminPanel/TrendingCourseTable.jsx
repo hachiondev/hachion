@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +11,6 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
-import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
 import { useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
@@ -22,17 +21,21 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { IoMdCloseCircleOutline } from "react-icons/io";
+import { IoMdCloseCircleOutline } from 'react-icons/io';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import CourseCategory from './CourseCategory';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -45,13 +48,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, course_name, status, created_date, Action) {
-  return { S_No, course_name, status, created_date, Action };
+function createData(S_No, course_name, status, created_date) {
+  return { S_No, course_name, status, created_date };
 }
 
 const rows = [
-  createData(1, 'QA Automation','Enable', '2019-11-25'),
-  createData(2, 'Python','Enable', '2022-12-11'),
+  createData(1, 'QA Automation', 'Enable', '2019-11-25'),
+  createData(2, 'Python', 'Enable', '2022-12-11'),
   createData(3, 'Tableau','Enable', '2021-02-15'),
   createData(4, 'Big data Hadoop','Enable', '2020-05-12'),
   createData(5, 'Salesforce Developer','Enable', '2019-06-11'),
@@ -60,52 +63,81 @@ const rows = [
   createData(8, 'Load Runner', 'Enable','2018-04-13'),
   createData(9, 'ServiceNow','Enable', '2019-06-11'),
   createData(10, 'Cloud Computing','Enable', '2019-06-11'),
+
 ];
-export default function TrendingCourseTable() {
- 
-  const [open, setOpen] = React.useState(false);
-  const navigate=useNavigate();
 
-const onAddTrendingCourseClick=()=>{
-  navigate('/addtrending')
-}
+export default function TrendingCourse() {
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const [selectedRow, setSelectedRow] = useState({ course_name: '', Date: '' });
+  const [course, setCourse] = useState('');
 
-const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
 
-const handleClickOpen = (row) => {
-  setSelectedRow(row); // Set the selected row data
-  setOpen(true); // Open the modal
-};
 
-const handleClose = () => {
-  setOpen(false); // Close the modal
-};
+  const handleClickOpen = (row) => {
+    setSelectedRow(row);
+    setOpen(true);
+  };
 
-const handleSave = () => {
-  // Logic to handle saving the updated category and date
-  console.log('Saved:', selectedRow);
-  setOpen(false);
-};
+  const handleClose = () => setOpen(false);
 
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setSelectedRow((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
-};
+  const handleSave = () => {
+    console.log('Saved:', selectedRow);
+    setOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCourseChange = (event) => setCourse(event.target.value);
 
   return (
-  
-     
-        <>
-          <CourseCategory
-        pageTitle="Trending Courses"
-        headerTitle="View Trending Courses"
-        buttonLabel="Add Trending Courses"
-        onAdd={onAddTrendingCourseClick} // Call the function passed from parent
-      />
-          <TableContainer component={Paper}>
+    <>
+      {showAddCourse ? (
+        <div style={{ padding: '20px' }}>
+          <h2>Add Trending Course</h2>
+          <FormControl fullWidth>
+            <label>Course Name</label>
+            <Select
+              value={course}
+              onChange={handleCourseChange}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+            >
+              <MenuItem value=""><em>Select Course</em></MenuItem>
+              <MenuItem value="QA Automation">QA Automation</MenuItem>
+              <MenuItem value="Load Runner">Load Runner</MenuItem>
+              <MenuItem value="QA Manual Testing">QA Manual Testing</MenuItem>
+              <MenuItem value="Mobile App Testing">Mobile App Testing</MenuItem>
+            </Select>
+            <label>Status</label>
+            <FormControlLabel
+              control={<Switch defaultChecked />}
+              label="Disable"
+            />
+          </FormControl>
+          <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+          <button className="submit-btn"  onClick={() => console.log('Submitted')}>Submit</button>
+          <button className="reset-btn">Reset</button>
+        
+          </div>
+        </div>
+      ) : (
+        <div>
+        <CourseCategory pageTitle = "Trending Courses"
+  headerTitle = "View Trending Course Details"
+buttonLabel='Add Trending Course'
+onAddCategoryClick={handleAddTrendingCourseClick}
+  />
+         
+          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
@@ -126,46 +158,37 @@ const handleInputChange = (e) => {
                     <StyledTableCell align="center">{row.status}</StyledTableCell>
                     <StyledTableCell align="center">{row.created_date}</StyledTableCell>
                     <StyledTableCell align="center">
-                  <FaEdit className="edit" onClick={() => handleClickOpen(row)} /> {/* Open modal on edit click */}
-                  <RiDeleteBin6Line className="delete" />
-                </StyledTableCell>
+                      <FaEdit className='edit' onClick={() => handleClickOpen(row)} />
+                      <RiDeleteBin6Line className='delete' />
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-          <div className='pagination'>
-            <Pagination count={10} color="primary" />
-          </div>
+          <Pagination count={10} color="primary" />
           <Dialog open={open} onClose={handleClose}>
-            <div className='dialog-title'>
-        <DialogTitle >Edit Trending Course   <Button onClick={handleClose} className='close-btn'>
-            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
-          </Button></DialogTitle>
-          </div>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="course_name"
-            label="Course Name"
-            type="text"
-            fullWidth
-            value={selectedRow.course_name}
-            onChange={handleInputChange}
-          />
-          <label>Status</label>
-        <FormControlLabel control={<Switch defaultChecked />} label="Enable" />
-       
-        </DialogContent>
-        <DialogActions>
-        
-          <Button onClick={handleSave} className='update-btn'>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-        </>
-   
+            <DialogTitle>Edit Trending Course</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="course_name"
+                label="Course Name"
+                type="text"
+                fullWidth
+                value={selectedRow.course_name}
+                onChange={handleInputChange}
+              />
+              <FormControlLabel control={<Switch defaultChecked />} label="Enable" />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSave} color="primary">Update</Button>
+              <Button onClick={handleClose} color="secondary">Cancel</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      )}
+    </>
   );
 }

@@ -47,7 +47,8 @@ export default function UserReviews() {
   return (
     <>
       <div className='courses-enrolled' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <h6>Reviews</h6>
+      <nav className='dashboard-nav'>
+        Reviews</nav>
         <button className='explore-btn' onClick={() => setShowReviewForm(true)}>Write Review</button>
       </div>
 

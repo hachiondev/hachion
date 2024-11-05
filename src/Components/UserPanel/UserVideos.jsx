@@ -46,7 +46,8 @@ const rows = [
 export default function UserVideos() {
   return (<>  
    <div className='courses-enrolled'>
-    <h6>Videos</h6>
+   <nav className='dashboard-nav'>
+    Videos</nav>
     </div>
     <div className='resume-div'>
     <TableContainer component={Paper}>

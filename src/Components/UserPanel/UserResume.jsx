@@ -17,7 +17,8 @@ const UserResume = () => {
     };
   return (<>
     <div className='courses-enrolled'>
-    <h6>Download Resume</h6>
+    <nav className='dashboard-nav'>
+      Download Resume</nav>
     </div>
     <div className='resume-div'>
         <div className='resume-div-top'>

@@ -48,16 +48,16 @@ function createData(S_No, course_name, certificate_title, certificate_image, des
 }
 
 const courseCertificateRows = [
-    createData(1, 'Qa Automation','Qa Automation', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(2,'Python','Python', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
-    createData(3, 'Tableau','Tableau',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(4,'Big Data Hadoop','Big Data Hadoop',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
-    createData(5,'Salesforce Developer','Salesforce Developer', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
-    createData(6, 'Salesforce Admin','Salesforce Admin',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(7, 'Data Science with Python','Data Science with Python',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(8, 'Blue Prism','Blue Prism',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(9, 'Load Runner','Load Runner',<img src={certificateImage}/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
-    createData(10, 'Service now','Service now', <img src={certificateImage}/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(1, 'Qa Automation','Qa Automation', <img src={certificateImage} alt='certificate'/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(2,'Python','Python', <img src={certificateImage} alt='certificate'/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(3, 'Tableau','Tableau',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(4,'Big Data Hadoop','Big Data Hadoop',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(5,'Salesforce Developer','Salesforce Developer', <img src={certificateImage} alt='certificate'/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05' ),
+    createData(6, 'Salesforce Admin','Salesforce Admin',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(7, 'Data Science with Python','Data Science with Python',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(8, 'Blue Prism','Blue Prism',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(9, 'Load Runner','Load Runner',<img src={certificateImage} alt='certificate'/>, 'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
+    createData(10, 'Service now','Service now', <img src={certificateImage} alt='certificate'/>,'After completion of the Course online training program, candidates will get a course completion certificate','2024-07-05'),
 ];
 
 const candidateCertificateRows = [

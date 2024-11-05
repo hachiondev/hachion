@@ -58,7 +58,8 @@ const UserProfile = () => {
   return (
     <>
       <div className="courses-enrolled">
-        <h6>My Profile</h6>
+      <nav className='dashboard-nav'>
+        My Profile</nav>
       </div>
       <div className="resume-div">
         <div className="d-flex align-items-center mb-3">

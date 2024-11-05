@@ -1,4 +1,6 @@
-import * as React from 'react';
+import  React from 'react';
+import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,7 +15,6 @@ import './Admin.css';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import CourseCategory from './CourseCategory';
-import { useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -60,8 +61,12 @@ const rows = [
 ];
 
 export default function Trainer() {
-  const navigate=useNavigate();
+ 
   const [open, setOpen] = React.useState(false);
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [course, setCourse] = useState('');
+
+  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
 
 const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
 
@@ -87,17 +92,82 @@ const handleInputChange = (e) => {
     [name]: value,
   }));
 };
-  const handleAdd=()=>{
-    navigate('/addtrainer');
-  }
+const handleCourseChange = (event) => setCourse(event.target.value);
   return (
+    
     <>   
+       {showAddCourse ? (<div className='course-category'>
+<p>View Trainer <IoIosArrowForward/> Add Trainer </p>
+<div className='category'>
+<div className='category-header'>
+<p>Add Trainer</p>
+</div>
+<div class="row">
+  <div class="col">
+    <label className='form-label'>Trainer</label>
+    <input type="text" class="form-select" placeholder="Trainer name" aria-label="First name"/>
+  </div>
+  <div class="col">
+    <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>Select Category</option>
+      <option>QA Testing</option>
+      <option>Project Management</option>
+      <option>Business Intelligence</option>
+      <option>Data Science</option>
+    </select>
+  </div>
+  <div class="col">
+    <label for="inputState" class="form-label">Course Name</label>
+    <select id="inputState" class="form-select">
+      <option selected>Select Course</option>
+      <option>QA Automation</option>
+      <option>Load Runner</option>
+      <option>QA Automation Testing</option>
+      <option>Mobile App Testing</option>
+    </select>
+  </div>
+  </div>
+  <div class="mb-6">
+  <label for="exampleFormControlTextarea1" class="form-label">Trainer Profile Summary</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+</div>
+<div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Demo Link 1</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"/>
+  </div>
+  </div>
+  <div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Demo Link 2</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"/>
+  </div>
+  </div>
+  <div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Demo Link 3</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"/>
+  </div>
+  </div>
+  <div style={{display:'flex',flexDirection:'row'}}> 
+  <button className='submit-btn'>Submit</button>
+  <button className='reset-btn'>Reset</button>
+  </div>
+</div>
+</div>):(<div>
     <CourseCategory
   pageTitle="Trainer"
   headerTitle="View Trainer"
   buttonLabel="Add Trainer"
-  onAdd={handleAdd}
-></CourseCategory> <TableContainer component={Paper}>
+  onAddCategoryClick={handleAddTrendingCourseClick}/>
+   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -224,5 +294,6 @@ const handleInputChange = (e) => {
           </Button>
         </DialogActions>
       </Dialog>
+      </div>)}
  </> );
 }

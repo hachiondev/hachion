@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
 import AdminDashboard from './AdminDashboard'; // Default or dashboard component
-import CategoryTable from './CategoryTable';
 import TrendingCourseTable from './TrendingCourseTable';
 import Trainer from './Trainer';
 import Certificate from './Certificate';
@@ -13,44 +12,42 @@ import Blogs from './Blogs';
 import Support from './Support';
 import Course from './Course';
 import AddCourseCategory from './AddCourseCategory';
-import AddTrendingCourse from './AddTrendingCourse';
+
 import Other from './Other';
+import ManageCategories from './ManageCategories';
+
 
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
-  const [showAddCourse, setShowAddCourse] = useState(false);
+
   const [showAddCategory, setShowAddCategory] = useState(false);
 
-  // Function to handle category selection from sidebar
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setShowAddCategory(false);
-    setShowAddCourse(false);
+   
   };
 
   const handleAddCategoryClick = () => {
-    setShowAddCategory(true); // Show the AddCourseCategory component
-  };
-
-  const handleAddTrendingCourseClick = () => {
-    setShowAddCourse(true);
+    setShowAddCategory(true);
   };
 
   const renderContent = () => {
     if (showAddCategory) {
-      return <AddCourseCategory />; // If the "Add" button is clicked, show this component
+      return <AddCourseCategory  />; // Pass onSelectCategory
     }
-    if (showAddCourse) {
-      return <AddTrendingCourse />;
-    }
+
+
 
     switch (selectedCategory) {
       case 'Dashboard':
         return <AdminDashboard />;
       case 'Course Category':
-        return <CategoryTable onAddCategoryClick={handleAddCategoryClick} />;
-      case 'Trending Courses':
-        return <TrendingCourseTable />;
+        return <ManageCategories onAddCategoryClick={handleAddCategoryClick} />;
+   
+        case 'Trending Courses':
+        
+        return <TrendingCourseTable/>
       case 'Trainer':
         return <Trainer />;
       case 'Certificate':
@@ -67,8 +64,8 @@ const AdminDashboardView = () => {
         return <Support />;
       case 'Course':
         return <Course />;
-        case 'Other':
-          return <Other/>
+      case 'Other':
+        return <Other />;
       default:
         return <AdminDashboard />;
     }
@@ -78,8 +75,7 @@ const AdminDashboardView = () => {
     <>
       <AdminNavbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        {/* Ensure onSelectCategory is passed */}
-        <AdminSidebar onSelectCategory={handleCategorySelect} />
+        <AdminSidebar onSelectCategory={handleCategorySelect} /> {/* Sidebar with onSelectCategory prop */}
         <div className='admin-right'>
           {renderContent()}
         </div>
@@ -89,4 +85,3 @@ const AdminDashboardView = () => {
 };
 
 export default AdminDashboardView;
-

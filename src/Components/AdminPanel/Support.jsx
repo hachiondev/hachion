@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,7 +16,6 @@ import './Admin.css';
 import TextField from '@mui/material/TextField';
 import CourseCategory from './CourseCategory';
 import Pagination from '@mui/material/Pagination';
-import { useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -61,11 +62,15 @@ const rows = [
 ];
 
 export default function Support() {
-  const navigate=useNavigate();
+ 
   const [open, setOpen] = React.useState(false);
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [course, setCourse] = useState('');
 
   const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
   
+  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
+
   const handleClickOpen = (row) => {
     setSelectedRow(row); // Set the selected row data
     setOpen(true); // Open the modal
@@ -88,19 +93,55 @@ export default function Support() {
       [name]: value,
     }));
   };
-  const handleAdd=()=>{
-    navigate('/addsupport')
-  }
+  const handleCourseChange = (event) => setCourse(event.target.value);
+  
   return (
 
-    <>   
+    <>  
+     {showAddCourse?( <div className='course-category'>
+<p>Support Details <IoIosArrowForward/> Add Support </p>
+<div className='category'>
+<div className='category-header'>
+<p>Add Support</p>
+</div>
+<div class="row">
+
+  <div class="col">
+    <label className='form-label'>Name</label>
+    <input type="text" class="form-control" placeholder="Enter Name" aria-label="First name"/>
+  </div>
+  <div class="col">
+    <label className='form-label'>Mobile</label>
+    <input type="number" class="form-control" placeholder="Enter Mobile" aria-label="First name"/>
+  </div>
+  </div>
+  <div className='course-row'>
+  <div class="col">
+    <label className='form-label'>Email</label>
+    <input type="email" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+  </div>
+  <div class="col">
+    <label className='form-label'>Password</label>
+    <input type="password" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+  </div>
+</div>
+
+  <div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+
+  <div style={{display:'flex',flexDirection:'row'}}> 
+  <button className='submit-btn'>Submit</button>
+  <button className='reset-btn'>Reset</button>
+</div>
+</div></div>) :(<>
     <CourseCategory
   pageTitle="Support"
   headerTitle="Support Details"
   buttonLabel="Add Support"
-  onAdd={handleAdd}
-
-></CourseCategory> <TableContainer component={Paper}>
+  onAddCategoryClick={handleAddTrendingCourseClick}/>
+   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -202,5 +243,6 @@ export default function Support() {
           </Button>
         </DialogActions>
       </Dialog>
+      </>)}
  </> );
 }

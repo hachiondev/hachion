@@ -11,7 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
-import CourseCategory from './CourseCategory';
+
 import Pagination from '@mui/material/Pagination';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -91,7 +91,7 @@ export default function CategoryTable() {
 
   return (
     <>
-      <CourseCategory />
+    
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>

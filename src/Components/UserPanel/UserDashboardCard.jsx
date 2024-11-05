@@ -1,6 +1,6 @@
 import React from 'react';
-import '../AdminPanel/Admin.css';
-import DashboardCard from '../AdminPanel/DashboardCard'; 
+import './Dashboard.css';
+import DashboardCard from './DashboardCard'; 
 import {PiVideoFill} from 'react-icons/pi';
 import {FaMoneyBillTrendUp} from 'react-icons/fa6';
 import { PiBookOpenTextFill } from 'react-icons/pi';
@@ -10,8 +10,9 @@ const UserDashboardCard = () => {
   return (
     <>
       <div className='courses-enrolled'>
-        <h6>Dashboard</h6>
-        <div className='admin-dashboard-content'>
+        <nav className='dashboard-nav'>
+        Dashboard</nav>
+        <div className='dashboard-content-cards'>
         <DashboardCard
             icon={FaUserTimes}
             background="linear-gradient(45deg,#868F96,#596164)"

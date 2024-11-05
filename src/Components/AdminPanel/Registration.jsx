@@ -63,9 +63,11 @@ export default function Registration() {
   const navigate=useNavigate();
   const [activeTab, setActiveTab] = useState('registerlist'); // Default tab is Register List
   const [open, setOpen] = React.useState(false);
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [course, setCourse] = useState('');
 
   const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
-  
+  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   const handleClickOpen = (row) => {
     setSelectedRow(row); // Set the selected row data
     setOpen(true); // Open the modal
@@ -92,9 +94,7 @@ export default function Registration() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-const handleAdd=()=>{
-navigate('/addstudent')
-}
+const handleCourseChange = (event) => setCourse(event.target.value);
   return (
     <>   
       <div className="certificate-tabs">
@@ -121,8 +121,7 @@ navigate('/addstudent')
         pageTitle="Registration"
         headerTitle={activeTab === 'registerlist' ? 'Register List' : activeTab === 'studentdetails' ? 'Student Details' : 'Import Lead'}
         buttonLabel={activeTab === 'importlead' ? 'Upload Leads' : 'Add Student'}
-        onAdd={handleAdd
-        }
+        onAddCategoryClick={handleAddTrendingCourseClick}
       />
 
       {/* Table Content */}

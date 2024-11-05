@@ -3,7 +3,8 @@ import React from 'react'
 const UserMessages = () => {
   return (<>
     <div className='courses-enrolled'>
-    <h6>Messages</h6>
+    <nav className='dashboard-nav'>
+      Messages</nav>
     </div>
     <div className='resume-div'></div>
     </>

@@ -45,7 +45,8 @@ const rows = [
 export default function UserCategoryTable() {
   return (<>  
  <div className='courses-enrolled'>
-    <h6>Courses Enrolled</h6>
+ <nav className='dashboard-nav'>
+  Courses Enrolled</nav>
     </div>
     <div className="resume-div">
   <TableContainer component={Paper}>

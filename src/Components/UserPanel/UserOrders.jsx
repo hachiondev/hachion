@@ -39,8 +39,8 @@ function createData(S_No, course_name, Duration, Fee,Invoice_Bill) {
 }
 
 const rows = [
-  createData(1, 'QA Automation', '60 Days','30,000',<FiDownload/> ),
-  createData(2, 'Python', '30 Days', '15,000',<FiDownload/>),
+  createData(1, 'QA Automation', '60 Days','30,000',<FiDownload className='invoice-icon'/> ),
+  createData(2, 'Python', '30 Days', '15,000',<FiDownload className='invoice-icon'/>),
   
 ];
 

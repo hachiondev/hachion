@@ -157,6 +157,12 @@
   padding: 0px;
 }
 
+.courses-review{
+  display:flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .resume-div{
   background-color: #FFFFFF;
   border: 1px solid #b3b3b3;
@@ -191,6 +197,10 @@
 
 .resume-table{
 min-width: 1300;
+}
+
+.invoice-icon {
+  color: #00AEEF;
 }
 
 /* Table container styling */
@@ -278,6 +288,18 @@ font-weight: 600;
   font-weight: 700;
  /* margin-left: 500px; */
 }
+
+.write-btn{
+  padding: 5px 10px;
+  background-color: #00AEEF;
+  color: #FFFFFF;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  margin: 20px;
+  font-size: 20px;
+  font-weight: 700;
+} 
 .review-form{
   padding: 20px;
 }
@@ -339,7 +361,7 @@ padding: 0px;
 
 .resume-div {
   width: 75vw;
-  min-height: 50vh;
+  /* min-height: 50vh; */
   background-color: #FFFFFF;
   border: 1px solid #b3b3b3;
   box-shadow: 5px 5px 10px #d3d3d3;
@@ -572,6 +594,15 @@ min-width: 500;
   margin: 10px;
   font-size: 14px;
  margin-left: 40%;
+}
+
+.write-btn{
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-radius: 5px;
+  margin: 10px;
+  font-size: 14px;
 }
 
 table {

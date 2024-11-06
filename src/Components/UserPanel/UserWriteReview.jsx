@@ -1,15 +1,24 @@
 import React from 'react';
-import { IoIosArrowForward } from "react-icons/io";
+import { MdKeyboardArrowRight } from 'react-icons/md';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import './Blogs.css';
 
 const UserWriteReview = () => {
    
     return (
         <>
             <div className='courses-enrolled'>
-                <p>Reviews <IoIosArrowForward /> Write a review</p>
+            <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="./userreviews"> Reviews</a> <MdKeyboardArrowRight/>            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+            Write a Review
+            </li>
+          </ol>
+        </nav>
             </div>
 
             {/* Form Row with two input fields */}

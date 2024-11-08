@@ -163,6 +163,13 @@
   align-items: center;
 }
 
+.dashboard-card{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+}
+
 .resume-div{
   background-color: #FFFFFF;
   border: 1px solid #b3b3b3;
@@ -173,6 +180,20 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-width: 100%;
+}
+
+.resume{
+  background-color: #FFFFFF;
+  border: 1px solid #b3b3b3;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  border-radius: 20px;
+  padding: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  min-width: 100%;
 }
 
 .resume-div-table{
@@ -184,15 +205,15 @@
 .resume-div-top{
   display: flex;
   flex-direction: row;
-  margin-left: 5vw;
   align-items: center;
-  gap: 50px;
+  gap: 40px;
   padding-top: 2vh;
 }
 .resume-div-top p{
-  padding: 2.5vh;
+  padding: 10px;
   font-size: 1rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .resume-table{
@@ -254,28 +275,34 @@ min-width: 1300;
 }
 
 .resume-download-btn{
-  padding: 10px;
+  padding: 5px 10px;
   background-color: #00AEEF;
   color: white;
   font-size: 24px;
   font-weight: 700;
-  border: none;
   border-radius: 10px;
   border: 1px solid white;
   box-shadow: 5px 5px 5px #d3d3d3;
-  color: white;
-    padding: 1vh;
-    font-size: 1.25rem;
- font-weight: 700;
- margin: 2vh;
+  margin: 2vh;
+  white-space: nowrap;
 }
 .formgroup-checkbox{
   display: flex;
- margin-left: 7vw;
+  justify-content: flex-start;
  margin-top: 3vh;
+ padding: 10px;
 font-size: 1rem;
 font-weight: 600;
+white-space: nowrap;
 }
+
+.button-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .explore-btn{
   padding: 5px 10px;
   background-color: #00AEEF;
@@ -299,7 +326,32 @@ font-weight: 600;
   margin: 20px;
   font-size: 20px;
   font-weight: 700;
-} 
+}
+
+.update-btn{
+  padding: 5px 10px;
+  background-color: #00AEEF;
+  color: #FFFFFF;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  margin: 5px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#exampleFormControlTextarea1 {
+  max-width: 100%;
+  min-width: 600px;
+}
+.form-control, .form-select{
+  width: 100%;
+  min-width: 200px;
+  margin: 5px;
+  height: 50px;
+  border: 1px solid #b3b3b3;
+}
+
 .review-form{
   padding: 20px;
 }
@@ -308,6 +360,54 @@ font-weight: 600;
 flex-grow: 1;
 padding: 0px;
 }
+
+.write-review {
+ display: block;
+ width: 100%;
+ padding: 2vh;
+ flex-direction: column;
+  }
+
+  p {
+    font-size: 24px;
+    font-weight: 600;
+    padding-top: 20px;
+  }
+
+  .row {
+    display: block;
+  }
+
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #nameInput, #emailInput, #mobileInput, #locationInput, #genderInput, #oldPasswordInput, #newPasswordInput, #confirmPasswordInput, #extraFieldInput {
+  width: 400px;
+  height: 50px;
+}
+
+/* Flex layout to organize input fields in three rows with three columns */
+.input-row {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.profile {
+  padding: 10px;
+  margin-right: 50px;
+}
+
+.me-3 {
+ width: 100%;
+  height: auto;
+}
+
 @media only screen and (max-width: 1366px) {
 /* .sidebar-user {
   width: 250px;
@@ -323,6 +423,16 @@ padding: 0px;
   width: 70vw; /* Reduce width */
   padding: 1vh;
 }
+
+.resume {
+  width: 70vw;
+  padding: 1vh;
+}
+
+.formgroup-checkbox {
+  margin-top: 10px;
+ }
+
 }
 
 @media only screen and (max-width: 1024px) {
@@ -359,40 +469,72 @@ padding: 0px;
   font-size: 16px;
 }
 
+.dashboard-card {
+  width: 75vw;
+  margin: 0 auto; /* Center the content */
+  overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
+  }
+
 .resume-div {
   width: 75vw;
-  /* min-height: 50vh; */
-  background-color: #FFFFFF;
-  border: 1px solid #b3b3b3;
-  box-shadow: 5px 5px 10px #d3d3d3;
   border-radius: 20px;
   padding: 2vh;
   margin: 0 auto; /* Center the content */
   overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
   }
+
+  .resume {
+    width: 75vw;
+    padding: 2vh;
+    margin: 0 auto; /* Center the content */
+    overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
+    }
+
+    p {
+      font-size: 16px;
+      padding-top: 10px;
+    }
+
+    .formgroup-checkbox {
+      margin-top: 10px;
+     }
+
   .resume-download-btn{
-  padding: 10px;
-  background-color: #00AEEF;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
   border-radius: 10px;
-  box-shadow: 5px 5px 5px #d3d3d3;
+  margin: 5px;
   }
 }
 
 /* For tablets */
 @media (max-width: 1024px) {
-.resume-div {
+  .dashboard-card {
+    width: 67vw;
+    padding: 1vh;
+  }
+
+  .resume-div {
   width: 67vw; /* Reduce width */
   padding: 1vh;
   font-size: 1.25rem;
 }
 
+.resume {
+  width: 67vw;
+  padding: 1vh;
+  font-size: 1.25rem;
+}
+
+p {
+  font-size: 20px;
+  padding-top: 15px;
+}
+
 .resume-download-btn {
   font-size: 16px; /* Reduce button font size */
   padding: 0.75vh;
+  margin: 5px;
 }
 
 table {
@@ -402,18 +544,23 @@ table {
 
 /* For mobile screens */
 @media (max-width: 768px) {
-.resume-div {
+  .dashboard-card {
+    width: 65vw;
+    padding: 0.5vh;
+  }
+
+  .resume-div {
   width: 65vw; /* Further reduce width */
+  padding: 0.5vh;
+}
+
+.resume {
+  width: 65vw;
   padding: 0.5vh;
 }
 
 .resume-div-top p {
   font-size: 0.9rem; /* Adjust paragraph font size */
-}
-
-.resume-download-btn {
-  font-size: 0.9rem; /* Reduce button font size */
-  padding: 0.5vh;
 }
 
 table {
@@ -501,6 +648,7 @@ font-size: 16px;
     flex-direction: column;
     color:white;
     justify-content: space-between;
+    padding: 5px 0;
   }
   
   .dashboard-heading {
@@ -511,7 +659,7 @@ font-size: 16px;
   
   .dashboard-content {
     font-size: 14px;
-    margin-bottom: 5px;
+    padding-bottom: 10px;
     text-align: right;
   }
   
@@ -525,13 +673,33 @@ font-size: 16px;
     background: #FFFFFF;
     box-shadow: 5px 5px 10px #d3d3d3;
   }
+
+  .dashboard-card{
+    min-width: 100%;
+    padding: 5px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 0
+  }
   
   .dashboard-content-cards{
     display: grid;
     justify-content: center;
     min-width: 90%;
-    padding: 10px;
+    padding: 5px;
+    gap: 10px;
   }
+
+  .resume{
+    min-width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 0;
+  } 
   /* Order page */
   .resume-div{
     min-width: 100%;
@@ -556,12 +724,14 @@ font-size: 16px;
   margin-left: 5px;
   align-items: center;
   gap: 10px;
-  padding-top: 10px;
+  padding-top: 20px;
+  flex-wrap: wrap;
 }
 .resume-div-top p{
-  padding: 5px;
+  padding: 0px;
   font-size: 14px;
   font-weight: 600;
+  margin-bottom: 0;
 }
 
 .resume-table{
@@ -593,7 +763,6 @@ min-width: 500;
   border-radius: 5px;
   margin: 10px;
   font-size: 14px;
- margin-left: 40%;
 }
 
 .write-btn{
@@ -605,6 +774,60 @@ min-width: 500;
   font-size: 14px;
 }
 
+.row {
+  display: flex;
+  padding: 10px;
+} 
+
+.center {
+  display: block;
+}
+
+p {
+  font-size: 16px;
+  padding-top: 20px;
+}
+
+.update-btn{
+  width: 95%;
+  padding: 5px auto;
+  background-color: #00AEEF;
+  color: #FFFFFF;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  margin: 5px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#exampleFormControlTextarea1.form-control {
+  max-width: 100%;
+  min-width: 250px;
+}
+
+.input-group, .form-control, .form-select{
+  height: 35px;
+  margin-bottom: 10px !important;
+  border: 1px solid #b3b3b3;
+  }
+
+.input-row {
+  display: flex;
+  padding: 10px;
+  padding-top: 0;
+  margin-bottom: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profile {
+  padding: 10px;
+  margin-right: 0px;
+}
+
 table {
   font-size: 8px; /* Reduce table font size */
 }
@@ -614,9 +837,28 @@ th, td {
 }
 
 .resume-download-btn {
-  font-size: 0.8rem; /* Further reduce button font size */
-  padding: 0.25vh;
+  font-size: 14px; /* Further reduce button font size */
+  padding: 5px 10px;
+  border-radius: 5px;
 }
+
+.formgroup-checkbox {
+ margin-top: 10px;
+}
+
+.formgroup-checkbox .custom-label{
+  display: flex;
+ margin-left: 10px;
+ margin-top: 0;
+font-size: 12px;
+}
+
+.select-menu .MuiSelect-select {
+  font-size: 12px !important;
+  padding: 5px;
+  min-width: 200px;
+}
+
 }
 table {
 width: 100%; /* Make table take full width */

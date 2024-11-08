@@ -54,6 +54,7 @@ export default function UserOrders() {
     </div>
     <div className='resume-div'>
       <div className='resume-div-table'>
+      <div className='button-div'>
     <TableContainer component={Paper}>
             <Table className='resume-table' aria-label="customized table">
               <TableHead>
@@ -81,6 +82,7 @@ export default function UserOrders() {
     </div>
     <div>
     <button className='explore-btn'  onClick={()=>navigate('/course')}>Explore All Courses</button>
+    </div>
     </div>
     </div>
     </>

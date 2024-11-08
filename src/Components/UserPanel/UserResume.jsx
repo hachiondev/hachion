@@ -19,12 +19,12 @@ const UserResume = () => {
     <nav className='dashboard-nav'>
       Download Resume</nav>
     </div>
-    <div className='resume-div'>
+    <div className='resume'>
         <div className='resume-div-top'>
         <p>Course Name</p>
     <div>
  
-      <FormControl sx={{ m: 1, minWidth: 350 }}>
+      <FormControl sx={{ m: 1, minWidth: 250 }} className="select-menu">
         <Select
           value={course}
           onChange={handleChange}
@@ -45,13 +45,14 @@ const UserResume = () => {
     </div>
     <div className='formgroup-checkbox'>
     <FormGroup>
-      <FormControlLabel control={<Checkbox />} label="Junior Level Position Resume" />
-      <FormControlLabel required control={<Checkbox />} label="Middle Level Position Resume" />
-      <FormControlLabel required control={<Checkbox />} label="Senior Level Position Resume" />
+      <FormControlLabel control={<Checkbox />} label="Junior Level Position Resume" classes={{ label: 'custom-label' }}/>
+      <FormControlLabel control={<Checkbox />} label="Middle Level Position Resume" classes={{ label: 'custom-label' }}/>
+      <FormControlLabel control={<Checkbox />} label="Senior Level Position Resume" classes={{ label: 'custom-label' }}/>
     </FormGroup>
     </div>
     </div>
-    </> )
+    </> 
+    )
 }
 
 export default UserResume

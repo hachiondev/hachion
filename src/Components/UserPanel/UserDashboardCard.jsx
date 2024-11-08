@@ -12,6 +12,7 @@ const UserDashboardCard = () => {
       <div className='courses-enrolled'>
         <nav className='dashboard-nav'>
         Dashboard</nav>
+        <div className="dashboard-card">
         <div className='dashboard-content-cards'>
         <DashboardCard
             icon={FaUserTimes}
@@ -41,6 +42,7 @@ const UserDashboardCard = () => {
           />
         
         </div>
+      </div>
       </div>
     </>
   );

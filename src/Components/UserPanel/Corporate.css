@@ -78,6 +78,7 @@
     display: flex;
     flex-wrap: wrap; 
     justify-content: space-between;
+    padding: 20px;
    
 }
 
@@ -106,7 +107,6 @@
     border-radius: 20px;
 }
 .association{
- 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,7 +124,7 @@
 .customize-training{
    align-items: center;
    justify-content: center;
-    gap: 4vh;
+    gap: 3vh;
 }
 .customize-training-div{
     
@@ -229,7 +229,7 @@
    padding: 2vw;
     background-color: #fff;
     margin-left: 15vw;
-    width: 70vw;
+    width: 72vw;
     margin-right: 15vw;
     border-radius: 20px;
     display: flex;
@@ -238,10 +238,15 @@
 }
 
 .customized-column {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
     justify-content: space-evenly;
-   gap: 10px;
+    gap: 10px;
+    width: auto;
+    margin: 5px auto;
+    margin-top: 10px;
+    padding: 5px;
+    align-items: center;    
 }
 .customized-row{
     display: flex;
@@ -276,7 +281,10 @@
 }
 
 .training-img {
-    width: 420px;
+    height: 420px;
+    width: 500px;
+    margin-left: 10px;
+    padding: 5px;
     align-self: center;
 }
 
@@ -500,7 +508,7 @@
       width: 80px;
        color: rgba(0, 174, 239, 1);
         margin-top: -6vh; 
-        margin-left: 94vw;
+        margin-left: 92vw;
   }
 
   .quotesleft-icon{
@@ -783,7 +791,7 @@
 }
   .training-events{
     background-color: #EEEEEE;
-    margin: 0px;
+    margin: 10px;
   }
 .card-holder{
     width: 80%;
@@ -1116,7 +1124,8 @@
     .hachion-content {
         margin-left: 10px;
         margin-bottom: 20px;
-        width: 95%;
+        width: 90%;
+        margin: 0 auto;
     }
 
     .about-us-row {
@@ -1126,6 +1135,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 5px;
+        padding: 10px;
     }
 
     .about-us-div-content {
@@ -1324,6 +1334,7 @@
       
       .training-events {
         padding: 10px;
+        margin: 0;
       }
 
       .association{
@@ -1529,7 +1540,8 @@
       }    
     
       .learner-cover {
-        width: 100%;
+        max-width: 100%;
+        min-width: 350px;
         height: 350px;
         position: relative;
         display: block;

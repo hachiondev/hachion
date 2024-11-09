@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { RiDeleteBinLine } from "react-icons/ri";
+import './Blogs.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -15,7 +16,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.common.black,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
     color: theme.palette.common.black, // white text color for table columns
     border: `1px solid ${theme.palette.common.black}`, // white border for each cell
   },
@@ -42,28 +42,28 @@ const rows = [
 export default function EnrollmentTable() {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+      <Table className='table-details' sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Course Name</StyledTableCell>
-            <StyledTableCell align="right">Batch</StyledTableCell>
-            <StyledTableCell align="right">Fee</StyledTableCell>
-            <StyledTableCell align="right">% Discount</StyledTableCell>
-            <StyledTableCell align="right">Total</StyledTableCell>
-            <StyledTableCell align="right">Action</StyledTableCell>
+            <StyledTableCell  align="center">Course Name</StyledTableCell>
+            <StyledTableCell align="center">Batch</StyledTableCell>
+            <StyledTableCell align="center">Fee</StyledTableCell>
+            <StyledTableCell align="center">% Discount</StyledTableCell>
+            <StyledTableCell align="center">Total</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.course_name}>
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell component="th" scope="row"  align="center">
                 {row.course_name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.batch}</StyledTableCell>
-              <StyledTableCell align="right">{row.fee}</StyledTableCell>
-              <StyledTableCell align="right">{row.discount}</StyledTableCell>
-              <StyledTableCell align="right">{row.total}</StyledTableCell>
-              <StyledTableCell align="right">{row.action}</StyledTableCell>
+              <StyledTableCell align="center">{row.batch}</StyledTableCell>
+              <StyledTableCell align="center">{row.fee}</StyledTableCell>
+              <StyledTableCell align="center">{row.discount}</StyledTableCell>
+              <StyledTableCell align="center">{row.total}</StyledTableCell>
+              <StyledTableCell align="center">{row.action}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

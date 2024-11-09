@@ -314,14 +314,15 @@ background-color: #00AEEF;
 
 #autoScrollingBanner .carousel-indicators {
 position: absolute; /* Ensure the indicators are positioned relative to the banner */
-top:59vh; /* Set 20px margin from the bottom of the banner */
+top:auto; /* Set 20px margin from the bottom of the banner */
+bottom: 0vh; 
 left: 35%; /* Center the indicators horizontally */
 transform: translateX(-35%); /* Centering adjustment */
 }
 
 #autoScrollingBanner .carousel-indicators button {
-width: 0.6vw;
-height: 1.2vh;
+width: 10px;
+height: 10px;
 border-radius: 50%;
 background-color: black 50% opacity !important; 
 border: 2px solid #000; 
@@ -539,6 +540,9 @@ text-align: center;
 background-color: white !important;
 color: rgba(16, 201, 0, 1) ;
 white-space: nowrap;
+}
+.mob-card-header{
+  display: none;
 }
 
 .card-header-icon{
@@ -1077,10 +1081,9 @@ gap:1vh;
       }
       
       #autoScrollingBanner .carousel-indicators {
-        top: auto; /* Reset top */
-        bottom: 2vh; /* Position 2vh from the bottom */
-        left: 50%; /* Center horizontally */
-        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        left: 40%; /* Center horizontally */
       }
       
       .coupon-btn, .register-now-btn {
@@ -1123,13 +1126,6 @@ gap:1vh;
 
 .login-div-content {
   font-size: 1rem;
-}
-
-#autoScrollingBanner .carousel-indicators {
-  top: auto; /* Reset top */
-  bottom: 2vh; /* Position 2vh from the bottom */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%);
 }
 
 .coupon-btn, .register-now-btn {
@@ -1540,13 +1536,6 @@ display: none !important; /* Hide the normal navbar items on mobile */
   justify-content: flex-start;
   gap: 10px;
   }
-
-#autoScrollingBanner .carousel-indicators {
-  position: absolute; /* Ensure the indicators are positioned relative to the banner */
-  top:59vh; /* Set 20px margin from the bottom of the banner */
-  left: 35%; /* Center the indicators horizontally */
-  transform: translateX(-35%); /* Centering adjustment */
-  }
   
   #autoScrollingBanner .carousel-indicators button {
   width: 5px;
@@ -1561,10 +1550,8 @@ display: none !important; /* Hide the normal navbar items on mobile */
 #autoScrollingBanner .carousel-indicators {
   display: flex;
   justify-content: center;
-top: auto;
-bottom: 0vh; /* 2vh from bottom */
-/* left: 50%; */
-transform: translateX(-50%);
+  left: 35%;
+  bottom: 0vh;
 }
 
 .coupon-btn, .register-now-btn {

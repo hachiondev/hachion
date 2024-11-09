@@ -207,13 +207,13 @@
     gap:2vw;
     min-width: 75vw;
   }
-  .dashboard-text{
-    color:white;
-  }
+
   .dashboard-div {
     display: flex;
     align-items: center;
- 
+    justify-content: space-between;
+    width: 230px;
+    height: 140px;
     border-radius: 20px;
     padding: 15px;
     box-shadow: 5px 5px 5px #d3d3d3;
@@ -225,7 +225,9 @@
   
   .dashboard-text {
     display: flex;
+    align-items: flex-end;
     flex-direction: column;
+    color:white;
   }
   
   .dashboard-heading {

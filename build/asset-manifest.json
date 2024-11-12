@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.1fe0cb57.css",
-    "main.js": "/static/js/main.ef51b293.js",
+    "main.css": "/static/css/main.e3437b46.css",
+    "main.js": "/static/js/main.4f762bf3.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
     "static/media/Group 39809.png": "/static/media/Group 39809.88bf930e4bf2b59cb676.png",
@@ -64,14 +64,15 @@
     "static/media/WorkdayBlog.png": "/static/media/WorkdayBlog.af3c863223108538e6f9.png",
     "static/media/ProgrammingBlog.png": "/static/media/ProgrammingBlog.6923c5e24337b143f062.png",
     "static/media/usflag.jpg": "/static/media/usflag.f1c957ad98d5d5be7112.jpg",
+    "static/media/logo.png": "/static/media/logo.c146b0f898eac15c40a7.png",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.1fe0cb57.css.map": "/static/css/main.1fe0cb57.css.map",
-    "main.ef51b293.js.map": "/static/js/main.ef51b293.js.map",
+    "main.e3437b46.css.map": "/static/css/main.e3437b46.css.map",
+    "main.4f762bf3.js.map": "/static/js/main.4f762bf3.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1fe0cb57.css",
-    "static/js/main.ef51b293.js"
+    "static/css/main.e3437b46.css",
+    "static/js/main.4f762bf3.js"
   ]
 }

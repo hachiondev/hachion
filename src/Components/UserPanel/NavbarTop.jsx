@@ -132,7 +132,7 @@ const NavbarTop = () => {
               src={logo}
               alt="logo"
               onClick={handleClick}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', height: '40px', marginLeft: '15%', marginTop: '5px' }}
             />
 
             {/* Conditional rendering for login/logout */}
@@ -143,10 +143,10 @@ const NavbarTop = () => {
               <div className="user-name">
               <Avatar alt="user_name" src={profile1} /> Hachion
               </div>
-                <div className="drawer-item" onClick={() => navigate('/userdashboard')}>
+                <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
                 <FaUserAlt style={{color:'#00AEEF'}}/> Dashboard
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/userdashboard')}>
+                <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
                 <IoMdSettings style={{color:'#00AEEF'}}/> Settings
                 </div>
 

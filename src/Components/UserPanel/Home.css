@@ -183,7 +183,7 @@ background-color: #EEEEEE !important;
 display: flex;
 align-items: center;
 justify-content: space-between;
-flex-wrap: nowrap; /* Prevent wrapping */
+flex-wrap: nowrap; 
 }
 
 .search-div-home {
@@ -232,6 +232,7 @@ color: black;
 text-decoration: none;
 padding: 10px 15px;
 transition: color 0.3s ease;
+white-space: nowrap;
 }
 
 .nav-item-link:hover {
@@ -279,7 +280,20 @@ padding: 5px 10px;
 font-size: 14px;
 border-bottom: 1px solid #eeeeee;
 cursor: pointer;
+white-space: nowrap;
 }
+
+.drawer-sub-item {
+  padding: 5px;
+  font-size: 14px;
+  gap: 8px;
+  margin-left: 20%;
+  border-bottom: 1px solid #eeeeee;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}  
 
 .drawer-button {
 width: 90%;
@@ -1062,54 +1076,6 @@ gap:1vh;
 }
 
 @media screen and (max-width: 1180px) {
-      .topbar {
-        height: 60px;
-        padding: 0 5vw;
-      }
-      
-      .topbar-left {
-        width: auto; /* Allow auto width to fit content */
-      }
-      
-      .whatsapp-number,
-      .training-email,
-      .query-content {
-        font-size: 20px;
-      }
-      
-      .training-mail-icon {
-        font-size: 1.5rem;
-      }
-      
-      .login-div-content {
-        font-size: 1rem;
-      }
-      
-      #autoScrollingBanner .carousel-indicators {
-        display: flex;
-        justify-content: center;
-        left: 40%; /* Center horizontally */
-      }
-      
-      .coupon-btn, .register-now-btn {
-        font-size: 1rem; /* Adjust button font size for smaller screens */
-        padding: 0.8vh;
-      }
-      .training-card-holder{
-        max-width: 94vw;
-        gap: 10px;
-      }
-
-
-.whatsapp-number,
-.training-email,
-.query-content {
-  font-size: 28px;
- 
-}
-}
-
-@media screen and (max-width: 1180px) {
 .topbar {
   height: 60px;
   padding: 0 5vw;
@@ -1133,13 +1099,47 @@ gap:1vh;
   font-size: 1rem;
 }
 
-.coupon-btn, .register-now-btn {
-  font-size: 1rem; /* Adjust button font size for smaller screens */
-  padding: 0.8vh;
-}
 .training-card-holder{
   max-width: 94vw;
   gap: 10px;
+}
+
+.navbar-nav {
+  gap: 2px;
+  font-size: 12px;
+  margin: 0;
+  margin-left: 0px;
+  padding: 0 5px;
+  justify-content: space-around;
+}
+
+.search-div-home {
+  width: 250px;
+  margin-left: 0 !important
+}
+
+.btn-search-home {
+  width: 80px;
+  height: 60px;
+  }
+
+.nav-item-link {
+  height: auto;
+  font-size: 16px;
+  padding: 5px;
+  white-space: nowrap;
+  }
+
+#autoScrollingBanner .carousel-indicators {
+  display: flex;
+  justify-content: center;
+  left: 40%; /* Center horizontally */
+}
+
+.coupon-btn, .register-now-btn {
+  font-size: 1rem; /* Adjust button font size for smaller screens */
+  padding: 5px 10px;
+  margin-bottom: -30px;
 }
 }
 @media (min-width: 1025px) and (max-width: 1366px) {
@@ -1165,20 +1165,40 @@ gap:1vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px; /* Add padding to reduce the space */
+    padding: 0 8px; /* Add padding to reduce the space */
   }
   
   .search-div-home {
-    width: 250px; /* Reduce width for tablet screens */
+    width: 200px; /* Reduce width for tablet screens */
     margin-left: 0 !important /* Remove margin for better alignment */
   }
   
   .navbar-nav {
-    gap: 2px; /* Add gap between the items */
+    gap: 2px;
     font-size: 12px;
     margin: 0;
     margin-left: 0px;
+    padding: 0 5px;
+    justify-content: space-around;
   }
+
+  .nav-item-link {
+    font-size: 14px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    }
+
+    .nav-item.active {
+      border-radius: 5px;
+      padding-left: 0.5vh;
+      padding-right: 0.5vh;
+      }
+
+      .coupon-btn, .register-now-btn {
+        font-size: 12px;
+        padding: 3px 5px;
+        border-radius: 20px;
+        }
   
   .training-events{
     margin-bottom:10px;
@@ -1428,9 +1448,10 @@ padding: 10px;
 
 .navbar img {
 /* margin-left: 1px; */
-height: 32px;
+height: 35px;
 display: flex;
 align-items: center;
+justify-content: center;
 }
 
 .navbar .container-fluid {
@@ -1522,6 +1543,7 @@ display: none !important; /* Hide the normal navbar items on mobile */
 .profile {
   display: block;
   align-items: center;
+  padding-top: 0 !important;
   }
 
 .user-name{

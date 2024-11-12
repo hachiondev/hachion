@@ -27,7 +27,6 @@ import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Enrollment from './Components/UserPanel/Enrollment';
-import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddBanner from './Components/AdminPanel/AddBanner';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
@@ -73,7 +72,6 @@ function App() {
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
-      <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addbanner' element={<AddBanner/>}/>
    <Route path='/addtrending' element={<TrendingCourse/>}/>

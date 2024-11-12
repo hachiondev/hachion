@@ -144,6 +144,17 @@
   box-shadow: 5px 5px 10px #d3d3d3;
 }
 
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title {
+  font-size: 24px;
+}
+
 .dashboard-content-cards{
   display:flex;
   flex-wrap: wrap;
@@ -222,6 +233,19 @@ min-width: 1300;
 
 .invoice-icon {
   color: #00AEEF;
+}
+
+.edit-button {
+  color: #00AEEF !important;
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+/* Delete Button Styles */
+.delete-button {
+  color: red !important; 
+  font-size: 24px;
+  transition: transform 0.3s ease;
 }
 
 /* Table container styling */
@@ -335,7 +359,7 @@ white-space: nowrap;
   border-radius: 10px;
   border: none;
   box-shadow: 5px 5px 5px #d3d3d3;
-  margin: 5px;
+  margin: 5px !important;
   font-size: 20px;
   font-weight: 700;
 }
@@ -558,6 +582,14 @@ padding: 0px;
   border-radius: 10px;
   margin: 5px;
   }
+
+  .resume-div-top p {
+    font-size: 0.9rem; /* Adjust paragraph font size */
+  }
+  
+  table {
+    font-size: 10px; /* Smaller font size in table */
+  }
 }
 
 /* For tablets */
@@ -592,32 +624,6 @@ padding: 0px;
 
 table {
   font-size: 12px; /* Reduce font size in table */
-}
-}
-
-/* For mobile screens */
-@media (max-width: 768px) {
-  .dashboard-card {
-    width: 65vw;
-    padding: 0.5vh;
-  }
-
-  .resume-div {
-  width: 65vw; /* Further reduce width */
-  padding: 0.5vh;
-}
-
-.resume {
-  width: 65vw;
-  padding: 0.5vh;
-}
-
-.resume-div-top p {
-  font-size: 0.9rem; /* Adjust paragraph font size */
-}
-
-table {
-  font-size: 10px; /* Smaller font size in table */
 }
 }
 
@@ -727,6 +733,10 @@ font-size: 16px;
     box-shadow: 5px 5px 10px #d3d3d3;
   }
 
+  .title {
+    font-size: 16px;
+  }
+
   .dashboard-card{
     min-width: 100%;
     padding: 5px;
@@ -809,6 +819,11 @@ min-width: 500;
   padding: 10px !important;
 }
 
+.edit-button,
+.delete-button {
+  font-size: 20px !important;
+}
+
 .explore-btn{
   display: flex;
   align-items: center;
@@ -836,34 +851,29 @@ min-width: 500;
   display: block;
 }
 
+.write-review {
+  display: block;
+  margin: 10px;
+  padding: 0;
+   }
+
 .password-title {
   font-size: 16px;
   padding-top: 20px;
 }
 
 .update-btn{
-  width: 95%;
+  width: 100%;
   padding: 5px auto;
-  background-color: #00AEEF;
-  color: #FFFFFF;
   border-radius: 5px;
   border: none;
-  box-shadow: 5px 5px 5px #d3d3d3;
-  margin: 5px;
   font-size: 14px;
-  font-weight: 700;
 }
 
 #exampleFormControlTextarea1.form-control {
   max-width: 100%;
   min-width: 250px;
 }
-
-.input-group, .form-control, .form-select{
-  height: 35px;
-  margin-bottom: 10px !important;
-  border: 1px solid #b3b3b3;
-  }
 
 .input-row {
   display: flex;
@@ -878,8 +888,7 @@ min-width: 500;
 
 .country-code-profile {
   font-size: 16px;
-  height: 35px;
-  margin:0 0 5px 5px !important;
+  margin:0 0 15px 5px !important;
 }
 
 .profile {

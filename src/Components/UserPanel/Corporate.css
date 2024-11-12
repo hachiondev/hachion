@@ -29,7 +29,6 @@
     color:#fff;
     padding-top: 6vh;
     text-align: center;
-
 }
 .corporate-banner-bottom-content{
     font-size: 2.1rem;
@@ -38,21 +37,25 @@
     text-align: center;
     color: #fff;
 }
+
+.corporate-button{
+   display: flex;
+   justify-content: center;
+}
+
 .contact-us-corporate{
     margin-top:80px;
     border-radius: 10px;
     border: 1px solid white;
-    padding: 1.5vh 5vh 1.5vh 5vh;
+    padding: 15px 40px;
     background-color: #00AEEF;
     box-shadow: 5px 5px 5px #000000 opacity 30%;
     color: white;
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 700;
-    margin-left: 700px;
 }
 .hachion-content {
     background-color: white;
-  
     margin-left: 15vw;
     width: 70vw;
     padding: 5px;
@@ -465,7 +468,7 @@
      }
    
      .carousel-indicators {
-       top: 37vh;
+       top: 310px;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -491,6 +494,7 @@
    .learner-card-item {
     display: flex;
     justify-content: center;
+    overflow: hidden;
   }
   .left-quotes{
     height: 80px;
@@ -872,7 +876,6 @@
 }
 @media  (min-width:1180px) and (max-width: 1366px){
     .contact-us-corporate{
-        margin-left: 480px;
         margin-top: 50px;
     }
     .hachion-content{
@@ -992,15 +995,20 @@
  
 }
  
-@media (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
 
     .learner-card-item {
-      display: flex;
-      justify-content: center; 
+        flex-direction: row;
+        flex-wrap: wrap;
     }
+
+    .learner-card-item > div {
+    flex: 1 1 45%;
+    max-width: 45%;
+  }
   
     .learner-card {
       width: 65vw; 
@@ -1019,12 +1027,18 @@
       width: 70vw; 
     }
     .custom-prev-icon{
-        margin-left: -10vh;
+        margin-left: 5px;
     }
-    /* .learner-image{
-        height: 90px;
-        width: 100px;
-    } */
+    .learner-card-item {
+        flex-direction: column;
+        height: 350px;
+        overflow: hidden;
+      }
+      .learner-card-item > div {
+        width: 70%; 
+        max-width: 100%;
+      }
+
     .profile-image{
         height: 80px !important;
         width: 80px !important;
@@ -1052,7 +1066,7 @@
 
 @media  (min-width:480px) and (max-width: 1179px){
     .contact-us-corporate{
-        margin-left: 300px;
+        padding: 10px 30px;
         margin-top: 50px;
     }
 
@@ -1555,7 +1569,6 @@
     }
     .contact-us-corporate{
         margin-top: 0px;
-        margin-left: 40%;
         font-size: 14px;
         padding: 3px 8px;
         border-radius: 5px;
@@ -1746,6 +1759,7 @@
 
     .training-img {
         width: 320px; /* Full width for the image */
+        height: 320px;
         max-width: 100%; /* Maintain the image's aspect ratio */
         margin: 20px auto;
     }

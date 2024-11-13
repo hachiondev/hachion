@@ -302,7 +302,6 @@
    margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
-    
 }
 .enquiry-form{
     padding: 40px;
@@ -377,10 +376,7 @@
        margin-left: 20px;
        margin-top: -2vh;
    }
-   /* .profile-image{
-       height: 120px !important;
-       width: 120px !important;
-   } */
+
    .learner-top{
        display: flex;
        flex-direction: row;
@@ -858,23 +854,7 @@
     width: 100%;
     }
 
-@media  (min-width:1180px) and (max-width: 1366px){
-.learner-info{
-    margin-left: 10px;
-    margin-top: -15px;
-}
-.left-quotes{
-    margin-top: -40px;
-}
-.right-quotes{
-    margin-bottom: -50px;
-    margin-left: 92vw;
-}
-.custom-next-icon{
-    margin-right: -220px;
-}
-}
-@media  (min-width:1180px) and (max-width: 1366px){
+@media  (min-width:1181px) and (max-width: 1366px){
     .contact-us-corporate{
         margin-top: 50px;
     }
@@ -932,6 +912,27 @@
         margin-bottom: -50px;
         margin-left: 92vw;
     }
+    .custom-next-icon{
+        margin-right: -220px;
+    }
+
+    #advisor1{
+    
+        width: 400px !important;
+    }
+    .advisor-row{
+        gap: 10px !important;
+    }
+    #advisor2{
+        width: 220px !important;
+    }
+    #advisor3{
+        height: 120px;
+        width: 800px !important;
+    }
+    .advisor-form{
+        width: 95%;
+    }
 }
 
 @media  (min-width:780px) and (max-width: 1179px){
@@ -945,19 +946,25 @@
     }
   }
 
-  @media (max-width: 1180px) {
+  @media (min-width:1025px) and (max-width: 1180px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
 
     .learner-card-item {
-      display: flex;
-      justify-content: center; 
+      display: block;
+     flex-direction: column;
+    height: 330px;
+    overflow: hidden;
     }
+    .learner-card-item > div {
+        flex: 70%;
+        max-width: 100%;
+      }
   
     .learner-card {
-      width: 68vw; 
-      margin-left:160px;
+        display: block;
+        width: 75vw;
     }
     .left-quotes{
         margin-left: 2vh;
@@ -967,75 +974,109 @@
         margin-left: 10px;
     }
     .right-quotes{
-        margin-left: 90vw;
+        margin-left: 87vw;
         margin-bottom: -40px;
     }
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        top: 320px;
+      }
+    
+    .custom-prev-icon, .custom-next-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+      }
+      .custom-next-icon{
+        margin-right: -220px;
+    }
+
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+}
+ 
+@media (min-width: 769px) and (max-width: 1024px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
 
     .learner-card-item {
-      display: flex;
-      justify-content: center; 
+        display: block;
+        flex-direction: column;
+        height: 335px;
+        overflow: hidden;
     }
+
+    .learner-card-item > div {
+    flex: 80%;
+    max-width: 100%;
+  }
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    top: 320px;
+  }
+
+.custom-prev-icon, .custom-next-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0px;
+  }
+  .custom-next-icon{
+    margin-right: -300px;
+}
   
     .learner-card {
-      width: 68vw; 
-      margin-left:160px;
+    display: block;
+      width: 65vw; 
     }
     .left-quotes{
         margin-left: 2vh;
     }
-    .learner-info{
-        margin-top: 20px;
-    }
     .right-quotes{
-        margin-left: 90vw;
-    }
- 
-}
- 
-@media (min-width: 768px) and (max-width: 1024px) {
-    .blogs-container {
-        grid-template-columns: repeat(4, 1fr); 
-      }
-
-    .learner-card-item {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .learner-card-item > div {
-    flex: 1 1 45%;
-    max-width: 45%;
-  }
-  
-    .learner-card {
-      width: 65vw; 
-    }
-    .left-quotes{
-        margin-left: 4vh;
+        margin-left: 88vw;
+        margin-bottom: -30px;
     }
 }
   
-@media (max-width: 768px) {
+@media(min-width:481px) and (max-width: 768px) {
     .blogs-container {
         grid-template-columns: repeat(3, 1fr); 
       }
 
     .learner-card {
+    display: block;
       width: 70vw; 
+      margin-left: 13%;
     }
-    .custom-prev-icon{
-        margin-left: 5px;
-    }
+
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        top: 320px;
+      }
+    
+    .custom-prev-icon, .custom-next-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+      }
+
     .learner-card-item {
         flex-direction: column;
-        height: 350px;
+        height: 340px;
         overflow: hidden;
       }
       .learner-card-item > div {
-        width: 70%; 
+        width: 75%; 
         max-width: 100%;
       }
 
@@ -1064,7 +1105,7 @@
     }
 }
 
-@media  (min-width:480px) and (max-width: 1179px){
+@media  (min-width:481px) and (max-width: 1179px){
     .contact-us-corporate{
         padding: 10px 30px;
         margin-top: 50px;
@@ -1617,7 +1658,7 @@
         margin: 5px;
     }
 
-    .row {
+    .advisor-row {
         flex-direction: column !important; /* Stack the form fields vertically */
         gap: 0px !important; /* Reduce gap between elements for mobile */
       }
@@ -1759,7 +1800,7 @@
 
     .training-img {
         width: 320px; /* Full width for the image */
-        height: 320px;
+        height: 300px;
         max-width: 100%; /* Maintain the image's aspect ratio */
         margin: 20px auto;
     }
@@ -1816,9 +1857,9 @@
     border: 1px solid #b3b3b3;
     padding: 5px;
 }
-.row{
+.advisor-row{
     display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     /* gap: 50px !important; */
 }
   
@@ -1849,7 +1890,7 @@
 }
 #advisor3{
     height: 120px;
-    width: 995px !important;
+    width: 100% !important;
     border-radius: 5px;
     outline: none;
     border: 1px solid #b3b3b3;
@@ -1860,35 +1901,14 @@
     justify-content: flex-end;
     padding: 5px;
     }
-@media(min-width:1180px) and (max-width:1367px){
-    
-#advisor1{
-    
-    width: 400px !important;
-}
-.row{
 
-    gap: 10px !important;
-}
-#advisor2{
-    width: 220px !important;
-}
-#advisor3{
-    height: 120px;
-    width: 800px !important;
-}
-.advisor-form{
-    width: 95%;
-}
-}
 @media(min-width:768px) and (max-width:1179px){
     
     #advisor1{
         
         width: 300px !important;
     }
-    .row{
-    
+    .advisor-row{
         gap: 10px !important;
     }
     #advisor2{

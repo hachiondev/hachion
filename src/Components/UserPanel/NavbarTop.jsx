@@ -41,7 +41,7 @@ const NavbarTop = () => {
   // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.matchMedia('(max-width: 480px)').matches;
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
       if (isMobile) {
         setSearchVisible(false);
       } else {
@@ -93,7 +93,7 @@ const NavbarTop = () => {
                 aria-label="Search"
               />
               <button className="btn-search-mobile">
-                <IoSearch style={{ fontSize: '24px' }} />
+                <IoSearch className="search-icon" />
               </button>
               <button
                 className="btn-cancel-mobile"
@@ -107,14 +107,14 @@ const NavbarTop = () => {
               className="btn-search-icon-mobile"
               onClick={() => setMobileSearchOpen(true)}
             >
-              <IoSearch style={{ fontSize: '24px' }} />
+              <IoSearch className="search-icon" />
             </button>
           )}
 
           {/* Hamburger menu */}
           {!isMobileSearchOpen && (
             <button className="drawer-toggle-btn" onClick={toggleDrawer}>
-              <GiHamburgerMenu style={{ fontSize: '24px', marginLeft: '1px' }} />
+              <GiHamburgerMenu className="toggle-icon"/>
             </button>
           )}
         </div>
@@ -132,7 +132,7 @@ const NavbarTop = () => {
               src={logo}
               alt="logo"
               onClick={handleClick}
-              style={{ cursor: 'pointer', height: '40px', marginLeft: '15%', marginTop: '5px' }}
+              className="drawer-logo"
             />
 
             {/* Conditional rendering for login/logout */}

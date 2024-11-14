@@ -1,7 +1,7 @@
 import React from 'react'
 import LiveOnlineFeesRight from './LiveOnlineFeesRight';
 
-const SelfPlacedFees = () => {
+const SelfPacedFees = () => {
   return (
    <>
 <div className='batch-schedule'>
@@ -11,10 +11,10 @@ const SelfPlacedFees = () => {
     </p>
     </div>
    <div className='separator'></div>
-   <LiveOnlineFeesRight enrollText='Enroll Now' fee='15383'/>
+   <LiveOnlineFeesRight enrollText='Enroll Now' fee='₹ 15383'/>
    </div>
    </>
   )
 }
 
-export default SelfPlacedFees
+export default SelfPacedFees

@@ -8,8 +8,8 @@ import image5 from '../../Assets/mdi_support.png';
 import image1 from '../../Assets/ri_video-download-line.png';
 import image6 from '../../Assets/mdi_whatsapp.png';
 
-const SelfPlaced = () => {
-  const anotherDescription = "Self-Placed Training is a flexible learning approach where students can access course matrials and complete assignments at their own place. This mode allows learners to study according to their own schedule,without the constraints of fixed class times or deadlines";
+const SelfPaced = () => {
+  const anotherDescription = "Self-Paced Training is a flexible learning approach where students can access course matrials and complete assignments at their own place. This mode allows learners to study according to their own schedule,without the constraints of fixed class times or deadlines";
   const anotherTargetAudience ="Busy professionals, Independent Learners, Variable availability Learners, Self-Disciplined Learners, Review-Oriented Learners, Introverted Learners, Long-Term Learners";
   
   const anotherFeatures = [
@@ -35,4 +35,4 @@ const SelfPlaced = () => {
   );
 }
 
-export default SelfPlaced;
+export default SelfPaced;

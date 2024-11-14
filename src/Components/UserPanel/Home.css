@@ -888,6 +888,7 @@ margin-left: 2vw;
 font-weight: 600;
 font-size: 1.1rem;
 text-align: center;
+white-space: nowrap;
 }
 
 .footer-heading {
@@ -1255,9 +1256,17 @@ gap:1vh;
   height: 40px;
   width: 40px;
   }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    gap: 10px;
+  }
   
   .footer-bottom{
-  justify-content: space-evenly;
+  justify-content: space-around;
   }
   
   .career-div {
@@ -1527,9 +1536,18 @@ gap:1vh;
     height: 40px;
     width: 40px;
     }
+
+    .footer-link {
+      display: flex;
+      align-items: center;
+      padding-left: 10%;
+      padding-right: 10%;
+      gap: 10px;
+    }
     
     .footer-bottom{
-    justify-content: space-evenly;
+    justify-content: center;
+    flex-direction: column;
     }
     
     .career-div {

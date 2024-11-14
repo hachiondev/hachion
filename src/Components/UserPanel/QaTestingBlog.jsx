@@ -6,7 +6,6 @@ import './Blogs.css';
 import facebook from '../../Assets/facebook.png';
 import twitter from '../../Assets/twitter.png';
 import linkedin from '../../Assets/linkedin.png';
-import salesforce from '../../Assets/salesforce.png';
 import { FaUserTie } from "react-icons/fa6";
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';

@@ -11,7 +11,7 @@ const Learners = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);  // Tablet and Mobile devices
+      setIsMobile(window.innerWidth <= 768);  // Mobile devices
     };
 
     window.addEventListener('resize', handleResize);
@@ -65,6 +65,42 @@ const Learners = () => {
                 {!isMobile && (
                   <LearnerCard
                     name='Jane Smith'
+                    profile='Data Scientist'
+                    location='Australia'
+                    content='The training was comprehensive and the placement support was exceptional. This is the best learning platform for any individual to boost technical skills.'
+                  />
+                )}
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div className='learner-card-item'>
+                <LearnerCard
+                  name='Doe'
+                  profile='Android Developer'
+                  location='Us'
+                  content='Excellent learning experience, great instructors, and fantastic career support. You can learn along with your work because of flexible timing.'
+                />
+                {!isMobile && (
+                  <LearnerCard
+                    name='Smith'
+                    profile='Data Scientist'
+                    location='Australia'
+                    content='The training was comprehensive and the placement support was exceptional. This is the best learning platform for any individual to boost technical skills.'
+                  />
+                )}
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div className='learner-card-item'>
+                <LearnerCard
+                  name='Sam'
+                  profile='Web Developer'
+                  location='UK'
+                  content='Excellent learning experience, great instructors, and fantastic career support. You can learn along with your work because of flexible timing.'
+                />
+                {!isMobile && (
+                  <LearnerCard
+                    name='Raj'
                     profile='Data Scientist'
                     location='Australia'
                     content='The training was comprehensive and the placement support was exceptional. This is the best learning platform for any individual to boost technical skills.'

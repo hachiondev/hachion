@@ -49,7 +49,7 @@ const ModeOfTraining = () => {
           className={`batch-type-content ${selectedMode === 'SelfPlaced' ? 'active' : ''}`}
           onClick={() => setSelectedMode('SelfPlaced')}
         >
-          Self-Placed Learning
+          Self-Paced Learning
         </p>
       </div>
       <div className='mode-of-training-content'>

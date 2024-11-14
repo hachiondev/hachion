@@ -553,6 +553,8 @@ padding: 0px;
   }
 
 .resume-div {
+  display: flex;
+  align-items: flex-start;
   width: 75vw;
   border-radius: 20px;
   padding: 2vh;

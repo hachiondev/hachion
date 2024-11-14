@@ -366,7 +366,7 @@
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
-       margin-left: 8vw;
+       margin-left: 7vw;
    }
    .profile-image{
        height: 120px !important;
@@ -464,7 +464,7 @@
      }
    
      .carousel-indicators {
-       top: 310px;
+       top: 330px;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -491,6 +491,7 @@
     display: flex;
     justify-content: center;
     overflow: hidden;
+    padding: 10px;
   }
   .left-quotes{
     height: 80px;
@@ -854,6 +855,39 @@
     width: 100%;
     }
 
+    .video-card {
+        width: 330px; /* Adjust width to display 2 cards on mobile */
+        flex: 0 0 auto; /* Prevent cards from shrinking */
+        margin-right: 10px; /* Add some space between cards */
+        background-color: white;
+        box-shadow: 5px 5px 5px #d3d3d3;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      
+      .video-thumbnail {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .video-card-content {
+        padding: 10px;
+      }
+      
+      .video-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      
+      .video-description {
+        font-size: 0.9rem;
+        color: #555;
+        margin-top: 5px;
+      }
+      
+
 @media  (min-width:1181px) and (max-width: 1366px){
     .contact-us-corporate{
         margin-top: 50px;
@@ -910,7 +944,7 @@
     }
     .right-quotes{
         margin-bottom: -50px;
-        margin-left: 92vw;
+        margin-left: 90vw;
     }
     .custom-next-icon{
         margin-right: -220px;
@@ -954,7 +988,7 @@
     .learner-card-item {
       display: block;
      flex-direction: column;
-    height: 330px;
+    height: 340px;
     overflow: hidden;
     }
     .learner-card-item > div {
@@ -1007,7 +1041,7 @@
     .learner-card-item {
         display: block;
         flex-direction: column;
-        height: 335px;
+        height: 295px;
         overflow: hidden;
     }
 
@@ -1019,7 +1053,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    top: 320px;
+    top: 290px;
   }
 
 .custom-prev-icon, .custom-next-icon {
@@ -1071,8 +1105,9 @@
       }
 
     .learner-card-item {
+        display: block;
         flex-direction: column;
-        height: 340px;
+        height: 350px;
         overflow: hidden;
       }
       .learner-card-item > div {
@@ -1404,6 +1439,13 @@
         max-width: 400px;
         height: 320px;
         margin-top: 0px;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .learner-card-item > div {
+        width: 80%; 
+        max-width: 100%;
       }
     
       .learner-card {
@@ -1415,7 +1457,7 @@
         border: 1px solid #ddd;
         border-radius: 20px;
         padding: 10px;
-        margin: 50px;
+        margin: 40px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
     

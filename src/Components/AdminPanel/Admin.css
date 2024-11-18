@@ -170,7 +170,7 @@
 }
 
 .menu-item-admin {
-  background: transparent;
+  background: linear-gradient(90deg, #006489 0%, #00AEEF 100%);;
   color: white;
   width: 100%;
   border: none;
@@ -292,7 +292,7 @@
     background-color: #00AEEF;
     color: white;
     border-radius: 30px;
-    padding: 1vh 2vh 1vh 2vh;
+    padding: 10px 5px ;
     border: 1px solid white;
     box-shadow: 2px 2px 4px #d3d3d3;
   }
@@ -430,5 +430,5 @@ width: 180px;
   margin-right: 120px !important;
 }
 .close-btn{
-margin-left: 200px !important;
+margin-left: 22vw !important;
 }

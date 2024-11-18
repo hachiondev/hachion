@@ -509,7 +509,7 @@ cursor: pointer;
 .icon-text-img{
     height: 50px;
     width: 50px;
-    margin-right:-8px;
+    margin-right:-10px;
     z-index: 1;   
 }
 
@@ -551,7 +551,7 @@ cursor: pointer;
     }
     .icon-text:hover .icon-text-holder-facebook{
         font-size: 1.20rem;
-        background-color: #1275B1;
+        background-color: #588AF4;
     }
     .icon-text-holder-linkedin{
         height: 5vh;
@@ -559,7 +559,7 @@ cursor: pointer;
        z-index: 0;
        border-radius:5px;
        margin-left: -5px;
-        margin-top: 1.35vh;
+        margin-top: 1vh;
         font-weight: bold;
         font-size: 1.1rem;
         display: flex;
@@ -642,7 +642,8 @@ cursor: pointer;
     .icon-text-holder-email {
        height: 60px;
         width: 275px;
-        font-size: 0.9rem;
+        font-size: 16px;
+        margin-top: 13px;
         
     }
 }
@@ -673,9 +674,9 @@ cursor: pointer;
     .icon-text-holder-email {
         padding: 1vh;
         width: 275px;
-        font-size: 0.9rem;
+        font-size: 16px;
         height: 50px;
-        margin-top: 1vh;
+        margin-top: 14px;
         
     }
 
@@ -722,8 +723,8 @@ cursor: pointer;
 .icon-text-holder-google, .icon-text-holder-facebook, 
 .icon-text-holder-linkedin {
     padding: 0.5vh;
-  height: 5vh !important;
-    font-size: 0.8rem;
+    height: 50px;
+    font-size: 16px;
     padding-left: 2vw;
     
     
@@ -731,8 +732,8 @@ cursor: pointer;
  .icon-text-holder-apple, 
 .icon-text-holder-email {
 padding: 1vh;
-  height: 5vh !important;
-    font-size: 0.7rem;
+  height: 50px;
+    font-size: 16px;
     padding-left: 2vw;
     
     
@@ -777,6 +778,7 @@ padding: 1vh;
     width: 250px;
     height: 50px;
     font-size: 16px;
+    margin-top: 5px;
   }
   .icon-text-img{
     height: 60px !important;
@@ -807,12 +809,12 @@ padding: 1vh;
     cursor: pointer;
 }
 
-.icon-text-img {
+/* .icon-text-img {
     height: 6.5vh;
     width: 3.25vw;
     margin-right: -8px;
     z-index: 1;
-}
+} */
 
 
 

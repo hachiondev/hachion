@@ -40,6 +40,7 @@ import AddCourseDetails from './Components/AdminPanel/AddCourseDetails'
 import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
+import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
       <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
+      <Route path='/courseschedule' element={<CourseSchedule/>}/>
     
   
       </Routes></BrowserRouter>

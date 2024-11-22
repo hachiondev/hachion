@@ -100,7 +100,7 @@
   color: #006489;
 }
 .topic-content{
-  font-size: 1.20rem;
+  font-size: 16px;
   font-weight: 400;
 
 }
@@ -235,7 +235,7 @@
         margin: 40px;
       }
       .about-us-left-content{
-        font-size: 1.20rem;
+        font-size: 16px;
         font-weight: 400;
         padding-top: 20px;
         padding-left: 4vh;
@@ -524,6 +524,7 @@ background-color: #ffffff;
 padding: 2vh;
 box-shadow: 5px 5px 10px #d3d3d3;
 width: 24vw;
+border-radius: 20px;
 }
 
 .contact-us-box{
@@ -551,6 +552,7 @@ margin-top: 4vh;
 margin-left: 12vw;
 text-align: center;
 padding: 4vh;
+border-radius: 20px;
 }
 .contact-info{
 font-size: 1.2rem;

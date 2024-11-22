@@ -997,6 +997,14 @@ margin: 0;
   min-width: 180px;
 }
 
+.dropdown-icon {
+  color:#00AEEF;
+}
+
+.dropdown-item:hover .dropdown-icon {
+  color: white;
+}
+
 .dropdown-menu .dropdown-item {
   display: flex;
   align-items: center;

@@ -38,7 +38,7 @@ function createData(S_No, course_name, Video_link, Date) {
 
 const rows = [
   createData(1, 'QA Automation', 'Link','25-1-2019'),
-  createData(2, 'Python', '30 Days', 'Link','12-05-2020'),
+  createData(2, 'Python', 'Link','12-05-2020'),
   
 ];
 

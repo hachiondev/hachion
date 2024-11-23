@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logo from '../../Assets/logo.png';
 import { IoSearch } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
@@ -8,7 +8,7 @@ import profile1 from '../../Assets/profile1.jfif';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
-import {IoLogOut} from 'react-icons/io5';
+import { IoLogOut } from 'react-icons/io5';
 import './Home.css';
 
 const NavbarTop = () => {
@@ -18,6 +18,7 @@ const NavbarTop = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Manage login state
   const navigate = useNavigate();
+  const drawerRef = useRef(null); // Reference to the drawer for click detection
 
   // Function to toggle drawer
   const toggleDrawer = () => {
@@ -35,13 +36,13 @@ const NavbarTop = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false); // Set login state to false on logout
-    setDrawerOpen(false); // Close drawer after logout
+    // setDrawerOpen(false); // Close drawer after logout
   };
 
   // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.matchMedia('(max-width: 480px)').matches;
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
       if (isMobile) {
         setSearchVisible(false);
       } else {
@@ -56,6 +57,23 @@ const NavbarTop = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // Close drawer when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (drawerRef.current && !drawerRef.current.contains(event.target)) {
+        setDrawerOpen(false);
+      }
+    };
+
+    if (isDrawerOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isDrawerOpen]);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -93,7 +111,7 @@ const NavbarTop = () => {
                 aria-label="Search"
               />
               <button className="btn-search-mobile">
-                <IoSearch style={{ fontSize: '24px' }} />
+                <IoSearch className="search-icon" />
               </button>
               <button
                 className="btn-cancel-mobile"
@@ -107,21 +125,21 @@ const NavbarTop = () => {
               className="btn-search-icon-mobile"
               onClick={() => setMobileSearchOpen(true)}
             >
-              <IoSearch style={{ fontSize: '24px' }} />
+              <IoSearch className="search-icon" />
             </button>
           )}
 
           {/* Hamburger menu */}
-          {!isMobileSearchOpen && (
+          {!isMobileSearchOpen && !isDrawerOpen && (
             <button className="drawer-toggle-btn" onClick={toggleDrawer}>
-              <GiHamburgerMenu style={{ fontSize: '24px', marginLeft: '1px' }} />
+              <GiHamburgerMenu className="toggle-icon" />
             </button>
           )}
         </div>
 
         {/* Drawer content, only visible when isDrawerOpen is true */}
         {isDrawerOpen && (
-          <div className="mobile-drawer">
+          <div className="mobile-drawer" ref={drawerRef}>
             <button
               className="drawer-cancel-icon"
               onClick={() => setDrawerOpen(false)}
@@ -132,41 +150,41 @@ const NavbarTop = () => {
               src={logo}
               alt="logo"
               onClick={handleClick}
-              style={{ cursor: 'pointer' }}
+              className="drawer-logo"
             />
 
             {/* Conditional rendering for login/logout */}
             {isLoggedIn ? (
               <>
-            <div className="profile">
-            <div className="dropdown">
-              <div className="user-name">
-              <Avatar alt="user_name" src={profile1} /> Hachion
-              </div>
-                <div className="drawer-item" onClick={() => navigate('/userdashboard')}>
-                <FaUserAlt style={{color:'#00AEEF'}}/> Dashboard
-                </div>
-                <div className="drawer-item" onClick={() => navigate('/userdashboard')}>
-                <IoMdSettings style={{color:'#00AEEF'}}/> Settings
-                </div>
+                <div className="profile">
+                  <div className="dropdown">
+                    <div className="user-name">
+                      <Avatar alt="user_name" src={profile1} /> Hachion
+                    </div>
+                    <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
+                      <FaUserAlt style={{ color: '#00AEEF' }} /> Dashboard
+                    </div>
+                    <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
+                      <IoMdSettings style={{ color: '#00AEEF' }} /> Settings
+                    </div>
 
-                <div className="drawer-item" onClick={() => navigate('/corporate')}>
-              Corporate Training
-            </div>
-            <div className="drawer-item" onClick={() => navigate('/course')}>
-              Courses
-            </div>
-            <div className="drawer-item">Hire from Us</div>
+                    <div className="drawer-item" onClick={() => navigate('/corporate')}>
+                      Corporate Training
+                    </div>
+                    <div className="drawer-item" onClick={() => navigate('/course')}>
+                      Courses
+                    </div>
+                    <div className="drawer-item">Hire from Us</div>
 
-              <button className="drawer-button" onClick={() => handleLogout()}>
-                <IoLogOut /> Logout
-                </button>
-                </div>
+                    <button className="drawer-button" onClick={() => handleLogout()}>
+                      <IoLogOut /> Logout
+                    </button>
+                  </div>
                 </div>
               </>
             ) : (
               <>
-                  <div className="drawer-item" onClick={() => navigate('/corporate')}>
+                <div className="drawer-item" onClick={() => navigate('/corporate')}>
                   Corporate Training
                 </div>
                 <div className="drawer-item" onClick={() => navigate('/course')}>

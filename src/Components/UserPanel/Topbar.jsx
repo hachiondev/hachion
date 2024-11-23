@@ -24,7 +24,7 @@ const Topbar = () => {
     <>
       <div className='topbar'>
         <div className='topbar-left'>
-          <p className='query-content'>Have any query?</p>
+          <p className='query-title'>Have any query?</p>
           {/* <div className='training-mail'> */}
             <img src={whatsapp} alt='whatsapp-icon' className='whatsapp-icon' />
             <p className='whatsapp-number'> +919490323388</p>

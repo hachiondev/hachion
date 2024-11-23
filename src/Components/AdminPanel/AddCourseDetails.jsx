@@ -1,270 +1,212 @@
-import React from 'react'
-import AdminNavbar from './AdminNavbar'
-import AdminSidebar from './AdminSidebar'
-import { IoIosArrowForward } from 'react-icons/io'
-import './Admin.css';
+// import React, { useState, useEffect } from 'react';
+// import AdminNavbar from './AdminNavbar';
+// import AdminSidebar from './AdminSidebar';
+// import { IoIosArrowForward } from 'react-icons/io';
+// import axios from 'axios';
+// import './Admin.css';
 
-const AddCourseDetails = () => {
+// const AddCourseDetails = ({ fetchCourses }) => {
+//   const [courseName, setCourseName] = useState('');
+//   const [categoryName, setCategoryName] = useState('');
+//   const [youtubeLink, setYoutubeLink] = useState('');
+//   const [noOfClasses, setNoOfClasses] = useState('');
+//   const [dailySession, setDailySession] = useState('');
+//   const [liveTrainingHours, setLiveTrainingHours] = useState('');
+//   const [labExerciseHours, setLabExerciseHours] = useState('');
+//   const [realTimeProjects, setRealTimeProjects] = useState('');
+//   const [starRating, setStarRating] = useState('');
+//   const [ratingByPeople, setRatingByPeople] = useState('');
+//   const [totalEnrollment, setTotalEnrollment] = useState('');
+//   const [courseImage, setCourseImage] = useState(null);
+
+//   const resetForm = () => {
+//     setCourseName('');
+//     setCategoryName('');
+//     setYoutubeLink('');
+//     setNoOfClasses('');
+//     setDailySession('');
+//     setLiveTrainingHours('');
+//     setLabExerciseHours('');
+//     setRealTimeProjects('');
+//     setStarRating('');
+//     setRatingByPeople('');
+//     setTotalEnrollment('');
+//     setCourseImage(null);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData();
+//     formData.append('courseName', courseName);
+//     formData.append('categoryName', categoryName);
+//     formData.append('youtubeLink', youtubeLink);
+//     formData.append('noOfClasses', noOfClasses);
+//     formData.append('dailySession', dailySession);
+//     formData.append('liveTrainingHours', liveTrainingHours);
+//     formData.append('labExerciseHours', labExerciseHours);
+//     formData.append('realTimeProjects', realTimeProjects);
+//     formData.append('starRating', starRating);
+//     formData.append('ratingByPeople', ratingByPeople);
+//     formData.append('totalEnrollment', totalEnrollment);
+//     formData.append('courseImage', courseImage);
+
+//     try {
+//       await axios.post('http://localhost:8080/api/courses', formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       });
+//       fetchCourses();
+//       alert('Course added successfully!');
+//       resetForm();
+//     } catch (error) {
+//       console.error('Error adding course:', error);
+//       alert('Failed to add course.');
+//     }
+//   };
+
+//   const [courses, setCourses] = useState([]);
+//   const [categories, setCategories] = useState([]);
+//   const [error, setError] = useState(null);
+
+//   // Fetch all courses on load
+//   useEffect(() => {
+//     fetchCourses();
+//     fetchCategories(); // Fetch course categories for dropdown
+//   }, []);
+
+//   // const fetchCourses = async () => {
+//   //   try {
+//   //     const response = await axios.get('/api/courses/all');
+//   //     setCourses(response.data);
+//   //     console.log('Courses fetched successfully:', response.data);
+//   //   } catch (error) {
+//   //     console.error('Error fetching courses:', error);
+//   //     setError('Failed to load courses.');
+//   //   }
+//   // };
 
 
-  return (
-    <>
-     <AdminNavbar />
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-      
-        <AdminSidebar />
-        <div style={{ flexGrow: 1, padding: '20px' }}>
-        
-      
-  <div className='course-category'>
-<p>Course details <IoIosArrowForward/> Add Course Details </p>
-<div className='category'>
-<div className='category-header'>
-<p>Add Course Details</p>
-</div>
-<div className='course-details'>
-  <div className='course-row'>
-<div class="col-md-4">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select">
-      <option selected>Select category</option>
-      <option>Qa Testing</option>
-      <option>Project Management</option>
-      <option>Business Intelligence</option>
-    </select>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Course Name</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter Course name here'/>
-  </div>
-  <div class="mb-3">
-  <label for="formFile" class="form-label">Course Images</label>
-  <input class="form-control" type="file" id="formFile"/>
-</div>
-  </div>
-  <div className='course-row'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Youtube Link</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter Youtube Link'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">No. of Classes</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter number of classes'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Daily Session</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter session'/>
-  </div>
-  </div>
-  <div className='course-row'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Live Training hours</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter Hours'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Lab Exercise Hours</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter Hours'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Real Time Projects</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter projects'/>
-  </div>
-  </div>
-  <div className='course-row'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Star Rating</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter Rating'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Rating by No. of People</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter number of people'/>
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Total Enrollment</label>
-    <input type="text" class="form-control" id="inputEmail4" placeholder='Enter No. Of Enrollment'/>
-  </div>
-  </div>
-</div>
-<div className='course-details'>
-  <h3>Key Highlights</h3>
-  <div className='course-row'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 1</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 2</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 3</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  </div>
-  <div className='course-row'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 4</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 5</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Key Highlights 6</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  </div>
-</div>
-<h3>Mode Of Training</h3>
-<div className='course-row'>
-<div className='course-details'>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-  <label class="form-check-label" for="flexCheckDefault">
-    Live Training
-  </label>
-</div>
-<div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Amount(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Discount%</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Total(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-</div>
-<div className='course-details'>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-  <label class="form-check-label" for="flexCheckDefault">
-    Mentoring Mode
-  </label>
-</div>
-<div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Amount(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Discount%</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Total(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-</div>
-<div className='course-details'>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-  <label class="form-check-label" for="flexCheckDefault">
- Self Placed Training
-  </label>
-</div>
-<div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Amount(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Discount%</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Total(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-</div>
+// const fetchCategories = async () => {
+//     try {
+//       const response = await axios.get('/api/categories/all'); // Adjusted API call for categories
+//       setCategories(response.data);
+//       console.log('Categories fetched successfully:', response.data);
+//     } catch (error) {
+//       console.error('Error fetching categories:', error);
+//       setError('Failed to load categories.');
+//     }
+//   };
 
-</div>
-<div className='course-details'>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-  <label class="form-check-label" for="flexCheckDefault">
- Self Placed Training
-  </label>
-</div>
-<div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Amount(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Discount%</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputEmail4" class="form-label">Total(INR)</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-</div>
+//   // // Handle input change
+//   // const handleInputChange = (e) => {
+//   //   const { name, value } = e.target;
+//   //   setCourseData({
+//   //     ...courseData,
+//   //     [name]: value,
+//   //   });
+//   // };
 
-</div>
-<h3>Sample session</h3>
-<div className='course-row'>
-<div className='course-details'>
-  <h4>Mentoring Training</h4>
-  <div className='course-col'>
-  <div class="col-sm-3">
-    <label for="inputEmail4" class="form-label">Day 1</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-sm-3">
-    <label for="inputEmail4" class="form-label">Day 2</label>
-    <input type="number" class="form-control" id="inputEmail4" />
-  </div>
-  </div>
-  
-  </div>
-  <div className='course-details'>
-  <h4>Mentoring Training</h4>
-  <div className='course-col'>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Day 1</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Day 2</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  </div>
-  
-  </div>
-</div>
-<div className='course-row'>
-<div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Header Title</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Course keyword with comma</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  <div class="col-md-4">
-    <label for="inputEmail4" class="form-label">Course keyword description</label>
-    <input type="text" class="form-control" id="inputEmail4" />
-  </div>
-  </div>
-  <div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-</div>
-<div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-</div>
+//   // // Submit form to add course
+//   // const handleSubmit = async (e) => {
+//   //   e.preventDefault();
+//   //   try {
+//   //     const response = await axios.post('/api/courses/add', courseData);
+//   //     console.log('Course added successfully:', response.data);
+//   //     setCourses([...courses, response.data]); // Update local state with new course
+//   //     setCourseData({}); // Clear form
+//   //   } catch (error) {
+//   //     console.error('Error adding course:', error);
+//   //     setError('Failed to add course.');
+//   //   }
+//   // };
 
-</div>
-<div style={{display:'flex',flexDirection:'row'}}> 
-  <button className='submit-btn'>Submit</button>
-  <button className='reset-btn'>Reset</button>
-  </div>
-</div>
-</div>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <AdminNavbar />
+//       <div style={{ display: 'flex', flexDirection: 'row' }}>
+//         <AdminSidebar />
+//         <div style={{ flexGrow: 1, padding: '20px' }}>
+//           <div className='course-category'>
+//             <p>Course details <IoIosArrowForward /> Add Course Details</p>
+//             <div className='category'>
+//               <div className='category-header'>
+//                 <p>Add Course Details</p>
+//               </div>
+//               <form onSubmit={handleSubmit}>
+//                 <div className='course-row'>
+//                   <div className="col-md-4">
+//                     <label htmlFor="categoryName" className="form-label">Category Name</label>
+//                     <select className="form-control" name="categoryName" value={courseData.categoryName || ''} onChange={handleInputChange}>
+//                         <option value="">Select Category</option>
+//                         {categories.map((category) => (
+//                           <option key={category.id} value={category.name}>{category.name}</option>
+//                         ))}
+//                       </select>
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="courseName" className="form-label">Course Name</label>
+//                     <input type="text" className="form-control" id="courseName" value={courseName} onChange={(e) => setCourseName(e.target.value)} placeholder="Enter Course name" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="courseImage" className="form-label">Course Images</label>
+//                     <input className="form-control" type="file" id="courseImage" onChange={(e) => setCourseImage(e.target.files[0])} />
+//                   </div>
+//                 </div>
+//                 <div className='course-row'>
+//                   <div className="col-md-4">
+//                     <label htmlFor="youtubeLink" className="form-label">Youtube Link</label>
+//                     <input type="text" className="form-control" id="youtubeLink" value={youtubeLink} onChange={(e) => setYoutubeLink(e.target.value)} placeholder="Enter Youtube Link" />
+//                   </div>
+// <div className="col-md-4">
+//                     <label htmlFor="noOfClasses" className="form-label">No. of Classes</label>
+//                     <input type="number" className="form-control" id="noOfClasses" value={noOfClasses} onChange={(e) => setNoOfClasses(e.target.value)} placeholder="Enter number of classes" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="dailySession" className="form-label">Daily Session</label>
+//                     <input type="text" className="form-control" id="dailySession" value={dailySession} onChange={(e) => setDailySession(e.target.value)} placeholder="Enter session" />
+//                   </div>
+//                 </div>
+//                 <div className='course-row'>
+//                   <div className="col-md-4">
+//                     <label htmlFor="liveTrainingHours" className="form-label">Live Training hours</label>
+//                     <input type="number" className="form-control" id="liveTrainingHours" value={liveTrainingHours} onChange={(e) => setLiveTrainingHours(e.target.value)} placeholder="Enter Hours" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="labExerciseHours" className="form-label">Lab Exercise Hours</label>
+//                     <input type="number" className="form-control" id="labExerciseHours" value={labExerciseHours} onChange={(e) => setLabExerciseHours(e.target.value)} placeholder="Enter Hours" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="realTimeProjects" className="form-label">Real Time Projects</label>
+//                     <input type="number" className="form-control" id="realTimeProjects" value={realTimeProjects} onChange={(e) => setRealTimeProjects(e.target.value)} placeholder="Enter projects" />
+//                   </div>
+//                 </div>
+//                 <div className='course-row'>
+//                   <div className="col-md-4">
+//                     <label htmlFor="starRating" className="form-label">Star Rating</label>
+//                     <input type="number" className="form-control" id="starRating" value={starRating} onChange={(e) => setStarRating(e.target.value)} placeholder="Enter Rating" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="ratingByPeople" className="form-label">Rating by No. of People</label>
+//                     <input type="number" className="form-control" id="ratingByPeople" value={ratingByPeople} onChange={(e) => setRatingByPeople(e.target.value)} placeholder="Enter number of people" />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label htmlFor="totalEnrollment" className="form-label">Total Enrollment</label>
+//                     <input type="number" className="form-control" id="totalEnrollment" value={totalEnrollment} onChange={(e) => setTotalEnrollment(e.target.value)} placeholder="Enter No. Of Enrollment" />
 
-export default AddCourseDetails
+//                   </div>
+//                 </div>
+//                 <div style={{ display: 'flex', flexDirection: 'row' }}>
+//                   <button type="submit" onclick={handleSubmit} className="submit-btn">Submit</button>
+//                   <button type="button" onClick={resetForm} className="btn btn-secondary">Reset</button>
+//                 </div>
+//               </form>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AddCourseDetails;

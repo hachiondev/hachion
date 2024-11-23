@@ -1,5 +1,4 @@
 import React from 'react'
-import { LiveOnlineFees } from './LiveOnlineFees'
 import LiveOnlineFeesRight from './LiveOnlineFeesRight'
 import './Course.css';
 

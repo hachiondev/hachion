@@ -31,7 +31,7 @@ align-items: center;
 gap: 1rem;
 }
 
-.query-content {
+.query-title {
 font-weight: 500;
 color: white;
 cursor: pointer;
@@ -116,8 +116,8 @@ justify-content:center ;
 flex-direction: column;
 }
 .success-gif{
-width: 4vw;
-height: 8vh;
+width: 60px;
+height: 60px;
 }
 .button-login{
 width:6.85vw;
@@ -183,7 +183,7 @@ background-color: #EEEEEE !important;
 display: flex;
 align-items: center;
 justify-content: space-between;
-flex-wrap: nowrap; /* Prevent wrapping */
+flex-wrap: nowrap; 
 }
 
 .search-div-home {
@@ -232,6 +232,7 @@ color: black;
 text-decoration: none;
 padding: 10px 15px;
 transition: color 0.3s ease;
+white-space: nowrap;
 }
 
 .nav-item-link:hover {
@@ -279,7 +280,20 @@ padding: 5px 10px;
 font-size: 14px;
 border-bottom: 1px solid #eeeeee;
 cursor: pointer;
+white-space: nowrap;
 }
+
+.drawer-sub-item {
+  padding: 5px;
+  font-size: 14px;
+  gap: 8px;
+  margin-left: 20%;
+  border-bottom: 1px solid #eeeeee;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}  
 
 .drawer-button {
 width: 90%;
@@ -406,17 +420,17 @@ animation-play-state: paused;
 }
 
 .login-div-content{
-position: relative;
-display: inline-block;
-height:40px;
-padding: 5px;
-font-size: 1.25rem;
-border-radius: 10px;
-background-color:#00AEEF;
-color: white;
-border:none;
-transition: background-color 0.3s ease;
-}
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  padding: 5px 15px;
+  font-size: 1.25rem;
+  border-radius: 8px;
+  color: white;
+  border:none;
+  transition: background-color 0.3s ease;
+  }
 .login-div-content:hover{
 background-color: rgba(255, 255, 255, 0.2);
 border: 2px solid white;
@@ -735,7 +749,6 @@ justify-items: space-between;
 transition: all 0.3s ease;
 cursor: pointer;
 border-radius: 20px 20px 50px 50px; 
-
 }
 .new-batch-para{
 display: none;
@@ -875,6 +888,7 @@ margin-left: 2vw;
 font-weight: 600;
 font-size: 1.1rem;
 text-align: center;
+white-space: nowrap;
 }
 
 .footer-heading {
@@ -918,6 +932,18 @@ display: flex;
 align-items: center;
 }
 
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .image-block {
 height: 5vh;
 width: 1.7vw;
@@ -942,10 +968,10 @@ font-size: 1.5rem;
 font-weight: 600;
 border: none;
 cursor: pointer;
-margin-left: 2vh;
+/* margin-left: 2vh; */
 padding: 2.5vh;
 text-decoration: none;
-padding-bottom: 2vh;
+/* padding-bottom: 2vh; */
 }
 
 .btn-group {
@@ -953,13 +979,35 @@ display: flex;
 align-items: center;
 }
 
-.dropdown-menu {
+/* .dropdown-menu {
 padding-top: 4vh !important;
 }
 
 .dropdown-divider {
 margin: 0;
+} */
+
+.btn-logout.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.dropdown-menu {
+  min-width: 180px;
+}
+
+.dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-divider {
+  margin: 0.5rem 0;
+  border-top: 1px solid #ddd;
+}
+
 
 .course-title-container {
   display: none;
@@ -1032,7 +1080,7 @@ gap:1vh;
 }
 
 .course-names {
-  font-size: 24px;
+  font-size: 20px;
   margin: 15px;
   gap: 15px;
   }
@@ -1053,55 +1101,12 @@ gap:1vh;
       margin-top: -120px;
     }
     
-
-}
-
-@media screen and (max-width: 1180px) {
-      .topbar {
-        height: 60px;
-        padding: 0 5vw;
-      }
-      
-      .topbar-left {
-        width: auto; /* Allow auto width to fit content */
-      }
-      
-      .whatsapp-number,
-      .training-email,
-      .query-content {
-        font-size: 20px;
-      }
-      
-      .training-mail-icon {
-        font-size: 1.5rem;
-      }
-      
-      .login-div-content {
-        font-size: 1rem;
-      }
-      
-      #autoScrollingBanner .carousel-indicators {
-        display: flex;
-        justify-content: center;
-        left: 40%; /* Center horizontally */
-      }
-      
-      .coupon-btn, .register-now-btn {
-        font-size: 1rem; /* Adjust button font size for smaller screens */
-        padding: 0.8vh;
-      }
-      .training-card-holder{
-        max-width: 94vw;
-        gap: 10px;
-      }
-
-
-.whatsapp-number,
-.training-email,
-.query-content {
-  font-size: 28px;
- 
-}
+    .whatsapp-number,
+    .training-email,
+    .query-title {
+      font-size: 20px;
+     
+    }
 }
 
 @media screen and (max-width: 1180px) {
@@ -1116,8 +1121,8 @@ gap:1vh;
 
 .whatsapp-number,
 .training-email,
-.query-content {
-  font-size: 20px;
+.query-title {
+  font-size: 18px;
 }
 
 .training-mail-icon {
@@ -1128,52 +1133,91 @@ gap:1vh;
   font-size: 1rem;
 }
 
-.coupon-btn, .register-now-btn {
-  font-size: 1rem; /* Adjust button font size for smaller screens */
-  padding: 0.8vh;
-}
 .training-card-holder{
   max-width: 94vw;
   gap: 10px;
 }
-}
-@media (min-width: 1025px) and (max-width: 1366px) {
-  .search-div-home {
-    width: 430px; /* Reduce width for tablet screens */
-    margin-left: 0 !important /* Remove margin for better alignment */
-  }
-.courses-list{
-  gap: 15px;
-  margin-left: 20px;
+
+.navbar-nav {
+  gap: 2px;
+  font-size: 12px;
+  margin: 0;
+  margin-left: 0px;
+  padding: 0 5px;
+  justify-content: space-around;
 }
 
-.course-names {
-  font-size: 24px;
-  margin: 15px;
-  gap: 15px;
-  }
+.search-div-home {
+  width: 250px;
+  margin-left: 0 !important
 }
-/* Styles for Tablet/iPad (min-width: 481px and max-width: 1024px) */
-@media (min-width: 481px) and (max-width: 1024px) {
+
+.btn-search-home {
+  width: 80px;
+  height: 60px;
+  }
+
+.nav-item-link {
+  height: auto;
+  font-size: 16px;
+  padding: 5px;
+  white-space: nowrap;
+  }
+
+#autoScrollingBanner .carousel-indicators {
+  display: flex;
+  justify-content: center;
+  left: 40%; /* Center horizontally */
+}
+
+.coupon-btn, .register-now-btn {
+  font-size: 1rem; /* Adjust button font size for smaller screens */
+  padding: 5px 10px;
+  margin-bottom: -30px;
+}
+}
+
+/* Styles for Tablet/iPad (min-width: 769px and max-width: 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
   .navbar {
     height: 10vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px; /* Add padding to reduce the space */
+    padding: 0 8px; /* Add padding to reduce the space */
   }
   
   .search-div-home {
-    width: 250px; /* Reduce width for tablet screens */
+    width: 200px; /* Reduce width for tablet screens */
     margin-left: 0 !important /* Remove margin for better alignment */
   }
   
   .navbar-nav {
-    gap: 2px; /* Add gap between the items */
+    gap: 2px;
     font-size: 12px;
     margin: 0;
     margin-left: 0px;
+    padding: 0 5px;
+    justify-content: space-around;
   }
+
+  .nav-item-link {
+    font-size: 14px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    }
+
+    .nav-item.active {
+      border-radius: 5px;
+      padding-left: 0.5vh;
+      padding-right: 0.5vh;
+      }
+
+      .coupon-btn, .register-now-btn {
+        font-size: 12px;
+        padding: 3px 5px;
+        border-radius: 20px;
+        }
   
   .training-events{
     margin-bottom:10px;
@@ -1212,6 +1256,12 @@ gap:1vh;
   .courses-list{
     font-size: 20px;
   }
+
+  .course-names {
+    margin: 10px;
+    gap: 15px;
+    }
+
   .view-btn{
   margin-right: 60px;
   margin-left: 10px;
@@ -1240,9 +1290,17 @@ gap:1vh;
   height: 40px;
   width: 40px;
   }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    gap: 10px;
+  }
   
   .footer-bottom{
-  justify-content: space-evenly;
+  justify-content: space-around;
   }
   
   .career-div {
@@ -1258,60 +1316,365 @@ gap:1vh;
   }
   }
 
-@media screen and (max-width: 768px) {
-  .topbar {
-    height: 50px;
-    padding: 0 2vw;
-  }
+  @media (min-width: 481px) and (max-width: 768px) {
+    .navbar {
+      height: 8vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px; /* Add padding to reduce the space */
+    }
+
+    .navbar .container-fluid {
+      display: flex;
+      /* justify-content: space-between; */
+      justify-content: space-evenly;
+      align-items: center;
+      
+      }
+
+      .close-btn{
+        display: flex;
+        justify-content: flex-end;
+        font-size: 24px;
+        padding: 5px;
+        }
+    
+    .drawer-toggle-btn {
+    display: block; 
+    border:none;
+    margin-right: 2px !important; /* Show toggle button only on mobile */
+    justify-content: flex-end;
+    }
+
+    .drawer-logo {
+      height: 70px;
+      margin-left: 20%;
+      margin-top: 5px;
+      cursor: pointer;
+      }
+
+    .toggle-icon {
+      font-size: 32px;
+      margin-left: 1px;
+      }
+
+      .search-icon {
+        font-size: 32px;
+        }
+    
+    .mobile-drawer {
+    display: block; /* Drawer becomes visible when toggled */
+    }
+      
+      /* Container for search and hamburger buttons */
+      .navbar .right-icons {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 30px; /* Space between the search and hamburger */
+      }
+      
+      /* Mobile search bar taking full width */
+      .search-div-mobile {
+      position: absolute; /* Absolute positioning to overlay the entire navbar */
+      left: 0;
+      width: 100%; /* Full width */
+      height: 50px;
+      display: flex;
+      background-color: white;
+      align-items: center;
+      z-index: 1000; /* Ensure it's above other content */
+      padding: 0 10px; /* Add padding to left and right */
+      }
+      
+      .search-input-mobile {
+      flex: 1; /* Input takes up as much space as possible */
+      padding-left: 1vw;
+      border-radius: 10px 0px 0px 10px;
+      border: 1px solid rgba(186, 186, 186, 1);
+      outline: none;
+      background-color: white;
+      height: 50px;
+      padding: 5px;
+      font-size: 16px;
+      margin-left: 5px;
+      }
+      
+      .btn-search-mobile {
+      height: 50px;
+      width: 100px;
+      border-radius: 0px 10px 10px 0px;
+      background-color: rgba(0, 174, 239, 1);
+      color: white;
+      border: none;
+      cursor: pointer;
+      }
+      
+      .btn-cancel-mobile {
+        font-size: 24px;
+      color: rgba(0, 174, 239, 1);
+      /* color: white; */
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      }
+      
+      .drawer-cancel-icon {
+        font-size: 24px;
+        color: rgba(0, 174, 239, 1);
+        border: none;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        background: none;
+        cursor: pointer;
+        }
+      
+      .btn-search-icon-mobile {
+      height: 50px;
+      width: 50px;
+      border-radius: 10px;
+      background-color: rgba(0, 174, 239, 1);
+      color: white;
+      border: none;
+      cursor: pointer;
+      }
+      
+      .navbar-nav {
+      display: none !important; /* Hide the normal navbar items on mobile */
+      }
+      
+      .profile {
+        display: block;
+        align-items: center;
+        margin-right: 0 !important;
+        padding-top: 0 !important;
+        }
+      
+      .user-name{
+        background-color: #00AEEF;
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        margin-left: 0;
+        margin-top: 5px;
+        padding: 5px;
+        text-decoration: none;
+        padding-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        }
+
+        .drawer-item {
+          padding: 5px 10px;
+          font-size: 18px;
+          border-bottom: 1px solid #eeeeee;
+          cursor: pointer;
+          white-space: nowrap;
+          }
+          
+          .drawer-sub-item {
+            padding: 5px;
+            font-size: 18px;
+            gap: 8px;
+            margin-left: 20%;
+            border-bottom: 1px solid #eeeeee;
+            cursor: pointer;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+          }
+
+          .drawer-button {
+            width: 95%;
+            font-size: 18px;
+            }
   
-  .topbar-left {
-    width: auto;
-  }
+    .nav-item-link {
+      font-size: 16px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      }
   
-  .query-content {
-    font-size: 14px;
-  }
+      .nav-item.active {
+        border-radius: 5px;
+        padding-left: 0.5vh;
+        padding-right: 0.5vh;
+        }
   
-  .training-mail-icon {
-    font-size: 1.5rem;
-  }
-  
-  .whatsapp-number,
-  .training-email {
-    font-size: 14px;
-  }
-  
-  .login-div-content {
-    font-size: 0.9rem;
-  }
-  
-  .button-login{
-    margin-left: 35vw;
-    width:8vw;
-    height:4vh;
-    font-size: 0.7rem;
-  }
-  .modal fade{
-    width: 400px;
-    height:300px ;
+        .coupon-btn, .register-now-btn {
+          font-size: 12px;
+          padding: 3px 5px;
+          border-radius: 20px;
+          }
+    
+    .training-events{
+      margin-bottom:10px;
+      margin-top: 10px;
+      }
+      
+      .training-events-head{
+      margin-top: 50px;
+      margin-left: 25%;
+      justify-content: space-between;
+      display: flex;
+     
+      margin-bottom: 50px;
+      }
+    
+    .card {
+      width: calc(45% - 5px); 
+      }
+    
+    .training-card-holder {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      max-width: 90vw !important;
+    }
+    
+    .new-batch{
+    display: none;
+    }
+   
+    .view-btn{
+    margin-right: 60px;
+    margin-left: 10px;
+    margin-top:-105px; 
+    font-size: 12px;
+    
+    }
+    .view-all{
+      width: auto;  
+    }
+    
+    .card-header{
+      font-size: 12px;
+      top: 0vh;
+      padding: 0vh;
+      width: auto;
+    }
+    
+    .footer-heading {
+    font-size: 1rem;
+    }
+    .footer-content {
     font-size: 0.8rem;
-  }
-  .success-gif{
-  height: 40px;
-  width: 40px;
-  }
-  
-  .courses-list {
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 1vh;
-  }
-  
-  .course-names {
-  font-size: 0.6rem;
-  margin: 0.5vh 0.5vw;
-  }
-  }
+    }
+    .footer-link img{
+    height: 40px;
+    width: 40px;
+    }
+
+    .footer-link {
+      display: flex;
+      align-items: center;
+      padding-left: 10%;
+      padding-right: 10%;
+      gap: 10px;
+    }
+    
+    .footer-bottom{
+    justify-content: center;
+    flex-direction: column;
+    }
+    
+    .career-div {
+    width: 95%; 
+    margin-left: auto; 
+    margin-right: auto;
+    justify-content: center;
+    }
+    
+    .online-training-div {
+    width: 40vw; 
+    margin-bottom: 2vh;
+    }
+
+    .topbar {
+      height: 50px;
+      padding: 0 2vw;
+       display: block;
+      align-content: center;
+    }
+    
+    .topbar-left {
+      width: auto;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .topbar-right{
+      display: none;
+      }
+
+    .whatsapp-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .training-mail-icon {
+      font-size: 26px;
+    }
+    
+    .whatsapp-number,
+    .training-email,
+    .query-title {
+      font-size: 16px;
+    }
+    
+    .login-div-content {
+      font-size: 0.9rem;
+    }
+
+    .login-div {
+      display: none; /* Hide login and register links */
+    }
+    
+    .logout-right {
+      display: none; /* Hide logout button on small screens */
+    }
+    
+    .button-login{
+      margin-left: 35vw;
+      width:8vw;
+      height:4vh;
+      font-size: 0.7rem;
+    }
+    .modal fade{
+      width: 400px;
+      height:300px ;
+      font-size: 0.8rem;
+    }
+    .success-gif{
+    height: 40px;
+    width: 40px;
+    }
+    
+    .courses-list {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    padding-bottom: 10px;
+    gap: 10px;
+    }
+
+    .course-menu {
+    font-size: 24px;
+    margin-top: 0;
+      }
+    
+    .course-names {
+    font-size: 16px;
+    margin: 0.5vh 0.5vw;
+    }
+    }
 
 /* Styles for Mobile (max-width: 480px) */
 @media (min-width: 350px) and (max-width: 480px) {
@@ -1330,7 +1693,7 @@ gap:1vh;
   overflow: visible;
 }
 
-.query-content {
+.query-title {
   font-size: 12px;
   padding: 0px;
   margin: 0;
@@ -1408,6 +1771,10 @@ margin-right: 2px !important; /* Show toggle button only on mobile */
 justify-content: flex-end;
 }
 
+.drawer-logo {
+  margin-left: 15%;
+  }
+
 .mobile-drawer {
 display: block; /* Drawer becomes visible when toggled */
 }
@@ -1423,9 +1790,10 @@ padding: 10px;
 
 .navbar img {
 /* margin-left: 1px; */
-height: 32px;
+height: 35px;
 display: flex;
 align-items: center;
+justify-content: center;
 }
 
 .navbar .container-fluid {
@@ -1517,6 +1885,7 @@ display: none !important; /* Hide the normal navbar items on mobile */
 .profile {
   display: block;
   align-items: center;
+  padding-top: 0 !important;
   }
 
 .user-name{

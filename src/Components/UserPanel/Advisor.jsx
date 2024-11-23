@@ -80,7 +80,7 @@ const Advisor = () => {
             <p>Talk to our Advisor</p>
           </div>
           <form className="enquiry-form" onSubmit={handleModal}>
-            <div className='row'>
+            <div className='advisor-row'>
             <div className="col-md-5">
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
@@ -99,7 +99,7 @@ const Advisor = () => {
                onBlur={handleBlur} />
             </div>
             </div>
-            <div className='row'>
+            <div className='advisor-row'>
             <div className="col-md-5">
               <label htmlFor="inputEmail4" className="form-label">
                 Email ID<span className="required">*</span>
@@ -152,7 +152,7 @@ const Advisor = () => {
             </div>
             </div>
             </div>
-            <div className='row'>
+            <div className='advisor-row'>
             <div className="col-md-5">
               <label htmlFor="inputState" className="form-label">
                 No. of People<span className="required">*</span>

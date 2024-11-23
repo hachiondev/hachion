@@ -1,7 +1,7 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io'
-import { styled } from '@mui/material/styles';
+import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
+import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -33,6 +34,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
+import './Admin.css'; 
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -56,12 +58,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
-
-
 export default function CourseSchedule() {
  const[courses,setCourses]=useState([]);
-const [filteredTrainers,setFilteredTrainers]=useState(courses);
+const [filteredCourses,setFilteredCourses]=useState([]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -69,30 +68,59 @@ const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({ trainer_name: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
-  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
+  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
   const currentDate = new Date().toISOString().split('T')[0];
-  const [courseData, setCourseData] = useState({
-  course_schedule_id:"",
+  const [courseData, setCourseData] = useState([{
+  course_schedule_id:Date.now(),
     schedule_category_name:"",
       schedule_course_name: "",
-    schedule_date:"",
+    schedule_date:null,
+    schedule_frequency:"",
     schedule_week:"",
-    schedule_time:"",
+    schedule_time:null,
     schedule_duration:"",
     schedule_mode:"",
     trainer_name:"",
-      date:currentDate
+      created_date:currentDate,
+      pattern:"",
+      meeting:"",
+      batch_id:""
     
-    });
+    }]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTime, setSelectedTime] = useState(null);
+    const [rows, setRows] = useState([{ id:"",frequency: "", time: "", duration: "", mode: "", pattern: "", meeting: "" }]);
 
-  const handleTimeChange = (newValue) => {
-    setSelectedTime(newValue);
- 
-    console.log("Selected Time:", newValue ? newValue.format("HH:mm") : null);
-  };
+const addRow = () => {
+    setRows([...rows, { id: Date.now(), frequency: "", time: "", duration: "", mode: "", pattern: "", meeting: "" }]);
+};
+
+const deleteRow = (id) => {
+    setRows(rows.filter(row => row.id !== id));
+};
+const handleDateChange = (newValue) => {
+  const parsedDate = dayjs(newValue); // Ensure proper parsing
+  
+  if (!parsedDate.isValid()) { // Validate the date
+    console.error("Invalid date:", newValue);
+    return;
+  }
+
+  setCourseData((prevData) => ({
+    ...prevData,
+    schedule_date: parsedDate.format('YYYY-MM-DD'), // Format the date
+    schedule_week: parsedDate.format('dddd'), // Format the weekday
+  }));
+};
+
+// Handle time change
+const handleTimeChange = (newValue) => {
+  setCourseData((prevData) => ({
+    ...prevData,
+    schedule_time: newValue ? dayjs(newValue).format('HH:mm') : null,
+  }));
+};
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -106,85 +134,102 @@ const[message,setMessage]=useState(false);
 
     
   const handleReset = () => {
-    setCourseData({
+    setCourseData([{
         schedule_category_name:"",
           schedule_course_name: "",
         schedule_date:"",
         schedule_week:"",
         schedule_time:"",
+        scheule_frequency:"",
         schedule_duration:"",
         schedule_mode:"",
         trainer_name:"",
-          date:currentDate
-    });
+          created_date:"",
+    }]);
   };
   const handleSubmit = async (e) => {
-    console.log(courseData)
-    e.preventDefault(); // Prevents the default form submission
+    e.preventDefault(); // Prevent the default form submission
+  
     const currentDate = new Date().toISOString().split("T")[0];
+  
+    // Validate required fields
     if (!courseData.schedule_category_name || !courseData.schedule_course_name || !courseData.trainer_name) {
       alert("Please fill in all required fields.");
       return;
     }
   
     try {
-      
-      const response = await axios.post("http://localhost:8080/courseschedule/add", courseData
-      );
-      
+      // Add the current date to the courseData
+      const dataToSubmit = { ...courseData, created_date: currentDate };
+  
+      // Send the POST request
+      const response = await axios.post("http://localhost:8080/schedulecourse/add", dataToSubmit);
+  
       if (response.status === 200) {
-        alert("course added successfully");
-        
-        // Add the new trainer to the current list of trainers in the UI
-        setCourses((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
+        alert("Course added successfully");
+  
+        // Update the courses state to include the new course
+        const updatedCourses = [...courses, dataToSubmit];
+        setCourses(updatedCourses);
+  
+        // Reapply filtering to reflect the new data in the table
+        const filtered = updatedCourses.filter((course) =>
+          course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredCourses(filtered);
+  
+        // Reset the form fields
         handleReset();
-        setTimeout(() => {
-          
-           }, 5000); 
-        };
-      
+      }
     } catch (error) {
-      console.error("Error adding trainer:", error.message);
-      alert("There was an error adding the trainer.");
+      console.error("Error adding course:", error.message);
+      alert("There was an error adding the course.");
     }
-  };
+  }
+  
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
  
   const handleDateFilter = () => {
-    const filtered = courses.filter((trainer) => {
-      const trainerDate = new Date(trainer.date);
-      return (!startDate || trainerDate >= new Date(startDate)) &&
-             (!endDate || trainerDate <= new Date(endDate));
+    const filtered = courses.filter((course) => {
+      const courseDate = new Date(course.schedule_date); // Ensure schedule_date is parseable
+      return (
+        (!startDate || courseDate >= new Date(startDate)) &&
+        (!endDate || courseDate <= new Date(endDate))
+      );
     });
+  
     setCourses(filtered);
   };
-  
+
 useEffect(() => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get('http://localhost:8080/schedulecourse');
       setCourses(response.data);
+      setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
     } catch (error) {
       console.error("Error fetching categories:", error.message);
     }
   };
   fetchCourse();
-}, [courses]);
+}, [filteredCourses]);
 useEffect(() => {
-  const filtered = courses.filter((trainer) =>
-    trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trainer.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trainer.summary.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = courses.filter((course) =>
+    course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  setFilteredTrainers(filtered)
-  setCourses(filtered);
-}, [searchTerm,]);
+  setFilteredCourses(filtered)
+
+}, [searchTerm,filteredCourses]);
 const startIndex = (currentPage -1) * rowsPerPage;
-const paginatedData = filteredTrainers.slice(startIndex, startIndex + rowsPerPage);
-const pageCount = Math.ceil(filteredTrainers.length / rowsPerPage);
+const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
+const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
 
 // Handle page change
 const handlePageChange = (event, page) => {
@@ -213,11 +258,11 @@ const handleDelete = async (course_schedule_id) => {
 
 
 const handleClickOpen = (row) => {
-
+console.log(row);
   setSelectedRow(row); 
   setEditedRow(row)// Set the selected row data
   setOpen(true); // Open the modal
-  console.log("tid",row.trainer_id)
+  console.log("tid",row.course_schedule_id)
 };
 
 const handleClose = () => {
@@ -231,14 +276,14 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `http://localhost:8080/trainer/update/${selectedRow.trainer_id}`,
+      `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 
     // Update only the edited row in the trainers state
     setCourses((prevCourses) =>
       prevCourses.map((course) =>
-        course.course_schedule_id_id === selectedRow.course_schedule_id ? response.data : course
+        course.course_schedule_id === selectedRow.course_schedule_id ? response.data : course
       )
     );
     setMessage(true); // Show the success message
@@ -313,32 +358,38 @@ const handleInputChange = (e) => {
         </div>
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
+            <LocalizationProvider dateAdapter={AdapterDayjs}> 
               <TableHead>
+            
                 <TableRow>
+                
                   <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell align="right">Frequency</StyledTableCell>
-                  <StyledTableCell align="right">Time</StyledTableCell>
-                  <StyledTableCell align="right">Duration</StyledTableCell>
-                  <StyledTableCell align="right">Mode</StyledTableCell>
-                  <StyledTableCell align="right">Pattern</StyledTableCell>
-                  <StyledTableCell align="right">Meeting</StyledTableCell>
-                  <StyledTableCell align="right">Add/Delete Row</StyledTableCell>
+                  <StyledTableCell align="center">Frequency</StyledTableCell>
+                  <StyledTableCell align="center">Time</StyledTableCell>
+                  <StyledTableCell align="center">Duration</StyledTableCell>
+                  <StyledTableCell align="center">Mode</StyledTableCell>
+                  <StyledTableCell align="center">Pattern</StyledTableCell>
+                  <StyledTableCell align="center">Meeting</StyledTableCell>
+                  <StyledTableCell align="center">Add/Delete Row</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
+              {rows.map((row) => (
+              <StyledTableRow key={row.id}>
                 
-                  <StyledTableRow
-                    key={courseData.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
                     <StyledTableCell component="th" scope="row">
-                      <input name='schedule_date' value={courseData.schedule_date} onChange={handleChange}/>
+                    <DatePicker
+  value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null} // Ensure proper format
+  onChange={(newValue) => handleDateChange(newValue)}
+  renderInput={(params) => <TextField {...params} />}
+/>
+
                     </StyledTableCell>
                    
                     <StyledTableCell align="right"><div class="col-md-3">
-          <label for="inputState" class="form-label">Frequency</label>
-          <select id="inputState" class="form-select" name='schedule_week' 
-          value={courseData.schedule_week} onChange={handleChange}>
+         
+          <select id="inputState" class="form-select" name='schedule_frequency' 
+          value={courseData.schedule_frequency} onChange={handleChange}>
             <option selected>Select</option>
             <option>Only Weekends</option>
             <option>Week Days</option>
@@ -347,14 +398,18 @@ const handleInputChange = (e) => {
           </select>
         </div></StyledTableCell>
                     <StyledTableCell align="right"> 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>    <DemoContainer components={['TimePicker']}>
-        <TimePicker label="00:00 AM" value={selectedTime} onChange={handleTimeChange} />
-      </DemoContainer> </LocalizationProvider>
-        
+                      <DemoContainer components={['TimePicker']}>
+                      <TimePicker
+  label="Select Time"
+  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'HH:mm') : null} // Parse back for controlled component
+  onChange={handleTimeChange}
+  renderInput={(params) => <TextField {...params} />}
+/>
+      </DemoContainer> 
            </StyledTableCell>
-                    <StyledTableCell align="right"><input name="schedule_duration" value={courseData.schedule_duration} onChange={handleChange}/></StyledTableCell>
+                    <StyledTableCell align="right"><input name="schedule_duration" className='table-input' value={courseData.schedule_duration} onChange={handleChange}/></StyledTableCell>
                     <StyledTableCell align="right"><div class="col-md-3">
-          <label for="inputState" class="form-label">Mode</label>
+       
           <select id="inputState" class="form-select" name='schedule_mode' 
           value={courseData.schedule_mode} onChange={handleChange}>
             <option selected>Select</option>
@@ -362,18 +417,22 @@ const handleInputChange = (e) => {
             <option>Live Demo</option>
           </select>
         </div></StyledTableCell>
-                    <StyledTableCell align="right"><input/></StyledTableCell>
-                    <StyledTableCell align="right"><input/></StyledTableCell>
-                    <StyledTableCell align="right"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}}/><IoClose style={{fontSize:'2rem',color:'red'}}/></></StyledTableCell>
+                    <StyledTableCell align="right"><input name='pattern' className='table-input' value={rows.pattern} onChange={handleChange}/></StyledTableCell>
+                    <StyledTableCell align="right"><input name='meeting' className='table-input' value={rows.meeting} onChange={handleChange}/></StyledTableCell>
+                    <StyledTableCell align="right"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow}/>
+                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={(id)=>deleteRow(id)}/></></StyledTableCell>
                   </StyledTableRow>
-         
+                  
+                     ))}
               </TableBody>
+              </LocalizationProvider>
             </Table>
           </TableContainer>
         
       <div style={{display:'flex',flexDirection:'row'}}> 
-        <button className='submit-btn' onClick={handleSubmit}>Submit</button>
-        <button className='reset-btn'>Reset</button>
+        <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+        <button className='reset-btn' onClick={handleReset}>Reset</button>
         
       </div>
       </div>
@@ -392,10 +451,19 @@ const handleInputChange = (e) => {
           </div>
           <div className='date-schedule'>
             Start Date
-            <DatePicker  selected={startDate} onChange={date => setStartDate(date)} />
+            <DatePicker 
+    selected={startDate} 
+    onChange={(date) => setStartDate(date)} 
+    isClearable 
+  />
             End Date
-            <DatePicker  selected={endDate} onChange={date => setEndDate(date)} />
+            <DatePicker 
+    selected={endDate} 
+    onChange={(date) => setEndDate(date)} 
+    isClearable 
+  />
             <button className='filter' onClick={handleDateFilter}>filter</button>
+           
           </div>
           <div className='entries'>
             <div className='entries-left'>
@@ -448,7 +516,7 @@ const handleInputChange = (e) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {courses.map((row) => (
+          {filteredCourses.map((row) => (
             <StyledTableRow key={row.S_No}>
               <StyledTableCell><Checkbox /></StyledTableCell>
               <StyledTableCell>{row.course_schedule_id}</StyledTableCell>
@@ -460,7 +528,7 @@ const handleInputChange = (e) => {
               <StyledTableCell align="center">{row.schedule_duration}</StyledTableCell>
               <StyledTableCell align="center">{row.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{row.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.date}</StyledTableCell>
+              <StyledTableCell align="center">{row.created_date}</StyledTableCell>
               <StyledTableCell align="center">
                   <FaEdit className="edit" onClick={() => handleClickOpen(row)} /> {/* Open modal on edit click */}
                   <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(row.course_schedule_id)} />
@@ -483,31 +551,118 @@ const handleInputChange = (e) => {
       <Dialog open={open} onClose={handleClose}>
         <div className='dialog-title'>
 
-        <DialogTitle>Edit Category  </DialogTitle>
+        <DialogTitle>Edit Schedule  </DialogTitle>
         <Button onClick={handleClose} className='close-btn'>
             <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
           </Button>
         </div>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="category_name"
-            label="Category Name"
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="col">
+          <label htmlFor="inputState" className="form-label">Category Name</label>
+          <select
+            id="inputState"
+            className="form-select"
+            name="schedule_category_name"
+            value={editedRow.schedule_category_name || ""}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Category</option>
+            <option>QA Testing</option>
+            <option>Project Management</option>
+            <option>Business Intelligence</option>
+            <option>Data Science</option>
+          </select>
+        </div>
+
+        <div className="col">
+          <label htmlFor="inputState" className="form-label">Course Name</label>
+          <select
+            id="inputState"
+            className="form-select"
+            name="schedule_course_name"
+            value={editedRow.schedule_course_name || ""}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Course</option>
+            <option>QA Automation</option>
+            <option>Load Runner</option>
+            <option>QA Automation Testing</option>
+            <option>Mobile App Testing</option>
+          </select>
+        </div>
+
+        <div className="col">
+          <label className='form-label'>Trainer</label>
+          <input
             type="text"
-            fullWidth
-            value={selectedRow.category_name}
+            className="form-select"
+            placeholder="Trainer name"
+            name="trainer_name"
+            value={editedRow.trainer_name || ""}
             onChange={handleInputChange}
           />
-          <TextField
-            margin="dense"
-            name="Date"
-            label="Date"
-            type="date"
-            fullWidth
-            value={selectedRow.Date}
+        </div>
+
+        <DatePicker
+  value={editedRow.schedule_date ? dayjs(editedRow.schedule_date) : null}
+  onChange={handleDateChange}
+  renderInput={(params) => <TextField {...params} />}
+/>
+
+        <div className="col-md-3">
+          <label className="form-label">Frequency</label>
+          <select
+            id="inputState"
+            className="form-select"
+            name="schedule_frequency"
+            value={editedRow.schedule_frequency || ""}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Select</option>
+            <option>Only Weekends</option>
+            <option>Week Days</option>
+            <option>Any Days</option>
+          </select>
+        </div>
+
+        <TimePicker
+  label="Select Time"
+  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'HH:mm') : null}
+  onChange={handleTimeChange}
+  renderInput={(params) => <TextField {...params} />}
+/>
+        <input
+          name="schedule_duration"
+          value={editedRow.schedule_duration}
+          onChange={handleInputChange}
+        />
+
+        <div className="col-md-3">
+          <label htmlFor="inputState" className="form-label">Mode</label>
+          <select
+            id="inputState"
+            className="form-select"
+            name="schedule_mode"
+            value={editedRow.schedule_mode || ""}
+            onChange={handleInputChange}
+          >
+            <option value="">Select</option>
+            <option>Live Class</option>
+            <option>Live Demo</option>
+          </select>
+        </div>
+
+        <label>Pattern</label>
+        <input name="pattern" value={editedRow.pattern} onChange={handleInputChange} />
+
+        <label>Meeting</label>
+        <input name="meeting" value={editedRow.meeting} onChange={handleInputChange} />
+
+        <label>Batch ID</label>
+        <input name="batch_id" value={editedRow.batch_id} onChange={handleInputChange} />
+      </LocalizationProvider>
+    
         </DialogContent>
         <DialogActions>
          
@@ -542,7 +697,7 @@ const handleInputChange = (e) => {
                           className='success-gif'
                         />
                         <p className='modal-para'>
-                    Trainer Added Successfully
+                    Course Added Successfully
                         </p>
                       </div>
                     </div>

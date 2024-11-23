@@ -15,8 +15,7 @@ const CorporateTrainingFeature = () => {
         <h1 className='association-head'>Corporate Training Features</h1>
       </div>
       <div className='corporate-training-features'>
-        <div className='customized-row'>
-     <div className='customized-column'>
+        <div className='customized-column'>
           <div className='customized-content'>
             <img src={icon1} alt='icon-image'/>
             <div>
@@ -37,10 +36,8 @@ const CorporateTrainingFeature = () => {
               <p className='customized-content-heading'>Projects</p>
               <p className='customized-content-para'>Designed for Impact, Executed with Care</p>
             </div>
-            </div>
           </div>
-          <div className='customized-column'>
-                    <div className='customized-content'>
+          <div className='customized-content'>
             <img src={icon4} alt='icon-image'/>
             <div>
               <p className='customized-content-heading'>Flexiblity</p>
@@ -59,11 +56,9 @@ const CorporateTrainingFeature = () => {
             <div>
               <p className='customized-content-heading'>Certification</p>
               <p className='customized-content-para'>Validate Your Skills, Advance Your Career</p>
-              </div>
             </div>
-            </div>
-            </div>
-    
+          </div>
+        </div>
         <img src={training} alt='training-image' className='training-img'/>
       </div>
     </>

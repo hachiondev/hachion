@@ -72,7 +72,7 @@ const Enrollment = () => {
     <Topbar/>
     <NavbarTop/>
     <div className='enrollment'>
-      Enrollment Details 
+        <p>Enrollment Details</p>
     </div>
     <div className='enrollment-details'>
     <div className='personal-details'>

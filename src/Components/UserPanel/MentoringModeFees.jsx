@@ -14,7 +14,7 @@ const MentoringModeFees = () => {
 Mentor Mode Training refers to a personalized, guided learning approach where students receive one-on-one or small group instruction from a mentor. This method is highly effective for students who need tailored support, ongoing feedback, and deeper engagement with the subject matter.</p>
     </div>
     <div className='separator'></div>
-   <LiveOnlineFeesRight enrollText='Enroll Now' fee='25383'/>
+   <LiveOnlineFeesRight enrollText='Enroll Now' fee='₹ 25383'/>
    </div>
     </>
   )

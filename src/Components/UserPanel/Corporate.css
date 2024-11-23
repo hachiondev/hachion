@@ -29,7 +29,6 @@
     color:#fff;
     padding-top: 6vh;
     text-align: center;
-
 }
 .corporate-banner-bottom-content{
     font-size: 2.1rem;
@@ -38,21 +37,25 @@
     text-align: center;
     color: #fff;
 }
+
+.corporate-button{
+   display: flex;
+   justify-content: center;
+}
+
 .contact-us-corporate{
     margin-top:80px;
     border-radius: 10px;
     border: 1px solid white;
-    padding: 1.5vh 5vh 1.5vh 5vh;
+    padding: 15px 40px;
     background-color: #00AEEF;
     box-shadow: 5px 5px 5px #000000 opacity 30%;
     color: white;
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 700;
-    margin-left: 700px;
 }
 .hachion-content {
     background-color: white;
-  
     margin-left: 15vw;
     width: 70vw;
     padding: 5px;
@@ -205,8 +208,8 @@
 .view-all-div{
     display: flex;
     flex-direction: row-reverse;
-    margin-right: -15vw !important;
-    margin-top: -1vh;
+    margin-right: 13vw;
+    margin-top: -9vh;
 }
 
 .view-all-corporate {
@@ -248,10 +251,7 @@
     padding: 5px;
     align-items: center;    
 }
-.customized-row{
-    display: flex;
-    flex-direction: row ;
-}
+
 .customized-content {
     height: 134px;
     width: 280px;
@@ -302,7 +302,6 @@
    margin-left: 10vw;
     border-radius: 20px;
     background-color: white;
-    
 }
 .enquiry-form{
     padding: 40px;
@@ -367,7 +366,7 @@
        border-radius: 30px;
        background-color: rgba(255,255,255,1);
        margin-top:2vh;
-       margin-left: 8vw;
+       margin-left: 7vw;
    }
    .profile-image{
        height: 120px !important;
@@ -377,10 +376,7 @@
        margin-left: 20px;
        margin-top: -2vh;
    }
-   /* .profile-image{
-       height: 120px !important;
-       width: 120px !important;
-   } */
+
    .learner-top{
        display: flex;
        flex-direction: row;
@@ -468,7 +464,7 @@
      }
    
      .carousel-indicators {
-       top: 37vh;
+       top: 330px;
        display: flex;
        left: 10%;
        transform: translateX(10%);
@@ -494,6 +490,8 @@
    .learner-card-item {
     display: flex;
     justify-content: center;
+    overflow: hidden;
+    padding: 10px;
   }
   .left-quotes{
     height: 80px;
@@ -637,15 +635,7 @@
     scrollbar-width: none; /* Hide scrollbar for Firefox */
     -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
 }
-.card-holder {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 2vh;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; 
-}
+
 .recent-entries::-webkit-scrollbar {
     display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
@@ -865,25 +855,41 @@
     width: 100%;
     }
 
-@media  (min-width:1180px) and (max-width: 1366px){
-.learner-info{
-    margin-left: 10px;
-    margin-top: -15px;
-}
-.left-quotes{
-    margin-top: -40px;
-}
-.right-quotes{
-    margin-bottom: -50px;
-    margin-left: 92vw;
-}
-.custom-next-icon{
-    margin-right: -220px;
-}
-}
-@media  (min-width:1180px) and (max-width: 1366px){
+    .video-card {
+        width: 330px; /* Adjust width to display 2 cards on mobile */
+        flex: 0 0 auto; /* Prevent cards from shrinking */
+        margin-right: 10px; /* Add some space between cards */
+        background-color: white;
+        box-shadow: 5px 5px 5px #d3d3d3;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      
+      .video-thumbnail {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .video-card-content {
+        padding: 10px;
+      }
+      
+      .video-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      
+      .video-description {
+        font-size: 0.9rem;
+        color: #555;
+        margin-top: 5px;
+      }
+      
+
+@media  (min-width:1181px) and (max-width: 1366px){
     .contact-us-corporate{
-        margin-left: 480px;
         margin-top: 50px;
     }
     .hachion-content{
@@ -938,7 +944,28 @@
     }
     .right-quotes{
         margin-bottom: -50px;
-        margin-left: 92vw;
+        margin-left: 90vw;
+    }
+    .custom-next-icon{
+        margin-right: -220px;
+    }
+
+    #advisor1{
+    
+        width: 400px !important;
+    }
+    .advisor-row{
+        gap: 10px !important;
+    }
+    #advisor2{
+        width: 220px !important;
+    }
+    #advisor3{
+        height: 120px;
+        width: 800px !important;
+    }
+    .advisor-form{
+        width: 95%;
     }
 }
 
@@ -953,19 +980,25 @@
     }
   }
 
-  @media (max-width: 1180px) {
+  @media (min-width:1025px) and (max-width: 1180px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
 
     .learner-card-item {
-      display: flex;
-      justify-content: center; 
+      display: block;
+     flex-direction: column;
+    height: 340px;
+    overflow: hidden;
     }
+    .learner-card-item > div {
+        flex: 70%;
+        max-width: 100%;
+      }
   
     .learner-card {
-      width: 68vw; 
-      margin-left:160px;
+        display: block;
+        width: 75vw;
     }
     .left-quotes{
         margin-left: 2vh;
@@ -975,67 +1008,113 @@
         margin-left: 10px;
     }
     .right-quotes{
-        margin-left: 90vw;
+        margin-left: 87vw;
         margin-bottom: -40px;
     }
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        top: 320px;
+      }
+    
+    .custom-prev-icon, .custom-next-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+      }
+      .custom-next-icon{
+        margin-right: -220px;
+    }
+
+    .blogs-container {
+        grid-template-columns: repeat(4, 1fr); 
+      }
+}
+ 
+@media (min-width: 769px) and (max-width: 1024px) {
     .blogs-container {
         grid-template-columns: repeat(4, 1fr); 
       }
 
     .learner-card-item {
-      display: flex;
-      justify-content: center; 
+        display: block;
+        flex-direction: column;
+        height: 295px;
+        overflow: hidden;
     }
+
+    .learner-card-item > div {
+    flex: 80%;
+    max-width: 100%;
+  }
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    top: 290px;
+  }
+
+.custom-prev-icon, .custom-next-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0px;
+  }
+  .custom-next-icon{
+    margin-right: -300px;
+}
   
     .learner-card {
-      width: 68vw; 
-      margin-left:160px;
+    display: block;
+      width: 65vw; 
     }
     .left-quotes{
         margin-left: 2vh;
     }
-    .learner-info{
-        margin-top: 20px;
-    }
     .right-quotes{
-        margin-left: 90vw;
-    }
- 
-}
- 
-@media (max-width: 1024px) {
-    .blogs-container {
-        grid-template-columns: repeat(4, 1fr); 
-      }
-
-    .learner-card-item {
-      display: flex;
-      justify-content: center; 
-    }
-  
-    .learner-card {
-      width: 65vw; 
-    }
-    .left-quotes{
-        margin-left: 4vh;
+        margin-left: 88vw;
+        margin-bottom: -30px;
     }
 }
   
-@media (max-width: 768px) {
+@media(min-width:481px) and (max-width: 768px) {
     .blogs-container {
         grid-template-columns: repeat(3, 1fr); 
       }
 
     .learner-card {
+    display: block;
       width: 70vw; 
+      margin-left: 13%;
     }
-    .custom-prev-icon{
-        margin-left: -10vh;
-    }
-    /* .learner-image{
-        height: 90px;
-        width: 100px;
-    } */
+
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        top: 320px;
+      }
+    
+    .custom-prev-icon, .custom-next-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+      }
+
+    .learner-card-item {
+        display: block;
+        flex-direction: column;
+        height: 350px;
+        overflow: hidden;
+      }
+      .learner-card-item > div {
+        width: 75%; 
+        max-width: 100%;
+      }
+
     .profile-image{
         height: 80px !important;
         width: 80px !important;
@@ -1061,9 +1140,9 @@
     }
 }
 
-@media  (min-width:480px) and (max-width: 1179px){
+@media  (min-width:481px) and (max-width: 1179px){
     .contact-us-corporate{
-        margin-left: 300px;
+        padding: 10px 30px;
         margin-top: 50px;
     }
 
@@ -1360,6 +1439,13 @@
         max-width: 400px;
         height: 320px;
         margin-top: 0px;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .learner-card-item > div {
+        width: 80%; 
+        max-width: 100%;
       }
     
       .learner-card {
@@ -1371,7 +1457,7 @@
         border: 1px solid #ddd;
         border-radius: 20px;
         padding: 10px;
-        margin: 50px;
+        margin: 40px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
     
@@ -1566,7 +1652,6 @@
     }
     .contact-us-corporate{
         margin-top: 0px;
-        margin-left: 40%;
         font-size: 14px;
         padding: 3px 8px;
         border-radius: 5px;
@@ -1615,7 +1700,7 @@
         margin: 5px;
     }
 
-    .row {
+    .advisor-row {
         flex-direction: column !important; /* Stack the form fields vertically */
         gap: 0px !important; /* Reduce gap between elements for mobile */
       }
@@ -1757,6 +1842,7 @@
 
     .training-img {
         width: 320px; /* Full width for the image */
+        height: 300px;
         max-width: 100%; /* Maintain the image's aspect ratio */
         margin: 20px auto;
     }
@@ -1813,9 +1899,9 @@
     border: 1px solid #b3b3b3;
     padding: 5px;
 }
-.row{
+.advisor-row{
     display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     /* gap: 50px !important; */
 }
   
@@ -1846,7 +1932,7 @@
 }
 #advisor3{
     height: 120px;
-    width: 995px !important;
+    width: 100% !important;
     border-radius: 5px;
     outline: none;
     border: 1px solid #b3b3b3;
@@ -1857,35 +1943,14 @@
     justify-content: flex-end;
     padding: 5px;
     }
-@media(min-width:1180px) and (max-width:1367px){
-    
-#advisor1{
-    
-    width: 400px !important;
-}
-.row{
 
-    gap: 10px !important;
-}
-#advisor2{
-    width: 220px !important;
-}
-#advisor3{
-    height: 120px;
-    width: 800px !important;
-}
-.advisor-form{
-    width: 95%;
-}
-}
 @media(min-width:768px) and (max-width:1179px){
     
     #advisor1{
         
         width: 300px !important;
     }
-    .row{
-    
+    .advisor-row{
         gap: 10px !important;
     }
     #advisor2{

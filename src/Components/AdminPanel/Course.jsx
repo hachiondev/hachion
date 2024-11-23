@@ -23,6 +23,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import CourseSchedule from './CourseSchedule';
+import Curriculum from './Curriculum';
 // Styling the table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -277,15 +279,17 @@ const handleAdd=()=>{
           Review
         </div>
       </div>
+      {activeTab==='schedule' &&  <CourseSchedule/>}
+      {activeTab==='curriculum' &&  <Curriculum/>}
 
-      <CourseCategory
+      {/* <CourseCategory
         pageTitle="Course"
         headerTitle={activeTab.replace(/([A-Z])/g, ' $1')} // Dynamically updates the header title
         buttonLabel={`Add ${activeTab.replace(/([A-Z])/g, ' $1')}`} // Dynamic button label
         onAdd={handleAdd}
       />
 
-      {/* Table Content */}
+ 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -298,7 +302,7 @@ const handleAdd=()=>{
           <TableBody>
           {getCurrentRows().map((row, index) => (
     <StyledTableRow key={index}>
-      {/* Render the correct cells based on the active tab */}
+    
       <StyledTableCell>{row.S_No}</StyledTableCell>
       {activeTab === 'courseDetails' && (
         <>
@@ -405,7 +409,6 @@ const handleAdd=()=>{
         </Table>
       </TableContainer>
 
-      {/* Pagination */}
       <div className='pagination'>
         <Pagination count={10} color="primary" />
       </div>
@@ -444,7 +447,7 @@ const handleAdd=()=>{
             Update
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

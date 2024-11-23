@@ -432,3 +432,9 @@ width: 180px;
 .close-btn{
 margin-left: 22vw !important;
 }
+.table-input{
+  margin-top: 5px;
+  height: 55px;
+  border-radius: 5px;
+  border: 1px solid #d3d3d3;
+}

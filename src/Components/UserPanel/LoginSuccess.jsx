@@ -4,7 +4,7 @@ import Login from './Login';
 const LoginSuccess = () => {
   return (<>
    <Login/>
-   <p>Successfully Registered with Hachion</p>
+   <p style={{color: 'green'}}>Successfully Registered with Hachion</p>
    </>)
 }
 

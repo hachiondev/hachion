@@ -438,3 +438,13 @@ margin-left: 22vw !important;
   border-radius: 5px;
   border: 1px solid #d3d3d3;
 }
+.bullet-list {
+  margin: 0;
+  padding-left: 5px;
+
+  list-style-type: disc;
+}
+
+.bullet-list li {
+  margin-bottom: 5px; /* Optional spacing between list items */
+}

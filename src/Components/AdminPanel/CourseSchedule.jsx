@@ -60,7 +60,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function CourseSchedule() {
  const[courses,setCourses]=useState([]);
-const [filteredCourses,setFilteredCourses]=useState([]);
+const [filteredCourses,setFilteredCourses]=useState([courses]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -420,7 +420,7 @@ const handleInputChange = (e) => {
                     <StyledTableCell align="right"><input name='pattern' className='table-input' value={rows.pattern} onChange={handleChange}/></StyledTableCell>
                     <StyledTableCell align="right"><input name='meeting' className='table-input' value={rows.meeting} onChange={handleChange}/></StyledTableCell>
                     <StyledTableCell align="right"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow}/>
-                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={(id)=>deleteRow(id)}/></></StyledTableCell>
+                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
                   
                      ))}

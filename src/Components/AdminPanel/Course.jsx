@@ -25,6 +25,9 @@ import TextField from '@mui/material/TextField';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import CourseSchedule from './CourseSchedule';
 import Curriculum from './Curriculum';
+import Faq from './Faq';
+import DemoVideo from './DemoVideo';
+import RegularVideo from './RegularVideo';
 // Styling the table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -281,7 +284,9 @@ const handleAdd=()=>{
       </div>
       {activeTab==='schedule' &&  <CourseSchedule/>}
       {activeTab==='curriculum' &&  <Curriculum/>}
-
+      {activeTab==='faq' &&  <Faq/>}
+      {activeTab==='demoVideos' &&  <DemoVideo/>}
+      {activeTab==='regularVideos' &&  <RegularVideo/>}
       {/* <CourseCategory
         pageTitle="Course"
         headerTitle={activeTab.replace(/([A-Z])/g, ' $1')} // Dynamically updates the header title

@@ -152,7 +152,7 @@ useEffect(() => {
     }
   };
   fetchTrainer();
-}, []);
+}, [trainers]);
 useEffect(() => {
   const filtered = trainers.filter((trainer) =>
     trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -161,7 +161,7 @@ useEffect(() => {
   );
   setFilteredTrainers(filtered)
   setTrainers(filtered);
-}, [searchTerm,trainers]);
+}, [searchTerm,filteredTrainers]);
 const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredTrainers.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredTrainers.length / rowsPerPage);

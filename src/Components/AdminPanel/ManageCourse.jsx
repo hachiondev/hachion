@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Course from './Course';
 import AddCourseDetails from './AddCourseDetails';
+import CourseDetail from './CourseDetail';
 
 const ManageCourse = () => {
   const [isAddingCourse, setIsAddingCourse] = useState(false);
@@ -10,7 +10,7 @@ const ManageCourse = () => {
       {isAddingCourse ? (
         <AddCourseDetails onBack={() => setIsAddingCourse(false)} />
       ) : (
-        <Course onAddCourse={() => setIsAddingCourse(true)} />
+        <CourseDetail onAddCourse={() => setIsAddingCourse(true)} />
       )}
     </div>
   );

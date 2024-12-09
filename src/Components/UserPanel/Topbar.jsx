@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { PiLineVerticalThin } from "react-icons/pi";
 import { IoIosMail } from "react-icons/io";
 import whatsapp from '../../Assets/logos_whatsapp-icon.png';
@@ -9,17 +9,38 @@ import profile1 from '../../Assets/profile1.jfif';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
+import { AuthContext } from '../../AuthContext';
 
 
 const Topbar = () => {
   
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const handleLogout = () => {
-   
     setIsLoggedIn(false);
+    // Logic to handle logout
+    window.location.href = '/login';  // Redirect to login page after logout
   };
 
+  // Fetch user data when the component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/user', {
+          credentials: 'include'  // Ensures cookies (including session) are sent
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUserData(data);  // Set the user data (e.g., name, email)
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
     <>
       <div className='topbar'>
@@ -42,10 +63,10 @@ const Topbar = () => {
           <div className='topbar-right'>
           <div className='user-info'>
             <div className="btn-group">
-              <Avatar alt="user_name" src={profile1} />
+              <Avatar src={userData?.picture || profile1} alt="user_name" />
               <div className="dropdown">
-  <Link className="btn-logout dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Hachion
+  <Link className="btn-logout dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" onClick={handleLogout}>
+  {userData?.name || 'Hachion'}
   </Link>
 
   <ul className="dropdown-menu">

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logo from '../../Assets/logo.png';
-import linkedin from '../../Assets/linkedins.png';
+import linkedin from '../../Assets/linkedin.png';
 import apple from '../../Assets/Apple.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginSide from './LoginSide';
 import captcha from '../../Assets/captcha.png';
 import google from '../../Assets/google_symbol.svg.png';
 import facebook from '../../Assets/facebook_symbol.svg.png';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
-import { useNavigate } from 'react-router-dom';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
+import Topbar from './Topbar';
 
 const initialValues = {
   email: "",
@@ -19,57 +20,44 @@ const initialValues = {
 
 const Login = () => {
   const [passwordType, setPasswordType] = useState('password');
-  //const [captchaVerified, setCaptchaVerified] = useState(false); // State to track captcha status
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // To programmatically navigate
 
+  // Formik for form validation
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-      // if (!captchaVerified) {
-      //   alert('Please verify the CAPTCHA');
-      //   return;
-      // }
-      navigate('/login');
+      // On form submit, this will handle the login process
+      // Replace with actual login logic (e.g. API call) and validation
       console.log(values);
+      navigate('/home');  // After successful login, navigate to the home page
     }
   });
+  const handleLogin=()=>{
+    navigate('/home');
+  }
 
-  const handleLogin = () => {
-    navigate('/');
-  };
-
+  // Functions to handle social login
   const googleLogin = () => {
-    console.log('Google login clicked');
+    window.open('http://localhost:8080/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    console.log('Facebook login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    console.log('LinkedIn login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    console.log('Apple login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
   };
-  const handleAdminLogin=()=>{
-    navigate('/adminlogin')
-  }
-
-  // Handle CAPTCHA verification
-  // const handleCaptchaChange = (value) => {
-  //   if (value) {
-  //     setCaptchaVerified(true); 
-  //   } else {
-  //     setCaptchaVerified(false); 
-  //   }
-  // };
 
   return (
     <>
@@ -79,8 +67,7 @@ const Login = () => {
             <img src={logo} alt='logo' className='login-logo' />
             <h3 className='welcome-back'>Welcome back!</h3>
             <h4 className='login-continue'>Login to continue learning</h4>
-
-            <div className='login-mid'>
+<div className='login-mid'>
               <form onSubmit={handleSubmit}>
                 <label className='login-label'>Email ID<span className='star'>*</span></label>
                 <div className="input-group mb-2">
@@ -95,7 +82,7 @@ const Login = () => {
                   />
                 </div>
                 {errors.email && touched.email ? (<p className='form-error'>{errors.email}</p>) : null}
-                
+
                 <label className='login-label'>Password<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
@@ -107,7 +94,9 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-  
+                  <span className="input-group-text" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  </span>
                 </div>
                 {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
 
@@ -124,15 +113,8 @@ const Login = () => {
                   <label className="form-check-label" htmlFor="flexCheckDefault">
                     I'm not a robot
                   </label>
-                  <img src={captcha} alt='captcha' className='captcha' />
+                  <img src={captcha} alt='captcha' style={{ marginLeft: '4vh', cursor: 'pointer' }} />
                 </div>
-
-              {/* <div className="form-check">
-                  <ReCAPTCHA
-                    sitekey="YOUR_SITE_KEY" 
-                    onChange={handleCaptchaChange}
-                  />
-                </div> */}
 
                 <div className="d-grid gap-2">
                   <button className="register-btn" type="submit" onClick={handleLogin}>Login</button>
@@ -141,20 +123,24 @@ const Login = () => {
             </div>
 
             <div className='login-with'>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr width='30%' size='2' style={{ marginTop: '3vh' }}></hr>
               <p className='login-option'>Or Login with</p>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
+              <hr width='30%' size='2' style={{ marginTop: '3vh' }}></hr>
             </div>
 
             <div className='icon-holder'>
-              <button className="social-login-btn" onClick={googleLogin}>
+       
+              <button className="social-login-btn" onClick={() => {
+  console.log('Google login button clicked');
+  googleLogin();
+}}>
                 <img src={google} alt='google'  />
               </button>
               <button className="social-login-btn" onClick={facebookLogin}>
-                <img src={facebook} alt='facebook'/>
+                <img src={facebook} alt='facebook' />
               </button>
               <button className="social-login-btn" onClick={linkedinLogin}>
-                <img src={linkedin} alt='linkedin' />
+                <img src={linkedin} alt='linkedin' style={{ height: '5.2vh', width: '2.8vw' }} />
               </button>
               <button className="social-login-btn" onClick={appleLogin}>
                 <img src={apple} alt='apple' />
@@ -162,7 +148,6 @@ const Login = () => {
             </div>
 
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
-          <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button>
           </div>
         </div>
         <LoginSide />

@@ -10,6 +10,10 @@ import email from '../../Assets/Group 39487.png'
 import {Link} from 'react-router-dom';
 
 const Register = () => {
+  const googleLogin = () => {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';  // Backend Google OAuth
+  };
+
   return (
 <>
 <div className='login'>
@@ -21,7 +25,7 @@ const Register = () => {
   <div className='icon-places'>
     <div className='icon-text'>
   <img src={google} alt='google' className='icon-text-img'/>
-   <div className='icon-text-holder-google'>Google</div>
+   <button className='icon-text-holder-google' onClick={googleLogin}>Google</button>
     </div>
     <div className='icon-text' >
   <img src={facebook} alt='facebook' className='icon-text-img'/>

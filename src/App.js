@@ -41,19 +41,28 @@ import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
     <BrowserRouter>
     <Routes>
-      <Route path='/' element={<Home/>}/>
+      
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+      <Route
+          path="/home"
+          element={
+            
+              <Home />
+            
+          }
+        />
       <Route path='/course' element={<Course/>}/>
       <Route path='/qaautomation' element={<QaAutomation/>}/>
       <Route path='/corporate' element={<CorporateTraining/>}/>

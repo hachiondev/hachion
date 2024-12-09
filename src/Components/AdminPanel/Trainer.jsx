@@ -141,18 +141,18 @@ const[message,setMessage]=useState(false);
     setTrainers(filtered);
   };
   
-useEffect(() => {
-  const fetchTrainer = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/trainers');
-      setTrainers(response.data);
-      setFilteredTrainers(response.data); // Set initial filtered categories to all data
-    } catch (error) {
-      console.error("Error fetching categories:", error.message);
-    }
-  };
-  fetchTrainer();
-}, [trainers]);
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/trainers');
+        setTrainers(response.data);
+        setFilteredTrainers(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error.message);
+      }
+    };
+    fetchTrainer();
+  }, []);
 useEffect(() => {
   const filtered = trainers.filter((trainer) =>
     trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||

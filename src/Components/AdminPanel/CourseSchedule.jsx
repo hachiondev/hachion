@@ -60,6 +60,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function CourseSchedule() {
  const[courses,setCourses]=useState([]);
+ const [course,setCourse]=useState([]);
 const [filteredCourses,setFilteredCourses]=useState([courses]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
@@ -113,6 +114,17 @@ const handleDateChange = (newValue) => {
     schedule_week: parsedDate.format('dddd'), // Format the weekday
   }));
 };
+useEffect(() => {
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/course-categories/all");
+      setCourse(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCategory();
+}, []);
 
 // Handle time change
 const handleTimeChange = (newValue) => {
@@ -326,16 +338,16 @@ const handleInputChange = (e) => {
       <div className='course-row'>
       <div class="col-md-3">
           <label for="inputState" class="form-label">Category Name</label>
-          <select id="inputState" class="form-select"     name="schedule_category_name"
-    value={courseData.schedule_category_name}
-    onChange={handleChange}>
-    
-            <option selected>Select category</option>
-            <option>QA Testing</option>
-            <option>Project Management</option>
-            <option>Business Intelligence</option>
-            <option>DataScience</option>
-          </select>
+          <select id="inputState" class="form-select" name='schedule_category_name' value={courseData.schedule_category_name} onChange={handleChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+      </select>
         </div>
         <div class="col-md-3">
           <label for="inputState" class="form-label">Course Name</label>
@@ -567,11 +579,14 @@ const handleInputChange = (e) => {
             value={editedRow.schedule_category_name || ""}
             onChange={handleInputChange}
           >
-            <option value="">Select Category</option>
-            <option>QA Testing</option>
-            <option>Project Management</option>
-            <option>Business Intelligence</option>
-            <option>Data Science</option>
+            <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
           </select>
         </div>
 

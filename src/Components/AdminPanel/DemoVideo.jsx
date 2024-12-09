@@ -59,7 +59,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function DemoVideo() {
-  const [searchTerm,setSearchTerm]=useState("")
+  const [searchTerm,setSearchTerm]=useState("");
+  const [course,setCourse]=useState([]);
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[demoVideo,setDemoVideo]=useState([]);
     const[filteredVideo,setFilteredVideo]=useState([])
@@ -221,6 +222,17 @@ const paginatedRows = filteredVideo.slice(
           alert("Error adding video.");
         }
       };
+      useEffect(() => {
+        const fetchCategory = async () => {
+          try {
+            const response = await axios.get("http://localhost:8080/course-categories/all");
+            setCourse(response.data); // Assuming the data contains an array of trainer objects
+          } catch (error) {
+            console.error("Error fetching categories:", error.message);
+          }
+        };
+        fetchCategory();
+      }, []);
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -236,11 +248,14 @@ const paginatedRows = filteredVideo.slice(
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={videoData.category_name} onChange={handleChange}>
-      <option selected>Select category</option>
-      <option>QA Testing</option>
-      <option>Project Management</option>
-      <option>Business Intelligence</option>
-      <option>DataScience</option>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
     </select>
   </div>
   <div class="col-md-3">
@@ -407,11 +422,14 @@ const paginatedRows = filteredVideo.slice(
         value={editedRow.category_name || ""}
         onChange={handleInputChange}
       >
-        <option value="">Select Category</option>
-        <option>QA Testing</option>
-        <option>Project Management</option>
-        <option>Business Intelligence</option>
-        <option>Data Science</option>
+        <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
       </select>
     </div>
 

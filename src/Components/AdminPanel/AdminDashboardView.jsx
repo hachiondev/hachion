@@ -15,6 +15,7 @@ import AddCourseCategory from './AddCourseCategory';
 
 import Other from './Other';
 import ManageCategories from './ManageCategories';
+import CourseCategory from './CourseCategory';
 
 
 const AdminDashboardView = () => {
@@ -43,7 +44,7 @@ const AdminDashboardView = () => {
       case 'Dashboard':
         return <AdminDashboard />;
       case 'Course Category':
-        return <ManageCategories onAddCategoryClick={handleAddCategoryClick} />;
+        return <CourseCategory  />;
    
         case 'Trending Courses':
         

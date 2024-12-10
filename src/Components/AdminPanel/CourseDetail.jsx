@@ -13,21 +13,15 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
-import dayjs from 'dayjs';
+import success from '../../Assets/success.gif';
+import { RiCloseCircleLine } from 'react-icons/ri';
 import Pagination from '@mui/material/Pagination';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
-import AddCourseDetails from './AddCourseDetails';
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -60,7 +54,10 @@ const CourseDetail = ({
   buttonLabel = 'Add Courses',
  
 }) => {
+  const [formMode, setFormMode] = useState('Add'); 
   const [course,setCourse]=useState([]);
+  const [searchTerm,setSearchTerm]=useState("");
+  const[courses,setCourses]=useState([]);
   const [categories, setCategories] = useState([]);
   const [showAddCourse,setShowAddCourse]=useState(false);
   const [filteredCourses,setFilteredCourses]=useState([])
@@ -81,6 +78,7 @@ const CourseDetail = ({
     liveTrainingHours: '',
     labExerciseHours: '',
     realTimeProjects: '',
+    courseCategory:"",
     starRating: '',
     ratingByNumberOfPeople: '',
     totalEnrollment: '',
@@ -98,6 +96,13 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
+  useEffect(() => {
+    const filtered = categories.filter(category =>
+        category.courseName.toLowerCase().includes(searchTerm.toLowerCase()) 
+        
+    );
+    setFilteredCourses(filtered);
+}, [searchTerm,filteredCourses]);
   useEffect(() => {
     const fetchCourses = async () => {
         try {
@@ -121,32 +126,48 @@ const handleFileChange = (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const form = new FormData();
-  form.append("courseName", formData.courseName);
-  form.append("courseImage", formData.courseImage); // Ensure the file is selected
-  form.append("youtubeLink", formData.youtubeLink);
-  form.append("numberOfClasses", formData.numberOfClasses);
-  form.append("dailySessions", formData.dailySessions);
-  form.append("liveTrainingHours", formData.liveTrainingHours);
-  form.append("labExerciseHours", formData.labExerciseHours);
-  form.append("realTimeProjects", formData.realTimeProjects);
-  form.append("starRating", formData.starRating);
-  form.append("ratingByNumberOfPeople", formData.ratingByNumberOfPeople);
-  form.append("totalEnrollment", formData.totalEnrollment);
-  form.append("courseCategory", formData.courseCategory);
+  const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+  const dataToSubmit = { 
+    ...formData, 
+    date: currentDate, // Add current date
+  };
 
   try {
-    const response = await axios.post("http://localhost:8080/courses/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    alert(response.data); // "Course added successfully"
+    if (formData.id) {
+      // Edit operation
+      const response = await axios.put(
+        `http://localhost:8080/courses/update/${formData.id}`, // Ensure the correct ID is used
+        dataToSubmit
+      );
+      if (response.status === 200) {
+        alert("Course updated successfully");
+        // Update local state
+        setCourse((prevCourses) =>
+          prevCourses.map((course) =>
+            course.id === formData.id ? { ...course, ...dataToSubmit } : course
+          )
+        );
+      }
+    } else {
+      // Add operation
+      const response = await axios.post(
+        "http://localhost:8080/courses/add",
+        dataToSubmit
+      );
+      if (response.status === 200) {
+        alert("Course added successfully");
+        // Update local state
+        setCourse((prevCourses) => [...prevCourses, response.data]); // Use response data for the new course
+      }
+    }
+
+    handleReset(); // Clear form fields
   } catch (error) {
-    console.error("Error:", error.response?.data || error.message);
-    alert("Failed to add course");
+    console.error("Error submitting course:", error.message);
+    alert("Error submitting course.");
   }
 };
+
 
   
 const handleReset=()=>{
@@ -182,118 +203,51 @@ const handleDelete = async (id) => {
  } catch (error) { 
    console.error("Error deleting Curriculum:", error); 
  } }; 
-// const CATEGORY_API_URL = 'http://localhost:8080/course-categories';
 
-  // // Fetch course categories on component mount
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, []);
-  // // Fetch Courses on Component Mount
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, []);
-
-  // const fetchCategories = async () => {
-  //   try {
-  //     const response = await axios.get(`${CATEGORY_API_URL}/all`);
-  //     setCategories(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching categories:', error);
-  //     setMessage({ text: 'Failed to load categories. Please try again.', type: 'error' });
-  //   }
-  // };
-
-  // const fetchCourses = async () => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/all`);
-  //     setCourses(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching courses:', error);
-  //     setMessage({ text: 'Failed to load courses. Please try again.', type: 'error' });
-  //   }
-  // };
-  // const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-  // const handleInputChange = (e) => {
-  //   const { name, value, type, files } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: type === 'file' ? files[0] : value,
-  //   });
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setMessage({ text: '', type: '' });
-
-  //   try {
-  //     const data = new FormData();
-  //     Object.keys(formData).forEach((key) => {
-  //       data.append(key, formData[key]);
-  //     });
-
-  //     const response = await axios.post(`${API_URL}/add`, data, {
-  //       headers: { 'Content-Type': 'multipart/form-data' },
-  //     });
-
-  //     setMessage({ text: 'Course added successfully!', type: 'success' });
-  //     handleReset();
-  //   } catch (error) {
-  //     console.error('Error submitting course:', error);
-  //     setMessage({ text: 'Failed to add the course. Please try again.', type: 'error' });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleReset = () => {
-  //   setFormData({
-  //     title: '',
-  //     courseName: '',
-  //     courseImage: null,
-  //     youtubeLink: '',
-  //     numberOfClasses: '',
-  //     dailySessions: '',
-  //     liveTrainingHours: '',
-  //     labExerciseHours: '',
-  //     realTimeProjects: '',
-  //     starRating: '',
-  //     ratingByNumberOfPeople: '',
-  //     totalEnrollment: '',
-  //     courseCategory: '',
-  //   });
-  //   setMessage({ text: '', type: '' });
-  // };
-
-  // const handleSave = async () => {
-  //   try {
-  //     await axios.put(`${API_URL}/update/${selectedCourses.id}`, selectedCourses);
-  //     fetchCourses();
-  //     setOpen(false);
-  //   } catch (error) {
-  //     console.error('Failed to update course:', error);
-  //   }
-  // };
-
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await axios.delete(`http://localhost:8080/api/courses/delete/${id}`);
-  //     fetchCourses();
-  //   } catch (error) {
-  //     console.error('Failed to delete course:', error);
-  //   }
-  // };
-  
+   
+ const handleCloseModal=()=>{
+  setShowAddCourse(false);
+ 
+}
+const handleEditClick = async (courseId) => {
+  setFormMode('Edit');
+  setShowAddCourse(true);
+  try {
+    const response = await fetch(`http://localhost:8080/courses/${courseId}`);
+    if (response.ok) {
+      const course = await response.json();
+      setFormData({
+        id: course.id, // Ensure the unique identifier is included
+        category_name: course.courseCategory || '',
+        courseName: course.courseName || '',
+        courseImage: '', // Handle file uploads differently if needed
+        youtubeLink: course.youtubeLink || '',
+        numberOfClasses: course.numberOfClasses || '',
+        dailySessions: course.dailySessions || '',
+        liveTrainingHours: course.liveTrainingHours || '',
+        labExerciseHours: course.labExerciseHours || '',
+        realTimeProjects: course.realTimeProjects || '',
+        starRating: course.starRating || '',
+        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
+        totalEnrollment: course.totalEnrollment || '',
+      });
+    } else {
+      console.error('Failed to fetch course data');
+    }
+  } catch (error) {
+    console.error('Error fetching course data:', error);
+  }
+};
 
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (<>{
     showAddCourse?(  <div className="course-category">
       <p>
-        Course Details <IoIosArrowForward /> Add Course Details
-      </p>
+    Course Details <IoIosArrowForward /> {formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}
+</p>
       <div className="category">
         <div className="category-header">
-          <p>Add Course Details</p>
+          <p>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
         </div>
         {message.text && (
           <div className={`alert alert-${message.type}`}>
@@ -305,7 +259,7 @@ const handleDelete = async (id) => {
             <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Category Name</label>
-                <select id="inputState" class="form-select" name='category_name' value={formData.category_name} onChange={handleInputChange}>
+                <select id="inputState" class="form-select" name='courseCategory' value={formData.courseCategory} onChange={handleInputChange}>
     <option value="" disabled>
           Select Category
         </option>
@@ -617,10 +571,9 @@ Self Placed Training
 </div> 
 
             <div className="course-row">
-              <button type="submit" className="btn btn-primary" onClick={handleSubmit} >
-         Submit
-              </button>
-              <button type="button" className="btn btn-secondary" onClick={handleReset}>
+            <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+              <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
             </div>
@@ -650,12 +603,14 @@ Self Placed Training
             </div>
             <div className="entries-right">
             <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-              <input
-                className="search-input"
-                type="search"
-                placeholder="Enter Courses, Category or Keywords"
-        
-              />
+            <input
+      className="search-input"
+      type="search"
+      placeholder="Enter Courses, Category or Keywords"
+      aria-label="Search"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
               <button className="btn-search" >
                 <IoSearch />
               </button>
@@ -683,47 +638,89 @@ Self Placed Training
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredCourses.length > 0
-                ? filteredCourses.map((course, index) => (
-                    <StyledTableRow key={course.id}>
-                      <StyledTableCell>
-                        <Checkbox />
-                      </StyledTableCell>
-                      <StyledTableCell>{index + 1}</StyledTableCell>
-                      <StyledTableCell align="center">
-                        <img src={course.image} alt="Course" width="50" />
-                      </StyledTableCell>
-                      <StyledTableCell align="center">{course.courseName}</StyledTableCell>
-                      <StyledTableCell align="center">{course.date}</StyledTableCell>
-                      <StyledTableCell align="center">
-                        <FaEdit
-                          className="edit" 
-                          // onClick={() => handleEditClick(course)}
-                          style={{ cursor: 'pointer', marginRight: '10px' }}
-                        />
-                        <RiDeleteBin6Line
-                          className="delete"
-                          onClick={() => handleDelete(course.id)}
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-                : (
-                  <StyledTableRow>
-                    <StyledTableCell colSpan={6} align="center">
-                      No courses available.
-                    </StyledTableCell>
-                  </StyledTableRow>
-                )}
-            </TableBody>
+      {filteredCourses.length > 0 ? (
+        filteredCourses.map((course, index) => (
+          <StyledTableRow key={course.id}>
+            <StyledTableCell>
+              <Checkbox />
+            </StyledTableCell>
+            <StyledTableCell>{index + 1}</StyledTableCell>
+            <StyledTableCell align="center">
+            {course.image ? (
+    <img
+      src={`http://localhost:8080${course.image}`} // Adjust based on your server setup
+      alt="Course"
+      width="50"
+    />
+  ) : (
+    'No Image'
+  )}
+            </StyledTableCell>
+            <StyledTableCell align="center">
+              {course.courseName}
+            </StyledTableCell>
+            <StyledTableCell align="center">{course.date}</StyledTableCell>
+            <StyledTableCell align="center">
+              <FaEdit
+                className="edit"
+                onClick={() => handleEditClick(course.id)}
+                style={{ cursor: "pointer", marginRight: "10px" }}
+              />
+              <RiDeleteBin6Line
+                className="delete"
+                onClick={() => handleDeleteConfirmation(course.id)}
+                style={{ cursor: "pointer" }}
+              />
+            </StyledTableCell>
+          </StyledTableRow>
+        ))
+      ) : (
+        <StyledTableRow>
+          <StyledTableCell colSpan={6} align="center">
+            No courses available.
+          </StyledTableCell>
+        </StyledTableRow>
+      )}
+    </TableBody>
           </Table>
         </TableContainer>
 
         <Pagination count={10} color="primary" />
 
       </div>
-    </LocalizationProvider></>)}</>
+    </LocalizationProvider></>)}
+    <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Course Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+   </>
   );
 };
 

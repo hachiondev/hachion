@@ -178,7 +178,7 @@ const paginatedRows = filteredCurriculum.slice(
             setMessage("Error updating Curriculum.");
         }
     };
-            
+
       const handleDelete = async (curriculum_id) => {
        
          try { 

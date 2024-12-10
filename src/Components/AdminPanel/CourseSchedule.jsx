@@ -60,7 +60,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function CourseSchedule() {
  const[courses,setCourses]=useState([]);
- const [course,setCourse]=useState([]);
+ const[category,setCategory]=useState([]);
+ const[courseCategory,setCourseCategory]=useState([]);
 const [filteredCourses,setFilteredCourses]=useState([courses]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
@@ -118,7 +119,7 @@ useEffect(() => {
   const fetchCategory = async () => {
     try {
       const response = await axios.get("http://localhost:8080/course-categories/all");
-      setCourse(response.data); // Assuming the data contains an array of trainer objects
+      setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
     }
@@ -342,7 +343,7 @@ const handleInputChange = (e) => {
     <option value="" disabled>
           Select Category
         </option>
-        {course.map((curr) => (
+        {category.map((curr) => (
           <option key={curr.id} value={curr.name}>
             {curr.name}
           </option>
@@ -353,11 +354,14 @@ const handleInputChange = (e) => {
           <label for="inputState" class="form-label">Course Name</label>
           <select id="inputState" class="form-select" name='schedule_course_name' 
           value={courseData.schedule_course_name} onChange={handleChange}>
-            <option selected>Select course</option>
-            <option>QA Automation</option>
-            <option>Load Runner</option>
-            <option>QA Manual Testing</option>
-            <option>Mobile App Testing</option>
+            <option value="" disabled>
+          Select Course
+        </option>
+        {courses.map((curr) => (
+          <option key={curr.id} value={curr.course_name}>
+            {curr.course_name}
+          </option>
+        ))}
           </select>
         </div>
         <div class="col-md-3">
@@ -582,7 +586,7 @@ const handleInputChange = (e) => {
             <option value="" disabled>
           Select Category
         </option>
-        {course.map((curr) => (
+        {category.map((curr) => (
           <option key={curr.id} value={curr.name}>
             {curr.name}
           </option>

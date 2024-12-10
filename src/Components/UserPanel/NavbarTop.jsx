@@ -31,7 +31,7 @@ const NavbarTop = () => {
   };
 
   const handleClick = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   const handleLogout = () => {

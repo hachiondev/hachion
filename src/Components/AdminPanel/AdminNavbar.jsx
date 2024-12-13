@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import './Admin.css';
 import logo from '../../Assets/image 133.png';
-import { RiMenuUnfold3Line } from "react-icons/ri";
+// import { RiMenuUnfold3Line } from "react-icons/ri";
 import { IoSearch } from "react-icons/io5";
 import { BsEnvelopeFill } from "react-icons/bs";
 import { IoMdNotifications } from "react-icons/io";
@@ -26,7 +26,7 @@ const AdminNavbar = () => {
    <div className='admin-nav'>
      <img src={logo} alt='logo' />
      <div className='admin-nav-middle'>
-       <RiMenuUnfold3Line style={{color:'white',fontSize:'2rem',marginTop:'1.25vh'}}/>
+       {/* <RiMenuUnfold3Line style={{color:'white',fontSize:'2rem',marginTop:'1.25vh'}}/> */}
        <div className="search-div" role="search">
          <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search" />
          <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
@@ -34,10 +34,10 @@ const AdminNavbar = () => {
      </div>
      <div className='admin-nav-right'>
        <div className='icon-container'>
-         <BsEnvelopeFill style={{color:'#00AEEF',fontSize:'2rem'}}/>
+         <BsEnvelopeFill style={{color:'#00AEEF',fontSize:'24px'}}/>
        </div>
        <div className='icon-container'>
-         <IoMdNotifications style={{color:'#00AEEF',fontSize:'2rem'}}/>
+         <IoMdNotifications style={{color:'#00AEEF',fontSize:'24px'}}/>
        </div>
       
        <div className='user-info'>
@@ -50,10 +50,10 @@ const AdminNavbar = () => {
   </Link>
 
   <ul className="dropdown-menu">
-    <li><Link className="dropdown-item" to={'/userdashboard'}> <FaUserAlt style={{color:'#00AEEF'}}/> Dashboard</Link></li>
-    <li><Link className="dropdown-item" href="#"> <IoMdSettings style={{color:'#00AEEF'}}/> Settings</Link></li>
+    <li><Link className="dropdown-item" to={'/userdashboard'}> <FaUserAlt className="dropdown-icon-admin"/> Dashboard</Link></li>
+    <li><Link className="dropdown-item" href="#"> <IoMdSettings className="dropdown-icon-admin" /> Settings</Link></li>
     <li><a className="dropdown-divider" /></li>
-    <li><Link className="dropdown-item" href="#" onClick={handleLogout}><IoLogOut style={{color:'#00AEEF'}}/> Logout</Link></li>
+    <li><Link className="dropdown-item" href="#" onClick={handleLogout}><IoLogOut className="dropdown-icon-admin"/> Logout</Link></li>
   </ul>
 </div>
   

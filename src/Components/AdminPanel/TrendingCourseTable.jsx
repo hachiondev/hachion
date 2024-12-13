@@ -48,23 +48,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, course_name, status, created_date) {
-  return { S_No, course_name, status, created_date };
-}
+// function createData(S_No, course_name, status, created_date) {
+//   return { S_No, course_name, status, created_date };
+// }
 
-const rows = [
-  createData(1, 'QA Automation', 'Enable', '2019-11-25'),
-  createData(2, 'Python', 'Enable', '2022-12-11'),
-  createData(3, 'Tableau','Enable', '2021-02-15'),
-  createData(4, 'Big data Hadoop','Enable', '2020-05-12'),
-  createData(5, 'Salesforce Developer','Enable', '2019-06-11'),
-  createData(6, 'Data Science with Python','Enable', '2018-05-21'),
-  createData(7, 'Blue Prism','Enable', '2019-05-18'),
-  createData(8, 'Load Runner', 'Enable','2018-04-13'),
-  createData(9, 'ServiceNow','Enable', '2019-06-11'),
-  createData(10, 'Cloud Computing','Enable', '2019-06-11'),
+// const rows = [
+//   createData(1, 'QA Automation', 'Enable', '2019-11-25'),
+//   createData(2, 'Python', 'Enable', '2022-12-11'),
+//   createData(3, 'Tableau','Enable', '2021-02-15'),
+//   createData(4, 'Big data Hadoop','Enable', '2020-05-12'),
+//   createData(5, 'Salesforce Developer','Enable', '2019-06-11'),
+//   createData(6, 'Data Science with Python','Enable', '2018-05-21'),
+//   createData(7, 'Blue Prism','Enable', '2019-05-18'),
+//   createData(8, 'Load Runner', 'Enable','2018-04-13'),
+//   createData(9, 'ServiceNow','Enable', '2019-06-11'),
+//   createData(10, 'Cloud Computing','Enable', '2019-06-11'),
 
-];
+// ];
 
 export default function TrendingCourse() {
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -139,7 +139,7 @@ onAddCategoryClick={handleAddTrendingCourseClick}
          
           <TableContainer component={Paper} style={{ marginTop: '20px' }}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <TableHead>
+              {/* <TableHead>
                 <TableRow>
                   <StyledTableCell><Checkbox /></StyledTableCell>
                   <StyledTableCell>S.No.</StyledTableCell>
@@ -148,9 +148,9 @@ onAddCategoryClick={handleAddTrendingCourseClick}
                   <StyledTableCell align="center">Date</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
-              </TableHead>
+              </TableHead> */}
               <TableBody>
-                {rows.map((row) => (
+                {/* {rows.map((row) => (
                   <StyledTableRow key={row.S_No}>
                     <StyledTableCell><Checkbox /></StyledTableCell>
                     <StyledTableCell>{row.S_No}</StyledTableCell>
@@ -162,7 +162,7 @@ onAddCategoryClick={handleAddTrendingCourseClick}
                       <RiDeleteBin6Line className='delete' />
                     </StyledTableCell>
                   </StyledTableRow>
-                ))}
+                ))} */}
               </TableBody>
             </Table>
           </TableContainer>

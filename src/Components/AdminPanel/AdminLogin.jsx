@@ -2,32 +2,40 @@ import React, { useState } from 'react';
 import './Admin.css';
 import logo from '../../Assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
-import LoginSide from '../UserPanel/LoginSide';
-import { useFormik } from 'formik';
-import { LoginSchema } from '../Schemas';
-
-const initialValues = {
-  email: "",
-  password: ""
-};
+import axios from 'axios';
 
 const Login = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [passwordType, setPasswordType] = useState('password');
- 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: initialValues,
-    validationSchema: LoginSchema,
-    onSubmit: (values) => {
-   
-      console.log(values);
+  // Direct form submission handler without Formik for testing`
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();  // Prevent default form submission
+    console.log("Form submission triggered");  // Debugging log
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/admin/login', {
+        email: email,
+        password: password
+      });
+      console.log("Response from backend:", response);  // Debugging response
+
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);  // Success log
+        navigate('/admindashboardview');
+      }
+    } catch (error) {
+      console.error("Error during login:", error);  // Error log
+
+      if (error.response && error.response.status === 401) {
+        setErrorMessage('Invalid Username or Password');
+      } else {
+        setErrorMessage('An error occurred. Please try again later.');
+      }
     }
-  });
-
-
-  const handleLogin = () => {
-    navigate('/admindashboardview');
   };
 
   return (
@@ -40,7 +48,7 @@ const Login = () => {
             <h4 className='login-continue'>Login to Admin Dashboard</h4>
 
             <div className='login-mid'>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleFormSubmit}>
                 <label className='login-label'>Email ID<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
@@ -48,13 +56,12 @@ const Login = () => {
                     className="form-control"
                     placeholder="abc@gmail.com"
                     name='email'
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
-                 
                 </div>
-                {errors.email && touched.email ? (<p className='form-error'>{errors.email}</p>) : null}
+
                 <label className='login-label'>Password<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
@@ -62,32 +69,34 @@ const Login = () => {
                     className="form-control"
                     placeholder="Enter your password"
                     name='password'
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
-                 
                 </div>
-                {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
+
+                {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
 
                 <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link>
- 
+
                 <div className="d-grid gap-2">
-                  <button className="admin-login" type="submit" onClick={handleLogin} >Login</button>
+                  <button 
+                    className="admin-login" 
+                    type="submit"
+                  >
+                    Login
+                  </button>
                 </div>
               </form>
-    </div>
-    </div>
-
-          
-
+            </div>
+          </div>
         </div>
-        <LoginSide />
+        {/* Include LoginSide if necessary */}
       </div>
     </>
   );
-}
+};
 
 export default Login;

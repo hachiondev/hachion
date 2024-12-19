@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { IoIosArrowForward } from 'react-icons/io';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,13 +14,13 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
 import success from '../../Assets/success.gif';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import Pagination from '@mui/material/Pagination';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
-
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -97,12 +96,12 @@ const CourseDetail = ({
     fetchCategory();
   }, []);
   useEffect(() => {
-    const filtered = categories.filter(category =>
+    const filtered = courses.filter(category =>
         category.courseName.toLowerCase().includes(searchTerm.toLowerCase()) 
         
     );
     setFilteredCourses(filtered);
-}, [searchTerm,filteredCourses]);
+}, [searchTerm, courses]);
   useEffect(() => {
     const fetchCourses = async () => {
         try {
@@ -168,7 +167,25 @@ const handleSubmit = async (e) => {
   }
 };
 
+const [currentPage, setCurrentPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(10);
+   
+   const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  // Inside your CourseCategory component
 
+const handleRowsPerPageChange = (rows) => {
+  setRowsPerPage(rows);
+  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+};
+
+// Slice filteredCourses based on rowsPerPage and currentPage
+const displayedCategories = filteredCourses.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
   
 const handleReset=()=>{
   setFormData([{
@@ -239,12 +256,31 @@ const handleEditClick = async (courseId) => {
   }
 };
 
-  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
+  const handleAddTrendingCourseClick = () => {
+    setFormMode('Add'); // Explicitly set formMode to 'Add'
+    setShowAddCourse(true); // Show the form
+    handleReset(); // Reset the form fields for a clean form
+  };
+  
   return (<>{
     showAddCourse?(  <div className="course-category">
-      <p>
-    Course Details <IoIosArrowForward /> {formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}
-</p>
+      <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                <a href="#!" onClick={() => {
+                setShowAddCourse(false); // Hide the add/edit form
+                setFormMode('Add'); // Reset to 'Add' mode
+                handleReset(); // Clear any existing form data
+            }}>
+              Course Details
+            </a>
+            <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+      {formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}
+    </li>
+              </ol>
+            </nav>
       <div className="category">
         <div className="category-header">
           <p>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
@@ -256,6 +292,7 @@ const handleEditClick = async (courseId) => {
         )}
         
           <div className="course-details">
+          <div className='course-details'>
             <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Category Name</label>
@@ -399,6 +436,8 @@ const handleEditClick = async (courseId) => {
                 />
               </div>
             </div>
+            </div>
+
             <div className='course-details'>
             <h3>Key Highlights</h3>
               <div className='course-row'>
@@ -432,7 +471,7 @@ const handleEditClick = async (courseId) => {
 </div> 
 <h3>Mode Of Training</h3>
 <div className='course-row'>
-<div className='course-details'>
+<div className='course-mode'>
 <div class="form-check">
 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
 <label class="form-check-label" for="flexCheckDefault">
@@ -441,18 +480,18 @@ Live Training
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 </div>
-<div className='course-details'>
+<div className='course-mode'>
 <div class="form-check">
 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
 <label class="form-check-label" for="flexCheckDefault">
@@ -461,18 +500,18 @@ Mentoring Mode
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 </div>
-<div className='course-details'>
+<div className='course-mode'>
 <div class="form-check">
 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
 <label class="form-check-label" for="flexCheckDefault">
@@ -481,67 +520,66 @@ Self Placed Training
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 </div>
 
-</div>
-<div className='course-details'>
+<div className='course-mode'>
 <div class="form-check">
 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
 <label class="form-check-label" for="flexCheckDefault">
-Self Placed Training
+Corporate Training
 </label>
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
 </div>
-
+</div>
 </div>
 <h3>Sample session</h3>
 <div className='course-row'>
 <div className='course-details'>
 <h4>Mentoring Training</h4>
 <div className='course-col'>
-<div class="col-sm-3">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-sample" id="inputEmail4" />
 </div>
-<div class="col-sm-3">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="number" class="form-control" id="inputEmail4" />
+<input type="number" class="form-control-sample" id="inputEmail4" />
 </div>
 </div>
 
 </div>
 <div className='course-details'>
-<h4>Mentoring Training</h4>
+<h4>Self Paced Training</h4>
 <div className='course-col'>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="form-control-sample" id="inputEmail4" />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="form-control-sample" id="inputEmail4" />
 </div>
 </div>
 
@@ -563,16 +601,16 @@ Self Placed Training
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+<textarea class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+<textarea class="form-control" id="exampleFormControlTextarea1" ></textarea>
 </div> 
 
-            <div className="course-row">
+      <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
@@ -588,20 +626,36 @@ Self Placed Training
           </div>
           <div className="date-schedule">
             Start Date
-            <DatePicker value={startDate} onChange={(date) => setStartDate(date)} />
+            <DatePicker value={startDate} onChange={(date) => setStartDate(date)} 
+              sx={{
+                '& .MuiIconButton-root':{color: '#00aeef'}
+              }}/>
             End Date
-            <DatePicker value={endDate} onChange={(date) => setEndDate(date)} />
+            <DatePicker value={endDate} onChange={(date) => setEndDate(date)}
+            sx={{
+               '& .MuiIconButton-root':{color: '#00aeef'}
+            }} />
             <button className="filter" >
               Filter
             </button>
           </div>
           <div className="entries">
             <div className="entries-left">
-              <p>Show</p>
-              <button className="btn-number">10</button>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className="entries-right">
+            <div className="search">
             <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
             <input
       className="search-input"
@@ -615,6 +669,7 @@ Self Placed Training
                 <IoSearch />
               </button>
               </div>
+              </div>
               <button className="btn-category" onClick={handleAddTrendingCourseClick}>
                 <FiPlus />
                 {buttonLabel}
@@ -623,29 +678,30 @@ Self Placed Training
           </div>
         </div>
 
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ padding: '0 10px' }}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>
+                <StyledTableCell sx={{ width: 100 }} align="center">
                   <Checkbox />
                 </StyledTableCell>
-                <StyledTableCell>S.No.</StyledTableCell>
-                <StyledTableCell align="center">Image</StyledTableCell>
-                <StyledTableCell align="center">Course Name</StyledTableCell>
-                <StyledTableCell align="center">Date</StyledTableCell>
-                <StyledTableCell align="center">Action</StyledTableCell>
+                <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">S.No.</StyledTableCell>
+                <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">Image</StyledTableCell>
+                <StyledTableCell sx={{ fontSize: '16px' }} align="center">Course Name</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Date</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Action</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-      {filteredCourses.length > 0 ? (
-        filteredCourses.map((course, index) => (
+      {displayedCategories.length > 0 ? (
+        displayedCategories.map((course, index) => (
           <StyledTableRow key={course.id}>
-            <StyledTableCell>
+            <StyledTableCell sx={{ width: 100 }} align="center">
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell>{index + 1}</StyledTableCell>
-            <StyledTableCell align="center">
+            <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+            </StyledTableCell>
+            <StyledTableCell sx={{ width: 220}} align="center">
             {course.image ? (
     <img
       src={`http://localhost:8080${course.image}`} // Adjust based on your server setup
@@ -656,11 +712,12 @@ Self Placed Training
     'No Image'
   )}
             </StyledTableCell>
-            <StyledTableCell align="center">
+            <StyledTableCell sx={{ fontSize: '16px' }} align="left">
               {course.courseName}
             </StyledTableCell>
-            <StyledTableCell align="center">{course.date}</StyledTableCell>
-            <StyledTableCell align="center">
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
+            <StyledTableCell align="center" style={{ width: 200, }}>
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
               <FaEdit
                 className="edit"
                 onClick={() => handleEditClick(course.id)}
@@ -671,6 +728,7 @@ Self Placed Training
                 onClick={() => handleDeleteConfirmation(course.id)}
                 style={{ cursor: "pointer" }}
               />
+              </div>
             </StyledTableCell>
           </StyledTableRow>
         ))
@@ -684,9 +742,14 @@ Self Placed Training
     </TableBody>
           </Table>
         </TableContainer>
-
-        <Pagination count={10} color="primary" />
-
+       <div className='pagination-container'>
+             <AdminPagination
+         currentPage={currentPage}
+         rowsPerPage={rowsPerPage}
+         totalRows={filteredCourses.length} // Use the full list for pagination
+         onPageChange={handlePageChange}
+       />
+                 </div>
       </div>
     </LocalizationProvider></>)}
     <div

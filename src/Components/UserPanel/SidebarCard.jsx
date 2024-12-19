@@ -4,8 +4,13 @@ import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar } from "react-icons/md";
 import './Course.css';
 import cardicon from '../../Assets/image 85.png';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarCard = ({ title }) => {
+  const navigate=useNavigate();
+  const handleClick=()=>{
+    navigate('/qaautomation');
+  }
   return (
     <div className="sidebar-card">
       <div className='sidebar-card-header-div'>
@@ -22,7 +27,7 @@ const SidebarCard = ({ title }) => {
           <MdOutlineStar className='star-icon'/><MdOutlineStar className='star-icon'/>
           <MdOutlineStar className='star-icon'/><MdOutlineStar className='star-icon'/> (100) 
         </h6>
-        <button className='sidebar-enroll-btn'>View Details</button>
+        <button className='sidebar-enroll-btn' onClick={handleClick}>View Details</button>
       </div>
     </div>
   );

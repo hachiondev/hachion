@@ -1070,7 +1070,11 @@ white-space: nowrap;
 }
 
 .qa-course-heading img{
-  padding: 5vh;
+  padding: 10px;
+  max-height: 600px;
+  display: flex;
+  justify-content: center;
+
 }
 
 .schedule{
@@ -1144,7 +1148,7 @@ padding-bottom: 1.5vh;
   padding-left: 10px;
   padding-right: 10px;
 align-content: center;
-text-align: center;
+text-align: left;
   background-color: #EEEEEE;
   font-size: 1.2rem;
   font-weight: 600;
@@ -1259,6 +1263,7 @@ font-size:1.2rem;
 font-weight:600;
 padding-left: 7vh;
 padding-right: 4vh;
+margin-bottom: 0;
 }
 
 .feature-content{
@@ -1269,9 +1274,9 @@ cursor: pointer;
 }
 
 .features-icon{
-padding-top: 1vh;
-width:50px;
-height:50px;
+padding-top: 10px;
+width: auto;
+height:45px;
 }
 
 .live-mode-feature{
@@ -1394,8 +1399,8 @@ border:2px solid white;
     margin-left: 20px;
   }
   .qa-course-heading img{
-    height: 500px;
-    width: 80%;
+    height: 300px;
+    width: auto;
     padding: 20px;
   }
   
@@ -1652,8 +1657,8 @@ border:2px solid white;
   margin-left: 20px;
 }
 .qa-course-heading img{
-  height: 500px;
-  width: 80%;
+  height: 400px;
+  width: auto;
   padding: 30px;
 }
 
@@ -2530,8 +2535,7 @@ max-height: 3em;
 }
 
 .query-content { 
-  font-size: 12px;        /* Adjust text size if needed */
-  margin-right: 5px;        /* Optional: adjust margins */
+  font-size: 12px;
 }
 
 .contact-button {

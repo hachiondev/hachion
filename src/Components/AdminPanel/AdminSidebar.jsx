@@ -14,11 +14,12 @@ import { BiSupport } from 'react-icons/bi';
 import { FaHandshakeAngle } from 'react-icons/fa6';
 import { LuFocus } from 'react-icons/lu';
 import { HiOutlineDotsCircleHorizontal } from 'react-icons/hi';
-
+import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
 import './Admin.css';
 
 const AdminSidebar = ({ onSelectCategory }) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const menuItems = [
     { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -42,21 +43,34 @@ const AdminSidebar = ({ onSelectCategory }) => {
 
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
-    onSelectCategory(title); // Call the function to notify the parent component
+    onSelectCategory(title);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   return (
-    <div className="sidebar-admin">
-      <h3 className='sidebar-heading-admin'>Admin</h3>
+    <div className={`sidebar-admin ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+      <div className="heading-admin">
+      <div className="sidebar-heading-admin">
+        {!isSidebarCollapsed && <h3>Admin</h3>}
+      </div>
+      <div className="sidebar-toggle">
+        <button onClick={toggleSidebar} className="toggle-btn">
+          {isSidebarCollapsed ? <BiArrowToRight /> : <BiArrowToLeft />}
+        </button>
+      </div>
+      </div>
       <ul className="menu-list-admin">
         {menuItems.map((item, index) => (
-          <li key={index} className="menu-item-container">
+          <li key={index} className="menu-item-container-admin">
             <button
               onClick={() => handleMenuItemClick(index, item.title)}
               className={`menu-item-admin ${activeIndex === index ? 'active' : ''}`}
             >
               <span className="menu-icon">{item.icon}</span>
-              <span>{item.title}</span>
+              {!isSidebarCollapsed && <span className="menu-title">{item.title}</span>}
             </button>
           </li>
         ))}

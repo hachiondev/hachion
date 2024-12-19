@@ -60,7 +60,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function Resume() {
   const [course,setCourse]=useState([]);
-   
+   const [courseCategory,setCourseCategory]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[resume,setResume]=useState([]);
@@ -241,7 +241,17 @@ const paginatedRows = filteredResume.slice(
       };
       fetchCategory();
     }, []);
-
+    useEffect(() => {
+      const fetchCourseCategory = async () => {
+        try {
+          const response = await axios.get("http://localhost:8080/courses/all");
+          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+        } catch (error) {
+          console.error("Error fetching categories:", error.message);
+        }
+      };
+      fetchCourseCategory();
+    }, []);
 
   return (
     
@@ -272,11 +282,14 @@ const paginatedRows = filteredResume.slice(
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={resumeData.course_name} onChange={handleChange}>
-      <option selected>Select course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Manual Testing</option>
-      <option>Mobile App Testing</option>
+    <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
     </select>
 
 </div>
@@ -447,11 +460,14 @@ const paginatedRows = filteredResume.slice(
         value={editedData.course_name || ""}
         onChange={handleInputChange}
       >
-        <option value="">Select Course</option>
-        <option>QA Automation</option>
-        <option>Load Runner</option>
-        <option>QA Automation Testing</option>
-        <option>Mobile App Testing</option>
+         <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
       </select>
     </div>
 

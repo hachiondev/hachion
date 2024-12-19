@@ -1,7 +1,7 @@
-import * as React from 'react';
+import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io'
-import { styled } from '@mui/material/styles';
+import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -10,19 +10,29 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import Pagination from '@mui/material/Pagination';
+import './Admin.css';
+
+import { RiCloseCircleLine } from 'react-icons/ri';
+import success from '../../Assets/success.gif';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { IoSearch } from "react-icons/io5";
+import { FiPlus } from 'react-icons/fi';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import './Admin.css';
-import TextField from '@mui/material/TextField';
-import CourseCategory from './CourseCategory';
-import Pagination from '@mui/material/Pagination';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
-
+import axios from 'axios';
+import { GoPlus } from "react-icons/go";
+import { IoClose } from "react-icons/io5";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -44,61 +54,183 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No,name,email,password,mobile,address,created_date,action) {
-  return { S_No,name,email,password,mobile,address,created_date,action };
-}
-
-const rows = [
-  createData(1,'Hach Prasad','laxmi.veena@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
-  createData(2,'support1','hachion@gmail.com','hachion@321','61570553345','Hyderabad','25-11-2015'),
-  createData(3,'Havila','havila@hachion.co','hachion@321','8133005987','Hyderabad','25-11-2017'),
-  createData(4,'Vineetha','vineetha.v@gmail.com','hachion@321','2045681555','Hyderabad','25-1-2019'),
-  createData(5, 'navitha','navithahachion@gmail.com','hachion@321','2019181555','Hyderabad','15-1-2019'),
-  createData(6,'Ramakrishan','ramakrishan.hachion@gmail.com','hachion@321','6175081555','Hyderabad','25-11-2015'),
-  createData(7, 'Srilatha','srilatha.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2023'),
-  createData(8,'Pushpa','Pushpanjali.ahach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
-  createData(9, 'shoeb','shoeb.hachion@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
-  createData(10,'Suryansh','Suryansh.hach@gmail.com','hachion@321','2019181555','Hyderabad','25-11-2015'),
-];
 
 export default function Support() {
+  const [searchTerm,setSearchTerm]=useState("")
+    const [showAddCourse, setShowAddCourse] = useState(false);
+    const[support,setSupport]=useState([]);
+    const[filteredSupport,setFilteredSupport]=useState([])
+    const [open, setOpen] = React.useState(false);
+    const currentDate = new Date().toISOString().split('T')[0];
+    const[message,setMessage]=useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [editedData, setEditedData] = useState({name:"", email:"",password:"",mobile:"",address:""});
+    const [supportData, setSupportData] = useState([{
+        support_id:"",
+          name:"",
+          email:"",
+          mobile:"",
+          password:"",
+          address:"",
+            date:currentDate,
+            
+         }]);
+         const [currentPage, setCurrentPage] = useState(1);
+        
+
+const rowsPerPage = 5;
+
+const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+};
+
+const paginatedRows = filteredSupport.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+);
+
+         const handleReset=()=>{
+            setSupportData([{
+              support_id:"",
+              name:"",
+              email:"",
+              mobile:"",
+              password:"",
+              address:"",
+                date:currentDate,
+                 }]);
+        
+         }
+         const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setEditedData((prev) => ({
+              ...prev,
+              [name]: value,
+            }));
+          };
+   
+    const handleClose = () => {
+      setOpen(false); // Close the modal
+    };
+    
+    useEffect(() => {
+      const fetchSupport = async () => {
+          try {
+              const response = await axios.get('http://localhost:8080/support');
+              setSupport(response.data); // Use the curriculum state
+          } catch (error) {
+              console.error("Error fetching support:", error.message);
+          }
+      };
+      fetchSupport();
+      setFilteredSupport(support);
+  }, []); // Empty dependency array ensures it runs only once
+
+    const handleDeleteConfirmation = (support_id) => {
+        if (window.confirm("Are you sure you want to delete this Support?")) {
+          handleDelete(support_id);
+        }
+      };
+  
+      const handleDateFilter = () => {
+        const filtered = support.filter((item) => {
+          const videoDate = new Date(item.date); // Parse the date field
+          const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+          const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      
+          return (
+            (!start || videoDate >= start) &&
+            (!end || videoDate <= end)
+          );
+        });
+      
+        setFilteredSupport(filtered);
+      };
+      const handleSave = async () => {
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/support/update/${editedData.support_id}`,editedData
+            );
+            setSupport((prev) =>
+                prev.map(curr =>
+                    curr.support_id === editedData.support_id ? response.data : curr
+                )
+            );
+            setMessage("Support Details updated successfully!");
+            setTimeout(() => setMessage(""), 5000);
+            setOpen(false);
+        } catch (error) {
+            setMessage("Error updating Suport details");
+        }
+    };
+            
+      const handleDelete = async (support_id) => {
+       
+         try { 
+          const response = await axios.delete(`http://localhost:8080/support/delete/${support_id}`); 
+          console.log("Support deleted successfully:", response.data); 
+        } catch (error) { 
+          console.error("Error deleting Support:", error); 
+        } }; 
+        useEffect(() => {
+          const filtered = support.filter(support =>
+              support.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              support.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              support.address.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          setFilteredSupport(filtered);
+      }, [searchTerm,filteredSupport]);
+        
+        const handleCloseModal=()=>{
+          setShowAddCourse(false);
+         
+        }
+        const handleClickOpen = (row) => {
+            console.log(row);
+              setEditedData(row)// Set the selected row data
+              setOpen(true); // Open the modal
+             
+            };
+    
+            const handleChange = (e) => {
+              console.log(e.target.name, e.target.value); // Check which field and value are changing
+              setSupportData({
+                ...supportData,
+                [e.target.name]: e.target.value,
+              });
+            };
+            
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+        const dataToSubmit = { 
+          ...supportData, 
+          date: currentDate, // Ensure this is added
+        };
+      
+        try {
+          const response = await axios.post("http://localhost:8080/support/add", dataToSubmit);
+          if (response.status === 200) {
+            alert("Support added successfully");
+            setSupportData([...supportData, dataToSubmit]); // Update local state
+            handleReset(); // Clear form fields
+          }
+        } catch (error) {
+          console.error("Error adding support:", error.message);
+          alert("Error adding support.");
+        }
+      };
+    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
+
+    }
  
-  const [open, setOpen] = React.useState(false);
-  const [showAddCourse, setShowAddCourse] = useState(false);
-  const [course, setCourse] = useState('');
 
-  const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
-  
-  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
-  const handleClickOpen = (row) => {
-    setSelectedRow(row); // Set the selected row data
-    setOpen(true); // Open the modal
-  };
-  
-  const handleClose = () => {
-    setOpen(false); // Close the modal
-  };
-  
-  const handleSave = () => {
-    // Logic to handle saving the updated category and date
-    console.log('Saved:', selectedRow);
-    setOpen(false);
-  };
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedRow((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const handleCourseChange = (event) => setCourse(event.target.value);
-  
   return (
-
+    
     <>  
-     {showAddCourse?( <div className='course-category'>
+     {showAddCourse ?  (<div className='course-category'>
 <p>Support Details <IoIosArrowForward/> Add Support </p>
 <div className='category'>
 <div className='category-header'>
@@ -108,49 +240,104 @@ export default function Support() {
 
   <div class="col">
     <label className='form-label'>Name</label>
-    <input type="text" class="form-control" placeholder="Enter Name" aria-label="First name"/>
+    <input type="text" class="form-control" placeholder="Enter Name" aria-label="First name"
+    name='name' value={supportData.name} onChange={handleChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Mobile</label>
-    <input type="number" class="form-control" placeholder="Enter Mobile" aria-label="First name"/>
+    <input type="number" class="form-control" placeholder="Enter Mobile" aria-label="First name"
+    name='mobile' value={supportData.mobile} onChange={handleChange}/>
   </div>
   </div>
   <div className='course-row'>
   <div class="col">
     <label className='form-label'>Email</label>
-    <input type="email" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+    <input type="email" class="form-control" placeholder="Enter Title" aria-label="First name"
+    name='email' value={supportData.email} onChange={handleChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Password</label>
-    <input type="password" class="form-control" placeholder="Enter Title" aria-label="First name"/>
+    <input type="password" class="form-control" placeholder="Enter Title" aria-label="First name"
+    name='password' value={supportData.password} onChange={handleChange}/>
   </div>
 </div>
 
   <div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  <label for="exampleFormControlTextarea1" class="form-label">Address</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+  name='address' value={supportData.address} onChange={handleChange}></textarea>
 </div>
 
   <div style={{display:'flex',flexDirection:'row'}}> 
-  <button className='submit-btn'>Submit</button>
-  <button className='reset-btn'>Reset</button>
+  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+  <button className='reset-btn' onClick={handleReset}>Reset</button>
 </div>
-</div></div>) :(<>
-    <CourseCategory
-  pageTitle="Support"
-  headerTitle="Support Details"
-  buttonLabel="Add Support"
-  onAddCategoryClick={handleAddTrendingCourseClick}/>
-   <TableContainer component={Paper}>
+</div></div>
+
+):(<div>
+   <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className='course-category'>
+       
+        <div className='category'>
+          <div className='category-header'>
+            <p>Support</p>
+          </div>
+          <div className='date-schedule'>
+            Start Date
+            <DatePicker 
+    selected={startDate} 
+    onChange={(date) => setStartDate(date)} 
+    isClearable />
+            End Date
+            <DatePicker 
+    selected={endDate} 
+    onChange={(date) => setEndDate(date)} 
+    isClearable 
+  />
+            <button className='filter' onClick={handleDateFilter} >filter</button>
+           
+          </div>
+          <div className='entries'>
+            <div className='entries-left'>
+              <p>Show</p>
+              <div className="btn-group">
+                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  10
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">1</a></li>
+      
+                </ul>
+              </div>
+              <p>entries</p>
+            </div>
+            <div className='entries-right'>
+              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}/>
+                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              </div>
+              <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                <FiPlus /> Add Support
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </LocalizationProvider>
+  <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>
-              <Checkbox />
+            <Checkbox
+              />
             </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
-            <StyledTableCell align="center">Name</StyledTableCell>
-            <StyledTableCell align="center">Email</StyledTableCell>
+            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center'>Name</StyledTableCell>
+            <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align="center">Password</StyledTableCell>
             <StyledTableCell align="center">Mobile</StyledTableCell>
             <StyledTableCell align="center">Address</StyledTableCell>
@@ -159,90 +346,107 @@ export default function Support() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.S_No}</StyledTableCell>
-              <StyledTableCell align="left">{row.name}</StyledTableCell>
+
+          {filteredSupport.map((row, index) => (
+            <StyledTableRow key={row.support_id}>
+              <StyledTableCell>
+               
+              </StyledTableCell>
+              <StyledTableCell align="center">{index + 1}</StyledTableCell>
+              <StyledTableCell align="center">{row.name}</StyledTableCell>
               <StyledTableCell align="center">{row.email}</StyledTableCell>
-              <StyledTableCell align="left">{row.password}</StyledTableCell>
-              <StyledTableCell align="left">{row.mobile}</StyledTableCell>
+              <StyledTableCell align="center">{row.password}</StyledTableCell>
+              <StyledTableCell align="center">{row.mobile}</StyledTableCell>
               <StyledTableCell align="center">{row.address}</StyledTableCell>
-              <StyledTableCell align="center">{row.created_date}</StyledTableCell>
+              <StyledTableCell align="center">{row.date}</StyledTableCell>
               <StyledTableCell align="center">
-                  <FaEdit className="edit" onClick={() => handleClickOpen(row)}  />
-                  <RiDeleteBin6Line className="delete" />
-                </StyledTableCell>
+                <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                <RiDeleteBin6Line
+                  className="delete"
+                  onClick={() => handleDeleteConfirmation(row.support_id)}
+                />
+              </StyledTableCell>
             </StyledTableRow>
           ))}
-        </TableBody>
-      </Table>
+        
+</TableBody>
+    </Table>
     </TableContainer>
-    <div className='pagination'>
-      <Pagination count={10} color="primary" />
-      </div>
-      <Dialog open={open} onClose={handleClose}>
-            <div className='dialog-title'>
-        <DialogTitle >Edit Registered Student   <Button onClick={handleClose} className='close-btn'>
-            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
-          </Button></DialogTitle>
-          </div>
-          <DialogContent>
-  <div style={{ display: 'flex', gap: '1rem' }}>
-    <TextField
-      autoFocus
-      margin="dense"
-      name="student_name"
-      label="Student Name"
-      type="text"
-      fullWidth
-      value={selectedRow.student_name}
-      onChange={handleInputChange}
-    />
-    <TextField
-      margin="dense"
-      name="mobile"
-      label="Mobile"
-      type="number"
-      fullWidth
-      value={selectedRow.mobile}
-      onChange={handleInputChange}
-    />
+    {message && <div className="success-message">{message}</div>}
+
+    </div>)}
+
+    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+  <div className="dialog-title">
+    <DialogTitle id="edit-schedule-dialog">Edit Support</DialogTitle>
+    <Button onClick={handleClose} className="close-btn">
+      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+    </Button>
   </div>
-  <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-    <TextField
-      margin="dense"
-      name="email"
-      label="Email"
-      type="email"
-      fullWidth
-      value={selectedRow.email}
-      onChange={handleInputChange}
-    />
-    <TextField
-      margin="dense"
-      name="password"
-      label="Password"
-      type="text"
-      fullWidth
-    />
+  <DialogContent>
+  
+  
+    <div class="col">
+    <label className='form-label'>Name</label>
+    <input type="text" class="form-control"  aria-label="First name" name='name' value={editedData.name} onChange={handleInputChange}/>
   </div>
-  <TextField
-    margin="dense"
-    name="address"
-    label="Address"
-    type="text"
-    fullWidth
-    value={selectedRow.address}
-    onChange={handleInputChange}
-  />
-</DialogContent>
-        <DialogActions>
-          <Button onClick={handleSave} className="update-btn">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-      </>)}
+  <div class="col">
+    <label className='form-label'>Mobile</label>
+    <input type="number" class="form-control"  aria-label="First name" name='mobile' value={editedData.mobile} onChange={handleInputChange}/>
+  </div>
+
+  <div class="col">
+    <label className='form-label'>Email</label>
+    <input type="text" class="form-control"  aria-label="First name" name='email' value={editedData.email} onChange={handleInputChange}/>
+  </div>
+  <div class="col">
+    <label className='form-label'>Password</label>
+    <input type="password" class="form-control" aria-label="First name" name='password' value={editedData.password} onChange={handleInputChange}/>
+  </div>
+  <div class="col">
+    <label className='form-label'>Address</label>
+    <input type="text" class="form-control"  aria-label="First name" name='address' value={editedData.address} onChange={handleInputChange}/>
+  </div>
+
+
+     
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleSave} className="update-btn">Update</Button>
+  </DialogActions>
+</Dialog>
+
+    <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Courses Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+   
  </> );
 }

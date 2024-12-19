@@ -138,10 +138,11 @@
  
 }
 .customize-training-div img{
-   
-   padding: 2vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
+   padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 34vw;
+    height: auto;
 }
 .customize-training-div-content{
     font-size: 1.5rem;

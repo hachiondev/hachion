@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,8 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
-import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
@@ -34,8 +31,9 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
+import { MdKeyboardArrowRight } from 'react-icons/md';
 import './Admin.css'; 
-
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,6 +89,24 @@ const[message,setMessage]=useState(false);
     
     }]);
     const [currentPage, setCurrentPage] = useState(1);
+     const [rowsPerPage, setRowsPerPage] = useState(10);
+               
+      const handlePageChange = (page) => {
+                setCurrentPage(page);
+                window.scrollTo(0, window.scrollY);
+              };
+              // Inside your CourseCategory component
+            
+            const handleRowsPerPageChange = (rows) => {
+              setRowsPerPage(rows);
+              setCurrentPage(1); // Reset to the first page whenever rows per page changes
+            };
+            
+            // Slice filteredCourses based on rowsPerPage and currentPage
+            const displayedCategories = filteredCourses.slice(
+              (currentPage - 1) * rowsPerPage,
+              currentPage * rowsPerPage
+            );
     const [selectedTime, setSelectedTime] = useState(null);
     const [rows, setRows] = useState([{ id:"",frequency: "", time: "", duration: "", mode: "", pattern: "", meeting: "" }]);
 
@@ -142,9 +158,6 @@ const handleTimeChange = (newValue) => {
           [name]: value,
         }));
       };
-    const rowsPerPage = 10; // Show 10 rows per page
-
-
     
   const handleReset = () => {
     setCourseData([{
@@ -244,12 +257,6 @@ const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
 
-// Handle page change
-const handlePageChange = (event, page) => {
-  setCourses(paginatedData);
-  setCurrentPage(page);
- 
-};
 const handleDeleteConfirmation = (course_schedule_id) => {
   if (window.confirm("Are you sure you want to delete this trainer?",courseData.trainer_name)) {
     handleDelete(course_schedule_id);
@@ -267,8 +274,6 @@ const handleDelete = async (course_schedule_id) => {
 
 
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
-
 
 const handleClickOpen = (row) => {
 console.log(row);
@@ -312,7 +317,6 @@ const handleSave = async () => {
   }
 };
 
-
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setEditedRow((prev) => ({
@@ -330,7 +334,16 @@ const handleInputChange = (e) => {
         
       
         <div className='course-category'>
-      <p>Schedule <IoIosArrowForward/> Add Schedule </p>
+        <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}> Schedule </a> <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                Add Schedule
+                </li>
+              </ol>
+            </nav>
       <div className='category'>
       <div className='category-header'>
       <p>Add Schedule</p>
@@ -354,9 +367,11 @@ const handleInputChange = (e) => {
           <label for="inputState" class="form-label">Course Name</label>
           <select id="inputState" class="form-select" name='schedule_course_name' 
           value={courseData.schedule_course_name} onChange={handleChange}>
-            <option value="" disabled>
-          Select Course
-        </option>
+            <option selected>Select course</option>
+      <option>QA Automation</option>
+      <option>Load Runner</option>
+      <option>QA Manual Testing</option>
+      <option>Mobile App Testing</option>
         {courses.map((curr) => (
           <option key={curr.id} value={curr.course_name}>
             {curr.course_name}
@@ -373,83 +388,116 @@ const handleInputChange = (e) => {
           </div>
         </div>
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
-            <LocalizationProvider dateAdapter={AdapterDayjs}> 
-              <TableHead>
-            
-                <TableRow>
-                
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell align="center">Frequency</StyledTableCell>
-                  <StyledTableCell align="center">Time</StyledTableCell>
-                  <StyledTableCell align="center">Duration</StyledTableCell>
-                  <StyledTableCell align="center">Mode</StyledTableCell>
-                  <StyledTableCell align="center">Pattern</StyledTableCell>
-                  <StyledTableCell align="center">Meeting</StyledTableCell>
-                  <StyledTableCell align="center">Add/Delete Row</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-              {rows.map((row) => (
-              <StyledTableRow key={row.id}>
-                
-                    <StyledTableCell component="th" scope="row">
-                    <DatePicker
-  value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null} // Ensure proper format
-  onChange={(newValue) => handleDateChange(newValue)}
-  renderInput={(params) => <TextField {...params} />}
-/>
-
-                    </StyledTableCell>
-                   
-                    <StyledTableCell align="right"><div class="col-md-3">
-         
-          <select id="inputState" class="form-select" name='schedule_frequency' 
-          value={courseData.schedule_frequency} onChange={handleChange}>
-            <option selected>Select</option>
-            <option>Only Weekends</option>
-            <option>Week Days</option>
-            <option>Any Days</option>
-      
-          </select>
-        </div></StyledTableCell>
-                    <StyledTableCell align="right"> 
-                      <DemoContainer components={['TimePicker']}>
-                      <TimePicker
-  label="Select Time"
-  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'HH:mm') : null} // Parse back for controlled component
-  onChange={handleTimeChange}
-  renderInput={(params) => <TextField {...params} />}
-/>
-      </DemoContainer> 
-           </StyledTableCell>
-                    <StyledTableCell align="right"><input name="schedule_duration" className='table-input' value={courseData.schedule_duration} onChange={handleChange}/></StyledTableCell>
-                    <StyledTableCell align="right"><div class="col-md-3">
-       
-          <select id="inputState" class="form-select" name='schedule_mode' 
-          value={courseData.schedule_mode} onChange={handleChange}>
-            <option selected>Select</option>
-            <option>Live Class</option>
-            <option>Live Demo</option>
-          </select>
-        </div></StyledTableCell>
-                    <StyledTableCell align="right"><input name='pattern' className='table-input' value={rows.pattern} onChange={handleChange}/></StyledTableCell>
-                    <StyledTableCell align="right"><input name='meeting' className='table-input' value={rows.meeting} onChange={handleChange}/></StyledTableCell>
-                    <StyledTableCell align="right"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow}/>
-                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
-                  </StyledTableRow>
-                  
-                     ))}
-              </TableBody>
-              </LocalizationProvider>
-            </Table>
-          </TableContainer>
+  <Table sx={{ minWidth: 650, marginTop: 5 }} aria-label="customized table">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <TableHead>
+        <TableRow>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Date</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Frequency</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Time</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Duration</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Mode</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Pattern</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px', width: '500px' }}>Meeting</StyledTableCell>
+          <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Add/Delete Row</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {rows.map((row) => (
+          <StyledTableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}>
+            <StyledTableCell component="th" scope="row" sx={{ padding: 0, }}>
+              <DatePicker
+                value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null}
+                onChange={(newValue) => handleDateChange(newValue)}
+                renderInput={(params) => <TextField {...params} />}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    width: '200px',
+                  }, '& .MuiIconButton-root':{color: '#00aeef'}
+                }}                
+              />
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <div className="col-md-3">
+                <select
+                  id="inputState"
+                  className="form-select"
+                  name="schedule_frequency"
+                  value={courseData.schedule_frequency}
+                  onChange={handleChange}
+                >
+                  <option selected>Select</option>
+                  <option>Only Weekends</option>
+                  <option>Week Days</option>
+                  <option>Any Days</option>
+                </select>
+              </div>
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <DemoContainer components={['TimePicker']}>
+                <TimePicker
+                  label="Select Time"
+                  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'HH:mm') : null}
+                  onChange={handleTimeChange}
+                  renderInput={(params) => <TextField {...params} />}
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      width: '200px',
+                    }, '& .MuiIconButton-root':{color: '#00aeef'}
+                  }}
+                />
+              </DemoContainer>
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <input
+                name="schedule_duration"
+                className='table-curriculum'
+                value={courseData.schedule_duration}
+                onChange={handleChange}
+              />
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <div className="col-md-3">
+                <select
+                  id="inputState"
+                  className="form-select"
+                  name="schedule_mode"
+                  value={courseData.schedule_mode}
+                  onChange={handleChange}
+                >
+                  <option selected>Select</option>
+                  <option>Live Class</option>
+                  <option>Live Demo</option>
+                </select>
+              </div>
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <input name="pattern" className='table-curriculum' value={rows.pattern} onChange={handleChange} />
+            </StyledTableCell>
+            <StyledTableCell align="left" sx={{ padding: 0 }}>
+              <input name="meeting" className='table-curriculum' value={rows.meeting} onChange={handleChange} />
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ padding: 0 }}>
+              <GoPlus
+                style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }}
+                onClick={addRow}
+              />
+              <IoClose
+                style={{ fontSize: '2rem', color: 'red' }}
+                onClick={() => deleteRow(row.id)}
+              />
+            </StyledTableCell>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </LocalizationProvider>
+  </Table>
+</TableContainer>
         
-      <div style={{display:'flex',flexDirection:'row'}}> 
+          <div className="course-row">
         <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
         <button className='reset-btn' onClick={handleReset}>Reset</button>
-        
       </div>
       </div>
       </div>
@@ -471,30 +519,37 @@ const handleInputChange = (e) => {
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
     isClearable 
+    sx={{
+       '& .MuiIconButton-root':{color: '#00aeef'}
+    }}
   />
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+    }}
   />
-            <button className='filter' onClick={handleDateFilter}>filter</button>
+            <button className='filter' onClick={handleDateFilter}>Filter</button>
            
           </div>
           <div className='entries'>
-            <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+          <div className='entries-left'>
+          <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -515,10 +570,10 @@ const handleInputChange = (e) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align="center">
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
+            <StyledTableCell align="center">S.No.</StyledTableCell>
             <StyledTableCell align="center">Category Name</StyledTableCell>
             <StyledTableCell align="center">Schedule Course Name</StyledTableCell>
             <StyledTableCell align="center">Schedule Date</StyledTableCell>
@@ -532,48 +587,59 @@ const handleInputChange = (e) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredCourses.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.course_schedule_id}</StyledTableCell>
-              <StyledTableCell align="left">{row.schedule_category_name}</StyledTableCell>
-              <StyledTableCell align="left">{row.schedule_course_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_date}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_week}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_time}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_duration}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_mode}</StyledTableCell>
-              <StyledTableCell align="center">{row.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.created_date}</StyledTableCell>
+        {displayedCategories.length > 0 ? (
+        displayedCategories.map((course, index) => (
+            <StyledTableRow key={course.course_schedule_id}>
+              <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+              <StyledTableCell align="left">{course.schedule_category_name}</StyledTableCell>
+              <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_date}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_time}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_duration}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
+              <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
+              <StyledTableCell align="center">{course.created_date}</StyledTableCell>
               <StyledTableCell align="center">
-                  <FaEdit className="edit" onClick={() => handleClickOpen(row)} /> {/* Open modal on edit click */}
-                  <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(row.course_schedule_id)} />
-                </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    {message? (<p>Table updated succesfully</p>):<p></p>}
-    <div className='pagination'>
-        <Pagination
-          count={pageCount}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
+              <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                  <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}
+                  <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(course.course_schedule_id)} />
+                  </div>
+                  </StyledTableCell>
+      </StyledTableRow>
+        ))
+      ) : (
+        <p>No schedules available</p>
+      )}
+      </TableBody>
+          </Table>
+          </TableContainer>
+    <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredCourses.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
         />
-      </div>
+                  </div>
+        {message && <div className="success-message">{message}</div>}
 
-      <Dialog open={open} onClose={handleClose}>
-        <div className='dialog-title'>
+        </div>)}
 
-        <DialogTitle>Edit Schedule  </DialogTitle>
+      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+          PaperProps={{
+            style: { borderRadius: 20 },
+          }}>
+        <div className="dialog-title">
+        <DialogTitle >Edit Schedule  </DialogTitle>
         <Button onClick={handleClose} className='close-btn'>
             <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
           </Button>
         </div>
         <DialogContent>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="course-row">
         <div className="col">
           <label htmlFor="inputState" className="form-label">Category Name</label>
           <select
@@ -610,7 +676,9 @@ const handleInputChange = (e) => {
             <option>Mobile App Testing</option>
           </select>
         </div>
+        </div>
 
+        <div className="course-row">
         <div className="col">
           <label className='form-label'>Trainer</label>
           <input
@@ -623,13 +691,21 @@ const handleInputChange = (e) => {
           />
         </div>
 
+        <div className="col">
+          <label className="form-label">Date</label>
         <DatePicker
+          sx={{
+            '& .MuiIconButton-root':{color: '#00aeef'}
+         }}
   value={editedRow.schedule_date ? dayjs(editedRow.schedule_date) : null}
   onChange={handleDateChange}
   renderInput={(params) => <TextField {...params} />}
 />
+    </div>
+        </div>
 
-        <div className="col-md-3">
+        <div className="course-row">
+        <div className="col">
           <label className="form-label">Frequency</label>
           <select
             id="inputState"
@@ -645,19 +721,32 @@ const handleInputChange = (e) => {
           </select>
         </div>
 
+        <div className="col">
+          <label className="form-label">Time</label>
         <TimePicker
-  label="Select Time"
+         sx={{
+           '& .MuiIconButton-root':{color: '#00aeef'}
+        }}
+  // label="Select Time"
   value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'HH:mm') : null}
   onChange={handleTimeChange}
   renderInput={(params) => <TextField {...params} />}
-/>
+  />
+  </div>
+        </div>
+
+        <div className="course-row">
+      <div className="col">
+      <label className="form-label">Duration</label>
         <input
+        className="schedule-input"
           name="schedule_duration"
           value={editedRow.schedule_duration}
           onChange={handleInputChange}
         />
+        </div>
 
-        <div className="col-md-3">
+        <div className="col">
           <label htmlFor="inputState" className="form-label">Mode</label>
           <select
             id="inputState"
@@ -672,14 +761,23 @@ const handleInputChange = (e) => {
           </select>
         </div>
 
-        <label>Pattern</label>
-        <input name="pattern" value={editedRow.pattern} onChange={handleInputChange} />
+        <div className="col">
+        <label className="form-label">Pattern</label>
+        <input className="schedule-input" name="pattern" value={editedRow.pattern} onChange={handleInputChange} />
+        </div>
+        </div>
 
-        <label>Meeting</label>
-        <input name="meeting" value={editedRow.meeting} onChange={handleInputChange} />
+        <div className="course-row">
+        <div className="col">
+        <label className="form-label">Meeting</label>
+        <input className="schedule-input" name="meeting" value={editedRow.meeting} onChange={handleInputChange} />
+        </div>
 
-        <label>Batch ID</label>
-        <input name="batch_id" value={editedRow.batch_id} onChange={handleInputChange} />
+        <div className="col">
+        <label className="form-label">Batch ID</label>
+        <input className="schedule-input" name="batch_id" value={editedRow.batch_id} onChange={handleInputChange} />
+        </div>
+        </div>
       </LocalizationProvider>
     
         </DialogContent>
@@ -690,7 +788,7 @@ const handleInputChange = (e) => {
           </Button>
         </DialogActions>
       </Dialog>
-      </div>)}
+
       <div
                   className='modal fade'
                   id='exampleModal'

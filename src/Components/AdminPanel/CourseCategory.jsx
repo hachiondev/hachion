@@ -27,8 +27,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import { Link } from "react-router-dom";
-
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -66,13 +65,32 @@ const CourseCategory = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-const [showAddCourse,setShowAddCourse]=useState(false);
+  const [showAddCourse,setShowAddCourse]=useState(false);
 const [editedRow, setEditedRow] = useState({name:"",date:""})
 const [courseData, setCourseData] = useState([{
     name:"",
       date:""
    }]);
+   const [currentPage, setCurrentPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(10);
    
+   const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  // Inside your CourseCategory component
+
+const handleRowsPerPageChange = (rows) => {
+  setRowsPerPage(rows);
+  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+};
+
+// Slice filteredCategories based on rowsPerPage and currentPage
+const displayedCategories = filteredCategories.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
+
 
   const API_URL = 'http://localhost:8080/course-categories/all';
 
@@ -183,8 +201,8 @@ const [courseData, setCourseData] = useState([{
     }
   };
 
-
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
+  
   return (<>
     {showAddCourse?(<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -192,17 +210,13 @@ const [courseData, setCourseData] = useState([{
               <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <Link to="/CourseCategory">
-                    View Course Category list
-                  </Link>
-                  <MdKeyboardArrowRight />
+                <a href="#!" onClick={() => setShowAddCourse(false)}>View Course Category list</a> <MdKeyboardArrowRight />
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   Add Category
                 </li>
               </ol>
             </nav>
-        {/* <p>View Course Category list &gt; Add Category</p> */}
         <div className="category">
           <div className="category-header">
             <p>Add Category</p>
@@ -230,6 +244,11 @@ const [courseData, setCourseData] = useState([{
                 onChange={(newDate) =>
                   setCourseData({ ...courseData, date: newDate })
                 }
+                sx={{
+                  '& .MuiInputBase-root': {
+                    width: '350px',
+                  }, '& .MuiIconButton-root':{color: '#00aeef'}
+                }}
               />
             </div>
             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -256,24 +275,32 @@ const [courseData, setCourseData] = useState([{
           </div>
           <div className='date-schedule'>
             Start Date
-            <DatePicker value={startDate} onChange={(newDate) => setStartDate(newDate)} />
+            <DatePicker value={startDate} onChange={(newDate) => setStartDate(newDate)} 
+              sx={{
+                 '& .MuiIconButton-root':{color: '#00aeef'}
+              }}/>
             End Date
-            <DatePicker value={endDate} onChange={(newDate) => setEndDate(newDate)} />
+            <DatePicker value={endDate} onChange={(newDate) => setEndDate(newDate)} 
+              sx={{
+                 '& .MuiIconButton-root':{color: '#00aeef'}
+              }}/>
             <button className='filter' onClick={handleFilter}>Filter</button>
           </div>
           <div className='entries'>
-            <div className='entries-left'>
-              <p style={{ marginBottom: '0' }}>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-                </ul>
-              </div>
-              <p style={{ marginBottom: '0' }}>entries</p>
-            </div>
+          <div className="entries-left">
+  <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search">
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
@@ -286,7 +313,7 @@ const [courseData, setCourseData] = useState([{
                   
                 />
                 <button className="btn-search" onClick={handleFilter} type="button">
-                  <IoSearch style={{ fontSize: '2rem' }} />
+                  <IoSearch />
                 </button>
               </div>
               </div>
@@ -295,7 +322,7 @@ const [courseData, setCourseData] = useState([{
               </button>
             </div>
           </div>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ padding: '0 10px' }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -309,40 +336,43 @@ const [courseData, setCourseData] = useState([{
             </TableRow>
           </TableHead>
           <TableBody>
-          {filteredCategories.length > 0
-                ? filteredCategories.map((course, index) => (
-                    <StyledTableRow key={course.id}>
-                      <StyledTableCell sx={{ width: 100 }} align="center">
-                        <Checkbox />
-                      </StyledTableCell>
-                      <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">{index + 1}</StyledTableCell>
-            
-                      <StyledTableCell sx={{ fontSize: '16px' }} align="left">{course.name}</StyledTableCell>
-                      <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
-                      <StyledTableCell align="center" style={{ display: 'flex',justifyContent: 'space-around', width: 220 }}>
-                        <FaEdit
-                          className="edit"onClick={() => handleClickOpen(course)}
-                         
-                          style={{ cursor: 'pointer' }}
-                        />
-                        <RiDeleteBin6Line
-                          className="delete"
-                          onClick={() => handleDeleteConfirmation(course.id)}
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-                : (
-                  <StyledTableRow>
-                    <StyledTableCell colSpan={6} align="center">
-                      No courses available.
-                    </StyledTableCell>
-                  </StyledTableRow>
-                )}
-          </TableBody>
+  {displayedCategories.length > 0
+    ? displayedCategories.map((course, index) => (
+        <StyledTableRow key={course.id}>
+          <StyledTableCell sx={{ width: 100 }} align="center">
+            <Checkbox />
+          </StyledTableCell>
+          <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">
+            {index + 1 + (currentPage - 1) * rowsPerPage}
+          </StyledTableCell>
+          <StyledTableCell sx={{ fontSize: '16px' }} align="left">{course.name}</StyledTableCell>
+          <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
+          <StyledTableCell align="center" style={{ width: 220, }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
+            <FaEdit className="edit" onClick={() => handleClickOpen(course)} style={{ cursor: 'pointer' }} />
+            <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(course.id)} style={{ cursor: 'pointer' }} />
+            </div>
+          </StyledTableCell>
+        </StyledTableRow>
+      ))
+    : (
+      <StyledTableRow>
+        <StyledTableCell colSpan={6} align="center">
+          No courses available.
+        </StyledTableCell>
+      </StyledTableRow>
+    )}
+</TableBody>
         </Table>
       </TableContainer>
+      <div className='pagination-container'>
+      <AdminPagination
+  currentPage={currentPage}
+  rowsPerPage={rowsPerPage}
+  totalRows={filteredCategories.length} // Use the full list for pagination
+  onPageChange={handlePageChange}
+/>
+          </div>
       {message && <div className="success-message">{message}</div>}
         </div>
       </div>
@@ -378,6 +408,11 @@ const [courseData, setCourseData] = useState([{
   onChange={(newDate) =>
     setEditedRow({ ...editedRow, date: newDate }) // Update only editedRow, not courseData
   }
+  sx={{
+    '& .MuiInputBase-root': {
+      width: '552px',
+    }, '& .MuiIconButton-root':{color: '#00aeef'}
+  }}
 />
             </div>
 

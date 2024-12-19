@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -36,6 +35,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -247,7 +248,16 @@ const paginatedRows = filteredResume.slice(
     
     <>  
      {showAddCourse ?  (<div className='course-category'>
-<p> Resume <IoIosArrowForward/> Add Resume </p>
+      <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item">
+                      <a href="#!" onClick={() => setShowAddCourse(false)}>Resume</a> <MdKeyboardArrowRight />
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Add Resume
+                      </li>
+                    </ol>
+                  </nav>
 <div className='category'>
 <div className='category-header'>
 <p>Add Resume</p>
@@ -331,7 +341,7 @@ const paginatedRows = filteredResume.slice(
     onChange={(date) => setEndDate(date)} 
     isClearable 
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>

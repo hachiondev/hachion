@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -34,7 +33,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
-
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -239,7 +238,16 @@ const paginatedRows = filteredVideo.slice(
     
     <>  
      {showAddCourse ?  (<div className='course-category'>
-<p>Regular Videos <IoIosArrowForward/> Add Regular Videos </p>
+      <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item">
+                      <a href="#!" onClick={() => setShowAddCourse(false)}>Regular Videos</a> <MdKeyboardArrowRight />
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Add Regular Videos
+                      </li>
+                    </ol>
+                  </nav>
 <div className='category'>
 <div className='category-header'>
 <p>Add Regular Video</p>
@@ -334,7 +342,7 @@ const paginatedRows = filteredVideo.slice(
     onChange={(date) => setEndDate(date)} 
     isClearable 
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>

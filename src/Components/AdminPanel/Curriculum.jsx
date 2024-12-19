@@ -10,7 +10,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -34,7 +33,8 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
-
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -78,17 +78,25 @@ export default function Curriculum() {
          curriculum_pdf:"",
             date:currentDate,
          }]);
-         const [currentPage, setCurrentPage] = useState(1);
-const rowsPerPage = 5;
-
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
-
-const paginatedRows = filteredCurriculum.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-);
+        const [currentPage, setCurrentPage] = useState(1);
+           const [rowsPerPage, setRowsPerPage] = useState(10);
+           
+           const handlePageChange = (page) => {
+            setCurrentPage(page);
+            window.scrollTo(0, window.scrollY);
+          };
+          // Inside your CourseCategory component
+        
+        const handleRowsPerPageChange = (rows) => {
+          setRowsPerPage(rows);
+          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+        };
+        
+        // Slice filteredCurriculum based on rowsPerPage and currentPage
+        const displayedCategories = filteredCurriculum.slice(
+          (currentPage - 1) * rowsPerPage,
+          currentPage * rowsPerPage
+        );
 
          const handleReset=()=>{
             setCurriculumData([{
@@ -189,12 +197,12 @@ const paginatedRows = filteredCurriculum.slice(
         } }; 
         useEffect(() => {
           const filtered = curriculum.filter(curriculum =>
-              curriculum.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              curriculum.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              curriculum.topic.toLowerCase().includes(searchTerm.toLowerCase())
+              (curriculum.course_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+              (curriculum.title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+              (curriculum.topic?.toLowerCase() || "").includes(searchTerm.toLowerCase())
           );
           setFilteredCurriculum(filtered);
-      }, [searchTerm,filteredCurriculum]);
+      }, [searchTerm, curriculum]);      
       const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file && file.type === "application/pdf") {
@@ -250,7 +258,16 @@ const paginatedRows = filteredCurriculum.slice(
     
     <>  
      {showAddCourse ?  (<div className='course-category'>
-<p>Curriculum <IoIosArrowForward/> Add Curriculum </p>
+      <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item">
+                      <a href="#!" onClick={() => setShowAddCourse(false)}>Curriculum </a> <MdKeyboardArrowRight />
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                      Add Curriculum
+                      </li>
+                    </ol>
+                  </nav>
 <div className='category'>
 <div className='category-header'>
 <p>Add Curriculum</p>
@@ -295,22 +312,22 @@ const paginatedRows = filteredCurriculum.slice(
       <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align='center'> Title</StyledTableCell>
-            <StyledTableCell align="center">Topic</StyledTableCell>
-            <StyledTableCell align="center">Add/Delete Row</StyledTableCell>
+            <StyledTableCell align='center' sx={{ fontSize: '16px', width: '35%' }}> Title</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Topic</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px', width: '180px' }}>Add/Delete Row</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow
               key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}
             >
-              <StyledTableCell component="th" scope="row" align='center'>
-               <input className='table-input' name='title' value={rows.title} onChange={handleChange}/>
+              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
+               <input className='table-curriculum' name='title' value={rows.title} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell align="center"><input className='table-input' name='topic' value={rows.topic} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
+              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='topic' value={rows.topic} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
     
@@ -319,11 +336,10 @@ const paginatedRows = filteredCurriculum.slice(
       </Table>
     </TableContainer>
   
-<div style={{display:'flex',flexDirection:'row'}}> 
+    <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
-  
 </div>
 </div>
 </div>
@@ -341,30 +357,37 @@ const paginatedRows = filteredCurriculum.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+       '& .MuiIconButton-root':{color: '#00aeef'}
+    }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+    }}
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -418,54 +441,80 @@ const paginatedRows = filteredCurriculum.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell  align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Topic</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-  {filteredCurriculum.map((row, index) => (
-    <StyledTableRow key={row.faq_id}>
-      <StyledTableCell>
+        {displayedCategories.length > 0 ? (
+  displayedCategories.map((course, index) => (
+    <StyledTableRow key={course.curr_id}>
+      <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="left">{row.title}</StyledTableCell>
+      <StyledTableCell align="center">
+        {index + 1 + (currentPage - 1) * rowsPerPage}
+      </StyledTableCell>
+      <StyledTableCell align="left">{course.title}</StyledTableCell>
       <StyledTableCell align="left">
         <ul className="bullet-list">
-          {row.topic.split(',').map((topic, i) => (
-            <li key={i}>{topic.trim()}</li>
-          ))}
+          {course.topic ? (
+            course.topic.split(',').map((topic, i) => (
+              <li key={i}>{topic.trim()}</li>
+            ))
+          ) : (
+            <li>No topics available</li>
+          )}
         </ul>
-
       </StyledTableCell>
-      <StyledTableCell align="center">{row.date}</StyledTableCell>
+      <StyledTableCell align="center">{course.date}</StyledTableCell>
       <StyledTableCell align="center">
-        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.curriculum_id)} />
+        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+          <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
+          <RiDeleteBin6Line
+            className="delete"
+            onClick={() => handleDeleteConfirmation(course.curriculum_id)}
+          />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+  ))
+) : (
+  <p>No categories available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
+    <div className='pagination-container'>
+          <AdminPagination
+      currentPage={currentPage}
+      rowsPerPage={rowsPerPage}
+      totalRows={filteredCurriculum.length} // Use the full list for pagination
+      onPageChange={handlePageChange}
+    />
+              </div>
     {message && <div className="success-message">{message}</div>}
 
     </div>)}
 
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    PaperProps={{
+      style: { borderRadius: 20 },
+    }}>
   <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit Curriculum</DialogTitle>
+    <DialogTitle  id="edit-schedule-dialog">Edit Curriculum</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
+  <div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -502,11 +551,12 @@ const paginatedRows = filteredCurriculum.slice(
         <option>Mobile App Testing</option>
       </select>
     </div>
+    </div>
 
     <div className="mb-3">
       <label htmlFor="faqPDF" className="form-label">FAQ's PDF</label>
       <input
-        className="form-control"
+        className="form-control-sample"
         type="file"
         id="faqPDF"
         name="curriculum_pdf"

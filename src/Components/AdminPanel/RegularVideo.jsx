@@ -34,6 +34,7 @@ import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -58,6 +59,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function RegularVideo() {
+    const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
@@ -77,16 +79,24 @@ export default function RegularVideo() {
             date:currentDate,
          }]);
          const [currentPage, setCurrentPage] = useState(1);
-const rowsPerPage = 5;
-
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
-
-const paginatedRows = filteredVideo.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-);
+                    const [rowsPerPage, setRowsPerPage] = useState(10);
+                    
+                    const handlePageChange = (page) => {
+                     setCurrentPage(page);
+                     window.scrollTo(0, window.scrollY);
+                   };
+                   // Inside your CourseCategory component
+                 
+                 const handleRowsPerPageChange = (rows) => {
+                   setRowsPerPage(rows);
+                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
+                 };
+                 
+                 // Slice filteredVideo based on rowsPerPage and currentPage
+                 const displayedCategories = filteredVideo.slice(
+                   (currentPage - 1) * rowsPerPage,
+                   currentPage * rowsPerPage
+                 );
 
          const handleReset=()=>{
             setVideoData([{
@@ -193,7 +203,7 @@ const paginatedRows = filteredVideo.slice(
               regularVideo.week.toLowerCase().includes(searchTerm.toLowerCase())
           );
           setFilteredVideo(filtered);
-      }, [searchTerm,filteredVideo]);
+      }, [searchTerm,regularVideo]);
         
         const handleCloseModal=()=>{
           setShowAddCourse(false);
@@ -270,11 +280,14 @@ const paginatedRows = filteredVideo.slice(
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={videoData.course_name} onChange={handleChange}>
-      <option selected>Select course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Manual Testing</option>
-      <option>Mobile App Testing</option>
+    <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
     </select>
 
 </div>
@@ -295,16 +308,16 @@ const paginatedRows = filteredVideo.slice(
           {rows.map((row) => (
             <StyledTableRow
               key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 ' } }}
             >
-              <StyledTableCell component="th" scope="row" align='center'>
-               <input className='table-input' name='video_link' value={rows.video_link} onChange={handleChange}/>
+              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
+               <input className='table-curriculum' name='video_link' value={rows.video_link} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell align="center"><input className='table-input' name='video_description' value={rows.video_description} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center"><input className='table-input' name='week' value={rows.week} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center"><input className='table-input' name='day' value={rows.day} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center"><input className='table-input' name='video_duration' value={rows.video_duration} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center"><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
+              <StyledTableCell align="center" sx={{ padding: 0, }}><input className='table-curriculum' name='video_description' value={rows.video_description} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell align="center" sx={{ padding: 0, }}><input className='table-curriculum' name='week' value={rows.week} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell align="center" sx={{ padding: 0, }}><input className='table-curriculum' name='day' value={rows.day} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell align="center" sx={{ padding: 0, }}><input className='table-curriculum' name='video_duration' value={rows.video_duration} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell align="center" sx={{ padding: 0, }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)} /></></StyledTableCell>
                   </StyledTableRow>
     
@@ -313,7 +326,7 @@ const paginatedRows = filteredVideo.slice(
       </Table>
     </TableContainer>
   
-<div style={{display:'flex',flexDirection:'row'}}> 
+    <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -347,18 +360,19 @@ const paginatedRows = filteredVideo.slice(
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -379,10 +393,10 @@ const paginatedRows = filteredVideo.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Category Name</StyledTableCell>
             <StyledTableCell align='center'>Course Name</StyledTableCell>
             <StyledTableCell align="center">Video</StyledTableCell>
@@ -391,45 +405,62 @@ const paginatedRows = filteredVideo.slice(
             <StyledTableCell align="center">Day</StyledTableCell>
             <StyledTableCell align="center">Duration</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '100px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-  {filteredVideo.map((row, index) => (
+        {displayedCategories.length > 0 ? (
+  displayedCategories.map((row, index) => (
     <StyledTableRow key={row.regularvideo_id}>
-      <StyledTableCell>
+      <StyledTableCell align='center' sx={{ width: '100px' }}>
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="center">{row.category_name}</StyledTableCell>
-      <StyledTableCell align="center">{row.course_name}</StyledTableCell>
-      <StyledTableCell align="center">{row.video_link}</StyledTableCell>
-      <StyledTableCell align="center">{row.video_description}</StyledTableCell>
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+      <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+      <StyledTableCell align="left">{row.video_link}</StyledTableCell>
+      <StyledTableCell align="left">{row.video_description}</StyledTableCell>
       <StyledTableCell align="center">{row.week}</StyledTableCell>
       <StyledTableCell align="center">{row.day}</StyledTableCell>
       <StyledTableCell align="center">{row.video_duration}</StyledTableCell>
       <StyledTableCell align="center">{row.date}</StyledTableCell>
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.regularvideo_id)} />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+  ))
+) : (
+  <p>No categories available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
-
-    </div>)}
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
-  <div className="dialog-title">
+    <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredVideo.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
+      <div className="dialog-title">
     <DialogTitle id="edit-schedule-dialog">Edit Regular Video</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
+  <div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -459,14 +490,19 @@ const paginatedRows = filteredVideo.slice(
         value={editedRow.course_name || ""}
         onChange={handleInputChange}
       >
-        <option value="">Select Course</option>
-        <option>QA Automation</option>
-        <option>Load Runner</option>
-        <option>QA Automation Testing</option>
-        <option>Mobile App Testing</option>
+        <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+           ))}
       </select>
     </div>
+    </div>
 
+    <div className="col">
     <label htmlFor="title">Video Link</label>
     <input
       id="title"
@@ -475,7 +511,9 @@ const paginatedRows = filteredVideo.slice(
       value={editedRow.video_link || ""}
       onChange={handleInputChange}
     />
+    </div>
 
+  <div className="col">
     <label htmlFor="topic">Description</label>
     <input
       id="topic"
@@ -484,32 +522,42 @@ const paginatedRows = filteredVideo.slice(
       value={editedRow.video_description || ""}
       onChange={handleInputChange}
     />
+    </div>
+
+<div className="course-row">
+<div className="col">
        <label htmlFor="topic">Week</label>
     <input
       id="topic"
-      className="form-control"
+      className="schedule-input"
       name="week"
       value={editedRow.week || ""}
       onChange={handleInputChange}
     />
+    </div>
+    <div className="col">
        <label htmlFor="topic">Day</label>
     <input
       id="topic"
-      className="form-control"
+      className="schedule-input"
       name="day"
       value={editedRow.day || ""}
       onChange={handleInputChange}
     />
+    </div>
+    <div className="col">
      <label htmlFor="topic">Duration</label>
     <input
       id="duration"
-      className="form-control"
+      className="schedule-input"
       name="video_duration"
       value={editedRow.video_duration || ""}
       onChange={handleInputChange}
     />
+    </div>
+    </div>
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

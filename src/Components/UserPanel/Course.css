@@ -562,10 +562,12 @@ position: relative;
 position: absolute;
 top: 10px;
 right: 10px;
-font-size: 2rem;
+font-size: 2.2rem;
 font-weight: 700;
 color: white;
 cursor: pointer;
+background: #006489;
+border-radius: 50%;
 }
 
 .btn.btn-outline-secondary {
@@ -2639,7 +2641,8 @@ max-height: 3em;
   }
 
  #query1.form-control.date-picker,
- #query1.form-control.time-picker{
+ #query1.form-control.time-picker,
+ #query1.form-select.mode{
   width: 320px!important;
   height: 35px !important;
   margin-bottom: 10px !important;
@@ -2708,7 +2711,8 @@ max-height: 3em;
 }
 
 #query1.form-control.date-picker,
-#query1.form-control.time-picker{
+#query1.form-control.time-picker,
+#query1.form-select.mode{
 width: 520px;
 height: 50px;
 margin-bottom: 10px;

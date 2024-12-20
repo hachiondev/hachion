@@ -781,7 +781,7 @@ const handleInputChange = (e) => {
       </LocalizationProvider>
     
         </DialogContent>
-        <DialogActions>
+        <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
          
           <Button onClick={handleSave} className='update-btn'>
             Update

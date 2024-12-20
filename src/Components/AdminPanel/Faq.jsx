@@ -58,6 +58,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function Faq() {
+  const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
@@ -121,9 +122,9 @@ export default function Faq() {
       const fetchFaq = async () => {
           try {
               const response = await axios.get('http://localhost:8080/faq');
-              setFaq(response.data); // Use the Faq state
+              setFaq(response.data); // Use the curriculum state
           } catch (error) {
-              console.error("Error fetching Faq:", error.message);
+              console.error("Error fetching curriculum:", error.message);
           }
       };
       fetchFaq();
@@ -195,22 +196,25 @@ export default function Faq() {
           };
           fetchCategory();
         }, []);
-
         useEffect(() => {
-          const filtered = faq.filter(faq => {
-            const courseName = faq?.course_name || ""; 
-            const description = faq?.description || ""; 
-            const faqTitle = faq?.faq_title || ""; 
-        
-            return (
-              courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              faqTitle.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-          });
-        
+          const fetchCourseCategory = async () => {
+            try {
+              const response = await axios.get("http://localhost:8080/courses/all");
+              setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+            } catch (error) {
+              console.error("Error fetching categories:", error.message);
+            }
+          };
+          fetchCourseCategory();
+        }, []);
+        useEffect(() => {
+          const filtered = faq.filter(faq =>
+              faq.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              faq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              faq.faq_title.toLowerCase().includes(searchTerm.toLowerCase())
+          );
           setFilteredFaq(filtered);
-        }, [searchTerm, faq]); 
+      }, [searchTerm,filteredFaq]);
       const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file && file.type === "application/pdf") {
@@ -298,11 +302,14 @@ export default function Faq() {
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={faqData.course_name} onChange={handleChange}>
-      <option selected>Select course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Manual Testing</option>
-      <option>Mobile App Testing</option>
+    <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
     </select>
   </div>
   <div class="mb-3">
@@ -431,11 +438,14 @@ export default function Faq() {
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={faqData.course_name} onChange={handleChange}>
-      <option selected>Select course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Manual Testing</option>
-      <option>Mobile App Testing</option>
+    <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
     </select>
   </div>
   <div class="mb-3">
@@ -462,22 +472,22 @@ export default function Faq() {
         </TableHead>
         <TableBody>
         {displayedCategories.length > 0 ? (
-  displayedCategories.map((course, index) => (
-    <StyledTableRow key={course.faq_id}>
+  displayedCategories.map((row, index) => (
+    <StyledTableRow key={row.faq_id}>
       <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">
         {index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell>
-      <StyledTableCell align="left">{Faq.faq_title}</StyledTableCell>
-      <StyledTableCell align="left">{Faq.description}
+      <StyledTableCell align="left">{row.faq_title}</StyledTableCell>
+      <StyledTableCell align="left">{row.description}
       </StyledTableCell>
-      <StyledTableCell align="center">{Faq.date}</StyledTableCell>
+      <StyledTableCell align="center">{row.date}</StyledTableCell>
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-        <FaEdit className="edit" onClick={() => handleClickOpen(Faq)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(Faq.faq_id)} />
+        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.faq_id)} />
         </div>
       </StyledTableCell>
     </StyledTableRow>
@@ -524,9 +534,9 @@ export default function Faq() {
         <option value="" disabled>
           Select Category
         </option>
-        {course.map((faq) => (
-          <option key={faq.id} value={faq.name}>
-            {faq.name}
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
           </option>
         ))}
       </select>
@@ -541,11 +551,14 @@ export default function Faq() {
         value={editedRow.course_name || ""}
         onChange={handleInputChange}
       >
-        <option value="">Select Course</option>
-        <option>QA Automation</option>
-        <option>Load Runner</option>
-        <option>QA Automation Testing</option>
-        <option>Mobile App Testing</option>
+        <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
       </select>
     </div>
     </div>
@@ -579,7 +592,7 @@ export default function Faq() {
       onChange={handleInputChange}
     />
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

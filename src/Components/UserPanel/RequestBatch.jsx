@@ -96,6 +96,17 @@ const RequestBatch = ({ closeModal }) => {
             />
           </div>
 
+          <div className='form-group col-10' style={{ position: 'relative' }}>
+            <label for="inputState" className='form-label'>
+              Mode
+            </label>
+            <select id='query1' class="form-select mode">
+            <option selected>Select mode</option>
+            <option>Live Demo</option>
+            <option>Live Class</option>
+          </select>
+          </div>
+
         <div className='form-group col-10'>
           <label htmlFor='inputEmail' className='form-label'>Email ID</label>
           <input

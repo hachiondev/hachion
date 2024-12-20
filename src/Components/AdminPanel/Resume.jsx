@@ -36,6 +36,7 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -81,20 +82,25 @@ export default function Resume() {
            middle_level:"",
            senior_level:""
          }]);
-         const [currentPage, setCurrentPage] = useState(1);
-  
+ const [currentPage, setCurrentPage] = useState(1);
+           const [rowsPerPage, setRowsPerPage] = useState(10);
+           
+           const handlePageChange = (page) => {
+            setCurrentPage(page);
+            window.scrollTo(0, window.scrollY);
+          };
+          // Inside your CourseCategory component
+        
+        const handleRowsPerPageChange = (rows) => {
+          setRowsPerPage(rows);
+          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+        };
 
-const rowsPerPage = 5;
 
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
-
-
-const paginatedRows = filteredResume.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-);
+        const displayedCategories = filteredResume.slice(
+          (currentPage - 1) * rowsPerPage,
+          currentPage * rowsPerPage
+        );
 
          const handleReset=()=>{
             setResumeData([{
@@ -326,7 +332,7 @@ const paginatedRows = filteredResume.slice(
 
 
 
-<div style={{display:'flex',flexDirection:'row'}}> 
+<div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -348,30 +354,37 @@ const paginatedRows = filteredResume.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -392,56 +405,73 @@ const paginatedRows = filteredResume.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell  align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Category Name</StyledTableCell>
             <StyledTableCell align='center'>Course Name</StyledTableCell>
             <StyledTableCell align="center">Junior level position link</StyledTableCell>
             <StyledTableCell align="center">Middle  level position link</StyledTableCell>
             <StyledTableCell align="center">Senior level position link </StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-  {resume.map((row, index) => (
+        {displayedCategories.length > 0 ? (
+  displayedCategories.map((row, index) => (
     <StyledTableRow key={row.resume_id}>
-      <StyledTableCell>
+      <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="center">{row.category_name}</StyledTableCell>
-      <StyledTableCell align="center">{row.course_name}</StyledTableCell>
-      <StyledTableCell align="center">{row.junior_level}</StyledTableCell>
-      <StyledTableCell align="center">{row.middle_level}</StyledTableCell>
-      <StyledTableCell align="center">
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+      <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+      <StyledTableCell align="left">{row.junior_level}</StyledTableCell>
+      <StyledTableCell align="left">{row.middle_level}</StyledTableCell>
+      <StyledTableCell align="left">
   {row.senior_level}
 </StyledTableCell>
       <StyledTableCell align="center">{row.date}</StyledTableCell>
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.resume_id)} />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+ ))
+) : (
+  <p>No Data available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
+        <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredResume.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
 
-    </div>)}
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
-  <div className="dialog-title">
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
+      <div className="dialog-title">
     <DialogTitle id="edit-schedule-dialog">Edit  Resume</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
-  
+  <div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -481,7 +511,7 @@ const paginatedRows = filteredResume.slice(
         ))}
       </select>
     </div>
-
+    </div>
 
     <label htmlFor="topic">Enter junior level position path</label>
     <input

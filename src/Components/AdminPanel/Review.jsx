@@ -36,6 +36,8 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -83,21 +85,26 @@ export default function Review() {
            image:null
          }]);
          const [currentPage, setCurrentPage] = useState(1);
-  
-
-const rowsPerPage = 5;
-
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
+                    const [rowsPerPage, setRowsPerPage] = useState(10);
+                    
+                    const handlePageChange = (page) => {
+                     setCurrentPage(page);
+                     window.scrollTo(0, window.scrollY);
+                   };
+                   // Inside your CourseCategory component
+                 
+                 const handleRowsPerPageChange = (rows) => {
+                   setRowsPerPage(rows);
+                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
+                 };
 
 const handleFileChange = (e) => {
     setReviewData((prev) => ({ ...prev, image: e.target.files[0] }));
   };
-const paginatedRows = filteredReview.slice(
+  const displayedCategories = filteredReview.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
-);
+  );
 
          const handleReset=()=>{
             setReviewData([{
@@ -342,7 +349,7 @@ const paginatedRows = filteredReview.slice(
   onChange={handleChange}></textarea>
 </div>
 
-<div style={{display:'flex',flexDirection:'row'}}> 
+<div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -364,30 +371,37 @@ const paginatedRows = filteredReview.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
             <button className='filter' >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -408,45 +422,62 @@ const paginatedRows = filteredReview.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Images</StyledTableCell>
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align="center">Source</StyledTableCell>
             <StyledTableCell align="center">Technology</StyledTableCell>
             <StyledTableCell align="center">Comment </StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-  {review.map((curr, index) => (
+        {displayedCategories.length > 0 ? (
+  displayedCategories.map((curr, index) => (
     <StyledTableRow key={curr.review_id}>
-      <StyledTableCell>
+      <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{curr.image}</StyledTableCell>
-      <StyledTableCell align="center">{curr.student_name}</StyledTableCell>
+      <StyledTableCell align="left">{curr.student_name}</StyledTableCell>
       <StyledTableCell align="center">{curr.source}</StyledTableCell>
-      <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
-      <StyledTableCell align="center">{curr.comment}</StyledTableCell>
+      <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
+      <StyledTableCell align="left">{curr.comment}</StyledTableCell>
      
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.review_id)} />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+ ))
+) : (
+  <p>No Data available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
+    <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredReview.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
 
-    </div>)}
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
   <div className="dialog-title">
     <DialogTitle id="edit-schedule-dialog">Edit  Review</DialogTitle>
     <Button onClick={handleClose} className="close-btn">

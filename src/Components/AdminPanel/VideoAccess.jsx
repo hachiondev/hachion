@@ -35,6 +35,7 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -107,10 +108,10 @@ const handlePermissionChange = (e) => {
     setVideoAccess(updatedVideoData);  // Update the state
   };
 
-const paginatedRows = filteredVideo.slice(
+  const displayedCategories = filteredVideo.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
-);
+  );
 
          const handleReset=()=>{
             setVideoData([{
@@ -465,12 +466,13 @@ const paginatedRows = filteredVideo.slice(
           </TableRow>
         </TableHead>
         <TableBody>
-  {videoAccess.map((row, index) => (
+        {displayedCategories.length > 0 ? (
+          displayedCategories.map((row, index) => (
     <StyledTableRow key={row.regularvideo_id}>
       <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{row.category_name}</StyledTableCell>
       <StyledTableCell align="center">{row.course_name}</StyledTableCell>
       <StyledTableCell align="center">{row.user_email}</StyledTableCell>
@@ -486,13 +488,24 @@ const paginatedRows = filteredVideo.slice(
       </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+ ))
+) : (
+  <p>No Data available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
-
-    </div>)}
+        <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredVideo.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
 
     <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
               PaperProps={{

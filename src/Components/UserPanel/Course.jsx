@@ -13,6 +13,7 @@ const Course = () => {
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(12);
+  const [totalCards, setTotalCards] = useState(0);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -20,6 +21,10 @@ const Course = () => {
     if (bannerRef.current) {
       window.scrollTo(0, 400); 
     }
+  };
+
+  const updateTotalCards = (total) => {
+    setTotalCards(total);
   };
 
   useEffect(() => {
@@ -74,12 +79,13 @@ const Course = () => {
               category={selectedCategory}
               currentPage={currentPage}
               cardsPerPage={cardsPerPage}
+              onTotalCardsChange={updateTotalCards}
             />
             {/* Pagination component */}
             <div className='pagination-container'>
             <Pagination
               currentPage={currentPage}
-              totalCards={getTotalCards(selectedCategory)} // Total number of cards in the selected category
+              totalCards={totalCards} // Total number of cards in the selected category
               cardsPerPage={cardsPerPage}
               onPageChange={handlePageChange} // Custom handler for page change
             />

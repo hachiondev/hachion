@@ -310,8 +310,9 @@ const handleFileChange = (e) => {
       <option>Twitter</option>
       <option>Instagram</option>
     </select>
-
 </div>
+</div>
+<div className="course-row">
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={reviewData.category_name} onChange={handleChange}>
@@ -324,8 +325,8 @@ const handleFileChange = (e) => {
           </option>
         ))}
     </select>
-
 </div>
+
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={reviewData.course_name} onChange={handleChange}>
@@ -338,9 +339,9 @@ const handleFileChange = (e) => {
           </option>
         ))}
       </select>
-
 </div>
   </div>
+  
   <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
@@ -485,23 +486,25 @@ const handleFileChange = (e) => {
     </Button>
   </div>
   <DialogContent>
-  <div class="mb-6">
+    <div className="course-row">
+  <div class="col">
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+  <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="student_name"
   value={editedData.student_name}
-  onChange={handleInputChange}/></div>
-  <div className="col-md-4">
+  onChange={handleInputChange}/>
+  </div>
+  <div className="col">
                 <label className="form-label">Image</label>
                 <input
                   type="file"
-                  className="form-control"
+                  className="schedule-input"
                   name="image"
                   onChange={handleFileChange}
                   required
                 />
               </div>
-              <div class="col-md-3">
+              <div class="col">
     <label for="inputState" class="form-label">Source</label>
     <select id="inputState" class="form-select" name='source' value={editedData.source} onChange={handleInputChange}>
       <option selected>Select </option>
@@ -511,6 +514,9 @@ const handleFileChange = (e) => {
       <option>Instagram</option>
     </select>
 </div>
+</div>
+
+<div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -550,6 +556,7 @@ const handleFileChange = (e) => {
         ))}
       </select>
     </div>
+    </div>
     <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
@@ -560,7 +567,7 @@ const handleFileChange = (e) => {
 
 
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

@@ -617,7 +617,7 @@ width: 100%;
   font-weight: 500;
   margin-bottom: 20px;
   display: flex;
-  justify-items: space-between !important;
+  justify-content: space-between !important;
   white-space: nowrap;
   width: 600px;
   border-radius: 20px 20px 0 0;
@@ -632,9 +632,7 @@ width: 150px;
   box-shadow: 5px 5px 10px #d3d3d3;
   align-items: center;
 }
-.close-btn{
-margin-left: 18vw !important;
-}
+
 .table-input{
   margin-top: 5px;
   height: 55px;

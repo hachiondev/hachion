@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
+import  React, { useEffect } from 'react';
+import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
+import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -8,34 +10,38 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+
+import './Admin.css';
+
+import { RiCloseCircleLine } from 'react-icons/ri';
+import success from '../../Assets/success.gif';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { IoSearch } from "react-icons/io5";
+import { FiPlus } from 'react-icons/fi';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import './Admin.css';
-import Pagination from '@mui/material/Pagination';
-import { useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Switch from '@mui/material/Switch';
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import axios from 'axios';
+import { GoPlus } from "react-icons/go";
+import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import CourseCategory from './CourseCategory';
-
+import Switch from '@mui/material/Switch';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white',
+    borderRight: '1px solid white', // Add vertical lines
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0',
+    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
 
@@ -48,147 +54,479 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// function createData(S_No, course_name, status, created_date) {
-//   return { S_No, course_name, status, created_date };
-// }
 
-// const rows = [
-//   createData(1, 'QA Automation', 'Enable', '2019-11-25'),
-//   createData(2, 'Python', 'Enable', '2022-12-11'),
-//   createData(3, 'Tableau','Enable', '2021-02-15'),
-//   createData(4, 'Big data Hadoop','Enable', '2020-05-12'),
-//   createData(5, 'Salesforce Developer','Enable', '2019-06-11'),
-//   createData(6, 'Data Science with Python','Enable', '2018-05-21'),
-//   createData(7, 'Blue Prism','Enable', '2019-05-18'),
-//   createData(8, 'Load Runner', 'Enable','2018-04-13'),
-//   createData(9, 'ServiceNow','Enable', '2019-06-11'),
-//   createData(10, 'Cloud Computing','Enable', '2019-06-11'),
+export default function TrendingCourseTable() {
+  const [category,setCategory]=useState([]);
+  const [course,setCourse]=useState([]);
+  const [searchTerm,setSearchTerm]=useState("")
+    const [showAddCourse, setShowAddCourse] = useState(false);
+    const[trendingCourse,setTrendingCourse]=useState([]);
+    const[filteredCourse,setFilteredCourse]=useState([])
+    const [open, setOpen] = React.useState(false);
+    const currentDate = new Date().toISOString().split('T')[0];
+    const[message,setMessage]=useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
+    const [courseData, setCourseData] = useState([{
+        trendingcourse_id:"",
+          category_name:"",
+            course_name: "",
+            date:currentDate,
+            status:false
+         }]);
+         const [currentPage, setCurrentPage] = useState(1);
+        
 
-// ];
+const rowsPerPage = 5;
 
-export default function TrendingCourse() {
-  const [showAddCourse, setShowAddCourse] = useState(false);
-  const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const [selectedRow, setSelectedRow] = useState({ course_name: '', Date: '' });
-  const [course, setCourse] = useState('');
+const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+};
+const handleStatusChange = () => {
+  setCourseData((prev) => ({ ...prev, status: !prev.status }));
+};
+const handleInputStatusChange = () => {
+  setEditedData((prev) => ({ ...prev, status: !prev.status }));
+};
+const paginatedRows = filteredCourse.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+);
 
-  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
+         const handleReset=()=>{
+            setCourseData([{
+                trendingcourse_id:"",
+                category_name:"",
+                  course_name: "",
+                  date:currentDate,
+                  status:false
+                 }]);
+        
+         }
+         const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setEditedData((prev) => ({
+              ...prev,
+              [name]: value,
+            }));
+          };
+   
+    const handleClose = () => {
+      setOpen(false); // Close the modal
+    };
+    
+    useEffect(() => {
+      const fetchCourse = async () => {
+          try {
+              const response = await axios.get('http://localhost:8080/trendingcourse');
+              setTrendingCourse(response.data); // Use the curriculum state
+          } catch (error) {
+              console.error("Error fetching video:", error.message);
+          }
+      };
+      fetchCourse();
+      setFilteredCourse(trendingCourse)
+  }, []); // Empty dependency array ensures it runs only once
 
+    const handleDeleteConfirmation = (trendingcourse_id) => {
+        if (window.confirm("Are you sure you want to delete this Course?")) {
+          handleDelete(trendingcourse_id);
+        }
+      };
+  
+      const handleDateFilter = () => {
+        const filtered = trendingCourse.filter((item) => {
+          const videoDate = new Date(item.date); // Parse the date field
+          const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+          const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      
+          return (
+            (!start || videoDate >= start) &&
+            (!end || videoDate <= end)
+          );
+        });
+      
+        setFilteredCourse(filtered);
+      };
+      const handleSave = async () => {
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
+            );
+            setTrendingCourse((prev) =>
+                prev.map(curr =>
+                    curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr
+                )
+            );
+            setMessage("Trending Course updated successfully!");
+            setTimeout(() => setMessage(""), 5000);
+            setOpen(false);
+        } catch (error) {
+            setMessage("Error updating Courses.");
+        }
+    };
+            
+      const handleDelete = async (trendingcourse_id) => {
+       
+         try { 
+          const response = await axios.delete(`http://localhost:8080/trendingcourse/delete/${trendingcourse_id}`); 
+          console.log("Trending Courses deleted successfully:", response.data); 
+        } catch (error) { 
+          console.error("Error deleting Courses:", error); 
+        } }; 
+        useEffect(() => {
+          const filtered = trendingCourse.filter(trendingCourse =>
+              trendingCourse.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              trendingCourse.category_name.toLowerCase().includes(searchTerm.toLowerCase()) 
+          );
+          setFilteredCourse(filtered);
+      }, [searchTerm,filteredCourse]);
+        
+        const handleCloseModal=()=>{
+          setShowAddCourse(false);
+         
+        }
+        const handleClickOpen = (row) => {
+            console.log(row);
+              setEditedData(row)// Set the selected row data
+              setOpen(true); // Open the modal
+             
+            };
+    
+            const handleChange = (e) => {
+              console.log(e.target.name, e.target.value); // Check which field and value are changing
+              setCourseData({
+                ...courseData,
+                [e.target.name]: e.target.value,
+              });
+            };
+            
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+        const dataToSubmit = { 
+          ...courseData, 
+          date: currentDate, // Ensure this is added
+        };
+      
+        try {
+          const response = await axios.post("http://localhost:8080/trendingcourse/add", dataToSubmit);
+          if (response.status === 200) {
+            alert("Courses added successfully");
+            setCourseData([...courseData, dataToSubmit]); // Update local state
+            handleReset(); // Clear form fields
+          }
+        } catch (error) {
+          console.error("Error adding courses:", error.message);
+          alert("Error adding course.");
+        }
+      };
+    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
 
-  const handleClickOpen = (row) => {
-    setSelectedRow(row);
-    setOpen(true);
-  };
-
-  const handleClose = () => setOpen(false);
-
-  const handleSave = () => {
-    console.log('Saved:', selectedRow);
-    setOpen(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedRow((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleCourseChange = (event) => setCourse(event.target.value);
+    }
+    useEffect(() => {
+      const fetchCategory = async () => {
+        try {
+          const response = await axios.get("http://localhost:8080/course-categories/all");
+          setCategory(response.data); // Assuming the data contains an array of trainer objects
+        } catch (error) {
+          console.error("Error fetching categories:", error.message);
+        }
+      };
+      fetchCategory();
+    }, []);
+    useEffect(() => {
+      const fetchCourses = async () => {
+        try {
+          const response = await axios.get("http://localhost:8080/courses/all");
+          console.log("API response:", response.data); // Check the API response
+          if (Array.isArray(response.data)) {
+            setCourse(response.data); // Update state
+          } else {
+            console.log("Unexpected response format:", response.data);
+          }
+        } catch (error) {
+          console.log("Error fetching courses:", error.message);
+        }
+      };
+    
+      fetchCourses();
+    }, []);
+    
+    useEffect(() => {
+      console.log("Updated course state:", course); // Logs whenever 'course' state updates
+    }, [course]);
+    
 
   return (
-    <>
-      {showAddCourse ? (
-        <div style={{ padding: '20px' }}>
-          <h2>Add Trending Course</h2>
-          <FormControl fullWidth>
-            <label>Course Name</label>
-            <Select
-              value={course}
-              onChange={handleCourseChange}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-            >
-              <MenuItem value=""><em>Select Course</em></MenuItem>
-              <MenuItem value="QA Automation">QA Automation</MenuItem>
-              <MenuItem value="Load Runner">Load Runner</MenuItem>
-              <MenuItem value="QA Manual Testing">QA Manual Testing</MenuItem>
-              <MenuItem value="Mobile App Testing">Mobile App Testing</MenuItem>
-            </Select>
-            <label>Status</label>
-            <FormControlLabel
-              control={<Switch defaultChecked />}
-              label="Disable"
-            />
-          </FormControl>
-          <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-          <button className="submit-btn"  onClick={() => console.log('Submitted')}>Submit</button>
-          <button className="reset-btn">Reset</button>
-        
+    
+    <>  
+     {showAddCourse ?  (<div className='course-category'>
+<p> Trending Courses <IoIosArrowForward/> Add Trending COurses </p>
+<div className='category'>
+<div className='category-header'>
+<p>Add Trending Course</p>
+</div>
+<div className='course-details'>
+<div className='course-row'>
+
+  <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {category.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    </select>
+
+</div>
+  <div class="col-md-3">
+  <label htmlFor="inputState" className="form-label">
+        Course Name
+      </label>
+      <select
+  id="inputState"
+  className="form-select"
+  name="course_name"
+  value={courseData.course_name}
+  onChange={handleChange}
+>
+  <option value="" disabled>
+    Select Course
+  </option>
+  {course.length > 0 ? (
+    course.map((current) => (
+      <option key={current.id} value={current.courseName}>
+        {current.courseName}
+      </option>
+    ))
+  ) : (
+    <option disabled>No Courses Available</option>
+  )}
+</select>
+</div>
+  </div>
+
+  <label>
+        Status:
+        <input
+          type="checkbox"
+          checked={courseData.status}
+          onChange={handleStatusChange}
+        />
+      </label>
+<div style={{display:'flex',flexDirection:'row'}}> 
+  <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+  <button className='reset-btn' onClick={handleReset}>Reset</button>
+  
+</div>
+</div>
+</div>
+</div>
+):(<div>
+   <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className='course-category'>
+       
+        <div className='category'>
+          <div className='category-header'>
+            <p>Trending Courses</p>
           </div>
-        </div>
-      ) : (
-        <div>
-        <CourseCategory pageTitle = "Trending Courses"
-  headerTitle = "View Trending Course Details"
-buttonLabel='Add Trending Course'
-onAddCategoryClick={handleAddTrendingCourseClick}
+          <div className='date-schedule'>
+            Start Date
+            <DatePicker 
+    selected={startDate} 
+    onChange={(date) => setStartDate(date)} 
+    isClearable />
+            End Date
+            <DatePicker 
+    selected={endDate} 
+    onChange={(date) => setEndDate(date)} 
+    isClearable 
   />
-         
-          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              {/* <TableHead>
-                <TableRow>
-                  <StyledTableCell><Checkbox /></StyledTableCell>
-                  <StyledTableCell>S.No.</StyledTableCell>
-                  <StyledTableCell align="center">Course Name</StyledTableCell>
-                  <StyledTableCell align="center">Status</StyledTableCell>
-                  <StyledTableCell align="center">Date</StyledTableCell>
-                  <StyledTableCell align="center">Action</StyledTableCell>
-                </TableRow>
-              </TableHead> */}
-              <TableBody>
-                {/* {rows.map((row) => (
-                  <StyledTableRow key={row.S_No}>
-                    <StyledTableCell><Checkbox /></StyledTableCell>
-                    <StyledTableCell>{row.S_No}</StyledTableCell>
-                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-                    <StyledTableCell align="center">{row.status}</StyledTableCell>
-                    <StyledTableCell align="center">{row.created_date}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      <FaEdit className='edit' onClick={() => handleClickOpen(row)} />
-                      <RiDeleteBin6Line className='delete' />
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))} */}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Pagination count={10} color="primary" />
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Edit Trending Course</DialogTitle>
-            <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                name="course_name"
-                label="Course Name"
-                type="text"
-                fullWidth
-                value={selectedRow.course_name}
-                onChange={handleInputChange}
-              />
-              <FormControlLabel control={<Switch defaultChecked />} label="Enable" />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleSave} color="primary">Update</Button>
-              <Button onClick={handleClose} color="secondary">Cancel</Button>
-            </DialogActions>
-          </Dialog>
+            <button className='filter' onClick={handleDateFilter} >filter</button>
+           
+          </div>
+          <div className='entries'>
+            <div className='entries-left'>
+              <p>Show</p>
+              <div className="btn-group">
+                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  10
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">1</a></li>
+      
+                </ul>
+              </div>
+              <p>entries</p>
+            </div>
+            <div className='entries-right'>
+              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}/>
+                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              </div>
+              <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                <FiPlus /> Add Trending Course
+              </button>
+            </div>
+          </div>
+
         </div>
-      )}
-    </>
-  );
+      </div>
+    </LocalizationProvider>
+  <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>
+            <Checkbox
+              />
+            </StyledTableCell>
+            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center'>Category Name</StyledTableCell>
+            <StyledTableCell align='center'>Course Name</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
+            <StyledTableCell align="center">Created Date</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+
+          {filteredCourse.map((row, index) => (
+            <StyledTableRow key={row.trendingcourse_id}>
+              <StyledTableCell>
+               
+              </StyledTableCell>
+              <StyledTableCell align="center">{index + 1}</StyledTableCell>
+              <StyledTableCell align="center">{row.category_name}</StyledTableCell>
+              <StyledTableCell align="center">{row.course_name}</StyledTableCell>
+              <StyledTableCell align="center">
+                {row.status ? "Enabled" : "Disabled"}
+              </StyledTableCell>
+              <StyledTableCell align="center">{row.date}</StyledTableCell>
+              <StyledTableCell align="center">
+                <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                <RiDeleteBin6Line
+                  className="delete"
+                  onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
+                />
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        
+</TableBody>
+    </Table>
+    </TableContainer>
+    {message && <div className="success-message">{message}</div>}
+
+    </div>)}
+
+    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+  <div className="dialog-title">
+    <DialogTitle id="edit-schedule-dialog">Edit Trending Course</DialogTitle>
+    <Button onClick={handleClose} className="close-btn">
+      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+    </Button>
+  </div>
+  <DialogContent>
+  
+    <div className="col">
+      <label htmlFor="categoryName" className="form-label">Category Name</label>
+      <select
+        id="categoryName"
+        className="form-select"
+        name="category_name"
+        value={editedData.category_name || ""}
+        onChange={handleInputChange}
+      >
+         <option value="" disabled>
+          Select Category
+        </option>
+        {category.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div className="col">
+      <label htmlFor="courseName" className="form-label">Course Name</label>
+      <select
+        id="courseName"
+        className="form-select"
+        name="course_name"
+        value={editedData.course_name || ""}
+        onChange={handleInputChange}
+      >
+        <option value="" disabled>
+    Select Course
+  </option>
+  {course.length > 0 ? (
+    course.map((current) => (
+      <option key={current.id} value={current.courseName}>
+        {current.courseName}
+      </option>
+    ))
+  ) : (
+    <option disabled>No Courses Available</option>
+  )}
+      </select>
+    </div>
+    <label>
+        Status:
+        <input
+          type="checkbox"
+          checked={editedData.status}
+          onChange={handleInputStatusChange}
+        />
+      </label>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleSave} className="update-btn">Update</Button>
+  </DialogActions>
+</Dialog>
+
+    <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Courses Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+   
+ </> );
 }

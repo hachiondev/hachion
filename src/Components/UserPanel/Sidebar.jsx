@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 import './Course.css';
 
@@ -7,31 +8,22 @@ const Sidebar = ({ onSelectCategory }) => {
   const [selectedCategory, setSelectedCategory] = useState('All'); // Default category
   const [activeIndex, setActiveIndex] = useState(null); // Track active main menu item
   const [openSubmenuIndex, setOpenSubmenuIndex] = useState(null); // Track open submenu
+  const [menuItems, setMenuItems] = useState([]); // Dynamic menu items
 
-  const menuItems = [
-    { title: 'All', submenu: [] },
-    { title: 'Project Management', submenu: ['PMP', 'Business Analyst'] },
-    { title: 'QA Testing', submenu: ['QA Automation', 'Load Runner', 'QA Manual Testing', 'Mobile App Testing'] },
-    { title: 'Data Science', submenu: ['Python', 'DataScience with Python', 'Data Science with R'] },
-    { title: 'Programming', submenu: ['Java Full Stack Development', 'PHP with MySQL', 'UI/UX Design', 'Microsoft .NET', 'Angular JS Training', 'Node js', 'MongoDB Training', 'JavaScript Course', 'JQuery Training', 'React JS Training', 'SQL'] },
-    { title: 'Salesforce', submenu: ['Salesforce Developer', 'Salesforce Admin', 'Salesforce Lightning', 'Salesforce Admin Developer Lightning', 'Salesforce Admin Developer'] },
-    { title: 'ServiceNow', submenu: ['ServiceNow'] },
-    { title: 'Cloud Computing', submenu: ['AWS Solution Architecture', 'AWS Developer', 'AWS SysOps Admin', 'Google Cloud', 'DevOps', 'Internet of Things', 'Snowflake'] },
-    { title: 'Workday', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Mulesoft', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Cyber Security', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Machine learning', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'BlockChain', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Deep Learning', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Data Warehousing & ETL', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Mobile Development', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Big Data', submenu: ['Big Data Hadoop', 'Spark and Scala'] },
-    { title: 'RPA', submenu: ['Blue Prism', 'Automation Anywhere', 'RPA UI Path'] },
-    { title: 'BPM', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Flutter', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Microsoft', submenu: ['Subitem 1', 'Subitem 2'] },
-    { title: 'Scrum Master', submenu: ['Subitem 1', 'Subitem 2'] },
-  ];
+  const API_URL = 'http://localhost:8080/course-categories/all';
+
+  // Fetch categories from the API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setMenuItems(response.data); // Assuming response.data is an array of categories
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Check if mobile view is active (max-width: 480px)
   useEffect(() => {
@@ -51,9 +43,9 @@ const Sidebar = ({ onSelectCategory }) => {
     onSelectCategory(selected); // Update category and display corresponding cards
   };
 
-  const handleMenuItemClick = (index, title) => {
+  const handleMenuItemClick = (index, name) => {
     setActiveIndex(index);
-    onSelectCategory(title); // Update selected category and show cards
+    onSelectCategory(name); // Update selected category and show cards
     setOpenSubmenuIndex(null); // Close submenu if open
   };
 
@@ -67,20 +59,20 @@ const Sidebar = ({ onSelectCategory }) => {
         // Dropdown for mobile view
         <div>
           <h3 className="mob-sidebar-heading">Categories</h3>
-        <div className="mobile-dropdown">
-        <h3 className="mob-sidebar-text">Please select Category from the below dropdown</h3>
-          <select
-            onChange={handleCategoryChange}
-            className="dropdown-select"
-            value={selectedCategory}
-          >
-            {menuItems.map((item, index) => (
-              <option key={index} value={item.title}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className="mobile-dropdown">
+            <h3 className="mob-sidebar-text">Please select Category from the below dropdown</h3>
+            <select
+              onChange={handleCategoryChange}
+              className="dropdown-select"
+              value={selectedCategory}
+            >
+              {menuItems.map((item, index) => (
+                <option key={index} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       ) : (
         // Sidebar for desktop view
@@ -90,11 +82,11 @@ const Sidebar = ({ onSelectCategory }) => {
             {menuItems.map((item, index) => (
               <li key={index}>
                 <button
-                  onClick={() => handleMenuItemClick(index, item.title)}
+                  onClick={() => handleMenuItemClick(index, item.name)}
                   className={`menu-item ${activeIndex === index ? 'active' : ''}`}
                 >
-                  {item.title}
-                  {item.submenu.length > 0 && (
+                  {item.name}
+                  {item.submenu && item.submenu.length > 0 && (
                     <span onClick={() => handleSubmenuToggle(index)}>
                       {openSubmenuIndex === index ? <IoIosArrowDown /> : <IoIosArrowForward />}
                     </span>
@@ -102,7 +94,7 @@ const Sidebar = ({ onSelectCategory }) => {
                 </button>
 
                 {/* Show submenu items when toggled */}
-                {openSubmenuIndex === index && item.submenu.length > 0 && (
+                {openSubmenuIndex === index && item.submenu && item.submenu.length > 0 && (
                   <ul className="submenu">
                     {item.submenu.map((subitem, subIndex) => (
                       <li key={subIndex} className="submenu-item">

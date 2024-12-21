@@ -469,7 +469,7 @@ const handleEditClick = async (courseId) => {
 </div>
 </div>
 </div> 
-<h3>Mode Of Training</h3>
+<h3>Mode Of Training <span>1 USD= 84 INR</span></h3>
 <div className='course-row'>
 <div className='course-mode'>
 <div class="form-check">
@@ -478,17 +478,29 @@ const handleEditClick = async (courseId) => {
 Live Training
 </label>
 </div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
 </div>
-<div class="col-md-4">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(INR)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Discount%</label>
 <input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
-<div class="col-md-4">
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Total(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
 </div>
 </div>
 <div className='course-mode'>
@@ -498,17 +510,29 @@ Live Training
 Mentoring Mode
 </label>
 </div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(INR)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Discount%</label>
 <input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Total(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
 </div>
 </div>
 <div className='course-mode'>
@@ -518,17 +542,29 @@ Mentoring Mode
 Self Placed Training
 </label>
 </div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(INR)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Discount%</label>
 <input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Total(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
 </div>
 </div>
 
@@ -539,17 +575,29 @@ Self Placed Training
 Corporate Training
 </label>
 </div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div class="col">
+<label for="inputEmail4" class="form-label">Amount(INR)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Discount%</label>
 <input type="number" class="form-control-mode" id="inputEmail4" />
 </div>
-<div class="col-md-3">
+<div className="course-row">
+<div class="col">
+<label for="inputEmail4" class="form-label">Total(USD)</label>
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
+<div class="col">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="schedule-input" id="inputEmail4" />
+</div>
 </div>
 </div>
 </div>
@@ -559,13 +607,13 @@ Corporate Training
 <div className='course-details'>
 <h4>Mentoring Training</h4>
 <div className='course-col'>
-<div class="col-md-4">
+<div class="col">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="number" class="form-control-sample" id="inputEmail4" />
+<input type="link" class="form-control-sample" id="inputEmail4" />
 </div>
-<div class="col-md-4">
+<div class="col">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="number" class="form-control-sample" id="inputEmail4" />
+<input type="link" class="form-control-sample" id="inputEmail4" />
 </div>
 </div>
 
@@ -573,30 +621,32 @@ Corporate Training
 <div className='course-details'>
 <h4>Self Paced Training</h4>
 <div className='course-col'>
-<div class="col-md-4">
+<div class="col">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="text" class="form-control-sample" id="inputEmail4" />
+<input type="link" class="form-control-sample" id="inputEmail4" />
 </div>
-<div class="col-md-4">
+<div class="col">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="text" class="form-control-sample" id="inputEmail4" />
+<input type="link" class="form-control-sample" id="inputEmail4" />
 </div>
 </div>
 
 </div>
 </div>
+<div className='course-details'>
 <div className='course-row'>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Header Title</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="schedule-input" id="inputEmail4" />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Course keyword with comma</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="schedule-input" id="inputEmail4" />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Course keyword description</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="schedule-input" id="inputEmail4" />
+</div>
 </div>
 </div>
 <div class="mb-3">

@@ -29,6 +29,14 @@
   padding: 10px; /* Add some padding for better aesthetics */
 }
 
+.course-card-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+  justify-content: flex-start; /* Align cards from the start */
+  gap: 10px; /* Optional, adds space between the cards */
+  width: 100%;
+}
+
 .sidebar-right-all .SidebarCard {
   width: 300px; /* Card width */
   height: 340px; /* Card height */

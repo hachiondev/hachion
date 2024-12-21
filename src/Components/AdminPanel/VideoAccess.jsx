@@ -101,12 +101,18 @@ export default function VideoAccess() {
            setPermission(!permission); // Toggle the permission state
          };
 
-const handlePermissionChange = (e) => {
-    // Toggle the permission value based on the checkbox
-    const updatedVideoData = [...videoAccess];  // Copy the current video data
-    updatedVideoData[0].permission = e.target.checked;  // Update the permission for the first item (adjust accordingly if you have multiple items)
-    setVideoAccess(updatedVideoData);  // Update the state
-  };
+         const handlePermissionChange = (e) => {
+          // Ensure `videoAccess` and the first item exist before proceeding
+          if (!videoAccess || !videoAccess[0]) {
+              console.error("videoAccess or the first item is undefined");
+              return;
+          }
+      
+          // Toggle the permission value based on the checkbox
+          const updatedVideoData = [...videoAccess]; // Copy the current video data
+          updatedVideoData[0].permission = e.target.checked; // Update the permission for the first item
+          setVideoAccess(updatedVideoData); // Update the state
+      };
 
   const displayedCategories = filteredVideo.slice(
     (currentPage - 1) * rowsPerPage,
@@ -371,11 +377,11 @@ const handlePermissionChange = (e) => {
   <label className="form-label">Permission:</label>
   <div className="col" style={{ display: 'flex', gap: 10,}}> 
   <Switch
-        checked={videoAccess[0].permission}
-        onChange={handlePermissionChange}
-        color="primary"
-      />
-      <span>{videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
+                checked={videoAccess && videoAccess[0] ? videoAccess[0].permission : false} // Default to false if undefined
+                onChange={handlePermissionChange}
+                color="primary"
+            />
+            <span>{videoAccess && videoAccess[0] && videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
  </div>
   </div>
  </div>
@@ -599,11 +605,11 @@ const handlePermissionChange = (e) => {
     <div className="col" style={{ display: 'flex', gap: 20 }}> 
   <label className="form-label">Permission:</label>
   <Switch
-        checked={videoAccess[0].permission}
-        onChange={handlePermissionChange}
-        color="primary"
-      />
-      <span>{videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
+                checked={videoAccess && videoAccess[0] ? videoAccess[0].permission : false} // Default to false if undefined
+                onChange={handlePermissionChange}
+                color="primary"
+            />
+            <span>{videoAccess && videoAccess[0] && videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
     </div>
     </div>
        

@@ -27,6 +27,7 @@ import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Enrollment from './Components/UserPanel/Enrollment';
+import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddBanner from './Components/AdminPanel/AddBanner';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
@@ -39,19 +40,29 @@ import AddCourseDetails from './Components/AdminPanel/AddCourseDetails'
 import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
+import CourseSchedule from './Components/AdminPanel/CourseSchedule';
+// import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
     <BrowserRouter>
     <Routes>
-      <Route path='/' element={<Home/>}/>
+      
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+      <Route
+          path="/home"
+          element={
+            
+              <Home />
+            
+          }
+        />
       <Route path='/course' element={<Course/>}/>
       <Route path='/qaautomation' element={<QaAutomation/>}/>
       <Route path='/corporate' element={<CorporateTraining/>}/>
@@ -72,6 +83,7 @@ function App() {
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
+      <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addbanner' element={<AddBanner/>}/>
    <Route path='/addtrending' element={<TrendingCourse/>}/>
@@ -84,6 +96,7 @@ function App() {
       <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
+      <Route path='/courseschedule' element={<CourseSchedule/>}/>
     
   
       </Routes></BrowserRouter>

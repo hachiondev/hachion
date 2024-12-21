@@ -9,10 +9,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
-import CourseCategory from './CourseCategory';
-import Pagination from '@mui/material/Pagination';
-import { useNavigate } from 'react-router-dom';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { IoSearch } from "react-icons/io5";
+import { FiPlus } from 'react-icons/fi';
+import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import axios from 'axios';
+import { useState,useEffect } from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,46 +40,116 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No,email,mobile,country,course_name,schedule_date,time,mode,action) {
-  return { S_No,email,mobile,country,course_name,schedule_date,time,mode,action };
-}
 
-const rows = [
-  createData(1,'Pritivisa@gmail.com','2019181555','United States', 'QA Automation', '2024-11-25','07:30:00 PM IST','Live Demo'),
-  createData(2,'raknmit2000@gmail.com','6157055334','Bangladesh', 'Python', '2024-12-11','07:30:00 PM CST','Live Demo'),
-  createData(3,'Mahartejraj@gmail.com' ,'8133003767','India','Tableau', '2024-02-15','07:30:00 PM IST','Live Class'),
-  createData(4,'Simrannagpal@gmail.com', '6786900208','India','Big data Hadoop', '2024-05-12','07:30:00 PM CST','Live Demo'),
-  createData(5, 'abc@gmail.com','6786900208','Latvia','Salesforce Developer', '2024-06-11','07:30:00 PM IST','Live Class'),
-  createData(6,'bhatacharjee.attreya@gmail.com' ,'6786900208','Canada','Data Science with Python', '2024-05-21','07:30:00 PM CST','Live Demo'),
-  createData(7, 'Swatikulkarni07@gmail.com','6786900208','Canada','Blue Prism', '2024-05-18','07:30:00 PM IST','Live Class'),
-  createData(8,'Anishpatel_03@gmail.com' ,'6786900208','India','Load Runner','2024-04-13','07:30:00 PM CST','Live Demo'),
-  createData(9, 'bhalerao_01@yahoo.com','6786900208','India','ServiceNow', '2024-06-11','07:30:00 PM IST','Live Class'),
-  createData(10,'Laxmidon@gmail.com', '6786900208','India','Cloud Computing', '2024-06-11','07:30:00 PM CST','Live Demo'),
-];
 
 export default function ScheduleRequest() {
-  const navigate=useNavigate();
-  const handleAdd=()=>{
-navigate('/addschedule')
+  const [startDate,setStartDate]=useState([]);
+  const[endDate,setEndDate]=useState([]);
+  const [searchTerm,setSearchTerm]=useState("")
+const[requestBatch,setRequestBatch]=useState([]);
+  useEffect(() => {
+    const fetchRequestBatch = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/requestbatch');
+            setRequestBatch(response.data);
+        } catch (error) {
+            console.error("Error fetching student list:", error.message);
+        }
+    };
+    fetchRequestBatch();
+   
+}, []);
+const handleDeleteConfirmation = (batch_id) => {
+  if (window.confirm("Are you sure you want to delete this student batch?")) {
+    handleDelete(batch_id);
   }
+};
+const handleDelete = async (batch_id) => {
+       
+  try { 
+   const response = await axios.delete(`http://localhost:8080/requestbatch/delete/${batch_id}`); 
+   console.log("Request batch Deleting Successfully:", response.data); 
+ } catch (error) { 
+   console.error("Error deleting batch:", error); 
+ } }; 
+ const handleDateFilter = () => {
+  const filtered = requestBatch.filter((item) => {
+    const Date = new Date(item.date); // Parse the date field
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    return (
+      (!start || Date >= start) &&
+      (!end || Date <= end)
+    );
+  });
+
+  setRequestBatch(filtered);
+};
+ 
   return (
     <>   
-    <CourseCategory
-  pageTitle="Schedule Request"
-  headerTitle="View Schedule"
-  buttonLabel="Add"
-  onAdd={handleAdd}
+    <div>
+   <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className='course-category'>
+       
+        <div className='category'>
+          <div className='category-header'>
+            <p>Video Access</p>
+          </div>
+          <div className='date-schedule'>
+            Start Date
+            <DatePicker 
+    selected={startDate} 
+    onChange={(date) => setStartDate(date)} 
+    isClearable />
+            End Date
+            <DatePicker 
+    selected={endDate} 
+    onChange={(date) => setEndDate(date)} 
+    isClearable 
+  />
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
+           
+          </div>
+          <div className='entries'>
+            <div className='entries-left'>
+              <p>Show</p>
+              <div className="btn-group">
+                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  10
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">1</a></li>
+      
+                </ul>
+              </div>
+              <p>entries</p>
+            </div>
+            <div className='entries-right'>
+              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}/>
+                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              </div>
+             
+            </div>
+          </div>
 
-></CourseCategory> <TableContainer component={Paper}>
+        </div>
+      </div>
+    </LocalizationProvider>
+  <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
-            <StyledTableCell align="center">Email</StyledTableCell>
-            <StyledTableCell align="center">Mobile</StyledTableCell>
+            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center'>Email</StyledTableCell>
+            <StyledTableCell align='center'>Mobile</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Schedule Date</StyledTableCell>
@@ -84,28 +159,29 @@ navigate('/addschedule')
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.S_No}</StyledTableCell>
-              <StyledTableCell align="left">{row.email}</StyledTableCell>
-              <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-              <StyledTableCell align="left">{row.country}</StyledTableCell>
-              <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.schedule_date}</StyledTableCell>
-              <StyledTableCell align="center">{row.time}</StyledTableCell>
-              <StyledTableCell align="center">{row.mode}</StyledTableCell>
-              <StyledTableCell align="center">
-              
-                  <RiDeleteBin6Line className="delete" />
-                </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
+  {requestBatch.map((row, index) => (
+    <StyledTableRow key={row.batch_id}>
+      <StyledTableCell>
+        <Checkbox />
+      </StyledTableCell>
+      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{row.email}</StyledTableCell>
+      <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+      <StyledTableCell align="center">{row.country}</StyledTableCell>
+      <StyledTableCell align="center">{row.courseName}</StyledTableCell>
+      <StyledTableCell align="center">{row.schedule_date}</StyledTableCell>
+      <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
+      <StyledTableCell align="center">{row.mode}</StyledTableCell>
+   
+      <StyledTableCell align="center">
+       
+        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.batch_id)} />
+      </StyledTableCell>
+    </StyledTableRow>
+  ))}
+</TableBody>
+    </Table>
     </TableContainer>
-    <div className='pagination'>
-      <Pagination count={10} color="primary" />
       </div>
  </> );
 }

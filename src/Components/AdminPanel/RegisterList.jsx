@@ -37,6 +37,7 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { AnalyticsOutlined } from '@mui/icons-material';
+import './Admin.css';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -187,7 +188,7 @@ const rowsPerPage = 5;
           const filtered = registerStudent.filter(registerStudent =>
               registerStudent.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
               registerStudent.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              registerStudent.video_status.toLowerCase().includes(searchTerm.toLowerCase()) 
+              registerStudent.visa_status.toLowerCase().includes(searchTerm.toLowerCase()) 
           );
           setFilteredStudent(filtered);
       }, [searchTerm,filteredStudent]);

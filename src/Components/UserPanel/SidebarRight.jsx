@@ -48,7 +48,11 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
     <div>
       {currentCards.length > 0 ? (
         currentCards.map((course, index) => (
-          <SidebarCard key={course.id || index} title={course.courseName} />
+          <SidebarCard key={course.id || index} title={course.courseName}
+          RatingByPeople={course.ratingByNumberOfPeople}
+          Rating={course.starRating}
+          month={course.duration}
+            time={course.liveTrainingHours  }  />
         ))
       ) : (
         <p>No courses available</p>

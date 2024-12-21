@@ -107,7 +107,7 @@ border: none;
 .btn-logout {
   background-color: #00AEEF;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -115,7 +115,6 @@ border: none;
   flex-direction:row;
   justify-content: space-between;
   height:8vh !important;
-  width:10vw;
   padding-top: 3vh !important;
 
 }
@@ -667,4 +666,9 @@ list-style-type: disc;
 
 .bullet-list li {
 margin-bottom: 5px; /* Optional spacing between list items */
+}
+.row-student{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }

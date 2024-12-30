@@ -45,7 +45,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
   const currentCards = filteredCourses.slice(indexOfFirstCard, indexOfLastCard);
 
   return (
-    <div>
+    <div className="course-card-container">
       {currentCards.length > 0 ? (
         currentCards.map((course, index) => (
           <SidebarCard key={course.id || index} title={course.courseName}

@@ -1070,6 +1070,15 @@ box-shadow: darkgrey;
     display: flex;
     justify-content: flex-start;
 }
+#register.mobilenumber{
+    width: 430px;
+    height: 50px;
+    border-radius: 0 5px 5px 0;
+    outline: none;
+    border: 1px solid #d3d3d3;
+    padding: 10px;
+   }
+   
 @media screen and (max-width: 1024px) {
     .login {
         flex-direction: row;
@@ -1134,6 +1143,9 @@ box-shadow: darkgrey;
         width: 50px;
         border-radius: 10px;
     }
+    .country-dropdown {
+        width: 150px;
+      }
 
     /* .register-btn {
         font-size: 0.85rem;

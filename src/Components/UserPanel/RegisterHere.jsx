@@ -140,11 +140,11 @@ const handleClick=()=>{
 
                     <input
                       type="tel"
-                      className="form-control"
+                      className="mobilenumber"
                       ref={mobileInputRef}
                       name="mobile"
                       aria-label="Text input with segmented dropdown button"
-                      id="floatingMobile"
+                      id="register"
                       value={values.mobile}
                       onChange={handleChange}
                       onBlur={handleBlur}

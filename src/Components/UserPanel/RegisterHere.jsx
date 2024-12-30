@@ -15,65 +15,77 @@ const RegisterHere = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
   const handleClick = async () => {
     if (!name || !email) {
       alert("Please fill in both fields.");
       return;
     }
-  
+
     if (!isValidEmail(email)) {
       alert("Please enter a valid email.");
       return;
     }
-  
+
     setIsLoading(true); // Start loading state
-  
+
     const data = {
       name,
       email,
+      
     };
-  
+
     try {
-      const response = await fetch("http://localhost:8080/api/v1/user/save", {
-        method: "POST",
+      const response = await fetch("http://localhost:8080/api/v1/user/send-otp?email=" + email, {
+        method: "POST", // Assuming POST request for OTP
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       });
   
+      localStorage.setItem("registeruserData", JSON.stringify({
+        name,
+        email,
+ 
+      }));
       const contentType = response.headers.get("Content-Type");
+    // Save user data (name, email, OTP) to localStorage
   
       if (response.ok) {
         if (contentType && contentType.includes("application/json")) {
           const responseData = await response.json();
-          alert(`OTP sent to your email: ${responseData.message}`);
+        
+          
+
+          // Check if OTP and message are present in the response
+          if (responseData && responseData.otp) {
+            alert(`OTP sent to your email: ${responseData.message}`);
+            
+        
+
+            // Confirm if data was stored correctly
+            console.log("Stored in LocalStorage:", localStorage.getItem("registeruserData"));
+
+            // Navigate after successfully storing data
+           
+          } else {
+            alert("Failed to send OTP. Please try again.");
+          }
         } else {
           const responseText = await response.text();
-          alert(`OTP sent to your email: ${responseText}`);
+          alert(`Error: ${responseText}`);
         }
-  
-        // Store user data in localStorage and navigate
-        localStorage.setItem("userData", JSON.stringify({ name, email }));
-        navigate("/registerverification");
       } else {
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
-        } else {
-          const errorText = await response.text();
-          alert(`Error: ${errorText}`);
-        }
+        const responseText = await response.text();
+        alert(`Error: ${responseText}`);
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}`);
     } finally {
+      navigate("/registerverification");
       setIsLoading(false); // End loading state
     }
   };
-  
-  
-  
 
   return (
     <div className="login">

@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { PiLineVerticalThin } from "react-icons/pi";
-import { IoIosMail } from "react-icons/io";
-import whatsapp from '../../Assets/logos_whatsapp-icon.png';
-import './Home.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { IoLogOut } from 'react-icons/io5';
-import profile1 from '../../Assets/profile1.jfif';
+import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
+import { PiLineVerticalThin } from "react-icons/pi";
+import { IoLogOut } from 'react-icons/io5';
+import profile1 from '../../Assets/profile1.jfif';
+import whatsapp from '../../Assets/logos_whatsapp-icon.png';
+import './Home.css';
 
 const Topbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const navigate = useNavigate();
 
-  // Check login state and fetch user data on component mount
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
+    // Check localStorage for user data on component mount
+    const storedUserData = localStorage.getItem('loginuserData');
     if (storedUserData) {
-      setIsLoggedIn(true);
-      setUserData(JSON.parse(storedUserData));
+      setUserData(JSON.parse(storedUserData));  // Parse and store the user data
+      setIsLoggedIn(true);  // Set the user as logged in
     }
-  }, []);
+  }, []);  // This effect runs only once on component mount
 
   const handleLogout = () => {
-    localStorage.removeItem('userData'); // Clear user data
+    localStorage.removeItem('loginuserData'); // Clear user data
     setIsLoggedIn(false);
     setUserData(null);
-    navigate('/login'); // Redirect to login page
   };
 
   return (
@@ -38,7 +35,6 @@ const Topbar = () => {
         <img src={whatsapp} alt='whatsapp-icon' className='whatsapp-icon' />
         <p className='whatsapp-number'> +919490323388</p>
         <PiLineVerticalThin className='line-vertical' />
-        <IoIosMail className='training-mail-icon' />
         <p className='training-email'>trainings@hachion.co</p>
       </div>
 
@@ -55,7 +51,7 @@ const Topbar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {userData?.email || 'Hachion user'}
+                  {userData?.name || 'Hachion User'}
                 </Link>
 
                 <ul className="dropdown-menu">

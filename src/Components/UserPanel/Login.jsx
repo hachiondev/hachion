@@ -23,34 +23,46 @@ const Login = () => {
    const [passwordType, setPasswordType] = useState('password');
    const[email,setEmail]=useState("");
    const [password,setPassword]=useState("");
-const navigate=useNavigate();
-   const handleLogin=async(e)=>{
-    localStorage.setItem('userData', JSON.stringify({  email}));
-navigate('/home')
-   }
-//     console.log("value:", email,password)
-//     const data={
-//       "email": email,
-//       "password":password
-//     }
-//     try{
-//       const response=await axios.post("http://localhost:8080/api/v1/user/login",data);
+   const [errorMessage, setErrorMessage] = useState('');
+   const navigate=useNavigate();
+   const handleLogin = async (e) => {
+    e.preventDefault();
+    const loginData = {
+        email: email,
+        password: password,
+    };
 
-//     if (response.data.status) {
-//     alert("Login Success");
-//     // localStorage.setItem('userData', JSON.stringify({  email}));
+    try {
+        const response = await axios.post('http://localhost:8080/api/v1/user/login', loginData);
+        console.log(response.data); // Debugging line
 
-//     navigate('/home');
-//     }
-// // } else {
-// //     alert(response.data.message || "Invalid credentials");
-// // }
+        if (response.data.status) {
+            // Ensure the response contains 'userName' and 'email'
+            const loginuserData = { name: response.data.userName, email: response.data.email };
 
-//     }
-//     catch(error){
-//       console.error(error);
-//     }
-//    }
+            try {
+                localStorage.setItem('loginuserData', JSON.stringify(loginuserData)); // Try saving to localStorage
+                // console.log('User data saved to localStorage:', loginuserData); // Debugging line
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
+
+            navigate('/home'); // Navigate after saving data
+        } else {
+            setErrorMessage(response.data.message); // Show error message
+        }
+    } catch (error) {
+        console.error("Error during login", error);
+        setErrorMessage("An error occurred during login");
+    }
+};
+
+
+// Display error message
+
+
+
+
 
   const googleLogin = () => {
     window.open('http://localhost:8080/oauth2/authorization/google', '_self');
@@ -81,6 +93,7 @@ navigate('/home')
         <div className='login-left'>
           <div className='login-top'>
             <img src={logo} alt='logo' className='login-logo' />
+            
             <h3 className='welcome-back'>Welcome back!</h3>
             <h4 className='login-continue'>Login to continue learning</h4>
 <div className='login-mid'>
@@ -119,7 +132,7 @@ navigate('/home')
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link>
 
-                
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="form-check">
                   <input
                     className="form-check-input"

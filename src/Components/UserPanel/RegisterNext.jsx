@@ -6,29 +6,19 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterNext = () => {
-  const [otp, setOtp] = useState(Array(4).fill(""));
+  const [otp, setOtp] = useState(Array(4).fill("")); // OTP array initialized
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordType, setPasswordType] = useState('password');
   const [confirmPasswordType, setConfirmPasswordType] = useState('password');
+  const [resendLoading, setResendLoading] = useState(false); // To manage resend OTP loading state
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({ name: '', email: '' });
 
-  useEffect(() => {
-    const userDataString = localStorage.getItem('userData');
-    if (userDataString) {
-      try {
-        setUserData(JSON.parse(userDataString));
-      } catch {
-        alert('Error with stored user data. Please register again.');
-        navigate('/registerhere');
-      }
-    } else {
-      alert('No user data found. Please register again.');
-      navigate('/registerhere');
-    }
-  }, [navigate]);
+  // Assuming the data is in localStorage and looks like:
+  // { name: '', email: '', otp: '' }
+  const userDataString = localStorage.getItem('registeruserData');
+  const registeruserData = userDataString ? JSON.parse(userDataString) : {  email: '' };
 
   const handleOtpChange = (e, index) => {
     const value = e.target.value.replace(/\D/g, ""); // Allow digits only
@@ -41,10 +31,10 @@ const RegisterNext = () => {
     }
   };
 
-  const verifyAccount = async (email, otpArray, password, confirmPassword) => {
-    const otp = otpArray.join("");
+  const verifyAccount = async (otpArray, password, confirmPassword) => {
+    const otp = otpArray.join(""); // Convert OTP array to string
 
-    if (!otp || !password || !confirmPassword || !email) {
+    if (!otp || !password || !confirmPassword) {
       alert("Please fill in all fields");
       return;
     }
@@ -54,27 +44,30 @@ const RegisterNext = () => {
       return;
     }
 
+    // Verify OTP
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/v1/user/verify-account?email=${email}&otp=${otp}&password=${password}&confirmPassword=${confirmPassword}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await fetch("http://localhost:8080/api/v1/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: registeruserData.name,
+          email: registeruserData.email,
+          OTP: otp, // Send OTP in the request
+          password: password,
+        }),
+      });
+      alert("User registered successfully");
+      navigate('/login');
       if (!response.ok) {
         const error = await response.text();
-        throw new Error(error || "Verification failed");
+        throw new Error(error || "Registration failed");
       }
 
-      const data = await response.text();
-      alert("Registration successful");
-      console.log(data);
-      navigate('/login');
+      const data = await response.json();
+  
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
@@ -87,6 +80,31 @@ const RegisterNext = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordType(confirmPasswordType === 'password' ? 'text' : 'password');
+  };
+
+  // Function to resend OTP
+  const resendOtp = async () => {
+    if (resendLoading) return; // Prevent multiple requests if one is already in progress
+    setResendLoading(true);
+
+    const email = registeruserData.email; // Get email from localStorage
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/user/regenerate-otp?email=${email}`, {
+        method: "PUT",
+      });
+
+      if (response.ok) {
+        alert("OTP sent successfully!");
+      } else {
+        const error = await response.text();
+        throw new Error(error || "Failed to resend OTP");
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   return (
@@ -121,7 +139,9 @@ const RegisterNext = () => {
                 />
               ))}
             </div>
-            <p className="forgot-password">Resend OTP</p>
+            <p className="forgot-password" onClick={resendOtp}>
+              {resendLoading ? "Resending..." : "Resend OTP"}
+            </p>
 
             <label className="login-label">Password</label>
             <div className="input-group mb-2">
@@ -154,7 +174,7 @@ const RegisterNext = () => {
             <button
               type="button"
               className="register-btn"
-              onClick={() => verifyAccount(userData.email, otp, password, confirmPassword)}
+              onClick={() => verifyAccount(otp, password, confirmPassword)}
               disabled={isLoading}
             >
               {isLoading ? "Verifying..." : "Verify and Register"}

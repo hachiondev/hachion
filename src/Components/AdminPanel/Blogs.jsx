@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,27 +12,29 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
-import { IoIosArrowForward } from 'react-icons/io'
-import CourseCategory from './CourseCategory';
-import Pagination from '@mui/material/Pagination';
-import automation from '../../Assets/automationtesting.png';
-import salesforce from '../../Assets/salesforce.png';
-import { useNavigate } from 'react-router-dom';
-import EditBlog from './EditBlog';
+import success from '../../Assets/success.gif';
+import { RiCloseCircleLine } from 'react-icons/ri';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { IoSearch } from 'react-icons/io5';
+import { FiPlus } from 'react-icons/fi';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
-
+// Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
-    wordWrap: 'break-word', // Allows text to wrap to the next line
-    whiteSpace: 'normal',  // Ensures text breaks onto new lines
-    maxWidth: 500,    
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -45,164 +47,496 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, category_name, blog_image, blog_title, author,pdf,description,date,action) {
-  return { S_No,  category_name, blog_image, blog_title, author,pdf,description,date,action};
-}
+const Blogs = () => {
+  const [formMode, setFormMode] = useState('Add'); 
 
-const rows = [
-  createData(1,'Project Management', <img src={salesforce} height={50}/>, '7 Reasons to Learn Salesforce in 2023 By','Sandeep P','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(2,'QA Testing', <img src={automation} height={50}/>, 'Which is a better programming language for data science R or Python	','Sandeep P','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>  ),
-  createData(3, 'Business Intelligence', <img src={salesforce} height={50}/>, '	What Is Java Full Stack An Easy Guide for Developers','Priyanka','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(4, 'Data Science', <img src={automation} height={50}/>, 'Which is a better programming language for data science R or Python	','Ramakrishna','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(5, 'Programming', <img src={salesforce} height={50}/>, '	What Is Java Full Stack An Easy Guide for Developers','Hachion','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(6, 'Big Data', <img src={automation} height={50}/>, 'Which is a better programming language for data science R or Python	','Sandeep P','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(7, 'RPA', <img src={salesforce} height={50}/>, '	What Is Java Full Stack An Easy Guide for Developers','Srilatha','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(8, 'salesforce', <img src={automation} height={50}/>, 'Which is a better programming language for data science R or Python	','Priyanka' ,'course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-  createData(9,'Service now', <img src={salesforce} height={50}/>, '	What Is Java Full Stack An Easy Guide for Developers','Hachion','course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></> ),
-  createData(10,'Cloud Computing', <img src={automation} height={50}/>, 'Which is a better programming language for data science R or Python	','Pushpa' ,'course.pdf','After completion of the Course online training program, candidates will get a course completion certificate','2024-05-07',<><FaEdit className='edit' /> <RiDeleteBin6Line className='delete' /></>),
-];
-
-export default function Blogs() {
-  const navigate=useNavigate();
-  const [editRow, setEditRow] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
-  const [showAddCourse, setShowAddCourse] = useState(false);
-  const [course, setCourse] = useState('');
-
-  const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
-const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
-
-const handleClickOpen = (row) => {
-  setSelectedRow(row); // Set the selected row data
-  setOpen(true); // Open the modal
+  const [searchTerm,setSearchTerm]=useState("");
+  const[blogs,setBlogs]=useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showAddCourse,setShowAddCourse]=useState(false);
+  const [filteredBlogs,setFilteredBlogs]=useState([])
+  const[message,setMessage]=useState(false);
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  
+  const [formData, setFormData] = useState({
+    id:"",
+   category_name:"",
+   title:"",
+   author:"",
+   blogs_image:"",
+   blogs_pdf:"",
+   description:"",
+    date:currentDate,
+  });
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/course-categories/all");
+        setCategories(response.data); // Assuming the data contains an array of trainer objects
+      } catch (error) {
+        console.error("Error fetching categories:", error.message);
+      }
+    };
+    fetchCategory();
+  }, []);
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === "application/pdf") {
+        setFormData((prevData) => ({
+            ...prevData,
+            curriculum_pdf: file,
+        }));
+    } else {
+        alert("Please upload a valid PDF file.");
+    }
 };
-
-const handleClose = () => {
-  setOpen(false); // Close the modal
-};
-
-const handleSave = () => {
-  // Logic to handle saving the updated category and date
-  console.log('Saved:', selectedRow);
-  setOpen(false);
-};
-
+  useEffect(() => {
+    const filtered = blogs.filter(blogs =>
+        blogs.category_name.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.title.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.author.toLowerCase().includes(searchTerm.toLowerCase())
+        
+    );
+    setFilteredBlogs(filtered);
+}, [searchTerm, blogs]);
+  useEffect(() => {
+    const fetchBlogs = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/blog');
+            setBlogs(response.data); // Use the curriculum state
+        } catch (error) {
+            console.error("Error fetching blogs:", error.message);
+        }
+    };
+    fetchBlogs();
+    setFilteredBlogs(blogs)
+}, [blogs]);
 const handleInputChange = (e) => {
   const { name, value } = e.target;
-  setSelectedRow((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
+  setFormData((prev) => ({ ...prev, [name]: value }));
 };
-const handleCourseChange = (event) => setCourse(event.target.value);
 
-  const handleEdit = (rowId) => {
-    setEditRow(rowId);  // Set the clicked row's ID in the state
+const handleFileChange = (e) => {
+  setFormData((prev) => ({ ...prev, blogs_image: e.target.files[0] }));
+};
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+  const dataToSubmit = { 
+    ...formData, 
+    date: currentDate, // Add current date
   };
 
-  return (
-    <>  
-    {editRow ? (
-        <EditBlog rowId={editRow} />  // Pass the row ID to the EditBlogForm
-      ) : (<> 
-      {showAddCourse?(<div className='course-category'>
-<p>Blog Details <IoIosArrowForward/> Add Blog </p>
-<div className='category'>
-<div className='category-header'>
-<p>Add Blog</p>
-</div>
-<div class="row">
-<div class="col">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select">
-      <option selected>Select Category</option>
-      <option>QA Testing</option>
-      <option>Project Management</option>
-      <option>Business Intelligence</option>
-      <option>Data Science</option>
-    </select>
-  </div>
-  <div class="col">
-    <label className='form-label'>Blog Title</label>
-    <input type="select" class="form-control" placeholder="Enter Title" aria-label="First name"/>
-  </div>
-  </div>
-  <div className='course-row'>
-  <div class="col">
-    <label className='form-label'>Author</label>
-    <input type="text" class="form-control" placeholder="Enter Title" aria-label="First name"/>
-  </div>
-  <div class="col">
-  <label for="formFile" class="form-label">Blog Image</label>
-  <input class="form-control" type="file" id="formFile"/>
-</div>
-<div class="col">
+  try {
+    if (formData.id) {
+      // Edit operation
+      const response = await axios.put(
+        `http://localhost:8080/blog/update/${formData.id}`, // Ensure the correct ID is used
+        dataToSubmit
+      );
+      if (response.status === 200) {
+        alert("Blogs updated successfully");
+        // Update local state
+        setBlogs((prevBlogs) =>
+          prevBlogs.map((blogs) =>
+            blogs.id === formData.id ? { ...blogs, ...dataToSubmit } : blogs
+          )
+        );
+      }
+    } else {
+      // Add operation
+      const response = await axios.post(
+        "http://localhost:8080/blog/add",
+        dataToSubmit
+      );
+      if (response.status === 200) {
+        alert("Blogs added successfully");
+        // Update local state
+        setBlogs((prevBlogs) => [...prevBlogs, response.data]); // Use response data for the new course
+      }
+    }
+
+    handleReset(); // Clear form fields
+  } catch (error) {
+    console.error("Error submitting blogs:", error.message);
+    alert("Error submitting blogs.");
+  }
+};
+
+const [currentPage, setCurrentPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(10);
+   
+   const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  // Inside your CourseCategory component
+
+const handleRowsPerPageChange = (rows) => {
+  setRowsPerPage(rows);
+  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+};
+
+// Slice filteredCourses based on rowsPerPage and currentPage
+const displayedCategories = filteredBlogs.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
+  
+const handleReset=()=>{
+  setFormData([{
+    id:"",
+   category_name:"",
+   title:"",
+   author:"",
+   blogs_image:"",
+   blogs_pdf:"",
+   description:"",
+    date:currentDate,
+       }]);
+
+}
+const handleDeleteConfirmation = (id) => {
+  if (window.confirm("Are you sure you want to delete this Blogs?")) {
+    handleDelete(id);
+  }
+};
+const handleDelete = async (id) => {
+       
+  try { 
+   const response = await axios.delete(`http://localhost:8080/blog/delete/${id}`); 
+   console.log("Blogs deleted successfully:", response.data); 
+ } catch (error) { 
+   console.error("Error deleting Blogs:", error); 
+ } }; 
+
+   
+ const handleCloseModal=()=>{
+  setShowAddCourse(false);
+ 
+}
+const handleEditClick = async (id) => {
+  setFormMode('Edit');
+  setShowAddCourse(true);
+  try {
+    const response = await fetch(`http://localhost:8080/blog/${id}`);
+    if (response.ok) {
+      const blog = await response.json();
+      setFormData({
+        id: blog.id, // Ensure the unique identifier is included
+        category_name: blog.category_name || '',
+        blog_image: '', // Handle file uploads differently if needed
+       blogs_pdf: '',
+        author: blog.author || '',
+        title: blog.title || '',
+        description: blog.description || '',
+       
+      });
+    } else {
+      console.error('Failed to fetch blogs');
+    }
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
+  }
+};
+
+  const handleAddTrendingCourseClick = () => {
+    setFormMode('Add'); // Explicitly set formMode to 'Add'
+    setShowAddCourse(true); // Show the form
+    handleReset(); // Reset the form fields for a clean form
+  };
+  
+  return (<>{
+    showAddCourse?( <> <div className="course-category">
+      <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                <a href="#!" onClick={() => {
+                setShowAddCourse(false); // Hide the add/edit form
+                setFormMode('Add'); // Reset to 'Add' mode
+                handleReset(); // Clear any existing form data
+            }}>
+              Blogs
+            </a>
+            <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+      {formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}
+    </li>
+              </ol>
+            </nav>
+      <div className="category">
+        <div className="category-header">
+          <p>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
+        </div>
+        {message.text && (
+          <div className={`alert alert-${message.type}`}>
+            {message.text}
+          </div>
+        )}
+        </div>
+          <div className='course-details'>
+            <div className="course-row">
+              <div className="col-md-4">
+                <label className="form-label">Category Name</label>
+                <select id="inputState" class="form-select" name='category_name' value={formData.category_name} onChange={handleInputChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {categories.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    
+                </select>
+              </div>
+             
+              <div className="col-md-4">
+                <label className="form-label">Blog Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  className="form-control"
+                  placeholder="Enter Title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="course-row">
+              <div className="col-md-4">
+                <label className="form-label">Author</label>
+                <input
+                  type="text"
+                  name="author"
+                  className="form-control"
+                  placeholder="Enter author name"
+                  value={formData.author}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">Blog Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="blog)image"
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
+              <div class="mb-3">
   <label for="formFile" class="form-label">Blog PDF</label>
-  <input class="form-control" type="file" id="formFile"/>
-</div>
-</div>
-
-  <div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-</div>
-
-  <div style={{display:'flex',flexDirection:'row'}}> 
-  <button className='submit-btn'>Submit</button>
-  <button className='reset-btn'>Reset</button>
-</div>
-</div></div>):(<>
-    <CourseCategory
-  pageTitle="Blog"
-  headerTitle="Blog Details"
-  buttonLabel="Add new Blog"
-  onAddCategoryClick={handleAddTrendingCourseClick}
+  <input
+    className="form-control"
+    type="file"
+    id="formFile"
+    onChange={handleFileUpload}
 />
-        <TableContainer component={Paper}>
+</div>
+</div>
+              <div className="col-md-4">
+                <label className="form-label">Description</label>
+                <input
+                  type="text"
+                  name="description"
+                  className="form-control"
+                  placeholder="Enter description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="course-row">
+            <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
+              <button type="button" className="reset-btn" onClick={handleReset}>
+                Reset
+              </button>
+            </div>
+            </div>
+   </> ):(   <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="course-category">
+        <p>Blog</p>
+        <div className="category">
+          <div className="category-header">
+            <p>Blog Details</p>
+          </div>
+          <div className="date-schedule">
+            Start Date
+            <DatePicker value={startDate} onChange={(date) => setStartDate(date)} 
+              sx={{
+                '& .MuiIconButton-root':{color: '#00aeef'}
+              }}/>
+            End Date
+            <DatePicker value={endDate} onChange={(date) => setEndDate(date)}
+            sx={{
+               '& .MuiIconButton-root':{color: '#00aeef'}
+            }} />
+            <button className="filter" >
+              Filter
+            </button>
+          </div>
+          <div className="entries">
+            <div className="entries-left">
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
+            <div className="entries-right">
+            <div className="search">
+            <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+            <input
+      className="search-input"
+      type="search"
+      placeholder="Enter Courses, Category or Keywords"
+      aria-label="Search"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+              <button className="btn-search" >
+                <IoSearch />
+              </button>
+              </div>
+              </div>
+              <button className="btn-category" onClick={handleAddTrendingCourseClick}>
+                <FiPlus />
+               Add Blog
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <TableContainer component={Paper} sx={{ padding: '0 10px' }}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>
+                <StyledTableCell sx={{ width: 100 }} align="center">
                   <Checkbox />
                 </StyledTableCell>
-                <StyledTableCell>S.No.</StyledTableCell>
-                <StyledTableCell align="center">Category Name</StyledTableCell>
-                <StyledTableCell align="center">Blog Image</StyledTableCell>
-                <StyledTableCell align="center">Blog Title</StyledTableCell>
-                <StyledTableCell align="center">Author</StyledTableCell>
-                <StyledTableCell align="center">Blog PDF</StyledTableCell>
-                <StyledTableCell align="center">Description</StyledTableCell>
-                <StyledTableCell align="center">Created Date</StyledTableCell>
-                <StyledTableCell align="center">Action</StyledTableCell>
+                <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">S.No.</StyledTableCell>
+                <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">Category Name</StyledTableCell>
+                <StyledTableCell sx={{ fontSize: '16px' }} align="center">Blog Image</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Blog Title</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Author</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Blog PDF</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Description</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Created Date</StyledTableCell>
+                <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">Action</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.S_No}>
-                  <StyledTableCell><Checkbox /></StyledTableCell>
-                  <StyledTableCell>{row.S_No}</StyledTableCell>
-                  <StyledTableCell align="left">{row.category_name}</StyledTableCell>
-                  <StyledTableCell align="center">{row.blog_image}</StyledTableCell>
-                  <StyledTableCell align="center">{row.blog_title}</StyledTableCell>
-                  <StyledTableCell align="center">{row.author}</StyledTableCell>
-                  <StyledTableCell align="center">{row.pdf}</StyledTableCell>
-                  <StyledTableCell align="center">{row.description}</StyledTableCell>
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <FaEdit className='edit' onClick={() => handleEdit(row.S_No)} /> 
-                    <RiDeleteBin6Line className='delete' />
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
+      {displayedCategories.length > 0 ? (
+        displayedCategories.map((blogs, index) => (
+          <StyledTableRow key={blogs.id}>
+            <StyledTableCell sx={{ width: 100 }} align="center">
+              <Checkbox />
+            </StyledTableCell>
+            <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+            </StyledTableCell>
+            <StyledTableCell sx={{ fontSize: '16px' }} align="left">
+              {blogs.category_name}
+            </StyledTableCell>
+            <StyledTableCell sx={{ width: 220}} align="center">
+            {blogs.blog_image ? (
+    <img
+      src={`http://localhost:8080${blogs.blogs_image}`} // Adjust based on your server setup
+      alt="Course"
+      width="50"
+    />
+  ) : (
+    'No Image'
+  )}
+            </StyledTableCell>
+          
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.title}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.author}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.blogs_pdf}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.date}</StyledTableCell>
+            <StyledTableCell align="center" style={{ width: 200, }}>
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
+              <FaEdit
+                className="edit"
+                onClick={() => handleEditClick(blogs.id)}
+                style={{ cursor: "pointer", marginRight: "10px" }}
+              />
+              <RiDeleteBin6Line
+                className="delete"
+                onClick={() => handleDeleteConfirmation(blogs.id)}
+                style={{ cursor: "pointer" }}
+              />
+              </div>
+            </StyledTableCell>
+          </StyledTableRow>
+        ))
+      ) : (
+        <StyledTableRow>
+          <StyledTableCell colSpan={6} align="center">
+            No blogs available.
+          </StyledTableCell>
+        </StyledTableRow>
+      )}
+    </TableBody>
           </Table>
         </TableContainer>
-        </>)}
-    </>  )}
-      <div className='pagination'>
-        <Pagination count={10} color="primary" />
+       <div className='pagination-container'>
+             <AdminPagination
+         currentPage={currentPage}
+         rowsPerPage={rowsPerPage}
+         totalRows={filteredBlogs.length} // Use the full list for pagination
+         onPageChange={handlePageChange}
+       />
+                 </div>
       </div>
-    </>
+    </LocalizationProvider>)
+    }
+    <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Blogs Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+   </>
   );
-}
+};
+
+export default Blogs;

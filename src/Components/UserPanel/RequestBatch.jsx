@@ -58,7 +58,10 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
-
+  
+    // Retrieve the userName from localStorage
+    const userName = JSON.parse(localStorage.getItem('loginuserData'))?.name || '';
+  
     const payload = {
       schedule_date: startDate,
       time_zone: time,
@@ -67,8 +70,9 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
       mode,
       country: selectedCountry.name,
       courseName, // Automatically set from the component prop
+      userName // Add userName from localStorage
     };
-
+  
     try {
       const response = await fetch('http://localhost:8080/requestbatch/add', {
         method: 'POST',
@@ -77,11 +81,11 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to add the request.');
       }
-
+  
       alert('Request submitted successfully!');
       closeModal(); // Close the modal on successful submission
     } catch (err) {
@@ -91,6 +95,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="request-batch">

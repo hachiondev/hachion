@@ -1,7 +1,8 @@
-import * as React from 'react';
+
+import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io'
-import { styled } from '@mui/material/styles';
+import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -10,21 +11,29 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
+
 import './Admin.css';
-import CourseCategory from './CourseCategory';
-import { useNavigate } from 'react-router-dom';
-import BannerImage from '../../Assets/BannerImage.jpg';
+
+import { RiCloseCircleLine } from 'react-icons/ri';
+import success from '../../Assets/success.gif';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { IoSearch } from "react-icons/io5";
+import { FiPlus } from 'react-icons/fi';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import axios from 'axios';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import { IoMdCloseCircleOutline } from "react-icons/io";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -46,166 +55,430 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No,image,type,conversion,country,status,created_date,action) {
-  return { S_No, image,type,conversion,country,status,created_date,action};
-}
 
-const rows = [
-  createData(1,<img src={BannerImage} alt='banner-image'/>,'Amount_Convert',83,'United States','Disable','2024-07-05'),
+export default function Review() {
+  const [searchTerm,setSearchTerm]=useState("")
+    const [showAddCourse, setShowAddCourse] = useState(false);
+    const[banner,setBanner]=useState([]);
+    const[filteredBanner,setFilteredBanner]=useState([])
+    const [open, setOpen] = React.useState(false);
+    const currentDate = new Date().toISOString().split('T')[0];
+    const[message,setMessage]=useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [editedData, setEditedData] = useState({banner_image:"",status:"",country:"",amount_conversion:""});
+    const [bannerData, setBannerData] = useState([{
+        banner_id:"",
+          banner_image:null,
+           type: "",
+            date:currentDate,
+           amount_conversion:"",
+           country:"",
+           status:"",
+           
+         }]);
+         const [currentPage, setCurrentPage] = useState(1);
   
-];
 
-export default function Other() {
-  const navigate=useNavigate();
-  const [open, setOpen] = React.useState(false);
-  const [showAddCourse, setShowAddCourse] = useState(false);
-  const [course, setCourse] = useState('');
-const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
+const rowsPerPage = 5;
 
-const handleClickOpen = (row) => {
-  setSelectedRow(row); // Set the selected row data
-  setOpen(true); // Open the modal
-};
-const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
-const handleClose = () => {
-  setOpen(false); // Close the modal
+const handlePageChange = (event, value) => {
+    setCurrentPage(value);
 };
 
-const handleSave = () => {
-  // Logic to handle saving the updated category and date
-  console.log('Saved:', selectedRow);
-  setOpen(false);
-};
+const handleFileChange = (e) => {
+    setBannerData((prev) => ({ ...prev, banner_image: e.target.files[0] }));
+  };
+const paginatedRows = filteredBanner.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+);
 
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setSelectedRow((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
-};
-const handleCourseChange = (event) => setCourse(event.target.value);
+         const handleReset=()=>{
+            setBannerData([{
+              banner_id:"",
+              banner_image:null,
+               type: "",
+                date:currentDate,
+               amount_conversion:"",
+               country:"",
+               status:"",
+                 }]);
+        
+         }
+         const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setEditedData((prev) => ({
+              ...prev,
+              [name]: value,
+            }));
+          };
+   
+    const handleClose = () => {
+      setOpen(false); // Close the modal
+    };
+ 
+    useEffect(() => {
+      const fetchBanner = async () => {
+          try {
+              const response = await axios.get('http://localhost:8080/banner');
+              setBanner(response.data); // Use the curriculum state
+          } catch (error) {
+              console.error("Error fetching resume:", error.message);
+          }
+      };
+      fetchBanner();
+
+      setFilteredBanner(banner);
+  }, []); // Empty dependency array ensures it runs only once
+
+    const handleDeleteConfirmation = (banner_id) => {
+        if (window.confirm("Are you sure you want to delete this banner")) {
+          handleDelete(banner_id);
+        }
+      };
   
+   
+      const handleSave = async () => {
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/banner/update/${editedData.banner_id}`,editedData
+            );
+            setBanner((prev) =>
+                prev.map(curr =>
+                    curr.banner_id === editedData.banner_id ? response.data : curr
+                )
+            );
+            setMessage("Banner updated successfully!");
+            setTimeout(() => setMessage(""), 5000);
+            setOpen(false);
+        } catch (error) {
+            setMessage("Error updating Banner.");
+        }
+    };
+            
+      const handleDelete = async (banner_id) => {
+       
+         try { 
+          const response = await axios.delete(`http://localhost:8080/banner/delete/${banner_id}`); 
+          console.log("Banner deleted successfully:", response.data); 
+        } catch (error) { 
+          console.error("Error deleting banner:", error); 
+        } }; 
+        useEffect(() => {
+          const filtered = banner.filter(banner =>
+              banner.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              banner.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              banner.type.toLowerCase().includes(searchTerm.toLowerCase()) 
+            
+          );
+          setFilteredBanner(filtered);
+      }, [searchTerm,filteredBanner]);
+ 
+        const handleCloseModal=()=>{
+          setShowAddCourse(false);
+         
+        }
+        const handleClickOpen = (row) => {
+            console.log(row);
+              setEditedData(row)// Set the selected row data
+              setOpen(true); // Open the modal
+             
+            };
+    
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setBannerData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      };
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        // Create a FormData object to handle file uploads
+        const formData = new FormData();
+        
+        // Add text data to the FormData object
+        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+        formData.append("date", currentDate);
+        formData.append("type", bannerData.type);
+        formData.append("amount_conversion", bannerData.amount_conversion);
+        formData.append("country", bannerData.country);
+        formData.append("status", bannerData.status);
+    
+        // Add the image file to the FormData object
+        if (bannerData.banner_image) {
+            formData.append("banner_image", bannerData.banner_image);
+        } else {
+            alert("Please select an image.");
+            return;
+        }
+    
+        try {
+            // Send the POST request with FormData
+            const response = await axios.post("http://localhost:8080/banner/add", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+    
+            if (response.status === 201 || response.status === 200) {
+                alert("Banner added successfully");
+                setBannerData([...bannerData, { ...bannerData, date: currentDate }]); // Update local state
+                handleReset(); // Clear form fields
+            }
+        } catch (error) {
+            console.error("Error adding banner:", error.message);
+            alert("Error adding banner.");
+        }
+    };
+    
+    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
+    }
+
+
+
   return (
+    
     <>  
-     {showAddCourse?(<div className='course-category'>
-<p>Banner/Amount Conversion Details <IoIosArrowForward/> Add Banner/Amount Conversion </p>
+     {showAddCourse ?  (<div className='course-category'>
+<p> Banner/Amount Conversion Details <IoIosArrowForward/> Add Banner/Amount Conversion  </p>
 <div className='category'>
 <div className='category-header'>
-<p>Add Banner/Amount Conversion</p>
+<p>Add Banner/Amount Conversion </p>
 </div>
+
+
 <div className='course-row'>
 <div className='course-details'>
 
-<div class="col">
-  <label for="formFile" class="form-label">Blog Image</label>
-  <input class="form-control" type="file" id="formFile"/>
-</div>
+
+<div className="col-md-4">
+                <label className="form-label">Banner Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="banner_image"
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
+ 
 <button className='submit-btn'>Upload</button>
-</div>
 <div className='course-details'>
 <div class="col-md-10">
     <label for="inputState" class="form-label">Country</label>
-    <select id="inputState" class="form-select">
+    <select id="inputState" class="form-select" name='country' value={bannerData.country} onChange={handleChange}>
       <option selected>Select Country</option>
-      <option>...</option>
+      <option>India</option>
+      <option>USA</option>
+      <option>Canada</option>
+      <option>Australia</option>
     </select>
   </div>
   <div class="col">
     <label for="inputEmail4" class="form-label">Amount Conversion</label>
-    <input type="text" class="form-control" id="inputEmail4"/>
+    <input type="text" class="form-control" id="inputEmail4" name='amount_conversion' value={bannerData.amount_conversion} onChange={handleChange}/>
   </div>
-  <button className='submit-btn'>Add Amount</button>
+  <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Add amount</button>
 </div>
-</div></div>
-</div>):(<div> 
-    <CourseCategory
-  pageTitle="Banner/Amount Conversion"
-  headerTitle="Banner/Amount Conversion Details"
-  buttonLabel="Add Banner/Amount"
-  onAddCategoryClick={handleAddTrendingCourseClick}
-></CourseCategory> <TableContainer component={Paper}>
+</div>
+  </div>
+  
+</div>
+</div>
+):(<div>
+   <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className='course-category'>
+       
+        <div className='category'>
+          <div className='category-header'>
+            <p>Review</p>
+          </div>
+          <div className='date-schedule'>
+            Start Date
+            <DatePicker 
+    selected={startDate} 
+    onChange={(date) => setStartDate(date)} 
+    isClearable />
+            End Date
+            <DatePicker 
+    selected={endDate} 
+    onChange={(date) => setEndDate(date)} 
+    isClearable 
+  />
+            <button className='filter' >filter</button>
+           
+          </div>
+          <div className='entries'>
+            <div className='entries-left'>
+              <p>Show</p>
+              <div className="btn-group">
+                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  10
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">1</a></li>
+      
+                </ul>
+              </div>
+              <p>entries</p>
+            </div>
+            <div className='entries-right'>
+              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}/>
+                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              </div>
+              <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                <FiPlus /> Add Banner/Amount
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </LocalizationProvider>
+  <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
-            <StyledTableCell align="center">Banner Image</StyledTableCell>
-            <StyledTableCell align="center">Type</StyledTableCell>
+            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center'>Banner Image</StyledTableCell>
+            <StyledTableCell align='center'>Type</StyledTableCell>
             <StyledTableCell align="center">Amount Conversion</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
-            <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Created Date</StyledTableCell>
+            <StyledTableCell align="center">Status </StyledTableCell>
+            <StyledTableCell align="center">Created Date </StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.S_No}</StyledTableCell>
-              <StyledTableCell align="left">{row.image}</StyledTableCell>
-              <StyledTableCell align="left">{row.type}</StyledTableCell>
-              <StyledTableCell align="center">{row.conversion}</StyledTableCell>
-              <StyledTableCell align="center">{row.country}</StyledTableCell>
-              <StyledTableCell align="center">{row.status}</StyledTableCell>
-              <StyledTableCell align="center">{row.created_date}</StyledTableCell>
-              <StyledTableCell align="center">
-                  <FaEdit className="edit" onClick={() => handleClickOpen(row)} /> {/* Open modal on edit click */}
-                  <RiDeleteBin6Line className="delete" />
-                </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
+        {filteredBanner.map((curr, index) => (
+    <StyledTableRow key={curr.banner_id}>
+        <StyledTableCell>
+            <Checkbox />
+        </StyledTableCell>
+        <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+        <StyledTableCell align="center">
+            {curr.banner_image ? (
+                <img
+                    src={curr.banner_image}
+                    alt={`Banner ${index + 1}`}
+                    style={{ width: "100px", height: "auto" }}
+                />
+            ) : (
+                "No Image"
+            )}
+        </StyledTableCell>
+        <StyledTableCell align="center">{curr.type}</StyledTableCell>
+        <StyledTableCell align="center">{curr.amount_conversion}</StyledTableCell>
+        <StyledTableCell align="center">{curr.country}</StyledTableCell>
+        <StyledTableCell align="center">{curr.status}</StyledTableCell>
+        <StyledTableCell align="center">{curr.date}</StyledTableCell>
+        <StyledTableCell align="center">
+            <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
+            <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.banner_id)} />
+        </StyledTableCell>
+    </StyledTableRow>
+))}
+</TableBody>
+    </Table>
     </TableContainer>
-    <div className='pagination'>
-      <Pagination count={10} color="primary" />
-      </div>
-      <Dialog open={open} onClose={handleClose}>
-            <div className='dialog-title'>
-        <DialogTitle >Edit Banner/Amount Conversion   <Button onClick={handleClose} className='close-btn'>
-            <IoMdCloseCircleOutline style={{color:'white',fontSize:'2rem'}}/>
-          </Button></DialogTitle>
-          </div>
-        <DialogContent>
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <div class="mb-3">
-  <label for="formFile" class="form-label">Banner Image</label>
-  <input class="form-control" type="file" id="formFile"/>
-</div>
-<div className="mb-3">
-<label>Status</label>
-<FormControlLabel required control={<Switch />} label="Disable" />
-</div>
-</div>
-<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+    {message && <div className="success-message">{message}</div>}
 
-<div class="col-md-4">
+    </div>)}
+
+    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+  <div className="dialog-title">
+    <DialogTitle id="edit-schedule-dialog">Edit Banner/Amount Conversion</DialogTitle>
+    <Button onClick={handleClose} className="close-btn">
+      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+    </Button>
+  </div>
+  <DialogContent>
+  
+  <div className="col-md-4">
+                <label className="form-label">Banner Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="image"
+                  onChange={handleFileChange}
+                  required
+                />
+                <label>Status :</label>
+                 <FormControlLabel  control={<Switch />} label="Disable" />
+              </div>
+              <div class="col-md-3">
     <label for="inputState" class="form-label">Country</label>
-    <select id="inputState" class="form-select">
-      <option selected>Select Country</option>
+    <select id="inputState" class="form-select" name='country' value={editedData.country} onChange={handleInputChange}>
+      <option selected>Select </option>
       <option>India</option>
       <option>USA</option>
       <option>Canada</option>
+      <option>Australia</option>
     </select>
-    </div>
-    <div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label">Amount Conversion</label>
-  <input type="text" class="form-control" id="exampleFormControlInput1" />
 </div>
-       </div>
-        </DialogContent>
-        <DialogActions>
-        
-          <Button onClick={handleSave} className='update-btn'>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-      </div>)}
+   
+
+    <div className="col">
+      <label htmlFor="courseName" className="form-label">Amount Conversion</label>
+      <input
+        id="courseName"
+        className="form-control"
+        name="amount_conversion"
+        value={editedData.amount_conversion || ""}
+        onChange={handleInputChange}
+     />
+     
+    </div>
+ 
+
+
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleSave} className="update-btn">Update</Button>
+  </DialogActions>
+</Dialog>
+
+    <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Banner Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+   
  </> );
 }

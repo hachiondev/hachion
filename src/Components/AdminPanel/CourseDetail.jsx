@@ -64,25 +64,15 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({title: '',courseName: '',courseImage: null,youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '',labExerciseHours: '',realTimeProjects: '',starRating: '',ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',date:currentDate,
-  });
-  const [formData, setFormData] = useState({
-    course_id:"",
-    title: '',
-    courseName: '',
-    courseImage: null,
-    youtubeLink: '',
-    numberOfClasses: '',
-    dailySessions: '',
-    liveTrainingHours: '',
-    labExerciseHours: '',
-    realTimeProjects: '',
-    courseCategory:"",
-    starRating: '',
-    ratingByNumberOfPeople: '',
-    totalEnrollment: '',
-    courseCategory: '',
-    date:currentDate,
+  // const [editedRow, setEditedRow] = useState({title: '',courseName: '',courseImage: null,youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '',labExerciseHours: '',realTimeProjects: '',starRating: '',ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',date:currentDate,
+  //   keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
+  //   keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
+  //   self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:''
+  // });
+  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: null,youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
+    ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
+    self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   useEffect(() => {
     const fetchCategory = async () => {
@@ -247,7 +237,22 @@ const handleEditClick = async (courseId) => {
         starRating: course.starRating || '',
         ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
         totalEnrollment: course.totalEnrollment || '',
-      });
+        keyHighlights1:course.keyHighlights1||'',
+        keyHighlights2:course.keyHighlights2||'',
+        keyHighlights3:course.keyHighlights3||'',
+        keyHighlights4:course.keyHighlights4||'',
+        keyHighlights5:course.keyHighlights5||'',
+        keyHighlights6:course.keyHighlights6||'',
+        amount:course.amount||'',
+        discount:course.discount||'',
+        total:course.total||'',
+        mentoring1:course.mentoring1||'',
+        mentoring2:course.mentoring2||'',
+        self1:course.self1||'',
+    self2:course.self2||'',
+    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
+    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
+            });
     } else {
       console.error('Failed to fetch course data');
     }
@@ -443,33 +448,33 @@ const handleEditClick = async (courseId) => {
               <div className='course-row'>
                 <div class="col-md-4">
                   <label for="inputEmail4" class="form-label">Key Highlights 1</label>
-                  <input type="text" class="form-control" id="inputEmail4" />
+                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights1' value={formData.keyHighlights1} onChange={handleInputChange} />
                 </div>
                 <div class="col-md-4">
                   <label for="inputEmail4" class="form-label">Key Highlights 2</label>
-                  <input type="text" class="form-control" id="inputEmail4" />
+                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights2' value={formData.keyHighlights2} onChange={handleInputChange}  />
                 </div>
                 <div class="col-md-4">
                   <label for="inputEmail4" class="form-label">Key Highlights 3</label>
-                  <input type="text" class="form-control" id="inputEmail4" />
+                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights3' value={formData.keyHighlights3} onChange={handleInputChange}  />
                 </div>
               </div>
               <div className='course-row'>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Key Highlights 4</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="form-control" id="inputEmail4" name='keyHighlights4' value={formData.keyHighlights4} onChange={handleInputChange}  />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Key Highlights 5</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="form-control" id="inputEmail4" name='keyHighlights5' value={formData.keyHighlights5} onChange={handleInputChange}  />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Key Highlights 6</label>
-<input type="text" class="form-control" id="inputEmail4" />
+<input type="text" class="form-control" id="inputEmail4" name='keyHighlights6' value={formData.keyHighlights6} onChange={handleInputChange}  />
 </div>
 </div>
 </div> 
-<h3>Mode Of Training <span>1 USD= 84 INR</span></h3>
+<h3>Mode Of Training</h3>
 <div className='course-row'>
 <div className='course-mode'>
 <div class="form-check">
@@ -478,29 +483,17 @@ const handleEditClick = async (courseId) => {
 Live Training
 </label>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Amount(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange}/>
 </div>
-</div>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='discount'value={formData.discount} onChange={handleInputChange} />
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Total(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
+<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
 </div>
 </div>
 <div className='course-mode'>
@@ -510,29 +503,17 @@ Live Training
 Mentoring Mode
 </label>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Amount(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
 </div>
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Total(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
+<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange} />
 </div>
 </div>
 <div className='course-mode'>
@@ -542,29 +523,17 @@ Mentoring Mode
 Self Placed Training
 </label>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Amount(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
 </div>
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Total(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
+<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
 </div>
 </div>
 
@@ -575,29 +544,17 @@ Self Placed Training
 Corporate Training
 </label>
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Amount(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4"name='amount' value={formData.amount} onChange={handleInputChange} />
 </div>
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" />
+<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange} />
 </div>
-<div className="course-row">
-<div class="col">
-<label for="inputEmail4" class="form-label">Total(USD)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
-<div class="col">
+<div class="col-md-3">
 <label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="schedule-input" id="inputEmail4" />
-</div>
+<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
 </div>
 </div>
 </div>
@@ -607,13 +564,13 @@ Corporate Training
 <div className='course-details'>
 <h4>Mentoring Training</h4>
 <div className='course-col'>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="link" class="form-control-sample" id="inputEmail4" />
+<input type="number" class="form-control-sample" id="inputEmail4" name='mentoring1' value={formData.mentoring1} onChange={handleInputChange} />
 </div>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="link" class="form-control-sample" id="inputEmail4" />
+<input type="number" class="form-control-sample" id="inputEmail4" name='mentoring2' value={formData.mentoring2} onChange={handleInputChange}/>
 </div>
 </div>
 
@@ -621,41 +578,39 @@ Corporate Training
 <div className='course-details'>
 <h4>Self Paced Training</h4>
 <div className='course-col'>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 1</label>
-<input type="link" class="form-control-sample" id="inputEmail4" />
+<input type="text" class="form-control-sample" id="inputEmail4" name='self1' value={formData.self1} onChange={handleInputChange}/>
 </div>
-<div class="col">
+<div class="col-md-4">
 <label for="inputEmail4" class="form-label">Day 2</label>
-<input type="link" class="form-control-sample" id="inputEmail4" />
+<input type="text" class="form-control-sample" id="inputEmail4" name='self2' value={formData.self2} onChange={handleInputChange}/>
 </div>
 </div>
 
 </div>
 </div>
-<div className='course-details'>
 <div className='course-row'>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Header Title</label>
-<input type="text" class="schedule-input" id="inputEmail4" />
+<input type="text" class="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange}/>
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Course keyword with comma</label>
-<input type="text" class="schedule-input" id="inputEmail4" />
+<input type="text" class="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
 </div>
 <div class="col-md-4">
 <label for="inputEmail4" class="form-label">Course keyword description</label>
-<input type="text" class="schedule-input" id="inputEmail4" />
-</div>
+<input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
 </div>
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+<textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea>
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" ></textarea>
+<textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea>
 </div> 
 
       <div className="course-row">

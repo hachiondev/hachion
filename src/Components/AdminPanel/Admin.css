@@ -588,6 +588,7 @@ width: 100%;
   border: 1px solid #b3b3b3;
   padding: 5px; /* Less padding for compact look */
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .form-select {

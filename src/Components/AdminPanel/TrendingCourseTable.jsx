@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,9 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-
 import './Admin.css';
-
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -33,6 +30,9 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -75,24 +75,47 @@ export default function TrendingCourseTable() {
             date:currentDate,
             status:false
          }]);
-         const [currentPage, setCurrentPage] = useState(1);
-        
+const [currentPage, setCurrentPage] = useState(1);
+   const [rowsPerPage, setRowsPerPage] = useState(10);
+   const [status, setStatus] = useState(false);
+   
+   const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  // Inside your CourseCategory component
 
-const rowsPerPage = 5;
+const handleRowsPerPageChange = (rows) => {
+  setRowsPerPage(rows);
+  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+};
 
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
+const handleSwitchToggle = () => {
+  setStatus(!status); 
 };
-const handleStatusChange = () => {
-  setCourseData((prev) => ({ ...prev, status: !prev.status }));
+
+const handleStatusChange = (e) => {
+ if (!courseData || !courseData[0]) {
+     console.error("courseData or the first item is undefined");
+     return;
+ }
+
+ const updatedCourseData = [...courseData]; // Copy the current video data
+ updatedCourseData[0].status = e.target.checked; // Update the permission for the first item
+ setCourseData(updatedCourseData); // Update the state
 };
-const handleInputStatusChange = () => {
-  setEditedData((prev) => ({ ...prev, status: !prev.status }));
-};
-const paginatedRows = filteredCourse.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
+
+// Slice filteredCourse based on rowsPerPage and currentPage
+const displayedCourse = filteredCourse.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
 );
+// const handleStatusChange = () => {
+//   setCourseData((prev) => ({ ...prev, status: !prev.status }));
+// };
+// const handleInputStatusChange = () => {
+//   setEditedData((prev) => ({ ...prev, status: !prev.status }));
+// };
 
          const handleReset=()=>{
             setCourseData([{
@@ -263,12 +286,18 @@ const paginatedRows = filteredCourse.slice(
   return (
     
     <>  
-     {showAddCourse ?  (<div className='course-category'>
-<p> Trending Courses <IoIosArrowForward/> Add Trending COurses </p>
-<div className='category'>
-<div className='category-header'>
-<p>Add Trending Course</p>
-</div>
+     {showAddCourse ?  (
+      <div className='course-category'>
+        <nav aria-label="breadcrumb">
+                      <ol className="breadcrumb">
+                        <li className="breadcrumb-item">
+                        <a href="#!" onClick={() => setShowAddCourse(false)}>Trending Courses</a> <MdKeyboardArrowRight />
+                        </li>
+                        <li className="breadcrumb-item active" aria-current="page">
+                        Add Trending Course
+                        </li>
+                      </ol>
+                    </nav>
 <div className='course-details'>
 <div className='course-row'>
 
@@ -313,15 +342,25 @@ const paginatedRows = filteredCourse.slice(
 </div>
   </div>
 
-  <label>
+  <div className="col" style={{ display: 'flex', gap: 20 }}> 
+    <label className="form-label">Status:</label>
+    <Switch
+                  checked={courseData && courseData[0] ? courseData[0].status : false} 
+                  onChange={handleStatusChange}
+                  color="primary"
+              />
+              <span>{courseData && courseData[0] && courseData[0].status ? 'Enable' : 'Disable'}</span>
+      </div>
+
+  {/* <label>
         Status:
         <input
           type="checkbox"
           checked={courseData.status}
           onChange={handleStatusChange}
         />
-      </label>
-<div style={{display:'flex',flexDirection:'row'}}> 
+      </label> */}
+      <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -329,7 +368,7 @@ const paginatedRows = filteredCourse.slice(
 </div>
 </div>
 </div>
-</div>
+
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
@@ -343,30 +382,37 @@ const paginatedRows = filteredCourse.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -387,11 +433,11 @@ const paginatedRows = filteredCourse.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell sx={{ width: 70 }} align="center">
             <Checkbox
               />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Category Name</StyledTableCell>
             <StyledTableCell align='center'>Course Name</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
@@ -401,38 +447,60 @@ const paginatedRows = filteredCourse.slice(
         </TableHead>
         <TableBody>
 
-          {filteredCourse.map((row, index) => (
+    {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
             <StyledTableRow key={row.trendingcourse_id}>
-              <StyledTableCell>
-               
+              <StyledTableCell align="center">
+                          <Checkbox />
+                        </StyledTableCell>
+              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
               </StyledTableCell>
-              <StyledTableCell align="center">{index + 1}</StyledTableCell>
-              <StyledTableCell align="center">{row.category_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.course_name}</StyledTableCell>
+              <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+              <StyledTableCell align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell align="center">
                 {row.status ? "Enabled" : "Disabled"}
               </StyledTableCell>
               <StyledTableCell align="center">{row.date}</StyledTableCell>
               <StyledTableCell align="center">
+              <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                 <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                 <RiDeleteBin6Line
                   className="delete"
                   onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
                 />
+                </div>
               </StyledTableCell>
             </StyledTableRow>
-          ))}
+          ))
+          : (
+            <StyledTableRow>
+              <StyledTableCell colSpan={6} align="center">
+                No data available.
+              </StyledTableCell>
+            </StyledTableRow>
+          )}
         
 </TableBody>
     </Table>
     </TableContainer>
+    <div className='pagination-container'>
+          <AdminPagination
+      currentPage={currentPage}
+      rowsPerPage={rowsPerPage}
+      totalRows={filteredCourse.length} // Use the full list for pagination
+      onPageChange={handlePageChange}
+    />
+              </div>
     {message && <div className="success-message">{message}</div>}
 
     </div>)}
 
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
-  <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit Trending Course</DialogTitle>
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    PaperProps={{
+      style: { borderRadius: 20 },
+    }}>
+  <div >
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
@@ -482,16 +550,27 @@ const paginatedRows = filteredCourse.slice(
   )}
       </select>
     </div>
-    <label>
+
+    <div className="col" style={{ display: 'flex', gap: 20 }}> 
+    <label className="form-label">Status:</label>
+    <Switch
+                  checked={courseData && courseData[0] ? courseData[0].status : false} 
+                  onChange={handleStatusChange}
+                  color="primary"
+              />
+              <span>{courseData && courseData[0] && courseData[0].status ? 'Enable' : 'Disable'}</span>
+      </div>
+
+    {/* <label>
         Status:
         <input
           type="checkbox"
           checked={editedData.status}
           onChange={handleInputStatusChange}
         />
-      </label>
+      </label> */}
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,9 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
-
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -33,6 +30,9 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -77,18 +77,23 @@ export default function Support() {
             
          }]);
          const [currentPage, setCurrentPage] = useState(1);
-        
+            const [rowsPerPage, setRowsPerPage] = useState(10);
+            
+            const handlePageChange = (page) => {
+             setCurrentPage(page);
+             window.scrollTo(0, window.scrollY);
+           };
+           // Inside your CourseCategory component
+         
+         const handleRowsPerPageChange = (rows) => {
+           setRowsPerPage(rows);
+           setCurrentPage(1); // Reset to the first page whenever rows per page changes
+         };
 
-const rowsPerPage = 5;
-
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
-
-const paginatedRows = filteredSupport.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-);
+         const displayedCourse = filteredSupport.slice(
+          (currentPage - 1) * rowsPerPage,
+          currentPage * rowsPerPage
+        );
 
          const handleReset=()=>{
             setSupportData([{
@@ -231,33 +236,43 @@ const paginatedRows = filteredSupport.slice(
     
     <>  
      {showAddCourse ?  (<div className='course-category'>
-<p>Support Details <IoIosArrowForward/> Add Support </p>
+      <nav aria-label="breadcrumb">
+      <ol className="breadcrumb">
+  <li className="breadcrumb-item">
+        <a href="#!" onClick={() => setShowAddCourse(false)}>Support Details</a> <MdKeyboardArrowRight />
+        </li>
+        <li className="breadcrumb-item active" aria-current="page">
+        Add Support
+        </li>
+      </ol>
+    </nav>
 <div className='category'>
 <div className='category-header'>
 <p>Add Support</p>
 </div>
-<div class="row">
 
+<div className="course-row">
   <div class="col">
     <label className='form-label'>Name</label>
-    <input type="text" class="form-control" placeholder="Enter Name" aria-label="First name"
+    <input type="text" class="schedule-input" placeholder="Enter Name" aria-label="First name"
     name='name' value={supportData.name} onChange={handleChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Mobile</label>
-    <input type="number" class="form-control" placeholder="Enter Mobile" aria-label="First name"
+    <input type="number" class="schedule-input" placeholder="Enter Mobile" aria-label="First name"
     name='mobile' value={supportData.mobile} onChange={handleChange}/>
   </div>
   </div>
+
   <div className='course-row'>
   <div class="col">
     <label className='form-label'>Email</label>
-    <input type="email" class="form-control" placeholder="Enter Title" aria-label="First name"
+    <input type="email" class="schedule-input" placeholder="Enter Title" aria-label="First name"
     name='email' value={supportData.email} onChange={handleChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Password</label>
-    <input type="password" class="form-control" placeholder="Enter Title" aria-label="First name"
+    <input type="password" class="schedule-input" placeholder="Enter Title" aria-label="First name"
     name='password' value={supportData.password} onChange={handleChange}/>
   </div>
 </div>
@@ -268,7 +283,7 @@ const paginatedRows = filteredSupport.slice(
   name='address' value={supportData.address} onChange={handleChange}></textarea>
 </div>
 
-  <div style={{display:'flex',flexDirection:'row'}}> 
+   <div className="course-row">
   <button className='submit-btn' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
 </div>
@@ -287,30 +302,37 @@ const paginatedRows = filteredSupport.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -331,11 +353,11 @@ const paginatedRows = filteredSupport.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell sx={{ width: 70 }} align="center">
             <Checkbox
               />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell  sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Name</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align="center">Password</StyledTableCell>
@@ -347,12 +369,14 @@ const paginatedRows = filteredSupport.slice(
         </TableHead>
         <TableBody>
 
-          {filteredSupport.map((row, index) => (
+        {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
             <StyledTableRow key={row.support_id}>
-              <StyledTableCell>
-               
+              <StyledTableCell align="center">
+               <Checkbox />
               </StyledTableCell>
-              <StyledTableCell align="center">{index + 1}</StyledTableCell>
+              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+              </StyledTableCell>
               <StyledTableCell align="center">{row.name}</StyledTableCell>
               <StyledTableCell align="center">{row.email}</StyledTableCell>
               <StyledTableCell align="center">{row.password}</StyledTableCell>
@@ -360,48 +384,71 @@ const paginatedRows = filteredSupport.slice(
               <StyledTableCell align="center">{row.address}</StyledTableCell>
               <StyledTableCell align="center">{row.date}</StyledTableCell>
               <StyledTableCell align="center">
+              <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                 <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                 <RiDeleteBin6Line
                   className="delete"
                   onClick={() => handleDeleteConfirmation(row.support_id)}
                 />
+                 </div>
               </StyledTableCell>
             </StyledTableRow>
-          ))}
+         ))
+         : (
+           <StyledTableRow>
+             <StyledTableCell colSpan={6} align="center">
+               No data available.
+             </StyledTableCell>
+           </StyledTableRow>
+         )}
         
 </TableBody>
     </Table>
     </TableContainer>
+    <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredSupport.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
     {message && <div className="success-message">{message}</div>}
 
     </div>)}
 
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
-  <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit Support</DialogTitle>
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    PaperProps={{
+      style: { borderRadius: 20 },
+    }}>
+  <div >
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Support</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
   
-  
+  <div className="course-row">
     <div class="col">
     <label className='form-label'>Name</label>
-    <input type="text" class="form-control"  aria-label="First name" name='name' value={editedData.name} onChange={handleInputChange}/>
+    <input type="text" class="schedule-input"  aria-label="First name" name='name' value={editedData.name} onChange={handleInputChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Mobile</label>
-    <input type="number" class="form-control"  aria-label="First name" name='mobile' value={editedData.mobile} onChange={handleInputChange}/>
+    <input type="number" class="schedule-input"  aria-label="First name" name='mobile' value={editedData.mobile} onChange={handleInputChange}/>
+  </div>
   </div>
 
+  <div className="course-row">
   <div class="col">
     <label className='form-label'>Email</label>
-    <input type="text" class="form-control"  aria-label="First name" name='email' value={editedData.email} onChange={handleInputChange}/>
+    <input type="text" class="schedule-input"  aria-label="First name" name='email' value={editedData.email} onChange={handleInputChange}/>
   </div>
   <div class="col">
     <label className='form-label'>Password</label>
-    <input type="password" class="form-control" aria-label="First name" name='password' value={editedData.password} onChange={handleInputChange}/>
+    <input type="password" class="schedule-input" aria-label="First name" name='password' value={editedData.password} onChange={handleInputChange}/>
+  </div>
   </div>
   <div class="col">
     <label className='form-label'>Address</label>

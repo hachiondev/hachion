@@ -348,12 +348,18 @@ export default function RegularVideo() {
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }} />
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
-    isClearable 
+    isClearable
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }} 
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
            

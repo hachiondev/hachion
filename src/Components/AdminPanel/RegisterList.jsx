@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -36,6 +34,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination';
 // import { AnalyticsOutlined } from '@mui/icons-material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -89,11 +89,24 @@ export default function RegisterList() {
             visa_status:""
          }]);
         
+const [currentPage, setCurrentPage] = useState(1);
+            const [rowsPerPage, setRowsPerPage] = useState(10);
+            
+            const handlePageChange = (page) => {
+             setCurrentPage(page);
+             window.scrollTo(0, window.scrollY);
+           };
+           // Inside your CourseCategory component
+         
+         const handleRowsPerPageChange = (rows) => {
+           setRowsPerPage(rows);
+           setCurrentPage(1); // Reset to the first page whenever rows per page changes
+         };
 
-       
-const rowsPerPage = 5;
-
-
+         const displayedCourse = filteredStudent.slice(
+          (currentPage - 1) * rowsPerPage,
+          currentPage * rowsPerPage
+        );
          const handleReset=()=>{
             setStudentData([{
                 student_id:"",
@@ -252,47 +265,57 @@ const rowsPerPage = 5;
      {showAddCourse ?  (      
            
        <div className='course-category'>
-     <p>Register List <IoIosArrowForward/> Add Student </p>
+        <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}>Register List</a> <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                Add Student
+                </li>
+              </ol>
+            </nav>
+    
      <div className='category'>
      <div className='category-header'>
      <p>Add Student</p>
      </div>
-    <div className='row-student'>
-       <div class="col-md-3">
+     <div className="course-row">
+       <div class="col">
          <label for="inputEmail4" class="form-label">Student Name</label>
-         <input type="text" class="form-control" id="inputEmail4" name="name"
+         <input type="text" class="schedule-input" id="inputEmail4" name="name"
   value={studentData.name}
   onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">Email</label>
-         <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
+         <input type="email" class="schedule-input" id="inputPassword4" placeholder='abc@gmail.com'
          name="email"
          value={studentData.email}
          onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">Mobile</label>
-         <input type="number" class="form-control" id="inputPassword4" placeholder='enter mobile number'
+         <input type="number" class="schedule-input" id="inputPassword4" placeholder='Enter mobile number'
           name="mobile"
           value={studentData.mobile}
           onChange={handleChange}/>
        </div>
        </div>
-       <div className='row-student'>
-       <div class="col-md-3">
+       <div className="course-row">
+       <div class="col">
          <label for="inputEmail4" class="form-label">Country</label>
-         <input type="text" class="form-control" id="inputEmail4"  name="country"
+         <input type="text" class="schedule-input" id="inputEmail4"  name="country"
          value={studentData.country}
          onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">Location</label>
-         <input type="email" class="form-control" id="inputPassword4"  name="location"
+         <input type="email" class="schedule-input" id="inputPassword4"  name="location"
          value={studentData.location}
          onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputState" class="form-label">Visa Status</label>
          <select id="inputState" class="form-select" name="visa_status" value={studentData.visa_status} onChange={handleChange}>
            <option selected>Select Visa Status</option>
@@ -301,18 +324,18 @@ const rowsPerPage = 5;
          </select>
        </div>
        </div>
-       <div className='row-student'>
-       <div class="col-md-3">
-         <label for="inputEmail4" class="form-label">Time Zone</label>
-         <input type="text" class="form-control" id="inputTime4" 
+       <div className="course-row">
+       <div class="col">
+         <label for="inputState" class="form-label">Time Zone</label>
+         <input type="text" class="schedule-input"
          name="time" value={studentData.time} onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
-         <label for="inputPassword4" class="form-label">Entered by</label>
-         <input type="text" class="form-control" id="inputTime4" 
+       <div class="col">
+         <label for="inputState" class="form-label">Entered by</label>
+         <input type="text" class="schedule-input"
          name="analyst_name" value={studentData.analyst_name} onChange={handleChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputState" class="form-label">Source of Enquiry</label>
          <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
            <option selected>Select</option>
@@ -322,7 +345,7 @@ const rowsPerPage = 5;
            <option>Twitter</option>
          </select>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputState" class="form-label">Course Name</label>
          <select id="inputState" class="form-select" name='course_name' value={studentData.course_name} onChange={handleChange}>
          <option value="" disabled>
@@ -359,7 +382,7 @@ const rowsPerPage = 5;
              <FormControlLabel value="male" control={<Radio />} label="Send details via email and whtsapp" />
            
            </RadioGroup> */}
-        <div style={{display:'flex',flexDirection:'row'}}> 
+        <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -375,37 +398,44 @@ const rowsPerPage = 5;
        
         <div className='category'>
           <div className='category-header'>
-            <p>Video Access</p>
+            <p>Register List</p>
           </div>
           <div className='date-schedule'>
             Start Date
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
-            <button className='filter' onClick={handleDateFilter} >filter</button>
+            <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -426,7 +456,7 @@ const rowsPerPage = 5;
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align='center'>
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell align='center'>S.No.</StyledTableCell>
@@ -445,12 +475,14 @@ const rowsPerPage = 5;
           </TableRow>
         </TableHead>
         <TableBody>
-  {filteredStudent.map((row, index) => (
+        {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
     <StyledTableRow key={row.student_id}>
-      <StyledTableCell>
+      <StyledTableCell align='center'>
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+        </StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{row.name}</StyledTableCell>
       <StyledTableCell align="center">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
@@ -464,79 +496,102 @@ const rowsPerPage = 5;
             <StyledTableCell align="center">status date</StyledTableCell>
            
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.student_id)} />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+  ))
+  : (
+    <StyledTableRow>
+      <StyledTableCell colSpan={6} align="center">
+        No data available.
+      </StyledTableCell>
+    </StyledTableRow>
+  )}
 </TableBody>
     </Table>
     </TableContainer>
+    <div className='pagination-container'>
+                  <AdminPagination
+              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
+              totalRows={filteredStudent.length} // Use the full list for pagination
+              onPageChange={handlePageChange}
+            />
+                      </div>
     {message && <div className="success-message">{message}</div>}
 
     </div>
     </>)}
 
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
-  <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit Registered Student</DialogTitle>
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    PaperProps={{
+      style: { borderRadius: 20 },
+    }}>
+  <div >
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Registered Student</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
-  <div class="col-md-3">
+  <div className='course-row'>
+  <div class="col">
          <label for="inputEmail4" class="form-label">Student Name</label>
          <input type="text" class="form-control" id="inputEmail4" name="name"
   value={editedData.name}
   onChange={handleInputChange}/>
        </div>
       
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">Mobile</label>
          <input type="number" class="form-control" id="inputPassword4" placeholder='enter mobile number'
           name="mobile"
           value={editedData.mobile}
           onChange={handleInputChange}/>
        </div>
-       <div class="col-md-3">
+       </div>
+       <div className='course-row'>
+       <div class="col">
          <label for="inputPassword4" class="form-label">Email</label>
          <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
          name="email"
          value={editedData.email}
          onChange={handleInputChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">Password</label>
          <input type="text" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
          name="password"
          value={editedData.password}
          onChange={handleInputChange}/>
        </div>
-   
-       <div class="col-md-3">
+       </div>
+       <div className='course-row'>
+       <div class="col">
          <label for="inputPassword4" class="form-label">Location</label>
          <input type="text" class="form-control" id="inputPassword4"  name="location"
          value={editedData.location}
          onChange={handleInputChange}/>
        </div>
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputPassword4" class="form-label">State</label>
          <input type="text" class="form-control" id="inputPassword4"  name="state"
          value={editedData.state}
          onChange={handleInputChange}/>
        </div>
-    
+       </div>
        
-       <div className='row'>
-       <div class="col-md-3">
+       <div className='course-row'>
+       <div class="col">
          <label for="inputEmail4" class="form-label">Time Zone</label>
          <input type="text" class="form-control" id="inputTime4" 
          name="time" value={editedData.time} onChange={handleInputChange}/>
        </div>
     
-   
-       <div class="col-md-3">
+       <div class="col">
          <label for="inputState" class="form-label">Course Name</label>
          <select id="inputState" class="form-select" name='course_name' value={editedData.course_name} onChange={handleInputChange}>
          <option value="" disabled>
@@ -558,7 +613,7 @@ const rowsPerPage = 5;
        name='additinal_email' value={editedData.additional_email} onChange={handleInputChange}/>
      </div>
      <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Additional Phone</label>
+       <label for="exampleFormControlTextarea1" class="form-label">Additional Mobile</label>
        <input class="form-control" id="exampleFormControlTextarea1" type="number"
        name='additional_mobile' value={editedData.additional_mobile} onChange={handleInputChange}/>
      </div>

@@ -63,6 +63,7 @@ export default function Course() {
 
   return (
     <>   
+    <h3>Course</h3>
       <div className="certificate-tabs">
         {/* Tab Navigation */}
         <div 

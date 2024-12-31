@@ -247,7 +247,9 @@ const [currentPage, setCurrentPage] = useState(1);
   return (
     
     <>  
-     {showAddCourse ?  (<div className='course-category'>
+     {showAddCourse ?  (
+      <div className='course-category'>
+         <h3>Banner/Amount Conversion</h3>
       <nav aria-label="breadcrumb">
          <ol className="breadcrumb">
          <li className="breadcrumb-item">
@@ -321,10 +323,10 @@ const [currentPage, setCurrentPage] = useState(1);
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-       
+      <h3>Banner/Amount Conversion</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Review</p>
+            <p>Banner/Amount Conversion Details</p>
           </div>
           <div className='date-schedule'>
             Start Date

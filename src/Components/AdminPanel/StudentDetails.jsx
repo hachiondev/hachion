@@ -10,7 +10,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -32,6 +31,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
+import AdminPagination from './AdminPagination';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: '#00AEEF',
@@ -73,6 +74,25 @@ const[registerStudent,setRegisterStudent]=useState([]);
       setFilteredStudent(registerStudent)
       console.log(registerStudent);
   }, []);
+
+  const [currentPage, setCurrentPage] = useState(1);
+              const [rowsPerPage, setRowsPerPage] = useState(10);
+              
+              const handlePageChange = (page) => {
+               setCurrentPage(page);
+               window.scrollTo(0, window.scrollY);
+             };
+             // Inside your CourseCategory component
+           
+           const handleRowsPerPageChange = (rows) => {
+             setRowsPerPage(rows);
+             setCurrentPage(1); // Reset to the first page whenever rows per page changes
+           };
+  
+           const displayedCourse = registerStudent.slice(
+            (currentPage - 1) * rowsPerPage,
+            currentPage * rowsPerPage
+          );
     
 const handleDateFilter = () => {
   const filtered = registerStudent.filter((item) => {
@@ -103,30 +123,37 @@ const handleDateFilter = () => {
                 <DatePicker 
         selected={startDate} 
         onChange={(date) => setStartDate(date)} 
-        isClearable />
+        isClearable 
+        sx={{
+          '& .MuiIconButton-root':{color: '#00aeef'}
+       }}/>
                 End Date
                 <DatePicker 
         selected={endDate} 
         onChange={(date) => setEndDate(date)} 
         isClearable 
+        sx={{
+          '& .MuiIconButton-root':{color: '#00aeef'}
+       }}
       />
-                <button className='filter' onClick={handleDateFilter} >filter</button>
+                <button className='filter' onClick={handleDateFilter} >Filter</button>
                
               </div>
               <div className='entries'>
                 <div className='entries-left'>
-                  <p>Show</p>
-                  <div className="btn-group">
-                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                      10
-                    </button>
-                    <ul className="dropdown-menu">
-                      <li><a className="dropdown-item" href="#">1</a></li>
-          
-                    </ul>
-                  </div>
-                  <p>entries</p>
-                </div>
+                <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
                 <div className='entries-right'>
                   <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                     <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -145,7 +172,7 @@ const handleDateFilter = () => {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>
+                <StyledTableCell align='center'>
                   <Checkbox />
                 </StyledTableCell>
                 <StyledTableCell align='center'>S.No.</StyledTableCell>
@@ -168,12 +195,14 @@ const handleDateFilter = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-      {registerStudent.map((row, index) => (
+      {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
         <StyledTableRow key={row.student_id}>
-          <StyledTableCell>
+          <StyledTableCell align='center'>
             <Checkbox />
           </StyledTableCell>
-          <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+          <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+            </StyledTableCell> {/* S.No. */}
           <StyledTableCell align="center">{row.name}</StyledTableCell>
           <StyledTableCell align="center">{row.email}</StyledTableCell>
           <StyledTableCell align="center">{row.mobile}</StyledTableCell>
@@ -189,10 +218,25 @@ const handleDateFilter = () => {
                
          
         </StyledTableRow>
-      ))}
+       ))
+         : (
+           <StyledTableRow>
+             <StyledTableCell colSpan={6} align="center">
+               No data available.
+             </StyledTableCell>
+           </StyledTableRow>
+         )}
     </TableBody>
         </Table>
         </TableContainer>
+        <div className='pagination-container'>
+                      <AdminPagination
+                  currentPage={currentPage}
+                  rowsPerPage={rowsPerPage}
+                  totalRows={registerStudent.length} // Use the full list for pagination
+                  onPageChange={handlePageChange}
+                />
+        </div>
         </div>
         </>
   )

@@ -4,8 +4,8 @@ const ImportLead = () => {
   return (
     <div className="import-lead-form">
     <form>
-     <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',gap:'2vw'}}>
-      <p>CSV File Format</p>
+     <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',gap:'20px'}}>
+      <p style={{display: 'flex', marginBottom: '0', alignItems: 'center'}}>CSV File Format</p>
       <buttton className='download-btn'>Download</buttton>
      </div>
      <div className='lead-form'>

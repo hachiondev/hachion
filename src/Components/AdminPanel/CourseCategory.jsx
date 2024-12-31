@@ -207,6 +207,7 @@ const displayedCategories = filteredCategories.slice(
     {showAddCourse?(<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className="course-category">
+        <h3>Course Category</h3>
               <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
@@ -268,7 +269,7 @@ const displayedCategories = filteredCategories.slice(
     </LocalizationProvider>
    </>):(<LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-        <p>{pageTitle}</p>
+        <h3>{pageTitle}</h3>
         <div className='category'>
           <div className='category-header'>
             <p>{headerTitle}</p>

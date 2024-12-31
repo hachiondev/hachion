@@ -251,6 +251,7 @@ const handleEditClick = async (id) => {
   
   return (<>{
     showAddCourse?( <> <div className="course-category">
+      <h3>Blog</h3>
       <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
@@ -295,7 +296,7 @@ const handleEditClick = async (id) => {
                 </select>
               </div>
              
-              <div className="col-md-4">
+              <div className="col">
                 <label className="form-label">Blog Title</label>
                 <input
                   type="text"
@@ -339,12 +340,13 @@ const handleEditClick = async (id) => {
 />
 </div>
 </div>
-              <div className="col-md-4">
+              <div className="mb-3">
                 <label className="form-label">Description</label>
-                <input
+                <textarea
                   type="text"
                   name="description"
                   className="form-control"
+                  id="exampleFormControlTextarea1"
                   placeholder="Enter description"
                   value={formData.description}
                   onChange={handleInputChange}
@@ -361,7 +363,7 @@ const handleEditClick = async (id) => {
             </div>
    </> ):(   <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="course-category">
-        <p>Blog</p>
+        <h3>Blog</h3>
         <div className="category">
           <div className="category-header">
             <p>Blog Details</p>

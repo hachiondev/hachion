@@ -288,6 +288,7 @@ const displayedCourse = filteredCourse.slice(
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
+        <h3>Trending Courses</h3>
         <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
@@ -372,10 +373,10 @@ const displayedCourse = filteredCourse.slice(
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-       
+      <h3>Trending Courses</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Trending Courses</p>
+            <p>Trending Courses Details</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -500,10 +501,11 @@ const displayedCourse = filteredCourse.slice(
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course</DialogTitle>
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
+    </DialogTitle>
   </div>
   <DialogContent>
   
@@ -570,7 +572,7 @@ const displayedCourse = filteredCourse.slice(
         />
       </label> */}
   </DialogContent>
-  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+ <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

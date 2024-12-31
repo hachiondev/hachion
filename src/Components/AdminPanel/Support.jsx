@@ -235,7 +235,9 @@ export default function Support() {
   return (
     
     <>  
-     {showAddCourse ?  (<div className='course-category'>
+     {showAddCourse ?  (
+      <div className='course-category'>
+        <h3>Support</h3>
       <nav aria-label="breadcrumb">
       <ol className="breadcrumb">
   <li className="breadcrumb-item">
@@ -292,10 +294,10 @@ export default function Support() {
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-       
+      <h3>Support</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Support</p>
+            <p>Support Details</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -422,10 +424,11 @@ export default function Support() {
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Support</DialogTitle>
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Support
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
+    </DialogTitle>
   </div>
   <DialogContent>
   
@@ -458,7 +461,7 @@ export default function Support() {
 
      
   </DialogContent>
-  <DialogActions>
+ <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

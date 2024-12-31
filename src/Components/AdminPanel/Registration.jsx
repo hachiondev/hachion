@@ -16,6 +16,7 @@ export default function Registration() {
 
   return (
     <>   
+    <h3>Registration</h3>
       <div className="certificate-tabs">
         {/* Tab Navigation */}
         <div 

@@ -83,10 +83,7 @@ const[message,setMessage]=useState(false);
       date:currentDate
     
     });
-    const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 10; // Show 10 rows per page
-  
-    
+
   const handleReset = () => {
     setTrainerData({
       trainer_name: "",
@@ -99,6 +96,19 @@ const[message,setMessage]=useState(false);
       date:""
     });
   };
+  const [currentPage, setCurrentPage] = useState(1);
+              const [rowsPerPage, setRowsPerPage] = useState(10);
+              
+              const handlePageChange = (page) => {
+               setCurrentPage(page);
+               window.scrollTo(0, window.scrollY);
+             };
+             // Inside your CourseCategory component
+           
+           const handleRowsPerPageChange = (rows) => {
+             setRowsPerPage(rows);
+             setCurrentPage(1); // Reset to the first page whenever rows per page changes
+           };
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents the default form submission
     const currentDate = new Date().toISOString().split("T")[0];
@@ -166,12 +176,6 @@ const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredTrainers.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredTrainers.length / rowsPerPage);
 
-// Handle page change
-const handlePageChange = (event, page) => {
-  setTrainers(paginatedData);
-  setCurrentPage(page);
- 
-};
 const handleDeleteConfirmation = (trainerId) => {
   if (window.confirm("Are you sure you want to delete this trainer?")) {
     handleDelete(trainerId);
@@ -354,22 +358,23 @@ const handleChange = (e) => {
             <DatePicker  selected={startDate} onChange={date => setStartDate(date)} />
             End Date
             <DatePicker  selected={endDate} onChange={date => setEndDate(date)} />
-            <button className='filter' onClick={handleDateFilter}>filter</button>
+            <button className='filter' onClick={handleDateFilter}>Filter</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -435,16 +440,19 @@ const handleChange = (e) => {
         />
       </div>
 
-      <Dialog open={open} onClose={handleClose}>
-  <div className='dialog-title'>
-    <DialogTitle>Edit Trainer
+      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    PaperProps={{
+      style: { borderRadius: 20 },
+    }}>
+  <div >
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trainer
       <Button onClick={handleClose} className='close-btn'>
         <IoMdCloseCircleOutline style={{ color: 'white', fontSize: '2rem' }} />
       </Button>
     </DialogTitle>
   </div>
   <DialogContent>
-    <div className="row">
+  <div className="course-row">
       <div className="col">
         <label className='form-label'>Trainer</label>
         <input
@@ -500,8 +508,40 @@ const handleChange = (e) => {
         onChange={handleInputChange}
       />
     </div>
+    <div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Demo Link 1</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+       name="demo_link_1"
+       value={trainerData.demo_link_1}
+       onChange={handleChange}/>
+  </div>
+  </div>
+  <div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label"   >Demo Link 2</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"  name="demo_link_2"
+                  value={trainerData.demo_link_2}
+                  onChange={handleChange}/>
+  </div>
+  </div>
+  <div class="row g-3 align-items-center">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Demo Link 3</label>
+  </div>
+  <div class="col-auto">
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+    name="demo_link_3"
+    value={trainerData.demo_link_3}
+    onChange={handleChange}/>
+  </div>
+  </div>
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button className='update-btn' onClick={()=>handleSave(selectedRow)} color="primary">Update</Button>
     
   </DialogActions>

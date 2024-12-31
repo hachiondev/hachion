@@ -430,12 +430,12 @@ const handleEditClick = async (courseId) => {
                 />
               </div>
               <div className="col-md-4">
-                <label className="form-label">Total Enrollment</label>
+                <label className="form-label">Certified Students</label>
                 <input
                   type="text"
                   name="totalEnrollment"
                   className="form-control"
-                  placeholder="Enter total enrollment"
+                  placeholder="Enter Certified Students"
                   value={formData.totalEnrollment}
                   onChange={handleInputChange}
                 />

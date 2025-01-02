@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
@@ -30,6 +28,8 @@ import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 // import { listTrainer } from '../../Services/TrainerService';
 import axios from 'axios';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -109,6 +109,11 @@ const[message,setMessage]=useState(false);
              setRowsPerPage(rows);
              setCurrentPage(1); // Reset to the first page whenever rows per page changes
            };
+  
+           const displayedCourse = filteredTrainers.slice(
+            (currentPage - 1) * rowsPerPage,
+            currentPage * rowsPerPage
+          );
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents the default form submission
     const currentDate = new Date().toISOString().split("T")[0];
@@ -258,14 +263,24 @@ const handleChange = (e) => {
     
     <>   
        {showAddCourse ? (<div className='course-category'>
-<p>View Trainer <IoIosArrowForward/> Add Trainer </p>
+        <h3>Trainer</h3>
+              <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}>View Trainer</a> <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                Add Trainer
+                </li>
+              </ol>
+            </nav>
+
 <div className='category'>
 <div className='category-header'>
 <p>Add Trainer</p>
 </div>
-<div class="row">
+<div className="course-row">
   <div class="col">
-  
     <label className='form-label'>Trainer</label>
     <input type="text" class="form-select" placeholder="Trainer name" aria-label="First name" 
     name="trainer_name"
@@ -336,7 +351,7 @@ const handleChange = (e) => {
     onChange={handleChange}/>
   </div>
   </div>
-  <div style={{display:'flex',flexDirection:'row'}}> 
+  <div className="course-row">
   <button className='submit-btn'  data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -348,16 +363,24 @@ const handleChange = (e) => {
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-        <p>Trainer</p>
+        <h3>Trainer</h3>
         <div className='category'>
           <div className='category-header'>
             <p>View Trainer</p>
           </div>
           <div className='date-schedule'>
             Start Date
-            <DatePicker  selected={startDate} onChange={date => setStartDate(date)} />
+            <DatePicker  selected={startDate} onChange={date => setStartDate(date)} 
+            isClearable 
+              sx={{
+                '& .MuiIconButton-root':{color: '#00aeef'}
+             }}/>
             End Date
-            <DatePicker  selected={endDate} onChange={date => setEndDate(date)} />
+            <DatePicker  selected={endDate} onChange={date => setEndDate(date)} 
+              isClearable 
+              sx={{
+                '& .MuiIconButton-root':{color: '#00aeef'}
+             }}/>
             <button className='filter' onClick={handleDateFilter}>Filter</button>
           </div>
           <div className='entries'>
@@ -395,25 +418,27 @@ const handleChange = (e) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell sx={{ width: 70 }} align="center">
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell>S.No.</StyledTableCell>
+            <StyledTableCell sx={{ width: 70 }} align="center">S.No.</StyledTableCell>
             <StyledTableCell align="center">Trainer Name</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Demo 1</StyledTableCell>
             <StyledTableCell align="center">Demo 2</StyledTableCell>
             <StyledTableCell align="center">Demo 3</StyledTableCell>
-            <StyledTableCell align="center">Summary</StyledTableCell>
+            <StyledTableCell sx={{ width: 400 }} align="center">Summary</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {trainers.map((row) => (
-            <StyledTableRow key={row.S_No}>
-              <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>{row.trainer_id}</StyledTableCell>
+        {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
+            <StyledTableRow key={row.trainer_id}>
+              <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+              </StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
               <StyledTableCell align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell align="center">{row.demo_link_1}</StyledTableCell>
@@ -426,19 +451,26 @@ const handleChange = (e) => {
                   <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(row.trainer_id)} />
                 </StyledTableCell>
             </StyledTableRow>
-          ))}
+           ))
+           : (
+             <StyledTableRow>
+               <StyledTableCell colSpan={10} align="center">
+                 No data available.
+               </StyledTableCell>
+             </StyledTableRow>
+           )}
         </TableBody>
       </Table>
     </TableContainer>
     {message? (<p>Table updated succesfully</p>):<p></p>}
-    <div className='pagination'>
-        <Pagination
-          count={pageCount}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </div>
+    <div className='pagination-container'>
+                  <AdminPagination
+              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
+              totalRows={filteredTrainers.length} // Use the full list for pagination
+              onPageChange={handlePageChange}
+            />
+                      </div>
 
       <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
     PaperProps={{

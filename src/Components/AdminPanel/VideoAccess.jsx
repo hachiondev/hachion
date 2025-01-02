@@ -496,7 +496,11 @@ export default function VideoAccess() {
     </StyledTableRow>
  ))
 ) : (
-  <p>No Data available</p>
+  <StyledTableRow>
+             <StyledTableCell colSpan={9} align="center">
+               No data available.
+             </StyledTableCell>
+           </StyledTableRow>
 )}
 </TableBody>
     </Table>

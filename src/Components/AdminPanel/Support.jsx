@@ -398,7 +398,7 @@ export default function Support() {
          ))
          : (
            <StyledTableRow>
-             <StyledTableCell colSpan={6} align="center">
+             <StyledTableCell colSpan={9} align="center">
                No data available.
              </StyledTableCell>
            </StyledTableRow>

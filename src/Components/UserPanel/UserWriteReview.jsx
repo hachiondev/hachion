@@ -27,6 +27,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
             <label className='form-label'>Name</label>
             <input type="text" className="form-control" placeholder="Enter your Name" aria-label="Name" />
           </div>
+         
           <div className="col-md-5">
             <label className='form-label'>Email</label>
             <input type="email" className="form-control" placeholder="abc@gmail.com" aria-label="Email" />
@@ -34,6 +35,10 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
         </div>
 
         <div className="input-row">
+        <div className="col-md-5">
+            <label className='form-label'>Location</label>
+            <input type="text" className="form-control" placeholder="Enter your Location" aria-label="Location" />
+          </div>
           <div className="col-md-5">
             <label className="form-label">Review Type</label>
             <select className="form-select">
@@ -42,7 +47,10 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               <option>Trainer Review</option>
             </select>
           </div>
-          <div className="col-md-5">
+        </div>
+
+        <div className="input-row">
+        <div className="col-md-5">
             <label className="form-label">Course Name</label>
             <select
               className="form-select"
@@ -56,9 +64,6 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               <option>Mobile App Testing</option>
             </select>
           </div>
-        </div>
-
-        <div className="input-row">
           <div className="col-md-5">
             <label className="form-label">Trainer Name</label>
             <select className="form-select">
@@ -67,7 +72,10 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               <option>Havilla</option>
             </select>
           </div>
-          <div className="col-md-5">
+        </div>
+
+        <div className="input-row">
+        <div className="col-md-5">
             <label className="form-label">Select ID</label>
             <select className="form-select">
               <option>Select</option>
@@ -78,8 +86,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               <option>Other..</option>
             </select>
           </div>
-        </div>
-
+          <div className="col-md-5">
         <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
           <Typography component="legend">Rating</Typography>
           <Rating
@@ -89,6 +96,8 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
             sx={{ ml: 1, mt: 1 }}
           />
         </Box>
+        </div>
+        </div>
 
         <div className="mb-3 mt-3">
           <label className="form-label">Review</label>

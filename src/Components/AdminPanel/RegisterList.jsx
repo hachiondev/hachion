@@ -505,7 +505,7 @@ const [currentPage, setCurrentPage] = useState(1);
   ))
   : (
     <StyledTableRow>
-      <StyledTableCell colSpan={6} align="center">
+      <StyledTableCell colSpan={14} align="center">
         No data available.
       </StyledTableCell>
     </StyledTableRow>

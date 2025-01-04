@@ -2,6 +2,8 @@ import './App.css';
 import { Home } from './Components/UserPanel/Home';
 import Login from './Components/UserPanel/Login';
 import AdminLogin from './Components/AdminPanel/AdminLogin';
+import AdminRegister from './Components/AdminPanel/AdminRegister';
+import AdminForgot from './Components/AdminPanel/AdminForgot';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
@@ -68,6 +70,8 @@ function App() {
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminlogin' element={<AdminLogin/>}/>
+      <Route path='/adminregister' element={<AdminRegister/>}/>
+      <Route path='/adminforgot' element={<AdminForgot/>}/>
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
       <Route path='/admindashboard' element={<AdminDashboard/>}/>

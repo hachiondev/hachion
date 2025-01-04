@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Admin.css';
 import logo from '../../Assets/logo.png';
+import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -77,7 +78,7 @@ const Login = () => {
 
                 {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
 
-                <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
+                <Link to='/adminforgot' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link>
 
@@ -91,9 +92,10 @@ const Login = () => {
                 </div>
               </form>
             </div>
+            <p className='go-to-register'>Don't have an account? <Link to='/adminregister' className='link-to-register'> Register </Link></p>
           </div>
         </div>
-        {/* Include LoginSide if necessary */}
+        <LoginSide />
       </div>
     </>
   );

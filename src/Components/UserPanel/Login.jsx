@@ -58,9 +58,9 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
   };
-  const handleAdminLogin=()=>{
-    navigate('/adminlogin')
-  }
+  // const handleAdminLogin=()=>{
+  //   navigate('/adminlogin')
+  // }
 
   // Handle CAPTCHA verification
   // const handleCaptchaChange = (value) => {
@@ -162,7 +162,7 @@ const Login = () => {
             </div>
 
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
-          <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button>
+          {/* <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button> */}
           </div>
         </div>
         <LoginSide />

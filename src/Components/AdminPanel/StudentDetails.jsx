@@ -32,6 +32,8 @@ import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -53,13 +55,75 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       border: 0,
     },
   }));
+
+  const staticData = [
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      mobile: '123-456-7890',
+      country: 'USA',
+      date: '2025-01-01',
+      courseName: 'React Development',
+      timeZone: 'GMT-5',
+      visaStatus: 'Approved',
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      mobile: '987-654-3210',
+      country: 'Canada',
+      date: '2025-01-02',
+      courseName: 'Python Development',
+      timeZone: 'GMT-4',
+      visaStatus: 'Pending',
+    },
+  ];
   
 const StudentDetails = () => {
 const[registerStudent,setRegisterStudent]=useState([]);
  const [startDate, setStartDate] = useState(null);
  const[filteredStudent,setFilteredStudent]=useState([]);
     const [endDate, setEndDate] = useState(null);
-    const [searchTerm,setSearchTerm]=useState("")
+    const [searchTerm,setSearchTerm]=useState("");
+    const[filteredDemo,setFilteredDemo]=useState([]);
+    const[filteredClass,setFilteredClass]=useState([]);
+    const[filteredMentor,setFilteredMentor]=useState([]);
+    const[filteredSelf,setFilteredSelf]=useState([]);
+    const [showDemoTable, setShowDemoTable] = useState(false);
+  const [showClassTable, setShowClassTable] = useState(false);
+  const [showMentoringTable, setShowMentoringTable] = useState(false);
+  const [showSelfPlacedTable, setShowSelfPlacedTable] = useState(false);
+
+  const handleViewDemo = () => {
+    setShowDemoTable(true);
+    setShowClassTable(false);
+    setShowMentoringTable(false);
+    setShowSelfPlacedTable(false);
+  };
+
+  const handleViewClass = () => {
+    setShowDemoTable(false);
+    setShowClassTable(true);
+    setShowMentoringTable(false);
+    setShowSelfPlacedTable(false);
+  };
+
+  const handleViewMentoring = () => {
+    setShowDemoTable(false);
+    setShowClassTable(false);
+    setShowMentoringTable(true);
+    setShowSelfPlacedTable(false);
+  };
+
+  const handleViewSelfPlaced = () => {
+    setShowDemoTable(false);
+    setShowClassTable(false);
+    setShowMentoringTable(false);
+    setShowSelfPlacedTable(true);
+  };
+
     useEffect(() => {
       const fetchStudent = async () => {
           try {
@@ -116,7 +180,7 @@ const handleDateFilter = () => {
            
             <div className='category'>
               <div className='category-header'>
-                <p>Video Access</p>
+                <p>Student Details</p>
               </div>
               <div className='date-schedule'>
                 Start Date
@@ -211,17 +275,17 @@ const handleDateFilter = () => {
                 <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
                 <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
                 <StyledTableCell align="center">{row.course_name}</StyledTableCell>
-                <StyledTableCell align="center">1</StyledTableCell>
-                <StyledTableCell align="center">1</StyledTableCell>
-                <StyledTableCell align="center">1</StyledTableCell>
-                <StyledTableCell align="center">1</StyledTableCell>
+                <StyledTableCell align="center">  <MdOutlineRemoveRedEye onClick={handleViewDemo} /> </StyledTableCell>
+                <StyledTableCell align="center"><MdOutlineRemoveRedEye onClick={handleViewClass} /></StyledTableCell>
+                <StyledTableCell align="center"><MdOutlineRemoveRedEye onClick={handleViewMentoring} /></StyledTableCell>
+                <StyledTableCell align="center"><MdOutlineRemoveRedEye onClick={handleViewSelfPlaced} /></StyledTableCell>
                
          
         </StyledTableRow>
        ))
          : (
            <StyledTableRow>
-             <StyledTableCell colSpan={6} align="center">
+             <StyledTableCell colSpan={18} align="center">
                No data available.
              </StyledTableCell>
            </StyledTableRow>
@@ -237,6 +301,127 @@ const handleDateFilter = () => {
                   onPageChange={handlePageChange}
                 />
         </div>
+
+        {showDemoTable && (
+          <div>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <div className='course-category'>
+          <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+      <li className="breadcrumb-item">
+            <a href="#!" onClick={() => setShowDemoTable(false)}>Student Details</a> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+            View Live Demo
+            </li>
+          </ol>
+        </nav>    
+            <div className='category'>
+              <div className='category-header'>
+                <p>View Live Demo</p>
+              </div>
+              <div className='date-schedule'>
+                Start Date
+                <DatePicker 
+        selected={startDate} 
+        onChange={(date) => setStartDate(date)} 
+        isClearable 
+        sx={{
+          '& .MuiIconButton-root':{color: '#00aeef'}
+       }}/>
+                End Date
+                <DatePicker 
+        selected={endDate} 
+        onChange={(date) => setEndDate(date)} 
+        isClearable 
+        sx={{
+          '& .MuiIconButton-root':{color: '#00aeef'}
+       }}
+      />
+                <button className='filter' onClick={handleDateFilter} >Filter</button>
+               
+              </div>
+              <div className='entries'>
+                <div className='entries-left'>
+                <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
+                <div className='entries-right'>
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                    <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}/>
+                    <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+                  </div>
+                  
+                </div>
+              </div>
+    
+            </div>
+          </div>
+        </LocalizationProvider>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>S.No</StyledTableCell>
+                  <StyledTableCell>Date</StyledTableCell>
+                  <StyledTableCell>Week</StyledTableCell>
+                  <StyledTableCell>Time Zone</StyledTableCell>
+                  <StyledTableCell>Meeting Link</StyledTableCell>
+                  <StyledTableCell>Course Name</StyledTableCell>
+                  <StyledTableCell>Batch ID</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Created Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {displayedCourse.length > 0
+    ? displayedCourse.map((row, index) => (
+                  <StyledTableRow key={row.id}>
+                    <StyledTableCell>{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+                    <StyledTableCell>1</StyledTableCell>
+                  <StyledTableCell>02-01-2025</StyledTableCell>
+                  <StyledTableCell>Monday</StyledTableCell>
+                  <StyledTableCell>10.00AM</StyledTableCell>
+                  <StyledTableCell>abc</StyledTableCell>
+                  <StyledTableCell>Pega</StyledTableCell>
+                  <StyledTableCell>1234</StyledTableCell>
+                  <StyledTableCell>Active</StyledTableCell>
+                  <StyledTableCell>01-01-2025</StyledTableCell>
+                  </StyledTableRow>
+                ))
+                : (
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={9} align="center">
+                      No data available.
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div className='pagination-container'>
+                        <AdminPagination
+                    currentPage={currentPage}
+                    rowsPerPage={rowsPerPage}
+                    totalRows={filteredDemo.length} // Use the full list for pagination
+                    onPageChange={handlePageChange}
+                  />
+             </div>
+        </div>
+      )}
+
         </div>
         </>
   )

@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../Assets/banner1.png';
 import Banner2 from '../../Assets/banner2.png';
 import './Home.css';
 
 const Banner = () => {
+  const navigate = useNavigate();
+  const handleExploreMore = () => {
+    navigate('/course');
+  };
   useEffect(() => {
   
     const carousel = document.querySelector('#autoScrollingBanner');
@@ -25,7 +30,7 @@ const Banner = () => {
             <div className="carousel-caption">
               <div className='carousel-btn'>
              
-                <button className="coupon-btn">Coupon: Hach10</button>
+                <button className="coupon-btn" onClick={handleExploreMore}>Explore More</button>
                 </div>
             </div>
           </div>
@@ -34,7 +39,7 @@ const Banner = () => {
             <div className="carousel-caption">
             <div className='carousel-btn'>
         
-                <button className="register-now-btn">Register Now</button>
+                <button className="register-now-btn" onClick={handleExploreMore}>Explore More</button>
               </div>
             </div>
           </div>

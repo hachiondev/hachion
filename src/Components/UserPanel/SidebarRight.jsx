@@ -55,7 +55,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
             time={course.liveTrainingHours  }  />
         ))
       ) : (
-        <p>No courses available</p>
+        <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
       )}
     </div>
   );

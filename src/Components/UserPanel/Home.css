@@ -235,10 +235,10 @@ transition: color 0.3s ease;
 white-space: nowrap;
 }
 
-.nav-item-link:hover {
+/* .nav-item-link:hover {
 color: #00AEEF;
 font-weight: 500;
-}
+} */
 
 .nav-item {
 background: none;

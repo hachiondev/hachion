@@ -5,7 +5,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { PiLineVerticalThin } from "react-icons/pi";
 import { IoLogOut } from 'react-icons/io5';
-import profile1 from '../../Assets/profile1.jfif';
+import profile1 from '../../Assets/profile2.png';
 import whatsapp from '../../Assets/logos_whatsapp-icon.png';
 import './Home.css';
 
@@ -54,24 +54,13 @@ const Topbar = () => {
                   {userData?.name || 'Hachion User'}
                 </Link>
 
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to={'/userdashboard'}>
-                      <FaUserAlt style={{ color: '#00AEEF' }} /> Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/settings'}>
-                      <IoMdSettings style={{ color: '#00AEEF' }} /> Settings
-                    </Link>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <Link className="dropdown-item" to="#" onClick={handleLogout}>
-                      <IoLogOut style={{ color: '#00AEEF' }} /> Logout
-                    </Link>
-                  </li>
-                </ul>
+                
+  <ul className="dropdown-menu">
+    <li><Link className="dropdown-item" to={'/userdashboard'}><FaUserAlt className="dropdown-icon"/> Dashboard</Link></li>
+    <li><Link className="dropdown-item" href="#"><IoMdSettings className="dropdown-icon"/> Settings</Link></li>
+    <li><a className="dropdown-divider" /></li>
+    <li><Link className="dropdown-item" href="#" onClick={handleLogout}> <IoLogOut className="dropdown-icon"/> Logout</Link></li>
+  </ul>
               </div>
             </div>
           </div>

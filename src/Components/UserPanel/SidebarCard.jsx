@@ -6,11 +6,13 @@ import './Course.css';
 import cardicon from '../../Assets/image 85.png';
 import { useNavigate } from 'react-router-dom';
 
-const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
+const SidebarCard = ({ title, duration, time, Rating, RatingByPeople, course_id ,image}) => {
   const navigate = useNavigate();
-  
+
   const handleClick = () => {
-    navigate('/qaautomation');
+    // Navigate to QaAutomation page with course_id as a URL parameter
+    navigate(`/qaautomation/${course_id}`);
+    
   };
 
   // Function to render stars dynamically based on the rating
@@ -32,7 +34,7 @@ const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
     <div className="sidebar-card">
       <div className="sidebar-card-header-div">
         <h4 className="sidebar-card-heading">Certified Students: 0</h4>
-        <img src={cardicon} alt="card-img" className="sidebar-card-icon" />
+        <img src={image} alt="card-img" className="sidebar-card-icon" />
       </div>
       <div className="sidebar-course-details">
         <h5 className="sidebar-course-name">{title}</h5>

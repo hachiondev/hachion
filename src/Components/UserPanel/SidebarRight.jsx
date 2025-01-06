@@ -46,16 +46,21 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
 
   return (
     <div className="course-card-container">
-      {currentCards.length > 0 ? (
-        currentCards.map((course, index) => (
-          <SidebarCard key={course.id || index} title={course.courseName}
-          RatingByPeople={course.ratingByNumberOfPeople}
-          Rating={course.starRating}
-          month={course.duration}
-            time={course.liveTrainingHours  }  />
-        ))
-      ) : (
-        <p>No courses available</p>
+   {currentCards.length > 0 ? (
+    currentCards.map((course, index) => (
+      <SidebarCard
+        key={course.id || index}
+        title={course.courseName}
+        RatingByPeople={course.ratingByNumberOfPeople}
+        image={`http://localhost:8080/${course.courseImage}`} // Correct property
+        Rating={course.starRating}
+        month={course.duration}
+        time={course.liveTrainingHours}
+        course_id={course.id}
+      />
+    ))
+  ): (
+    <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
       )}
     </div>
   );

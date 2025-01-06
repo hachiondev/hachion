@@ -64,7 +64,7 @@ function App() {
           }
         />
       <Route path='/course' element={<Course/>}/>
-      <Route path='/qaautomation' element={<QaAutomation/>}/>
+      <Route path='/qaautomation/:course_id' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminlogin' element={<AdminLogin/>}/>
@@ -75,6 +75,7 @@ function App() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
+      <Route path='/adminforgot' element={<AdminLogin/>}/>
       <Route path='/enroll' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/qatestingblog' element={<QaTestingBlog/>}/>

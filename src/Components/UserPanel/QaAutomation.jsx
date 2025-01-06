@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import './Course.css';
 import Footer from './Footer';
 import QaTop from './QaTop';
@@ -22,7 +24,12 @@ const QaAutomation = () => {
   const upcomingHeaderRef = useRef(null);
   const footerRef = useRef(null); // Footer reference for intersection observer
   const [isSticky, setIsSticky] = useState(false);
+  const { course_id } = useParams(); // Get course_id from URL
+  const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -71,6 +78,30 @@ const QaAutomation = () => {
       curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  useEffect(() => {
+    // Fetch the course details by course_id
+    const fetchCourseData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:8080/courses/${course_id}`);
+        console.log(response);
+        if (response.data) {
+          setCourseData(response.data); // Set course data based on course_id
+        } else {
+          setError('Course not found');
+        }
+      } catch (err) {
+        setError('Error fetching course data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseData();
+  }, [course_id]); // Fetch new course data when course_id changes
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
@@ -78,18 +109,22 @@ const QaAutomation = () => {
         <Topbar />
         <NavbarTop />
         <div className='course-banner'>
-          <h3 className='course-banner-content'>QA Automation</h3>
+          <h3 className='course-banner-content'>{courseData?.courseName}</h3>
         </div>
         <div className='blogs-header'>
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="./Course">Courses</a> <MdKeyboardArrowRight/> </li>
+          <li className="breadcrumb-item">
+                <a href="/courses">Courses</a> <MdKeyboardArrowRight />
+              </li>
               <li className="breadcrumb-item">
-              <a href="./Course">QA Testing</a> <MdKeyboardArrowRight/></li>
-            <li className="breadcrumb-item active" aria-current="page">
-            QA Automation
-            </li>
+                <a href={`/courses/${courseData?.courseCategory}`}>
+                  {courseData?.courseCategory}
+                </a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                {courseData?.courseName}
+              </li>
           </ol>
         </nav>
         </div>

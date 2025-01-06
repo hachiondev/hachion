@@ -1,42 +1,54 @@
 import React, { useState } from 'react';
 import './Admin.css';
 import logo from '../../Assets/logo.png';
+import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
+const AdminLogin = () => {
   const navigate = useNavigate();
   const [passwordType, setPasswordType] = useState('password');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Direct form submission handler without Formik for testing`
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();  // Prevent default form submission
-    console.log("Form submission triggered");  // Debugging log
-
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      email: email,
+      password: password,
+  };
+    
     try {
-      const response = await axios.post('http://localhost:8080/api/admin/login', {
+      const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', {
         email: email,
         password: password
       });
-      console.log("Response from backend:", response);  // Debugging response
-
-      if (response.status === 200) {
-        console.log("Login successful:", response.data);  // Success log
+      console.log(response);
+      if (response.status===200) {
         navigate('/admindashboardview');
-      }
-    } catch (error) {
-      console.error("Error during login:", error);  // Error log
+        const loginuserData = { name: response.data.username, email: response.data.email };
 
-      if (error.response && error.response.status === 401) {
-        setErrorMessage('Invalid Username or Password');
-      } else {
-        setErrorMessage('An error occurred. Please try again later.');
-      }
+
+        try {
+            localStorage.setItem('adminloginuserData', JSON.stringify(loginuserData)); // Try saving to localStorage
+            // console.log('User data saved to localStorage:', loginuserData); // Debugging line
+        } catch (error) {
+            console.error('Error saving to localStorage:', error);
+        }
+
+        // Navigate after saving data
+    } else {
+        setErrorMessage(response.data.message); // Show error message
     }
-  };
+} catch (error) {
+    console.error("Error during login", error);
+    setErrorMessage("An error occurred during login");
+} 
+
+
+
+};
 
   return (
     <>
@@ -77,7 +89,7 @@ const Login = () => {
 
                 {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
 
-                <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
+                <Link to='/adminforgot' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link>
 
@@ -91,12 +103,13 @@ const Login = () => {
                 </div>
               </form>
             </div>
+            <p className='go-to-register'>Don't have an account? <Link to='/adminregister' className='link-to-register'> Register </Link></p>
           </div>
         </div>
-        {/* Include LoginSide if necessary */}
+        <LoginSide />
       </div>
     </>
   );
 };
 
-export default Login;
+export default AdminLogin;

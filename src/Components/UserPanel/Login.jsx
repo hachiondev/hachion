@@ -84,9 +84,7 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
   };
-  const handleAdminLogin=()=>{
-    navigate('/adminlogin')
-  }
+
   return (
     <>
       <div className='login'>
@@ -180,7 +178,7 @@ const Login = () => {
             </div>
 
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
-          <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button>
+          
           </div>
         </div>
         <LoginSide />

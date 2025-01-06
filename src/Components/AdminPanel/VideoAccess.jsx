@@ -9,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -36,6 +35,7 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -60,7 +60,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function VideoAccess() {
-  const[courseCategory,setCourseCategory]=useState([]);
+  const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
     const [trainers, setTrainers] = useState([]);
   const [searchTerm,setSearchTerm]=useState("")
@@ -84,27 +84,40 @@ export default function VideoAccess() {
             permission:false
          }]);
          const [currentPage, setCurrentPage] = useState(1);
+         const [rowsPerPage, setRowsPerPage] = useState(10);
          const [permission, setPermission] = useState(false); // Initial state: off (false)
 
+         const handlePageChange = (page) => {
+          setCurrentPage(page);
+          window.scrollTo(0, window.scrollY);
+        };
+        // Inside your CourseCategory component
+      
+      const handleRowsPerPageChange = (rows) => {
+        setRowsPerPage(rows);
+        setCurrentPage(1); // Reset to the first page whenever rows per page changes
+      };
          const handleSwitchToggle = () => {
            setPermission(!permission); // Toggle the permission state
          };
-const rowsPerPage = 5;
 
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
-const handlePermissionChange = (e) => {
-    // Toggle the permission value based on the checkbox
-    const updatedVideoData = [...videoAccess];  // Copy the current video data
-    updatedVideoData[0].permission = e.target.checked;  // Update the permission for the first item (adjust accordingly if you have multiple items)
-    setVideoAccess(updatedVideoData);  // Update the state
-  };
+         const handlePermissionChange = (e) => {
+          // Ensure `videoAccess` and the first item exist before proceeding
+          if (!videoAccess || !videoAccess[0]) {
+              console.error("videoAccess or the first item is undefined");
+              return;
+          }
+      
+          // Toggle the permission value based on the checkbox
+          const updatedVideoData = [...videoAccess]; // Copy the current video data
+          updatedVideoData[0].permission = e.target.checked; // Update the permission for the first item
+          setVideoAccess(updatedVideoData); // Update the state
+      };
 
-const paginatedRows = filteredVideo.slice(
+  const displayedCategories = filteredVideo.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
-);
+  );
 
          const handleReset=()=>{
             setVideoData([{
@@ -140,6 +153,17 @@ const paginatedRows = filteredVideo.slice(
           }
         };
         fetchTrainers();
+      }, []);
+      useEffect(() => {
+        const fetchCourseCategory = async () => {
+          try {
+            const response = await axios.get("http://localhost:8080/courses/all");
+            setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+          } catch (error) {
+            console.error("Error fetching categories:", error.message);
+          }
+        };
+        fetchCourseCategory();
       }, []);
     useEffect(() => {
       const fetchVideo = async () => {
@@ -264,17 +288,7 @@ const paginatedRows = filteredVideo.slice(
       };
       fetchCategory();
     }, []);
-    useEffect(() => {
-      const fetchCourseCategory = async () => {
-        try {
-          const response = await axios.get("http://localhost:8080/courses/all");
-          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
-        } catch (error) {
-          console.error("Error fetching categories:", error.message);
-        }
-      };
-      fetchCourseCategory();
-    }, []);
+
   return (
     
     <>  
@@ -318,6 +332,9 @@ const paginatedRows = filteredVideo.slice(
         ))}
       </select>
   </div>
+  </div>
+
+  <div className="course-row">
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={videoData.category_name} onChange={handleChange}>
@@ -330,8 +347,8 @@ const paginatedRows = filteredVideo.slice(
           </option>
         ))}
     </select>
-
 </div>
+
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={videoData.course_name} onChange={handleChange}>
@@ -343,11 +360,12 @@ const paginatedRows = filteredVideo.slice(
             {curr.courseName}
           </option>
         ))}
-    </select>
-
+      </select>
 </div>
   </div>
-  <div class="mb-6">
+
+  <div className="course-row">
+  <div class="mb-7" style={{width: '50%'}}>
   <label for="exampleFormControlTextarea1" class="form-label">Description</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
   name="description"
@@ -355,15 +373,19 @@ const paginatedRows = filteredVideo.slice(
   onChange={handleChange}></textarea>
 </div>
 
-<label>
-  Permission:
-  <input
-    type="checkbox"
-    checked={videoAccess.permission}  // Control checkbox state based on permission
-    onChange={handlePermissionChange}  // Toggle permission state when clicked
-  />
-</label>
-<div style={{display:'flex',flexDirection:'row'}}> 
+<div className="col" style={{ display: 'flex', gap: 10, alignItems: 'center' }}> 
+  <label className="form-label">Permission:</label>
+  <div className="col" style={{ display: 'flex', gap: 10,}}> 
+  <Switch
+                checked={videoAccess && videoAccess[0] ? videoAccess[0].permission : false} // Default to false if undefined
+                onChange={handlePermissionChange}
+                color="primary"
+            />
+            <span>{videoAccess && videoAccess[0] && videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
+ </div>
+  </div>
+ </div>
+<div className="course-row"> 
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -385,30 +407,37 @@ const paginatedRows = filteredVideo.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -429,10 +458,10 @@ const paginatedRows = filteredVideo.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: 70 }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: 70 }}>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Category Name</StyledTableCell>
             <StyledTableCell align='center'>Course Name</StyledTableCell>
             <StyledTableCell align="center">User Email</StyledTableCell>
@@ -443,12 +472,13 @@ const paginatedRows = filteredVideo.slice(
           </TableRow>
         </TableHead>
         <TableBody>
-  {videoAccess.map((row, index) => (
+        {displayedCategories.length > 0 ? (
+          displayedCategories.map((row, index) => (
     <StyledTableRow key={row.regularvideo_id}>
-      <StyledTableCell>
+      <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{row.category_name}</StyledTableCell>
       <StyledTableCell align="center">{row.course_name}</StyledTableCell>
       <StyledTableCell align="center">{row.user_email}</StyledTableCell>
@@ -458,27 +488,44 @@ const paginatedRows = filteredVideo.slice(
 </StyledTableCell>
       <StyledTableCell align="center">{row.date}</StyledTableCell>
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.videoaccess_id)} />
+      </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+ ))
+) : (
+  <p>No Data available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
+        <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredVideo.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
 
-    </div>)}
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+              PaperProps={{
+                style: { borderRadius: 20 },
+              }}>
   <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit  Video Access</DialogTitle>
+    <DialogTitle id="edit-schedule-dialog">Edit Video Access</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
   </div>
   <DialogContent>
-  <div class="col-md-3">
+  <div className="course-row">
+  <div class="col">
     <label for="inputState" class="form-label">User Email</label>
     <select id="inputState" class="form-select" name='user_email' value={editedData.user_email} onChange={handleInputChange}>
       <option selected>Select User</option>
@@ -488,7 +535,7 @@ const paginatedRows = filteredVideo.slice(
     
     </select>
   </div>
-<div class="col-md-3">
+<div class="col">
     <label for="inputState" class="form-label">Trainer Name</label>
     <select id="inputState" class="form-select" name='category_name' value={editedData.trainer_name} onChange={handleChange}>
     <option value="" disabled>
@@ -501,6 +548,8 @@ const paginatedRows = filteredVideo.slice(
         ))}
       </select>
   </div>
+  </div>
+  <div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -530,7 +579,7 @@ const paginatedRows = filteredVideo.slice(
         value={editedData.course_name || ""}
         onChange={handleInputChange}
       >
-         <option value="" disabled>
+        <option value="" disabled>
           Select Course
         </option>
         {courseCategory.map((curr) => (
@@ -540,19 +589,32 @@ const paginatedRows = filteredVideo.slice(
         ))}
       </select>
     </div>
+</div>
 
-
-    <label htmlFor="topic">Description</label>
+    <div className="course-row" style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="col">
+    <label className="form-label" htmlFor="topic">Description</label>
     <input
       id="topic"
-      className="form-control"
+      className="form-control-sample"
       name="description"
       value={editedData.description || ""}
       onChange={handleInputChange}
     />
+    </div>
+    <div className="col" style={{ display: 'flex', gap: 20 }}> 
+  <label className="form-label">Permission:</label>
+  <Switch
+                checked={videoAccess && videoAccess[0] ? videoAccess[0].permission : false} // Default to false if undefined
+                onChange={handlePermissionChange}
+                color="primary"
+            />
+            <span>{videoAccess && videoAccess[0] && videoAccess[0].permission ? 'Enable' : 'Disable'}</span>
+    </div>
+    </div>
        
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

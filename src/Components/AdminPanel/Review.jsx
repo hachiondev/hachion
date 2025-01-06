@@ -1,6 +1,5 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -36,6 +35,10 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import AdminPagination from './AdminPagination'; 
+
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -60,7 +63,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function Review() {
   const [course,setCourse]=useState([]);
-   const[courseCategory,setCourseCategory]=useState([]);
+   const [courseCategory,setCourseCategory]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[review,setReview]=useState([]);
@@ -82,21 +85,26 @@ export default function Review() {
            image:null
          }]);
          const [currentPage, setCurrentPage] = useState(1);
-  
-
-const rowsPerPage = 5;
-
-const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-};
+                    const [rowsPerPage, setRowsPerPage] = useState(10);
+                    
+                    const handlePageChange = (page) => {
+                     setCurrentPage(page);
+                     window.scrollTo(0, window.scrollY);
+                   };
+                   // Inside your CourseCategory component
+                 
+                 const handleRowsPerPageChange = (rows) => {
+                   setRowsPerPage(rows);
+                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
+                 };
 
 const handleFileChange = (e) => {
     setReviewData((prev) => ({ ...prev, image: e.target.files[0] }));
   };
-const paginatedRows = filteredReview.slice(
+  const displayedCategories = filteredReview.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
-);
+  );
 
          const handleReset=()=>{
             setReviewData([{
@@ -122,7 +130,17 @@ const paginatedRows = filteredReview.slice(
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
- 
+    useEffect(() => {
+      const fetchCourseCategory = async () => {
+        try {
+          const response = await axios.get("http://localhost:8080/courses/all");
+          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+        } catch (error) {
+          console.error("Error fetching categories:", error.message);
+        }
+      };
+      fetchCourseCategory();
+    }, []);
     useEffect(() => {
       const fetchReview = async () => {
           try {
@@ -192,17 +210,7 @@ const paginatedRows = filteredReview.slice(
           );
           setFilteredReview(filtered);
       }, [searchTerm,filteredReview]);
-      useEffect(() => {
-        const fetchCourseCategory = async () => {
-          try {
-            const response = await axios.get("http://localhost:8080/courses/all");
-            setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
-          } catch (error) {
-            console.error("Error fetching categories:", error.message);
-          }
-        };
-        fetchCourseCategory();
-      }, []);
+        
         const handleCloseModal=()=>{
           setShowAddCourse(false);
          
@@ -261,7 +269,16 @@ const paginatedRows = filteredReview.slice(
     
     <>  
      {showAddCourse ?  (<div className='course-category'>
-<p> Review <IoIosArrowForward/> Add Review </p>
+      <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item">
+                      <a href="#!" onClick={() => setShowAddCourse(false)}>Review</a> <MdKeyboardArrowRight />
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Add Review
+                      </li>
+                    </ol>
+                  </nav>
 <div className='category'>
 <div className='category-header'>
 <p>Add Review</p>
@@ -293,8 +310,9 @@ const paginatedRows = filteredReview.slice(
       <option>Twitter</option>
       <option>Instagram</option>
     </select>
-
 </div>
+</div>
+<div className="course-row">
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={reviewData.category_name} onChange={handleChange}>
@@ -307,8 +325,8 @@ const paginatedRows = filteredReview.slice(
           </option>
         ))}
     </select>
-
 </div>
+
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
     <select id="inputState" class="form-select" name='course_name' value={reviewData.course_name} onChange={handleChange}>
@@ -320,10 +338,10 @@ const paginatedRows = filteredReview.slice(
             {curr.courseName}
           </option>
         ))}
-    </select>
-
+      </select>
 </div>
   </div>
+  
   <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
@@ -332,7 +350,7 @@ const paginatedRows = filteredReview.slice(
   onChange={handleChange}></textarea>
 </div>
 
-<div style={{display:'flex',flexDirection:'row'}}> 
+<div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -354,30 +372,37 @@ const paginatedRows = filteredReview.slice(
             <DatePicker 
     selected={startDate} 
     onChange={(date) => setStartDate(date)} 
-    isClearable />
+    isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}/>
             End Date
             <DatePicker 
     selected={endDate} 
     onChange={(date) => setEndDate(date)} 
     isClearable 
+    sx={{
+      '& .MuiIconButton-root':{color: '#00aeef'}
+   }}
   />
-            <button className='filter' >filter</button>
+            <button className='filter' >Filter</button>
            
           </div>
           <div className='entries'>
             <div className='entries-left'>
-              <p>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  10
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">1</a></li>
-      
-                </ul>
-              </div>
-              <p>entries</p>
-            </div>
+            <p style={{ marginBottom: '0' }}>Show</p>
+  <div className="btn-group">
+    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {rowsPerPage}
+    </button>
+    <ul className="dropdown-menu">
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+    </ul>
+  </div>
+  <p style={{ marginBottom: '0' }}>entries</p>
+</div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -398,45 +423,62 @@ const paginatedRows = filteredReview.slice(
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Images</StyledTableCell>
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align="center">Source</StyledTableCell>
             <StyledTableCell align="center">Technology</StyledTableCell>
             <StyledTableCell align="center">Comment </StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-  {review.map((curr, index) => (
+        {displayedCategories.length > 0 ? (
+  displayedCategories.map((curr, index) => (
     <StyledTableRow key={curr.review_id}>
-      <StyledTableCell>
+      <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
-      <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{curr.image}</StyledTableCell>
-      <StyledTableCell align="center">{curr.student_name}</StyledTableCell>
+      <StyledTableCell align="left">{curr.student_name}</StyledTableCell>
       <StyledTableCell align="center">{curr.source}</StyledTableCell>
-      <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
-      <StyledTableCell align="center">{curr.comment}</StyledTableCell>
+      <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
+      <StyledTableCell align="left">{curr.comment}</StyledTableCell>
      
       <StyledTableCell align="center">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.review_id)} />
+        </div>
       </StyledTableCell>
     </StyledTableRow>
-  ))}
+ ))
+) : (
+  <p>No Data available</p>
+)}
 </TableBody>
     </Table>
     </TableContainer>
-    {message && <div className="success-message">{message}</div>}
+    <div className='pagination-container'>
+              <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredReview.length} // Use the full list for pagination
+          onPageChange={handlePageChange}
+        />
+                  </div>
+        {message && <div className="success-message">{message}</div>}
+    
+        </div>)}
 
-    </div>)}
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog">
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
   <div className="dialog-title">
     <DialogTitle id="edit-schedule-dialog">Edit  Review</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
@@ -444,23 +486,25 @@ const paginatedRows = filteredReview.slice(
     </Button>
   </div>
   <DialogContent>
-  <div class="mb-6">
+    <div className="course-row">
+  <div class="col">
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+  <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="student_name"
   value={editedData.student_name}
-  onChange={handleInputChange}/></div>
-  <div className="col-md-4">
+  onChange={handleInputChange}/>
+  </div>
+  <div className="col">
                 <label className="form-label">Image</label>
                 <input
                   type="file"
-                  className="form-control"
+                  className="schedule-input"
                   name="image"
                   onChange={handleFileChange}
                   required
                 />
               </div>
-              <div class="col-md-3">
+              <div class="col">
     <label for="inputState" class="form-label">Source</label>
     <select id="inputState" class="form-select" name='source' value={editedData.source} onChange={handleInputChange}>
       <option selected>Select </option>
@@ -470,6 +514,9 @@ const paginatedRows = filteredReview.slice(
       <option>Instagram</option>
     </select>
 </div>
+</div>
+
+<div className="course-row">
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select
@@ -499,7 +546,7 @@ const paginatedRows = filteredReview.slice(
         value={editedData.course_name || ""}
         onChange={handleInputChange}
       >
-       <option value="" disabled>
+        <option value="" disabled>
           Select Course
         </option>
         {courseCategory.map((curr) => (
@@ -508,6 +555,7 @@ const paginatedRows = filteredReview.slice(
           </option>
         ))}
       </select>
+    </div>
     </div>
     <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
@@ -519,7 +567,7 @@ const paginatedRows = filteredReview.slice(
 
 
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

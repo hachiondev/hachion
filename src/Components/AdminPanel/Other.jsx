@@ -65,15 +65,16 @@ export default function Review() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({banner_image:"",status:"",country:"",amount_conversion:""});
+    const [editedData, setEditedData] = useState({banner_image:"",home_banner_image:"",status:"",country:"",amount_conversion:""});
     const [bannerData, setBannerData] = useState([{
         banner_id:"",
-          banner_image:null,
-           type: "",
+          banner_image:"",
+          home_banner_image:"",
+           type: "amount_conversion",
             date:currentDate,
            amount_conversion:"",
            country:"",
-           status:"",
+           status:"disabled",
            
          }]);
 const [currentPage, setCurrentPage] = useState(1);
@@ -98,16 +99,20 @@ const [currentPage, setCurrentPage] = useState(1);
         const handleFileChange = (e) => {
           setBannerData((prev) => ({ ...prev, banner_image: e.target.files[0] }));
         };
+        const handleImageFileChange = (e) => {
+          setBannerData((prev) => ({ ...prev, home_banner_image: e.target.files[0] }));
+        };
 
          const handleReset=()=>{
             setBannerData([{
               banner_id:"",
               banner_image:null,
-               type: "",
+              home_banner_image:"",
+               type: "amount conversion",
                 date:currentDate,
                amount_conversion:"",
                country:"",
-               status:"",
+               status:"disabled",
                  }]);
         
          }
@@ -200,44 +205,47 @@ const [currentPage, setCurrentPage] = useState(1);
       };
       const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        // Create a FormData object to handle file uploads
-        const formData = new FormData();
         
-        // Add text data to the FormData object
+        // Ensure defaults are applied
         const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        formData.append("date", currentDate);
-        formData.append("type", bannerData.type);
-        formData.append("amount_conversion", bannerData.amount_conversion);
-        formData.append("country", bannerData.country);
-        formData.append("status", bannerData.status);
-    
-        // Add the image file to the FormData object
-        if (bannerData.banner_image) {
-            formData.append("banner_image", bannerData.banner_image);
-        } else {
-            alert("Please select an image.");
-            return;
-        }
-    
+        const formDataToSend = new FormData();
+      
+        // Append fields to formData
+        formDataToSend.append("type", bannerData.type || "amount conversion");  // Default value
+       formDataToSend.append("country",bannerData.country);
+        formDataToSend.append("amount_conversion", bannerData.amount_conversion);
+        formDataToSend.append("status", bannerData.status || "disabled");  // Default value
+        formDataToSend.append("date", currentDate);
+      
+        // Handle file uploads
+        if (bannerData.banner_image) formDataToSend.append("banner_image", bannerData.banner_image);
+        if (bannerData.home_banner_image) formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+      
+        // Log the formData content to check
+        formDataToSend.forEach((value, key) => {
+          console.log(`${key}:`, value);
+        });
+      
         try {
-            // Send the POST request with FormData
-            const response = await axios.post("http://localhost:8080/banner/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-    
-            if (response.status === 201 || response.status === 200) {
-                alert("Banner added successfully");
-                setBannerData([...bannerData, { ...bannerData, date: currentDate }]); // Update local state
-                handleReset(); // Clear form fields
+          const response = await axios.post(
+            "http://localhost:8080/banner/add",
+            formDataToSend,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
             }
+          );
+          if (response.status === 201) {
+            alert("Banner added successfully");
+            setFilteredBanner((prevBanner) => [...prevBanner, response.data]);
+          }
         } catch (error) {
-            console.error("Error adding banner:", error.message);
-            alert("Error adding banner.");
+          console.error("Error submitting banner:", error.response ? error.response.data : error.message);
+          alert("Error submitting banner.");
         }
-    };
+      };
+      
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
@@ -247,9 +255,7 @@ const [currentPage, setCurrentPage] = useState(1);
   return (
     
     <>  
-     {showAddCourse ?  (
-      <div className='course-category'>
-         <h3>Banner/Amount Conversion</h3>
+     {showAddCourse ?  (<div className='course-category'>
       <nav aria-label="breadcrumb">
          <ol className="breadcrumb">
          <li className="breadcrumb-item">
@@ -264,7 +270,7 @@ const [currentPage, setCurrentPage] = useState(1);
 <div className='category-header'>
 <p>Add Banner/Amount Conversion </p>
 </div>
-
+<form onSubmit={handleSubmit} enctype="multipart/form-data">
 <div className='course-row'>
 <div className='course-details'>
 <div className="col">
@@ -272,6 +278,8 @@ const [currentPage, setCurrentPage] = useState(1);
                 <input
                   type="file"
                   className="schedule-input"
+            
+                   accept="image/*"
                   name="banner_image"
                   onChange={handleFileChange}
                   required
@@ -287,8 +295,10 @@ const [currentPage, setCurrentPage] = useState(1);
                 <input
                   type="file"
                   className="schedule-input"
+                  accept="image/*"
                   name="home_banner_image"
-                  onChange={handleFileChange}
+                  onChange={handleImageFileChange}
+                 
                   required
                 />
               </div>
@@ -313,20 +323,23 @@ const [currentPage, setCurrentPage] = useState(1);
   </div>
   <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
   <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Add amount</button>
+                  data-bs-target='#exampleModal' type='submit'>Add amount</button>
                   </div>
+                  
 </div>
+
 </div>
+</form>
   </div>
   
 </div>
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-      <h3>Banner/Amount Conversion</h3>
+       
         <div className='category'>
           <div className='category-header'>
-            <p>Banner/Amount Conversion Details</p>
+            <p>Review</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -389,6 +402,7 @@ const [currentPage, setCurrentPage] = useState(1);
             </StyledTableCell>
             <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Banner Image</StyledTableCell>
+            <StyledTableCell align='center'>Home Banner Image</StyledTableCell>
             <StyledTableCell align='center'>Type</StyledTableCell>
             <StyledTableCell align="center">Amount Conversion</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
@@ -407,7 +421,18 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.banner_image ? (
                 <img
-                    src={curr.banner_image}
+                src={`http://localhost:8080/${curr.banner_image}`} 
+                    alt={`Banner ${index + 1}`}
+                    style={{ width: "100px", height: "auto" }}
+                />
+            ) : (
+                "No Image"
+            )}
+        </StyledTableCell>
+        <StyledTableCell align="center">
+            {curr.home_banner_image ? (
+                <img
+                src={`http://localhost:8080/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -465,7 +490,7 @@ const [currentPage, setCurrentPage] = useState(1);
           type="file"
           className="form-control"
           name="image"
-          onChange={handleFileChange}
+          onChange={handleImageFileChange}
           required
         />
         <label>Status :</label>

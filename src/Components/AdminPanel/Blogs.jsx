@@ -65,8 +65,8 @@ const Blogs = () => {
    category_name:"",
    title:"",
    author:"",
-   blogs_image:"",
-   blogs_pdf:"",
+   blog_image:"",
+   blog_pdf:"",
    description:"",
     date:currentDate,
   });
@@ -83,15 +83,8 @@ const Blogs = () => {
   }, []);
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    if (file && file.type === "application/pdf") {
-        setFormData((prevData) => ({
-            ...prevData,
-            curriculum_pdf: file,
-        }));
-    } else {
-        alert("Please upload a valid PDF file.");
-    }
-};
+    setFormData((prevState) => ({ ...prevState, blog_pdf: file }));
+  };
   useEffect(() => {
     const filtered = blogs.filter(blogs =>
         blogs.category_name.toLowerCase().includes(searchTerm.toLowerCase())||
@@ -119,30 +112,43 @@ const handleInputChange = (e) => {
 };
 
 const handleFileChange = (e) => {
-  setFormData((prev) => ({ ...prev, blogs_image: e.target.files[0] }));
+  const file = e.target.files[0];
+  setFormData((prevState) => ({ ...prevState, blog_image: file }));
 };
 const handleSubmit = async (e) => {
   e.preventDefault();
 
   const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-  const dataToSubmit = { 
-    ...formData, 
-    date: currentDate, // Add current date
-  };
+
+  // Create FormData object
+  const formDataToSend = new FormData();
+  formDataToSend.append("category_name", formData.category_name);
+  formDataToSend.append("title", formData.title);
+  formDataToSend.append("author", formData.author);
+  formDataToSend.append("description", formData.description);
+  formDataToSend.append("date", currentDate);
+
+  // Add files to FormData
+  if (formData.blog_image) formDataToSend.append("blog_image", formData.blog_image);
+  if (formData.blog_pdf) formDataToSend.append("blog_pdf", formData.blog_pdf);
 
   try {
     if (formData.id) {
       // Edit operation
       const response = await axios.put(
-        `http://localhost:8080/blog/update/${formData.id}`, // Ensure the correct ID is used
-        dataToSubmit
+        `http://localhost:8080/blog/update/${formData.id}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       if (response.status === 200) {
-        alert("Blogs updated successfully");
-        // Update local state
+        alert("Blog updated successfully");
         setBlogs((prevBlogs) =>
-          prevBlogs.map((blogs) =>
-            blogs.id === formData.id ? { ...blogs, ...dataToSubmit } : blogs
+          prevBlogs.map((blog) =>
+            blog.id === formData.id ? { ...blog, ...response.data } : blog
           )
         );
       }
@@ -150,19 +156,23 @@ const handleSubmit = async (e) => {
       // Add operation
       const response = await axios.post(
         "http://localhost:8080/blog/add",
-        dataToSubmit
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      if (response.status === 200) {
-        alert("Blogs added successfully");
-        // Update local state
-        setBlogs((prevBlogs) => [...prevBlogs, response.data]); // Use response data for the new course
+      if (response.status === 201) {
+        alert("Blog added successfully");
+        setBlogs((prevBlogs) => [...prevBlogs, response.data]);
       }
     }
 
     handleReset(); // Clear form fields
   } catch (error) {
-    console.error("Error submitting blogs:", error.message);
-    alert("Error submitting blogs.");
+    console.error("Error submitting blog:", error.message);
+    alert("Error submitting blog.");
   }
 };
 
@@ -192,8 +202,8 @@ const handleReset=()=>{
    category_name:"",
    title:"",
    author:"",
-   blogs_image:"",
-   blogs_pdf:"",
+   blog_image:"",
+   blog_pdf:"",
    description:"",
     date:currentDate,
        }]);
@@ -229,7 +239,7 @@ const handleEditClick = async (id) => {
         id: blog.id, // Ensure the unique identifier is included
         category_name: blog.category_name || '',
         blog_image: '', // Handle file uploads differently if needed
-       blogs_pdf: '',
+       blog_pdf: '',
         author: blog.author || '',
         title: blog.title || '',
         description: blog.description || '',
@@ -251,7 +261,6 @@ const handleEditClick = async (id) => {
   
   return (<>{
     showAddCourse?( <> <div className="course-category">
-      <h3>Blog</h3>
       <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
@@ -279,6 +288,7 @@ const handleEditClick = async (id) => {
           </div>
         )}
         </div>
+        <form onSubmit={handleSubmit} enctype="multipart/form-data">
           <div className='course-details'>
             <div className="course-row">
               <div className="col-md-4">
@@ -296,7 +306,7 @@ const handleEditClick = async (id) => {
                 </select>
               </div>
              
-              <div className="col">
+              <div className="col-md-4">
                 <label className="form-label">Blog Title</label>
                 <input
                   type="text"
@@ -325,7 +335,8 @@ const handleEditClick = async (id) => {
                 <input
                   type="file"
                   className="form-control"
-                  name="blog)image"
+                  name="blog_image"
+                   accept="image/*"
                   onChange={handleFileChange}
                   required
                 />
@@ -335,18 +346,19 @@ const handleEditClick = async (id) => {
   <input
     className="form-control"
     type="file"
+    name="blog_pdf"
+    accept="application/pdf"
     id="formFile"
     onChange={handleFileUpload}
 />
 </div>
 </div>
-              <div className="mb-3">
+              <div className="col-md-4">
                 <label className="form-label">Description</label>
-                <textarea
+                <input
                   type="text"
                   name="description"
                   className="form-control"
-                  id="exampleFormControlTextarea1"
                   placeholder="Enter description"
                   value={formData.description}
                   onChange={handleInputChange}
@@ -355,15 +367,17 @@ const handleEditClick = async (id) => {
             </div>
             <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
+                  data-bs-target='#exampleModal'type='submit'>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
+              
             </div>
+            </form>
             </div>
    </> ):(   <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="course-category">
-        <h3>Blog</h3>
+        <p>Blog</p>
         <div className="category">
           <div className="category-header">
             <p>Blog Details</p>
@@ -455,8 +469,8 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 220}} align="center">
             {blogs.blog_image ? (
     <img
-      src={`http://localhost:8080${blogs.blogs_image}`} // Adjust based on your server setup
-      alt="Course"
+    src={`http://localhost:8080/${blogs.blog_image}`} 
+      alt={blogs.category_name}
       width="50"
     />
   ) : (
@@ -466,7 +480,15 @@ const handleEditClick = async (id) => {
           
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.title}</StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.author}</StyledTableCell>
-            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.blogs_pdf}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">  <p>
+    <a 
+      href={`http://localhost:8080/${blogs.blog_pdf}`} 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      View or Download PDF
+    </a>
+  </p></StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.date}</StyledTableCell>
             <StyledTableCell align="center" style={{ width: 200, }}>

@@ -160,7 +160,7 @@ background-size:cover;
    border:1px solid #d3d3d3;
   }
   
-  .input-group-text {
+  .input-group-text, .toggle-password {
     position: absolute;
     right: 1.8vw;
     top: 50%;
@@ -1033,15 +1033,17 @@ width: 50px;
 border:1px solid #6A6A6A;
 border-radius: 10px;
 box-shadow: darkgrey;
-
+display: flex;
+align-items: center;
+justify-items: center;
 }
 
 .otp{
-   width: 20vw;
+   /* width: 20vw; */
     height: 5vh;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 .register-btn{
     width: 520px;

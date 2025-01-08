@@ -64,12 +64,8 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  // const [editedRow, setEditedRow] = useState({title: '',courseName: '',courseImage: null,youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '',labExerciseHours: '',realTimeProjects: '',starRating: '',ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',date:currentDate,
-  //   keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-  //   keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
-  //   self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:''
-  // });
-  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: null,youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
+
+  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
     keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
@@ -85,13 +81,13 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-  useEffect(() => {
-    const filtered = courses.filter(category =>
-        category.courseName.toLowerCase().includes(searchTerm.toLowerCase()) 
+//   useEffect(() => {
+//     const filtered = courses.filter(category =>
+//         category.courseName.toLowerCase().includes(searchTerm.toLowerCase()) 
         
-    );
-    setFilteredCourses(filtered);
-}, [searchTerm, courses]);
+//     );
+//     setFilteredCourses(filtered);
+// }, [searchTerm, courses]);
   useEffect(() => {
     const fetchCourses = async () => {
         try {
@@ -116,43 +112,76 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-  const dataToSubmit = { 
-    ...formData, 
-    date: currentDate, // Add current date
+  const courseData = {
+    courseCategory: formData.courseCategory,
+    courseName: formData.courseName,
+    date: currentDate,
+    youtubeLink: formData.youtubeLink,
+    liveTrainingHours: formData.liveTrainingHours,
+    labExerciseHours: formData.labExerciseHours,
+    realTimeProjects: formData.realTimeProjects,
+    starRating: formData.starRating,
+    ratingByNumberOfPeople: formData.ratingByNumberOfPeople,
+    totalEnrollment: formData.totalEnrollment,
+    keyHighlights1: formData.keyHighlights1,
+    keyHighlights2: formData.keyHighlights2,
+    keyHighlights3: formData.keyHighlights3,
+    keyHighlights4: formData.keyHighlights4,
+    keyHighlights5: formData.keyHighlights5,
+    keyHighlights6: formData.keyHighlights6,
+    amount: formData.amount,
+    discount: formData.discount,
+    total: formData.total,
+    mentoring1: formData.mentoring1,
+    mentoring2: formData.mentoring2,
+    self1: formData.self1,
+    self2: formData.self2,
+    headerTitle: formData.headerTitle,
+    courseKeyword: formData.courseKeyword,
+    courseKeywordDescription: formData.courseKeywordDescription,
+    courseHighlight: formData.courseHighlight,
+    courseDescription: formData.courseDescription,
   };
+  console.log("Course Data:", courseData);
+
+  const formNewData = new FormData();
+  formNewData.append("course", JSON.stringify(courseData));
+  if (formData.courseImage) {
+    formNewData.append("courseImage", formData.courseImage);
+  } else {
+    console.error("No course image provided.");
+  }
+  
+  // Log FormData
+  for (let [key, value] of formNewData.entries()) {
+    console.log(`${key}:`, value);
+  }
 
   try {
-    if (formData.id) {
-      // Edit operation
+    if (formMode === "Edit") {
+      // Update course
       const response = await axios.put(
-        `http://localhost:8080/courses/update/${formData.id}`, // Ensure the correct ID is used
-        dataToSubmit
+        `http://localhost:8080/courses/update/${formData.id}`,
+        formNewData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (response.status === 200) {
         alert("Course updated successfully");
-        // Update local state
-        setCourse((prevCourses) =>
-          prevCourses.map((course) =>
-            course.id === formData.id ? { ...course, ...dataToSubmit } : course
-          )
-        );
       }
     } else {
-      // Add operation
-      const response = await axios.post(
-        "http://localhost:8080/courses/add",
-        dataToSubmit
-      );
-      if (response.status === 200) {
+      // Add course
+      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+     console.log("***",formNewData);
+      if (response.status === 201) {
         alert("Course added successfully");
-        // Update local state
-        setCourse((prevCourses) => [...prevCourses, response.data]); // Use response data for the new course
+        setCourses((prevCourses) => [...prevCourses, response.data]);
       }
     }
-
-    handleReset(); // Clear form fields
   } catch (error) {
-    console.error("Error submitting course:", error.message);
+   
+    console.error('Error submitting course:', error.response ? error.response.data : error.message);
     alert("Error submitting course.");
   }
 };
@@ -225,7 +254,7 @@ const handleEditClick = async (courseId) => {
       const course = await response.json();
       setFormData({
         id: course.id, // Ensure the unique identifier is included
-        category_name: course.courseCategory || '',
+       courseCategory: course.courseCategory || '',
         courseName: course.courseName || '',
         courseImage: '', // Handle file uploads differently if needed
         youtubeLink: course.youtubeLink || '',
@@ -268,7 +297,8 @@ const handleEditClick = async (courseId) => {
   };
   
   return (<>{
-    showAddCourse?(  <div className="course-category">
+    showAddCourse?(  
+       <div className="course-category">
       <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
@@ -295,7 +325,7 @@ const handleEditClick = async (courseId) => {
             {message.text}
           </div>
         )}
-        
+         <form onSubmit={handleSubmit} enctype="multipart/form-data">
           <div className="course-details">
           <div className='course-details'>
             <div className="course-row">
@@ -331,6 +361,7 @@ const handleEditClick = async (courseId) => {
                   type="file"
                   className="form-control"
                   name="courseImage"
+                  accept="image/*"
                   onChange={handleFileChange}
                   required
                 />
@@ -615,14 +646,16 @@ Corporate Training
 
       <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
+                  data-bs-target='#exampleModal' type='submit' >{formMode === 'Add' ? 'Submit' : 'Update'}</button>
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
             </div>
-          
+            </form>
       </div>
-      </div>):(  <>  <LocalizationProvider dateAdapter={AdapterDayjs}>
+      </div>
+      
+):(  <>  <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="course-category">
         <p>{pageTitle}</p>
         <div className="category">
@@ -707,9 +740,9 @@ Corporate Training
             <StyledTableCell sx={{ width: 150, fontSize: '16px' }} align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
             </StyledTableCell>
             <StyledTableCell sx={{ width: 220}} align="center">
-            {course.image ? (
+            {course.courseImage ? (
     <img
-      src={`http://localhost:8080${course.image}`} // Adjust based on your server setup
+    src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
       alt="Course"
       width="50"
     />

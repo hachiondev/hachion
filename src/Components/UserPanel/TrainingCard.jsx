@@ -24,13 +24,13 @@ const TrainingCard = (props) => {
 
   const handleCardClick = () => {
     if (isMobile) {
-      navigate('/qaautomation');
+      navigate(`/qaautomation/${props.id}`);
     }
   };
 
   const handleButtonClick = (e) => {
     e.stopPropagation(); 
-    navigate('/qaautomation');
+    navigate(`/qaautomation/${props.id}`);
   };
 
   const handleKeyDown = (e) => {
@@ -50,14 +50,17 @@ const TrainingCard = (props) => {
       <div className="card-header-div">
         <img src={imageUrl} alt="Card" className="card-image" />
         <div className="card-header">
-          <FaCircle className="card-header-icon" />Live Demo
+        <FaCircle className="card-header-icon" />
+            {props.mode} {/* Dynamically display schedule_mode */}
+          </div>
+          <img src={props.image} 
+          alt="card-img" className="card-icon" />
         </div>
-        <img src={props.image} alt="card-img" className="card-icon" />
-      </div>
-      <div className="card-course-details">
-        <div className="mob-card-header">
-          <FaCircle className="mob-card-header-icon" />Live Demo
-        </div>
+        <div className="card-course-details">
+          <div className="mob-card-header">
+            <FaCircle className="mob-card-header-icon" />
+            {props.mode} {/* Dynamically display schedule_mode */}
+          </div>
         <h5 className="course-name">{props.heading}</h5>
         <div className="course-time">
           <h6 className="course-date">{props.date}</h6>

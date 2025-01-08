@@ -28,8 +28,20 @@ const RegisterNext = () => {
         newOtp[index] = value;
         return newOtp;
       });
+  
+      // Attempt to focus the next input
+      if (value && index < otp.length - 1) {
+        const nextInput = document.getElementById(`otp-input-${index + 1}`);
+        if (nextInput) {
+          nextInput.focus(); // Safeguard against null
+        }
+      }
     }
   };
+  
+
+
+
 
   const verifyAccount = async (otpArray, password, confirmPassword) => {
     const otp = otpArray.join(""); // Convert OTP array to string
@@ -55,20 +67,21 @@ const RegisterNext = () => {
         body: JSON.stringify({
           userName: registeruserData.name,
           email: registeruserData.email,
-          OTP: otp, // Send OTP in the request
+          mobile: registeruserData.mobile,
+          OTP: otp,
           password: password,
         }),
       });
-      alert("User registered successfully");
-      navigate('/login');
+      
       if (!response.ok) {
         const error = await response.text();
         throw new Error(error || "Registration failed");
       }
-
-      const data = await response.json();
-  
-    } catch (error) {
+      
+      const data = await response.json(); // Ensure backend sends valid JSON here
+      alert(`User registered: ${data.username}`);
+      navigate('/login');
+           }       catch (error) {
       alert(`Error: ${error.message}`);
     }
     setIsLoading(false);
@@ -128,17 +141,19 @@ const RegisterNext = () => {
           <div className="otp-verify">
             <h6 className="enter-otp">Enter OTP: </h6>
             <div className="otp">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  className="otp-number"
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  onChange={(e) => handleOtpChange(e, index)}
-                />
-              ))}
-            </div>
+  {otp.map((digit, index) => (
+    <input
+      key={index}
+      id={`otp-input-${index}`} // Assign unique ID
+      className="otp-number"
+      type="text"
+      maxLength="1"
+      value={digit}
+      onChange={(e) => handleOtpChange(e, index)}
+    />
+  ))}
+</div>
+
             <p className="forgot-password" onClick={resendOtp}>
               {resendLoading ? "Resending..." : "Resend OTP"}
             </p>

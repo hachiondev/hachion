@@ -55,16 +55,7 @@ const rows = [
 export default function Enroll() {
   return (
     <>   
-    <CourseCategory
-  pageTitle="All Enroll"
-  headerTitle="View Enrollment"
-  buttonLabel="Add Enroll"
-  onAdd={() => {
-    // Navigate or perform another action
-    console.log('Navigating to Add Trainer Category Page');
-  }}
-
-></CourseCategory> <TableContainer component={Paper}>
+ <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>

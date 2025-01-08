@@ -1,35 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState,useRef } from "react";
 import "./Login.css";
-import "./Course.css";
 import logo from "../../Assets/logo.png";
 import LoginSide from "./LoginSide";
-import { useFormik } from "formik";
-import { LoginSchema } from "../Schemas";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, MenuItem, Button } from "@mui/material";
-import Flag from "react-world-flags";
-import { AiFillCaretDown } from "react-icons/ai";
+import { Menu, MenuItem, Button } from '@mui/material';
+import Flag from 'react-world-flags';
+import {AiFillCaretDown } from 'react-icons/ai'
 
 const RegisterHere = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile,setMobile]=useState("");
+  const [isLoading, setIsLoading] = useState(false); // For loading state
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   const mobileInputRef = useRef(null);
-
   const [selectedCountry, setSelectedCountry] = useState({
-    code: "+91",
-    flag: "IN",
-    name: "India",
+    code: '+91',
+    flag: 'IN',
+    name: 'India',
   });
 
   const countries = [
-    { name: "India", code: "+91", flag: "IN" },
-    { name: "United States", code: "+1", flag: "US" },
-    { name: "United Kingdom", code: "+44", flag: "GB" },
-    { name: "Thailand", code: "+66", flag: "TH" },
+    { name: 'India', code: '+91', flag: 'IN' },
+    { name: 'United States', code: '+1', flag: 'US' },
+    { name: 'United Kingdom', code: '+44', flag: 'GB' },
+    { name: 'Thailand', code: '+66', flag: 'TH' },
+    { name: 'Canada', code: '+1', flag: 'CA' },
+    { name: 'Australia', code: '+61', flag: 'AU' },
+    { name: 'Germany', code: '+49', flag: 'DE' },
+    { name: 'France', code: '+33', flag: 'FR' },
+    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
+    { name: 'Qatar', code: '+974', flag: 'QA' },
+    { name: 'Japan', code: '+81', flag: 'JP' },
+    { name: 'China', code: '+86', flag: 'CN' },
+    { name: 'Russia', code: '+7', flag: 'RU' },
+    { name: 'South Korea', code: '+82', flag: 'KR' },
+    { name: 'Brazil', code: '+55', flag: 'BR' },
+    { name: 'Mexico', code: '+52', flag: 'MX' },
+    { name: 'South Africa', code: '+27', flag: 'ZA' },
   ];
-
+  
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
@@ -44,50 +55,84 @@ const RegisterHere = () => {
     setAnchorEl(null);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      mobile: "",
-    },
-    validationSchema: LoginSchema,
-    onSubmit: async (values) => {
-      setIsLoading(true);
 
-      try {
-        const response = await fetch(
-          `http://localhost:8080/api/v1/user/send-otp?email=${values.email}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+  // Basic email validation regex
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-        if (response.ok) {
+  const handleClick = async () => {
+    if (!name || !email || !mobile) {
+      alert("Please fill in both fields.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email.");
+      return;
+    }
+
+    setIsLoading(true); // Start loading state
+
+    const data = {
+      name,
+      email,
+      mobile
+      
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/user/send-otp?email=" + email, {
+        method: "POST", // Assuming POST request for OTP
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      localStorage.setItem("registeruserData", JSON.stringify({
+        name,
+        email,
+       mobile 
+      }));
+      const contentType = response.headers.get("Content-Type");
+    // Save user data (name, email, OTP) to localStorage
+  
+      if (response.ok) {
+        if (contentType && contentType.includes("application/json")) {
           const responseData = await response.json();
+        
+          
+
+          // Check if OTP and message are present in the response
           if (responseData && responseData.otp) {
-            localStorage.setItem(
-              "registeruserData",
-              JSON.stringify({ ...values, otp: responseData.otp })
-            );
-            alert("OTP sent to your email!");
-            navigate("/registerverification");
+            alert(`OTP sent to your email: ${responseData.message}`);
+            
+        
+
+            // Confirm if data was stored correctly
+            console.log("Stored in LocalStorage:", localStorage.getItem("registeruserData"));
+
+            // Navigate after successfully storing data
+           
           } else {
             alert("Failed to send OTP. Please try again.");
           }
         } else {
-          alert("Failed to send OTP.");
+          const responseText = await response.text();
+          alert(`Error: ${responseText}`);
         }
-      } catch (error) {
-        alert(`An error occurred: ${error.message}`);
-      } finally {
-        setIsLoading(false);
+      } else {
+        const responseText = await response.text();
+        alert(`Error: ${responseText}`);
       }
-    },
-  });
-
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
-    formik;
+    } catch (error) {
+      alert(`An error occurred: ${error.message}`);
+    } finally {
+      navigate("/registerverification");
+      setIsLoading(false); // End loading state
+    }
+  };
 
   return (
     <div className="login">
@@ -96,109 +141,99 @@ const RegisterHere = () => {
           <img src={logo} alt="logo" className="login-logo" />
           <h3 className="register-learning">Register to start learning</h3>
 
-          <div className="steps">
-            <h4 className="steps-head">Steps:</h4>
-            <div className="step-one">
-              <h6 className="steps-head-one">1</h6>
-            </div>
-            <hr width="55%" size="1" color="#00AAEF" />
-            <div className="step-two">
-              <h6 className="steps-head-two">2</h6>
-            </div>
-          </div>
+          <div className='steps'>
+    <h4 className='steps-head'>Steps: </h4>
+    <div className='step-one'>
+      <h6 className='steps-head-one'>1</h6>
+</div>
+<hr width='55%' size='1' color='#00AAEF'/>
+<div className='step-two'>
+  <h6 className='steps-head-two'>2</h6>
+</div>
+</div>
 
-          <form onSubmit={handleSubmit} className="login-form">
+          <div className="login-mid-name">
             <label className="login-label">
               Full Name<span className="star">*</span>
             </label>
             <div className="input-group mb-2">
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="form-control"
-            />
+              <input
+                type="text"
+                className="form-control"
+                id="floatingName"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
-            {errors.name && touched.name && (
-              <p className="form-error">{errors.name}</p>
-            )}
 
             <label className="login-label">
               Email ID<span className="star">*</span>
             </label>
             <div className="input-group mb-2">
-            <input
-              type="email"
-              name="email"
-              placeholder="abc@gmail.com"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="form-control"
-            />
-            </div>
-            {errors.email && touched.email && (
-              <p className="form-error">{errors.email}</p>
-            )}
-
-            <label className="login-label">
-              Mobile Number<span className="star">*</span>
-            </label>
-            <div className="input-group mb-3 custom-width">
-              <Button
-                variant="outlined"
-                onClick={openMenu}
-                className="country-dropdown"
-                endIcon={<AiFillCaretDown />}
-              >
-                <Flag code={selectedCountry.flag} className="country-flag" />
-                {selectedCountry.code}
-              </Button>
-
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={closeMenu}
-              >
-                {countries.map((country) => (
-                  <MenuItem
-                    key={country.code}
-                    onClick={() => handleCountrySelect(country)}
-                  >
-                    <Flag code={country.flag} className="country-flag" />
-                    {country.name} ({country.code})
-                  </MenuItem>
-                ))}
-              </Menu>
-
               <input
+                type="email"
+                className="form-control"
+                id="floatingEmail"
+                placeholder="abc@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <label className="login-label">
+                  Mobile Number<span className="star">*</span>
+                </label>
+                <div className="input-group mb-3 custom-width">
+                  <div className="input-group">
+                    <Button
+                      variant="outlined"
+                      onClick={openMenu}
+                      className="country-dropdown"
+                      endIcon={<AiFillCaretDown />}
+                    >
+                      <Flag code={selectedCountry.flag} className="country-flag" />
+                      {selectedCountry.code}
+                    </Button>
+
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={closeMenu}
+                    >
+                      {countries.map((country) => (
+                        <MenuItem
+                          key={country.code}
+                          onClick={() => handleCountrySelect(country)}
+                        >
+                          <Flag code={country.flag} className="country-flag" />
+                          {country.name} ({country.code})
+                        </MenuItem>
+                      ))}
+                    </Menu>
+
+                    <input
                       type="tel"
                       className="mobilenumber"
                       ref={mobileInputRef}
                       name="mobile"
                       aria-label="Text input with segmented dropdown button"
                       id="register"
-                      value={values.mobile}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      value={mobile}
+                      onChange={(e)=>setMobile(e.target.value)}
+                    
                       placeholder="Enter your mobile number"
                     />
                   </div>
-            {errors.mobile && touched.mobile && (
-              <p className="form-error">{errors.mobile}</p>
-            )}
-
+                </div>
             <button
-              type="submit"
+              type="button"
               className="register-btn"
+              onClick={handleClick}
               disabled={isLoading}
             >
               {isLoading ? "Sending OTP..." : "Verify"}
             </button>
-          </form>
+          </div>
 
           <p className="login-with-hachion">
             Do you have an account with Hachion?{" "}

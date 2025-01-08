@@ -55,8 +55,8 @@ const Trending = () => {
     setShowMore(!showMore);
   };
 
-  const handleCardClick = (courseSlug) => {
-    navigate(`/${courseSlug}`);
+  const handleCardClick = (course_id) => {
+    navigate(`/qaautomation/${course_id}`);
   };
 
   return (
@@ -98,34 +98,37 @@ const Trending = () => {
         </div>
       </div>
       <div className="training-card-holder">
-        {filteredCourses.slice(0, 4).map((course, index) => (
-          <CourseCard
-            key={index}
-            heading={course.courseName}
-            month={course.duration}
-            time={course.liveTrainingHours  } 
-            image={course.imageUrl}
-            RatingByPeople={course.ratingByNumberOfPeople}
-            Rating={course.starRating}
-            onClick={() => handleCardClick(course.slug)}
-            className="course-card"
-          />
-        ))}
-        {showMore &&
-          filteredCourses.slice(4).map((course, index) => (
-            <CourseCard
-              key={index + 4}
-              heading={course.courseName}
-              month={course.duration}
-              time={course.liveTrainingHours} 
-              RatingByPeople={course.ratingByNumberOfPeople}
-              Rating={course.starRating}
-              image={course.imageUrl}
-              onClick={() => handleCardClick(course.slug)}
-              className="course-card"
-            />
-          ))}
-        {filteredCourses.length === 0 && <p>No courses available.</p>}
+  {filteredCourses.slice(0, 4).map((course, index) => (
+    <CourseCard
+      key={index}
+      heading={course.courseName}
+      month={course.duration}
+      time={course.liveTrainingHours}
+      image={`http://localhost:8080/${course.courseImage}`}
+      course_id={course.id} // Pass the course ID
+      RatingByPeople={course.ratingByNumberOfPeople}
+      Rating={course.starRating}
+      onClick={() => handleCardClick}
+      className="course-card"
+    />
+  ))}
+  {showMore &&
+    filteredCourses.slice(4).map((course, index) => (
+      <CourseCard
+        key={index + 4}
+        heading={course.courseName}
+        month={course.duration}
+        time={course.liveTrainingHours}
+        image={course.courseImage}
+        course_id={course.id} // Pass the course ID
+        RatingByPeople={course.ratingByNumberOfPeople}
+        Rating={course.starRating}
+        className="course-card"
+        onClick={() => handleCardClick}
+      />
+    ))}
+  {filteredCourses.length === 0 && <p>No courses available.</p>}
+
       </div>
       <button className="cards-view" onClick={toggleShowMore}>
         {showMore ? 'View Less' : 'View More'}

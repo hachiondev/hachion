@@ -5,38 +5,51 @@ import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
+const AdminLogin = () => {
   const navigate = useNavigate();
-  const [passwordType, setPasswordType] = useState('password');
+
+  // State for form inputs and error message
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordType, setPasswordType] = useState('password'); // For toggling password visibility
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Direct form submission handler without Formik for testing`
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();  // Prevent default form submission
-    console.log("Form submission triggered");  // Debugging log
-
+  // Handle form submission
+  const handleFormSubmit = async (e) => {
+    e.preventDefault(); // Prevent form reload
+  
     try {
-      const response = await axios.post('http://localhost:8080/api/admin/login', {
-        email: email,
-        password: password
+      // Make a POST request to the login API
+      const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', {
+        email,
+        password,
       });
-      console.log("Response from backend:", response);  // Debugging response
-
-      if (response.status === 200) {
-        console.log("Login successful:", response.data);  // Success log
-        navigate('/admindashboardview');
+  
+      console.log('API Response:', response.data); // Debugging log
+  
+      // Check if login is successful
+      if (response.status === 200 && response.data.status) {
+        console.log('Login successful, navigating to dashboard...');
+        navigate('/admindashboardview'); // Navigate to admin dashboard
+      } else {
+        console.log('Login failed:', response.data.message); // Debugging log
+        setErrorMessage(response.data.message || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.error("Error during login:", error);  // Error log
-
-      if (error.response && error.response.status === 401) {
-        setErrorMessage('Invalid Username or Password');
+      // Handle errors from the API or network issues
+      console.error('Error during login:', error);
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'Invalid credentials');
       } else {
         setErrorMessage('An error occurred. Please try again later.');
       }
     }
+  };
+  
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setPasswordType(passwordType === 'password' ? 'text' : 'password');
   };
 
   return (
@@ -74,6 +87,9 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  <button type="button" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? 'Show' : 'Hide'}
+                  </button>
                 </div>
 
                 {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
@@ -101,4 +117,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

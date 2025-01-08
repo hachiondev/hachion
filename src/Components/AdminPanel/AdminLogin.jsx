@@ -7,48 +7,50 @@ import axios from 'axios';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [passwordType, setPasswordType] = useState('password');
+
+  // State for form inputs and error message
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordType, setPasswordType] = useState('password'); // For toggling password visibility
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Handle form submission
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    const data = {
-      email: email,
-      password: password,
-  };
-    
+    e.preventDefault(); // Prevent form reload
+  
     try {
+      // Make a POST request to the login API
       const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', {
-        email: email,
-        password: password
+        email,
+        password,
       });
-      console.log(response);
-      if (response.status===200) {
-        navigate('/admindashboardview');
-        const loginuserData = { name: response.data.username, email: response.data.email };
-
-
-        try {
-            localStorage.setItem('adminloginuserData', JSON.stringify(loginuserData)); // Try saving to localStorage
-            // console.log('User data saved to localStorage:', loginuserData); // Debugging line
-        } catch (error) {
-            console.error('Error saving to localStorage:', error);
-        }
-
-        // Navigate after saving data
-    } else {
-        setErrorMessage(response.data.message); // Show error message
+  
+      console.log('API Response:', response.data); // Debugging log
+  
+      // Check if login is successful
+      if (response.status === 200 && response.data.status) {
+        console.log('Login successful, navigating to dashboard...');
+        navigate('/admindashboardview'); // Navigate to admin dashboard
+      } else {
+        console.log('Login failed:', response.data.message); // Debugging log
+        setErrorMessage(response.data.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      // Handle errors from the API or network issues
+      console.error('Error during login:', error);
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'Invalid credentials');
+      } else {
+        setErrorMessage('An error occurred. Please try again later.');
+      }
     }
-} catch (error) {
-    console.error("Error during login", error);
-    setErrorMessage("An error occurred during login");
-} 
+  };
+  
 
-
-
-};
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setPasswordType(passwordType === 'password' ? 'text' : 'password');
+  };
 
   return (
     <>
@@ -85,6 +87,9 @@ const AdminLogin = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  <button type="button" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? 'Show' : 'Hide'}
+                  </button>
                 </div>
 
                 {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}

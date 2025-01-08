@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logo from '../../Assets/logo.png';
-import linkedin from '../../Assets/linkedins.png';
+import linkedin from '../../Assets/linkedin.png';
 import apple from '../../Assets/Apple.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginSide from './LoginSide';
 import captcha from '../../Assets/captcha.png';
 import google from '../../Assets/google_symbol.svg.png';
 import facebook from '../../Assets/facebook_symbol.svg.png';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import { LoginSchema } from '../Schemas';
-import { useNavigate } from 'react-router-dom';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
+import Topbar from './Topbar';
 
 const initialValues = {
   email: "",
@@ -18,103 +20,119 @@ const initialValues = {
 };
 
 const Login = () => {
-  const [passwordType, setPasswordType] = useState('password');
-  //const [captchaVerified, setCaptchaVerified] = useState(false); // State to track captcha status
-  const navigate = useNavigate();
+   const [passwordType, setPasswordType] = useState('password');
+   const[email,setEmail]=useState("");
+   const [password,setPassword]=useState("");
+   const [errorMessage, setErrorMessage] = useState('');
+   const navigate=useNavigate();
+   const handleLogin = async (e) => {
+    e.preventDefault();
+    const loginData = {
+        email: email,
+        password: password,
+    };
 
-  const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: initialValues,
-    validationSchema: LoginSchema,
-    onSubmit: (values) => {
-      // if (!captchaVerified) {
-      //   alert('Please verify the CAPTCHA');
-      //   return;
-      // }
-      navigate('/login');
-      console.log(values);
+    try {
+        const response = await axios.post('http://localhost:8080/api/v1/user/login', loginData);
+        console.log(response.data); // Debugging line
+
+        if (response.data.status) {
+            // Ensure the response contains 'userName' and 'email'
+            const loginuserData = { name: response.data.userName, email: response.data.email };
+
+            try {
+                localStorage.setItem('loginuserData', JSON.stringify(loginuserData)); // Try saving to localStorage
+                // console.log('User data saved to localStorage:', loginuserData); // Debugging line
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
+
+            navigate('/home'); // Navigate after saving data
+        } else {
+            setErrorMessage(response.data.message); // Show error message
+        }
+    } catch (error) {
+        console.error("Error during login", error);
+        setErrorMessage("An error occurred during login");
     }
-  });
+};
 
-  const handleLogin = () => {
-    navigate('/');
-  };
+
+// Display error message
+
+
+
+
 
   const googleLogin = () => {
-    console.log('Google login clicked');
+    window.open('http://localhost:8080/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    console.log('Facebook login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    console.log('LinkedIn login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    console.log('Apple login clicked');
+    window.location.href = 'http://localhost:8080/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
   };
-  // const handleAdminLogin=()=>{
-  //   navigate('/adminlogin')
-  // }
-
-  // Handle CAPTCHA verification
-  // const handleCaptchaChange = (value) => {
-  //   if (value) {
-  //     setCaptchaVerified(true); 
-  //   } else {
-  //     setCaptchaVerified(false); 
-  //   }
-  // };
-
+  const handleAdminLogin=()=>{
+    navigate('/adminlogin')
+  }
   return (
     <>
       <div className='login'>
         <div className='login-left'>
           <div className='login-top'>
             <img src={logo} alt='logo' className='login-logo' />
+            
             <h3 className='welcome-back'>Welcome back!</h3>
             <h4 className='login-continue'>Login to continue learning</h4>
-
-            <div className='login-mid'>
-              <form onSubmit={handleSubmit}>
+<div className='login-mid'>
+              
                 <label className='login-label'>Email ID<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
                     type="email"
                     className="form-control"
                     placeholder="abc@gmail.com"
-                    name='email'
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
-                {errors.email && touched.email ? (<p className='form-error'>{errors.email}</p>) : null}
-                
+              
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}/>
+                    </div>
+
+
+
                 <label className='login-label'>Password<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
                     type={passwordType}
                     className="form-control"
                     placeholder="Enter your password"
-                    name='password'
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                   
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
+
                   />
-  
+                  <span className="input-group-text" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  </span>
                 </div>
-                {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null}
+                {/* {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null} */}
 
                 <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link>
 
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -137,7 +155,7 @@ const Login = () => {
                 <div className="d-grid gap-2">
                   <button className="register-btn" type="submit" onClick={handleLogin}>Login</button>
                 </div>
-              </form>
+             
             </div>
 
             <div className='login-with'>
@@ -162,7 +180,6 @@ const Login = () => {
             </div>
 
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
-          {/* <button className='register-btn' onClick={handleAdminLogin}>Login with Admin</button> */}
           </div>
         </div>
         <LoginSide />

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../Assets/banner1.png';
-import Banner2 from '../../Assets/banner2.png';
+import Banner3 from '../../Assets/banner3.png';
 import './Home.css';
 
 const Banner = () => {
@@ -35,7 +35,7 @@ const Banner = () => {
             </div>
           </div>
           <div className="carousel-item">
-            <img src={Banner2} className="d-block w-100" alt="Banner2" />
+            <img src={Banner3} className="d-block w-100" alt="Banner3" />
             <div className="carousel-caption">
             <div className='carousel-btn'>
         

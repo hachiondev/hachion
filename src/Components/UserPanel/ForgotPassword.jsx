@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../../Assets/logo.png';
 import LoginSide from './LoginSide';
 import success from '../../Assets/success.gif';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import axios from 'axios';  // Add axios for making API calls
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState('');  // To store email input
+  const [message, setMessage] = useState('');  // To store response message
+  const [isSuccess, setIsSuccess] = useState(false);  // To track success/failure
   const navigate = useNavigate();
 
+  // Handle login redirection
   const handleLogin = () => {
     // Remove modal backdrop
     document.body.classList.remove('modal-open');
@@ -18,10 +23,22 @@ const ForgotPassword = () => {
     navigate('/login');
   };
 
-  const handleSendClick = () => {
-    // setTimeout(() => {
-    //   handleLogin();
-    // }, 2000); 
+  // Handle the "Send" button click and make API call
+  const handleSendClick = async () => {
+    try {
+      // Call the API with the email
+      const response = await axios.put(`http://localhost:8080/api/v1/user/forgotpassword?email=${email}`);
+      
+      // If successful, show success message
+      if (response.status === 200) {
+        setIsSuccess(true);
+        setMessage('Password reset link sent to your email');
+      }
+    } catch (error) {
+      // If there's an error, show failure message
+      setIsSuccess(false);
+      setMessage('Failed to send reset link. Please try again.');
+    }
   };
 
   return (
@@ -42,8 +59,9 @@ const ForgotPassword = () => {
                   className='form-control'
                   id='floatingInput'
                   placeholder='abc@gmail.com'
+                  value={email}  // Bind email state to input
+                  onChange={(e) => setEmail(e.target.value)}  // Update email state
                 />
-                
               </div>
 
               <div className='d-flex'>
@@ -76,14 +94,18 @@ const ForgotPassword = () => {
                       </button>
 
                       <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                          Password sent to your Email
-                        </p>
+                        {isSuccess ? (
+                          <>
+                            <img
+                              src={success}
+                              alt='Success'
+                              className='success-gif'
+                            />
+                            <p className='modal-para'> Password sent to your Email</p>
+                          </>
+                        ) : (
+                          <p className='modal-para'>{message}</p>
+                        )}
                       </div>
 
                       <button

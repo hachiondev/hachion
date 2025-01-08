@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
@@ -8,9 +8,36 @@ import { useNavigate } from 'react-router-dom';
 
 const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
   const navigate = useNavigate();
-  
-  const handleClick = () => {
-    navigate('/qaautomation');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleCardClick = () => {
+    if (isMobile) {
+      navigate('/qaautomation'); 
+    }
+  };
+
+  const handleButtonClick = (e) => {
+    e.stopPropagation();
+    navigate('/qaautomation'); 
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && isMobile) {
+      handleCardClick();
+    }
   };
 
   // Function to render stars dynamically based on the rating
@@ -29,7 +56,11 @@ const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
   };
 
   return (
-    <div className="sidebar-card">
+    <div className="sidebar-card"
+    onClick={handleCardClick}
+    role="button"
+    tabIndex={0}
+    onKeyDown={handleKeyDown}>
       <div className="sidebar-card-header-div">
         <h4 className="sidebar-card-heading">Certified Students: 0</h4>
         <img src={cardicon} alt="card-img" className="sidebar-card-icon" />
@@ -47,7 +78,7 @@ const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
         <h6 className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
         </h6>
-        <button className="sidebar-enroll-btn" onClick={handleClick}>
+        <button className="sidebar-enroll-btn" onClick={handleButtonClick}>
           View Details
         </button>
       </div>

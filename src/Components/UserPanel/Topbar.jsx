@@ -33,7 +33,7 @@ const Topbar = () => {
       <div className='topbar-left'>
         <p className='query-title'>Have any query?</p>
         <img src={whatsapp} alt='whatsapp-icon' className='whatsapp-icon' />
-        <p className='whatsapp-number'> +919490323388</p>
+        <p className='whatsapp-number'> +1 (732) 485-2499</p>
         <PiLineVerticalThin className='line-vertical' />
         <p className='training-email'>trainings@hachion.co</p>
       </div>

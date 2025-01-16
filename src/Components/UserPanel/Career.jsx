@@ -15,25 +15,25 @@ const Career = () => {
    <h1 className='association-head'>Hachion enhances career advancement</h1></div>
 <div className='career-div'>
 <div className='online-training-div'>
-   <img src={img1} alt='image1'/>
+   <img className='career-img' src={img1} alt='image1'/>
    <h3 className='Live-online'>Live online Training</h3>
    <p className='training-content'>Get Live interactive training from the convenience of your office or home.</p>
 
 </div>
 <div className='online-training-div'>
-   <img src={img2} alt='image1'/>
+   <img className='career-img' src={img2} alt='image1'/>
    <h3 className='Live-online'>Flexible Timings</h3>
    <p className='training-content'>Our training programs provides learners flexibility to schedule on their own schedules.</p>
 
 </div>
 <div className='online-training-div'>
-   <img src={img3} alt='image1'/>
+   <img className='career-img' src={img3} alt='image1'/>
    <h3 className='Live-online'>Certification Guidance</h3>
    <p className='training-content'>Technical team will help you to get certified in desired technologies.</p>
 
 </div>
 <div className='online-training-div'>
-   <img src={img4} alt='image1'/>
+   <img className='career-img' src={img4} alt='image1'/>
    <h3 className='Live-online'>Mentoring Support</h3>
    <p className='training-content'>We strongly supports mentoring mode for busy professionals to meet their training needs.</p>
 

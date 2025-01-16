@@ -16,7 +16,7 @@ const Trending = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/course-categories/all');
+        const response = await axios.get('http://160.153.175.69:8080/course-categories/all');
         setCategories([{ name: 'All' }, ...response.data]); // Add "All" option to categories
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -25,7 +25,7 @@ const Trending = () => {
 
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('http://160.153.175.69:8080/courses/all');
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -104,7 +104,7 @@ const Trending = () => {
       heading={course.courseName}
       month={course.duration}
       time={course.liveTrainingHours}
-      image={`http://localhost:8080/${course.courseImage}`}
+      image={`http://160.153.175.69:8080/${course.courseImage}`}
       course_id={course.id} // Pass the course ID
       RatingByPeople={course.ratingByNumberOfPeople}
       Rating={course.starRating}

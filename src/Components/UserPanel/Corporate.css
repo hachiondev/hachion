@@ -110,16 +110,21 @@
     border-radius: 20px;
 }
 .association{
+    margin-top: 50px;
+    margin-left: 40%;
+    justify-content: space-between;
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    padding-top: 20px;
+    margin-bottom: 50px;
+    }
 
 .association-head{
     font-size: 1.9rem;
     font-weight: 700;
-    margin: 2vh;
+    margin: 20px;
     letter-spacing: 2%;
+    display: flex;
+    justify-content: center;
     background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
@@ -208,10 +213,12 @@
 }
 .view-all-div{
     display: flex;
-    flex-direction: row-reverse;
-    margin-right: 13vw;
-    margin-top: -9vh;
-}
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 230px;
+    margin-top:5px;
+    /* margin-bottom: 50px; */
+    }
 
 .view-all-corporate {
    padding: 1vh;

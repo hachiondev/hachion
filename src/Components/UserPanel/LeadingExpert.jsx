@@ -29,7 +29,7 @@ const LeadingExpert = () => {
     <LeadingExpertCard CourseName='ServiceNow' image={card6}/>
     <LeadingExpertCard CourseName='QA Automation' image={card5}/> 
     <LeadingExpertCard CourseName='QA Manual Testing' image={card8}/>
-    <LeadingExpertCard CourseName='Python' image={card4}/>
+    <LeadingExpertCard CourseName='Java Script' image={card7}/>
  </div>
 
  </>

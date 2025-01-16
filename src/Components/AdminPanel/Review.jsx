@@ -133,7 +133,7 @@ const handleFileChange = (e) => {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("http://160.153.175.69:8080/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -144,7 +144,7 @@ const handleFileChange = (e) => {
     useEffect(() => {
       const fetchReview = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/review');
+              const response = await axios.get('http://160.153.175.69:8080/review');
               setReview(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -178,7 +178,7 @@ const handleFileChange = (e) => {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/review/update/${editedData.review_id}`,editedData
+                `http://160.153.175.69:8080/review/update/${editedData.review_id}`,editedData
             );
             setReview((prev) =>
                 prev.map(curr =>
@@ -196,7 +196,7 @@ const handleFileChange = (e) => {
       const handleDelete = async (review_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/review/delete/${review_id}`); 
+          const response = await axios.delete(`http://160.153.175.69:8080/review/delete/${review_id}`); 
           console.log("Review deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Review:", error); 
@@ -239,7 +239,7 @@ const handleFileChange = (e) => {
         };
       
         try {
-          const response = await axios.post("http://localhost:8080/review/add", dataToSubmit);
+          const response = await axios.post("http://160.153.175.69:8080/review/add", dataToSubmit);
           if (response.status === 200) {
             alert("Reviews added successfully");
             setReviewData([...reviewData, dataToSubmit]); // Update local state
@@ -255,7 +255,7 @@ const handleFileChange = (e) => {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
+          const response = await axios.get("http://160.153.175.69:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);

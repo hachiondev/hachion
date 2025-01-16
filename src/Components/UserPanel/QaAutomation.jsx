@@ -83,7 +83,7 @@ const QaAutomation = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8080/courses/${course_id}`);
+        const response = await axios.get(`http://160.153.175.69:8080/courses/${course_id}`);
         console.log(response);
         if (response.data) {
           setCourseData(response.data); // Set course data based on course_id

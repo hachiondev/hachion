@@ -10,7 +10,7 @@ const Sidebar = ({ onSelectCategory }) => {
   const [openSubmenuIndex, setOpenSubmenuIndex] = useState(null); // Track open submenu
   const [menuItems, setMenuItems] = useState([]); // Dynamic menu items
 
-  const API_URL = 'http://localhost:8080/course-categories/all';
+  const API_URL = 'http://160.153.175.69:8080/course-categories/all';
 
   // Fetch categories from the API
   useEffect(() => {

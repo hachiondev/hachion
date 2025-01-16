@@ -350,7 +350,7 @@ border-color: #000;
 .carousel-btn{
 display: flex;
 justify-content: center;
-padding-bottom: 5%;
+padding-bottom: 2%;
 padding-right: 50%;
 }
 
@@ -392,6 +392,8 @@ margin: 20px;
 }
 .association-head{
 font-size: 1.9rem;
+font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+font-style: italic;
 font-weight: 700;
 letter-spacing: 2%;
 background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
@@ -835,11 +837,16 @@ padding: 20px;
 width: 80%; 
 }
 
+.career-img {
+  width: 80px; 
+  height: 80px;
+  }
 
 .online-training-div {
-width: 18vw; 
+width: 300px;
+height: 300px; 
 box-shadow: 5px 5px 5px #d3d3d3;
-border-radius: 10px;
+border-radius: 50%;
 border-left: 10px solid rgba(0, 174, 239, 1);
 display: flex;
 background-color: white;
@@ -847,8 +854,12 @@ justify-content: space-evenly;
 flex-direction: column;
 align-items: center;
 padding: 1vh;
+transition: transform 0.3s ease; 
 }
 
+.online-training-div:hover {
+  border-right: 10px solid rgba(0, 174, 239, 1);
+  }
 
 .Live-online{
 font-weight: 700;
@@ -859,17 +870,23 @@ padding-top: 1.5vh;
 font-weight:400;
 font-size:1rem;
 color: rgba(97, 97, 97, 1);
-padding:2vh;
+padding-left:20px;
+padding-right:20px;
 align-content: center;
+text-align: center;
 }
 
 .footer {
-background-color: black;
-color: white;
-display: flex;
-padding-bottom: 7vh;
-flex-direction: column;
-justify-content: space-evenly;
+  background-color: black; /* Fallback color if the image fails to load */
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('../../Assets/footer.jpg'); /* Path to your image */
+  background-size: cover; /* Ensures the image covers the entire footer */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  color: white;
+  display: flex;
+  padding-bottom: 7vh;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .footer-top {
@@ -882,6 +899,7 @@ flex-wrap: wrap;
 .footer hr{
 width: 95%;
 margin-left: 2vw;
+margin-bottom: 10px;
 }
 
 .footer-copyright {
@@ -898,9 +916,14 @@ font-size: 1.15rem;
 
 .footer-content {
 font-weight: 400;
-font-size: 1.15rem;
+font-size: 1.05rem;
 cursor: pointer;
 }
+
+.footer-content:hover {
+  color: #00AEEF;
+  text-decoration: underline;
+  }
 
 .footer-bottom {
 display: flex;
@@ -920,11 +943,11 @@ gap: 4vh;
 height: 40px;
 width: 40px;
 cursor: pointer;
+transition: transform 0.3s ease; 
 }
 
 .footer-link img:hover {
-height: 45px;
-width: 45px;
+  transform: scale(1.25); 
 }
 
 .user-info {

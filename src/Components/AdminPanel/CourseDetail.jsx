@@ -73,7 +73,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/course-categories/all");
+        const response = await axios.get("http://160.153.175.69:8080/course-categories/all");
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -91,7 +91,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/courses/all');
+            const response = await axios.get('http://160.153.175.69:8080/courses/all');
             setCategories(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching couses:", error.message);
@@ -161,7 +161,7 @@ const handleSubmit = async (e) => {
     if (formMode === "Edit") {
       // Update course
       const response = await axios.put(
-        `http://localhost:8080/courses/update/${formData.id}`,
+        `http://160.153.175.69:8080/courses/update/${formData.id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -170,7 +170,7 @@ const handleSubmit = async (e) => {
       }
     } else {
       // Add course
-      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
+      const response = await axios.post("http://160.153.175.69:8080/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
      console.log("***",formNewData);
@@ -234,7 +234,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`); 
+   const response = await axios.delete(`http://160.153.175.69:8080/courses/delete/${id}`); 
    console.log("Courses deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Curriculum:", error); 
@@ -249,7 +249,7 @@ const handleEditClick = async (courseId) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await fetch(`http://localhost:8080/courses/${courseId}`);
+    const response = await fetch(`http://160.153.175.69:8080/courses/${courseId}`);
     if (response.ok) {
       const course = await response.json();
       setFormData({
@@ -742,7 +742,7 @@ Corporate Training
             <StyledTableCell sx={{ width: 220}} align="center">
             {course.courseImage ? (
     <img
-    src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
+    src={`http://160.153.175.69:8080/${course.courseImage}`}  // Adjust based on your server setup
       alt="Course"
       width="50"
     />

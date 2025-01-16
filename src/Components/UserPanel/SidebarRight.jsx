@@ -11,7 +11,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("http://160.153.175.69:8080/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data); // Set the courses if data is an array
         } else {

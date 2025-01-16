@@ -20,7 +20,7 @@ const QaTop = ({ onVideoButtonClick }) => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8080/courses/${course_id}`);
+        const response = await axios.get(`http://160.153.175.69:8080/courses/${course_id}`);
         
         if (response.data) {
           setCourse(response.data); // Set course details from API response
@@ -65,7 +65,7 @@ const QaTop = ({ onVideoButtonClick }) => {
         <div className='qa-left-part'>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
           <div className='qa-automation-left'>
-            <img src={`http://localhost:8080/${course.courseImage}`} alt='qa-image' />
+            <img src={`http://160.153.175.69:8080/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
               <p className='fee'>Fee: <span className='amount'>₹{course.amount}/-</span></p>
               <h6 className='sidebar-course-review'>

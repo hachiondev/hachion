@@ -26,8 +26,8 @@
 //   const [loading, setLoading] = useState(false);
 //   const [message, setMessage] = useState({ text: '', type: '' });
 
-//   const API_URL = 'http://localhost:8080/api/courses';
-//   const CATEGORY_API_URL = 'http://localhost:8080/api/course-categories';
+//   const API_URL = 'http://148.72.245.196:8080/api/courses';
+//   const CATEGORY_API_URL = 'http://148.72.245.196:8080/api/course-categories';
 
 //   // Fetch course categories on component mount
 //   useEffect(() => {

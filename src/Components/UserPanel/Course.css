@@ -1352,6 +1352,7 @@ align-items: center;
 justify-content: space-between;
 padding: 0 10px;
 z-index: 1000;
+padding-right: 25px;
 }
 
 .contact-info {

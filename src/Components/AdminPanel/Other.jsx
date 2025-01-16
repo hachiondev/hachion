@@ -131,7 +131,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchBanner = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/banner');
+              const response = await axios.get('http://160.153.175.69:8080/banner');
               setBanner(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -152,7 +152,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/banner/update/${editedData.banner_id}`,editedData
+                `http://160.153.175.69:8080/banner/update/${editedData.banner_id}`,editedData
             );
             setBanner((prev) =>
                 prev.map(curr =>
@@ -170,7 +170,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (banner_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/banner/delete/${banner_id}`); 
+          const response = await axios.delete(`http://160.153.175.69:8080/banner/delete/${banner_id}`); 
           console.log("Banner deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting banner:", error); 
@@ -228,7 +228,7 @@ const [currentPage, setCurrentPage] = useState(1);
       
         try {
           const response = await axios.post(
-            "http://localhost:8080/banner/add",
+            "http://160.153.175.69:8080/banner/add",
             formDataToSend,
             {
               headers: {
@@ -421,7 +421,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.banner_image ? (
                 <img
-                src={`http://localhost:8080/${curr.banner_image}`} 
+                src={`http://160.153.175.69:8080/${curr.banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -432,7 +432,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={`http://localhost:8080/${curr.home_banner_image}`} 
+                src={`http://160.153.175.69:8080/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />

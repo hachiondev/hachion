@@ -739,7 +739,7 @@ const ManageCourse = () => {
        
       ) : (<>
         <Course onAddCategoryClick={handleAddCategoryClick} />
- <CourseTable/>
+ <CategoryTable/>
         </>
       )}
     </div>

@@ -134,7 +134,7 @@ const handleDateChange = (newValue) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/course-categories/all");
+      const response = await axios.get("http://160.153.175.69:8080/course-categories/all");
       setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -189,7 +189,7 @@ const handleTimeChange = (newValue) => {
       const dataToSubmit = { ...courseData, created_date: currentDate };
   
       // Send the POST request
-      const response = await axios.post("http://localhost:8080/schedulecourse/add", dataToSubmit);
+      const response = await axios.post("http://160.153.175.69:8080/schedulecourse/add", dataToSubmit);
   
       if (response.status === 200) {
         alert("Course added successfully");
@@ -234,7 +234,7 @@ const handleTimeChange = (newValue) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/schedulecourse');
+      const response = await axios.get('http://160.153.175.69:8080/schedulecourse');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -266,7 +266,7 @@ const handleDeleteConfirmation = (course_schedule_id) => {
 const handleDelete = async (course_schedule_id) => {
  
    try { 
-    const response = await axios.delete(`http://localhost:8080/schedulecourse/delete/${course_schedule_id}`); 
+    const response = await axios.delete(`http://160.153.175.69:8080/schedulecourse/delete/${course_schedule_id}`); 
     console.log("Trainer deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
@@ -294,7 +294,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      `http://160.153.175.69:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 

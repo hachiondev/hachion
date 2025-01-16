@@ -92,7 +92,7 @@ const displayedCategories = filteredCategories.slice(
 );
 
 
-  const API_URL = 'http://localhost:8080/course-categories/all';
+  const API_URL = 'http://160.153.175.69:8080/course-categories/all';
 
   // Fetch Courses on Component Mount
   useEffect(() => {
@@ -153,7 +153,7 @@ const displayedCategories = filteredCategories.slice(
  
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/course-categories/add", {
+      const response = await axios.post("http://160.153.175.69:8080/course-categories/add", {
         name: courseData.category_name,
         date: dayjs(courseData.date).format("YYYY-MM-DD"),
       });
@@ -171,7 +171,7 @@ const displayedCategories = filteredCategories.slice(
   const handleEdit = async () => {
     try {
         const response = await axios.put(
-            `http://localhost:8080/course-categories/update/${editedRow.id}`,
+            `http://160.153.175.69:8080/course-categories/update/${editedRow.id}`,
             editedRow
         );
         setCategories((prev) =>
@@ -190,7 +190,7 @@ const displayedCategories = filteredCategories.slice(
   const handleDelete = async (id) => {
        
     try { 
-     const response = await axios.delete(`http://localhost:8080/course-categories/delete/${id}`); 
+     const response = await axios.delete(`http://160.153.175.69:8080/course-categories/delete/${id}`); 
      console.log("Course category deleted successfully:", response.data); 
    } catch (error) { 
      console.error("Error deleting Video:", error); 

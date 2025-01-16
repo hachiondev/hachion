@@ -12,8 +12,8 @@ const TrainingEvents = () => {
     const fetchData = async () => {
       try {
         const [scheduleResponse, coursesResponse] = await Promise.all([
-          fetch('http://localhost:8080/schedulecourse').then((res) => res.json()),
-          fetch('http://localhost:8080/courses/all').then((res) => res.json()),
+          fetch('http://160.153.175.69:8080/schedulecourse').then((res) => res.json()),
+          fetch('http://160.153.175.69:8080/courses/all').then((res) => res.json()),
         ]);
   
         const mergedData = scheduleResponse.map((scheduleItem) => {
@@ -69,7 +69,7 @@ const TrainingEvents = () => {
              key={index}
              id={course.course_id}
              heading={course.schedule_course_name}
-             image={`http://localhost:8080/${course.course_image}`} // Use course_image
+             image={`http://160.153.175.69:8080/${course.course_image}`} // Use course_image
              date={formatDate(course.schedule_date)}
              time={course.schedule_time}
              duration={`Duration: ${course.schedule_duration}`}

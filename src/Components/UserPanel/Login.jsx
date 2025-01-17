@@ -33,7 +33,7 @@ const Login = () => {
     };
 
     try {
-        const response = await axios.post('http://160.153.175.69:8080/api/v1/user/login', loginData);
+        const response = await axios.post('http://160.153.175.69:8080/HachionUserDashboad/api/v1/user/login', loginData);
         console.log(response.data); // Debugging line
 
         if (response.data.status) {
@@ -65,19 +65,19 @@ const Login = () => {
 
 
   const googleLogin = () => {
-    window.open('http://160.153.175.69:8080/oauth2/authorization/google', '_self');
+    window.open('http://160.153.175.69:8080/HachionUserDashboad/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    window.location.href = 'http://160.153.175.69:8080/oauth2/authorization/facebook';  // Backend Facebook OAuth
+    window.location.href = 'http://160.153.175.69:8080/HachionUserDashboad/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    window.location.href = 'http://160.153.175.69:8080/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
+    window.location.href = 'http://160.153.175.69:8080/HachionUserDashboad/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = 'http://160.153.175.69:8080/oauth2/authorization/apple';  // Backend Apple OAuth
+    window.location.href = 'http://160.153.175.69:8080/HachionUserDashboad/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
   // Toggle password visibility

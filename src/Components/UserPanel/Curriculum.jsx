@@ -111,7 +111,7 @@
     useEffect(() => {
       const fetchCurriculum = async () => {
         try {
-          const response = await axios.get('http://160.153.175.69:8080/curriculum');
+          const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/curriculum');
           setCurriculum(response.data); // Store the curriculum data
         } catch (error) {
           console.error('Error fetching curriculum:', error.message);

@@ -131,7 +131,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchBanner = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/banner');
+              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/banner/banner');
               setBanner(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -152,7 +152,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/banner/update/${editedData.banner_id}`,editedData
+                `http://160.153.175.69:8080/HachionUserDashboad/banner/banner/update/${editedData.banner_id}`,editedData
             );
             setBanner((prev) =>
                 prev.map(curr =>
@@ -170,7 +170,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (banner_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/banner/delete/${banner_id}`); 
+          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/banner/banner/delete/${banner_id}`); 
           console.log("Banner deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting banner:", error); 
@@ -228,7 +228,7 @@ const [currentPage, setCurrentPage] = useState(1);
       
         try {
           const response = await axios.post(
-            "http://160.153.175.69:8080/banner/add",
+            "http://160.153.175.69:8080/HachionUserDashboad/banner/banner/add",
             formDataToSend,
             {
               headers: {

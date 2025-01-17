@@ -97,7 +97,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
         try {
-            const response = await axios.get('http://160.153.175.69:8080/blog');
+            const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/blog/blog');
             setBlogs(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching blogs:", error.message);
@@ -136,7 +136,7 @@ const handleSubmit = async (e) => {
     if (formData.id) {
       // Edit operation
       const response = await axios.put(
-        `http://160.153.175.69:8080/blog/update/${formData.id}`,
+        `http://160.153.175.69:8080/HachionUserDashboad/blog/blog/update/${formData.id}`,
         formDataToSend,
         {
           headers: {
@@ -155,7 +155,7 @@ const handleSubmit = async (e) => {
     } else {
       // Add operation
       const response = await axios.post(
-        "http://160.153.175.69:8080/blog/add",
+        "http://160.153.175.69:8080/HachionUserDashboad/blog/blog/add",
         formDataToSend,
         {
           headers: {
@@ -217,7 +217,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://160.153.175.69:8080/blog/delete/${id}`); 
+   const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/blog/blog/delete/${id}`); 
    console.log("Blogs deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Blogs:", error); 
@@ -232,7 +232,7 @@ const handleEditClick = async (id) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await fetch(`http://160.153.175.69:8080/blog/${id}`);
+    const response = await fetch(`http://160.153.175.69:8080/HachionUserDashboad/blog/blog/${id}`);
     if (response.ok) {
       const blog = await response.json();
       setFormData({

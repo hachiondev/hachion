@@ -26,7 +26,7 @@ const QaAutomationFaq = () => {
   useEffect(() => {
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('http://160.153.175.69:8080/faq');
+        const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/faq/faq');
         setFaq(response.data);
       } catch (error) {
         console.error('Error fetching FAQ:', error.message);

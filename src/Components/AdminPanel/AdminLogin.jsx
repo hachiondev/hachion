@@ -20,7 +20,7 @@ const AdminLogin = () => {
   
     try {
       // Make a POST request to the login API
-      const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', {
+      const response = await axios.post('http://160.153.175.69:8080/HachionUserDashboad/api/v1/user/adminlogin', {
         email,
         password,
       });

@@ -122,7 +122,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://160.153.175.69:8080/course-categories/all");
+          const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -133,7 +133,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://160.153.175.69:8080/courses/all");
+          const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -144,7 +144,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCurriculum = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/curriculum');
+              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/curriculum');
               setCurriculum(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching curriculum:", error.message);
@@ -183,7 +183,7 @@ export default function Curriculum() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/curriculum/update/${editedRow.curriculum_id}`,
+                `http://160.153.175.69:8080/HachionUserDashboad/curriculum/update/${editedRow.curriculum_id}`,
                 editedRow
             );
             setCurriculum((prev) =>
@@ -202,7 +202,7 @@ export default function Curriculum() {
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -254,7 +254,7 @@ export default function Curriculum() {
         };
       
         try {
-          const response = await axios.post("http://160.153.175.69:8080/curriculum/add", dataToSubmit);
+          const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/curriculum/add", dataToSubmit);
           if (response.status === 200) {
             alert("Curriculum details added successfully");
             setCurriculumData([...curriculumData, dataToSubmit]); // Update local state

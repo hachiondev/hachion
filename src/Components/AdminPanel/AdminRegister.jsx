@@ -12,16 +12,29 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Simulated form submission handler (no backend request)
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
 
-    // Simulate registration check
-    if (name && email && password) {
-      console.log("Registration successful");
-      navigate('/admindashboardview'); // Navigate to dashboard on successful registration
-    } else {
-      setErrorMessage('Please fill in all required fields'); // Error message if fields are incomplete
+    try {
+      const response = await fetch('http://160.153.175.69:8080/HachionUserDashboad/api/v1/user/adminregister', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Registration successful:', data);
+        navigate('/admindashboardview'); // Navigate to dashboard on successful registration
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setErrorMessage('An error occurred. Please try again.');
     }
   };
 

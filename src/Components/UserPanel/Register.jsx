@@ -11,7 +11,7 @@ import {Link} from 'react-router-dom';
 
 const Register = () => {
   const googleLogin = () => {
-    window.location.href = 'http://160.153.175.69:8080/oauth2/authorization/google';  // Backend Google OAuth
+    window.location.href = 'http://160.153.175.69:8080/HachionUserDashboad/oauth2/authorization/google';  // Backend Google OAuth
   };
 
   return (

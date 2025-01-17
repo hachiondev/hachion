@@ -74,7 +74,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
     };
   
     try {
-      const response = await fetch('http://160.153.175.69:8080/requestbatch/add', {
+      const response = await fetch('http://160.153.175.69:8080/HachionUserDashboad/requestbatch/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

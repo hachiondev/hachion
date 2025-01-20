@@ -4,7 +4,7 @@ import { IoSearch } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
 import { GiHamburgerMenu } from "react-icons/gi";
-import profile1 from '../../Assets/profile1.jfif';
+import profile1 from '../../Assets/profile2.png';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
@@ -19,6 +19,22 @@ const NavbarTop = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Manage login state
   const navigate = useNavigate();
   const drawerRef = useRef(null); // Reference to the drawer for click detection
+   const [userData, setUserData] = useState(null);
+  
+    useEffect(() => {
+      // Check localStorage for user data on component mount
+      const storedUserData = localStorage.getItem('loginuserData');
+      if (storedUserData) {
+        setUserData(JSON.parse(storedUserData));  // Parse and store the user data
+        setIsLoggedIn(true);  // Set the user as logged in
+      }
+    }, []);  // This effect runs only once on component mount
+  
+    const handleLogout = () => {
+      localStorage.removeItem('loginuserData'); // Clear user data
+      setIsLoggedIn(false);
+      setUserData(null);
+    };
 
   // Function to toggle drawer
   const toggleDrawer = () => {
@@ -34,10 +50,10 @@ const NavbarTop = () => {
     navigate('/home');
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false); // Set login state to false on logout
-    // setDrawerOpen(false); // Close drawer after logout
-  };
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false); // Set login state to false on logout
+  //   // setDrawerOpen(false); // Close drawer after logout
+  // };
 
   // Set searchVisible to false on mobile screen resize
   useEffect(() => {
@@ -159,7 +175,15 @@ const NavbarTop = () => {
                 <div className="profile">
                   <div className="dropdown">
                     <div className="user-name">
-                      <Avatar alt="user_name" src={profile1} /> Hachion
+                    <Avatar src={userData?.picture || profile1} alt="user_name" />
+                    <Link
+                                      className="user-name"
+                                      role="button"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      {userData?.name || 'Hachion User'}
+                                    </Link>
                     </div>
                     <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
                       <FaUserAlt style={{ color: '#00AEEF' }} /> Dashboard

@@ -58,6 +58,14 @@ function App() {
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route
+          path="/"
+          element={
+            
+              <Home />
+            
+          }
+        />
+         <Route
           path="/home"
           element={
             

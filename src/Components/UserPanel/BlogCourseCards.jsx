@@ -5,8 +5,22 @@ import { FaUserTie } from "react-icons/fa6";
 import { MdMessage } from "react-icons/md";
 
 const BlogCourseCards = ({ imageSrc, content,username, views, messages, date, onClick }) => {
+
+  const handleClick = () => {
+    console.log(`Blog course card clicked:`);
+    console.log(`Content: ${content}`);
+    console.log(`Username: ${username}`);
+    console.log(`Views: ${views}`);
+    console.log(`Messages: ${messages}`);
+    console.log(`Date: ${date}`);
+
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className='main-card' onClick={onClick}> 
+    <div className='main-card' onClick={handleClick}> 
       <img src={imageSrc} alt='card-image' className='main-card-image' />
       <div className='main-content-block'>
         <p className='main-content'>{content}</p>

@@ -14,18 +14,26 @@ const Topbar = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    console.log("Checking for stored user data in localStorage...");
+
     // Check localStorage for user data on component mount
     const storedUserData = localStorage.getItem('loginuserData');
     if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));  // Parse and store the user data
-      setIsLoggedIn(true);  // Set the user as logged in
+      const parsedData = JSON.parse(storedUserData);
+      setUserData(parsedData);  
+      setIsLoggedIn(true);  
+      console.log("User data found:", parsedData);
+    } else {
+      console.log("No user data found. User is not logged in.");
     }
-  }, []);  // This effect runs only once on component mount
+  }, []);  
 
   const handleLogout = () => {
+    console.log("Logging out user...");
     localStorage.removeItem('loginuserData'); // Clear user data
     setIsLoggedIn(false);
     setUserData(null);
+    console.log("User logged out successfully.");
   };
 
   return (
@@ -54,13 +62,24 @@ const Topbar = () => {
                   {userData?.name || 'Hachion User'}
                 </Link>
 
-                
-  <ul className="dropdown-menu">
-    <li><Link className="dropdown-item" to={'/userdashboard'}><FaUserAlt className="dropdown-icon"/> Dashboard</Link></li>
-    <li><Link className="dropdown-item" href="#"><IoMdSettings className="dropdown-icon"/> Settings</Link></li>
-    <li><a className="dropdown-divider" /></li>
-    <li><Link className="dropdown-item" href="#" onClick={handleLogout}> <IoLogOut className="dropdown-icon"/> Logout</Link></li>
-  </ul>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to={'/userdashboard'}>
+                      <FaUserAlt className="dropdown-icon"/> Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" href="#">
+                      <IoMdSettings className="dropdown-icon"/> Settings
+                    </Link>
+                  </li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li>
+                    <Link className="dropdown-item" href="#" onClick={handleLogout}>
+                      <IoLogOut className="dropdown-icon"/> Logout
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -69,11 +88,11 @@ const Topbar = () => {
         <div className='topbar-right'>
           <div className='login-div'>
             <Link to='/login' className='login-link-home'>
-              <button className='login-div-content'>Login</button>
+              <button className='login-div-content' onClick={() => console.log("Login button clicked")}>Login</button>
             </Link>
             <PiLineVerticalThin style={{ color: 'white', fontSize: '2rem' }} />
             <Link to='/register' className='login-link-home'>
-              <button className='login-div-content'>Register</button>
+              <button className='login-div-content' onClick={() => console.log("Register button clicked")}>Register</button>
             </Link>
           </div>
         </div>

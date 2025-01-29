@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect , useState, useRef } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import CorporateBanner from './CorporateBanner';
@@ -11,8 +11,10 @@ import StickyBar from './StickyBar';
 import CorporateTrainingFeature from './CorporateTrainingFeature';
 import Learners from './Learners';
 import Advisor from './Advisor';
+import { FaArrowUp } from 'react-icons/fa';
 
 const CorporateTraining = () => {
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const advisorRef = useRef(null); // Create a ref for Advisor
 
   const scrollToAdvisor = () => {
@@ -20,6 +22,26 @@ const CorporateTraining = () => {
       advisorRef.current.scrollIntoView({ behavior: 'smooth' }); // Scroll to Advisor section smoothly
     }
   };
+
+  // Handle Scroll - Show/Hide Button
+    useEffect(() => {
+      const handleScroll = () => {
+        if (window.scrollY > 300) {
+          setShowScrollButton(true);
+        } else {
+          setShowScrollButton(false);
+        }
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+  
+    // Scroll to top function
+    const scrollToTop = () => {
+      console.log("Scroll to top clicked!");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
   return (
     <>
@@ -38,6 +60,14 @@ const CorporateTraining = () => {
         </div>
       </div>
       <Footer />
+
+      {/* Scroll to Top Button */}
+            {showScrollButton && (
+              <button className="scroll-to-top" onClick={scrollToTop}>
+                <FaArrowUp />
+              </button>
+            )}
+            
       <StickyBar />
     </>
   );

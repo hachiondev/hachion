@@ -6,23 +6,42 @@ import './Home.css';
 
 const Banner = () => {
   const navigate = useNavigate();
+  // Function to handle "Explore More" button click
   const handleExploreMore = () => {
+    console.log("Explore More button clicked. Navigating to /course...");
     navigate('/course');
   };
+
   useEffect(() => {
-  
+    console.log("Banner component mounted. Initializing Bootstrap carousel...");
+
+    // Select the carousel element
     const carousel = document.querySelector('#autoScrollingBanner');
-    const bootstrapCarousel = new window.bootstrap.Carousel(carousel, {
-      interval: 3000,
-    });
+
+    // Check if Bootstrap is available
+    if (window.bootstrap && carousel) {
+      new window.bootstrap.Carousel(carousel, {
+        interval: 3000,
+      });
+
+      console.log("Bootstrap carousel initialized successfully.");
+    } else {
+      console.error("Bootstrap is not loaded or carousel element is missing.");
+    }
+
+    return () => {
+      console.log("Banner component unmounted. Cleanup executed.");
+    };
   }, []);
 
   return (
     <>
       <div id="autoScrollingBanner" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
         <div className="carousel-indicators">
-          <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"
+          onClick={() => console.log("Carousel Indicator 1 clicked.")}></button>
+          <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="1" aria-label="Slide 2"
+          onClick={() => console.log("Carousel Indicator 2 clicked.")}></button>
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">

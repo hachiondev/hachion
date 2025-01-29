@@ -33,13 +33,16 @@ import { useNavigate } from 'react-router-dom';
 const Blogs = () => {
 
   const navigate=useNavigate();
-  const handleqa=()=>{
- navigate('/qatesting')
-  }
+  const handleqa = () => {
+    console.log('QA Testing blog clicked');
+    navigate('/qatesting');
+  };
+
   const handleSalesforce = () => {
-    console.log('clicked')
+    console.log('Salesforce blog clicked');
     navigate('/salesforce');
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);  // This will scroll to the top of the page
   }, []);
@@ -70,12 +73,12 @@ const Blogs = () => {
    <div className='blogs-container'>
 <BlogCard imageSrc={blogImage1} content="Project Management" />
 <BlogCard imageSrc={dataScienceBlog} content="Data Science" />
-<BlogCard imageSrc={blogImage2} content="QA Testing" onClick={() => handleqa()} />
+<BlogCard imageSrc={blogImage2} content="QA Testing" onClick={() => { console.log('QA Testing clicked'); handleqa(); }} />
         <BlogCard imageSrc={programmingBlog} content="Programming" />
         <BlogCard 
             imageSrc={salesforceblog} 
             content="Salesforce" 
-            onClick={handleSalesforce}
+            onClick={() => { console.log('Salesforce blog clicked'); handleSalesforce(); }}
           />
         <BlogCard imageSrc={servicenowblog} content="Service now" />
         <BlogCard imageSrc={cloudcomputing} content="Cloud Computing" />

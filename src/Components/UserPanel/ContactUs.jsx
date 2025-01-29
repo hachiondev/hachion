@@ -25,8 +25,11 @@ const ContactUs = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const [isChecked, setIsChecked] = useState(false);
+  const [error, setError] = useState('');
   useEffect(() => {
     window.scrollTo(0, 0);  // This will scroll to the top of the page
+    console.log('Page loaded and scrolled to top');
   }, []);
 
   const countries = [
@@ -50,17 +53,35 @@ const ContactUs = () => {
   ];
 
   const handleCountrySelect = (country) => {
+    console.log('Country selected:', country.name, country.code);
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
 
   const openMenu = (event) => {
+    console.log('Opening country select menu');
     setAnchorEl(event.currentTarget);
   };
 
   const closeMenu = () => {
+    console.log('Closing country select menu');
     setAnchorEl(null);
+  };
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (!isChecked) {
+      setError('Please select the checkbox to acknowledge the Privacy Notice.');
+    } else {
+      setError('');
+      // Handle form submission here
+      console.log('Form submitted');
+    }
   };
 
   return (
@@ -195,9 +216,12 @@ const ContactUs = () => {
           <textarea class="form-control" id="contact3" rows="3"></textarea>
         </div>
         <div class="mb-3">
-        <button type="button" class="submit-button">Submit</button>
+        <button type="button" class="submit-button" onClick={handleFormSubmit}>Submit</button>
+        {/* Error message display */}
+        {error && <p className="error-message">{error}</p>}
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" 
+           onChange={handleCheckboxChange} />
           <label class="form-check-label" for="flexCheckChecked">
           By clicking on Submit, you acknowledge read our Privacy Notice
           </label>

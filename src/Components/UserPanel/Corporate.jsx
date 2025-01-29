@@ -7,9 +7,13 @@ const Corporate = () => {
   const navigate = useNavigate();
 
   const handleKnowMoreClick = () => {
+    console.log('Know More button clicked');
     navigate('/corporate', { replace: true });
     window.scrollTo(0, 0);
   };
+
+  // Log when the component renders
+  console.log('Corporate component rendered');
 
   return (
     <>

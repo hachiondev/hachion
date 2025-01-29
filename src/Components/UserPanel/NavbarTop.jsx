@@ -21,64 +21,62 @@ const NavbarTop = () => {
   const drawerRef = useRef(null); // Reference to the drawer for click detection
    const [userData, setUserData] = useState(null);
   
-    useEffect(() => {
-      // Check localStorage for user data on component mount
-      const storedUserData = localStorage.getItem('loginuserData');
-      if (storedUserData) {
-        setUserData(JSON.parse(storedUserData));  // Parse and store the user data
-        setIsLoggedIn(true);  // Set the user as logged in
-      }
-    }, []);  // This effect runs only once on component mount
-  
-    const handleLogout = () => {
-      localStorage.removeItem('loginuserData'); // Clear user data
-      setIsLoggedIn(false);
-      setUserData(null);
-    };
+   useEffect(() => {
+    console.log("Checking localStorage for user data...");
+    const storedUserData = localStorage.getItem('loginuserData');
+    if (storedUserData) {
+      const parsedData = JSON.parse(storedUserData);
+      setUserData(parsedData);
+      setIsLoggedIn(true);
+      console.log("User data found:", parsedData);
+    } else {
+      console.log("No user data found. User is not logged in.");
+    }
+  }, []);
 
-  // Function to toggle drawer
-  const toggleDrawer = () => {
-    setDrawerOpen(!isDrawerOpen);
+  const handleLogout = () => {
+    console.log("Logging out user...");
+    localStorage.removeItem('loginuserData'); 
+    setIsLoggedIn(false);
+    setUserData(null);
+    console.log("User logged out successfully.");
   };
 
-  // Function to handle active navigation link
+  const toggleDrawer = () => {
+    setDrawerOpen(!isDrawerOpen);
+    console.log(`Drawer ${isDrawerOpen ? "closed" : "opened"}`);
+  };
+
   const handleNavClick = (link) => {
     setActiveLink(link);
+    console.log(`Navigating to: ${link}`);
   };
 
   const handleClick = () => {
+    console.log("Navigating to Home");
     navigate('/home');
   };
 
-  // const handleLogout = () => {
-  //   setIsLoggedIn(false); // Set login state to false on logout
-  //   // setDrawerOpen(false); // Close drawer after logout
-  // };
-
-  // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      if (isMobile) {
-        setSearchVisible(false);
-      } else {
-        setSearchVisible(true);
-        setMobileSearchOpen(false);
-      }
+      setSearchVisible(!isMobile);
+      setMobileSearchOpen(false);
+      console.log(`Window resized. Mobile view: ${isMobile}`);
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Call initially
+    handleResize(); 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  // Close drawer when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (drawerRef.current && !drawerRef.current.contains(event.target)) {
         setDrawerOpen(false);
+        console.log("Clicked outside drawer. Closing drawer.");
       }
     };
 

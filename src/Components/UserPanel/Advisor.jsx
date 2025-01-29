@@ -28,7 +28,7 @@ const Advisor = () => {
     initialValues: initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-      console.log(values);
+      console.log('Form Submitted with values:', values);
     }
   });
 
@@ -53,22 +53,25 @@ const Advisor = () => {
   ];
 
   const handleCountrySelect = (country) => {
+    console.log('Country selected:', country);
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
 
   const openMenu = (event) => {
+    console.log('Dropdown menu opened');
     setAnchorEl(event.currentTarget);
   };
 
   const closeMenu = () => {
+    console.log('Dropdown menu closed');
     setAnchorEl(null);
   };
 
-
   const handleModal = (e) => {
     e.preventDefault(); // Prevent default form submission
+    console.log('Opening modal');
     setShowModal(true); // Open the modal
   };
 
@@ -79,7 +82,7 @@ const Advisor = () => {
           <div className='advisor-head'>
             <p>Talk to our Advisor</p>
           </div>
-          <form className="enquiry-form" onSubmit={handleModal}>
+          <form className="enquiry-form" onSubmit={(e) => { handleModal(e); handleSubmit(e); }}>
             <div className='advisor-row'>
             <div className="col-md-5">
               <label htmlFor="inputName4" className="form-label">

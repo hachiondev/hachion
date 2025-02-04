@@ -203,12 +203,6 @@ const handleTimeChange = (newValue) => {
   
     const currentDate = new Date().toISOString().split("T")[0];
   
-    // Validate required fields
-    if (!courseData.schedule_category_name || !courseData.schedule_course_name || !courseData.trainer_name) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-  
     try {
       // Add the current date to the courseData
       const dataToSubmit = { ...courseData, created_date: currentDate };

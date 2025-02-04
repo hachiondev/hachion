@@ -108,7 +108,7 @@ const Trending = () => {
       course_id={course.id} // Pass the course ID
       RatingByPeople={course.ratingByNumberOfPeople}
       Rating={course.starRating}
-    
+    onClick={handleCardClick}
       className="course-card"
     />
   ))}

@@ -71,7 +71,7 @@ export default function Resume() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",junior_level:"",middle_level:"",senior_level:""});
-    const [resumeData, setResumeData] = useState([{
+    const [resumeData, setResumeData] = useState({
         resume_id:"",
           category_name:"",
             course_name: "",
@@ -79,7 +79,7 @@ export default function Resume() {
            junior_level:"",
            middle_level:"",
            senior_level:""
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
   
 
@@ -179,12 +179,12 @@ const paginatedRows = filteredResume.slice(
           console.error("Error deleting Resume:", error); 
         } }; 
         useEffect(() => {
-          const filtered = resume.filter(resume =>
-              resume.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.junior_level.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.middle_level.toLowerCase().includes(searchTerm.toLowerCase())||
-              resume.senior_level.toLowerCase().includes(searchTerm.toLowerCase())
+          const filtered = resume.filter(resumeData =>
+              resumeData.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              resumeData.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              resumeData.junior_level.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              resumeData.middle_level.toLowerCase().includes(searchTerm.toLowerCase())||
+              resumeData.senior_level.toLowerCase().includes(searchTerm.toLowerCase())
           );
           setFilteredResume(filtered);
       }, [searchTerm,filteredResume]);
@@ -396,7 +396,7 @@ const paginatedRows = filteredResume.slice(
         </TableHead>
         <TableBody>
   {resume.map((row, index) => (
-    <StyledTableRow key={row.regularvideo_id}>
+    <StyledTableRow key={row.resume_id}>
       <StyledTableCell>
         <Checkbox />
       </StyledTableCell>

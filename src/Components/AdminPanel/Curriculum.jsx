@@ -72,13 +72,13 @@ export default function Curriculum() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:""});
-    const [curriculumData, setCurriculumData] = useState([{
+    const [curriculumData, setCurriculumData] = useState({
         curriculum_id:"",
           category_name:"",
             course_name: "",
          curriculum_pdf:"",
             date:currentDate,
-         }]);
+         });
         const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -563,17 +563,20 @@ useEffect(() => {
         value={editedRow.course_name || ""}
         onChange={handleInputChange}
       >
-        <option value="">Select Course</option>
-        <option>QA Automation</option>
-        <option>Load Runner</option>
-        <option>QA Automation Testing</option>
-        <option>Mobile App Testing</option>
-      </select>
+       <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
+    </select>
     </div>
     </div>
 
     <div className="mb-3">
-      <label htmlFor="faqPDF" className="form-label">FAQ's PDF</label>
+      <label htmlFor="faqPDF" className="form-label">Curriculum PDF</label>
       <input
         className="form-control-sample"
         type="file"

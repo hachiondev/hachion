@@ -73,16 +73,17 @@ export default function VideoAccess() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",description:"",trainer_name:"",user_email:"",permission:true});
-    const [videoData, setVideoData] = useState([{
-        videoaccess_id:"",
-          category_name:"",
-            course_name: "",
-            date:currentDate,
-            user_email:"",
-            description:"",
-            trainer_name:"",
-            permission:false
-         }]);
+    const [videoData, setVideoData] = useState({
+      videoaccess_id: "",
+      category_name: "",
+      course_name: "",
+      date: currentDate,
+      user_email: "",
+      description: "",
+      trainer_name: "",
+      permission: false
+  });
+  
          const [currentPage, setCurrentPage] = useState(1);
          const [rowsPerPage, setRowsPerPage] = useState(10);
          const [permission, setPermission] = useState(false); // Initial state: off (false)
@@ -246,13 +247,14 @@ export default function VideoAccess() {
              
             };
     
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setVideoData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
+            const handleChange = (e) => {
+              const { name, value } = e.target;
+              setVideoData(prevData => ({
+                  ...prevData,
+                  [name]: value, // Update the correct field
+              }));
+          };
+          
       const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -266,7 +268,7 @@ export default function VideoAccess() {
           const response = await axios.post("http://localhost:8080/videoaccess/add", dataToSubmit);
           if (response.status === 200) {
             alert("video details added successfully");
-            setVideoData([...videoData, dataToSubmit]); // Update local state
+            setVideoAccess([...videoAccess, dataToSubmit]); 
             handleReset(); // Clear form fields
           }
         } catch (error) {
@@ -321,7 +323,7 @@ export default function VideoAccess() {
   </div>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Trainer Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={videoData.category_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='trainer_name' value={videoData.trainer_name} onChange={handleChange}>
     <option value="" disabled>
           Select Trainer
         </option>
@@ -337,16 +339,18 @@ export default function VideoAccess() {
   <div className="course-row">
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={videoData.category_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Category
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
+    <select 
+    id="inputState" 
+    class="form-select" 
+    name="category_name" 
+    value={videoData.category_name} 
+    onChange={handleChange}
+>
+    <option value="" disabled>Select Category</option>
+    {course.map((curr) => (
+        <option key={curr.id} value={curr.name}>{curr.name}</option>
+    ))}
+</select>
 </div>
 
   <div class="col-md-3">
@@ -472,8 +476,8 @@ export default function VideoAccess() {
           </TableRow>
         </TableHead>
         <TableBody>
-        {displayedCategories.length > 0 ? (
-          displayedCategories.map((row, index) => (
+        {videoAccess.length > 0 ? (
+          videoAccess.map((row, index) => (
     <StyledTableRow key={row.regularvideo_id}>
       <StyledTableCell align="center">
         <Checkbox />

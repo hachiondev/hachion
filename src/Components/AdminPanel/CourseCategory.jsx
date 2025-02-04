@@ -129,27 +129,14 @@ const displayedCategories = filteredCategories.slice(
   const formattedDate = courseData.date ? dayjs(courseData.date).format('YYYY-MM-DD') : null;
   
   const handleFilter = () => {
-    let filteredData = categories;
-
-    if (startDate) {
-      filteredData = filteredData.filter(category =>
-        new Date(category.date) >= new Date(startDate)
-      );
-    }
-    if (endDate) {
-      filteredData = filteredData.filter(category =>
-        new Date(category.date) <= new Date(endDate)
-      );
-    }
-    if (searchTerm) {
-      filteredData = filteredData.filter(category =>
-        category.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
+    const filteredData = categories.filter(category => {
+      const matchesDate = (!startDate || new Date(category.date) >= new Date(startDate)) &&
+                          (!endDate || new Date(category.date) <= new Date(endDate));
+      const matchesSearch = !searchTerm || category.name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesDate && matchesSearch;
+    });
     setFilteredCategories(filteredData);
-  };
-
+  }    
  
   const handleSubmit = async () => {
     try {
@@ -161,6 +148,7 @@ const displayedCategories = filteredCategories.slice(
       if (response.status === 200) {
         alert("Category added successfully");
         setCategories((prev) => [...prev, response.data]);
+      
         setCourseData({ name: "", date: null });
       }
     } catch (error) {
@@ -207,6 +195,7 @@ const displayedCategories = filteredCategories.slice(
     {showAddCourse?(<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className="course-category">
+        <h3>Course Category</h3>
               <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
@@ -268,7 +257,7 @@ const displayedCategories = filteredCategories.slice(
     </LocalizationProvider>
    </>):(<LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-        <p>{pageTitle}</p>
+        <h3>{pageTitle}</h3>
         <div className='category'>
           <div className='category-header'>
             <p>{headerTitle}</p>
@@ -336,8 +325,14 @@ const displayedCategories = filteredCategories.slice(
             </TableRow>
           </TableHead>
           <TableBody>
-  {displayedCategories.length > 0
-    ? displayedCategories.map((course, index) => (
+  {displayedCategories.length === 0 ?(
+      <StyledTableRow>
+        <StyledTableCell colSpan={6} align="center">
+          No courses available.
+        </StyledTableCell>
+      </StyledTableRow>
+    ):(
+    displayedCategories.map((course, index) => (
         <StyledTableRow key={course.id}>
           <StyledTableCell sx={{ width: 100 }} align="center">
             <Checkbox />
@@ -355,13 +350,7 @@ const displayedCategories = filteredCategories.slice(
           </StyledTableCell>
         </StyledTableRow>
       ))
-    : (
-      <StyledTableRow>
-        <StyledTableCell colSpan={6} align="center">
-          No courses available.
-        </StyledTableCell>
-      </StyledTableRow>
-    )}
+)}
 </TableBody>
         </Table>
       </TableContainer>

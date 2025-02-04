@@ -405,7 +405,7 @@ const handleChange = (e) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {trainers.map((row) => (
+          {filteredTrainers.map((row) => (
             <StyledTableRow key={row.S_No}>
               <StyledTableCell><Checkbox /></StyledTableCell>
               <StyledTableCell>{row.trainer_id}</StyledTableCell>

@@ -63,6 +63,14 @@ function App() {
             
           }
         />
+        <Route
+          path="/"
+          element={
+            
+              <Home />
+            
+          }
+        />
       <Route path='/course' element={<Course/>}/>
       <Route path='/qaautomation/:course_id' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>

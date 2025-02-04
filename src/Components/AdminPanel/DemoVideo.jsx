@@ -72,12 +72,12 @@ export default function DemoVideo() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",video_link:"",video_description:"",video_duration:""});
-    const [videoData, setVideoData] = useState([{
+    const [videoData, setVideoData] = useState({
         demovideo_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
 const rowsPerPage = 5;
 
@@ -195,14 +195,17 @@ const paginatedRows = filteredVideo.slice(
             setOpen(true); // Open the modal
            
           };
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setVideoData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
+          const handleChange = (e) => {
+            const { name, value } = e.target;
+            
+            setVideoData((prevData) => ({
+              ...prevData,
+              [name]: value,
+            }));
+          };
+          
       const handleSubmit = async (e) => {
+        console.log(videoData);
         e.preventDefault();
       
         const currentDate = new Date().toISOString().split("T")[0]; // Today's date
@@ -259,7 +262,7 @@ const paginatedRows = filteredVideo.slice(
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={videoData.category_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='category_name' value={videoData.category_name||""} onChange={handleChange}>
     <option value="" disabled>
           Select Category
         </option>
@@ -272,7 +275,7 @@ const paginatedRows = filteredVideo.slice(
   </div>
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={videoData.course_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='course_name' value={videoData.course_name||""} onChange={handleChange}>
     <option value="" disabled>
           Select Course
         </option>

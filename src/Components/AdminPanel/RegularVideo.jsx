@@ -72,12 +72,12 @@ export default function RegularVideo() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",video_link:"",video_description:"",week:"",day:"",video_duration:""});
-    const [videoData, setVideoData] = useState([{
+    const [videoData, setVideoData] = useState({
         regularvideo_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
 const rowsPerPage = 5;
 
@@ -218,13 +218,14 @@ const paginatedRows = filteredVideo.slice(
             setOpen(true); // Open the modal
            
           };
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setVideoData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
+          const handleChange = (e) => {
+            const { name, value } = e.target;
+            
+            setVideoData((prevData) => ({
+              ...prevData,
+              [name]: value,
+            }));
+          };
       const handleSubmit = async (e) => {
         e.preventDefault();
       

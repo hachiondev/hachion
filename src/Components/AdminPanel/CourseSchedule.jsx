@@ -919,7 +919,7 @@ const[message,setMessage]=useState(false);
   const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
   const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
   const currentDate = new Date().toISOString().split('T')[0];
-  const [courseData, setCourseData] = useState([{
+  const [courseData, setCourseData] = useState({
   course_schedule_id:Date.now(),
     schedule_category_name:"",
       schedule_course_name: "",
@@ -935,7 +935,7 @@ const[message,setMessage]=useState(false);
       meeting:"",
       batch_id:""
     
-    }]);
+    });
     const [currentPage, setCurrentPage] = useState(1);
      const [rowsPerPage, setRowsPerPage] = useState(10);
                
@@ -966,19 +966,31 @@ const deleteRow = (id) => {
     setRows(rows.filter(row => row.id !== id));
 };
 const handleDateChange = (newValue) => {
-  const parsedDate = dayjs(newValue); // Ensure proper parsing
+  if (!newValue) return;
+
+  const parsedDate = dayjs(newValue);
   
-  if (!parsedDate.isValid()) { // Validate the date
+  if (!parsedDate.isValid()) {
     console.error("Invalid date:", newValue);
     return;
   }
 
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_date: parsedDate.format('YYYY-MM-DD'), // Format the date
-    schedule_week: parsedDate.format('dddd'), // Format the weekday
+    schedule_date: parsedDate.format('YYYY-MM-DD'),
+    schedule_week: parsedDate.format('dddd'),
   }));
 };
+
+const handleTimeChange = (newValue) => {
+  if (!newValue) return;
+
+  setCourseData((prevData) => ({
+    ...prevData,
+    schedule_time: dayjs(newValue).format('HH:mm'),
+  }));
+};
+
 useEffect(() => {
   const fetchCategory = async () => {
     try {
@@ -1014,12 +1026,7 @@ useEffect(() => {
 }, []);
 
 // Handle time change
-const handleTimeChange = (newValue) => {
-  setCourseData((prevData) => ({
-    ...prevData,
-    schedule_time: newValue ? dayjs(newValue).format('HH:mm') : null,
-  }));
-};
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -1030,7 +1037,7 @@ const handleTimeChange = (newValue) => {
       };
     
   const handleReset = () => {
-    setCourseData([{
+    setCourseData({
         schedule_category_name:"",
           schedule_course_name: "",
         schedule_date:"",
@@ -1041,33 +1048,37 @@ const handleTimeChange = (newValue) => {
         schedule_mode:"",
         trainer_name:"",
           created_date:"",
-    }]);
+    });
   };
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
   
     const currentDate = new Date().toISOString().split("T")[0];
+    const dataToSubmit = { ...courseData, created_date: currentDate };
   
     try {
-      // Add the current date to the courseData
-      const dataToSubmit = { ...courseData, created_date: currentDate };
+      const response = await axios.post(
+        "https://api.hachion.co/schedulecourse/add", 
+        dataToSubmit, 
+        { headers: { "Content-Type": "application/json" } }
+      );
   
-      // Send the POST request
-      const response = await axios.post("https://api.hachion.co/schedulecourse/add", dataToSubmit);
-  
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         alert("Course added successfully");
-  
-        // Update the courses state to include the new course
-        const updatedCourses = [...courses, dataToSubmit];
-        setCourses(updatedCourses);
+        const updatedResponse = await axios.get('https://api.hachion.co/schedulecourse');
+        setCourses(updatedResponse.data);
+        setFilteredCourses(updatedResponse.data);
         handleReset();
       }
     } catch (error) {
-      console.error("Error adding course:", error.message);
-      alert("There was an error adding the course.");
+      console.error("Error adding course:", error.response?.data || error.message);
+      alert("Error: " + (error.response?.data?.message || "Failed to add course"));
     }
-  }
+  };
+  
+  
+ 
+  
   
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -1085,28 +1096,34 @@ const handleTimeChange = (newValue) => {
     setCourses(filtered);
   };
 
-useEffect(() => {
-  const fetchCourse = async () => {
-    try {
-      const response = await axios.get('https://api.hachion.co/schedulecourse');
-      setCourses(response.data);
-      setFilteredCourses(response.data);
-    //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
-    } catch (error) {
-      console.error("Error fetching categories:", error.message);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get('https://api.hachion.co/schedulecourse');
+        setCourses(response.data);
+        setFilteredCourses(response.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+      }
+    };
+    fetchCourse();
+  }, []); // Remove filteredCourses from dependencies
+  
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredCourses(courses);
+      return;
     }
-  };
-  fetchCourse();
-}, [filteredCourses]);
-useEffect(() => {
-  const filtered = courses.filter((course) =>
-    course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  setFilteredCourses(filtered)
-
-}, [searchTerm,filteredCourses]);
+  
+    const filtered = courses.filter((course) =>
+      course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
+    setFilteredCourses(filtered);
+  }, [searchTerm, courses]); // Only depend on searchTerm and courses
+  
 const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
@@ -1145,31 +1162,28 @@ const handleCloseModal=()=>{
  
 }
 const handleSave = async () => {
- 
   try {
     const response = await axios.put(
       `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 
-    // Update only the edited row in the trainers state
-    setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course.course_schedule_id === selectedRow.course_schedule_id ? response.data : course
-      )
-    );
-    setMessage(true); // Show the success message
+    if (response.status === 200) {
+      alert("Schedule updated successfully");
 
-    // Hide the message after 5 seconds
-    setTimeout(() => {
-      setMessage(false);
-    }, 5000);
+      // Fetch latest courses from API instead of manually updating
+      const updatedResponse = await axios.get('https://api.hachion.co/schedulecourse');
+      setCourses(updatedResponse.data);
+      setFilteredCourses(updatedResponse.data);
 
-    setOpen(false); // Close the dialog
+      setOpen(false); // Close the modal
+    }
   } catch (error) {
-    console.error("Error updating trainer:", error);
+    console.error("Error updating schedule:", error);
+    alert("There was an error updating the schedule.");
   }
 };
+
 
 const handleInputChange = (e) => {
   const { name, value } = e.target;

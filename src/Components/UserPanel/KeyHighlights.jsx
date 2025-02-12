@@ -16,31 +16,7 @@ const KeyHighlights = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
   
-    // Fetch course details based on course_id
-    // useEffect(() => {
-    //   const fetchCourseData = async () => {
-    //     try {
-    //       setLoading(true);
-    //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-          
-    //       if (response.data) {
-    //         setCourse(response.data); // Set course details from API response
-    //       } else {
-    //         setError('Course not found');
-    //       }
-    //     } catch (err) {
-    //       setError('Error fetching course data');
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
-  
-    //   if (course_id) {
-    //     fetchCourseData();
-    //   } else {
-    //     console.error('Course ID is missing!');
-    //   }
-    // }, [course_id]);
+
     useEffect(() => {
       const fetchCourse = async () => {
         try {

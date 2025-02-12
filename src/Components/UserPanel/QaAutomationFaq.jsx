@@ -4,41 +4,16 @@ import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
+
 const QaAutomationFaq = () => {
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
- const { courseName } = useParams(); // Extract course_id from URL params
-    const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
-    const [course, setCourse] = useState(null);
-  // Toggle additional topics
-  const handleViewMore = () => {
-    setShowMore(!showMore);
-  };
-  // useEffect(() => {
-  //   const fetchCourseData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-  //       if (response.data) {
-  //         setCourse(response.data);
-  //       } else {
-  //         setError('Course not found');
-  //       }
-  //     } catch (err) {
-  //       setError('Error fetching course data');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  
-  //   if (course_id) {
-  //     fetchCourseData();
-  //   } else {
-  //     console.error('Course ID is missing!');
-  //   }
-  // }, [course_id]);
+  const { courseName } = useParams(); // Extract courseName from URL params
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [course, setCourse] = useState(null);
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -50,10 +25,11 @@ const QaAutomationFaq = () => {
         setCourse(courseData);
       } catch (error) {
         console.error('Error fetching course details:', error);
-      }finally {
-              setLoading(false);
-    }
-  }
+        setError('Failed to load course details.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchCourse();
   }, [courseName]);
@@ -61,20 +37,28 @@ const QaAutomationFaq = () => {
   useEffect(() => {
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('http://api.hachion.co/faq');
-        setFaq(response.data);
+        const response = await axios.get('https://api.hachion.co/faq');
+        const filteredFaq = response.data.filter(
+          (item) =>
+            item.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setFaq(filteredFaq);
       } catch (error) {
         console.error('Error fetching FAQ:', error.message);
+        setError('Failed to load FAQs.');
       }
     };
+
     fetchFaq();
-  }, []);
-  
-  // Move the return statement after both useEffects
+  }, [courseName]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  
-  // Toggle expanded content for each topic
+
+  const handleViewMore = () => {
+    setShowMore(!showMore);
+  };
+
   const handleToggleExpand = (index) => {
     setExpandedTopics((prevState) => ({
       ...prevState,
@@ -82,12 +66,8 @@ const QaAutomationFaq = () => {
     }));
   };
 
-  // Fetch FAQ data from API
-
-
-  // Render topics with slicing
   const renderTopics = () => {
-    const visibleFaq = showMore ? faq : faq.slice(0, 5); // Show only 5 items if not expanded
+    const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
     return visibleFaq.map((item, index) => (
       <div key={index}>
@@ -119,12 +99,14 @@ const QaAutomationFaq = () => {
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
-        <h1 className="qa-heading">{course.courseName} FAQ's</h1>
+        <h1 className="qa-heading">{course?.courseName} FAQ's</h1>
         <button className="btn-curriculum">
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download FAQ's
         </button>
       </div>
-      <div className="curriculum-topic">{renderTopics()}</div>
+      <div className="curriculum-topic">
+        {faq.length > 0 ? renderTopics() : <p>No FAQs available for this course.</p>}
+      </div>
       {faq.length > 5 && (
         <div className="view-div">
           <button className="view-more-btn" onClick={handleViewMore}>

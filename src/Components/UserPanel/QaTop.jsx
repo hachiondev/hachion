@@ -8,7 +8,7 @@ import { IoPlayCircleOutline } from 'react-icons/io5';
 import './Course.css';
 
 const QaTop = ({ onVideoButtonClick }) => {
-  const { course_id } = useParams(); // Extract course_id from URL params
+  const { courseName } = useParams(); // Extract course_id from URL params
   const navigate = useNavigate();
 
   const [course, setCourse] = useState(null);
@@ -16,30 +16,51 @@ const QaTop = ({ onVideoButtonClick }) => {
   const [error, setError] = useState(null);
 
   // Fetch course details based on course_id
+  // useEffect(() => {
+  //   const fetchCourseData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
+  //       if (response.data) {
+  //         setCourse(response.data); // Set course details from API response
+  //       } else {
+  //         setError('Course not found');
+  //       }
+  //     } catch (err) {
+  //       setError('Error fetching course data');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (course_id) {
+  //     fetchCourseData();
+  //   } else {
+  //     console.error('Course ID is missing!');
+  //   }
+  // }, [course_id]);
   useEffect(() => {
-    const fetchCourseData = async () => {
+    const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-        if (response.data) {
-          setCourse(response.data); // Set course details from API response
-        } else {
-          setError('Course not found');
-        }
-      } catch (err) {
-        setError('Error fetching course data');
-      } finally {
+        const response = await axios.get('https://api.hachion.co/courses/all');
+        const courseData = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setCourse(courseData);
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+      }finally {
         setLoading(false);
-      }
     };
+  }
+    fetchCourse();
+  }, [courseName]);
 
-    if (course_id) {
-      fetchCourseData();
-    } else {
-      console.error('Course ID is missing!');
-    }
-  }, [course_id]);
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!course) return <div>Course details not available</div>;
   // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];

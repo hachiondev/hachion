@@ -383,7 +383,7 @@ flex-direction: row;
 }
 
 .qa-automation-left img{
-margin-right: -20px;
+/* margin-right: -20px; */
 height:180px;
 }
 

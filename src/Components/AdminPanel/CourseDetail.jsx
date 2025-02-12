@@ -67,7 +67,7 @@ const CourseDetail = ({
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   useEffect(() => {
@@ -112,7 +112,8 @@ const handleSubmit = async (e) => {
     courseName: formData.courseName,
     date: currentDate,
     youtubeLink: formData.youtubeLink,
-    numberOfClasses:formData.numberOfClasses,
+    numberOfClasses: formData.numberOfClasses,
+    dailySessions: formData.dailySessions,
     liveTrainingHours: formData.liveTrainingHours,
     labExerciseHours: formData.labExerciseHours,
     realTimeProjects: formData.realTimeProjects,
@@ -125,9 +126,10 @@ const handleSubmit = async (e) => {
     keyHighlights4: formData.keyHighlights4,
     keyHighlights5: formData.keyHighlights5,
     keyHighlights6: formData.keyHighlights6,
-    amount: formData.amount,
-    discount: formData.discount,
-    total: formData.total,
+    amount: formData.amount,discount: formData.discount,total: formData.total,
+    mamount: formData.mamount,mdiscount: formData.mdiscount,mtotal: formData.mtotal,
+    samount: formData.samount,sdiscount: formData.sdiscount,stotal: formData.stotal,
+    camount: formData.camount,cdiscount: formData.cdiscount,ctotal: formData.ctotal,
     mentoring1: formData.mentoring1,
     mentoring2: formData.mentoring2,
     self1: formData.self1,
@@ -158,12 +160,13 @@ const handleSubmit = async (e) => {
       // Update course
       const response = await axios.put(
         `https://api.hachion.co/courses/update/${formData.course_id}`,
-        courseData,  // Send JSON instead of FormData
-        { headers: { "Content-Type": "application/json" } }
+        formNewData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-      
       if (response.status === 200) {
         alert("Course updated successfully");
+       
+        setShowAddCourse(false); // Hide the form
       }
     } else {
       // Add course
@@ -182,6 +185,102 @@ const handleSubmit = async (e) => {
     alert("Error submitting course.");
   }
 };
+const handleEditClick = async (course_id) => {
+  setFormMode('Edit');
+  setShowAddCourse(true);
+  try {
+    const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
+    if (response.status === 200) {
+      const course = response.data;
+      setFormData({
+        course_id: course.course_id || '',
+// Ensure the unique identifier is included
+       courseCategory: course.courseCategory || '',
+        courseName: course.courseName || '',
+        courseImage: course.courseImage||'', // Handle file uploads differently if needed
+        youtubeLink: course.youtubeLink || '',
+        numberOfClasses: course.numberOfClasses || '',
+        dailySessions: course.dailySessions || '',
+        liveTrainingHours: course.liveTrainingHours || '',
+        labExerciseHours: course.labExerciseHours || '',
+        realTimeProjects: course.realTimeProjects || '',
+        starRating: course.starRating || '',
+        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
+        totalEnrollment: course.totalEnrollment || '',
+        keyHighlights1:course.keyHighlights1||'',
+        keyHighlights2:course.keyHighlights2||'',
+        keyHighlights3:course.keyHighlights3||'',
+        keyHighlights4:course.keyHighlights4||'',
+        keyHighlights5:course.keyHighlights5||'',
+        keyHighlights6:course.keyHighlights6||'',
+        amount:course.amount||'',discount:course.discount||'',total:course.total||'',
+        mamount:course.mamount||'',mdiscount:course.mdiscount||'',mtotal:course.mtotal||'',
+        samount:course.samount||'',sdiscount:course.sdiscount||'',stotal:course.stotal||'',
+        camount:course.camount||'',cdiscount:course.cdiscount||'',ctotal:course.ctotal||'',
+        mentoring1:course.mentoring1||'',
+        mentoring2:course.mentoring2||'',
+        self1:course.self1||'',
+    self2:course.self2||'',
+    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
+    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
+            });
+    } else {
+      console.error('Failed to fetch course data');
+    }
+  } catch (error) {
+    console.error('Error fetching course data:', error);
+  }
+};
+
+//   try {
+//     if (formMode === "Edit") {
+//       // Update course
+//       // const response = await axios.put(
+//       //   `https://api.hachion.co/courses/update/${formData.course_id}`,
+//       //   courseData,  // Send the course data as JSON
+//       //   { headers: { "Content-Type": "application/json" } }
+//       // );
+//       const formDataToSend = new FormData();
+// formDataToSend.append("course", JSON.stringify(courseData));
+
+// if (formData.courseImage) {
+//   formDataToSend.append("courseImage", formData.courseImage);
+// }
+
+// const response = await axios.put(
+//   `https://api.hachion.co/courses/update/${formData.course_id}`,
+//   formDataToSend,
+//   { headers: { "Content-Type": "multipart/form-data" } }
+// );
+//       if (response.status === 200) {
+//         alert("Course updated successfully");
+//       }
+//     } else {
+//       // Add course (with image file)
+//       const formDataToSend = new FormData();
+//       formDataToSend.append("course", JSON.stringify(courseData));  // Send the course data as JSON
+      
+//       if (formData.courseImage) {
+//         formDataToSend.append("courseImage", formData.courseImage);  // Add the image as a file
+//       } else {
+//         console.error("No course image provided.");
+//       }
+
+//       const response = await axios.post("https://api.hachion.co/courses/add", formDataToSend, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+      
+//       if (response.status === 201) {
+//         alert("Course added successfully");
+//         setCourses((prevCourses) => [...prevCourses, response.data]);
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error submitting course:', error.response ? error.response.data : error.message);
+//     alert("Error submitting course.");
+//   }
+// };
+
 
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -242,51 +341,7 @@ const handleDelete = async (id) => {
   setShowAddCourse(false);
  
 }
-const handleEditClick = async (course_id) => {
-  setFormMode('Edit');
-  setShowAddCourse(true);
-  try {
-    const response = await fetch(`https://api.hachion.co/courses/${course_id}`);
-    if (response.ok) {
-      const course = await response.json();
-      setFormData({
-        course_id: course.course_id || '',
-// Ensure the unique identifier is included
-       courseCategory: course.courseCategory || '',
-        courseName: course.courseName || '',
-        courseImage: course.courseImage||'', // Handle file uploads differently if needed
-        youtubeLink: course.youtubeLink || '',
-        numberOfClasses: course.numberOfClasses || '',
-        dailySessions: course.dailySessions || '',
-        liveTrainingHours: course.liveTrainingHours || '',
-        labExerciseHours: course.labExerciseHours || '',
-        realTimeProjects: course.realTimeProjects || '',
-        starRating: course.starRating || '',
-        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
-        totalEnrollment: course.totalEnrollment || '',
-        keyHighlights1:course.keyHighlights1||'',
-        keyHighlights2:course.keyHighlights2||'',
-        keyHighlights3:course.keyHighlights3||'',
-        keyHighlights4:course.keyHighlights4||'',
-        keyHighlights5:course.keyHighlights5||'',
-        keyHighlights6:course.keyHighlights6||'',
-        amount:course.amount||'',
-        discount:course.discount||'',
-        total:course.total||'',
-        mentoring1:course.mentoring1||'',
-        mentoring2:course.mentoring2||'',
-        self1:course.self1||'',
-    self2:course.self2||'',
-    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
-    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
-            });
-    } else {
-      console.error('Failed to fetch course data');
-    }
-  } catch (error) {
-    console.error('Error fetching course data:', error);
-  }
-};
+
 
   const handleAddTrendingCourseClick = () => {
     setFormMode('Add'); // Explicitly set formMode to 'Add'
@@ -521,7 +576,7 @@ Live Training
 <input type="number" class="form-control-mode" id="inputEmail4" name='discount'value={formData.discount} onChange={handleInputChange} />
 </div>
 <div class="col-md-4">
-<label for="inputEmail4" class="form-label">amount</label>
+<label for="inputEmail4" class="form-label">Total</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
 </div>
 </div>
@@ -534,15 +589,15 @@ Mentoring Mode
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
+<input type="number" class="form-control-mode" id="inputEmail4" name='mamount' value={formData.mamount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
+<input type="number" class="form-control-mode" id="inputEmail4" name='mdiscount' value={formData.mdiscount} onChange={handleInputChange}/>
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange} />
+<label for="inputEmail4" class="form-label">Total</label>
+<input type="number" class="form-control-mode" id="inputEmail4" name='mtotal' value={formData.mtotal} onChange={handleInputChange} />
 </div>
 </div>
 <div className='course-mode'>
@@ -554,15 +609,15 @@ Self Placed Training
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
+<input type="number" class="form-control-mode" id="inputEmail4" name='samount' value={formData.samount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
+<input type="number" class="form-control-mode" id="inputEmail4" name='sdiscount' value={formData.sdiscount} onChange={handleInputChange}/>
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
+<label for="inputEmail4" class="form-label">Total</label>
+<input type="number" class="form-control-mode" id="inputEmail4" name='stotal' value={formData.stotal} onChange={handleInputChange}/>
 </div>
 </div>
 
@@ -575,15 +630,15 @@ Corporate Training
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4"name='amount' value={formData.amount} onChange={handleInputChange} />
+<input type="number" class="form-control-mode" id="inputEmail4"name='camount' value={formData.camount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
 <label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange} />
+<input type="number" class="form-control-mode" id="inputEmail4" name='cdiscount' value={formData.cdiscount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
+<label for="inputEmail4" class="form-label">total</label>
+<input type="number" class="form-control-mode" id="inputEmail4" name='ctotal' value={formData.ctotal} onChange={handleInputChange}/>
 </div>
 </div>
 </div>

@@ -54,10 +54,17 @@ const Trending = () => {
     setShowMore(!showMore);
   };
 
-  const handleCardClick = (course_id) => {
-    navigate(`/qaautomation/${course_id}`);
+  // const handleCardClick = (course_id) => {
+  //   navigate(`/qaautomation/${course_id}`);
+  // };
+  const handleCardClick = (course) => {
+    if (!course?.courseName) return; // Prevent errors if courseName is undefined
+  
+    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-'); // Convert to slug
+    navigate(`/courses/${courseSlug}`); // Navigate with new path
   };
-
+  
+  
   return (
     <div className="training-events">
       <div className="training-events-head">
@@ -99,32 +106,34 @@ const Trending = () => {
       <div className="training-card-holder">
         {filteredCourses.slice(0, 4).map((course, index) => (
           <CourseCard
-            key={index}
-            heading={course.courseName}
-            month={course.numberOfClasses}
-            time={course.liveTrainingHours}
-            image={`https://api.hachion.co/${course.courseImage}`}
-            course_id={course.id}
-            RatingByPeople={course.ratingByNumberOfPeople}
-            Rating={course.starRating}
-            onClick={() => handleCardClick(course.id)} // Pass course ID
-            className="course-card"
-          />
+          key={index}
+          heading={course.courseName}
+          month={course.numberOfClasses}
+          time={course.liveTrainingHours}
+          image={`https://api.hachion.co/${course.courseImage}`}
+          course_id={course.id}
+          RatingByPeople={course.ratingByNumberOfPeople}
+          Rating={course.starRating}
+          onClick={() => handleCardClick(course)} // Pass entire course object
+          className="course-card"
+        />
+        
         ))}
         {showMore &&
           filteredCourses.slice(4).map((course, index) => (
             <CourseCard
-              key={index + 4}
-              heading={course.courseName}
-              month={course.numberOfClasses}
-              time={course.liveTrainingHours}
-              image={`https://api.hachion.co/${course.courseImage}`}
-              course_id={course.id}
-              RatingByPeople={course.ratingByNumberOfPeople}
-              Rating={course.starRating}
-              className="course-card"
-              onClick={() => handleCardClick(course.id)} // Pass course ID
-            />
+  key={index}
+  heading={course.courseName}
+  month={course.numberOfClasses}
+  time={course.liveTrainingHours}
+  image={`https://api.hachion.co/${course.courseImage}`}
+  course_id={course.id}
+  RatingByPeople={course.ratingByNumberOfPeople}
+  Rating={course.starRating}
+  onClick={() => handleCardClick(course)} // Pass entire course object
+  className="course-card"
+/>
+
           ))}
         {filteredCourses.length === 0 && <p>No courses available.</p>}
       </div>

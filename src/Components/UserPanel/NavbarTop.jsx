@@ -4,7 +4,7 @@ import { IoSearch } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
 import { GiHamburgerMenu } from "react-icons/gi";
-import profile1 from '../../Assets/profile1.jfif';
+import profile1 from '../../Assets/profile2.png';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
@@ -16,53 +16,67 @@ const NavbarTop = () => {
   const [searchVisible, setSearchVisible] = useState(true);
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Manage login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage login state
   const navigate = useNavigate();
   const drawerRef = useRef(null); // Reference to the drawer for click detection
+   const [userData, setUserData] = useState(null);
+  
+   useEffect(() => {
+    console.log("Checking localStorage for user data...");
+    const storedUserData = localStorage.getItem('loginuserData');
+    if (storedUserData) {
+      const parsedData = JSON.parse(storedUserData);
+      setUserData(parsedData);
+      setIsLoggedIn(true);
+      console.log("User data found:", parsedData);
+    } else {
+      console.log("No user data found. User is not logged in.");
+    }
+  }, []);
 
-  // Function to toggle drawer
-  const toggleDrawer = () => {
-    setDrawerOpen(!isDrawerOpen);
+  const handleLogout = () => {
+    console.log("Logging out user...");
+    localStorage.removeItem('loginuserData'); 
+    setIsLoggedIn(false);
+    setUserData(null);
+    console.log("User logged out successfully.");
   };
 
-  // Function to handle active navigation link
+  const toggleDrawer = () => {
+    setDrawerOpen(!isDrawerOpen);
+    console.log(`Drawer ${isDrawerOpen ? "closed" : "opened"}`);
+  };
+
   const handleNavClick = (link) => {
     setActiveLink(link);
+    console.log(`Navigating to: ${link}`);
   };
 
   const handleClick = () => {
+    console.log("Navigating to Home");
     navigate('/home');
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false); // Set login state to false on logout
-    // setDrawerOpen(false); // Close drawer after logout
-  };
-
-  // Set searchVisible to false on mobile screen resize
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      if (isMobile) {
-        setSearchVisible(false);
-      } else {
-        setSearchVisible(true);
-        setMobileSearchOpen(false);
-      }
+      setSearchVisible(!isMobile);
+      setMobileSearchOpen(false);
+      console.log(`Window resized. Mobile view: ${isMobile}`);
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Call initially
+    handleResize(); 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  // Close drawer when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (drawerRef.current && !drawerRef.current.contains(event.target)) {
         setDrawerOpen(false);
+        console.log("Clicked outside drawer. Closing drawer.");
       }
     };
 
@@ -159,7 +173,15 @@ const NavbarTop = () => {
                 <div className="profile">
                   <div className="dropdown">
                     <div className="user-name">
-                      <Avatar alt="user_name" src={profile1} /> Hachion
+                    <Avatar src={userData?.picture || profile1} alt="user_name" />
+                    <Link
+                                      className="user-name"
+                                      role="button"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      {userData?.name || 'Hachion User'}
+                                    </Link>
                     </div>
                     <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
                       <FaUserAlt style={{ color: '#00AEEF' }} /> Dashboard

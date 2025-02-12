@@ -24,7 +24,8 @@ const QaAutomation = () => {
   const upcomingHeaderRef = useRef(null);
   const footerRef = useRef(null); // Footer reference for intersection observer
   const [isSticky, setIsSticky] = useState(false);
-  const { course_id } = useParams(); // Get course_id from URL
+  // const { course_id } = useParams(); // Get course_id from URL
+  const { courseName } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -78,27 +79,45 @@ const QaAutomation = () => {
       curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  // useEffect(() => {
+  //   // Fetch the course details by course_id
+  //   const fetchCourseData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
+  //       console.log(response);
+  //       if (response.data) {
+  //         setCourseData(response.data); // Set course data based on course_id
+  //       } else {
+  //         setError('Course not found');
+  //       }
+  //     } catch (err) {
+  //       setError('Error fetching course data');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCourseData();
+  // }, [course_id]); // Fetch new course data when course_id changes
   useEffect(() => {
-    // Fetch the course details by course_id
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-        console.log(response);
-        if (response.data) {
-          setCourseData(response.data); // Set course data based on course_id
-        } else {
-          setError('Course not found');
-        }
-      } catch (err) {
-        setError('Error fetching course data');
-      } finally {
-        setLoading(false);
-      }
-    };
+        const response = await axios.get('https://api.hachion.co/courses/all');
+        const course = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setCourseData(course);
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+      }finally {
+              setLoading(false);
+    }
+  }
 
     fetchCourseData();
-  }, [course_id]); // Fetch new course data when course_id changes
+  }, [courseName]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

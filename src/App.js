@@ -74,7 +74,10 @@ function App() {
           }
         />
       <Route path='/course' element={<Course/>}/>
-      <Route path='/qaautomation/:course_id' element={<QaAutomation/>}/>
+      <Route path='/courses/:courseName' element={<QaAutomation />} />
+
+      {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
+      {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminlogin' element={<AdminLogin/>}/>

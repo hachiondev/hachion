@@ -248,7 +248,7 @@ useEffect(() => {
     }
   };
   fetchCourse();
-}, [filteredCourses]);
+}, []);
 useEffect(() => {
   const filtered = courses.filter((course) =>
     course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||

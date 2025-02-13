@@ -124,7 +124,7 @@ const[message,setMessage]=useState(false);
   
     try {
       
-      const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/trainers/add", trainerData
+      const response = await axios.post("http://localhost:8080/trainers/add", trainerData
       );
       
       if (response.status === 200) {
@@ -159,7 +159,7 @@ const[message,setMessage]=useState(false);
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/trainers');
+        const response = await axios.get('http://localhost:8080/trainers');
         setTrainers(response.data);
         setFilteredTrainers(response.data);
       } catch (error) {
@@ -190,7 +190,7 @@ const handleDeleteConfirmation = (trainerId) => {
 const handleDelete = async (trainer_id) => {
  
    try { 
-    const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/trainers/delete/${trainer_id}`); 
+    const response = await axios.delete(`http://localhost:8080/trainers/delete/${trainer_id}`); 
     console.log("Trainer deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
@@ -220,7 +220,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `http://160.153.175.69:8080/HachionUserDashboad/trainers/update/${selectedRow.trainer_id}`,
+      `http://localhost:8080/trainers/update/${selectedRow.trainer_id}`,
       editedRow
     );
 

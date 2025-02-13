@@ -144,7 +144,7 @@ const ContactUs = () => {
   <h3>Enquiries</h3>
   <div className='contact-block'>
     <img src={whatsappIcon} alt='whatsapp-icon'/>
-    <p className='contact-info'> +91 9490323388</p>
+    <p className='contact-info'> +1 (732) 485-2499 </p>
   </div>
   <div className='contact-block'>
     <img src={mailIcon} alt='mail-icon'/>

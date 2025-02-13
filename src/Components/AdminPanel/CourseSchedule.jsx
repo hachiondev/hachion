@@ -57,6 +57,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function CourseSchedule() {
+
+  const[trainer,setTrainer]=useState([]);
  const[courses,setCourses]=useState([]);
  const[category,setCategory]=useState([]);
  const[courseCategory,setCourseCategory]=useState([]);
@@ -68,11 +70,11 @@ const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
-  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting:"",batch_id:""});
+  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting:""});
+  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting:""});
   const currentDate = new Date().toISOString().split('T')[0];
-  const [courseData, setCourseData] = useState([{
-  course_schedule_id:Date.now(),
+  const [courseData, setCourseData] = useState({
+  course_schedule_id:"",
     schedule_category_name:"",
       schedule_course_name: "",
     schedule_date:null,
@@ -85,9 +87,9 @@ const[message,setMessage]=useState(false);
       created_date:currentDate,
       pattern:"",
       meeting:"",
-      batch_id:""
+     
     
-    }]);
+    });
     const [currentPage, setCurrentPage] = useState(1);
      const [rowsPerPage, setRowsPerPage] = useState(10);
                
@@ -134,13 +136,35 @@ const handleDateChange = (newValue) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/course-categories/all");
+      const response = await axios.get("http://localhost:8080/course-categories/all");
       setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
     }
   };
   fetchCategory();
+}, []);
+useEffect(() => {
+  const fetchCourseCategory = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/courses/all");
+      setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCourseCategory();
+}, []);
+useEffect(() => {
+  const fetchTrainer = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/trainers");
+      setTrainer(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchTrainer();
 }, []);
 
 // Handle time change
@@ -151,16 +175,16 @@ const handleTimeChange = (newValue) => {
   }));
 };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCourseData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-    
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setCourseData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
+
   const handleReset = () => {
-    setCourseData([{
+    setCourseData({
         schedule_category_name:"",
           schedule_course_name: "",
         schedule_date:"",
@@ -171,50 +195,30 @@ const handleTimeChange = (newValue) => {
         schedule_mode:"",
         trainer_name:"",
           created_date:"",
-    }]);
+    });
   };
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-  
-    const currentDate = new Date().toISOString().split("T")[0];
-  
-    // Validate required fields
-    if (!courseData.schedule_category_name || !courseData.schedule_course_name || !courseData.trainer_name) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-  
+    const formattedCourseData = {
+      course_schedule_id: courseData.course_schedule_id,
+      schedule_category_name: courseData.schedule_category_name,
+      schedule_course_name: courseData.schedule_course_name,
+      schedule_date: courseData.schedule_date,
+      schedule_week: courseData.schedule_week,
+      schedule_time: courseData.schedule_time,
+      schedule_duration: courseData.schedule_duration,
+      schedule_mode: courseData.schedule_mode,
+      trainer_name: courseData.trainer_name || "", // Ensure trainer name is not null
+      created_date: courseData.created_date,
+    };
+    
     try {
-      // Add the current date to the courseData
-      const dataToSubmit = { ...courseData, created_date: currentDate };
-  
-      // Send the POST request
-      const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/schedulecourse/add", dataToSubmit);
-  
-      if (response.status === 200) {
-        alert("Course added successfully");
-  
-        // Update the courses state to include the new course
-        const updatedCourses = [...courses, dataToSubmit];
-        setCourses(updatedCourses);
-  
-        // Reapply filtering to reflect the new data in the table
-        const filtered = updatedCourses.filter((course) =>
-          course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredCourses(filtered);
-  
-        // Reset the form fields
-        handleReset();
-      }
+      const response = await axios.post("http://localhost:8080/schedulecourse/add", formattedCourseData);
+      console.log("Course added successfully:", response.data);
     } catch (error) {
-      console.error("Error adding course:", error.message);
-      alert("There was an error adding the course.");
+      console.error("Error adding course:", error.response?.data || error.message);
     }
-  }
-  
+  }    
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -234,7 +238,7 @@ const handleTimeChange = (newValue) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/schedulecourse');
+      const response = await axios.get('http://localhost:8080/schedulecourse');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -243,7 +247,7 @@ useEffect(() => {
     }
   };
   fetchCourse();
-}, [filteredCourses]);
+}, []);
 useEffect(() => {
   const filtered = courses.filter((course) =>
     course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -258,7 +262,7 @@ const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
 
 const handleDeleteConfirmation = (course_schedule_id) => {
-  if (window.confirm("Are you sure you want to delete this trainer?",courseData.trainer_name)) {
+  if (window.confirm("Are you sure you want to delete this course?",courseData.trainer_name)) {
     handleDelete(course_schedule_id);
   }
 };
@@ -266,8 +270,8 @@ const handleDeleteConfirmation = (course_schedule_id) => {
 const handleDelete = async (course_schedule_id) => {
  
    try { 
-    const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/schedulecourse/delete/${course_schedule_id}`); 
-    console.log("Trainer deleted successfully:", response.data); 
+    const response = await axios.delete(`http://localhost:8080/schedulecourse/delete/${course_schedule_id}`); 
+    console.log("Courses deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
   } }; 
@@ -294,7 +298,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `http://160.153.175.69:8080/HachionUserDashboad/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 
@@ -367,24 +371,29 @@ const handleInputChange = (e) => {
           <label for="inputState" class="form-label">Course Name</label>
           <select id="inputState" class="form-select" name='schedule_course_name' 
           value={courseData.schedule_course_name} onChange={handleChange}>
-            <option selected>Select course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Manual Testing</option>
-      <option>Mobile App Testing</option>
-        {courses.map((curr) => (
-          <option key={curr.id} value={curr.course_name}>
-            {curr.course_name}
+            <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
           </option>
         ))}
           </select>
         </div>
         <div class="col-md-3">
           <label for="inputState" class="form-label">Trainer Name</label>
-          <input type="text" class="form-select" placeholder="Trainer name" aria-label="First name" 
-    name="trainer_name"
-    value={courseData.trainer_name}
-    onChange={handleChange}/>
+          <select id="inputState" class="form-select" name='trainer_name' 
+          value={courseData.trainer_name} onChange={handleChange}>
+            <option value="" disabled>
+          Select Trainer
+        </option>
+        {trainer.map((curr) => (
+          <option key={curr.id} value={curr.trainer_name}>
+            {curr.trainer_name}
+          </option>
+        ))}
+          </select>
           </div>
         </div>
         <TableContainer component={Paper}>
@@ -669,11 +678,14 @@ const handleInputChange = (e) => {
             value={editedRow.schedule_course_name || ""}
             onChange={handleInputChange}
           >
-            <option value="">Select Course</option>
-            <option>QA Automation</option>
-            <option>Load Runner</option>
-            <option>QA Automation Testing</option>
-            <option>Mobile App Testing</option>
+            <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
           </select>
         </div>
         </div>
@@ -781,7 +793,7 @@ const handleInputChange = (e) => {
       </LocalizationProvider>
     
         </DialogContent>
-        <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+        <DialogActions>
          
           <Button onClick={handleSave} className='update-btn'>
             Update

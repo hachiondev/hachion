@@ -11,7 +11,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data); // Set the courses if data is an array
         } else {
@@ -46,16 +46,22 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
 
   return (
     <div className="course-card-container">
-      {currentCards.length > 0 ? (
-        currentCards.map((course, index) => (
-          <SidebarCard key={course.id || index} title={course.courseName}
-          RatingByPeople={course.ratingByNumberOfPeople}
-          Rating={course.starRating}
-          month={course.duration}
-            time={course.liveTrainingHours  }  />
-        ))
-      ) : (
-        <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
+   {currentCards.length > 0 ? (
+    currentCards.map((course, index) => (
+      <SidebarCard
+        key={course.id || index}
+        title={course.courseName}
+        RatingByPeople={course.ratingByNumberOfPeople}
+        image={`http://api.hachion.co/${course.courseImage}`} // Correct property
+        Rating={course.starRating}
+        student={course.totalEnrollment}
+        month={course.numberOfClasses}
+        time={course.liveTrainingHours}
+        course_id={course.id}
+      />
+    ))
+  ): (
+    <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
       )}
     </div>
   );

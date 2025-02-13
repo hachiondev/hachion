@@ -28,7 +28,7 @@ export default function UserReviews({ userId }) {
       return;
     }
   
-    axios.get(`http://160.153.175.69:8080/HachionUserDashboad/userreview/${userId}`)
+    axios.get(`http://localhost:8080/userreview/${userId}`)
       .then(response => {
         console.log("API Response:", response.data); // Log the response to confirm
         const reviewData = response.data;
@@ -68,7 +68,7 @@ export default function UserReviews({ userId }) {
     ]);
   
     // Optionally, fetch updated reviews for the user
-    axios.get(`http://160.153.175.69:8080/HachionUserDashboad/userreview/${userId}`)
+    axios.get(`http://localhost:8080/userreview/${userId}`)
       .then(response => {
         console.log("Updated reviews fetched:", response.data);
         setReviews(response.data);
@@ -82,7 +82,7 @@ export default function UserReviews({ userId }) {
   const handleDeleteReview = (S_No) => {
     const reviewToDelete = reviews.find((review) => review.S_No === S_No);
     if (reviewToDelete) {
-      axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/userreview/${reviewToDelete.review_id}`)
+      axios.delete(`http://localhost:8080/userreview/${reviewToDelete.review_id}`)
         .then(() => {
           setReviews((prevReviews) => prevReviews.filter((review) => review.S_No !== S_No));
         })

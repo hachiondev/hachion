@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -55,6 +57,7 @@ const CourseDetail = ({
 }) => {
   const [formMode, setFormMode] = useState('Add'); 
   const [course,setCourse]=useState([]);
+  const [error,setError]=useState([]);
   const [searchTerm,setSearchTerm]=useState("");
   const[courses,setCourses]=useState([]);
   const [categories, setCategories] = useState([]);
@@ -67,13 +70,13 @@ const CourseDetail = ({
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/course-categories/all");
+        const response = await axios.get("http://localhost:8080/course-categories/all");
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -91,7 +94,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/courses/all');
+            const response = await axios.get('http://localhost:8080/courses/all');
             setCategories(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching couses:", error.message);
@@ -105,9 +108,20 @@ const handleInputChange = (e) => {
   setFormData((prev) => ({ ...prev, [name]: value }));
 };
 
-const handleFileChange = (e) => {
-  setFormData((prev) => ({ ...prev, courseImage: e.target.files[0] }));
+const handleTextChange = (content) => {
+  if (content.trim() === "" || content === "<p><br></p>") {
+    setError("Course description is required.");
+  } else {
+    setError("");
+  }
+  setFormData({ ...formData, courseDescription: content });
 };
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  setFormData({ ...formData, courseImage: file });
+};
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -117,6 +131,8 @@ const handleSubmit = async (e) => {
     courseName: formData.courseName,
     date: currentDate,
     youtubeLink: formData.youtubeLink,
+    numberOfClasses: formData.numberOfClasses,
+    dailySessions: formData.dailySessions,
     liveTrainingHours: formData.liveTrainingHours,
     labExerciseHours: formData.labExerciseHours,
     realTimeProjects: formData.realTimeProjects,
@@ -129,9 +145,10 @@ const handleSubmit = async (e) => {
     keyHighlights4: formData.keyHighlights4,
     keyHighlights5: formData.keyHighlights5,
     keyHighlights6: formData.keyHighlights6,
-    amount: formData.amount,
-    discount: formData.discount,
-    total: formData.total,
+    amount: formData.amount,discount: formData.discount,total: formData.total,
+    mamount: formData.mamount,mdiscount: formData.mdiscount,mtotal: formData.mtotal,
+    samount: formData.samount,sdiscount: formData.sdiscount,stotal: formData.stotal,
+    camount: formData.camount,cdiscount: formData.cdiscount,ctotal: formData.ctotal,
     mentoring1: formData.mentoring1,
     mentoring2: formData.mentoring2,
     self1: formData.self1,
@@ -161,16 +178,18 @@ const handleSubmit = async (e) => {
     if (formMode === "Edit") {
       // Update course
       const response = await axios.put(
-        `http://160.153.175.69:8080/HachionUserDashboad/courses/update/${formData.id}`,
+        `http://localhost:8080/courses/update/${formData.course_id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (response.status === 200) {
         alert("Course updated successfully");
+       
+        setShowAddCourse(false); // Hide the form
       }
     } else {
       // Add course
-      const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/courses/add", formNewData, {
+      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
      console.log("***",formNewData);
@@ -183,6 +202,52 @@ const handleSubmit = async (e) => {
    
     console.error('Error submitting course:', error.response ? error.response.data : error.message);
     alert("Error submitting course.");
+  }
+};
+const handleEditClick = async (course_id) => {
+  setFormMode('Edit');
+  setShowAddCourse(true);
+  try {
+    const response = await axios.get(`http://localhost:8080/courses/${course_id}`);
+    if (response.status === 200) {
+      const course = response.data;
+      setFormData({
+        course_id: course.course_id || '',
+// Ensure the unique identifier is included
+       courseCategory: course.courseCategory || '',
+        courseName: course.courseName || '',
+        courseImage: course.courseImage||'', // Handle file uploads differently if needed
+        youtubeLink: course.youtubeLink || '',
+        numberOfClasses: course.numberOfClasses || '',
+        dailySessions: course.dailySessions || '',
+        liveTrainingHours: course.liveTrainingHours || '',
+        labExerciseHours: course.labExerciseHours || '',
+        realTimeProjects: course.realTimeProjects || '',
+        starRating: course.starRating || '',
+        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
+        totalEnrollment: course.totalEnrollment || '',
+        keyHighlights1:course.keyHighlights1||'',
+        keyHighlights2:course.keyHighlights2||'',
+        keyHighlights3:course.keyHighlights3||'',
+        keyHighlights4:course.keyHighlights4||'',
+        keyHighlights5:course.keyHighlights5||'',
+        keyHighlights6:course.keyHighlights6||'',
+        amount:course.amount||'',discount:course.discount||'',total:course.total||'',
+        mamount:course.mamount||'',mdiscount:course.mdiscount||'',mtotal:course.mtotal||'',
+        samount:course.samount||'',sdiscount:course.sdiscount||'',stotal:course.stotal||'',
+        camount:course.camount||'',cdiscount:course.cdiscount||'',ctotal:course.ctotal||'',
+        mentoring1:course.mentoring1||'',
+        mentoring2:course.mentoring2||'',
+        self1:course.self1||'',
+    self2:course.self2||'',
+    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
+    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
+            });
+    } else {
+      console.error('Failed to fetch course data');
+    }
+  } catch (error) {
+    console.error('Error fetching course data:', error);
   }
 };
 
@@ -234,7 +299,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/courses/delete/${id}`); 
+   const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`); 
    console.log("Courses deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Curriculum:", error); 
@@ -245,50 +310,7 @@ const handleDelete = async (id) => {
   setShowAddCourse(false);
  
 }
-const handleEditClick = async (courseId) => {
-  setFormMode('Edit');
-  setShowAddCourse(true);
-  try {
-    const response = await fetch(`http://160.153.175.69:8080/HachionUserDashboad/courses/${courseId}`);
-    if (response.ok) {
-      const course = await response.json();
-      setFormData({
-        id: course.id, // Ensure the unique identifier is included
-       courseCategory: course.courseCategory || '',
-        courseName: course.courseName || '',
-        courseImage: '', // Handle file uploads differently if needed
-        youtubeLink: course.youtubeLink || '',
-        numberOfClasses: course.numberOfClasses || '',
-        dailySessions: course.dailySessions || '',
-        liveTrainingHours: course.liveTrainingHours || '',
-        labExerciseHours: course.labExerciseHours || '',
-        realTimeProjects: course.realTimeProjects || '',
-        starRating: course.starRating || '',
-        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
-        totalEnrollment: course.totalEnrollment || '',
-        keyHighlights1:course.keyHighlights1||'',
-        keyHighlights2:course.keyHighlights2||'',
-        keyHighlights3:course.keyHighlights3||'',
-        keyHighlights4:course.keyHighlights4||'',
-        keyHighlights5:course.keyHighlights5||'',
-        keyHighlights6:course.keyHighlights6||'',
-        amount:course.amount||'',
-        discount:course.discount||'',
-        total:course.total||'',
-        mentoring1:course.mentoring1||'',
-        mentoring2:course.mentoring2||'',
-        self1:course.self1||'',
-    self2:course.self2||'',
-    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
-    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
-            });
-    } else {
-      console.error('Failed to fetch course data');
-    }
-  } catch (error) {
-    console.error('Error fetching course data:', error);
-  }
-};
+
 
   const handleAddTrendingCourseClick = () => {
     setFormMode('Add'); // Explicitly set formMode to 'Add'
@@ -641,7 +663,39 @@ Corporate Training
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
+<ReactQuill
+        theme="snow"
+        id="courseDescription"
+        name="courseDescription"
+        value={formData.courseDescription}
+        onChange={handleTextChange}
+        modules={{
+          toolbar: [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+            ["bold", "italic", "underline"], // Text formatting
+            [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+            [{ align: [] }], // Text alignment
+            [{ indent: "-1" }, { indent: "+1" }], // Indentation
+            ["blockquote"], // Blockquote for paragraph formatting
+            ["link"], // Insert links
+            ["clean"], // Remove formatting
+          ],
+        }}
+        formats={[
+          "header",
+          "bold",
+          "italic",
+          "underline",
+          "list",
+          "bullet",
+          "align",
+          "indent",
+          "blockquote",
+          "link",
+        ]}
+      />
+      {error && <p className="error-message">{error}</p>}
 </div> 
 
       <div className="course-row">
@@ -742,7 +796,7 @@ Corporate Training
             <StyledTableCell sx={{ width: 220}} align="center">
             {course.courseImage ? (
     <img
-    src={`http://160.153.175.69:8080/HachionUserDashboad/${course.courseImage}`}  // Adjust based on your server setup
+    src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
       alt="Course"
       width="50"
     />

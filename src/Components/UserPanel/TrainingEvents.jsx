@@ -12,35 +12,39 @@ const TrainingEvents = () => {
     const fetchData = async () => {
       try {
         const [scheduleResponse, coursesResponse] = await Promise.all([
-          fetch('http://160.153.175.69:8080/HachionUserDashboad/schedulecourse').then((res) => res.json()),
-          fetch('http://160.153.175.69:8080/HachionUserDashboad/courses/all').then((res) => res.json()),
+          fetch('http://localhost:8080/schedulecourse').then((res) => res.json()),
+          fetch('http://localhost:8080/courses/all').then((res) => res.json()),
         ]);
-  
+
+        if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
+          throw new Error("Invalid API response format");
+        }
+
         const mergedData = scheduleResponse.map((scheduleItem) => {
           const matchingCourse = coursesResponse.find(
             (course) => course.courseName.toLowerCase() === scheduleItem.schedule_course_name.toLowerCase()
           );
+
           return {
             ...scheduleItem,
-            course_id: matchingCourse ? matchingCourse.id : null,
-            course_image: matchingCourse ? matchingCourse.courseImage : '', // Optionally include course image
+            course_id: matchingCourse?.id || null,
+            course_image: matchingCourse?.courseImage || '', // Ensure a default empty string
           };
         });
-  
-        console.log('Merged Courses:', mergedData); // Debugging merged data
+
+        console.log('Merged Courses:', mergedData);
         setMergedCourses(mergedData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (!dateString) return 'TBA';
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(dateString));
   };
 
   return (
@@ -48,36 +52,29 @@ const TrainingEvents = () => {
       <div className="training-events-head">
         <h1 className="association-head">Upcoming Training Events</h1>
       </div>
-    
+
       <div className="view-btn">
         <button
           className="view-all"
-          onClick={() => {
-            if (!viewAll) {
-              setViewAll(true);
-            } else {
-              navigate('/course');
-            }
-          }}
+          onClick={() => (viewAll ? navigate('/course') : setViewAll(true))}
         >
           {viewAll ? 'View Courses Page' : 'View All'}
         </button>
       </div>
+
       <div className="training-card-holder">
         {(viewAll ? mergedCourses : mergedCourses.slice(0, 4)).map((course, index) => (
-             <TrainingCard
-             key={index}
-             id={course.course_id}
-             heading={course.schedule_course_name}
-             image={`http://160.153.175.69:8080/HachionUserDashboad/${course.course_image}`} // Use course_image
-             date={formatDate(course.schedule_date)}
-             time={course.schedule_time}
-             duration={`Duration: ${course.schedule_duration}`}
-             mode={course.schedule_mode}
-           />
-          
+          <TrainingCard
+            key={course.course_id || index}
+            id={course.course_id}
+            heading={course.schedule_course_name}
+            image={course.course_image ? `http://localhost:8080/${course.course_image}` : ''}
+            date={formatDate(course.schedule_date)}
+            time={course.schedule_time || 'TBA'}
+            duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
+            mode={course.schedule_mode || 'TBA'}
+          />
         ))}
-       
       </div>
     </div>
   );

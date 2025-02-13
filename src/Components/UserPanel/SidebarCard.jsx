@@ -1,46 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
-import './Course.css';
-import cardicon from '../../Assets/image 85.png';
-import { useNavigate } from 'react-router-dom';
+import "./Course.css";
+import { useNavigate } from "react-router-dom";
 
-const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
+const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, student }) => {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // Update screen size on resize
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth < 768);
     };
 
-    handleResize(); 
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleCardClick = () => {
-    if (isMobile) {
-      navigate('/qaautomation'); 
+  // Handle navigation
+  const handleClick = () => {
+    if (title) {
+      const formattedName = title.toLowerCase().replace(/\s+/g, "-");
+      navigate(`/courses/${formattedName}`);
     }
   };
 
-  const handleButtonClick = (e) => {
-    e.stopPropagation();
-    navigate('/qaautomation'); 
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && isMobile) {
-      handleCardClick();
-    }
-  };
-
-  // Function to render stars dynamically based on the rating
+  // Render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -56,20 +43,19 @@ const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
   };
 
   return (
-    <div className="sidebar-card"
-    onClick={handleCardClick}
-    role="button"
-    tabIndex={0}
-    onKeyDown={handleKeyDown}>
+    <div 
+      className="sidebar-card"
+      onClick={() => isMobile && handleClick()} // Click anywhere in mobile view
+    >
       <div className="sidebar-card-header-div">
-        <h4 className="sidebar-card-heading">Certified Students: 0</h4>
-        <img src={cardicon} alt="card-img" className="sidebar-card-icon" />
+        <h4 className="sidebar-card-heading">Certified Students: {student}</h4>
+        <img src={image} alt="card-img" className="sidebar-card-icon" />
       </div>
       <div className="sidebar-course-details">
         <h5 className="sidebar-course-name">{title}</h5>
         <div className="sidebar-course-time">
           <h6 className="sidebar-course-month">
-            <RxCalendar /> {duration} months
+            <RxCalendar /> {month} Days
           </h6>
           <h6 className="sidebar-course-month">
             <BiTimeFive /> {time} hours
@@ -78,9 +64,17 @@ const SidebarCard = ({ title, duration, time, Rating, RatingByPeople }) => {
         <h6 className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
         </h6>
-        <button className="sidebar-enroll-btn" onClick={handleButtonClick}>
-          View Details
-        </button>
+        {!isMobile && ( // Show button only on larger screens
+          <button
+            className="sidebar-enroll-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick();
+            }}
+          >
+            View Details
+          </button>
+        )}
       </div>
     </div>
   );

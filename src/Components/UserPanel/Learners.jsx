@@ -14,7 +14,7 @@ const Learners = () => {
     // Fetch data from the API
     const fetchReviews = async () => {
       try {
-        const response = await fetch('http://160.153.175.69:8080/HachionUserDashboad/userreview'); // Replace with your API URL
+        const response = await fetch('http://localhost:8080/userreview'); // Replace with your API URL
         const data = await response.json();
         setReviews(data); // Update state with API data
       } catch (error) {

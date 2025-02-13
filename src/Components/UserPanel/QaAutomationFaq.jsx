@@ -3,18 +3,62 @@ import './Course.css';
 import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
+import { useParams } from 'react-router-dom';
 
 const QaAutomationFaq = () => {
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
+  const { courseName } = useParams(); // Extract courseName from URL params
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [course, setCourse] = useState(null);
 
-  // Toggle additional topics
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8080/courses/all');
+        const courseData = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setCourse(courseData);
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+        setError('Failed to load course details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [courseName]);
+
+  useEffect(() => {
+    const fetchFaq = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/faq');
+        const filteredFaq = response.data.filter(
+          (item) =>
+            item.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setFaq(filteredFaq);
+      } catch (error) {
+        console.error('Error fetching FAQ:', error.message);
+        setError('Failed to load FAQs.');
+      }
+    };
+
+    fetchFaq();
+  }, [courseName]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   const handleViewMore = () => {
     setShowMore(!showMore);
   };
 
-  // Toggle expanded content for each topic
   const handleToggleExpand = (index) => {
     setExpandedTopics((prevState) => ({
       ...prevState,
@@ -22,22 +66,8 @@ const QaAutomationFaq = () => {
     }));
   };
 
-  // Fetch FAQ data from API
-  useEffect(() => {
-    const fetchFaq = async () => {
-      try {
-        const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/faq/faq');
-        setFaq(response.data);
-      } catch (error) {
-        console.error('Error fetching FAQ:', error.message);
-      }
-    };
-    fetchFaq();
-  }, []);
-
-  // Render topics with slicing
   const renderTopics = () => {
-    const visibleFaq = showMore ? faq : faq.slice(0, 5); // Show only 5 items if not expanded
+    const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
     return visibleFaq.map((item, index) => (
       <div key={index}>
@@ -69,12 +99,14 @@ const QaAutomationFaq = () => {
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
-        <h1 className="qa-heading">QA Automation FAQ's</h1>
+        <h1 className="qa-heading">{course?.courseName}  FAQ's</h1>
         <button className="btn-curriculum">
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download FAQ's
         </button>
       </div>
-      <div className="curriculum-topic">{renderTopics()}</div>
+      <div className="curriculum-topic">
+        {faq.length > 0 ? renderTopics() : <p>No FAQs available for this course.</p>}
+      </div>
       {faq.length > 5 && (
         <div className="view-div">
           <button className="view-more-btn" onClick={handleViewMore}>

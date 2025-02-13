@@ -121,7 +121,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchFaq = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/faq/faq');
+              const response = await axios.get('http://localhost:8080/faq/faq');
               setFaq(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching curriculum:", error.message);
@@ -160,7 +160,7 @@ export default function Faq() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/HachionUserDashboad/faq/faq/update/${editedRow.faq_id}`,
+                `http://localhost:8080/faq/faq/update/${editedRow.faq_id}`,
                 editedRow
             );
             setFaq((prev) =>
@@ -179,7 +179,7 @@ export default function Faq() {
       const handleDelete = async (faq_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/faq/faq/delete/${faq_id}`); 
+          const response = await axios.delete(`http://localhost:8080/faq/faq/delete/${faq_id}`); 
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
@@ -188,7 +188,7 @@ export default function Faq() {
         useEffect(() => {
           const fetchCategory = async () => {
             try {
-              const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/course-categories/all");
+              const response = await axios.get("http://localhost:8080/course-categories/all");
               setCourse(response.data); // Assuming the data contains an array of trainer objects
             } catch (error) {
               console.error("Error fetching categories:", error.message);
@@ -199,7 +199,7 @@ export default function Faq() {
         useEffect(() => {
           const fetchCourseCategory = async () => {
             try {
-              const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/courses/all");
+              const response = await axios.get("http://localhost:8080/courses/all");
               setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
             } catch (error) {
               console.error("Error fetching categories:", error.message);
@@ -254,7 +254,7 @@ export default function Faq() {
         };
       
         try {
-          const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/faq/faq/add", dataToSubmit);
+          const response = await axios.post("http://localhost:8080/faq/faq/add", dataToSubmit);
           if (response.status === 200) {
             alert("Faq details added successfully");
             setFaqData([...faqData, dataToSubmit]); // Update local state

@@ -1,17 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import calendar from '../../Assets/calendar.png';
 import './Course.css';
+import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
 import CorporateFees from './CorporateFees';
 import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
 import RequestBatch from './RequestBatch'; // Import the RequestBatch component
+import axios from 'axios';
 
 const UpcomingBatch = () => {
   const [activeComponent, setActiveComponent] = useState('LiveOnlineFees');
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal visibility
+//  const { course_id } = useParams(); // Extract course_id from URL params
+const {courseName}= useParams();
+  const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+    const [course, setCourse] = useState(null);
 
-  // Function to render the selected batch component
+useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8080/courses/all');
+        const courseData = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setCourse(courseData);
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+      }finally {
+              setLoading(false);
+    }
+  }
+
+    fetchCourse();
+  }, [courseName]);
+
+  
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   const renderComponent = () => {
     switch (activeComponent) {
       case 'LiveOnlineFees':
@@ -27,6 +55,7 @@ const UpcomingBatch = () => {
     }
   };
 
+
   // Function to close the modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -35,7 +64,7 @@ const UpcomingBatch = () => {
   return (
     <>
       <div className='upcoming-batch'>
-        <p className='qa-heading'>Upcoming Batches for QA Automation Course</p>
+        <p className='qa-heading'>Upcoming Batches for {course.courseName}</p>
         <div className='batch-type'>
           <p 
             className='batch-type-content' 

@@ -580,6 +580,26 @@ width: 100%;
   box-sizing: border-box;
 }
 
+/* .ql-editor h1, 
+.ql-editor h2, 
+.ql-editor h3 {
+  color: #006489 !important;
+}
+
+.ql-editor ul {
+  color: #000 !important;
+}
+
+.ql-editor ol {
+  color: #006489 !important;
+}
+
+.ql-editor a {
+  color: #006489 !important;
+  text-decoration: underline;
+} */
+
+
 .schedule-input {
   width: 100%;
   height: 50px;

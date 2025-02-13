@@ -119,7 +119,7 @@ export default function DemoVideo() {
     useEffect(() => {
       const fetchVideo = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/demovideo');
+              const response = await axios.get('http://localhost:8080/demovideo');
               setDemoVideo(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching video:", error.message);
@@ -158,7 +158,7 @@ export default function DemoVideo() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/HachionUserDashboad/demovideo/update/${editedRow.demovideo_id}`,
+                `http://localhost:8080/demovideo/update/${editedRow.demovideo_id}`,
                 editedRow
             );
             setDemoVideo((prev) =>
@@ -177,7 +177,7 @@ export default function DemoVideo() {
       const handleDelete = async (demovideo_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/demovideo/delete/${demovideo_id}`); 
+          const response = await axios.delete(`http://localhost:8080/demovideo/delete/${demovideo_id}`); 
           console.log("Demo Video deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Demo Video:", error); 
@@ -219,7 +219,7 @@ export default function DemoVideo() {
         };
       
         try {
-          const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/demovideo/add", dataToSubmit);
+          const response = await axios.post("http://localhost:8080/demovideo/add", dataToSubmit);
           if (response.status === 200) {
             alert("video details added successfully");
             setVideoData([...videoData, dataToSubmit]); // Update local state
@@ -233,7 +233,7 @@ export default function DemoVideo() {
       useEffect(() => {
         const fetchCategory = async () => {
           try {
-            const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/course-categories/all");
+            const response = await axios.get("http://localhost:8080/course-categories/all");
             setCourse(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);
@@ -244,7 +244,7 @@ export default function DemoVideo() {
       useEffect(() => {
         const fetchCourseCategory = async () => {
           try {
-            const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/courses/all");
+            const response = await axios.get("http://localhost:8080/courses/all");
             setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);

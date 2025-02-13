@@ -2410,12 +2410,29 @@ max-height: 3em;
     .qa-subheading{
       font-size: 12px;
       padding-bottom: 5px;
-      margin-bottom: 0;
+      margin-bottom: 3px;
     }
     
     .qa-sub-content{
       font-size: 10px;
       text-align: justify;
+    }
+
+    .qa-sub-content h1,
+    .qa-sub-content h2,
+    .qa-sub-content h3 {
+      color: #006489;
+    }
+
+    .qa-sub-content li::marker {
+      color: #006489;
+      font-size: 12px;
+      margin-left: 20px; 
+    }
+
+    .qa-sub-content ul {
+      list-style-type: disc; 
+      color: #006489; 
     }
     
     .curriculum-expanded {

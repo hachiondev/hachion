@@ -141,7 +141,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchStudent = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/registerstudent');
+              const response = await axios.get('http://localhost:8080/registerstudent');
               setRegisterStudent(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching student list:", error.message);
@@ -174,7 +174,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/HachionUserDashboad/registerstudent/update/${editedData.student_id}`,editedData
+                `http://localhost:8080/registerstudent/update/${editedData.student_id}`,editedData
             );
             setRegisterStudent((prev) =>
                 prev.map(curr =>
@@ -192,7 +192,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (student_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/registerstudent/delete/${student_id}`); 
+          const response = await axios.delete(`http://localhost:8080/registerstudent/delete/${student_id}`); 
           console.log("Register Student deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Student:", error); 
@@ -234,7 +234,7 @@ const [currentPage, setCurrentPage] = useState(1);
         };
       
         try {
-          const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/registerstudent/add", dataToSubmit);
+          const response = await axios.post("http://localhost:8080/registerstudent/add", dataToSubmit);
           if (response.status === 200) {
             alert("Student added successfully");
             setStudentData([...studentData, dataToSubmit]); // Update local state
@@ -250,7 +250,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchCourse = async () => {
         try {
-          const response = await axios.get("http://160.153.175.69:8080/HachionUserDashboad/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching courses:", error.message);

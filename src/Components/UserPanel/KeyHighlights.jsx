@@ -10,37 +10,33 @@ import Resume from '../../Assets/mi_document.png';
 import Certification from '../../Assets/tabler_certificate.png'
 
 const KeyHighlights = () => {
-    const { course_id } = useParams(); // Extract course_id from URL params
-  
+    // const { course_id } = useParams(); // Extract course_id from URL params
+  const { courseName } = useParams();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
   
-    // Fetch course details based on course_id
+
     useEffect(() => {
-      const fetchCourseData = async () => {
+      const fetchCourse = async () => {
         try {
           setLoading(true);
-          const response = await axios.get(`http://160.153.175.69:8080/HachionUserDashboad/courses/all/${course_id}`);
-          
-          if (response.data) {
-            setCourse(response.data); // Set course details from API response
-          } else {
-            setError('Course not found');
-          }
-        } catch (err) {
-          setError('Error fetching course data');
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      if (course_id) {
-        fetchCourseData();
-      } else {
-        console.error('Course ID is missing!');
+          const response = await axios.get('http://localhost:8080/courses/all');
+          const courseData = response.data.find(
+            (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+          );
+          setCourse(courseData);
+        } catch (error) {
+          console.error('Error fetching course details:', error);
+        }finally {
+                setLoading(false);
       }
-    }, [course_id]);
+    }
+  
+      fetchCourse();
+    }, [courseName]);
+  
+    
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
   

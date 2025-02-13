@@ -10,20 +10,29 @@ const Sidebar = ({ onSelectCategory }) => {
   const [openSubmenuIndex, setOpenSubmenuIndex] = useState(null); // Track open submenu
   const [menuItems, setMenuItems] = useState([]); // Dynamic menu items
 
-  const API_URL = 'http://160.153.175.69:8080/HachionUserDashboad/course-categories/all';
+  const API_URL = 'http://localhost:8080/course-categories/all';
 
   // Fetch categories from the API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(API_URL, {
+          headers: {
+            'Authorization': 'Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S', // Replace with your token if needed
+            'Content-Type': 'application/json',
+           
+          },
+        });
+
         setMenuItems(response.data); // Assuming response.data is an array of categories
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
+
     fetchCategories();
   }, []);
+
 
   // Check if mobile view is active (max-width: 480px)
   useEffect(() => {

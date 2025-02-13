@@ -16,7 +16,7 @@ const NavbarTop = () => {
   const [searchVisible, setSearchVisible] = useState(true);
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Manage login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage login state
   const navigate = useNavigate();
   const drawerRef = useRef(null); // Reference to the drawer for click detection
    const [userData, setUserData] = useState(null);

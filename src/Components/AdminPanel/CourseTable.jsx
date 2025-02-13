@@ -47,7 +47,7 @@ const CourseTable = ({ courses, fetchCourses }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/courses/all/${id}`);
+      await axios.delete(`http://localhost:3000/courses/all/${id}`);
       setSuccessMessage('Course deleted successfully!');
       fetchCourses(); // Refresh course list
     } catch (error) {
@@ -57,7 +57,7 @@ const CourseTable = ({ courses, fetchCourses }) => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`http://160.153.175.69:8080/HachionUserDashboad/courses/all/${selectedRow.id}`, selectedRow);
+      await axios.put(`http://localhost:3000/courses/all/${selectedRow.id}`, selectedRow);
       setSuccessMessage('Course updated successfully!');
       fetchCourses();
       setOpen(false);

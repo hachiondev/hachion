@@ -8,39 +8,53 @@ import { IoPlayCircleOutline } from 'react-icons/io5';
 import './Course.css';
 
 const QaTop = ({ onVideoButtonClick }) => {
-  const { course_id } = useParams(); // Extract course_id from URL params
+  const { courseName } = useParams(); // Extract course_id from URL params
   const navigate = useNavigate();
-
+  const [curriculumData, setCurriculumData] = useState({
+    course_name: "",
+    curriculum_pdf: null,
+  });
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch course details based on course_id
+  const handleDownload = () => {
+    if (!curriculumData.curriculum_pdf) {
+      alert("No file available for download.");
+      return;
+    }
+
+    const url = URL.createObjectURL(curriculumData.curriculum_pdf);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = curriculumData.curriculum_pdf.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
-    const fetchCourseData = async () => {
+    const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://160.153.175.69:8080/HachionUserDashboad/courses/all/${course_id}`);
-        
-        if (response.data) {
-          setCourse(response.data); // Set course details from API response
-        } else {
-          setError('Course not found');
-        }
-      } catch (err) {
-        setError('Error fetching course data');
-      } finally {
+        const response = await axios.get('http://localhost:8080/courses/all');
+        const courseData = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+        setCourse(courseData);
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+      }finally {
         setLoading(false);
-      }
     };
+  }
+    fetchCourse();
+  }, [courseName]);
 
-    if (course_id) {
-      fetchCourseData();
-    } else {
-      console.error('Course ID is missing!');
-    }
-  }, [course_id]);
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!course) return <div>Course details not available</div>;
   // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
@@ -65,9 +79,9 @@ const QaTop = ({ onVideoButtonClick }) => {
         <div className='qa-left-part'>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
           <div className='qa-automation-left'>
-            <img src={`http://160.153.175.69:8080/HachionUserDashboad/${course.courseImage}`} alt='qa-image' />
+            <img src={`http://localhost:8080/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>₹{course.amount}/-</span></p>
+              <p className='fee'>Fee: <span className='amount'>${course.total}/-</span></p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
               </h6>
@@ -78,7 +92,9 @@ const QaTop = ({ onVideoButtonClick }) => {
           </div>
           <div className='qa-button'>
             <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
-            <button className='download'>Download Brochure</button>
+            <button className="download" onClick={handleDownload}>
+        Download Brochure
+      </button>
           </div>
         </div>
         <div className='qa-right'>

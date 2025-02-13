@@ -122,7 +122,7 @@ export default function Support() {
     useEffect(() => {
       const fetchSupport = async () => {
           try {
-              const response = await axios.get('http://160.153.175.69:8080/HachionUserDashboad/support');
+              const response = await axios.get('http://localhost:8080/support');
               setSupport(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching support:", error.message);
@@ -155,7 +155,7 @@ export default function Support() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://160.153.175.69:8080/HachionUserDashboad/support/update/${editedData.support_id}`,editedData
+                `http://localhost:8080/support/update/${editedData.support_id}`,editedData
             );
             setSupport((prev) =>
                 prev.map(curr =>
@@ -173,7 +173,7 @@ export default function Support() {
       const handleDelete = async (support_id) => {
        
          try { 
-          const response = await axios.delete(`http://160.153.175.69:8080/HachionUserDashboad/support/delete/${support_id}`); 
+          const response = await axios.delete(`http://localhost:8080/support/delete/${support_id}`); 
           console.log("Support deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Support:", error); 
@@ -216,7 +216,7 @@ export default function Support() {
         };
       
         try {
-          const response = await axios.post("http://160.153.175.69:8080/HachionUserDashboad/support/add", dataToSubmit);
+          const response = await axios.post("http://localhost:8080/support/add", dataToSubmit);
           if (response.status === 200) {
             alert("Support added successfully");
             setSupportData([...supportData, dataToSubmit]); // Update local state

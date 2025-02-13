@@ -58,14 +58,6 @@ function App() {
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route
-          path="/"
-          element={
-            
-              <Home />
-            
-          }
-        />
-         <Route
           path="/home"
           element={
             
@@ -73,8 +65,19 @@ function App() {
             
           }
         />
+           <Route
+          path="/"
+          element={
+            
+              <Home />
+            
+          }
+        />
       <Route path='/course' element={<Course/>}/>
-      <Route path='/qaautomation' element={<QaAutomation/>}/>
+      <Route path='/courses/:courseName' element={<QaAutomation />} />
+
+      {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
+      {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminlogin' element={<AdminLogin/>}/>

@@ -1,75 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { FaCircle } from "react-icons/fa";
-import imageUrl from '../../Assets/course_card2.png';
 import { useNavigate } from 'react-router-dom';
+import imageUrl from '../../Assets/course_card2.png';
 
-const TrainingCard = (props) => {
+const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Check screen size to determine mobile or desktop view
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Define breakpoint for mobile
-    };
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const handleResize = (e) => setIsMobile(e.matches);
 
-    handleResize(); // Set initial value
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    mediaQuery.addEventListener('change', handleResize);
+    return () => mediaQuery.removeEventListener('change', handleResize);
   }, []);
 
-  const handleCardClick = () => {
-    if (isMobile) {
-      navigate(`/qaautomation/${props.id}`);
-    }
-  };
-
-  const handleButtonClick = (e) => {
-    e.stopPropagation(); 
-    navigate(`/qaautomation/${props.id}`);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && isMobile) {
-      handleCardClick();
+  const navigateToCourse = () => {
+    if (heading) {
+      const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/courses/${formattedName}`);
     }
   };
 
   return (
     <div
       className="card"
-      onClick={handleCardClick}
+      onClick={isMobile ? navigateToCourse : undefined} // Click on card only for mobile
       role="button"
       tabIndex={0}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => e.key === 'Enter' && isMobile && navigateToCourse()}
     >
       <div className="card-header-div">
         <img src={imageUrl} alt="Card" className="card-image" />
         <div className="card-header">
-        <FaCircle className="card-header-icon" />
-            {props.mode} {/* Dynamically display schedule_mode */}
-          </div>
-          <img src={props.image} 
-          alt="card-img" className="card-icon" />
+          <FaCircle className="card-header-icon" />
+          {mode}
         </div>
-        <div className="card-course-details">
-          <div className="mob-card-header">
-            <FaCircle className="mob-card-header-icon" />
-            {props.mode} {/* Dynamically display schedule_mode */}
-          </div>
-        <h5 className="course-name">{props.heading}</h5>
+        {image && <img src={image} alt="card-img" className="card-icon" />}
+      </div>
+      <div className="card-course-details">
+        <div className="mob-card-header">
+          <FaCircle className="mob-card-header-icon" />
+          {mode}
+        </div>
+        <h5 className="course-name">{heading}</h5>
         <div className="course-time">
-          <h6 className="course-date">{props.date}</h6>
-          <h6 className="course-date">{props.time}</h6>
+          <h6 className="course-date">{date}</h6>
+          <h6 className="course-date">{time}</h6>
         </div>
-        <h6 className="course-date">{props.duration}</h6>
-        <button
-          className="enroll-btn"
-          onClick={handleButtonClick}
+        <h6 className="course-date">{duration}</h6>
+        {/* Prevent event propagation on button click */}
+        <button 
+          className="enroll-btn" 
+          onClick={(e) => { 
+            e.stopPropagation(); // Stop click from triggering card event
+            navigateToCourse(); 
+          }}
         >
           View Details
         </button>

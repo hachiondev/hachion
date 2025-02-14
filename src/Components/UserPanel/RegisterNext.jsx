@@ -59,7 +59,7 @@ const RegisterNext = () => {
     // Verify OTP
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/v1/user/register", {
+      const response = await fetch("https://api.hachion.co/api/v1/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ const RegisterNext = () => {
     const email = registeruserData.email; // Get email from localStorage
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 

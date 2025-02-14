@@ -76,7 +76,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/course-categories/all");
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -94,7 +94,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/courses/all');
+            const response = await axios.get('https://api.hachion.co/courses/all');
             setCategories(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching couses:", error.message);
@@ -178,7 +178,7 @@ const handleSubmit = async (e) => {
     if (formMode === "Edit") {
       // Update course
       const response = await axios.put(
-        `http://localhost:8080/courses/update/${formData.course_id}`,
+        `https://api.hachion.co/courses/update/${formData.course_id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -189,7 +189,7 @@ const handleSubmit = async (e) => {
       }
     } else {
       // Add course
-      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
+      const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
      console.log("***",formNewData);
@@ -208,7 +208,7 @@ const handleEditClick = async (course_id) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await axios.get(`http://localhost:8080/courses/${course_id}`);
+    const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
     if (response.status === 200) {
       const course = response.data;
       setFormData({
@@ -299,7 +299,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`); 
+   const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`); 
    console.log("Courses deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Curriculum:", error); 
@@ -657,45 +657,83 @@ Corporate Training
 <input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
 </div>
 </div>
-<div class="mb-3">
+<div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea> */}
+<ReactQuill
+  theme="snow"
+  id="courseHighlight"
+  name="courseHighlight"
+  value={formData.courseHighlight}
+  onChange={handleInputChange}
+  style={{ height: "130px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "link",
+    "color",
+  ]}
+/>
+{error && <p className="error-message">{error}</p>}
 </div>
-<div class="mb-3">
+<div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
 {/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
 <ReactQuill
-        theme="snow"
-        id="courseDescription"
-        name="courseDescription"
-        value={formData.courseDescription}
-        onChange={handleTextChange}
-        modules={{
-          toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
-            ["bold", "italic", "underline"], // Text formatting
-            [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
-            [{ align: [] }], // Text alignment
-            [{ indent: "-1" }, { indent: "+1" }], // Indentation
-            ["blockquote"], // Blockquote for paragraph formatting
-            ["link"], // Insert links
-            ["clean"], // Remove formatting
-          ],
-        }}
-        formats={[
-          "header",
-          "bold",
-          "italic",
-          "underline",
-          "list",
-          "bullet",
-          "align",
-          "indent",
-          "blockquote",
-          "link",
-        ]}
-      />
-      {error && <p className="error-message">{error}</p>}
+  theme="snow"
+  id="courseDescription"
+  name="courseDescription"
+  value={formData.courseDescription}
+  onChange={handleTextChange}
+  style={{ height: "300px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "link",
+    "color",
+  ]}
+/>
+{error && <p className="error-message">{error}</p>}
 </div> 
 
       <div className="course-row">
@@ -796,7 +834,7 @@ Corporate Training
             <StyledTableCell sx={{ width: 220}} align="center">
             {course.courseImage ? (
     <img
-    src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
+    src={`https://api.hachion.co/${course.courseImage}`}  // Adjust based on your server setup
       alt="Course"
       width="50"
     />

@@ -14,7 +14,7 @@ const Learners = () => {
     // Fetch data from the API
     const fetchReviews = async () => {
       try {
-        const response = await fetch('http://localhost:8080/userreview'); // Replace with your API URL
+        const response = await fetch('https://api.hachion.co/userreview'); // Replace with your API URL
         const data = await response.json();
         setReviews(data); // Update state with API data
       } catch (error) {

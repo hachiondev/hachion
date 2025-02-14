@@ -2434,6 +2434,23 @@ max-height: 3em;
       list-style-type: disc; 
       color: #006489; 
     }
+
+    /* Increase toolbar font size */
+.ql-toolbar {
+  font-size: 16px; /* Increase font size in toolbar */
+}
+
+/* Increase editor height */
+.ql-container {
+  height: 300px !important; /* Adjust height */
+}
+
+/* Increase toolbar button size */
+.ql-toolbar button {
+  font-size: 14px; /* Make toolbar buttons bigger */
+  padding: 5px 10px;
+}
+
     
     .curriculum-expanded {
       height: auto; 

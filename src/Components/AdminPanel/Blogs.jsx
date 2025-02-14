@@ -97,7 +97,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/blog/blog');
+            const response = await axios.get('https://api.hachion.co/blog/blog');
             setBlogs(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching blogs:", error.message);
@@ -136,7 +136,7 @@ const handleSubmit = async (e) => {
     if (formData.id) {
       // Edit operation
       const response = await axios.put(
-        `http://localhost:8080/blog/blog/update/${formData.id}`,
+        `https://api.hachion.co/blog/blog/update/${formData.id}`,
         formDataToSend,
         {
           headers: {
@@ -155,7 +155,7 @@ const handleSubmit = async (e) => {
     } else {
       // Add operation
       const response = await axios.post(
-        "http://localhost:8080/blog/blog/add",
+        "https://api.hachion.co/blog/blog/add",
         formDataToSend,
         {
           headers: {
@@ -217,7 +217,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://localhost:8080/blog/blog/delete/${id}`); 
+   const response = await axios.delete(`https://api.hachion.co/blog/blog/delete/${id}`); 
    console.log("Blogs deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Blogs:", error); 
@@ -232,7 +232,7 @@ const handleEditClick = async (id) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await fetch(`http://localhost:8080/blog/blog/${id}`);
+    const response = await fetch(`https://api.hachion.co/blog/blog/${id}`);
     if (response.ok) {
       const blog = await response.json();
       setFormData({

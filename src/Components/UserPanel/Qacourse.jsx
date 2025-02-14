@@ -29,61 +29,6 @@
 
 // export default Qacourse
 
-// import React from 'react';
-// import './Course.css';
-// import image1 from '../../Assets/image 125.png';
-
-// const Qacourse = () => {
-//   return (
-//     <div className='qa-course'>
-//       <div className='qa-course-heading'>
-//         <h1 className='qa-heading'>About QA Automation Course</h1>
-        
-//         <h3 className='qa-subheading'>What is QA Automation</h3>
-//         <p className='qa-sub-content'>
-//           QA Automation mainly focuses on software tools to execute preset tests on a software program before its release into production.
-//         </p>
-
-//         <h3 className='qa-subheading'>Key Benefits of QA Automation</h3>
-//         <ul>
-//           <li>Reduces manual testing efforts</li>
-//           <li>Increases test efficiency and accuracy</li>
-//           <li>Speeds up the software development lifecycle</li>
-//           <li>Enhances CI/CD integration</li>
-//         </ul>
-
-//         <h3 className='qa-subheading'>Want to Become a QA Automation Engineer?</h3>
-//         <p className='qa-sub-content'>
-//           To become a QA Automation Engineer requires a combination of technical expertise, industry understanding, and hands-on expertise.
-//         </p>
-
-//         <h3 className='qa-subheading'>Automated QA Testing</h3>
-//         <ul>
-//           <li>Ensures software quality through automated tests</li>
-//           <li>Speeds up regression testing</li>
-//           <li>Reduces manual testing costs</li>
-//         </ul>
-
-//         <img src={image1} alt='key-benefits' />
-
-//         <h3 className='qa-subheading'>Why Choose Hachion?</h3>
-//         <p className='qa-sub-content'>
-//           Hachion provides the best QA automation course in the USA, designed to fulfill industry requirements.
-//         </p>
-
-//         <h3 className='qa-subheading'>Conclusion</h3>
-//         <p className='qa-sub-content'>
-//           Enroll in Hachion's QA Automation course today whether you are a beginner or a professional trying to improve your skills.
-//         </p>
-
-//         <h3 className='qa-subheading'>Related Links: Python</h3>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Qacourse;
-
 import React,{useState,useEffect} from 'react'
 import './Course.css';
 import { useParams } from 'react-router-dom';
@@ -99,7 +44,7 @@ const { courseName } = useParams(); // Extract course_id from URL params
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );

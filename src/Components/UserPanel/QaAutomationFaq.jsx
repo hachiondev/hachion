@@ -18,7 +18,7 @@ const QaAutomationFaq = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -37,7 +37,7 @@ const QaAutomationFaq = () => {
   useEffect(() => {
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/faq');
+        const response = await axios.get('https://api.hachion.co/faq');
         const filteredFaq = response.data.filter(
           (item) =>
             item.courseName.toLowerCase().replace(/\s+/g, '-') === courseName

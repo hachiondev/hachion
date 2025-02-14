@@ -20,7 +20,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
 
   // Fetch courses and trainers data on component load
   useEffect(() => {
-    axios.get('http://localhost:8080/courses/all')
+    axios.get('https://api.hachion.co/courses/all')
       .then(response => {
         setCourses(response.data);
       })
@@ -28,7 +28,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
         console.error("Error fetching courses:", error);
       });
 
-    axios.get('http://localhost:8080/trainers')
+    axios.get('https://api.hachion.co/trainers')
       .then(response => {
         setTrainers(response.data);
       })
@@ -50,7 +50,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
       review,
     };
 
-    axios.post('http://localhost:8080/userreview/add', reviewData)
+    axios.post('https://api.hachion.co/userreview/add', reviewData)
       .then(response => {
         console.log("Review submitted successfully:", response.data);
         console.log(response);

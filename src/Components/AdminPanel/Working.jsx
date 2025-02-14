@@ -24,7 +24,7 @@
 // // useEffect(() => {
 // //     const fetchCategories = async () => {
 // //       try {
-// //         const response = await axios.get('http://localhost:8080/api/course-categories/all');
+// //         const response = await axios.get('https://api.hachion.co/api/course-categories/all');
 // //         setCategories(response.data);
 // //         setFilteredCategories(response.data); // Set initial filtered categories to all data
 // //       } catch (error) {
@@ -63,7 +63,7 @@
 // // const handleEdit = async (updatedCategory) => {
 // //     try {
 // //       const response = await axios.put(
-// //         `http://localhost:8080/api/course-categories/update/${updatedCategory.id}`,
+// //         `https://api.hachion.co/api/course-categories/update/${updatedCategory.id}`,
 // //         updatedCategory
 // //       );
 // //       console.log("Category updated:", response.data);
@@ -79,7 +79,7 @@
 
 // //   const handleDelete = async (id) => {
 // //     try {
-// //       await axios.delete(`http://localhost:8080/api/course-categories/delete/${id}`);
+// //       await axios.delete(`https://api.hachion.co/api/course-categories/delete/${id}`);
 // //       console.log("Deleted category with ID:", id);
 // //       // Refresh the data after delete
 // //       setCategories((prev) => prev.filter((cat) => cat.id !== id));
@@ -239,7 +239,7 @@
 // // }
 // //   // Fetch categories on load
 // //   useEffect(() => {
-// //     axios.get("http://localhost:8080/api/course-categories/all")
+// //     axios.get("https://api.hachion.co/api/course-categories/all")
 // //       .then(response => setCategories(response.data))
 // //       .catch(error => console.error("Error fetching categories:", error));
 // //   }, []);
@@ -253,7 +253,7 @@
 // //   // Submit form data to add a course
 // //   const handleSubmit = (e) => {
 // //     e.preventDefault();
-// //     axios.post("http://localhost:8080/api/courses/add", courseData)
+// //     axios.post("https://api.hachion.co/api/courses/add", courseData)
 // //       .then(response => {
 // //         alert("Course added successfully");
 // //         onAdd(courseData); // Update parent component to show the new course

@@ -47,7 +47,7 @@ const Curriculum = ({ heading, buttonText }) => {
   useEffect(() => {
     const fetchCurriculum = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/curriculum');
+        const response = await axios.get('https://api.hachion.co/curriculum');
         const filteredCurriculum = response.data.filter(
           (item) =>
             item.courseName.toLowerCase().replace(/\s+/g, '-') === courseName

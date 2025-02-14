@@ -37,7 +37,7 @@ const QaTop = ({ onVideoButtonClick }) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -79,7 +79,7 @@ const QaTop = ({ onVideoButtonClick }) => {
         <div className='qa-left-part'>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
           <div className='qa-automation-left'>
-            <img src={`http://localhost:8080/${course.courseImage}`} alt='qa-image' />
+            <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
               <p className='fee'>Fee: <span className='amount'>${course.total}/-</span></p>
               <h6 className='sidebar-course-review'>

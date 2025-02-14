@@ -665,7 +665,7 @@ Corporate Training
   id="courseHighlight"
   name="courseHighlight"
   value={formData.courseHighlight}
-  onChange={handleInputChange}
+  onChange={handleTextChange}
   style={{ height: "130px" }} // Increased editor height
   modules={{
     toolbar: [

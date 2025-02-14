@@ -11,7 +11,7 @@ const SelfPacedFees = () => {
     </p>
     </div>
    <div className='separator'></div>
-   <LiveOnlineFeesRight enrollText='Enroll Now' fee='₹ 15383'/>
+   <LiveOnlineFeesRight enrollText='Enroll Now' modeType="self"/>
    </div>
    </>
   )

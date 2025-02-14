@@ -5,19 +5,20 @@ import LiveOnlineFeesRight from './LiveOnlineFeesRight';
 const MentoringModeFees = () => {
   return (
     <>
-   <div className='batch-schedule'>
-    <div className='left-mode'>
-        <h2 className='mentoring-mode-heading'>
+      <div className='batch-schedule'>
+        <div className='left-mode'>
+          <h2 className='mentoring-mode-heading'>
             Self-Paced Videos + Trainer Support
-        </h2>
-        <p className='mentoring-mode-content'>
-Mentor Mode Training refers to a personalized, guided learning approach where students receive one-on-one or small group instruction from a mentor. This method is highly effective for students who need tailored support, ongoing feedback, and deeper engagement with the subject matter.</p>
-    </div>
-    <div className='separator'></div>
-   <LiveOnlineFeesRight enrollText='Enroll Now' fee='₹ 25383'/>
-   </div>
+          </h2>
+          <p className='mentoring-mode-content'>
+            Mentor Mode Training refers to a personalized, guided learning approach where students receive one-on-one or small group instruction from a mentor. This method is highly effective for students who need tailored support, ongoing feedback, and deeper engagement with the subject matter.
+          </p>
+        </div>
+        <div className='separator'></div>
+        <LiveOnlineFeesRight enrollText='Enroll Now' modeType="mentoring" />
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default MentoringModeFees
+export default MentoringModeFees;

@@ -10,6 +10,8 @@ const QaAutomationFaq = () => {
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
   const { courseName } = useParams(); // Extract courseName from URL params
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [matchedCourseName, setMatchedCourseName] = useState(null);
 
   // Fetch course details to get the correct course_name

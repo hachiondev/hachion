@@ -93,7 +93,7 @@ export const LiveOnlineFees = () => {
         </div>
 
         <div className='separator'></div>
-        <LiveOnlineFeesRight fee={fee} enrollText="Enroll Now" />
+        <LiveOnlineFeesRight enrollText='Enroll Now' modeType="live" />
       </div>
     </>
   );

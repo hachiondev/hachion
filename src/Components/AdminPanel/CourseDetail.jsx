@@ -108,6 +108,15 @@ const handleInputChange = (e) => {
   setFormData((prev) => ({ ...prev, [name]: value }));
 };
 
+const handleHighlightChange= (content) => {
+  if (content.trim() === "" || content === "<p><br></p>") {
+    setError("Course description heighlight is required.");
+  } else {
+    setError("");
+  }
+  setFormData({ ...formData, courseHighlight: content });
+};
+
 const handleTextChange = (content) => {
   if (content.trim() === "" || content === "<p><br></p>") {
     setError("Course description is required.");
@@ -665,7 +674,7 @@ Corporate Training
   id="courseHighlight"
   name="courseHighlight"
   value={formData.courseHighlight}
-  onChange={handleTextChange}
+  onChange={handleHighlightChange}
   style={{ height: "130px" }} // Increased editor height
   modules={{
     toolbar: [

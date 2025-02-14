@@ -1,94 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Course.css';
 import { FaCircle } from "react-icons/fa";
 import LiveOnlineFeesRight from './LiveOnlineFeesRight';
+import axios from 'axios';
 
 export const LiveOnlineFees = () => {
   const [selectedBatch, setSelectedBatch] = useState('');
   const [fee, setFee] = useState('');
+  const [courses, setCourses] = useState([]);
 
-  const handleBatchSelect = (batch) => {
-    setSelectedBatch(batch);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get('https://api.hachion.co/schedulecourse');
+        setCourses(response.data);
+        console.log(courses) // Assuming response.data is an array of courses
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+      }
+    };
+    fetchCourse();
+  }, []);
 
-    // Set fee based on selected batch
-    switch (batch) {
-      case 'batch1':
-        setFee('₹ 25000');
-        break;
-      case 'batch2':
-        setFee('Free');
-        break;
-      case 'batch3':
-        setFee('₹ 27000');
-        break;
-      default:
-        setFee('');
-    }
+  const handleBatchSelect = (batchId, batchFee) => {
+    setSelectedBatch(batchId);
+    setFee(batchFee); // Set fee dynamically from API data
   };
 
   return (
     <>
       <div className='batch-schedule'>
         <div className='left'>
-          {/* First batch */}
-          <div className='partition'>
-            <label className="radio-label">
-              <input 
-                type="radio" 
-                name="batch" 
-                value="batch1" 
-                checked={selectedBatch === 'batch1'}
-                onChange={() => handleBatchSelect('batch1')} 
-                className="hidden-radio"
-              />
-              <span className="custom-radio"></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Aug 8 2024 <span className='date-span'>(Thursday)</span></p>
-                <p className='batch-date'>09:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='class'><FaCircle className='class-icon' />Live Class</p>
-              </div>
-            </label>
-          </div>
-
-          {/* Second batch */}
-          <div className='partition'>
-            <label className="radio-label">
-              <input 
-                type="radio" 
-                name="batch" 
-                value="batch2" 
-                checked={selectedBatch === 'batch2'}
-                onChange={() => handleBatchSelect('batch2')} 
-                className="hidden-radio"
-              />
-              <span className="custom-radio"></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Sep 9 2024 <span className='date-span'>(Sunday)</span></p>
-                <p className='batch-date'>07:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='demo'><FaCircle className='demo-icon' />Live Demo</p>
-              </div>
-            </label>
-          </div>
-
-          {/* Third batch */}
-          <div className='partition'>
-            <label className="radio-label">
-              <input 
-                type="radio" 
-                name="batch" 
-                value="batch3" 
-                checked={selectedBatch === 'batch3'}
-                onChange={() => handleBatchSelect('batch3')} 
-                className="hidden-radio"
-              />
-              <span className="custom-radio"></span>
-              <div className='partition-schedule'>
-                <p className='batch-date'>Oct 5 2024 <span className='date-span'>(Saturday)</span></p>
-                <p className='batch-date'>05:00 PM IST <span className='date-span'>(1 hour)</span></p>
-                <p className='class'><FaCircle className='class-icon' />Live Class</p>
-              </div>
-            </label>
-          </div>
+          {/* Dynamically render batches */}
+          {courses.map((course, index) => (
+            <div className='partition' key={course.id || index}>
+              <label className="radio-label">
+                <input 
+                  type="radio" 
+                  name="batch" 
+                  value={course.id} 
+                  checked={selectedBatch === course.id}
+                  onChange={() => handleBatchSelect(course.id, course.fee)} 
+                  className="hidden-radio"
+                />
+                <span className="custom-radio"></span>
+                <div className='partition-schedule'>
+                  <p className='batch-date'>
+                    {course.schedule_date} <span className='date-span'>({course.schedule_week})</span>
+                  </p>
+                  <p className='batch-date'>
+                    {course.schedule_time} <span className='date-span'>({course.schedule_duration})</span>
+                  </p>
+                  <p className={course.schedule_mode === "Live Class" ? 'class' : 'demo'}>
+                    <FaCircle className={course.schedule_mode === "Live Class" ? 'class-icon' : 'demo-icon'} />
+                    {course.schedule_mode}
+                  </p>
+                </div>
+              </label>
+            </div>
+          ))}
         </div>
 
         <div className='separator'></div>

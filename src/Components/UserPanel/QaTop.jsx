@@ -20,7 +20,7 @@ const QaTop = ({ onVideoButtonClick }) => {
 
   const handleDownload = () => {
     if (!curriculumData.curriculum_pdf) {
-      alert("No file available for download.");
+      alert("No PDF available for download. Please contact trainings@hachion.co");
       return;
     }
 
@@ -81,7 +81,7 @@ const QaTop = ({ onVideoButtonClick }) => {
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>${course.total}/-</span></p>
+              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span></p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
               </h6>

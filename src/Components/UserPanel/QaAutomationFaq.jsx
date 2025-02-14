@@ -12,17 +12,23 @@ const QaAutomationFaq = () => {
   const { courseName } = useParams(); // Extract courseName from URL params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [course, setCourse] = useState(null);
+  const [matchedCourseName, setMatchedCourseName] = useState(null);
 
+  // Fetch course details to get the correct course_name
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
         const response = await axios.get('https://api.hachion.co/courses/all');
-        const courseData = response.data.find(
+        const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
-        setCourse(courseData);
+
+        if (matchedCourse) {
+          setMatchedCourseName(matchedCourse.courseName.trim());
+        } else {
+          setError('Course not found.');
+        }
       } catch (error) {
         console.error('Error fetching course details:', error);
         setError('Failed to load course details.');
@@ -34,14 +40,17 @@ const QaAutomationFaq = () => {
     fetchCourse();
   }, [courseName]);
 
+  // Fetch FAQs based on the matched course_name
   useEffect(() => {
+    if (!matchedCourseName) return;
+
     const fetchFaq = async () => {
       try {
         const response = await axios.get('https://api.hachion.co/faq');
         const filteredFaq = response.data.filter(
-          (item) =>
-            item.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+          (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
+
         setFaq(filteredFaq);
       } catch (error) {
         console.error('Error fetching FAQ:', error.message);
@@ -50,15 +59,14 @@ const QaAutomationFaq = () => {
     };
 
     fetchFaq();
-  }, [courseName]);
+  }, [matchedCourseName]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
+  // Toggle View More / View Less
   const handleViewMore = () => {
     setShowMore(!showMore);
   };
 
+  // Toggle individual FAQ expansion
   const handleToggleExpand = (index) => {
     setExpandedTopics((prevState) => ({
       ...prevState,
@@ -66,6 +74,7 @@ const QaAutomationFaq = () => {
     }));
   };
 
+  // Render FAQ topics
   const renderTopics = () => {
     const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
@@ -99,7 +108,7 @@ const QaAutomationFaq = () => {
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
-        <h1 className="qa-heading">{course?.courseName}  FAQ's</h1>
+        <h1 className="qa-heading">{matchedCourseName} FAQ's</h1>
         <button className="btn-curriculum">
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download FAQ's
         </button>

@@ -87,8 +87,11 @@ const QaTop = ({ onVideoButtonClick }) => {
               </h6>
             </div>
           </div>
-          <div className='qa-content'>
-            <p>{course.courseHighlight}</p> {/* Display course highlight */}
+          {/* <div className='qa-content'>
+            <p>{course.courseHighlight}</p> 
+          </div> */}
+          <div>
+            <div className="qa-content" dangerouslySetInnerHTML={{ __html: course.courseHighlight.trim() }} />
           </div>
           <div className='qa-button'>
             <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>

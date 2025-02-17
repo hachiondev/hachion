@@ -88,7 +88,7 @@ export const LiveOnlineFees = () => {
               </div>
             ))
           ) : (
-            <p>No batches available for this course.</p>
+            <p className='batch-text'>No batches available for this course.</p>
           )}
         </div>
 

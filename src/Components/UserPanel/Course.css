@@ -365,17 +365,23 @@ border-radius: 20px;
 background-image: url('../../Assets/qa_background.png');
 background-repeat: no-repeat;
 background-size: 100%;
-margin:1vh;
-padding:1vh;
+/* margin:10px;
+padding:10px; */
 display: flex;
-flex-direction: row;
-gap: 100px;
+flex-direction: column;
+box-shadow: 5px 5px 5px #D3D3D3;
 margin-left:10vw;
 margin-right: 10vw;
-box-shadow: 5px 5px 5px #D3D3D3;
 margin-top: 50px;
 margin-bottom: 50px;
 }
+
+.qa-inside{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  }
 
 .qa-automation-left{
 display: flex;
@@ -385,7 +391,7 @@ flex-direction: row;
 .qa-automation-left img{
 margin-right: 80px;
 padding-left: 20px;
-height:180px;
+height:140px;
 }
 
 .video-btn{
@@ -397,8 +403,8 @@ box-shadow:2px 2px 2px white;
 color:white;
 font-size: 1.5rem;
 font-weight: 700;
-margin-top: 20px;
-margin-left: 20px;
+margin-top: 10px;
+margin-left: 10px;
 margin-bottom: 30px;
 margin-right: 20px;
 }
@@ -488,12 +494,21 @@ color:white;
 border: 2px solid white;
 }
 
-.qa-button{
+.qa-button-container{
 display: flex;
-justify-content: space-evenly;
-margin: 20px;
-margin-top: 180px;
+align-items: center;
+justify-content: flex-start;
+margin: 10px;
+margin-bottom: 20px;
+gap: 220px;
 }
+
+.qa-button{
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  gap: 60px;
+  }
 
 .qa-right{
 display:flex;
@@ -568,6 +583,16 @@ background-color: white;
 border-radius: 20px;
 width: 600px; /* Adjust width as needed */
 position: relative;
+}
+
+.batch-text{
+  color: #000;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  justify-content: center;
+  padding: 20px;
 }
 
 .button-close {
@@ -1765,6 +1790,7 @@ border:2px solid white;
   padding: 0px;
   justify-content: space-evenly;
 }
+
 .qa-automation-left{
   margin-left: 0px;
 }
@@ -1900,6 +1926,15 @@ border:2px solid white;
   gap: 5px;
 }
 
+.qa-inside{
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  }
+
 .qa-automation-left {
   flex-direction: row; /* Make the content stack vertically */
   margin-left: 0;
@@ -1926,6 +1961,15 @@ border:2px solid white;
   margin-bottom: 0;
 }
 
+.qa-button-container{
+  display: flex;
+  width: 95%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  }
+
 .qa-button {
   flex-direction: column;
   width: 95%;
@@ -1933,6 +1977,7 @@ border:2px solid white;
   align-items: center;
   margin: 5px;
   margin-top: 0;
+  gap: 5px;
 }
 
 .enroll-now,
@@ -2427,23 +2472,6 @@ max-height: 3em;
     .qa-sub-content{
       font-size: 10px;
       text-align: justify;
-    }
-
-    .qa-sub-content h1,
-    .qa-sub-content h2,
-    .qa-sub-content h3 {
-      color: #006489;
-    }
-
-    .qa-sub-content li::marker {
-      color: #006489;
-      font-size: 12px;
-      margin-left: 20px; 
-    }
-
-    .qa-sub-content ul {
-      list-style-type: disc; 
-      color: #006489; 
     }
 
     /* Increase toolbar font size */

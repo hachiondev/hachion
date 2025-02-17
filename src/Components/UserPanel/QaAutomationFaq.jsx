@@ -9,23 +9,45 @@ const QaAutomationFaq = () => {
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
+   const [pdfUrl, setPdfUrl] = useState(null); 
   const { courseName } = useParams(); // Extract courseName from URL params
+  const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [matchedCourseName, setMatchedCourseName] = useState(null);
-
   // Fetch course details to get the correct course_name
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
         const response = await axios.get('https://api.hachion.co/courses/all');
+        console.log('API response:', response.data); // Check course data
+    
+        const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
+        console.log('Course name from URL:', courseNameFromUrl);
+    
         const matchedCourse = response.data.find(
-          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
         );
-
+    
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
+          console.log('Matched Course:', matchedCourse);
+    
+          // Now fetch the curriculum for the matched course
+          const curriculumResponse = await axios.get('https://api.hachion.co/faq');
+          console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
+    
+          const matchedCurriculum = curriculumResponse.data.find(
+            (item) => item.course_name && item.course_name.trim() === matchedCourse.courseName.trim()
+          );
+    
+          // Check if the PDF URL exists in the matched curriculum
+          if (matchedCurriculum && matchedCurriculum.faq_pdf) {
+            setPdfUrl(matchedCurriculum.faq_pdf); // Set PDF URL from the curriculum API
+          } else {
+            console.log('No PDF found in FAQ for this course');
+            setError('No PDF found in FAQ for this course.');
+          }
         } else {
           setError('Course not found.');
         }
@@ -36,8 +58,9 @@ const QaAutomationFaq = () => {
         setLoading(false);
       }
     };
-
-    fetchCourse();
+    
+    
+fetchCourse();    
   }, [courseName]);
 
   // Fetch FAQs based on the matched course_name
@@ -60,6 +83,10 @@ const QaAutomationFaq = () => {
 
     fetchFaq();
   }, [matchedCourseName]);
+
+  useEffect(() => {
+    console.log('PDF URL:', pdfUrl); // Log pdfUrl whenever it changes
+  }, [pdfUrl]);
 
   // Toggle View More / View Less
   const handleViewMore = () => {
@@ -104,12 +131,33 @@ const QaAutomationFaq = () => {
       </div>
     ));
   };
+  const downloadPdf = () => {
+    if (!pdfUrl) {
+      console.error('No PDF URL available.');
+      return;
+    }
+  
+    try {
+      // Decode the base64 string
+      const pdfBlob = new Blob([new Uint8Array(atob(pdfUrl.split(',')[1]).split('').map(char => char.charCodeAt(0)))], { type: 'application/pdf' });
+  
+      // Create a link element
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(pdfBlob);
+      link.setAttribute('download', `${matchedCourseName}_Curriculum.pdf`); // Set the filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    }
+  };
 
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
         <h1 className="qa-heading">{matchedCourseName} FAQ's</h1>
-        <button className="btn-curriculum">
+        <button className="btn-curriculum" onClick={downloadPdf}>
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download FAQ's
         </button>
       </div>

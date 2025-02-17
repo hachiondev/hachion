@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from 'react';
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
-import "./Course.css";
-import { useNavigate } from "react-router-dom";
+import './Course.css';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, student }) => {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Update screen size on resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Handle navigation
+  // Handle button click to navigate
   const handleClick = () => {
     if (title) {
-      const formattedName = title.toLowerCase().replace(/\s+/g, "-");
+      const formattedName = title.toLowerCase().replace(/\s+/g, '-'); // Format course name
       navigate(`/courses/${formattedName}`);
     }
   };
 
-  // Render stars dynamically based on rating
+  // Function to render stars dynamically based on the rating
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -43,10 +32,7 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
   };
 
   return (
-    <div 
-      className="sidebar-card"
-      onClick={() => isMobile && handleClick()} // Click anywhere in mobile view
-    >
+    <div className="sidebar-card">
       <div className="sidebar-card-header-div">
         <h4 className="sidebar-card-heading">Certified Students: {student}</h4>
         <img src={image} alt="card-img" className="sidebar-card-icon" />
@@ -58,23 +44,18 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
             <RxCalendar /> {month} Days
           </h6>
           <h6 className="sidebar-course-month">
-            <BiTimeFive /> {time} hours
+            <BiTimeFive /> {time} Hours
           </h6>
         </div>
         <h6 className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
         </h6>
-        {!isMobile && ( // Show button only on larger screens
-          <button
-            className="sidebar-enroll-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClick();
-            }}
-          >
-            View Details
-          </button>
-        )}
+        <button className="sidebar-enroll-btn" onClick={(e) => {
+          e.stopPropagation(); // Prevent parent click event
+          handleClick();
+        }}>
+          View Details
+        </button>
       </div>
     </div>
   );

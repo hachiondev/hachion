@@ -84,13 +84,7 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-//   useEffect(() => {
-//     const filtered = courses.filter(category =>
-//         category.courseName.toLowerCase().includes(searchTerm.toLowerCase()) 
-        
-//     );
-//     setFilteredCourses(filtered);
-// }, [searchTerm, courses]);
+
   useEffect(() => {
     const fetchCourses = async () => {
         try {
@@ -103,9 +97,43 @@ const CourseDetail = ({
     fetchCourses();
     setFilteredCourses(categories)
 }, [categories]);
+
+
 const handleInputChange = (e) => {
   const { name, value } = e.target;
-  setFormData((prev) => ({ ...prev, [name]: value }));
+  setFormData((prevData) => {
+    const updatedData = { ...prevData, [name]: value };
+
+    // Function to calculate total based on amount and discount
+    const calculateTotal = (amount, discount) => {
+      if (!amount || isNaN(amount)) return "";
+      const discountAmount = discount ? (amount * discount) / 100 : 0;
+      return (amount - discountAmount).toFixed(2);
+    };
+
+    switch (name) {
+      case "amount":
+      case "discount":
+        updatedData.total = calculateTotal(updatedData.amount, updatedData.discount);
+        break;
+      case "mamount":
+      case "mdiscount":
+        updatedData.mtotal = calculateTotal(updatedData.mamount, updatedData.mdiscount);
+        break;
+      case "samount":
+      case "sdiscount":
+        updatedData.stotal = calculateTotal(updatedData.samount, updatedData.sdiscount);
+        break;
+      case "camount":
+      case "cdiscount":
+        updatedData.ctotal = calculateTotal(updatedData.camount, updatedData.cdiscount);
+        break;
+      default:
+        break;
+    }
+
+    return updatedData;
+  });
 };
 
 const handleHighlightChange= (content) => {
@@ -140,8 +168,6 @@ const handleSubmit = async (e) => {
     courseName: formData.courseName,
     date: currentDate,
     youtubeLink: formData.youtubeLink,
-    numberOfClasses: formData.numberOfClasses,
-    dailySessions: formData.dailySessions,
     liveTrainingHours: formData.liveTrainingHours,
     labExerciseHours: formData.labExerciseHours,
     realTimeProjects: formData.realTimeProjects,
@@ -172,86 +198,86 @@ const handleSubmit = async (e) => {
 
   const formNewData = new FormData();
   formNewData.append("course", JSON.stringify(courseData));
-  if (formData.courseImage) {
+  if (formData.courseImage && typeof formData.courseImage !== "string") {
     formNewData.append("courseImage", formData.courseImage);
-  } else {
-    console.error("No course image provided.");
-  }
-  
-  // Log FormData
-  for (let [key, value] of formNewData.entries()) {
-    console.log(`${key}:`, value);
   }
 
   try {
     if (formMode === "Edit") {
-      // Update course
       const response = await axios.put(
-        `https://api.hachion.co/courses/update/${formData.course_id}`,
+        `https://api.hachion.co/courses/update/${formData.id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       if (response.status === 200) {
         alert("Course updated successfully");
-       
-        setShowAddCourse(false); // Hide the form
+        setCourses((prevCourses) =>
+          prevCourses.map((course) =>
+            course.id === formData.id ? response.data : course
+          )
+        );
+        setShowAddCourse(false); // Close the form after update
       }
     } else {
-      // Add course
       const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-     console.log("***",formNewData);
+
       if (response.status === 201) {
         alert("Course added successfully");
         setCourses((prevCourses) => [...prevCourses, response.data]);
+        setShowAddCourse(false); // Close the form after add
       }
     }
   } catch (error) {
-   
-    console.error('Error submitting course:', error.response ? error.response.data : error.message);
+    console.error("Error submitting course:", error.response?.data || error.message);
     alert("Error submitting course.");
   }
 };
-const handleEditClick = async (course_id) => {
-  setFormMode('Edit');
+
+const handleEditClick = async (courseId) => {
+  
+  console.log(courseId)
   setShowAddCourse(true);
   try {
-    const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-    if (response.status === 200) {
-      const course = response.data;
+    const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+    if (response.ok) {
+      const course = await response.json();
       setFormData({
-        course_id: course.course_id || '',
-// Ensure the unique identifier is included
-       courseCategory: course.courseCategory || '',
-        courseName: course.courseName || '',
-        courseImage: course.courseImage||'', // Handle file uploads differently if needed
-        youtubeLink: course.youtubeLink || '',
-        numberOfClasses: course.numberOfClasses || '',
-        dailySessions: course.dailySessions || '',
-        liveTrainingHours: course.liveTrainingHours || '',
-        labExerciseHours: course.labExerciseHours || '',
-        realTimeProjects: course.realTimeProjects || '',
-        starRating: course.starRating || '',
-        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
-        totalEnrollment: course.totalEnrollment || '',
-        keyHighlights1:course.keyHighlights1||'',
-        keyHighlights2:course.keyHighlights2||'',
-        keyHighlights3:course.keyHighlights3||'',
-        keyHighlights4:course.keyHighlights4||'',
-        keyHighlights5:course.keyHighlights5||'',
-        keyHighlights6:course.keyHighlights6||'',
-        amount:course.amount||'',discount:course.discount||'',total:course.total||'',
-        mamount:course.mamount||'',mdiscount:course.mdiscount||'',mtotal:course.mtotal||'',
-        samount:course.samount||'',sdiscount:course.sdiscount||'',stotal:course.stotal||'',
-        camount:course.camount||'',cdiscount:course.cdiscount||'',ctotal:course.ctotal||'',
-        mentoring1:course.mentoring1||'',
-        mentoring2:course.mentoring2||'',
-        self1:course.self1||'',
-    self2:course.self2||'',
-    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
-    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
+        id: course.id, // Ensure the unique identifier is included
+       courseCategory: course.courseCategory ,
+        courseName: course.courseName ,
+        courseImage: course.courseImage, // Handle file uploads differently if needed
+        youtubeLink: course.youtubeLink ,
+        numberOfClasses: course.numberOfClasses ,
+        dailySessions: course.dailySessions ,
+        liveTrainingHours: course.liveTrainingHours ,
+        labExerciseHours: course.labExerciseHours ,
+        realTimeProjects: course.realTimeProjects,
+        starRating: course.starRating ,
+        ratingByNumberOfPeople: course.ratingByNumberOfPeople,
+        totalEnrollment: course.totalEnrollment,
+        keyHighlights1:course.keyHighlights1,
+        keyHighlights2:course.keyHighlights2,
+        keyHighlights3:course.keyHighlights3,
+        keyHighlights4:course.keyHighlights4,
+        keyHighlights5:course.keyHighlights5,
+        keyHighlights6:course.keyHighlights6,
+        amount:course.amount,discount:course.discount,total:course.total,
+        mamount:course.mamount,mdiscount:course.mdiscount,mtotal:course.mtotal,
+        samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
+        camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
+        mentoring1:course.mentoring1,
+        mentoring2:course.mentoring2,
+        self1:course.self1,
+    self2:course.self2,
+    headerTitle:course.headerTitle,courseKeyword:course.courseKeyword,courseKeywordDescription:course.courseDescription,
+    courseHighlight:course.courseHighlight,courseDescription:course.courseDescription
             });
+            
+            setFormMode('Edit');
+           
     } else {
       console.error('Failed to fetch course data');
     }
@@ -314,18 +340,16 @@ const handleDelete = async (id) => {
    console.error("Error deleting Curriculum:", error); 
  } }; 
 
-   
  const handleCloseModal=()=>{
   setShowAddCourse(false);
  
 }
 
-
-  const handleAddTrendingCourseClick = () => {
-    setFormMode('Add'); // Explicitly set formMode to 'Add'
-    setShowAddCourse(true); // Show the form
-    handleReset(); // Reset the form fields for a clean form
-  };
+const handleAddTrendingCourseClick = () => {
+  setFormMode('Add'); // Explicitly set formMode to 'Add'
+  setShowAddCourse(true); // Show the form
+  handleReset(); // Reset the form fields for a clean form
+};
   
   return (<>{
     showAddCourse?(  
@@ -347,7 +371,7 @@ const handleDelete = async (id) => {
     </li>
               </ol>
             </nav>
-      <div className="category">
+            <div className="category">
         <div className="category-header">
           <p>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
         </div>
@@ -372,7 +396,7 @@ const handleDelete = async (id) => {
           </option>
         ))}
     
-                </select>
+    </select>
               </div>
               <div className="col-md-4">
                 <label className="form-label">Course Name</label>
@@ -537,91 +561,56 @@ const handleDelete = async (id) => {
 </div>
 </div> 
 <h3>Mode Of Training</h3>
-<div className='course-row'>
-<div className='course-mode'>
-<div class="form-check">
-<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-<label class="form-check-label" for="flexCheckDefault">
-Live Training
-</label>
-</div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange}/>
-</div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount'value={formData.discount} onChange={handleInputChange} />
-</div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
-</div>
-</div>
-<div className='course-mode'>
-<div class="form-check">
-<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-<label class="form-check-label" for="flexCheckDefault">
-Mentoring Mode
-</label>
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange} />
-</div>
-</div>
-<div className='course-mode'>
-<div class="form-check">
-<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-<label class="form-check-label" for="flexCheckDefault">
-Self Placed Training
-</label>
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange} />
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange}/>
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
-</div>
-</div>
+      <div className="course-row">
+        {[
+          { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
+          { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+          { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
+          { label: "Corporate Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
+        ].map((mode, index) => (
+          <div className="course-mode" key={index}>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" id={`flexCheck${index}`} />
+              <label className="form-check-label" htmlFor={`flexCheck${index}`}>
+                {mode.label}
+              </label>
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Amount (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.amount}
+                value={formData[mode.amount]}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Discount %</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.discount}
+                value={formData[mode.discount]}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Total (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.total}
+                value={formData[mode.total]}
+                readOnly
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
 
-<div className='course-mode'>
-<div class="form-check">
-<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-<label class="form-check-label" for="flexCheckDefault">
-Corporate Training
-</label>
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4"name='amount' value={formData.amount} onChange={handleInputChange} />
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Discount%</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='discount' value={formData.discount} onChange={handleInputChange} />
-</div>
-<div class="col-md-3">
-<label for="inputEmail4" class="form-label">Total(INR)</label>
-<input type="number" class="form-control-mode" id="inputEmail4" name='total' value={formData.total} onChange={handleInputChange}/>
-</div>
-</div>
-</div>
-</div>
-<h3>Sample session</h3>
+    <h3>Sample session</h3>
 <div className='course-row'>
 <div className='course-details'>
 <h4>Mentoring Training</h4>
@@ -723,6 +712,7 @@ Corporate Training
       [{ align: [] }], // Text alignment
       [{ indent: "-1" }, { indent: "+1" }], // Indentation
       ["blockquote"], // Blockquote for paragraph formatting
+      ["image"],
       ["link"], // Insert links
       [{ color: [] }], // Full color picker
       ["clean"], // Remove formatting
@@ -738,6 +728,7 @@ Corporate Training
     "align",
     "indent",
     "blockquote",
+    "image",
     "link",
     "color",
   ]}

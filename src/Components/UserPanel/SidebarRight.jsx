@@ -52,7 +52,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
         key={course.id || index}
         title={course.courseName}
         RatingByPeople={course.ratingByNumberOfPeople}
-        image={`http://api.hachion.co/${course.courseImage}`} // Correct property
+        image={`https://api.hachion.co/${course.courseImage}`} // Correct property
         Rating={course.starRating}
         student={course.totalEnrollment}
         month={course.numberOfClasses}

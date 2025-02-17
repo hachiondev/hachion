@@ -65,19 +65,21 @@ export default function Faq() {
     const[faq,setFaq]=useState([]);
     const[filteredFaq,setFilteredFaq]=useState([])
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = useState([{ id:"",title:"",description:"" }]);
+    const [rows, setRows] = useState([{ id:"",faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",faq_pdf:"",faq_title:"",description:""});
-    const [faqData, setFaqData] = useState([{
+    const [faqData, setFaqData] = useState({
         faq_id:"",
           category_name:"",
             course_name: "",
          faq_pdf:"",
+         faq_title:"",
+         description:"",
             date:currentDate,
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
                     
@@ -99,13 +101,13 @@ export default function Faq() {
                  );
 
          const handleReset=()=>{
-            setFaqData([{
+            setFaqData({
                 faq_id:"",
                   category_name:"",
                     course_name: "",
                  faq_pdf:"",
                     date:""
-                 }]);
+                 });
         
          }
          const addRow = () => {
@@ -215,17 +217,35 @@ export default function Faq() {
           );
           setFilteredFaq(filtered);
       }, [searchTerm,filteredFaq]);
-      const handleFileUpload = (e) => {
+      const handleFileUpload = async (e) => {
         const file = e.target.files[0];
-        if (file && file.type === "application/pdf") {
-            setFaqData((prevData) => ({
-                ...prevData,
-                faq_pdf: file,
-            }));
-        } else {
-            alert("Please upload a valid PDF file.");
+        if (file) {
+            // Convert file to Base64 (if needed)
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                setFaqData((prev) => ({
+                    ...prev,
+                    faq_pdf: reader.result // Base64 string
+                }));
+            };
         }
     };
+    
+    const handleEditFileUpload = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          // Convert file to Base64 (if needed)
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = () => {
+              setEditedRow((prev) => ({
+                  ...prev,
+                  faq_pdf: reader.result // Base64 string
+              }));
+          };
+      }
+  };
         
         const handleCloseModal=()=>{
           setShowAddCourse(false);
@@ -246,25 +266,44 @@ export default function Faq() {
       };
       const handleSubmit = async (e) => {
         e.preventDefault();
-      
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        const dataToSubmit = { 
-          ...faqData, 
-          date: currentDate, // Ensure this is added
+    
+        const currentDate = new Date().toISOString().split("T")[0];
+        const dataToSubmit = {
+            category_name: faqData?.category_name,
+            course_name: faqData?.course_name,
+            faq_pdf: faqData?.faq_pdf,
+            faq_title: faqData?.faq_title,
+        description: faqData?.description,
+            date: currentDate
         };
-      
+    
+        console.log("Data being sent:", dataToSubmit); // Debugging
+    
         try {
-          const response = await axios.post("https://api.hachion.co/faq/add", dataToSubmit);
+          const response = await axios.post("https://api.hachion.co/faq/add", dataToSubmit, {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+        
           if (response.status === 200) {
             alert("Faq details added successfully");
-            setFaqData([...faqData, dataToSubmit]); // Update local state
-            handleReset(); // Clear form fields
+            setFaqData({}); // Reset form
+            handleReset();
           }
         } catch (error) {
-          console.error("Error adding faq:", error.message);
-          alert("Error adding faq.");
+          if (error.response) {
+            console.error("Error response:", error.response.data); // Log server response
+            alert(`Error adding FAQ: ${error.response.data.message || 'Unknown error'}`);
+          } else {
+            console.error("Error:", error.message);
+            alert("Error adding faq.");
+          }
         }
-      };
+      }        
+    
+    
+        
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -318,6 +357,7 @@ export default function Faq() {
     className="form-control"
     type="file"
     id="formFile"
+     accept=".pdf"
     onChange={handleFileUpload}
 />
 
@@ -452,7 +492,8 @@ export default function Faq() {
   <label for="formFile" class="form-label">FAQ's PDF</label>
   <input class="form-control" type="file" id="formFile"
           name="faq_pdf"
-          onChange={handleChange}/>
+          accept='.pdf'
+          onChange={handleFileUpload}/>
 </div>
   </div>
   </div>
@@ -569,7 +610,10 @@ export default function Faq() {
         className="form-control"
         type="file"
         id="faqPDF"
+        accept='.pdf'
         name="faq_pdf"
+      
+        onChange={handleEditFileUpload}
     
       />
     </div>

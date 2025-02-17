@@ -569,9 +569,14 @@ width: 100%;
   box-sizing: border-box;
 }
 
+.form-label {
+  padding: 3px;
+  white-space: nowrap;
+}
+
 .form-control-mode, .form-control-sample {
   width: 100%; /* Reduces the input field width */
-  min-width: 260px;
+  min-width: 210px;
   height: 50px;
   border-radius: 5px;
   outline: none;

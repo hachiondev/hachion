@@ -72,13 +72,15 @@ export default function Curriculum() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:""});
-    const [curriculumData, setCurriculumData] = useState([{
+    const [curriculumData, setCurriculumData] = useState({
         curriculum_id:"",
           category_name:"",
             course_name: "",
          curriculum_pdf:"",
+         title:"",
+         topic:'',
             date:currentDate,
-         }]);
+         });
         const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -100,13 +102,13 @@ export default function Curriculum() {
         );
 
          const handleReset=()=>{
-            setCurriculumData([{
+            setCurriculumData({
                 curriculum_id:"",
                   category_name:"",
                     course_name: "",
                  curriculum_pdf:"",
                     date:""
-                 }]);
+                 });
         
          }
          const addRow = () => {
@@ -215,17 +217,37 @@ export default function Curriculum() {
           );
           setFilteredCurriculum(filtered);
       }, [searchTerm, curriculum]);      
-      const handleFileUpload = (e) => {
+      const handleFileUpload = async (e) => {
         const file = e.target.files[0];
-        if (file && file.type === "application/pdf") {
-            setCurriculumData((prevData) => ({
-                ...prevData,
-                curriculum_pdf: file,
-            }));
-        } else {
-            alert("Please upload a valid PDF file.");
+        if (file) {
+            // Convert file to Base64 (if needed)
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                setCurriculumData((prev) => ({
+                    ...prev,
+                    curriculum_pdf: reader.result // Base64 string
+                }));
+            };
         }
     };
+    
+    const handleEditFileUpload = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          // Convert file to Base64 (if needed)
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = () => {
+              setEditedRow((prev) => ({
+                  ...prev,
+                  curriculum_pdf: reader.result // Base64 string
+              }));
+          };
+      }
+  };
+  
+  
         
         const handleCloseModal=()=>{
           setShowAddCourse(false);
@@ -235,38 +257,50 @@ export default function Curriculum() {
           console.log(row);
             setEditedRow(row)// Set the selected row data
             setOpen(true); // Open the modal
-            console.log("tid",row.course_schedule_id)
+            console.log("tid",row.curriculum_id)
           };
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCurriculumData((prevData) => ({
+      const { name, value } = e.target;
+      setCurriculumData((prevData) => ({
           ...prevData,
-          [name]: value,
-        }));
-      };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        const dataToSubmit = { 
-          ...curriculumData, 
-          date: currentDate, // Ensure this is added
-        };
-      
-        console.log("Data to submit:", dataToSubmit); // Add this line
-      
-        try {
-          const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit);
-          if (response.status === 200) {
+          [name]: value
+      }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const dataToSubmit = {
+        category_name: curriculumData?.category_name,
+        course_name: curriculumData?.course_name,
+        curriculum_pdf: curriculumData?.curriculum_pdf,
+        title: curriculumData?.title,
+    topic: curriculumData?.topic,
+        date: currentDate
+    };
+
+    console.log("Data being sent:", dataToSubmit); // Debugging
+
+    try {
+        const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
             alert("Curriculum details added successfully");
-            setCurriculumData([...curriculumData, dataToSubmit]); // Update local state
-            handleReset(); // Clear form fields
-          }
-        } catch (error) {
-          console.error("Error adding curriculum:", error.message);
-          alert("Error adding curriculum.");
+            setCurriculumData({}); // Reset form
+            handleReset();
         }
-      };
+    } catch (error) {
+        console.error("Error adding curriculum:", error.message);
+        alert("Error adding curriculum.");
+    }
+};
+
+
+    
       
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
@@ -321,10 +355,10 @@ export default function Curriculum() {
     className="form-control"
     type="file"
     id="formFile"
+    accept=".pdf"
     onChange={handleFileUpload}
 />
-{curriculumData.curriculum_pdf && (
-  <p>Uploaded: {curriculumData.curriculum_pdf.name}</p> )}
+
 </div>
   </div>
   <TableContainer component={Paper}>
@@ -454,7 +488,7 @@ export default function Curriculum() {
   <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
-          name="faq_pdf"
+          name="curriculum_pdf"
           onChange={handleChange}/>
 </div>
   </div>
@@ -579,12 +613,15 @@ export default function Curriculum() {
     </div>
 
     <div className="mb-3">
-      <label htmlFor="faqPDF" className="form-label">FAQ's PDF</label>
+      <label htmlFor="curriculumPDF" className="form-label">Curriculum's PDF</label>
       <input
         className="form-control-sample"
         type="file"
-        id="faqPDF"
+        id="curriculumPDF"
+        accept='.pdf'
         name="curriculum_pdf"
+      
+        onChange={handleEditFileUpload}
     
       />
     </div>

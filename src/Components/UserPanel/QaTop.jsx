@@ -44,17 +44,17 @@ const QaTop = ({ onVideoButtonClick }) => {
         setCourse(courseData);
       } catch (error) {
         console.error('Error fetching course details:', error);
-      }finally {
+      } finally {
         setLoading(false);
+      }
     };
-  }
     fetchCourse();
   }, [courseName]);
-
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
+
   // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
@@ -70,12 +70,10 @@ const QaTop = ({ onVideoButtonClick }) => {
     return stars;
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <>
       <div className='qa-automation'>
+        <div className='qa-inside'>
         <div className='qa-left-part'>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
           <div className='qa-automation-left'>
@@ -87,28 +85,27 @@ const QaTop = ({ onVideoButtonClick }) => {
               </h6>
             </div>
           </div>
-          {/* <div className='qa-content'>
-            <p>{course.courseHighlight}</p> 
-          </div> */}
-          <div>
-            <div className="qa-content" dangerouslySetInnerHTML={{ __html: course.courseHighlight.trim() }} />
-          </div>
-          <div className='qa-button'>
-            <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
-            <button className="download" onClick={handleDownload}>
-        Download Brochure
-      </button>
-          </div>
+          <div className="qa-content" dangerouslySetInnerHTML={{ __html: course.courseHighlight.trim() }} />
         </div>
+        
         <div className='qa-right'>
           <p className='certified'>Certified-students: {course.totalEnrollment}</p>
           <img src={qaheader} alt='video-frame' />
+        </div>
+        </div>
+
+      {/* Buttons Section */}
+      <div className='qa-button-container'>
+        <div className='qa-button'>
+          <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
+          <button className="download" onClick={handleDownload}>Download Brochure</button>
+          </div>
           <button className='video-btn' onClick={onVideoButtonClick}>
             <IoPlayCircleOutline className='video-btn-icon' />
             Watch Demo Videos
           </button>
-        </div>
-      </div>
+          </div>
+          </div>
     </>
   );
 };

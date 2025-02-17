@@ -67,7 +67,7 @@ const CourseDetail = ({
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mamount,mdiscount,mtotal,camount,cdiscount,ctotal,samount,sdiscount,stotal,mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   useEffect(() => {
@@ -82,19 +82,18 @@ const CourseDetail = ({
     fetchCategory();
   }, []);
 
-useEffect(() => {
-  const fetchCourses = async () => {
-      try {
-          const response = await axios.get('https://api.hachion.co/courses/all');
-          setCourses(response.data); // Correct state update
-      } catch (error) {
-          console.error("Error fetching courses:", error.message);
-      }
-  };
-  fetchCourses();
-  setFilteredCourses(courses);
-}, [courses]); 
-
+  useEffect(() => {
+    const fetchCourses = async () => {
+        try {
+            const response = await axios.get('https://api.hachion.co/courses/all');
+            setCategories(response.data); // Use the curriculum state
+        } catch (error) {
+            console.error("Error fetching couses:", error.message);
+        }
+    };
+    fetchCourses();
+    setFilteredCourses(categories)
+}, [categories]);
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setFormData((prev) => ({ ...prev, [name]: value }));
@@ -112,8 +111,6 @@ const handleSubmit = async (e) => {
     courseName: formData.courseName,
     date: currentDate,
     youtubeLink: formData.youtubeLink,
-    numberOfClasses: formData.numberOfClasses,
-    dailySessions: formData.dailySessions,
     liveTrainingHours: formData.liveTrainingHours,
     labExerciseHours: formData.labExerciseHours,
     realTimeProjects: formData.realTimeProjects,
@@ -144,143 +141,43 @@ const handleSubmit = async (e) => {
 
   const formNewData = new FormData();
   formNewData.append("course", JSON.stringify(courseData));
-  if (formData.courseImage) {
+  if (formData.courseImage && typeof formData.courseImage !== "string") {
     formNewData.append("courseImage", formData.courseImage);
-  } else {
-    console.error("No course image provided.");
-  }
-  
-  // Log FormData
-  for (let [key, value] of formNewData.entries()) {
-    console.log(`${key}:`, value);
   }
 
   try {
     if (formMode === "Edit") {
-      // Update course
       const response = await axios.put(
-        `https://api.hachion.co/courses/update/${formData.course_id}`,
+        `https://api.hachion.co/courses/update/${formData.id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       if (response.status === 200) {
         alert("Course updated successfully");
-       
-        setShowAddCourse(false); // Hide the form
+        setCourses((prevCourses) =>
+          prevCourses.map((course) =>
+            course.id === formData.id ? response.data : course
+          )
+        );
+        setShowAddCourse(false); // Close the form after update
       }
     } else {
-      // Add course
       const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-     console.log("***",formNewData);
+
       if (response.status === 201) {
         alert("Course added successfully");
         setCourses((prevCourses) => [...prevCourses, response.data]);
+        setShowAddCourse(false); // Close the form after add
       }
     }
   } catch (error) {
-   
-    console.error('Error submitting course:', error.response ? error.response.data : error.message);
+    console.error("Error submitting course:", error.response?.data || error.message);
     alert("Error submitting course.");
   }
 };
-const handleEditClick = async (course_id) => {
-  setFormMode('Edit');
-  setShowAddCourse(true);
-  try {
-    const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-    if (response.status === 200) {
-      const course = response.data;
-      setFormData({
-        course_id: course.course_id || '',
-// Ensure the unique identifier is included
-       courseCategory: course.courseCategory || '',
-        courseName: course.courseName || '',
-        courseImage: course.courseImage||'', // Handle file uploads differently if needed
-        youtubeLink: course.youtubeLink || '',
-        numberOfClasses: course.numberOfClasses || '',
-        dailySessions: course.dailySessions || '',
-        liveTrainingHours: course.liveTrainingHours || '',
-        labExerciseHours: course.labExerciseHours || '',
-        realTimeProjects: course.realTimeProjects || '',
-        starRating: course.starRating || '',
-        ratingByNumberOfPeople: course.ratingByNumberOfPeople || '',
-        totalEnrollment: course.totalEnrollment || '',
-        keyHighlights1:course.keyHighlights1||'',
-        keyHighlights2:course.keyHighlights2||'',
-        keyHighlights3:course.keyHighlights3||'',
-        keyHighlights4:course.keyHighlights4||'',
-        keyHighlights5:course.keyHighlights5||'',
-        keyHighlights6:course.keyHighlights6||'',
-        amount:course.amount||'',discount:course.discount||'',total:course.total||'',
-        mamount:course.mamount||'',mdiscount:course.mdiscount||'',mtotal:course.mtotal||'',
-        samount:course.samount||'',sdiscount:course.sdiscount||'',stotal:course.stotal||'',
-        camount:course.camount||'',cdiscount:course.cdiscount||'',ctotal:course.ctotal||'',
-        mentoring1:course.mentoring1||'',
-        mentoring2:course.mentoring2||'',
-        self1:course.self1||'',
-    self2:course.self2||'',
-    headerTitle:course.headerTitle||'',courseKeyword:course.courseKeyword||'',courseKeywordDescription:course.courseDescription||'',
-    courseHighlight:course.courseHighlight||'',courseDescription:course.courseDescription||''
-            });
-    } else {
-      console.error('Failed to fetch course data');
-    }
-  } catch (error) {
-    console.error('Error fetching course data:', error);
-  }
-};
-
-//   try {
-//     if (formMode === "Edit") {
-//       // Update course
-//       // const response = await axios.put(
-//       //   `https://api.hachion.co/courses/update/${formData.course_id}`,
-//       //   courseData,  // Send the course data as JSON
-//       //   { headers: { "Content-Type": "application/json" } }
-//       // );
-//       const formDataToSend = new FormData();
-// formDataToSend.append("course", JSON.stringify(courseData));
-
-// if (formData.courseImage) {
-//   formDataToSend.append("courseImage", formData.courseImage);
-// }
-
-// const response = await axios.put(
-//   `https://api.hachion.co/courses/update/${formData.course_id}`,
-//   formDataToSend,
-//   { headers: { "Content-Type": "multipart/form-data" } }
-// );
-//       if (response.status === 200) {
-//         alert("Course updated successfully");
-//       }
-//     } else {
-//       // Add course (with image file)
-//       const formDataToSend = new FormData();
-//       formDataToSend.append("course", JSON.stringify(courseData));  // Send the course data as JSON
-      
-//       if (formData.courseImage) {
-//         formDataToSend.append("courseImage", formData.courseImage);  // Add the image as a file
-//       } else {
-//         console.error("No course image provided.");
-//       }
-
-//       const response = await axios.post("https://api.hachion.co/courses/add", formDataToSend, {
-//         headers: { "Content-Type": "multipart/form-data" },
-//       });
-      
-//       if (response.status === 201) {
-//         alert("Course added successfully");
-//         setCourses((prevCourses) => [...prevCourses, response.data]);
-//       }
-//     }
-//   } catch (error) {
-//     console.error('Error submitting course:', error.response ? error.response.data : error.message);
-//     alert("Error submitting course.");
-//   }
-// };
-
 
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -303,7 +200,7 @@ const displayedCategories = filteredCourses.slice(
 );
   
 const handleReset=()=>{
-  setFormData([{
+  setFormData({
     course_id:"",
     title: '',
     courseName: '',
@@ -319,7 +216,7 @@ const handleReset=()=>{
     totalEnrollment: '',
     courseCategory: '',
     date:""
-       }]);
+       });
 
 }
 const handleDeleteConfirmation = (id) => {
@@ -341,7 +238,56 @@ const handleDelete = async (id) => {
   setShowAddCourse(false);
  
 }
-
+const handleEditClick = async (courseId) => {
+  
+  console.log(courseId)
+  setShowAddCourse(true);
+  try {
+    const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+    if (response.ok) {
+      const course = await response.json();
+      setFormData({
+        id: course.id, // Ensure the unique identifier is included
+       courseCategory: course.courseCategory ,
+        courseName: course.courseName ,
+        courseImage: course.courseImage, // Handle file uploads differently if needed
+        youtubeLink: course.youtubeLink ,
+        numberOfClasses: course.numberOfClasses ,
+        dailySessions: course.dailySessions ,
+        liveTrainingHours: course.liveTrainingHours ,
+        labExerciseHours: course.labExerciseHours ,
+        realTimeProjects: course.realTimeProjects,
+        starRating: course.starRating ,
+        ratingByNumberOfPeople: course.ratingByNumberOfPeople,
+        totalEnrollment: course.totalEnrollment,
+        keyHighlights1:course.keyHighlights1,
+        keyHighlights2:course.keyHighlights2,
+        keyHighlights3:course.keyHighlights3,
+        keyHighlights4:course.keyHighlights4,
+        keyHighlights5:course.keyHighlights5,
+        keyHighlights6:course.keyHighlights6,
+        amount:course.amount,discount:course.discount,total:course.total,
+        mamount:course.mamount,mdiscount:course.mdiscount,mtotal:course.mtotal,
+        samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
+        camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
+        mentoring1:course.mentoring1,
+        mentoring2:course.mentoring2,
+        self1:course.self1,
+    self2:course.self2,
+    headerTitle:course.headerTitle,courseKeyword:course.courseKeyword,courseKeywordDescription:course.courseDescription,
+    courseHighlight:course.courseHighlight,courseDescription:course.courseDescription
+            });
+            
+            setFormMode('Edit');
+            
+           
+    } else {
+      console.error('Failed to fetch course data');
+    }
+  } catch (error) {
+    console.error('Error fetching course data:', error);
+  }
+};
 
   const handleAddTrendingCourseClick = () => {
     setFormMode('Add'); // Explicitly set formMode to 'Add'
@@ -568,7 +514,7 @@ Live Training
 </label>
 </div>
 <div class="col-md-4">
-<label for="inputEmail4" class="form-label">amount</label>
+<label for="inputEmail4" class="form-label">Amount(INR)</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange}/>
 </div>
 <div class="col-md-4">
@@ -588,7 +534,7 @@ Mentoring Mode
 </label>
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
+<label for="inputEmail4" class="form-label">Amount</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='mamount' value={formData.mamount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
@@ -608,7 +554,7 @@ Self Placed Training
 </label>
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
+<label for="inputEmail4" class="form-label">Amount</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='samount' value={formData.samount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
@@ -629,7 +575,7 @@ Corporate Training
 </label>
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">amount</label>
+<label for="inputEmail4" class="form-label">Amount</label>
 <input type="number" class="form-control-mode" id="inputEmail4"name='camount' value={formData.camount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
@@ -637,7 +583,7 @@ Corporate Training
 <input type="number" class="form-control-mode" id="inputEmail4" name='cdiscount' value={formData.cdiscount} onChange={handleInputChange} />
 </div>
 <div class="col-md-3">
-<label for="inputEmail4" class="form-label">total</label>
+<label for="inputEmail4" class="form-label">Total</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='ctotal' value={formData.ctotal} onChange={handleInputChange}/>
 </div>
 </div>
@@ -848,11 +794,10 @@ Corporate Training
                   id='exampleModal'
                   tabIndex='-1'
                   aria-labelledby='exampleModalLabel'
-                 
+                  aria-hidden='true'
                 >
                   <div className='modal-dialog'>
                     <div className='modal-content'>
-                    <div className='modal-header'>
                       <button
                         data-bs-dismiss='modal'
                         className='close-btn'
@@ -861,7 +806,7 @@ Corporate Training
                       >
                         <RiCloseCircleLine />
                       </button>
-</div>
+
                       <div className='modal-body'>
                         <img
                           src={success}
@@ -873,7 +818,6 @@ Corporate Training
                         </p>
                       </div>
                     </div>
-                   
                     </div>
                     </div>
    </>

@@ -67,7 +67,7 @@ const CourseDetail = ({
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mamount:'',mdiscount:'',mtotal:'',camount:'',cdiscount:'',ctotal:'',samount:'',sdiscount:'',stotal:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',mamount:'',mdiscount:'',mtotal:'',samount:'',stotal:'',sdiscount:'',camount:'',cdiscount:'',ctotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   useEffect(() => {
@@ -268,8 +268,8 @@ const handleEditClick = async (courseId) => {
         keyHighlights6:course.keyHighlights6,
         amount:course.amount,discount:course.discount,total:course.total,
         mamount:course.mamount,mdiscount:course.mdiscount,mtotal:course.mtotal,
-        samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
         camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
+        samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
         mentoring1:course.mentoring1,
         mentoring2:course.mentoring2,
         self1:course.self1,
@@ -514,7 +514,7 @@ Live Training
 </label>
 </div>
 <div class="col-md-4">
-<label for="inputEmail4" class="form-label">Amount(INR)</label>
+<label for="inputEmail4" class="form-label">Amount</label>
 <input type="number" class="form-control-mode" id="inputEmail4" name='amount' value={formData.amount} onChange={handleInputChange}/>
 </div>
 <div class="col-md-4">

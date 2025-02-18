@@ -21,7 +21,8 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,6 +58,7 @@ const CourseDetail = ({
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("");
   const[courses,setCourses]=useState([]);
+  const [error,setError]=useState([]);
   const [categories, setCategories] = useState([]);
   const [showAddCourse,setShowAddCourse]=useState(false);
   const [filteredCourses,setFilteredCourses]=useState([])
@@ -81,7 +83,24 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-
+  const handleHighlightChange= (content) => {
+    if (content.trim() === "" || content === "<p><br></p>") {
+      setError("Course description heighlight is required.");
+    } else {
+      setError("");
+    }
+    setFormData({ ...formData, courseHighlight: content });
+  };
+  
+  const handleTextChange = (content) => {
+    if (content.trim() === "" || content === "<p><br></p>") {
+      setError("Course description is required.");
+    } else {
+      setError("");
+    }
+    setFormData({ ...formData, courseDescription: content });
+  };
+  
   useEffect(() => {
     const fetchCourses = async () => {
         try {
@@ -589,6 +608,56 @@ Corporate Training
 </div>
 </div>
 </div>
+{/* <h3>Mode Of Training</h3>
+      <div className="course-row">
+        {[
+          { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
+          { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+          { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
+          { label: "Corporate Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
+        ].map((mode, index) => (
+          <div className="course-mode" key={index}>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" id={`flexCheck${index}`} />
+              <label className="form-check-label" htmlFor={`flexCheck${index}`}>
+                {mode.label}
+              </label>
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Amount (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.amount}
+                value={formData[mode.amount]}
+                onChange={handleModeChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Discount %</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.discount}
+                value={formData[mode.discount]}
+                onChange={handleModeChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Total (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.total}
+                value={formData[mode.total]}
+                readOnly
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div> */}
+
 <h3>Sample session</h3>
 <div className='course-row'>
 <div className='course-details'>
@@ -635,12 +704,91 @@ Corporate Training
 </div>
 </div>
 <div class="mb-3">
-<label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
+{/* <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
 <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea>
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
 <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea>
+</div>  */}
+<label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea> */}
+<ReactQuill
+  theme="snow"
+  id="courseHighlight"
+  name="courseHighlight"
+  value={formData.courseHighlight}
+  onChange={handleHighlightChange}
+  style={{ height: "130px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "link",
+    "color",
+  ]}
+/>
+{error && <p className="error-message">{error}</p>}
+</div>
+<div class="mb-3" style={{ paddingBottom: "20px" }}>
+<label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
+<ReactQuill
+  theme="snow"
+  id="courseDescription"
+  name="courseDescription"
+  value={formData.courseDescription}
+  onChange={handleTextChange}
+  style={{ height: "300px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["image"],
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "image",
+    "link",
+    "color",
+  ]}
+/>
+{error && <p className="error-message">{error}</p>}
 </div> 
 
       <div className="course-row">

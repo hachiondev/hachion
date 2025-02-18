@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import image from '../../Assets/image 80.png';
@@ -10,35 +10,29 @@ import './Course.css';
 const QaTop = ({ onVideoButtonClick }) => {
   const { courseName } = useParams(); // Extract course_id from URL params
   const navigate = useNavigate();
-
+  const [curriculumData, setCurriculumData] = useState({
+    course_name: "",
+    curriculum_pdf: null,
+  });
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch course details based on course_id
-  // useEffect(() => {
-  //   const fetchCourseData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-  //       if (response.data) {
-  //         setCourse(response.data); // Set course details from API response
-  //       } else {
-  //         setError('Course not found');
-  //       }
-  //     } catch (err) {
-  //       setError('Error fetching course data');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleDownload = () => {
+    if (!curriculumData.curriculum_pdf) {
+      alert("No PDF available for download. Please contact trainings@hachion.co");
+      return;
+    }
 
-  //   if (course_id) {
-  //     fetchCourseData();
-  //   } else {
-  //     console.error('Course ID is missing!');
-  //   }
-  // }, [course_id]);
+    const url = URL.createObjectURL(curriculumData.curriculum_pdf);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = curriculumData.curriculum_pdf.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -50,17 +44,17 @@ const QaTop = ({ onVideoButtonClick }) => {
         setCourse(courseData);
       } catch (error) {
         console.error('Error fetching course details:', error);
-      }finally {
+      } finally {
         setLoading(false);
+      }
     };
-  }
     fetchCourse();
   }, [courseName]);
-
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
+
   // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
@@ -76,40 +70,42 @@ const QaTop = ({ onVideoButtonClick }) => {
     return stars;
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <>
       <div className='qa-automation'>
+        <div className='qa-inside'>
         <div className='qa-left-part'>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>${course.total}/-</span></p>
+              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span></p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
               </h6>
             </div>
           </div>
-          <div className='qa-content'>
-            <p>{course.courseHighlight}</p> {/* Display course highlight */}
-          </div>
-          <div className='qa-button'>
-            <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
-            <button className='download'>Download Brochure</button>
-          </div>
+          <div className="qa-content" dangerouslySetInnerHTML={{ __html: course.courseHighlight.trim() }} />
         </div>
+        
         <div className='qa-right'>
           <p className='certified'>Certified-students: {course.totalEnrollment}</p>
           <img src={qaheader} alt='video-frame' />
+        </div>
+        </div>
+
+      {/* Buttons Section */}
+      <div className='qa-button-container'>
+        <div className='qa-button'>
+          <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
+          <button className="download" onClick={handleDownload}>Download Brochure</button>
+          </div>
           <button className='video-btn' onClick={onVideoButtonClick}>
             <IoPlayCircleOutline className='video-btn-icon' />
             Watch Demo Videos
           </button>
-        </div>
-      </div>
+          </div>
+          </div>
     </>
   );
 };

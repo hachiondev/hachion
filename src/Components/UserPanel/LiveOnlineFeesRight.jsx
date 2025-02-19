@@ -53,7 +53,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
   return (
     <div className='right'>
       <p className='batch-date'>Fee:</p>
-      <p className='free'>₹ {fee}</p>
+      <p className='free'>USD {fee}</p>
       <button className='fee-enroll-now'>{enrollText}</button>
     </div>
   );

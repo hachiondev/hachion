@@ -5,7 +5,7 @@ import card1 from '../../Assets/image 96.png';
 import card2 from '../../Assets/image 85.png';
 import card3 from '../../Assets/image 93.png';
 import card4 from '../../Assets/image 90.png';
-import card5 from '../../Assets/image 80.png';
+import card5 from '../../Assets/image.png';
 import card6 from '../../Assets/image 107.png';
 import card7 from '../../Assets/image 110.png';
 import card8 from '../../Assets/image 95.png';

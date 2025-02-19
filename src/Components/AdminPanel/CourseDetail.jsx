@@ -83,23 +83,23 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-  const handleHighlightChange= (content) => {
-    if (content.trim() === "" || content === "<p><br></p>") {
-      setError("Course description heighlight is required.");
-    } else {
-      setError("");
-    }
-    setFormData({ ...formData, courseHighlight: content });
-  };
+  // const handleHighlightChange= (content) => {
+  //   if (content.trim() === "" || content === "<p><br></p>") {
+  //     setError("Course description heighlight is required.");
+  //   } else {
+  //     setError("");
+  //   }
+  //   setFormData({ ...formData, courseHighlight: content });
+  // };
   
-  const handleTextChange = (content) => {
-    if (content.trim() === "" || content === "<p><br></p>") {
-      setError("Course description is required.");
-    } else {
-      setError("");
-    }
-    setFormData({ ...formData, courseDescription: content });
-  };
+  // const handleTextChange = (content) => {
+  //   if (content.trim() === "" || content === "<p><br></p>") {
+  //     setError("Course description is required.");
+  //   } else {
+  //     setError("");
+  //   }
+  //   setFormData({ ...formData, courseDescription: content });
+  // };
   
   useEffect(() => {
     const fetchCourses = async () => {
@@ -704,24 +704,24 @@ Corporate Training
 </div>
 </div>
 <div class="mb-3">
-{/* <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
+<label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
 <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea>
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
 <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea>
-</div>  */}
-<label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
+</div>
+{/* <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
 {/* <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea> */}
-<ReactQuill
+{/* <ReactQuill
   theme="snow"
   id="courseHighlight"
   name="courseHighlight"
   value={formData.courseHighlight}
   onChange={handleHighlightChange}
   style={{ height: "130px" }} // Increased editor height
-  modules={{
-    toolbar: [
+  modules={{ */}
+    {/* toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
       ["bold", "italic", "underline"], // Text formatting
       [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
@@ -732,8 +732,8 @@ Corporate Training
       [{ color: [] }], // Full color picker
       ["clean"], // Remove formatting
     ],
-  }}
-  formats={[
+  }} */}
+  {/* formats={[
     "header",
     "bold",
     "italic",
@@ -747,11 +747,10 @@ Corporate Training
     "color",
   ]}
 />
-{error && <p className="error-message">{error}</p>}
-</div>
-<div class="mb-3" style={{ paddingBottom: "20px" }}>
+{error && <p className="error-message">{error}</p>} */}
+{/* <div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-{/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
+<textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea>
 <ReactQuill
   theme="snow"
   id="courseDescription"
@@ -772,8 +771,8 @@ Corporate Training
       [{ color: [] }], // Full color picker
       ["clean"], // Remove formatting
     ],
-  }}
-  formats={[
+  }} */}
+  {/* formats={[
     "header",
     "bold",
     "italic",
@@ -788,8 +787,8 @@ Corporate Training
     "color",
   ]}
 />
-{error && <p className="error-message">{error}</p>}
-</div> 
+{error && <p className="error-message">{error}</p>} */}
+
 
       <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'

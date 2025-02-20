@@ -105,7 +105,6 @@ fetchCourse();
   // Download PDF function
   const downloadPdf = () => {
     if (!pdfUrl) {
-      alert("No PDF available for download. Please contact trainings@hachion.co");
       console.error('No PDF URL available.');
       return;
     }

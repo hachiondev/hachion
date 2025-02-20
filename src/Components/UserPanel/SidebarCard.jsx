@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
@@ -7,6 +7,16 @@ import { useNavigate } from 'react-router-dom';
 
 const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, student }) => {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 760);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Handle button click to navigate
   const handleClick = () => {
@@ -32,7 +42,8 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
   };
 
   return (
-    <div className="sidebar-card">
+    <div className="sidebar-card"
+    onClick={isMobile ? handleClick : undefined} >
       <div className="sidebar-card-header-div">
         <h4 className="sidebar-card-heading">Certified Students: {student}</h4>
         <img src={image} alt="card-img" className="sidebar-card-icon" />

@@ -1,3 +1,4 @@
+
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
@@ -171,7 +172,7 @@ useEffect(() => {
 const handleTimeChange = (newValue) => {
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_time: newValue ? dayjs(newValue).format('HH:mm') : null,
+    schedule_time: newValue ? dayjs(newValue).format('hh:mm A') : null,
   }));
 };
 
@@ -446,7 +447,8 @@ const handleInputChange = (e) => {
               <DemoContainer components={['TimePicker']}>
                 <TimePicker
                   label="Select Time"
-                  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'HH:mm') : null}
+                  ampm={true}
+                  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'hh:mm A') : null}
                   onChange={handleTimeChange}
                   renderInput={(params) => <TextField {...params} />}
                   sx={{
@@ -740,7 +742,8 @@ const handleInputChange = (e) => {
            '& .MuiIconButton-root':{color: '#00aeef'}
         }}
   // label="Select Time"
-  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'HH:mm') : null}
+  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'hh:mm A') : null}
+  ampm={true}
   onChange={handleTimeChange}
   renderInput={(params) => <TextField {...params} />}
   />

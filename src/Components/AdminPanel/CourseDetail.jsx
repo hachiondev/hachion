@@ -213,6 +213,7 @@ const handleSubmit = async (e) => {
     courseName: formData.courseName,
     date: currentDate,
     youtubeLink: formData.youtubeLink,
+    numberOfClasses: formData.numberOfClasses,
     liveTrainingHours: formData.liveTrainingHours,
     labExerciseHours: formData.labExerciseHours,
     realTimeProjects: formData.realTimeProjects,

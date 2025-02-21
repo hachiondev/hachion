@@ -968,13 +968,14 @@ width: 100%;
 }
 
 
-.partition-schedule{
-display: flex;
-flex-direction: row;
-justify-items:space-evenly;
-gap:120px;
-align-items: center;
-margin-top: 10px;
+.partition-schedule {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
 }
 
 /* .custom-radio {

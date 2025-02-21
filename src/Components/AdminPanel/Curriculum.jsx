@@ -112,12 +112,22 @@ export default function Curriculum() {
         
          }
          const addRow = () => {
-          setRows([...rows, { id: Date.now(), title: "", topic: "" }]);
-      };
-      
-      const deleteRow = (id) => {
-          setRows(rows.filter(row => row.id !== id));
-      };;
+          const newRow = { id: Date.now(), title: "", topic: "" }; // Use current timestamp as unique id
+          setRows((prevRows) => [...prevRows, newRow]); // Add the new row
+        };
+        
+        const deleteRow = (id) => {
+          setRows((prevRows) => prevRows.filter((row) => row.id !== id)); // Remove the row with the given id
+        };
+        const handleRowChange = (e, id) => {
+          const { name, value } = e.target;
+          setRows((prevRows) =>
+            prevRows.map((row) =>
+              row.id === id ? { ...row, [name]: value } : row
+            )
+          );
+        };
+                
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
@@ -220,30 +230,20 @@ export default function Curriculum() {
       const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Convert file to Base64 (if needed)
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setCurriculumData((prev) => ({
-                    ...prev,
-                    curriculum_pdf: reader.result // Base64 string
-                }));
-            };
+            setCurriculumData((prev) => ({
+                ...prev,
+                curriculum_pdf: file, // Store the file object directly
+            }));
         }
     };
     
     const handleEditFileUpload = async (e) => {
       const file = e.target.files[0];
       if (file) {
-          // Convert file to Base64 (if needed)
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onloadend = () => {
-              setEditedRow((prev) => ({
-                  ...prev,
-                  curriculum_pdf: reader.result // Base64 string
-              }));
-          };
+          setEditedRow((prev) => ({
+              ...prev,
+              curriculum_pdf: file, // Store the file object directly
+          }));
       }
   };
   
@@ -266,39 +266,78 @@ export default function Curriculum() {
           [name]: value
       }));
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
 
-    const currentDate = new Date().toISOString().split("T")[0];
-    const dataToSubmit = {
-        category_name: curriculumData?.category_name,
-        course_name: curriculumData?.course_name,
-        curriculum_pdf: curriculumData?.curriculum_pdf,
-        title: curriculumData?.title,
-    topic: curriculumData?.topic,
-        date: currentDate
-    };
+//     const currentDate = new Date().toISOString().split("T")[0];
+//     const dataToSubmit = {
+//       category_name: curriculumData?.category_name,
+//       course_name: curriculumData?.course_name,
+//       curriculum_pdf: curriculumData?.curriculum_pdf,
+//       title: rows.map(row => row.title),
+//       topic: rows.map(row => row.topic),
+//         date: currentDate
+//     };
 
-    console.log("Data being sent:", dataToSubmit); // Debugging
+//     console.log("Data being sent:", dataToSubmit); // Debugging
 
-    try {
-        const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+//     try {
+//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+//             headers: {
+//                 "Content-Type": "application/json"
+//             }
+//         });
 
-        if (response.status === 200) {
-            alert("Curriculum details added successfully");
-            setCurriculumData({}); // Reset form
-            handleReset();
-        }
-    } catch (error) {
-        console.error("Error adding curriculum:", error.message);
-        alert("Error adding curriculum.");
-    }
+//         if (response.status === 200) {
+//             alert("Curriculum details added successfully");
+//             setCurriculumData({}); // Reset form
+//             handleReset();
+//         }
+//     } catch (error) {
+//         console.error("Error adding curriculum:", error.message);
+//         alert("Error adding curriculum.");
+//     }
+// };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Create a new FormData object
+  const formData = new FormData();
+
+  // Append the non-file data
+  formData.append("category_name", curriculumData?.category_name);
+  formData.append("course_name", curriculumData?.course_name);
+  formData.append("title", JSON.stringify(rows.map(row => row.title))); // Make sure to send an array of titles
+  formData.append("topic", JSON.stringify(rows.map(row => row.topic))); // Send an array of topics
+  formData.append("date", new Date().toISOString().split("T")[0]); // Add current date
+
+  // Append the file (PDF)
+  if (curriculumData?.curriculum_pdf) {
+      formData.append("file", curriculumData?.curriculum_pdf); // Append the file directly
+  }
+
+  // Debugging: Check the formData content (Note: formData won't show directly, but you can log it to the console to check)
+  console.log("FormData being sent:", formData);
+
+  try {
+      // Make the POST request with the FormData
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+          headers: {
+              "Content-Type": "multipart/form-data", // Ensure the correct content type
+          }
+      });
+
+      if (response.status === 200) {
+          alert("Curriculum details added successfully");
+          setCurriculumData({}); // Reset form data
+          handleReset();
+      }
+  } catch (error) {
+      console.error("Error adding curriculum:", error.message);
+      alert("Error adding curriculum.");
+  }
 };
-
 
     
       
@@ -354,8 +393,7 @@ export default function Curriculum() {
   <input
     className="form-control"
     type="file"
-    id="formFile"
-    accept=".pdf"
+    name='curriculum_pdf'
     onChange={handleFileUpload}
 />
 
@@ -371,20 +409,36 @@ export default function Curriculum() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}
-            >
-              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
-               <input className='table-curriculum' name='title' value={rows.title} onChange={handleChange}/>
-              </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='topic' value={rows.topic} onChange={handleChange}/></StyledTableCell>
-              <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
-                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
-                  </StyledTableRow>
-    
-          ))}
+        {rows.map((row) => (
+        <StyledTableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3' } }}>
+          <StyledTableCell component="th" scope="row" align="center" sx={{ padding: 0 }}>
+            <input
+              className="table-curriculum"
+              name="title"
+              value={row.title}
+              onChange={(e) => handleRowChange(e, row.id)} // Pass the row's id
+            />
+          </StyledTableCell>
+          <StyledTableCell sx={{ padding: 0 }} align="center">
+            <input
+              className="table-curriculum"
+              name="topic"
+              value={row.topic}
+              onChange={(e) => handleRowChange(e, row.id)} // Pass the row's id
+            />
+          </StyledTableCell>
+          <StyledTableCell align="center" sx={{ padding: 0 }}>
+            <GoPlus
+              style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }}
+              onClick={addRow}
+            />
+            <IoClose
+              style={{ fontSize: '2rem', color: 'red' }}
+              onClick={() => deleteRow(row.id)} // Pass the row's id
+            />
+          </StyledTableCell>
+        </StyledTableRow>
+      ))}
         </TableBody>
       </Table>
     </TableContainer>

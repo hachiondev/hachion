@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import cardbackground from '../../Assets/course2.png';
 import './Home.css';
 
-const CourseCard = ({ heading, month, time, image, course_id, Rating, RatingByPeople }) => {
+const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -58,7 +58,7 @@ const CourseCard = ({ heading, month, time, image, course_id, Rating, RatingByPe
             <RxCalendar /> {month} Days
           </h6>
           <h6 className="course-month">
-            <BiTimeFive /> {time} hours
+            <BiTimeFive /> {time} Hours
           </h6>
         </div>
 

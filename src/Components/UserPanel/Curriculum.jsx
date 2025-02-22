@@ -41,8 +41,7 @@ const Curriculum = () => {
           const matchedCurriculum = curriculumResponse.data.find(
             (item) => item.course_name && item.course_name.trim() === matchedCourse.courseName.trim()
           );
-    
-          // Check if the PDF URL exists in the matched curriculum
+// Check if the PDF URL exists in the matched curriculum
           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
             setPdfUrl(matchedCurriculum.curriculum_pdf); // Set PDF URL from the curriculum API
           } else {
@@ -84,8 +83,7 @@ fetchCourse();
 
     fetchFaq();
   }, [matchedCourseName]);
-
-  useEffect(() => {
+useEffect(() => {
     console.log('PDF URL:', pdfUrl); // Log pdfUrl whenever it changes
   }, [pdfUrl]);
 
@@ -125,15 +123,13 @@ fetchCourse();
     }
   };
   
-
-  // Render FAQ topics
   const renderTopics = () => {
     const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
     return visibleFaq.map((item, index) => (
       <div key={index}>
         <div className="curriculum-content" onClick={() => handleToggleExpand(index)}>
-          <p>{item.faq_title}</p>
+          <p>{item.title}</p>
           <p>
             {expandedTopics[index] ? (
               <FaMinus style={{ color: '#006489' }} />
@@ -146,8 +142,8 @@ fetchCourse();
         {expandedTopics[index] && (
           <div className="topic-details">
             <ul className="bullet-list">
-              {item.description &&
-                item.description.split(',').map((desc, i) => (
+              {item.topic &&
+                item.topic.split(',').map((desc, i) => (
                   <li key={i}>{desc.trim()}</li>
                 ))}
             </ul>

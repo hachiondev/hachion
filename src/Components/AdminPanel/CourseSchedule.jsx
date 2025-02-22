@@ -130,7 +130,7 @@ const handleDateChange = (newValue) => {
 
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_date: parsedDate.format('YYYY-MM-DD'), // Format the date
+    schedule_date: parsedDate.format('MM-DD-YYYY'), // Format the date
     schedule_week: parsedDate.format('dddd'), // Format the weekday
   }));
 };
@@ -176,12 +176,27 @@ const handleTimeChange = (newValue) => {
   }));
 };
 
+// const handleChange = (e) => {
+//   const { name, value } = e.target;
+//   setCourseData((prevData) => ({
+//     ...prevData,
+//     [name]: value,
+//   }));
+// };
+
 const handleChange = (e) => {
   const { name, value } = e.target;
+  
   setCourseData((prevData) => ({
     ...prevData,
     [name]: value,
   }));
+
+  // If category is selected, filter courses
+  if (name === 'schedule_category_name') {
+    const filtered = courses.filter(course => course.schedule_category_name === value);
+    setFilteredCourses(filtered);
+  }
 };
 
   const handleReset = () => {
@@ -240,6 +255,7 @@ useEffect(() => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get('https://api.hachion.co/schedulecourse');
+      console.log("API Response:", response.data);
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -257,7 +273,7 @@ useEffect(() => {
   );
   setFilteredCourses(filtered)
 
-}, [searchTerm,filteredCourses]);
+}, [searchTerm]);
 const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
@@ -376,9 +392,9 @@ const handleInputChange = (e) => {
             <option value="" disabled>
           Select Course
         </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
+        {filteredCourses.map((curr) => (
+          <option key={curr.id} value={curr.schedule_course_name}>
+            {curr.schedule_course_name}
           </option>
         ))}
           </select>
@@ -418,7 +434,7 @@ const handleInputChange = (e) => {
           <StyledTableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}>
             <StyledTableCell component="th" scope="row" sx={{ padding: 0, }}>
               <DatePicker
-                value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null}
+                value={courseData.schedule_date ? dayjs(courseData.schedule_date).format('MM-DD-YYYY') : null}
                 onChange={(newValue) => handleDateChange(newValue)}
                 renderInput={(params) => <TextField {...params} />}
                 sx={{
@@ -606,13 +622,15 @@ const handleInputChange = (e) => {
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_date}</StyledTableCell>
+              <StyledTableCell align="center">
+              {course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_time} EST</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_duration} Hour</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.created_date}</StyledTableCell>
+              <StyledTableCell align="center">
+              {course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}
@@ -712,7 +730,7 @@ const handleInputChange = (e) => {
           sx={{
             '& .MuiIconButton-root':{color: '#00aeef'}
          }}
-  value={editedRow.schedule_date ? dayjs(editedRow.schedule_date) : null}
+  value={editedRow.schedule_date ? dayjs(editedRow.schedule_date).format('MM-DD-YYYY') : null}
   onChange={handleDateChange}
   renderInput={(params) => <TextField {...params} />}
 />

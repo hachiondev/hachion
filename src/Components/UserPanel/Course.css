@@ -952,13 +952,14 @@ margin: 5px;
 .partition {
 display: flex;
 flex-direction: row;
-justify-content: space-between;
+justify-content: center;
 align-items: center;
 padding: 10px;
 box-sizing: border-box;
 border: 2px solid #d3d3d3;
 margin-bottom: 10px;
 border-radius: 10px;
+width: 100%;
 }
 
 .partition label {
@@ -974,8 +975,10 @@ width: 100%;
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  width: 100%;
+  width: 95%;
   flex-wrap: nowrap;
+  text-align: center;
+  padding: 10px;
 }
 
 /* .custom-radio {
@@ -1017,7 +1020,9 @@ display: none;
 .radio-label {
   display: flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
+  flex: 1;
 }
 
 .custom-radio {
@@ -1050,8 +1055,13 @@ display: none;
 
 .batch-date {
 font-size: 20px;
-font-weight: 400;
+font-weight: 600;
 }
+
+.batch-date-fee {
+  font-size: 20px;
+  font-weight: 400;
+  }
 
 .date-span {
 font-size: 16px;

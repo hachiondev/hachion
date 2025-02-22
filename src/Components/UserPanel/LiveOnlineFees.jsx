@@ -4,6 +4,7 @@ import { FaCircle } from "react-icons/fa";
 import LiveOnlineFeesRight from './LiveOnlineFeesRight';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 export const LiveOnlineFees = () => {
   const { courseName } = useParams(); // Extract courseName from URL
@@ -91,10 +92,12 @@ export const LiveOnlineFees = () => {
                   <span className="custom-radio"></span>
                   <div className='partition-schedule'>
                     <p className='batch-date'>
-                      {course.schedule_date} <span className='date-span'>({course.schedule_week})</span>
+                    {dayjs(course.schedule_date).format('MMM DD YYYY')} <span className='date-span'>
+                    ({dayjs(course.schedule_date).format('ddd')})
+                    </span>
                     </p>
                     <p className='batch-date'>
-                      {course.schedule_time} EST<span className='date-span'>({course.schedule_duration} Hour)</span>
+                      {course.schedule_time} EST <span className='date-span'>({course.schedule_duration} Hour)</span>
                     </p>
                     <p className={course.schedule_mode === "Live Class" ? 'class' : 'demo'}>
                       <FaCircle className={course.schedule_mode === "Live Class" ? 'class-icon' : 'demo-icon'} />

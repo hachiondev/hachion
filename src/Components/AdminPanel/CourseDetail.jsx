@@ -23,6 +23,7 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import dayjs from 'dayjs';
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -953,7 +954,8 @@ const handleAddTrendingCourseClick = () => {
             <StyledTableCell sx={{ fontSize: '16px' }} align="left">
               {course.courseName}
             </StyledTableCell>
-            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">
+            {course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
             <StyledTableCell align="center" style={{ width: 200, }}>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
               <FaEdit

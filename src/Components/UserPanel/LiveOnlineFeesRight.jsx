@@ -116,7 +116,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
 
   return (
     <div className='right'>
-      <p className='batch-date'>Fee:</p>
+      <p className='batch-date-fee'>Fee:</p>
       <p className='free'>{enrollText === 'Enroll Free Demo' ? 'Free' : `USD ${fee}`}</p>
       {discount > 0 && fee !== 'Free' && (
         <p className='discount'>

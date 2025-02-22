@@ -172,7 +172,7 @@ useEffect(() => {
 const handleTimeChange = (newValue) => {
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_time: newValue ? dayjs(newValue).format('HH:mm') : null,
+    schedule_time: newValue ? dayjs(newValue).format('hh:mm A') : null,
   }));
 };
 
@@ -371,7 +371,8 @@ const handleInputChange = (e) => {
         <div class="col-md-3">
           <label for="inputState" class="form-label">Course Name</label>
           <select id="inputState" class="form-select" name='schedule_course_name' 
-          value={courseData.schedule_course_name} onChange={handleChange}>
+          value={courseData.schedule_course_name} onChange={handleChange}
+          disabled={!courseData.schedule_category_name}>
             <option value="" disabled>
           Select Course
         </option>
@@ -447,7 +448,8 @@ const handleInputChange = (e) => {
               <DemoContainer components={['TimePicker']}>
                 <TimePicker
                   label="Select Time"
-                  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'HH:mm') : null}
+                  ampm={true}
+                  value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'hh:mm A') : null}
                   onChange={handleTimeChange}
                   renderInput={(params) => <TextField {...params} />}
                   sx={{
@@ -606,8 +608,8 @@ const handleInputChange = (e) => {
               <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_date}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_time}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_duration}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_time} EST</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_duration} Hour</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
               <StyledTableCell align="center">{course.created_date}</StyledTableCell>
@@ -741,7 +743,8 @@ const handleInputChange = (e) => {
            '& .MuiIconButton-root':{color: '#00aeef'}
         }}
   // label="Select Time"
-  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'HH:mm') : null}
+  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'hh:mm A') : null}
+  ampm={true}
   onChange={handleTimeChange}
   renderInput={(params) => <TextField {...params} />}
   />

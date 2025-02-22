@@ -117,7 +117,8 @@ export default function Curriculum() {
       
       const deleteRow = (id) => {
           setRows(rows.filter(row => row.id !== id));
-      };;
+      };
+                
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
@@ -220,30 +221,20 @@ export default function Curriculum() {
       const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Convert file to Base64 (if needed)
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setCurriculumData((prev) => ({
-                    ...prev,
-                    curriculum_pdf: reader.result // Base64 string
-                }));
-            };
+            setCurriculumData((prev) => ({
+                ...prev,
+                curriculum_pdf: file, // Store the file object directly
+            }));
         }
     };
     
     const handleEditFileUpload = async (e) => {
       const file = e.target.files[0];
       if (file) {
-          // Convert file to Base64 (if needed)
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onloadend = () => {
-              setEditedRow((prev) => ({
-                  ...prev,
-                  curriculum_pdf: reader.result // Base64 string
-              }));
-          };
+          setEditedRow((prev) => ({
+              ...prev,
+              curriculum_pdf: file, // Store the file object directly
+          }));
       }
   };
   
@@ -266,42 +257,79 @@ export default function Curriculum() {
           [name]: value
       }));
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
 
-    const currentDate = new Date().toISOString().split("T")[0];
-    const dataToSubmit = {
-        category_name: curriculumData?.category_name,
-        course_name: curriculumData?.course_name,
-        curriculum_pdf: curriculumData?.curriculum_pdf,
-        title: curriculumData?.title,
-    topic: curriculumData?.topic,
-        date: currentDate
-    };
+//     const currentDate = new Date().toISOString().split("T")[0];
+//     const dataToSubmit = {
+//       category_name: curriculumData?.category_name,
+//       course_name: curriculumData?.course_name,
+//       curriculum_pdf: curriculumData?.curriculum_pdf,
+//       title: rows.map(row => row.title),
+//       topic: rows.map(row => row.topic),
+//         date: currentDate
+//     };
 
-    console.log("Data being sent:", dataToSubmit); // Debugging
+//     console.log("Data being sent:", dataToSubmit); // Debugging
 
-    try {
-        const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+//     try {
+//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+//             headers: {
+//                 "Content-Type": "multipart/form-data" 
+//             }
+//         });
 
-        if (response.status === 200) {
-            alert("Curriculum details added successfully");
-            setCurriculumData({}); // Reset form
-            handleReset();
-        }
-    } catch (error) {
-        console.error("Error adding curriculum:", error.message);
-        alert("Error adding curriculum.");
-    }
+//         if (response.status === 200) {
+//             alert("Curriculum details added successfully");
+//             setCurriculumData({}); // Reset form
+//             handleReset();
+//         }
+//     } catch (error) {
+//         console.error("Error adding curriculum:", error.message);
+//         alert("Error adding curriculum.");
+//     }
+// };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const currentDate = new Date().toISOString().split("T")[0];
+  const formData = new FormData();
+  
+  // Append the fields to formData
+  formData.append("category_name", curriculumData?.category_name);
+  formData.append("course_name", curriculumData?.course_name);
+  formData.append("title", curriculumData?.title);
+  formData.append("topic", curriculumData?.topic);
+  formData.append("date", currentDate);
+
+  // Append the file if available
+  if (curriculumData?.curriculum_pdf) {
+    console.log(curriculumData?.curriculum_pdf); 
+      formData.append("file", curriculumData?.curriculum_pdf);
+  }
+
+  console.log("Data being sent:", formData); // Debugging
+
+  try {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+          headers: {
+              "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
+          }
+      });
+
+      if (response.status === 200) {
+          alert("Curriculum details added successfully");
+          setCurriculumData({}); // Reset form
+          handleReset();
+      }
+  } catch (error) {
+      console.error("Error adding curriculum:", error.message);
+      alert("Error adding curriculum.");
+  }
 };
 
-
-    
-      
+        
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -355,7 +383,7 @@ export default function Curriculum() {
     className="form-control"
     type="file"
     id="formFile"
-    accept=".pdf"
+    name='curriculum_pdf'
     onChange={handleFileUpload}
 />
 
@@ -371,7 +399,7 @@ export default function Curriculum() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+        {rows.map((row) => (
             <StyledTableRow
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}

@@ -133,7 +133,7 @@ fetchCourse();
     return visibleFaq.map((item, index) => (
       <div key={index}>
         <div className="curriculum-content" onClick={() => handleToggleExpand(index)}>
-          <p>{item.faq_title}</p>
+          <p>{item.title}</p>
           <p>
             {expandedTopics[index] ? (
               <FaMinus style={{ color: '#006489' }} />
@@ -146,8 +146,8 @@ fetchCourse();
         {expandedTopics[index] && (
           <div className="topic-details">
             <ul className="bullet-list">
-              {item.description &&
-                item.description.split(',').map((desc, i) => (
+              {item.topic &&
+                item.topic.split(',').map((desc, i) => (
                   <li key={i}>{desc.trim()}</li>
                 ))}
             </ul>

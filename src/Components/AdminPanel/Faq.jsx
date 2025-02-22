@@ -217,36 +217,55 @@ export default function Faq() {
           );
           setFilteredFaq(filtered);
       }, [searchTerm,filteredFaq]);
-      const handleFileUpload = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Convert file to Base64 (if needed)
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setFaqData((prev) => ({
-                    ...prev,
-                    faq_pdf: reader.result // Base64 string
-                }));
-            };
-        }
-    };
+  //     const handleFileUpload = async (e) => {
+  //       const file = e.target.files[0];
+  //       if (file) {
+  //           // Convert file to Base64 (if needed)
+  //           const reader = new FileReader();
+  //           reader.readAsDataURL(file);
+  //           reader.onloadend = () => {
+  //               setFaqData((prev) => ({
+  //                   ...prev,
+  //                   faq_pdf: reader.result // Base64 string
+  //               }));
+  //           };
+  //       }
+  //   };
     
-    const handleEditFileUpload = async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-          // Convert file to Base64 (if needed)
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onloadend = () => {
-              setEditedRow((prev) => ({
-                  ...prev,
-                  faq_pdf: reader.result // Base64 string
-              }));
-          };
-      }
-  };
-        
+  //   const handleEditFileUpload = async (e) => {
+  //     const file = e.target.files[0];
+  //     if (file) {
+  //         // Convert file to Base64 (if needed)
+  //         const reader = new FileReader();
+  //         reader.readAsDataURL(file);
+  //         reader.onloadend = () => {
+  //             setEditedRow((prev) => ({
+  //                 ...prev,
+  //                 faq_pdf: reader.result // Base64 string
+  //             }));
+  //         };
+  //     }
+  // };
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setFaqData((prev) => ({
+            ...prev,
+            faq_pdf: file, // Store the file object directly
+        }));
+    }
+};
+
+const handleEditFileUpload = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+      setEditedRow((prev) => ({
+          ...prev,
+          faq_pdf: file, // Store the file object directly
+      }));
+  }
+};
+
         const handleCloseModal=()=>{
           setShowAddCourse(false);
          
@@ -264,45 +283,82 @@ export default function Faq() {
           [name]: value,
         }));
       };
+      // const handleSubmit = async (e) => {
+      //   e.preventDefault();
+    
+      //   const currentDate = new Date().toISOString().split("T")[0];
+      //   const dataToSubmit = {
+      //       category_name: faqData?.category_name,
+      //       course_name: faqData?.course_name,
+      //       faq_pdf: faqData?.faq_pdf,
+      //       faq_title: faqData?.faq_title,
+      //   description: faqData?.description,
+      //       date: currentDate
+      //   };
+    
+      //   console.log("Data being sent:", dataToSubmit); // Debugging
+    
+      //   try {
+      //     const response = await axios.post("https://api.hachion.co/faq/add", dataToSubmit, {
+      //       headers: {
+      //         "Content-Type": "application/json"
+      //       }
+      //     });
+        
+      //     if (response.status === 200) {
+      //       alert("Faq details added successfully");
+      //       setFaqData({}); // Reset form
+      //       handleReset();
+      //     }
+      //   } catch (error) {
+      //     if (error.response) {
+      //       console.error("Error response:", error.response.data); // Log server response
+      //       alert(`Error adding FAQ: ${error.response.data.message || 'Unknown error'}`);
+      //     } else {
+      //       console.error("Error:", error.message);
+      //       alert("Error adding faq.");
+      //     }
+      //   }
+      // }        
+    
       const handleSubmit = async (e) => {
         e.preventDefault();
-    
+      
         const currentDate = new Date().toISOString().split("T")[0];
-        const dataToSubmit = {
-            category_name: faqData?.category_name,
-            course_name: faqData?.course_name,
-            faq_pdf: faqData?.faq_pdf,
-            faq_title: faqData?.faq_title,
-        description: faqData?.description,
-            date: currentDate
-        };
-    
-        console.log("Data being sent:", dataToSubmit); // Debugging
-    
-        try {
-          const response = await axios.post("https://api.hachion.co/faq/add", dataToSubmit, {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          });
+        const formData = new FormData();
         
-          if (response.status === 200) {
-            alert("Faq details added successfully");
-            setFaqData({}); // Reset form
-            handleReset();
-          }
-        } catch (error) {
-          if (error.response) {
-            console.error("Error response:", error.response.data); // Log server response
-            alert(`Error adding FAQ: ${error.response.data.message || 'Unknown error'}`);
-          } else {
-            console.error("Error:", error.message);
-            alert("Error adding faq.");
-          }
+        // Append the fields to formData
+        formData.append("category_name", faqData?.category_name);
+        formData.append("course_name", faqData?.course_name);
+        formData.append("faq_title", faqData?.faq_title);
+        formData.append("description", faqData?.description);
+        formData.append("date", currentDate);
+      
+        // Append the file if available
+        if (faqData?.faq_pdf) {
+          console.log(faqData?.faq_pdf); 
+            formData.append("file", faqData?.faq_pdf);
         }
-      }        
-    
-    
+      
+        console.log("Data being sent:", formData); // Debugging
+      
+        try {
+            const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
+                }
+            });
+      
+            if (response.status === 200) {
+                alert("FAQ details added successfully");
+                setFaqData({}); // Reset form
+                handleReset();
+            }
+        } catch (error) {
+            console.error("Error adding faq:", error.message);
+            alert("Error adding faq.");
+        }
+      };
         
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
@@ -357,7 +413,8 @@ export default function Faq() {
     className="form-control"
     type="file"
     id="formFile"
-     accept=".pdf"
+    name="faq_pdf"
+    
     onChange={handleFileUpload}
 />
 

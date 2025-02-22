@@ -362,7 +362,7 @@ gap: 10px;
 .qa-automation{
 width:80%;
 border-radius: 20px;
-background-image: url('../../Assets/image.png');
+background-image: url('../../Assets/qa_background.png');
 background-repeat: no-repeat;
 background-size: 100%;
 /* margin:10px;
@@ -431,6 +431,33 @@ font-weight: 600;
 background: linear-gradient( #00AEEF,#006489);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
+}
+
+.strike-price {
+  text-decoration: line-through;
+  color: #888; /* Gray color to indicate discount */
+  margin-left: 10px; /* Space between discounted price and original price */
+}
+
+.discount {
+  color: orangered;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.discount-percent {
+  /* font-size: 14px; */
+  font-weight: bold;
+}
+
+.enroll-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.enroll-message.error {
+  color: red;
 }
 
 .qa-automation-middle{
@@ -941,13 +968,14 @@ width: 100%;
 }
 
 
-.partition-schedule{
-display: flex;
-flex-direction: row;
-justify-items:space-evenly;
-gap:120px;
-align-items: center;
-margin-top: 10px;
+.partition-schedule {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
 }
 
 /* .custom-radio {

@@ -11,6 +11,8 @@ export const LiveOnlineFees = () => {
   const [fee, setFee] = useState('');
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  const [enrollText, setEnrollText] = useState('Enroll Now');
+  const [modeType, setModeType] = useState('live');
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -37,19 +39,34 @@ export const LiveOnlineFees = () => {
     let calculatedFee = '';
     switch (batchData.schedule_mode) {
       case "Live Class":
-        calculatedFee = batchData.amount;
+        calculatedFee = batchData.total;
+        setModeType('live');
+        setEnrollText('Enroll Now');
+        break;
+      case "Live Demo":
+        calculatedFee = 'Free';
+        setModeType('live');
+        setEnrollText('Enroll Free Demo');
         break;
       case "Mentoring Mode":
-        calculatedFee = batchData.mamount;
+        calculatedFee = batchData.mtotal;
+        setModeType('mentoring');
+        setEnrollText('Enroll Now');
         break;
       case "Self-Paced":
-        calculatedFee = batchData.samount;
+        calculatedFee = batchData.stotal;
+        setModeType('self');
+        setEnrollText('Enroll Now');
         break;
       case "Corporate Training":
-        calculatedFee = batchData.camount;
+        calculatedFee = batchData.ctotal;
+        setModeType('corporate');
+        setEnrollText('Enroll Now');
         break;
       default:
-        calculatedFee = batchData.amount; // Default to Live Class if no match
+        calculatedFee = batchData.total; // Default to Live Class if no match
+        setModeType('live');
+        setEnrollText('Enroll Now');
     }
 
     setFee(calculatedFee);
@@ -77,7 +94,7 @@ export const LiveOnlineFees = () => {
                       {course.schedule_date} <span className='date-span'>({course.schedule_week})</span>
                     </p>
                     <p className='batch-date'>
-                      {course.schedule_time} <span className='date-span'>({course.schedule_duration})</span>
+                      {course.schedule_time} EST<span className='date-span'>({course.schedule_duration} Hour)</span>
                     </p>
                     <p className={course.schedule_mode === "Live Class" ? 'class' : 'demo'}>
                       <FaCircle className={course.schedule_mode === "Live Class" ? 'class-icon' : 'demo-icon'} />
@@ -88,12 +105,12 @@ export const LiveOnlineFees = () => {
               </div>
             ))
           ) : (
-            <p>No batches available for this course.</p>
+            <p className='batch-text'>No batches available for this course.</p>
           )}
         </div>
 
         <div className='separator'></div>
-        <LiveOnlineFeesRight enrollText='Enroll Now' modeType="live" />
+        <LiveOnlineFeesRight enrollText={enrollText} modeType={modeType} />
       </div>
     </>
   );

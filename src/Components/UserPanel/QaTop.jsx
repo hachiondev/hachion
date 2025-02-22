@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import image from '../../Assets/image.png';
 import { MdOutlineStar } from "react-icons/md";
 import qaheader from '../../Assets/qa-video.png';
 import { IoPlayCircleOutline } from 'react-icons/io5';
@@ -9,29 +10,73 @@ import './Course.css';
 const QaTop = ({ onVideoButtonClick }) => {
   const { courseName } = useParams(); // Extract course_id from URL params
   const navigate = useNavigate();
-  const [curriculumData, setCurriculumData] = useState({
-    course_name: "",
-    curriculum_pdf: null,
-  });
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
+
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://api.hachion.co/courses/all');
+
+        const matchedCourse = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+        );
+
+        if (matchedCourse) {
+          setCourse(matchedCourse);
+
+          // Fetch Curriculum
+          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
+          const matchedCurriculum = curriculumResponse.data.find(
+            (item) => item.course_name && item.course_name.trim() === matchedCourse.courseName.trim()
+          );
+
+          if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
+            setPdfUrl(matchedCurriculum.curriculum_pdf);
+          }
+        } else {
+          setError('Course not found.');
+        }
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+        setError('Failed to load course details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseData();
+  }, [courseName]);
+
+  // Function to download PDF
   const handleDownload = () => {
-    if (!curriculumData.curriculum_pdf) {
+    if (!pdfUrl) {
       alert("No PDF available for download. Please contact trainings@hachion.co");
       return;
     }
+else{
+    try {
+      // Decode Base64 PDF and create Blob
+      const pdfBlob = new Blob(
+        [new Uint8Array(atob(pdfUrl.split(',')[1]).split('').map(char => char.charCodeAt(0)))],
+        { type: 'application/pdf' }
+      );
 
-    const url = URL.createObjectURL(curriculumData.curriculum_pdf);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = curriculumData.curriculum_pdf.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(pdfBlob);
+      link.setAttribute("download", `${course.courseName}_Curriculum.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
   };
-
+  }
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -78,7 +123,8 @@ const QaTop = ({ onVideoButtonClick }) => {
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span></p>
+              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
+              <span className='strike-price'> USD {course.amount}/-</span></p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
               </h6>

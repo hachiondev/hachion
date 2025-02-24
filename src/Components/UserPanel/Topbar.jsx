@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { PiLineVerticalThin } from "react-icons/pi";
+import { IoIosMail } from "react-icons/io";
 import { IoLogOut } from 'react-icons/io5';
 import profile1 from '../../Assets/profile2.png';
 import whatsapp from '../../Assets/logos_whatsapp-icon.png';
@@ -40,10 +41,24 @@ const Topbar = () => {
     <div className='topbar'>
       <div className='topbar-left'>
         <p className='query-title'>Have any query?</p>
-        <img src={whatsapp} alt='whatsapp-icon' className='whatsapp-icon' />
-        <p className='whatsapp-number'> +1 (732) 485-2499</p>
+        <div className="whatsapp-container">
+      <a 
+        href="https://wa.me/17324852499" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="whatsapp-link"
+      >
+        <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" />
+        <p className="whatsapp-number">+1 (732) 485-2499</p>
+      </a>
+    </div>
         <PiLineVerticalThin className='line-vertical' />
-        <p className='training-email'>trainings@hachion.co</p>
+        <IoIosMail className='training-mail-icon'/>
+        <p className='training-email'>
+  <a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer">trainings@hachion.co</a>
+</p>
       </div>
 
       {/* Conditional Rendering Based on Login Status */}

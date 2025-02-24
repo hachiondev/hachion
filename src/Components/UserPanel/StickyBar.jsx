@@ -22,12 +22,24 @@ const StickyBar = () => {
         <div className="contact-info">
           <p className='query-content' style={{marginBottom: '0'}}>Have any query ?</p>
          
-            <img src={whatsapp} alt='whatsapp-icon' style={{height:'30px',width:'30px'}}/>
-            <p className='whatsapp-number-footer'> +1 (732) 485-2499</p>
+          <div className="whatsapp-container">
+      <a 
+        href="https://wa.me/17324852499" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="whatsapp-link"
+      >
+        <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" />
+        <p className="whatsapp-number-footer">+1 (732) 485-2499</p>
+      </a>
+    </div>
             <PiLineVerticalThin style={{color:'white',fontSize:'2rem'}}/>
        
-            <IoIosMail style={{color:'white',fontSize:'2rem',marginRight:'1vh'}}/>
-            <p className='training-email-footer'>trainings@hachion.co</p>
+            <IoIosMail className='training-mail-icon'/>
+            <p className='training-email-footer'><a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+                target="_blank" 
+                rel="noopener noreferrer">trainings@hachion.co</a>
+            </p>
           </div>
        
         <button className="contact-button" onClick={openModal}>Contact Us</button>

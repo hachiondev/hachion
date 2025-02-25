@@ -372,7 +372,7 @@ flex-direction: column;
 box-shadow: 5px 5px 5px #D3D3D3;
 margin-left:10vw;
 margin-right: 10vw;
-margin-top: 50px;
+margin-top: 15px;
 margin-bottom: 50px;
 }
 
@@ -390,6 +390,7 @@ flex-direction: row;
 
 .qa-automation-left img{
 margin-right: 80px;
+margin-left: 15%;
 padding-left: 20px;
 height:140px;
 }
@@ -418,6 +419,22 @@ background-color: #0D6EFD;
   margin-right: 10px;
   color: #fff;
 }
+
+.top-course-name{
+  display: flex;
+  margin-left: 15%;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-size: 2.2rem;
+  font-weight: 600;
+  background: linear-gradient( #00AEEF,#006489);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  }
+
+  .top-course-name-mob{
+    display: none;
+  }
 
 .fee{
 padding-top: 50px;
@@ -463,6 +480,7 @@ background: linear-gradient( #00AEEF,#006489);
 .qa-automation-middle{
 display:flex;
 flex-direction: column;
+margin-top: 6%;
 }
 
 .qa-content{
@@ -716,6 +734,7 @@ margin-right: 10vw;
 background-color: #FFFFFF;
 box-shadow: 5px 5px 5px #D3D3D3;
 border-radius:10px;
+margin-top: 5vh;
 }
 
 .key-highlights-content{
@@ -810,8 +829,8 @@ background-color: white;
 .upcoming-batch { 
 width: 80%;
 margin: 2vh;
-margin-left: 8vw;
-margin-right:8vw;
+margin-left: 10vw;
+margin-right:10vw;
 align-items: center;
 border-radius: 10px;
 background-color: #FFFFFF;
@@ -1122,17 +1141,19 @@ white-space: nowrap;
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .corporate-image {
-  width: 100%; /* Make the image take full width */
+  width: 80%; /* Make the image take full width */
   height: auto; /* Adjust height automatically */
   object-fit: cover; /* Ensure the image covers the container without stretching */
 }
 
 .know-more {
   position: absolute;
-  right: 5%; /* Position button towards the right of the image */
+  right: 13%; /* Position button towards the right of the image */
   bottom: 15%; /* Position button slightly above the bottom */
   padding: 10px 20px;
   border-radius: 10px;
@@ -1181,6 +1202,8 @@ margin-left: 15px;
   margin: 2vh;
   margin-left: 10vw;
   margin-right: 10vw;
+  margin-top: 5vh;
+  margin-bottom: 10vh;
   padding:4vh;
   border-radius: 10px;
   box-shadow: 5px 5px 5px #d3d3d3;
@@ -1208,7 +1231,8 @@ padding-bottom: 1.5vh;
 }
 
 .curriculum {
-  margin-bottom: 5vh;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
   background-color: #FFFFFF;
   margin: 2vh;
   margin-left: 10vw;
@@ -1313,11 +1337,12 @@ text-align: left;
 
 .mode-of-training{
  margin-bottom: 5vh !important;
+ margin-top: 10vh !important;
   background-color: white;
-  margin: 1vh;
+  margin: 2vh;
   margin-left: 10vw;
   margin-right: 10vw;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 18px 43px 20px 43px;
   box-shadow: 5px 5px 5px #D3D3D3;
 }
@@ -1370,6 +1395,7 @@ justify-content: space-evenly;
 
 .career-support{
 margin-bottom: 5vh;
+margin-top: 10vh;
 margin-left:10vw;
 margin-right: 10vw;
 border-radius: 10px;
@@ -1510,6 +1536,10 @@ border:2px solid white;
     height: 80px;
   }
 
+  .qa-automation-middle {
+    margin-top: 6%;
+  }
+
   .qa-button{
     margin: 5px;
   }
@@ -1623,6 +1653,11 @@ border:2px solid white;
   .qa-automation-left{
     margin-left: 0px;
   }
+
+  .top-course-name{
+    font-size: 1.5rem;
+  }
+
   .amount{
     font-size: 1.5rem;
   }
@@ -1980,9 +2015,15 @@ border:2px solid white;
 }
 
 .qa-automation-left img {
-  margin-right: -48px;
+  /* margin-right: -48px; */
   height: 80px;
-  margin-left: -10px;
+  margin-left: 5px;
+  padding-left: 5px;
+  margin-top: 5px;
+}
+
+.qa-automation-middle {
+  margin-top: 2%;
 }
 
 .qa-content {
@@ -2348,6 +2389,30 @@ max-height: 3em;
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
+.top-course-name-mob{
+  display: flex;
+  margin-left: 2%;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  font-size: 16px;
+  white-space: nowrap;
+  font-weight: 600;
+  background: linear-gradient( #00AEEF,#006489);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.top-course-name{
+  display: none;
+}
+
+.top-course-data-mob{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .amount{
   font-size: 16px;
 }
@@ -2425,7 +2490,7 @@ max-height: 3em;
   font-size: 16px !important;
   padding-bottom: 5px;
   margin-bottom: 10px;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .upcoming-batch { 

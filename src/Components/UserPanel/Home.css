@@ -2166,6 +2166,24 @@ margin-left: 2%;
 justify-content: space-between;
 }
 
+.association{
+  justify-content: center !important;
+  margin: 5px;
+  padding-bottom: 20px;
+  }
+
+.association-head {
+  font-size: 16px;
+  text-align: center;
+  /* margin-bottom: 5px; */
+  padding-top: 5px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-left: 5%;
+  margin-right: 5px;
+  justify-content: center;
+}
+
 .course-title-container {
   display: flex;
   justify-content: space-between;
@@ -2304,9 +2322,9 @@ padding: 10px;
 }
 
 .online-training-div {
-width: 165px;
+width: 179px;
 margin-bottom: 0;
-height: 165px;
+height: 170px;
 border-left: 6px solid #00AEEF;
 padding: 2px;
 }
@@ -2319,8 +2337,9 @@ margin-bottom: 0;
 
 .training-content{
 font-size: 12px;
-padding: 2px;
+padding: 8px;
 margin-bottom: 2px;
+text-align: center;
 }
 .online-training-div img {
 height: 50px;

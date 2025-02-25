@@ -107,9 +107,9 @@ const QaAutomation = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        <div className='course-banner'>
+        {/* <div className='course-banner'>
           <h3 className='course-banner-content'>{courseData?.courseName}</h3>
-        </div>
+        </div> */}
         <div className='blogs-header'>
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -127,6 +127,7 @@ const QaAutomation = () => {
           </ol>
         </nav>
         </div>
+        {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
         <KeyHighlights />
 

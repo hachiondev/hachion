@@ -357,7 +357,9 @@
 
 .learner-cover{
     height: 380px;
-    width: 100%;
+    width: 80%;
+    margin-left: 10vw;
+    margin-right: 10vw;
     background-image: url('../../Assets/rectangle123.png');
     object-fit: cover;
     background-size: cover;
@@ -506,7 +508,8 @@
      z-index: 1;
       width: 80px;
        color: rgba(0, 174, 239, 1);
-        margin-bottom: -4vh; 
+        margin-bottom: -4vh;
+        margin-left: 10vw; 
   }
   .right-quotes{
     height: 80px;
@@ -514,7 +517,7 @@
       width: 80px;
        color: rgba(0, 174, 239, 1);
         margin-top: -6vh; 
-        margin-left: 92vw;
+        margin-left: 83vw;
   }
 
   .quotesleft-icon{
@@ -952,7 +955,7 @@
     }
     .right-quotes{
         margin-bottom: -50px;
-        margin-left: 90vw;
+        /* margin-left: 80vw; */
     }
     .custom-next-icon{
         margin-right: -220px;

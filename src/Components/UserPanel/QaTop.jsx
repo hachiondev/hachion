@@ -189,9 +189,15 @@ const QaTop = ({ onVideoButtonClick }) => {
       <div className='qa-automation'>
         <div className='qa-inside'>
         <div className='qa-left-part'>
+          <div className='top-course-data-mob'>
+        <h4 className='top-course-name-mob'>{course?.courseName}</h4>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
+          </div>
           <div className='qa-automation-left'>
+            <div>
+            <h3 className='top-course-name'>{course?.courseName}</h3>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
+            </div>
             <div className='qa-automation-middle'>
               <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
               <span className='strike-price'> USD {course.amount}/-</span></p>

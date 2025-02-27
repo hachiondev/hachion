@@ -64,6 +64,7 @@ export default function CourseSchedule() {
  const[category,setCategory]=useState([]);
  const[courseCategory,setCourseCategory]=useState([]);
 const [filteredCourses,setFilteredCourses]=useState([courses]);
+const[filterCourse,setFilterCourse]=useState([]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -157,6 +158,16 @@ useEffect(() => {
   fetchCourseCategory();
 }, []);
 useEffect(() => {
+  if (courseData.schedule_category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === courseData.schedule_category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [courseData.schedule_category_name, courseCategory]);
+useEffect(() => {
   const fetchTrainer = async () => {
     try {
       const response = await axios.get("https://api.hachion.co/trainers");
@@ -176,14 +187,21 @@ const handleTimeChange = (newValue) => {
   }));
 };
 
+// const handleChange = (e) => {
+//   const { name, value } = e.target;
+//   setCourseData((prevData) => ({
+//     ...prevData,
+//     [name]: value,
+//   }));
+// };
 const handleChange = (e) => {
   const { name, value } = e.target;
-  setCourseData((prevData) => ({
-    ...prevData,
+  setCourseData((prev) => ({
+    ...prev,
     [name]: value,
+    ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
   }));
 };
-
   const handleReset = () => {
     setCourseData({
         schedule_category_name:"",
@@ -368,21 +386,22 @@ const handleInputChange = (e) => {
         ))}
       </select>
         </div>
-        <div class="col-md-3">
-          <label for="inputState" class="form-label">Course Name</label>
-          <select id="inputState" class="form-select" name='schedule_course_name' 
-          value={courseData.schedule_course_name} onChange={handleChange}
-          disabled={!courseData.schedule_category_name}>
-            <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-          </select>
-        </div>
+        <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="schedule_course_name"
+          value={courseData.schedule_course_name}
+          onChange={handleChange}
+          disabled={!courseData.schedule_category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
         <div class="col-md-3">
           <label for="inputState" class="form-label">Trainer Name</label>
           <select id="inputState" class="form-select" name='trainer_name' 

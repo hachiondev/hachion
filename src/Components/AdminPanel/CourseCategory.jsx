@@ -121,12 +121,12 @@ const displayedCategories = filteredCategories.slice(
   const handleClickOpen = (course) => {
     setEditedRow({
       ...course,
-      date: course.date ? dayjs(course.date) : null, // Convert date to dayjs if it exists
+      date: course.date ? dayjs(course.date).format('MM-DD-YYYY') : null, // Convert date to dayjs if it exists
     });
     setOpen(true);
   };
   
-  const formattedDate = courseData.date ? dayjs(courseData.date).format('YYYY-MM-DD') : null;
+  const formattedDate = courseData.date ? dayjs(courseData.date).format('MM-DD-YYYY') : null;
   
   const handleFilter = () => {
     let filteredData = categories;
@@ -347,7 +347,8 @@ const displayedCategories = filteredCategories.slice(
             {index + 1 + (currentPage - 1) * rowsPerPage}
           </StyledTableCell>
           <StyledTableCell sx={{ fontSize: '16px' }} align="left">{course.name}</StyledTableCell>
-          <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
+          <StyledTableCell sx={{ width: 220, fontSize: '16px' }} align="center">
+          {course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
           <StyledTableCell align="center" style={{ width: 220, }}>
           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
             <FaEdit className="edit" onClick={() => handleClickOpen(course)} style={{ cursor: 'pointer' }} />

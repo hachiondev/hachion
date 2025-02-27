@@ -66,14 +66,15 @@ export default function VideoAccess() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[videoAccess,setVideoAccess]=useState([]);
-    const[filteredVideo,setFilteredVideo]=useState([])
+    const[filteredVideo,setFilteredVideo]=useState([]);
+    const[filterCourse,setFilterCourse]=useState([]);
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",description:"",trainer_name:"",user_email:"",permission:true});
-    const [videoData, setVideoData] = useState([{
+    const [videoData, setVideoData] = useState({
         videoaccess_id:"",
           category_name:"",
             course_name: "",
@@ -82,7 +83,7 @@ export default function VideoAccess() {
             description:"",
             trainer_name:"",
             permission:false
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
          const [rowsPerPage, setRowsPerPage] = useState(10);
          const [permission, setPermission] = useState(false); // Initial state: off (false)
@@ -165,6 +166,16 @@ export default function VideoAccess() {
         };
         fetchCourseCategory();
       }, []);
+      useEffect(() => {
+                      if (videoData.category_name) {
+                        const filtered = courseCategory.filter(
+                          (course) => course.courseCategory === videoData.category_name
+                        );
+                        setFilterCourse(filtered);
+                      } else {
+                        setFilterCourse([]); // Reset when no category is selected
+                      }
+                    }, [videoData.category_name, courseCategory]);
     useEffect(() => {
       const fetchVideo = async () => {
           try {
@@ -349,19 +360,22 @@ export default function VideoAccess() {
     </select>
 </div>
 
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={videoData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-      </select>
-</div>
+<div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={videoData.course_name}
+          onChange={handleChange}
+          disabled={!videoData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
 
   <div className="course-row">

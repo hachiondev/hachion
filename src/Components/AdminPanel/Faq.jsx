@@ -1,5 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -34,6 +35,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -58,12 +61,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function Faq() {
-  const [courseCategory,setCourseCategory]=useState([]);
+    const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
-    const[faq,setFaq]=useState([]);
-    const[filteredFaq,setFilteredFaq]=useState([])
+    const[curriculum,setCurriculum]=useState([]);
+    const[filterCourse,setFilterCourse]=useState([]);
+    const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
     const [rows, setRows] = useState([{ id:"",faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
@@ -71,37 +75,47 @@ export default function Faq() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",faq_pdf:"",faq_title:"",description:""});
-    const [faqData, setFaqData] = useState({
+    const [curriculumData, setCurriculumData] = useState({
         faq_id:"",
           category_name:"",
             course_name: "",
          faq_pdf:"",
          faq_title:"",
-         description:"",
+         description:'',
             date:currentDate,
          });
-         const [currentPage, setCurrentPage] = useState(1);
-                    const [rowsPerPage, setRowsPerPage] = useState(10);
-                    
-                    const handlePageChange = (page) => {
-                     setCurrentPage(page);
-                     window.scrollTo(0, window.scrollY);
-                   };
-                   // Inside your CourseCategory component
-                 
-                 const handleRowsPerPageChange = (rows) => {
-                   setRowsPerPage(rows);
-                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
-                 };
-                 
-                 // Slice filteredFaq based on rowsPerPage and currentPage
-                 const displayedCategories = filteredFaq.slice(
-                   (currentPage - 1) * rowsPerPage,
-                   currentPage * rowsPerPage
-                 );
+        const [currentPage, setCurrentPage] = useState(1);
+           const [rowsPerPage, setRowsPerPage] = useState(10);
+           
+           const handlePageChange = (page) => {
+            setCurrentPage(page);
+            window.scrollTo(0, window.scrollY);
+          };
+          // Inside your CourseCategory component
+        
+        const handleRowsPerPageChange = (rows) => {
+          setRowsPerPage(rows);
+          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+        };
+        
+        // Slice filteredCurriculum based on rowsPerPage and currentPage
+        const displayedCategories = filteredCurriculum.slice(
+          (currentPage - 1) * rowsPerPage,
+          currentPage * rowsPerPage
+        );
+
+        const quillModules = {
+          toolbar: [
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'color': [] }, { 'background': [] }],
+              ['link'],
+              ['clean']
+          ]
+      };
 
          const handleReset=()=>{
-            setFaqData({
+            setCurriculumData({
                 faq_id:"",
                   category_name:"",
                     course_name: "",
@@ -116,25 +130,58 @@ export default function Faq() {
       
       const deleteRow = (id) => {
           setRows(rows.filter(row => row.id !== id));
-      };;
+      };
+                
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
     useEffect(() => {
+      const fetchCategory = async () => {
+        try {
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          setCourse(response.data); // Assuming the data contains an array of trainer objects
+        } catch (error) {
+          console.error("Error fetching categories:", error.message);
+        }
+      };
+      fetchCategory();
+    }, []);
+     useEffect(() => {
+          if (curriculumData.category_name) {
+            const filtered = courseCategory.filter(
+              (course) => course.courseCategory === curriculumData.category_name
+            );
+            setFilterCourse(filtered);
+          } else {
+            setFilterCourse([]); // Reset when no category is selected
+          }
+        }, [curriculumData.category_name, courseCategory]);
+    useEffect(() => {
+      const fetchCourseCategory = async () => {
+        try {
+          const response = await axios.get("https://api.hachion.co/courses/all");
+          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+        } catch (error) {
+          console.error("Error fetching categories:", error.message);
+        }
+      };
+      fetchCourseCategory();
+    }, []);
+    useEffect(() => {
       const fetchFaq = async () => {
           try {
               const response = await axios.get('https://api.hachion.co/faq');
-              setFaq(response.data); // Use the curriculum state
+              setCurriculum(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching curriculum:", error.message);
           }
       };
       fetchFaq();
-      setFilteredFaq(faq)
-  }, [faq]); // Empty dependency array ensures it runs only once
+      setFilteredCurriculum(curriculum)
+  }, [curriculum]); // Empty dependency array ensures it runs only once
 
     const handleDeleteConfirmation = (faq_id) => {
-        if (window.confirm("Are you sure you want to delete this FAQ?")) {
+        if (window.confirm("Are you sure you want to delete this Faq?")) {
           handleDelete(faq_id);
         }
       };
@@ -146,18 +193,18 @@ export default function Faq() {
         }));
       };
       const handleDateFilter = () => {
-        const filtered = faq.filter((item) => {
-          const faqDate = new Date(item.date); // Parse the date field
+        const filtered = curriculum.filter((item) => {
+          const curriculumDate = new Date(item.date); // Parse the date field
           const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
           const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       
           return (
-            (!start || faqDate >= start) &&
-            (!end || faqDate <= end)
+            (!start || curriculumDate >= start) &&
+            (!end || curriculumDate <= end)
           );
         });
       
-        setFilteredFaq(filtered);
+        setFilteredCurriculum(filtered);
       };
       const handleSave = async () => {
         try {
@@ -165,19 +212,19 @@ export default function Faq() {
                 `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
                 editedRow
             );
-            setFaq((prev) =>
-                prev.map(fa =>
-                    fa.faq_id === editedRow.faq_id ? response.data : fa
+            setCurriculum((prev) =>
+                prev.map(curr =>
+                    curr.faq_id === editedRow.faq_id ? response.data : curr
                 )
             );
-            setMessage("FAQ updated successfully!");
+            setMessage("Faq updated successfully!");
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
-            setMessage("Error updating faq.");
+            setMessage("Error updating Curriculum.");
         }
     };
-            
+
       const handleDelete = async (faq_id) => {
        
          try { 
@@ -186,86 +233,36 @@ export default function Faq() {
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
         } }; 
-
         useEffect(() => {
-          const fetchCategory = async () => {
-            try {
-              const response = await axios.get("https://api.hachion.co/course-categories/all");
-              setCourse(response.data); // Assuming the data contains an array of trainer objects
-            } catch (error) {
-              console.error("Error fetching categories:", error.message);
-            }
-          };
-          fetchCategory();
-        }, []);
-        useEffect(() => {
-          const fetchCourseCategory = async () => {
-            try {
-              const response = await axios.get("https://api.hachion.co/courses/all");
-              setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
-            } catch (error) {
-              console.error("Error fetching categories:", error.message);
-            }
-          };
-          fetchCourseCategory();
-        }, []);
-        useEffect(() => {
-          const filtered = faq.filter(faq =>
-              faq.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              faq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              faq.faq_title.toLowerCase().includes(searchTerm.toLowerCase())
+          const filtered = curriculum.filter(curriculum =>
+              (curriculum.course_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+              (curriculum.faq_title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+              (curriculum.description?.toLowerCase() || "").includes(searchTerm.toLowerCase())
           );
-          setFilteredFaq(filtered);
-      }, [searchTerm,filteredFaq]);
-  //     const handleFileUpload = async (e) => {
-  //       const file = e.target.files[0];
-  //       if (file) {
-  //           // Convert file to Base64 (if needed)
-  //           const reader = new FileReader();
-  //           reader.readAsDataURL(file);
-  //           reader.onloadend = () => {
-  //               setFaqData((prev) => ({
-  //                   ...prev,
-  //                   faq_pdf: reader.result // Base64 string
-  //               }));
-  //           };
-  //       }
-  //   };
+          setFilteredCurriculum(filtered);
+      }, [searchTerm, curriculum]);      
+      const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setCurriculumData((prev) => ({
+                ...prev,
+                faq_pdf: file, // Store the file object directly
+            }));
+        }
+    };
     
-  //   const handleEditFileUpload = async (e) => {
-  //     const file = e.target.files[0];
-  //     if (file) {
-  //         // Convert file to Base64 (if needed)
-  //         const reader = new FileReader();
-  //         reader.readAsDataURL(file);
-  //         reader.onloadend = () => {
-  //             setEditedRow((prev) => ({
-  //                 ...prev,
-  //                 faq_pdf: reader.result // Base64 string
-  //             }));
-  //         };
-  //     }
-  // };
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        setFaqData((prev) => ({
-            ...prev,
-            faq_pdf: file, // Store the file object directly
-        }));
-    }
-};
-
-const handleEditFileUpload = async (e) => {
-  const file = e.target.files[0];
-  if (file) {
-      setEditedRow((prev) => ({
-          ...prev,
-          faq_pdf: file, // Store the file object directly
-      }));
-  }
-};
-
+    const handleEditFileUpload = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          setEditedRow((prev) => ({
+              ...prev,
+              faq_pdf: file, // Store the file object directly
+          }));
+      }
+  };
+  
+  
+        
         const handleCloseModal=()=>{
           setShowAddCourse(false);
          
@@ -274,91 +271,87 @@ const handleEditFileUpload = async (e) => {
           console.log(row);
             setEditedRow(row)// Set the selected row data
             setOpen(true); // Open the modal
-            console.log("tid",row.course_schedule_id)
+            console.log("tid",row.faq_id)
           };
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFaqData((prevData) => ({
+      const { name, value } = e.target;
+      setCurriculumData((prevData) => ({
           ...prevData,
-          [name]: value,
-        }));
-      };
-      // const handleSubmit = async (e) => {
-      //   e.preventDefault();
-    
-      //   const currentDate = new Date().toISOString().split("T")[0];
-      //   const dataToSubmit = {
-      //       category_name: faqData?.category_name,
-      //       course_name: faqData?.course_name,
-      //       faq_pdf: faqData?.faq_pdf,
-      //       faq_title: faqData?.faq_title,
-      //   description: faqData?.description,
-      //       date: currentDate
-      //   };
-    
-      //   console.log("Data being sent:", dataToSubmit); // Debugging
-    
-      //   try {
-      //     const response = await axios.post("https://api.hachion.co/faq/add", dataToSubmit, {
-      //       headers: {
-      //         "Content-Type": "application/json"
-      //       }
-      //     });
-        
-      //     if (response.status === 200) {
-      //       alert("Faq details added successfully");
-      //       setFaqData({}); // Reset form
-      //       handleReset();
-      //     }
-      //   } catch (error) {
-      //     if (error.response) {
-      //       console.error("Error response:", error.response.data); // Log server response
-      //       alert(`Error adding FAQ: ${error.response.data.message || 'Unknown error'}`);
-      //     } else {
-      //       console.error("Error:", error.message);
-      //       alert("Error adding faq.");
-      //     }
-      //   }
-      // }        
-    
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        const currentDate = new Date().toISOString().split("T")[0];
-        const formData = new FormData();
-        
-        // Append the fields to formData
-        formData.append("category_name", faqData?.category_name);
-        formData.append("course_name", faqData?.course_name);
-        formData.append("faq_title", faqData?.faq_title);
-        formData.append("description", faqData?.description);
-        formData.append("date", currentDate);
-      
-        // Append the file if available
-        if (faqData?.faq_pdf) {
-          console.log(faqData?.faq_pdf); 
-            formData.append("file", faqData?.faq_pdf);
-        }
-      
-        console.log("Data being sent:", formData); // Debugging
-      
-        try {
-            const response = await axios.post("https://api.hachion.co/faq/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
-                }
-            });
-      
-            if (response.status === 200) {
-                alert("FAQ details added successfully");
-                setFaqData({}); // Reset form
-                handleReset();
-            }
-        } catch (error) {
-            console.error("Error adding faq:", error.message);
-            alert("Error adding faq.");
-        }
-      };
+          [name]: value
+      }));
+  };
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const currentDate = new Date().toISOString().split("T")[0];
+//     const dataToSubmit = {
+//       category_name: curriculumData?.category_name,
+//       course_name: curriculumData?.course_name,
+//       curriculum_pdf: curriculumData?.curriculum_pdf,
+//       title: rows.map(row => row.title),
+//       topic: rows.map(row => row.topic),
+//         date: currentDate
+//     };
+
+//     console.log("Data being sent:", dataToSubmit); // Debugging
+
+//     try {
+//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+//             headers: {
+//                 "Content-Type": "multipart/form-data" 
+//             }
+//         });
+
+//         if (response.status === 200) {
+//             alert("Curriculum details added successfully");
+//             setCurriculumData({}); // Reset form
+//             handleReset();
+//         }
+//     } catch (error) {
+//         console.error("Error adding curriculum:", error.message);
+//         alert("Error adding curriculum.");
+//     }
+// };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const currentDate = new Date().toISOString().split("T")[0];
+  const formData = new FormData();
+  
+  // Append the fields to formData
+  formData.append("category_name", curriculumData?.category_name);
+  formData.append("course_name", curriculumData?.course_name);
+  formData.append("faq_title", curriculumData?.faq_title);
+  formData.append("description", curriculumData?.description);
+  formData.append("date", currentDate);
+
+  // Append the file if available
+  if (curriculumData?.faq_pdf) {
+    console.log(curriculumData?.faq_pdf); 
+      formData.append("file", curriculumData?.faq_pdf);
+  }
+
+  console.log("Data being sent:", formData); // Debugging
+
+  try {
+      const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+          headers: {
+              "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
+          }
+      });
+
+      if (response.status === 200) {
+          alert("Faq details added successfully");
+          setCurriculumData({}); // Reset form
+          handleReset();
+      }
+  } catch (error) {
+      console.error("Error adding faq:", error.message);
+      alert("Error adding faq.");
+  }
+};
+
         
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
@@ -368,22 +361,22 @@ const handleEditFileUpload = async (e) => {
       <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                       <li className="breadcrumb-item">
-                      <a href="#!" onClick={() => setShowAddCourse(false)}>FAQ's</a> <MdKeyboardArrowRight />
+                      <a href="#!" onClick={() => setShowAddCourse(false)}>FAQ </a> <MdKeyboardArrowRight />
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Add FAQ's
+                      Add Faq's
                       </li>
                     </ol>
                   </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add FAQ's</p>
+<p>Add Faq</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={faqData.category_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
     <option value="" disabled>
           Select Category
         </option>
@@ -394,27 +387,29 @@ const handleEditFileUpload = async (e) => {
         ))}
     </select>
   </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={faqData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={curriculumData.course_name}
+          onChange={handleChange}
+          disabled={!curriculumData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   <div class="mb-3">
-  <label for="formFile" class="form-label">FAQ's PDF</label>
+  <label for="formFile" class="form-label">Faq PDF</label>
   <input
     className="form-control"
     type="file"
     id="formFile"
-    name="faq_pdf"
-    
+    name='faq_pdf'
     onChange={handleFileUpload}
 />
 
@@ -424,13 +419,13 @@ const handleEditFileUpload = async (e) => {
       <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align='center' sx={{ fontSize: '16px', width: '35%' }}>FAQ's Title</StyledTableCell>
+            <StyledTableCell align='center' sx={{ fontSize: '16px', width: '35%' }}> Title</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Description</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px', width: '180px' }}>Add/Delete Row</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+        {rows.map((row) => (
             <StyledTableRow
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}
@@ -438,9 +433,19 @@ const handleEditFileUpload = async (e) => {
               <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
                <input className='table-curriculum' name='faq_title' value={rows.faq_title} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='description' value={rows.description} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell sx={{ padding: 0 }} align="center">
+    <ReactQuill
+        theme="snow"
+        modules={quillModules}
+        value={curriculumData.description}
+        onChange={(value) => setCurriculumData((prevData) => ({
+            ...prevData,
+            description: value
+        }))}
+    />
+</StyledTableCell>
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
-                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)} /></></StyledTableCell>
+                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
     
           ))}
@@ -448,11 +453,10 @@ const handleEditFileUpload = async (e) => {
       </Table>
     </TableContainer>
   
-<div className="course-row"> 
+    <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
-  
 </div>
 </div>
 </div>
@@ -509,7 +513,7 @@ const handleEditFileUpload = async (e) => {
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add FAQ
+                <FiPlus /> Add Faq
               </button>
             </div>
           </div>
@@ -521,7 +525,7 @@ const handleEditFileUpload = async (e) => {
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={faqData.category_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
     <option value="" disabled>
           Select Category
         </option>
@@ -534,7 +538,7 @@ const handleEditFileUpload = async (e) => {
   </div>
   <div class="col-md-3">
     <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={faqData.course_name} onChange={handleChange}>
+    <select id="inputState" class="form-select" name='course_name' value={curriculumData.course_name} onChange={handleChange}>
     <option value="" disabled>
           Select Course
         </option>
@@ -546,11 +550,10 @@ const handleEditFileUpload = async (e) => {
     </select>
   </div>
   <div class="mb-3">
-  <label for="formFile" class="form-label">FAQ's PDF</label>
+  <label for="formFile" class="form-label">FAQ PDF</label>
   <input class="form-control" type="file" id="formFile"
-          name="faq_pdf"
-          accept='.pdf'
-          onChange={handleFileUpload}/>
+          name="curriculum_pdf"
+          onChange={handleChange}/>
 </div>
   </div>
   </div>
@@ -558,11 +561,11 @@ const handleEditFileUpload = async (e) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align='center' sx={{ width: '100px' }}>
+            <StyledTableCell  align='center' sx={{ width: '100px' }}>
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
-            <StyledTableCell align="center">FAQ Title</StyledTableCell>
+            <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Description</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
@@ -570,26 +573,33 @@ const handleEditFileUpload = async (e) => {
         </TableHead>
         <TableBody>
         {displayedCategories.length > 0 ? (
-  displayedCategories.map((row, index) => (
-    <StyledTableRow key={row.faq_id}>
+  displayedCategories.map((course, index) => (
+    <StyledTableRow key={course.curr_id}>
       <StyledTableCell align="center">
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">
         {index + 1 + (currentPage - 1) * rowsPerPage}
-        </StyledTableCell>
-      <StyledTableCell align="left">{row.faq_title}</StyledTableCell>
-      <StyledTableCell align="left">{row.description}
       </StyledTableCell>
-      <StyledTableCell align="center">{row.date}</StyledTableCell>
+      <StyledTableCell align="left">{course.faq_title}</StyledTableCell>
+      <StyledTableCell align="left">
+  <div 
+    style={{ maxWidth: '1000px', wordWrap: 'break-word', whiteSpace: 'pre-line' }} 
+    dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
+  />
+</StyledTableCell>
+      <StyledTableCell align="center">{course.date}</StyledTableCell>
       <StyledTableCell align="center">
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.faq_id)} />
+        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+          <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
+          <RiDeleteBin6Line
+            className="delete"
+            onClick={() => handleDeleteConfirmation(course.faq_id)}
+          />
         </div>
       </StyledTableCell>
     </StyledTableRow>
- ))
+  ))
 ) : (
   <p>No categories available</p>
 )}
@@ -597,23 +607,23 @@ const handleEditFileUpload = async (e) => {
     </Table>
     </TableContainer>
     <div className='pagination-container'>
-              <AdminPagination
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          totalRows={filteredFaq.length} // Use the full list for pagination
-          onPageChange={handlePageChange}
-        />
-                  </div>
-        {message && <div className="success-message">{message}</div>}
-    
-        </div>)}
+          <AdminPagination
+      currentPage={currentPage}
+      rowsPerPage={rowsPerPage}
+      totalRows={filteredCurriculum.length} // Use the full list for pagination
+      onPageChange={handlePageChange}
+    />
+              </div>
+    {message && <div className="success-message">{message}</div>}
 
-        <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    </div>)}
+
+    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
     PaperProps={{
       style: { borderRadius: 20 },
     }}>
   <div className="dialog-title">
-    <DialogTitle  id="edit-schedule-dialog">Edit FAQ's</DialogTitle>
+    <DialogTitle  id="edit-schedule-dialog">Edit FAQ</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
@@ -629,7 +639,7 @@ const handleEditFileUpload = async (e) => {
         value={editedRow.category_name || ""}
         onChange={handleInputChange}
       >
-        <option value="" disabled>
+         <option value="" disabled>
           Select Category
         </option>
         {course.map((curr) => (
@@ -662,11 +672,11 @@ const handleEditFileUpload = async (e) => {
     </div>
 
     <div className="mb-3">
-      <label htmlFor="faqPDF" className="form-label">FAQ's PDF</label>
+      <label htmlFor="curriculumPDF" className="form-label">FAQ's PDF</label>
       <input
-        className="form-control"
+        className="form-control-sample"
         type="file"
-        id="faqPDF"
+        id="curriculumPDF"
         accept='.pdf'
         name="faq_pdf"
       
@@ -675,7 +685,7 @@ const handleEditFileUpload = async (e) => {
       />
     </div>
 
-    <label htmlFor="title">FAQ Title</label>
+    <label htmlFor="title">Title</label>
     <input
       id="title"
       className="form-control"
@@ -684,14 +694,18 @@ const handleEditFileUpload = async (e) => {
       onChange={handleInputChange}
     />
 
-    <label htmlFor="topic">Description</label>
-    <input
-      id="topic"
-      className="form-control"
-      name="description"
-      value={editedRow.description || ""}
-      onChange={handleInputChange}
-    />
+<label htmlFor="topic">Description</label>
+<ReactQuill
+  theme="snow"
+  modules={quillModules}
+  value={editedRow.description || ""}
+  onChange={(value) =>
+    setEditedRow((prevData) => ({
+      ...prevData,
+      description: value
+    }))
+  }
+/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

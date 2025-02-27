@@ -61,6 +61,7 @@ export default function DemoVideo() {
   const[courseCategory,setCourseCategory]=useState([]);
   const [searchTerm,setSearchTerm]=useState("");
   const [course,setCourse]=useState([]);
+  const[filterCourse,setFilterCourse]=useState([]);
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[demoVideo,setDemoVideo]=useState([]);
     const[filteredVideo,setFilteredVideo]=useState([])
@@ -71,12 +72,12 @@ export default function DemoVideo() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",video_link:"",video_description:"",video_duration:""});
-    const [videoData, setVideoData] = useState([{
+    const [videoData, setVideoData] = useState({
         demovideo_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
-         }]);
+         });
  const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -252,6 +253,16 @@ export default function DemoVideo() {
         };
         fetchCourseCategory();
       }, []);
+       useEffect(() => {
+                if (videoData.category_name) {
+                  const filtered = courseCategory.filter(
+                    (course) => course.courseCategory === videoData.category_name
+                  );
+                  setFilterCourse(filtered);
+                } else {
+                  setFilterCourse([]); // Reset when no category is selected
+                }
+              }, [videoData.category_name, courseCategory]);
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -286,20 +297,22 @@ export default function DemoVideo() {
         ))}
     </select>
   </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={videoData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-
-</div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={videoData.course_name}
+          onChange={handleChange}
+          disabled={!videoData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">

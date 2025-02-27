@@ -1,7 +1,121 @@
+// import React, { useEffect, useState } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import image from '../../Assets/image 80.png';
+// import { MdOutlineStar } from "react-icons/md";
+// import qaheader from '../../Assets/qa-video.png';
+// import { IoPlayCircleOutline } from 'react-icons/io5';
+// import './Course.css';
+
+// const QaTop = ({ onVideoButtonClick }) => {
+//   const { courseName } = useParams(); // Extract course_id from URL params
+//   const navigate = useNavigate();
+//   const [curriculumData, setCurriculumData] = useState({
+//     course_name: "",
+//     curriculum_pdf: null,
+//   });
+//   const [course, setCourse] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const handleDownload = () => {
+//     if (!curriculumData.curriculum_pdf) {
+//       alert("No PDF available for download. Please contact trainings@hachion.co");
+//       return;
+//     }
+
+//     const url = URL.createObjectURL(curriculumData.curriculum_pdf);
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.download = curriculumData.curriculum_pdf.name;
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//   };
+
+//   useEffect(() => {
+//     const fetchCourse = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await axios.get('https://api.hachion.co/courses/all');
+//         const courseData = response.data.find(
+//           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+//         );
+//         setCourse(courseData);
+//       } catch (error) {
+//         console.error('Error fetching course details:', error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchCourse();
+//   }, [courseName]);
+
+//   if (loading) return <div>Loading...</div>;
+//   if (error) return <div>Error: {error}</div>;
+//   if (!course) return <div>Course details not available</div>;
+
+//   // Function to render stars dynamically based on rating
+//   const renderStars = (rating) => {
+//     const stars = [];
+//     for (let i = 1; i <= 5; i++) {
+//       stars.push(
+//         i <= rating ? (
+//           <MdOutlineStar key={i} className="star-icon filled" />
+//         ) : (
+//           <MdOutlineStar key={i} className="star-icon" />
+//         )
+//       );
+//     }
+//     return stars;
+//   };
+
+//   return (
+//     <>
+//       <div className='qa-automation'>
+//         <div className='qa-inside'>
+//         <div className='qa-left-part'>
+//           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
+//           <div className='qa-automation-left'>
+//             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
+//             <div className='qa-automation-middle'>
+//               <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
+//               <span className='strike-price'> USD {course.amount}/-</span></p>
+//               <h6 className='sidebar-course-review'>
+//                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
+//               </h6>
+//             </div>
+//           </div>
+//           <div className="qa-content" dangerouslySetInnerHTML={{ __html: (course.courseHighlight || "").trim() }} />
+//         </div>
+        
+//         <div className='qa-right'>
+//           <p className='certified'>Certified-students: {course.totalEnrollment}</p>
+//           <img src={qaheader} alt='video-frame' />
+//         </div>
+//         </div>
+
+//       {/* Buttons Section */}
+//       <div className='qa-button-container'>
+//         <div className='qa-button'>
+//           <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
+//           <button className="download" onClick={handleDownload}>Download Brochure</button>
+//           </div>
+//           <button className='video-btn' onClick={onVideoButtonClick}>
+//             <IoPlayCircleOutline className='video-btn-icon' />
+//             Watch Demo Videos
+//           </button>
+//           </div>
+//           </div>
+//     </>
+//   );
+// };
+
+// export default QaTop;
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import image from '../../Assets/image.png';
 import { MdOutlineStar } from "react-icons/md";
 import qaheader from '../../Assets/qa-video.png';
 import { IoPlayCircleOutline } from 'react-icons/io5';
@@ -10,73 +124,29 @@ import './Course.css';
 const QaTop = ({ onVideoButtonClick }) => {
   const { courseName } = useParams(); // Extract course_id from URL params
   const navigate = useNavigate();
+  const [curriculumData, setCurriculumData] = useState({
+    course_name: "",
+    curriculum_pdf: null,
+  });
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null);
 
-
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
-
-        const matchedCourse = response.data.find(
-          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
-        );
-
-        if (matchedCourse) {
-          setCourse(matchedCourse);
-
-          // Fetch Curriculum
-          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
-          const matchedCurriculum = curriculumResponse.data.find(
-            (item) => item.course_name && item.course_name.trim() === matchedCourse.courseName.trim()
-          );
-
-          if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-            setPdfUrl(matchedCurriculum.curriculum_pdf);
-          }
-        } else {
-          setError('Course not found.');
-        }
-      } catch (error) {
-        console.error('Error fetching course details:', error);
-        setError('Failed to load course details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourseData();
-  }, [courseName]);
-
-  // Function to download PDF
   const handleDownload = () => {
-    if (!pdfUrl) {
+    if (!curriculumData.curriculum_pdf) {
       alert("No PDF available for download. Please contact trainings@hachion.co");
       return;
     }
-else{
-    try {
-      // Decode Base64 PDF and create Blob
-      const pdfBlob = new Blob(
-        [new Uint8Array(atob(pdfUrl.split(',')[1]).split('').map(char => char.charCodeAt(0)))],
-        { type: 'application/pdf' }
-      );
 
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(pdfBlob);
-      link.setAttribute("download", `${course.courseName}_Curriculum.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading PDF:", error);
-    }
+    const url = URL.createObjectURL(curriculumData.curriculum_pdf);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = curriculumData.curriculum_pdf.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
-  }
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -119,9 +189,15 @@ else{
       <div className='qa-automation'>
         <div className='qa-inside'>
         <div className='qa-left-part'>
+          <div className='top-course-data-mob'>
+        <h4 className='top-course-name-mob'>{course?.courseName}</h4>
           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
+          </div>
           <div className='qa-automation-left'>
+            <div>
+            <h3 className='top-course-name'>{course?.courseName}</h3>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
+            </div>
             <div className='qa-automation-middle'>
               <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
               <span className='strike-price'> USD {course.amount}/-</span></p>

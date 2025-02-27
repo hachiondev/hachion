@@ -61,20 +61,21 @@ export default function TrendingCourseTable() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[trendingCourse,setTrendingCourse]=useState([]);
-    const[filteredCourse,setFilteredCourse]=useState([])
+    const[filteredCourse,setFilteredCourse]=useState([]);
+  
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
-    const [courseData, setCourseData] = useState([{
+    const [courseData, setCourseData] = useState({
         trendingcourse_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
             status:false
-         }]);
+         });
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
    const [status, setStatus] = useState(false);

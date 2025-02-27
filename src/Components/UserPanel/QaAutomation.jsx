@@ -79,27 +79,7 @@ const QaAutomation = () => {
       curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  // useEffect(() => {
-  //   // Fetch the course details by course_id
-  //   const fetchCourseData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-  //       console.log(response);
-  //       if (response.data) {
-  //         setCourseData(response.data); // Set course data based on course_id
-  //       } else {
-  //         setError('Course not found');
-  //       }
-  //     } catch (err) {
-  //       setError('Error fetching course data');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchCourseData();
-  // }, [course_id]); // Fetch new course data when course_id changes
+  
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -127,9 +107,9 @@ const QaAutomation = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        <div className='course-banner'>
+        {/* <div className='course-banner'>
           <h3 className='course-banner-content'>{courseData?.courseName}</h3>
-        </div>
+        </div> */}
         <div className='blogs-header'>
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -147,6 +127,7 @@ const QaAutomation = () => {
           </ol>
         </nav>
         </div>
+        {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
         <KeyHighlights />
 

@@ -61,6 +61,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Curriculum() {
     const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
+  const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[curriculum,setCurriculum]=useState([]);
@@ -144,6 +145,16 @@ export default function Curriculum() {
       };
       fetchCourseCategory();
     }, []);
+    useEffect(() => {
+      if (curriculumData.category_name) {
+        const filtered = courseCategory.filter(
+          (course) => course.courseCategory === curriculumData.category_name
+        );
+        setFilterCourse(filtered);
+      } else {
+        setFilterCourse([]); // Reset when no category is selected
+      }
+    }, [curriculumData.category_name, courseCategory]);
     useEffect(() => {
       const fetchCurriculum = async () => {
           try {
@@ -364,19 +375,22 @@ const handleSubmit = async (e) => {
         ))}
     </select>
   </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={curriculumData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={curriculumData.course_name}
+          onChange={handleChange}
+          disabled={!curriculumData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input

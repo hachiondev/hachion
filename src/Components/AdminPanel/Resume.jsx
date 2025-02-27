@@ -66,6 +66,7 @@ export default function Resume() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[resume,setResume]=useState([]);
+    const[filterCourse,setFilterCourse]=useState([]);
     const[filteredResume,setFilteredResume]=useState([])
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
@@ -73,7 +74,7 @@ export default function Resume() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",junior_level:"",middle_level:"",senior_level:""});
-    const [resumeData, setResumeData] = useState([{
+    const [resumeData, setResumeData] = useState({
         resume_id:"",
           category_name:"",
             course_name: "",
@@ -81,7 +82,7 @@ export default function Resume() {
            junior_level:"",
            middle_level:"",
            senior_level:""
-         }]);
+         });
  const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -103,7 +104,7 @@ export default function Resume() {
         );
 
          const handleReset=()=>{
-            setResumeData([{
+            setResumeData({
               resume_id:"",
               category_name:"",
               course_name: "",
@@ -111,7 +112,7 @@ export default function Resume() {
              junior_level:"",
              middle_level:"",
              senior_level:""
-                 }]);
+                 });
         
          }
          const handleInputChange = (e) => {
@@ -259,7 +260,16 @@ export default function Resume() {
       };
       fetchCourseCategory();
     }, []);
-
+useEffect(() => {
+                      if (resumeData.category_name) {
+                        const filtered = courseCategory.filter(
+                          (course) => course.courseCategory === resumeData.category_name
+                        );
+                        setFilterCourse(filtered);
+                      } else {
+                        setFilterCourse([]); // Reset when no category is selected
+                      }
+                    }, [resumeData.category_name, courseCategory]);
 
   return (
     
@@ -296,20 +306,23 @@ export default function Resume() {
     </select>
 
 </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={resumeData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-
-</div>
+<div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={resumeData.course_name}
+          onChange={handleChange}
+          disabled={!resumeData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
+  
   </div>
   <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Enter Junior level Position Path</label>

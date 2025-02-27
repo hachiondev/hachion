@@ -1,4 +1,3 @@
-
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
@@ -64,6 +63,7 @@ export default function CourseSchedule() {
  const[category,setCategory]=useState([]);
  const[courseCategory,setCourseCategory]=useState([]);
 const [filteredCourses,setFilteredCourses]=useState([courses]);
+const[filterCourse,setFilterCourse]=useState([]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -157,6 +157,16 @@ useEffect(() => {
   fetchCourseCategory();
 }, []);
 useEffect(() => {
+  if (courseData.schedule_category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === courseData.schedule_category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [courseData.schedule_category_name, courseCategory]);
+useEffect(() => {
   const fetchTrainer = async () => {
     try {
       const response = await axios.get("https://api.hachion.co/trainers");
@@ -183,22 +193,14 @@ const handleTimeChange = (newValue) => {
 //     [name]: value,
 //   }));
 // };
-
 const handleChange = (e) => {
   const { name, value } = e.target;
-  
-  setCourseData((prevData) => ({
-    ...prevData,
+  setCourseData((prev) => ({
+    ...prev,
     [name]: value,
+    ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
   }));
-
-  // If category is selected, filter courses
-  if (name === 'schedule_category_name') {
-    const filtered = courses.filter(course => course.schedule_category_name === value);
-    setFilteredCourses(filtered);
-  }
 };
-
   const handleReset = () => {
     setCourseData({
         schedule_category_name:"",
@@ -255,7 +257,6 @@ useEffect(() => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get('https://api.hachion.co/schedulecourse');
-      console.log("API Response:", response.data);
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -273,7 +274,7 @@ useEffect(() => {
   );
   setFilteredCourses(filtered)
 
-}, [searchTerm]);
+}, [searchTerm,filteredCourses]);
 const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
@@ -384,21 +385,22 @@ const handleInputChange = (e) => {
         ))}
       </select>
         </div>
-        <div class="col-md-3">
-          <label for="inputState" class="form-label">Course Name</label>
-          <select id="inputState" class="form-select" name='schedule_course_name' 
-          value={courseData.schedule_course_name} onChange={handleChange}
-          disabled={!courseData.schedule_category_name}>
-            <option value="" disabled>
-          Select Course
-        </option>
-        {filteredCourses.map((curr) => (
-          <option key={curr.id} value={curr.schedule_course_name}>
-            {curr.schedule_course_name}
-          </option>
-        ))}
-          </select>
-        </div>
+        <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="schedule_course_name"
+          value={courseData.schedule_course_name}
+          onChange={handleChange}
+          disabled={!courseData.schedule_category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
         <div class="col-md-3">
           <label for="inputState" class="form-label">Trainer Name</label>
           <select id="inputState" class="form-select" name='trainer_name' 
@@ -594,7 +596,7 @@ const handleInputChange = (e) => {
         </div>
       </div>
     </LocalizationProvider>
-   <TableContainer component={Paper}>
+    <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -735,6 +737,38 @@ const handleInputChange = (e) => {
   renderInput={(params) => <TextField {...params} />}
 />
     </div>
+        </div>
+
+        <div className="course-row">
+        <div className="col">
+          <label className="form-label">Frequency</label>
+          <select
+            id="inputState"
+            className="form-select"
+            name="schedule_frequency"
+            value={editedRow.schedule_frequency || ""}
+            onChange={handleInputChange}
+          >
+            <option value="">Select</option>
+            <option>Only Weekends</option>
+            <option>Week Days</option>
+            <option>Any Days</option>
+          </select>
+        </div>
+
+        <div className="col">
+          <label className="form-label">Time</label>
+        <TimePicker
+         sx={{
+           '& .MuiIconButton-root':{color: '#00aeef'}
+        }}
+  // label="Select Time"
+  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'hh:mm A') : null}
+  ampm={true}
+  onChange={handleTimeChange}
+  renderInput={(params) => <TextField {...params} />}
+  />
+  </div>
         </div>
 
         <div className="course-row">

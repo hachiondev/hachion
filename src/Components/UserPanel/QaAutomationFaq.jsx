@@ -118,7 +118,7 @@ fetchCourse();
           </p>
         </div>
 
-        {expandedTopics[index] && (
+        {/* {expandedTopics[index] && (
           <div className="topic-details">
             <ul className="bullet-list">
               {item.description &&
@@ -130,7 +130,16 @@ fetchCourse();
         )}
       </div>
     ));
-  };
+  }; */}
+
+{expandedTopics[index] && (
+        <div className="topic-details">
+          <div className="quill-content" dangerouslySetInnerHTML={{ __html: item.description }} />
+        </div>
+      )}
+    </div>
+  ));
+};
   const downloadPdf = () => {
     if (!pdfUrl) {
       console.error('No PDF URL available.');

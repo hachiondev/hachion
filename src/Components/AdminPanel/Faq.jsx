@@ -1487,6 +1487,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -1552,6 +1554,16 @@ export default function Faq() {
           (currentPage - 1) * rowsPerPage,
           currentPage * rowsPerPage
         );
+
+        const quillModules = {
+          toolbar: [
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'color': [] }, { 'background': [] }],
+              ['link'],
+              ['clean']
+          ]
+      };
 
          const handleReset=()=>{
             setCurriculumData({
@@ -1859,7 +1871,17 @@ const handleSubmit = async (e) => {
               <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
                <input className='table-curriculum' name='faq_title' value={rows.faq_title} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='description' value={rows.description} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell sx={{ padding: 0 }} align="center">
+    <ReactQuill
+        theme="snow"
+        modules={quillModules}
+        value={curriculumData.description}
+        onChange={(value) => setCurriculumData((prevData) => ({
+            ...prevData,
+            description: value
+        }))}
+    />
+</StyledTableCell>
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
@@ -1999,17 +2021,12 @@ const handleSubmit = async (e) => {
       </StyledTableCell>
       <StyledTableCell align="left">{course.faq_title}</StyledTableCell>
       <StyledTableCell align="left">
-        <ul className="bullet-list">
-          {course.description ? (
-            course.description.split(',').map((desc, i) => (
-              <li key={i}>{desc.trim()}</li>
-            ))
-          ) : (
-            <li>No topics available</li>
-          )}
-        </ul>
-      </StyledTableCell>
-      <StyledTableCell align="center">{course.date}</StyledTableCell>
+  <div 
+    style={{ maxWidth: '1000px', wordWrap: 'break-word', whiteSpace: 'pre-line' }} 
+    dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
+  />
+</StyledTableCell>
+      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
@@ -2115,14 +2132,18 @@ const handleSubmit = async (e) => {
       onChange={handleInputChange}
     />
 
-    <label htmlFor="topic">Description</label>
-    <input
-      id="topic"
-      className="form-control"
-      name="description"
-      value={editedRow.description || ""}
-      onChange={handleInputChange}
-    />
+<label htmlFor="topic">Description</label>
+<ReactQuill
+  theme="snow"
+  modules={quillModules}
+  value={editedRow.description || ""}
+  onChange={(value) =>
+    setEditedRow((prevData) => ({
+      ...prevData,
+      description: value
+    }))
+  }
+/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

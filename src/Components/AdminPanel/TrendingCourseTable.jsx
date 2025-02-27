@@ -68,13 +68,13 @@ export default function TrendingCourseTable() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
-    const [courseData, setCourseData] = useState([{
+    const [courseData, setCourseData] = useState({
         trendingcourse_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
             status:false
-         }]);
+         });
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
    const [status, setStatus] = useState(false);

@@ -799,6 +799,9 @@ flex-direction: row;
 justify-content:center;
 margin-top: 2vh;
 gap: 40px; 
+width: 80%;
+margin-left: 10vw;
+margin-right: 10vw;
 }
 
 .course-names {

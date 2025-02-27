@@ -141,13 +141,8 @@ useEffect(() => {
 
         {expandedTopics[index] && (
           <div className="topic-details">
-            <ul className="bullet-list">
-              {item.topic &&
-                item.topic.split(',').map((desc, i) => (
-                  <li key={i}>{desc.trim()}</li>
-                ))}
-            </ul>
-          </div>
+          <ul className="bullet-list" dangerouslySetInnerHTML={{ __html: item.topic }} />
+        </div>
         )}
       </div>
     ));

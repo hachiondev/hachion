@@ -67,6 +67,7 @@ export default function Review() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[review,setReview]=useState([]);
+    const[filterCourse,setFilterCourse]=useState([]);
     const[filteredReview,setFilteredReview]=useState([])
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
@@ -74,7 +75,7 @@ export default function Review() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:""});
-    const [reviewData, setReviewData] = useState([{
+    const [reviewData, setReviewData] = useState({
         review_id:"",
           category_name:"",
             course_name: "",
@@ -83,7 +84,7 @@ export default function Review() {
            source:"",
            comment:"",
            image:null
-         }]);
+         });
          const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
                     
@@ -263,7 +264,16 @@ const handleFileChange = (e) => {
       };
       fetchCategory();
     }, []);
-
+useEffect(() => {
+          if (reviewData.category_name) {
+            const filtered = courseCategory.filter(
+              (course) => course.courseCategory === reviewData.category_name
+            );
+            setFilterCourse(filtered);
+          } else {
+            setFilterCourse([]); // Reset when no category is selected
+          }
+        }, [reviewData.category_name, courseCategory]);
 
   return (
     
@@ -327,19 +337,22 @@ const handleFileChange = (e) => {
     </select>
 </div>
 
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={reviewData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-      </select>
-</div>
+<div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={reviewData.course_name}
+          onChange={handleChange}
+          disabled={!reviewData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
   
   <div class="mb-6">

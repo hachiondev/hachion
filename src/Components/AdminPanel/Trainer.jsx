@@ -1,5 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
@@ -26,10 +28,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
-// import { listTrainer } from '../../Services/TrainerService';
+
 import axios from 'axios';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import AdminPagination from './AdminPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -61,6 +61,9 @@ function createData(S_No, trainer_name, course_name,demo1, demo2,demo3,summary,d
 export default function Trainer() {
  const[trainers,setTrainers]=useState([]);
 const [filteredTrainers,setFilteredTrainers]=useState(trainers);
+const[filterCourse,setFilterCourse]=useState([]);
+  const [courseCategory,setCourseCategory]=useState([]);
+  const [course,setCourse]=useState([]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -83,7 +86,10 @@ const[message,setMessage]=useState(false);
       date:currentDate
     
     });
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 10; // Show 10 rows per page
+  
+    
   const handleReset = () => {
     setTrainerData({
       trainer_name: "",
@@ -96,24 +102,6 @@ const[message,setMessage]=useState(false);
       date:""
     });
   };
-  const [currentPage, setCurrentPage] = useState(1);
-              const [rowsPerPage, setRowsPerPage] = useState(10);
-              
-              const handlePageChange = (page) => {
-               setCurrentPage(page);
-               window.scrollTo(0, window.scrollY);
-             };
-             // Inside your CourseCategory component
-           
-           const handleRowsPerPageChange = (rows) => {
-             setRowsPerPage(rows);
-             setCurrentPage(1); // Reset to the first page whenever rows per page changes
-           };
-  
-           const displayedCourse = filteredTrainers.slice(
-            (currentPage - 1) * rowsPerPage,
-            currentPage * rowsPerPage
-          );
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents the default form submission
     const currentDate = new Date().toISOString().split("T")[0];
@@ -124,7 +112,7 @@ const[message,setMessage]=useState(false);
   
     try {
       
-      const response = await axios.post("https://api.hachion.co/trainers/add", trainerData
+      const response = await axios.post("https://api.hachion.co/trainer/add", trainerData
       );
       
       if (response.status === 200) {
@@ -181,16 +169,53 @@ const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredTrainers.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredTrainers.length / rowsPerPage);
 
+// Handle page change
+const handlePageChange = (event, page) => {
+  setTrainers(paginatedData);
+  setCurrentPage(page);
+ 
+};
 const handleDeleteConfirmation = (trainerId) => {
   if (window.confirm("Are you sure you want to delete this trainer?")) {
     handleDelete(trainerId);
   }
 };
-
+useEffect(() => {
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/course-categories/all");
+      setCourse(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCategory();
+}, []);
+useEffect(() => {
+  const fetchCourseCategory = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/courses/all");
+      setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCourseCategory();
+}, []);
+useEffect(() => {
+  if (trainerData.category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === trainerData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [trainerData.category_name, courseCategory]);
 const handleDelete = async (trainer_id) => {
  
    try { 
-    const response = await axios.delete(`https://api.hachion.co/trainers/delete/${trainer_id}`); 
+    const response = await axios.delete(`https://api.hachion.co/trainer/delete/${trainer_id}`); 
     console.log("Trainer deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
@@ -220,7 +245,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `https://api.hachion.co/trainers/update/${selectedRow.trainer_id}`,
+      `https://api.hachion.co/trainer/update/${selectedRow.trainer_id}`,
       editedRow
     );
 
@@ -263,54 +288,49 @@ const handleChange = (e) => {
     
     <>   
        {showAddCourse ? (<div className='course-category'>
-        <h3>Trainer</h3>
-              <nav aria-label="breadcrumb">
-              <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-                <a href="#!" onClick={() => setShowAddCourse(false)}>View Trainer</a> <MdKeyboardArrowRight />
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                Add Trainer
-                </li>
-              </ol>
-            </nav>
-
+<p>View Trainer <IoIosArrowForward/> Add Trainer </p>
 <div className='category'>
 <div className='category-header'>
 <p>Add Trainer</p>
 </div>
-<div className="course-row">
+<div class="row">
   <div class="col">
+  
     <label className='form-label'>Trainer</label>
     <input type="text" class="form-select" placeholder="Trainer name" aria-label="First name" 
     name="trainer_name"
     value={trainerData.trainer_name}
     onChange={handleChange}/>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name="category_name"
-                  value={trainerData.category_name}
-                  onChange={handleChange}>
-      <option selected>Select Category</option>
-      <option>QA Testing</option>
-      <option>Project Management</option>
-      <option>Business Intelligence</option>
-      <option>Data Science</option>
+    <select id="inputState" class="form-select" name='category_name' value={trainerData.category_name} onChange={handleChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
     </select>
   </div>
-  <div class="col">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name="course_name"
-                  value={trainerData.course_name}
-                  onChange={handleChange}>
-      <option selected>Select Course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Automation Testing</option>
-      <option>Mobile App Testing</option>
-    </select>
-  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={trainerData.course_name}
+          onChange={handleChange}
+          disabled={!trainerData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
   <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Trainer Profile Summary</label>
@@ -351,7 +371,7 @@ const handleChange = (e) => {
     onChange={handleChange}/>
   </div>
   </div>
-  <div className="course-row">
+  <div style={{display:'flex',flexDirection:'row'}}> 
   <button className='submit-btn'  data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -363,41 +383,32 @@ const handleChange = (e) => {
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-        <h3>Trainer</h3>
+        <p>Trainer</p>
         <div className='category'>
           <div className='category-header'>
             <p>View Trainer</p>
           </div>
           <div className='date-schedule'>
             Start Date
-            <DatePicker  selected={startDate} onChange={date => setStartDate(date)} 
-            isClearable 
-              sx={{
-                '& .MuiIconButton-root':{color: '#00aeef'}
-             }}/>
+            <DatePicker  selected={startDate} onChange={date => setStartDate(date)} />
             End Date
-            <DatePicker  selected={endDate} onChange={date => setEndDate(date)} 
-              isClearable 
-              sx={{
-                '& .MuiIconButton-root':{color: '#00aeef'}
-             }}/>
-            <button className='filter' onClick={handleDateFilter}>Filter</button>
+            <DatePicker  selected={endDate} onChange={date => setEndDate(date)} />
+            <button className='filter' onClick={handleDateFilter}>filter</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>
-            <p style={{ marginBottom: '0' }}>Show</p>
-  <div className="btn-group">
-    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-      {rowsPerPage}
-    </button>
-    <ul className="dropdown-menu">
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-    </ul>
-  </div>
-  <p style={{ marginBottom: '0' }}>entries</p>
-</div>
+              <p>Show</p>
+              <div className="btn-group">
+                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  10
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">1</a></li>
+      
+                </ul>
+              </div>
+              <p>entries</p>
+            </div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
@@ -418,27 +429,25 @@ const handleChange = (e) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell sx={{ width: 70 }} align="center">
+            <StyledTableCell>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell sx={{ width: 70 }} align="center">S.No.</StyledTableCell>
+            <StyledTableCell>S.No.</StyledTableCell>
             <StyledTableCell align="center">Trainer Name</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Demo 1</StyledTableCell>
             <StyledTableCell align="center">Demo 2</StyledTableCell>
             <StyledTableCell align="center">Demo 3</StyledTableCell>
-            <StyledTableCell sx={{ width: 400 }} align="center">Summary</StyledTableCell>
+            <StyledTableCell align="center">Summary</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-        {displayedCourse.length > 0
-    ? displayedCourse.map((row, index) => (
-            <StyledTableRow key={row.trainer_id}>
-              <StyledTableCell align="center"><Checkbox /></StyledTableCell>
-              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
-              </StyledTableCell>
+          {trainers.map((row) => (
+            <StyledTableRow key={row.S_No}>
+              <StyledTableCell><Checkbox /></StyledTableCell>
+              <StyledTableCell>{row.trainer_id}</StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
               <StyledTableCell align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell align="center">{row.demo_link_1}</StyledTableCell>
@@ -451,40 +460,30 @@ const handleChange = (e) => {
                   <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(row.trainer_id)} />
                 </StyledTableCell>
             </StyledTableRow>
-           ))
-           : (
-             <StyledTableRow>
-               <StyledTableCell colSpan={10} align="center">
-                 No data available.
-               </StyledTableCell>
-             </StyledTableRow>
-           )}
+          ))}
         </TableBody>
       </Table>
     </TableContainer>
     {message? (<p>Table updated succesfully</p>):<p></p>}
-    <div className='pagination-container'>
-                  <AdminPagination
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              totalRows={filteredTrainers.length} // Use the full list for pagination
-              onPageChange={handlePageChange}
-            />
-                      </div>
+    <div className='pagination'>
+        <Pagination
+          count={pageCount}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </div>
 
-      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-    PaperProps={{
-      style: { borderRadius: 20 },
-    }}>
-  <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trainer
+      <Dialog open={open} onClose={handleClose}>
+  <div className='dialog-title'>
+    <DialogTitle>Edit Trainer
       <Button onClick={handleClose} className='close-btn'>
         <IoMdCloseCircleOutline style={{ color: 'white', fontSize: '2rem' }} />
       </Button>
     </DialogTitle>
   </div>
   <DialogContent>
-  <div className="course-row">
+    <div className="row">
       <div className="col">
         <label className='form-label'>Trainer</label>
         <input
@@ -540,40 +539,8 @@ const handleChange = (e) => {
         onChange={handleInputChange}
       />
     </div>
-    <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Demo Link 1</label>
-  </div>
-  <div class="col-auto">
-    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-       name="demo_link_1"
-       value={trainerData.demo_link_1}
-       onChange={handleChange}/>
-  </div>
-  </div>
-  <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label"   >Demo Link 2</label>
-  </div>
-  <div class="col-auto">
-    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"  name="demo_link_2"
-                  value={trainerData.demo_link_2}
-                  onChange={handleChange}/>
-  </div>
-  </div>
-  <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Demo Link 3</label>
-  </div>
-  <div class="col-auto">
-    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-    name="demo_link_3"
-    value={trainerData.demo_link_3}
-    onChange={handleChange}/>
-  </div>
-  </div>
   </DialogContent>
-  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+  <DialogActions>
     <Button className='update-btn' onClick={()=>handleSave(selectedRow)} color="primary">Update</Button>
     
   </DialogActions>

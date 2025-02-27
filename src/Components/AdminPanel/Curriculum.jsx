@@ -35,6 +35,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -61,6 +63,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Curriculum() {
     const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
+  const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[curriculum,setCurriculum]=useState([]);
@@ -78,7 +81,7 @@ export default function Curriculum() {
             course_name: "",
          curriculum_pdf:"",
          title:"",
-         topic:'',
+         topic: "<ul><li></li></ul>",
             date:currentDate,
          });
         const [currentPage, setCurrentPage] = useState(1);
@@ -100,6 +103,16 @@ export default function Curriculum() {
           (currentPage - 1) * rowsPerPage,
           currentPage * rowsPerPage
         );
+
+        const quillModules = {
+          toolbar: [
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }], 
+              ['bold', 'italic', 'underline', 'strike'], 
+              [{ 'color': [] }, { 'background': [] }], 
+              ['link'], 
+              ['clean'] 
+          ]
+      };
 
          const handleReset=()=>{
             setCurriculumData({
@@ -144,6 +157,16 @@ export default function Curriculum() {
       };
       fetchCourseCategory();
     }, []);
+    useEffect(() => {
+      if (curriculumData.category_name) {
+        const filtered = courseCategory.filter(
+          (course) => course.courseCategory === curriculumData.category_name
+        );
+        setFilterCourse(filtered);
+      } else {
+        setFilterCourse([]); // Reset when no category is selected
+      }
+    }, [curriculumData.category_name, courseCategory]);
     useEffect(() => {
       const fetchCurriculum = async () => {
           try {
@@ -364,19 +387,22 @@ const handleSubmit = async (e) => {
         ))}
     </select>
   </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={curriculumData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={curriculumData.course_name}
+          onChange={handleChange}
+          disabled={!curriculumData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input
@@ -407,7 +433,17 @@ const handleSubmit = async (e) => {
               <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
                <input className='table-curriculum' name='title' value={rows.title} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='topic' value={rows.topic} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell sx={{ padding: 0 }} align="center">
+    <ReactQuill
+        theme="snow"
+        modules={quillModules}
+        value={curriculumData.topic} 
+        onChange={(value) => setCurriculumData((prevData) => ({
+            ...prevData,
+            topic: value
+        }))}
+    />
+</StyledTableCell>
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
@@ -547,16 +583,12 @@ const handleSubmit = async (e) => {
       </StyledTableCell>
       <StyledTableCell align="left">{course.title}</StyledTableCell>
       <StyledTableCell align="left">
-        <ul className="bullet-list">
-          {course.topic ? (
-            course.topic.split(',').map((topic, i) => (
-              <li key={i}>{topic.trim()}</li>
-            ))
-          ) : (
-            <li>No topics available</li>
-          )}
-        </ul>
-      </StyledTableCell>
+    {course.topic ? (
+        <div dangerouslySetInnerHTML={{ __html: course.topic }} />
+    ) : (
+        <p>No topics available</p>
+    )}
+</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -663,13 +695,13 @@ const handleSubmit = async (e) => {
       onChange={handleInputChange}
     />
 
-    <label htmlFor="topic">Description</label>
-    <input
+    <label htmlFor="topic">Topic</label>
+    <ReactQuill 
       id="topic"
-      className="form-control"
       name="topic"
       value={editedRow.topic || ""}
-      onChange={handleInputChange}
+      onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, topic: value }))}
+      modules={quillModules}
     />
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

@@ -57,6 +57,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function CourseCertificate() {
   const[course,setCourse]=useState([]);
   const[courseCategory,setCourseCategory]=useState([]);
+    const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[certificate,setCertificate]=useState([]);
@@ -67,7 +68,7 @@ export default function CourseCertificate() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({certificate_image:"",course_name:"",category_name:"",title:"",description:"",});
-    const [certificateData, setCertificateData] = useState([{
+    const [certificateData, setCertificateData] = useState({
       id:"",
           certificate_image:null,
            course_name: "",
@@ -76,7 +77,7 @@ export default function CourseCertificate() {
            title:"",
            description:"",
            
-         }]);
+         });
         const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
                     
@@ -202,7 +203,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCategory = async () => {
           try {
-            const response = await axios.get("https://hachion.co:443/course-categories/all");
+            const response = await axios.get("https://api.hachion.co/course-categories/all");
             setCourse(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);
@@ -213,7 +214,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCourseCategory = async () => {
           try {
-            const response = await axios.get("https://hachion.co:443/courses/all");
+            const response = await axios.get("https://api.hachion.co/courses/all");
             setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);
@@ -221,6 +222,16 @@ const handleFileChange = (e) => {
         };
         fetchCourseCategory();
       }, []);
+       useEffect(() => {
+            if (certificateData.category_name) {
+              const filtered = courseCategory.filter(
+                (course) => course.courseCategory === certificateData.category_name
+              );
+              setFilterCourse(filtered);
+            } else {
+              setFilterCourse([]); // Reset when no category is selected
+            }
+          }, [certificateData.category_name, courseCategory]);
       const handleSubmit = async (e) => {
         e.preventDefault();
     
@@ -301,19 +312,22 @@ const handleFileChange = (e) => {
         ))}
     </select>
   </div>
-  <div class="col">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={certificateData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+  <div className="col">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={certificateData.course_name}
+          onChange={handleChange}
+          disabled={!certificateData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
   <div className='course-row'>
   <div class="col">

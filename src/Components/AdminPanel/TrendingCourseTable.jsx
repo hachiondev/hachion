@@ -61,8 +61,7 @@ export default function TrendingCourseTable() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[trendingCourse,setTrendingCourse]=useState([]);
-    const[filteredCourse,setFilteredCourse]=useState([]);
-  
+    const[filteredCourse,setFilteredCourse]=useState([])
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);

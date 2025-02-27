@@ -61,6 +61,9 @@ function createData(S_No, trainer_name, course_name,demo1, demo2,demo3,summary,d
 export default function Trainer() {
  const[trainers,setTrainers]=useState([]);
 const [filteredTrainers,setFilteredTrainers]=useState(trainers);
+const[filterCourse,setFilterCourse]=useState([]);
+  const [courseCategory,setCourseCategory]=useState([]);
+  const [course,setCourse]=useState([]);
  const [date, setDate] = useState('');
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
@@ -177,7 +180,38 @@ const handleDeleteConfirmation = (trainerId) => {
     handleDelete(trainerId);
   }
 };
-
+useEffect(() => {
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/course-categories/all");
+      setCourse(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCategory();
+}, []);
+useEffect(() => {
+  const fetchCourseCategory = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/courses/all");
+      setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    }
+  };
+  fetchCourseCategory();
+}, []);
+useEffect(() => {
+  if (trainerData.category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === trainerData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [trainerData.category_name, courseCategory]);
 const handleDelete = async (trainer_id) => {
  
    try { 
@@ -268,30 +302,35 @@ const handleChange = (e) => {
     value={trainerData.trainer_name}
     onChange={handleChange}/>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name="category_name"
-                  value={trainerData.category_name}
-                  onChange={handleChange}>
-      <option selected>Select Category</option>
-      <option>QA Testing</option>
-      <option>Project Management</option>
-      <option>Business Intelligence</option>
-      <option>Data Science</option>
+    <select id="inputState" class="form-select" name='category_name' value={trainerData.category_name} onChange={handleChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
     </select>
   </div>
-  <div class="col">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name="course_name"
-                  value={trainerData.course_name}
-                  onChange={handleChange}>
-      <option selected>Select Course</option>
-      <option>QA Automation</option>
-      <option>Load Runner</option>
-      <option>QA Automation Testing</option>
-      <option>Mobile App Testing</option>
-    </select>
-  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={trainerData.course_name}
+          onChange={handleChange}
+          disabled={!trainerData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
   </div>
   <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Trainer Profile Summary</label>

@@ -24,6 +24,8 @@ import SalesforceBlog from './Components/UserPanel/SalesforceBlog';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
+import Terms from './Components/UserPanel/Terms';
+import Privacy from './Components/UserPanel/Privacy';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
@@ -94,6 +96,8 @@ function App() {
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/qatestingblog' element={<QaTestingBlog/>}/>
       <Route path='/aboutus' element={<Aboutus/>}/>
+      <Route path='/terms' element={<Terms/>}/>
+      <Route path='/privacy' element={<Privacy/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>

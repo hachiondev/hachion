@@ -25,6 +25,12 @@ const Footer = () => {
   const handleContact=()=>{
     navigate('/contactus')
   }
+   const handleTerms=()=>{
+    navigate('/terms')
+  }
+   const handlePrivacy=()=>{
+    navigate('/privacy')
+  }
   return (
     
     <div className='footer'>
@@ -66,16 +72,20 @@ const Footer = () => {
       </div>
       <hr  size='2' />
       <div className='footer-bottom'>
+      <div className='footer-p'>
       <p className='footer-copyright'>© Hachion 2024. All Rights Reserved.</p>
+      <div className='term'>
+      <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
+      <p className='footer-term' onClick={handlePrivacy}>Privacy policy</p>
+      </div>
       <div className='footer-link'>
       <img src={facebook} alt='facebook'/>
       <img src={twitter} alt='twitter'/>
       <img src={linkedin} alt='linkedin'/>
       <img src={instagram} alt='instagram'/>
       <img src={quora} alt='dribble'/>
-      <img src={youtube} alt='youtube'/>
-
-      
+      <img src={youtube} alt='youtube'/>      
+      </div>
       </div>
       </div>
     </div>

@@ -280,78 +280,45 @@ export default function Faq() {
           [name]: value
       }));
   };
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     const currentDate = new Date().toISOString().split("T")[0];
-//     const dataToSubmit = {
-//       category_name: curriculumData?.category_name,
-//       course_name: curriculumData?.course_name,
-//       curriculum_pdf: curriculumData?.curriculum_pdf,
-//       title: rows.map(row => row.title),
-//       topic: rows.map(row => row.topic),
-//         date: currentDate
-//     };
-
-//     console.log("Data being sent:", dataToSubmit); // Debugging
-
-//     try {
-//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data" 
-//             }
-//         });
-
-//         if (response.status === 200) {
-//             alert("Curriculum details added successfully");
-//             setCurriculumData({}); // Reset form
-//             handleReset();
-//         }
-//     } catch (error) {
-//         console.error("Error adding curriculum:", error.message);
-//         alert("Error adding curriculum.");
-//     }
-// };
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const currentDate = new Date().toISOString().split("T")[0];
-  const formData = new FormData();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
-  // Append the fields to formData
-  formData.append("category_name", curriculumData?.category_name);
-  formData.append("course_name", curriculumData?.course_name);
-  formData.append("faq_title", curriculumData?.faq_title);
-  formData.append("description", curriculumData?.description);
-  formData.append("date", currentDate);
-
-  // Append the file if available
-  if (curriculumData?.faq_pdf) {
-    console.log(curriculumData?.faq_pdf); 
-      formData.append("file", curriculumData?.faq_pdf);
-  }
-
-  console.log("Data being sent:", formData); // Debugging
-
-  try {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const formData = new FormData();
+    
+    // Append curriculum data fields (even if some are optional)
+    formData.append("faqData", JSON.stringify({
+      category_name: curriculumData?.category_name || "",
+      course_name: curriculumData?.course_name || "",
+      faq_title: curriculumData?.faq_title || "",
+      description: curriculumData?.description || "",
+      date: currentDate
+    }));
+  
+    // Append PDF only if it's provided
+    if (curriculumData?.faq_pdf) {
+      formData.append("faqPdf", curriculumData.faq_pdf);
+    }
+  
+    console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
+  
+    try {
       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
-          headers: {
-              "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
-          }
+        headers: {
+          "Content-Type": "multipart/form-data" // Important for file uploads
+        }
       });
-
-      if (response.status === 200) {
-          alert("Faq details added successfully");
-          setCurriculumData({}); // Reset form
-          handleReset();
+  
+      if (response.status === 201) { // HTTP 201 means "Created"
+        alert("FAQ details added successfully");
+        setCurriculumData({}); // Reset form state
+        handleReset(); // Call reset function if available
       }
-  } catch (error) {
-      console.error("Error adding faq:", error.message);
+    } catch (error) {
+      console.error("Error adding faq:", error.response?.data || error.message);
       alert("Error adding faq.");
-  }
-};
-
+    }
+  };
         
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (

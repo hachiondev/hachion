@@ -226,9 +226,6 @@
         display: flex;
         flex-direction: row;
         justify-content: space-evenly !important;
-       
-    
-        
       }
       .about-us-top img{
         height: 340px;
@@ -240,6 +237,10 @@
         padding-top: 20px;
         padding-left: 4vh;
         padding-right: 4vh;
+        text-align: justify;
+      }
+      .title{
+        font-weight: 600;
       }
       
       @media  (min-width:1025px) and (max-width: 1366px){

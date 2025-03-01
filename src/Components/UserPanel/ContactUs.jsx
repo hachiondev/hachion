@@ -19,8 +19,10 @@ import instagram from '../../Assets/instagram.png';
 import quora from '../../Assets/Component 141.png';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
+import {  useNavigate } from 'react-router-dom';
 
 const ContactUs = () => {
+  const navigate= useNavigate();
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
@@ -84,6 +86,10 @@ const ContactUs = () => {
     }
   };
 
+  const handlePrivacy=()=>{
+    navigate('/privacy')
+  }
+
   return (
    <>
    <Topbar/>
@@ -144,18 +150,34 @@ const ContactUs = () => {
   <h3>Enquiries</h3>
   <div className='contact-block'>
     <img src={whatsappIcon} alt='whatsapp-icon'/>
-    <p className='contact-info'> +1 (732) 485-2499 </p>
+    <p className='contact-info'><a 
+        href="https://wa.me/17324852499" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      > +1 (732) 485-2499 </a></p>
   </div>
   <div className='contact-block'>
     <img src={mailIcon} alt='mail-icon'/>
-    <p className='contact-info'>trainings@hachion.co</p>
+    <p className='contact-info'><a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer">trainings@hachion.co</a></p>
   </div>
   <div className='contact-us-icon'>
-    <img src={facebookIcon} alt='facebook-icon'/>
-    <img src={twitter} alt='twitter-icon'/>
-    <img src={linkedin} alt='linkedin-icon'/>
-    <img src={instagram} alt='instagram-icon'/>
-    <img src={quora} alt='quora-icon'/>
+  <a href="https://www.facebook.com/hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={facebookIcon} alt='facebook-icon'/></a>
+    <a href="https://x.com/hachion_co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={twitter} alt='twitter-icon'/></a>
+    <a href="https://www.linkedin.com/company/hachion" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon'/></a>
+    <a href="https://www.instagram.com/hachion_trainings" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={instagram} alt='instagram-icon'/></a>
+    <a href="https://www.quora.com/profile/Hachion-4" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={quora} alt='quora-icon'/></a>
   </div>
     </div>
 <div className='contact-us-right'>
@@ -223,7 +245,7 @@ const ContactUs = () => {
           <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" 
            onChange={handleCheckboxChange} />
           <label class="form-check-label" for="flexCheckChecked">
-          By clicking on Submit, you acknowledge read our Privacy Notice
+          By clicking on Submit, you acknowledge read our <span onClick={handlePrivacy} style={{textDecoration: 'underline', cursor: 'pointer'}}>Privacy Notice</span>
           </label>
           </div>        
         </div>

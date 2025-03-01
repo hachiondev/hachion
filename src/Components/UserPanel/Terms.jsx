@@ -49,7 +49,7 @@ const Terms = () => {
             </li>
           </ol>
         </nav>
-        <div className='about-us-content'>
+        <div className='about-us-content' style={{color: '#6a6a6a'}}>
           <h1 className='about-us-heading'>Terms and Conditions for Hachion</h1>
 
             <p className='about-us-left-content'>

@@ -34,8 +34,8 @@ const Enrollment = () => {
   });
 
   const countries = [
-    { name: 'India', code: '+91', flag: 'IN' },
     { name: 'United States', code: '+1', flag: 'US' },
+    { name: 'India', code: '+91', flag: 'IN' },
     { name: 'United Kingdom', code: '+44', flag: 'GB' },
     { name: 'Thailand', code: '+66', flag: 'TH' },
     { name: 'Canada', code: '+1', flag: 'CA' },
@@ -147,7 +147,7 @@ const Enrollment = () => {
               <label for="inputCity" className="form-label">
               Country<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="enroll1" placeholder='India'
+              <input type="text" className="form-control" id="enroll1" placeholder='United States'
              required/>
             </div>
   </div>

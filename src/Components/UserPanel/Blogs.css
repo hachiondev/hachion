@@ -570,8 +570,10 @@ padding-top: 2vh;
 }
 .contact-us-icon{
 padding-top: 20px;
+display: flex;
+flex-direction: row;
 justify-content: space-evenly;
-
+gap: 4vh;
 }
 .contact-us-icon img{
 width: 2vw;
@@ -722,8 +724,10 @@ margin-bottom: 20px;
   }
   .contact-us-icon{
   padding-top: 10px;
-  justify-content: space-evenly;
-  
+  /* justify-content: space-evenly; */
+  display: flex;
+  align-items: center;
+  gap: 5px;
   }
   .contact-us-icon img{
   width: 30px;

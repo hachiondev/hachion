@@ -76,15 +76,27 @@ const Footer = () => {
       <p className='footer-copyright'>© Hachion 2024. All Rights Reserved.</p>
       <div className='term'>
       <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
-      <p className='footer-term' onClick={handlePrivacy}>Privacy policy</p>
+      <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>
       </div>
       <div className='footer-link'>
-      <img src={facebook} alt='facebook'/>
-      <img src={twitter} alt='twitter'/>
-      <img src={linkedin} alt='linkedin'/>
-      <img src={instagram} alt='instagram'/>
-      <img src={quora} alt='dribble'/>
-      <img src={youtube} alt='youtube'/>      
+      <a href="https://www.facebook.com/hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={facebook} alt='facebook-icon'/></a>
+    <a href="https://x.com/hachion_co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={twitter} alt='twitter-icon'/></a>
+    <a href="https://www.linkedin.com/company/hachion" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon'/></a>
+    <a href="https://www.instagram.com/hachion_trainings" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={instagram} alt='instagram-icon'/></a>
+    <a href="https://www.quora.com/profile/Hachion-4" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={quora} alt='quora-icon'/></a>
+      <a href="https://www.youtube.com/@hachion" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={youtube} alt='youtube'/></a>
       </div>
       </div>
       </div>

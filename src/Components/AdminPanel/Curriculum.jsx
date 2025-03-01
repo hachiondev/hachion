@@ -307,36 +307,37 @@ const handleSubmit = async (e) => {
   const currentDate = new Date().toISOString().split("T")[0];
   const formData = new FormData();
   
-  // Append the fields to formData
-  formData.append("category_name", curriculumData?.category_name);
-  formData.append("course_name", curriculumData?.course_name);
-  formData.append("title", curriculumData?.title);
-  formData.append("topic", curriculumData?.topic);
-  formData.append("date", currentDate);
+  // Append curriculum data fields (even if some are optional)
+  formData.append("curriculumData", JSON.stringify({
+    category_name: curriculumData?.category_name || "",
+    course_name: curriculumData?.course_name || "",
+    title: curriculumData?.title || "",
+    topic: curriculumData?.topic || "",
+    date: currentDate
+  }));
 
-  // Append the file if available
+  // Append PDF only if it's provided
   if (curriculumData?.curriculum_pdf) {
-    console.log(curriculumData?.curriculum_pdf); 
-      formData.append("file", curriculumData?.curriculum_pdf);
+    formData.append("curriculumPdf", curriculumData.curriculum_pdf);
   }
 
-  console.log("Data being sent:", formData); // Debugging
+  console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
 
   try {
-      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
-          headers: {
-              "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
-          }
-      });
-
-      if (response.status === 200) {
-          alert("Curriculum details added successfully");
-          setCurriculumData({}); // Reset form
-          handleReset();
+    const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data" // Important for file uploads
       }
+    });
+
+    if (response.status === 201) { // HTTP 201 means "Created"
+      alert("Curriculum details added successfully");
+      setCurriculumData({}); // Reset form state
+      handleReset(); // Call reset function if available
+    }
   } catch (error) {
-      console.error("Error adding curriculum:", error.message);
-      alert("Error adding curriculum.");
+    console.error("Error adding curriculum:", error.response?.data || error.message);
+    alert("Error adding curriculum.");
   }
 };
 

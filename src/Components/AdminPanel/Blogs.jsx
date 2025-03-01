@@ -118,63 +118,71 @@ const handleFileChange = (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  // Construct blogData as a JSON string
+  const blogData = JSON.stringify({
+    category_name: formData.category_name || "",
+    title: formData.title || "",
+    author: formData.author || "",
+    description: formData.description || "",
+    date: currentDate,
+  });
 
   // Create FormData object
   const formDataToSend = new FormData();
-  formDataToSend.append("category_name", formData.category_name);
-  formDataToSend.append("title", formData.title);
-  formDataToSend.append("author", formData.author);
-  formDataToSend.append("description", formData.description);
-  formDataToSend.append("date", currentDate);
+  formDataToSend.append("blogData", blogData); // Send blog details as JSON string
 
-  // Add files to FormData
-  if (formData.blog_image) formDataToSend.append("blog_image", formData.blog_image);
-  if (formData.blog_pdf) formDataToSend.append("blog_pdf", formData.blog_pdf);
+  // Append Image File
+  if (formData.blog_image) {
+    formDataToSend.append("blogImage", formData.blog_image);
+  } else {
+    alert("Blog image is required!");
+    return;
+  }
+
+  // Append PDF File (optional)
+  if (formData.blog_pdf) {
+    formDataToSend.append("blogPdf", formData.blog_pdf);
+  }
+
+  // Debugging: Log FormData contents
+  for (let pair of formDataToSend.entries()) {
+    console.log(pair[0], pair[1]);
+  }
 
   try {
+    let response;
     if (formData.id) {
       // Edit operation
-      const response = await axios.put(
+      response = await axios.put(
         `https://api.hachion.co/blog/update/${formData.id}`,
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formDataToSend
       );
-      if (response.status === 200) {
-        alert("Blog updated successfully");
-        setBlogs((prevBlogs) =>
-          prevBlogs.map((blog) =>
-            blog.id === formData.id ? { ...blog, ...response.data } : blog
-          )
-        );
-      }
     } else {
       // Add operation
-      const response = await axios.post(
-        "https://api.hachion.co/blog/add",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (response.status === 201) {
-        alert("Blog added successfully");
-        setBlogs((prevBlogs) => [...prevBlogs, response.data]);
-      }
+      response = await axios.post("https://api.hachion.co/blog/add", formDataToSend);
     }
 
-    handleReset(); // Clear form fields
+    if (response.status === 200 || response.status === 201) {
+      alert(`Blog ${formData.id ? "updated" : "added"} successfully`);
+      setBlogs((prevBlogs) =>
+        formData.id
+          ? prevBlogs.map((blog) =>
+              blog.id === formData.id ? { ...blog, ...response.data } : blog
+            )
+          : [...prevBlogs, response.data]
+      );
+    }
+
+    handleReset(); // Reset form fields
   } catch (error) {
-    console.error("Error submitting blog:", error.message);
-    alert("Error submitting blog.");
+    console.error("Error submitting blog:", error.response?.data || error.message);
+    alert("Error submitting blog. Please check required fields.");
   }
 };
+
+
 
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -482,7 +490,7 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.author}</StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">  <p>
     <a 
-      href={`https://160.153.175.69:8080/${blogs.blog_pdf}`} 
+      href={`https://api.hachion.co/${blogs.blog_pdf}`} 
       target="_blank" 
       rel="noopener noreferrer"
     >

@@ -33,17 +33,22 @@ const QaAutomationFaq = () => {
           setMatchedCourseName(matchedCourse.courseName.trim());
           console.log('Matched Course:', matchedCourse);
     
-          // Now fetch the curriculum for the matched course
+          // Fetch curriculum details
           const curriculumResponse = await axios.get('https://api.hachion.co/faq');
           console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
     
+          // Normalize both names for reliable comparison
           const matchedCurriculum = curriculumResponse.data.find(
-            (item) => item.course_name && item.course_name.trim() === matchedCourse.courseName.trim()
+            (item) => item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
           );
-    
-          // Check if the PDF URL exists in the matched curriculum
+  
+          console.log('Matched Curriculum:', matchedCurriculum); // Debugging log
+  
+          // Set the PDF URL if found
           if (matchedCurriculum && matchedCurriculum.faq_pdf) {
-            setPdfUrl(matchedCurriculum.faq_pdf); // Set PDF URL from the curriculum API
+            const fullPdfUrl = `https://api.hachion.co/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
+            setPdfUrl(fullPdfUrl);
+            console.log('PDF URL Set:', fullPdfUrl);
           } else {
             console.log('No PDF found in FAQ for this course');
             setError('No PDF found in FAQ for this course.');
@@ -58,9 +63,8 @@ const QaAutomationFaq = () => {
         setLoading(false);
       }
     };
-    
-    
-fetchCourse();    
+  
+    fetchCourse();
   }, [courseName]);
 
   // Fetch FAQs based on the matched course_name
@@ -140,27 +144,21 @@ fetchCourse();
     </div>
   ));
 };
-  const downloadPdf = () => {
-    if (!pdfUrl) {
-      console.error('No PDF URL available.');
-      return;
-    }
-  
-    try {
-      // Decode the base64 string
-      const pdfBlob = new Blob([new Uint8Array(atob(pdfUrl.split(',')[1]).split('').map(char => char.charCodeAt(0)))], { type: 'application/pdf' });
-  
-      // Create a link element
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(pdfBlob);
-      link.setAttribute('download', `${matchedCourseName}_Curriculum.pdf`); // Set the filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-    }
-  };
+const downloadPdf = () => {
+  if (!pdfUrl) {
+    alert('No brochure available for this course.');
+    return;
+  }
+else{
+  // Programmatically trigger download
+  const link = document.createElement('a');
+  link.href = pdfUrl; // Now, pdfUrl contains the correct full URL
+  link.setAttribute('download', pdfUrl.split('/').pop()); // Extract file name
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+}
 
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>

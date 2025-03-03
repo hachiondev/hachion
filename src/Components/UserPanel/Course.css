@@ -390,8 +390,8 @@ flex-direction: row;
 
 .qa-automation-left img{
 margin-right: 80px;
-margin-left: 15%;
-padding-left: 20px;
+margin-left: 10%;
+padding-left: 10px;
 height:140px;
 }
 
@@ -422,11 +422,12 @@ background-color: #0D6EFD;
 
 .top-course-name{
   display: flex;
-  margin-left: 15%;
+  margin-left: 5%;
   margin-bottom: 10px;
   margin-top: 20px;
   font-size: 2.2rem;
   font-weight: 600;
+  white-space: nowrap;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -437,7 +438,7 @@ background-color: #0D6EFD;
   }
 
 .fee{
-padding-top: 50px;
+padding-top: 20px;
 font-size: 1rem;
 font-weight: 500;
 }
@@ -480,7 +481,7 @@ background: linear-gradient( #00AEEF,#006489);
 .qa-automation-middle{
 display:flex;
 flex-direction: column;
-margin-top: 6%;
+/* margin-top: 6%; */
 }
 
 .qa-content{
@@ -1149,6 +1150,8 @@ white-space: nowrap;
   width: 80%; /* Make the image take full width */
   height: auto; /* Adjust height automatically */
   object-fit: cover; /* Ensure the image covers the container without stretching */
+  margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 .know-more {
@@ -1534,10 +1537,6 @@ border:2px solid white;
   }
   .qa-automation-left img{
     height: 80px;
-  }
-
-  .qa-automation-middle {
-    margin-top: 6%;
   }
 
   .qa-button{
@@ -2366,7 +2365,6 @@ max-height: 3em;
 .know-more{
   font-size: 12px;
   right: 2%; 
-  bottom: 7%;
   border-radius: 10px;
   padding: 1px 5px;
   border-radius: 5px;
@@ -2513,6 +2511,15 @@ max-height: 3em;
 
 .free {
   font-size: 20px; 
+}
+
+.corporate-content {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.corporate-image {
+  width: 100%; /* Make the image take full width */
 }
 
 .fee-enroll-now {

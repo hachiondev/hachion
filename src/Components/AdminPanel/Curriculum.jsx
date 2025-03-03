@@ -35,6 +35,8 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -79,7 +81,7 @@ export default function Curriculum() {
             course_name: "",
          curriculum_pdf:"",
          title:"",
-         topic:'',
+         topic: "<ul><li></li></ul>",
             date:currentDate,
          });
         const [currentPage, setCurrentPage] = useState(1);
@@ -101,6 +103,16 @@ export default function Curriculum() {
           (currentPage - 1) * rowsPerPage,
           currentPage * rowsPerPage
         );
+
+        const quillModules = {
+          toolbar: [
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }], 
+              ['bold', 'italic', 'underline', 'strike'], 
+              [{ 'color': [] }, { 'background': [] }], 
+              ['link'], 
+              ['clean'] 
+          ]
+      };
 
          const handleReset=()=>{
             setCurriculumData({
@@ -268,80 +280,46 @@ export default function Curriculum() {
           [name]: value
       }));
   };
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     const currentDate = new Date().toISOString().split("T")[0];
-//     const dataToSubmit = {
-//       category_name: curriculumData?.category_name,
-//       course_name: curriculumData?.course_name,
-//       curriculum_pdf: curriculumData?.curriculum_pdf,
-//       title: rows.map(row => row.title),
-//       topic: rows.map(row => row.topic),
-//         date: currentDate
-//     };
-
-//     console.log("Data being sent:", dataToSubmit); // Debugging
-
-//     try {
-//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data" 
-//             }
-//         });
-
-//         if (response.status === 200) {
-//             alert("Curriculum details added successfully");
-//             setCurriculumData({}); // Reset form
-//             handleReset();
-//         }
-//     } catch (error) {
-//         console.error("Error adding curriculum:", error.message);
-//         alert("Error adding curriculum.");
-//     }
-// };
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const currentDate = new Date().toISOString().split("T")[0];
-  const formData = new FormData();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
-  // Append curriculum data fields (even if some are optional)
-  formData.append("curriculumData", JSON.stringify({
-    category_name: curriculumData?.category_name || "",
-    course_name: curriculumData?.course_name || "",
-    title: curriculumData?.title || "",
-    topic: curriculumData?.topic || "",
-    date: currentDate
-  }));
-
-  // Append PDF only if it's provided
-  if (curriculumData?.curriculum_pdf) {
-    formData.append("curriculumPdf", curriculumData.curriculum_pdf);
-  }
-
-  console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
-
-  try {
-    const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data" // Important for file uploads
-      }
-    });
-
-    if (response.status === 201) { // HTTP 201 means "Created"
-      alert("Curriculum details added successfully");
-      setCurriculumData({}); // Reset form state
-      handleReset(); // Call reset function if available
+    const currentDate = new Date().toISOString().split("T")[0];
+    const formData = new FormData();
+    
+    // Append curriculum data fields (even if some are optional)
+    formData.append("curriculumData", JSON.stringify({
+      category_name: curriculumData?.category_name || "",
+      course_name: curriculumData?.course_name || "",
+      title: curriculumData?.title || "",
+      topic: curriculumData?.topic || "",
+      date: currentDate
+    }));
+  
+    // Append PDF only if it's provided
+    if (curriculumData?.curriculum_pdf) {
+      formData.append("curriculumPdf", curriculumData.curriculum_pdf);
     }
-  } catch (error) {
-    console.error("Error adding curriculum:", error.response?.data || error.message);
-    alert("Error adding curriculum.");
-  }
-};
-
-        
+  
+    console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
+  
+    try {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data" // Important for file uploads
+        }
+      });
+  
+      if (response.status === 201) { // HTTP 201 means "Created"
+        alert("Curriculum details added successfully");
+        setCurriculumData({}); // Reset form state
+        handleReset(); // Call reset function if available
+      }
+    } catch (error) {
+      console.error("Error adding curriculum:", error.response?.data || error.message);
+      alert("Error adding curriculum.");
+    }
+  };
+     
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -422,7 +400,17 @@ const handleSubmit = async (e) => {
               <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
                <input className='table-curriculum' name='title' value={rows.title} onChange={handleChange}/>
               </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center"><input className='table-curriculum' name='topic' value={rows.topic} onChange={handleChange}/></StyledTableCell>
+              <StyledTableCell sx={{ padding: 0 }} align="center">
+    <ReactQuill
+        theme="snow"
+        modules={quillModules}
+        value={curriculumData.topic} 
+        onChange={(value) => setCurriculumData((prevData) => ({
+            ...prevData,
+            topic: value
+        }))}
+    />
+</StyledTableCell>
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
@@ -562,17 +550,13 @@ const handleSubmit = async (e) => {
       </StyledTableCell>
       <StyledTableCell align="left">{course.title}</StyledTableCell>
       <StyledTableCell align="left">
-        <ul className="bullet-list">
-          {course.topic ? (
-            course.topic.split(',').map((topic, i) => (
-              <li key={i}>{topic.trim()}</li>
-            ))
-          ) : (
-            <li>No topics available</li>
-          )}
-        </ul>
-      </StyledTableCell>
-      <StyledTableCell align="center">{course.date}</StyledTableCell>
+    {course.topic ? (
+        <div dangerouslySetInnerHTML={{ __html: course.topic }} />
+    ) : (
+        <p>No topics available</p>
+    )}
+</StyledTableCell>
+      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
@@ -678,13 +662,13 @@ const handleSubmit = async (e) => {
       onChange={handleInputChange}
     />
 
-    <label htmlFor="topic">Description</label>
-    <input
+    <label htmlFor="topic">Topic</label>
+    <ReactQuill 
       id="topic"
-      className="form-control"
       name="topic"
       value={editedRow.topic || ""}
-      onChange={handleInputChange}
+      onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, topic: value }))}
+      modules={quillModules}
     />
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

@@ -56,7 +56,7 @@ const QaTop = ({ onVideoButtonClick }) => {
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
             console.log('No PDF found in FAQ for this course');
-            setError('No PDF found in FAQ for this course.');
+           
           }
         } else {
           setError('Course not found.');

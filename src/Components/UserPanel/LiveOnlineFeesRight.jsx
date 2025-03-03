@@ -120,7 +120,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       <p className='free'>{enrollText === 'Enroll Free Demo' ? 'Free' : `USD ${fee}`}</p>
       {discount > 0 && fee !== 'Free' && (
         <p className='discount'>
-         Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & save: USD {discount}/-
+         Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & Save USD {Math.round(discount)}/-
         </p>
       )}
       

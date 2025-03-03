@@ -297,7 +297,6 @@
 }
 
 .advisor {
-  
     background-image: url('../../Assets/Group\ 39810.png');
     background-size: 100% 100%;
     background-position: center;
@@ -1693,7 +1692,7 @@
         width: auto;
     }
 
-    #advisor1.form-control{
+    #advisor1.form-control-advisor{
         height: 35px !important;
         width: 280px !important;
         border-color: #b3b3b3;
@@ -1735,7 +1734,7 @@
         font-size: 12px;
         margin-bottom: 0px;
     }
-    #advisor3.form-control{
+    #advisor3.form-control-advisor{
         height: 80px;
         width: 280px !important;
         font-size: 12px;

@@ -88,14 +88,14 @@ const Advisor = () => {
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="advisor1" placeholder='Enter your full name' 
+              <input type="text" className="form-control-advisor" id="advisor1" placeholder='Enter your full name' 
              required/>
             </div>
             <div className="col-md-5">
               <label htmlFor="inputCompany4" className="form-label">
                 Company Name<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="advisor1" placeholder='Enter your company name'
+              <input type="text" className="form-control-advisor" id="advisor1" placeholder='Enter your company name'
                name='company_name'
                value={values.company_name}
                onChange={handleChange}
@@ -107,7 +107,7 @@ const Advisor = () => {
               <label htmlFor="inputEmail4" className="form-label">
                 Email ID<span className="required">*</span>
               </label>
-              <input type="email" className="form-control" id="advisor1" placeholder='abc@gmail.com'
+              <input type="email" className="form-control-advisor" id="advisor1" placeholder='abc@gmail.com'
                name='email'
                value={values.email}
                onChange={handleChange}
@@ -171,7 +171,7 @@ const Advisor = () => {
               <label htmlFor="inputCourse4" className="form-label">
                 Training Course<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="advisor1" placeholder='Enter preferred course'
+              <input type="text" className="form-control-advisor" id="advisor1" placeholder='Enter preferred course'
                name='course_name'
                value={values.course_name}
                onChange={handleChange}
@@ -180,7 +180,7 @@ const Advisor = () => {
             </div>
             <div className="col-10">
               <label htmlFor="Textarea" className="form-label">Comments</label>
-              <textarea className="form-control" id="advisor3" placeholder="Enter comments here"
+              <textarea className="form-control-advisor" id="advisor3" placeholder="Enter comments here"
                name='comment'
                value={values.comment}
                onChange={handleChange}

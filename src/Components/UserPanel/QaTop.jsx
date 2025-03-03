@@ -56,7 +56,7 @@ const QaTop = ({ onVideoButtonClick }) => {
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
             console.log('No PDF found in FAQ for this course');
-            setError('No PDF found in FAQ for this course.');
+           
           }
         } else {
           setError('Course not found.');
@@ -137,9 +137,9 @@ const QaTop = ({ onVideoButtonClick }) => {
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
+              <p className='fee'>Fee: <span className='amount'>USD {course.total}</span>
               {course.total !== course.amount && (
-              <span className='strike-price'> USD {course.amount}/-</span>
+              <span className='strike-price'> USD {course.amount}</span>
             )}</p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})

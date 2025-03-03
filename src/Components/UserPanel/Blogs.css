@@ -774,10 +774,11 @@ margin-bottom: 20px;
     margin-bottom: 0;
     }
 
-    #contact1.form-control{
+    #contact1.form-control-contact{
       width: 300px;
       height: 35px;
       font-size: 12px;
+      padding: 5px;
     }
     .country-code-dropdown {
       font-size: 12px;
@@ -799,10 +800,11 @@ margin-bottom: 20px;
       font-size: 12px;
       margin-bottom: 10px;
     }
-    #contact3.form-control{
+    #contact3.form-control-contact{
       width: 300px;
       height: 80px;
       font-size: 12px;
+      padding: 5px;
     }
 
     .submit-button{
@@ -921,12 +923,13 @@ margin-bottom: 20px;
           margin: 5px 5px 5px 3px !important;
         }
 
-      #enroll1.form-control{
+      #enroll1.form-control-contact{
         height: 35px !important;
         width: 310px !important;
         border-color: #b3b3b3;
         font-size: 12px;
         margin: 5px !important;
+        padding: 5px;
     }
 
     .row {

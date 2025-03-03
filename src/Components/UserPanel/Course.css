@@ -2759,7 +2759,7 @@ max-height: 3em;
   margin: 0 1vh; /* Adjust margin to fit smaller screen */
 }
 
-.form-control {
+.form-control-query {
   width: 320px; /* Set input field width to 330px */
   height: 35px; /* Set input field height to 40px */
   margin: 10px; /* Center input fields and adjust margin */
@@ -2798,7 +2798,7 @@ max-height: 3em;
     padding: 10px !important;
   }
 
-  .input-group, .form-control {
+  .input-group, .form-control-query {
     width: 320px;
     height: 30px;
     font-size: 14px;
@@ -2817,10 +2817,11 @@ max-height: 3em;
   /* margin-bottom: 10px !important; */
 }
 
-#query1.form-control{
+#query1.form-control-query{
   width: 320px!important;
   height: 35px;
   margin-bottom: 10px !important;
+  padding: 5px;
  }
 
  .black-calendar {
@@ -2833,8 +2834,8 @@ max-height: 3em;
     width: 320px !important;
   }
 
- #query1.form-control.date-picker,
- #query1.form-control.time-picker,
+ #query1.form-control-query.date-picker,
+ #query1.form-control-query.time-picker,
  #query1.form-select.mode{
   width: 320px!important;
   height: 35px !important;
@@ -2842,14 +2843,15 @@ max-height: 3em;
  }
 
  #query2.mobile-number{
-  width: 230px !important;
+  width: 250px !important;
   height: 35px !important;
   border-radius: 0 5px 5px 0;
   padding: 5px;
  }
- #query3.form-control{
+ #query3.form-control-query{
   width: 320px!important;
   height: 80px;
+  padding: 5px;
  }
  .btn-submit{
   width: 320px!important;
@@ -2903,8 +2905,8 @@ max-height: 3em;
   width: 520px ;
 }
 
-#query1.form-control.date-picker,
-#query1.form-control.time-picker,
+#query1.form-control-query.date-picker,
+#query1.form-control-query.time-picker,
 #query1.form-select.mode{
 width: 520px;
 height: 50px;

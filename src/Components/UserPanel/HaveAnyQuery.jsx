@@ -84,7 +84,7 @@ const handleContact=(e)=>{
           <form className='query-form' onSubmit={handleSubmit}>
             <div className="form-group col-10">
               <label htmlFor="inputName" className="form-label">Full Name*</label>
-              <input type="text" className="form-control" id="query1" placeholder="Enter your full name"
+              <input type="text" className="form-control-query" id="query1" placeholder="Enter your full name"
               name='name'
                value={values.name}
                onChange={handleChange}
@@ -94,7 +94,7 @@ const handleContact=(e)=>{
 
             <div className="form-group col-10">
               <label htmlFor="inputEmail" className="form-label">Email ID</label>
-              <input type="email" className="form-control" id="query1" placeholder="abc@gmail.com"
+              <input type="email" className="form-control-query" id="query1" placeholder="abc@gmail.com"
               name='email'
                value={values.email}
                onChange={handleChange}
@@ -146,7 +146,7 @@ const handleContact=(e)=>{
         {errors.number && touched.number ? (<p className='form-error'>{errors.number}</p>) : null}
             <div className="mb-4">
               <label htmlFor="exampleFormControlTextarea1" className="form-label">Comments</label>
-              <textarea className="form-control" id="query3" rows="4"
+              <textarea className="form-control-query" id="query3" rows="4"
               name='comment'
                value={values.comment}
                onChange={handleChange}

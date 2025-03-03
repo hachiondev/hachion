@@ -188,11 +188,11 @@ const ContactUs = () => {
 <form className='contact-form'>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Full Name</label>
-  <input type="text" className="form-control" id="contact1" placeholder="Enter your full name"/>
+  <input type="text" className="form-control-contact" id="contact1" placeholder="Enter your full name"/>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Email Id</label>
-  <input type="email" className="form-control" id="contact1" placeholder="Enter your emailid"/>
+  <input type="email" className="form-control-contact" id="contact1" placeholder="Enter your emailid"/>
 </div>
 <label className='form-label'>Mobile Number</label>
 <div class="input-group custom-width">
@@ -235,7 +235,7 @@ const ContactUs = () => {
         </div>
         <div class="mb-3">
           <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-          <textarea class="form-control" id="contact3" rows="3"></textarea>
+          <textarea class="form-control-contact" id="contact3" rows="3"></textarea>
         </div>
         <div class="mb-3">
         <button type="button" class="submit-button" onClick={handleFormSubmit}>Submit</button>

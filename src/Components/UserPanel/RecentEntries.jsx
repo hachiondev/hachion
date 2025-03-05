@@ -1,50 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import RecentEntriesCard from './RecentEntriesCard';
-import automation from '../../Assets/automationtesting.png';
-import salesforce from '../../Assets/salesforce.png';
-import salesforceadmin from '../../Assets/salesforceadmin.png';
-import salesforceinterview from '../../Assets/salesforceinterview.png';
 import './Blogs.css';
 import { useNavigate } from 'react-router-dom';
 
 const RecentEntries = () => {
   const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([]); // State to store blogs
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get('https://api.hachion.co/blog');
+        setBlogs(response.data); // Store API data in state
+      } catch (error) {
+        console.error('Error fetching blog data:', error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <div className='recent-entries'>
-      <RecentEntriesCard 
-        imageSrc={automation} 
-        content='Importance of Automation in Software Testing' 
-        views='100' 
-        date='24-09-10' 
-        onClick={() => {
-          console.log('Card clicked!'); 
-          navigate('/qatestingblog');
-        }}
-      />
-      <RecentEntriesCard 
-        imageSrc={salesforce} 
-        content='7 Reasons to Learn Salesforce in 2023' 
-        views='100' 
-        date='24-09-10' 
-        onClick={() => navigate('/salesforceblog')} 
-      />
-      <RecentEntriesCard 
-        imageSrc={salesforceadmin} 
-        content='Salesforce Admin Interview FAQs' 
-        views='100' 
-        date='24-09-10' 
-        onClick={() => navigate('/salesforceadminblog')} // Update this to the correct route
-      />
-      <RecentEntriesCard 
-        imageSrc={salesforceinterview} 
-        content='Salesforce Developer Interview FAQs' 
-        views='100' 
-        date='24-09-10' 
-        onClick={() => navigate('/salesforcedeveloperblog')} // Update this to the correct route
-      />
+      {blogs.length > 0 ? (
+        blogs.map((blog) => (
+          <RecentEntriesCard
+            key={blog.id} // Unique key
+            imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`} // Correct image URL
+            content={blog.title}
+            views={blog.views || '100'} // Fallback if views are missing
+            date={blog.date}
+            onClick={() => navigate(`/blogs/${blog.category_name}`)} // Dynamic navigation
+          />
+        ))
+      ) : (
+        <p>Loading recent entries...</p>
+      )}
     </div>
   );
-}
+};
 
 export default RecentEntries;

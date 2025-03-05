@@ -107,20 +107,29 @@ useEffect(() => {
 
   // Download PDF function
   const downloadPdf = () => {
-    if (!pdfUrl) {
-      alert('No brochure available for this course.');
+    if (!faq || faq.length === 0) {
+      alert('No curriculum found for this course.');
       return;
     }
-  else{
-    // Programmatically trigger download
-    const link = document.createElement('a');
-    link.href = pdfUrl; // Now, pdfUrl contains the correct full URL
-    link.setAttribute('download', pdfUrl.split('/').pop()); // Extract file name
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  
+    // Search for the first curriculum entry with a valid PDF URL
+    const curriculumWithPdf = faq.find(item => item.curriculum_pdf);
+  
+    if (curriculumWithPdf) {
+      const pdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+  
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', curriculumWithPdf.curriculum_pdf.split('/').pop());
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert('No brochure available for this course.');
+    }
   };
-}
+  
   
   
 

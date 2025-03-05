@@ -92,7 +92,7 @@ function App() {
       <Route path='/salesforce' element={<Salesforce/>}/>
       <Route path='/enroll' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
-      <Route path='/qatestingblog' element={<QaTestingBlog/>}/>
+      <Route path='/blogs/:category_name' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>

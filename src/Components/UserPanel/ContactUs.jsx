@@ -19,14 +19,19 @@ import instagram from '../../Assets/instagram.png';
 import quora from '../../Assets/Component 141.png';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
+import {  useNavigate } from 'react-router-dom';
 
 const ContactUs = () => {
+  const navigate= useNavigate();
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const [isChecked, setIsChecked] = useState(false);
+  const [error, setError] = useState('');
   useEffect(() => {
     window.scrollTo(0, 0);  // This will scroll to the top of the page
+    console.log('Page loaded and scrolled to top');
   }, []);
 
   const countries = [
@@ -50,18 +55,40 @@ const ContactUs = () => {
   ];
 
   const handleCountrySelect = (country) => {
+    console.log('Country selected:', country.name, country.code);
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
 
   const openMenu = (event) => {
+    console.log('Opening country select menu');
     setAnchorEl(event.currentTarget);
   };
 
   const closeMenu = () => {
+    console.log('Closing country select menu');
     setAnchorEl(null);
   };
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (!isChecked) {
+      setError('Please select the checkbox to acknowledge the Privacy Notice.');
+    } else {
+      setError('');
+      // Handle form submission here
+      console.log('Form submitted');
+    }
+  };
+
+  const handlePrivacy=()=>{
+    navigate('/privacy')
+  }
 
   return (
    <>
@@ -123,18 +150,34 @@ const ContactUs = () => {
   <h3>Enquiries</h3>
   <div className='contact-block'>
     <img src={whatsappIcon} alt='whatsapp-icon'/>
-    <p className='contact-info'> +91 9490323388</p>
+    <p className='contact-info'><a 
+        href="https://wa.me/17324852499" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      > +1 (732) 485-2499 </a></p>
   </div>
   <div className='contact-block'>
     <img src={mailIcon} alt='mail-icon'/>
-    <p className='contact-info'>trainings@hachion.co</p>
+    <p className='contact-info'><a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer">trainings@hachion.co</a></p>
   </div>
   <div className='contact-us-icon'>
-    <img src={facebookIcon} alt='facebook-icon'/>
-    <img src={twitter} alt='twitter-icon'/>
-    <img src={linkedin} alt='linkedin-icon'/>
-    <img src={instagram} alt='instagram-icon'/>
-    <img src={quora} alt='quora-icon'/>
+  <a href="https://www.facebook.com/hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={facebookIcon} alt='facebook-icon'/></a>
+    <a href="https://x.com/hachion_co" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={twitter} alt='twitter-icon'/></a>
+    <a href="https://www.linkedin.com/company/hachion" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon'/></a>
+    <a href="https://www.instagram.com/hachion_trainings" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={instagram} alt='instagram-icon'/></a>
+    <a href="https://www.quora.com/profile/Hachion-4" 
+    target="_blank" 
+    rel="noopener noreferrer"><img src={quora} alt='quora-icon'/></a>
   </div>
     </div>
 <div className='contact-us-right'>
@@ -145,11 +188,11 @@ const ContactUs = () => {
 <form className='contact-form'>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Full Name</label>
-  <input type="text" className="form-control" id="contact1" placeholder="Enter your full name"/>
+  <input type="text" className="form-control-contact" id="contact1" placeholder="Enter your full name"/>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Email Id</label>
-  <input type="email" className="form-control" id="contact1" placeholder="Enter your emailid"/>
+  <input type="email" className="form-control-contact" id="contact1" placeholder="Enter your emailid"/>
 </div>
 <label className='form-label'>Mobile Number</label>
 <div class="input-group custom-width">
@@ -192,14 +235,17 @@ const ContactUs = () => {
         </div>
         <div class="mb-3">
           <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-          <textarea class="form-control" id="contact3" rows="3"></textarea>
+          <textarea class="form-control-contact" id="contact3" rows="3"></textarea>
         </div>
         <div class="mb-3">
-        <button type="button" class="submit-button">Submit</button>
+        <button type="button" class="submit-button" onClick={handleFormSubmit}>Submit</button>
+        {/* Error message display */}
+        {error && <p className="error-message">{error}</p>}
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" 
+           onChange={handleCheckboxChange} />
           <label class="form-check-label" for="flexCheckChecked">
-          By clicking on Submit, you acknowledge read our Privacy Notice
+          By clicking on Submit, you acknowledge read our <span onClick={handlePrivacy} style={{textDecoration: 'underline', cursor: 'pointer'}}>Privacy Notice</span>
           </label>
           </div>        
         </div>

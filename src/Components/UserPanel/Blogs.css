@@ -226,9 +226,6 @@
         display: flex;
         flex-direction: row;
         justify-content: space-evenly !important;
-       
-    
-        
       }
       .about-us-top img{
         height: 340px;
@@ -240,6 +237,10 @@
         padding-top: 20px;
         padding-left: 4vh;
         padding-right: 4vh;
+        text-align: justify;
+      }
+      .title{
+        font-weight: 600;
       }
       
       @media  (min-width:1025px) and (max-width: 1366px){
@@ -569,8 +570,10 @@ padding-top: 2vh;
 }
 .contact-us-icon{
 padding-top: 20px;
+display: flex;
+flex-direction: row;
 justify-content: space-evenly;
-
+gap: 4vh;
 }
 .contact-us-icon img{
 width: 2vw;
@@ -721,8 +724,10 @@ margin-bottom: 20px;
   }
   .contact-us-icon{
   padding-top: 10px;
-  justify-content: space-evenly;
-  
+  /* justify-content: space-evenly; */
+  display: flex;
+  align-items: center;
+  gap: 5px;
   }
   .contact-us-icon img{
   width: 30px;
@@ -769,10 +774,11 @@ margin-bottom: 20px;
     margin-bottom: 0;
     }
 
-    #contact1.form-control{
+    #contact1.form-control-contact{
       width: 300px;
       height: 35px;
       font-size: 12px;
+      padding: 5px;
     }
     .country-code-dropdown {
       font-size: 12px;
@@ -794,10 +800,11 @@ margin-bottom: 20px;
       font-size: 12px;
       margin-bottom: 10px;
     }
-    #contact3.form-control{
+    #contact3.form-control-contact{
       width: 300px;
       height: 80px;
       font-size: 12px;
+      padding: 5px;
     }
 
     .submit-button{
@@ -916,12 +923,13 @@ margin-bottom: 20px;
           margin: 5px 5px 5px 3px !important;
         }
 
-      #enroll1.form-control{
+      #enroll1.form-control-contact{
         height: 35px !important;
         width: 310px !important;
         border-color: #b3b3b3;
         font-size: 12px;
         margin: 5px !important;
+        padding: 5px;
     }
 
     .row {

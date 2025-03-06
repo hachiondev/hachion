@@ -33,6 +33,20 @@ const QaTestingBlog = () => {
     fetchBlogs();
   }, [category_name]); // Re-fetch when category changes
 
+  const handleDownload = () => {
+    if (blogs.length > 0 && blogs[0].blog_pdf) {
+      const pdfUrl = `https://api.hachion.co/blogs/${blogs[0].blog_pdf}`;
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", blogs[0].blog_pdf); // Set the filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert("No PDF available for this category.");
+    }
+  };
+  
   return (
     <>
       <Topbar />
@@ -62,7 +76,7 @@ const QaTestingBlog = () => {
 
         <div className='salesforce-blog-right'>
           <div className='salesforce-right'>
-            <button className='btn-curriculum'>
+            <button className='btn-curriculum' onClick={handleDownload}>
               <BsFileEarmarkPdfFill className='btn-pdf-icon' /> Download
             </button>
             <div className='salesforce-right-icon'>
@@ -93,7 +107,9 @@ const QaTestingBlog = () => {
 
           <div className='topics'>
             {blogs.length > 0 ? blogs[0].description : "Loading description..."}
+           
           </div>
+          
         </div>
       </div>
 

@@ -57,14 +57,7 @@ function App() {
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
-      <Route
-          path="/home"
-          element={
-            
-              <Home />
-            
-          }
-        />
+    
            <Route
           path="/"
           element={
@@ -73,7 +66,7 @@ function App() {
             
           }
         />
-      <Route path='/course' element={<Course/>}/>
+      <Route path='/courses' element={<Course/>}/>
       <Route path='/courses/:courseName' element={<QaAutomation />} />
 
       {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
@@ -90,7 +83,7 @@ function App() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
-      <Route path='/enroll' element={<Enrollment/>}/>
+      <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/blogs/:category_name' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>

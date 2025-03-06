@@ -72,8 +72,8 @@ export default function RegisterList() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({student_name:"",email:"",mobile:"",password:"",location:"",state:"",time:"",course_name:"",additional_email:"",additional_mobile:""});
-    const [studentData, setStudentData] = useState([{
-        student_id:"",
+    const [studentData, setStudentData] = useState({
+        student_id:Date.now(),
         name:"",
         email:"",
         mobile:"",
@@ -86,8 +86,9 @@ export default function RegisterList() {
        remarks:"",
        comments:"",
        date:currentDate,
-            visa_status:""
-         }]);
+            visa_status:"",
+            send_details:"yes"
+         });
         
 const [currentPage, setCurrentPage] = useState(1);
             const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -108,7 +109,7 @@ const [currentPage, setCurrentPage] = useState(1);
           currentPage * rowsPerPage
         );
          const handleReset=()=>{
-            setStudentData([{
+            setStudentData({
                 student_id:"",
         name:"",
         email:"",
@@ -123,7 +124,7 @@ const [currentPage, setCurrentPage] = useState(1);
        comments:"",
        date:currentDate,
             visa_status:""
-                 }]);
+                 });
         
          }
          const handleInputChange = (e) => {
@@ -232,6 +233,8 @@ const [currentPage, setCurrentPage] = useState(1);
           ...studentData, 
           date: currentDate, // Ensure this is added
         };
+        console.log("Data being sent:", dataToSubmit);
+
       
         try {
           const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);

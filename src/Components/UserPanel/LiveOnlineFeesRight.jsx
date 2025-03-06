@@ -83,13 +83,13 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       window.location.href = '/login'; // Redirect to login page
       return;
     }
-
+else{
     if (modeType === 'live' && enrollText === 'Enroll Now') {
       // Redirect to Enrollment.jsx page for Live Class
-      navigate('/enrollment');
+      navigate(`/enroll/${courseName}`);
       return;
     }
-
+  }
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
       try {
         const userEmail = localStorage.getItem('userEmail');

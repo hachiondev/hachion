@@ -158,7 +158,7 @@ const QaTop = ({ onVideoButtonClick }) => {
       {/* Buttons Section */}
       <div className='qa-button-container'>
         <div className='qa-button'>
-          <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
+          <button className='enroll-now' onClick={() => navigate(`/enroll/${courseName}`)}>Enroll Now</button>
           <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>
           <button className='video-btn' onClick={onVideoButtonClick}>

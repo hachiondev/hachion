@@ -74,7 +74,7 @@ export default function Curriculum() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:""});
+    const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
     const [curriculumData, setCurriculumData] = useState({
         curriculum_id:"",
           category_name:"",
@@ -82,6 +82,7 @@ export default function Curriculum() {
          curriculum_pdf:"",
          title:"",
          topic: "<ul><li></li></ul>",
+         link: "",
             date:currentDate,
          });
         const [currentPage, setCurrentPage] = useState(1);
@@ -125,7 +126,7 @@ export default function Curriculum() {
         
          }
          const addRow = () => {
-          setRows([...rows, { id: Date.now(), title: "", topic: "" }]);
+          setRows([...rows, { id: Date.now(), title: "", topic: "", link: "" }]);
       };
       
       const deleteRow = (id) => {
@@ -292,6 +293,7 @@ export default function Curriculum() {
       course_name: curriculumData?.course_name || "",
       title: curriculumData?.title || "",
       topic: curriculumData?.topic || "",
+      link: curriculumData?.link || "",
       date: currentDate
     }));
   
@@ -388,6 +390,7 @@ export default function Curriculum() {
           <TableRow>
             <StyledTableCell align='center' sx={{ fontSize: '16px', width: '35%' }}> Title</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Topic</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Video Link</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px', width: '180px' }}>Add/Delete Row</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -411,6 +414,9 @@ export default function Curriculum() {
         }))}
     />
 </StyledTableCell>
+              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
+               <input className='table-curriculum' name='link' value={rows.link} onChange={handleChange}/>
+              </StyledTableCell>
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
@@ -534,6 +540,7 @@ export default function Curriculum() {
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Topic</StyledTableCell>
+            <StyledTableCell align="center">Video Link</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
@@ -556,6 +563,7 @@ export default function Curriculum() {
         <p>No topics available</p>
     )}
 </StyledTableCell>
+      <StyledTableCell align="left">{course.link}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

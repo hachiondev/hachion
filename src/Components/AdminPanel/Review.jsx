@@ -99,16 +99,23 @@ export default function Review() {
                    setCurrentPage(1); // Reset to the first page whenever rows per page changes
                  };
 
-const handleFileChange = (e) => {
-    setReviewData((prev) => ({ ...prev, image: e.target.files[0] }));
-  };
+                 const handleFileChange = (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                      setReviewData((prevData) => ({
+                          ...prevData,
+                          image: file, // Ensure file object is stored
+                      }));
+                  }
+              };
+              
   const displayedCategories = filteredReview.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
          const handleReset=()=>{
-            setReviewData([{
+            setReviewData({
                 review_id:"",
                 category_name:"",
                   course_name: "",
@@ -117,7 +124,7 @@ const handleFileChange = (e) => {
                  source:"",
                  comment:"",
                  image:null
-                 }]);
+                 });
         
          }
          const handleInputChange = (e) => {
@@ -145,7 +152,7 @@ const handleFileChange = (e) => {
     useEffect(() => {
       const fetchReview = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/review');
+              const response = await axios.get('https://api.hachion.co/userreview');
               setReview(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -179,7 +186,7 @@ const handleFileChange = (e) => {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/review/update/${editedData.review_id}`,editedData
+                `https://api.hachion.co/userreview/update/${editedData.review_id}`,editedData
             );
             setReview((prev) =>
                 prev.map(curr =>
@@ -197,7 +204,7 @@ const handleFileChange = (e) => {
       const handleDelete = async (review_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/review/delete/${review_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`); 
           console.log("Review deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Review:", error); 
@@ -232,25 +239,49 @@ const handleFileChange = (e) => {
       };
       const handleSubmit = async (e) => {
         e.preventDefault();
-      console.log(review);
         const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        const dataToSubmit = { 
-          ...reviewData, 
-          date: currentDate, // Ensure this is added
-        };
-      
-        try {
-          const response = await axios.post("https://api.hachion.co/review/add", dataToSubmit);
-          if (response.status === 200) {
-            alert("Reviews added successfully");
-            setReviewData([...reviewData, dataToSubmit]); // Update local state
-            handleReset(); // Clear form fields
-          }
-        } catch (error) {
-          console.error("Error adding review:", error.message);
-          alert("Error adding review.");
+    
+        const formData = new FormData();
+        formData.append("name", reviewData.student_name);
+        formData.append("social_id", reviewData.source);
+        formData.append("category_name", reviewData.category_name);
+        formData.append("course_name", reviewData.course_name);
+        formData.append("review", reviewData.comment);
+        formData.append("email",reviewData.email||"");
+        formData.append("type",reviewData.type||"");
+        formData.append("trainer_name",reviewData.trainer_name||"");
+        formData.append("rating",reviewData.rating||"");
+        formData.append("location",reviewData.location||"");
+       
+        formData.append("date", currentDate); // Ensure the date is added
+    
+        if (reviewData.image) {
+            formData.append("image", reviewData.image); // Append the image
         }
-      };
+        for (let pair of formData.entries()) {
+          console.log(pair[0], pair[1]); // Check key-value pairs
+      }
+        try {
+            const response = await axios.post(
+                "https://api.hachion.co/userreview/add",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+    
+            if (response.status === 200) {
+                alert("Review added successfully!");
+                setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
+            }
+        } catch (error) {
+            console.error("Error adding review:", error);
+            alert("Error adding review.");
+        }
+    };
+    
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
     useEffect(() => {
@@ -319,6 +350,7 @@ useEffect(() => {
       <option>Facebook</option>
       <option>Twitter</option>
       <option>Instagram</option>
+      <option>Google</option>
     </select>
 </div>
 </div>
@@ -361,6 +393,35 @@ useEffect(() => {
   name="comment"
   value={reviewData.comment}
   onChange={handleChange}></textarea>
+</div>
+
+<div style={{paddingTop: "10px"}}>
+  <label htmlFor="display" className="form-label">
+    Display Reviews:
+  </label>
+  </div>
+  
+  <div className="course-row">
+  <div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="homeAboutPage" name="displayPages" value="home_about" checked={reviewData.displayPages?.includes("home_about")} />
+  <label className="form-check-label" htmlFor="homeAboutPage">
+    Home & About Us Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
+  <label className="form-check-label" htmlFor="coursePage">
+    Course Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
+  <label className="form-check-label" htmlFor="corporateTrainingPage">
+    Corporate Training Page
+  </label>
+</div>
 </div>
 
 <div className="course-row">
@@ -456,11 +517,11 @@ useEffect(() => {
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="center">{curr.image}</StyledTableCell>
-      <StyledTableCell align="left">{curr.student_name}</StyledTableCell>
-      <StyledTableCell align="center">{curr.source}</StyledTableCell>
+      <StyledTableCell align="center">{curr.user_image}</StyledTableCell>
+      <StyledTableCell align="left">{curr.name}</StyledTableCell>
+      <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
-      <StyledTableCell align="left">{curr.comment}</StyledTableCell>
+      <StyledTableCell align="left">{curr.review}</StyledTableCell>
      
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -578,6 +639,34 @@ useEffect(() => {
   onChange={handleInputChange}></textarea>
 </div>
 
+<div style={{paddingTop: "10px"}}>
+  <label htmlFor="display" className="form-label">
+    Display Reviews:
+  </label>
+  </div>
+  
+  <div className="course-row">
+  <div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="homeAboutPage" name="displayPages" value="home_about" checked={reviewData.displayPages?.includes("home_about")} />
+  <label className="form-check-label" htmlFor="homeAboutPage">
+    Home & About Us Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
+  <label className="form-check-label" htmlFor="coursePage">
+    Course Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
+  <label className="form-check-label" htmlFor="corporateTrainingPage">
+    Corporate Training Page
+  </label>
+</div>
+</div>
 
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

@@ -516,12 +516,12 @@ export default function Curriculum() {
         ))}
     </select>
   </div>
-  <div class="mb-3">
+  {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
           name="curriculum_pdf"
           onChange={handleChange}/>
-</div>
+</div> */}
   </div>
   </div>
   <TableContainer component={Paper}>

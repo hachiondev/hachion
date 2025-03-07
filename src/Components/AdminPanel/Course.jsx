@@ -89,7 +89,7 @@ export default function Course() {
         >
           FAQ
         </div>
-        <div 
+        {/* <div 
           className={`tab-item ${activeTab === 'demoVideos' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('demoVideos')}
         >
@@ -106,7 +106,7 @@ export default function Course() {
           onClick={() => handleTabChange('videoAccess')}
         >
           Video Access
-        </div>
+        </div> */}
         <div 
           className={`tab-item ${activeTab === 'resume' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('resume')}
@@ -125,9 +125,9 @@ export default function Course() {
       {activeTab==='schedule' &&  <CourseSchedule/>}
       {activeTab==='curriculum' &&  <Curriculum/>}
       {activeTab==='faq' &&  <Faq/>}
-      {activeTab==='demoVideos' &&  <DemoVideo/>}
+      {/* {activeTab==='demoVideos' &&  <DemoVideo/>}
       {activeTab==='regularVideos' &&  <RegularVideo/>}
-      {activeTab==='videoAccess' &&  <VideoAccess/>}
+      {activeTab==='videoAccess' &&  <VideoAccess/>} */}
       {activeTab==='resume' &&  <Resume/>}
       {activeTab==='review' &&  <Review/>}
      

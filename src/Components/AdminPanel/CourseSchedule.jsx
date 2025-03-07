@@ -1,3 +1,4 @@
+
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
@@ -436,7 +437,7 @@ const handleInputChange = (e) => {
           <StyledTableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}>
             <StyledTableCell component="th" scope="row" sx={{ padding: 0, }}>
               <DatePicker
-                value={courseData.schedule_date ? dayjs(courseData.schedule_date).format('MM-DD-YYYY') : null}
+                value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null}
                 onChange={(newValue) => handleDateChange(newValue)}
                 renderInput={(params) => <TextField {...params} />}
                 sx={{
@@ -588,7 +589,7 @@ const handleInputChange = (e) => {
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick}>
-                <FiPlus /> Add Course
+                <FiPlus /> Add Schedule
               </button>
             </div>
           </div>
@@ -596,7 +597,7 @@ const handleInputChange = (e) => {
         </div>
       </div>
     </LocalizationProvider>
-    <TableContainer component={Paper}>
+   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -624,15 +625,13 @@ const handleInputChange = (e) => {
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
-              <StyledTableCell align="center">
-              {course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_time} EST</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_duration} Hour</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_duration} Days</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">
-              {course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}
@@ -732,43 +731,11 @@ const handleInputChange = (e) => {
           sx={{
             '& .MuiIconButton-root':{color: '#00aeef'}
          }}
-  value={editedRow.schedule_date ? dayjs(editedRow.schedule_date).format('MM-DD-YYYY') : null}
+  value={editedRow.schedule_date ? dayjs(editedRow.schedule_date) : null}
   onChange={handleDateChange}
   renderInput={(params) => <TextField {...params} />}
 />
     </div>
-        </div>
-
-        <div className="course-row">
-        <div className="col">
-          <label className="form-label">Frequency</label>
-          <select
-            id="inputState"
-            className="form-select"
-            name="schedule_frequency"
-            value={editedRow.schedule_frequency || ""}
-            onChange={handleInputChange}
-          >
-            <option value="">Select</option>
-            <option>Only Weekends</option>
-            <option>Week Days</option>
-            <option>Any Days</option>
-          </select>
-        </div>
-
-        <div className="col">
-          <label className="form-label">Time</label>
-        <TimePicker
-         sx={{
-           '& .MuiIconButton-root':{color: '#00aeef'}
-        }}
-  // label="Select Time"
-  value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'hh:mm A') : null}
-  ampm={true}
-  onChange={handleTimeChange}
-  renderInput={(params) => <TextField {...params} />}
-  />
-  </div>
         </div>
 
         <div className="course-row">

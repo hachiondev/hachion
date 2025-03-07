@@ -24,8 +24,6 @@ import SalesforceBlog from './Components/UserPanel/SalesforceBlog';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
-import Terms from './Components/UserPanel/Terms';
-import Privacy from './Components/UserPanel/Privacy';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
@@ -45,11 +43,13 @@ import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
+import { HelmetProvider } from "react-helmet-async";
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
+    <HelmetProvider>
     <BrowserRouter>
     <Routes>
       
@@ -59,14 +59,7 @@ function App() {
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
-      <Route
-          path="/home"
-          element={
-            
-              <Home />
-            
-          }
-        />
+    
            <Route
           path="/"
           element={
@@ -75,7 +68,7 @@ function App() {
             
           }
         />
-      <Route path='/course' element={<Course/>}/>
+      <Route path='/courses' element={<Course/>}/>
       <Route path='/courses/:courseName' element={<QaAutomation />} />
 
       {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
@@ -92,15 +85,14 @@ function App() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
-      <Route path='/enroll' element={<Enrollment/>}/>
+      <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
-      <Route path='/qatestingblog' element={<QaTestingBlog/>}/>
+      <Route path='/blogs/:category_name' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
-      <Route path='/terms' element={<Terms/>}/>
-      <Route path='/privacy' element={<Privacy/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
+      
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
@@ -117,8 +109,9 @@ function App() {
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/courseschedule' element={<CourseSchedule/>}/>
     
-  
-      </Routes></BrowserRouter>
+      </Routes>
+      </BrowserRouter>
+      </HelmetProvider>
     </>
   );
 }

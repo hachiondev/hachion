@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Corporate.css';
-import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+// import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 import { Carousel } from 'react-bootstrap';
 import LearnerCard from './LearnerCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -41,8 +41,9 @@ const Learners = () => {
         <h1 className='association-head'>Our Students Feedback</h1>
       </div>
 
-      <ImQuotesLeft className='left-quotes' />
-      <div className='learner-cover'>
+      {/* <ImQuotesLeft className='left-quotes' /> */}
+      {/* <div className='learner-cover'> */}
+      <div className='learner-background'>
         <Carousel
           indicators={true}
           prevIcon={<FaAngleLeft className="custom-prev-icon" />}
@@ -77,7 +78,7 @@ const Learners = () => {
           ))}
         </Carousel>
       </div>
-      <ImQuotesRight className='right-quotes' />
+      {/* <ImQuotesRight className='right-quotes' /> */}
     </div>
   );
 };

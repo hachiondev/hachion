@@ -47,7 +47,7 @@ const Login = () => {
                 console.error('Error saving to localStorage:', error);
             }
 
-            navigate('/home'); // Navigate after saving data
+            navigate('/'); // Navigate after saving data
         } else {
             setErrorMessage(response.data.message); // Show error message
         }

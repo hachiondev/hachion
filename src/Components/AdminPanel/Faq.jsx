@@ -587,12 +587,12 @@ const handleSubmit = async (e) => {
         ))}
     </select>
   </div>
-  <div class="mb-3">
+  {/* <div class="mb-3">
   <label for="formFile" class="form-label">FAQ PDF</label>
   <input class="form-control" type="file" id="formFile"
           name="curriculum_pdf"
           onChange={handleChange}/>
-</div>
+</div> */}
   </div>
   </div>
   <TableContainer component={Paper}>
@@ -619,14 +619,15 @@ const handleSubmit = async (e) => {
       <StyledTableCell align="center">
         {index + 1 + (currentPage - 1) * rowsPerPage}
       </StyledTableCell>
-      <StyledTableCell align="left">{course.faq_title}</StyledTableCell>
+      <StyledTableCell align="left" style={{ maxWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-line' }} 
+      >{course.faq_title}</StyledTableCell>
       <StyledTableCell align="left">
   <div 
     style={{ maxWidth: '1000px', wordWrap: 'break-word', whiteSpace: 'pre-line' }} 
     dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
   />
 </StyledTableCell>
-      <StyledTableCell align="center">{course.date}</StyledTableCell>
+      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />

@@ -54,7 +54,7 @@ const NavbarTop = () => {
 
   const handleClick = () => {
     console.log("Navigating to Home");
-    navigate('/home');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -238,7 +238,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'course' ? 'active' : ''}`}
             onClick={() => handleNavClick('course')}
           >
-            <Link to="/course" className="nav-item-link">
+            <Link to="/courses" className="nav-item-link">
               Courses
             </Link>
           </button>

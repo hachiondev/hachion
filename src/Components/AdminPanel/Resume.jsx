@@ -446,7 +446,7 @@ useEffect(() => {
       <StyledTableCell align="left">
   {row.senior_level}
 </StyledTableCell>
-      <StyledTableCell align="center">{row.date}</StyledTableCell>
+      <StyledTableCell align="center">{row.date? dayjs(row.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

@@ -137,9 +137,9 @@ const QaTop = ({ onVideoButtonClick }) => {
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>USD {course.total}</span>
+              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
               {course.total !== course.amount && (
-              <span className='strike-price'> USD {course.amount}</span>
+              <span className='strike-price'> USD {course.amount}/-</span>
             )}</p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
@@ -158,7 +158,7 @@ const QaTop = ({ onVideoButtonClick }) => {
       {/* Buttons Section */}
       <div className='qa-button-container'>
         <div className='qa-button'>
-          <button className='enroll-now' onClick={() => navigate('/enroll')}>Enroll Now</button>
+          <button className='enroll-now' onClick={() => navigate(`/enroll/${courseName}`)}>Enroll Now</button>
           <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>
           <button className='video-btn' onClick={onVideoButtonClick}>

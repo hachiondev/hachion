@@ -24,6 +24,7 @@ import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 import dayjs from 'dayjs';
+import { Helmet } from "react-helmet-async";
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -504,7 +505,7 @@ const handleAddTrendingCourseClick = () => {
                 />
               </div>
             </div>
-            <div className="course-row">
+            {/* <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Live Training Hours</label>
                 <input
@@ -538,7 +539,7 @@ const handleAddTrendingCourseClick = () => {
                   onChange={handleInputChange}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Star Rating</label>
@@ -607,55 +608,6 @@ const handleAddTrendingCourseClick = () => {
 </div>
 </div>
 </div> 
-{/* <h3>Mode Of Training</h3>
-      <div className="course-row">
-        {[
-          { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
-          { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
-          { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
-          { label: "Corporate Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
-        ].map((mode, index) => (
-          <div className="course-mode" key={index}>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" id={`flexCheck${index}`} />
-              <label className="form-check-label" htmlFor={`flexCheck${index}`}>
-                {mode.label}
-              </label>
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Amount (USD)</label>
-              <input
-                type="number"
-                className="form-control-mode"
-                name={mode.amount}
-                value={formData[mode.amount]}
-                onChange={handleModeChange}
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Discount %</label>
-              <input
-                type="number"
-                className="form-control-mode"
-                name={mode.discount}
-                value={formData[mode.discount]}
-                onChange={handleModeChange}
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Total (USD)</label>
-              <input
-                type="number"
-                className="form-control-mode"
-                name={mode.total}
-                value={formData[mode.total]}
-                readOnly
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div> */}
 
 <h3>Mode Of Training</h3>
 <div className="course-row">
@@ -706,7 +658,7 @@ const handleAddTrendingCourseClick = () => {
   ))}
 </div>
 
-    <h3>Sample session</h3>
+    {/* <h3>Sample session</h3>
 <div className='course-row'>
 <div className='course-details'>
 <h4>Mentoring Training</h4>
@@ -736,21 +688,29 @@ const handleAddTrendingCourseClick = () => {
 </div>
 
 </div>
-</div>
-<div className='course-row'>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Header Title</label>
-<input type="text" class="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange}/>
-</div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Course keyword with comma</label>
-<input type="text" class="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
-</div>
-<div class="col-md-4">
-<label for="inputEmail4" class="form-label">Course keyword description</label>
-<input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
-</div>
-</div>
+</div> */}
+
+          <Helmet>
+                <title>{formData.headerTitle ? formData.headerTitle : "Default Course Title"}</title>
+                <meta name="keywords" content={formData.courseKeyword ? formData.courseKeyword : "default, keywords"} />
+                <meta name="description" content={formData.courseKeywordDescription ? formData.courseKeywordDescription : "Default course keyword description"} />
+            </Helmet>
+
+            <div className='course-row'>
+                <div className="col-md-4">
+                    <label htmlFor="inputEmail4" className="form-label">Header Title</label>
+                    <input type="text" className="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange} />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="inputEmail4" className="form-label">Course keyword with comma</label>
+                    <input type="text" className="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="inputEmail4" className="form-label">Course keyword description</label>
+                    <input type="text" className="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
+                </div>
+            </div>
+            
 <div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
 {/* <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea> */}

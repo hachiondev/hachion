@@ -477,7 +477,7 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 220}} align="center">
             {blogs.blog_image ? (
     <img
-    src={`https://api.hachion.co/${blogs.blog_image}`} 
+    src={`https://api.hachion.co/blogs/${blogs.blog_image}`} 
       alt={blogs.category_name}
       width="50"
     />

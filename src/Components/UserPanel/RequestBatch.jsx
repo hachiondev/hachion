@@ -113,7 +113,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
               onChange={(date) => setStartDate(date)}
               dateFormat="dd/MM/yyyy"
               placeholderText="DD/MM/YYYY"
-              className="form-control date-picker"
+              className="form-control-query date-picker"
               id="query1"
               ref={datePickerRef}
             />
@@ -135,7 +135,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
             ref={timeInputRef}
             value={time}
             onChange={(e) => setTime(e.target.value)}
-            className="form-control time-picker"
+            className="form-control-query time-picker"
             placeholder="HH:MM"
             id="query1"
           />
@@ -160,7 +160,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="form-control"
+            className="form-control-query"
             placeholder="abc@gmail.com"
           />
         </div>

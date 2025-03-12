@@ -131,7 +131,7 @@ const handleDateChange = (newValue) => {
 
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_date: parsedDate.format('YYYY-MM-DD'), // Format the date
+    schedule_date: parsedDate.format('MM-DD-YYYY'), // Format the date
     schedule_week: parsedDate.format('dddd'), // Format the weekday
   }));
 };
@@ -589,7 +589,7 @@ const handleInputChange = (e) => {
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick}>
-                <FiPlus /> Add Course
+                <FiPlus /> Add Schedule
               </button>
             </div>
           </div>
@@ -625,13 +625,13 @@ const handleInputChange = (e) => {
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_date}</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_time} EST</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_duration} Hour</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_duration} Days</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.created_date}</StyledTableCell>
+              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}

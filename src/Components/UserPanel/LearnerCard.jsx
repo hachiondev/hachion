@@ -1,6 +1,6 @@
 import React from 'react';
 import './Corporate.css';
-import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+// import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 import { MdOutlineStar } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
 
@@ -45,28 +45,28 @@ const LearnerCard = (props) => {
     <div className='learner-card'>
       <div className='learner-top'>
         <div className='learner-image'>
-          <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' />
+          <Avatar alt={props.name} src={props.image || ''} className='profile-image' />
         </div>
         <div className='learner-info'>
           <div className='learner-name'>
             <p className='name'>{props.name}</p>
             <img src={getSocialMediaLogo(props.social_id)} alt={props.social_id} />
-            <span className='rating'>{renderStarRating(props.rating)}</span>
           </div>
           <p className='job-profile'>{props.profile}</p>
           <p className='job-location'>{props.location}</p>
+          <div className='rating'>{renderStarRating(props.rating)}</div>
         </div>
       </div>
       <div className='learner-description-bottom'>
-        <span className='quotesleft-icon'>
+        {/* <span className='quotesleft-icon'>
           <ImQuotesLeft />
-        </span>
+        </span> */}
         <p className='learner-description'>
           {props.content}
         </p>
-        <span className='quotesright-icon'>
+        {/* <span className='quotesright-icon'>
           <ImQuotesRight />
-        </span>
+        </span> */}
       </div>
     </div>
   );

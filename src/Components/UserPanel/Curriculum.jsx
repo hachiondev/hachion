@@ -9,86 +9,85 @@ const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
-  const [pdfUrl, setPdfUrl] = useState(); // Store PDF URL here
+  const [pdfUrl, setPdfUrl] = useState(null); // Store PDF URL here
   const { courseName } = useParams(); // Extract courseName from URL params
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
- 
-useEffect(() => {
-  const fetchCourse = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('https://api.hachion.co/courses/all');
-      console.log('API response:', response.data); // Check course data
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://api.hachion.co/courses/all');
+        console.log('API response:', response.data); // Check course data
+    
+        const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
+        console.log('Course name from URL:', courseNameFromUrl);
+    
+        const matchedCourse = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
+        );
+    
+        if (matchedCourse) {
+          setMatchedCourseName(matchedCourse.courseName.trim());
+          console.log('Matched Course:', matchedCourse);
+    
+          // Fetch curriculum details
+          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
+          console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
+    
+          // Normalize both names for reliable comparison
+          const matchedCurriculum = curriculumResponse.data.find(
+            (item) => item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
+          );
   
-      const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
-      console.log('Course name from URL:', courseNameFromUrl);
+          console.log('Matched Curriculum:', matchedCurriculum); // Debugging log
   
-      const matchedCourse = response.data.find(
-        (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
-      );
+          // Set the PDF URL if found
+          if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
+            const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
+            setPdfUrl(fullPdfUrl);
+            console.log('PDF URL Set:', fullPdfUrl);
+          } else {
+            console.log('No PDF found in Curriculum for this course');
+            setError('No PDF found in Curriculum for this course.');
+          }
+        } else {
+          setError('Course not found.');
+        }
+      } catch (error) {
+        console.error('Error fetching course details:', error);
+        setError('Failed to load course details.');
+      } finally {
+        setLoading(false);
+      }
+    };
   
-      if (matchedCourse) {
-        setMatchedCourseName(matchedCourse.courseName.trim());
-        console.log('Matched Course:', matchedCourse);
-  
-        // Fetch curriculum details
-        const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
-        console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
-  
-        // Normalize both names for reliable comparison
-        const matchedCurriculum = curriculumResponse.data.find(
-          (item) => item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
+    fetchCourse();
+  }, [courseName]);
+
+  // Fetch FAQs based on the matched course_name
+  useEffect(() => {
+    if (!matchedCourseName) return;
+
+    const fetchFaq = async () => {
+      try {
+        const response = await axios.get('https://api.hachion.co/curriculum');
+        const filteredFaq = response.data.filter(
+          (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
 
-        console.log('Matched Curriculum:', matchedCurriculum); // Debugging log
-
-        // Set the PDF URL if found
-        if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-          const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
-          setPdfUrl(fullPdfUrl);
-          console.log('PDF URL Set:', fullPdfUrl);
-        } else {
-          console.log('No PDF found in Curriculum for this course');
-          setError('No PDF found in Curriculum for this course.');
-        }
-      } else {
-        setError('Course not found.');
+        setFaq(filteredFaq);
+      } catch (error) {
+        console.error('Error fetching FAQ:', error.message);
+        setError('Failed to load FAQs.');
       }
-    } catch (error) {
-      console.error('Error fetching course details:', error);
-      setError('Failed to load course details.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchCourse();
-}, [courseName]);
-
+    fetchFaq();
+  }, [matchedCourseName]);
 useEffect(() => {
-  if (!matchedCourseName) return;
-
-  const fetchFaq = async () => {
-    try {
-      const response = await axios.get('https://api.hachion.co/curriculum');
-      const filteredFaq = response.data.filter(
-        (item) => item.course_name && item.course_name.trim() === matchedCourseName
-      );
-
-      setFaq(filteredFaq);
-    } catch (error) {
-      console.error('Error fetching Curriculum:', error.message);
-      setError('Failed to load Curriculum.');
-    }
-  };
-
-  fetchFaq();
-}, [matchedCourseName]);
-
-  useEffect(() => {
     console.log('PDF URL:', pdfUrl); // Log pdfUrl whenever it changes
   }, [pdfUrl]);
 
@@ -130,11 +129,6 @@ useEffect(() => {
     }
   };
   
-  
-  
-
-
-  // Render FAQ topics
   const renderTopics = () => {
     const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
@@ -153,13 +147,8 @@ useEffect(() => {
 
         {expandedTopics[index] && (
           <div className="topic-details">
-            <ul className="bullet-list">
-              {item.topic &&
-                item.topic.split(',').map((desc, i) => (
-                  <li key={i}>{desc.trim()}</li>
-                ))}
-            </ul>
-          </div>
+          <ul className="bullet-list" dangerouslySetInnerHTML={{ __html: item.topic }} />
+        </div>
         )}
       </div>
     ));

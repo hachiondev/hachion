@@ -19,6 +19,63 @@ const QaTop = ({ onVideoButtonClick }) => {
      const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  // Fetch Geolocation and Currency Conversion
+  useEffect(() => {
+    const fetchGeolocationData = async () => {
+      try {
+        const geoResponse = await axios.get('https://ipinfo.io?token=82aafc3ab8d25b');
+        console.log('Geolocation Data:', geoResponse.data);
+  
+        // Country-to-Currency Mapping
+        const currencyMap = {
+          'IN': 'INR',
+          'US': 'USD',
+          'GB': 'GBP',
+          'AU': 'AUD',
+          'CA': 'CAD',
+          'AE': 'AED',
+          'JP': 'JPY',
+          'EU': 'EUR'
+        };
+        
+        // Improved Fallback Logic
+        const countryCode = geoResponse.data.country?.toUpperCase() || 'US';
+        const userCurrency = currencyMap[countryCode] || 'USD';
+        
+  
+        console.log('Detected Currency:', userCurrency);
+        setCurrency(userCurrency);
+  
+        // Fetch Exchange Rate
+        const cachedRates = localStorage.getItem('exchangeRates');
+        if (cachedRates) {
+          const rates = JSON.parse(cachedRates);
+          setExchangeRate(rates[userCurrency] || 1);
+        } else {
+          try {
+            const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+            const rates = exchangeResponse.data.rates;
+            localStorage.setItem('exchangeRates', JSON.stringify(rates));
+            setExchangeRate(rates[userCurrency] || 1);
+          } catch (error) {
+            console.warn('Exchange rate API failed. Using default USD rate.');
+            setExchangeRate(1);  // Safe fallback
+          }
+        };
+  
+      } catch (error) {
+        console.error('Error fetching geolocation or exchange rate data:', error);
+        setCurrency('USD'); // Fallback to USD if data fails
+      }
+    };
+  
+    fetchGeolocationData();
+  }, []);
+  
+  
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -108,7 +165,8 @@ const QaTop = ({ onVideoButtonClick }) => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
-
+  const convertedTotalFee = (course.total * exchangeRate).toFixed(2);
+  const convertedOriginalFee = (course.amount * exchangeRate).toFixed(2);
   // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
@@ -137,10 +195,16 @@ const QaTop = ({ onVideoButtonClick }) => {
           <div className='qa-automation-left'>
             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
             <div className='qa-automation-middle'>
-              <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
+              {/* <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
               {course.total !== course.amount && (
               <span className='strike-price'> USD {course.amount}/-</span>
-            )}</p>
+            )}</p> */}
+             <p className='fee'>
+            Fee: <span className='amount'>{currency} {convertedTotalFee}/-</span>
+            {course.total !== course.amount && (
+              <span className='strike-price'>{currency} {convertedOriginalFee}/-</span>
+            )}
+          </p>
               <h6 className='sidebar-course-review'>
                 Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
               </h6>

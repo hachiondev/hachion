@@ -53,13 +53,13 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
 
       <div className="card-course-details">
         <h5 className="course-name">{heading}</h5>
-        <div className="course-time">
+        <div className="course-name">
           <h6 className="course-month">
             <RxCalendar /> {month} Days
           </h6>
-          <h6 className="course-month">
+          {/* <h6 className="course-month">
             <BiTimeFive /> {time} Hours
-          </h6>
+          </h6> */}
         </div>
 
         <h6 className="course-review">

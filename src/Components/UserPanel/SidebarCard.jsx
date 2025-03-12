@@ -54,9 +54,9 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
           <h6 className="sidebar-course-month">
             <RxCalendar /> {month} Days
           </h6>
-          <h6 className="sidebar-course-month">
+          {/* <h6 className="sidebar-course-month">
             <BiTimeFive /> {time} Hours
-          </h6>
+          </h6> */}
         </div>
         <h6 className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})

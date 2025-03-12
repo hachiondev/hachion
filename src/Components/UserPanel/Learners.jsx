@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Corporate.css';
-import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+// import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 import { Carousel } from 'react-bootstrap';
 import LearnerCard from './LearnerCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -41,8 +41,9 @@ const Learners = () => {
         <h1 className='association-head'>Our Students Feedback</h1>
       </div>
 
-      <ImQuotesLeft className='left-quotes' />
-      <div className='learner-cover'>
+      {/* <ImQuotesLeft className='left-quotes' /> */}
+      {/* <div className='learner-cover'> */}
+      <div className='learner-background'>
         <Carousel
           indicators={true}
           prevIcon={<FaAngleLeft className="custom-prev-icon" />}
@@ -62,6 +63,7 @@ const Learners = () => {
     content={review.review}
     social_id={review.social_id}
     rating={review.rating}
+    image={review.user_image?`https://api.hachion.co/${review.user_image}` : ''}
   />
                 {/* Conditionally render the second card for desktop/tablet */}
                 {!isMobile && reviews[index + 1] && (
@@ -70,6 +72,7 @@ const Learners = () => {
                     profile={reviews[index + 1].course_name}
                     location={reviews[index + 1].location}
                     content={reviews[index + 1].review}
+                    image={reviews[index + 1].user_image}
                   />
                 )}
               </div>
@@ -77,7 +80,7 @@ const Learners = () => {
           ))}
         </Carousel>
       </div>
-      <ImQuotesRight className='right-quotes' />
+      {/* <ImQuotesRight className='right-quotes' /> */}
     </div>
   );
 };

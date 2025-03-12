@@ -12,11 +12,41 @@ import Radio from '@mui/material/Radio';
 import payumoney from '../../Assets/payumoney.png';
 import './Blogs.css';
 
+const countryToCurrencyMap = {
+  'IN': 'INR',
+  'US': 'USD',
+  'GB': 'GBP',
+  'AU': 'AUD',
+  'CA': 'CAD',
+  'EU': 'EUR'
+};
+
 export default function TotalOrder() {
   const { courseName } = useParams(); // Get selected course from URL
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedValue, setSelectedValue] = useState('a'); // Default selection for Radio
+const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchGeolocationData = async () => {
+      try {
+        const geoResponse = await axios.get('https://ip-api.com/json/');
+        const countryCode = geoResponse.data.countryCode || 'US';
+        const detectedCurrency = countryToCurrencyMap[countryCode] || 'USD';
+        setCurrency(detectedCurrency);
+
+        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+        const rate = exchangeResponse.data.rates[detectedCurrency] || 1;
+        setExchangeRate(rate);
+      } catch (error) {
+        console.error('Error fetching geolocation or exchange data:', error);
+      }
+    };
+
+    fetchGeolocationData();
+  }, []);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -46,7 +76,7 @@ export default function TotalOrder() {
 
   if (loading) return <div>Loading...</div>;
   if (!courseData) return <div>No matching course found.</div>;
-
+  const convertAmount = (amount) => (amount * exchangeRate).toFixed(2);
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
@@ -67,7 +97,7 @@ export default function TotalOrder() {
             <TableRow>
               <TableCell className="table-cell-left">Course Fee</TableCell>
               <TableCell align="right" className="table-cell-right">
-                USD {courseData.amount || "N/A"}
+              {currency} {convertAmount(courseData.amount)}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -79,20 +109,20 @@ export default function TotalOrder() {
             <TableRow>
               <TableCell className="table-cell-left">Total</TableCell>
               <TableCell align="right" className="table-cell-right">
-               USD {courseData.total || "N/A"}
+              {currency} {convertAmount(courseData.total)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="table-cell-left">Tax</TableCell>
               <TableCell align="right" className="table-cell-right">
-               USD {courseData.tax || "N/A"}
+                {courseData.tax || "N/A"}
               </TableCell>
             </TableRow>
             {/* Net Payable Amount Row */}
             <TableRow className="net-amount">
               <TableCell className="net-amount-left">Net Payable amount:</TableCell>
               <TableCell align="right" className="net-amount-right">
-               USD  {courseData.total || 0}
+              {currency} {convertAmount(courseData.total)}
               </TableCell>
             </TableRow>
           </TableBody>

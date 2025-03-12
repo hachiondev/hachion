@@ -5,7 +5,11 @@ import LiveOnlineFeesRight from './LiveOnlineFeesRight';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';  
+import timezone from 'dayjs/plugin/timezone';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 export const LiveOnlineFees = () => {
   const { courseName } = useParams(); // Extract courseName from URL
   const [selectedBatch, setSelectedBatch] = useState('');
@@ -14,7 +18,78 @@ export const LiveOnlineFees = () => {
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [enrollText, setEnrollText] = useState('Enroll Now');
   const [modeType, setModeType] = useState('live');
+  const [userTimezone, setUserTimezone] = useState('America/New_York'); // Default to EST
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
+  // Fetch User's Geolocation Timezone
+  // Update the timezone detection logic
+useEffect(() => {
+  const fetchGeolocationData = async () => {
+    try {
+      const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+      console.log('Geolocation Data:', geoResponse.data);
 
+      const timezone = geoResponse.data.timezone || 'America/New_York';  // Correct timezone detection
+      setUserTimezone(timezone);
+
+      const currencyMap = {
+        'IN': 'INR',
+        'US': 'USD',
+        'GB': 'GBP',
+        'AU': 'AUD',
+        'CA': 'CAD',
+        'AE': 'AED',
+        'JP': 'JPY',
+        'EU': 'EUR'
+      };
+
+      const countryCode = geoResponse.data.country || 'US';
+      const userCurrency = currencyMap[countryCode] || 'USD';
+
+      console.log('Detected Currency:', userCurrency);
+      setCurrency(userCurrency);
+
+      localStorage.removeItem('exchangeRates');
+
+      const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+      localStorage.setItem('exchangeRates', JSON.stringify(exchangeResponse.data.rates));
+      const rate = exchangeResponse.data.rates[userCurrency] || 1;
+      setExchangeRate(rate);
+
+    } catch (error) {
+      console.error('Error fetching geolocation or exchange rate data:', error);
+      setCurrency('USD'); 
+    }
+  };
+
+  fetchGeolocationData();
+}, []);
+
+// Updated Timezone Conversion Function
+// Custom timezone abbreviation mapping
+const timezoneAbbreviationMap = {
+  'Asia/Kolkata': 'IST',    // India
+  'America/New_York': 'EST', // Eastern US
+  'America/Los_Angeles': 'PST', // Pacific US
+  'Europe/London': 'GMT',    // UK
+  'Australia/Sydney': 'AEST' // Australia
+};
+
+const convertToUserTimezone = (time, date) => {
+  if (!time || !date) return 'TBA'; // Handle missing data
+
+  const combinedDateTime = `${date} ${time}`;
+
+  const formattedTime = dayjs.tz(combinedDateTime, userTimezone)
+    .format('MMM DD YYYY - hh:mm A');
+
+  // Map the abbreviation dynamically
+  const abbreviation = timezoneAbbreviationMap[userTimezone] || 'GMT';
+
+  return `${formattedTime} ${abbreviation}`;
+};
+
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -32,7 +107,16 @@ export const LiveOnlineFees = () => {
     };
     fetchCourses();
   }, [courseName]);
+  // const convertToUserTimezone = (time, date) => {
+  //   const estDateTime = `${date} ${time} EST`;
+  //   return dayjs(estDateTime)
+  //     .tz(userTimezone)
+  //     .format('MMM DD YYYY - hh:mm A z');
+  // };
+  
 
+
+  
   const handleBatchSelect = (batchId, batchData) => {
     setSelectedBatch(batchId);
 
@@ -70,8 +154,14 @@ export const LiveOnlineFees = () => {
         setEnrollText('Enroll Now');
     }
 
-    setFee(calculatedFee);
-  };
+    // Convert the fee to detected currency
+// Convert the fee to detected currency
+const convertedFee = calculatedFee !== 'Free' 
+  ? (currency === 'INR' 
+      ? (calculatedFee * exchangeRate).toFixed(2) 
+      : calculatedFee)
+  : 'Free';
+  }
 
   return (
     <>
@@ -91,13 +181,17 @@ export const LiveOnlineFees = () => {
                   />
                   <span className="custom-radio"></span>
                   <div className='partition-schedule'>
-                    <p className='batch-date'>
+                    {/* <p className='batch-date'>
                     {dayjs(course.schedule_date).format('MMM DD YYYY')} <span className='date-span'>
                     ({dayjs(course.schedule_date).format('ddd')})
                     </span>
+                    </p> */}
+                    
+                    <p className='batch-date'>
+                      {convertToUserTimezone(course.schedule_time, course.schedule_date)}
                     </p>
                     <p className='batch-date'>
-                      {course.schedule_time} EST <span className='date-span'>({course.schedule_duration} Hour)</span>
+                    {course.schedule_duration} Days
                     </p>
                     <p className={course.schedule_mode === "Live Class" ? 'class' : 'demo'}>
                       <FaCircle className={course.schedule_mode === "Live Class" ? 'class-icon' : 'demo-icon'} />

@@ -238,7 +238,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'course' ? 'active' : ''}`}
             onClick={() => handleNavClick('course')}
           >
-            <Link to="/courses" className="nav-item-link">
+            <Link to="/CourseDetails" className="nav-item-link">
               Courses
             </Link>
           </button>

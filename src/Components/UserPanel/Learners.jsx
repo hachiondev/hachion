@@ -72,7 +72,10 @@ const Learners = () => {
                     profile={reviews[index + 1].course_name}
                     location={reviews[index + 1].location}
                     content={reviews[index + 1].review}
-                    image={reviews[index + 1].user_image}
+                    image={reviews[index + 1].user_image 
+                      ? `https://api.hachion.co/${reviews[index + 1].user_image}` 
+                      : ''}
+                  
                   />
                 )}
               </div>

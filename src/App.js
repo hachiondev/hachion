@@ -66,8 +66,8 @@ function App() {
             
           }
         />
-      <Route path='/courses' element={<Course/>}/>
-      <Route path='/courses/:courseName' element={<QaAutomation />} />
+      <Route path='/CourseDetails' element={<Course/>}/>
+      <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
 
       {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
       {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}

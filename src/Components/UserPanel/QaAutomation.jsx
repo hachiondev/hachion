@@ -114,10 +114,10 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
           <li className="breadcrumb-item">
-                <a href="/courses">Courses</a> <MdKeyboardArrowRight />
+                <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <a href={`/courses/${courseData?.courseCategory}`}>
+                <a href={`/CourseDetails/${courseData?.courseCategory}`}>
                   {courseData?.courseCategory}
                 </a> <MdKeyboardArrowRight />
               </li>

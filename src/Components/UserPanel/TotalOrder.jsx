@@ -32,19 +32,21 @@ const [currency, setCurrency] = useState('USD');
   useEffect(() => {
     const fetchGeolocationData = async () => {
       try {
-        const geoResponse = await axios.get('https://ip-api.com/json/');
-        const countryCode = geoResponse.data.countryCode || 'US';
+        const geoResponse = await axios.get('https://ipinfo.io?token=82aafc3ab8d25b');
+        console.log('Geolocation Response:', geoResponse.data); // Verify data structure
+  
+        const countryCode = geoResponse.data.country || 'US';
         const detectedCurrency = countryToCurrencyMap[countryCode] || 'USD';
         setCurrency(detectedCurrency);
-
+  
         const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-        const rate = exchangeResponse.data.rates[detectedCurrency] || 1;
+        const rate = exchangeResponse.data.rates[detectedCurrency] ?? 1;
         setExchangeRate(rate);
       } catch (error) {
         console.error('Error fetching geolocation or exchange data:', error);
       }
     };
-
+  
     fetchGeolocationData();
   }, []);
 

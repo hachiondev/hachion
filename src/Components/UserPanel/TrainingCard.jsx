@@ -19,7 +19,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
   const navigateToCourse = () => {
     if (heading) {
       const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/courses/${formattedName}`);
+      navigate(`/CourseDetails/${formattedName}`);
     }
   };
 
@@ -45,9 +45,9 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
           {mode}
         </div>
         <h5 className="course-name">{heading}</h5>
-        <div className="course-time">
-          <h6 className="course-date">{date}</h6>
-          <h6 className="course-date">{time} EST</h6>
+        <div className="date-time-container">
+          <p className="date">{date}</p>
+          <p className="time">{time}</p>
         </div>
         {/* <h6 className="course-date">{duration} Hour</h6> */}
         {/* Prevent event propagation on button click */}

@@ -22,7 +22,7 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
   const handleClick = () => {
     if (title) {
       const formattedName = title.toLowerCase().replace(/\s+/g, '-'); // Format course name
-      navigate(`/courses/${formattedName}`);
+      navigate(`/CourseDetails/${formattedName}`);
     }
   };
 

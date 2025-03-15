@@ -5,75 +5,112 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import './Dashboard.css';
 
-const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState('');
-  const [course_name, setCourse_name] = useState('');
-  const [trainer_name, setTrainer_name] = useState('');
+const UserWriteReview = ({ setShowReviewForm }) => {
+  const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
+
+  const [reviewData, setReviewData] = useState({
+    review_id: Date.now(),
+    category_name: "",
+    course_name: "",
+    date: currentDate,
+    student_name: "",
+    source: "",
+    review:"",
+    user_image: "",
+    rating: 0,
+    type: "",
+    social_id: ""
+  });
+
   const [courses, setCourses] = useState([]);
   const [trainers, setTrainers] = useState([]);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState('');
-  const [social_id, setSocial_id] = useState('');
 
   // Fetch courses and trainers data on component load
   useEffect(() => {
     axios.get('https://api.hachion.co/courses/all')
-      .then(response => {
-        setCourses(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching courses:", error);
-      });
+      .then(response => setCourses(response.data))
+      .catch(error => console.error("Error fetching courses:", error));
 
     axios.get('https://api.hachion.co/trainers')
-      .then(response => {
-        setTrainers(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching trainers:", error);
-      });
+      .then(response => setTrainers(response.data))
+      .catch(error => console.error("Error fetching trainers:", error));
   }, []);
 
-  const handleSubmit = () => {
-    const reviewData = {
-      name,
-      email,
-      location,
-      type,
-      course_name,
-      trainer_name,
-      social_id,
-      rating,
-      review,
-    };
-
-    axios.post('https://api.hachion.co/userreview/add', reviewData)
-      .then(response => {
-        console.log("Review submitted successfully:", response.data);
-        console.log(response);
-        setShowReviewForm(false);
-      })
-      .catch(error => {
-        console.error("Error submitting review:", error);
-      });
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setReviewData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setReviewData((prevData) => ({
+      ...prevData,
+      user_image: e.target.files[0], // Store file object
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const reviewPayload = {
+        name: reviewData.student_name,
+        email: reviewData.email || "",
+        type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
+        course_name: reviewData.course_name,
+        trainer_name: reviewData.trainer_name || "",
+        social_id: reviewData.social_id,
+        rating: reviewData.rating ? Number(reviewData.rating) : 5,
+        review: reviewData.review || "",
+        location: reviewData.location || "",
+        date: new Date().toISOString().split("T")[0]
+    };
+
+    const formData = new FormData();
+    formData.append("review", JSON.stringify(reviewPayload)); // Attach JSON data
+
+    if (reviewData.user_image) {
+        formData.append("user_image", reviewData.user_image, reviewData.user_image.name); // Attach image
+    }
+
+    // Debugging FormData
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+
+    try {
+        const response = await axios.post(
+            "https://api.hachion.co/userreview/add",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        console.log("Review added successfully:", response.data);
+    } catch (error) {
+        console.error("Error adding review:", error.response?.data || error.message);
+    }
+};
+
+  
+  
   return (
     <div className='write-review'>
       <div className='review-form-content'>
         <div className="input-row">
           <div className="col-md-5">
-            <label className='form-label'>Name</label>
+            <label className='form-label'>Student Name</label>
             <input
               type="text"
               className="form-control"
               placeholder="Enter your Name"
-              aria-label="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="student_name"
+              value={reviewData.student_name}
+              onChange={handleChange}
             />
           </div>
           <div className="col-md-5">
@@ -82,31 +119,42 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               type="email"
               className="form-control"
               placeholder="abc@gmail.com"
-              aria-label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={reviewData.email}
+              onChange={handleChange}
             />
           </div>
         </div>
 
+        <div className="col-md-4">
+          <label className="form-label">Image</label>
+          <input
+            type="file"
+            className="form-control"
+            name="user_image"
+            onChange={handleFileChange}
+          />
+        </div>
+
         <div className="input-row">
           <div className="col-md-5">
-            <label className='form-label'>Location</label>
+            <label className='form-label'>Category Name</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Enter your Location"
-              aria-label="Location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Enter Category"
+              name="category_name"
+              value={reviewData.category_name}
+              onChange={handleChange}
             />
           </div>
           <div className="col-md-5">
             <label className="form-label">Review Type</label>
             <select
               className="form-select"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
+              name="type"
+              value={reviewData.type}
+              onChange={handleChange}
             >
               <option value="">Select Type</option>
               <option value="Course Review">Course Review</option>
@@ -120,25 +168,13 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
             <label className="form-label">Course Name</label>
             <select
               className="form-select"
-              value={course_name}
-              onChange={(e) => setCourse_name(e.target.value)}
+              name="course_name"
+              value={reviewData.course_name}
+              onChange={handleChange}
             >
               <option value="">Select Course</option>
               {courses.map(course => (
                 <option key={course.id} value={course.courseName}>{course.courseName}</option>
-              ))}
-            </select>
-          </div>
-          <div className="col-md-5">
-            <label className="form-label">Trainer Name</label>
-            <select
-              className="form-select"
-              value={trainer_name}
-              onChange={(e) => setTrainer_name(e.target.value)}
-            >
-              <option value="">Select Trainer</option>
-              {trainers.map(trainer => (
-                <option key={trainer.id} value={trainer.trainer_name}>{trainer.trainer_name}</option>
               ))}
             </select>
           </div>
@@ -149,8 +185,9 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
             <label className="form-label">Select ID</label>
             <select
               className="form-select"
-              value={social_id}
-              onChange={(e) => setSocial_id(e.target.value)}
+              name="social_id"
+              value={reviewData.social_id}
+              onChange={handleChange}
             >
               <option value="">Select</option>
               <option value="LinkedIn">LinkedIn</option>
@@ -164,9 +201,11 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
             <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
               <Typography component="legend">Rating</Typography>
               <Rating
-                name="user-rating"
-                value={rating}
-                onChange={(event, newValue) => setRating(newValue)}
+                name="rating"
+                value={reviewData.rating}
+                onChange={(event, newValue) =>
+                  setReviewData((prevData) => ({ ...prevData, rating: newValue }))
+                }
                 sx={{ ml: 1, mt: 1 }}
               />
             </Box>
@@ -175,12 +214,14 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
 
         <div className="mb-3 mt-3">
           <label className="form-label">Review</label>
-          <textarea
+          <input
+            type="text"
             className="form-control"
-            rows="3"
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-          ></textarea>
+            placeholder="Enter review"
+            name="review"
+            value={reviewData.review}
+            onChange={handleChange}
+          />
         </div>
 
         <div className='center'>

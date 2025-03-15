@@ -116,7 +116,9 @@
   display: flex; /* Display sidebar and card container side by side */
 }
 .course-banner-content{
-  color: white;
+  display: flex;
+  justify-content: center;
+  color: #00AAEF;
   font-weight: 600;
   font-size: 36px;
 }

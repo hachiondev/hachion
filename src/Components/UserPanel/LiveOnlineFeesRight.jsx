@@ -2,67 +2,112 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const countryToCurrencyMap = {
+  'IN': 'INR',
+  'US': 'USD',
+  'GB': 'GBP',
+  'AU': 'AUD',
+  'CA': 'CAD',
+  'EU': 'EUR'
+  // Add more country codes as needed
+};
+
 const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
-  const { courseName } = useParams(); // Get course name from URL
+  const { courseName } = useParams();
   const navigate = useNavigate();
   const [fee, setFee] = useState('');
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [message, setMessage] = useState('');
 
+  // Fetch Geolocation and Currency
   useEffect(() => {
-    const fetchCourseAmount = async () => {
+    const fetchGeolocationData = async () => {
+      try {
+        const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+        console.log('Geolocation Data:', geoResponse.data);
+
+        const countryCode = geoResponse.data.country || 'US';
+        const userCurrency = countryToCurrencyMap[countryCode] || 'USD';
+
+        console.log('Detected Currency:', userCurrency);
+        setCurrency(userCurrency);
+
+        // Clear old cached rates to ensure fresh data
+        localStorage.removeItem('exchangeRates');
+
+        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+        const rates = exchangeResponse.data.rates;
+        localStorage.setItem('exchangeRates', JSON.stringify(rates));
+
+        const rate = rates[userCurrency] || 1;
+        setExchangeRate(rate);
+
+        // ✅ Move `fetchCourseAmount()` here to ensure it's called after setting exchangeRate
+        fetchCourseAmount(rate);  
+      } catch (error) {
+        console.error('Error fetching geolocation or exchange rate data:', error);
+        setCurrency('USD');
+        fetchCourseAmount(1);  // Default to 1 (USD)
+      }
+    };
+
+    const fetchCourseAmount = async (rate) => {
       try {
         const response = await axios.get('https://api.hachion.co/courses/all');
         const courses = response.data;
 
-        // Find the matching course by courseName
         const matchedCourse = courses.find(
           (course) => course.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
 
         if (matchedCourse) {
-          let selectedFee, originalFee;
+          let selectedFee = 0;
+          let originalFee = 0;
 
           if (modeType === 'live') {
             if (enrollText.toLowerCase().includes('demo')) {
-              selectedFee = '0';
+              selectedFee = 0;
               originalFee = 0;
             } else {
-              selectedFee = matchedCourse.total;
-              originalFee = matchedCourse.amount;
+              selectedFee = parseFloat(matchedCourse.total) || 0;
+              originalFee = parseFloat(matchedCourse.amount) || 0;
             }
           } else {
             switch (modeType) {
               case 'mentoring':
-                selectedFee = matchedCourse.mtotal;
-                originalFee = matchedCourse.mamount;
+                selectedFee = parseFloat(matchedCourse.mtotal) || 0;
+                originalFee = parseFloat(matchedCourse.mamount) || 0;
                 break;
               case 'self':
-                selectedFee = matchedCourse.stotal;
-                originalFee = matchedCourse.samount;
+                selectedFee = parseFloat(matchedCourse.stotal) || 0;
+                originalFee = parseFloat(matchedCourse.samount) || 0;
                 break;
               case 'corporate':
-                selectedFee = matchedCourse.ctotal;
-                originalFee = matchedCourse.camount;
+                selectedFee = parseFloat(matchedCourse.ctotal) || 0;
+                originalFee = parseFloat(matchedCourse.camount) || 0;
                 break;
               default:
-                selectedFee = 'Not Available';
+                selectedFee = 0;
                 originalFee = 0;
             }
           }
 
+          const convertedFee = (parseFloat(selectedFee) * rate).toFixed(2);
+
           if (originalFee && selectedFee !== 'Free' && originalFee > selectedFee) {
             const calculatedDiscount = originalFee - selectedFee;
             const calculatedDiscountPercentage = Math.round((calculatedDiscount / originalFee) * 100);
-            setDiscount(calculatedDiscount);
+            setDiscount((calculatedDiscount * rate).toFixed(2));
             setDiscountPercentage(calculatedDiscountPercentage);
           } else {
             setDiscount(0);
             setDiscountPercentage(0);
           }
 
-          setFee(selectedFee || 'Not Available'); // Handle null values
+          setFee(convertedFee || 'Not Available');
         } else {
           setFee('Not Available');
         }
@@ -72,22 +117,22 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       }
     };
 
-    fetchCourseAmount();
-  }, [courseName, modeType, enrollText]);
+    fetchGeolocationData();
+}, [courseName, modeType, enrollText]);
+
 
   const handleEnroll = async () => {
     const isLoggedIn = localStorage.getItem('userToken') ? true : false;
 
     if (!isLoggedIn) {
       alert('Please log in to enroll.');
-      window.location.href = '/login'; // Redirect to login page
+      window.location.href = '/login'; 
       return;
-    }
-
-    if (modeType === 'live' && enrollText === 'Enroll Now') {
-      // Redirect to Enrollment.jsx page for Live Class
-      navigate('/enrollment');
-      return;
+    } else {
+      if (modeType === 'live' && enrollText === 'Enroll Now') {
+        navigate(`/enroll/${courseName}`);
+        return;
+      }
     }
 
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
@@ -117,10 +162,13 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
   return (
     <div className='right'>
       <p className='batch-date-fee'>Fee:</p>
-      <p className='free'>{enrollText === 'Enroll Free Demo' ? 'Free' : `USD ${fee}`}</p>
+      <p className='free'>
+        {enrollText === 'Enroll Free Demo' ? 'Free' : `${currency} ${fee}`}
+      </p>
+
       {discount > 0 && fee !== 'Free' && (
         <p className='discount'>
-         Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & Save USD {Math.round(discount)}/-
+          Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & Save {currency} {discount}/-
         </p>
       )}
       

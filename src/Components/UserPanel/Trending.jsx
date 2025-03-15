@@ -75,7 +75,7 @@ const Trending = () => {
     if (!course?.courseName) return; // Prevent errors if courseName is undefined
 
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-'); // Convert to slug
-    navigate(`/courses/${courseSlug}`); // Navigate with new path
+    navigate(`/CourseDetails/${courseSlug}`); // Navigate with new path
   };
 
   return (
@@ -84,7 +84,7 @@ const Trending = () => {
         <h1 className="association-head">Trending Courses</h1>
       </div>
       <div className="view-btn">
-        <button className="view-all" onClick={() => navigate('/course')}>
+        <button className="view-all" onClick={() => navigate('/CourseDetails')}>
           View All
         </button>
       </div>

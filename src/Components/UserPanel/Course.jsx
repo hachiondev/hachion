@@ -7,12 +7,14 @@ import Pagination from './Pagination';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import './Course.css';
+import { Helmet } from 'react-helmet-async';
+
 
 const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage, setCardsPerPage] = useState(12);
+  const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
 
   const handleCategorySelect = (category) => {
@@ -42,7 +44,7 @@ const Course = () => {
       else if (width <= 1366) {
         setCardsPerPage(8); // Larger tablet view
       } else {
-        setCardsPerPage(12); // Desktop view
+        setCardsPerPage(9); // Desktop view
       }
     };
 
@@ -65,15 +67,31 @@ const Course = () => {
   
   return (
     <>
+      <Helmet>
+      <title>Explore Our Wide Range of Courses - Hachion</title>
+      <meta name="description" content="Explore top-notch courses on various subjects. Find the best programs for your skill growth at Hachion." />
+      <meta name="keywords" content="IT certification programs, Best IT courses with placements, IT Career Growth courses, IT Training with Job Support" />
+      <meta property="og:title" content="Best Online IT Certification Courses & Programs - Hachion" />
+      <meta property="og:description" content="Transform your career with Hachion's Online IT Courses. Enroll now, earn a certificate
+      ,get job assistance & try our free demo! Join Today!" />
+      <meta property="og:image" content="https://hachion.co/images/course-banner.jpg" />
+      <meta property="og:url" content="https://hachion.co/CourseDetails" />
+      <meta name="robots" content="index, follow" />
+    </Helmet>
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        <div className='course-banner' ref={bannerRef}>
+        {/* <div className='course-banner' ref={bannerRef}>
+          <h3 className='course-banner-content'>Courses</h3>
+        </div> */}
+        <div>
           <h3 className='course-banner-content'>Courses</h3>
         </div>
         <div className='course-content'>
+          
           <Sidebar onSelectCategory={handleCategorySelect} />
           <div className='sidebar-right-container'>
+          <meta name="description" content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`} />
             {/* SidebarRight renders the course cards */}
             <SidebarRight
               category={selectedCategory}
@@ -100,4 +118,3 @@ const Course = () => {
 };
 
 export default Course;
-

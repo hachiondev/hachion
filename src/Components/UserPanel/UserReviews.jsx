@@ -21,75 +21,78 @@ export default function UserReviews({ userId }) {
 
   // Fetch user reviews by ID
   useEffect(() => {
-    console.log("User ID:", userId); // Add this to confirm the ID being used
     if (!userId) {
       console.error("No user ID provided.");
-      
       return;
     }
-  
+
     axios.get(`https://api.hachion.co/userreview/${userId}`)
       .then(response => {
-        console.log("API Response:", response.data); // Log the response to confirm
-        const reviewData = response.data;
-        if (reviewData) {
-          setReviews([{
-            S_No: 1,
-            name: reviewData.name,
-            email: reviewData.email,
-            course_name: reviewData.course_name,
-            trainer_name: reviewData.trainer_name,
-            social_id: reviewData.social_id,
-            rating: Array(reviewData.rating).fill(<LiaStarSolid style={{ color: 'gold' }} />),
-            review: reviewData.review,
-            location: reviewData.location,
-            date: reviewData.date,
-          }]);
+        console.log("API Response:", response.data);
+        if (Array.isArray(response.data)) {
+          setReviews(response.data.map((review, index) => ({
+            S_No: index + 1,
+            review_id: review.review_id,
+            course_name: review.course_name,
+            rating: [...Array(review.rating)].map((_, i) => <LiaStarSolid key={i} style={{ color: 'gold' }} />),
+            review: review.review,
+          })));
         } else {
-          console.warn("No review data received.");
           setReviews([]);
+          console.warn("Unexpected API response format.");
         }
       })
       .catch(error => {
         console.error("Error fetching user reviews:", error);
       });
   }, [userId]);
-  
 
-  const handleAddReview = (userId, reviewData) => {
-    setReviews((prevReviews) => [
-      ...prevReviews,
-      {
-        S_No: prevReviews.length + 1,
-        course_name: reviewData.course_name,
-        rating: Array(reviewData.rating).fill(<LiaStarSolid style={{ color: 'gold' }} />),
-        review: reviewData.review,
-      },
-    ]);
-  
-    // Optionally, fetch updated reviews for the user
+  // Handle adding a new review
+  const handleAddReview = (reviewData) => {
+    axios.post(`https://api.hachion.co/userreview`, {
+      user_id: userId,
+      course_name: reviewData.course_name,
+      rating: reviewData.rating,
+      review: reviewData.review,
+    })
+    .then(response => {
+      console.log("Review added:", response.data);
+      fetchReviews();  // Refresh reviews after addition
+      setShowReviewForm(false);
+    })
+    .catch(error => {
+      console.error("Error adding review:", error);
+    });
+  };
+
+  // Fetch updated reviews
+  const fetchReviews = () => {
     axios.get(`https://api.hachion.co/userreview/${userId}`)
       .then(response => {
         console.log("Updated reviews fetched:", response.data);
-        setReviews(response.data);
+        setReviews(response.data.map((review, index) => ({
+          S_No: index + 1,
+          review_id: review.review_id,
+          course_name: review.course_name,
+          rating: [...Array(review.rating)].map((_, i) => <LiaStarSolid key={i} style={{ color: 'gold' }} />),
+          review: review.review,
+        })));
       })
       .catch(error => {
         console.error("Error fetching updated reviews:", error);
       });
   };
-  
 
-  const handleDeleteReview = (S_No) => {
-    const reviewToDelete = reviews.find((review) => review.S_No === S_No);
-    if (reviewToDelete) {
-      axios.delete(`https://api.hachion.co/userreview/${reviewToDelete.review_id}`)
-        .then(() => {
-          setReviews((prevReviews) => prevReviews.filter((review) => review.S_No !== S_No));
-        })
-        .catch(error => {
-          console.error("Error deleting review:", error);
-        });
-    }
+  // Handle review deletion
+  const handleDeleteReview = (reviewId) => {
+    axios.delete(`https://api.hachion.co/userreview/${reviewId}`)
+      .then(() => {
+        console.log("Review deleted:", reviewId);
+        fetchReviews(); // Refresh reviews after deletion
+      })
+      .catch(error => {
+        console.error("Error deleting review:", error);
+      });
   };
 
   return (
@@ -145,7 +148,7 @@ export default function UserReviews({ userId }) {
                         <IconButton className="edit-button">
                           <BiSolidEditAlt />
                         </IconButton>
-                        <IconButton onClick={() => handleDeleteReview(row.S_No)} className="delete-button">
+                        <IconButton onClick={() => handleDeleteReview(row.review_id)} className="delete-button">
                           <MdOutlineDeleteForever />
                         </IconButton>
                       </TableCell>

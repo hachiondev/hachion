@@ -649,6 +649,26 @@ margin: 1vh 0;
 text-align: center;
 }
 
+.date-time-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.date {
+  text-align: left;
+  flex: 1;
+  
+  font-weight: 600;
+}
+
+.time {
+  text-align: right;
+  flex: 1;
+  font-weight: 600;
+}
+
 .cards-view{
   margin-left: 50%;
   margin-top: 10px;

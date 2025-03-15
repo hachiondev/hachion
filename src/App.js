@@ -45,13 +45,11 @@ import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
-import { HelmetProvider } from "react-helmet-async";
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
-    <HelmetProvider>
     <BrowserRouter>
     <Routes>
       
@@ -70,8 +68,8 @@ function App() {
             
           }
         />
-      <Route path='/courses' element={<Course/>}/>
-      <Route path='/courses/:courseName' element={<QaAutomation />} />
+       <Route path='/CourseDetails' element={<Course/>}/>
+       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
 
       {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
       {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
@@ -115,7 +113,6 @@ function App() {
     
       </Routes>
       </BrowserRouter>
-      </HelmetProvider>
     </>
   );
 }

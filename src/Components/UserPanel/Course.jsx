@@ -14,7 +14,7 @@ const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage, setCardsPerPage] = useState(12);
+  const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
 
   const handleCategorySelect = (category) => {
@@ -44,7 +44,7 @@ const Course = () => {
       else if (width <= 1366) {
         setCardsPerPage(8); // Larger tablet view
       } else {
-        setCardsPerPage(12); // Desktop view
+        setCardsPerPage(9); // Desktop view
       }
     };
 
@@ -81,7 +81,10 @@ const Course = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        <div className='course-banner' ref={bannerRef}>
+        {/* <div className='course-banner' ref={bannerRef}>
+          <h3 className='course-banner-content'>Courses</h3>
+        </div> */}
+        <div>
           <h3 className='course-banner-content'>Courses</h3>
         </div>
         <div className='course-content'>
@@ -115,4 +118,3 @@ const Course = () => {
 };
 
 export default Course;
-

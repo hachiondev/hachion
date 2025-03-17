@@ -193,7 +193,7 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/corporate')}>
                       Corporate Training
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/course')}>
+                    <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
                       Courses
                     </div>
                     <div className="drawer-item">Hire from Us</div>
@@ -209,7 +209,7 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/corporate')}>
                   Corporate Training
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/course')}>
+                <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
                   Courses
                 </div>
                 <div className="drawer-item">Hire from Us</div>

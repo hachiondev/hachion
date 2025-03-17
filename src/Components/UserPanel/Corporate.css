@@ -499,7 +499,7 @@
      }
    
      .carousel-indicators {
-       /* top: 330px; */
+       top: 500px;
        display: flex;
        left: 10%;
        padding-top: 20px;
@@ -509,7 +509,7 @@
    }
    
    .carousel-indicators li {
-       background-color:  grey; 
+       background-color:  #6A6A6A; 
        width: 60px !important;  
        height: 5px !important; 
        margin: 5px; 
@@ -530,6 +530,55 @@
   gap: 20px;
   padding: 20px;
   }
+
+  .read-more {
+    color: #00aeef;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .popup-content {
+    text-align: center;
+  }
+  
+  .profile-image-large {
+    width: 80px;
+    height: 80px;
+    margin: 10px auto;
+  }
+
+  .top{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .close-button {
+    /* position: absolute;
+    right: 10px;
+    top: 10px; */
+    display: flex;
+    justify-items: flex-end;
+  }
+  
+  .full-review {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: justify;
+  }
+
+  .learner-card-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .modal-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
   .left-quotes{
     height: 80px;
      z-index: 1;
@@ -1162,6 +1211,12 @@
         width: 30px;
         margin-top: 2vh;
     }
+
+    .learner-card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
     .left-quotes{
         height: 60px;
         width: 60px;
@@ -1611,6 +1666,11 @@
         margin-top:70px;
       }
 
+      .learner-card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
       .left-quotes{
         height: 60px;
         width: 60px;
@@ -1629,7 +1689,6 @@
     
       .custom-prev-icon, .custom-next-icon {
         font-size: 20px;
-        color: #000;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);

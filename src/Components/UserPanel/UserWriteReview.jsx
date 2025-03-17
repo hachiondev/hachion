@@ -137,17 +137,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
         </div>
 
         <div className="input-row">
-          <div className="col-md-5">
-            <label className='form-label'>Category Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter Category"
-              name="category_name"
-              value={reviewData.category_name}
-              onChange={handleChange}
-            />
-          </div>
+         
           <div className="col-md-5">
             <label className="form-label">Review Type</label>
             <select

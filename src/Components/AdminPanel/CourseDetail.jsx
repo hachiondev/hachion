@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
+import { Helmet } from 'react-helmet';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -68,7 +69,7 @@ const CourseDetail = ({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
+  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
     keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
@@ -214,9 +215,6 @@ const handleSubmit = async (e) => {
     date: currentDate,
     youtubeLink: formData.youtubeLink,
     numberOfClasses: formData.numberOfClasses,
-    liveTrainingHours: formData.liveTrainingHours,
-    labExerciseHours: formData.labExerciseHours,
-    realTimeProjects: formData.realTimeProjects,
     starRating: formData.starRating,
     ratingByNumberOfPeople: formData.ratingByNumberOfPeople,
     totalEnrollment: formData.totalEnrollment,
@@ -234,9 +232,9 @@ const handleSubmit = async (e) => {
     mentoring2: formData.mentoring2,
     self1: formData.self1,
     self2: formData.self2,
-    headerTitle: formData.headerTitle,
-    courseKeyword: formData.courseKeyword,
-    courseKeywordDescription: formData.courseKeywordDescription,
+    metaTitle: formData.headerTitle,
+  metaKeywords: formData.courseKeyword,
+  metaDescription: formData.courseKeywordDescription,
     courseHighlight: formData.courseHighlight,
     courseDescription: formData.courseDescription,
   };
@@ -298,9 +296,7 @@ const handleEditClick = async (courseId) => {
         youtubeLink: course.youtubeLink ,
         numberOfClasses: course.numberOfClasses ,
         dailySessions: course.dailySessions ,
-        liveTrainingHours: course.liveTrainingHours ,
-        labExerciseHours: course.labExerciseHours ,
-        realTimeProjects: course.realTimeProjects,
+  
         starRating: course.starRating ,
         ratingByNumberOfPeople: course.ratingByNumberOfPeople,
         totalEnrollment: course.totalEnrollment,
@@ -318,7 +314,7 @@ const handleEditClick = async (courseId) => {
         mentoring2:course.mentoring2,
         self1:course.self1,
     self2:course.self2,
-    headerTitle:course.headerTitle,courseKeyword:course.courseKeyword,courseKeywordDescription:course.courseDescription,
+    metaTitle:course.headerTitle,metaKeyword:course.courseKeyword,metaDescription:course.courseDescription,
     courseHighlight:course.courseHighlight,courseDescription:course.courseDescription
             });
             
@@ -361,9 +357,7 @@ const handleReset=()=>{
     youtubeLink: '',
     numberOfClasses: '',
     dailySessions: '',
-    liveTrainingHours: '',
-    labExerciseHours: '',
-    realTimeProjects: '',
+ 
     starRating: '',
     ratingByNumberOfPeople: '',
     totalEnrollment: '',
@@ -503,41 +497,8 @@ const handleAddTrendingCourseClick = () => {
                 />
               </div>
             </div>
-            <div className="course-row">
-              <div className="col-md-4">
-                <label className="form-label">Live Training Hours</label>
-                <input
-                  type="text"
-                  name="liveTrainingHours"
-                  className="form-control"
-                  placeholder="Enter live training hours"
-                  value={formData.liveTrainingHours}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Lab Exercise Hours</label>
-                <input
-                  type="text"
-                  name="labExerciseHours"
-                  className="form-control"
-                  placeholder="Enter lab exercise hours"
-                  value={formData.labExerciseHours}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Real Time Projects</label>
-                <input
-                  type="text"
-                  name="realTimeProjects"
-                  className="form-control"
-                  placeholder="Enter projects"
-                  value={formData.realTimeProjects}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
+            
+            
             <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Star Rating</label>
@@ -852,6 +813,12 @@ const handleAddTrendingCourseClick = () => {
               </button>
             </div>
             </form>
+            <Helmet>
+  <title>{formData.headerTitle || 'Default Title'}</title>
+  <meta name="description" content={formData.courseKeywordDescription || 'Default Description'} />
+  <meta name="keywords" content={formData.courseKeyword || 'Default Keywords'} />
+</Helmet>
+
       </div>
       </div>
       

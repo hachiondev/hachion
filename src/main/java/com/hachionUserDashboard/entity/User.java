@@ -127,7 +127,6 @@
 // 
 //}
 
-
 package com.hachionUserDashboard.entity;
 
 import java.time.LocalDateTime;
@@ -140,34 +139,44 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "user_tbl") // Replace with your actual table name
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "user_name", nullable = false)
-    private String userName;
+//    @Column(name = "user_name", nullable = false)
+	private String userName;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-    
-    @Column(name = "mobile",nullable=true)
-    private Long mobile;
+	@Column(name = "email", nullable = false, unique = true)
+	private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-    
+//    @Column(name = "mobile",nullable=true)
+	private Long mobile;
 
-    private String OTP;
+//    @Column(name = "password", nullable = false)
+	private String password;
+
+	private String OTP;
+
+	@Column(name = "otp_status")
+	private boolean OTPStatus;
 
 
-    public User() {
-    	
-    }
+	public boolean isOTPStatus() {
+		return OTPStatus;
+	}
+
+	public void setOTPStatus(boolean oTPStatus) {
+		OTPStatus = oTPStatus;
+	}
+
+	public User() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -209,25 +218,29 @@ public class User {
 		this.password = password;
 		OTP = oTP;
 	}
+
 	public Long getMobile() {
 		return mobile;
 	}
+
 	public void setMobile(Long mobile) {
 		this.mobile = (long) mobile;
 	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", email=" + email + ", mobile=" + mobile + ", password="
 				+ password + ", OTP=" + OTP + "]";
 	}
 
-
 	public static void setActive(boolean active) {
 		active = active;
 	}
+
 	public String getOTP() {
 		return OTP;
 	}
+
 	public void setOTP(String oTP) {
 		OTP = oTP;
 	}
@@ -236,31 +249,30 @@ public class User {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	public User get() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public Temporal getOtpgeneratedTime() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public void setOtpGeneratedTime(LocalDateTime now) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	public User orElseThrow(Object object) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public boolean isActive() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-
-
-	
-
-
-
-    }
+}

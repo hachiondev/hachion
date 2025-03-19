@@ -19,9 +19,9 @@ import com.hachionUserDashboard.entity.Banner;
 import com.hachionUserDashboard.entity.Blogs;
 import com.hachionUserDashboard.repository.BannerRepository;
 
-@RequestMapping("/banner")
+@RequestMapping
 @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
+//@CrossOrigin(origins ="http://localhost:3000")
 @RestController
 public class BannerController {
 

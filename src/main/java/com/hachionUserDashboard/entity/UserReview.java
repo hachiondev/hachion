@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,7 +24,23 @@ public class UserReview {
 	    @Column
 	    private String email;
 	    
-	    @Column
+	    @Lob
+	    private String user_image; 
+	    
+	    public UserReview(String user_image) {
+			super();
+			this.user_image = user_image;
+		}
+
+		public String getUser_image() {
+			return user_image;
+		}
+
+		public void setUser_image(String user_image) {
+			this.user_image = user_image;
+		}
+
+		@Column
 	    private String type;
 	    
 	    @Column
@@ -157,9 +174,10 @@ public class UserReview {
 
 		@Override
 		public String toString() {
-			return "UserReview [review_id=" + review_id + ", name=" + name + ", email=" + email + ", type=" + type
-					+ ", course_name=" + course_name + ",location=\" + location + \", trainer_name=" + trainer_name + ", social_id=" + social_id
-					+ ", rating=" + rating + ", review=" + review + ", date=" + date + "]";
+			return "UserReview [review_id=" + review_id + ", name=" + name + ", email=" + email + ", user_image="
+					+ user_image + ", type=" + type + ", course_name=" + course_name + ", trainer_name=" + trainer_name
+					+ ", social_id=" + social_id + ", rating=" + rating + ", review=" + review + ", location="
+					+ location + ", date=" + date + "]";
 		}
 	    
 }

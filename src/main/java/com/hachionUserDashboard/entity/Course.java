@@ -28,14 +28,7 @@ public class Course {
 	    @Column
 	    private String dailySessions;
 	    
-	    @Column
-	    private String liveTrainingHours;
-	    
-	    @Column
-	    private String labExerciseHours;
-	    
-	    @Column
-	    private String realTimeProjects;
+	
 	    @Column
 	    private int starRating;
 	    @Column
@@ -62,6 +55,96 @@ public class Course {
 	    @Column
 	    private Double total;
 	    @Column
+	    private Double mamount;
+	    @Column
+	    private Double mdiscount;
+	    @Column
+	    private Double mtotal;
+	    @Column
+	    private Double samount;
+	    @Column
+	    private Double sdiscount;
+	    @Column
+	    private Double stotal;
+	    @Column
+	    private Double camount;
+	    @Column
+	    private Double cdiscount;
+	    @Column
+	    private Double ctotal;
+	    public Double getMamount() {
+			return mamount;
+		}
+
+		public void setMamount(Double mamount) {
+			this.mamount = mamount;
+		}
+
+		public Double getMdiscount() {
+			return mdiscount;
+		}
+
+		public void setMdiscount(Double mdiscount) {
+			this.mdiscount = mdiscount;
+		}
+
+		public Double getMtotal() {
+			return mtotal;
+		}
+
+		public void setMtotal(Double mtotal) {
+			this.mtotal = mtotal;
+		}
+
+		public Double getSamount() {
+			return samount;
+		}
+
+		public void setSamount(Double samount) {
+			this.samount = samount;
+		}
+
+		public Double getSdiscount() {
+			return sdiscount;
+		}
+
+		public void setSdiscount(Double sdiscount) {
+			this.sdiscount = sdiscount;
+		}
+
+		public Double getStotal() {
+			return stotal;
+		}
+
+		public void setStotal(Double stotal) {
+			this.stotal = stotal;
+		}
+
+		public Double getCamount() {
+			return camount;
+		}
+
+		public void setCamount(Double camount) {
+			this.camount = camount;
+		}
+
+		public Double getCdiscount() {
+			return cdiscount;
+		}
+
+		public void setCdiscount(Double cdiscount) {
+			this.cdiscount = cdiscount;
+		}
+
+		public Double getCtotal() {
+			return ctotal;
+		}
+
+		public void setCtotal(Double ctotal) {
+			this.ctotal = ctotal;
+		}
+
+		@Column
 	    private String mentoring1;
 	    @Column
 	    private String mentoring2;
@@ -70,11 +153,11 @@ public class Course {
 	    @Column
 	    private String self2;
 	    @Column
-	    private String headerTitle;
+	    private String metaTitle;
 	    @Column
-	    private String courseKeyword;
+	    private String metaKeyword;
 	    @Column
-	    private String courseKeywordDescription;
+	    private String metaDescription;
 	    @Column
 	    private String courseHighlight;
 	    @Column
@@ -138,30 +221,7 @@ public class Course {
 		this.dailySessions = dailySessions;
 	}
 
-	public String getLiveTrainingHours() {
-		return liveTrainingHours;
-	}
-
-	public void setLiveTrainingHours(String liveTrainingHours) {
-		this.liveTrainingHours = liveTrainingHours;
-	}
-
-	public String getLabExerciseHours() {
-		return labExerciseHours;
-	}
-
-	public void setLabExerciseHours(String labExerciseHours) {
-		this.labExerciseHours = labExerciseHours;
-	}
-
-	public String getRealTimeProjects() {
-		return realTimeProjects;
-	}
-
-	public void setRealTimeProjects(String realTimeProjects) {
-		this.realTimeProjects = realTimeProjects;
-	}
-
+	
 	public int getStarRating() {
 		return starRating;
 	}
@@ -290,28 +350,28 @@ public class Course {
 		this.self2 = self2;
 	}
 
-	public String getHeaderTitle() {
-		return headerTitle;
+	public String getMetaTitle() {
+		return metaTitle;
 	}
 
-	public void setHeaderTitle(String headerTitle) {
-		this.headerTitle = headerTitle;
+	public void setMetaTitle(String metaTitle) {
+		this.metaTitle = metaTitle;
 	}
 
-	public String getCourseKeyword() {
-		return courseKeyword;
+	public String getMetaKeyword() {
+		return metaKeyword;
 	}
 
-	public void setCourseKeyword(String courseKeyword) {
-		this.courseKeyword = courseKeyword;
+	public void setMetaKeyword(String metaKeyword) {
+		this.metaKeyword = metaKeyword;
 	}
 
-	public String getCourseKeywordDescription() {
-		return courseKeywordDescription;
+	public String getMetaDescription() {
+		return metaDescription;
 	}
 
-	public void setCourseKeywordDescription(String courseKeywordDescription) {
-		this.courseKeywordDescription = courseKeywordDescription;
+	public void setMetaDescription(String metaDescription) {
+		this.metaDescription = metaDescription;
 	}
 
 	public String getCourseHighlight() {
@@ -346,13 +406,16 @@ public class Course {
 		this.courseCategory = courseCategory;
 	}
 
+	
 	public Course(int id, String courseName, String courseImage, String youtubeLink, String numberOfClasses,
-			String dailySessions, String liveTrainingHours, String labExerciseHours, String realTimeProjects,
+			String dailySessions,
 			int starRating, int ratingByNumberOfPeople, int totalEnrollment, String keyHighlights1,
 			String keyHighlights2, String keyHighlights3, String keyHighlights4, String keyHighlights5,
-			String keyHighlights6, Double amount, Double discount, Double total, String mentoring1, String mentoring2,
-			String self1, String self2, String headerTitle, String courseKeyword, String courseKeywordDescription,
-			String courseHighlight, String courseDescription, LocalDate date, String courseCategory) {
+			String keyHighlights6, Double amount, Double discount, Double total, Double mamount, Double mdiscount,
+			Double mtotal, Double samount, Double sdiscount, Double stotal, Double camount, Double cdiscount,
+			Double ctotal, String mentoring1, String mentoring2, String self1, String self2, String metaTitle,
+			String metaKeyword, String metaDescription, String courseHighlight, String courseDescription,
+			LocalDate date, String courseCategory) {
 		super();
 		this.id = id;
 		this.courseName = courseName;
@@ -360,9 +423,7 @@ public class Course {
 		this.youtubeLink = youtubeLink;
 		this.numberOfClasses = numberOfClasses;
 		this.dailySessions = dailySessions;
-		this.liveTrainingHours = liveTrainingHours;
-		this.labExerciseHours = labExerciseHours;
-		this.realTimeProjects = realTimeProjects;
+
 		this.starRating = starRating;
 		this.ratingByNumberOfPeople = ratingByNumberOfPeople;
 		this.totalEnrollment = totalEnrollment;
@@ -375,13 +436,22 @@ public class Course {
 		this.amount = amount;
 		this.discount = discount;
 		this.total = total;
+		this.mamount = mamount;
+		this.mdiscount = mdiscount;
+		this.mtotal = mtotal;
+		this.samount = samount;
+		this.sdiscount = sdiscount;
+		this.stotal = stotal;
+		this.camount = camount;
+		this.cdiscount = cdiscount;
+		this.ctotal = ctotal;
 		this.mentoring1 = mentoring1;
 		this.mentoring2 = mentoring2;
 		this.self1 = self1;
 		this.self2 = self2;
-		this.headerTitle = headerTitle;
-		this.courseKeyword = courseKeyword;
-		this.courseKeywordDescription = courseKeywordDescription;
+		this.metaTitle = metaTitle;
+		this.metaKeyword = metaKeyword;
+		this.metaDescription = metaDescription;
 		this.courseHighlight = courseHighlight;
 		this.courseDescription = courseDescription;
 		this.date = date;
@@ -392,16 +462,18 @@ public class Course {
 	public String toString() {
 		return "Course [id=" + id + ", courseName=" + courseName + ", courseImage=" + courseImage + ", youtubeLink="
 				+ youtubeLink + ", numberOfClasses=" + numberOfClasses + ", dailySessions=" + dailySessions
-				+ ", liveTrainingHours=" + liveTrainingHours + ", labExerciseHours=" + labExerciseHours
-				+ ", realTimeProjects=" + realTimeProjects + ", starRating=" + starRating + ", ratingByNumberOfPeople="
+				+ ", starRating=" + starRating + ", ratingByNumberOfPeople="
 				+ ratingByNumberOfPeople + ", totalEnrollment=" + totalEnrollment + ", keyHighlights1=" + keyHighlights1
 				+ ", keyHighlights2=" + keyHighlights2 + ", keyHighlights3=" + keyHighlights3 + ", keyHighlights4="
 				+ keyHighlights4 + ", keyHighlights5=" + keyHighlights5 + ", keyHighlights6=" + keyHighlights6
-				+ ", amount=" + amount + ", discount=" + discount + ", total=" + total + ", mentoring1=" + mentoring1
-				+ ", mentoring2=" + mentoring2 + ", self1=" + self1 + ", self2=" + self2 + ", headerTitle="
-				+ headerTitle + ", courseKeyword=" + courseKeyword + ", courseKeywordDescription="
-				+ courseKeywordDescription + ", courseHighlight=" + courseHighlight + ", courseDescription="
-				+ courseDescription + ", date=" + date + ", courseCategory=" + courseCategory + "]";
+				+ ", amount=" + amount + ", discount=" + discount + ", total=" + total + ", mamount=" + mamount
+				+ ", mdiscount=" + mdiscount + ", mtotal=" + mtotal + ", samount=" + samount + ", sdiscount="
+				+ sdiscount + ", stotal=" + stotal + ", camount=" + camount + ", cdiscount=" + cdiscount + ", ctotal="
+				+ ctotal + ", mentoring1=" + mentoring1 + ", mentoring2=" + mentoring2 + ", self1=" + self1 + ", self2="
+				+ self2 + ", metaTitle=" + metaTitle + ", metaKeyword=" + metaKeyword
+				+ ", metaDescription=" + metaDescription + ", courseHighlight=" + courseHighlight
+				+ ", courseDescription=" + courseDescription + ", date=" + date + ", courseCategory=" + courseCategory
+				+ "]";
 	}
 	
 	

@@ -13,6 +13,14 @@ public class UserRegistrationRequest {
 	  private String password;
 	  private String OTP;
 	  private Long mobile;
+	  private String confirmPassword;
+	    
+		public String getConfirmPassword() {
+			return confirmPassword;
+		}
+		public void setConfirmPassword(String confirmPassword) {
+			this.confirmPassword = confirmPassword;
+		}
 	  
 
 	public Long getMobile() {

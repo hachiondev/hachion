@@ -18,7 +18,7 @@ import com.hachionUserDashboard.entity.DemoVideo;
 import com.hachionUserDashboard.repository.DemoVideoRepository;
 
  @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
+// @CrossOrigin(origins ="http://localhost:3000")
 @RestController
 public class DemoVideoController {
 

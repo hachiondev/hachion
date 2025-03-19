@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.RegularVideo;
 import com.hachionUserDashboard.repository.RegularVideoRepository;
-
- @CrossOrigin
+@CrossOrigin
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"}) 
 @RestController
 public class RegularVideoController {

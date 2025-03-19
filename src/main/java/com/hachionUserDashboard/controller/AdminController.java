@@ -134,6 +134,7 @@ import Service.AdminService;
 
 @RestController
 @CrossOrigin
+//@CrossOrigin(origins ="http://localhost:3000")
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RequestMapping("/api/v1/user")
 public class AdminController {

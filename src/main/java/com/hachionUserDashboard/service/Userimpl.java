@@ -119,17 +119,13 @@
 
 package com.hachionUserDashboard.service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.security.SecureRandom;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -142,54 +138,119 @@ import com.hachionUserDashboard.util.OtpUtil;
 
 import Response.LoginResponse;
 import Service.UserService;
-import jakarta.mail.MessagingException;
 
 @Service
 public class Userimpl implements UserService {
 
 	@Autowired
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-private OtpUtil otpUtil;
-@Autowired
-private EmailUtil emailUtil;
-    
-@Autowired
-private PasswordEncoder passwordEncoder;
+	private OtpUtil otpUtil;
+	@Autowired
+	private EmailUtil emailUtil;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
+	@Override
+	public String sendOtp(String email) {
 
-@Override
+		String otp = String.valueOf(new Random().nextInt(9999));
 
+		User user = userRepository.findByEmail(email);
 
-public String sendOtp(String email) {
-    // Generate OTP
-    String otp = String.valueOf(new Random().nextInt(9999));
-    emailUtil.sendOtpEmail(email, otp);
-	return "OTP sent to your mail.";
-}
-@Override
-public String addUser(UserRegistrationRequest userDTO) {
-    // Check OTP and register user logic
-	   User user = new User();
+		if (user == null) {
+			user = new User();
+			user.setEmail(email);
+			user.setOTPStatus(false);
+		}
+
+		user.setOTP(otp);
+		user.setOTPStatus(false);
+
+		userRepository.save(user);
+		emailUtil.sendOtpEmail(email, otp);
+
+		return "OTP sent to your email.";
+	}
+
+	@Override
+	public String verifyOtp(String email, String otp) {
+	    User user = userRepository.findByEmail(email);
+
+	    if (user == null) {
+	        return "Email does not exist in the database.";
+	    }
+
+	    if (user.getOTP().equals(otp)) {
+	        
+	        user.setOTPStatus(true);
+	        user.setOTP(null); 
+	        userRepository.save(user);
+
+	        return "User verified successfully with OTP.";
+	    } else {
+	        return "Invalid OTP.";
+	    }
+	}
+
+	@Override
+	public String updatePassword(UserRegistrationRequest registrationRequest) {
+
+		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirmPassword())) {
+			return "Password and Confirm Password do not match.";
+		}
+		User user = userRepository.findByEmail(registrationRequest.getEmail());
+		if (user == null) {
+			return "Email does not exist.";
+		}
+
+		user.setPassword(registrationRequest.getPassword());
+		user.setUserName(registrationRequest.getUserName());
+		user.setMobile(registrationRequest.getMobile());
+//		user.setOTP(null);
+		userRepository.save(user);
+
+		return "Password and user details updated successfully.";
+	}
+
+	@Override
+	public String addUser(UserRegistrationRequest userDTO) {
 	
-	    user.setUserName(userDTO.getUserName());
-	    user.setEmail(userDTO.getEmail());
-	    String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-	    user.setPassword(hashedPassword);
-	    user.setMobile(userDTO.getMobile());
-	    user.setOTP(userDTO.getOTP());
-	    user.setOtpGeneratedTime(LocalDateTime.now());
-	    user.setActive(true);
-	    userRepository.save(user);
-	    return user.getUserName();
-	  }
+		User user = new User();
 
+		user.setUserName(userDTO.getUserName());
+		user.setEmail(userDTO.getEmail());
+		String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+		user.setPassword(hashedPassword);
+		user.setMobile(userDTO.getMobile());
+		user.setOTP(userDTO.getOTP());
+		user.setOtpGeneratedTime(LocalDateTime.now());
+		user.setActive(true);
+		userRepository.save(user);
+		return user.getUserName();
+	}
+	
+	public User saveUser(String username, String email) {
+	    // Check if the user already exists
+	    Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
+	    if (existingUser.isPresent()) {
+	        return existingUser.get();
+	    }
 
+	    // Create a new user without using builder
+	    User newUser = new User();
+	    newUser.setUserName(username);
+	    newUser.setEmail(email);
 
+	    return userRepository.save(newUser);
+	}
 
+	    public Optional<User> getUserByEmail(String email) {
+	        return userRepository.findBYEmailForOauth(email);
+	    }
 
-	//   public String addUser(UserRegistrationRequest userDTO) {
+	// public String addUser(UserRegistrationRequest userDTO) {
 //    	String otp= otpUtil.generateOtp();
 //   	emailUtil.sendOtpEmail(userDTO.getEmail(), otp);
 //   	User user = new User(
@@ -207,36 +268,37 @@ public String addUser(UserRegistrationRequest userDTO) {
 //       return user.getUserName(); // Ensure `getUsername` is defined in your `User` entity.
 // }
 //    
-@Override
-public LoginResponse LoginUser(LoginRequest loginRequest) {
-	String msg="" ;
-    User user1 = userRepository.findByEmail(loginRequest.getEmail());
+	@Override
+	public LoginResponse LoginUser(LoginRequest loginRequest) {
+		String msg = "";
+		User user1 = userRepository.findByEmail(loginRequest.getEmail());
 
-    if (user1 != null) { // Check if email exists
-        String password = loginRequest.getPassword();
-        String encodedPassword = user1.getPassword();
-        String name=user1.getUserName();
-      
-Boolean isPwdRight=passwordEncoder.matches(password, encodedPassword);
-   if(isPwdRight) {
-	   Optional<User> user=userRepository.findOneByEmailAndPassword(loginRequest.getEmail(), encodedPassword);
-	   if(user.isPresent()) {
-		   return new LoginResponse("Login success",true, name, encodedPassword);
-	   }else {
-		   return new LoginResponse("Login Failed",false, name, encodedPassword);
-	   }
-   }else {
-	   return new LoginResponse("password must match",false, name, encodedPassword);
-   }
-}else {
-	return new LoginResponse("email not exist",false, null, msg);
-}
-}
+		if (user1 != null) { // Check if email exists
+			String password = loginRequest.getPassword();
+			String encodedPassword = user1.getPassword();
+			String name = user1.getUserName();
 
-@Autowired
-public void UserServiceImpl(UserRepository userRepository) {
-    this.userRepository = userRepository;
-}
+			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
+			if (isPwdRight) {
+				Optional<User> user = userRepository.findOneByEmailAndPassword(loginRequest.getEmail(),
+						encodedPassword);
+				if (user.isPresent()) {
+					return new LoginResponse("Login success", true, name, encodedPassword);
+				} else {
+					return new LoginResponse("Login Failed", false, name, encodedPassword);
+				}
+			} else {
+				return new LoginResponse("password must match", false, name, encodedPassword);
+			}
+		} else {
+			return new LoginResponse("email not exist", false, null, msg);
+		}
+	}
+
+	@Autowired
+	public void UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 //public String login(LoginRequest loginDto) {
 //    User user = UserRepository.findByEmail(loginDto.getEmail());
 //    if (!loginDto.getPassword().equals(user.getPassword())) {
@@ -287,116 +349,104 @@ public void UserServiceImpl(UserRepository userRepository) {
 //    }
 //}
 
+	public String verifyAccount(String email, String otp) {
+		User user = userRepository.findByEmail(email);
+		if (user == null) {
+			throw new RuntimeException("User not found with this email: " + email);
+		}
 
+		if (user.getOTP().equals(otp)
+				&& Duration.between(user.getOtpgeneratedTime(), LocalDateTime.now()).getSeconds() < (3 * 60)) {
 
+			user.setActive(true);
+			userRepository.save(user);
+			return "OTP verified successfully";
+		}
+		return "Please regenerate OTP and try again";
+	}
 
+	public String regenerateOtp(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user == null) {
+			throw new RuntimeException("Email not found.");
+		}
 
+		// Generate a new OTP
+		String newOtp = otpUtil.generateOtp();
+		user.setOTP(newOtp);
 
+		// Save the updated user with the new OTP
+		userRepository.save(user);
 
-    public String verifyAccount(String email, String otp) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("User not found with this email: " + email);
-        }
+		// Send the new OTP to the user's email
+		emailUtil.sendOtpEmail(user.getEmail(), newOtp);
 
-        if (user.getOTP().equals(otp) && 
-            Duration.between(user.getOtpgeneratedTime(), LocalDateTime.now()).getSeconds() < (3 * 60)) {
+		return "OTP regenerated and sent successfully.";
+	}
 
-            user.setActive(true);
-            userRepository.save(user);
-            return "OTP verified successfully";
-        }
-        return "Please regenerate OTP and try again";
-    }
+	public String forgotpassword(String email) {
+		User user = userRepository.findByEmail(email);
 
+		// Generate a random password
+		String randomPassword = generateRandomPassword();
 
-    public String regenerateOtp(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("Email not found.");
-        }
+		// Hash the generated random password
+		String encodedPassword = passwordEncoder.encode(randomPassword);
 
-        // Generate a new OTP
-        String newOtp =otpUtil.generateOtp();
-        user.setOTP(newOtp);
+		// Update the user's password in the database
+		user.setPassword(encodedPassword);
+		userRepository.save(user);
 
-        // Save the updated user with the new OTP
-        userRepository.save(user);
+		// Send the random password to the user's email
+		emailUtil.sendSetPasswordEmail(email, randomPassword);
 
-        // Send the new OTP to the user's email
-        emailUtil.sendOtpEmail(user.getEmail(), newOtp);
+		return "Please check your email to get your new password.";
+	}
 
-        return "OTP regenerated and sent successfully.";
-    }
-   
+	private String generateRandomPassword() {
+		// Create a random password (e.g., 12 characters long, alphanumeric)
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?";
+		SecureRandom random = new SecureRandom();
+		StringBuilder password = new StringBuilder(12);
 
-    public String forgotpassword(String email) {
-        User user = userRepository.findByEmail(email);
+		for (int i = 0; i < 12; i++) {
+			int randomIndex = random.nextInt(characters.length());
+			password.append(characters.charAt(randomIndex));
+		}
 
-        // Generate a random password
-        String randomPassword = generateRandomPassword();
+		return password.toString();
+	}
 
-        // Hash the generated random password
-        String encodedPassword = passwordEncoder.encode(randomPassword);
+	@Override
+	public String saveOtp(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        // Update the user's password in the database
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
+	@Override
+	public String verifyAndRegisterUser(UserRegistrationRequest userDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        // Send the random password to the user's email
-        emailUtil.sendSetPasswordEmail(email, randomPassword);
+	@Override
+	public String addUser(UserRegistrationRequest userDTO, String otp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        return "Please check your email to get your new password.";
-    }
+	@Override
+	public Object register(UserRegistrationRequest registerDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private String generateRandomPassword() {
-        // Create a random password (e.g., 12 characters long, alphanumeric)
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?";
-        SecureRandom random = new SecureRandom();
-        StringBuilder password = new StringBuilder(12);
-
-        for (int i = 0; i < 12; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            password.append(characters.charAt(randomIndex));
-        }
-
-        return password.toString();
-    }
-
-
-
-@Override
-public String saveOtp(String email) {
-	// TODO Auto-generated method stub
-	return null;
-}
-@Override
-public String verifyAndRegisterUser(UserRegistrationRequest userDTO) {
-	// TODO Auto-generated method stub
-	return null;
-}
-@Override
-public String addUser(UserRegistrationRequest userDTO, String otp) {
-	// TODO Auto-generated method stub
-	return null;
-}
-@Override
-public Object register(UserRegistrationRequest registerDto) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public Object setpassword(String email, String newPassword) {
-	User user= userRepository.findByEmail(email);
-	user.setPassword(newPassword);
-	userRepository.save(user);
-	return "New Password set successfully login with new password";
-}
-
-
-
+	@Override
+	public Object setpassword(String email, String newPassword) {
+		User user = userRepository.findByEmail(email);
+		user.setPassword(newPassword);
+		userRepository.save(user);
+		return "New Password set successfully login with new password";
+	}
 
 }
-
-

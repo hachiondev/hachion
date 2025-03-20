@@ -1,6 +1,5 @@
 package Service;
 
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -37,16 +36,11 @@ public interface UserService {
 
 	Object register(UserRegistrationRequest registerDto);
 
-	
-
 	Object setpassword(String email, String newPassword);
 
+	String verifyOtp(String email, String otp);
+	
+	String updatePassword(UserRegistrationRequest registrationRequest);
 
-
-
-
-
-
-
-
+	User saveUser(String username, String email);
 }

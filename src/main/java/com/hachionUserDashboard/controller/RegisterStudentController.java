@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
 
-
 @CrossOrigin
+//@CrossOrigin(origins ="http://localhost:3000")
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RestController
 public class RegisterStudentController {

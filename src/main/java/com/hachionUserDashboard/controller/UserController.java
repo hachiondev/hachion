@@ -26,12 +26,15 @@
 
 package com.hachionUserDashboard.controller;
 
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,37 +44,70 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.dto.LoginRequest;
+import com.hachionUserDashboard.dto.OtpRequest;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
-import com.hachionUserDashboard.service.Userimpl;
+import com.hachionUserDashboard.entity.User;
 
 import Response.LoginResponse;
 import Service.UserService;
-import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RequestMapping("/api/v1/user")
-public class UserController{
-	
-	 @Autowired
-	    private UserService userService;
+public class UserController {
 
-	    @PostMapping("/send-otp")
-	    public ResponseEntity<String> sendOtp(@RequestParam String email) {
-	        if (email == null || email.isEmpty()) {
-	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is required");
-	        }
+	@Autowired
+	private UserService userService;
 
-	        String response = userService.sendOtp(email);
-	        return new ResponseEntity<>(response, HttpStatus.OK);
-	    }
-	    
-@PostMapping("/register")
-public String addUser(@RequestBody UserRegistrationRequest userDTO) {
-	String Id= userService.addUser(userDTO);
-	return Id;
-}
+//	    @PostMapping("/send-otp")
+//	    public ResponseEntity<String> sendOtp(@RequestParam String email) {
+//	        if (email == null || email.isEmpty()) {
+//	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is required");
+//	        }
+//
+//	        String response = userService.sendOtp(email);
+//	        return new ResponseEntity<>(response, HttpStatus.OK);
+//	    }
+	@PostMapping("/send-otp")
+	public ResponseEntity<String> sendOtp(@RequestParam String email) {
+		if (email == null || email.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is required");
+		}
+
+		String response = userService.sendOtp(email);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping("/verify-otp")
+	public ResponseEntity<String> verifyOtp(@RequestBody OtpRequest otpRequest) {
+
+		String response = userService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
+
+		if (response.equals("User verified successfully with OTP.")) {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping("/update-password")
+	public ResponseEntity<String> updatePassword(@RequestBody UserRegistrationRequest registrationRequest) {
+
+		String response = userService.updatePassword(registrationRequest);
+
+		if (response.equals("Password updated successfully.")) {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/register")
+	public String addUser(@RequestBody UserRegistrationRequest userDTO) {
+		String Id = userService.addUser(userDTO);
+		return Id;
+	}
 //	    @PostMapping("/register")
 //	    public ResponseEntity<?> addUser(@Valid @RequestBody UserRegistrationRequest userDTO) {
 //	        if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
@@ -122,10 +158,11 @@ public String addUser(@RequestBody UserRegistrationRequest userDTO) {
 //	     return new ResponseEntity<>(UserService.verifyAccount(email, otp), HttpStatus.OK);
 //	 }
 
-	  @PutMapping("/regenerate-otp")
-	  public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
-	    return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
-	  }
+	@PutMapping("/regenerate-otp")
+	public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
+		return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
+	}
+
 //	  @PutMapping("/login")
 //	  public ResponseEntity<String> login(@RequestBody LoginRequest loginDto) {
 //	    return new ResponseEntity(userService.login(loginDto), HttpStatus.OK);
@@ -152,25 +189,42 @@ public String addUser(@RequestBody UserRegistrationRequest userDTO) {
 //	// TODO Auto-generated method stub
 //	return null;
 //}
-	  @PostMapping("/login")
-	  public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-	     LoginResponse loginResponse=userService.LoginUser(loginRequest);
-         return ResponseEntity.ok(loginResponse);
+	@PostMapping("/login")
+	public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+		LoginResponse loginResponse = userService.LoginUser(loginRequest);
+		return ResponseEntity.ok(loginResponse);
 
-	  }
+	}
 
-	  @PutMapping("/forgotpassword")
-	  public ResponseEntity<String> forgotpassword(@RequestParam String email) {
-	      return new ResponseEntity<>(userService.forgotpassword(email), HttpStatus.OK);
-	  }
+	@PutMapping("/forgotpassword")
+	public ResponseEntity<String> forgotpassword(@RequestParam String email) {
+		return new ResponseEntity<>(userService.forgotpassword(email), HttpStatus.OK);
+	}
 
+	@PutMapping("/setpassword")
+	public ResponseEntity<String> setpassword(@RequestParam String email, @RequestHeader String newPassword) {
+		return new ResponseEntity(userService.setpassword(email, newPassword), HttpStatus.OK);
+	}
 
-		
-		@PutMapping("/setpassword")
-		public ResponseEntity<String> setpassword(@RequestParam String email, @RequestHeader String newPassword){
-			return new ResponseEntity(userService.setpassword(email,newPassword),HttpStatus.OK);
+	@GetMapping("/me")
+	public Optional<User> getCurrentUser(@AuthenticationPrincipal OAuth2User oAuth2User) {
+		if (oAuth2User == null) {
+			System.out.println("oauth details :" + oAuth2User);
+			return Optional.empty();
 		}
-		
+		System.out.println("oauth details :" + oAuth2User);
+
+		String email = oAuth2User.getAttribute("email");
+		String username = oAuth2User.getAttribute("name");
+		System.out.println("oauth details email and name :" + email + username);
+		return Optional.of(userService.saveUser(username, email));
+	}
+
+	@PostMapping("/logout")
+	public String logout() {
+		return "Logged out successfully!";
+	}
+
 //
 //	
 //

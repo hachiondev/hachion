@@ -26,9 +26,9 @@ import com.hachionUserDashboard.repository.CertificateRepository;
 
 
 
-@RequestMapping("/certificate")
+@RequestMapping
 @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
+//@CrossOrigin(origins ="http://localhost:3000")
 
 @RestController
 public class CertificateController {

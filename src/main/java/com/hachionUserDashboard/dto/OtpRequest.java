@@ -40,7 +40,9 @@ package com.hachionUserDashboard.dto;
 public class OtpRequest {
     private String email;
     private String otp;
-    private String password;  // This will contain the password the user wants to set
+    private String password; 
+    // This will contain the password the user wants to set
+    
 	public String getEmail() {
 		return email;
 	}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,12 +14,12 @@ import './Blogs.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#d3d3d3',
+    backgroundColor: '#d3d3d3', // Grey color for the table header
     color: theme.palette.common.black,
   },
   [`&.${tableCellClasses.body}`]: {
-    color: theme.palette.common.black,
-    border: `1px solid ${theme.palette.common.black}`,
+    color: theme.palette.common.black, // Text color for table columns
+    border: `1px solid ${theme.palette.common.black}`, // White border for each cell
   },
 }));
 
@@ -32,52 +32,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// Mapping Country Code to Currency Code
-const countryToCurrencyMap = {
-  'IN': 'INR',
-  'US': 'USD',
-  'GB': 'GBP',
-  'AU': 'AUD',
-  'CA': 'CAD',
-  'EU': 'EUR'
-};
-
 export default function EnrollmentTable() {
-  const { courseName } = useParams();
+  const { courseName } = useParams(); // Get selected course from URL
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currency, setCurrency] = useState('USD');
-  const [exchangeRate, setExchangeRate] = useState(1);
-
-  // Fetch User Location and Exchange Rate
-  useEffect(() => {
-    const fetchGeolocationData = async () => {
-      try {
-        const geoResponse = await axios.get('https://ipinfo.io?token=82aafc3ab8d25b');
-        console.log('Geolocation Response:', geoResponse.data); // Verify data structure
-  
-        const countryCode = geoResponse.data.country || 'US';
-        const detectedCurrency = countryToCurrencyMap[countryCode] || 'USD';
-        setCurrency(detectedCurrency);
-  
-        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-        const rate = exchangeResponse.data.rates[detectedCurrency] ?? 1;
-        setExchangeRate(rate);
-      } catch (error) {
-        console.error('Error fetching geolocation or exchange data:', error);
-      }
-    };
-  
-    fetchGeolocationData();
-  }, []);
-  
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
         const response = await axios.get('https://api.hachion.co/courses/all');
-
+        
+        // Match course from URL
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName.toLowerCase().replace(/\s+/g, '-')
         );
@@ -100,9 +66,6 @@ export default function EnrollmentTable() {
   if (loading) return <div>Loading...</div>;
   if (!courseData) return <div>No matching course found.</div>;
 
-  // Currency Conversion
-  const convertAmount = (amount) => (amount * exchangeRate).toFixed(2);
-
   return (
     <TableContainer component={Paper}>
       <Table className='table-details' sx={{ minWidth: 700 }} aria-label="customized table">
@@ -122,13 +85,9 @@ export default function EnrollmentTable() {
               {courseData.courseName}
             </StyledTableCell>
             <StyledTableCell align="center">{courseData.batch || "N/A"}</StyledTableCell>
-            <StyledTableCell align="center">
-              {currency} {convertAmount(courseData.amount)}
-            </StyledTableCell>
+            <StyledTableCell align="center">USD {courseData.amount}</StyledTableCell>
             <StyledTableCell align="center">{courseData.discount || "0"}</StyledTableCell>
-            <StyledTableCell align="center">
-              {currency} {convertAmount(courseData.total)}
-            </StyledTableCell>
+            <StyledTableCell align="center">USD {courseData.total}</StyledTableCell>
             <StyledTableCell align="center">
               <RiDeleteBinLine style={{ color: 'red', cursor: 'pointer' }} />
             </StyledTableCell>

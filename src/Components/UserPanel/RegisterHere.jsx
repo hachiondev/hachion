@@ -120,11 +120,11 @@ const RegisterHere = () => {
           }
         } else {
           const responseText = await response.text();
-          alert(`Error: ${responseText}`);
+          // alert(`Error: ${responseText}`);
         }
       } else {
         const responseText = await response.text();
-        alert(`Error: ${responseText}`);
+        // alert(`Error: ${responseText}`);
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}`);

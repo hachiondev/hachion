@@ -1,35 +1,12 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import TrainingCard from './TrainingCard';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const TrainingEvents = () => {
   const navigate = useNavigate();
   const [mergedCourses, setMergedCourses] = useState([]);
   const [viewAll, setViewAll] = useState(false);
-  const [userTimezone, setUserTimezone] = useState('UTC');
-
-  useEffect(() => {
-    const fetchTimezone = async () => {
-      try {
-        const geoResponse = await fetch('https://ipinfo.io?token=82aafc3ab8d25b');
-        const geoData = await geoResponse.json();
-        const detectedTimezone = geoData.timezone || 'UTC';
-        setUserTimezone(detectedTimezone);
-      } catch (error) {
-        console.error('Error fetching timezone:', error);
-        setUserTimezone('UTC'); // Fallback timezone
-      }
-    };
-
-    fetchTimezone();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +28,7 @@ const TrainingEvents = () => {
           return {
             ...scheduleItem,
             course_id: matchingCourse?.id || null,
-            course_image: matchingCourse?.courseImage || '',
+            course_image: matchingCourse?.courseImage || '', // Ensure a default empty string
           };
         });
 
@@ -65,52 +42,10 @@ const TrainingEvents = () => {
     fetchData();
   }, []);
 
-  // Format Date and Time separately for clear display
   const formatDate = (dateString) => {
     if (!dateString) return 'TBA';
-    return dayjs(dateString).tz(dayjs.tz.guess()).format('MMM DD YYYY');
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(dateString));
   };
-  
-  // Format Time Only with Timezone Abbreviation (e.g., 02:30 AM IST)
-// Format Time with Proper Timezone Abbreviation
-const timezoneAbbreviationMap = {
-  'Asia/Kolkata': 'IST',
-  'Asia/Dubai': 'GST',
-  'Asia/Tokyo': 'JST',
-  'Asia/Singapore': 'SGT',
-  'Asia/Seoul': 'KST',
-  'Europe/London': 'GMT',
-  'Europe/Paris': 'CET',
-  'Europe/Berlin': 'CET',
-  'America/New_York': 'EST',
-  'America/Chicago': 'CST',
-  'America/Denver': 'MST',
-  'America/Los_Angeles': 'PST',
-  'Australia/Sydney': 'AEST',
-  'Australia/Perth': 'AWST',
-  'Pacific/Honolulu': 'HST',
-  'Pacific/Auckland': 'NZST'
-};
-
-const formatTime = (timeString) => {
-  if (!timeString) return 'TBA';
-
-  const dateObj = new Date(`1970-01-01T${timeString}:00`);
-
-  const formattedTime = new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-    timeZone: userTimezone
-  }).format(dateObj);
-
-  const abbreviation = timezoneAbbreviationMap[userTimezone] || 'GMT';
-
-  return `${formattedTime} ${abbreviation}`;
-};
-
-
-
 
   return (
     <div className="training-events">
@@ -121,7 +56,7 @@ const formatTime = (timeString) => {
       <div className="view-btn">
         <button
           className="view-all"
-          onClick={() => (viewAll ? navigate('/CourseDetails') : setViewAll(true))}
+          onClick={() => (viewAll ? navigate('/course') : setViewAll(true))}
         >
           {viewAll ? 'View Courses Page' : 'View All'}
         </button>
@@ -135,8 +70,8 @@ const formatTime = (timeString) => {
             heading={course.schedule_course_name}
             image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
             date={formatDate(course.schedule_date)}
-            time={formatTime(course.schedule_time)}
-             duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
+            time={course.schedule_time || 'TBA'}
+            duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
             mode={course.schedule_mode || 'TBA'}
           />
         ))}
@@ -146,6 +81,7 @@ const formatTime = (timeString) => {
 };
 
 export default TrainingEvents;
+
 // import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 // import dayjs from "dayjs";

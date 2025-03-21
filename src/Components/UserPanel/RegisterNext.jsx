@@ -82,7 +82,7 @@ const RegisterNext = () => {
       alert(`User registered: ${data.username}`);
       navigate('/login');
            }       catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
     }
     setIsLoading(false);
   };
@@ -114,7 +114,7 @@ const RegisterNext = () => {
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
     }
@@ -192,7 +192,7 @@ const RegisterNext = () => {
               onClick={() => verifyAccount(otp, password, confirmPassword)}
               disabled={isLoading}
             >
-              {isLoading ? "Verifying..." : "Verify and Register"}
+              {isLoading ? "Verifying..." : "Register"}
             </button>
           </div>
         </div>

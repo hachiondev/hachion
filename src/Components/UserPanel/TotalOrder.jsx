@@ -12,43 +12,11 @@ import Radio from '@mui/material/Radio';
 import payumoney from '../../Assets/payumoney.png';
 import './Blogs.css';
 
-const countryToCurrencyMap = {
-  'IN': 'INR',
-  'US': 'USD',
-  'GB': 'GBP',
-  'AU': 'AUD',
-  'CA': 'CAD',
-  'EU': 'EUR'
-};
-
 export default function TotalOrder() {
   const { courseName } = useParams(); // Get selected course from URL
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedValue, setSelectedValue] = useState('a'); // Default selection for Radio
-const [currency, setCurrency] = useState('USD');
-  const [exchangeRate, setExchangeRate] = useState(1);
-
-  useEffect(() => {
-    const fetchGeolocationData = async () => {
-      try {
-        const geoResponse = await axios.get('https://ipinfo.io?token=82aafc3ab8d25b');
-        console.log('Geolocation Response:', geoResponse.data); // Verify data structure
-  
-        const countryCode = geoResponse.data.country || 'US';
-        const detectedCurrency = countryToCurrencyMap[countryCode] || 'USD';
-        setCurrency(detectedCurrency);
-  
-        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-        const rate = exchangeResponse.data.rates[detectedCurrency] ?? 1;
-        setExchangeRate(rate);
-      } catch (error) {
-        console.error('Error fetching geolocation or exchange data:', error);
-      }
-    };
-  
-    fetchGeolocationData();
-  }, []);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -78,7 +46,7 @@ const [currency, setCurrency] = useState('USD');
 
   if (loading) return <div>Loading...</div>;
   if (!courseData) return <div>No matching course found.</div>;
-  const convertAmount = (amount) => (amount * exchangeRate).toFixed(2);
+
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
@@ -99,7 +67,7 @@ const [currency, setCurrency] = useState('USD');
             <TableRow>
               <TableCell className="table-cell-left">Course Fee</TableCell>
               <TableCell align="right" className="table-cell-right">
-              {currency} {convertAmount(courseData.amount)}
+                USD {courseData.amount || "N/A"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -111,20 +79,20 @@ const [currency, setCurrency] = useState('USD');
             <TableRow>
               <TableCell className="table-cell-left">Total</TableCell>
               <TableCell align="right" className="table-cell-right">
-              {currency} {convertAmount(courseData.total)}
+               USD {courseData.total || "N/A"}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="table-cell-left">Tax</TableCell>
               <TableCell align="right" className="table-cell-right">
-                {courseData.tax || "N/A"}
+               USD {courseData.tax || "N/A"}
               </TableCell>
             </TableRow>
             {/* Net Payable Amount Row */}
             <TableRow className="net-amount">
               <TableCell className="net-amount-left">Net Payable amount:</TableCell>
               <TableCell align="right" className="net-amount-right">
-              {currency} {convertAmount(courseData.total)}
+               USD  {courseData.total || 0}
               </TableCell>
             </TableRow>
           </TableBody>

@@ -337,6 +337,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -367,7 +368,11 @@ import com.hachionUserDashboard.repository.CurriculumRepository;
 //@CrossOrigin(origins ="http://localhost:3000")
 @RestController
 public class CurriculumController {
+	@Value("${spring.servlet.multipart.max-file-size}")
+    private String maxFileSize;
 
+	  @Value("${spring.servlet.multipart.max-request-size}")
+	    private String maxRequestSize;
     
 
     @Autowired
@@ -401,6 +406,10 @@ public class CurriculumController {
             return subFolder + "/" + file.getOriginalFilename();
         }
         return null;
+    }
+    @GetMapping("/upload-limits")
+    public String getUploadLimits() {
+        return "Max File Size: " + maxFileSize + ", Max Request Size: " + maxRequestSize;
     }
     @PostMapping("curriculum/add")
     public ResponseEntity<String> addCurriculum(

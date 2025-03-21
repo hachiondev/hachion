@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>5.8.0</version> <!-- Use the correct version for your project -->
+			 <!-- Use the correct version for your project -->
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

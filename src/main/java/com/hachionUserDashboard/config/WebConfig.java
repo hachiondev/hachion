@@ -22,13 +22,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**")
         .addResourceLocations("file:/home/cpanhach/public_html/static/");
     }
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        // Redirect all unknown paths to React's index.html
-//        registry.addViewController("/{spring:\\w+}")
-//                .setViewName("forward:/index.html");
-//        registry.addViewController("/**/{spring:\\w+}")
-//                .setViewName("forward:/index.html");
-//    }
+
 }
 

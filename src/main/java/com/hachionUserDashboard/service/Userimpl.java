@@ -122,12 +122,20 @@ package com.hachionUserDashboard.service;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
@@ -204,11 +212,11 @@ public class Userimpl implements UserService {
 		if (user == null) {
 			return "Email does not exist.";
 		}
-
-		user.setPassword(registrationRequest.getPassword());
+		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
+		
+		user.setPassword(hashedPassword);
 		user.setUserName(registrationRequest.getUserName());
 		user.setMobile(registrationRequest.getMobile());
-//		user.setOTP(null);
 		userRepository.save(user);
 
 		return "Password and user details updated successfully.";
@@ -226,11 +234,12 @@ public class Userimpl implements UserService {
 		user.setMobile(userDTO.getMobile());
 		user.setOTP(userDTO.getOTP());
 		user.setOtpGeneratedTime(LocalDateTime.now());
-		user.setActive(true);
+		
 		userRepository.save(user);
 		return user.getUserName();
 	}
 	
+	@Override
 	public User saveUser(String username, String email) {
 	    // Check if the user already exists
 	    Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
@@ -242,6 +251,7 @@ public class Userimpl implements UserService {
 	    User newUser = new User();
 	    newUser.setUserName(username);
 	    newUser.setEmail(email);
+	    newUser.setOTPStatus(true);
 
 	    return userRepository.save(newUser);
 	}
@@ -249,6 +259,37 @@ public class Userimpl implements UserService {
 	    public Optional<User> getUserByEmail(String email) {
 	        return userRepository.findBYEmailForOauth(email);
 	    }
+	    
+//	    @Override
+//	    public void saveUser(String email, String username) {
+//	        Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
+//	        if (existingUser.isEmpty()) {
+//	            User newUser = new User();
+//	            newUser.setEmail(email);
+//	            newUser.setUserName(username);
+//	            userRepository.save(newUser);
+//	        }
+//	    }
+
+//	    public Map<String, String> getUserInfo(String accessToken) {
+//	        RestTemplate restTemplate = new RestTemplate();
+//	        String userInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
+//	        
+//	        HttpHeaders headers = new HttpHeaders();
+//	        headers.setBearerAuth(accessToken);
+//	        
+//	        HttpEntity<String> entity = new HttpEntity<>(headers);
+//	        ResponseEntity<Map> response = restTemplate.exchange(userInfoEndpoint, HttpMethod.GET, entity, Map.class);
+//	        
+//	        if (response.getStatusCode() == HttpStatus.OK) {
+//	            Map<String, String> userInfo = response.getBody();
+//	            if (userInfo != null) {
+//	                saveUser(userInfo.get("email"), userInfo.get("name"));
+//	            }
+//	            return userInfo;
+//	        }
+//	        return Collections.emptyMap();
+//	    }
 
 	// public String addUser(UserRegistrationRequest userDTO) {
 //    	String otp= otpUtil.generateOtp();
@@ -277,18 +318,19 @@ public class Userimpl implements UserService {
 			String password = loginRequest.getPassword();
 			String encodedPassword = user1.getPassword();
 			String name = user1.getUserName();
+			String email = user1.getEmail();
 
 			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
 			if (isPwdRight) {
 				Optional<User> user = userRepository.findOneByEmailAndPassword(loginRequest.getEmail(),
 						encodedPassword);
 				if (user.isPresent()) {
-					return new LoginResponse("Login success", true, name, encodedPassword);
+					return new LoginResponse("Login success", true, name, email);
 				} else {
-					return new LoginResponse("Login Failed", false, name, encodedPassword);
+					return new LoginResponse("Login Failed", false, name, email);
 				}
 			} else {
-				return new LoginResponse("password must match", false, name, encodedPassword);
+				return new LoginResponse("password must match", false, name, email);
 			}
 		} else {
 			return new LoginResponse("email not exist", false, null, msg);

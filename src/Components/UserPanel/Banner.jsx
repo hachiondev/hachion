@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../Assets/banner1.png';
 import Banner3 from '../../Assets/banner3.png';
+import Banner2 from '../../Assets/bann3.png';
 import './Home.css';
 
 const Banner = () => {
@@ -42,6 +43,8 @@ const Banner = () => {
           onClick={() => console.log("Carousel Indicator 1 clicked.")}></button>
           <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="1" aria-label="Slide 2"
           onClick={() => console.log("Carousel Indicator 2 clicked.")}></button>
+          <button type="button" data-bs-target="#autoScrollingBanner" data-bs-slide-to="2" aria-label="Slide 3"
+          onClick={() => console.log("Carousel Indicator 3 clicked.")}></button>
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">
@@ -62,6 +65,15 @@ const Banner = () => {
               </div>
             </div>
           </div>
+
+          <div className="carousel-item">
+          <a href="/Salesforce-Workshop">
+            <img src={Banner2} className="d-block w-100" alt="Banner2" />
+            </a>
+            <div className="carousel-caption">
+            </div>
+          </div>
+
         </div>
       </div>
     </>

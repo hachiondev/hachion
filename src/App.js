@@ -26,6 +26,7 @@ import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
 import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
+import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
@@ -92,6 +93,7 @@ function App() {
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
+      <Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       

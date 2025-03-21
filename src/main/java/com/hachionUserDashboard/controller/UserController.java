@@ -26,12 +26,13 @@
 
 package com.hachionUserDashboard.controller;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -91,23 +92,18 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/update-password")
-	public ResponseEntity<String> updatePassword(@RequestBody UserRegistrationRequest registrationRequest) {
+	@PutMapping("/register")
+	public ResponseEntity<?> updatePassword(@RequestBody UserRegistrationRequest registrationRequest) {
 
 		String response = userService.updatePassword(registrationRequest);
 
-		if (response.equals("Password updated successfully.")) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		return ResponseEntity.ok("Password updated successfully");
 	}
-
-	@PostMapping("/register")
-	public String addUser(@RequestBody UserRegistrationRequest userDTO) {
-		String Id = userService.addUser(userDTO);
-		return Id;
-	}
+//	@PostMapping("/register")
+//	public String addUser(@RequestBody UserRegistrationRequest userDTO) {
+//		String Id = userService.addUser(userDTO);
+//		return Id;
+//	}
 //	    @PostMapping("/register")
 //	    public ResponseEntity<?> addUser(@Valid @RequestBody UserRegistrationRequest userDTO) {
 //	        if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
@@ -206,24 +202,58 @@ public class UserController {
 		return new ResponseEntity(userService.setpassword(email, newPassword), HttpStatus.OK);
 	}
 
-	@GetMapping("/me")
-	public Optional<User> getCurrentUser(@AuthenticationPrincipal OAuth2User oAuth2User) {
-		if (oAuth2User == null) {
-			System.out.println("oauth details :" + oAuth2User);
-			return Optional.empty();
+//	@GetMapping("/profile")
+//	public ResponseEntity<LoginResponse> getUserProfile() {
+//	    // Fetch user profile details
+//	    return ResponseEntity.ok(new LoginResponse("John Doe", "john@example.com"));
+//	}
+
+	@GetMapping("/profile")
+	public ResponseEntity<?> getUserProfile(Authentication authentication) {
+		System.out.println("Authentication: " + authentication);
+
+		if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
 		}
-		System.out.println("oauth details :" + oAuth2User);
 
-		String email = oAuth2User.getAttribute("email");
-		String username = oAuth2User.getAttribute("name");
-		System.out.println("oauth details email and name :" + email + username);
-		return Optional.of(userService.saveUser(username, email));
+		OAuth2User user = (OAuth2User) authentication.getPrincipal();
+		System.out.println("OAuth2User: " + user);
+
+		String email = user.getAttribute("email");
+		String username = user.getAttribute("name");
+
+		User savedUser = userService.saveUser(username, email);
+
+		return ResponseEntity.ok(Map.of("email", savedUser.getEmail(), "name", savedUser.getUserName()));
 	}
 
-	@PostMapping("/logout")
-	public String logout() {
-		return "Logged out successfully!";
+	@GetMapping("/login2")
+	public String login() {
+		System.out.println("From login api");
+		return "Successfully Login";
 	}
+
+//	    @GetMapping("/user")
+//	    public Principal user(Principal user) {
+//	    	System.out.println(user);
+//	        return user;
+//	    }
+	@RestController
+	public class HomeController {
+		@GetMapping("/index")
+		public Map<String, String> index() {
+			return Collections.singletonMap("message", "Hello, World!");
+		}
+	}
+//		  @GetMapping("/")
+//		  public String home() {
+//		    return "hello home";
+//		  }
+//		  
+//		  @GetMapping("/secure")
+//		  public String secureed() {
+//		    return "secureed";
+//		  }
 
 //
 //	

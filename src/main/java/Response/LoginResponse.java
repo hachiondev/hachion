@@ -40,6 +40,12 @@ public class LoginResponse {
 		this.userName = userName;
 		this.email = email;
 	}
+	
+	public LoginResponse(String userName, String email) {
+		super();
+		this.userName = userName;
+		this.email = email;
+	}
 	@Override
 	public String toString() {
 		return "LoginResponse [message=" + message + ", status=" + status + ", userName=" + userName + ", email="

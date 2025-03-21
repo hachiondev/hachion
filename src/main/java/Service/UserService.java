@@ -2,6 +2,7 @@ package Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
@@ -43,4 +44,5 @@ public interface UserService {
 	String updatePassword(UserRegistrationRequest registrationRequest);
 
 	User saveUser(String username, String email);
+//	Map<String, String> getUserInfo(String accessToken);
 }

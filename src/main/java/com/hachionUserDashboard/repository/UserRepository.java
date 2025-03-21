@@ -41,4 +41,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Transactional
 	@Query(value = "DELETE FROM user_tbl WHERE otp_status = false", nativeQuery = true)
 	int deleteExpiredOtps();
+
 }

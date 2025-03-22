@@ -233,7 +233,7 @@ const handleSubmit = async (e) => {
     self1: formData.self1,
     self2: formData.self2,
     metaTitle: formData.headerTitle,
-  metaKeywords: formData.courseKeyword,
+  metaKeyword: formData.courseKeyword,
   metaDescription: formData.courseKeywordDescription,
     courseHighlight: formData.courseHighlight,
     courseDescription: formData.courseDescription,

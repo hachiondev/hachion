@@ -40,52 +40,67 @@ const RegisterNext = () => {
   };
   
 
-
-
-
   const verifyAccount = async (otpArray, password, confirmPassword) => {
     const otp = otpArray.join(""); // Convert OTP array to string
 
     if (!otp || !password || !confirmPassword) {
-      alert("Please fill in all fields");
-      return;
+        alert("Please fill in all fields");
+        return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
+        alert("Passwords do not match");
+        return;
     }
 
-    // Verify OTP
     setIsLoading(true);
+
     try {
-      const response = await fetch("https://api.hachion.co/api/v1/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: registeruserData.name,
-          email: registeruserData.email,
-          mobile: registeruserData.mobile,
-          OTP: otp,
-          password: password,
-        }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || "Registration failed");
-      }
-      
-      const data = await response.json(); // Ensure backend sends valid JSON here
-      alert(`User registered: ${data.username}`);
-      navigate('/login');
-           }       catch (error) {
-      alert(`Error: ${error.message}`);
+        // Step 1: Verify OTP
+        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: registeruserData.email,
+                otp: otp,
+            }),
+        });
+
+        if (!verifyResponse.ok) {
+            const error = await verifyResponse.text();
+            alert(`Invalid OTP: ${error}`);
+            throw new Error("OTP verification failed");  // Stop execution if OTP fails
+        }
+
+        // Step 2: Proceed with Registration
+        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userName: registeruserData.name,
+                email: registeruserData.email,
+                mobile: registeruserData.mobile,
+                password: password,           // Ensure password is sent as string
+                confirmPassword: confirmPassword
+            }),
+        });
+
+        if (!registerResponse.ok) {
+            const error = await registerResponse.text();
+            throw new Error(error || "Registration failed");
+        }
+
+        const data = await registerResponse.json();
+        alert(`User registered successfully: ${data.username}`);
+        navigate('/login');  // ✅ Navigate only on success
+
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+        navigate('/login');
+    } finally {
+        setIsLoading(false);  // ✅ Ensure loading spinner stops
     }
-    setIsLoading(false);
-  };
+};
 
   const togglePasswordVisibility = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');

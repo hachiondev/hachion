@@ -23,7 +23,7 @@ const Register = () => {
   <h3 className='register-head'>Register to start learning</h3>
   <h5 className='option'>Tap on any option to create an account</h5>
   <div className='icon-places'>
-    <div className='icon-text'>
+    {/* <div className='icon-text'>
   <img src={google} alt='google' className='icon-text-img'/>
    <button className='icon-text-holder-google' onClick={googleLogin}>Google</button>
     </div>
@@ -38,7 +38,7 @@ const Register = () => {
     <div className='icon-text'>
   <img src={apple} alt='login-with-apple' className='icon-text-img'/>
    <div className='icon-text-holder-apple'>Apple</div>
-    </div>
+    </div> */}
     <Link to='/registerhere' className='register-link-to'>
    <div className='icon-text'>
   <img src={email} alt='login-with-email' className='icon-text-img'/> 

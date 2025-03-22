@@ -33,6 +33,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddBanner from './Components/AdminPanel/AddBanner';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
+import { HelmetProvider } from "react-helmet-async";
 import AddFaq from './Components/AdminPanel/AddFaq';
 import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
 import AddResume from './Components/AdminPanel/AddResume';
@@ -43,11 +44,13 @@ import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
+import SalWorkshop from './Components/UserPanel/SalWorkshop';
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
+     <HelmetProvider>
     <BrowserRouter>
     <Routes>
       
@@ -73,13 +76,27 @@ function App() {
       {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-      <Route path='/adminlogin' element={<AdminLogin/>}/>
+      {/* <Route path='/adminlogin' element={<AdminLogin/>}/>
       <Route path='/adminregister' element={<AdminRegister/>}/>
       <Route path='/adminforgot' element={<AdminForgot/>}/>
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      <Route path='/admindashboard' element={<AdminDashboard/>}/>
-      <Route path='/admincourse' element={<CategoryTable/>}/>
+      <Route path='/admindashboardview' element={<AdminDashboard/>}/>
+      <Route path='/admincourse' element={<CategoryTable/>}/> */}
+      <Route path='/adminnav' element={<AdminNavbar/>}/>
+      <Route path='/adminsidebar' element={<AdminSidebar/>}/>
+      <Route path='/admin'>
+  <Route path='login' element={<AdminLogin />} />
+  <Route path='register' element={<AdminRegister />} />
+  <Route path='forgot' element={<AdminForgot />} />
+  {/* <Route path='/nav' element={<AdminNavbar/>}/> */}
+      {/* <Route path='/sidebar' element={<AdminSidebar/>}/> */}
+  <Route path='dashboardview' element={<AdminDashboardView />} />
+  <Route path='course' element={<CategoryTable />} />
+
+</Route>
+<Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
+
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
@@ -108,6 +125,7 @@ function App() {
     
   
       </Routes></BrowserRouter>
+     </HelmetProvider>
     </>
   );
 }

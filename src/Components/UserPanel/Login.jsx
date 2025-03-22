@@ -156,13 +156,13 @@ const Login = () => {
              
             </div>
 
-            <div className='login-with'>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
+            {/* <div className='login-with'> */}
+              {/* <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
               <p className='login-option'>Or Login with</p>
               <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
-            </div>
+            </div> */}
 
-            <div className='icon-holder'>
+            {/* <div className='icon-holder'>
               <button className="social-login-btn" onClick={googleLogin}>
                 <img src={google} alt='google'  />
               </button>
@@ -175,7 +175,7 @@ const Login = () => {
               <button className="social-login-btn" onClick={appleLogin}>
                 <img src={apple} alt='apple' />
               </button>
-            </div>
+            </div> */}
 
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
           

@@ -5,6 +5,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import com.hachionUserDashboard.dto.FormRequest;
 import com.hachionUserDashboard.entity.RequestBatch;
 
 import jakarta.mail.MessagingException;
@@ -15,16 +17,8 @@ public class EmailUtil {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-	
-//	public void sendOtpEmail(String email,String otp) {
-//		SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
-////		SimpleMailMessageHelper simpleMailMessageHelper= new SimpleMailMessageHelper(simpleMailMessage);
-//		simpleMailMessage.setTo(email);
-//		simpleMailMessage.setSubject("Verify OTP");
-//		simpleMailMessage.setText("Hello Your OTP is " +otp);
-//		javaMailSender.send(simpleMailMessage);
-//	}
+    
+    private final String ADMIN_EMAIL = "trainings@hachion.co";
 
 
     // Send OTP Email
@@ -81,4 +75,40 @@ public class EmailUtil {
         simpleMailMessage.setText(message);
         javaMailSender.send(simpleMailMessage);
     }
+    
+
+    public void sendEmails(FormRequest formRequest) throws MessagingException {
+        sendToAdmin(formRequest);
+        sendToUser(formRequest);
+    }
+
+    private void sendToAdmin(FormRequest formRequest) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(ADMIN_EMAIL);
+        helper.setSubject("New Registration - " + formRequest.getCourseName());
+        helper.setText("New Registration Details:\n\n" +
+                "Full Name: " + formRequest.getFullName() + "\n" +
+                "Email: " + formRequest.getEmailId() + "\n" +
+                "Mobile: " + formRequest.getMobileNumber() + "\n" +
+                "Time Zone: " + formRequest.getTimeZone() + "\n" +
+                "Course Name: " + formRequest.getCourseName());
+
+        javaMailSender.send(message);
+    }
+
+    private void sendToUser(FormRequest formRequest) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(formRequest.getEmailId());
+        helper.setSubject("Registration Successful for " + formRequest.getCourseName());
+        helper.setText("Dear " + formRequest.getFullName() + ",\n\n" +
+                "You have successfully registered for the " + formRequest.getCourseName() + " training.\n\n" +
+                "Thank you!");
+
+        javaMailSender.send(message);
+    }
+    
 }

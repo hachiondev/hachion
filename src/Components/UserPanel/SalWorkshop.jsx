@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import { useParams } from 'react-router-dom';
@@ -22,6 +23,7 @@ import {AiFillCaretDown } from 'react-icons/ai'
 
 const SalWorkshop = () => {
   const footerRef = useRef(null); // Footer reference for intersection observer
+  const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const[email,setEmail]=useState("");
   const [name, setName] = useState("");
@@ -69,41 +71,51 @@ const SalWorkshop = () => {
       setAnchorEl(null);
     };
   
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Intersection Observer to detect when footer is in view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsSticky(false); // Unstick the header when the footer comes into view
-          }
-        });
-      },
-      { rootMargin: '0px', threshold: 0.1 }
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
-
-    return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
+    const handleScrollToWorkshop = () => {
+      if (workshopRef.current) {
+        workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
-  }, []);
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+  
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setIsSticky(false);
+            }
+          });
+        },
+        { rootMargin: '0px', threshold: 0.1 }
+      );
+  
+      if (footerRef.current) {
+        observer.observe(footerRef.current);
+      }
+  
+      return () => {
+        if (footerRef.current) {
+          observer.unobserve(footerRef.current);
+        }
+      };
+    }, []);
 
   return (
     <>
+    <Helmet>
+        <title>Best Salesforce Training & Workshop in USA | Expert Guidance</title>
+        <meta name="description" content="Unlock your potential with our expert-led Salesforce training & workshop in USA. Enhance skills, boost career & transform businesses." />
+        <meta name="keywords" content="Salesforce Training, Salesforce Workshop, USA Salesforce Training, Expert Guidance, Career Development" />
+      </Helmet>
       <Topbar />
       <NavbarTop />
       <div className='course-top'>
         <div className='about-banner'>
-          <img src={Banner2} alt="Banner2" />
+          <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/>
         </div>
 
         <div className='workshop-content'>
@@ -157,9 +169,9 @@ const SalWorkshop = () => {
           </div>
         </div>
 
-      <div className='workshop-banner' style={{marginBottom: '50px'}}>
+      <div className='workshop-banner'onClick={handleScrollToWorkshop}>
                     <p className='workshop-banner-content'>Register Now Before Seats Run Out !</p>
-                    <button className='join'>Join Now</button>
+                    <button className='join' onClick={handleScrollToWorkshop}>Join Now</button>
                   </div>
 
             <div className='workshop-content'>
@@ -201,87 +213,88 @@ const SalWorkshop = () => {
         <WorkshopFAQ />
         </div>
 
-        <div className='workshopform'>
+        <div className='workshopform' ref={workshopRef}>
         <div className='workshop-content'>
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
           <div className='workshop-top'>
-          <img src={salreg} alt='' />
+          <img className='workshop-reg-img' src={salreg} alt='' />
 
           <div>
-          <label className="login-label">
-              Full Name<span className="star">*</span>
-            </label>
-            <div className="input-group mb-2">
-              <input
-                type="text"
-                className="form-control"
-                id="floatingName"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
+          <div className='join-form'>
+            <div className="form-group col-10" style={{marginBottom: '20px'}}>
+          <label htmlFor="inputName" className="form-label">
+          Full Name<span className='star'>*</span>
+          </label>
+          <input
+            id="query1"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="form-control-query"
+            placeholder="Enter your name"
+          />
+        </div>
 
-          <label className='login-label'>Email ID<span className='star'>*</span></label>
-                <div className="input-group mb-2">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="abc@gmail.com"
-                    value={email}
-                    onChange={(e)=>setEmail(e.target.value)}/>
-                    </div>
+         <div className="form-group col-10" style={{marginBottom: '20px'}}>
+          <label htmlFor="inputEmail" className="form-label">
+            Email ID<span className='star'>*</span>
+          </label>
+          <input
+            id="query1"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-control-query"
+            placeholder="abc@gmail.com"
+          />
+        </div>
 
-                    <label className="login-label">
-                                      Mobile Number<span className="star">*</span>
-                                    </label>
-                                    <div className="input-group mb-3 custom-width">
-                                      <div className="input-group">
-                                        <Button
-                                          variant="outlined"
-                                          onClick={openMenu}
-                                          className="country-dropdown"
-                                          endIcon={<AiFillCaretDown />}
-                                          style={{backgroundColor: "#fff"}}
-                                        >
-                                          <Flag code={selectedCountry.flag} className="country-flag" />
-                                          {selectedCountry.code}
-                                        </Button>
-                    
-                                        <Menu
-                                          anchorEl={anchorEl}
-                                          open={Boolean(anchorEl)}
-                                          onClose={closeMenu}
-                                        >
-                                          {countries.map((country) => (
-                                            <MenuItem
-                                              key={country.code}
-                                              onClick={() => handleCountrySelect(country)}
-                                            >
-                                              <Flag code={country.flag} className="country-flag" />
-                                              {country.name} ({country.code})
-                                            </MenuItem>
-                                          ))}
-                                        </Menu>
-                    
-                                        <input
-                                          type="tel"
-                                          className="mobilenumber"
-                                          ref={mobileInputRef}
-                                          name="mobile"
-                                          aria-label="Text input with segmented dropdown button"
-                                          id="register"
-                                          value={mobile}
-                                          onChange={(e)=>setMobile(e.target.value)}
-                                          placeholder="Enter your mobile number"
-                                        />
-                                      </div>
-                                    </div>
+        <div className="form-group col-10" style={{marginBottom: '20px'}}>
+           <label className="form-label">Mobile Number</label>
+                   <div className="input-group mb-3 custom-width">
+                     <div className="input-group">
+                       <Button
+                         variant="outlined"
+                         onClick={openMenu}
+                         className="country-code-dropdown"
+                         endIcon={<AiFillCaretDown />}
+                         style={{backgroundColor: '#FFF'}}
+                       >
+                         <Flag code={selectedCountry.flag} className="country-flag" />
+                         {selectedCountry.code}
+                       </Button>
+           
+                       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+                         {countries.map((country) => (
+                           <MenuItem
+                             key={country.code}
+                             onClick={() => handleCountrySelect(country)}
+                           >
+                             <Flag code={country.flag} className="country-flag" />
+                             {country.name} ({country.code})
+                           </MenuItem>
+                         ))}
+                       </Menu>
+           
+                       <input
+                         type="tel"
+                         className="mobile-number"
+                         ref={mobileInputRef}
+                         aria-label="Text input with segmented dropdown button"
+                         id="workshop"
+                         value={mobile}
+                         onChange={(e) => setMobile(e.target.value)}
+                         placeholder="Enter your mobile number"
+                       />
+                     </div>
+                   </div>
+                   </div>
 
-             <label className="login-label">
+           <div className='form-group col-10' style={{ position: 'relative' }}>
+             <label for="inputState" className='form-label'>
               Time Zone<span className="star">*</span>
             </label>
-            <div className="input-group mb-2">
+            {/* <div className="input-group mb-2"> */}
               <select id='query1' class="form-select mode" value={zone}
             onChange={(e) => setZone(e.target.value)}>
             <option selected>Select Time Zone</option>
@@ -291,15 +304,15 @@ const SalWorkshop = () => {
             <option>PST</option>
           </select>
             </div>
+            </div>
 
             <button
               type="button"
-              className="register-btn"
+              className="register-button"
             >
               Register
             </button>
-
-          </div>
+            </div>
         </div>
         </div>
         </div>

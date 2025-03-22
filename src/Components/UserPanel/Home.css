@@ -1727,6 +1727,14 @@ gap:1vh;
     justify-content: center;
     flex-direction: column;
     }
+
+    .footer-p {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* padding-left: 12vh; */
+      gap: 5px;
+      }
     
     .career-div {
     width: 95%; 

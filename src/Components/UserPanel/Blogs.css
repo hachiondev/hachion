@@ -259,15 +259,20 @@
       }
 
       .workshop-reg{
-        color: #000;
+    color: #000;
     font-weight: 700;
     text-align: center;
     padding: 2vh;
       }
+
+      .workshop-reg-img{
+        width: 100%;
+          }
       .workshop-top, .workshop-top-img{
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
+        align-items: center;
         gap: 50px;
       }
 
@@ -305,6 +310,7 @@
         flex-direction: row;
         justify-content: space-between;
         padding: 25px 12%;
+        margin-bottom: 50px;
       }
 
       .workshop-banner-content{
@@ -367,6 +373,28 @@
         margin-bottom: 50px;
       }
 
+      .register-button {
+        width: 520px;
+        height: 50px;
+        background-color: #00AEEF;
+        color: white;
+        font-weight: bold;
+        font-size: 20;
+        margin: 1vh;
+        border: 0px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    #workshop.mobile-number {
+      width: 400px !important;
+      height: 50px;
+      border-radius: 0 5px 5px 0;
+      outline: none;
+      border: 1px solid #b3b3b3;
+      padding: 10px;
+  }
+
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
           width: 95%;
@@ -407,6 +435,24 @@
       margin: 0px;
         height: 280px;
       }
+
+      .workshop-top{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 10%;
+        margin-right: 10%;
+        gap: 20px;
+      }
+      .workshop-reg-img{
+        width: 90%;
+        margin-left: 10%;
+        margin-right: 10%;
+          }
+          .workshop-img{
+            width: 95%;
+            height: auto;
+          }
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -457,7 +503,8 @@
 
         .workshop-content{
           width: 100%;
-          margin-left: 10px;
+          margin-left: 5px;
+          margin-right: 5px;
           margin-top: 30px;
           margin-bottom: 30px;
         }
@@ -468,6 +515,10 @@
         .workshop-reg{
       padding: 10px;
         }
+        .workshop-reg-img{
+          width: 90%;
+          margin: 0 5%;
+            }
         .workshop-top{
           display: flex;
           flex-direction: column;
@@ -506,13 +557,15 @@
           padding-right: 10px;
           text-align: justify;
           width: 90%;
+          margin: 0 5%;
         }
   
         .workshop-banner{
           display: flex;
           flex-direction: row;
-          justify-content: center;
+          justify-content: space-between;
           padding: 10px 5%;
+          margin-bottom: 30px;
         }
   
         .workshop-banner-content{
@@ -569,6 +622,26 @@
           background-color: #FFE69D;
           margin-bottom: 30px;
         }
+
+        .register-button {
+          width: 78%;
+          height: 35px;
+          font-size: 16;
+          margin: 5px 8%;
+          margin-top: 20px;
+      }
+
+      #workshop.mobile-number {
+        width: 260px !important;
+        height: 35px;
+        padding: 10px;
+    }
+
+      .join-form {
+        width: 95%;
+        align-items: center;
+        justify-items: center;
+    }
       }
     
     .our-story{
@@ -1264,6 +1337,18 @@ margin-bottom: 20px;
 }
 .contact-us-bottom-div{
 flex-direction: column;
+}
+
+.workshop-left-content{
+  font-size: 14px;
+  font-weight: 400;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: justify;
+  width: 100%;
+  margin: 0 5%;
 }
 
 }

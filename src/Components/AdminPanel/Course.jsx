@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import CourseSchedule from './CourseSchedule';
 import Curriculum from './Curriculum';
 import Faq from './Faq';
+import WorkshopSchedule from './WorkshopSchedule';
 import DemoVideo from './DemoVideo';
 import RegularVideo from './RegularVideo';
 import VideoAccess from './VideoAccess';
@@ -89,6 +90,12 @@ export default function Course() {
         >
           FAQ
         </div>
+        <div 
+          className={`tab-item ${activeTab === 'workshopschedule' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('workshopschedule')}
+        >
+          Workshop Schedule
+        </div>
         {/* <div 
           className={`tab-item ${activeTab === 'demoVideos' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('demoVideos')}
@@ -125,6 +132,7 @@ export default function Course() {
       {activeTab==='schedule' &&  <CourseSchedule/>}
       {activeTab==='curriculum' &&  <Curriculum/>}
       {activeTab==='faq' &&  <Faq/>}
+      {activeTab==='workshopschedule' &&  <WorkshopSchedule/>}
       {/* {activeTab==='demoVideos' &&  <DemoVideo/>}
       {activeTab==='regularVideos' &&  <RegularVideo/>}
       {activeTab==='videoAccess' &&  <VideoAccess/>} */}

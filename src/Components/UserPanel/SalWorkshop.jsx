@@ -19,9 +19,15 @@ import WorkshopFAQ from './WorkshopFAQ';
 import './Blogs.css';
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
-import {AiFillCaretDown } from 'react-icons/ai'
+import {AiFillCaretDown } from 'react-icons/ai';
+import axios from "axios";
 
 const SalWorkshop = () => {
+  const [workshop, setWorkshop] = useState({
+    date: "",
+    time: "",
+    timezone: "",
+  });
   const footerRef = useRef(null); // Footer reference for intersection observer
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -104,6 +110,17 @@ const SalWorkshop = () => {
       };
     }, []);
 
+    useEffect(() => {
+    // Fetching workshop details from the backend
+    axios.get("https://api.hachion.co/workshop")
+      .then(response => {
+        setWorkshop(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching workshop details:", error);
+      });
+  }, []);
+
   return (
     <>
     <Helmet>
@@ -143,11 +160,13 @@ const SalWorkshop = () => {
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
+                {/* <p>Date: {workshop.date}</p>
+                <p>Time: {workshop.time} {workshop.timezone}</p> */}
                 <p>Date: 15th March</p>
-                <p>Time: 10 AM EST</p>
+                <p>Time: 10AM EST</p>
                 <p>(4 Days a Week: Monday - Thursday)</p>
-                  <p>Time Duration: 1 Hour</p>
-                  <p>Workshop Duration: 1 Month</p>
+                  <p>Time Duration: 1 Hour Daily</p>
+                  {/* <p>Workshop Duration: 1 Month</p> */}
               </div>
 
               <ul>
@@ -216,7 +235,7 @@ const SalWorkshop = () => {
         <div className='workshopform' ref={workshopRef}>
         <div className='workshop-content'>
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
-          <div className='workshop-top'>
+          <div className='workshop-top-img'>
           <img className='workshop-reg-img' src={salreg} alt='' />
 
           <div>

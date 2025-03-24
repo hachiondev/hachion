@@ -403,9 +403,16 @@ useEffect(() => {
   
   <div className="course-row">
   <div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="homeAboutPage" name="displayPages" value="home_about" checked={reviewData.displayPages?.includes("home_about")} />
-  <label className="form-check-label" htmlFor="homeAboutPage">
-    Home & About Us Page
+  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
+  <label className="form-check-label" htmlFor="homePage">
+    Home Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
+  <label className="form-check-label" htmlFor="aboutPage">
+    About Us Page
   </label>
 </div>
 
@@ -647,9 +654,16 @@ useEffect(() => {
   
   <div className="course-row">
   <div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="homeAboutPage" name="displayPages" value="home_about" checked={reviewData.displayPages?.includes("home_about")} />
-  <label className="form-check-label" htmlFor="homeAboutPage">
-    Home & About Us Page
+  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
+  <label className="form-check-label" htmlFor="homePage">
+    Home Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
+  <label className="form-check-label" htmlFor="aboutPage">
+    About Us Page
   </label>
 </div>
 

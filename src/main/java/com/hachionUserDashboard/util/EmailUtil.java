@@ -6,7 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import com.hachionUserDashboard.dto.FormRequest;
+import com.hachionUserDashboard.dto.WorkshopRequest;
 import com.hachionUserDashboard.entity.RequestBatch;
 
 import jakarta.mail.MessagingException;
@@ -77,12 +77,12 @@ public class EmailUtil {
     }
     
 
-    public void sendEmails(FormRequest formRequest) throws MessagingException {
+    public void sendEmails(WorkshopRequest formRequest) throws MessagingException {
         sendToAdmin(formRequest);
         sendToUser(formRequest);
     }
 
-    private void sendToAdmin(FormRequest formRequest) throws MessagingException {
+    private void sendToAdmin(WorkshopRequest formRequest) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -98,7 +98,7 @@ public class EmailUtil {
         javaMailSender.send(message);
     }
 
-    private void sendToUser(FormRequest formRequest) throws MessagingException {
+    private void sendToUser(WorkshopRequest formRequest) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 

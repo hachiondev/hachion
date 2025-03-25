@@ -27,7 +27,6 @@
 package com.hachionUserDashboard.controller;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +44,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hachionUserDashboard.dto.FormRequest;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.OtpRequest;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.User;
-import com.hachionUserDashboard.entity.UsersWorkshop;
 import com.hachionUserDashboard.util.EmailUtil;
 
 import Response.LoginResponse;
-import Response.UserWorkshopResponse;
 import Service.UserService;
 import Service.UsersWorkshopService;
-import jakarta.mail.MessagingException;
 
 @CrossOrigin
 @RestController
@@ -234,20 +229,20 @@ public class UserController {
 		return ResponseEntity.ok(Map.of("email", savedUser.getEmail(), "name", savedUser.getUserName()));
 	}
 
-	@PostMapping("/submit")
-	public ResponseEntity<?> userWorkshopRegistration(@RequestBody FormRequest formRequest) {
-		try {
-			UserWorkshopResponse userWorkshopRegistration = usersWorkshopService.userWorkshopRegistration(formRequest);
-			return ResponseEntity.ok(userWorkshopRegistration);
-		} catch (MessagingException e) {
-			return ResponseEntity.status(500).body("Error sending email: " + e.getMessage());
-		}
-	}
-
-	@GetMapping("/users-workshop")
-	public List<UsersWorkshop> getAllUsers() {
-		return usersWorkshopService.getAllUsers();
-	}
+//	@PostMapping("/submit")
+//	public ResponseEntity<?> userWorkshopRegistration(@RequestBody WorkshopRequest formRequest) {
+//		try {
+//			WorkshopResponse userWorkshopRegistration = usersWorkshopService.userWorkshopRegistration(formRequest);
+//			return ResponseEntity.ok(userWorkshopRegistration);
+//		} catch (MessagingException e) {
+//			return ResponseEntity.status(500).body("Error sending email: " + e.getMessage());
+//		}
+//	}
+//
+//	@GetMapping("/users-workshop")
+//	public List<Workshop> getAllUsers() {
+//		return usersWorkshopService.getAllUsers();
+//	}
 
 	@GetMapping("/login2")
 	public String login() {

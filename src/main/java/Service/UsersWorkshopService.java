@@ -2,15 +2,15 @@ package Service;
 
 import java.util.List;
 
-import com.hachionUserDashboard.dto.FormRequest;
-import com.hachionUserDashboard.entity.UsersWorkshop;
+import com.hachionUserDashboard.dto.WorkshopRequest;
+import com.hachionUserDashboard.entity.Workshop;
 
-import Response.UserWorkshopResponse;
+import Response.WorkshopResponse;
 import jakarta.mail.MessagingException;
 
 public interface UsersWorkshopService {
-
-	public UserWorkshopResponse userWorkshopRegistration(FormRequest formRequest) throws MessagingException;
-
-	public List<UsersWorkshop> getAllUsers();
+//
+//	public WorkshopResponse userWorkshopRegistration(WorkshopRequest formRequest) throws MessagingException;
+//
+//	public List<Workshop> getAllUsers();
 }

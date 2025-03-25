@@ -1,10 +1,5 @@
 package com.hachionUserDashboard.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
 public class UserRegistrationRequest {
 
 

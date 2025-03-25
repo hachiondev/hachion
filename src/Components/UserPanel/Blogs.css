@@ -276,7 +276,7 @@
         gap: 50px;
       }
 
-     .workshop-top-img{
+     .workshop-top-img, .workshop-top-form{
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
@@ -469,6 +469,7 @@
           .workshop-img{
             width: 95%;
             height: auto;
+            border-radius: 10px;
           }
     }
       @media (min-width:350px) and (max-width:480px){
@@ -536,7 +537,7 @@
           width: 90%;
           margin: 0 5%;
             }
-        .workshop-top{
+        .workshop-top, .workshop-top-form{
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -594,8 +595,9 @@
         }
   
         .workshop-img{
-          width: 200px;
+          width: 100px;
           height: auto;
+          border-radius: 10px;
         }
   
         .join{
@@ -949,7 +951,6 @@ align-items: center;
   border-radius: 5px;
 }
 .form-check{
-
 margin-bottom: 2vh;
 }
 
@@ -974,10 +975,38 @@ flex-basis: 45%; /* This makes two items per row for larger screens */
 margin-bottom: 20px;
 }
 
+.workshop-div-content h6{
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  }
+  .workshop-div-content p{
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  }
+
+  .workshop-div-content {
+    flex-basis: 45%; /* This makes two items per row for larger screens */
+    margin-bottom: 20px;
+    justify-items: center;
+    }
+
+    .workshop-div {
+      display: flex;
+      flex-wrap: wrap; /* Allow items to wrap into multiple rows */
+      justify-content: space-evenly;
+      }
+
 @media (min-width:350px) and (max-width:480px){
 .about-us-div-content {
   flex-basis: 100%; /* One item per row for mobile screens */
 }
+
+.workshop-div-content h6{
+  font-size: 14px;
+  }
+
 .about-us-div-content img{
   width: 300px;
 }
@@ -1336,6 +1365,10 @@ margin-bottom: 20px;
 
 @media (min-width: 481px) and (max-width: 1024px) {
 .about-us-div-content {
+  flex-basis: 45%; /* Two items per row for tablet and laptop screens */
+}
+
+.workshop-div-content {
   flex-basis: 45%; /* Two items per row for tablet and laptop screens */
 }
 .contact-us{

@@ -16,6 +16,8 @@ import QaAutomation from './Components/UserPanel/QaAutomation';
 import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
+import Terms from './Components/UserPanel/Terms';
+import Privacy from './Components/UserPanel/Privacy';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
 import Blogs from './Components/UserPanel/Blogs';
 import QaTesting from './Components/UserPanel/QaTesting';
@@ -119,7 +121,8 @@ function App() {
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/courseschedule' element={<CourseSchedule/>}/>
-    
+      <Route path='/terms' element={<Terms/>}/>
+      <Route path='/privacy' element={<Privacy/>}/>
   
       </Routes></BrowserRouter>
      </HelmetProvider>

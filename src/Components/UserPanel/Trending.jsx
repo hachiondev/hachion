@@ -22,7 +22,7 @@ const Trending = () => {
         const response = await axios.get('https://api.hachion.co/course-categories/all');
         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
         setCategories(allCategories);
-        setTopCategories(allCategories.slice(0, 7)); // Set top 7 categories for desktop
+        setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
         setDropdownCategories(allCategories.slice(7)); // Set remaining categories for dropdown
       } catch (error) {
         console.error('Error fetching categories:', error);

@@ -4,40 +4,34 @@ import logo from '../../Assets/logo.png';
 import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const AdminRegister = () => {
   const navigate = useNavigate();
   const [passwordType, setPasswordType] = useState('password');
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleFormSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-
+    event.preventDefault();
+  
     try {
       const response = await fetch('https://api.hachion.co/api/v1/user/adminregister', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Registration successful:', data);
-        navigate('/admindashboardview'); // Navigate to dashboard on successful registration
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Registration failed');
-      }
+  
+      const data = await response.json(); // ✅ Now, safely parse JSON
+      alert("Registration successful");
+      navigate('/adminlogin');
     } catch (error) {
       console.error('Error during registration:', error);
       setErrorMessage('An error occurred. Please try again.');
     }
   };
-
   return (
     <div className='login'>
       <div className='login-left'>
@@ -53,9 +47,9 @@ const Register = () => {
                   type="text"
                   className="form-control"
                   placeholder="Enter your Name"
-                  name='name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name='username'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -112,4 +106,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default AdminRegister;

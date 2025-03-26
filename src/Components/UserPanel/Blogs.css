@@ -259,15 +259,28 @@
       }
 
       .workshop-reg{
-        color: #000;
+    color: #000;
     font-weight: 700;
     text-align: center;
     padding: 2vh;
       }
-      .workshop-top, .workshop-top-img{
+
+      .workshop-reg-img{
+        width: 100%;
+          }
+      .workshop-top{
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
+        align-items: stretch;
+        gap: 50px;
+      }
+
+     .workshop-top-img, .workshop-top-form{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
         gap: 50px;
       }
 
@@ -305,6 +318,7 @@
         flex-direction: row;
         justify-content: space-between;
         padding: 25px 12%;
+        margin-bottom: 50px;
       }
 
       .workshop-banner-content{
@@ -318,7 +332,12 @@
       .workshop-img{
         width: 250px;
         height: auto;
+        border-radius: 20px;
       }
+
+      .workshop-img:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+    }
 
       .join{
         color: #fff;
@@ -367,6 +386,32 @@
         margin-bottom: 50px;
       }
 
+      .register-button {
+        width: 520px;
+        height: 50px;
+        background-color: #00AEEF;
+        color: white;
+        font-weight: bold;
+        font-size: 20;
+        margin: 1vh;
+        border: 0px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    .register-button:hover{
+      background-color: #006489;
+    }
+
+    #workshop.mobile-number {
+      width: 400px !important;
+      height: 50px;
+      border-radius: 0 5px 5px 0;
+      outline: none;
+      border: 1px solid #b3b3b3;
+      padding: 10px;
+  }
+
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
           width: 95%;
@@ -407,6 +452,25 @@
       margin: 0px;
         height: 280px;
       }
+
+      .workshop-top{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 10%;
+        margin-right: 10%;
+        gap: 20px;
+      }
+      .workshop-reg-img{
+        width: 90%;
+        margin-left: 10%;
+        margin-right: 10%;
+          }
+          .workshop-img{
+            width: 95%;
+            height: auto;
+            border-radius: 10px;
+          }
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -457,7 +521,8 @@
 
         .workshop-content{
           width: 100%;
-          margin-left: 10px;
+          margin-left: 5px;
+          margin-right: 5px;
           margin-top: 30px;
           margin-bottom: 30px;
         }
@@ -468,7 +533,11 @@
         .workshop-reg{
       padding: 10px;
         }
-        .workshop-top{
+        .workshop-reg-img{
+          width: 90%;
+          margin: 0 5%;
+            }
+        .workshop-top, .workshop-top-form{
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -506,13 +575,15 @@
           padding-right: 10px;
           text-align: justify;
           width: 90%;
+          margin: 0 5%;
         }
   
         .workshop-banner{
           display: flex;
           flex-direction: row;
-          justify-content: center;
+          justify-content: space-between;
           padding: 10px 5%;
+          margin-bottom: 30px;
         }
   
         .workshop-banner-content{
@@ -524,8 +595,9 @@
         }
   
         .workshop-img{
-          width: 200px;
+          width: 100px;
           height: auto;
+          border-radius: 10px;
         }
   
         .join{
@@ -569,6 +641,26 @@
           background-color: #FFE69D;
           margin-bottom: 30px;
         }
+
+        .register-button {
+          width: 78%;
+          height: 35px;
+          font-size: 16;
+          margin: 5px 8%;
+          margin-top: 20px;
+      }
+
+      #workshop.mobile-number {
+        width: 260px !important;
+        height: 35px;
+        padding: 10px;
+    }
+
+      .join-form {
+        width: 95%;
+        align-items: center;
+        justify-items: center;
+    }
       }
     
     .our-story{
@@ -859,7 +951,6 @@ align-items: center;
   border-radius: 5px;
 }
 .form-check{
-
 margin-bottom: 2vh;
 }
 
@@ -884,10 +975,38 @@ flex-basis: 45%; /* This makes two items per row for larger screens */
 margin-bottom: 20px;
 }
 
+.workshop-div-content h6{
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  }
+  .workshop-div-content p{
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  }
+
+  .workshop-div-content {
+    flex-basis: 45%; /* This makes two items per row for larger screens */
+    margin-bottom: 20px;
+    justify-items: center;
+    }
+
+    .workshop-div {
+      display: flex;
+      flex-wrap: wrap; /* Allow items to wrap into multiple rows */
+      justify-content: space-evenly;
+      }
+
 @media (min-width:350px) and (max-width:480px){
 .about-us-div-content {
   flex-basis: 100%; /* One item per row for mobile screens */
 }
+
+.workshop-div-content h6{
+  font-size: 14px;
+  }
+
 .about-us-div-content img{
   width: 300px;
 }
@@ -1248,6 +1367,10 @@ margin-bottom: 20px;
 .about-us-div-content {
   flex-basis: 45%; /* Two items per row for tablet and laptop screens */
 }
+
+.workshop-div-content {
+  flex-basis: 45%; /* Two items per row for tablet and laptop screens */
+}
 .contact-us{
   margin-left: 0px !important;
 
@@ -1264,6 +1387,18 @@ margin-bottom: 20px;
 }
 .contact-us-bottom-div{
 flex-direction: column;
+}
+
+.workshop-left-content{
+  font-size: 14px;
+  font-weight: 400;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: justify;
+  width: 100%;
+  margin: 0 5%;
 }
 
 }

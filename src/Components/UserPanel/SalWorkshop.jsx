@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import { useParams } from 'react-router-dom';
@@ -18,15 +19,26 @@ import WorkshopFAQ from './WorkshopFAQ';
 import './Blogs.css';
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
-import {AiFillCaretDown } from 'react-icons/ai'
+import {AiFillCaretDown } from 'react-icons/ai';
+import axios from "axios";
 
 const SalWorkshop = () => {
+
   const footerRef = useRef(null); // Footer reference for intersection observer
+  const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
-  const[email,setEmail]=useState("");
-  const [name, setName] = useState("");
-  const [zone, setZone] = useState("");
-  const [mobile,setMobile]=useState("");
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [formData, setFormData] = useState({
+    fullName: "",
+    emailId: "",
+    courseCategory:"",
+    time:"",
+    message:"",
+    mobileNumber: "",
+    timeZone: "",
+    date:"",
+    courseName: "Salesforce", // Default value
+  });
   const mobileInputRef = useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedCountry, setSelectedCountry] = useState({
@@ -69,41 +81,84 @@ const SalWorkshop = () => {
       setAnchorEl(null);
     };
   
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Intersection Observer to detect when footer is in view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsSticky(false); // Unstick the header when the footer comes into view
-          }
-        });
-      },
-      { rootMargin: '0px', threshold: 0.1 }
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
-
-    return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
+    const handleScrollToWorkshop = () => {
+      if (workshopRef.current) {
+        workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
-  }, []);
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+  
+    // Handle form submission
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const currentDate = new Date().toISOString().split("T")[0];
+    
+      const updatedFormData = {
+        fullName: formData.fullName,
+        courseCategory: formData.courseCategory || "Salesforce",
+        time: "10:00",
+        message: "register",
+        emailId: formData.emailId,
+        mobileNumber: formData.mobileNumber,
+        timeZone: formData.timeZone || "GMT",
+        courseName: [formData.courseName || "Salesforce"], // ✅ Fixed property name
+        date: currentDate,
+      };
+    
+      try {
+        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+    
+        alert("Form submitted successfully!");
+        console.log("Response:", response.data);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    };
+    
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+  
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setIsSticky(false);
+            }
+          });
+        },
+        { rootMargin: '0px', threshold: 0.1 }
+      );
+  
+      if (footerRef.current) {
+        observer.observe(footerRef.current);
+      }
+  
+      return () => {
+        if (footerRef.current) {
+          observer.unobserve(footerRef.current);
+        }
+      };
+    }, []);
+
+   
 
   return (
     <>
+    <Helmet>
+        <title>Best Salesforce Training & Workshop in USA | Expert Guidance</title>
+        <meta name="description" content="Unlock your potential with our expert-led Salesforce training & workshop in USA. Enhance skills, boost career & transform businesses." />
+        <meta name="keywords" content="Salesforce Training, Salesforce Workshop, USA Salesforce Training, Expert Guidance, Career Development" />
+      </Helmet>
       <Topbar />
       <NavbarTop />
       <div className='course-top'>
         <div className='about-banner'>
-          <img src={Banner2} alt="Banner2" />
+          <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/>
         </div>
 
         <div className='workshop-content'>
@@ -131,11 +186,13 @@ const SalWorkshop = () => {
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
+                {/* <p>Date: {workshop.date}</p>
+                <p>Time: {workshop.time} {workshop.timezone}</p> */}
                 <p>Date: 15th March</p>
-                <p>Time: 10 AM EST</p>
+                <p>Time: 10AM EST</p>
                 <p>(4 Days a Week: Monday - Thursday)</p>
-                  <p>Time Duration: 1 Hour</p>
-                  <p>Workshop Duration: 1 Month</p>
+                  <p>Time Duration: 1 Hour Daily</p>
+                  {/* <p>Workshop Duration: 1 Month</p> */}
               </div>
 
               <ul>
@@ -157,38 +214,38 @@ const SalWorkshop = () => {
           </div>
         </div>
 
-      <div className='workshop-banner' style={{marginBottom: '50px'}}>
+      <div className='workshop-banner'onClick={handleScrollToWorkshop}>
                     <p className='workshop-banner-content'>Register Now Before Seats Run Out !</p>
-                    <button className='join'>Join Now</button>
+                    <button className='join' onClick={handleScrollToWorkshop}>Join Now</button>
                   </div>
 
             <div className='workshop-content'>
           <h2 className='workshop-heading'>Program Highlights</h2>
           <div className='workshop-top-img'>
-            <div className='about-us-div-content'>
+            <div className='workshop-div-content'>
                 <img className='workshop-img' src={Exp} alt='' />
                 <h6>Expert Guidance</h6>
               </div>
-              <div className='about-us-div-content'>
+              <div className='workshop-div-content'>
                 <img className='workshop-img' src={Assig} alt='' />
                 <h6>Assignment Practices</h6>
               </div>
-              <div className='about-us-div-content'>
+              <div className='workshop-div-content'>
                 <img className='workshop-img' src={Handexp} alt='' />
                 <h6>Hands on Projects</h6>
               </div>
             </div>
 
             <div className='workshop-top-img'>
-            <div className='about-us-div-content'>
+            <div className='workshop-div-content'>
                 <img className='workshop-img' src={cv} alt='' />
                 <h6>Resume Building</h6>
               </div>
-              <div className='about-us-div-content'>
+              <div className='workshop-div-content'>
                 <img className='workshop-img' src={inter} alt='' />
                 <h6>Interview Preparation</h6>
               </div>
-              <div className='about-us-div-content'>
+              <div className='workshop-div-content'>
                 <img className='workshop-img' src={support} alt='' />
                 <h6>24/7 Support</h6>
               </div>
@@ -200,90 +257,100 @@ const SalWorkshop = () => {
         <div className='workshopfaq'>
         <WorkshopFAQ />
         </div>
-
-        <div className='workshopform'>
+       
+        <div className='workshopform' ref={workshopRef}>
+        
         <div className='workshop-content'>
+        <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md w-96">
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
-          <div className='workshop-top'>
-          <img src={salreg} alt='' />
+          <div className='workshop-top-form'>
+          <img className='workshop-reg-img' src={salreg} alt='' />
 
           <div>
-          <label className="login-label">
-              Full Name<span className="star">*</span>
-            </label>
-            <div className="input-group mb-2">
-              <input
-                type="text"
-                className="form-control"
-                id="floatingName"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
+          
+          <div className='join-form'>
+        
+            <div className="form-group col-10" style={{marginBottom: '20px'}}>
+              
+          <label htmlFor="inputName" className="form-label">
+          Full Name<span className='star'>*</span>
+          </label>
+          <input
+            id="query1"
+            type="text"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            className="form-control-query"
+            placeholder="Enter your name"
+          />
+        </div>
 
-          <label className='login-label'>Email ID<span className='star'>*</span></label>
-                <div className="input-group mb-2">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="abc@gmail.com"
-                    value={email}
-                    onChange={(e)=>setEmail(e.target.value)}/>
-                    </div>
+         <div className="form-group col-10" style={{marginBottom: '20px'}}>
+          <label htmlFor="inputEmail" className="form-label">
+            Email ID<span className='star'>*</span>
+          </label>
+          <input
+            id="query1"
+            type="email"
+            name="emailId"
+          value={formData.emailId}
+          onChange={handleChange}
+            className="form-control-query"
+            placeholder="abc@gmail.com"
+          />
+        </div>
 
-                    <label className="login-label">
-                                      Mobile Number<span className="star">*</span>
-                                    </label>
-                                    <div className="input-group mb-3 custom-width">
-                                      <div className="input-group">
-                                        <Button
-                                          variant="outlined"
-                                          onClick={openMenu}
-                                          className="country-dropdown"
-                                          endIcon={<AiFillCaretDown />}
-                                          style={{backgroundColor: "#fff"}}
-                                        >
-                                          <Flag code={selectedCountry.flag} className="country-flag" />
-                                          {selectedCountry.code}
-                                        </Button>
-                    
-                                        <Menu
-                                          anchorEl={anchorEl}
-                                          open={Boolean(anchorEl)}
-                                          onClose={closeMenu}
-                                        >
-                                          {countries.map((country) => (
-                                            <MenuItem
-                                              key={country.code}
-                                              onClick={() => handleCountrySelect(country)}
-                                            >
-                                              <Flag code={country.flag} className="country-flag" />
-                                              {country.name} ({country.code})
-                                            </MenuItem>
-                                          ))}
-                                        </Menu>
-                    
-                                        <input
-                                          type="tel"
-                                          className="mobilenumber"
-                                          ref={mobileInputRef}
-                                          name="mobile"
-                                          aria-label="Text input with segmented dropdown button"
-                                          id="register"
-                                          value={mobile}
-                                          onChange={(e)=>setMobile(e.target.value)}
-                                          placeholder="Enter your mobile number"
-                                        />
-                                      </div>
-                                    </div>
+        <div className="form-group col-10" style={{marginBottom: '20px'}}>
+           <label className="form-label">Mobile Number</label>
+                   <div className="input-group mb-3 custom-width">
+                     <div className="input-group">
+                       <Button
+                         variant="outlined"
+                         onClick={openMenu}
+                         className="country-code-dropdown"
+                         endIcon={<AiFillCaretDown />}
+                         style={{backgroundColor: '#FFF'}}
+                       >
+                         <Flag code={selectedCountry.flag} className="country-flag" />
+                         {selectedCountry.code}
+                       </Button>
+           
+                       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+                         {countries.map((country) => (
+                           <MenuItem
+                             key={country.code}
+                             onClick={() => handleCountrySelect(country)}
+                           >
+                             <Flag code={country.flag} className="country-flag" />
+                             {country.name} ({country.code})
+                           </MenuItem>
+                         ))}
+                       </Menu>
+           
+                       <input
+                         type="tel"
+                         className="mobile-number"
+                         ref={mobileInputRef}
+                         aria-label="Text input with segmented dropdown button"
+                         id="workshop"
+                         name="mobileNumber"
+                         value={formData.mobileNumber}
+                         onChange={handleChange}
+                         placeholder="Enter your mobile number"
+                       />
+                     </div>
+                   </div>
+                   </div>
 
-             <label className="login-label">
+           <div className='form-group col-10' style={{ position: 'relative' }}>
+             <label for="inputState" className='form-label'>
               Time Zone<span className="star">*</span>
             </label>
-            <div className="input-group mb-2">
-              <select id='query1' class="form-select mode" value={zone}
-            onChange={(e) => setZone(e.target.value)}>
+            {/* <div className="input-group mb-2"> */}
+              <select id='query1' class="form-select mode" name="timeZone"
+          value={formData.timeZone}
+          onChange={handleChange}>
             <option selected>Select Time Zone</option>
             <option>EST</option>
             <option>CST</option>
@@ -291,25 +358,36 @@ const SalWorkshop = () => {
             <option>PST</option>
           </select>
             </div>
+            </div>
 
             <button
-              type="button"
-              className="register-btn"
+              type="submit"
+              className="register-button"
             >
               Register
             </button>
+           
 
-          </div>
+            </div>
+            
+           
         </div>
+        </form> 
+        
         </div>
-        </div>
+        
 
+        </div>
+       
       {/* Footer section to stop the sticky behavior */}
       <div ref={footerRef}>
         <Footer />
+        
       </div>
+      
       <StickyBar />
       </div>
+      
     </>
   );
 };

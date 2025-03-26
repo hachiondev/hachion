@@ -2,9 +2,6 @@ import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -77,21 +74,16 @@ export default function Review() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:"",source:"",comment:""});
+    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:""});
     const [reviewData, setReviewData] = useState({
-        review_id:Date.now(),
-           email:"",
+        review_id:"",
+          category_name:"",
             course_name: "",
             date:currentDate,
            student_name:"",
            source:"",
            comment:"",
-           user_image:"",
-           type:"",
-           trainer_name:"",
-           rating:"",
-           location:""
-         
+           image:null
          });
          const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -112,7 +104,7 @@ export default function Review() {
                   if (file) {
                       setReviewData((prevData) => ({
                           ...prevData,
-                          user_image: file, // Ensure file object is stored
+                          image: file, // Ensure file object is stored
                       }));
                   }
               };
@@ -245,46 +237,48 @@ export default function Review() {
           [name]: value,
         }));
       };
-      const handleSubmit = async () => {
-        const reviewPayload = {
-            name: reviewData.student_name,
-            email: reviewData.email || "",
-            type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
-            course_name: reviewData.course_name,
-            trainer_name: reviewData.trainer_name || "",
-            social_id: reviewData.source,
-            rating: reviewData.rating ? Number(reviewData.rating) : 5,
-            review: reviewData.comment || "",
-            location: reviewData.location || "",
-            date: new Date().toISOString().split("T")[0]
-        };
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
     
         const formData = new FormData();
-        formData.append("review", JSON.stringify(reviewPayload)); // Attach JSON data
+        formData.append("name", reviewData.student_name);
+        formData.append("social_id", reviewData.source);
+        formData.append("category_name", reviewData.category_name);
+        formData.append("course_name", reviewData.course_name);
+        formData.append("review", reviewData.comment);
+        formData.append("email",reviewData.email||"");
+        formData.append("type",reviewData.type||"");
+        formData.append("trainer_name",reviewData.trainer_name||"");
+        formData.append("rating",reviewData.rating||"");
+        formData.append("location",reviewData.location||"");
+       
+        formData.append("date", currentDate); // Ensure the date is added
     
-        if (reviewData.user_image) {
-            formData.append("user_image", reviewData.user_image, reviewData.user_image.name); // Attach image
+        if (reviewData.image) {
+            formData.append("image", reviewData.image); // Append the image
         }
-    
-        // Debugging FormData
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
-    
+        for (let pair of formData.entries()) {
+          console.log(pair[0], pair[1]); // Check key-value pairs
+      }
         try {
             const response = await axios.post(
                 "https://api.hachion.co/userreview/add",
                 formData,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
+                        "Content-Type": "multipart/form-data",
+                    },
                 }
             );
     
-            console.log("Review added successfully:", response.data);
+            if (response.status === 200) {
+                alert("Review added successfully!");
+                setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
+            }
         } catch (error) {
-            console.error("Error adding review:", error.response?.data || error.message);
+            console.error("Error adding review:", error);
+            alert("Error adding review.");
         }
     };
     
@@ -343,7 +337,7 @@ useEffect(() => {
                 <input
                   type="file"
                   className="form-control"
-                  name="user_image"
+                  name="image"
                   onChange={handleFileChange}
                   required
                 />
@@ -400,38 +394,7 @@ useEffect(() => {
   value={reviewData.comment}
   onChange={handleChange}></textarea>
 </div>
-<div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Trainer Name</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="trainer_name"
-  value={reviewData.trainer_name}
-  onChange={handleChange}/></div>
-  <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Student Email</label>
-  <input type="email" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="email"
-  value={reviewData.email}
-  onChange={handleChange}/></div>
-  <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">location</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="location"
-  value={reviewData.location}
-  onChange={handleChange}/></div>
- <div className="col-md-5">
-            <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
-              <Typography component="legend">Rating</Typography>
-              <Rating
-                name="rating"
-                value={reviewData.rating}
-                onChange={(event, newValue) =>
-                  setReviewData((prevData) => ({ ...prevData, rating: newValue }))
-                }
-                sx={{ ml: 1, mt: 1 }}
-              />
-            </Box>
-          </div>
-        
+
 <div style={{paddingTop: "10px"}}>
   <label htmlFor="display" className="form-label">
     Display Reviews:
@@ -439,32 +402,33 @@ useEffect(() => {
   </div>
   
   <div className="course-row">
-  {[
-    { id: "homeAboutPage", value: "home_about", label: "Home & About Us Page" },
-    { id: "coursePage", value: "course", label: "Course Page" },
-    { id: "corporateTrainingPage", value: "corporate", label: "Corporate Training Page" },
-  ].map(({ id, value, label }) => (
-    <div className="checkbox-group" key={id}>
-      <input
-        className="form-check-input"
-        type="checkbox"
-        id={id}
-        name="displayPages"
-        value={value}
-        checked={reviewData.type?.includes(value)}
-        onChange={(e) => {
-          const updatedTypes = e.target.checked
-            ? [...(reviewData.type || []), value] // Add value if checked
-            : (reviewData.type || []).filter((v) => v !== value); // Remove value if unchecked
+  <div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
+  <label className="form-check-label" htmlFor="homePage">
+    Home Page
+  </label>
+</div>
 
-          setReviewData({ ...reviewData, type: updatedTypes });
-        }}
-      />
-      <label className="form-check-label" htmlFor={id}>
-       {label}
-      </label>
-    </div>
-  ))}
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
+  <label className="form-check-label" htmlFor="aboutPage">
+    About Us Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
+  <label className="form-check-label" htmlFor="coursePage">
+    Course Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
+  <label className="form-check-label" htmlFor="corporateTrainingPage">
+    Corporate Training Page
+  </label>
+</div>
 </div>
 
 <div className="course-row">
@@ -689,35 +653,34 @@ useEffect(() => {
   </div>
   
   <div className="course-row">
-  {[
-    { id: "homeAboutPage", value: "home_about", label: "Home & About Us Page" },
-    { id: "coursePage", value: "course", label: "Course Page" },
-    { id: "corporateTrainingPage", value: "corporate", label: "Corporate Training Page" },
-  ].map(({ id, value, label }) => (
-    <div className="checkbox-group" key={id}>
-      <input
-        className="form-check-input"
-        type="checkbox"
-        id={id}
-        name="displayPages"
-        value={value}
-        checked={reviewData.type?.includes(value)}
-        onChange={(e) => {
-          const updatedTypes = e.target.checked
-            ? [...(reviewData.type || []), value] // Add value if checked
-            : (reviewData.type || []).filter((v) => v !== value); // Remove value if unchecked
-
-          setReviewData({ ...reviewData, type: updatedTypes });
-        }}
-      />
-      <label className="form-check-label" htmlFor={id}>
-        {label}
-      </label>
-    </div>
-  ))}
+  <div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
+  <label className="form-check-label" htmlFor="homePage">
+    Home Page
+  </label>
 </div>
 
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
+  <label className="form-check-label" htmlFor="aboutPage">
+    About Us Page
+  </label>
+</div>
 
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
+  <label className="form-check-label" htmlFor="coursePage">
+    Course Page
+  </label>
+</div>
+
+<div className="checkbox-group">
+  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
+  <label className="form-check-label" htmlFor="corporateTrainingPage">
+    Corporate Training Page
+  </label>
+</div>
+</div>
 
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

@@ -52,7 +52,6 @@ import com.hachionUserDashboard.util.EmailUtil;
 
 import Response.LoginResponse;
 import Service.UserService;
-import Service.UsersWorkshopService;
 
 @CrossOrigin
 @RestController
@@ -66,8 +65,8 @@ public class UserController {
 	@Autowired
 	private EmailUtil emailUtil;
 
-	@Autowired
-	private UsersWorkshopService usersWorkshopService;
+//	@Autowired
+//	private UsersWorkshopService usersWorkshopService;
 
 //	    @PostMapping("/send-otp")
 //	    public ResponseEntity<String> sendOtp(@RequestParam String email) {
@@ -229,20 +228,6 @@ public class UserController {
 		return ResponseEntity.ok(Map.of("email", savedUser.getEmail(), "name", savedUser.getUserName()));
 	}
 
-//	@PostMapping("/submit")
-//	public ResponseEntity<?> userWorkshopRegistration(@RequestBody WorkshopRequest formRequest) {
-//		try {
-//			WorkshopResponse userWorkshopRegistration = usersWorkshopService.userWorkshopRegistration(formRequest);
-//			return ResponseEntity.ok(userWorkshopRegistration);
-//		} catch (MessagingException e) {
-//			return ResponseEntity.status(500).body("Error sending email: " + e.getMessage());
-//		}
-//	}
-//
-//	@GetMapping("/users-workshop")
-//	public List<Workshop> getAllUsers() {
-//		return usersWorkshopService.getAllUsers();
-//	}
 
 	@GetMapping("/login2")
 	public String login() {

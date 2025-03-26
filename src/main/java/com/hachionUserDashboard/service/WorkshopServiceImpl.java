@@ -67,14 +67,6 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 			workshopResponse.setFullName(savedWorkshop.getFullName());
 			workshopResponse.setMobileNumber(savedWorkshop.getMobileNumber());
 			workshopResponse.setEmailId(savedWorkshop.getEmailId());
-//			response = createResponseForWorkshop(savedWorkshop);
-
-//		        response.setFullName(savedWorkshop.getFullName());
-//		        response.setEmailId(savedWorkshop.getEmailId());		        
-//		        List<String> courseNamesList = Arrays.asList(savedWorkshop.getCourseName().split(", "));
-//		        response.setCourseNames(courseNamesList);
-//
-//		        response.setTimeZone(savedWorkshop.getTimeZone());
 
 			return workshopResponse;
 		} catch (MessagingException e) {
@@ -84,43 +76,6 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 			return errorResponse;
 		}
 	}
-//	@Override
-//	public WorkshopResponse userWorkshopRegistration(WorkshopRequest formRequest) {
-//		try {
-//
-//			sendToAdmin(formRequest);
-//			sendToUser(formRequest);
-//
-//			Workshop user = new Workshop();
-//			user.setFullName(formRequest.getFullName());
-//			user.setEmailId(formRequest.getEmailId());
-//			user.setMobileNumber(formRequest.getMobileNumber());
-//			user.setTimeZone(formRequest.getTimeZone());
-//			String courseNames = String.join(", ", formRequest.getCourseName());
-//
-//			user.setCourseName(courseNames);
-//			
-//			Workshop save = workshopRepository.save(user);
-//
-//			WorkshopResponse response = new WorkshopResponse();
-//			response.setMessage("Your details has been successfully sent to the team and you will get call shortly.");
-//			response.setFullName(save.getFullName());
-//			response.setEmailId(save.getEmailId());
-//			
-//			List<String> courseNamesList = Arrays.asList(save.getCourseName().split(", "));
-//
-//			response.setCourseNames(courseNamesList);
-//			response.setTimeZone(formRequest.getTimeZone());
-//
-//			return response;
-//
-//		} catch (MessagingException e) {
-//
-//			WorkshopResponse errorResponse = new WorkshopResponse();
-//			errorResponse.setMessage("Email sending failed. Registration not saved: " + e.getMessage());
-//			return errorResponse;
-//		}
-//	}
 
 	private WorkshopResponse createResponseForWorkshop(Workshop savedWorkshop) {
 		WorkshopResponse workshopResponse = new WorkshopResponse();
@@ -173,6 +128,15 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		}
 		if (workshopRequest.isTimeZoneUpdated()) {
 			workshop.setTimeZone(workshopRequest.getTimeZone());
+		}
+		if (workshopRequest.isFullNameUpdated()) {
+			workshop.setFullName(workshopRequest.getFullName());
+		}
+		if (workshopRequest.isEmailIdUpdated()) {
+			workshop.setEmailId(workshopRequest.getEmailId());
+		}
+		if (workshopRequest.isMobileNumberUpdated()) {
+			workshop.setMobileNumber(workshopRequest.getMobileNumber());
 		}
 		Workshop updateWorkshop = workshopRepository.save(workshop);
 
@@ -229,11 +193,5 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 
 		mailSender.send(message);
 	}
-
-//	@Override
-//	public List<Workshop> getAllUsers() {
-//
-//		return workshopRepository.findAll();
-//	}
 
 }

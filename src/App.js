@@ -76,23 +76,19 @@ function App() {
       {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-      {/* <Route path='/adminlogin' element={<AdminLogin/>}/>
-      <Route path='/adminregister' element={<AdminRegister/>}/>
-      <Route path='/adminforgot' element={<AdminForgot/>}/>
-      <Route path='/adminnav' element={<AdminNavbar/>}/>
-      <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      <Route path='/admindashboardview' element={<AdminDashboard/>}/>
-      <Route path='/admincourse' element={<CategoryTable/>}/> */}
+    
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
       <Route path='/admin'>
-  <Route path='login' element={<AdminLogin />} />
-  <Route path='register' element={<AdminRegister />} />
-  <Route path='forgot' element={<AdminForgot />} />
-  {/* <Route path='/nav' element={<AdminNavbar/>}/> */}
-      {/* <Route path='/sidebar' element={<AdminSidebar/>}/> */}
-  <Route path='dashboardview' element={<AdminDashboardView />} />
-  <Route path='course' element={<CategoryTable />} />
+      <Route path="adminlogin" element={<AdminLogin />} />
+        <Route path="adminregister" element={<AdminRegister />} />
+        <Route path="/forgot" element={<AdminForgot />} />
+
+        {/* Protected Admin Dashboard Route */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="admindashboardview" element={<AdminDashboardView />} />
+        </Route>
+  <Route path='/admincourse' element={<CategoryTable />} />
 
 </Route>
 <Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>

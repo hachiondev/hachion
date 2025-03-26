@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
+import { Helmet } from 'react-helmet';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -23,8 +24,6 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
-import dayjs from 'dayjs';
-import { Helmet } from "react-helmet-async";
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -70,7 +69,7 @@ const CourseDetail = ({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',liveTrainingHours: '', labExerciseHours: '', realTimeProjects: '',courseCategory:"",starRating: '',
+  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
     keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
@@ -216,9 +215,6 @@ const handleSubmit = async (e) => {
     date: currentDate,
     youtubeLink: formData.youtubeLink,
     numberOfClasses: formData.numberOfClasses,
-    liveTrainingHours: formData.liveTrainingHours,
-    labExerciseHours: formData.labExerciseHours,
-    realTimeProjects: formData.realTimeProjects,
     starRating: formData.starRating,
     ratingByNumberOfPeople: formData.ratingByNumberOfPeople,
     totalEnrollment: formData.totalEnrollment,
@@ -236,9 +232,9 @@ const handleSubmit = async (e) => {
     mentoring2: formData.mentoring2,
     self1: formData.self1,
     self2: formData.self2,
-    headerTitle: formData.headerTitle,
-    courseKeyword: formData.courseKeyword,
-    courseKeywordDescription: formData.courseKeywordDescription,
+    metaTitle: formData.headerTitle,
+  metaKeyword: formData.courseKeyword,
+  metaDescription: formData.courseKeywordDescription,
     courseHighlight: formData.courseHighlight,
     courseDescription: formData.courseDescription,
   };
@@ -300,9 +296,7 @@ const handleEditClick = async (courseId) => {
         youtubeLink: course.youtubeLink ,
         numberOfClasses: course.numberOfClasses ,
         dailySessions: course.dailySessions ,
-        liveTrainingHours: course.liveTrainingHours ,
-        labExerciseHours: course.labExerciseHours ,
-        realTimeProjects: course.realTimeProjects,
+  
         starRating: course.starRating ,
         ratingByNumberOfPeople: course.ratingByNumberOfPeople,
         totalEnrollment: course.totalEnrollment,
@@ -320,7 +314,7 @@ const handleEditClick = async (courseId) => {
         mentoring2:course.mentoring2,
         self1:course.self1,
     self2:course.self2,
-    headerTitle:course.headerTitle,courseKeyword:course.courseKeyword,courseKeywordDescription:course.courseDescription,
+    metaTitle:course.headerTitle,metaKeyword:course.courseKeyword,metaDescription:course.courseDescription,
     courseHighlight:course.courseHighlight,courseDescription:course.courseDescription
             });
             
@@ -363,9 +357,7 @@ const handleReset=()=>{
     youtubeLink: '',
     numberOfClasses: '',
     dailySessions: '',
-    liveTrainingHours: '',
-    labExerciseHours: '',
-    realTimeProjects: '',
+ 
     starRating: '',
     ratingByNumberOfPeople: '',
     totalEnrollment: '',
@@ -505,41 +497,8 @@ const handleAddTrendingCourseClick = () => {
                 />
               </div>
             </div>
-            {/* <div className="course-row">
-              <div className="col-md-4">
-                <label className="form-label">Live Training Hours</label>
-                <input
-                  type="text"
-                  name="liveTrainingHours"
-                  className="form-control"
-                  placeholder="Enter live training hours"
-                  value={formData.liveTrainingHours}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Lab Exercise Hours</label>
-                <input
-                  type="text"
-                  name="labExerciseHours"
-                  className="form-control"
-                  placeholder="Enter lab exercise hours"
-                  value={formData.labExerciseHours}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Real Time Projects</label>
-                <input
-                  type="text"
-                  name="realTimeProjects"
-                  className="form-control"
-                  placeholder="Enter projects"
-                  value={formData.realTimeProjects}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div> */}
+            
+            
             <div className="course-row">
               <div className="col-md-4">
                 <label className="form-label">Star Rating</label>
@@ -608,6 +567,55 @@ const handleAddTrendingCourseClick = () => {
 </div>
 </div>
 </div> 
+{/* <h3>Mode Of Training</h3>
+      <div className="course-row">
+        {[
+          { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
+          { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+          { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
+          { label: "Corporate Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
+        ].map((mode, index) => (
+          <div className="course-mode" key={index}>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" id={`flexCheck${index}`} />
+              <label className="form-check-label" htmlFor={`flexCheck${index}`}>
+                {mode.label}
+              </label>
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Amount (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.amount}
+                value={formData[mode.amount]}
+                onChange={handleModeChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Discount %</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.discount}
+                value={formData[mode.discount]}
+                onChange={handleModeChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Total (USD)</label>
+              <input
+                type="number"
+                className="form-control-mode"
+                name={mode.total}
+                value={formData[mode.total]}
+                readOnly
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div> */}
 
 <h3>Mode Of Training</h3>
 <div className="course-row">
@@ -658,7 +666,7 @@ const handleAddTrendingCourseClick = () => {
   ))}
 </div>
 
-    {/* <h3>Sample session</h3>
+    <h3>Sample session</h3>
 <div className='course-row'>
 <div className='course-details'>
 <h4>Mentoring Training</h4>
@@ -688,29 +696,21 @@ const handleAddTrendingCourseClick = () => {
 </div>
 
 </div>
-</div> */}
-
-          <Helmet>
-                <title>{formData.headerTitle ? formData.headerTitle : "Default Course Title"}</title>
-                <meta name="keywords" content={formData.courseKeyword ? formData.courseKeyword : "default, keywords"} />
-                <meta name="description" content={formData.courseKeywordDescription ? formData.courseKeywordDescription : "Default course keyword description"} />
-            </Helmet>
-
-            <div className='course-row'>
-                <div className="col-md-4">
-                    <label htmlFor="inputEmail4" className="form-label">Header Title</label>
-                    <input type="text" className="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange} />
-                </div>
-                <div className="col-md-4">
-                    <label htmlFor="inputEmail4" className="form-label">Course keyword with comma</label>
-                    <input type="text" className="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
-                </div>
-                <div className="col-md-4">
-                    <label htmlFor="inputEmail4" className="form-label">Course keyword description</label>
-                    <input type="text" className="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
-                </div>
-            </div>
-            
+</div>
+<div className='course-row'>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Header Title</label>
+<input type="text" class="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange}/>
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Course keyword with comma</label>
+<input type="text" class="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Course keyword description</label>
+<input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
+</div>
+</div>
 <div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
 {/* <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name='courseHighlight' value={formData.courseHighlight} onChange={handleInputChange}></textarea> */}
@@ -813,6 +813,12 @@ const handleAddTrendingCourseClick = () => {
               </button>
             </div>
             </form>
+            <Helmet>
+  <title>{formData.headerTitle || 'Default Title'}</title>
+  <meta name="description" content={formData.courseKeywordDescription || 'Default Description'} />
+  <meta name="keywords" content={formData.courseKeyword || 'Default Keywords'} />
+</Helmet>
+
       </div>
       </div>
       
@@ -914,8 +920,7 @@ const handleAddTrendingCourseClick = () => {
             <StyledTableCell sx={{ fontSize: '16px' }} align="left">
               {course.courseName}
             </StyledTableCell>
-            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">
-            {course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{course.date}</StyledTableCell>
             <StyledTableCell align="center" style={{ width: 200, }}>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
               <FaEdit

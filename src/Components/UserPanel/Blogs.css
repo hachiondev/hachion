@@ -155,7 +155,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
-       
+       cursor: pointer;
       }
       
       .about-banner img {
@@ -330,7 +330,7 @@
       }
 
       .workshop-img{
-        width: 250px;
+        width: 200px;
         height: auto;
         border-radius: 20px;
       }
@@ -430,6 +430,11 @@
       .about-us-top img{
       margin: 10px;
         height: 320px;
+      }
+      .workshop-img{
+        width: 200px;
+        height: auto;
+        border-radius: 20px;
       }
     }
     

@@ -47,7 +47,7 @@
     margin-top:80px;
     border-radius: 10px;
     border: 1px solid white;
-    padding: 15px 40px;
+    padding: 10px 30px;
     background-color: #00AEEF;
     box-shadow: 5px 5px 5px #000000 opacity 30%;
     color: white;
@@ -130,13 +130,13 @@
     -webkit-background-clip: text;
 }
 .customize-training{
+  display: flex;
    align-items: center;
    justify-content: center;
     gap: 3vh;
 }
 .customize-training-div{
-    
-    width: 34vw;
+    width: 45%;
     border-radius: 20px;
     background-color: #fff;
     box-shadow:5px 5px 5px #d3d3d3;
@@ -146,11 +146,11 @@
    padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 34vw;
+    width: 90%;
     height: auto;
 }
 .customize-training-div-content{
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: 700;
     text-align: center;
     color:#00AEEF;
@@ -160,8 +160,7 @@
     flex-direction: row;
 }
 .leading-expert-card {
-  
-    width: 16.5vw;
+    width: 240px;
     border-radius: 20px;
     background-color: #fff;
     box-shadow: 5px 5px 5px #d3d3d3;
@@ -174,7 +173,7 @@
 }
 
 .leading-expert-card img {
-    height: 100px;
+    height: 60px;
     width: auto;
     margin-bottom: 1vh; 
 }
@@ -188,7 +187,6 @@
 }
 
 .view-details-corporate {
-   
    padding: 10px;
     border-radius: 10px;
     padding: 5px 20px;
@@ -990,16 +988,31 @@
         padding: 10px;
     }
     .leading-expert {
-       max-width: 90%;
-       margin-left: 50px;
+       max-width: 80%;
+       margin-left: 10%;
+       margin-right: 10%;
     }
     .leading-expert-card{
-        width: 320px;
+        width: 250px;
     }
+
+    .leading-expert-card img {
+      height: 70px;
+      width: auto;
+      margin-bottom: 10px; 
+  }
+
+  .leading-expert-card-content {
+    font-size: 20px;
+}
+.view-details-corporate {
+   padding: 5px 20px;
+   font-size: 16px;
+}
     
     .view-all-div {
-        margin-right: 10vw;
-        margin-top: -5vh;
+        margin-right: 8%;
+        margin-top: -5px;
     }
     .leading-expert{
         width: 95%;
@@ -1054,12 +1067,40 @@
     .advisor-form{
         width: 95%;
     }
+    .association{
+      margin-top: 30px;
+      margin-left: 5%;
+      margin-right: 5%;
+      justify-content: center;
+      display: flex;
+      padding-top: 20px;
+      margin-bottom: 30px;
+      }
+      .association-head{
+          font-size: 28px;
+          /* margin-left: 10px; */
+          margin-left: 5%;
+          margin-right: 5%;
+          white-space: nowrap;
+      }
 }
 
 @media  (min-width:780px) and (max-width: 1179px){
+  .association{
+    margin-top: 30px;
+    margin-left: 5%;
+    margin-right: 5%;
+    justify-content: center;
+    display: flex;
+    padding-top: 20px;
+    margin-bottom: 30px;
+    }
     .association-head{
         font-size: 28px;
-        margin-left: 10px;
+        /* margin-left: 10px; */
+        margin-left: 5%;
+        margin-right: 5%;
+        white-space: nowrap;
     }
     .view-all-div{
         margin-top: -5vh;
@@ -1245,14 +1286,15 @@
     }
  
 .customize-training-div{
-    width: 40vw;
+    width: 45%;
     height: 250px;
     align-items: center;
     justify-items: center;
 }
 .customize-training-div img{
-    padding: 0px;
-    width: 240px;
+    padding: 10px;
+    width: auto;
+    height: 200px;
    
 }
 .customized-content{
@@ -1264,15 +1306,16 @@
     width: 290px;
 }
 .leading-expert {
-   max-width: 100%;
-   margin-left: 0px;
+   max-width: 80%;
+   margin-left: 10%;
+   margin-right: 10%;
 }
 .leading-expert-card{
-    width: 40vw;
+    width: 200px;
 }
 
 .leading-expert{
-    width: 95%;
+    width: 80%;
 }
 .corporate-training-features{
     width: 100vw;

@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from 'react'
+import React from 'react'
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Banner from './Banner';
@@ -10,32 +10,21 @@ import Learners from './Learners';
 import Footer from './Footer';
 import Corporate from './Corporate';
 import StickyBar from './StickyBar';
-import { FaArrowUp } from 'react-icons/fa';
+import { Helmet } from "react-helmet-async";
 
 export const Home = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
-
-  useEffect(() => {
-      const handleScroll = () => {
-        if (window.scrollY > 300) {
-          setShowScrollButton(true);
-        } else {
-          setShowScrollButton(false);
-        }
-      };
-  
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-  
-    // Scroll to top function
-    const scrollToTop = () => {
-      console.log("Scroll to top clicked!");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
   return (
     <>
+      <Helmet>
+        <title>Hachion - Your Learning Partner</title>
+        <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
+        <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
+        <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
+        <meta property="og:description" content="Learn online with the best courses at Hachion." />
+        <meta property="og:image" content="/Hachion-logo.png" />
+      </Helmet>
    <div className='home-background'>
+  
 <Topbar/>
 <NavbarTop/>
 <Banner/>
@@ -48,15 +37,8 @@ export const Home = () => {
 
 <Footer/>
 </div>
-
-{/* Scroll to Top Button */}
-      {showScrollButton && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
-      
 <StickyBar/>
+
     </>
   )
 }

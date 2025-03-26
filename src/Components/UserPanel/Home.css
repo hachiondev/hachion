@@ -361,8 +361,8 @@ transform: translateX(-35%); /* Centering adjustment */
 }
 
 #autoScrollingBanner .carousel-indicators button {
-width: 10px;
-height: 10px;
+width: 10px !important;
+height: 10px !important;
 border-radius: 50%;
 background-color: black 50% opacity !important; 
 border: 2px solid #000; 
@@ -379,6 +379,13 @@ justify-content: center;
 padding-bottom: 2%;
 padding-right: 50%;
 }
+
+.carousel-join-btn{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1%;
+  padding-right: 90%;
+  }
 
 .coupon-btn{
 background-color: #000000;
@@ -411,6 +418,25 @@ font-weight: 600;
 background-color: #EA4335;
 }
 
+.join-now{
+  border-radius: 10px;
+  padding: 3px 10px;
+  background-color: #00AEEF;
+  color: #FFF;
+  border: none;
+  margin-top: 2vh;
+  font-size: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  }
+  .join-now:hover{
+  background-color: #006489;
+  }
+
+  .d-block{
+    height: 420px;
+    }
+
 .association{
 display: flex;
 justify-content: center;
@@ -430,7 +456,7 @@ background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
 
 .logos-slide img{
 height: 50px;
-margin: 20px 10px;
+margin: 20px;
 }
 
 .logos-slide{
@@ -1203,15 +1229,15 @@ gap:1vh;
 
 @media  (min-width:1025px) and (max-width: 1366px)  {
   .career-div {
-      width: 95%; 
+      width: 80%; 
       margin-left: auto;
       margin-right: auto;
       justify-content: center;
   }
   
   .online-training-div {
-      width: 40vw; 
-      margin-bottom: 2vh;
+    width: 250px;
+    height: 250px;
   }
 
   .search-div-home {
@@ -1319,6 +1345,13 @@ gap:1vh;
   padding: 5px 10px;
   margin-bottom: -30px;
 }
+
+.join-now{
+  border-radius: 10px;
+  padding: 3px 10px;
+  font-size: 20px;
+  white-space: nowrap;
+  }
 }
 
 /* Styles for Tablet/iPad (min-width: 769px and max-width: 1024px) */
@@ -1362,6 +1395,12 @@ gap:1vh;
         padding: 3px 5px;
         border-radius: 20px;
         }
+
+        .join-now{
+          padding: 3px 5px;
+          font-size: 12px;
+          white-space: nowrap;
+          }
   
   .training-events{
     margin-bottom:10px;
@@ -1444,8 +1483,16 @@ gap:1vh;
   }
   
   .footer-bottom{
-  justify-content: space-around;
+    justify-content: center;
+    flex-direction: column;
   }
+
+  .footer-p {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    }
   
   .career-div {
   width: 95%; 
@@ -1455,8 +1502,9 @@ gap:1vh;
   }
   
   .online-training-div {
-  width: 40vw; 
-  margin-bottom: 2vh;
+  width: 300px; 
+  height: 300px;
+  margin-bottom: 10px;
   }
   }
 
@@ -2059,11 +2107,11 @@ display: none !important; /* Hide the normal navbar items on mobile */
   }
   
   #autoScrollingBanner .carousel-indicators button {
-  width: 5px;
-  height: 5px;
+  width: 5px !important;
+  height: 5px !important;
   }
   
-  .carousel-btn{
+  .carousel-btn, .carousel-join-btn{
     margin-bottom: -40px !important; 
   padding-right: 50%;
   }
@@ -2081,6 +2129,15 @@ padding: 2px 5px;
 border-radius: 20px;
 /* margin-bottom: -30px !important; */
 }
+
+.join-now{
+  border-radius: 5px;
+  padding: 2px 5px;
+  margin-bottom: 1px;
+  font-size: 10px;
+  white-space: nowrap;
+  }
+
 .d-block{
 height: 130px;
 }
@@ -2379,9 +2436,9 @@ padding: 10px;
 }
 
 .online-training-div {
-width: 179px;
+width: 180px;
 margin-bottom: 0;
-height: 170px;
+height: 180px;
 border-left: 6px solid #00AEEF;
 padding: 2px;
 }

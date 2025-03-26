@@ -16,6 +16,8 @@ import QaAutomation from './Components/UserPanel/QaAutomation';
 import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
+import Terms from './Components/UserPanel/Terms';
+import Privacy from './Components/UserPanel/Privacy';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
 import Blogs from './Components/UserPanel/Blogs';
 import QaTesting from './Components/UserPanel/QaTesting';
@@ -24,9 +26,6 @@ import SalesforceBlog from './Components/UserPanel/SalesforceBlog';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
-import Terms from './Components/UserPanel/Terms';
-import Privacy from './Components/UserPanel/Privacy';
-import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
@@ -36,6 +35,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddBanner from './Components/AdminPanel/AddBanner';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
+import { HelmetProvider } from "react-helmet-async";
 import AddFaq from './Components/AdminPanel/AddFaq';
 import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
 import AddResume from './Components/AdminPanel/AddResume';
@@ -46,11 +46,14 @@ import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
 import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
+import SalWorkshop from './Components/UserPanel/SalWorkshop';
+import ProtectedRoute from './ProtectedRoute';
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <>
+     <HelmetProvider>
     <BrowserRouter>
     <Routes>
       
@@ -69,20 +72,30 @@ function App() {
             
           }
         />
-       <Route path='/CourseDetails' element={<Course/>}/>
-       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
+      <Route path='/CourseDetails' element={<Course/>}/>
+      <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
 
       {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
       {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-      <Route path='/adminlogin' element={<AdminLogin/>}/>
-      <Route path='/adminregister' element={<AdminRegister/>}/>
-      <Route path='/adminforgot' element={<AdminForgot/>}/>
+    
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      <Route path='/admindashboard' element={<AdminDashboard/>}/>
-      <Route path='/admincourse' element={<CategoryTable/>}/>
+      {/* <Route path='/admin'> */}
+      <Route path="adminlogin" element={<AdminLogin />} />
+        <Route path="adminregister" element={<AdminRegister />} />
+        <Route path="/adminforgot" element={<AdminForgot />} />
+
+        {/* Protected Admin Dashboard Route */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="admindashboardview" element={<AdminDashboardView />} />
+        </Route>
+  <Route path='/admincourse' element={<CategoryTable />} />
+
+{/* </Route> */}
+<Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
+
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path='/salesforce' element={<Salesforce/>}/>
@@ -91,12 +104,8 @@ function App() {
       <Route path='/blogs/:category_name' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
-      <Route path='/terms' element={<Terms/>}/>
-      <Route path='/privacy' element={<Privacy/>}/>
-      <Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
-      
       <Route path='/addcourse' element={<AddCourseCategory/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
@@ -112,9 +121,11 @@ function App() {
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/courseschedule' element={<CourseSchedule/>}/>
-    
-      </Routes>
-      </BrowserRouter>
+      <Route path='/terms' element={<Terms/>}/>
+      <Route path='/privacy' element={<Privacy/>}/>
+  
+      </Routes></BrowserRouter>
+     </HelmetProvider>
     </>
   );
 }

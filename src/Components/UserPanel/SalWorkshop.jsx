@@ -23,18 +23,22 @@ import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
 
 const SalWorkshop = () => {
-  const [workshop, setWorkshop] = useState({
-    date: "",
-    time: "",
-    timezone: "",
-  });
+
   const footerRef = useRef(null); // Footer reference for intersection observer
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
-  const[email,setEmail]=useState("");
-  const [name, setName] = useState("");
-  const [zone, setZone] = useState("");
-  const [mobile,setMobile]=useState("");
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [formData, setFormData] = useState({
+    fullName: "",
+    emailId: "",
+    courseCategory:"",
+    time:"",
+    message:"",
+    mobileNumber: "",
+    timeZone: "",
+    date:"",
+    courseName: "Salesforce", // Default value
+  });
   const mobileInputRef = useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedCountry, setSelectedCountry] = useState({
@@ -82,7 +86,38 @@ const SalWorkshop = () => {
         workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
   
+    // Handle form submission
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const currentDate = new Date().toISOString().split("T")[0];
+    
+      const updatedFormData = {
+        fullName: formData.fullName,
+        courseCategory: formData.courseCategory || "Salesforce",
+        time: "10:00",
+        message: "register",
+        emailId: formData.emailId,
+        mobileNumber: formData.mobileNumber,
+        timeZone: formData.timeZone || "GMT",
+        courseName: [formData.courseName || "Salesforce"], // ✅ Fixed property name
+        date: currentDate,
+      };
+    
+      try {
+        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+    
+        alert("Form submitted successfully!");
+        console.log("Response:", response.data);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    };
+    
     useEffect(() => {
       window.scrollTo(0, 0);
     }, []);
@@ -110,16 +145,7 @@ const SalWorkshop = () => {
       };
     }, []);
 
-    useEffect(() => {
-    // Fetching workshop details from the backend
-    axios.get("https://api.hachion.co/workshop")
-      .then(response => {
-        setWorkshop(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching workshop details:", error);
-      });
-  }, []);
+   
 
   return (
     <>
@@ -231,24 +257,30 @@ const SalWorkshop = () => {
         <div className='workshopfaq'>
         <WorkshopFAQ />
         </div>
-
+       
         <div className='workshopform' ref={workshopRef}>
+        
         <div className='workshop-content'>
+        <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md w-96">
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
           <div className='workshop-top-form'>
           <img className='workshop-reg-img' src={salreg} alt='' />
 
           <div>
+          
           <div className='join-form'>
+        
             <div className="form-group col-10" style={{marginBottom: '20px'}}>
+              
           <label htmlFor="inputName" className="form-label">
           Full Name<span className='star'>*</span>
           </label>
           <input
             id="query1"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
             className="form-control-query"
             placeholder="Enter your name"
           />
@@ -261,8 +293,9 @@ const SalWorkshop = () => {
           <input
             id="query1"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="emailId"
+          value={formData.emailId}
+          onChange={handleChange}
             className="form-control-query"
             placeholder="abc@gmail.com"
           />
@@ -301,8 +334,9 @@ const SalWorkshop = () => {
                          ref={mobileInputRef}
                          aria-label="Text input with segmented dropdown button"
                          id="workshop"
-                         value={mobile}
-                         onChange={(e) => setMobile(e.target.value)}
+                         name="mobileNumber"
+                         value={formData.mobileNumber}
+                         onChange={handleChange}
                          placeholder="Enter your mobile number"
                        />
                      </div>
@@ -314,8 +348,9 @@ const SalWorkshop = () => {
               Time Zone<span className="star">*</span>
             </label>
             {/* <div className="input-group mb-2"> */}
-              <select id='query1' class="form-select mode" value={zone}
-            onChange={(e) => setZone(e.target.value)}>
+              <select id='query1' class="form-select mode" name="timeZone"
+          value={formData.timeZone}
+          onChange={handleChange}>
             <option selected>Select Time Zone</option>
             <option>EST</option>
             <option>CST</option>
@@ -326,22 +361,33 @@ const SalWorkshop = () => {
             </div>
 
             <button
-              type="button"
+              type="submit"
               className="register-button"
             >
               Register
             </button>
-            </div>
-        </div>
-        </div>
-        </div>
+           
 
+            </div>
+            
+           
+        </div>
+        </form> 
+        
+        </div>
+        
+
+        </div>
+       
       {/* Footer section to stop the sticky behavior */}
       <div ref={footerRef}>
         <Footer />
+        
       </div>
+      
       <StickyBar />
       </div>
+      
     </>
   );
 };

@@ -18,6 +18,7 @@ import StickyBar from './StickyBar';
 import CurriculumMain from './CurriculumMain';
 import QaAutomationFaq from './QaAutomationFaq';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { Helmet } from 'react-helmet-async';
 
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
@@ -104,6 +105,17 @@ const QaAutomation = () => {
 
   return (
     <>
+    <Helmet>
+  <title>{courseData?.metaTitle || "Loading..."}</title>
+  <meta name="description" content={courseData?.metaDescription || "Default description"} />
+  <meta name="keywords" content={courseData?.metaKeyword || "default, keywords"} />
+  <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
+  <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
+  <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
+  <meta property="og:url" content={`https://hachion.co/CourseDetails/${courseName}`} />
+  <meta name="robots" content="index, follow" />
+</Helmet>
+
       <div className='course-top'>
         <Topbar />
         <NavbarTop />

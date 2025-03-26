@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../Assets/banner1.png';
 import Banner3 from '../../Assets/banner3.png';
-import Banner2 from '../../Assets/bann3.png';
+import Banner2 from '../../Assets/banne3.png';
 import './Home.css';
 
 const Banner = () => {
@@ -11,6 +11,11 @@ const Banner = () => {
   const handleExploreMore = () => {
     console.log("Explore More button clicked. Navigating to /course...");
     navigate('/course');
+  };
+
+  const handleJoinNow = () => {
+    console.log("Join Now button clicked. Navigating to /Salesforce-Workshop...");
+    navigate('/Salesforce-Workshop');
   };
 
   useEffect(() => {
@@ -67,10 +72,12 @@ const Banner = () => {
           </div>
 
           <div className="carousel-item">
-          <a href="/Salesforce-Workshop">
             <img src={Banner2} className="d-block w-100" alt="Banner2" />
-            </a>
             <div className="carousel-caption">
+            <div className='carousel-join-btn'>
+        
+                <button className="join-now" onClick={handleJoinNow}>Join Now</button>
+              </div>
             </div>
           </div>
 

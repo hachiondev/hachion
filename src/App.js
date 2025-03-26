@@ -45,6 +45,7 @@ import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import SalWorkshop from './Components/UserPanel/SalWorkshop';
+import ProtectedRoute from './ProtectedRoute';
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {

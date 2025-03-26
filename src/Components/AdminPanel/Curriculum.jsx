@@ -293,7 +293,7 @@ export default function Curriculum() {
       course_name: curriculumData?.course_name || "",
       title: curriculumData?.title || "",
       topic: curriculumData?.topic || "",
-      // link: curriculumData?.link || "",
+      link: curriculumData?.link || "",
       date: currentDate
     }));
   

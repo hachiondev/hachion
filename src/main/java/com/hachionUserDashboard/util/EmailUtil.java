@@ -5,6 +5,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import com.hachionUserDashboard.entity.Query;
 import com.hachionUserDashboard.entity.RequestBatch;
 
 import jakarta.mail.MessagingException;
@@ -81,4 +83,21 @@ public class EmailUtil {
         simpleMailMessage.setText(message);
         javaMailSender.send(simpleMailMessage);
     }
+    public void sendQueryEmail(Query queryRequest) {  // Removed @RequestBody
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(queryRequest.getEmail());
+        simpleMailMessage.setSubject("Hachion Query Session");
+
+        String message = String.format(
+            "Hello %s,\n\nThank you for submitting your query. One of our team member will call you shortly\n\n"
+            + " %s\n\nThank you,\nHachion Team",
+            queryRequest.getName(),
+            queryRequest.getEmail(),
+            queryRequest.getMobile()
+        );
+
+        simpleMailMessage.setText(message);
+        javaMailSender.send(simpleMailMessage);
+    }
+
 }

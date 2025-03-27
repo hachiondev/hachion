@@ -32,10 +32,16 @@ public class MailConfig {
         mailSender.setPassword(mailPassword);
 
         Properties props = mailSender.getJavaMailProperties();
+     
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587"); // Use 587 for STARTTLS
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.ssl.enable", "false");  // No SSL for GoDaddy Relay
-        props.put("mail.smtp.starttls.enable", "false");  // No STARTTLS for Relay
-        props.put("mail.smtp.localhost", "localhost");  // Required for GoDaddy relay
+        props.put("mail.smtp.starttls.enable", "true"); // ✅ Enable STARTTLS
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.ssl.enable", "true");  // No SSL for GoDaddy Relay
+//        props.put("mail.smtp.starttls.enable", "true");  // No STARTTLS for Relay
+//        props.put("mail.smtp.localhost", "localhost");  // Required for GoDaddy relay
 
         mailSender.setJavaMailProperties(props);
         return mailSender;

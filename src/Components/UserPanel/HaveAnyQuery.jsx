@@ -7,7 +7,7 @@ import success from '../../Assets/success.gif';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
-
+import axios from 'axios';
 const initialValues = {
   name: "",
   email: "",
@@ -41,7 +41,30 @@ const HaveAnyQuery = ({ closeModal }) => {
     { name: 'Mexico', code: '+52', flag: 'MX' },
     { name: 'South Africa', code: '+27', flag: 'ZA' },
   ];
-
+  const handleContact = async (e) => {
+    e.preventDefault();
+  
+    const requestData = {
+      name: values.name,
+      email: values.email,
+      mobile: mobileNumber,
+      comment: values.comment
+    };
+  
+    try {
+      const response = await axios.post('https://api.hachion.co/haveanyquery/add', requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status === 200) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error('Error submitting query:', error);
+    }
+  };
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
@@ -63,10 +86,7 @@ const HaveAnyQuery = ({ closeModal }) => {
       console.log(values);
     }
   });
-const handleContact=(e)=>{
-  e.preventDefault();
-  setShowModal(true);
-}
+
 
 
   return (

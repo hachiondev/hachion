@@ -203,48 +203,53 @@ const [currentPage, setCurrentPage] = useState(1);
           [name]: value,
         }));
       };
-      const handleSubmit = async (e) => {
+      const handleSubmit = async (e, actionType) => {
         e.preventDefault();
-        
-        // Ensure defaults are applied
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+      
         const formDataToSend = new FormData();
+        const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
       
-        // Append fields to formData
-        formDataToSend.append("type", bannerData.type || "amount conversion");  // Default value
-       formDataToSend.append("country",bannerData.country);
-        formDataToSend.append("amount_conversion", bannerData.amount_conversion);
-        formDataToSend.append("status", bannerData.status || "disabled");  // Default value
-        formDataToSend.append("date", currentDate);
+        // Prepare the JSON data
+        const jsonData = {
+          type: "amount conversion",
+          status: "disabled",
+          date: currentDate,
+          country: "",
+          amount_conversion: "",
+        };
       
-        // Handle file uploads
-        if (bannerData.banner_image) formDataToSend.append("banner_image", bannerData.banner_image);
-        if (bannerData.home_banner_image) formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+        // Conditionally append images and JSON fields based on actionType
+        if (actionType === "banner" && bannerData.banner_image) {
+          formDataToSend.append("banner_image", bannerData.banner_image);
+          formDataToSend.append("home_banner_image", "");
+        } 
+        else if (actionType === "homeBanner" && bannerData.home_banner_image) {
+          formDataToSend.append("banner_image", "");
+          formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+        } 
+        else if (actionType === "amount") {
+          jsonData.country = bannerData.country || "";
+          jsonData.amount_conversion = bannerData.amount_conversion || "";
+          formDataToSend.append("banner_image", ""); // Empty strings for images
+          formDataToSend.append("home_banner_image", "");
+        }
       
-        // Log the formData content to check
-        formDataToSend.forEach((value, key) => {
-          console.log(`${key}:`, value);
-        });
+        // Append JSON data as a Blob
+        formDataToSend.append("banner", new Blob([JSON.stringify(jsonData)], { type: "application/json" }));
       
         try {
-          const response = await axios.post(
-            "https://api.hachion.co/banner/add",
-            formDataToSend,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
+          const response = await axios.post("https://api.hachion.co/banner/add", formDataToSend);
+      
           if (response.status === 201) {
-            alert("Banner added successfully");
-            setFilteredBanner((prevBanner) => [...prevBanner, response.data]);
+            alert("Banner added successfully!");
           }
         } catch (error) {
-          console.error("Error submitting banner:", error.response ? error.response.data : error.message);
-          alert("Error submitting banner.");
+          console.error("Error submitting banner:", error.response?.data || error.message);
+          alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
         }
       };
+      
+      
       
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
@@ -286,7 +291,7 @@ const [currentPage, setCurrentPage] = useState(1);
                 />
               </div>
 <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-<button className='submit-btn'>Upload</button>
+<button className='submit-btn' onClick={(e) => handleSubmit(e, "banner")}>Upload</button>
 </div>
 </div>
 <div className='course-details'>
@@ -303,7 +308,7 @@ const [currentPage, setCurrentPage] = useState(1);
                 />
               </div>
 <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-<button className='submit-btn'>Upload</button>
+<button className='submit-btn' onClick={(e) => handleSubmit(e, "homeBanner")}>Upload</button>
 </div>
 </div>
 <div className='course-details'>
@@ -323,7 +328,7 @@ const [currentPage, setCurrentPage] = useState(1);
   </div>
   <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
   <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' type='submit'>Add amount</button>
+                  data-bs-target='#exampleModal' type='submit'  onClick={(e) => handleSubmit(e, "amount")}>Add amount</button>
                   </div>
                   
 </div>
@@ -432,7 +437,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={`https://160.153.175.69:8080/${curr.home_banner_image}`} 
+                src={`https://api.hachion.co/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />

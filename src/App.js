@@ -82,18 +82,18 @@ function App() {
     
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      <Route path='/admin'>
-      <Route path="adminlogin" element={<AdminLogin />} />
-        <Route path="adminregister" element={<AdminRegister />} />
-        <Route path="/forgot" element={<AdminForgot />} />
+      {/* <Route path='/admin'> */}
+      <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/adminregister" element={<AdminRegister />} />
+        <Route path="/adminforgot" element={<AdminForgot />} />
 
         {/* Protected Admin Dashboard Route */}
         <Route element={<ProtectedRoute />}>
-          <Route path="admindashboardview" element={<AdminDashboardView />} />
+          <Route path="/admindashboardview" element={<AdminDashboardView />} />
         </Route>
   <Route path='/admincourse' element={<CategoryTable />} />
 
-</Route>
+
 <Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
 
       <Route path='/blogs' element={<Blogs/>}/>

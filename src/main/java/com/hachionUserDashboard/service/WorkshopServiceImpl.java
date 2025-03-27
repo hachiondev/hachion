@@ -174,24 +174,57 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		mailSender.send(message);
 	}
 
-	private void sendToUser(WorkshopRequest formRequest) throws MessagingException {
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+	public void sendToUser(WorkshopRequest formRequest) throws MessagingException {
+	    MimeMessage message = mailSender.createMimeMessage();
+	    MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setTo(formRequest.getEmailId());
-		helper.setCc("trainings@hachion.co");
+	    helper.setTo(formRequest.getEmailId());
+	    helper.setCc("trainings@hachion.co");
+	    helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
 
-		helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
+	    String emailContent = "<html><head><style>"
+	            + "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; }"
+	            + ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }"
+	            + ".strip { padding: 20px; border-bottom: 2px solid #f2f2f2; }"
+	            + ".header-strip, .footer-strip { background-color: #4CAF50; color: #ffffff; text-align: center; }"  // Green color for both header and footer
+	            + ".header-strip h1 { font-size: 50px; font-weight: bold; margin: 0; text-transform: uppercase; }"  // Hachion in capital letters
+	            + ".header-strip p { font-size: 18px; font-weight: bold; margin: 10px 0; }" // Added "Welcome Registration Successful"
+	            + ".content-strip { background-color: #f9f9f9; color: #333333; text-align: left; }"
+	            + ".content-strip p { margin: 10px 0; line-height: 1.6; }"
+	            + ".highlight { color: #4CAF50; font-weight: bold; }"
+	            + ".footer-strip p { margin: 5px 0; font-weight: bold; color: white; }"  // White color for text in footer
+	            + "</style></head><body>"
+	            + "<div class='email-container'>"
+	            
+	            // Header Strip (HACHION + Welcome Registration Successful)
+	            + "<div class='strip header-strip'>"
+	            + "    <h1>HACHION</h1>"  // Hachion in capital letters
+	            + "    <p>Welcome! Registration Successful</p>"  // Added "Welcome Registration Successful"
+	            + "</div>"
+	            
+	            // Content Strip (Welcome message)
+	            + "<div class='strip content-strip'>"
+	            + "    <p>Dear <span class='highlight'>" + formRequest.getFullName() + "</span>,</p>"
+	            + "    <p>Thank you for registering for our <span class='highlight'>" + formRequest.getCourseName() + "</span> Workshop! We’re excited to have you join us.</p>"
+	            + "    <p>Your registration has been successfully completed. Keep an eye on your inbox for further details and reminders as we approach the event date.</p>"
+	            + "    <p>If you have any questions, feel free to contact us at <a class='highlight' href='mailto:trainings@hachion.co'>trainings@hachion.co</a>.</p>"
+	            + "    <p>We look forward to seeing you at the workshop!</p>"
+	            + "</div>"
+	            
+	            // Footer Strip (Best Regards + Team Hachion)
+	            + "<div class='strip footer-strip'>"
+	            + "    <p>Best Regards,</p>"
+	            + "    <p>Team Hachion</p>"
+	            + "</div>"
+	            
+	            + "</div>"
+	            + "</body></html>";
 
-		String emailContent = "Dear " + formRequest.getFullName() + ",\n\n" + "Thank you for registering for our "
-				+ formRequest.getCourseName() + " Workshop! We’re excited to have you join us.\n\n"
-				+ "Your registration has been successfully completed. Keep an eye on your inbox for further details and reminders as we approach the event date.\n\n"
-				+ "If you have any questions, feel free to contact us at hachion.trainings@hachion.co.\n\n"
-				+ "We look forward to seeing you at the workshop!\n\n" + "Regards,\n" + "Team Hachion";
 
-		helper.setText(emailContent);
-
-		mailSender.send(message);
+	    helper.setText(emailContent, true);
+	    mailSender.send(message);
 	}
+
+
 
 }

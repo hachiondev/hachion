@@ -1,6 +1,5 @@
 package com.hachionUserDashboard.controller;
 
-
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,51 +17,48 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hachionUserDashboard.entity.TrendingCourse;
 import com.hachionUserDashboard.repository.TrendingCourseRepository;
 
-
 @CrossOrigin
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RestController
 public class TrendingCourseController {
 
-    
+	@Autowired
+	private TrendingCourseRepository repo;
 
-    @Autowired
-    private TrendingCourseRepository repo;
+	@GetMapping("/trendingcourse/{id}")
+	public ResponseEntity<TrendingCourse> getTrendingCourse(@PathVariable Integer id) {
+		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
+	@GetMapping("/trendingcourse")
+	public List<TrendingCourse> getAllTrendingCourse() {
+		return repo.findAll();
+	}
 
-    @GetMapping("/trendingcourse/{id}")
-    public ResponseEntity<TrendingCourse> getTrendingCourse(@PathVariable Integer id) {
-        return repo.findById(id)
-                   .map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@PostMapping("/trendingcourse/add")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public void createTrendingCourse(@RequestBody TrendingCourse trendingcourse) {
+		repo.save(trendingcourse);
+	}
 
-    @GetMapping("/trendingcourse")
-    public List<TrendingCourse> getAllTrendingCourse() {
-        return repo.findAll();
-    }
+	@PutMapping("/trendingcourse/update/{id}")
+	public ResponseEntity<TrendingCourse> updatedTrendingCourse(@PathVariable int id,
+			@RequestBody TrendingCourse updatedTrendingCourse) {
+		return repo.findById(id).map(trendingcourse -> {
+			trendingcourse.setCategory_name(updatedTrendingCourse.getCategory_name());
+			trendingcourse.setCourse_name(updatedTrendingCourse.getCourse_name());
+			trendingcourse.setStatus(updatedTrendingCourse.isStatus());
 
-    @PostMapping("/trendingcourse/add")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void createTrendingCourse(@RequestBody TrendingCourse trendingcourse) {
-        repo.save(trendingcourse);
-    }
+			repo.save(trendingcourse);
+			return ResponseEntity.ok(trendingcourse);
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @PutMapping("/trendingcourse/update/{id}")
-    public ResponseEntity<TrendingCourse> updatedTrendingCourse(@PathVariable int id, @RequestBody TrendingCourse updatedTrendingCourse) {
-        return repo.findById(id).map(trendingcourse -> {
-            trendingcourse.setCategory_name(updatedTrendingCourse.getCategory_name());
-            trendingcourse.setCourse_name(updatedTrendingCourse.getCourse_name());
-            trendingcourse.setStatus(updatedTrendingCourse.isStatus());
-           
-            repo.save(trendingcourse);
-            return ResponseEntity.ok(trendingcourse);
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@DeleteMapping("trendingcourse/delete/{id}")
+	public ResponseEntity<?> deleteTrendingCourse(@PathVariable int id) {
+		TrendingCourse trendingcourse = repo.findById(id).get();
+		repo.delete(trendingcourse);
+		return null;
 
-    @DeleteMapping("trendingcourse/delete/{id}") public ResponseEntity<?>
-    deleteTrendingCourse(@PathVariable int id) { TrendingCourse trendingcourse=
-    repo.findById(id).get(); repo.delete(trendingcourse); return null;
-    
-    }
+	}
 }

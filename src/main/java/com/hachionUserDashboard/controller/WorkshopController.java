@@ -21,6 +21,7 @@ import com.hachionUserDashboard.exception.ResourceNotFoundException;
 
 import Response.WorkshopResponse;
 import Service.WorkshopServiceInterface;
+import jakarta.mail.MessagingException;
 
 @CrossOrigin
 @RestController
@@ -31,7 +32,7 @@ public class WorkshopController {
 	private WorkshopServiceInterface workshopService;
 
 	@PostMapping
-	public ResponseEntity<WorkshopResponse> createWorkshop(@RequestBody WorkshopRequest workshopRequest) {
+	public ResponseEntity<WorkshopResponse> createWorkshop(@RequestBody WorkshopRequest workshopRequest) throws MessagingException {
 		WorkshopResponse response = workshopService.createWorkshop(workshopRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

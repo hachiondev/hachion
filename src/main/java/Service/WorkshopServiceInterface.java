@@ -6,10 +6,11 @@ import java.util.Optional;
 import com.hachionUserDashboard.dto.WorkshopRequest;
 
 import Response.WorkshopResponse;
+import jakarta.mail.MessagingException;
 
 public interface WorkshopServiceInterface {
 
-	public WorkshopResponse createWorkshop(WorkshopRequest workshopRequest);
+	public WorkshopResponse createWorkshop(WorkshopRequest workshopRequest) throws MessagingException;
 
 	public Optional<WorkshopResponse> getByWorkshopId(Long workshopId);
 

@@ -33,14 +33,26 @@ public class Curriculum {
     @Column
     private String topic;
     
+    @Column
+    private String link;
     
-    @Column(name = "date")  // Make sure the name matches your SQL column
+    
+    public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+
+	@Column(name = "date")  // Make sure the name matches your SQL column
     private LocalDate date;
 
     public Curriculum() {
     }
 
-	public Curriculum(int curriculum_id, String category_name, String course_name, String curriculum_pdf, String title,
+	public Curriculum(int curriculum_id, String category_name, String course_name, String curriculum_pdf, String title,String link,
 			String topic, LocalDate date) {
 		super();
 		this.curriculum_id = curriculum_id;
@@ -48,6 +60,7 @@ public class Curriculum {
 		this.course_name = course_name;
 		this.curriculum_pdf = curriculum_pdf;
 		this.title = title;
+		this.link=link;
 		this.topic = topic;
 		this.date = date;
 	}
@@ -127,7 +140,7 @@ public class Curriculum {
 	public String toString() {
 		return "Curriculum [curriculum_id=" + curriculum_id + ", category_name=" + category_name + ", course_name="
 				+ course_name + ", curriculum_pdf=" + curriculum_pdf + ", title=" + title + ", topic=" + topic
-				+ ", date=" + date + "]";
+				+ ", link=" + link + ", date=" + date + "]";
 	}
     
 }

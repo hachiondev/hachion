@@ -261,7 +261,7 @@ const SalWorkshop = () => {
         <div className='workshopform' ref={workshopRef}>
         
         <div className='workshop-content'>
-        <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md w-96">
+        <form onSubmit={handleSubmit}>
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
           <div className='workshop-top-form'>
           <img className='workshop-reg-img' src={salreg} alt='' />

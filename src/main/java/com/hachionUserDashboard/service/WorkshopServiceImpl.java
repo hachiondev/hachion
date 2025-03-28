@@ -34,10 +34,10 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 	@Override
 	public WorkshopResponse createWorkshop(WorkshopRequest workshopRequest) {
 
-		try {
-
-			sendToAdmin(workshopRequest);
-			sendToUser(workshopRequest);
+//		try {
+//
+//			sendToAdmin(workshopRequest);
+//			sendToUser(workshopRequest);
 
 			Workshop workshop = new Workshop();
 			workshop.setFullName(workshopRequest.getFullName());
@@ -69,12 +69,12 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 			workshopResponse.setEmailId(savedWorkshop.getEmailId());
 
 			return workshopResponse;
-		} catch (MessagingException e) {
-
-			WorkshopResponse errorResponse = new WorkshopResponse();
-			errorResponse.setMessage("Email sending failed. Registration not saved: " + e.getMessage());
-			return errorResponse;
-		}
+//		} catch (MessagingException e) {
+//
+//			WorkshopResponse errorResponse = new WorkshopResponse();
+//			errorResponse.setMessage("Email sending failed. Registration not saved: " + e.getMessage());
+//			return errorResponse;
+//		}
 	}
 
 	private WorkshopResponse createResponseForWorkshop(Workshop savedWorkshop) {

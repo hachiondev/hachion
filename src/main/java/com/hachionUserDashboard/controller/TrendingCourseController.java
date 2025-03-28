@@ -18,7 +18,6 @@ import com.hachionUserDashboard.entity.TrendingCourse;
 import com.hachionUserDashboard.repository.TrendingCourseRepository;
 
 @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RestController
 public class TrendingCourseController {
 

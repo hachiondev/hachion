@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.eba76f13.css",
-    "main.js": "/static/js/main.0eb0cd21.js",
+    "main.css": "/static/css/main.9e152fdc.css",
+    "main.js": "/static/js/main.b3f80f5f.js",
     "static/js/851.6a1707bf.chunk.js": "/static/js/851.6a1707bf.chunk.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
@@ -13,7 +13,10 @@
     "static/media/AboutusBanner (2).png": "/static/media/AboutusBanner (2).b5353f5194255a006ecf.png",
     "static/media/contactus.png": "/static/media/contactus.4500901ee11bcbf6263d.png",
     "static/media/image27.png": "/static/media/image27.95a10ebf680f539d0fe5.png",
+    "static/media/salreg.png": "/static/media/salreg.ab8f32ef3fc9806f9792.png",
     "static/media/aboutussider.png": "/static/media/aboutussider.644a9b400aabfad6d603.png",
+    "static/media/bann3.png": "/static/media/bann3.fe1917b6f540f95e7006.png",
+    "static/media/banne3.png": "/static/media/banne3.998f336f4ae1140762c0.png",
     "static/media/blogbanner.png": "/static/media/blogbanner.9a87e907803d6d4852b7.png",
     "static/media/success.gif": "/static/media/success.f68e6e8adf9d91b5f126.gif",
     "static/media/OurVision.png": "/static/media/OurVision.dc011381b10599486d20.png",
@@ -23,11 +26,17 @@
     "static/media/qa-video.png": "/static/media/qa-video.a3401daba383eb785690.png",
     "static/media/handsonLearning.png": "/static/media/handsonLearning.aa1835523a18548811be.png",
     "static/media/course_banner.png": "/static/media/course_banner.2f47c993a3d644a08aaa.png",
+    "static/media/exp.png": "/static/media/exp.3c867a776fa8397998bb.png",
+    "static/media/assig.png": "/static/media/assig.2c4ae21febfde8cb05ed.png",
+    "static/media/inter.png": "/static/media/inter.4c1879ea9117e591d525.png",
     "static/media/qa_background.png": "/static/media/qa_background.ccce96d01ee2149bc8d5.png",
     "static/media/Assistance.png": "/static/media/Assistance.0fc0d615d56c22b976a6.png",
     "static/media/onlineTeaching.png": "/static/media/onlineTeaching.d52c0e4c7e4a179ceb97.png",
+    "static/media/cv.png": "/static/media/cv.78f9bbf6e35e996534d0.png",
+    "static/media/247.png": "/static/media/247.53d6d577666fea88879e.png",
     "static/media/flexibleDesign.png": "/static/media/flexibleDesign.41b2b66100a7f34158d0.png",
     "static/media/careerSupport.png": "/static/media/careerSupport.988224c87f6e71f2f004.png",
+    "static/media/handexp.png": "/static/media/handexp.ac5df605710fe09dbc82.png",
     "static/media/remoteTraining.png": "/static/media/remoteTraining.0e6c21f04ca126be1110.png",
     "static/media/course2.png": "/static/media/course2.2a36b2614ae78db96a33.png",
     "static/media/image.png": "/static/media/image.3ffdcac7158eb36d0d2c.png",
@@ -67,13 +76,13 @@
     "static/media/usflag.jpg": "/static/media/usflag.f1c957ad98d5d5be7112.jpg",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.eba76f13.css.map": "/static/css/main.eba76f13.css.map",
-    "main.0eb0cd21.js.map": "/static/js/main.0eb0cd21.js.map",
+    "main.9e152fdc.css.map": "/static/css/main.9e152fdc.css.map",
+    "main.b3f80f5f.js.map": "/static/js/main.b3f80f5f.js.map",
     "851.6a1707bf.chunk.js.map": "/static/js/851.6a1707bf.chunk.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.eba76f13.css",
-    "static/js/main.0eb0cd21.js"
+    "static/css/main.9e152fdc.css",
+    "static/js/main.b3f80f5f.js"
   ]
 }

@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
+bin/
+*.class
+.metadata/
+mvnw
+mvnw.cmd

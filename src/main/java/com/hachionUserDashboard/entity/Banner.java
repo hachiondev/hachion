@@ -31,28 +31,13 @@ public class Banner {
 		this.home_banner_image = home_banner_image;
 	}
 
-	@Column
-    private String type;
-
-    @Column
-    private String amount_conversion;
-
-    @Column
-    private String country;
-
-    @Column
-    private String status;
 
     @Column(name = "date")  // Ensure the name matches your SQL column
     private LocalDate date;
     
 
     // Default constructor with default values
-    public Banner() {
-        this.status = "disabled";  // Default status
-        this.type = "amount conversion";  // Default type
-    }
-
+ 
     // Getters and Setters
     public int getBanner_id() {
         return banner_id;
@@ -70,37 +55,9 @@ public class Banner {
         this.banner_image = banner_image;
     }
 
-    public String getType() {
-        return type;
-    }
+  
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getAmount_conversion() {
-        return amount_conversion;
-    }
-
-    public void setAmount_conversion(String amount_conversion) {
-        this.amount_conversion = amount_conversion;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+   
 
     public LocalDate getDate() {
         return date;
@@ -113,8 +70,7 @@ public class Banner {
     @Override
 	public String toString() {
 		return "Banner [banner_id=" + banner_id + ", banner_image=" + banner_image + ", home_banner_image="
-				+ home_banner_image + ", type=" + type + ", amount_conversion=" + amount_conversion + ", country="
-				+ country + ", status=" + status + ", date=" + date + "]";
+				+ home_banner_image + ", date=" + date + "]";
 	}
 
 	public Banner(int banner_id, String banner_image, String home_banner_image, String type, String amount_conversion,
@@ -123,13 +79,12 @@ public class Banner {
 		this.banner_id = banner_id;
 		this.banner_image = banner_image;
 		this.home_banner_image = home_banner_image;
-		this.type = type;
-		this.amount_conversion = amount_conversion;
-		this.country = country;
-		this.status = status;
+		
 		this.date = date;
 	}
+public Banner() {
 
+}
     // Constructor with all fields
 
 }

@@ -181,12 +181,12 @@ public class BannerController {
             @RequestPart(value = "banner_image", required = false) MultipartFile bannerImage,
             @RequestPart(value = "home_banner_image", required = false) MultipartFile homeBannerImage) {
         try {
-            // Parse the banner data (excluding images)
+            // Parse the banner data
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             Banner banner = objectMapper.readValue(bannerData, Banner.class);
 
-            // Process the banner image
+            // Process banner image (if available)
             if (bannerImage != null && !bannerImage.isEmpty()) {
                 String bannerImagePath = saveImage(bannerImage);
                 if (bannerImagePath != null) {
@@ -194,11 +194,9 @@ public class BannerController {
                 } else {
                     return ResponseEntity.badRequest().body("Failed to save banner image.");
                 }
-            } else {
-                banner.setBanner_image(""); // Set empty string if no image is provided
             }
 
-            // Process the home banner image
+            // Process home banner image (if available)
             if (homeBannerImage != null && !homeBannerImage.isEmpty()) {
                 String homeBannerImagePath = saveImage(homeBannerImage);
                 if (homeBannerImagePath != null) {
@@ -206,20 +204,26 @@ public class BannerController {
                 } else {
                     return ResponseEntity.badRequest().body("Failed to save home banner image.");
                 }
-            } else {
-                banner.setHome_banner_image(""); // Set empty string if no image is provided
             }
 
-            // Save the banner data to the database
+            // If neither image is provided, allow saving the banner with empty image fields
+            if (banner.getBanner_image() == null) {
+                banner.setBanner_image(""); // Default empty value
+            }
+            if (banner.getHome_banner_image() == null) {
+                banner.setHome_banner_image(""); // Default empty value
+            }
+
+            // Save to database
             repo.save(banner);
 
-            // Respond with a success message
             return ResponseEntity.status(HttpStatus.CREATED).body("Banner added successfully.");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding banner: " + e.getMessage());
         }
     }
+
 
 //    @PostMapping("/banner/add")
 //    @ResponseStatus(code = HttpStatus.CREATED)
@@ -280,12 +284,8 @@ public class BannerController {
             Banner updatedBanner = objectMapper.readValue(bannerData, Banner.class);
 
             return repo.findById(id).map(banner -> {
-                // Update non-image fields
-                banner.setAmount_conversion(updatedBanner.getAmount_conversion());
-                banner.setCountry(updatedBanner.getCountry());
-                banner.setStatus(updatedBanner.getStatus());
-                banner.setType(updatedBanner.getType());
-
+               
+               
                 try {
                     // If a new banner image is uploaded, update it
                     if (bannerImage != null && !bannerImage.isEmpty()) {

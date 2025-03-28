@@ -23,7 +23,7 @@ const Trending = () => {
         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
         setCategories(allCategories);
         setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
-        setDropdownCategories(allCategories.slice(7)); // Set remaining categories for dropdown
+        setDropdownCategories(allCategories.slice(6)); // Set remaining categories for dropdown
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

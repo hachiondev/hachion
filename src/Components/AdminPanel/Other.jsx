@@ -55,7 +55,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function Review() {
+export default function Other() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[banner,setBanner]=useState([]);
@@ -108,11 +108,9 @@ const [currentPage, setCurrentPage] = useState(1);
               banner_id:"",
               banner_image:null,
               home_banner_image:"",
-               type: "amount conversion",
+              
                 date:currentDate,
-               amount_conversion:"",
-               country:"",
-               status:"disabled",
+             
                  }]);
         
          }
@@ -131,7 +129,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchBanner = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/banner/banner');
+              const response = await axios.get('https://api.hachion.co/banner');
               setBanner(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -140,7 +138,7 @@ const [currentPage, setCurrentPage] = useState(1);
       fetchBanner();
 
       setFilteredBanner(banner);
-  }, []); // Empty dependency array ensures it runs only once
+  }, [banner]); // Empty dependency array ensures it runs only once
 
     const handleDeleteConfirmation = (banner_id) => {
         if (window.confirm("Are you sure you want to delete this banner")) {
@@ -151,39 +149,66 @@ const [currentPage, setCurrentPage] = useState(1);
    
       const handleSave = async () => {
         try {
+            const formDataToSend = new FormData();
+    
+            // Convert JSON data to string and append it as a Blob
+            formDataToSend.append("banner", new Blob([JSON.stringify(editedData)], { type: "application/json" }));
+    
+            // Ensure banner_image is sent only if updated
+            if (editedData.banner_image instanceof File) {
+                formDataToSend.append("banner_image", editedData.banner_image);
+            } else {
+                formDataToSend.append("banner_image", ""); // Prevent missing key issue
+            }
+    
+            // Ensure home_banner_image is sent only if updated
+            if (editedData.home_banner_image instanceof File) {
+                formDataToSend.append("home_banner_image", editedData.home_banner_image);
+            } else {
+                formDataToSend.append("home_banner_image", "");
+            }
+    
+            console.log("FormData Entries:");
+            for (let pair of formDataToSend.entries()) {
+                console.log(pair[0], pair[1]); // Debugging output
+            }
+    
+            // Send the update request
             const response = await axios.put(
-                `https://api.hachion.co/banner/banner/update/${editedData.banner_id}`,editedData
+                `https://api.hachion.co/banner/update/${editedData.banner_id}`,
+                formDataToSend,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
+    
+            // Update banner list state
             setBanner((prev) =>
                 prev.map(curr =>
                     curr.banner_id === editedData.banner_id ? response.data : curr
                 )
             );
+    
             setMessage("Banner updated successfully!");
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
+            console.error("Error updating banner:", error.response?.data || error.message);
             setMessage("Error updating Banner.");
         }
     };
-            
+    
       const handleDelete = async (banner_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/banner/banner/delete/${banner_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`); 
           console.log("Banner deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting banner:", error); 
         } }; 
-        useEffect(() => {
-          const filtered = banner.filter(banner =>
-              banner.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              banner.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              banner.type.toLowerCase().includes(searchTerm.toLowerCase()) 
-            
-          );
-          setFilteredBanner(filtered);
-      }, [searchTerm,filteredBanner]);
+      
  
         const handleCloseModal=()=>{
           setShowAddCourse(false);
@@ -203,53 +228,51 @@ const [currentPage, setCurrentPage] = useState(1);
           [name]: value,
         }));
       };
-      const handleSubmit = async (e) => {
+      const handleSubmit = async (e, actionType) => {
         e.preventDefault();
-        
-        // Ensure defaults are applied
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+      
         const formDataToSend = new FormData();
+        const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
       
-        // Append fields to formData
-        formDataToSend.append("type", bannerData.type || "amount conversion");  // Default value
-       formDataToSend.append("country",bannerData.country);
-        formDataToSend.append("amount_conversion", bannerData.amount_conversion);
-        formDataToSend.append("status", bannerData.status || "disabled");  // Default value
-        formDataToSend.append("date", currentDate);
+        // Prepare the JSON data
+        const jsonData = {
+         
+          date: currentDate,
+         
+        };
       
-        // Handle file uploads
-        if (bannerData.banner_image) formDataToSend.append("banner_image", bannerData.banner_image);
-        if (bannerData.home_banner_image) formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+        // Conditionally append images and JSON fields based on actionType
+        if (actionType === "banner" && bannerData.banner_image) {
+          formDataToSend.append("banner_image", bannerData.banner_image);
+          formDataToSend.append("home_banner_image", "");
+        } 
+        else if (actionType === "homeBanner" && bannerData.home_banner_image) {
+          formDataToSend.append("banner_image", "");
+          formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+        } 
+     
       
-        // Log the formData content to check
-        formDataToSend.forEach((value, key) => {
-          console.log(`${key}:`, value);
-        });
+        // Append JSON data as a Blob
+        formDataToSend.append("banner", new Blob([JSON.stringify(jsonData)], { type: "application/json" }));
       
         try {
-          const response = await axios.post(
-            "https://api.hachion.co/banner/banner/add",
-            formDataToSend,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
+          const response = await axios.post("https://api.hachion.co/banner/add", formDataToSend);
+      
           if (response.status === 201) {
-            alert("Banner added successfully");
-            setFilteredBanner((prevBanner) => [...prevBanner, response.data]);
+            alert("Banner added successfully!");
+            
           }
         } catch (error) {
-          console.error("Error submitting banner:", error.response ? error.response.data : error.message);
-          alert("Error submitting banner.");
+          console.error("Error submitting banner:", error.response?.data || error.message);
+          alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
         }
       };
+      
+      
       
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
-
 
 
   return (
@@ -268,10 +291,10 @@ const [currentPage, setCurrentPage] = useState(1);
         </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Banner/Amount Conversion </p>
+<p>Add Banner </p>
 </div>
 <form onSubmit={handleSubmit} enctype="multipart/form-data">
-<div className='course-row'>
+<div>
 <div className='course-details'>
 <div className="col">
                 <label className="form-label">Banner popup Image</label>
@@ -291,7 +314,7 @@ const [currentPage, setCurrentPage] = useState(1);
 </div>
 <div className='course-details'>
 <div className="col">
-                <label className="form-label">Home Banner Image</label>
+                <label className="form-label">Home Banner Image (width=1440px, height=420px)</label>
                 <input
                   type="file"
                   className="schedule-input"
@@ -302,11 +325,11 @@ const [currentPage, setCurrentPage] = useState(1);
                   required
                 />
               </div>
-<div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-<button className='submit-btn'>Upload</button>
+              <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+<button className='submit-btn' onClick={(e) => handleSubmit(e, "homeBanner")}>Upload</button>
 </div>
 </div>
-<div className='course-details'>
+{/* <div className='course-details'>
 <div class="col">
     <label for="inputState" class="form-label">Country</label>
     <select id="inputState" class="form-select" name='country' value={bannerData.country} onChange={handleChange}>
@@ -326,7 +349,7 @@ const [currentPage, setCurrentPage] = useState(1);
                   data-bs-target='#exampleModal' type='submit'>Add amount</button>
                   </div>
                   
-</div>
+</div> */}
 
 </div>
 </form>
@@ -339,7 +362,7 @@ const [currentPage, setCurrentPage] = useState(1);
        
         <div className='category'>
           <div className='category-header'>
-            <p>Review</p>
+            <p>Banner</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -385,7 +408,7 @@ const [currentPage, setCurrentPage] = useState(1);
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Banner/Amount
+                <FiPlus /> Add Banner
               </button>
             </div>
           </div>
@@ -403,9 +426,9 @@ const [currentPage, setCurrentPage] = useState(1);
             <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Banner Image</StyledTableCell>
             <StyledTableCell align='center'>Home Banner Image</StyledTableCell>
-            <StyledTableCell align='center'>Type</StyledTableCell>
-            <StyledTableCell align="center">Amount Conversion</StyledTableCell>
-            <StyledTableCell align="center">Country</StyledTableCell>
+            {/* <StyledTableCell align='center'>Type</StyledTableCell> */}
+            {/* <StyledTableCell align="center">Amount Conversion</StyledTableCell>
+            <StyledTableCell align="center">Country</StyledTableCell> */}
             <StyledTableCell align="center">Status </StyledTableCell>
             <StyledTableCell align="center">Created Date </StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
@@ -421,7 +444,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.banner_image ? (
                 <img
-                src={`http://160.153.175.69:8080/${curr.banner_image}`} 
+                src={`https://api.hachion.co/${curr.banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -432,7 +455,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={`http://160.153.175.69:8080/${curr.home_banner_image}`} 
+                src={`https://api.hachion.co/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -440,9 +463,9 @@ const [currentPage, setCurrentPage] = useState(1);
                 "No Image"
             )}
         </StyledTableCell>
-        <StyledTableCell align="center">{curr.type}</StyledTableCell>
-        <StyledTableCell align="center">{curr.amount_conversion}</StyledTableCell>
-        <StyledTableCell align="center">{curr.country}</StyledTableCell>
+        {/* <StyledTableCell align="center">{curr.type}</StyledTableCell> */}
+        {/* <StyledTableCell align="center">{curr.amount_conversion}</StyledTableCell>
+        <StyledTableCell align="center">{curr.country}</StyledTableCell> */}
         <StyledTableCell align="center">{curr.status}</StyledTableCell>
         <StyledTableCell align="center">{curr.date}</StyledTableCell>
         <StyledTableCell align="center">
@@ -461,11 +484,11 @@ const [currentPage, setCurrentPage] = useState(1);
     </div>)}
 
     <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-    PaperProps={{
-      style: { borderRadius: 20 },
-    }}>
-  <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Banner/Amount Conversion</DialogTitle>
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
+      <div >
+        <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Banner</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
@@ -496,7 +519,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <label>Status :</label>
           <FormControlLabel  control={<Switch />} label="Disable" />
       </div>
-              <div class="col-md-3">
+              {/* <div class="col-md-3">
     <label for="inputState" class="form-label">Country</label>
     <select id="inputState" class="form-select" name='country' value={editedData.country} onChange={handleInputChange}>
       <option selected>Select </option>
@@ -518,12 +541,12 @@ const [currentPage, setCurrentPage] = useState(1);
         onChange={handleInputChange}
      />
      
-    </div>
+    </div> */}
  
 
 
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

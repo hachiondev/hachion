@@ -15,7 +15,8 @@ const LeadingExpert = () => {
    const navigate=useNavigate();
   return (
  <>
- <div className='training-events-head' style={{width: '85%', alignItems: 'center', marginLeft: '8%'}}>
+ {/* <div className='training-events-head' style={{width: '80%', alignItems: 'center', marginLeft: '10%', marginRight: '10%'}}> */}
+ <div className='training-events-head'>
     <h1 className='association-head'>Skill-Building Curriculum</h1>
     <div className='view-all-div'>
  <button className='view-all-corporate' onClick={()=>navigate('/course')} >View All</button>

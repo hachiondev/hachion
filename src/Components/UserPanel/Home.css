@@ -434,7 +434,7 @@ background-color: #EA4335;
   }
 
   .d-block{
-    height: 420px;
+    max-height: 470px;
     }
 
 .association{
@@ -1234,6 +1234,10 @@ gap:1vh;
       margin-right: auto;
       justify-content: center;
   }
+
+  .d-block{
+    max-height: 450px;
+    }
   
   .online-training-div {
     width: 250px;

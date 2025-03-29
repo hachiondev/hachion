@@ -30,15 +30,15 @@ public class OtpCleanupScheduler {
 		System.out.println(deletedRows + " unverified users deleted.");
 	}
 
-//	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
-////	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
-//	@Transactional
-//	public void deletePastWorkshops() {
-//		// Write UTC timezone
-//		ZonedDateTime nowInUtc = ZonedDateTime.now(ZoneOffset.UTC);
-//		String todayDateInUtc = nowInUtc.format(DateTimeFormatter.ISO_LOCAL_DATE);
-//
-//		int deletedRows = courseScheduleRepository.deletePastWorkshops(todayDateInUtc);
-//		System.out.println(deletedRows + " past workshop records deleted.");
-//	}
+	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
+//	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
+	@Transactional
+	public void deletePastWorkshops() {
+		// Write UTC timezone
+		ZonedDateTime nowInUtc = ZonedDateTime.now(ZoneOffset.UTC);
+		String todayDateInUtc = nowInUtc.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+		int deletedRows = courseScheduleRepository.deletePastWorkshops(todayDateInUtc);
+		System.out.println(deletedRows + " past workshop records deleted.");
+	}
 }

@@ -321,7 +321,7 @@ const TrainingEvents = () => {
       <div className="view-btn">
         <button
           className="view-all"
-          onClick={() => (viewAll ? navigate('/course') : setViewAll(true))}
+          onClick={() => (viewAll ? navigate('/coursedetails') : setViewAll(true))}
         >
           {viewAll ? 'View Courses Page' : 'View All'}
         </button>

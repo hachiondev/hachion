@@ -19,7 +19,7 @@ const LeadingExpert = () => {
  <div className='training-events-head'>
     <h1 className='association-head'>Skill-Building Curriculum</h1>
     <div className='view-all-div'>
- <button className='view-all-corporate' onClick={()=>navigate('/course')} >View All</button>
+ <button className='view-all-corporate' onClick={()=>navigate('/coursedetails')} >View All</button>
  </div>
  </div>
  <div className='leading-expert'>

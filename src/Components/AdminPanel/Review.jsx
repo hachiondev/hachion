@@ -237,50 +237,97 @@ export default function Review() {
           [name]: value,
         }));
       };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+    //   const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const currentDate = new Date().toISOString().split("T")[0]; // Today's date
     
-        const formData = new FormData();
-        formData.append("name", reviewData.student_name);
-        formData.append("social_id", reviewData.source);
-        formData.append("category_name", reviewData.category_name);
-        formData.append("course_name", reviewData.course_name);
-        formData.append("review", reviewData.comment);
-        formData.append("email",reviewData.email||"");
-        formData.append("type",reviewData.type||"");
-        formData.append("trainer_name",reviewData.trainer_name||"");
-        formData.append("rating",reviewData.rating||"");
-        formData.append("location",reviewData.location||"");
+    //     const formData = new FormData();
+    //     formData.append("name", reviewData.student_name);
+    //     formData.append("social_id", reviewData.source);
+    //     formData.append("category_name", reviewData.category_name);
+    //     formData.append("course_name", reviewData.course_name);
+    //     formData.append("review", reviewData.comment);
+    //     formData.append("email",reviewData.email||"");
+    //     formData.append("type",reviewData.type||"");
+    //     formData.append("trainer_name",reviewData.trainer_name||"");
+    //     formData.append("rating",reviewData.rating||"");
+    //     formData.append("location",reviewData.location||"");
        
-        formData.append("date", currentDate); // Ensure the date is added
+    //     formData.append("date", currentDate); // Ensure the date is added
     
-        if (reviewData.image) {
-            formData.append("image", reviewData.image); // Append the image
-        }
-        for (let pair of formData.entries()) {
-          console.log(pair[0], pair[1]); // Check key-value pairs
+    //     if (reviewData.image) {
+    //         formData.append("image", reviewData.image); // Append the image
+    //     }
+    //     for (let pair of formData.entries()) {
+    //       console.log(pair[0], pair[1]); // Check key-value pairs
+    //   }
+    //     try {
+    //         const response = await axios.post(
+    //             "https://api.hachion.co/userreview/add",
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             }
+    //         );
+    
+    //         if (response.status === 200) {
+    //             alert("Review added successfully!");
+    //             setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
+    //         }
+    //     } catch (error) {
+    //         console.error("Error adding review:", error);
+    //         alert("Error adding review.");
+    //     }
+    // };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const currentDate = new Date().toISOString().split("T")[0];
+  
+      // Create an object to match the backend's expected structure
+      const reviewObject = {
+          name: reviewData.student_name,
+          social_id: reviewData.source,
+          
+          course_name: reviewData.course_name,
+          review: reviewData.comment,
+          email: reviewData.email || "",
+          type: reviewData.type || "",
+          trainer_name: reviewData.trainer_name || "",
+          rating: reviewData.rating || "",
+          location: reviewData.location || "",
+          date: currentDate
+      };
+  
+      const formData = new FormData();
+      formData.append("review", JSON.stringify(reviewObject)); // Convert object to JSON string
+  
+      if (reviewData.image) {
+          formData.append("user_image", reviewData.image); // Match the backend field name
       }
-        try {
-            const response = await axios.post(
-                "https://api.hachion.co/userreview/add",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-    
-            if (response.status === 200) {
-                alert("Review added successfully!");
-                setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
-            }
-        } catch (error) {
-            console.error("Error adding review:", error);
-            alert("Error adding review.");
-        }
-    };
+  
+      try {
+          const response = await axios.post(
+              "https://api.hachion.co/userreview/add",
+              formData,
+              {
+                  headers: {
+                      "Content-Type": "multipart/form-data",
+                  },
+              }
+          );
+  
+          if (response.status === 201) { // Use 201 since backend sends CREATED status
+              alert("Review added successfully!");
+              setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null });
+          }
+      } catch (error) {
+          console.error("Error adding review:", error);
+          alert("Error adding review.");
+      }
+  };
+  
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }

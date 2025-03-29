@@ -136,7 +136,7 @@ display: flex;
   gap: 3vh;
 }
 .customize-training-div{
-  width: 45%;
+  width: 35%;
   border-radius: 20px;
   background-color: #fff;
   box-shadow:5px 5px 5px #d3d3d3;
@@ -868,6 +868,13 @@ padding: 20px;
   background-color: #EEEEEE;
   margin: 10px;
 }
+
+.training-events-head{
+  margin-left: 18%;
+  margin-right: 18%;
+  width: 80%;
+}
+
 .card-holder{
   width: 80%;
   display: flex;
@@ -982,7 +989,7 @@ padding: 20px;
       margin-left: 80px;
   }
   .customize-training-div{
-      width: 520px;
+      width: 40%;
   }
   .customize-training-div img{
       padding: 10px;

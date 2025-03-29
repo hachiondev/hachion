@@ -94,15 +94,29 @@ const handleSwitchToggle = () => {
   setStatus(!status); 
 };
 
-const handleStatusChange = (e) => {
- if (!courseData || !courseData[0]) {
-     console.error("courseData or the first item is undefined");
-     return;
- }
+// const handleStatusChange = (e) => {
+//  if (!courseData || !courseData[0]) {
+//      console.error("courseData or the first item is undefined");
+//      return;
+//  }
 
- const updatedCourseData = [...courseData]; // Copy the current video data
- updatedCourseData[0].status = e.target.checked; // Update the permission for the first item
- setCourseData(updatedCourseData); // Update the state
+//  const updatedCourseData = [...courseData]; // Copy the current video data
+//  updatedCourseData[0].status = e.target.checked; // Update the permission for the first item
+//  setCourseData(updatedCourseData); // Update the state
+// };
+
+const handleStatusChange = (e) => {
+  setCourseData((prevData) => ({
+    ...prevData,
+    status: e.target.checked,
+  }));
+};
+
+const handleInputStatusChange = (e) => {
+  setEditedData((prevData) => ({
+    ...prevData,
+    status: e.target.checked,
+  }));
 };
 
 // Slice filteredCourse based on rowsPerPage and currentPage
@@ -346,11 +360,11 @@ const displayedCourse = filteredCourse.slice(
   <div className="col" style={{ display: 'flex', gap: 20 }}> 
     <label className="form-label">Status:</label>
     <Switch
-                  checked={courseData && courseData[0] ? courseData[0].status : false} 
-                  onChange={handleStatusChange}
-                  color="primary"
-              />
-              <span>{courseData && courseData[0] && courseData[0].status ? 'Enable' : 'Disable'}</span>
+  checked={courseData?.status ?? false}
+  onChange={handleStatusChange}
+  color="primary"
+/>
+<span>{courseData?.status ? 'Enable' : 'Disable'}</span>
       </div>
 
   {/* <label>
@@ -556,11 +570,11 @@ const displayedCourse = filteredCourse.slice(
     <div className="col" style={{ display: 'flex', gap: 20 }}> 
     <label className="form-label">Status:</label>
     <Switch
-                  checked={courseData && courseData[0] ? courseData[0].status : false} 
-                  onChange={handleStatusChange}
-                  color="primary"
-              />
-              <span>{courseData && courseData[0] && courseData[0].status ? 'Enable' : 'Disable'}</span>
+  checked={editedData?.status ?? false}
+  onChange={handleInputStatusChange}
+  color="primary"
+/>
+<span>{editedData?.status ? 'Enable' : 'Disable'}</span>
       </div>
 
     {/* <label>

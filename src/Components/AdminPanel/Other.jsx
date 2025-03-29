@@ -65,14 +65,16 @@ export default function Other() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({banner_id:"",banner_image:"",home_banner_image:""});
+    const [editedData, setEditedData] = useState({banner_image:"",home_banner_image:"",status:"",country:"",amount_conversion:""});
     const [bannerData, setBannerData] = useState([{
         banner_id:"",
           banner_image:"",
           home_banner_image:"",
-          
+           type: "amount_conversion",
             date:currentDate,
-          
+           amount_conversion:"",
+           country:"",
+           status:"disabled",
            
          }]);
 const [currentPage, setCurrentPage] = useState(1);
@@ -273,7 +275,6 @@ const [currentPage, setCurrentPage] = useState(1);
     }
 
 
-
   return (
     
     <>  
@@ -290,10 +291,10 @@ const [currentPage, setCurrentPage] = useState(1);
         </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Banner/Amount Conversion </p>
+<p>Add Banner </p>
 </div>
 <form onSubmit={handleSubmit} enctype="multipart/form-data">
-<div className='course-row'>
+<div>
 <div className='course-details'>
 <div className="col">
                 <label className="form-label">Banner popup Image</label>
@@ -308,12 +309,12 @@ const [currentPage, setCurrentPage] = useState(1);
                 />
               </div>
 <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-<button className='submit-btn' onClick={(e) => handleSubmit(e, "banner")}>Upload</button>
+<button className='submit-btn'>Upload</button>
 </div>
 </div>
 <div className='course-details'>
 <div className="col">
-                <label className="form-label">Home Banner Image</label>
+                <label className="form-label">Home Banner Image (width=1440px, height=420px)</label>
                 <input
                   type="file"
                   className="schedule-input"
@@ -324,13 +325,31 @@ const [currentPage, setCurrentPage] = useState(1);
                   required
                 />
               </div>
-<div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+              <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
 <button className='submit-btn' onClick={(e) => handleSubmit(e, "homeBanner")}>Upload</button>
 </div>
 </div>
-
+{/* <div className='course-details'>
+<div class="col">
+    <label for="inputState" class="form-label">Country</label>
+    <select id="inputState" class="form-select" name='country' value={bannerData.country} onChange={handleChange}>
+      <option selected>Select Country</option>
+      <option>India</option>
+      <option>USA</option>
+      <option>Canada</option>
+      <option>Australia</option>
+    </select>
+  </div>
+  <div class="col">
+    <label for="inputEmail4" class="form-label">Amount Conversion</label>
+    <input type="text" class="form-control" id="inputEmail4" name='amount_conversion' value={bannerData.amount_conversion} onChange={handleChange}/>
+  </div>
+  <div className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+  <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' type='submit'>Add amount</button>
+                  </div>
                   
-
+</div> */}
 
 </div>
 </form>
@@ -389,7 +408,7 @@ const [currentPage, setCurrentPage] = useState(1);
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Banner/Amount
+                <FiPlus /> Add Banner
               </button>
             </div>
           </div>
@@ -407,6 +426,10 @@ const [currentPage, setCurrentPage] = useState(1);
             <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Banner Image</StyledTableCell>
             <StyledTableCell align='center'>Home Banner Image</StyledTableCell>
+            {/* <StyledTableCell align='center'>Type</StyledTableCell> */}
+            {/* <StyledTableCell align="center">Amount Conversion</StyledTableCell>
+            <StyledTableCell align="center">Country</StyledTableCell> */}
+            <StyledTableCell align="center">Status </StyledTableCell>
             <StyledTableCell align="center">Created Date </StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
@@ -426,7 +449,7 @@ const [currentPage, setCurrentPage] = useState(1);
                     style={{ width: "100px", height: "auto" }}
                 />
             ) : (
-                ""
+                "No Image"
             )}
         </StyledTableCell>
         <StyledTableCell align="center">
@@ -437,10 +460,13 @@ const [currentPage, setCurrentPage] = useState(1);
                     style={{ width: "100px", height: "auto" }}
                 />
             ) : (
-                ""
+                "No Image"
             )}
         </StyledTableCell>
-       
+        {/* <StyledTableCell align="center">{curr.type}</StyledTableCell> */}
+        {/* <StyledTableCell align="center">{curr.amount_conversion}</StyledTableCell>
+        <StyledTableCell align="center">{curr.country}</StyledTableCell> */}
+        <StyledTableCell align="center">{curr.status}</StyledTableCell>
         <StyledTableCell align="center">{curr.date}</StyledTableCell>
         <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
@@ -458,15 +484,14 @@ const [currentPage, setCurrentPage] = useState(1);
     </div>)}
 
     <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-       PaperProps={{
-         style: { borderRadius: 20 },
-       }}>
-     <div >
-       <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Banner
-       <Button onClick={handleClose} className="close-btn">
-         <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
-       </Button>
-       </DialogTitle>
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
+      <div >
+        <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Banner</DialogTitle>
+    <Button onClick={handleClose} className="close-btn">
+      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+    </Button>
   </div>
   <DialogContent>
   
@@ -475,32 +500,53 @@ const [currentPage, setCurrentPage] = useState(1);
                 <input
                   type="file"
                   className="form-control"
-                  name="banner_image"
+                  name="image"
                   onChange={handleFileChange}
                   required
                 />
-                {/* <label>Status :</label>
-                 <FormControlLabel  control={<Switch />} label="Disable" /> */}
+                <label>Status :</label>
+                 <FormControlLabel  control={<Switch />} label="Disable" />
               </div>
       <div className="col-md-4">
         <label className="form-label">Home Banner Image</label>
         <input
           type="file"
           className="form-control"
-          name="home_banner_image"
+          name="image"
           onChange={handleImageFileChange}
           required
         />
-   
+        <label>Status :</label>
+          <FormControlLabel  control={<Switch />} label="Disable" />
       </div>
-             
+              {/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Country</label>
+    <select id="inputState" class="form-select" name='country' value={editedData.country} onChange={handleInputChange}>
+      <option selected>Select </option>
+      <option>India</option>
+      <option>USA</option>
+      <option>Canada</option>
+      <option>Australia</option>
+    </select>
+</div>
    
 
-  
+    <div className="col">
+      <label htmlFor="courseName" className="form-label">Amount Conversion</label>
+      <input
+        id="courseName"
+        className="form-control"
+        name="amount_conversion"
+        value={editedData.amount_conversion || ""}
+        onChange={handleInputChange}
+     />
+     
+    </div> */}
+ 
 
 
   </DialogContent>
-  <DialogActions>
+  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>

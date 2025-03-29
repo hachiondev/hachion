@@ -11,7 +11,7 @@ import com.hachionUserDashboard.entity.CourseSchedule;
 @Repository
 public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, Integer> {
 
-//	@Modifying
-//	@Query("DELETE FROM CourseSchedule c WHERE c.schedule_date < :todayDateInUtc")
-//	int deletePastWorkshops(@Param("todayDateInUtc") String todayDateInUtc);
+	@Modifying
+	@Query("DELETE FROM CourseSchedule c WHERE c.schedule_date < :todayDateInUtc")
+	int deletePastWorkshops(@Param("todayDateInUtc") String todayDateInUtc);
 }

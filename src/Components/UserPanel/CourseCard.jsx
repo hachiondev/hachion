@@ -26,7 +26,7 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
 
   // Function to navigate to course details
   const handleNavigation = () => {
-    navigate(`/CourseDetails/${formattedName}`);
+    navigate(`/courseDetails/${formattedName}`);
   };
 
   // Render star ratings

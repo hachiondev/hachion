@@ -68,6 +68,7 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [wordCount, setWordCount] = useState(0);
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
@@ -77,7 +78,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("http://localhost:8080/course-categories/all");
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -89,7 +90,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/courses/all');
+            const response = await axios.get('http://localhost:8080/courses/all');
             setCategories(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching couses:", error.message);
@@ -249,7 +250,7 @@ const handleSubmit = async (e) => {
   try {
     if (formMode === "Edit") {
       const response = await axios.put(
-        `https://api.hachion.co/courses/update/${formData.id}`,
+        `http://localhost:8080/courses/update/${formData.id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -264,7 +265,7 @@ const handleSubmit = async (e) => {
         setShowAddCourse(false); // Close the form after update
       }
     } else {
-      const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
+      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -285,7 +286,7 @@ const handleEditClick = async (courseId) => {
   console.log(courseId)
   setShowAddCourse(true);
   try {
-    const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+    const response = await fetch(`http://localhost:8080/courses/${courseId}`);
     if (response.ok) {
       const course = await response.json();
       setFormData({
@@ -374,7 +375,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`); 
+   const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`); 
    console.log("Courses deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Curriculum:", error); 
@@ -725,7 +726,19 @@ const handleAddTrendingCourseClick = () => {
     id="courseHighlight"
     name="courseHighlight"
     value={formData.courseHighlight}
-    onChange={(content) => handleInputChange(null, "courseHighlight", content)}
+    onChange={(content) => {
+      const plainText = content.replace(/<[^>]*>?/gm, '').trim(); // Remove HTML tags
+      const words = plainText.split(/\s+/).filter(Boolean);
+      const wordCount = words.length;
+
+      if (wordCount > 65) {
+        setError('Word limit exceeded. Please keep it within 65 words.');
+      } else {
+        setError('');
+        handleInputChange(null, 'courseHighlight', content);
+      }
+      setWordCount(wordCount); // Track word count in real-time
+    }}
   style={{ height: "130px" }} // Increased editor height
   modules={{
     toolbar: [
@@ -754,6 +767,9 @@ const handleAddTrendingCourseClick = () => {
     "color",
   ]}
 />
+<div style={{ marginTop: '8px', fontSize: '14px', color: wordCount > 500 ? 'red' : 'black' }}>
+    Word Count: {wordCount}/65
+  </div>
 {error && <p className="error-message">{error}</p>}
 </div>
 <div class="mb-3" style={{ paddingBottom: "20px" }}>
@@ -909,7 +925,7 @@ const handleAddTrendingCourseClick = () => {
             <StyledTableCell sx={{ width: 220}} align="center">
             {course.courseImage ? (
     <img
-    src={`https://api.hachion.co/${course.courseImage}`}  // Adjust based on your server setup
+    src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
       alt="Course"
       width="50"
     />
@@ -1071,7 +1087,7 @@ export default CourseDetail;
 //   useEffect(() => {
 //     const fetchCategory = async () => {
 //       try {
-//         const response = await axios.get("https://api.hachion.co/course-categories/all");
+//         const response = await axios.get("http://localhost:8080/course-categories/all");
 //         setCourse(response.data); // Assuming the data contains an array of trainer objects
 //       } catch (error) {
 //         console.error("Error fetching categories:", error.message);
@@ -1100,7 +1116,7 @@ export default CourseDetail;
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //         try {
-//             const response = await axios.get('https://api.hachion.co/courses/all');
+//             const response = await axios.get('http://localhost:8080/courses/all');
 //             setCategories(response.data); // Use the curriculum state
 //         } catch (error) {
 //             console.error("Error fetching couses:", error.message);
@@ -1163,7 +1179,7 @@ export default CourseDetail;
 //   try {
 //     if (formMode === "Edit") {
 //       const response = await axios.put(
-//         `https://api.hachion.co/courses/update/${formData.id}`,
+//         `http://localhost:8080/courses/update/${formData.id}`,
 //         formNewData,
 //         { headers: { "Content-Type": "multipart/form-data" } }
 //       );
@@ -1178,7 +1194,7 @@ export default CourseDetail;
 //         setShowAddCourse(false); // Close the form after update
 //       }
 //     } else {
-//       const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
+//       const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
 //         headers: { "Content-Type": "multipart/form-data" },
 //       });
 
@@ -1242,7 +1258,7 @@ export default CourseDetail;
 // const handleDelete = async (id) => {
        
 //   try { 
-//    const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`); 
+//    const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`); 
 //    console.log("Courses deleted successfully:", response.data); 
 //  } catch (error) { 
 //    console.error("Error deleting Curriculum:", error); 
@@ -1258,7 +1274,7 @@ export default CourseDetail;
 //   console.log(courseId, "clicked")
 //   setShowAddCourse(true);
 //   try {
-//     const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+//     const response = await fetch(`http://localhost:8080/courses/${courseId}`);
 //     if (response.ok) {
 //       const course = await response.json();
 //       setFormData({
@@ -1884,7 +1900,7 @@ export default CourseDetail;
 //             <StyledTableCell sx={{ width: 220}} align="center">
 //             {course.courseImage ? (
 //     <img
-//     src={`https://api.hachion.co/${course.courseImage}`}  // Adjust based on your server setup
+//     src={`http://localhost:8080/${course.courseImage}`}  // Adjust based on your server setup
 //       alt="Course"
 //       width="50"
 //     />

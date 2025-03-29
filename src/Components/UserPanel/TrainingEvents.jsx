@@ -35,8 +35,8 @@
 //     const fetchData = async () => {
 //       try {
 //         const [scheduleResponse, coursesResponse] = await Promise.all([
-//           fetch('https://api.hachion.co/schedulecourse').then((res) => res.json()),
-//           fetch('https://api.hachion.co/courses/all').then((res) => res.json()),
+//           fetch('http://localhost:8080/schedulecourse').then((res) => res.json()),
+//           fetch('http://localhost:8080/courses/all').then((res) => res.json()),
 //         ]);
 
 //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -121,7 +121,7 @@
 //       <div className="view-btn">
 //         <button
 //           className="view-all"
-//           onClick={() => (viewAll ? navigate('/CourseDetails') : setViewAll(true))}
+//           onClick={() => (viewAll ? navigate('/courseDetails') : setViewAll(true))}
 //         >
 //           {viewAll ? 'View Courses Page' : 'View All'}
 //         </button>
@@ -135,7 +135,7 @@
 //             key={course.course_id || index}
 //             id={course.course_id}
 //             heading={course.schedule_course_name}
-//             image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
+//             image={course.course_image ? `http://localhost:8080/${course.course_image}` : ''}
 //             date={formatDate(course.schedule_date)}
 //             time={formatTime(course.schedule_time)}
 //              duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
@@ -203,8 +203,8 @@
 // //     const fetchData = async () => {
 // //       try {
 // //         const [scheduleResponse, coursesResponse] = await Promise.all([
-// //           fetch("https://api.hachion.co/schedulecourse").then((res) => res.json()),
-// //           fetch("https://api.hachion.co/CourseDetails/all").then((res) => res.json()),
+// //           fetch("http://localhost:8080/schedulecourse").then((res) => res.json()),
+// //           fetch("http://localhost:8080/courseDetails/all").then((res) => res.json()),
 // //         ]);
 
 // //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -277,8 +277,8 @@ const TrainingEvents = () => {
     const fetchData = async () => {
       try {
         const [scheduleResponse, coursesResponse] = await Promise.all([
-          fetch('https://api.hachion.co/schedulecourse').then((res) => res.json()),
-          fetch('https://api.hachion.co/courses/all').then((res) => res.json()),
+          fetch('http://localhost:8080/schedulecourse').then((res) => res.json()),
+          fetch('http://localhost:8080/courses/all').then((res) => res.json()),
         ]);
 
         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -314,14 +314,14 @@ const TrainingEvents = () => {
 
   return (
     <div className="training-events">
-      <div className="training-events-head">
+      <div className="training-events-head-upcoming">
         <h1 className="association-head">Upcoming Training Events</h1>
       </div>
 
       <div className="view-btn">
         <button
           className="view-all"
-          onClick={() => (viewAll ? navigate('/course') : setViewAll(true))}
+          onClick={() => (viewAll ? navigate('/CourseDetails') : setViewAll(true))}
         >
           {viewAll ? 'View Courses Page' : 'View All'}
         </button>
@@ -333,7 +333,7 @@ const TrainingEvents = () => {
             key={course.course_id || index}
             id={course.course_id}
             heading={course.schedule_course_name}
-            image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
+            image={course.course_image ? `http://localhost:8080/${course.course_image}` : ''}
             date={formatDate(course.schedule_date)}
             time={course.schedule_time || 'TBA'}
             duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}

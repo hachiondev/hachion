@@ -19,7 +19,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
   const navigateToCourse = () => {
     if (heading) {
       const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/CourseDetails/${formattedName}`);
+      navigate(`/courseDetails/${formattedName}`);
     }
   };
 

@@ -75,8 +75,8 @@ function App() {
       <Route path='/CourseDetails' element={<Course/>}/>
       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
 
-      {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
-      {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
+      {/* <Route path='/Courses/:courseName' element={<QaAutomation/>}/> */}
+      {/* <Route path='/CourseDetails/CourseDetailsData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
     
@@ -120,7 +120,7 @@ function App() {
       <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
-      <Route path='/courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/Courseschedule' element={<CourseSchedule/>}/>
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
   

@@ -85,7 +85,7 @@ const QaAutomation = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -112,7 +112,7 @@ const QaAutomation = () => {
   <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
   <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
   <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
-  <meta property="og:url" content={`https://hachion.co/CourseDetails/${courseName}`} />
+  <meta property="og:url" content={`https://hachion.co/courseDetails/${courseName}`} />
   <meta name="robots" content="index, follow" />
 </Helmet>
 
@@ -126,10 +126,10 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
           <li className="breadcrumb-item">
-                <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
+                <a href="/courseDetails">Courses</a> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <a href={`/CourseDetails/${courseData?.courseCategory}`}>
+                <a href={`/courseDetails/${courseData?.courseCategory}`}>
                   {courseData?.courseCategory}
                 </a> <MdKeyboardArrowRight />
               </li>

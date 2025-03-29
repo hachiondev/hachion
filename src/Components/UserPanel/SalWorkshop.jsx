@@ -108,7 +108,7 @@ const SalWorkshop = () => {
       };
     
       try {
-        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+        const response = await axios.post("http://localhost:8080/workshops", updatedFormData);
     
         alert("Form submitted successfully!");
         console.log("Response:", response.data);

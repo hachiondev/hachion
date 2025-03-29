@@ -14,7 +14,7 @@ const Learners = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/userreview');
+        const response = await fetch('http://localhost:8080/userreview');
         const data = await response.json();
         setReviews(data);
       } catch (error) {
@@ -71,7 +71,7 @@ const Learners = () => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ''}
+                    profileImage={review.user_image ? `http://localhost:8080/${review.user_image}` : ''}
                     onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
                   />
                 ))}

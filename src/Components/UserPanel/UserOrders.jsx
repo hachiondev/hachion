@@ -81,7 +81,7 @@ export default function UserOrders() {
           </TableContainer>
     </div>
     <div>
-    <button className='explore-btn'  onClick={()=>navigate('/course')}>Explore All Courses</button>
+    <button className='explore-btn'  onClick={()=>navigate('/CourseDetails')}>Explore All Courses</button>
     </div>
     </div>
     </div>

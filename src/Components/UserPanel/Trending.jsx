@@ -19,7 +19,7 @@ const Trending = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/course-categories/all');
+        const response = await axios.get('http://localhost:8080/course-categories/all');
         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
         setCategories(allCategories);
         setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
@@ -31,7 +31,7 @@ const Trending = () => {
 
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         setCourses(response.data || []); // Ensure data is an array
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -75,16 +75,16 @@ const Trending = () => {
     if (!course?.courseName) return; // Prevent errors if courseName is undefined
 
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-'); // Convert to slug
-    navigate(`/CourseDetails/${courseSlug}`); // Navigate with new path
+    navigate(`/courseDetails/${courseSlug}`); // Navigate with new path
   };
 
   return (
     <div className="training-events">
-      <div className="training-events-head">
+      <div className="training-events-head-upcoming">
         <h1 className="association-head">Trending Courses</h1>
       </div>
       <div className="view-btn">
-        <button className="view-all" onClick={() => navigate('/CourseDetails')}>
+        <button className="view-all" onClick={() => navigate('/courseDetails')}>
           View All
         </button>
       </div>
@@ -153,7 +153,7 @@ const Trending = () => {
             heading={course.courseName}
             month={course.numberOfClasses}
             time={course.liveTrainingHours}
-            image={`https://api.hachion.co/${course.courseImage}`}
+            image={`http://localhost:8080/${course.courseImage}`}
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}
@@ -169,7 +169,7 @@ const Trending = () => {
               heading={course.courseName}
               month={course.numberOfClasses}
               time={course.liveTrainingHours}
-              image={`https://api.hachion.co/${course.courseImage}`}
+              image={`http://localhost:8080/${course.courseImage}`}
               course_id={course.id}
               RatingByPeople={course.ratingByNumberOfPeople}
               Rating={course.starRating}

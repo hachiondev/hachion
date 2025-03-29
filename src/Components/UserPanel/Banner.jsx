@@ -10,7 +10,7 @@ const Banner = () => {
   // Function to handle "Explore More" button click
   const handleExploreMore = () => {
     console.log("Explore More button clicked. Navigating to /course...");
-    navigate('/course');
+    navigate('/CourseDetails');
   };
 
   const handleJoinNow = () => {

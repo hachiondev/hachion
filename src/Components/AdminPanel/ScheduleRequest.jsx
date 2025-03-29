@@ -50,7 +50,7 @@ const[requestBatch,setRequestBatch]=useState([]);
   useEffect(() => {
     const fetchRequestBatch = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/requestbatch');
+            const response = await axios.get('http://localhost:8080/requestbatch');
             setRequestBatch(response.data);
         } catch (error) {
             console.error("Error fetching student list:", error.message);
@@ -67,7 +67,7 @@ const handleDeleteConfirmation = (batch_id) => {
 const handleDelete = async (batch_id) => {
        
   try { 
-   const response = await axios.delete(`https://api.hachion.co/requestbatch/delete/${batch_id}`); 
+   const response = await axios.delete(`http://localhost:8080/requestbatch/delete/${batch_id}`); 
    console.log("Request batch Deleting Successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting batch:", error); 
@@ -95,7 +95,7 @@ const handleDelete = async (batch_id) => {
        
         <div className='category'>
           <div className='category-header'>
-            <p>Video Access</p>
+            <p>Schedule Request</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -155,7 +155,7 @@ const handleDelete = async (batch_id) => {
             <StyledTableCell align="center">Schedule Date</StyledTableCell>
             <StyledTableCell align="center">Time Zone</StyledTableCell>
             <StyledTableCell align="center">Mode</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            {/* <StyledTableCell align="center">Action</StyledTableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -173,10 +173,10 @@ const handleDelete = async (batch_id) => {
       <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
       <StyledTableCell align="center">{row.mode}</StyledTableCell>
    
-      <StyledTableCell align="center">
+      {/* <StyledTableCell align="center">
        
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.batch_id)} />
-      </StyledTableCell>
+      </StyledTableCell> */}
     </StyledTableRow>
   ))}
 </TableBody>

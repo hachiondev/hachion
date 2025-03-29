@@ -129,7 +129,7 @@ const handleDateChange = (newValue) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/course-categories/all");
+      const response = await axios.get("http://localhost:8080/course-categories/all");
       setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -140,7 +140,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/courses/all");
+      const response = await axios.get("http://localhost:8080/courses/all");
       setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -204,7 +204,7 @@ const handleChange = (e) => {
     };
     
     try {
-      const response = await axios.post("https://api.hachion.co/schedulecourse/add", formattedCourseData);
+      const response = await axios.post("http://localhost:8080/schedulecourse/add", formattedCourseData);
       console.log("Course added successfully:", response.data);
     } catch (error) {
       console.error("Error adding course:", error.response?.data || error.message);
@@ -230,7 +230,7 @@ const handleChange = (e) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/schedulecourse');
+      const response = await axios.get('http://localhost:8080/schedulecourse');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -261,7 +261,7 @@ const handleDeleteConfirmation = (course_schedule_id) => {
 const handleDelete = async (course_schedule_id) => {
  
    try { 
-    const response = await axios.delete(`https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`); 
+    const response = await axios.delete(`http://localhost:8080/schedulecourse/delete/${course_schedule_id}`); 
     console.log("Courses deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
@@ -289,7 +289,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 

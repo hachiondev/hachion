@@ -69,7 +69,7 @@ export default function Curriculum() {
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = useState([{ id:"",title:"",topic:"" }]);
+    const [rows, setRows] = useState([{ id:"",title:"",topic:"",linl: "" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
@@ -139,7 +139,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("http://localhost:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -150,7 +150,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -171,7 +171,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCurriculum = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/curriculum');
+              const response = await axios.get('http://localhost:8080/curriculum');
               setCurriculum(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching curriculum:", error.message);
@@ -210,7 +210,7 @@ export default function Curriculum() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+                `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
                 editedRow
             );
             setCurriculum((prev) =>
@@ -229,7 +229,7 @@ export default function Curriculum() {
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`http://localhost:8080/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -305,7 +305,7 @@ export default function Curriculum() {
     console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
   
     try {
-      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+      const response = await axios.post("http://localhost:8080/curriculum/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data" // Important for file uploads
         }
@@ -558,7 +558,9 @@ export default function Curriculum() {
       <StyledTableCell align="left">{course.title}</StyledTableCell>
       <StyledTableCell align="left">
     {course.topic ? (
-        <div dangerouslySetInnerHTML={{ __html: course.topic }} />
+        <div 
+        style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+        dangerouslySetInnerHTML={{ __html: course.topic }} />
     ) : (
         <p>No topics available</p>
     )}
@@ -678,6 +680,10 @@ export default function Curriculum() {
       onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, topic: value }))}
       modules={quillModules}
     />
+
+    <label htmlFor="topic">Video Link</label>
+    <input id="link" className="form-control" name='link' value={editedRow.link || ""}
+      onChange={handleInputChange}/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

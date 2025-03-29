@@ -11,7 +11,7 @@ import {Link} from 'react-router-dom';
 
 const Register = () => {
   const googleLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/google';  // Backend Google OAuth
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';  // Backend Google OAuth
   };
 
   return (

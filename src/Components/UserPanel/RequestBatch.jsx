@@ -74,7 +74,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
     };
   
     try {
-      const response = await fetch('https://api.hachion.co/requestbatch/add', {
+      const response = await fetch('http://localhost:8080/requestbatch/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

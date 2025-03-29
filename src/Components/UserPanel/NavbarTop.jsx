@@ -193,10 +193,10 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/corporate')}>
                       Corporate Training
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
                       Courses
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>Hire from Us</div>
+                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
 
                     <button className="drawer-button" onClick={() => handleLogout()}>
                       <IoLogOut /> Logout
@@ -209,10 +209,10 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/corporate')}>
                   Corporate Training
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
                   Courses
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>Hire from Us</div>
+                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
@@ -238,7 +238,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
             onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="/CourseDetails" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Courses
             </Link>
           </button>
@@ -246,7 +246,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
             onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="/CourseDetails" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

@@ -49,7 +49,8 @@ public class QueryController {
         query.setEmail(queryRequest.getEmail());
         query.setMobile(queryRequest.getMobile());
         query.setComment(queryRequest.getComment());
-     
+       query.setDate(queryRequest.getDate());
+       query.setCountry(queryRequest.getCountry());
 
         // Save requestBatch to the database
         repo.save(query);

@@ -112,7 +112,7 @@ const QaAutomation = () => {
   <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
   <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
   <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
-  <meta property="og:url" content={`https://hachion.co/courseDetails/${courseName}`} />
+  <meta property="og:url" content={`https://hachion.co/CourseDetails/${courseName}`} />
   <meta name="robots" content="index, follow" />
 </Helmet>
 
@@ -126,10 +126,10 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
           <li className="breadcrumb-item">
-                <a href="/courseDetails">Courses</a> <MdKeyboardArrowRight />
+                <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <a href={`/courseDetails/${courseData?.courseCategory}`}>
+                <a href={`/CourseDetails/${courseData?.courseCategory}`}>
                   {courseData?.courseCategory}
                 </a> <MdKeyboardArrowRight />
               </li>
@@ -175,7 +175,7 @@ const QaAutomation = () => {
         </div>
 
         <div id="learners">
-          <Learners />
+        <Learners page="course" />
         </div>
 
         <div id="qa-faq">

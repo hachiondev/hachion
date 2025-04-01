@@ -7,12 +7,13 @@ import success from '../../Assets/success.gif';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
-
+import axios from 'axios';
 const initialValues = {
   name: "",
   email: "",
   number:"",
-  comment:""
+  comment:"",
+  date:""
 };
 
 const HaveAnyQuery = ({ closeModal }) => {
@@ -20,7 +21,8 @@ const HaveAnyQuery = ({ closeModal }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [selectedCountry, setSelectedCountry] = useState({ name: 'India', code: '+91', flag: 'IN' })
 
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
@@ -41,7 +43,33 @@ const HaveAnyQuery = ({ closeModal }) => {
     { name: 'Mexico', code: '+52', flag: 'MX' },
     { name: 'South Africa', code: '+27', flag: 'ZA' },
   ];
+  const handleContact = async (e) => {
+    e.preventDefault();
+    const currentDate = new Date().toISOString().split("T")[0];
 
+    const requestData = {
+      name: values.name,
+      email: values.email,
+      mobile: mobileNumber,
+      comment: values.comment,
+      date:currentDate,
+      country: selectedCountry.name
+    };
+  
+    try {
+      const response = await axios.post('https://api.hachion.co/haveanyquery/add', requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status === 200) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error('Error submitting query:', error);
+    }
+  };
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
@@ -63,10 +91,7 @@ const HaveAnyQuery = ({ closeModal }) => {
       console.log(values);
     }
   });
-const handleContact=(e)=>{
-  e.preventDefault();
-  setShowModal(true);
-}
+
 
 
   return (

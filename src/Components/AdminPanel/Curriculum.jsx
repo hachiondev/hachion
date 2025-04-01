@@ -69,7 +69,7 @@ export default function Curriculum() {
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = useState([{ id:"",title:"",topic:"",linl: "" }]);
+    const [rows, setRows] = useState([{ id:"",title:"",topic:"",link: "" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);

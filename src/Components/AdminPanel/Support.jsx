@@ -491,7 +491,7 @@ export default function Support() {
                           className='success-gif'
                         />
                         <p className='modal-para'>
-                     Courses Successfully
+                     Support added Successfully
                         </p>
                       </div>
                     </div>

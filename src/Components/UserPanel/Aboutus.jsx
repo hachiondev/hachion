@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from 'react';
+import React, { useEffect } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Blogs.css';
@@ -19,35 +19,12 @@ import Assistance from '../../Assets/Assistance.png';
 import careerSupport from '../../Assets/careerSupport.png';
 import handsOnLearning from '../../Assets/handsonLearning.png';
 import onlineTeaching from '../../Assets/onlineTeaching.png';
-import { FaArrowUp } from 'react-icons/fa';
 
 const Aboutus = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
   // Scroll to top when component is mounted
   useEffect(() => {
-    console.log("Aboutus component mounted. Scrolling to top...");
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
   }, []);
-
-  // Handle Scroll - Show/Hide Button
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Scroll to top function
-  const scrollToTop = () => {
-    console.log("Scroll to top clicked!");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <>
@@ -153,16 +130,8 @@ Our Real-time experts with over 10 years of experience in IT are ready to take y
 
         </div>
       </div>
-      <Learners />
+      <Learners page="about" />
       <Footer />
-      
-      {/* Scroll to Top Button */}
-      {showScrollButton && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
-
       <StickyBar />
     </>
   );

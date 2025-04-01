@@ -1012,6 +1012,7 @@ cursor: pointer;
 font-weight: 400;
 font-size: 1.05rem;
 cursor: pointer;
+white-space: nowrap;
 }
 
 .footer-term:hover {
@@ -1258,6 +1259,11 @@ gap:1vh;
   margin: 15px;
   gap: 15px;
   }
+  .Live-online{
+    font-size: 18px;
+    padding-top: 2px;
+    margin-bottom: 0;
+    }
   }
 
 @media (min-width: 1025px) and (max-width: 1366px){
@@ -1356,6 +1362,17 @@ gap:1vh;
   font-size: 20px;
   white-space: nowrap;
   }
+  .footer-bottom{
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .footer-p {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    }
 }
 
 /* Styles for Tablet/iPad (min-width: 769px and max-width: 1024px) */

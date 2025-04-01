@@ -33,7 +33,8 @@ export const Home = () => {
 <Trending/>
 <Corporate/>
 <Career/>
-<Learners/>
+{/* <Learners/> */}
+<Learners page="home"/>
 
 <Footer/>
 </div>

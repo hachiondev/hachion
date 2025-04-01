@@ -194,6 +194,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               <option value="Facebook">Facebook</option>
               <option value="Twitter">Twitter</option>
               <option value="Instagram">Instagram</option>
+              <option value="Google">Google</option>
               <option value="Other">Other</option>
             </select>
           </div>

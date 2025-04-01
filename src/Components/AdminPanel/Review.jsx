@@ -222,9 +222,10 @@ export default function Review() {
           setShowAddCourse(false);
          
         }
-        const handleClickOpen = (row) => {
-            console.log(row);
-              setEditedData(row)// Set the selected row data
+        const handleClickOpen = (review) => {
+            console.log(review);
+              setEditedData(review)// Set the selected row data
+              setReviewData({ displayPages: review.displayPages || [] });
               setOpen(true); // Open the modal
              
             };
@@ -574,7 +575,8 @@ useEffect(() => {
       <StyledTableCell align="left">{curr.name}</StyledTableCell>
       <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
-      <StyledTableCell align="left">{curr.review}</StyledTableCell>
+      <StyledTableCell align="left"
+      style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{curr.review}</StyledTableCell>
      
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -607,7 +609,7 @@ useEffect(() => {
           style: { borderRadius: 20 },
         }}>
   <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit  Review</DialogTitle>
+    <DialogTitle id="edit-schedule-dialog">Edit Review</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
@@ -618,7 +620,7 @@ useEffect(() => {
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="student_name"
-  value={editedData.student_name}
+  value={editedData.student_name || ""}
   onChange={handleInputChange}/>
   </div>
   <div className="col">
@@ -633,12 +635,13 @@ useEffect(() => {
               </div>
               <div class="col">
     <label for="inputState" class="form-label">Source</label>
-    <select id="inputState" class="form-select" name='source' value={editedData.source} onChange={handleInputChange}>
+    <select id="inputState" class="form-select" name='source' value={editedData.source|| ""} onChange={handleInputChange}>
       <option selected>Select </option>
       <option>Linkedin</option>
       <option>Facebook</option>
       <option>Twitter</option>
       <option>Instagram</option>
+      <option>Google</option>
     </select>
 </div>
 </div>

@@ -1277,6 +1277,8 @@ text-align: left;
   font-size: 1.2rem;
   font-weight: 600;
   color: #333;
+  display: flex;
+  justify-content: space-between;
 }
 
 .bullet-list {
@@ -1332,6 +1334,41 @@ text-align: left;
 
 .view-more-btn:hover{
   background-color: #0D6EFD;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.play-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* animation: pulse 1.5s infinite; */
+}
+
+.play-icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
 }
 
 .view-div{

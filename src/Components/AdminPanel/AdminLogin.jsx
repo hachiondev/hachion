@@ -4,6 +4,7 @@ import logo from '../../Assets/logo.png';
 import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -66,24 +67,25 @@ const AdminLogin = () => {
                 />
               </div>
 
-              <label className='login-label'>Password<span className='star'>*</span></label>
-              <div className="input-group mb-2">
-                <input
-                  type={passwordType}
-                  className="form-control"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button type="button" onClick={togglePasswordVisibility}>
-                  {passwordType === 'password' ? 'Show' : 'Hide'}
-                </button>
-              </div>
+                <label className='login-label'>Password<span className='star'>*</span></label>
+                <div className="input-group mb-2">
+                  <input
+                    type={passwordType}
+                    className="form-control"
+                    placeholder="Enter your password"
+                    name='password'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button className="input-group-text" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  </button>
+                </div>
 
-              {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
+                {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}
 
-              <Link to='/adminforgot' style={{ textDecoration: 'none' }}>
+                <Link to='/adminforgot' style={{ textDecoration: 'none' }}>
                 <p className='forgot-password'>Forgot Password?</p>
               </Link>
 

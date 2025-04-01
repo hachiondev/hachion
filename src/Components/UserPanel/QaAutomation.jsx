@@ -175,7 +175,7 @@ const QaAutomation = () => {
         </div>
 
         <div id="learners">
-          <Learners />
+        <Learners page="course" />
         </div>
 
         <div id="qa-faq">

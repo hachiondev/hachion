@@ -12,7 +12,8 @@ const initialValues = {
   name: "",
   email: "",
   number:"",
-  comment:""
+  comment:"",
+  date:""
 };
 
 const HaveAnyQuery = ({ closeModal }) => {
@@ -20,7 +21,8 @@ const HaveAnyQuery = ({ closeModal }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [selectedCountry, setSelectedCountry] = useState({ name: 'India', code: '+91', flag: 'IN' })
 
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
@@ -43,12 +45,15 @@ const HaveAnyQuery = ({ closeModal }) => {
   ];
   const handleContact = async (e) => {
     e.preventDefault();
-  
+    const currentDate = new Date().toISOString().split("T")[0];
+
     const requestData = {
       name: values.name,
       email: values.email,
       mobile: mobileNumber,
-      comment: values.comment
+      comment: values.comment,
+      date:currentDate,
+      country: selectedCountry.name
     };
   
     try {

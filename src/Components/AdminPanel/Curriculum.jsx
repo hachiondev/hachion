@@ -69,7 +69,7 @@ export default function Curriculum() {
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = useState([{ id:"",title:"",topic:"" }]);
+    const [rows, setRows] = useState([{ id:"",title:"",topic:"",linl: "" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
@@ -558,7 +558,9 @@ export default function Curriculum() {
       <StyledTableCell align="left">{course.title}</StyledTableCell>
       <StyledTableCell align="left">
     {course.topic ? (
-        <div dangerouslySetInnerHTML={{ __html: course.topic }} />
+        <div 
+        style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+        dangerouslySetInnerHTML={{ __html: course.topic }} />
     ) : (
         <p>No topics available</p>
     )}
@@ -678,6 +680,10 @@ export default function Curriculum() {
       onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, topic: value }))}
       modules={quillModules}
     />
+
+    <label htmlFor="topic">Video Link</label>
+    <input id="link" className="form-control" name='link' value={editedRow.link || ""}
+      onChange={handleInputChange}/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './Corporate.css';
-import { Carousel, Modal } from 'react-bootstrap';
-import LearnerCard from './LearnerCard';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import React, { useState, useEffect } from "react";
+import "./Corporate.css";
+import { Carousel, Modal } from "react-bootstrap";
+import LearnerCard from "./LearnerCard";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-const Learners = () => {
+const Learners = ({ page }) => {
   const [reviews, setReviews] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showModal, setShowModal] = useState(false);
@@ -14,20 +14,27 @@ const Learners = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/userreview');
+        const response = await fetch("https://api.hachion.co/userreview");
         const data = await response.json();
-        setReviews(data);
+
+        if (Array.isArray(data)) {
+          // Filter reviews based on the display field matching the current page
+          const filteredReviews = data.filter((review) => review.display === page);
+          setReviews(filteredReviews);
+        } else {
+          console.error("Invalid API response", data);
+        }
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error("Error fetching reviews:", error);
       }
     };
 
     fetchReviews();
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [page]); // Runs when the page prop changes
 
   // Function to chunk reviews into slides
   const chunkArray = (arr, chunkSize) => {
@@ -47,12 +54,12 @@ const Learners = () => {
   };
 
   return (
-    <div className='training-events'>
-      <div className='association'>
-        <h1 className='association-head'>Our Students Feedback</h1>
+    <div className="training-events">
+      <div className="association">
+        <h1 className="association-head">Our Students Feedback</h1>
       </div>
 
-      <div className='learner-background'>
+      <div className="learner-background">
         <Carousel
           indicators={true}
           prevIcon={<FaAngleLeft className="custom-prev-icon" />}
@@ -61,7 +68,7 @@ const Learners = () => {
         >
           {groupedReviews.map((group, index) => (
             <Carousel.Item key={index}>
-              <div className='learner-card-container'>
+              <div className="learner-card-container">
                 {group.map((review, idx) => (
                   <LearnerCard
                     key={review.review_id}
@@ -71,7 +78,7 @@ const Learners = () => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ''}
+                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ""}
                     onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
                   />
                 ))}
@@ -96,7 +103,7 @@ const Learners = () => {
           >
             {reviews.map((review, index) => (
               <Carousel.Item key={index}>
-                <div className='full-review'>
+                <div className="full-review">
                   <h3>{review.name}</h3>
                   <p>{review.review}</p>
                 </div>

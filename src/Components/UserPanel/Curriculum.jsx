@@ -3,6 +3,7 @@ import './Course.css';
 import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
+import { BsFillPlayCircleFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 
 const Curriculum = () => {
@@ -148,7 +149,25 @@ useEffect(() => {
         {expandedTopics[index] && (
           <div className="topic-details">
           <ul className="bullet-list" dangerouslySetInnerHTML={{ __html: item.topic }} />
-        </div>
+
+        <div>
+          {item.link && (
+            <button
+              className="play-btn"
+              onClick={() => {
+                const validUrl = item.link.startsWith('http') ? item.link : `https://${item.link}`;
+                window.open(validUrl, '_blank', 'noopener,noreferrer');
+              }}
+              title="Watch Video"
+            >
+              <div className="play-icon-btn">
+              <BsFillPlayCircleFill size={28} color="#00AEEF" /> 
+              </div>
+              Preview
+            </button>
+          )}
+          </div>
+          </div>
         )}
       </div>
     ));

@@ -68,6 +68,7 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [wordCount, setWordCount] = useState(0);
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
@@ -725,7 +726,19 @@ const handleAddTrendingCourseClick = () => {
     id="courseHighlight"
     name="courseHighlight"
     value={formData.courseHighlight}
-    onChange={(content) => handleInputChange(null, "courseHighlight", content)}
+    onChange={(content) => {
+      const plainText = content.replace(/<[^>]*>?/gm, '').trim(); // Remove HTML tags
+      const words = plainText.split(/\s+/).filter(Boolean);
+      const wordCount = words.length;
+
+      if (wordCount > 65) {
+        setError('Word limit exceeded. Please keep it within 65 words.');
+      } else {
+        setError('');
+        handleInputChange(null, 'courseHighlight', content);
+      }
+      setWordCount(wordCount); // Track word count in real-time
+    }}
   style={{ height: "130px" }} // Increased editor height
   modules={{
     toolbar: [
@@ -754,6 +767,9 @@ const handleAddTrendingCourseClick = () => {
     "color",
   ]}
 />
+<div style={{ marginTop: '8px', fontSize: '14px', color: wordCount > 500 ? 'red' : 'black' }}>
+    Word Count: {wordCount}/65
+  </div>
 {error && <p className="error-message">{error}</p>}
 </div>
 <div class="mb-3" style={{ paddingBottom: "20px" }}>

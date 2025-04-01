@@ -19,7 +19,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     user_image: "",
     rating: 0,
     type: "",
-    social_id: ""
+    social_id: "",
+    display:""
   });
 
   const [courses, setCourses] = useState([]);
@@ -64,7 +65,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
         rating: reviewData.rating ? Number(reviewData.rating) : 5,
         review: reviewData.review || "",
         location: reviewData.location || "",
-        date: new Date().toISOString().split("T")[0]
+        date: new Date().toISOString().split("T")[0],
+        display:"course"
     };
 
     const formData = new FormData();

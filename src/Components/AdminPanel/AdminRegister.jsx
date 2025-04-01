@@ -3,6 +3,7 @@ import './Admin.css';
 import logo from '../../Assets/logo.png';
 import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const AdminRegister = () => {
   const navigate = useNavigate();
@@ -32,6 +33,11 @@ const AdminRegister = () => {
       setErrorMessage('An error occurred. Please try again.');
     }
   };
+
+  const togglePasswordVisibility = () => {
+    setPasswordType(passwordType === 'password' ? 'text' : 'password');
+  };
+  
   return (
     <div className='login'>
       <div className='login-left'>
@@ -78,6 +84,9 @@ const AdminRegister = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button className="input-group-text" onClick={togglePasswordVisibility}>
+                 {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+                 </button>
               </div>
 
               {errorMessage && <p className='error-message'>{errorMessage}</p>} {/* Error message display */}

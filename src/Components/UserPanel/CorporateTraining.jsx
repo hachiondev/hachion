@@ -54,7 +54,7 @@ const CorporateTraining = () => {
         <CustomizeTraining />
         <LeadingExpert />
         <CorporateTrainingFeature />
-        <Learners />
+        <Learners page="corporate" />
         <div ref={advisorRef}>
           <Advisor /> {/* Set the ref to Advisor component */}
         </div>

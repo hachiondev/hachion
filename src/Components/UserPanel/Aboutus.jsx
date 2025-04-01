@@ -130,7 +130,7 @@ Our Real-time experts with over 10 years of experience in IT are ready to take y
 
         </div>
       </div>
-      <Learners />
+      <Learners page="about" />
       <Footer />
       <StickyBar />
     </>

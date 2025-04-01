@@ -75,7 +75,7 @@ const Course = () => {
       <meta property="og:description" content="Transform your career with Hachion's Online IT Courses. Enroll now, earn a certificate
       ,get job assistance & try our free demo! Join Today!" />
       <meta property="og:image" content="https://hachion.co/images/course-banner.jpg" />
-      <meta property="og:url" content="https://hachion.co/CourseDetails" />
+      <meta property="og:url" content="https://hachion.co/courseDetails" />
       <meta name="robots" content="index, follow" />
     </Helmet>
       <div className='course-top'>

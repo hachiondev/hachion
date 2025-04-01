@@ -64,6 +64,9 @@ public class UserReview {
 	    
 	    @Column(name = "date")  // Make sure the name matches your SQL column
 	    private LocalDate date;
+	    
+	    @Column
+	    private String display;
 
 	    public UserReview() {
 	    }
@@ -120,6 +123,14 @@ public class UserReview {
 			return trainer_name;
 		}
 
+		public String getDisplay() {
+			return display;
+		}
+
+		public void setDisplay(String display) {
+			this.display = display;
+		}
+
 		public void setTrainer_name(String trainer_name) {
 			this.trainer_name = trainer_name;
 		}
@@ -157,7 +168,7 @@ public class UserReview {
 		}
 
 		public UserReview(int review_id, String name, String email, String type, String course_name,String location,
-				String trainer_name, String social_id, int rating, String review, LocalDate date) {
+				String trainer_name, String social_id, int rating, String review, LocalDate date, String display) {
 			super();
 			this.review_id = review_id;
 			this.name = name;
@@ -170,6 +181,7 @@ public class UserReview {
 			this.rating = rating;
 			this.review = review;
 			this.date = date;
+			this.display=display;
 		}
 
 		@Override
@@ -177,7 +189,7 @@ public class UserReview {
 			return "UserReview [review_id=" + review_id + ", name=" + name + ", email=" + email + ", user_image="
 					+ user_image + ", type=" + type + ", course_name=" + course_name + ", trainer_name=" + trainer_name
 					+ ", social_id=" + social_id + ", rating=" + rating + ", review=" + review + ", location="
-					+ location + ", date=" + date + "]";
+					+ location + ", date=" + date + ", display=" + display + "]";
 		}
 	    
 }

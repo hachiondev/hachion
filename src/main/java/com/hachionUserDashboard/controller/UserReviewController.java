@@ -127,6 +127,7 @@ public class UserReviewController {
 				userReview.setTrainer_name(updatedUserReview.getTrainer_name());
 				userReview.setReview(updatedUserReview.getReview());
 				userReview.setType(updatedUserReview.getType());
+				userReview.setDisplay(updatedUserReview.getDisplay());
 
 				// Check if a new image is uploaded
 				if (user_image != null && !user_image.isEmpty()) {

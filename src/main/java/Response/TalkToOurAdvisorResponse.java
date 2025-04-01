@@ -17,6 +17,8 @@ public class TalkToOurAdvisorResponse {
 	private String trainingCourse;
 
 	private String comments;
+	
+	private String message;
 
 	public Long getId() {
 		return id;
@@ -80,6 +82,15 @@ public class TalkToOurAdvisorResponse {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+	
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public TalkToOurAdvisorResponse(Long id, String fullName, String emailId, int noOfPeople, String companyName,

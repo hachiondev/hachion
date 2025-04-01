@@ -139,7 +139,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -150,7 +150,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -171,7 +171,7 @@ export default function Curriculum() {
     useEffect(() => {
       const fetchCurriculum = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/curriculum');
+              const response = await axios.get('https://api.hachion.co/curriculum');
               setCurriculum(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching curriculum:", error.message);
@@ -210,7 +210,7 @@ export default function Curriculum() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
+                `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
                 editedRow
             );
             setCurriculum((prev) =>
@@ -229,7 +229,7 @@ export default function Curriculum() {
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -305,7 +305,7 @@ export default function Curriculum() {
     console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
   
     try {
-      const response = await axios.post("http://localhost:8080/curriculum/add", formData, {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data" // Important for file uploads
         }

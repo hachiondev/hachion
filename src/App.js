@@ -30,6 +30,7 @@ import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
+import Reports from './Components/AdminPanel/Reports';
 import Enrollment from './Components/UserPanel/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
@@ -110,7 +111,7 @@ function App() {
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addbanner' element={<AddBanner/>}/>
-   <Route path='/addtrending' element={<TrendingCourse/>}/>
+      <Route path='/addtrending' element={<TrendingCourse/>}/>
       <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
       <Route path='/addcurriculum' element={<AddCurriculum/>}/>
       <Route path='/addfaq' element={<AddFaq/>}/>
@@ -121,6 +122,7 @@ function App() {
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/Courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
   

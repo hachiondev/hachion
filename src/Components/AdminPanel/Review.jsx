@@ -9,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Pagination from '@mui/material/Pagination';
 import './Admin.css';
 import dayjs from 'dayjs';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -141,7 +140,7 @@ export default function Review() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -152,7 +151,7 @@ export default function Review() {
     useEffect(() => {
       const fetchReview = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/userreview');
+              const response = await axios.get('https://api.hachion.co/userreview');
               setReview(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -186,7 +185,7 @@ export default function Review() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/userreview/update/${editedData.review_id}`,editedData
+                `https://api.hachion.co/userreview/update/${editedData.review_id}`,editedData
             );
             setReview((prev) =>
                 prev.map(curr =>
@@ -204,7 +203,7 @@ export default function Review() {
       const handleDelete = async (review_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/userreview/delete/${review_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`); 
           console.log("Review deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Review:", error); 
@@ -237,57 +236,104 @@ export default function Review() {
           [name]: value,
         }));
       };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+    //   const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const currentDate = new Date().toISOString().split("T")[0]; // Today's date
     
-        const formData = new FormData();
-        formData.append("name", reviewData.student_name);
-        formData.append("social_id", reviewData.source);
-        formData.append("category_name", reviewData.category_name);
-        formData.append("course_name", reviewData.course_name);
-        formData.append("review", reviewData.comment);
-        formData.append("email",reviewData.email||"");
-        formData.append("type",reviewData.type||"");
-        formData.append("trainer_name",reviewData.trainer_name||"");
-        formData.append("rating",reviewData.rating||"");
-        formData.append("location",reviewData.location||"");
+    //     const formData = new FormData();
+    //     formData.append("name", reviewData.student_name);
+    //     formData.append("social_id", reviewData.source);
+    //     formData.append("category_name", reviewData.category_name);
+    //     formData.append("course_name", reviewData.course_name);
+    //     formData.append("review", reviewData.comment);
+    //     formData.append("email",reviewData.email||"");
+    //     formData.append("type",reviewData.type||"");
+    //     formData.append("trainer_name",reviewData.trainer_name||"");
+    //     formData.append("rating",reviewData.rating||"");
+    //     formData.append("location",reviewData.location||"");
        
-        formData.append("date", currentDate); // Ensure the date is added
+    //     formData.append("date", currentDate); // Ensure the date is added
     
-        if (reviewData.image) {
-            formData.append("image", reviewData.image); // Append the image
-        }
-        for (let pair of formData.entries()) {
-          console.log(pair[0], pair[1]); // Check key-value pairs
+    //     if (reviewData.image) {
+    //         formData.append("image", reviewData.image); // Append the image
+    //     }
+    //     for (let pair of formData.entries()) {
+    //       console.log(pair[0], pair[1]); // Check key-value pairs
+    //   }
+    //     try {
+    //         const response = await axios.post(
+    //             "https://api.hachion.co/userreview/add",
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             }
+    //         );
+    
+    //         if (response.status === 200) {
+    //             alert("Review added successfully!");
+    //             setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
+    //         }
+    //     } catch (error) {
+    //         console.error("Error adding review:", error);
+    //         alert("Error adding review.");
+    //     }
+    // };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const currentDate = new Date().toISOString().split("T")[0];
+  
+      // Create an object to match the backend's expected structure
+      const reviewObject = {
+          name: reviewData.student_name,
+          social_id: reviewData.source,
+          
+          course_name: reviewData.course_name,
+          review: reviewData.comment,
+          email: reviewData.email || "",
+          type: reviewData.type || "",
+          trainer_name: reviewData.trainer_name || "",
+          rating: reviewData.rating || "",
+          location: reviewData.location || "",
+          date: currentDate
+      };
+  
+      const formData = new FormData();
+      formData.append("review", JSON.stringify(reviewObject)); // Convert object to JSON string
+  
+      if (reviewData.image) {
+          formData.append("user_image", reviewData.image); // Match the backend field name
       }
-        try {
-            const response = await axios.post(
-                "http://localhost:8080/userreview/add",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-    
-            if (response.status === 200) {
-                alert("Review added successfully!");
-                setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
-            }
-        } catch (error) {
-            console.error("Error adding review:", error);
-            alert("Error adding review.");
-        }
-    };
+  
+      try {
+          const response = await axios.post(
+              "https://api.hachion.co/userreview/add",
+              formData,
+              {
+                  headers: {
+                      "Content-Type": "multipart/form-data",
+                  },
+              }
+          );
+  
+          if (response.status === 201) { // Use 201 since backend sends CREATED status
+              alert("Review added successfully!");
+              setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null });
+          }
+      } catch (error) {
+          console.error("Error adding review:", error);
+          alert("Error adding review.");
+      }
+  };
+  
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);

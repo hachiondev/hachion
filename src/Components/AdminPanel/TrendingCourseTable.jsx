@@ -156,7 +156,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourse = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/trendingcourse');
+              const response = await axios.get('https://api.hachion.co/trendingcourse');
               setTrendingCourse(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching video:", error.message);
@@ -189,7 +189,7 @@ const displayedCourse = filteredCourse.slice(
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
+                `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
             );
             setTrendingCourse((prev) =>
                 prev.map(curr =>
@@ -207,7 +207,7 @@ const displayedCourse = filteredCourse.slice(
       const handleDelete = async (trendingcourse_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/trendingcourse/delete/${trendingcourse_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`); 
           console.log("Trending Courses deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Courses:", error); 
@@ -249,7 +249,7 @@ const displayedCourse = filteredCourse.slice(
         };
       
         try {
-          const response = await axios.post("http://localhost:8080/trendingcourse/add", dataToSubmit);
+          const response = await axios.post("https://api.hachion.co/trendingcourse/add", dataToSubmit);
           if (response.status === 200) {
             alert("Courses added successfully");
             setCourseData([...courseData, dataToSubmit]); // Update local state
@@ -266,7 +266,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -277,7 +277,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourses = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           console.log("API response:", response.data); // Check the API response
           if (Array.isArray(response.data)) {
             setCourse(response.data); // Update state

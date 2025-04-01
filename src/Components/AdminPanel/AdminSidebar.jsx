@@ -15,6 +15,7 @@ import { FaHandshakeAngle } from 'react-icons/fa6';
 import { LuFocus } from 'react-icons/lu';
 import { HiOutlineDotsCircleHorizontal } from 'react-icons/hi';
 import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
+import { IoNewspaperOutline } from "react-icons/io5";
 import './Admin.css';
 
 const AdminSidebar = ({ onSelectCategory }) => {
@@ -33,6 +34,7 @@ const AdminSidebar = ({ onSelectCategory }) => {
     { title: 'All Enroll', icon: <FaRegPenToSquare /> },
     { title: 'Payment Status', icon: <RiMoneyDollarCircleFill /> },
     { title: 'Registration', icon: <BiSolidBookContent /> },
+    { title: 'Reports', icon: <IoNewspaperOutline /> },
     { title: 'Schedule Request', icon: <BiSolidBookContent /> },
     { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
     { title: 'Support', icon: <BiSupport /> },

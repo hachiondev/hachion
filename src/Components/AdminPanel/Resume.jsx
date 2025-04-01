@@ -130,7 +130,7 @@ export default function Resume() {
     useEffect(() => {
       const fetchResume = async () => {
           try {
-              const response = await axios.get('http://localhost:8080/resume');
+              const response = await axios.get('https://api.hachion.co/resume');
               setResume(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -163,7 +163,7 @@ export default function Resume() {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/videoaccess/update/${editedData.resume_id}`,editedData
+                `https://api.hachion.co/videoaccess/update/${editedData.resume_id}`,editedData
             );
             setResume((prev) =>
                 prev.map(curr =>
@@ -181,7 +181,7 @@ export default function Resume() {
       const handleDelete = async (resume_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/resume/delete/${resume_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/resume/delete/${resume_id}`); 
           console.log("Resume deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Resume:", error); 
@@ -225,7 +225,7 @@ export default function Resume() {
         };
       
         try {
-          const response = await axios.post("http://localhost:8080/resume/add", dataToSubmit);
+          const response = await axios.post("https://api.hachion.co/resume/add", dataToSubmit);
           if (response.status === 200) {
             alert("Resume details added successfully");
             setResumeData([...resumeData, dataToSubmit]); // Update local state
@@ -241,7 +241,7 @@ export default function Resume() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -252,7 +252,7 @@ export default function Resume() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);

@@ -17,7 +17,7 @@ const AdminRegister = () => {
     event.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:8080/api/v1/user/adminregister', {
+      const response = await fetch('https://api.hachion.co/api/v1/user/adminregister', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

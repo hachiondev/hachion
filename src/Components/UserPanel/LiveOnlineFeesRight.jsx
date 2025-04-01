@@ -56,7 +56,7 @@
 
 //     const fetchCourseAmount = async (rate) => {
 //       try {
-//         const response = await axios.get('http://localhost:8080/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         const courses = response.data;
 
 //         const matchedCourse = courses.find(
@@ -143,7 +143,7 @@
 //           return;
 //         }
 
-//         const response = await axios.post('http://localhost:8080/enrolldemo', { email: userEmail });
+//         const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
 
 //         if (response.data.success) {
 //           setMessage('Successfully enrolled for the free demo.');
@@ -197,7 +197,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
   useEffect(() => {
     const fetchCourseAmount = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courses = response.data;
 
         // Find the matching course by courseName
@@ -282,7 +282,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
           return;
         }
 
-        const response = await axios.post('http://localhost:8080/enrolldemo', { email: userEmail });
+        const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
 
         if (response.data.success) {
           setMessage('Successfully enrolled for the free demo.');

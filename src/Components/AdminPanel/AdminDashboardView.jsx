@@ -11,6 +11,7 @@ import ScheduleRequest from './ScheduleRequest';
 import Blogs from './Blogs';
 import Support from './Support';
 import Course from './Course';
+import Reports from './Reports';
 import AddCourseCategory from './AddCourseCategory';
 
 import Other from './Other';
@@ -57,7 +58,9 @@ const AdminDashboardView = () => {
         return <Enroll />;
       case 'Registration':
         return <Registration />;
-      case 'Schedule Request':
+      case 'Reports':
+        return <Reports />;
+        case 'Schedule Request':
         return <ScheduleRequest />;
       case 'Blog':
         return <Blogs />;

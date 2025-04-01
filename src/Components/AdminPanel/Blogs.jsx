@@ -73,7 +73,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/course-categories/all");
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
         setCategories(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -97,7 +97,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/blog');
+            const response = await axios.get('https://api.hachion.co/blog');
             setBlogs(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching blogs:", error.message);
@@ -156,12 +156,12 @@ const handleSubmit = async (e) => {
     if (formData.id) {
       // Edit operation
       response = await axios.put(
-        `http://localhost:8080/blog/update/${formData.id}`,
+        `https://api.hachion.co/blog/update/${formData.id}`,
         formDataToSend
       );
     } else {
       // Add operation
-      response = await axios.post("http://localhost:8080/blog/add", formDataToSend);
+      response = await axios.post("https://api.hachion.co/blog/add", formDataToSend);
     }
 
     if (response.status === 200 || response.status === 201) {
@@ -225,7 +225,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`http://localhost:8080/blog/delete/${id}`); 
+   const response = await axios.delete(`https://api.hachion.co/blog/delete/${id}`); 
    console.log("Blogs deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Blogs:", error); 
@@ -240,7 +240,7 @@ const handleEditClick = async (id) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await fetch(`http://localhost:8080/blog/${id}`);
+    const response = await fetch(`https://api.hachion.co/blog/${id}`);
     if (response.ok) {
       const blog = await response.json();
       setFormData({
@@ -477,7 +477,7 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 220}} align="center">
             {blogs.blog_image ? (
     <img
-    src={`http://localhost:8080/blogs/${blogs.blog_image}`} 
+    src={`https://api.hachion.co/blogs/${blogs.blog_image}`} 
       alt={blogs.category_name}
       width="50"
     />
@@ -490,7 +490,7 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.author}</StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">  <p>
     <a 
-      href={`http://localhost:8080/${blogs.blog_pdf}`} 
+      href={`https://api.hachion.co/${blogs.blog_pdf}`} 
       target="_blank" 
       rel="noopener noreferrer"
     >

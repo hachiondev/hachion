@@ -19,7 +19,7 @@ const Trending = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/course-categories/all');
+        const response = await axios.get('https://api.hachion.co/course-categories/all');
         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
         setCategories(allCategories);
         setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
@@ -31,7 +31,7 @@ const Trending = () => {
 
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         setCourses(response.data || []); // Ensure data is an array
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -153,7 +153,7 @@ const Trending = () => {
             heading={course.courseName}
             month={course.numberOfClasses}
             time={course.liveTrainingHours}
-            image={`http://localhost:8080/${course.courseImage}`}
+            image={`https://api.hachion.co/${course.courseImage}`}
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}
@@ -169,7 +169,7 @@ const Trending = () => {
               heading={course.courseName}
               month={course.numberOfClasses}
               time={course.liveTrainingHours}
-              image={`http://localhost:8080/${course.courseImage}`}
+              image={`https://api.hachion.co/${course.courseImage}`}
               course_id={course.id}
               RatingByPeople={course.ratingByNumberOfPeople}
               Rating={course.starRating}

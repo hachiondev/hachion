@@ -39,36 +39,36 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 //			sendToAdmin(workshopRequest);
 //			sendToUser(workshopRequest);
 
-			Workshop workshop = new Workshop();
-			workshop.setFullName(workshopRequest.getFullName());
-			workshop.setEmailId(workshopRequest.getEmailId());
-			workshop.setMobileNumber(workshopRequest.getMobileNumber());
-			workshop.setTimeZone(workshopRequest.getTimeZone());
+		Workshop workshop = new Workshop();
+		workshop.setFullName(workshopRequest.getFullName());
+		workshop.setEmailId(workshopRequest.getEmailId());
+		workshop.setMobileNumber(workshopRequest.getMobileNumber());
+		workshop.setTimeZone(workshopRequest.getTimeZone());
+		workshop.setCountry(workshopRequest.getCountry());
+		String courseNames = String.join(", ", workshopRequest.getCourseName());
+		workshop.setCourseName(courseNames);
 
-			String courseNames = String.join(", ", workshopRequest.getCourseName());
-			workshop.setCourseName(courseNames);
+		workshop.setCourseCategory(workshopRequest.getCourseCategory());
+		workshop.setDate(workshopRequest.getDate());
+		workshop.setTime(workshopRequest.getTimeZone());
 
-			workshop.setCourseCategory(workshopRequest.getCourseCategory());
-			workshop.setDate(workshopRequest.getDate());
-			workshop.setTime(workshopRequest.getTimeZone());
+		Workshop savedWorkshop = workshopRepository.save(workshop);
 
-			Workshop savedWorkshop = workshopRepository.save(workshop);
+		WorkshopResponse workshopResponse = new WorkshopResponse();
 
-			WorkshopResponse workshopResponse = new WorkshopResponse();
-
-			workshopResponse.setMessage(
-					"Your details have been successfully sent to the team, and you will get a call shortly.");
-			workshopResponse.setWorkshopId(savedWorkshop.getWorkshopId());
-			workshopResponse.setCourseNames(Arrays.asList(savedWorkshop.getCourseName().split(", ")));
-			workshopResponse.setCourseCategory(savedWorkshop.getCourseCategory());
-			workshopResponse.setDate(savedWorkshop.getDate());
-			workshopResponse.setTime(savedWorkshop.getTime());
-			workshopResponse.setTimeZone(savedWorkshop.getTimeZone());
-			workshopResponse.setFullName(savedWorkshop.getFullName());
-			workshopResponse.setMobileNumber(savedWorkshop.getMobileNumber());
-			workshopResponse.setEmailId(savedWorkshop.getEmailId());
-
-			return workshopResponse;
+		workshopResponse
+				.setMessage("Your details have been successfully sent to the team, and you will get a call shortly.");
+		workshopResponse.setWorkshopId(savedWorkshop.getWorkshopId());
+		workshopResponse.setCourseNames(Arrays.asList(savedWorkshop.getCourseName().split(", ")));
+		workshopResponse.setCourseCategory(savedWorkshop.getCourseCategory());
+		workshopResponse.setDate(savedWorkshop.getDate());
+		workshopResponse.setTime(savedWorkshop.getTime());
+		workshopResponse.setTimeZone(savedWorkshop.getTimeZone());
+		workshopResponse.setFullName(savedWorkshop.getFullName());
+		workshopResponse.setMobileNumber(savedWorkshop.getMobileNumber());
+		workshopResponse.setEmailId(savedWorkshop.getEmailId());
+		workshopResponse.setCountry(savedWorkshop.getCountry());
+		return workshopResponse;
 //		} catch (MessagingException e) {
 //
 //			WorkshopResponse errorResponse = new WorkshopResponse();
@@ -88,6 +88,7 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		workshopResponse.setFullName(savedWorkshop.getFullName());
 		workshopResponse.setMobileNumber(savedWorkshop.getMobileNumber());
 		workshopResponse.setEmailId(savedWorkshop.getEmailId());
+		workshopResponse.setCountry(savedWorkshop.getCountry());
 		return workshopResponse;
 	}
 
@@ -138,6 +139,10 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		if (workshopRequest.isMobileNumberUpdated()) {
 			workshop.setMobileNumber(workshopRequest.getMobileNumber());
 		}
+
+		if (workshopRequest.isCountryUpdated()) {
+			workshop.setCountry(workshopRequest.getCountry());
+		}
 		Workshop updateWorkshop = workshopRepository.save(workshop);
 
 		WorkshopResponse workshopResponse = createResponseForWorkshop(updateWorkshop);
@@ -175,56 +180,58 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 	}
 
 	public void sendToUser(WorkshopRequest formRequest) throws MessagingException {
-	    MimeMessage message = mailSender.createMimeMessage();
-	    MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-	    helper.setTo(formRequest.getEmailId());
-	    helper.setCc("trainings@hachion.co");
-	    helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
+		helper.setTo(formRequest.getEmailId());
+		helper.setCc("trainings@hachion.co");
+		helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
 
-	    String emailContent = "<html><head><style>"
-	            + "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; }"
-	            + ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }"
-	            + ".strip { padding: 20px; border-bottom: 2px solid #f2f2f2; }"
-	            + ".header-strip, .footer-strip { background-color: #4CAF50; color: #ffffff; text-align: center; }"  // Green color for both header and footer
-	            + ".header-strip h1 { font-size: 50px; font-weight: bold; margin: 0; text-transform: uppercase; }"  // Hachion in capital letters
-	            + ".header-strip p { font-size: 18px; font-weight: bold; margin: 10px 0; }" // Added "Welcome Registration Successful"
-	            + ".content-strip { background-color: #f9f9f9; color: #333333; text-align: left; }"
-	            + ".content-strip p { margin: 10px 0; line-height: 1.6; }"
-	            + ".highlight { color: #4CAF50; font-weight: bold; }"
-	            + ".footer-strip p { margin: 5px 0; font-weight: bold; color: white; }"  // White color for text in footer
-	            + "</style></head><body>"
-	            + "<div class='email-container'>"
-	            
-	            // Header Strip (HACHION + Welcome Registration Successful)
-	            + "<div class='strip header-strip'>"
-	            + "    <h1>HACHION</h1>"  // Hachion in capital letters
-	            + "    <p>Welcome! Registration Successful</p>"  // Added "Welcome Registration Successful"
-	            + "</div>"
-	            
-	            // Content Strip (Welcome message)
-	            + "<div class='strip content-strip'>"
-	            + "    <p>Dear <span class='highlight'>" + formRequest.getFullName() + "</span>,</p>"
-	            + "    <p>Thank you for registering for our <span class='highlight'>" + formRequest.getCourseName() + "</span> Workshop! We’re excited to have you join us.</p>"
-	            + "    <p>Your registration has been successfully completed. Keep an eye on your inbox for further details and reminders as we approach the event date.</p>"
-	            + "    <p>If you have any questions, feel free to contact us at <a class='highlight' href='mailto:trainings@hachion.co'>trainings@hachion.co</a>.</p>"
-	            + "    <p>We look forward to seeing you at the workshop!</p>"
-	            + "</div>"
-	            
-	            // Footer Strip (Best Regards + Team Hachion)
-	            + "<div class='strip footer-strip'>"
-	            + "    <p>Best Regards,</p>"
-	            + "    <p>Team Hachion</p>"
-	            + "</div>"
-	            
-	            + "</div>"
-	            + "</body></html>";
+		String emailContent = "<html><head><style>"
+				+ "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; }"
+				+ ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }"
+				+ ".strip { padding: 20px; border-bottom: 2px solid #f2f2f2; }"
+				+ ".header-strip, .footer-strip { background-color: #4CAF50; color: #ffffff; text-align: center; }" // Green
+																													// color
+																													// for
+																													// both
+																													// header
+																													// and
+																													// footer
+				+ ".header-strip h1 { font-size: 50px; font-weight: bold; margin: 0; text-transform: uppercase; }" // Hachion
+																													// in
+																													// capital
+																													// letters
+				+ ".header-strip p { font-size: 18px; font-weight: bold; margin: 10px 0; }" // Added "Welcome
+																							// Registration Successful"
+				+ ".content-strip { background-color: #f9f9f9; color: #333333; text-align: left; }"
+				+ ".content-strip p { margin: 10px 0; line-height: 1.6; }"
+				+ ".highlight { color: #4CAF50; font-weight: bold; }"
+				+ ".footer-strip p { margin: 5px 0; font-weight: bold; color: white; }" // White color for text in
+																						// footer
+				+ "</style></head><body>" + "<div class='email-container'>"
 
+				// Header Strip (HACHION + Welcome Registration Successful)
+				+ "<div class='strip header-strip'>" + "    <h1>HACHION</h1>" // Hachion in capital letters
+				+ "    <p>Welcome! Registration Successful</p>" // Added "Welcome Registration Successful"
+				+ "</div>"
 
-	    helper.setText(emailContent, true);
-	    mailSender.send(message);
+				// Content Strip (Welcome message)
+				+ "<div class='strip content-strip'>" + "    <p>Dear <span class='highlight'>"
+				+ formRequest.getFullName() + "</span>,</p>"
+				+ "    <p>Thank you for registering for our <span class='highlight'>" + formRequest.getCourseName()
+				+ "</span> Workshop! We’re excited to have you join us.</p>"
+				+ "    <p>Your registration has been successfully completed. Keep an eye on your inbox for further details and reminders as we approach the event date.</p>"
+				+ "    <p>If you have any questions, feel free to contact us at <a class='highlight' href='mailto:trainings@hachion.co'>trainings@hachion.co</a>.</p>"
+				+ "    <p>We look forward to seeing you at the workshop!</p>" + "</div>"
+
+				// Footer Strip (Best Regards + Team Hachion)
+				+ "<div class='strip footer-strip'>" + "    <p>Best Regards,</p>" + "    <p>Team Hachion</p>" + "</div>"
+
+				+ "</div>" + "</body></html>";
+
+		helper.setText(emailContent, true);
+		mailSender.send(message);
 	}
-
-
 
 }

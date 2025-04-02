@@ -31,10 +31,10 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 
 	@Override
 	public TalkToOurAdvisorResponse createTalkToOurAdvisor(TalkToOurAdvisorRequest ourAdvisor) {
-		try {
+//		try {
 
-			sendToAdmin(ourAdvisor);
-			sendToUser(ourAdvisor);
+//			sendToAdmin(ourAdvisor);
+//			sendToUser(ourAdvisor);
 
 			TalkToOurAdvisor entity = new TalkToOurAdvisor(null, ourAdvisor.getFullName(), ourAdvisor.getEmailId(),
 					ourAdvisor.getNoOfPeople(), ourAdvisor.getCompanyName(), ourAdvisor.getMobileNumber(),
@@ -52,12 +52,12 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 			response.setTrainingCourse(savedEntity.getTrainingCourse());
 			response.setComments(savedEntity.getComments());
 			return response;
-		} catch (MessagingException e) {
-		
-			TalkToOurAdvisorResponse errorResponse = new TalkToOurAdvisorResponse();
-			errorResponse.setMessage("Email sending failed. Request not saved: " + e.getMessage());
-			return errorResponse;
-		}
+//		} catch (MessagingException e) {
+//		
+//			TalkToOurAdvisorResponse errorResponse = new TalkToOurAdvisorResponse();
+//			errorResponse.setMessage("Email sending failed. Request not saved: " + e.getMessage());
+//			return errorResponse;
+//		}
 	}
 
 	private void sendToAdmin(TalkToOurAdvisorRequest toOurAdvisorRequest) throws MessagingException {

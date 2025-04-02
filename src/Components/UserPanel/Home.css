@@ -968,8 +968,8 @@ text-align: center;
 .footer-top {
 margin-top: 4vh;
 display: flex;
-flex-direction: row;
-justify-content: space-evenly;
+flex-direction: column;
+justify-content: left;
 flex-wrap: wrap; 
 }
 .footer hr{
@@ -985,9 +985,19 @@ text-align: center;
 white-space: nowrap;
 }
 
+.footer-head {
+  width: 80%; 
+  margin-bottom: 20px;
+  margin-left: 15%; 
+  display: flex;
+  }
+
 .footer-heading {
 font-weight: 600;
 font-size: 1.15rem;
+margin-right: 10px;
+display: flex;
+justify-content: left;
 }
 
 .footer-content {
@@ -999,6 +1009,25 @@ cursor: pointer;
 .footer-content:hover {
   color: #00AEEF;
   text-decoration: underline;
+  }
+
+  .footer-row {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust spacing */
+  }
+  
+  .footer-row span {
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
   }
 
   .term {

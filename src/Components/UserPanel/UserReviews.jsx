@@ -1,227 +1,165 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import { LiaStarSolid } from "react-icons/lia";
+import UserWriteReview from './UserWriteReview';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import { BiSolidEditAlt } from "react-icons/bi";
+import { MdOutlineDeleteForever } from "react-icons/md";
 import './Dashboard.css';
 
-const UserWriteReview = ({ setShowReviewForm }) => {
-  const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
+export default function UserReviews({ userId }) {
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
-  const [reviewData, setReviewData] = useState({
-    review_id: Date.now(),
-    category_name: "",
-    course_name: "",
-    date: currentDate,
-    student_name: "",
-    source: "",
-    review:"",
-    user_image: "",
-    rating: 0,
-    type: "",
-    social_id: "",
-    display:""
-  });
-
-  const [courses, setCourses] = useState([]);
-  const [trainers, setTrainers] = useState([]);
-
-  // Fetch courses and trainers data on component load
+  // Fetch user reviews by ID
   useEffect(() => {
-    axios.get('https://api.hachion.co/courses/all')
-      .then(response => setCourses(response.data))
-      .catch(error => console.error("Error fetching courses:", error));
+    if (!userId) {
+      console.error("No user ID provided.");
+      return;
+    }
 
-    axios.get('https://api.hachion.co/trainers')
-      .then(response => setTrainers(response.data))
-      .catch(error => console.error("Error fetching trainers:", error));
-  }, []);
+    axios.get(`https://api.hachion.co/userreview/${userId}`)
+      .then(response => {
+        console.log("API Response:", response.data);
+        if (Array.isArray(response.data)) {
+          setReviews(response.data.map((review, index) => ({
+            S_No: index + 1,
+            review_id: review.review_id,
+            course_name: review.course_name,
+            rating: [...Array(review.rating)].map((_, i) => <LiaStarSolid key={i} style={{ color: 'gold' }} />),
+            review: review.review,
+          })));
+        } else {
+          setReviews([]);
+          console.warn("Unexpected API response format.");
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching user reviews:", error);
+      });
+  }, [userId]);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setReviewData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  // Handle adding a new review
+  const handleAddReview = (reviewData) => {
+    axios.post(`https://api.hachion.co/userreview`, {
+      user_id: userId,
+      course_name: reviewData.course_name,
+      rating: reviewData.rating,
+      review: reviewData.review,
+    })
+    .then(response => {
+      console.log("Review added:", response.data);
+      fetchReviews();  // Refresh reviews after addition
+      setShowReviewForm(false);
+    })
+    .catch(error => {
+      console.error("Error adding review:", error);
+    });
   };
 
-  // Handle file input change
-  const handleFileChange = (e) => {
-    setReviewData((prevData) => ({
-      ...prevData,
-      user_image: e.target.files[0], // Store file object
-    }));
+  // Fetch updated reviews
+  const fetchReviews = () => {
+    axios.get(`https://api.hachion.co/userreview/${userId}`)
+      .then(response => {
+        console.log("Updated reviews fetched:", response.data);
+        setReviews(response.data.map((review, index) => ({
+          S_No: index + 1,
+          review_id: review.review_id,
+          course_name: review.course_name,
+          rating: [...Array(review.rating)].map((_, i) => <LiaStarSolid key={i} style={{ color: 'gold' }} />),
+          review: review.review,
+        })));
+      })
+      .catch(error => {
+        console.error("Error fetching updated reviews:", error);
+      });
   };
 
-  const handleSubmit = async () => {
-    const reviewPayload = {
-        name: reviewData.student_name,
-        email: reviewData.email || "",
-        type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
-        course_name: reviewData.course_name,
-        trainer_name: reviewData.trainer_name || "",
-        social_id: reviewData.social_id,
-        rating: reviewData.rating ? Number(reviewData.rating) : 5,
-        review: reviewData.review || "",
-        location: reviewData.location || "",
-        date: new Date().toISOString().split("T")[0],
-        display:"course"
-    };
+  // Handle review deletion
+  const handleDeleteReview = (reviewId) => {
+    axios.delete(`https://api.hachion.co/userreview/${reviewId}`)
+      .then(() => {
+        console.log("Review deleted:", reviewId);
+        fetchReviews(); // Refresh reviews after deletion
+      })
+      .catch(error => {
+        console.error("Error deleting review:", error);
+      });
+  };
 
-    const formData = new FormData();
-    formData.append("review", JSON.stringify(reviewPayload)); // Attach JSON data
-
-    if (reviewData.user_image) {
-        formData.append("user_image", reviewData.user_image, reviewData.user_image.name); // Attach image
-    }
-
-    // Debugging FormData
-    for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
-
-    try {
-        const response = await axios.post(
-            "https://api.hachion.co/userreview/add",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
-        );
-
-        console.log("Review added successfully:", response.data);
-    } catch (error) {
-        console.error("Error adding review:", error.response?.data || error.message);
-    }
-};
-
-  
-  
   return (
-    <div className='write-review'>
-      <div className='review-form-content'>
-        <div className="input-row">
-          <div className="col-md-5">
-            <label className='form-label'>Student Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter your Name"
-              name="student_name"
-              value={reviewData.student_name}
-              onChange={handleChange}
-            />
+    <>
+      <div className='courses-enrolled'>
+        <nav className='dashboard-nav'>
+          <div className='nav-content'>
+            <div className='title'>{showReviewForm ? "Write a Review" : "User Reviews"}</div>
+            {!showReviewForm && (
+              <button className='write-btn' onClick={() => setShowReviewForm(true)}>Write Review</button>
+            )}
           </div>
-          <div className="col-md-5">
-            <label className='form-label'>Email</label>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="abc@gmail.com"
-              name="email"
-              value={reviewData.email}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+        </nav>
+      </div>
 
-        <div className="col-md-4">
-          <label className="form-label">Image</label>
-          <input
-            type="file"
-            className="form-control"
-            name="user_image"
-            onChange={handleFileChange}
-          />
-        </div>
+      {showReviewForm && (
+        <nav aria-label="breadcrumb" className='breadcrumb-nav'>
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="#!" onClick={() => setShowReviewForm(false)}>Reviews</a> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Write a Review
+            </li>
+          </ol>
+        </nav>
+      )}
 
-        <div className="input-row">
-         
-          <div className="col-md-5">
-            <label className="form-label">Review Type</label>
-            <select
-              className="form-select"
-              name="type"
-              value={reviewData.type}
-              onChange={handleChange}
-            >
-              <option value="">Select Type</option>
-              <option value="Course Review">Course Review</option>
-              <option value="Trainer Review">Trainer Review</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="input-row">
-          <div className="col-md-5">
-            <label className="form-label">Course Name</label>
-            <select
-              className="form-select"
-              name="course_name"
-              value={reviewData.course_name}
-              onChange={handleChange}
-            >
-              <option value="">Select Course</option>
-              {courses.map(course => (
-                <option key={course.id} value={course.courseName}>{course.courseName}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="input-row">
-          <div className="col-md-5">
-            <label className="form-label">Select ID</label>
-            <select
-              className="form-select"
-              name="social_id"
-              value={reviewData.social_id}
-              onChange={handleChange}
-            >
-              <option value="">Select</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Facebook">Facebook</option>
-              <option value="Twitter">Twitter</option>
-              <option value="Instagram">Instagram</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div className="col-md-5">
-            <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
-              <Typography component="legend">Rating</Typography>
-              <Rating
-                name="rating"
-                value={reviewData.rating}
-                onChange={(event, newValue) =>
-                  setReviewData((prevData) => ({ ...prevData, rating: newValue }))
-                }
-                sx={{ ml: 1, mt: 1 }}
-              />
-            </Box>
-          </div>
-        </div>
-
-        <div className="mb-3 mt-3">
-          <label className="form-label">Review</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter review"
-            name="review"
-            value={reviewData.review}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className='center'>
-          <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+      <div className='content-wrapper' style={{ display: 'flex', flexDirection: 'row' }}>
+        <div className='resume-div' style={{ flex: 1 }}>
+          {showReviewForm ? (
+            <UserWriteReview setShowReviewForm={setShowReviewForm} onSubmitReview={handleAddReview} />
+          ) : (
+            <TableContainer component={Paper}>
+              <Table className='resume-table' aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">S.No.</TableCell>
+                    <TableCell align="center">Course Name</TableCell>
+                    <TableCell align="center">Rating</TableCell>
+                    <TableCell align="center">Review</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {reviews.map((row) => (
+                    <TableRow key={row.S_No}>
+                      <TableCell align="center">{row.S_No}</TableCell>
+                      <TableCell align="left">{row.course_name}</TableCell>
+                      <TableCell align="center">{row.rating}</TableCell>
+                      <TableCell align="left">{row.review}</TableCell>
+                      <TableCell align="center">
+                        <IconButton className="edit-button">
+                          <BiSolidEditAlt />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteReview(row.review_id)} className="delete-button">
+                          <MdOutlineDeleteForever />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default UserWriteReview;
+}

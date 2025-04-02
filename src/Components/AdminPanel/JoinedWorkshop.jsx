@@ -45,18 +45,20 @@ export default function JoinedWorkshop() {
 const[message,setMessage]=useState(false);
 const[filteredWorkshop,setFilteredWorkshop]=useState([])
 const[joinedWorkshop,setJoinedWorkshop]=useState([]);
-  useEffect(() => {
-    const fetchJoinedWorkshop = async () => {
-        try {
-            const response = await axios.get('https://api.hachion.co/requestbatch');
-            setJoinedWorkshop(response.data);
-        } catch (error) {
-            console.error("Error fetching student list:", error.message);
-        }
-    };
-    fetchJoinedWorkshop();
-   
+useEffect(() => {
+  const fetchJoinedWorkshop = async () => {
+      try {
+          const response = await axios.get('https://api.hachion.co/workshops'); // Check API URL
+          console.log("API Response:", response.data); // Debugging line
+          setJoinedWorkshop(response.data);
+          setFilteredWorkshop(response.data);
+      } catch (error) {
+          console.error("Error fetching workshop list:", error.message);
+      }
+  };
+  fetchJoinedWorkshop();
 }, []);
+
 
  const handleDateFilter = () => {
   const filtered = joinedWorkshop.filter((item) => {
@@ -176,11 +178,11 @@ const [currentPage, setCurrentPage] = useState(1);
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1}</StyledTableCell>
-      <StyledTableCell align="center">{row.name}</StyledTableCell>
-      <StyledTableCell align="center">{row.email}</StyledTableCell>
-      <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+      <StyledTableCell align="center">{row.fullName}</StyledTableCell>
+      <StyledTableCell align="center">{row.emailId}</StyledTableCell>
+      <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
-      <StyledTableCell align="center">{row.zone}</StyledTableCell>
+      <StyledTableCell align="center">{row.timeZone}</StyledTableCell>
    
     </StyledTableRow>
  ))

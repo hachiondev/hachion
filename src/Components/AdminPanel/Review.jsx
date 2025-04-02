@@ -73,7 +73,9 @@ export default function Review() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:""});
+    const [selectedRow, setSelectedRow] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:""});
+    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:"",display:"",
+      displayPages:[]});
     const [reviewData, setReviewData] = useState({
         review_id:"",
           category_name:"",
@@ -82,7 +84,8 @@ export default function Review() {
            student_name:"",
            source:"",
            comment:"",
-           image:null
+           image:null,display:"",
+           displayPages:[]
          });
          const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -91,8 +94,33 @@ export default function Review() {
                      setCurrentPage(page);
                      window.scrollTo(0, window.scrollY);
                    };
+                   const handleEditCheckboxChange = (e) => {
+                    const { value, checked } = e.target;
+                    setEditedData((prev) => ({
+                      ...prev,
+                      display: checked 
+                        ? [...prev.display, value]  // Add value if checked
+                        : prev.display.filter((item) => item !== value), // Remove if unchecked
+                    }));
+                  };
+                  
                    // Inside your CourseCategory component
-                 
+                   const handleCheckboxChange = (event) => {
+                    const { value, checked } = event.target;
+                    let updatedPages = [...reviewData.displayPages];
+                
+                    if (checked) {
+                      updatedPages.push(value);
+                    } else {
+                      updatedPages = updatedPages.filter((page) => page !== value);
+                    }
+                
+                    setReviewData({
+                      ...reviewData,
+                      displayPages: updatedPages,
+                      display: updatedPages.length > 0 ? updatedPages.join(", ") : "", // Join values as a string
+                    });
+                  }; 
                  const handleRowsPerPageChange = (rows) => {
                    setRowsPerPage(rows);
                    setCurrentPage(1); // Reset to the first page whenever rows per page changes
@@ -127,13 +155,13 @@ export default function Review() {
         
          }
          const handleInputChange = (e) => {
-            const { name, value } = e.target;
-            setEditedData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
-   
+          const { name, value } = e.target;
+          setEditedData((prev) => ({
+            ...prev,
+            [name]: value,  // Updates the corresponding field
+          }));
+        };
+        
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
@@ -154,7 +182,7 @@ export default function Review() {
               const response = await axios.get('https://api.hachion.co/userreview');
               setReview(response.data); // Use the curriculum state
           } catch (error) {
-              console.error("Error fetching resume:", error.message);
+              console.error("Error fetching review:", error.message);
           }
       };
       fetchReview();
@@ -163,7 +191,7 @@ export default function Review() {
   }, []); // Empty dependency array ensures it runs only once
 
     const handleDeleteConfirmation = (review_id) => {
-        if (window.confirm("Are you sure you want to delete this Resume details")) {
+        if (window.confirm("Are you sure you want to delete this Review details")) {
           handleDelete(review_id);
         }
       };
@@ -182,23 +210,56 @@ export default function Review() {
       
     //     setFilteredReview(filtered);
     //   };
-      const handleSave = async () => {
-        try {
-            const response = await axios.put(
-                `https://api.hachion.co/userreview/update/${editedData.review_id}`,editedData
-            );
-            setReview((prev) =>
-                prev.map(curr =>
-                    curr.review_id === editedData.review_id ? response.data : curr
-                )
-            );
-            setMessage("Review updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
-        } catch (error) {
-            setMessage("Error updating Review.");
+    const handleSave = async () => {
+      try {
+        const formData = new FormData();
+    
+        const updatedReviewObject = {
+          name: editedData.student_name,
+          social_id: editedData.source,
+          display: editedData.display.join(","), // Convert array to comma-separated string
+          course_name: editedData.course_name,
+          review: editedData.comment,
+          email: editedData.email || "",
+          type: editedData.type || "",
+          trainer_name: editedData.trainer_name || "",
+          rating: editedData.rating || "",
+          location: editedData.location || "",
+          date: new Date().toISOString().split("T")[0],
+        };
+    
+        formData.append("review", JSON.stringify(updatedReviewObject));
+    
+        if (editedData.image instanceof File) {
+          formData.append("user_image", editedData.image);
         }
+    
+        const response = await axios.put(
+          `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+    
+        if (response.status === 200) {
+          setReview((prev) =>
+            prev.map((curr) =>
+              curr.review_id === editedData.review_id ? response.data : curr
+            )
+          );
+          setMessage("Review updated successfully!");
+          setTimeout(() => setMessage(""), 5000);
+          setOpen(false);
+        }
+      } catch (error) {
+        console.error("Error updating review:", error);
+        setMessage("Error updating Review.");
+      }
     };
+    
             
       const handleDelete = async (review_id) => {
        
@@ -222,13 +283,14 @@ export default function Review() {
           setShowAddCourse(false);
          
         }
-        const handleClickOpen = (review) => {
-            console.log(review);
-              setEditedData(review)// Set the selected row data
-              setReviewData({ displayPages: review.displayPages || [] });
-              setOpen(true); // Open the modal
-             
-            };
+        const handleClickOpen = (row) => {
+          
+            setSelectedRow(row); 
+            setEditedData(row)
+            console.log("ROW",editedData);// Set the selected row data
+            setOpen(true); // Open the modal
+        
+          };
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -289,7 +351,7 @@ export default function Review() {
       const reviewObject = {
           name: reviewData.student_name,
           social_id: reviewData.source,
-          
+          display:reviewData.display,
           course_name: reviewData.course_name,
           review: reviewData.comment,
           email: reviewData.email || "",
@@ -320,7 +382,8 @@ export default function Review() {
   
           if (response.status === 201) { // Use 201 since backend sends CREATED status
               alert("Review added successfully!");
-              setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null });
+              setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "", image: null });
+
           }
       } catch (error) {
           console.error("Error adding review:", error);
@@ -447,35 +510,32 @@ useEffect(() => {
     Display Reviews:
   </label>
   </div>
-  
   <div className="course-row">
-  <div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
-  <label className="form-check-label" htmlFor="homePage">
-    Home Page
-  </label>
-</div>
-
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
-  <label className="form-check-label" htmlFor="aboutPage">
-    About Us Page
-  </label>
-</div>
-
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
-  <label className="form-check-label" htmlFor="coursePage">
-    Course Page
-  </label>
-</div>
-
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
-  <label className="form-check-label" htmlFor="corporateTrainingPage">
-    Corporate Training Page
-  </label>
-</div>
+        {[
+          { id: "homePage", value: "home", label: "Home Page" },
+          { id: "aboutPage", value: "about", label: "About Us Page" },
+          { id: "coursePage", value: "course", label: "Course Page" },
+          { id: "corporateTrainingPage", value: "corporate", label: "Corporate Training Page" },
+        ].map(({ id, value, label }) => (
+          <div className="checkbox-group" key={id}>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id={id}
+              name="displayPages"
+              value={value}
+              // checked={reviewData.displayPages.includes(value)}
+              onChange={handleCheckboxChange}
+            />
+            <label className="form-check-label" htmlFor={id}>
+              {label}
+            </label>
+          </div>
+        ))}
+      </div>
+      <div>
+        <strong>Selected Display:</strong> {reviewData.display || "None"}
+      
 </div>
 
 <div className="course-row">
@@ -571,7 +631,9 @@ useEffect(() => {
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="center">{curr.user_image}</StyledTableCell>
+      <StyledTableCell align="center">
+        {curr.user_image ? <img src={curr.user_image} alt="User" width="50" height="50" /> : 'No Image'}
+        </StyledTableCell>
       <StyledTableCell align="left">{curr.name}</StyledTableCell>
       <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
@@ -609,7 +671,7 @@ useEffect(() => {
           style: { borderRadius: 20 },
         }}>
   <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit Review</DialogTitle>
+    <DialogTitle id="edit-schedule-dialog">Edit  Review</DialogTitle>
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
@@ -620,7 +682,7 @@ useEffect(() => {
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="student_name"
-  value={editedData.student_name || ""}
+  value={editedData.name}
   onChange={handleInputChange}/>
   </div>
   <div className="col">
@@ -635,7 +697,7 @@ useEffect(() => {
               </div>
               <div class="col">
     <label for="inputState" class="form-label">Source</label>
-    <select id="inputState" class="form-select" name='source' value={editedData.source|| ""} onChange={handleInputChange}>
+    <select id="inputState" class="form-select" name='source' value={editedData.social_id} onChange={handleInputChange}>
       <option selected>Select </option>
       <option>Linkedin</option>
       <option>Facebook</option>
@@ -691,7 +753,7 @@ useEffect(() => {
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
   name="comment"
-  value={editedData.comment}
+  value={editedData.review}
   onChange={handleInputChange}></textarea>
 </div>
 
@@ -701,35 +763,58 @@ useEffect(() => {
   </label>
   </div>
   
-  <div className="course-row">
-  <div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="homePage" name="displayPages" value="home" checked={reviewData.displayPages?.includes("home")} />
-  <label className="form-check-label" htmlFor="homePage">
-    Home Page
-  </label>
-</div>
+  <input
+  className="form-check-input"
+  type="checkbox"
+  id="homePage"
+  name="displayPages"
+  value="home"
+  checked={editedData.display?.includes("home")}
+  onChange={handleEditCheckboxChange}
+/>
+<label className="form-check-label" htmlFor="homePage">
+  Home Page
+</label>
 
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="aboutPage" name="displayPages" value="about" checked={reviewData.displayPages?.includes("about")} />
-  <label className="form-check-label" htmlFor="aboutPage">
-    About Us Page
-  </label>
-</div>
+<input
+  className="form-check-input"
+  type="checkbox"
+  id="aboutPage"
+  name="displayPages"
+  value="about"
+  checked={editedData.display?.includes("about")}
+  onChange={handleEditCheckboxChange}
+/>
+<label className="form-check-label" htmlFor="aboutPage">
+  About Us Page
+</label>
 
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="coursePage" name="displayPages" value="course" checked={reviewData.displayPages?.includes("course")} />
-  <label className="form-check-label" htmlFor="coursePage">
-    Course Page
-  </label>
-</div>
+<input
+  className="form-check-input"
+  type="checkbox"
+  id="coursePage"
+  name="displayPages"
+  value="course"
+  checked={editedData.display?.includes("course")}
+  onChange={handleEditCheckboxChange}
+/>
+<label className="form-check-label" htmlFor="homePage">
+  Course Page
+</label>
 
-<div className="checkbox-group">
-  <input className="form-check-input" type="checkbox" id="corporateTrainingPage" name="displayPages" value="corporate" checked={reviewData.displayPages?.includes("corporate")} />
-  <label className="form-check-label" htmlFor="corporateTrainingPage">
-    Corporate Training Page
-  </label>
-</div>
-</div>
+<input
+  className="form-check-input"
+  type="checkbox"
+  id="corporatePage"
+  name="displayPages"
+  value="corporate"
+  checked={editedData.display?.includes("corporate")}
+  onChange={handleEditCheckboxChange}
+/>
+<label className="form-check-label" htmlFor="aboutPage">
+  Corporate Page
+</label>
+
 
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

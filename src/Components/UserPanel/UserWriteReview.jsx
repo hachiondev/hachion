@@ -126,7 +126,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           </div>
         </div>
 
-        <div className="col-md-4">
+        <div className="input-row">
+        <div className="col-md-5">
           <label className="form-label">Image</label>
           <input
             type="file"
@@ -135,6 +136,20 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             onChange={handleFileChange}
           />
         </div>
+        <div className="col-md-5">
+            <label className="form-label">Review Type</label>
+            <select
+              className="form-select"
+              name="type"
+              value={reviewData.type}
+              onChange={handleChange}
+            >
+              <option value="">Select Type</option>
+              <option value="Course Review">Course Review</option>
+              <option value="Trainer Review">Trainer Review</option>
+            </select>
+          </div>
+          </div>
 
         <div className="input-row">
           <div className="col-md-5">
@@ -148,22 +163,6 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-5">
-            <label className="form-label">Review Type</label>
-            <select
-              className="form-select"
-              name="type"
-              value={reviewData.type}
-              onChange={handleChange}
-            >
-              <option value="">Select Type</option>
-              <option value="Course Review">Course Review</option>
-              <option value="Trainer Review">Trainer Review</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="input-row">
           <div className="col-md-5">
             <label className="form-label">Course Name</label>
             <select
@@ -229,7 +228,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           <button className='submit-btn' onClick={handleSubmit}>Submit</button>
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

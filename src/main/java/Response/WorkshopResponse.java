@@ -26,8 +26,10 @@ public class WorkshopResponse {
 	private String fullName;
 
 	private String emailId;
-	
+
 	private String mobileNumber;
+
+	private String country;
 
 	public Long getWorkshopId() {
 		return workshopId;
@@ -100,7 +102,6 @@ public class WorkshopResponse {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-	
 
 	public String getMobileNumber() {
 		return mobileNumber;
@@ -115,7 +116,7 @@ public class WorkshopResponse {
 	}
 
 	public WorkshopResponse(Long workshopId, List<String> courseNames, String courseCategory, String date, String time,
-			String timeZone, String message, String fullName, String emailId, String mobileNumber) {
+			String timeZone, String message, String fullName, String emailId, String mobileNumber, String country) {
 		super();
 		this.workshopId = workshopId;
 		this.courseNames = courseNames;
@@ -127,8 +128,15 @@ public class WorkshopResponse {
 		this.fullName = fullName;
 		this.emailId = emailId;
 		this.mobileNumber = mobileNumber;
+		this.country = country;
 	}
 
-	
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
 }

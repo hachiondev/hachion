@@ -31,6 +31,8 @@ public class WorkshopRequest {
 
 	private String mobileNumber;
 	private boolean isMobileNumberUpdated;
+	private String country;
+	private boolean isCountryUpdated;
 
 	public Long getWorkshopId() {
 		return workshopId;
@@ -146,6 +148,19 @@ public class WorkshopRequest {
 
 	public boolean isMobileNumberUpdated() {
 		return isMobileNumberUpdated;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+		this.isCountryUpdated = true;
+	}
+
+	public boolean isCountryUpdated() {
+		return isCountryUpdated;
 	}
 
 }

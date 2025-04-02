@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import facebook from '../../Assets/facebook.png';
 import twitter from '../../Assets/twitter.png';
 import youtube from '../../Assets/youtube.png';
@@ -10,6 +10,29 @@ import './Home.css';
 
 const Footer = () => {
   const navigate= useNavigate();
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchTrendingCourses = async () => {
+      try {
+        const response = await fetch('https://api.hachion.co/trendingcourse');
+        const data = await response.json();
+        // Filter courses with status true
+        const activeCourses = data.filter(course => course.status === true);
+        setCourses(activeCourses);
+      } catch (error) {
+        console.error('Error fetching trending courses:', error);
+      }
+    };
+
+    fetchTrendingCourses();
+  }, []);
+
+  const handleNavigation = (courseName) => {
+    const formattedName = courseName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/CourseDetails/${formattedName}`);
+  };
+
   const handleBlog=()=>{
   navigate('/blogs')
   }
@@ -37,11 +60,20 @@ const Footer = () => {
       <div className='footer-top'>
     <div className='footer-head'>
     <p className='footer-heading'>Top Courses</p>
-    <p className='footer-content'>AWS SysOps Admin</p>
-    <p className='footer-content'>DevOps</p>
-    <p className='footer-content'>Python</p>
-    <p className='footer-content'>Salesforce Admin</p>
-    <p className='footer-content'>More...</p>
+     {courses.length > 0 ? (
+        courses.map((course) => (
+          <p
+            key={course.trendingcourse_id}
+            className='footer-content'
+            onClick={() => handleNavigation(course.course_name)}
+            style={{ cursor: 'pointer' }}
+          >
+            {course.course_name}
+          </p>
+        ))
+      ) : (
+        <p>No active courses available.</p>
+      )}
 </div>
 <div className='footer-head'>
     <p className='footer-heading'>Popular Courses</p>

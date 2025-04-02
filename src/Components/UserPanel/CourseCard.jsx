@@ -22,7 +22,10 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
   }, []);
 
   // Format course name for URL
-  const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
+  const formattedName = heading
+  ? heading.toLowerCase().replace(/\s+/g, '-')
+  : '';
+
 
   // Function to navigate to course details
   const handleNavigation = () => {

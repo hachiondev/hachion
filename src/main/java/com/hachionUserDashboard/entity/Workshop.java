@@ -42,6 +42,8 @@ public class Workshop {
 	@Column(name = "mobile_number", nullable = false)
 	private String mobileNumber;
 
+	private String country;
+
 	public Long getWorkshopId() {
 		return workshopId;
 	}
@@ -115,7 +117,7 @@ public class Workshop {
 	}
 
 	public Workshop(Long workshopId, String courseName, String courseCategory, String date, String time,
-			String timeZone, String fullName, String emailId, String mobileNumber) {
+			String timeZone, String fullName, String emailId, String mobileNumber, String country) {
 		super();
 		this.workshopId = workshopId;
 		this.courseName = courseName;
@@ -126,10 +128,19 @@ public class Workshop {
 		this.fullName = fullName;
 		this.emailId = emailId;
 		this.mobileNumber = mobileNumber;
+		this.country = country;
 	}
 
 	public Workshop() {
 		super();
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 }

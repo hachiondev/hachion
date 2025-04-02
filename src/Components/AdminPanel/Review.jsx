@@ -182,7 +182,7 @@ export default function Review() {
               const response = await axios.get('https://api.hachion.co/userreview');
               setReview(response.data); // Use the curriculum state
           } catch (error) {
-              console.error("Error fetching resume:", error.message);
+              console.error("Error fetching review:", error.message);
           }
       };
       fetchReview();
@@ -191,7 +191,7 @@ export default function Review() {
   }, []); // Empty dependency array ensures it runs only once
 
     const handleDeleteConfirmation = (review_id) => {
-        if (window.confirm("Are you sure you want to delete this Resume details")) {
+        if (window.confirm("Are you sure you want to delete this Review details")) {
           handleDelete(review_id);
         }
       };

@@ -179,7 +179,7 @@ export default function Review() {
   }, []); // Empty dependency array ensures it runs only once
 
     const handleDeleteConfirmation = (review_id) => {
-        if (window.confirm("Are you sure you want to delete this Review")) {
+        if (window.confirm("Are you sure you want to delete this Review details")) {
           handleDelete(review_id);
         }
       };
@@ -198,23 +198,57 @@ export default function Review() {
       
     //     setFilteredReview(filtered);
     //   };
-      const handleSave = async () => {
-        try {
-            const response = await axios.put(
-                `https://api.hachion.co/userreview/update/${editedData.review_id}`,editedData
-            );
-            setReview((prev) =>
-                prev.map(curr =>
-                    curr.review_id === editedData.review_id ? response.data : curr
-                )
-            );
-            setMessage("Review updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
-        } catch (error) {
-            setMessage("Error updating Review.");
-        }
-    };
+    const handleSave = async () => {
+      try {
+          const formData = new FormData();
+          
+          // Create an object with the same structure as the backend expects
+          const updatedReviewObject = {
+              name: editedData.student_name,
+              social_id: editedData.source,
+              display: editedData.display,
+              course_name: editedData.course_name,
+              review: editedData.comment,
+              email: editedData.email || "",
+              type: editedData.type || "",
+              trainer_name: editedData.trainer_name || "",
+              rating: editedData.rating || "",
+              location: editedData.location || "",
+              date: new Date().toISOString().split("T")[0]
+          };
+  
+          formData.append("review", JSON.stringify(updatedReviewObject));
+  
+          if (editedData.image instanceof File) {
+              formData.append("user_image", editedData.image);
+          }
+  
+          const response = await axios.put(
+              `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+              formData,
+              {
+                  headers: {
+                      "Content-Type": "multipart/form-data",
+                  },
+              }
+          );
+  
+          if (response.status === 200) {
+              setReview((prev) =>
+                  prev.map((curr) =>
+                      curr.review_id === editedData.review_id ? response.data : curr
+                  )
+              );
+              setMessage("Review updated successfully!");
+              setTimeout(() => setMessage(""), 5000);
+              setOpen(false);
+          }
+      } catch (error) {
+          console.error("Error updating review:", error);
+          setMessage("Error updating Review.");
+      }
+  };
+  
             
       const handleDelete = async (review_id) => {
        
@@ -252,50 +286,7 @@ export default function Review() {
           [name]: value,
         }));
       };
-    //   const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-    
-    //     const formData = new FormData();
-    //     formData.append("name", reviewData.student_name);
-    //     formData.append("social_id", reviewData.source);
-    //     formData.append("category_name", reviewData.category_name);
-    //     formData.append("course_name", reviewData.course_name);
-    //     formData.append("review", reviewData.comment);
-    //     formData.append("email",reviewData.email||"");
-    //     formData.append("type",reviewData.type||"");
-    //     formData.append("trainer_name",reviewData.trainer_name||"");
-    //     formData.append("rating",reviewData.rating||"");
-    //     formData.append("location",reviewData.location||"");
-       
-    //     formData.append("date", currentDate); // Ensure the date is added
-    
-    //     if (reviewData.image) {
-    //         formData.append("image", reviewData.image); // Append the image
-    //     }
-    //     for (let pair of formData.entries()) {
-    //       console.log(pair[0], pair[1]); // Check key-value pairs
-    //   }
-    //     try {
-    //         const response = await axios.post(
-    //             "https://api.hachion.co/userreview/add",
-    //             formData,
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                 },
-    //             }
-    //         );
-    
-    //         if (response.status === 200) {
-    //             alert("Review added successfully!");
-    //             setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
-    //         }
-    //     } catch (error) {
-    //         console.error("Error adding review:", error);
-    //         alert("Error adding review.");
-    //     }
-    // };
+   
     const handleSubmit = async (e) => {
       e.preventDefault();
       const currentDate = new Date().toISOString().split("T")[0];
@@ -477,7 +468,7 @@ useEffect(() => {
               id={id}
               name="displayPages"
               value={value}
-              checked={reviewData.displayPages.includes(value)}
+              // checked={reviewData.displayPages.includes(value)}
               onChange={handleCheckboxChange}
             />
             <label className="form-check-label" htmlFor={id}>

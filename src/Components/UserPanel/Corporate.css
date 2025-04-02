@@ -484,7 +484,7 @@ position: relative;
    cursor: pointer;
    z-index: 1;
    border-radius: 50%;
-   margin-left: -20vh;
+   margin-left: -10vh;
  }
  .custom-next-icon {
      font-size: 2rem;
@@ -493,8 +493,18 @@ position: relative;
      cursor: pointer;
      z-index: 1;
      border-radius: 50%;
-     margin-right: -20vh;
+     margin-right: -10vh;
    }
+   .carousel-control-next, .carousel-control-prev {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3% !important;
+}
  
    .carousel-indicators {
      top: 500px;
@@ -1054,8 +1064,11 @@ padding: 20px;
       /* margin-left: 80vw; */
   }
   .custom-next-icon{
-      margin-right: -220px;
+      margin-right: -150px;
   }
+  .custom-prev-icon{
+    margin-left: -150px;
+}
 
   #advisor1{
   
@@ -1203,7 +1216,7 @@ padding: 20px;
 
   .learner-card {
   display: block;
-    width: 65vw; 
+    width: 60vw; 
   }
   .left-quotes{
       margin-left: 2vh;
@@ -1221,15 +1234,16 @@ padding: 20px;
 
   .learner-card {
   display: block;
-    width: 70vw; 
-    margin-left: 13%;
+    width: 90%; 
+    margin-left: 10%;
+    margin-right: 10%;
   }
 
   .carousel-indicators {
       display: flex;
       justify-content: center;
       margin-top: 20px;
-      top: 320px;
+      top: 460px;
     }
   
   .custom-prev-icon, .custom-next-icon {

@@ -7,6 +7,7 @@ import success from '../../Assets/success.gif';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
+import axios from 'axios';
 
 const initialValues = {
   name: "",
@@ -24,13 +25,14 @@ const Advisor = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
-  const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
+  const [selectedValue, setSelectedValue] = useState("");
+  const { values, errors, handleBlur, touched, handleChange, handleSubmit: formikSubmit } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values) => {
       console.log('Form Submitted with values:', values);
     }
-  });
+});
 
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
@@ -52,6 +54,35 @@ const Advisor = () => {
     { name: 'South Africa', code: '+27', flag: 'ZA' },
   ];
 
+
+  const handleSubmit  = async (e) => {
+    e.preventDefault(); // Prevents form refresh
+  
+    const requestData = {
+      fullName: values.full_name,
+      emailId: values.email,
+      noOfPeople: selectedValue,
+      companyName: values.company_name,
+      mobileNumber: mobileNumber,
+      trainingCourse: values.course_name,
+      comments: values.comment
+    };
+  
+    try {
+      const response = await axios.post('https://api.hachion.co/advisors', requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status === 200) {
+        console.log('Successfully submitted:', response.data);
+        setShowModal(true); // Show success modal only when API call succeeds
+      }
+    } catch (error) {
+      console.error('Error submitting request:', error);
+    }
+  };
   const handleCountrySelect = (country) => {
     console.log('Country selected:', country);
     setSelectedCountry(country);
@@ -89,6 +120,10 @@ const Advisor = () => {
                 Full Name<span className="required">*</span>
               </label>
               <input type="text" className="form-control-advisor" id="advisor1" placeholder='Enter your full name' 
+             name='full_name'
+             value={values.full_name}
+             onChange={handleChange}
+             onBlur={handleBlur} 
              required/>
             </div>
             <div className="col-md-5">
@@ -160,7 +195,10 @@ const Advisor = () => {
               <label htmlFor="inputState" className="form-label">
                 No. of People<span className="required">*</span>
               </label>
-              <select id="advisor1" className="form-select" required>
+              <select id="advisor1" className="form-select" required
+              onChange={(e) =>              
+                setSelectedValue(e.target.value)}
+              >
                 <option selected disabled>Select number</option>
                 {[...Array(10)].map((_, i) => (
                   <option key={i + 1}>{i + 1}</option>

@@ -16,10 +16,15 @@ const Learners = ({ page }) => {
       try {
         const response = await fetch("https://api.hachion.co/userreview");
         const data = await response.json();
-
+  
         if (Array.isArray(data)) {
-          // Filter reviews based on the display field matching the current page
-          const filteredReviews = data.filter((review) => review.display === page);
+          // Filter reviews safely
+          const filteredReviews = data.filter((review) => 
+            review.display && typeof review.display === "string" 
+              ? review.display.split(",").map(item => item.trim()).includes(page)
+              : false
+          );
+  
           setReviews(filteredReviews);
         } else {
           console.error("Invalid API response", data);
@@ -28,8 +33,9 @@ const Learners = ({ page }) => {
         console.error("Error fetching reviews:", error);
       }
     };
-
+  
     fetchReviews();
+  
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);

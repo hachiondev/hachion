@@ -121,7 +121,7 @@
 //       <div className="view-btn">
 //         <button
 //           className="view-all"
-//           onClick={() => (viewAll ? navigate('/CourseDetails') : setViewAll(true))}
+//           onClick={() => (viewAll ? navigate('/courseDetails') : setViewAll(true))}
 //         >
 //           {viewAll ? 'View Courses Page' : 'View All'}
 //         </button>
@@ -204,7 +204,7 @@
 // //       try {
 // //         const [scheduleResponse, coursesResponse] = await Promise.all([
 // //           fetch("https://api.hachion.co/schedulecourse").then((res) => res.json()),
-// //           fetch("https://api.hachion.co/CourseDetails/all").then((res) => res.json()),
+// //           fetch("https://api.hachion.co/courseDetails/all").then((res) => res.json()),
 // //         ]);
 
 // //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -314,14 +314,14 @@ const TrainingEvents = () => {
 
   return (
     <div className="training-events">
-      <div className="training-events-head">
+      <div className="training-events-head-upcoming">
         <h1 className="association-head">Upcoming Training Events</h1>
       </div>
 
       <div className="view-btn">
         <button
           className="view-all"
-          onClick={() => (viewAll ? navigate('/coursedetails') : setViewAll(true))}
+          onClick={() => (viewAll ? navigate('/CourseDetails') : setViewAll(true))}
         >
           {viewAll ? 'View Courses Page' : 'View All'}
         </button>

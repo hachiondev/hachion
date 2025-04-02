@@ -30,6 +30,7 @@ import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
+import Reports from './Components/AdminPanel/Reports';
 import Enrollment from './Components/UserPanel/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
@@ -75,25 +76,25 @@ function App() {
       <Route path='/CourseDetails' element={<Course/>}/>
       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
 
-      {/* <Route path='/courses/:courseName' element={<QaAutomation/>}/> */}
-      {/* <Route path='/course/courseData?.courseCategory' element={<QaAutomation/>}/> */}
+      {/* <Route path='/Courses/:courseName' element={<QaAutomation/>}/> */}
+      {/* <Route path='/CourseDetails/CourseDetailsData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
     
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
       {/* <Route path='/admin'> */}
-      <Route path="/adminlogin" element={<AdminLogin />} />
-        <Route path="/adminregister" element={<AdminRegister />} />
+      <Route path="adminlogin" element={<AdminLogin />} />
+        <Route path="adminregister" element={<AdminRegister />} />
         <Route path="/adminforgot" element={<AdminForgot />} />
 
         {/* Protected Admin Dashboard Route */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/admindashboardview" element={<AdminDashboardView />} />
+          <Route path="admindashboardview" element={<AdminDashboardView />} />
         </Route>
   <Route path='/admincourse' element={<CategoryTable />} />
 
-
+{/* </Route> */}
 <Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
 
       <Route path='/blogs' element={<Blogs/>}/>
@@ -110,7 +111,7 @@ function App() {
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addcertificate' element={<AddCertificate/>}/>
       <Route path='/addbanner' element={<AddBanner/>}/>
-   <Route path='/addtrending' element={<TrendingCourse/>}/>
+      <Route path='/addtrending' element={<TrendingCourse/>}/>
       <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
       <Route path='/addcurriculum' element={<AddCurriculum/>}/>
       <Route path='/addfaq' element={<AddFaq/>}/>
@@ -120,7 +121,8 @@ function App() {
       <Route path='/addschedule' element={<AddSchedule/>}/>
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
-      <Route path='/courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/Courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
   

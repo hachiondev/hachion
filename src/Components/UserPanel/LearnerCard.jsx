@@ -82,6 +82,7 @@ import linkedin from '../../Assets/linkedin.png';
 import facebook from '../../Assets/facebook.png';
 import instagram from '../../Assets/instagram.png';
 import twitter from '../../Assets/twitter.png';
+import google from '../../Assets/google.png';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -95,7 +96,8 @@ const getSocialMediaLogo = (social_id) => {
     case 'Instagram': return instagram;
     case 'Twitter': return twitter;
     case 'Linkedin': return linkedin;
-    default: return linkedin;
+    case 'Google': return google;
+    default: return null;
   }
 };
 
@@ -122,7 +124,9 @@ const LearnerCard = (props) => {
           <div className='learner-info'>
             <div className='learner-name'>
               <p className='name'>{props.name}</p>
-              <img src={getSocialMediaLogo(props.social_id)} alt={props.social_id} />
+              {props.social_id && getSocialMediaLogo(props.social_id) && (
+            <img src={getSocialMediaLogo(props.social_id)} alt={props.social_id} />
+                )}
             </div>
             <p className='job-profile'>{props.profile}</p>
             <p className='job-location'>{props.location}</p>
@@ -131,7 +135,7 @@ const LearnerCard = (props) => {
         </div>
         <div className='learner-description-bottom'>
           <p className='learner-description'>
-            {props.content.substring(0, 250)}...
+            {props.content.substring(0, 150)}...
             <span className='read-more' onClick={() => setOpen(true)}> Read More</span>
           </p>
         </div>
@@ -147,8 +151,15 @@ const LearnerCard = (props) => {
         </DialogTitle>
         <DialogContent>
           <div className='popup-content'>
-            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image-large' />
-            <h3>{props.name}</h3>
+          <div className='learner-image'>
+            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' />
+            </div>
+            <div className='learner-name'>
+            <p className='name'>{props.name}</p>
+              {props.social_id && getSocialMediaLogo(props.social_id) && (
+            <img src={getSocialMediaLogo(props.social_id)} alt={props.social_id} />
+                )}
+                </div>
             <p className='job-profile'>{props.profile}</p>
             <p className='job-location'>{props.location}</p>
             <div className='rating'>{renderStarRating(props.rating)}</div>

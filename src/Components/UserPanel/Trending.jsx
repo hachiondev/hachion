@@ -23,7 +23,7 @@ const Trending = () => {
         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
         setCategories(allCategories);
         setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
-        setDropdownCategories(allCategories.slice(7)); // Set remaining categories for dropdown
+        setDropdownCategories(allCategories.slice(6)); // Set remaining categories for dropdown
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -75,16 +75,16 @@ const Trending = () => {
     if (!course?.courseName) return; // Prevent errors if courseName is undefined
 
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-'); // Convert to slug
-    navigate(`/CourseDetails/${courseSlug}`); // Navigate with new path
+    navigate(`/courseDetails/${courseSlug}`); // Navigate with new path
   };
 
   return (
     <div className="training-events">
-      <div className="training-events-head">
+      <div className="training-events-head-upcoming">
         <h1 className="association-head">Trending Courses</h1>
       </div>
       <div className="view-btn">
-        <button className="view-all" onClick={() => navigate('/CourseDetails')}>
+        <button className="view-all" onClick={() => navigate('/courseDetails')}>
           View All
         </button>
       </div>

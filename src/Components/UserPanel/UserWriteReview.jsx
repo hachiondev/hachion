@@ -57,7 +57,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     const reviewPayload = {
         name: reviewData.student_name,
         email: reviewData.email || "",
-        type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
+        type: false,
         course_name: reviewData.course_name,
         trainer_name: reviewData.trainer_name || "",
         social_id: reviewData.social_id,
@@ -90,7 +90,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             }
         );
 
-        console.log("Review added successfully:", response.data);
+        alert("Review added successfully:", response.data);
+        
     } catch (error) {
         console.error("Error adding review:", error.response?.data || error.message);
     }

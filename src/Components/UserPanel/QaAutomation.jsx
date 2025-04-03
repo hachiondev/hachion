@@ -90,6 +90,7 @@ const QaAutomation = () => {
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
         setCourseData(course);
+        
       } catch (error) {
         console.error('Error fetching course details:', error);
       }finally {

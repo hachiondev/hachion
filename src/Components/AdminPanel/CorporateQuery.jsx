@@ -45,18 +45,20 @@ export default function CorporateQuery() {
 const[corporateQuery,setCorporateQuery]=useState([]);
 const[message,setMessage]=useState(false);
 const[filteredCorporate,setFilteredCorporate]=useState([])
-  useEffect(() => {
-    const fetchCorporateQuery = async () => {
-        try {
-            const response = await axios.get('https://api.hachion.co/requestbatch');
-            setCorporateQuery(response.data);
-        } catch (error) {
-            console.error("Error fetching student list:", error.message);
-        }
-    };
-    fetchCorporateQuery();
-   
+useEffect(() => {
+  const fetchCorporateQuery = async () => {
+    try {
+      const response = await axios.get('https://api.hachion.co/advisors');
+      console.log("API Response:", response.data);
+      setCorporateQuery(response.data);
+      setFilteredCorporate(response.data); // Initialize the filteredCorporate with the fetched data
+    } catch (error) {
+      console.error("Error fetching corporate queries:", error.message);
+    }
+  };
+  fetchCorporateQuery();
 }, []);
+
 
  const handleDateFilter = () => {
   const filtered = corporateQuery.filter((item) => {
@@ -179,15 +181,15 @@ const [currentPage, setCurrentPage] = useState(1);
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1}</StyledTableCell>
-      <StyledTableCell align="center">{row.name}</StyledTableCell>
-      <StyledTableCell align="center">{row.company}</StyledTableCell>
-      <StyledTableCell align="center">{row.email}</StyledTableCell>
-      <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-      <StyledTableCell align="center">{row.country}</StyledTableCell>
-      <StyledTableCell align="center">{row.people}</StyledTableCell>
-      <StyledTableCell align="center">{row.course}</StyledTableCell>
-      <StyledTableCell align="center">{row.comment}</StyledTableCell>
-   
+      <StyledTableCell align="center">{row.fullName}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.companyName}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.emailId}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.country || "N/A"}</StyledTableCell>  {/* Country missing in response */}
+        <StyledTableCell align="center">{row.noOfPeople}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.trainingCourse}</StyledTableCell>  {/* Fixed field */}
+        <StyledTableCell align="center">{row.comments}</StyledTableCell>  {/* Fixed field */}
+        
     </StyledTableRow>
   ))
 ) : (

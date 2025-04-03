@@ -186,13 +186,23 @@ export default function Curriculum() {
           handleDelete(curriculum_id);
         }
       };
+      // const handleInputChange = (e) => {
+      //   const { name, value } = e.target;
+      //   setEditedRow((prev) => ({
+      //     ...prev,
+      //     [name]: value,
+      //   }));
+      // };
+
       const handleInputChange = (e) => {
         const { name, value } = e.target;
+      
         setEditedRow((prev) => ({
           ...prev,
-          [name]: value,
+          [name]: name === "link" ? value.split("\n") : value, // Convert input to an array
         }));
-      };
+      };      
+      
       const handleDateFilter = () => {
         const filtered = curriculum.filter((item) => {
           const curriculumDate = new Date(item.date); // Parse the date field
@@ -274,13 +284,26 @@ export default function Curriculum() {
             setOpen(true); // Open the modal
             console.log("tid",row.curriculum_id)
           };
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setCurriculumData((prevData) => ({
-          ...prevData,
-          [name]: value
-      }));
-  };
+  //   const handleChange = (e) => {
+  //     const { name, value } = e.target;
+  //     setCurriculumData((prevData) => ({
+  //         ...prevData,
+  //         [name]: value
+  //     }));
+  // };
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+  
+    setRows((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        [name]: value.split("\n"), // Convert new lines into an array of links
+      };
+      return updatedRows;
+    });
+  };  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -414,9 +437,17 @@ export default function Curriculum() {
         }))}
     />
 </StyledTableCell>
-              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
-               <input className='table-curriculum' name='link' value={rows.link} onChange={handleChange}/>
-              </StyledTableCell>
+<StyledTableCell component="th" scope="row" align="center" sx={{ padding: 0 }}>
+  <textarea
+    className="table-curriculum"
+    name="link"
+    value={Array.isArray(row.link) ? row.link.join("\n") : ""}
+    onChange={(e) => handleChange(e, rows.indexOf(row))}
+    placeholder="Enter each video link on a new line"
+    rows={3}  
+  />
+</StyledTableCell>
+
               <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
                     <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
                   </StyledTableRow>
@@ -565,7 +596,23 @@ export default function Curriculum() {
         <p>No topics available</p>
     )}
 </StyledTableCell>
-      <StyledTableCell align="left">{course.link}</StyledTableCell>
+<StyledTableCell align="left">
+  {course.link ? (
+    <ul style={{ paddingLeft: "15px", margin: 0 }}>
+      {(Array.isArray(course.link) ? course.link : course.link.split("\n"))
+        .filter((link) => link.trim() !== "") // Remove empty lines
+        .map((link, i) => (
+          <li key={i} style={{ wordBreak: "break-word" }}>
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              {link}
+            </a>
+          </li>
+        ))}
+    </ul>
+  ) : (
+    <p>No links available</p>
+  )}
+</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -681,9 +728,17 @@ export default function Curriculum() {
       modules={quillModules}
     />
 
-    <label htmlFor="topic">Video Link</label>
-    <input id="link" className="form-control" name='link' value={editedRow.link || ""}
-      onChange={handleInputChange}/>
+<label htmlFor="link">Video Links</label>
+<textarea
+  id="link"
+  className="form-control"
+  name="link"
+  value={Array.isArray(editedRow.link) ? editedRow.link.join("\n") : editedRow.link || ""} 
+  onChange={handleInputChange}
+  placeholder="Enter each video link on a new line"
+  rows={3}
+/>
+
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

@@ -36,7 +36,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import AddCertificate from './Components/AdminPanel/AddCertificate';
 import AddBanner from './Components/AdminPanel/AddBanner';
 import AddCurriculum from './Components/AdminPanel/AddCurriculum';
-import { HelmetProvider } from "react-helmet-async";
+
 import AddFaq from './Components/AdminPanel/AddFaq';
 import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
 import AddResume from './Components/AdminPanel/AddResume';
@@ -54,7 +54,7 @@ import ProtectedRoute from './ProtectedRoute';
 function App() {
   return (
     <>
-     <HelmetProvider>
+   
     <BrowserRouter>
     <Routes>
       
@@ -127,7 +127,7 @@ function App() {
       <Route path='/privacy' element={<Privacy/>}/>
   
       </Routes></BrowserRouter>
-     </HelmetProvider>
+ 
     </>
   );
 }

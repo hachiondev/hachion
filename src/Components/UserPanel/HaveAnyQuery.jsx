@@ -22,7 +22,11 @@ const HaveAnyQuery = ({ closeModal }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const currentDate = new Date().toISOString().split('T')[0];
-  const [selectedCountry, setSelectedCountry] = useState({ name: 'India', code: '+91', flag: 'IN' })
+  const [selectedCountry, setSelectedCountry] = useState({
+        code: '+1',
+        flag: 'US',
+        name: 'United States',
+      });
 
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },

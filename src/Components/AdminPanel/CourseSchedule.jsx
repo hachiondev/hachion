@@ -131,7 +131,7 @@ const handleDateChange = (newValue) => {
 
   setCourseData((prevData) => ({
     ...prevData,
-    schedule_date: parsedDate.format('MM-DD-YYYY'), // Format the date
+    schedule_date: parsedDate.format('YYYY-MM-DD'), // Format the date
     schedule_week: parsedDate.format('dddd'), // Format the weekday
   }));
 };

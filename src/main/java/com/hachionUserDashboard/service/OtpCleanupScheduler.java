@@ -34,8 +34,8 @@ public class OtpCleanupScheduler {
 		System.out.println(deletedRows + " unverified users deleted.");
 	}
 
-	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
-//	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
+//	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
+	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
 //	@Scheduled(cron = "0 0 0 */7 * ?") // runs after 7 days
 //	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight UTC
 	@Transactional

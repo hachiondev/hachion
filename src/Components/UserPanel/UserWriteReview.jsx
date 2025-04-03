@@ -19,8 +19,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     user_image: "",
     rating: 0,
     type: "",
-    social_id: "",
-    display:""
+    social_id: ""
   });
 
   const [courses, setCourses] = useState([]);
@@ -58,15 +57,14 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     const reviewPayload = {
         name: reviewData.student_name,
         email: reviewData.email || "",
-        type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
+        type: false,
         course_name: reviewData.course_name,
         trainer_name: reviewData.trainer_name || "",
         social_id: reviewData.social_id,
         rating: reviewData.rating ? Number(reviewData.rating) : 5,
         review: reviewData.review || "",
         location: reviewData.location || "",
-        date: new Date().toISOString().split("T")[0],
-        display:"course"
+        date: new Date().toISOString().split("T")[0]
     };
 
     const formData = new FormData();
@@ -92,7 +90,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             }
         );
 
-        console.log("Review added successfully:", response.data);
+        alert("Review added successfully:", response.data);
+        
     } catch (error) {
         console.error("Error adding review:", error.response?.data || error.message);
     }
@@ -128,7 +127,8 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           </div>
         </div>
 
-        <div className="col-md-4">
+        <div className="input-row">
+        <div className="col-md-5">
           <label className="form-label">Image</label>
           <input
             type="file"
@@ -137,10 +137,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             onChange={handleFileChange}
           />
         </div>
-
-        <div className="input-row">
-         
-          <div className="col-md-5">
+        <div className="col-md-5">
             <label className="form-label">Review Type</label>
             <select
               className="form-select"
@@ -153,9 +150,20 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               <option value="Trainer Review">Trainer Review</option>
             </select>
           </div>
-        </div>
+          </div>
 
         <div className="input-row">
+          <div className="col-md-5">
+            <label className='form-label'>Category Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Category"
+              name="category_name"
+              value={reviewData.category_name}
+              onChange={handleChange}
+            />
+          </div>
           <div className="col-md-5">
             <label className="form-label">Course Name</label>
             <select
@@ -186,6 +194,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               <option value="Facebook">Facebook</option>
               <option value="Twitter">Twitter</option>
               <option value="Instagram">Instagram</option>
+              <option value="Google">Google</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -220,7 +229,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           <button className='submit-btn' onClick={handleSubmit}>Submit</button>
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

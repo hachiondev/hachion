@@ -25,6 +25,8 @@ import VideoAccess from './VideoAccess';
 import CourseDetail from './CourseDetail';
 import Resume from './Resume';
 import Review from './Review';
+import StudentReview from './StudentReview';
+
 // Styling the table cells
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -126,6 +128,12 @@ export default function Course() {
         >
           Review
         </div>
+        <div 
+          className={`tab-item ${activeTab === 'studentreview' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('studentreview')}
+        >
+         Student Reviews
+        </div>
       </div>
       
       {activeTab==='courseDetails' && <CourseDetail/>}
@@ -138,6 +146,7 @@ export default function Course() {
       {activeTab==='videoAccess' &&  <VideoAccess/>} */}
       {activeTab==='resume' &&  <Resume/>}
       {activeTab==='review' &&  <Review/>}
+      {activeTab==='studentreview' &&  <StudentReview/>}
      
     </>
   );

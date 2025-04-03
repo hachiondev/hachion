@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.459b06e4.css",
-    "main.js": "/static/js/main.68de5506.js",
+    "main.css": "/static/css/main.ecf71bd6.css",
+    "main.js": "/static/js/main.126b6cd6.js",
     "static/js/851.6a1707bf.chunk.js": "/static/js/851.6a1707bf.chunk.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Group 39810.png": "/static/media/Group 39810.7c7915d576e00c71b8ce.png",
@@ -15,6 +15,7 @@
     "static/media/image27.png": "/static/media/image27.95a10ebf680f539d0fe5.png",
     "static/media/salreg.png": "/static/media/salreg.ab8f32ef3fc9806f9792.png",
     "static/media/aboutussider.png": "/static/media/aboutussider.644a9b400aabfad6d603.png",
+    "static/media/image.png": "/static/media/image.9aac8160dc29f4a04ba7.png",
     "static/media/bann3.png": "/static/media/bann3.fe1917b6f540f95e7006.png",
     "static/media/banne3.png": "/static/media/banne3.998f336f4ae1140762c0.png",
     "static/media/blogbanner.png": "/static/media/blogbanner.9a87e907803d6d4852b7.png",
@@ -39,7 +40,6 @@
     "static/media/handexp.png": "/static/media/handexp.ac5df605710fe09dbc82.png",
     "static/media/remoteTraining.png": "/static/media/remoteTraining.0e6c21f04ca126be1110.png",
     "static/media/course2.png": "/static/media/course2.2a36b2614ae78db96a33.png",
-    "static/media/image.png": "/static/media/image.3ffdcac7158eb36d0d2c.png",
     "static/media/automationtesting.png": "/static/media/automationtesting.0ded65ff323c727d3f32.png",
     "static/media/footer.jpg": "/static/media/footer.3ac3cf12e0c6754abc58.jpg",
     "static/media/workforceNeeds.png": "/static/media/workforceNeeds.4043954dc93c2d5b69f0.png",
@@ -76,13 +76,13 @@
     "static/media/usflag.jpg": "/static/media/usflag.f1c957ad98d5d5be7112.jpg",
     "static/media/profile1.jfif": "/static/media/profile1.e272e7eae5f64391054d.jfif",
     "index.html": "/index.html",
-    "main.459b06e4.css.map": "/static/css/main.459b06e4.css.map",
-    "main.68de5506.js.map": "/static/js/main.68de5506.js.map",
+    "main.ecf71bd6.css.map": "/static/css/main.ecf71bd6.css.map",
+    "main.126b6cd6.js.map": "/static/js/main.126b6cd6.js.map",
     "851.6a1707bf.chunk.js.map": "/static/js/851.6a1707bf.chunk.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.459b06e4.css",
-    "static/js/main.68de5506.js"
+    "static/css/main.ecf71bd6.css",
+    "static/js/main.126b6cd6.js"
   ]
 }

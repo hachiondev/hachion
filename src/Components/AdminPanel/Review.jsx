@@ -81,6 +81,7 @@ export default function Review() {
           category_name:"",
             course_name: "",
             date:currentDate,
+            type:false,
            student_name:"",
            source:"",
            comment:"",
@@ -180,18 +181,20 @@ export default function Review() {
       const fetchReview = async () => {
           try {
               const response = await axios.get('https://api.hachion.co/userreview');
-              setReview(response.data); // Use the curriculum state
+              const filteredReviews = response.data.filter(review => review.type === true);
+              setReview(filteredReviews);
+              setFilteredReview(filteredReviews);
           } catch (error) {
-              console.error("Error fetching review:", error.message);
+              console.error("Error fetching reviews:", error.message);
           }
       };
+  
       fetchReview();
-
-      setFilteredReview(review);
-  }, []); // Empty dependency array ensures it runs only once
+  }, []);
+  
 
     const handleDeleteConfirmation = (review_id) => {
-        if (window.confirm("Are you sure you want to delete this Review details")) {
+        if (window.confirm("Are you sure you want to delete this Resume details")) {
           handleDelete(review_id);
         }
       };
@@ -355,7 +358,7 @@ export default function Review() {
           course_name: reviewData.course_name,
           review: reviewData.comment,
           email: reviewData.email || "",
-          type: reviewData.type || "",
+          type: true,
           trainer_name: reviewData.trainer_name || "",
           rating: reviewData.rating || "",
           location: reviewData.location || "",

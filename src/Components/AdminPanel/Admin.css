@@ -392,10 +392,36 @@ width: 100%;
 .edit{
   font-size: 1.5rem;
   color: #00AEEF;
+  cursor: pointer;
 }
 .delete{
   font-size: 1.5rem;
   color: red;
+  cursor: pointer;
+}
+.approve{
+  font-size: 1.5rem;
+  color: green;
+  cursor: pointer;
+}
+.reject{
+  font-size: 1.5rem;
+  color: red;
+  cursor: pointer;
+}
+.approved{
+  font-size: 16px;
+  background-color: green;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.rejected{
+  font-size: 16px;
+  color: #ffffff;
+  background-color: red;
+  padding: 5px 10px;
+  border-radius: 10px;
 }
 .submit-btn{
   font-size: 20px;

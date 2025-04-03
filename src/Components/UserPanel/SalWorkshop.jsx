@@ -105,6 +105,7 @@ const SalWorkshop = () => {
         timeZone: formData.timeZone || "GMT",
         courseName: [formData.courseName || "Salesforce"], // ✅ Fixed property name
         date: currentDate,
+        country: selectedCountry.name
       };
     
       try {

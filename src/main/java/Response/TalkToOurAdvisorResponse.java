@@ -17,8 +17,10 @@ public class TalkToOurAdvisorResponse {
 	private String trainingCourse;
 
 	private String comments;
-	
+
 	private String message;
+
+	private String country;
 
 	public Long getId() {
 		return id;
@@ -83,7 +85,6 @@ public class TalkToOurAdvisorResponse {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-	
 
 	public String getMessage() {
 		return message;
@@ -93,8 +94,20 @@ public class TalkToOurAdvisorResponse {
 		this.message = message;
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public TalkToOurAdvisorResponse() {
+		super();
+	}
+
 	public TalkToOurAdvisorResponse(Long id, String fullName, String emailId, int noOfPeople, String companyName,
-			String mobileNumber, String trainingCourse, String comments) {
+			String mobileNumber, String trainingCourse, String comments, String message, String country) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -104,10 +117,9 @@ public class TalkToOurAdvisorResponse {
 		this.mobileNumber = mobileNumber;
 		this.trainingCourse = trainingCourse;
 		this.comments = comments;
+		this.message = message;
+		this.country = country;
 	}
 
-	public TalkToOurAdvisorResponse() {
-		super();
-	}
 
 }

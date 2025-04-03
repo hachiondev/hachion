@@ -1,11 +1,13 @@
 package com.hachionUserDashboard.service;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -29,15 +31,15 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 	@Autowired
 	private JavaMailSender mailSender;
 
-	private final String ADMIN_EMAIL = "hachion.trainings@gmail.com";
+	private final String ADMIN_EMAIL = "trainings@hachion.co";
 
 	@Override
 	public WorkshopResponse createWorkshop(WorkshopRequest workshopRequest) {
 
-//		try {
-//
-//			sendToAdmin(workshopRequest);
-//			sendToUser(workshopRequest);
+		try {
+
+			sendToAdmin(workshopRequest);
+			sendToUser(workshopRequest);
 
 		Workshop workshop = new Workshop();
 		workshop.setFullName(workshopRequest.getFullName());
@@ -69,12 +71,12 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		workshopResponse.setEmailId(savedWorkshop.getEmailId());
 		workshopResponse.setCountry(savedWorkshop.getCountry());
 		return workshopResponse;
-//		} catch (MessagingException e) {
-//
-//			WorkshopResponse errorResponse = new WorkshopResponse();
-//			errorResponse.setMessage("Email sending failed. Registration not saved: " + e.getMessage());
-//			return errorResponse;
-//		}
+		} catch (MessagingException e) {
+
+			WorkshopResponse errorResponse = new WorkshopResponse();
+			errorResponse.setMessage("Email sending failed. Registration not saved: " + e.getMessage());
+			return errorResponse;
+		}
 	}
 
 	private WorkshopResponse createResponseForWorkshop(Workshop savedWorkshop) {
@@ -180,58 +182,100 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 	}
 
 	public void sendToUser(WorkshopRequest formRequest) throws MessagingException {
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+	    MimeMessage message = mailSender.createMimeMessage();
+	    MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setTo(formRequest.getEmailId());
-		helper.setCc("trainings@hachion.co");
-		helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
+	    helper.setTo(formRequest.getEmailId());
+//	    helper.setCc("trainings@hachion.co");
+	    helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
 
-		String emailContent = "<html><head><style>"
-				+ "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; }"
-				+ ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }"
-				+ ".strip { padding: 20px; border-bottom: 2px solid #f2f2f2; }"
-				+ ".header-strip, .footer-strip { background-color: #4CAF50; color: #ffffff; text-align: center; }" // Green
-																													// color
-																													// for
-																													// both
-																													// header
-																													// and
-																													// footer
-				+ ".header-strip h1 { font-size: 50px; font-weight: bold; margin: 0; text-transform: uppercase; }" // Hachion
-																													// in
-																													// capital
-																													// letters
-				+ ".header-strip p { font-size: 18px; font-weight: bold; margin: 10px 0; }" // Added "Welcome
-																							// Registration Successful"
-				+ ".content-strip { background-color: #f9f9f9; color: #333333; text-align: left; }"
-				+ ".content-strip p { margin: 10px 0; line-height: 1.6; }"
-				+ ".highlight { color: #4CAF50; font-weight: bold; }"
-				+ ".footer-strip p { margin: 5px 0; font-weight: bold; color: white; }" // White color for text in
-																						// footer
-				+ "</style></head><body>" + "<div class='email-container'>"
+	    // HTML Email Content
+	    String emailContent = "<html><head><style>"
+	            + "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; text-align: center; }"
+	            + ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; "
+	            + "box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; }"
+	            + ".header img { width: 100%; height: auto; border-radius: 10px 10px 0 0; }"
+	            + ".content { padding: 20px; font-size: 16px; color: #333333; text-align: left; }"
+	            + ".content p { margin: 10px 0; line-height: 1.6; }"
+	            + ".highlight { color: #4CAF50; font-weight: bold; }"
+	            + ".list { padding-left: 20px; }"
+	            + ".footer { background-color: #011538; padding: 20px; color: white; font-size: 14px; border-radius: 0 0 10px 10px; }"
+//	            + ".footer { background-color: #0077b6; padding: 20px; color: white; font-size: 14px; border-radius: 0 0 10px 10px; }"
+//	            + ".footer p { margin: 10px 0; font-size: 16px; text-align: center; }"
+				+ ".footer p { margin: 10px 0; font-size: 16px; text-align: center; color: white; }"
 
-				// Header Strip (HACHION + Welcome Registration Successful)
-				+ "<div class='strip header-strip'>" + "    <h1>HACHION</h1>" // Hachion in capital letters
-				+ "    <p>Welcome! Registration Successful</p>" // Added "Welcome Registration Successful"
-				+ "</div>"
+	            + ".social-icons { text-align: center; margin-top: 10px; }"
+	            + ".social-icons a { margin: 0 10px; text-decoration: none; display: inline-block; }"
+	            + ".social-icons img { width: 30px; height: 30px; }"
+	            + "</style></head><body>"
 
-				// Content Strip (Welcome message)
-				+ "<div class='strip content-strip'>" + "    <p>Dear <span class='highlight'>"
-				+ formRequest.getFullName() + "</span>,</p>"
-				+ "    <p>Thank you for registering for our <span class='highlight'>" + formRequest.getCourseName()
-				+ "</span> Workshop! We’re excited to have you join us.</p>"
-				+ "    <p>Your registration has been successfully completed. Keep an eye on your inbox for further details and reminders as we approach the event date.</p>"
-				+ "    <p>If you have any questions, feel free to contact us at <a class='highlight' href='mailto:trainings@hachion.co'>trainings@hachion.co</a>.</p>"
-				+ "    <p>We look forward to seeing you at the workshop!</p>" + "</div>"
+	            + "<div class='email-container'>"
 
-				// Footer Strip (Best Regards + Team Hachion)
-				+ "<div class='strip footer-strip'>" + "    <p>Best Regards,</p>" + "    <p>Team Hachion</p>" + "</div>"
+	            // Header Image
+	            + "<div class='header'><img src='cid:headerImage' alt='Workshop Header'/></div>"
 
-				+ "</div>" + "</body></html>";
+	            // Middle Content
+	            + "<div class='content'>"
+	            + "<p>The future of cloud technology is here, and <span class='highlight'>Salesforce expertise</span> is your ticket to a rewarding career!</p>"
+	            + "<p>At Hachion, we’ve already helped hundreds of professionals like you transition into high-demand Salesforce roles through our hands-on Workshop Program. Here’s what awaits you:</p>"
+	            + "<ul style='list-style-type: none; padding: 0; margin: 0;'>"
+	            + "<li>✅ Master Salesforce fundamentals (Admin, Development, Lightning)</li>"
+	            + "<li>✅ Build real-world projects for your portfolio</li>"
+	            + "<li>✅ Get certified with personal coaching</li>"
+	            + "<li>✅ Connect with top employers in our network</li>"
+	            + "</ul>"
+	            + "<p><b>Limited seats available!</b></p>"
+	            + "<p>📅 <b>Next batch starts:</b> (Every week)</p>"
+	            + "<p>⏰ <b>Duration:</b> 25 weeks | 10 AM EST</p>"
+	            + "<p>Ready to transform your career?</p>"
+	            + "<p>📩 <b>Start attending a couple of free sessions</b></p>"
+	            + "<p>✉️ <b>Let’s connect with the training coordinator</b> to get session access:</p>"
+	            + "<p>📞 1-732-485-2499 | 📧 <a href='mailto:trainings@hachion.co'>trainings@hachion.co</a></p>"
+	            + "<p>Best Regards,</p>"
+	            + "<p><b>Hachion Support Team</b></p>"
+	            + "</div>"
 
-		helper.setText(emailContent, true);
-		mailSender.send(message);
+	            // Footer with Social Media Links
+	            + "<div class='footer'>"
+	            + "<p>Follow us on social media for exclusive summer career tips and inspiration that's as refreshing as a beach day!</p>"
+	            + "<div class='social-icons'>"
+	            + "    <a href='https://www.instagram.com/hachion_trainings' target='_blank'><img src='cid:instagramIcon' alt='Instagram'/></a>"
+	            + "    <a href='https://www.facebook.com/hachion.co' target='_blank'><img src='cid:facebookIcon' alt='Facebook'/></a>"
+	            + "    <a href='https://www.youtube.com/@hachion' target='_blank'><img src='cid:youtubeIcon' alt='YouTube'/></a>"
+	            + "    <a href='https://x.com/hachion_co' target='_blank'><img src='cid:twitterIcon' alt='Twitter'/></a>"
+	            + "    <a href='https://www.linkedin.com/company/hachion' target='_blank'><img src='cid:linkedinIcon' alt='LinkedIn'/></a>"
+	            + "</div>"
+	            + "</div>"
+
+	            + "</div></body></html>";
+
+	    helper.setText(emailContent, true);
+
+	    // Attach header image
+	    FileSystemResource headerRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/SF Workshop.jpg"));
+	    helper.addInline("headerImage", headerRes);
+
+	    // Attach social media icons
+	    FileSystemResource instagramRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/instagram.png"));
+	    helper.addInline("instagramIcon", instagramRes);
+
+	    FileSystemResource facebookRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/facebook.png"));
+	    helper.addInline("facebookIcon", facebookRes);
+
+	    FileSystemResource youtubeRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/youtube.png"));
+	    helper.addInline("youtubeIcon", youtubeRes);
+	    
+	 // Attach Twitter (X) icon
+	    FileSystemResource twitterRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/twitter.png"));
+	    helper.addInline("twitterIcon", twitterRes);
+
+	    // Attach LinkedIn icon
+	    FileSystemResource linkedinRes = new FileSystemResource(new File("C:/Users/laksh/git/hachion/uploads/images/linkedin.png"));
+	    helper.addInline("linkedinIcon", linkedinRes);
+
+	    mailSender.send(message);
+	    System.out.println("Email sent successfully!");
 	}
+
 
 }

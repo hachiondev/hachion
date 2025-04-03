@@ -36,6 +36,8 @@ public class TalkToOurAdvisor {
 
 	@Column(name = "comments")
 	private String comments;
+	
+	private String country;
 
 	public Long getId() {
 		return id;
@@ -101,8 +103,21 @@ public class TalkToOurAdvisor {
 		this.comments = comments;
 	}
 
+	
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public TalkToOurAdvisor() {
+		super();
+	}
+
 	public TalkToOurAdvisor(Long id, String fullName, String emailId, int noOfPeople, String companyName,
-			String mobileNumber, String trainingCourse, String comments) {
+			String mobileNumber, String trainingCourse, String comments, String country) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -112,10 +127,7 @@ public class TalkToOurAdvisor {
 		this.mobileNumber = mobileNumber;
 		this.trainingCourse = trainingCourse;
 		this.comments = comments;
-	}
-
-	public TalkToOurAdvisor() {
-		super();
+		this.country = country;
 	}
 
 }

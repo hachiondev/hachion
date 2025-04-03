@@ -17,6 +17,7 @@ public class TalkToOurAdvisorRequest {
 	private String trainingCourse;
 
 	private String comments;
+	private String country;
 
 	public Long getId() {
 		return id;
@@ -82,8 +83,20 @@ public class TalkToOurAdvisorRequest {
 		this.comments = comments;
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public TalkToOurAdvisorRequest() {
+		super();
+	}
+
 	public TalkToOurAdvisorRequest(Long id, String fullName, String emailId, int noOfPeople, String companyName,
-			String mobileNumber, String trainingCourse, String comments) {
+			String mobileNumber, String trainingCourse, String comments, String country) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -93,10 +106,7 @@ public class TalkToOurAdvisorRequest {
 		this.mobileNumber = mobileNumber;
 		this.trainingCourse = trainingCourse;
 		this.comments = comments;
-	}
-
-	public TalkToOurAdvisorRequest() {
-		super();
+		this.country = country;
 	}
 
 }

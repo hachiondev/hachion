@@ -36,22 +36,23 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 //			sendToAdmin(ourAdvisor);
 //			sendToUser(ourAdvisor);
 
-			TalkToOurAdvisor entity = new TalkToOurAdvisor(null, ourAdvisor.getFullName(), ourAdvisor.getEmailId(),
-					ourAdvisor.getNoOfPeople(), ourAdvisor.getCompanyName(), ourAdvisor.getMobileNumber(),
-					ourAdvisor.getTrainingCourse(), ourAdvisor.getComments());
-			TalkToOurAdvisor savedEntity = repository.save(entity);
+		TalkToOurAdvisor entity = new TalkToOurAdvisor(null, ourAdvisor.getFullName(), ourAdvisor.getEmailId(),
+				ourAdvisor.getNoOfPeople(), ourAdvisor.getCompanyName(), ourAdvisor.getMobileNumber(),
+				ourAdvisor.getTrainingCourse(), ourAdvisor.getComments(), ourAdvisor.getCountry());
+		TalkToOurAdvisor savedEntity = repository.save(entity);
 
-			TalkToOurAdvisorResponse response = new TalkToOurAdvisorResponse();
-			response.setMessage("Your details have been successfully sent to the team, and you will get a call shortly.");
-			response.setId(savedEntity.getId());
-			response.setFullName(savedEntity.getFullName());
-			response.setEmailId(savedEntity.getEmailId());
-			response.setNoOfPeople(savedEntity.getNoOfPeople());
-			response.setCompanyName(savedEntity.getCompanyName());
-			response.setMobileNumber(savedEntity.getMobileNumber());
-			response.setTrainingCourse(savedEntity.getTrainingCourse());
-			response.setComments(savedEntity.getComments());
-			return response;
+		TalkToOurAdvisorResponse response = new TalkToOurAdvisorResponse();
+		response.setMessage("Your details have been successfully sent to the team, and you will get a call shortly.");
+		response.setId(savedEntity.getId());
+		response.setFullName(savedEntity.getFullName());
+		response.setEmailId(savedEntity.getEmailId());
+		response.setNoOfPeople(savedEntity.getNoOfPeople());
+		response.setCompanyName(savedEntity.getCompanyName());
+		response.setMobileNumber(savedEntity.getMobileNumber());
+		response.setTrainingCourse(savedEntity.getTrainingCourse());
+		response.setComments(savedEntity.getComments());
+		response.setCountry(savedEntity.getCountry());
+		return response;
 //		} catch (MessagingException e) {
 //		
 //			TalkToOurAdvisorResponse errorResponse = new TalkToOurAdvisorResponse();
@@ -75,23 +76,20 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 	}
 
 	public void sendToUser(TalkToOurAdvisorRequest formRequest) throws MessagingException {
-	    MimeMessage message = mailSender.createMimeMessage();
-	    MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-	    helper.setTo(formRequest.getEmailId());
-	    helper.setSubject("Successfully submitted Talk to our advisor form");
+		helper.setTo(formRequest.getEmailId());
+		helper.setSubject("Successfully submitted Talk to our advisor form");
 
-	    String emailContent = "Hi, " + formRequest.getFullName() + "\n\n" +
-	            "Welcome to Hachion\n" +
-	            "We have received your query.\n" +
-	            "Our Advisor will call you shortly or respond using the details provided by you.\n\n" +
-	            "If you have any questions, please contact our support team at trainings.hachion@gmail.com or call us at 17324852499.\n" +
-	            "We look forward to seeing you there!\n\n" +
-	            "Best regards,\n" +
-	            "Hachion Business Team\n";
+		String emailContent = "Hi, " + formRequest.getFullName() + "\n\n" + "Welcome to Hachion\n"
+				+ "We have received your query.\n"
+				+ "Our Advisor will call you shortly or respond using the details provided by you.\n\n"
+				+ "If you have any questions, please contact our support team at trainings.hachion@gmail.com or call us at 17324852499.\n"
+				+ "We look forward to seeing you there!\n\n" + "Best regards,\n" + "Hachion Business Team\n";
 
-	    helper.setText(emailContent);
-	    mailSender.send(message);
+		helper.setText(emailContent);
+		mailSender.send(message);
 	}
 
 	@Override
@@ -100,9 +98,18 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 	}
 
 	private TalkToOurAdvisorResponse mapToResponse(TalkToOurAdvisor entity) {
-		return new TalkToOurAdvisorResponse(entity.getId(), entity.getFullName(), entity.getEmailId(),
-				entity.getNoOfPeople(), entity.getCompanyName(), entity.getMobileNumber(), entity.getTrainingCourse(),
-				entity.getComments());
+
+		TalkToOurAdvisorResponse advisorResponse = new TalkToOurAdvisorResponse();
+		advisorResponse.setId(entity.getId());
+		advisorResponse.setFullName(entity.getFullName());
+		advisorResponse.setEmailId(entity.getEmailId());
+		advisorResponse.setNoOfPeople(entity.getNoOfPeople());
+		advisorResponse.setCompanyName(entity.getCompanyName());
+		advisorResponse.setMobileNumber(entity.getMobileNumber());
+		advisorResponse.setTrainingCourse(entity.getTrainingCourse());
+		advisorResponse.setComments(entity.getComments());
+		advisorResponse.setCountry(entity.getCountry());
+		return advisorResponse;
 	}
 
 	@Override

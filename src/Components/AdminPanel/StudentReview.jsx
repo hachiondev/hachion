@@ -90,7 +90,7 @@ export default function StudentReview() {
         if (!reviewToUpdate) return;
 
         // Create a new object with type changed to true
-        const updatedReview = { ...reviewToUpdate, type: true };
+        const updatedReview = { ...reviewToUpdate, type: "1" };
 
         // Create FormData for API request (since the API expects multipart/form-data)
         const formData = new FormData();

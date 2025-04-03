@@ -49,10 +49,10 @@ const Learners = ({ page }) => {
         if (Array.isArray(data)) {
           // Filter reviews that match the display condition and have type = true
           const filteredReviews = data.filter((review) => 
-            review.type === true && // Only include reviews where type is true
+            review.type === "1" && // Only include reviews where type is true
             review.display && typeof review.display === "string" 
               ? review.display.split(",").map(item => item.trim()).includes(page)
-              : false
+              : "0"
           );
   
           setReviews(filteredReviews);

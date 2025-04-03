@@ -81,7 +81,7 @@ export default function Review() {
           category_name:"",
             course_name: "",
             date:currentDate,
-            type:false,
+            type:"0",
            student_name:"",
            source:"",
            comment:"",
@@ -178,20 +178,20 @@ export default function Review() {
       fetchCourseCategory();
     }, []);
     useEffect(() => {
-      const fetchReview = async () => {
-          try {
-              const response = await axios.get('https://api.hachion.co/userreview');
-              const filteredReviews = response.data.filter(review => review.type === true);
-              setReview(filteredReviews);
-              setFilteredReview(filteredReviews);
-          } catch (error) {
-              console.error("Error fetching reviews:", error.message);
-          }
-      };
-  
-      fetchReview();
-  }, []);
-  
+    const fetchReview = async () => {
+        try {
+            const response = await axios.get('https://api.hachion.co/userreview');
+            const filteredReviews = response.data.filter(review => review.type === true);
+            setReview(filteredReviews);
+            setFilteredReview(filteredReviews);
+        } catch (error) {
+            console.error("Error fetching reviews:", error.message);
+        }
+    };
+
+    fetchReview();
+}, []);
+
 
     const handleDeleteConfirmation = (review_id) => {
         if (window.confirm("Are you sure you want to delete this Resume details")) {
@@ -358,7 +358,7 @@ export default function Review() {
           course_name: reviewData.course_name,
           review: reviewData.comment,
           email: reviewData.email || "",
-          type: true,
+          type: "1",
           trainer_name: reviewData.trainer_name || "",
           rating: reviewData.rating || "",
           location: reviewData.location || "",

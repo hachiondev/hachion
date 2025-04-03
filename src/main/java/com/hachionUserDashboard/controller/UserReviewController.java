@@ -126,7 +126,7 @@ public class UserReviewController {
 				userReview.setSocial_id(updatedUserReview.getSocial_id());
 				userReview.setTrainer_name(updatedUserReview.getTrainer_name());
 				userReview.setReview(updatedUserReview.getReview());
-				userReview.setType(updatedUserReview.getType());
+				userReview.setType(updatedUserReview.isType());
 				userReview.setDisplay(updatedUserReview.getDisplay());
 
 				// Check if a new image is uploaded

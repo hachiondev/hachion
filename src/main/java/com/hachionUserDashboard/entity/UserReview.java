@@ -41,7 +41,7 @@ public class UserReview {
 		}
 
 		@Column
-	    private String type;
+	    private boolean type;
 	    
 	    @Column
 	    private String course_name;
@@ -103,11 +103,13 @@ public class UserReview {
 			this.location = location;
 		}
 
-		public String getType() {
+	
+
+		public boolean isType() {
 			return type;
 		}
 
-		public void setType(String type) {
+		public void setType(boolean type) {
 			this.type = type;
 		}
 
@@ -167,7 +169,7 @@ public class UserReview {
 			this.date = date;
 		}
 
-		public UserReview(int review_id, String name, String email, String type, String course_name,String location,
+		public UserReview(int review_id, String name, String email, boolean type, String course_name,String location,
 				String trainer_name, String social_id, int rating, String review, LocalDate date, String display) {
 			super();
 			this.review_id = review_id;

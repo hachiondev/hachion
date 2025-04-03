@@ -173,27 +173,29 @@ const Footer = () => {
     <div className='footer'>
       <div className='footer-top'>
     <div className='footer-head'>
-    <p className='footer-heading'>Trending Courses :</p>
+    <p className='footer-heading'>Trending Courses</p>
     <div className="footer-row">
-     {courses.length > 0 ? (
-        courses.map((course) => (
-          <p
-            key={course.trendingcourse_id}
-            className='footer-content'
-            onClick={() => handleNavigation(course.course_name)}
-            style={{ cursor: 'pointer' }}
-          >
-            {course.course_name}
-          </p>
-        ))
-      ) : (
-        <p>No active courses available.</p>
-      )}
-</div>
-</div>
+    {courses.length > 0 ? (
+          courses.map((course, index) => (
+            <React.Fragment key={course.trendingcourse_id}>
+              <p
+                className='footer-content'
+                onClick={() => handleNavigation(course.course_name)}
+                style={{ cursor: 'pointer' }}
+              >
+                {course.course_name}
+              </p>
+              {index !== courses.length - 1 && <span>|</span>}
+            </React.Fragment>
+          ))
+        ) : (
+          <p>No active courses available.</p>
+        )}
+      </div>
+    </div>
     
     <div className='footer-head'>
-    <p className='footer-heading'>Hachion :</p>
+    <p className='footer-heading'>Hachion</p>
     <div className="footer-row">
   <p className="footer-content" onClick={handleAbout}>About us</p>
   <span>|</span>

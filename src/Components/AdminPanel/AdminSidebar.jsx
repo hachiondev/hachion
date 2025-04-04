@@ -16,6 +16,7 @@ import { LuFocus } from 'react-icons/lu';
 import { HiOutlineDotsCircleHorizontal } from 'react-icons/hi';
 import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
 import { IoNewspaperOutline } from "react-icons/io5";
+import { MdCorporateFare } from "react-icons/md";
 import './Admin.css';
 
 const AdminSidebar = ({ onSelectCategory }) => {
@@ -26,6 +27,7 @@ const AdminSidebar = ({ onSelectCategory }) => {
     { title: 'Dashboard', icon: <FaTachometerAlt /> },
     { title: 'Course Category', icon: <TbCategoryPlus /> },
     { title: 'Course', icon: <FaBook /> },
+    { title: 'Corporate Training', icon: <MdCorporateFare /> },
     { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
     { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
     { title: 'Discount Courses', icon: <TbDiscount /> },

@@ -406,9 +406,9 @@ const displayedCategories = filteredCategories.slice(
             <div className="mb-3">
               Date <br />
               <DatePicker
-  value={editedRow.date ? dayjs(editedRow.date) : null} // Ensure date is a dayjs object
+  value={editedRow.date ? dayjs(editedRow.date) : null} 
   onChange={(newDate) =>
-    setEditedRow({ ...editedRow, date: newDate }) // Update only editedRow, not courseData
+    setEditedRow({ ...editedRow, date: newDate }) 
   }
   sx={{
     '& .MuiInputBase-root': {

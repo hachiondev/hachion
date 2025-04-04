@@ -17,6 +17,7 @@ import AddCourseCategory from './AddCourseCategory';
 import Other from './Other';
 import ManageCategories from './ManageCategories';
 import CourseCategory from './CourseCategory';
+import CorporateCourses from './CorporateCourses';
 
 
 const AdminDashboardView = () => {
@@ -46,6 +47,12 @@ const AdminDashboardView = () => {
         return <AdminDashboard />;
       case 'Course Category':
         return <CourseCategory  />;
+
+        case 'Course':
+          return <Course />;
+
+          case 'Corporate Training':
+            return <CorporateCourses />;
    
         case 'Trending Courses':
         
@@ -66,8 +73,6 @@ const AdminDashboardView = () => {
         return <Blogs />;
       case 'Support':
         return <Support />;
-      case 'Course':
-        return <Course />;
       case 'Other':
         return <Other />;
       default:

@@ -77,17 +77,16 @@ const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",schedule_date:null,schedule_time:null,time_zone:""});
-  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",schedule_date:"",schedule_time:"",time_zone:""});
+  const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",date:null,time:null,time_zone:""});
+  const [selectedRow, setSelectedRow] = React.useState({category_name:"",course_name:"",date:"",time:"",time_zone:""});
   const currentDate = new Date().toISOString().split('T')[0];
-  const [courseData, setCourseData] = useState({
-  course_schedule_id:"",
-    schedule_category_name:"",
-      schedule_course_name: "",
-    schedule_date:null,
-    schedule_time:null,
-    time_zone:"",
-      created_date:currentDate,
+  const [formData, setFormData] = useState({
+    category_name:"",
+    course_name:"",
+    date:"",
+      time:"",
+      time_zone: "",
+      created_date:"",
     });
     const [currentPage, setCurrentPage] = useState(1);
      const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -120,10 +119,9 @@ const handleDateChange = (newValue) => {
     return;
   }
 
-  setCourseData((prevData) => ({
+  setFormData((prevData) => ({
     ...prevData,
-    schedule_date: parsedDate.format('MM-DD-YYYY'), // Format the date
-    schedule_week: parsedDate.format('dddd'), // Format the weekday
+    date: parsedDate.format('YYYY-MM-DD'), // Format the date
   }));
 };
 useEffect(() => {
@@ -148,76 +146,85 @@ useEffect(() => {
   };
   fetchCourseCategory();
 }, []);
-useEffect(() => {
-  if (courseData.schedule_category_name) {
-    const filtered = courseCategory.filter(
-      (course) => course.courseCategory === courseData.schedule_category_name
-    );
-    setFilterCourse(filtered);
-  } else {
-    setFilterCourse([]); // Reset when no category is selected
-  }
-}, [courseData.schedule_category_name, courseCategory]);
+// useEffect(() => {
+//   if (formData.category_name) {
+//     const filtered = category_name.filter(
+//       (course) => course.category_name === formData.category_name
+//     );
+//     setFilterCourse(filtered);
+//   } else {
+//     setFilterCourse([]); // Reset when no category is selected
+//   }
+// }, [formData.category_name]);
 
 // Handle time change
 const handleTimeChange = (newValue) => {
-  setCourseData((prevData) => ({
+  setFormData((prevData) => ({
     ...prevData,
-    schedule_time: newValue ? dayjs(newValue).format('hh:mm A') : null,
+    time: newValue ? dayjs(newValue).format('hh:mm A') : null,
   }));
 };
 
 // const handleChange = (e) => {
 //   const { name, value } = e.target;
-//   setCourseData((prevData) => ({
+//   setformData((prevData) => ({
 //     ...prevData,
 //     [name]: value,
 //   }));
 // };
 const handleChange = (e) => {
   const { name, value } = e.target;
-  setCourseData((prev) => ({
+  setFormData((prev) => ({
     ...prev,
-    [name]: value,
-    ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
+    [name]: value
   }));
 };
   const handleReset = () => {
-    setCourseData({
-        schedule_category_name:"",
-          schedule_course_name: "",
-        schedule_date:"",
-        schedule_time:"",
-        time_zone:"",
-          created_date:"",
+    setFormData({
+      category_name: "",
+      course_name:"",
+      time:"",
+      time_zone: "",
+      date:"",
+      created_date: ""
     });
   };
   const handleSubmit = async (e) => {
-    const formattedCourseData = {
-      course_schedule_id: courseData.course_schedule_id,
-      schedule_category_name: courseData.schedule_category_name,
-      schedule_course_name: courseData.schedule_course_name,
-      schedule_date: courseData.schedule_date,
-      schedule_time: courseData.schedule_time,
-      time_zone:courseData.time_zone,
-      created_date: courseData.created_date,
+    e.preventDefault();
+    const currentDate = new Date().toISOString().split("T")[0];
+  
+    const updatedFormData = {
+      category_name: formData.category_name,
+      course_name: formData.course_name || "Salesforce",
+      time: formData.time,
+      date: formData.date,
+      time_zone: formData.time_zone || "GMT",
+      created_date: currentDate,
     };
-    
+  
+    console.log("Submitting Data:", updatedFormData); // Debugging line
+  
     try {
-      const response = await axios.post("https://api.hachion.co/schedulecourse/add", formattedCourseData);
-      console.log("Course added successfully:", response.data);
+      const response = await axios.post(
+        "https://api.hachion.co/workshopschedule/add",
+        updatedFormData
+      );
+  
+      alert("Form submitted successfully!");
+      console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error adding course:", error.response?.data || error.message);
+      console.error("Error submitting form:", error.response ? error.response.data : error.message);
+      alert("Something went wrong. Please try again.");
     }
-  }    
-
+  };
+  
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
  
   const handleDateFilter = () => {
     const filtered = courses.filter((course) => {
-      const courseDate = new Date(course.schedule_date); // Ensure schedule_date is parseable
+      const courseDate = new Date(course.date); // Ensure schedule_date is parseable
       return (
         (!startDate || courseDate >= new Date(startDate)) &&
         (!endDate || courseDate <= new Date(endDate))
@@ -230,7 +237,7 @@ const handleChange = (e) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/schedulecourse');
+      const response = await axios.get('https://api.hachion.co/workshopschedule');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -242,8 +249,8 @@ useEffect(() => {
 }, []);
 useEffect(() => {
   const filtered = courses.filter((course) =>
-    course.schedule_course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.schedule_category_name.toLowerCase().includes(searchTerm.toLowerCase())
+    course.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.category_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   setFilteredCourses(filtered)
 
@@ -252,20 +259,28 @@ const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredCourses.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
 
-const handleDeleteConfirmation = (course_schedule_id) => {
-  if (window.confirm("Are you sure you want to delete this course?",courseData.trainer_name)) {
-    handleDelete(course_schedule_id);
+const handleDeleteConfirmation = (id) => {
+
+  if (window.confirm("Are you sure you want to delete this course?")) {
+    console.log("Deleting ID:", id); // Debugging line
+    handleDelete(id);
   }
 };
 
-const handleDelete = async (course_schedule_id) => {
- 
-   try { 
-    const response = await axios.delete(`https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`); 
-    console.log("Courses deleted successfully:", response.data); 
-  } catch (error) { 
-    console.error("Error deleting Trainer:", error); 
-  } }; 
+const handleDelete = async (id) => {
+  try {
+    if (!id) {
+      console.error("Error: ID is undefined or null");
+      return;
+    }
+
+    const response = await axios.delete(`https://api.hachion.co/workshopschedule/delete/${id}`);
+    console.log("Courses deleted successfully:", response.data);
+  } catch (error) {
+    console.error("Error deleting workshop:", error.response ? error.response.data : error.message);
+  }
+};
+
 
 
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
@@ -275,7 +290,7 @@ console.log(row);
   setSelectedRow(row); 
   setEditedRow(row)// Set the selected row data
   setOpen(true); // Open the modal
-  console.log("tid",row.course_schedule_id)
+ 
 };
 
 const handleClose = () => {
@@ -289,16 +304,17 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
       editedRow
     );
 
     // Update only the edited row in the trainers state
     setCourses((prevCourses) =>
       prevCourses.map((course) =>
-        course.course_schedule_id === selectedRow.course_schedule_id ? response.data : course
+        course.id === selectedRow.id ? response.data : course
       )
     );
+    console.log(courses);
     setMessage(true); // Show the success message
 
     // Hide the message after 5 seconds
@@ -348,7 +364,7 @@ const handleInputChange = (e) => {
       <div className='course-row'>
       <div class="col-md-3">
           <label for="inputState" class="form-label">Category Name</label>
-          <select id="inputState" class="form-select" name='schedule_category_name' value={courseData.schedule_category_name} onChange={handleChange}>
+          <select id="inputState" class="form-select" name='category_name' value={formData.category_name} onChange={handleChange}>
     <option value="" disabled>
           Select Category
         </option>
@@ -364,10 +380,10 @@ const handleInputChange = (e) => {
         <select
           id="course"
           className="form-select"
-          name="schedule_course_name"
-          value={courseData.schedule_course_name}
+          name="course_name"
+          value={formData.course_name}
           onChange={handleChange}
-          disabled={!courseData.schedule_category_name}
+          disabled={!formData.category_name}
         >
           <option value="" disabled>Select Course</option>
           {filterCourse.map((curr) => (
@@ -382,7 +398,7 @@ const handleInputChange = (e) => {
       <div className='col'>
         <label className="form-label d-block">Date</label>
         <DatePicker
-                        value={courseData.schedule_date ? dayjs(courseData.schedule_date) : null}
+                        value={formData.date ? dayjs(formData.date) : null}
                         onChange={(newValue) => handleDateChange(newValue)}
                         renderInput={(params) => <TextField {...params} />}
                         sx={{
@@ -398,7 +414,7 @@ const handleInputChange = (e) => {
                         <TimePicker
                           label="Select Time"
                           ampm={true}
-                          value={courseData.schedule_time ? dayjs(courseData.schedule_time, 'hh:mm A') : null}
+                          value={formData.time ? dayjs(formData.time, 'hh:mm A') : null}
                           onChange={handleTimeChange}
                           renderInput={(params) => <TextField {...params} />}
                           sx={{
@@ -416,7 +432,7 @@ const handleInputChange = (e) => {
           className="form-select"
           placeholder="Enter Time Zone"
           name="time_zone"
-          value={courseData.time_zone || ""}
+          value={formData.time_zone || "EST"}
           onChange={handleChange}
         />
       </div>
@@ -514,18 +530,18 @@ const handleInputChange = (e) => {
         <TableBody>
         {displayedCategories.length > 0 ? (
         displayedCategories.map((course, index) => (
-            <StyledTableRow key={course.course_schedule_id}>
+            <StyledTableRow key={course.id}>
               <StyledTableCell align="center"><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-              <StyledTableCell align="left">{course.schedule_category_name}</StyledTableCell>
-              <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_time} {course.time_zone}</StyledTableCell>
-              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+              <StyledTableCell align="left">{course.category_name}</StyledTableCell>
+              <StyledTableCell align="left">{course.course_name}</StyledTableCell>
+              <StyledTableCell align="center">{course.date}</StyledTableCell>
+              <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
+              <StyledTableCell align="center">{course.created_date}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}
-                  <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(course.course_schedule_id)} />
+                  <RiDeleteBin6Line className="delete"  onClick={() => handleDeleteConfirmation(course.id)} />
                   </div>
                   </StyledTableCell>
       </StyledTableRow>
@@ -566,8 +582,8 @@ const handleInputChange = (e) => {
           <select
             id="inputState"
             className="form-select"
-            name="schedule_category_name"
-            value={editedRow.schedule_category_name || ""}
+            name="category_name"
+            value={editedRow.category_name || ""}
             onChange={handleInputChange}
           >
             <option value="" disabled>
@@ -586,8 +602,8 @@ const handleInputChange = (e) => {
           <select
             id="inputState"
             className="form-select"
-            name="schedule_course_name"
-            value={editedRow.schedule_course_name || ""}
+            name="course_name"
+            value={editedRow.course_name || ""}
             onChange={handleInputChange}
           >
             <option value="" disabled>
@@ -609,7 +625,7 @@ const handleInputChange = (e) => {
                  sx={{
                    '& .MuiIconButton-root':{color: '#00aeef'}
                 }}
-         value={editedRow.schedule_date ? dayjs(editedRow.schedule_date) : null}
+         value={editedRow.date ? dayjs(editedRow.date) : null}
          onChange={handleDateChange}
          renderInput={(params) => <TextField {...params} />}
        />
@@ -622,7 +638,7 @@ const handleInputChange = (e) => {
                    '& .MuiIconButton-root':{color: '#00aeef'}
                 }}
           // label="Select Time"
-          value={editedRow.schedule_time ? dayjs(editedRow.schedule_time, 'hh:mm A') : null}
+          value={editedRow.time ? dayjs(editedRow.time, 'hh:mm A') : null}
           ampm={true}
           onChange={handleTimeChange}
           renderInput={(params) => <TextField {...params} />}

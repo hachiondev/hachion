@@ -26,9 +26,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
-import { GoPlus } from "react-icons/go";
-import { IoClose } from "react-icons/io5";
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
@@ -55,7 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function TrendingCourseTable() {
+export default function CorporateCourses() {
   const [category,setCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
@@ -302,21 +299,21 @@ const displayedCourse = filteredCourse.slice(
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
-        <h3>Trending Courses</h3>
+        <h3>Corporate Training Courses</h3>
         <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                        <a href="#!" onClick={() => setShowAddCourse(false)}>Trending Courses</a> <MdKeyboardArrowRight />
+                        <a href="#!" onClick={() => setShowAddCourse(false)}>Corporate Training Courses</a> <MdKeyboardArrowRight />
                         </li>
                         <li className="breadcrumb-item active" aria-current="page">
-                        Add Trending Course
+                        Add Corporate Course
                         </li>
                       </ol>
                     </nav>
 
-  <div className="category">
+   <div className="category">
       <div className="category-header">
-        <p>Add Trending Course</p>
+        <p>Add Corporate Course</p>
       </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -393,10 +390,10 @@ const displayedCourse = filteredCourse.slice(
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-      <h3>Trending Courses</h3>
+      <h3>Corporate Training Courses</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Trending Courses Details</p>
+            <p>View Corporate Training Courses</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -442,7 +439,7 @@ const displayedCourse = filteredCourse.slice(
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Trending Course
+                <FiPlus /> Add Corporate Course
               </button>
             </div>
           </div>
@@ -521,7 +518,7 @@ const displayedCourse = filteredCourse.slice(
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Corporate Course
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>

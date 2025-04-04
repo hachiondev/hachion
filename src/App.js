@@ -49,6 +49,7 @@ import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import ProtectedRoute from './ProtectedRoute';
+import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 // import ProtectedRoute from './ProtectedRoute';
 
 function App() {
@@ -122,6 +123,7 @@ function App() {
       <Route path='/addvideo' element={<Addvideo/>}/>
       <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/Courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/corporatecourses' element={<CorporateCourses />} />
       <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>

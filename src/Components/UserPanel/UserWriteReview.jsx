@@ -18,7 +18,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     review:"",
     user_image: "",
     rating: 0,
-    type: "",
+    type: false,
     social_id: ""
   });
 
@@ -64,6 +64,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
         rating: reviewData.rating ? Number(reviewData.rating) : 5,
         review: reviewData.review || "",
         location: reviewData.location || "",
+        display:"course",
         date: new Date().toISOString().split("T")[0]
     };
 
@@ -90,7 +91,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             }
         );
 
-        alert("Review added successfully:", response.data);
+        console.log("Review added successfully:", response.data);
         
     } catch (error) {
         console.error("Error adding review:", error.response?.data || error.message);
@@ -141,9 +142,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             <label className="form-label">Review Type</label>
             <select
               className="form-select"
-              name="type"
-              value={reviewData.type}
-              onChange={handleChange}
+              
             >
               <option value="">Select Type</option>
               <option value="Course Review">Course Review</option>

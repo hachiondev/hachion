@@ -11,35 +11,6 @@ const Learners = ({ page }) => {
   const [showModal, setShowModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await fetch("https://api.hachion.co/userreview");
-  //       const data = await response.json();
-  
-  //       if (Array.isArray(data)) {
-  //         // Filter reviews safely
-  //         const filteredReviews = data.filter((review) => 
-  //           review.display && typeof review.display === "string" 
-  //             ? review.display.split(",").map(item => item.trim()).includes(page)
-  //             : false
-  //         );
-  
-  //         setReviews(filteredReviews);
-  //       } else {
-  //         console.error("Invalid API response", data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching reviews:", error);
-  //     }
-  //   };
-  
-  //   fetchReviews();
-  
-  //   const handleResize = () => setIsMobile(window.innerWidth <= 768);
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, [page]); // Runs when the page prop changes
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -49,10 +20,10 @@ const Learners = ({ page }) => {
         if (Array.isArray(data)) {
           // Filter reviews that match the display condition and have type = true
           const filteredReviews = data.filter((review) => 
-            review.type === "1" && // Only include reviews where type is true
+            review.type === true && // Only include reviews where type is true
             review.display && typeof review.display === "string" 
               ? review.display.split(",").map(item => item.trim()).includes(page)
-              : "0"
+              : false
           );
   
           setReviews(filteredReviews);

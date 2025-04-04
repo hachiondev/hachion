@@ -65,7 +65,8 @@ const Advisor = () => {
       companyName: values.company_name,
       mobileNumber: mobileNumber,
       trainingCourse: values.course_name,
-      comments: values.comment
+      comments: values.comment,
+      country: selectedCountry.name
     };
   
     try {

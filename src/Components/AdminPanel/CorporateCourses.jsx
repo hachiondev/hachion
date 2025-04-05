@@ -66,7 +66,7 @@ export default function CorporateCourses() {
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
     const [courseData, setCourseData] = useState({
-        trendingcourse_id:"",
+        corporatecourse_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
@@ -130,7 +130,7 @@ const displayedCourse = filteredCourse.slice(
 
          const handleReset=()=>{
             setCourseData([{
-                trendingcourse_id:"",
+                corporatecourse_id:"",
                 category_name:"",
                   course_name: "",
                   date:currentDate,
@@ -153,7 +153,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourse = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/trendingcourse');
+              const response = await axios.get('https://api.hachion.co/corporatecourse');
               setTrendingCourse(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching video:", error.message);
@@ -163,9 +163,9 @@ const displayedCourse = filteredCourse.slice(
       setFilteredCourse(trendingCourse)
   }, []); // Empty dependency array ensures it runs only once
 
-    const handleDeleteConfirmation = (trendingcourse_id) => {
+    const handleDeleteConfirmation = (corporatecourse_id) => {
         if (window.confirm("Are you sure you want to delete this Course?")) {
-          handleDelete(trendingcourse_id);
+          handleDelete(corporatecourse_id);
         }
       };
   
@@ -186,14 +186,14 @@ const displayedCourse = filteredCourse.slice(
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
+                `https://api.hachion.co/corporatecourse/update/${editedData.corporatecourse_id}`,editedData
             );
             setTrendingCourse((prev) =>
                 prev.map(curr =>
-                    curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr
+                    curr.corporatecourse_id === editedData.corporatecourse_id ? response.data : curr
                 )
             );
-            setMessage("Trending Course updated successfully!");
+            setMessage(" Course updated successfully!");
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
@@ -201,11 +201,11 @@ const displayedCourse = filteredCourse.slice(
         }
     };
             
-      const handleDelete = async (trendingcourse_id) => {
+      const handleDelete = async (corporatecourse_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`); 
-          console.log("Trending Courses deleted successfully:", response.data); 
+          const response = await axios.delete(`https://api.hachion.co/corporatecourse/delete/${corporatecourse_id}`); 
+          console.log(" Courses deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Courses:", error); 
         } }; 
@@ -246,7 +246,7 @@ const displayedCourse = filteredCourse.slice(
         };
       
         try {
-          const response = await axios.post("https://api.hachion.co/trendingcourse/add", dataToSubmit);
+          const response = await axios.post("https://api.hachion.co/corporatecourse/add", dataToSubmit);
           if (response.status === 200) {
             alert("Courses added successfully");
             setCourseData([...courseData, dataToSubmit]); // Update local state
@@ -467,7 +467,7 @@ const displayedCourse = filteredCourse.slice(
 
     {displayedCourse.length > 0
     ? displayedCourse.map((row, index) => (
-            <StyledTableRow key={row.trendingcourse_id}>
+            <StyledTableRow key={row.corporatecourse_id}>
               <StyledTableCell align="center">
                           <Checkbox />
                         </StyledTableCell>
@@ -484,7 +484,7 @@ const displayedCourse = filteredCourse.slice(
                 <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                 <RiDeleteBin6Line
                   className="delete"
-                  onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
+                  onClick={() => handleDeleteConfirmation(row.corporatecourse_id)}
                 />
                 </div>
               </StyledTableCell>

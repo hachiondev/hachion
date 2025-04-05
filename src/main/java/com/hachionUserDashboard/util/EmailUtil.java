@@ -1,10 +1,14 @@
 package com.hachionUserDashboard.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.hachionUserDashboard.entity.Query;
 import com.hachionUserDashboard.entity.RequestBatch;
@@ -99,5 +103,5 @@ public class EmailUtil {
         simpleMailMessage.setText(message);
         javaMailSender.send(simpleMailMessage);
     }
-
+  
 }

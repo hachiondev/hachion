@@ -57,7 +57,7 @@ public class WorkshopScheduleController {
            workshopSchedule.setDate(updatedWorkshopSchedule.getDate());
            workshopSchedule.setTime(updatedWorkshopSchedule.getTime());
            workshopSchedule.setTime_zone(updatedWorkshopSchedule.getTime_zone());
-      
+         workshopSchedule.setContent(updatedWorkshopSchedule.getContent());
            repo.save(workshopSchedule);
            return ResponseEntity.ok(workshopSchedule);
        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

@@ -31,6 +31,9 @@ public class WorkshopSchedule {
 	    @Column
 	    private String time_zone;
 	    
+	    @Column
+	    private String content;
+	    
 	    @Column(name = "created_date")  // Make sure the name matches your SQL column
 	    private LocalDate created_date;
 	    
@@ -70,6 +73,14 @@ public class WorkshopSchedule {
 			this.course_name = course_name;
 		}
 
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
 		public String getDate() {
 			return date;
 		}
@@ -97,12 +108,12 @@ public class WorkshopSchedule {
 		@Override
 		public String toString() {
 			return "WorkshopSchedule [id=" + id + ", category_name=" + category_name + ", course_name=" + course_name
-					+ ", date=" + date + ", time=" + time + ", time_zone=" + time_zone + ", created_date="
-					+ created_date + "]";
+					+ ", date=" + date + ", time=" + time + ", time_zone=" + time_zone + ", content=" + content
+					+ ", created_date=" + created_date + "]";
 		}
 
 		public WorkshopSchedule(int id, String category_name, String course_name, String date, String time,
-				String time_zone,LocalDate created_date) {
+				String time_zone,LocalDate created_date, String content) {
 			super();
 			this.id = id;
 			this.category_name = category_name;
@@ -111,5 +122,5 @@ public class WorkshopSchedule {
 			this.time = time;
 			this.time_zone = time_zone;
 			this.created_date=created_date;
-		}
+			this.content=content;		}
 }

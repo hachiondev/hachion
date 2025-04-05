@@ -1,29 +1,29 @@
-import React from 'react'
-import LoginSide from './LoginSide'
-import logo from '../../Assets/logo.png'
-import './Login.css'
-import facebook from '../../Assets/facebook_symbol.svg.png'
-import google from '../../Assets/google_symbol.svg.png'
-import linkedin from '../../Assets/linkedins.png';
-import apple from '../../Assets/Apple.png'
-import email from '../../Assets/Group 39487.png'
-import {Link} from 'react-router-dom';
+import React from "react";
+import LoginSide from "./LoginSide";
+import logo from "../../Assets/logo.png";
+import "./Login.css";
+import facebook from "../../Assets/facebook_symbol.svg.png";
+import google from "../../Assets/google_symbol.svg.png";
+import linkedin from "../../Assets/linkedins.png";
+import apple from "../../Assets/Apple.png";
+import email from "../../Assets/Group 39487.png";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const googleLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/google';  // Backend Google OAuth
+    window.location.href = "https://api.hachion.co/oauth2/authorization/google"; // Backend Google OAuth
   };
 
   return (
-<>
-<div className='login'>
-<div className='login-left'>
-<div className='login-top'>
-  <img src={logo} alt='logo' className='login-logo'/>
-  <h3 className='register-head'>Register to start learning</h3>
-  <h5 className='option'>Tap on any option to create an account</h5>
-  <div className='icon-places'>
-    {/* <div className='icon-text'>
+    <>
+      <div className="login">
+        <div className="login-left">
+          <div className="login-top">
+            <img src={logo} alt="logo" className="login-logo" />
+            <h3 className="register-head">Register to start learning</h3>
+            <h5 className="option">Tap on any option to create an account</h5>
+            <div className="icon-places">
+              {/* <div className='icon-text'>
   <img src={google} alt='google' className='icon-text-img'/>
    <button className='icon-text-holder-google' onClick={googleLogin}>Google</button>
     </div>
@@ -39,22 +39,32 @@ const Register = () => {
   <img src={apple} alt='login-with-apple' className='icon-text-img'/>
    <div className='icon-text-holder-apple'>Apple</div>
     </div> */}
-    <Link to='/registerhere' className='register-link-to'>
-   <div className='icon-text'>
-  <img src={email} alt='login-with-email' className='icon-text-img'/> 
-   <div className='icon-text-holder-email'>Sign-up with Email</div> 
-    </div></Link>
-   
-  </div>
-  </div>
-  <p className='login-link'>Do you have an account with Hachion? <Link to='/login' className='link-to'>Click here to Login </Link></p>
-</div>
+              <Link to="/registerhere" className="register-link-to">
+                <div className="icon-text">
+                  <img
+                    src={email}
+                    alt="login-with-email"
+                    className="icon-text-img"
+                  />
+                  <div className="icon-text-holder-email">
+                    Sign-up with Email
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+          <p className="login-link">
+            Do you have an account with Hachion?{" "}
+            <Link to="/login" className="link-to">
+              Click here to Login{" "}
+            </Link>
+          </p>
+        </div>
 
-<LoginSide/>
-</div>
-  
-   </>
-  )
-}
+        <LoginSide />
+      </div>
+    </>
+  );
+};
 
 export default Register;

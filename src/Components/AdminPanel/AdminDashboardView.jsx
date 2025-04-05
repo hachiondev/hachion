@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import AdminNavbar from './AdminNavbar';
-import AdminSidebar from './AdminSidebar';
-import AdminDashboard from './AdminDashboard'; // Default or dashboard component
-import TrendingCourseTable from './TrendingCourseTable';
-import Trainer from './Trainer';
-import Certificate from './Certificate';
-import Enroll from './Enroll';
-import Registration from './Registration';
-import ScheduleRequest from './ScheduleRequest';
-import Blogs from './Blogs';
-import Support from './Support';
-import Course from './Course';
-import AddCourseCategory from './AddCourseCategory';
+import React, { useState } from "react";
+import AdminNavbar from "./AdminNavbar";
+import AdminSidebar from "./AdminSidebar";
+import AdminDashboard from "./AdminDashboard"; // Default or dashboard component
+import TrendingCourseTable from "./TrendingCourseTable";
+import Trainer from "./Trainer";
+import Certificate from "./Certificate";
+import Enroll from "./Enroll";
+import Registration from "./Registration";
+import ScheduleRequest from "./ScheduleRequest";
+import Blogs from "./Blogs";
+import Support from "./Support";
+import Course from "./Course";
+import Reports from "./Reports";
+import AddCourseCategory from "./AddCourseCategory";
 
-import Other from './Other';
-import ManageCategories from './ManageCategories';
-import CourseCategory from './CourseCategory';
-
+import Other from "./Other";
+import ManageCategories from "./ManageCategories";
+import CourseCategory from "./CourseCategory";
+import CorporateCourses from "./CorporateCourses";
 
 const AdminDashboardView = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Dashboard');
+  const [selectedCategory, setSelectedCategory] = useState("Dashboard");
 
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setShowAddCategory(false);
-   
   };
 
   const handleAddCategoryClick = () => {
@@ -35,37 +35,40 @@ const AdminDashboardView = () => {
 
   const renderContent = () => {
     if (showAddCategory) {
-      return <AddCourseCategory  />; // Pass onSelectCategory
+      return <AddCourseCategory />; // Pass onSelectCategory
     }
 
-
-
     switch (selectedCategory) {
-      case 'Dashboard':
+      case "Dashboard":
         return <AdminDashboard />;
-      case 'Course Category':
-        return <CourseCategory  />;
-   
-        case 'Trending Courses':
-        
-        return <TrendingCourseTable/>
-      case 'Trainer':
-        return <Trainer />;
-      case 'Certificate':
-        return <Certificate />;
-      case 'All Enroll':
-        return <Enroll />;
-      case 'Registration':
-        return <Registration />;
-      case 'Schedule Request':
-        return <ScheduleRequest />;
-      case 'Blog':
-        return <Blogs />;
-      case 'Support':
-        return <Support />;
-      case 'Course':
+      case "Course Category":
+        return <CourseCategory />;
+
+      case "Course":
         return <Course />;
-      case 'Other':
+
+      case "Corporate Training":
+        return <CorporateCourses />;
+
+      case "Trending Courses":
+        return <TrendingCourseTable />;
+      case "Trainer":
+        return <Trainer />;
+      case "Certificate":
+        return <Certificate />;
+      case "All Enroll":
+        return <Enroll />;
+      case "Registration":
+        return <Registration />;
+      case "Reports":
+        return <Reports />;
+      case "Schedule Request":
+        return <ScheduleRequest />;
+      case "Blog":
+        return <Blogs />;
+      case "Support":
+        return <Support />;
+      case "Other":
         return <Other />;
       default:
         return <AdminDashboard />;
@@ -75,11 +78,10 @@ const AdminDashboardView = () => {
   return (
     <>
       <AdminNavbar />
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <AdminSidebar onSelectCategory={handleCategorySelect} /> {/* Sidebar with onSelectCategory prop */}
-        <div className='admin-right'>
-          {renderContent()}
-        </div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <AdminSidebar onSelectCategory={handleCategorySelect} />{" "}
+        {/* Sidebar with onSelectCategory prop */}
+        <div className="admin-right">{renderContent()}</div>
       </div>
     </>
   );

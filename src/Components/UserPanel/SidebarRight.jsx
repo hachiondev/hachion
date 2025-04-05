@@ -23,7 +23,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
         setCourses([]); // Fallback to an empty array
       }
     };
-  
+
     fetchCourses();
   }, []);
 
@@ -46,22 +46,24 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
 
   return (
     <div className="course-card-container">
-   {currentCards.length > 0 ? (
-    currentCards.map((course, index) => (
-      <SidebarCard
-        key={course.id || index}
-        title={course.courseName}
-        RatingByPeople={course.ratingByNumberOfPeople}
-        image={`https://api.hachion.co/${course.courseImage}`} // Correct property
-        Rating={course.starRating}
-        student={course.totalEnrollment}
-        month={course.numberOfClasses}
-        time={course.liveTrainingHours}
-        course_id={course.id}
-      />
-    ))
-  ): (
-    <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
+      {currentCards.length > 0 ? (
+        currentCards.map((course, index) => (
+          <SidebarCard
+            key={course.id || index}
+            title={course.courseName}
+            RatingByPeople={course.ratingByNumberOfPeople}
+            image={`https://api.hachion.co/${course.courseImage}`} // Correct property
+            Rating={course.starRating}
+            student={course.totalEnrollment}
+            month={course.numberOfClasses}
+            time={course.liveTrainingHours}
+            course_id={course.id}
+          />
+        ))
+      ) : (
+        <h4 style={{ paddingTop: "30px", paddingLeft: "20px" }}>
+          No courses available
+        </h4>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 const handleDownload = async (pdfPath) => {
   try {
     const filename = pdfPath.split("/").pop(); // Extract only the filename
-    const response = await fetch(`https://api.hachion.co/curriculum/pdf/${filename}`, {
+    const response = await fetch(`http://localhost:8080/curriculum/pdf/${filename}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/pdf",

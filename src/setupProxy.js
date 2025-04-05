@@ -1,14 +1,14 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
-    '/HachionUserDashboad',
+    "/HachionUserDashboad",
     createProxyMiddleware({
-      target: 'https://api.hachion.co/',
+      target: "http://localhost:8080/", //'https://api.hachion.co/'
       changeOrigin: true,
       secure: false, // Disable SSL verification if using an HTTP API
       pathRewrite: {
-        '^/HachionUserDashboad': '', // Rewrite the path if necessary
+        "^/HachionUserDashboad": "", // Rewrite the path if necessary
       },
     })
   );

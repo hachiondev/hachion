@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
-import cardbackground from '../../Assets/course2.png';
-import './Home.css';
+import { useNavigate } from "react-router-dom";
+import cardbackground from "../../Assets/course2.png";
+import "./Home.css";
 
-const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {
-  const navigate = useNavigate(); 
+const CourseCard = ({
+  heading,
+  month,
+  time,
+  image,
+  Rating,
+  RatingByPeople,
+}) => {
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect if the screen is mobile size
@@ -17,12 +24,14 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
     };
 
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   // Format course name for URL
-  const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
+  const formattedName = heading
+    ? heading.toLowerCase().replace(/\s+/g, "-")
+    : "";
 
   // Function to navigate to course details
   const handleNavigation = () => {
@@ -43,7 +52,7 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
   return (
     <div
       className="card"
-      style={{ cursor: isMobile ? 'pointer' : 'default' }}
+      style={{ cursor: isMobile ? "pointer" : "default" }}
       onClick={isMobile ? handleNavigation : undefined} // Click only on mobile
     >
       <div className="card-header-div">

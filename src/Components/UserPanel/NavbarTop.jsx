@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import logo from '../../Assets/logo.png';
+import React, { useState, useEffect, useRef } from "react";
+import logo from "../../Assets/logo.png";
 import { IoSearch } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
-import profile1 from '../../Assets/profile2.png';
-import Avatar from '@mui/material/Avatar';
+import profile1 from "../../Assets/profile2.png";
+import Avatar from "@mui/material/Avatar";
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
-import { IoLogOut } from 'react-icons/io5';
-import './Home.css';
+import { IoLogOut } from "react-icons/io5";
+import "./Home.css";
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -19,11 +19,11 @@ const NavbarTop = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage login state
   const navigate = useNavigate();
   const drawerRef = useRef(null); // Reference to the drawer for click detection
-   const [userData, setUserData] = useState(null);
-  
-   useEffect(() => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
     console.log("Checking localStorage for user data...");
-    const storedUserData = localStorage.getItem('loginuserData');
+    const storedUserData = localStorage.getItem("loginuserData");
     if (storedUserData) {
       const parsedData = JSON.parse(storedUserData);
       setUserData(parsedData);
@@ -36,7 +36,7 @@ const NavbarTop = () => {
 
   const handleLogout = () => {
     console.log("Logging out user...");
-    localStorage.removeItem('loginuserData'); 
+    localStorage.removeItem("loginuserData");
     setIsLoggedIn(false);
     setUserData(null);
     console.log("User logged out successfully.");
@@ -54,21 +54,21 @@ const NavbarTop = () => {
 
   const handleClick = () => {
     console.log("Navigating to Home");
-    navigate('/');
+    navigate("/");
   };
 
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
       setSearchVisible(!isMobile);
       setMobileSearchOpen(false);
       console.log(`Window resized. Mobile view: ${isMobile}`);
     };
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); 
+    window.addEventListener("resize", handleResize);
+    handleResize();
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -81,11 +81,11 @@ const NavbarTop = () => {
     };
 
     if (isDrawerOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener("mousedown", handleOutsideClick);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [isDrawerOpen]);
 
@@ -98,7 +98,7 @@ const NavbarTop = () => {
             src={logo}
             alt="logo"
             onClick={handleClick}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
         )}
 
@@ -113,7 +113,7 @@ const NavbarTop = () => {
                 aria-label="Search"
               />
               <button className="btn-search-home">
-                <IoSearch style={{ fontSize: '1.8rem' }} />
+                <IoSearch style={{ fontSize: "1.8rem" }} />
               </button>
             </div>
           ) : isMobileSearchOpen ? (
@@ -173,32 +173,55 @@ const NavbarTop = () => {
                 <div className="profile">
                   <div className="dropdown">
                     <div className="user-name">
-                    <Avatar src={userData?.picture || profile1} alt="user_name" />
-                    <Link
-                                      className="user-name"
-                                      role="button"
-                                      data-bs-toggle="dropdown"
-                                      aria-expanded="false"
-                                    >
-                                      {userData?.name || 'Hachion User'}
-                                    </Link>
+                      <Avatar
+                        src={userData?.picture || profile1}
+                        alt="user_name"
+                      />
+                      <Link
+                        className="user-name"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        {userData?.name || "Hachion User"}
+                      </Link>
                     </div>
-                    <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
-                      <FaUserAlt style={{ color: '#00AEEF' }} /> Dashboard
+                    <div
+                      className="drawer-sub-item"
+                      onClick={() => navigate("/userdashboard")}
+                    >
+                      <FaUserAlt style={{ color: "#00AEEF" }} /> Dashboard
                     </div>
-                    <div className="drawer-sub-item" onClick={() => navigate('/userdashboard')}>
-                      <IoMdSettings style={{ color: '#00AEEF' }} /> Settings
+                    <div
+                      className="drawer-sub-item"
+                      onClick={() => navigate("/userdashboard")}
+                    >
+                      <IoMdSettings style={{ color: "#00AEEF" }} /> Settings
                     </div>
 
-                    <div className="drawer-item" onClick={() => navigate('/corporate')}>
+                    <div
+                      className="drawer-item"
+                      onClick={() => navigate("/corporate")}
+                    >
                       Corporate Training
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                    <div
+                      className="drawer-item"
+                      onClick={() => navigate("/courseDetails")}
+                    >
                       Courses
                     </div>
-                    <div className="drawer-item">Hire from Us</div>
+                    <div
+                      className="drawer-item"
+                      onClick={() => navigate("/courseDetails")}
+                    >
+                      Hire from Us
+                    </div>
 
-                    <button className="drawer-button" onClick={() => handleLogout()}>
+                    <button
+                      className="drawer-button"
+                      onClick={() => handleLogout()}
+                    >
                       <IoLogOut /> Logout
                     </button>
                   </div>
@@ -206,18 +229,35 @@ const NavbarTop = () => {
               </>
             ) : (
               <>
-                <div className="drawer-item" onClick={() => navigate('/corporate')}>
+                <div
+                  className="drawer-item"
+                  onClick={() => navigate("/corporate")}
+                >
                   Corporate Training
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                <div
+                  className="drawer-item"
+                  onClick={() => navigate("/courseDetails")}
+                >
                   Courses
                 </div>
-                <div className="drawer-item">Hire from Us</div>
+                <div
+                  className="drawer-item"
+                  onClick={() => navigate("/courseDetails")}
+                >
+                  Hire from Us
+                </div>
 
-                <button className="drawer-button" onClick={() => navigate('/login')}>
+                <button
+                  className="drawer-button"
+                  onClick={() => navigate("/login")}
+                >
                   Login
                 </button>
-                <button className="drawer-button" onClick={() => navigate('/register')}>
+                <button
+                  className="drawer-button"
+                  onClick={() => navigate("/register")}
+                >
                   Register
                 </button>
               </>
@@ -227,26 +267,30 @@ const NavbarTop = () => {
 
         <div className="navbar-nav">
           <button
-            className={`nav-item ${activeLink === 'corporate' ? 'active' : ''}`}
-            onClick={() => handleNavClick('corporate')}
+            className={`nav-item ${activeLink === "corporate" ? "active" : ""}`}
+            onClick={() => handleNavClick("corporate")}
           >
             <Link to="/corporate" className="nav-item-link">
               Corporate Training
             </Link>
           </button>
           <button
-            className={`nav-item ${activeLink === 'course' ? 'active' : ''}`}
-            onClick={() => handleNavClick('course')}
+            className={`nav-item ${
+              activeLink === "CourseDetails" ? "active" : ""
+            }`}
+            onClick={() => handleNavClick("CourseDetails")}
           >
-            <Link to="/CourseDetails" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Courses
             </Link>
           </button>
           <button
-            className={`nav-item ${activeLink === 'hire' ? 'active' : ''}`}
-            onClick={() => handleNavClick('hire')}
+            className={`nav-item ${
+              activeLink === "CourseDetails" ? "active" : ""
+            }`}
+            onClick={() => handleNavClick("CourseDetails")}
           >
-            <Link to="#" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

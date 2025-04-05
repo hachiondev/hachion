@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import './Corporate.css';
-import './Blogs.css';
-import { Carousel, Modal } from 'react-bootstrap';
-import LearnerCard from './LearnerCard';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import React, { useState, useEffect } from "react";
+import "./Corporate.css";
+import "./Blogs.css";
+import { Carousel, Modal } from "react-bootstrap";
+import LearnerCard from "./LearnerCard";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const WorkshopLearners = () => {
   const [reviews, setReviews] = useState([]);
@@ -15,19 +15,19 @@ const WorkshopLearners = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/userreview');
+        const response = await fetch("https://api.hachion.co/userreview");
         const data = await response.json();
         setReviews(data);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error("Error fetching reviews:", error);
       }
     };
 
     fetchReviews();
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Function to chunk reviews into slides
@@ -49,11 +49,11 @@ const WorkshopLearners = () => {
 
   return (
     <div>
-      <div className='workshop-content'>
-      <h2 className='workshop-heading'>Our Students Feedback</h2>
+      <div className="workshop-content">
+        <h2 className="workshop-heading">Our Students Feedback</h2>
       </div>
 
-      <div className='learner-background'>
+      <div className="learner-background">
         <Carousel
           indicators={true}
           prevIcon={<FaAngleLeft className="custom-prev-icon" />}
@@ -62,7 +62,7 @@ const WorkshopLearners = () => {
         >
           {groupedReviews.map((group, index) => (
             <Carousel.Item key={index}>
-              <div className='learner-card-container'>
+              <div className="learner-card-container">
                 {group.map((review, idx) => (
                   <LearnerCard
                     key={review.review_id}
@@ -72,8 +72,14 @@ const WorkshopLearners = () => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ''}
-                    onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
+                    profileImage={
+                      review.user_image
+                        ? `https://api.hachion.co/${review.user_image}`
+                        : ""
+                    }
+                    onReadMore={() =>
+                      handleReadMore(index * (isMobile ? 1 : 3) + idx)
+                    }
                   />
                 ))}
               </div>
@@ -83,7 +89,12 @@ const WorkshopLearners = () => {
       </div>
 
       {/* Modal for Full Review */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Student Review</Modal.Title>
         </Modal.Header>
@@ -97,7 +108,7 @@ const WorkshopLearners = () => {
           >
             {reviews.map((review, index) => (
               <Carousel.Item key={index}>
-                <div className='full-review'>
+                <div className="full-review">
                   <h3>{review.name}</h3>
                   <p>{review.review}</p>
                 </div>

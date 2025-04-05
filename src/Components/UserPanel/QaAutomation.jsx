@@ -1,24 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import './Course.css';
-import Footer from './Footer';
-import QaTop from './QaTop';
-import KeyHighlights from './KeyHighlights';
-import UpcomingHeader from './UpcomingHeader';
-import UpcomingBatch from './UpcomingBatch';
-import Corporate from './Corporate';
-import Qacourse from './Qacourse';
-import ModeOfTraining from './ModeOfTraining';
-import CareerSupport from './CareerSupport';
-import Learners from './Learners';
-import StickyBar from './StickyBar';
-import CurriculumMain from './CurriculumMain';
-import QaAutomationFaq from './QaAutomationFaq';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect, useRef, useState } from "react";
+import Topbar from "./Topbar";
+import NavbarTop from "./NavbarTop";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import "./Course.css";
+import Footer from "./Footer";
+import QaTop from "./QaTop";
+import KeyHighlights from "./KeyHighlights";
+import UpcomingHeader from "./UpcomingHeader";
+import UpcomingBatch from "./UpcomingBatch";
+import Corporate from "./Corporate";
+import Qacourse from "./Qacourse";
+import ModeOfTraining from "./ModeOfTraining";
+import CareerSupport from "./CareerSupport";
+import Learners from "./Learners";
+import StickyBar from "./StickyBar";
+import CurriculumMain from "./CurriculumMain";
+import QaAutomationFaq from "./QaAutomationFaq";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { Helmet } from "react-helmet-async";
 
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
@@ -31,7 +31,6 @@ const QaAutomation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -45,9 +44,9 @@ const QaAutomation = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -61,7 +60,7 @@ const QaAutomation = () => {
           }
         });
       },
-      { rootMargin: '0px', threshold: 0.1 }
+      { rootMargin: "0px", threshold: 0.1 }
     );
 
     if (footerRef.current) {
@@ -77,25 +76,25 @@ const QaAutomation = () => {
 
   const handleVideoButtonClick = () => {
     if (curriculumRef.current) {
-      curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
+      curriculumRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const course = response.data.find(
-          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
         );
         setCourseData(course);
       } catch (error) {
-        console.error('Error fetching course details:', error);
-      }finally {
-              setLoading(false);
-    }
-  }
+        console.error("Error fetching course details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchCourseData();
   }, [courseName]);
@@ -105,39 +104,66 @@ const QaAutomation = () => {
 
   return (
     <>
-    <Helmet>
-  <title>{courseData?.metaTitle || "Loading..."}</title>
-  <meta name="description" content={courseData?.metaDescription || "Default description"} />
-  <meta name="keywords" content={courseData?.metaKeyword || "default, keywords"} />
-  <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
-  <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
-  <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
-  <meta property="og:url" content={`https://hachion.co/CourseDetails/${courseName}`} />
-  <meta name="robots" content="index, follow" />
-</Helmet>
+      <Helmet>
+        <title>{courseData?.metaTitle || "Loading..."}</title>
+        <meta
+          name="description"
+          content={courseData?.metaDescription || "Default description"}
+        />
+        <meta
+          name="keywords"
+          content={courseData?.metaKeyword || "default, keywords"}
+        />
+        <meta
+          property="og:title"
+          content={
+            courseData?.metaTitle || "Best Online IT Certification Courses"
+          }
+        />
+        <meta
+          property="og:description"
+          content={
+            courseData?.metaDescription ||
+            "Transform your career with Hachion's Online IT Courses."
+          }
+        />
+        <meta
+          property="og:image"
+          content={
+            courseData?.metaImage ||
+            "https://hachion.co/images/course-banner.jpg"
+          }
+        />
+        <meta
+          property="og:url"
+          content={`https://hachion.co/CourseDetails/${courseName}`}
+        />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
 
-      <div className='course-top'>
+      <div className="course-top">
         <Topbar />
         <NavbarTop />
         {/* <div className='course-banner'>
           <h3 className='course-banner-content'>{courseData?.courseName}</h3>
         </div> */}
-        <div className='blogs-header'>
+        <div className="blogs-header">
           <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-          <li className="breadcrumb-item">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
                 <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
                 <a href={`/CourseDetails/${courseData?.courseCategory}`}>
                   {courseData?.courseCategory}
-                </a> <MdKeyboardArrowRight />
+                </a>{" "}
+                <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
                 {courseData?.courseName}
               </li>
-          </ol>
-        </nav>
+            </ol>
+          </nav>
         </div>
         {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
         <QaTop onVideoButtonClick={handleVideoButtonClick} />
@@ -145,42 +171,43 @@ const QaAutomation = () => {
 
         {/* Sticky Header applies to the entire section below */}
         <div ref={upcomingHeaderRef}>
-          <div className={isSticky ? 'sticky upcoming-header' : 'upcoming-header'}>
+          <div
+            className={isSticky ? "sticky upcoming-header" : "upcoming-header"}
+          >
             <UpcomingHeader />
-        
-        </div>
+          </div>
 
-        <div id="upcoming-batch">
-          <UpcomingBatch />
-        </div>
+          <div id="upcoming-batch">
+            <UpcomingBatch />
+          </div>
 
-        <div id="corporate">
-          <Corporate />
-        </div>
+          <div id="corporate">
+            <Corporate />
+          </div>
 
-        <div id="qa-course">
-          <Qacourse />
-        </div>
+          <div id="qa-course">
+            <Qacourse />
+          </div>
 
-        <div id="curriculum" ref={curriculumRef}>
-          <CurriculumMain />
-        </div>
+          <div id="curriculum" ref={curriculumRef}>
+            <CurriculumMain />
+          </div>
 
-        <div id="mode-of-training">
-          <ModeOfTraining />
-        </div>
+          <div id="mode-of-training">
+            <ModeOfTraining />
+          </div>
 
-        <div id="career-support">
-          <CareerSupport />
-        </div>
+          <div id="career-support">
+            <CareerSupport />
+          </div>
 
-        <div id="learners">
-          <Learners />
-        </div>
+          <div id="learners">
+            <Learners page="course" />
+          </div>
 
-        <div id="qa-faq">
-          <QaAutomationFaq />
-        </div>
+          <div id="qa-faq">
+            <QaAutomationFaq />
+          </div>
         </div>
         {/* Footer section to stop the sticky behavior */}
         <div ref={footerRef}>

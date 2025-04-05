@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
-import './Course.css';
-import { useNavigate } from 'react-router-dom';
+import "./Course.css";
+import { useNavigate } from "react-router-dom";
 
-const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, student }) => {
+const SidebarCard = ({
+  title,
+  month,
+  time,
+  Rating,
+  RatingByPeople,
+  image,
+  student,
+}) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
 
@@ -21,8 +29,8 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
   // Handle button click to navigate
   const handleClick = () => {
     if (title) {
-      const formattedName = title.toLowerCase().replace(/\s+/g, '-'); // Format course name
-      navigate(`/CourseDetails/${formattedName}`);
+      const formattedName = title.toLowerCase().replace(/\s+/g, "-"); // Format course name
+      navigate(`/courseDetails/${formattedName}`);
     }
   };
 
@@ -42,8 +50,7 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
   };
 
   return (
-    <div className="sidebar-card"
-    onClick={isMobile ? handleClick : undefined} >
+    <div className="sidebar-card" onClick={isMobile ? handleClick : undefined}>
       <div className="sidebar-card-header-div">
         <h4 className="sidebar-card-heading">Certified Students: {student}</h4>
         <img src={image} alt="card-img" className="sidebar-card-icon" />
@@ -61,10 +68,13 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
         <h6 className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
         </h6>
-        <button className="sidebar-enroll-btn" onClick={(e) => {
-          e.stopPropagation(); // Prevent parent click event
-          handleClick();
-        }}>
+        <button
+          className="sidebar-enroll-btn"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent parent click event
+            handleClick();
+          }}
+        >
           View Details
         </button>
       </div>

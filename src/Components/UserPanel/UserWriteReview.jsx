@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
-import './Dashboard.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import "./Dashboard.css";
 
 const UserWriteReview = ({ setShowReviewForm }) => {
   const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
@@ -15,11 +15,11 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     date: currentDate,
     student_name: "",
     source: "",
-    review:"",
+    review: "",
     user_image: "",
     rating: 0,
     type: "",
-    social_id: ""
+    social_id: "",
   });
 
   const [courses, setCourses] = useState([]);
@@ -27,13 +27,15 @@ const UserWriteReview = ({ setShowReviewForm }) => {
 
   // Fetch courses and trainers data on component load
   useEffect(() => {
-    axios.get('https://api.hachion.co/courses/all')
-      .then(response => setCourses(response.data))
-      .catch(error => console.error("Error fetching courses:", error));
+    axios
+      .get("https://api.hachion.co/courses/all")
+      .then((response) => setCourses(response.data))
+      .catch((error) => console.error("Error fetching courses:", error));
 
-    axios.get('https://api.hachion.co/trainers')
-      .then(response => setTrainers(response.data))
-      .catch(error => console.error("Error fetching trainers:", error));
+    axios
+      .get("https://api.hachion.co/trainers")
+      .then((response) => setTrainers(response.data))
+      .catch((error) => console.error("Error fetching trainers:", error));
   }, []);
 
   // Handle input changes
@@ -55,55 +57,60 @@ const UserWriteReview = ({ setShowReviewForm }) => {
 
   const handleSubmit = async () => {
     const reviewPayload = {
-        name: reviewData.student_name,
-        email: reviewData.email || "",
-        type: Array.isArray(reviewData.type) ? reviewData.type.join(", ") : reviewData.type || "Course Review",
-        course_name: reviewData.course_name,
-        trainer_name: reviewData.trainer_name || "",
-        social_id: reviewData.social_id,
-        rating: reviewData.rating ? Number(reviewData.rating) : 5,
-        review: reviewData.review || "",
-        location: reviewData.location || "",
-        date: new Date().toISOString().split("T")[0]
+      name: reviewData.student_name,
+      email: reviewData.email || "",
+      type: false,
+      course_name: reviewData.course_name,
+      trainer_name: reviewData.trainer_name || "",
+      social_id: reviewData.social_id,
+      rating: reviewData.rating ? Number(reviewData.rating) : 5,
+      review: reviewData.review || "",
+      location: reviewData.location || "",
+      date: new Date().toISOString().split("T")[0],
     };
 
     const formData = new FormData();
     formData.append("review", JSON.stringify(reviewPayload)); // Attach JSON data
 
     if (reviewData.user_image) {
-        formData.append("user_image", reviewData.user_image, reviewData.user_image.name); // Attach image
+      formData.append(
+        "user_image",
+        reviewData.user_image,
+        reviewData.user_image.name
+      ); // Attach image
     }
 
     // Debugging FormData
     for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+      console.log(`${key}:`, value);
     }
 
     try {
-        const response = await axios.post(
-            "https://api.hachion.co/userreview/add",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
-        );
+      const response = await axios.post(
+        "https://api.hachion.co/userreview/add",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-        console.log("Review added successfully:", response.data);
+      alert("Review added successfully:", response.data);
     } catch (error) {
-        console.error("Error adding review:", error.response?.data || error.message);
+      console.error(
+        "Error adding review:",
+        error.response?.data || error.message
+      );
     }
-};
+  };
 
-  
-  
   return (
-    <div className='write-review'>
-      <div className='review-form-content'>
+    <div className="write-review">
+      <div className="review-form-content">
         <div className="input-row">
           <div className="col-md-5">
-            <label className='form-label'>Student Name</label>
+            <label className="form-label">Student Name</label>
             <input
               type="text"
               className="form-control"
@@ -114,7 +121,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             />
           </div>
           <div className="col-md-5">
-            <label className='form-label'>Email</label>
+            <label className="form-label">Email</label>
             <input
               type="email"
               className="form-control"
@@ -126,18 +133,16 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           </div>
         </div>
 
-        <div className="col-md-4">
-          <label className="form-label">Image</label>
-          <input
-            type="file"
-            className="form-control"
-            name="user_image"
-            onChange={handleFileChange}
-          />
-        </div>
-
         <div className="input-row">
-         
+          <div className="col-md-5">
+            <label className="form-label">Image</label>
+            <input
+              type="file"
+              className="form-control"
+              name="user_image"
+              onChange={handleFileChange}
+            />
+          </div>
           <div className="col-md-5">
             <label className="form-label">Review Type</label>
             <select
@@ -155,6 +160,17 @@ const UserWriteReview = ({ setShowReviewForm }) => {
 
         <div className="input-row">
           <div className="col-md-5">
+            <label className="form-label">Category Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Category"
+              name="category_name"
+              value={reviewData.category_name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-5">
             <label className="form-label">Course Name</label>
             <select
               className="form-select"
@@ -163,8 +179,10 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               onChange={handleChange}
             >
               <option value="">Select Course</option>
-              {courses.map(course => (
-                <option key={course.id} value={course.courseName}>{course.courseName}</option>
+              {courses.map((course) => (
+                <option key={course.id} value={course.courseName}>
+                  {course.courseName}
+                </option>
               ))}
             </select>
           </div>
@@ -184,17 +202,21 @@ const UserWriteReview = ({ setShowReviewForm }) => {
               <option value="Facebook">Facebook</option>
               <option value="Twitter">Twitter</option>
               <option value="Instagram">Instagram</option>
+              <option value="Google">Google</option>
               <option value="Other">Other</option>
             </select>
           </div>
           <div className="col-md-5">
-            <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
+            <Box sx={{ "& > legend": { mt: 2, ml: 1 } }}>
               <Typography component="legend">Rating</Typography>
               <Rating
                 name="rating"
                 value={reviewData.rating}
                 onChange={(event, newValue) =>
-                  setReviewData((prevData) => ({ ...prevData, rating: newValue }))
+                  setReviewData((prevData) => ({
+                    ...prevData,
+                    rating: newValue,
+                  }))
                 }
                 sx={{ ml: 1, mt: 1 }}
               />
@@ -214,8 +236,10 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           />
         </div>
 
-        <div className='center'>
-          <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+        <div className="center">
+          <button className="submit-btn" onClick={handleSubmit}>
+            Submit
+          </button>
         </div>
       </div>
     </div>

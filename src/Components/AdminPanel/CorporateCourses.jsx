@@ -26,9 +26,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
-import { GoPlus } from "react-icons/go";
-import { IoClose } from "react-icons/io5";
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
@@ -55,7 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function TrendingCourseTable() {
+export default function CorporateCourses() {
   const [category,setCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
@@ -69,7 +66,7 @@ export default function TrendingCourseTable() {
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
     const [courseData, setCourseData] = useState({
-        trendingcourse_id:"",
+        corporatecourse_id:"",
           category_name:"",
             course_name: "",
             date:currentDate,
@@ -133,7 +130,7 @@ const displayedCourse = filteredCourse.slice(
 
          const handleReset=()=>{
             setCourseData([{
-                trendingcourse_id:"",
+                corporatecourse_id:"",
                 category_name:"",
                   course_name: "",
                   date:currentDate,
@@ -156,7 +153,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourse = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/trendingcourse');
+              const response = await axios.get('https://api.hachion.co/corporatecourse');
               setTrendingCourse(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching video:", error.message);
@@ -166,9 +163,9 @@ const displayedCourse = filteredCourse.slice(
       setFilteredCourse(trendingCourse)
   }, []); // Empty dependency array ensures it runs only once
 
-    const handleDeleteConfirmation = (trendingcourse_id) => {
+    const handleDeleteConfirmation = (corporatecourse_id) => {
         if (window.confirm("Are you sure you want to delete this Course?")) {
-          handleDelete(trendingcourse_id);
+          handleDelete(corporatecourse_id);
         }
       };
   
@@ -189,14 +186,14 @@ const displayedCourse = filteredCourse.slice(
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
+                `https://api.hachion.co/corporatecourse/update/${editedData.corporatecourse_id}`,editedData
             );
             setTrendingCourse((prev) =>
                 prev.map(curr =>
-                    curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr
+                    curr.corporatecourse_id === editedData.corporatecourse_id ? response.data : curr
                 )
             );
-            setMessage("Trending Course updated successfully!");
+            setMessage(" Course updated successfully!");
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
@@ -204,11 +201,11 @@ const displayedCourse = filteredCourse.slice(
         }
     };
             
-      const handleDelete = async (trendingcourse_id) => {
+      const handleDelete = async (corporatecourse_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`); 
-          console.log("Trending Courses deleted successfully:", response.data); 
+          const response = await axios.delete(`https://api.hachion.co/corporatecourse/delete/${corporatecourse_id}`); 
+          console.log(" Courses deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Courses:", error); 
         } }; 
@@ -249,7 +246,7 @@ const displayedCourse = filteredCourse.slice(
         };
       
         try {
-          const response = await axios.post("https://api.hachion.co/trendingcourse/add", dataToSubmit);
+          const response = await axios.post("https://api.hachion.co/corporatecourse/add", dataToSubmit);
           if (response.status === 200) {
             alert("Courses added successfully");
             setCourseData([...courseData, dataToSubmit]); // Update local state
@@ -302,21 +299,21 @@ const displayedCourse = filteredCourse.slice(
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
-        <h3>Trending Courses</h3>
+        <h3>Corporate Training Courses</h3>
         <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                        <a href="#!" onClick={() => setShowAddCourse(false)}>Trending Courses</a> <MdKeyboardArrowRight />
+                        <a href="#!" onClick={() => setShowAddCourse(false)}>Corporate Training Courses</a> <MdKeyboardArrowRight />
                         </li>
                         <li className="breadcrumb-item active" aria-current="page">
-                        Add Trending Course
+                        Add Corporate Course
                         </li>
                       </ol>
                     </nav>
 
-  <div className="category">
+   <div className="category">
       <div className="category-header">
-        <p>Add Trending Course</p>
+        <p>Add Corporate Course</p>
       </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -393,10 +390,10 @@ const displayedCourse = filteredCourse.slice(
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-      <h3>Trending Courses</h3>
+      <h3>Corporate Training Courses</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Trending Courses Details</p>
+            <p>View Corporate Training Courses</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -442,7 +439,7 @@ const displayedCourse = filteredCourse.slice(
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Trending Course
+                <FiPlus /> Add Corporate Course
               </button>
             </div>
           </div>
@@ -470,7 +467,7 @@ const displayedCourse = filteredCourse.slice(
 
     {displayedCourse.length > 0
     ? displayedCourse.map((row, index) => (
-            <StyledTableRow key={row.trendingcourse_id}>
+            <StyledTableRow key={row.corporatecourse_id}>
               <StyledTableCell align="center">
                           <Checkbox />
                         </StyledTableCell>
@@ -487,7 +484,7 @@ const displayedCourse = filteredCourse.slice(
                 <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                 <RiDeleteBin6Line
                   className="delete"
-                  onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
+                  onClick={() => handleDeleteConfirmation(row.corporatecourse_id)}
                 />
                 </div>
               </StyledTableCell>
@@ -521,7 +518,7 @@ const displayedCourse = filteredCourse.slice(
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Corporate Course
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>

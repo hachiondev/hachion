@@ -186,8 +186,8 @@ const SalWorkshop = () => {
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              <p>{workshop?.content}</p>
-              {/* <p><b>By participating along with us in the workshop, you'll learn:</b></p>
+              {/* <p>{workshop?.content}</p> */}
+              <p><b>By participating along with us in the workshop, you'll learn:</b></p>
               <ul>
                 <li>Learn the core concepts, architecture, and key features of Salesforce CRM.</li>
                 <li>Gain practical knowledge with live demonstrations and real-world scenarios.</li>
@@ -201,7 +201,7 @@ const SalWorkshop = () => {
               <p><b>Is This Workshop for Me?</b></p>
               <p>
                 This workshop is designed for individuals who want to gain hands-on experience with Salesforce CRM and build practical skills for real-world business solutions. By the end of this workshop, you'll be equipped to build business automation solutions, understand Salesforce architecture, and take your first steps toward Salesforce certifications.
-              </p> */}
+              </p>
             </div>
 
             <div className='workshop-left-content'>

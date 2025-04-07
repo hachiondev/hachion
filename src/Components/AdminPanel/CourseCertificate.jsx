@@ -568,7 +568,7 @@ const handleFileChange = (e) => {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -598,7 +598,7 @@ const handleFileChange = (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

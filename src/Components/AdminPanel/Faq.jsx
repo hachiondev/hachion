@@ -221,7 +221,7 @@ export default function Faq() {
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
-            setMessage("Error updating Curriculum.");
+            setMessage("Error updating FAQ.");
         }
     };
 
@@ -751,7 +751,7 @@ const handleSubmit = async (e) => {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -781,7 +781,7 @@ const handleSubmit = async (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

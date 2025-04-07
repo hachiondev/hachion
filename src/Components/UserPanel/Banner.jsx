@@ -195,9 +195,9 @@ const Banner = () => {
         console.error("Error fetching banners:", error);
         setApiError(true);
       });
-  }, []);
+  });
 
-  const handleExploreMore = () => navigate("/course");
+  const handleExploreMore = () => navigate("/courseDetails");
   const handleJoinNow = () => navigate("/Salesforce-Workshop");
 
   const displayBanners = apiError ? [staticBanner] : banners;
@@ -228,10 +228,12 @@ const Banner = () => {
             <div className="carousel-caption">
               <div className="carousel-btn">
                 {index === displayBanners.length - 1 ? (
+                  <div className='carousel-join-btn'>
                   <button className="join-now" onClick={handleJoinNow}>Join Now</button>
+                  </div>
                 ) : (
                   <button className="join-now" onClick={handleExploreMore}>Explore More</button>
-                )}
+                )}            
               </div>
             </div>
           </div>
@@ -241,73 +243,3 @@ const Banner = () => {
   );
 };
 export default Banner;
-
-// const Banner = () => {
-//   const [banners, setBanners] = useState([]);
-//   const [apiError, setApiError] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     axios
-//       .get("https://api.hachion.co/banner")
-//       .then((response) => {
-//         if (response.data.length > 0) {
-//           setBanners(response.data);
-//           setApiError(false);
-//         } else {
-//           setApiError(true);
-//         }
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching banners:", error);
-//         setApiError(true); // Set error flag if API fails
-//       });
-//   }, []);
-
-//   const handleExploreMore = () => navigate("/course");
-//   const handleJoinNow = () => navigate("/Salesforce-Workshop");
-
-//   const displayBanners = apiError
-//     ? [{ home_banner_image: Banner1 }, { home_banner_image: Banner3 }, { home_banner_image: Banner2 }]
-//     : banners;
-
-//   return (
-//     <div id="autoScrollingBanner" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-//       <div className="carousel-indicators">
-//         {displayBanners.map((_, index) => (
-//           <button
-//             key={index}
-//             type="button"
-//             data-bs-target="#autoScrollingBanner"
-//             data-bs-slide-to={index}
-//             className={index === 0 ? "active" : ""}
-//             aria-label={`Slide ${index + 1}`}
-//           ></button>
-//         ))}
-//       </div>
-
-//       <div className="carousel-inner">
-//         {displayBanners.map((banner, index) => (
-//           <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-//             <img
-//               src={apiError ? banner.home_banner_image : `https://api.hachion.co/${banner.home_banner_image}`}
-//               className="d-block w-100"
-//               alt={`Banner ${index + 1}`}
-//             />
-//             <div className="carousel-caption">
-//               <div className="carousel-btn">
-//                 {index === displayBanners.length - 1 ? (
-//                   <button className="join-now" onClick={handleJoinNow}>Join Now</button>
-//                 ) : (
-//                   <button className="join-now" onClick={handleExploreMore}>Explore More</button>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Banner;

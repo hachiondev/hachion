@@ -24,7 +24,11 @@ const Enrollment = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const [selectedCountry, setSelectedCountry] = useState({
+        code: '+1',
+        flag: 'US',
+        name: 'United States',
+      });
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
@@ -34,8 +38,8 @@ const Enrollment = () => {
   });
 
   const countries = [
-    { name: 'United States', code: '+1', flag: 'US' },
     { name: 'India', code: '+91', flag: 'IN' },
+    { name: 'United States', code: '+1', flag: 'US' },
     { name: 'United Kingdom', code: '+44', flag: 'GB' },
     { name: 'Thailand', code: '+66', flag: 'TH' },
     { name: 'Canada', code: '+1', flag: 'CA' },
@@ -147,7 +151,7 @@ const Enrollment = () => {
               <label for="inputCity" className="form-label">
               Country<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="enroll1" placeholder='United States'
+              <input type="text" className="form-control" id="enroll1" placeholder='India'
              required/>
             </div>
   </div>

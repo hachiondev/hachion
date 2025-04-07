@@ -58,7 +58,8 @@ export default function CorporateCourses() {
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[trendingCourse,setTrendingCourse]=useState([]);
-    const[filteredCourse,setFilteredCourse]=useState([])
+    const[filteredCourse,setFilteredCourse]=useState([]);
+     const[filterCourse,setFilterCourse]=useState([]);
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
@@ -90,7 +91,16 @@ const handleRowsPerPageChange = (rows) => {
 const handleSwitchToggle = () => {
   setStatus(!status); 
 };
-
+useEffect(() => {
+  if (courseData.category_name) {
+    const filtered = course.filter(
+      (course) => course.courseCategory === courseData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [courseData.category_name, course]);
 // const handleStatusChange = (e) => {
 //  if (!courseData || !courseData[0]) {
 //      console.error("courseData or the first item is undefined");
@@ -193,7 +203,7 @@ const displayedCourse = filteredCourse.slice(
                     curr.corporatecourse_id === editedData.corporatecourse_id ? response.data : curr
                 )
             );
-            setMessage(" Course updated successfully!");
+            setMessage("Trending Course updated successfully!");
             setTimeout(() => setMessage(""), 5000);
             setOpen(false);
         } catch (error) {
@@ -205,7 +215,7 @@ const displayedCourse = filteredCourse.slice(
        
          try { 
           const response = await axios.delete(`https://api.hachion.co/corporatecourse/delete/${corporatecourse_id}`); 
-          console.log(" Courses deleted successfully:", response.data); 
+          console.log("Trending Courses deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Courses:", error); 
         } }; 
@@ -342,20 +352,13 @@ const displayedCourse = filteredCourse.slice(
   name="course_name"
   value={courseData.course_name}
   onChange={handleChange}
+  disabled={!courseData.category_name}
 >
-  <option value="" disabled>
-    Select Course
-  </option>
-  {course.length > 0 ? (
-    course.map((current) => (
-      <option key={current.id} value={current.courseName}>
-        {current.courseName}
-      </option>
-    ))
-  ) : (
-    <option disabled>No Courses Available</option>
-  )}
-</select>
+  <option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
 </div>
   </div>
 
@@ -594,7 +597,7 @@ const displayedCourse = filteredCourse.slice(
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -624,7 +627,7 @@ const displayedCourse = filteredCourse.slice(
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

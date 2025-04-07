@@ -23,11 +23,12 @@ import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
 
 const SalWorkshop = () => {
-
+  const { courseName } = useParams();
   const footerRef = useRef(null); // Footer reference for intersection observer
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
+  const [workshop, setWorkshop] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     emailId: "",
@@ -66,7 +67,15 @@ const SalWorkshop = () => {
       { name: 'Mexico', code: '+52', flag: 'MX' },
       { name: 'South Africa', code: '+27', flag: 'ZA' },
     ];
+    useEffect(() => {
+      if (!courseName) {
+        console.warn("courseName param missing!");
+        return;
+      }
     
+      const originalName = courseName.replace(/-/g, " ");
+      // Now use originalName safely
+    }, [courseName]);
     const handleCountrySelect = (country) => {
       setSelectedCountry(country);
       closeMenu();
@@ -81,6 +90,16 @@ const SalWorkshop = () => {
       setAnchorEl(null);
     };
   
+    useEffect(() => {
+      fetch('https://api.hachion.co/workshopschedule')
+        .then((res) => res.json())
+        .then((data) => {
+          // if API returns an array, pick the first item (or adjust accordingly)
+          setWorkshop(Array.isArray(data) ? data[0] : data);
+        })
+        .catch((err) => console.error("Failed to fetch workshop:", err));
+    }, []);
+
     const handleScrollToWorkshop = () => {
       if (workshopRef.current) {
         workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -167,7 +186,8 @@ const SalWorkshop = () => {
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              <p><b>By participating along with us in the workshop, you'll learn:</b></p>
+              <p>{workshop?.content}</p>
+              {/* <p><b>By participating along with us in the workshop, you'll learn:</b></p>
               <ul>
                 <li>Learn the core concepts, architecture, and key features of Salesforce CRM.</li>
                 <li>Gain practical knowledge with live demonstrations and real-world scenarios.</li>
@@ -181,20 +201,18 @@ const SalWorkshop = () => {
               <p><b>Is This Workshop for Me?</b></p>
               <p>
                 This workshop is designed for individuals who want to gain hands-on experience with Salesforce CRM and build practical skills for real-world business solutions. By the end of this workshop, you'll be equipped to build business automation solutions, understand Salesforce architecture, and take your first steps toward Salesforce certifications.
-              </p>
+              </p> */}
             </div>
 
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
-                {/* <p>Date: {workshop.date}</p>
-                <p>Time: {workshop.time} {workshop.timezone}</p> */}
-                <p>Date: 15th March</p>
-                <p>Time: 10AM EST</p>
-                <p>(4 Days a Week: Monday - Thursday)</p>
-                  <p>Time Duration: 1 Hour Daily</p>
-                  {/* <p>Workshop Duration: 1 Month</p> */}
-              </div>
+        <p>Date: {workshop?.date ? new Date(workshop.date).toDateString() : 'Loading...'}</p>
+        <p>Time: {workshop?.time} {workshop?.time_zone}</p>
+        <p>(4 Days a Week: Monday - Thursday)</p>
+        <p>Time Duration: 1 Hour Daily</p>
+      </div>
+
 
               <ul>
                 <li>What is the outline of the Training Program</li>

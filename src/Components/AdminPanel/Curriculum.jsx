@@ -745,7 +745,7 @@ export default function Curriculum() {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -775,7 +775,7 @@ export default function Curriculum() {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

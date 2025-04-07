@@ -592,7 +592,7 @@ export default function RegularVideo() {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -622,7 +622,7 @@ export default function RegularVideo() {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

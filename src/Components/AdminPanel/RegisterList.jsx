@@ -628,7 +628,7 @@ const [currentPage, setCurrentPage] = useState(1);
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -658,7 +658,7 @@ const [currentPage, setCurrentPage] = useState(1);
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

@@ -496,7 +496,7 @@
     margin-left: 9vw;
   }
 .form-control{
-min-width: 350px !important;
+min-width: 280px !important;
 width: 100%;
 }
 .row{
@@ -590,7 +590,7 @@ width: 100%;
 
 .form-control {
   width: 100%; 
-  min-width: 0; 
+  /* min-width: 0;  */
   padding: 10px;
   box-sizing: border-box;
 }
@@ -609,7 +609,7 @@ width: 100%;
 
 .form-control-mode, .form-control-sample {
   width: 100%; /* Reduces the input field width */
-  min-width: 210px;
+  min-width: 180px;
   height: 50px;
   border-radius: 5px;
   outline: none;
@@ -644,8 +644,8 @@ width: 100%;
 .course-col{
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  gap: 10px;
+  justify-content: center;
+  gap: 50px;
 }
 #exampleFormControlTextarea1{
   height: 150px;

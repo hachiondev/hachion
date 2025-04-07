@@ -43,6 +43,8 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import './Admin.css'; 
 import AdminPagination from './AdminPagination'; 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -69,23 +71,27 @@ export default function WorkshopSchedule() {
  const[courses,setCourses]=useState([]);
  const[category,setCategory]=useState([]);
  const[courseCategory,setCourseCategory]=useState([]);
-const [filteredCourses,setFilteredCourses]=useState([courses]);
-const[filterCourse,setFilterCourse]=useState([]);
+  const [error,setError]=useState([]);
+  const [filteredCourses,setFilteredCourses]=useState([courses]);
+  const[filterCourse,setFilterCourse]=useState([]);
   const [open, setOpen] = React.useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
-const[message,setMessage]=useState(false);
+  const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",date:null,time:null,time_zone:""});
-  const [selectedRow, setSelectedRow] = React.useState({category_name:"",course_name:"",date:"",time:"",time_zone:""});
+  const [editedRow, setEditedRow] = useState({banner:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:""});
+  const [selectedRow, setSelectedRow] = React.useState({banner:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:""});
   const currentDate = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
+    banner:null,
     category_name:"",
     course_name:"",
     date:"",
       time:"",
       time_zone: "",
+      content:"",
+      details:"",
       created_date:"",
     });
     const [currentPage, setCurrentPage] = useState(1);
@@ -146,16 +152,16 @@ useEffect(() => {
   };
   fetchCourseCategory();
 }, []);
-// useEffect(() => {
-//   if (formData.category_name) {
-//     const filtered = category_name.filter(
-//       (course) => course.category_name === formData.category_name
-//     );
-//     setFilterCourse(filtered);
-//   } else {
-//     setFilterCourse([]); // Reset when no category is selected
-//   }
-// }, [formData.category_name]);
+useEffect(() => {
+  if (formData.category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === formData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [formData.category_name]);
 
 // Handle time change
 const handleTimeChange = (newValue) => {
@@ -181,11 +187,14 @@ const handleChange = (e) => {
 };
   const handleReset = () => {
     setFormData({
+      banner:null,
       category_name: "",
       course_name:"",
       time:"",
       time_zone: "",
       date:"",
+      content:"",
+      details:"",
       created_date: ""
     });
   };
@@ -199,6 +208,8 @@ const handleChange = (e) => {
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
+      content:formData.content||"",
+      details:formData.details||"",
       created_date: currentDate,
     };
   
@@ -281,8 +292,6 @@ const handleDelete = async (id) => {
   }
 };
 
-
-
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
 
 const handleClickOpen = (row) => {
@@ -334,6 +343,21 @@ const handleInputChange = (e) => {
     ...prev,
     [name]: value,
   }));
+};
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ align: [] }], 
+    [{ indent: "-1" }, { indent: "+1" }], 
+    ["blockquote"],
+    ["image"],
+    ["link"], 
+    [{ color: [] }], 
+    ["clean"],
+  ],
 };
 
 // const handleCourseChange = (event) => setCourse(event.target.value);
@@ -391,10 +415,22 @@ const handleInputChange = (e) => {
           ))}
         </select>
       </div>
+
+      <div className="col-md-3">
+                <label className="form-label">Banner Image (width=1440px, height=420px)</label>
+                <input
+                  type="file"
+                  className="schedule-input"
+                  accept="image/*"
+                  name="banner"
+                  onChange={handleChange}
+                 
+                  required
+                />
+              </div>
         </div>
         
         <div className='course-row d-flex align-items-center'>
-      {/* Date Field */}
       <div className='col'>
         <label className="form-label d-block">Date</label>
         <DatePicker
@@ -438,7 +474,39 @@ const handleInputChange = (e) => {
       </div>
       </div>
       </LocalizationProvider>
+      {/* <label className="form-label d-block">Key Takeaways</label>
+        <input type='text' placeholder='enter content' name='content' value={formData.content} onChange={handleChange}/> */}
         
+        <div className='course-row' style={{ paddingBottom: "20px" }}>
+         <div class="mb-3" style={{ paddingBottom: "20px" }}>
+         <label for="exampleFormControlTextarea1" class="form-label">Key Takeaways</label>
+           <ReactQuill
+             theme="snow"
+             id="keyTakeaways"
+             name="keyTakeaways"
+             value={formData.keyTakeaways}
+             onChange={(content) => handleChange(null, "keyTakeaways", content)}
+           style={{ height: "500px" }} // Increased editor height
+           modules={quillModules}
+         />
+         {error && <p className="error-message">{error}</p>}
+         </div> 
+         
+         <div class="mb-3" style={{ paddingBottom: "20px" }}>
+         <label for="exampleFormControlTextarea1" class="form-label">Workshop Details</label>
+           <ReactQuill
+             theme="snow"
+             id="details"
+             name="details"
+             value={formData.details}
+             onChange={(content) => handleChange(null, "details", content)}
+           style={{ height: "500px" }} // Increased editor height
+           modules={quillModules}
+         />
+         {error && <p className="error-message">{error}</p>}
+         </div> 
+         </div>
+          
           <div className="course-row">
         <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
@@ -515,14 +583,17 @@ const handleInputChange = (e) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align="center">
+            <StyledTableCell align="center" sx={{width: '50px'}}>
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell align="center">S.No.</StyledTableCell>
+            <StyledTableCell align="center">Banner Image</StyledTableCell>
             <StyledTableCell align="center">Category Name</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Time</StyledTableCell>
+            <StyledTableCell align="center">Key Takeaways</StyledTableCell>
+            <StyledTableCell align="center">Workshop Details</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
@@ -533,9 +604,14 @@ const handleInputChange = (e) => {
             <StyledTableRow key={course.id}>
               <StyledTableCell align="center"><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+              <StyledTableCell align="center">
+              {course.banner ? <img src={course.banner} alt="Banner" width="80" height="50" /> : 'No Banner'}
+              </StyledTableCell>
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
               <StyledTableCell align="center">{course.date}</StyledTableCell>
+              <StyledTableCell align="center">{course.content}</StyledTableCell>
+              <StyledTableCell align="center">{course.details}</StyledTableCell>
               <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
               <StyledTableCell align="center">{course.created_date}</StyledTableCell>
               <StyledTableCell align="center">
@@ -547,7 +623,11 @@ const handleInputChange = (e) => {
       </StyledTableRow>
         ))
       ) : (
-        <p>No Workshop schedules available</p>
+        <StyledTableRow>
+          <StyledTableCell colSpan={11} align="center">
+          No Workshop schedules available
+          </StyledTableCell>
+        </StyledTableRow>
       )}
       </TableBody>
           </Table>
@@ -620,6 +700,17 @@ const handleInputChange = (e) => {
 
         <div className="course-row">
         <div className="col">
+        <label className="form-label">Banner Image</label>
+        <input
+          type="file"
+          className="form-control"
+          name="image"
+          onChange={handleInputChange}
+          required
+        />
+        </div>
+
+        <div className="col">
           <label className="form-label">Date</label>
        <DatePicker
                  sx={{
@@ -630,7 +721,9 @@ const handleInputChange = (e) => {
          renderInput={(params) => <TextField {...params} />}
        />
        </div>
+       </div>
 
+       <div className="course-row">
         <div className="col">
           <label className="form-label">Time</label>
         <TimePicker
@@ -658,6 +751,24 @@ const handleInputChange = (e) => {
   </div>
         </div>
 
+        <label htmlFor="keyTakeaways">Key Takeaways</label>
+            <ReactQuill 
+              id="keyTakeaways"
+              name="keyTakeaways"
+              value={editedRow.keyTakeaways || ""}
+              onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, keyTakeaways: value }))}
+              modules={quillModules}
+            />
+
+      <label htmlFor="details">Workshop Details</label>
+            <ReactQuill 
+              id="details"
+              name="details"
+              value={editedRow.details || ""}
+              onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, details: value }))}
+              modules={quillModules}
+            />
+
       </LocalizationProvider>
     
         </DialogContent>
@@ -669,7 +780,7 @@ const handleInputChange = (e) => {
         </DialogActions>
       </Dialog>
 
-      <div
+      {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -699,7 +810,7 @@ const handleInputChange = (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
 
  </> );
 }

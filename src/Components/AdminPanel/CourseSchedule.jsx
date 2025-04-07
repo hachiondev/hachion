@@ -824,7 +824,7 @@ const handleInputChange = (e) => {
         </DialogActions>
       </Dialog>
 
-      <div
+      {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -854,7 +854,7 @@ const handleInputChange = (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
 
  </> );
 }

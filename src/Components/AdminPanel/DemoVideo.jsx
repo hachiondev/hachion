@@ -553,7 +553,7 @@ export default function DemoVideo() {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -583,7 +583,7 @@ export default function DemoVideo() {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

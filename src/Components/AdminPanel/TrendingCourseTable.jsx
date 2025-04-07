@@ -62,6 +62,7 @@ export default function TrendingCourseTable() {
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[trendingCourse,setTrendingCourse]=useState([]);
     const[filteredCourse,setFilteredCourse]=useState([])
+    const[filterCourse,setFilterCourse]=useState([]);
     const [open, setOpen] = React.useState(false);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
@@ -84,7 +85,16 @@ const [currentPage, setCurrentPage] = useState(1);
     window.scrollTo(0, window.scrollY);
   };
   // Inside your CourseCategory component
-
+useEffect(() => {
+  if (courseData.category_name) {
+    const filtered = course.filter(
+      (course) => course.courseCategory === courseData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [courseData.category_name, course]);
 const handleRowsPerPageChange = (rows) => {
   setRowsPerPage(rows);
   setCurrentPage(1); // Reset to the first page whenever rows per page changes
@@ -345,20 +355,14 @@ const displayedCourse = filteredCourse.slice(
   name="course_name"
   value={courseData.course_name}
   onChange={handleChange}
+  disabled={!courseData.category_name}
 >
-  <option value="" disabled>
-    Select Course
-  </option>
-  {course.length > 0 ? (
-    course.map((current) => (
-      <option key={current.id} value={current.courseName}>
-        {current.courseName}
-      </option>
-    ))
-  ) : (
-    <option disabled>No Courses Available</option>
-  )}
-</select>
+<option value="" disabled>Select Course</option>
+          {filterCourse.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+
 </div>
   </div>
 
@@ -597,7 +601,7 @@ const displayedCourse = filteredCourse.slice(
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -627,7 +631,7 @@ const displayedCourse = filteredCourse.slice(
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

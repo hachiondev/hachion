@@ -213,23 +213,24 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
               selectedFee = '0';
               originalFee = 0;
             } else {
-              selectedFee = matchedCourse.total;
-              originalFee = matchedCourse.amount;
+              selectedFee = Math.round(matchedCourse.total);
+              originalFee = Math.round(matchedCourse.amount);
+
             }
           } else {
             switch (modeType) {
               case 'mentoring':
-                selectedFee = matchedCourse.mtotal;
-                originalFee = matchedCourse.mamount;
-                break;
-              case 'self':
-                selectedFee = matchedCourse.stotal;
-                originalFee = matchedCourse.samount;
-                break;
-              case 'corporate':
-                selectedFee = matchedCourse.ctotal;
-                originalFee = matchedCourse.camount;
-                break;
+            selectedFee = Math.round(matchedCourse.mtotal);
+            originalFee = Math.round(matchedCourse.mamount);
+            break;
+            case 'self':
+            selectedFee = Math.round(matchedCourse.stotal);
+            originalFee = Math.round(matchedCourse.samount);
+            break;
+            case 'corporate':
+            selectedFee = Math.round(matchedCourse.ctotal);
+            originalFee = Math.round(matchedCourse.camount);
+            break;
               default:
                 selectedFee = 'Not Available';
                 originalFee = 0;

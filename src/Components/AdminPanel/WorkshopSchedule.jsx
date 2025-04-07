@@ -146,16 +146,16 @@ useEffect(() => {
   };
   fetchCourseCategory();
 }, []);
-// useEffect(() => {
-//   if (formData.category_name) {
-//     const filtered = category_name.filter(
-//       (course) => course.category_name === formData.category_name
-//     );
-//     setFilterCourse(filtered);
-//   } else {
-//     setFilterCourse([]); // Reset when no category is selected
-//   }
-// }, [formData.category_name]);
+useEffect(() => {
+  if (formData.category_name) {
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === formData.category_name
+    );
+    setFilterCourse(filtered);
+  } else {
+    setFilterCourse([]); // Reset when no category is selected
+  }
+}, [formData.category_name]);
 
 // Handle time change
 const handleTimeChange = (newValue) => {
@@ -199,6 +199,7 @@ const handleChange = (e) => {
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
+      content:formData.content||"",
       created_date: currentDate,
     };
   
@@ -438,7 +439,8 @@ const handleInputChange = (e) => {
       </div>
       </div>
       </LocalizationProvider>
-        
+      <label className="form-label d-block">Key Takeaways</label>
+        <input type='text' placeholder='enter content' name='content' value={formData.content} onChange={handleChange}/>
           <div className="course-row">
         <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
@@ -523,6 +525,7 @@ const handleInputChange = (e) => {
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Time</StyledTableCell>
+            <StyledTableCell align="center">Key Takeaways</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
@@ -536,6 +539,7 @@ const handleInputChange = (e) => {
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
               <StyledTableCell align="center">{course.date}</StyledTableCell>
+              <StyledTableCell align="center">{course.content}</StyledTableCell>
               <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
               <StyledTableCell align="center">{course.created_date}</StyledTableCell>
               <StyledTableCell align="center">

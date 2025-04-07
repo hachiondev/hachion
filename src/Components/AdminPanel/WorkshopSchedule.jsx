@@ -539,8 +539,8 @@ const handleInputChange = (e) => {
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
               <StyledTableCell align="center">{course.date}</StyledTableCell>
+              <StyledTableCell align="center">{course.time}{course.time_zone}</StyledTableCell>
               <StyledTableCell align="center">{course.content}</StyledTableCell>
-              <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
               <StyledTableCell align="center">{course.created_date}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

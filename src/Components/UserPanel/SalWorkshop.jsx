@@ -23,7 +23,7 @@ import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
 
 const SalWorkshop = () => {
-
+  const { courseName } = useParams();
   const footerRef = useRef(null); // Footer reference for intersection observer
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -67,7 +67,15 @@ const SalWorkshop = () => {
       { name: 'Mexico', code: '+52', flag: 'MX' },
       { name: 'South Africa', code: '+27', flag: 'ZA' },
     ];
+    useEffect(() => {
+      if (!courseName) {
+        console.warn("courseName param missing!");
+        return;
+      }
     
+      const originalName = courseName.replace(/-/g, " ");
+      // Now use originalName safely
+    }, [courseName]);
     const handleCountrySelect = (country) => {
       setSelectedCountry(country);
       closeMenu();

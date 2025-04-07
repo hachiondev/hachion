@@ -24,7 +24,11 @@ const Advisor = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN' });
+  const [selectedCountry, setSelectedCountry] = useState({
+        code: '+1',
+        flag: 'US',
+        name: 'United States',
+      });
   const [selectedValue, setSelectedValue] = useState("");
   const { values, errors, handleBlur, touched, handleChange, handleSubmit: formikSubmit } = useFormik({
     initialValues: initialValues,

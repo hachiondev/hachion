@@ -184,7 +184,7 @@ const SalWorkshop = () => {
                   ? `https://api.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
-            style={{ height: "420px"}}
+            // style={{ height: "420px"}}
             className="d-block w-100"
             onClick={handleScrollToWorkshop}
           />

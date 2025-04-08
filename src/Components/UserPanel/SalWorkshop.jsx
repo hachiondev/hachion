@@ -178,7 +178,16 @@ const SalWorkshop = () => {
       <NavbarTop />
       <div className='course-top'>
         <div className='about-banner'>
-          <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/>
+          {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
+          <img
+            src={workshop?.banner_image && workshop.banner_image.trim() !== ""
+                  ? `https://api.hachion.co/${workshop.banner_image}` 
+                  : Banner2}
+            alt="Workshop Banner"
+            // style={{ height: "420px"}}
+            className="d-block w-100"
+            onClick={handleScrollToWorkshop}
+          />
         </div>
 
         <div className='workshop-content'>
@@ -186,7 +195,10 @@ const SalWorkshop = () => {
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              <p>{workshop?.content}</p>
+              {/* <p>{workshop?.content}</p> */}
+
+              <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.content.trim() || "" }} />
+              
               {/* <p><b>By participating along with us in the workshop, you'll learn:</b></p>
               <ul>
                 <li>Learn the core concepts, architecture, and key features of Salesforce CRM.</li>
@@ -196,9 +208,9 @@ const SalWorkshop = () => {
                 <li>Get guidance on Salesforce certifications to fast-track your career.</li>
                 <li>See how top companies leverage Salesforce for customer management and business growth.</li>
                 <li>Learn about in-demand Salesforce roles, salary trends, and career growth opportunities.</li>
-              </ul>
+              </ul> */}
 
-              <p><b>Is This Workshop for Me?</b></p>
+              {/* <p><b>Is This Workshop for Me?</b></p>
               <p>
                 This workshop is designed for individuals who want to gain hands-on experience with Salesforce CRM and build practical skills for real-world business solutions. By the end of this workshop, you'll be equipped to build business automation solutions, understand Salesforce architecture, and take your first steps toward Salesforce certifications.
               </p> */}
@@ -207,15 +219,49 @@ const SalWorkshop = () => {
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
-        <p>Date: {workshop?.date ? new Date(workshop.date).toDateString() : 'Loading...'}</p>
+              <p>
+                Date: {workshop?.date ? (() => {
+                  const date = new Date(workshop.date);
+                  const day = date.getDate();
+                  const month = date.toLocaleString('default', { month: 'long' });
+                  const getDaySuffix = (d) => {
+                    if (d > 3 && d < 21) return 'th';
+                    switch (d % 10) {
+                      case 1: return 'st';
+                      case 2: return 'nd';
+                      case 3: return 'rd';
+                      default: return 'th';
+                    }
+                  };
+                  return `${day}${getDaySuffix(day)} ${month}`;
+                })() : 'Loading...'}
+              </p>
         <p>Time: {workshop?.time} {workshop?.time_zone}</p>
+        {/* <p>Date: 15th March</p>
+        <p>Time: 10AM EST</p> */}
         <p>(4 Days a Week: Monday - Thursday)</p>
         <p>Time Duration: 1 Hour Daily</p>
       </div>
-      <div className="qa-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() }} />
-    
 
-             {/* <p>{workshop?.details}</p> */}
+      {/* <p>{workshop?.details}</p> */}
+
+      <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() || "" }} />
+
+              {/* <ul>
+                <li>What is the outline of the Training Program</li>
+                <li>Live case study</li>
+                <li>How can you make a career as a Salesforce professional</li>
+                <li>How to crack the interviews - mantras for your case rounds</li>
+                <li>Live Q&A</li>
+              </ul>
+
+              <p><b>Any Prerequisites?</b></p>
+              <ul>
+                <li>Basic Computer Skills</li>
+                <li>Understanding of Business Processes</li>
+                <li>Problem-Solving Mindset</li>
+                <li>Curiosity to Learn</li>
+              </ul> */}
             </div>
           </div>
         </div>

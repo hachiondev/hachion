@@ -392,6 +392,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -487,22 +489,47 @@ public class FaqController {
         }
     }
 
-    @PutMapping("/faq/update/{id}")
-    public ResponseEntity<Faq> updateFaq(@PathVariable int id, @RequestBody Faq updatedFaq) {
-        return repo.findById(id).map(faq -> {
-            faq.setCategory_name(updatedFaq.getCategory_name());
-            faq.setCourse_name(updatedFaq.getCourse_name());
-            faq.setFaq_title(updatedFaq.getFaq_title());
-            faq.setDescription(updatedFaq.getDescription());
+    @PutMapping(value = "/faq/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateFaq(
+            @PathVariable int id,
+            @RequestPart("faqData") String faqData,
+            @RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {
+        try {
+            Optional<Faq> optionalFaq = repo.findById(id);
+            if (!optionalFaq.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faq not found");
+            }
+
+            Faq existing = optionalFaq.get();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            Faq updatedData = objectMapper.readValue(faqData, Faq.class);
+
+            // Update only non-null values
+            if (updatedData.getCategory_name() != null) existing.setCategory_name(updatedData.getCategory_name());
+            if (updatedData.getCourse_name() != null) existing.setCourse_name(updatedData.getCourse_name());
+            if (updatedData.getFaq_title() != null) existing.setFaq_title(updatedData.getFaq_title());
+            if (updatedData.getDescription() != null) existing.setDescription(updatedData.getDescription());
             
-            // Update PDF only if a new one is provided, otherwise keep the existing one
-            faq.setFaq_pdf(updatedFaq.getFaq_pdf() != null ? updatedFaq.getFaq_pdf() : faq.getFaq_pdf());
 
-            repo.save(faq);
-            return ResponseEntity.ok(faq);
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            // Optional: Handle new PDF file
+            if (faqPdf != null && !faqPdf.isEmpty()) {
+                String pdfPath = saveFile(faqPdf, "pdfs");
+                if (pdfPath != null) {
+                    existing.setFaq_pdf(pdfPath);
+                }
+            }
+
+            Faq saved = repo.save(existing);
+            return ResponseEntity.ok(saved);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating faq: " + e.getMessage());
+        }
     }
-
     @DeleteMapping("faq/delete/{id}")
     public ResponseEntity<String> deleteFaq(@PathVariable int id) {
         return repo.findById(id).map(faq -> {

@@ -80,20 +80,20 @@ export default function WorkshopSchedule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({banner:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:""});
-  const [selectedRow, setSelectedRow] = React.useState({banner:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:""});
+  const [editedRow, setEditedRow] = useState({bannerImage:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:""});
+  const [selectedRow, setSelectedRow] = React.useState({bannerImage:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:""});
   const currentDate = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
-    banner:null,
-    category_name:"",
-    course_name:"",
-    date:"",
-      time:"",
-      time_zone: "",
-      content:"",
-      details:"",
-      created_date:"",
-    });
+      bannerImage:null,
+      category_name:"",
+      course_name:"",
+      date:"",
+        time:"",
+        time_zone: "",
+        content:"",
+        details:"",
+        created_date:"",
+      });
     const [currentPage, setCurrentPage] = useState(1);
      const [rowsPerPage, setRowsPerPage] = useState(10);
                
@@ -178,16 +178,31 @@ const handleTimeChange = (newValue) => {
 //     [name]: value,
 //   }));
 // };
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({
-    ...prev,
-    [name]: value
-  }));
+// const handleChange = (e) => {
+//   const { name, value } = e.target;
+//   setFormData((prev) => ({
+//     ...prev,
+//     [name]: value
+//   }));
+// };
+
+const handleChange = (e, quillField = null, quillValue = null) => {
+  setFormData((prevData) => {
+    let { name, value } = e?.target || {};
+
+    // Handle ReactQuill input separately
+    if (quillField) {
+      name = quillField;
+      value = quillValue.trim() === "" || quillValue === "<p><br></p>" ? "" : quillValue;
+    }
+
+    return { ...prevData, [name]: value };
+  });
 };
+
   const handleReset = () => {
     setFormData({
-      banner:null,
+      bannerImage:null,
       category_name: "",
       course_name:"",
       time:"",
@@ -198,27 +213,40 @@ const handleChange = (e) => {
       created_date: ""
     });
   };
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const currentDate = new Date().toISOString().split("T")[0];
   
+    // Construct your JSON object
     const updatedFormData = {
       category_name: formData.category_name,
       course_name: formData.course_name || "Salesforce",
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
-      content:formData.content||"",
-      details:formData.details||"",
+      content: formData.content || "",
+      details: formData.details || "",
       created_date: currentDate,
     };
   
-    console.log("Submitting Data:", updatedFormData); // Debugging line
+    // Construct FormData for multipart
+    const formDataToSend = new FormData();
+    formDataToSend.append("workshop", JSON.stringify(updatedFormData)); // send JSON as 'workshop'
+  
+    if (formData.bannerImage) {
+      formDataToSend.append("bannerImage", formData.bannerImage); // only add if exists
+    }
   
     try {
       const response = await axios.post(
         "https://api.hachion.co/workshopschedule/add",
-        updatedFormData
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
   
       alert("Form submitted successfully!");
@@ -310,30 +338,42 @@ const handleCloseModal=()=>{
  
 }
 const handleSave = async () => {
- 
   try {
+    const formDataToSend = new FormData();
+
+    // Add the updated JSON data as a string
+    formDataToSend.append("workshop", JSON.stringify(editedRow));
+
+    // If a new banner image is selected, add it
+    if (editedRow.bannerImage) {
+      formDataToSend.append("bannerImage", editedRow.bannerImage);
+    }
+
     const response = await axios.put(
       `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
-      editedRow
+      formDataToSend,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
 
-    // Update only the edited row in the trainers state
+    // Update only the edited row in the courses state
     setCourses((prevCourses) =>
       prevCourses.map((course) =>
         course.id === selectedRow.id ? response.data : course
       )
     );
-    console.log(courses);
-    setMessage(true); // Show the success message
 
-    // Hide the message after 5 seconds
+    setMessage(true);
     setTimeout(() => {
       setMessage(false);
     }, 5000);
 
     setOpen(false); // Close the dialog
   } catch (error) {
-    console.error("Error updating trainer:", error);
+    console.error("Error updating workshop:", error.response?.data || error.message);
   }
 };
 
@@ -422,10 +462,11 @@ const quillModules = {
                   type="file"
                   className="schedule-input"
                   accept="image/*"
-                  name="banner"
-                  onChange={handleChange}
-                 
-                  required
+                  name="bannerImage"
+                  onChange={(e) =>
+                    setFormData({ ...formData, bannerImage: e.target.files[0] })
+                  }
+                  
                 />
               </div>
         </div>
@@ -465,7 +506,7 @@ const quillModules = {
         <label className="form-label d-block">Time Zone</label>
         <input
           type="text"
-          className="form-select"
+          className="form-control"
           placeholder="Enter Time Zone"
           name="time_zone"
           value={formData.time_zone || "EST"}
@@ -482,13 +523,40 @@ const quillModules = {
          <label for="exampleFormControlTextarea1" class="form-label">Key Takeaways</label>
            <ReactQuill
              theme="snow"
-             id="keyTakeaways"
-             name="keyTakeaways"
-             value={formData.keyTakeaways}
-             onChange={(content) => handleChange(null, "keyTakeaways", content)}
+             id="content"
+             name="content"
+             value={formData.content}
+             onChange={(value) => handleChange(null, "content", value)}
            style={{ height: "500px" }} // Increased editor height
-           modules={quillModules}
-         />
+           modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+              ["bold", "italic", "underline"], // Text formatting
+              [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+              [{ align: [] }], // Text alignment
+              [{ indent: "-1" }, { indent: "+1" }], // Indentation
+              ["blockquote"], // Blockquote for paragraph formatting
+              ["image"],
+              ["link"], // Insert links
+              [{ color: [] }], // Full color picker
+              ["clean"], // Remove formatting
+            ],
+          }}
+          formats={[
+            "header",
+            "bold",
+            "italic",
+            "underline",
+            "list",
+            "bullet",
+            "align",
+            "indent",
+            "blockquote",
+            "image",
+            "link",
+            "color",
+          ]}
+        />
          {error && <p className="error-message">{error}</p>}
          </div> 
          
@@ -499,9 +567,36 @@ const quillModules = {
              id="details"
              name="details"
              value={formData.details}
-             onChange={(content) => handleChange(null, "details", content)}
+             onChange={(value) => handleChange(null, "details", value)}
            style={{ height: "500px" }} // Increased editor height
-           modules={quillModules}
+           modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+              ["bold", "italic", "underline"], // Text formatting
+              [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+              [{ align: [] }], // Text alignment
+              [{ indent: "-1" }, { indent: "+1" }], // Indentation
+              ["blockquote"], // Blockquote for paragraph formatting
+              ["image"],
+              ["link"], // Insert links
+              [{ color: [] }], // Full color picker
+              ["clean"], // Remove formatting
+            ],
+          }}
+          formats={[
+            "header",
+            "bold",
+            "italic",
+            "underline",
+            "list",
+            "bullet",
+            "align",
+            "indent",
+            "blockquote",
+            "image",
+            "link",
+            "color",
+          ]}
          />
          {error && <p className="error-message">{error}</p>}
          </div> 
@@ -605,15 +700,39 @@ const quillModules = {
               <StyledTableCell align="center"><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="center">
-              {course.banner ? <img src={course.banner} alt="Banner" width="80" height="50" /> : 'No Banner'}
+              {course.banner_image ? <img
+                src={`https://api.hachion.co/${course.banner_image}`} 
+                    alt={`Banner`}
+                    style={{ width: "100px", height: "50px" }}
+                /> : 'No Banner'}
               </StyledTableCell>
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
-              <StyledTableCell align="center">{course.date}</StyledTableCell>
-              <StyledTableCell align="center">{course.content}</StyledTableCell>
-              <StyledTableCell align="center">{course.details}</StyledTableCell>
+              <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
-              <StyledTableCell align="center">{course.created_date}</StyledTableCell>
+              <StyledTableCell align="left">
+                  {course.content ? (
+                      <div 
+                      style={{ maxWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                      dangerouslySetInnerHTML={{ __html: course.content }} />
+                  ) : (
+                      <p>No content is available</p>
+                  )}
+              </StyledTableCell>
+              <StyledTableCell align="left">
+                  {course.details ? (
+                      <div 
+                      style={{ maxWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                      dangerouslySetInnerHTML={{ __html: course.details }} />
+                  ) : (
+                      <p>No details is available</p>
+                  )}
+              </StyledTableCell>
+              {/* <StyledTableCell align="center">
+              <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.content.trim() || "" }} /></StyledTableCell> */}
+              {/* <StyledTableCell align="center">
+              <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.details.trim() || "" }} /></StyledTableCell> */}
+              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}
@@ -704,8 +823,10 @@ const quillModules = {
         <input
           type="file"
           className="form-control"
-          name="image"
-          onChange={handleInputChange}
+          name="bannerImage"
+          onChange={(e) =>
+            setEditedRow({ ...editedRow, bannerImage: e.target.files[0] })
+          }
           required
         />
         </div>
@@ -742,7 +863,7 @@ const quillModules = {
     <label className="form-label">Time Zone</label>
     <input
       type="text"
-      className="form-select"
+      className="form-control"
       placeholder="Enter Time Zone"
       name="time_zone"
       value={editedRow.time_zone || ""}
@@ -751,12 +872,12 @@ const quillModules = {
   </div>
         </div>
 
-        <label htmlFor="keyTakeaways">Key Takeaways</label>
+        <label htmlFor="content">Key Takeaways</label>
             <ReactQuill 
-              id="keyTakeaways"
-              name="keyTakeaways"
-              value={editedRow.keyTakeaways || ""}
-              onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, keyTakeaways: value }))}
+              id="content"
+              name="content"
+              value={editedRow.content || ""}
+              onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, content: value }))}
               modules={quillModules}
             />
 

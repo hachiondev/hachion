@@ -16,9 +16,9 @@ const RegisterHere = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({
-    code: '+91',
-    flag: 'IN',
-    name: 'India',
+    code: '+1',
+    flag: 'US',
+    name: 'United States',
   });
 
   const countries = [
@@ -120,11 +120,11 @@ const RegisterHere = () => {
           }
         } else {
           const responseText = await response.text();
-          // alert(`Error: ${responseText}`);
+          alert(`Error: ${responseText}`);
         }
       } else {
         const responseText = await response.text();
-        // alert(`Error: ${responseText}`);
+        alert(`Error: ${responseText}`);
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}`);

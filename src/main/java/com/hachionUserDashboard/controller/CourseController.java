@@ -334,25 +334,24 @@ public class CourseController {
                 course.setCourseDescription(updatedCourse.getCourseDescription());
 
                 if (courseImage != null && !courseImage.isEmpty()) {
-                    // Save the new image and update the image path
-                    String imagePath = null;
                     try {
-                        imagePath = saveImage(courseImage);
+                        String imagePath = saveImage(courseImage);
+                        if (imagePath != null) {
+                            course.setCourseImage(imagePath);
+                        } else {
+                            return ResponseEntity.badRequest().body("Failed to save the new image.");
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
-                    if (imagePath != null) {
-                        course.setCourseImage(imagePath);  // Save new image path in the course
-                    } else {
-                        return ResponseEntity.badRequest().body("Failed to save the new image.");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body("Image saving error: " + e.getMessage());
                     }
                 }
 
-                // Save the updated course in the database
                 repo.save(course);
-
-                // Return success response
                 return ResponseEntity.ok("Course updated successfully.");
+
+            
             }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found."));
         } catch (Exception e) {
             e.printStackTrace();

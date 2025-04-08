@@ -142,5 +142,10 @@ public class Curriculum {
 				+ course_name + ", curriculum_pdf=" + curriculum_pdf + ", title=" + title + ", topic=" + topic
 				+ ", link=" + link + ", date=" + date + "]";
 	}
+
+	public void setCurriculum_pdf(byte[] bytes) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

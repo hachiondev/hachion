@@ -129,6 +129,7 @@ export default function CourseSchedule() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+  //console.log(displayedCategories);
   const [selectedTime, setSelectedTime] = useState(null);
   const [rows, setRows] = useState([
     {
@@ -160,7 +161,9 @@ export default function CourseSchedule() {
   const deleteRow = (id) => {
     setRows(rows.filter((row) => row.id !== id));
   };
+
   const handleDateChange = (newValue) => {
+    //alert(newValue);
     const parsedDate = dayjs(newValue); // Ensure proper parsing
 
     if (!parsedDate.isValid()) {
@@ -171,6 +174,11 @@ export default function CourseSchedule() {
 
     setCourseData((prevData) => ({
       ...prevData,
+      schedule_date: parsedDate.format("YYYY-MM-DD"), // Format the date
+      schedule_week: parsedDate.format("dddd"), // Format the weekday
+    }));
+    setEditedRow((prev) => ({
+      ...prev,
       schedule_date: parsedDate.format("YYYY-MM-DD"), // Format the date
       schedule_week: parsedDate.format("dddd"), // Format the weekday
     }));
@@ -225,6 +233,10 @@ export default function CourseSchedule() {
   const handleTimeChange = (newValue) => {
     setCourseData((prevData) => ({
       ...prevData,
+      schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
+    }));
+    setEditedRow((prev) => ({
+      ...prev,
       schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
     }));
   };
@@ -377,11 +389,13 @@ export default function CourseSchedule() {
   };
   const handleSave = async () => {
     try {
+      //console.log(editedRow);
       const response = await axios.put(
         `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
 
+      console.log(response.data);
       // Update only the edited row in the trainers state
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
@@ -390,6 +404,9 @@ export default function CourseSchedule() {
             : course
         )
       );
+
+      console.log(courses);
+
       setMessage(true); // Show the success message
 
       // Hide the message after 5 seconds
@@ -1036,15 +1053,15 @@ export default function CourseSchedule() {
               <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker
-                  sx={{
-                    "& .MuiIconButton-root": { color: "#00aeef" },
-                  }}
                   value={
                     editedRow.schedule_date
                       ? dayjs(editedRow.schedule_date)
                       : null
                   }
-                  onChange={handleDateChange}
+                  onChange={(newValue) => handleDateChange(newValue)}
+                  sx={{
+                    "& .MuiIconButton-root": { color: "#00aeef" },
+                  }}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>

@@ -24,7 +24,7 @@ public class RegisterStudent {
     private String email;
     
     @Column
-    private int mobile;
+    private String mobile;
     
     @Column
     private String country;
@@ -101,7 +101,7 @@ public class RegisterStudent {
     	
     }
 
-	public RegisterStudent(int student_id, String name, String email, int mobile, String country, String location,
+	public RegisterStudent(int student_id, String name, String email, String mobile, String country, String location,
 			String visa_status, String time_zone, String analyst_name, String source, String remarks, String comments,
 			String send_details, LocalDate date) {
 		super();
@@ -145,11 +145,11 @@ public class RegisterStudent {
 		this.email = email;
 	}
 
-	public int getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(int mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 

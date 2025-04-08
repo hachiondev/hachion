@@ -336,6 +336,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -446,34 +448,47 @@ public class CurriculumController {
 //        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 //    }
     @PutMapping(value = "/curriculum/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Curriculum> updateCurriculum(
+    public ResponseEntity<?> updateCurriculum(
             @PathVariable int id,
-            @RequestPart("category_name") String categoryName,
-            @RequestPart("course_name") String courseName,
-            @RequestPart("title") String title,
-            @RequestPart("topic") String topic,
-            @RequestPart("link") String link,
-            @RequestPart(value = "curriculum_pdf", required = false) MultipartFile curriculumPdfFile) {
+            @RequestPart("curriculumData") String curriculumData,
+            @RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf) {
+        try {
+            Optional<Curriculum> optionalCurriculum = repo.findById(id);
+            if (!optionalCurriculum.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curriculum not found");
+            }
 
-        return (ResponseEntity<Curriculum>) repo.findById(id).map(curriculum -> {
-            curriculum.setCategory_name(categoryName);
-            curriculum.setCourse_name(courseName);
-            curriculum.setTitle(title);
-            curriculum.setTopic(topic);
-            curriculum.setLink(link);
+            Curriculum existing = optionalCurriculum.get();
 
-            if (curriculumPdfFile != null && !curriculumPdfFile.isEmpty()) {
-                try {
-                    curriculum.setCurriculum_pdf(curriculumPdfFile.getBytes());
-                } catch (IOException e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            Curriculum updatedData = objectMapper.readValue(curriculumData, Curriculum.class);
+
+            // Update only non-null values
+            if (updatedData.getCategory_name() != null) existing.setCategory_name(updatedData.getCategory_name());
+            if (updatedData.getCourse_name() != null) existing.setCourse_name(updatedData.getCourse_name());
+            if (updatedData.getTitle() != null) existing.setTitle(updatedData.getTitle());
+            if (updatedData.getTopic() != null) existing.setTopic(updatedData.getTopic());
+            if (updatedData.getLink() != null) existing.setLink(updatedData.getLink());
+
+            // Optional: Handle new PDF file
+            if (curriculumPdf != null && !curriculumPdf.isEmpty()) {
+                String pdfPath = saveFile(curriculumPdf, "pdfs");
+                if (pdfPath != null) {
+                    existing.setCurriculum_pdf(pdfPath);
                 }
             }
 
-            repo.save(curriculum);
-            return ResponseEntity.ok(curriculum);
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            Curriculum saved = repo.save(existing);
+            return ResponseEntity.ok(saved);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating curriculum: " + e.getMessage());
+        }
     }
+
 
     @DeleteMapping("curriculum/delete/{id}")
     public ResponseEntity<String> deleteCurriculum(@PathVariable int id) {

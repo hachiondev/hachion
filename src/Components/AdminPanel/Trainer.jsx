@@ -546,7 +546,7 @@ const handleChange = (e) => {
   </DialogActions>
 </Dialog>
       </div>)}
-      <div
+      {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -576,7 +576,7 @@ const handleChange = (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
 
  </> );
 }

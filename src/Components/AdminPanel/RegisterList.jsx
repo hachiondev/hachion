@@ -73,7 +73,7 @@ export default function RegisterList() {
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({student_name:"",email:"",mobile:"",password:"",location:"",state:"",time:"",course_name:"",additional_email:"",additional_mobile:""});
     const [studentData, setStudentData] = useState({
-        student_id:Date.now(),
+        student_id:"",
         name:"",
         email:"",
         mobile:"",
@@ -84,6 +84,9 @@ export default function RegisterList() {
        source:"",
        course_name:"",
        remarks:"",
+       additional_email: "",
+  additional_phone: "",
+  password: "",
        comments:"",
        date:currentDate,
             visa_status:"",
@@ -231,8 +234,12 @@ const [currentPage, setCurrentPage] = useState(1);
         const currentDate = new Date().toISOString().split("T")[0]; // Today's date
         const dataToSubmit = { 
           ...studentData, 
-          date: currentDate, // Ensure this is added
+          date: currentDate,
+          additional_email: studentData.additional_email || null,
+  additional_phone: studentData.additional_phone || 0,
+  password: studentData.password || null
         };
+        
         console.log("Data being sent:", dataToSubmit);
 
       
@@ -240,7 +247,8 @@ const [currentPage, setCurrentPage] = useState(1);
           const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
           if (response.status === 200) {
             alert("Student added successfully");
-            setStudentData([...studentData, dataToSubmit]); // Update local state
+            setStudentData(dataToSubmit);
+           // Update local state
             handleReset(); // Clear form fields
           }
         } catch (error) {
@@ -628,37 +636,7 @@ const [currentPage, setCurrentPage] = useState(1);
   </DialogActions>
 </Dialog>
 
-    <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Student Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div>
+  
    
  </> );
 }

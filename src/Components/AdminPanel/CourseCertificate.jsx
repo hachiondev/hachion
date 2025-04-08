@@ -1,4 +1,3 @@
-
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
@@ -569,7 +568,7 @@ const handleFileChange = (e) => {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -599,7 +598,7 @@ const handleFileChange = (e) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

@@ -466,7 +466,7 @@ export default function Support() {
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -491,12 +491,12 @@ export default function Support() {
                           className='success-gif'
                         />
                         <p className='modal-para'>
-                     Courses Successfully
+                     Support added Successfully
                         </p>
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

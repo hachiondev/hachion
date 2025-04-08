@@ -536,7 +536,7 @@ const handleEditClick = async (id) => {
       </div>
     </LocalizationProvider>)
     }
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -566,7 +566,7 @@ const handleEditClick = async (id) => {
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    </>
   );
 };

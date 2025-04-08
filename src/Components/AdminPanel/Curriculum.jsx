@@ -74,7 +74,7 @@ export default function Curriculum() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
+    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
     const [curriculumData, setCurriculumData] = useState({
         curriculum_id:"",
           category_name:"",
@@ -209,22 +209,52 @@ export default function Curriculum() {
       };
       const handleSave = async () => {
         try {
-            const response = await axios.put(
-                `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
-                editedRow
-            );
-            setCurriculum((prev) =>
-                prev.map(curr =>
-                    curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
-                )
-            );
-            setMessage("Curriculum updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
+          const formData = new FormData();
+      
+          // Construct only the necessary fields
+          const curriculumData = {
+            category_name: editedRow.category_name,
+            course_name: editedRow.course_name,
+            title: editedRow.title,
+            topic: editedRow.topic,
+            link: editedRow.link,
+          };
+      
+          formData.append("curriculumData", JSON.stringify(curriculumData));
+      
+          // Append file only if it is selected and is a File object
+          if (
+            editedRow.curriculum_pdf &&
+            editedRow.curriculum_pdf instanceof File
+          ) {
+            formData.append("curriculumPdf", editedRow.curriculum_pdf);
+          }
+      
+          const response = await axios.put(
+            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+      
+          setCurriculum((prev) =>
+            prev.map((curr) =>
+              curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
+            )
+          );
+      
+          setMessage("Curriculum updated successfully!");
+          setTimeout(() => setMessage(""), 5000);
+          setOpen(false);
         } catch (error) {
-            setMessage("Error updating Curriculum.");
+          console.error("Error updating curriculum:", error);
+          setMessage("Error updating Curriculum.");
         }
-    };
+      };
+      
 
       const handleDelete = async (curriculum_id) => {
        
@@ -252,14 +282,11 @@ export default function Curriculum() {
         }
     };
     
-    const handleEditFileUpload = async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-          setEditedRow((prev) => ({
-              ...prev,
-              curriculum_pdf: file, // Store the file object directly
-          }));
-      }
+    const handleEditFileUpload =  (e) => {
+      setEditedRow(prev => ({
+        ...prev,
+        curriculum_pdf: e.target.files[0], // this must be a File object
+      }));
   };
   
   
@@ -272,7 +299,7 @@ export default function Curriculum() {
           console.log(row);
             setEditedRow(row)// Set the selected row data
             setOpen(true); // Open the modal
-            console.log("tid",row.curriculum_id)
+            
           };
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -652,15 +679,16 @@ export default function Curriculum() {
     <div className="mb-3">
       <label htmlFor="curriculumPDF" className="form-label">Curriculum's PDF</label>
       <input
-        className="form-control-sample"
-        type="file"
-        id="curriculumPDF"
-        accept='.pdf'
-        name="curriculum_pdf"
-      
-        onChange={handleEditFileUpload}
-    
-      />
+  type="file"
+  accept=".pdf"
+  onChange={(e) =>
+    setEditedRow((prev) => ({
+      ...prev,
+      curriculum_pdf: e.target.files[0], // must be a File object
+    }))
+  }
+/>
+
     </div>
 
     <label htmlFor="title">Title</label>
@@ -690,37 +718,7 @@ export default function Curriculum() {
   </DialogActions>
 </Dialog>
 
-    <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
 
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                    Curriculum Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div>
    
  </> );
 }

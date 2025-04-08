@@ -19,9 +19,10 @@ import CurriculumMain from './CurriculumMain';
 import QaAutomationFaq from './QaAutomationFaq';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Helmet } from 'react-helmet-async';
-
+import { Link } from 'react-router-dom';
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
+  const [helmetKey, setHelmetKey] = useState(0);
   const upcomingHeaderRef = useRef(null);
   const footerRef = useRef(null); // Footer reference for intersection observer
   const [isSticky, setIsSticky] = useState(false);
@@ -90,24 +91,25 @@ const QaAutomation = () => {
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
         setCourseData(course);
-        
+        setHelmetKey((prevKey) => prevKey + 1); // Force re-render
       } catch (error) {
         console.error('Error fetching course details:', error);
-      }finally {
-              setLoading(false);
-    }
-  }
-
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     fetchCourseData();
   }, [courseName]);
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <>
-    <Helmet>
-  <title>{courseData?.metaTitle || "Loading..."}</title>
+   <Helmet key={helmetKey}>
+  <title>{courseData?.metaTitle || "Hachion Courses"}</title>
   <meta name="description" content={courseData?.metaDescription || "Default description"} />
   <meta name="keywords" content={courseData?.metaKeyword || "default, keywords"} />
   <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
@@ -116,6 +118,7 @@ const QaAutomation = () => {
   <meta property="og:url" content={`https://hachion.co/CourseDetails/${courseName}`} />
   <meta name="robots" content="index, follow" />
 </Helmet>
+
 
       <div className='course-top'>
         <Topbar />
@@ -127,16 +130,16 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
           <li className="breadcrumb-item">
-                <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
-              </li>
-              <li className="breadcrumb-item">
-                <a href={`/CourseDetails/${courseData?.courseCategory}`}>
-                  {courseData?.courseCategory}
-                </a> <MdKeyboardArrowRight />
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                {courseData?.courseName}
-              </li>
+  <Link to="/CourseDetails">Courses</Link> <MdKeyboardArrowRight />
+</li>
+<li className="breadcrumb-item">
+  <Link to="/CourseDetails">
+    {courseData?.courseCategory}
+  </Link> <MdKeyboardArrowRight />
+</li>
+<li className="breadcrumb-item active" aria-current="page">
+  {courseData?.courseName}
+</li>
           </ol>
         </nav>
         </div>
@@ -177,6 +180,7 @@ const QaAutomation = () => {
 
         <div id="learners">
         <Learners page="course" />
+
         </div>
 
         <div id="qa-faq">

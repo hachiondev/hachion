@@ -212,23 +212,10 @@ const SalWorkshop = () => {
         <p>(4 Days a Week: Monday - Thursday)</p>
         <p>Time Duration: 1 Hour Daily</p>
       </div>
+      <div className="qa-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() }} />
+    
 
-
-              <ul>
-                <li>What is the outline of the Training Program</li>
-                <li>Live case study</li>
-                <li>How can you make a career as a Salesforce professional</li>
-                <li>How to crack the interviews - mantras for your case rounds</li>
-                <li>Live Q&A</li>
-              </ul>
-
-              <p><b>Any Prerequisites?</b></p>
-              <ul>
-                <li>Basic Computer Skills</li>
-                <li>Understanding of Business Processes</li>
-                <li>Problem-Solving Mindset</li>
-                <li>Curiosity to Learn</li>
-              </ul>
+             {/* <p>{workshop?.details}</p> */}
             </div>
           </div>
         </div>

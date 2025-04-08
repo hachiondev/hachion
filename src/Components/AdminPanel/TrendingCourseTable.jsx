@@ -601,7 +601,7 @@ const displayedCourse = filteredCourse.slice(
   </DialogActions>
 </Dialog>
 
-    <div
+    {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -631,7 +631,7 @@ const displayedCourse = filteredCourse.slice(
                       </div>
                     </div>
                     </div>
-                    </div>
+                    </div> */}
    
  </> );
 }

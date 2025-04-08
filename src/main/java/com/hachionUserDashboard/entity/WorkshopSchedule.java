@@ -12,7 +12,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "workshopschedule")
 public class WorkshopSchedule {
-	 @Id
+
+
+	@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private int id;
 	    
@@ -31,8 +33,13 @@ public class WorkshopSchedule {
 	    @Column
 	    private String time_zone;
 	    
+	    @Column // Ensure the field is required
+		private String banner_image; 
 	    @Column
 	    private String content;
+	    
+	    @Column
+	    private String details;
 	    
 	    @Column(name = "created_date")  // Make sure the name matches your SQL column
 	    private LocalDate created_date;
@@ -81,6 +88,21 @@ public class WorkshopSchedule {
 			this.content = content;
 		}
 
+		public String getDetails() {
+			return details;
+		}
+
+		public void setDetails(String details) {
+			this.details = details;
+		}
+		 public String getBanner_image() {
+				return banner_image;
+			}
+
+			public void setBanner_image(String banner_image) {
+				this.banner_image = banner_image;
+			}
+
 		public String getDate() {
 			return date;
 		}
@@ -108,12 +130,13 @@ public class WorkshopSchedule {
 		@Override
 		public String toString() {
 			return "WorkshopSchedule [id=" + id + ", category_name=" + category_name + ", course_name=" + course_name
-					+ ", date=" + date + ", time=" + time + ", time_zone=" + time_zone + ", content=" + content
-					+ ", created_date=" + created_date + "]";
+					+ ", date=" + date + ", time=" + time + ", time_zone=" + time_zone + ", banner_image="
+					+ banner_image + ", content=" + content + ", details=" + details + ", created_date=" + created_date
+					+ "]";
 		}
 
 		public WorkshopSchedule(int id, String category_name, String course_name, String date, String time,
-				String time_zone,LocalDate created_date, String content) {
+				String time_zone, String banner_image, String content, String details, LocalDate created_date) {
 			super();
 			this.id = id;
 			this.category_name = category_name;
@@ -121,6 +144,11 @@ public class WorkshopSchedule {
 			this.date = date;
 			this.time = time;
 			this.time_zone = time_zone;
-			this.created_date=created_date;
-			this.content=content;		}
+			this.banner_image = banner_image;
+			this.content = content;
+			this.details = details;
+			this.created_date = created_date;
+		}
+
+		
 }

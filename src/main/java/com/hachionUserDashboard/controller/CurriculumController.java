@@ -429,17 +429,46 @@ public class CurriculumController {
         }
     }
 
-    @PutMapping("/curriculum/update/{id}")
-    public ResponseEntity<Curriculum> updateCurriculum(@PathVariable int id, @RequestBody Curriculum updatedCurriculum) {
-        return repo.findById(id).map(curriculum -> {
-            curriculum.setCategory_name(updatedCurriculum.getCategory_name());
-            curriculum.setCourse_name(updatedCurriculum.getCourse_name());
-            curriculum.setTitle(updatedCurriculum.getTitle());
-            curriculum.setTopic(updatedCurriculum.getTopic());
-          curriculum.setLink(updatedCurriculum.getLink());
-            
-            // Update PDF only if a new one is provided, otherwise keep the existing one
-            curriculum.setCurriculum_pdf(updatedCurriculum.getCurriculum_pdf() != null ? updatedCurriculum.getCurriculum_pdf() : curriculum.getCurriculum_pdf());
+//    @PutMapping("/curriculum/update/{id}")
+//    public ResponseEntity<Curriculum> updateCurriculum(@PathVariable int id, @RequestBody Curriculum updatedCurriculum) {
+//        return repo.findById(id).map(curriculum -> {
+//            curriculum.setCategory_name(updatedCurriculum.getCategory_name());
+//            curriculum.setCourse_name(updatedCurriculum.getCourse_name());
+//            curriculum.setTitle(updatedCurriculum.getTitle());
+//            curriculum.setTopic(updatedCurriculum.getTopic());
+//          curriculum.setLink(updatedCurriculum.getLink());
+//            
+//            // Update PDF only if a new one is provided, otherwise keep the existing one
+//            curriculum.setCurriculum_pdf(updatedCurriculum.getCurriculum_pdf() != null ? updatedCurriculum.getCurriculum_pdf() : curriculum.getCurriculum_pdf());
+//
+//            repo.save(curriculum);
+//            return ResponseEntity.ok(curriculum);
+//        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+//    }
+    @PutMapping(value = "/curriculum/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Curriculum> updateCurriculum(
+            @PathVariable int id,
+            @RequestPart("category_name") String categoryName,
+            @RequestPart("course_name") String courseName,
+            @RequestPart("title") String title,
+            @RequestPart("topic") String topic,
+            @RequestPart("link") String link,
+            @RequestPart(value = "curriculum_pdf", required = false) MultipartFile curriculumPdfFile) {
+
+        return (ResponseEntity<Curriculum>) repo.findById(id).map(curriculum -> {
+            curriculum.setCategory_name(categoryName);
+            curriculum.setCourse_name(courseName);
+            curriculum.setTitle(title);
+            curriculum.setTopic(topic);
+            curriculum.setLink(link);
+
+            if (curriculumPdfFile != null && !curriculumPdfFile.isEmpty()) {
+                try {
+                    curriculum.setCurriculum_pdf(curriculumPdfFile.getBytes());
+                } catch (IOException e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            }
 
             repo.save(curriculum);
             return ResponseEntity.ok(curriculum);

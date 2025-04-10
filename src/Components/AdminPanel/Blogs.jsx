@@ -69,6 +69,9 @@ const Blogs = () => {
    blog_pdf:"",
    description:"",
     date:currentDate,
+    meta_title:"",
+    meta_keyword:"",
+    meta_description:"",
   });
   useEffect(() => {
     const fetchCategory = async () => {
@@ -87,9 +90,9 @@ const Blogs = () => {
   };
   useEffect(() => {
     const filtered = blogs.filter(blogs =>
-        blogs.category_name.toLowerCase().includes(searchTerm.toLowerCase())||
-        blogs.title.toLowerCase().includes(searchTerm.toLowerCase())||
-        blogs.author.toLowerCase().includes(searchTerm.toLowerCase())
+        blogs.category_name?.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.title?.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.author?.toLowerCase().includes(searchTerm.toLowerCase())
         
     );
     setFilteredBlogs(filtered);
@@ -127,6 +130,10 @@ const handleSubmit = async (e) => {
     author: formData.author || "",
     description: formData.description || "",
     date: currentDate,
+    meta_keyword:formData.meta_keyword||"",
+    meta_description:formData.meta_description||"",
+    meta_title:formData.meta_title||""
+
   });
 
   // Create FormData object
@@ -135,7 +142,7 @@ const handleSubmit = async (e) => {
 
   // Append Image File
   if (formData.blog_image) {
-    formDataToSend.append("blogImage", formData.blog_image);
+    formDataToSend.append("blogImage", formData.blog_image||"");
   } else {
     alert("Blog image is required!");
     return;
@@ -143,7 +150,7 @@ const handleSubmit = async (e) => {
 
   // Append PDF File (optional)
   if (formData.blog_pdf) {
-    formDataToSend.append("blogPdf", formData.blog_pdf);
+    formDataToSend.append("blogPdf", formData.blog_pdf||"");
   }
 
   // Debugging: Log FormData contents
@@ -205,7 +212,7 @@ const displayedCategories = filteredBlogs.slice(
 );
   
 const handleReset=()=>{
-  setFormData([{
+  setFormData({
     id:"",
    category_name:"",
    title:"",
@@ -214,7 +221,10 @@ const handleReset=()=>{
    blog_pdf:"",
    description:"",
     date:currentDate,
-       }]);
+    meta_title:"",
+    meta_description:"",
+    meta_keyword:""
+       });
 
 }
 const handleDeleteConfirmation = (id) => {
@@ -373,6 +383,20 @@ const handleEditClick = async (id) => {
                 />
               </div>
             </div>
+            <div className='course-row'>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta Title</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_title' value={formData.meta_title} onChange={handleInputChange}/>
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta keyword with comma</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_keyword' value={formData.meta_keyword} onChange={handleInputChange} />
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta keyword description</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_description' value={formData.meta_description} onChange={handleInputChange} />
+</div>
+</div>
             <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal'type='submit'>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
@@ -536,37 +560,7 @@ const handleEditClick = async (id) => {
       </div>
     </LocalizationProvider>)
     }
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Blogs Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
+   
    </>
   );
 };

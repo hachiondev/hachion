@@ -73,6 +73,14 @@ export default function Curriculum() {
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
+    const [displayedCategories, setDisplayedCategories] = useState([]);
+    const [allData, setAllData] = useState([]); // All fetched data
+// Data to be displayed
+const [filterData, setFilterData] = useState({
+  category_name: "",
+  course_name: "",
+});
+
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
     const [curriculumData, setCurriculumData] = useState({
@@ -100,10 +108,14 @@ export default function Curriculum() {
         };
         
         // Slice filteredCurriculum based on rowsPerPage and currentPage
-        const displayedCategories = filteredCurriculum.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+        useEffect(() => {
+          const displayCategories = filteredCurriculum.slice(
+            (currentPage - 1) * rowsPerPage,
+            currentPage * rowsPerPage
+          );
+          setDisplayedCategories(displayCategories);
+        }, [filteredCurriculum, currentPage, rowsPerPage]);
+        
 
         const quillModules = {
           toolbar: [
@@ -168,19 +180,32 @@ export default function Curriculum() {
         setFilterCourse([]); // Reset when no category is selected
       }
     }, [curriculumData.category_name, courseCategory]);
-    useEffect(() => {
-      const fetchCurriculum = async () => {
-          try {
-              const response = await axios.get('https://api.hachion.co/curriculum');
-              setCurriculum(response.data); // Use the curriculum state
-          } catch (error) {
-              console.error("Error fetching curriculum:", error.message);
-          }
-      };
-      fetchCurriculum();
-      setFilteredCurriculum(curriculum)
-  }, [curriculum]); // Empty dependency array ensures it runs only once
-
+  //   useEffect(() => {
+  //     const fetchCurriculum = async () => {
+  //         try {
+  //             const response = await axios.get('https://api.hachion.co/curriculum');
+  //             setCurriculum(response.data); // Use the curriculum state
+  //         } catch (error) {
+  //             console.error("Error fetching curriculum:", error.message);
+  //         }
+  //     };
+  //     fetchCurriculum();
+  //     setFilteredCurriculum(curriculum)
+  // }, [curriculum]); // Empty dependency array ensures it runs only once
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://api.hachion.co/curriculum");
+        setAllData(response.data);
+        setDisplayedCategories(response.data); // initially display all
+      } catch (error) {
+        console.error("Error fetching curriculum data", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
     const handleDeleteConfirmation = (curriculum_id) => {
         if (window.confirm("Are you sure you want to delete this Curriculum?")) {
           handleDelete(curriculum_id);
@@ -308,6 +333,28 @@ export default function Curriculum() {
           [name]: value
       }));
   };
+  const handlefilterChange = (e) => {
+    const { name, value } = e.target;
+    const updatedData = { ...filterData, [name]: value };
+    setFilterData(updatedData);
+  
+    let filtered = allData;
+  
+    if (updatedData.category_name) {
+      filtered = filtered.filter(
+        (item) => item.category_name === updatedData.category_name
+      );
+    }
+  
+    if (updatedData.course_name) {
+      filtered = filtered.filter(
+        (item) => item.course_name === updatedData.course_name
+      );
+    }
+  
+    setDisplayedCategories(filtered);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -525,30 +572,36 @@ export default function Curriculum() {
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Category
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-  </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={curriculumData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+    <select
+  id="inputState"
+  className="form-select"
+  name="category_name"
+  value={filterData.category_name}
+  onChange={handlefilterChange}
+>
+  <option value="" disabled>Select Category</option>
+  {course.map((curr) => (
+    <option key={curr.id} value={curr.name}>{curr.name}</option>
+  ))}
+</select>
+</div>
+<div className="col-md-3">
+<label htmlFor="course" className="form-label">Course Name</label>
+
+<select
+  id="course"
+  className="form-select"
+  name="course_name"
+  value={filterData.course_name}
+  onChange={handlefilterChange}
+  
+>
+  <option value="" disabled>Select Course</option>
+  {courseCategory.map((curr) => (
+    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+  ))}
+</select>
+      </div>
   {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -556,6 +609,13 @@ export default function Curriculum() {
           onChange={handleChange}/>
 </div> */}
   </div>
+  <button onClick={() => {
+  setFilterData({ category_name: "", course_name: "" });
+  setDisplayedCategories(allData);
+}}>
+  Reset Filter
+</button>
+
   </div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -718,7 +778,7 @@ export default function Curriculum() {
   </DialogActions>
 </Dialog>
 
-
+   
    
  </> );
 }

@@ -973,37 +973,7 @@ const handleAddTrendingCourseClick = () => {
                  </div>
       </div>
     </LocalizationProvider></>)}
-    <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Course Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div>
+    
    </>
   );
 };

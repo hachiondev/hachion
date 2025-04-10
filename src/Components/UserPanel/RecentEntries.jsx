@@ -26,13 +26,16 @@ const RecentEntries = () => {
       {blogs.length > 0 ? (
         blogs.map((blog) => (
           <RecentEntriesCard
-            key={blog.id} // Unique key
-            imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`} // Correct image URL
-            content={blog.title}
-            views={blog.views || '100'} // Fallback if views are missing
-            date={blog.date}
-            onClick={() => navigate(`/blogs/${blog.category_name}`)} // Dynamic navigation
-          />
+  key={blog.id}
+  imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
+  content={blog.title}
+  views={blog.views || '100'}
+  date={blog.date}
+  onClick={() =>
+    navigate(`/blogs/${blog.category_name.replace(/\s+/g, '-').toLowerCase()}`)
+  }
+/>
+
         ))
       ) : (
         <p>Loading recent entries...</p>

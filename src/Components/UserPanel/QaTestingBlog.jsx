@@ -14,16 +14,20 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import automation from '../../Assets/automationtesting.png';
+import { Helmet } from 'react-helmet-async';
 
 const QaTestingBlog = () => {
   const { category_name } = useParams(); // Get category from URL
   const [blogs, setBlogs] = useState([]); // State for API data
+const [helmetKey, setHelmetKey] = useState(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get("https://api.hachion.co/blog");
-        const filteredBlogs = response.data.filter(blog => blog.category_name === category_name);
+        const originalCategory = category_name.replace(/-/g, ' ');
+        const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
+        
         setBlogs(filteredBlogs);
       } catch (error) {
         console.error("Error fetching blog data:", error);
@@ -49,6 +53,16 @@ const QaTestingBlog = () => {
   
   return (
     <>
+    <Helmet key={helmetKey}>
+  <title>{blogs?.meta_title || "Hachion Blogs"}</title>
+  <meta name="description" content={blogs?.meta_description || "Blogs description"} />
+  <meta name="keywords" content={blogs?.meta_keyword || "meta keywords"} />
+  <meta property="og:title" content={blogs?.meta_title || "Best Online IT Certification Courses"} />
+  <meta property="og:description" content={blogs?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
+  <meta property="og:image" content={blogs?.blog_image || "https://hachion.co/images/course-banner.jpg"} />
+  <meta property="og:url" content={`https://hachion.co/blogs/${category_name}`} />
+  <meta name="robots" content="index, follow" />
+</Helmet>
       <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
@@ -61,8 +75,9 @@ const QaTestingBlog = () => {
               <a href="/blogs">Blog</a> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              {category_name || "Loading..."}
-            </li>
+  {category_name.replace(/-/g, ' ') || "Loading..."}
+</li>
+
           </ol>
         </nav>
       </div>

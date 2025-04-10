@@ -14,14 +14,11 @@ public class CorsConfig {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
 	            registry.addMapping("/**")
-	            .allowedOriginPatterns("*") 
-	                    .allowedOrigins("https://hachion.co", "http://localhost:3000","http://localhost:3001")
+	                    .allowedOrigins("https://hachion.co", "http://localhost:3000", "http://localhost:3001")
 	                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 	                    .allowedHeaders("*")
-	                    .exposedHeaders("Access-Control-Allow-Origin")
 	                    .allowCredentials(true);
 	        }
 	    };
 	}
-
 }

@@ -1,4 +1,5 @@
-import React,{useEffect} from 'react'
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import './Corporate.css';
@@ -7,43 +8,32 @@ import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import BlogCard from './BlogCard';
-import blogImage1 from '../../Assets/blogcardimage1.png';
 import blogImage2 from '../../Assets/blogcardimage2.png';
-import dataScienceBlog from '../../Assets/DataScienceBlog.png';
-import programmingBlog from '../../Assets/ProgrammingBlog.png';
-import salesforceblog from '../../Assets/salesforceBlog.png';
-import servicenowblog from '../../Assets/ServiceNow.png';
-import cloudcomputing from '../../Assets/CloudComputingBlog.png';
-import workdayBlog from '../../Assets/WorkdayBlog.png';
-import mulesoftBlog from '../../Assets/MulesoftBlog.png';
-import cybersecurity from '../../Assets/CybersecurityBlog.png';
-import machinelearning from '../../Assets/machineLearningBlog.png';
-import blockchain from '../../Assets/blockchainBlog.png';
-import deeplearning from '../../Assets/deepLearningBlog.png';
-import datawarehousing from '../../Assets/dataWarehousingBlog.png';
-import mobiledevelopment from '../../Assets/mobileDevelopment.png';
-import bigdata from '../../Assets/bigdataBlog.png';
-import Rpa from '../../Assets/rpaBlog.png';
-import bpm from '../../Assets/pegaBlog.png';
-import flutter from '../../Assets/flutterBlog.png';
-import microsoft from '../../Assets/microsoftBlog.png';
-import scrummaster from '../../Assets/ScrumBlog.png';
 import { useNavigate } from 'react-router-dom';
 
 const Blogs = () => {
+  const [categories, setCategories] = useState([]);
 
-  const navigate=useNavigate();
-  const handleqa=()=>{
- navigate('/qatesting')
-  }
-  const handleSalesforce = () => {
-    console.log('clicked')
-    navigate('/salesforce');
-  };
   useEffect(() => {
-    window.scrollTo(0, 0);  // This will scroll to the top of the page
-  }, []);
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        setCategories(response.data); // assuming the API returns an array of categories
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
+    fetchCategories();
+  }, []);
+  const navigate=useNavigate();
+  // const handleClick = (categoryName) => {
+  //   const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
+  //  navigate(`/blogs/${slug}`);
+  // };
+const handleClick=()=>{
+  navigate("/salesforce")
+}
   return (
     <>
     <Topbar/>
@@ -67,33 +57,18 @@ const Blogs = () => {
     <h1 className='blog-heading'>Knowledge hub</h1>
 
    </div>
-   <div className='blogs-container'>
-<BlogCard imageSrc={blogImage1} content="Project Management" />
-<BlogCard imageSrc={dataScienceBlog} content="Data Science" />
-<BlogCard imageSrc={blogImage2} content="QA Testing" onClick={() => handleqa()} />
-        <BlogCard imageSrc={programmingBlog} content="Programming" />
-        <BlogCard 
-            imageSrc={salesforceblog} 
-            content="Salesforce" 
-            onClick={handleSalesforce}
-          />
-        <BlogCard imageSrc={servicenowblog} content="Service now" />
-        <BlogCard imageSrc={cloudcomputing} content="Cloud Computing" />
-        <BlogCard imageSrc={workdayBlog} content="Workday" />
-        <BlogCard imageSrc={mulesoftBlog} content="Mulesoft" />
-        <BlogCard imageSrc={cybersecurity} content="Cyber Security" />
-        <BlogCard imageSrc={machinelearning} content="Machine Learning" />
-        <BlogCard imageSrc={blockchain} content="BlockChain" />
-        <BlogCard imageSrc={deeplearning} content="Deep Learning" />
-        <BlogCard imageSrc={datawarehousing} content="Data Warehousing & ETL" />
-        <BlogCard imageSrc={mobiledevelopment} content="Mobile Development" />
-        <BlogCard imageSrc={bigdata} content="Big Data" />
-        <BlogCard imageSrc={Rpa} content="RPA" />
-        <BlogCard imageSrc={bpm} content="BPM" />
-        <BlogCard imageSrc={flutter} content="Flutter" />
-        <BlogCard imageSrc={microsoft} content="Microsoft" />
-        <BlogCard imageSrc={scrummaster} content="ScrumMaster" />
-        </div>
+
+   <div className="blogs-container">
+      {categories.map((category, index) => (
+        <BlogCard
+          key={index}
+          imageSrc={category.imageUrl|| blogImage2} // Make sure this matches your backend's image field
+          content={category.name}
+          onClick={() => handleClick(category.name)}
+        />
+      ))}
+    </div>
+     
 <div className='blog-bottom'>
 <h1 className='blog-heading'>Recent Entries</h1>
 <RecentEntries/>

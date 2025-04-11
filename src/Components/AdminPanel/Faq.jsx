@@ -106,10 +106,13 @@ export default function Faq() {
         };
         
         // Slice filteredCurriculum based on rowsPerPage and currentPage
-        const displayCategories = filteredCurriculum.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+          useEffect(() => {
+                 const displayed = filteredCurriculum.slice(
+                   (currentPage - 1) * rowsPerPage,
+                   currentPage * rowsPerPage
+                 );
+                 setDisplayedCategories(displayed);
+               }, [filteredCurriculum, currentPage, rowsPerPage]);
 
         const quillModules = {
           toolbar: [
@@ -250,41 +253,46 @@ export default function Faq() {
         }
       };
       
+  
       const handlefilterChange = (e) => {
         const { name, value } = e.target;
-        const updatedData = { ...filterData, [name]: value };
-        setFilterData(updatedData);
+        const newFilter = { ...filterData, [name]: value };
+        setFilterData(newFilter);
       
-        let filtered = allData;
+        const filtered = allData.filter((item) =>
+          (!newFilter.category_name || item.category_name === newFilter.category_name) &&
+          (!newFilter.course_name || item.course_name === newFilter.course_name)
+        );
       
-        if (updatedData.category_name) {
-          filtered = filtered.filter(
-            (item) => item.category_name === updatedData.category_name
-          );
-        }
-      
-        if (updatedData.course_name) {
-          filtered = filtered.filter(
-            (item) => item.course_name === updatedData.course_name
-          );
-        }
-      
-        setDisplayedCategories(filtered);
+        setFilteredCurriculum(filtered);
+        setCurrentPage(1); // Reset to first page
       };
-
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get("https://api.hachion.co/faq");
-            setAllData(response.data);
-            setDisplayedCategories(response.data); // initially display all
-          } catch (error) {
-            console.error("Error fetching curriculum data", error);
-          }
-        };
       
-        fetchData();
-      }, []);
+      // useEffect(() => {
+      //   const fetchData = async () => {
+      //     try {
+      //       const response = await axios.get("https://api.hachion.co/faq");
+      //       setAllData(response.data);
+      //       setDisplayedCategories(response.data); // initially display all
+      //     } catch (error) {
+      //       console.error("Error fetching curriculum data", error);
+      //     }
+      //   };
+      
+      //   fetchData();
+      // }, []);
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const response = await axios.get("https://api.hachion.co/faq");
+              setAllData(response.data);
+              setFilteredCurriculum(response.data); // Used for paginated display
+            } catch (error) {
+              console.error("Error fetching curriculum data", error);
+            }
+          };
+          fetchData();
+        }, []);
       const handleDelete = async (faq_id) => {
        
          try { 
@@ -659,15 +667,16 @@ const handleSubmit = async (e) => {
           name="curriculum_pdf"
           onChange={handleChange}/>
 </div> */}
-  </div>
-  <button onClick={() => {
+ <div style={{marginTop: '50px'}}>
+  <button className="filter" onClick={() => {
   setFilterData({ category_name: "", course_name: "" });
-  setDisplayedCategories(allData);
-}}>
+  setFilteredCurriculum(allData);
+    setCurrentPage(1);}}>
   Reset Filter
 </button>
-
-  </div>
+</div>
+</div>
+</div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -829,7 +838,7 @@ const handleSubmit = async (e) => {
   </DialogActions>
 </Dialog>
 
-    
+
    
  </> );
 }

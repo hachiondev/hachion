@@ -109,13 +109,12 @@ const [filterData, setFilterData] = useState({
         
         // Slice filteredCurriculum based on rowsPerPage and currentPage
         useEffect(() => {
-          const displayCategories = filteredCurriculum.slice(
+          const displayed = filteredCurriculum.slice(
             (currentPage - 1) * rowsPerPage,
             currentPage * rowsPerPage
           );
-          setDisplayedCategories(displayCategories);
+          setDisplayedCategories(displayed);
         }, [filteredCurriculum, currentPage, rowsPerPage]);
-        
 
         const quillModules = {
           toolbar: [
@@ -197,14 +196,14 @@ const [filterData, setFilterData] = useState({
       try {
         const response = await axios.get("https://api.hachion.co/curriculum");
         setAllData(response.data);
-        setDisplayedCategories(response.data); // initially display all
+        setFilteredCurriculum(response.data); // Used for paginated display
       } catch (error) {
         console.error("Error fetching curriculum data", error);
       }
     };
-  
     fetchData();
   }, []);
+  
   
     const handleDeleteConfirmation = (curriculum_id) => {
         if (window.confirm("Are you sure you want to delete this Curriculum?")) {
@@ -335,24 +334,16 @@ const [filterData, setFilterData] = useState({
   };
   const handlefilterChange = (e) => {
     const { name, value } = e.target;
-    const updatedData = { ...filterData, [name]: value };
-    setFilterData(updatedData);
+    const newFilter = { ...filterData, [name]: value };
+    setFilterData(newFilter);
   
-    let filtered = allData;
+    const filtered = allData.filter((item) =>
+      (!newFilter.category_name || item.category_name === newFilter.category_name) &&
+      (!newFilter.course_name || item.course_name === newFilter.course_name)
+    );
   
-    if (updatedData.category_name) {
-      filtered = filtered.filter(
-        (item) => item.category_name === updatedData.category_name
-      );
-    }
-  
-    if (updatedData.course_name) {
-      filtered = filtered.filter(
-        (item) => item.course_name === updatedData.course_name
-      );
-    }
-  
-    setDisplayedCategories(filtered);
+    setFilteredCurriculum(filtered);
+    setCurrentPage(1); // Reset to first page
   };
   
   const handleSubmit = async (e) => {
@@ -608,15 +599,17 @@ const [filterData, setFilterData] = useState({
           name="curriculum_pdf"
           onChange={handleChange}/>
 </div> */}
-  </div>
-  <button onClick={() => {
+<div style={{marginTop: '50px'}}>
+  <button className="filter" onClick={() => {
   setFilterData({ category_name: "", course_name: "" });
-  setDisplayedCategories(allData);
-}}>
+  setFilteredCurriculum(allData);
+    setCurrentPage(1);}}>
   Reset Filter
 </button>
+</div>
+</div>
+</div>
 
-  </div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>

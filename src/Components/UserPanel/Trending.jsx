@@ -19,7 +19,7 @@
 //   useEffect(() => {
 //     const fetchCategories = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:8080/course-categories/all');
+//         const response = await axios.get('https://api.hachion.co/course-categories/all');
 //         const allCategories = [{ name: 'All' }, ...response.data]; // Add "All" option to categories
 //         setCategories(allCategories);
 //         setTopCategories(allCategories.slice(0, 6)); // Set top 7 categories for desktop
@@ -31,7 +31,7 @@
 
 //     const fetchCourses = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:8080/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         setCourses(response.data || []); // Ensure data is an array
 //       } catch (error) {
 //         console.error('Error fetching courses:', error);
@@ -153,7 +153,7 @@
 //             heading={course.courseName}
 //             month={course.numberOfClasses}
 //             time={course.liveTrainingHours}
-//             image={`http://localhost:8080/${course.courseImage}`}
+//             image={`https://api.hachion.co/${course.courseImage}`}
 //             course_id={course.id}
 //             RatingByPeople={course.ratingByNumberOfPeople}
 //             Rating={course.starRating}
@@ -169,7 +169,7 @@
 //               heading={course.courseName}
 //               month={course.numberOfClasses}
 //               time={course.liveTrainingHours}
-//               image={`http://localhost:8080/${course.courseImage}`}
+//               image={`https://api.hachion.co/${course.courseImage}`}
 //               course_id={course.id}
 //               RatingByPeople={course.ratingByNumberOfPeople}
 //               Rating={course.starRating}
@@ -209,14 +209,14 @@ const Trending = () => {
     const fetchTrendingCourses = async () => {
       try {
         // Fetch trending courses
-        const trendingResponse = await axios.get('http://localhost:8080/trendingcourse');
+        const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
         const trendingData = trendingResponse.data || [];
   
         // Filter courses with status: true
         const activeTrendingCourses = trendingData.filter(course => course.status);
   
         // Fetch all courses to get detailed information
-        const allCoursesResponse = await axios.get('http://localhost:8080/courses/all');
+        const allCoursesResponse = await axios.get('https://api.hachion.co/courses/all');
         const allCourses = allCoursesResponse.data || [];
   
         // Map active trending courses to include detailed info
@@ -321,7 +321,7 @@ const Trending = () => {
             heading={course.courseName}
             month={course.numberOfClasses}
             time={course.liveTrainingHours}
-            image={`http://localhost:8080/${course.courseImage}`}
+            image={`https://api.hachion.co/${course.courseImage}`}
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}

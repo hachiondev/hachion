@@ -112,7 +112,7 @@ const[message,setMessage]=useState(false);
   
     try {
       
-      const response = await axios.post("http://localhost:8080/trainer/add", trainerData
+      const response = await axios.post("https://api.hachion.co/trainer/add", trainerData
       );
       
       if (response.status === 200) {
@@ -147,7 +147,7 @@ const[message,setMessage]=useState(false);
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/trainers');
+        const response = await axios.get('https://api.hachion.co/trainers');
         setTrainers(response.data);
         setFilteredTrainers(response.data);
       } catch (error) {
@@ -183,7 +183,7 @@ const handleDeleteConfirmation = (trainerId) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/course-categories/all");
+      const response = await axios.get("https://api.hachion.co/course-categories/all");
       setCourse(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -194,7 +194,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/courses/all");
+      const response = await axios.get("https://api.hachion.co/courses/all");
       setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -215,7 +215,7 @@ useEffect(() => {
 const handleDelete = async (trainer_id) => {
  
    try { 
-    const response = await axios.delete(`http://localhost:8080/trainer/delete/${trainer_id}`); 
+    const response = await axios.delete(`https://api.hachion.co/trainer/delete/${trainer_id}`); 
     console.log("Trainer deleted successfully:", response.data); 
   } catch (error) { 
     console.error("Error deleting Trainer:", error); 
@@ -245,7 +245,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `http://localhost:8080/trainer/update/${selectedRow.trainer_id}`,
+      `https://api.hachion.co/trainer/update/${selectedRow.trainer_id}`,
       editedRow
     );
 

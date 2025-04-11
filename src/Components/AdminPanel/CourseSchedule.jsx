@@ -187,7 +187,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -199,7 +199,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -220,7 +220,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/trainers");
+        const response = await axios.get("https://api.hachion.co/trainers");
         setTrainer(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -286,7 +286,7 @@ export default function CourseSchedule() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/schedulecourse/add",
+        "https://api.hachion.co/schedulecourse/add",
         formattedCourseData
       );
       console.log("Course added successfully:", response.data);
@@ -318,7 +318,7 @@ export default function CourseSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/schedulecourse"
+          "https://api.hachion.co/schedulecourse"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -363,7 +363,7 @@ export default function CourseSchedule() {
   const handleDelete = async (course_schedule_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/schedulecourse/delete/${course_schedule_id}`
+        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
       console.log("Courses deleted successfully:", response.data);
     } catch (error) {
@@ -391,7 +391,7 @@ export default function CourseSchedule() {
     try {
       //console.log(editedRow);
       const response = await axios.put(
-        `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
 

@@ -62,7 +62,7 @@ const HaveAnyQuery = ({ closeModal }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/haveanyquery/add",
+        "https://api.hachion.co/haveanyquery/add",
         requestData,
         {
           headers: {

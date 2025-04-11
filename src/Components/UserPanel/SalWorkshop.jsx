@@ -91,7 +91,7 @@ const SalWorkshop = () => {
     };
   
     useEffect(() => {
-      fetch('http://localhost:8080/workshopschedule')
+      fetch('https://api.hachion.co/workshopschedule')
         .then((res) => res.json())
         .then((data) => {
           // if API returns an array, pick the first item (or adjust accordingly)
@@ -128,7 +128,7 @@ const SalWorkshop = () => {
       };
     
       try {
-        const response = await axios.post("http://localhost:8080/workshops", updatedFormData);
+        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
     
         alert("Form submitted successfully!");
         console.log("Response:", response.data);
@@ -181,7 +181,7 @@ const SalWorkshop = () => {
           {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
           <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                  ? `http://localhost:8080/${workshop.banner_image}` 
+                  ? `https://api.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
             // style={{ height: "420px"}}

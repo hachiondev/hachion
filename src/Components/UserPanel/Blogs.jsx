@@ -8,7 +8,7 @@ import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import BlogCard from './BlogCard';
-import blogImage2 from '../../Assets/blogcardimage2.png';
+import blogicon from '../../Assets/blogicon.png';
 import { useNavigate } from 'react-router-dom';
 
 const Blogs = () => {
@@ -17,7 +17,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/course-categories/all");
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
         setCategories(response.data); // assuming the API returns an array of categories
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -62,7 +62,7 @@ const handleClick=()=>{
       {categories.map((category, index) => (
         <BlogCard
           key={index}
-          imageSrc={category.imageUrl|| blogImage2} // Make sure this matches your backend's image field
+          imageSrc={category.imageUrl|| blogicon} // Make sure this matches your backend's image field
           content={category.name}
           onClick={() => handleClick(category.name)}
         />

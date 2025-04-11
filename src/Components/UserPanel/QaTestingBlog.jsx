@@ -24,7 +24,7 @@ const [helmetKey, setHelmetKey] = useState(0);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/blog");
+        const response = await axios.get("https://api.hachion.co/blog");
         const originalCategory = category_name.replace(/-/g, ' ');
         const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
         
@@ -39,7 +39,7 @@ const [helmetKey, setHelmetKey] = useState(0);
 
   const handleDownload = () => {
     if (blogs.length > 0 && blogs[0].blog_pdf) {
-      const pdfUrl = `http://localhost:8080/blogs/${blogs[0].blog_pdf}`;
+      const pdfUrl = `https://api.hachion.co/blogs/${blogs[0].blog_pdf}`;
       const link = document.createElement("a");
       link.href = pdfUrl;
       link.setAttribute("download", blogs[0].blog_pdf); // Set the filename
@@ -105,7 +105,7 @@ const [helmetKey, setHelmetKey] = useState(0);
           {blogs.length > 0 ? (
             blogs.map((blog) => (
               <div key={blog.id} className='salesforce-middle'>
-                <img src={`http://localhost:8080/blogs/${blog.blog_image}`} alt={blog.title} />
+                <img src={`https://api.hachion.co/blogs/${blog.blog_image}`} alt={blog.title} />
                 <div>
                   <h1>{blog.title}</h1>
                   <div className='salesforce-top'>

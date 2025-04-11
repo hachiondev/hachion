@@ -42,7 +42,7 @@ export default function Enroll() {
   const [enrollData, setEnrollData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/enroll")
+    axios.get("https://api.hachion.co/enroll")
       .then((response) => {
         setEnrollData(response.data);
       })

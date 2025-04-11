@@ -169,7 +169,7 @@ export default function Review() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -180,7 +180,7 @@ export default function Review() {
     useEffect(() => {
     const fetchReview = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/userreview');
+            const response = await axios.get('http://localhost:8080/userreview');
             const filteredReviews = response.data.filter(review => review.type === true);
             setReview(filteredReviews);
             setFilteredReview(filteredReviews);
@@ -238,7 +238,7 @@ export default function Review() {
         }
     
         const response = await axios.put(
-          `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+          `http://localhost:8080/userreview/update/${editedData.review_id}`,
           formData,
           {
             headers: {
@@ -267,7 +267,7 @@ export default function Review() {
       const handleDelete = async (review_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`); 
+          const response = await axios.delete(`http://localhost:8080/userreview/delete/${review_id}`); 
           console.log("Review deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Review:", error); 
@@ -328,7 +328,7 @@ export default function Review() {
     //   }
     //     try {
     //         const response = await axios.post(
-    //             "https://api.hachion.co/userreview/add",
+    //             "http://localhost:8080/userreview/add",
     //             formData,
     //             {
     //                 headers: {
@@ -374,7 +374,7 @@ export default function Review() {
   
       try {
           const response = await axios.post(
-              "https://api.hachion.co/userreview/add",
+              "http://localhost:8080/userreview/add",
               formData,
               {
                   headers: {
@@ -400,7 +400,7 @@ export default function Review() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("http://localhost:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);

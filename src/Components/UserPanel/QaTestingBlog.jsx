@@ -14,16 +14,20 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import automation from '../../Assets/automationtesting.png';
+import { Helmet } from 'react-helmet-async';
 
 const QaTestingBlog = () => {
   const { category_name } = useParams(); // Get category from URL
   const [blogs, setBlogs] = useState([]); // State for API data
+const [helmetKey, setHelmetKey] = useState(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/blog");
-        const filteredBlogs = response.data.filter(blog => blog.category_name === category_name);
+        const response = await axios.get("http://localhost:8080/blog");
+        const originalCategory = category_name.replace(/-/g, ' ');
+        const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
+        
         setBlogs(filteredBlogs);
       } catch (error) {
         console.error("Error fetching blog data:", error);
@@ -35,7 +39,7 @@ const QaTestingBlog = () => {
 
   const handleDownload = () => {
     if (blogs.length > 0 && blogs[0].blog_pdf) {
-      const pdfUrl = `https://api.hachion.co/blogs/${blogs[0].blog_pdf}`;
+      const pdfUrl = `http://localhost:8080/blogs/${blogs[0].blog_pdf}`;
       const link = document.createElement("a");
       link.href = pdfUrl;
       link.setAttribute("download", blogs[0].blog_pdf); // Set the filename
@@ -49,6 +53,16 @@ const QaTestingBlog = () => {
   
   return (
     <>
+    <Helmet key={helmetKey}>
+  <title>{blogs?.meta_title || "Hachion Blogs"}</title>
+  <meta name="description" content={blogs?.meta_description || "Blogs description"} />
+  <meta name="keywords" content={blogs?.meta_keyword || "meta keywords"} />
+  <meta property="og:title" content={blogs?.meta_title || "Best Online IT Certification Courses"} />
+  <meta property="og:description" content={blogs?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
+  <meta property="og:image" content={blogs?.blog_image || "https://hachion.co/images/course-banner.jpg"} />
+  <meta property="og:url" content={`https://hachion.co/blogs/${category_name}`} />
+  <meta name="robots" content="index, follow" />
+</Helmet>
       <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
@@ -61,8 +75,9 @@ const QaTestingBlog = () => {
               <a href="/blogs">Blog</a> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              {category_name || "Loading..."}
-            </li>
+  {category_name.replace(/-/g, ' ') || "Loading..."}
+</li>
+
           </ol>
         </nav>
       </div>
@@ -90,13 +105,22 @@ const QaTestingBlog = () => {
           {blogs.length > 0 ? (
             blogs.map((blog) => (
               <div key={blog.id} className='salesforce-middle'>
-                <img src={`https://api.hachion.co/blogs/${blog.blog_image}`} alt={blog.title} />
+                <img src={`http://localhost:8080/blogs/${blog.blog_image}`} alt={blog.title} />
                 <div>
                   <h1>{blog.title}</h1>
                   <div className='salesforce-top'>
                     <h5><FaUserTie className='user-icon' /> {blog.author}</h5>
                     <h5>{blog.views || '100'} Views</h5>
-                    <h5>{blog.date}</h5>
+                    {/* <h5>{blog.date}</h5> */}
+                    <h5>
+                      {(() => {
+                        const d = new Date(blog.date);
+                        const mm = String(d.getMonth() + 1).padStart(2, '0');
+                        const dd = String(d.getDate()).padStart(2, '0');
+                        const yyyy = d.getFullYear();
+                        return `${mm}-${dd}-${yyyy}`;
+                      })()}
+                    </h5>
                   </div>
                 </div>
               </div>
@@ -105,10 +129,10 @@ const QaTestingBlog = () => {
             <p>No blogs found for this category.</p>
           )}
 
-          <div className='topics'>
-            {blogs.length > 0 ? blogs[0].description : "Loading description..."}
-           
-          </div>
+        <div
+          className="topics"
+          dangerouslySetInnerHTML={{ __html: blogs.length > 0 ? blogs[0].description : '' }}
+        />
           
         </div>
       </div>

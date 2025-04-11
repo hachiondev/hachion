@@ -20,7 +20,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         console.log('API response:', response.data); // Check course data
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -35,7 +35,7 @@ const Curriculum = () => {
           console.log('Matched Course:', matchedCourse);
     
           // Fetch curriculum details
-          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
+          const curriculumResponse = await axios.get('http://localhost:8080/curriculum');
           console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
     
           // Normalize both names for reliable comparison
@@ -47,7 +47,7 @@ const Curriculum = () => {
   
           // Set the PDF URL if found
           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-            const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
+            const fullPdfUrl = `http://localhost:8080/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
@@ -74,7 +74,7 @@ const Curriculum = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/curriculum');
+        const response = await axios.get('http://localhost:8080/curriculum');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
@@ -116,7 +116,7 @@ useEffect(() => {
     const curriculumWithPdf = faq.find(item => item.curriculum_pdf);
   
     if (curriculumWithPdf) {
-      const pdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const pdfUrl = `http://localhost:8080/curriculum/${curriculumWithPdf.curriculum_pdf}`;
   
       // Trigger download
       const link = document.createElement('a');

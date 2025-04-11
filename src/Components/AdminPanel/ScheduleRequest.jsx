@@ -50,7 +50,7 @@ const[requestBatch,setRequestBatch]=useState([]);
   useEffect(() => {
     const fetchRequestBatch = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/requestbatch');
+            const response = await axios.get('http://localhost:8080/requestbatch');
             setRequestBatch(response.data);
         } catch (error) {
             console.error("Error fetching student list:", error.message);
@@ -67,7 +67,7 @@ const handleDeleteConfirmation = (batch_id) => {
 const handleDelete = async (batch_id) => {
        
   try { 
-   const response = await axios.delete(`https://api.hachion.co/requestbatch/delete/${batch_id}`); 
+   const response = await axios.delete(`http://localhost:8080/requestbatch/delete/${batch_id}`); 
    console.log("Request batch Deleting Successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting batch:", error); 

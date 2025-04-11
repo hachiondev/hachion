@@ -56,7 +56,7 @@
 
 //     const fetchCourseAmount = async (rate) => {
 //       try {
-//         const response = await axios.get('https://api.hachion.co/courses/all');
+//         const response = await axios.get('http://localhost:8080/courses/all');
 //         const courses = response.data;
 
 //         const matchedCourse = courses.find(
@@ -143,7 +143,7 @@
 //           return;
 //         }
 
-//         const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
+//         const response = await axios.post('http://localhost:8080/enrolldemo', { email: userEmail });
 
 //         if (response.data.success) {
 //           setMessage('Successfully enrolled for the free demo.');
@@ -197,7 +197,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
   useEffect(() => {
     const fetchCourseAmount = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         const courses = response.data;
 
         // Find the matching course by courseName
@@ -261,30 +261,26 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
   }, [courseName, modeType, enrollText]);
 
   const handleEnroll = async () => {
-    const isLoggedIn = localStorage.getItem('userToken') ? true : false;
-
-    if (!isLoggedIn) {
+    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+  
+    if (!user || !user.email) {
       alert('Please log in to enroll.');
-      window.location.href = '/login'; // Redirect to login page
+      navigate('/login');
       return;
-    }
-
+    }else{
+  
+    const userEmail = user.email;
+  
     if (modeType === 'live' && enrollText === 'Enroll Now') {
-      // Redirect to Enrollment.jsx page for Live Class
-      navigate('/enrollment');
-      return;
+      const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/enroll/${formattedCourseName}`);
+    return;
     }
-
+  
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
       try {
-        const userEmail = localStorage.getItem('userEmail');
-        if (!userEmail) {
-          alert('User email not found. Please log in again.');
-          return;
-        }
-
-        const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
-
+        const response = await axios.post('http://localhost:8080/enrolldemo', { email: userEmail });
+  
         if (response.data.success) {
           setMessage('Successfully enrolled for the free demo.');
         } else {
@@ -298,7 +294,8 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       setMessage('Successfully enrolled.');
     }
   };
-
+}
+  
   return (
     <div className='right'>
       <p className='batch-date-fee'>Fee:</p>

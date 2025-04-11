@@ -96,7 +96,7 @@ function App() {
   <Route path='/admincourse' element={<CategoryTable />} />
 
 {/* </Route> */}
-<Route path='/Salesforce-Workshop' element={<SalWorkshop/>}/>
+<Route path='/workshop/:courseName' element={<SalWorkshop/>}/>
 
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>

@@ -83,7 +83,7 @@ const RegisterHere = () => {
     };
 
     try {
-      const response = await fetch("https://api.hachion.co/api/v1/user/send-otp?email=" + email, {
+      const response = await fetch("http://localhost:8080/api/v1/user/send-otp?email=" + email, {
         method: "POST", // Assuming POST request for OTP
         headers: {
           "Content-Type": "application/json",

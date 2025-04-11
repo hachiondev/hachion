@@ -22,7 +22,7 @@ const AdminLogin = () => {
     e.preventDefault();
   
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/adminlogin', { email, password });
+      const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', { email, password });
 
       if (response.status === 200 && response.data.status) {
         // Store login state

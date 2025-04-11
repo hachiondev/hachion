@@ -73,7 +73,7 @@ export default function RegisterList() {
     const [endDate, setEndDate] = useState(null);
     const [editedData, setEditedData] = useState({student_name:"",email:"",mobile:"",password:"",location:"",state:"",time:"",course_name:"",additional_email:"",additional_mobile:""});
     const [studentData, setStudentData] = useState({
-        student_id:Date.now(),
+        student_id:"",
         name:"",
         email:"",
         mobile:"",
@@ -84,6 +84,9 @@ export default function RegisterList() {
        source:"",
        course_name:"",
        remarks:"",
+       additional_email: "",
+  additional_phone: "",
+  password: "",
        comments:"",
        date:currentDate,
             visa_status:"",
@@ -142,7 +145,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchStudent = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/registerstudent');
+              const response = await axios.get('http://localhost:8080/registerstudent');
               setRegisterStudent(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching student list:", error.message);
@@ -175,7 +178,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/registerstudent/update/${editedData.student_id}`,editedData
+                `http://localhost:8080/registerstudent/update/${editedData.student_id}`,editedData
             );
             setRegisterStudent((prev) =>
                 prev.map(curr =>
@@ -193,7 +196,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (student_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${student_id}`); 
+          const response = await axios.delete(`http://localhost:8080/registerstudent/delete/${student_id}`); 
           console.log("Register Student deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Student:", error); 
@@ -231,16 +234,21 @@ const [currentPage, setCurrentPage] = useState(1);
         const currentDate = new Date().toISOString().split("T")[0]; // Today's date
         const dataToSubmit = { 
           ...studentData, 
-          date: currentDate, // Ensure this is added
+          date: currentDate,
+          additional_email: studentData.additional_email || null,
+  additional_phone: studentData.additional_phone || 0,
+  password: studentData.password || null
         };
+        
         console.log("Data being sent:", dataToSubmit);
 
       
         try {
-          const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
+          const response = await axios.post("http://localhost:8080/registerstudent/add", dataToSubmit);
           if (response.status === 200) {
             alert("Student added successfully");
-            setStudentData([...studentData, dataToSubmit]); // Update local state
+            setStudentData(dataToSubmit);
+           // Update local state
             handleReset(); // Clear form fields
           }
         } catch (error) {
@@ -253,7 +261,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchCourse = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching courses:", error.message);
@@ -628,37 +636,7 @@ const [currentPage, setCurrentPage] = useState(1);
   </DialogActions>
 </Dialog>
 
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Student Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
+  
    
  </> );
 }

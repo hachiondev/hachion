@@ -19,7 +19,7 @@ const QaAutomationFaq = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         console.log('API response:', response.data); // Check course data
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -34,7 +34,7 @@ const QaAutomationFaq = () => {
           console.log('Matched Course:', matchedCourse);
     
           // Fetch curriculum details
-          const curriculumResponse = await axios.get('https://api.hachion.co/faq');
+          const curriculumResponse = await axios.get('http://localhost:8080/faq');
           console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
     
           // Normalize both names for reliable comparison
@@ -46,7 +46,7 @@ const QaAutomationFaq = () => {
   
           // Set the PDF URL if found
           if (matchedCurriculum && matchedCurriculum.faq_pdf) {
-            const fullPdfUrl = `https://api.hachion.co/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
+            const fullPdfUrl = `http://localhost:8080/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
@@ -73,7 +73,7 @@ const QaAutomationFaq = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/faq');
+        const response = await axios.get('http://localhost:8080/faq');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
@@ -154,7 +154,7 @@ const downloadPdf = () => {
   const curriculumWithPdf = faq.find(item => item.faq_pdf);
 
   if (curriculumWithPdf) {
-    const pdfUrl = `https://api.hachion.co/faq/${curriculumWithPdf.faq_pdf}`;
+    const pdfUrl = `http://localhost:8080/faq/${curriculumWithPdf.faq_pdf}`;
 
     // Trigger download
     const link = document.createElement('a');

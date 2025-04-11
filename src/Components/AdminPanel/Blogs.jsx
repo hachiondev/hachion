@@ -21,6 +21,8 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -69,11 +71,14 @@ const Blogs = () => {
    blog_pdf:"",
    description:"",
     date:currentDate,
+    meta_title:"",
+    meta_keyword:"",
+    meta_description:"",
   });
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("http://localhost:8080/course-categories/all");
         setCategories(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -87,9 +92,9 @@ const Blogs = () => {
   };
   useEffect(() => {
     const filtered = blogs.filter(blogs =>
-        blogs.category_name.toLowerCase().includes(searchTerm.toLowerCase())||
-        blogs.title.toLowerCase().includes(searchTerm.toLowerCase())||
-        blogs.author.toLowerCase().includes(searchTerm.toLowerCase())
+        blogs.category_name?.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.title?.toLowerCase().includes(searchTerm.toLowerCase())||
+        blogs.author?.toLowerCase().includes(searchTerm.toLowerCase())
         
     );
     setFilteredBlogs(filtered);
@@ -97,7 +102,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/blog');
+            const response = await axios.get('http://localhost:8080/blog');
             setBlogs(response.data); // Use the curriculum state
         } catch (error) {
             console.error("Error fetching blogs:", error.message);
@@ -106,9 +111,23 @@ const Blogs = () => {
     fetchBlogs();
     setFilteredBlogs(blogs)
 }, [blogs]);
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({ ...prev, [name]: value }));
+// const handleInputChange = (e) => {
+//   const { name, value } = e.target;
+//   setFormData((prev) => ({ ...prev, [name]: value }));
+// };
+
+const handleInputChange = (e, quillField = null, quillValue = null) => {
+  setFormData((prevData) => {
+    let { name, value } = e?.target || {};
+
+    // Handle ReactQuill input separately
+    if (quillField) {
+      name = quillField;
+      value = quillValue.trim() === "" || quillValue === "<p><br></p>" ? "" : quillValue;
+    }
+
+    return { ...prevData, [name]: value };
+  });
 };
 
 const handleFileChange = (e) => {
@@ -127,6 +146,10 @@ const handleSubmit = async (e) => {
     author: formData.author || "",
     description: formData.description || "",
     date: currentDate,
+    meta_keyword:formData.meta_keyword||"",
+    meta_description:formData.meta_description||"",
+    meta_title:formData.meta_title||""
+
   });
 
   // Create FormData object
@@ -135,7 +158,7 @@ const handleSubmit = async (e) => {
 
   // Append Image File
   if (formData.blog_image) {
-    formDataToSend.append("blogImage", formData.blog_image);
+    formDataToSend.append("blogImage", formData.blog_image||"");
   } else {
     alert("Blog image is required!");
     return;
@@ -143,7 +166,7 @@ const handleSubmit = async (e) => {
 
   // Append PDF File (optional)
   if (formData.blog_pdf) {
-    formDataToSend.append("blogPdf", formData.blog_pdf);
+    formDataToSend.append("blogPdf", formData.blog_pdf||"");
   }
 
   // Debugging: Log FormData contents
@@ -156,12 +179,12 @@ const handleSubmit = async (e) => {
     if (formData.id) {
       // Edit operation
       response = await axios.put(
-        `https://api.hachion.co/blog/update/${formData.id}`,
+        `http://localhost:8080/blog/update/${formData.id}`,
         formDataToSend
       );
     } else {
       // Add operation
-      response = await axios.post("https://api.hachion.co/blog/add", formDataToSend);
+      response = await axios.post("http://localhost:8080/blog/add", formDataToSend);
     }
 
     if (response.status === 200 || response.status === 201) {
@@ -205,7 +228,7 @@ const displayedCategories = filteredBlogs.slice(
 );
   
 const handleReset=()=>{
-  setFormData([{
+  setFormData({
     id:"",
    category_name:"",
    title:"",
@@ -214,7 +237,10 @@ const handleReset=()=>{
    blog_pdf:"",
    description:"",
     date:currentDate,
-       }]);
+    meta_title:"",
+    meta_description:"",
+    meta_keyword:""
+       });
 
 }
 const handleDeleteConfirmation = (id) => {
@@ -225,7 +251,7 @@ const handleDeleteConfirmation = (id) => {
 const handleDelete = async (id) => {
        
   try { 
-   const response = await axios.delete(`https://api.hachion.co/blog/delete/${id}`); 
+   const response = await axios.delete(`http://localhost:8080/blog/delete/${id}`); 
    console.log("Blogs deleted successfully:", response.data); 
  } catch (error) { 
    console.error("Error deleting Blogs:", error); 
@@ -240,7 +266,7 @@ const handleEditClick = async (id) => {
   setFormMode('Edit');
   setShowAddCourse(true);
   try {
-    const response = await fetch(`https://api.hachion.co/blog/${id}`);
+    const response = await fetch(`http://localhost:8080/blog/${id}`);
     if (response.ok) {
       const blog = await response.json();
       setFormData({
@@ -299,7 +325,7 @@ const handleEditClick = async (id) => {
         <form onSubmit={handleSubmit} enctype="multipart/form-data">
           <div className='course-details'>
             <div className="course-row">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <label className="form-label">Category Name</label>
                 <select id="inputState" class="form-select" name='category_name' value={formData.category_name} onChange={handleInputChange}>
     <option value="" disabled>
@@ -314,7 +340,7 @@ const handleEditClick = async (id) => {
                 </select>
               </div>
              
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <label className="form-label">Blog Title</label>
                 <input
                   type="text"
@@ -361,7 +387,54 @@ const handleEditClick = async (id) => {
 />
 </div>
 </div>
-              <div className="col-md-4">
+
+<div class="mb-3" style={{ paddingBottom: "20px" }}>
+<label for="exampleFormControlTextarea1" class="form-label">Description</label>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
+{/* <ReactQuill
+  theme="snow"
+  id="courseDescription"
+  name="courseDescription"
+  value={formData.courseDescription}
+  onChange={handleTextChange} */}
+  <ReactQuill
+    theme="snow"
+    id="description"
+    placeholder="Enter description"
+     value={formData.description}
+    onChange={(content) => handleInputChange(null, "description", content)}
+  style={{ height: "400px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["image"],
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "image",
+    "link",
+    "color",
+  ]}
+/>
+</div> 
+              {/* <div className="col-md-4">
                 <label className="form-label">Description</label>
                 <input
                   type="text"
@@ -371,8 +444,22 @@ const handleEditClick = async (id) => {
                   value={formData.description}
                   onChange={handleInputChange}
                 />
-              </div>
+              </div> */}
             </div>
+            <div className='course-row'>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta Title</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_title' value={formData.meta_title} onChange={handleInputChange}/>
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta keyword with comma</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_keyword' value={formData.meta_keyword} onChange={handleInputChange} />
+</div>
+<div class="col-md-4">
+<label for="inputEmail4" class="form-label">Meta keyword description</label>
+<input type="text" class="form-control" id="inputEmail4" name='meta_description' value={formData.meta_description} onChange={handleInputChange} />
+</div>
+</div>
             <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal'type='submit'>{formMode === 'Add' ? 'Submit' : 'Update'}</button>
@@ -477,7 +564,7 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 220}} align="center">
             {blogs.blog_image ? (
     <img
-    src={`https://api.hachion.co/blogs/${blogs.blog_image}`} 
+    src={`http://localhost:8080/blogs/${blogs.blog_image}`} 
       alt={blogs.category_name}
       width="50"
     />
@@ -490,14 +577,24 @@ const handleEditClick = async (id) => {
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.author}</StyledTableCell>
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">  <p>
     <a 
-      href={`https://api.hachion.co/${blogs.blog_pdf}`} 
+      href={`http://localhost:8080/${blogs.blog_pdf}`} 
       target="_blank" 
       rel="noopener noreferrer"
     >
       View or Download PDF
     </a>
   </p></StyledTableCell>
-            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell>
+              <StyledTableCell align="left">
+                {blogs.description ? (
+                    <div 
+                    style={{ maxWidth: '600px',height: '100px',
+                      overflowY: 'auto', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                    dangerouslySetInnerHTML={{ __html: blogs.description }} />
+                ) : (
+                    <p>No blog description available</p>
+                )}
+            </StyledTableCell>
+            {/* <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell> */}
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.date}</StyledTableCell>
             <StyledTableCell align="center" style={{ width: 200, }}>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
@@ -536,37 +633,7 @@ const handleEditClick = async (id) => {
       </div>
     </LocalizationProvider>)
     }
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Blogs Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
+   
    </>
   );
 };

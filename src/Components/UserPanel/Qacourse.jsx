@@ -44,7 +44,7 @@ const { courseName } = useParams(); // Extract course_id from URL params
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -92,7 +92,7 @@ export default Qacourse
 //     const fetchCourse = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('https://api.hachion.co/courses/all');
+//         const response = await axios.get('http://localhost:8080/courses/all');
 //         const courseData = response.data.find(
 //           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
 //         );

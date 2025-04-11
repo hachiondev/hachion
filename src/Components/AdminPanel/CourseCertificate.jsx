@@ -127,7 +127,7 @@ const handleFileChange = (e) => {
     useEffect(() => {
       const fetchCertificate = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/certificate');
+              const response = await axios.get('http://localhost:8080/certificate');
               setCertificate(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching certificate:", error.message);
@@ -148,7 +148,7 @@ const handleFileChange = (e) => {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/certificate/${editedData.id}`,editedData
+                `http://localhost:8080/certificate/${editedData.id}`,editedData
             );
             setCertificate((prev) =>
                 prev.map(curr =>
@@ -166,7 +166,7 @@ const handleFileChange = (e) => {
       const handleDelete = async (id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
+          const response = await axios.delete(`http://localhost:8080/certificate/delete/${id}`); 
           console.log("Certificate deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting certificate:", error); 
@@ -202,7 +202,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCategory = async () => {
           try {
-            const response = await axios.get("https://api.hachion.co/course-categories/all");
+            const response = await axios.get("http://localhost:8080/course-categories/all");
             setCourse(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);
@@ -213,7 +213,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCourseCategory = async () => {
           try {
-            const response = await axios.get("https://api.hachion.co/courses/all");
+            const response = await axios.get("http://localhost:8080/courses/all");
             setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
             console.error("Error fetching categories:", error.message);
@@ -255,7 +255,7 @@ const handleFileChange = (e) => {
     
         try {
             // Send the POST request with FormData
-            const response = await axios.post("https://api.hachion.co/certificate/add", formData, {
+            const response = await axios.post("http://localhost:8080/certificate/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

@@ -72,9 +72,16 @@ export default function Faq() {
     const [rows, setRows] = useState([{ id:"",faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
+    const [displayedCategories, setDisplayedCategories] = useState([]);
+        const [allData, setAllData] = useState([]); // All fetched data
+    // Data to be displayed
+    const [filterData, setFilterData] = useState({
+      category_name: "",
+      course_name: "",
+    });
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({category_name:"",course_name:"",faq_pdf:"",faq_title:"",description:""});
+    const [editedRow, setEditedRow] = useState({faq_id:"",category_name:"",course_name:"",faq_pdf:"",faq_title:"",description:""});
     const [curriculumData, setCurriculumData] = useState({
         faq_id:"",
           category_name:"",
@@ -99,10 +106,13 @@ export default function Faq() {
         };
         
         // Slice filteredCurriculum based on rowsPerPage and currentPage
-        const displayedCategories = filteredCurriculum.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+          useEffect(() => {
+                 const displayed = filteredCurriculum.slice(
+                   (currentPage - 1) * rowsPerPage,
+                   currentPage * rowsPerPage
+                 );
+                 setDisplayedCategories(displayed);
+               }, [filteredCurriculum, currentPage, rowsPerPage]);
 
         const quillModules = {
           toolbar: [
@@ -138,7 +148,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("http://localhost:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -159,7 +169,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -167,18 +177,7 @@ export default function Faq() {
       };
       fetchCourseCategory();
     }, []);
-    useEffect(() => {
-      const fetchFaq = async () => {
-          try {
-              const response = await axios.get('https://api.hachion.co/faq');
-              setCurriculum(response.data); // Use the curriculum state
-          } catch (error) {
-              console.error("Error fetching curriculum:", error.message);
-          }
-      };
-      fetchFaq();
-      setFilteredCurriculum(curriculum)
-  }, [curriculum]); // Empty dependency array ensures it runs only once
+  
 
     const handleDeleteConfirmation = (faq_id) => {
         if (window.confirm("Are you sure you want to delete this Faq?")) {
@@ -208,27 +207,96 @@ export default function Faq() {
       };
       const handleSave = async () => {
         try {
-            const response = await axios.put(
-                `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
-                editedRow
-            );
-            setCurriculum((prev) =>
-                prev.map(curr =>
-                    curr.faq_id === editedRow.faq_id ? response.data : curr
-                )
-            );
-            setMessage("Faq updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
+          const formData = new FormData();
+      
+          // Construct only the necessary fields
+          const curriculumData = {
+            category_name: editedRow.category_name,
+            course_name: editedRow.course_name,
+            faq_title: editedRow.faq_title,
+          description: editedRow.description,
+            
+          };
+      
+          formData.append("faqData", JSON.stringify(curriculumData));
+      
+          // Append file only if it is selected and is a File object
+          if (
+            editedRow.faq_pdf &&
+            editedRow.faq_pdf instanceof File
+          ) {
+            formData.append("faqPdf", editedRow.faq_pdf);
+          }
+      
+          const response = await axios.put(
+            `http://localhost:8080/faq/update/${editedRow.faq_id}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+      
+          setCurriculum((prev) =>
+            prev.map((curr) =>
+              curr.faq_id === editedRow.faq_id ? response.data : curr
+            )
+          );
+      
+          setMessage("FAQ updated successfully!");
+          setTimeout(() => setMessage(""), 5000);
+          setOpen(false);
         } catch (error) {
-            setMessage("Error updating FAQ.");
+          console.error("Error updating faq:", error);
+          setMessage("Error updating Faq.");
         }
-    };
-
+      };
+      
+  
+      const handlefilterChange = (e) => {
+        const { name, value } = e.target;
+        const newFilter = { ...filterData, [name]: value };
+        setFilterData(newFilter);
+      
+        const filtered = allData.filter((item) =>
+          (!newFilter.category_name || item.category_name === newFilter.category_name) &&
+          (!newFilter.course_name || item.course_name === newFilter.course_name)
+        );
+      
+        setFilteredCurriculum(filtered);
+        setCurrentPage(1); // Reset to first page
+      };
+      
+      // useEffect(() => {
+      //   const fetchData = async () => {
+      //     try {
+      //       const response = await axios.get("http://localhost:8080/faq");
+      //       setAllData(response.data);
+      //       setDisplayedCategories(response.data); // initially display all
+      //     } catch (error) {
+      //       console.error("Error fetching curriculum data", error);
+      //     }
+      //   };
+      
+      //   fetchData();
+      // }, []);
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const response = await axios.get("http://localhost:8080/faq");
+              setAllData(response.data);
+              setFilteredCurriculum(response.data); // Used for paginated display
+            } catch (error) {
+              console.error("Error fetching curriculum data", error);
+            }
+          };
+          fetchData();
+        }, []);
       const handleDelete = async (faq_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`); 
+          const response = await axios.delete(`http://localhost:8080/faq/delete/${faq_id}`); 
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
@@ -296,7 +364,7 @@ export default function Faq() {
 //     console.log("Data being sent:", dataToSubmit); // Debugging
 
 //     try {
-//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+//         const response = await axios.post("http://localhost:8080/curriculum/add", dataToSubmit, {
 //             headers: {
 //                 "Content-Type": "multipart/form-data" 
 //             }
@@ -335,7 +403,7 @@ export default function Faq() {
 //   console.log("Data being sent:", formData); // Debugging
 
 //   try {
-//       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+//       const response = await axios.post("http://localhost:8080/faq/add", formData, {
 //           headers: {
 //               "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
 //           }
@@ -374,7 +442,7 @@ const handleSubmit = async (e) => {
   console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
 
   try {
-    const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+    const response = await axios.post("http://localhost:8080/faq/add", formData, {
       headers: {
         "Content-Type": "multipart/form-data" // Important for file uploads
       }
@@ -563,38 +631,52 @@ const handleSubmit = async (e) => {
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Category
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-  </div>
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Course Name</label>
-    <select id="inputState" class="form-select" name='course_name' value={curriculumData.course_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-    </select>
-  </div>
+    <select
+  id="inputState"
+  className="form-select"
+  name="category_name"
+  value={filterData.category_name}
+  onChange={handlefilterChange}
+>
+  <option value="" disabled>Select Category</option>
+  {course.map((curr) => (
+    <option key={curr.id} value={curr.name}>{curr.name}</option>
+  ))}
+</select>
+</div>
+<div className="col-md-3">
+<label htmlFor="course" className="form-label">Course Name</label>
+
+<select
+  id="course"
+  className="form-select"
+  name="course_name"
+  value={filterData.course_name}
+  onChange={handlefilterChange}
+  
+>
+  <option value="" disabled>Select Course</option>
+  {courseCategory.map((curr) => (
+    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+  ))}
+</select>
+      </div>
   {/* <div class="mb-3">
-  <label for="formFile" class="form-label">FAQ PDF</label>
+  <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
           name="curriculum_pdf"
           onChange={handleChange}/>
 </div> */}
-  </div>
-  </div>
+ <div style={{marginTop: '50px'}}>
+  <button className="filter" onClick={() => {
+  setFilterData({ category_name: "", course_name: "" });
+  setFilteredCurriculum(allData);
+    setCurrentPage(1);}}>
+  Reset Filter
+</button>
+</div>
+</div>
+</div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -718,8 +800,13 @@ const handleSubmit = async (e) => {
         id="curriculumPDF"
         accept='.pdf'
         name="faq_pdf"
-      
-        onChange={handleEditFileUpload}
+        onChange={(e) =>
+          setEditedRow((prev) => ({
+            ...prev,
+            faq_pdf: e.target.files[0], // must be a File object
+          }))
+        }
+        
     
       />
     </div>
@@ -751,37 +838,7 @@ const handleSubmit = async (e) => {
   </DialogActions>
 </Dialog>
 
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
 
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                    FAQ Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
    
  </> );
 }

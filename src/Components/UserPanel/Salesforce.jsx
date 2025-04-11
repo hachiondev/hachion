@@ -36,12 +36,8 @@ const Salesforce = () => {
  <p className='batch-type-content'>Videos</p>
    </div>
    <div className='card-holder'>
-  <RecentEntriesCard imageSrc={salesforce} content='7 Reasons to Learn Salesforce in 2023 By' 
-     username='Sandeep' date='24-09-10' onClick={() => navigate('/salesforceblog')}/>
-     <RecentEntriesCard imageSrc={salesforceadmin} content='Salesforce admin Interview FAQs' 
-     username='Pushpa' date='24-09-10'/>
-     <RecentEntriesCard imageSrc={salesforceinterview} content='Salesforce Developer Interview FAQs' 
-     username='Ramkrishna' date='24-09-10'/>
+    <RecentEntries/>
+ 
 
      </div>
 <div className='blog-bottom'>

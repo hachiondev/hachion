@@ -179,12 +179,12 @@ const handleSubmit = async (e) => {
     if (formData.id) {
       // Edit operation
       response = await axios.put(
-        `https://api.hachion.co/blog/update/${formData.id}`,
+        `http://13.219.46.20:8080/blog/update/${formData.id}`,
         formDataToSend
       );
     } else {
       // Add operation
-      response = await axios.post("https://api.hachion.co/blog/add", formDataToSend);
+      response = await axios.post("http://13.219.46.20:8080/blog/add", formDataToSend);
     }
 
     if (response.status === 200 || response.status === 201) {

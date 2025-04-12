@@ -68,7 +68,7 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [wordCount, setWordCount] = useState(0);
+  const [characterCount, setCharacterCount] = useState(0);
 
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',courseCategory: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
@@ -100,47 +100,6 @@ const CourseDetail = ({
     setFilteredCourses(categories)
 }, [categories]);
 
-// const handleInputChange = (e) => {  
-//   const { name, value } = e.target;  
-//   setFormData((prev) => ({ ...prev, [name]: value }));};
-
-// const handleModeChange = (e) => {
-//   const { name, value } = e.target;
-//   setFormData((prevData) => {
-//     const updatedData = { ...prevData, [name]: value };
-
-//     // Function to calculate total based on amount and discount
-//     const calculateTotal = (amount, discount) => {
-//       if (!amount || isNaN(amount)) return "";
-//       const discountAmount = discount ? (amount * discount) / 100 : 0;
-//       return (amount - discountAmount).toFixed(2);
-//     };
-
-//     switch (name) {
-//       case "amount":
-//       case "discount":
-//         updatedData.total = calculateTotal(updatedData.amount, updatedData.discount);
-//         break;
-//       case "mamount":
-//       case "mdiscount":
-//         updatedData.mtotal = calculateTotal(updatedData.mamount, updatedData.mdiscount);
-//         break;
-//       case "samount":
-//       case "sdiscount":
-//         updatedData.stotal = calculateTotal(updatedData.samount, updatedData.sdiscount);
-//         break;
-//       case "camount":
-//       case "cdiscount":
-//         updatedData.ctotal = calculateTotal(updatedData.camount, updatedData.cdiscount);
-//         break;
-//       default:
-//         break;
-//     }
-
-//     return updatedData;
-//   });
-// };
-
 // const handleHighlightChange= (content) => {
 //   if (content.trim() === "" || content === "<p><br></p>") {
 //     setError("Course description heighlight is required.");
@@ -169,36 +128,41 @@ const handleInputChange = (e, quillField = null, quillValue = null) => {
       value = quillValue.trim() === "" || quillValue === "<p><br></p>" ? "" : quillValue;
     }
 
-    const updatedData = { ...prevData, [name]: value };
-
-    // Function to calculate total based on amount and discount
-    const calculateTotal = (amount, discount) => {
-      if (!amount || isNaN(amount)) return "";
-      const discountAmount = discount ? (amount * discount) / 100 : 0;
-      return (amount - discountAmount).toFixed(2);
-    };
-
-    // Handle course mode pricing calculations
-    const modeFields = {
-      amount: "total",
-      discount: "total",
-      mamount: "mtotal",
-      mdiscount: "mtotal",
-      samount: "stotal",
-      sdiscount: "stotal",
-      camount: "ctotal",
-      cdiscount: "ctotal",
-    };
-
-    if (modeFields[name]) {
-      updatedData[modeFields[name]] = calculateTotal(
-        updatedData[name.includes("discount") ? name.replace("discount", "amount") : name],
-        updatedData[name.includes("amount") ? name.replace("amount", "discount") : name]
-      );
-    }
-
-    return updatedData;
+    return { ...prevData, [name]: value };
   });
+};
+
+const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    setFormData((prevData) => {
+      const updatedData = { ...prevData };
+      const modes = ["", "m", "s", "c"];
+
+      modes.forEach((mode) => {
+        const amountKey = `${mode}amount`;
+        const discountKey = `${mode}discount`;
+        const totalKey = `${mode}total`;
+
+        const amount = parseFloat(updatedData[amountKey]);
+        const discount = parseFloat(updatedData[discountKey]);
+        const total = parseFloat(updatedData[totalKey]);
+
+        const hasAmount = !isNaN(amount);
+        const hasDiscount = !isNaN(discount);
+        const hasTotal = !isNaN(total);
+
+        if (hasAmount && hasDiscount && !hasTotal) {
+          updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
+        } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
+          updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
+        } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
+          updatedData[amountKey] = Math.round(total / (1 - discount / 100));
+        }
+      });
+
+      return updatedData;
+    });
+  }
 };
 
 const handleFileChange = (event) => {
@@ -641,6 +605,7 @@ const handleAddTrendingCourseClick = () => {
           name={mode.amount}
           value={formData[mode.amount] || ""}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
       <div className="col-md-3">
@@ -651,6 +616,7 @@ const handleAddTrendingCourseClick = () => {
           name={mode.discount}
           value={formData[mode.discount] || ""}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
       <div className="col-md-3">
@@ -660,7 +626,8 @@ const handleAddTrendingCourseClick = () => {
           className="form-control-mode"
           name={mode.total}
           value={formData[mode.total] || ""}
-          readOnly
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
     </div>
@@ -727,19 +694,19 @@ const handleAddTrendingCourseClick = () => {
     name="courseHighlight"
     value={formData.courseHighlight}
     onChange={(content) => {
-      const plainText = content.replace(/<[^>]*>?/gm, '').trim(); // Remove HTML tags
-      const words = plainText.split(/\s+/).filter(Boolean);
-      const wordCount = words.length;
-
-      if (wordCount > 65) {
-        setError('Word limit exceeded. Please keep it within 65 words.');
+      const plainText = content.replace(/<[^>]*>/g, ""); 
+      const count = plainText.length;
+  
+      if (count > 360) {
+        setError("Character limit exceeded. Please keep it within 360 characters.");
       } else {
-        setError('');
-        handleInputChange(null, 'courseHighlight', content);
+        setError("");
       }
-      setWordCount(wordCount); // Track word count in real-time
+  
+      handleInputChange(null, "courseHighlight", content);
+      setCharacterCount(count);
     }}
-  style={{ height: "130px" }} // Increased editor height
+  style={{ height: "200px" }}
   modules={{
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
@@ -767,10 +734,10 @@ const handleAddTrendingCourseClick = () => {
     "color",
   ]}
 />
-<div style={{ marginTop: '8px', fontSize: '14px', color: wordCount > 500 ? 'red' : 'black' }}>
-    Word Count: {wordCount}/65
+<div style={{marginLeft: '10px',marginTop: '8px', fontSize: '14px', color: characterCount > 360 ? 'red' : 'black' }}>
+    Character Count: {characterCount}/360
   </div>
-{error && <p className="error-message">{error}</p>}
+  {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
 </div>
 <div class="mb-3" style={{ paddingBottom: "20px" }}>
 <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
@@ -787,7 +754,7 @@ const handleAddTrendingCourseClick = () => {
     name="courseDescription"
     value={formData.courseDescription}
     onChange={(content) => handleInputChange(null, "courseDescription", content)}
-  style={{ height: "300px" }} // Increased editor height
+  style={{ height: "500px" }} // Increased editor height
   modules={{
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
@@ -823,7 +790,8 @@ const handleAddTrendingCourseClick = () => {
 
       <div className="course-row">
             <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' type='submit' >{formMode === 'Add' ? 'Submit' : 'Update'}</button>
+                  data-bs-target='#exampleModal' type='submit' 
+                 >{formMode === 'Add' ? 'Submit' : 'Update'}</button>
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
@@ -973,7 +941,37 @@ const handleAddTrendingCourseClick = () => {
                  </div>
       </div>
     </LocalizationProvider></>)}
-    
+    {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Course Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
    </>
   );
 };

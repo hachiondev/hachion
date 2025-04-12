@@ -21,6 +21,8 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -109,9 +111,23 @@ const Blogs = () => {
     fetchBlogs();
     setFilteredBlogs(blogs)
 }, [blogs]);
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({ ...prev, [name]: value }));
+// const handleInputChange = (e) => {
+//   const { name, value } = e.target;
+//   setFormData((prev) => ({ ...prev, [name]: value }));
+// };
+
+const handleInputChange = (e, quillField = null, quillValue = null) => {
+  setFormData((prevData) => {
+    let { name, value } = e?.target || {};
+
+    // Handle ReactQuill input separately
+    if (quillField) {
+      name = quillField;
+      value = quillValue.trim() === "" || quillValue === "<p><br></p>" ? "" : quillValue;
+    }
+
+    return { ...prevData, [name]: value };
+  });
 };
 
 const handleFileChange = (e) => {
@@ -309,7 +325,7 @@ const handleEditClick = async (id) => {
         <form onSubmit={handleSubmit} enctype="multipart/form-data">
           <div className='course-details'>
             <div className="course-row">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <label className="form-label">Category Name</label>
                 <select id="inputState" class="form-select" name='category_name' value={formData.category_name} onChange={handleInputChange}>
     <option value="" disabled>
@@ -324,7 +340,7 @@ const handleEditClick = async (id) => {
                 </select>
               </div>
              
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <label className="form-label">Blog Title</label>
                 <input
                   type="text"
@@ -371,7 +387,54 @@ const handleEditClick = async (id) => {
 />
 </div>
 </div>
-              <div className="col-md-4">
+
+<div class="mb-3" style={{ paddingBottom: "20px" }}>
+<label for="exampleFormControlTextarea1" class="form-label">Description</label>
+{/* <textarea class="form-control" id="exampleFormControlTextarea1" name='courseDescription' value={formData.courseDescription} onChange={handleInputChange}></textarea> */}
+{/* <ReactQuill
+  theme="snow"
+  id="courseDescription"
+  name="courseDescription"
+  value={formData.courseDescription}
+  onChange={handleTextChange} */}
+  <ReactQuill
+    theme="snow"
+    id="description"
+    placeholder="Enter description"
+     value={formData.description}
+    onChange={(content) => handleInputChange(null, "description", content)}
+  style={{ height: "400px" }} // Increased editor height
+  modules={{
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+      ["bold", "italic", "underline"], // Text formatting
+      [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+      [{ align: [] }], // Text alignment
+      [{ indent: "-1" }, { indent: "+1" }], // Indentation
+      ["blockquote"], // Blockquote for paragraph formatting
+      ["image"],
+      ["link"], // Insert links
+      [{ color: [] }], // Full color picker
+      ["clean"], // Remove formatting
+    ],
+  }}
+  formats={[
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "align",
+    "indent",
+    "blockquote",
+    "image",
+    "link",
+    "color",
+  ]}
+/>
+</div> 
+              {/* <div className="col-md-4">
                 <label className="form-label">Description</label>
                 <input
                   type="text"
@@ -381,7 +444,7 @@ const handleEditClick = async (id) => {
                   value={formData.description}
                   onChange={handleInputChange}
                 />
-              </div>
+              </div> */}
             </div>
             <div className='course-row'>
 <div class="col-md-4">
@@ -521,7 +584,17 @@ const handleEditClick = async (id) => {
       View or Download PDF
     </a>
   </p></StyledTableCell>
-            <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell>
+              <StyledTableCell align="left">
+                {blogs.description ? (
+                    <div 
+                    style={{ maxWidth: '600px',height: '100px',
+                      overflowY: 'auto', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                    dangerouslySetInnerHTML={{ __html: blogs.description }} />
+                ) : (
+                    <p>No blog description available</p>
+                )}
+            </StyledTableCell>
+            {/* <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.description}</StyledTableCell> */}
             <StyledTableCell sx={{ width: 200, fontSize: '16px' }} align="center">{blogs.date}</StyledTableCell>
             <StyledTableCell align="center" style={{ width: 200, }}>
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>

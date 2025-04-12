@@ -10,8 +10,16 @@ const RecentEntriesCard = ({ imageSrc, content, views, date, onClick }) => {
         <p className='content'>{content}</p>
         <div className='bottom-content'>
           <p className='views'><HiEye className='views-icon'/>  {views}</p>
-          <p className='date'>{date}</p>
-        </div>
+          <p className='date'>
+            {(() => {
+              const d = new Date(date);
+              const mm = String(d.getMonth() + 1).padStart(2, '0');
+              const dd = String(d.getDate()).padStart(2, '0');
+              const yyyy = d.getFullYear();
+              return `${mm}-${dd}-${yyyy}`;
+            })()}
+          </p>
+          </div>
       </div>
     </div>
   );

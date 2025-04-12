@@ -8,7 +8,7 @@ import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import BlogCard from './BlogCard';
-import blogImage2 from '../../Assets/blogcardimage2.png';
+import blogicon from '../../Assets/blogicon.png';
 import { useNavigate } from 'react-router-dom';
 
 const Blogs = () => {
@@ -62,7 +62,7 @@ const handleClick=()=>{
       {categories.map((category, index) => (
         <BlogCard
           key={index}
-          imageSrc={category.imageUrl|| blogImage2} // Make sure this matches your backend's image field
+          imageSrc={category.imageUrl|| blogicon} // Make sure this matches your backend's image field
           content={category.name}
           onClick={() => handleClick(category.name)}
         />

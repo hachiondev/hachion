@@ -345,6 +345,13 @@ width: 100%;
  flex-direction: row;
  gap: 3vh;
 }
+.course-filter{
+  padding: 1.5vh;
+ align-items: center;
+ display: flex;
+ flex-direction: row;
+ gap: 3vh;
+}
 .filter{
   /* width:4vw; */
   background-color: #00AEEF;
@@ -354,6 +361,9 @@ width: 100%;
   border: none;
   color: white;
   font-size:1rem;
+}
+.resetfilter{
+  margin-top: 50px;
 }
 .btn-number{
   /* width: 3.5vw; */

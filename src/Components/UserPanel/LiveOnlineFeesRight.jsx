@@ -186,8 +186,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
-  const { courseName } = useParams(); // Get course name from URL
+const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseName }) => {
+  // const { courseName } = useParams(); // Get course name from URL
   const navigate = useNavigate();
   const [fee, setFee] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -267,34 +267,59 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       alert('Please log in to enroll.');
       navigate('/login');
       return;
-    }else{
+    }
   
     const userEmail = user.email;
+    const userName = user.name || '';
+    const userMobile = user.mobile || '';
   
     if (modeType === 'live' && enrollText === 'Enroll Now') {
       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/enroll/${formattedCourseName}`);
-    return;
+      navigate(`/enroll/${formattedCourseName}`);
+      return;
     }
   
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
       try {
-        const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
-  
-        if (response.data.success) {
-          setMessage('Successfully enrolled for the free demo.');
-        } else {
-          setMessage('Failed to enroll. Please try again.');
+        if (!selectedBatchData) {
+          alert('Please select a batch before enrolling.');
+          return;
         }
+  
+        const payload = {
+          name: userName,
+          email: userEmail,
+          mobile: userMobile||"",
+          course_name: selectedBatchData.schedule_course_name,
+          enroll_date: selectedBatchData.schedule_date,
+          week: selectedBatchData.schedule_week,
+          time: selectedBatchData.schedule_time,
+          amount: 0,
+          mode: selectedBatchData.schedule_mode,
+          type: 'Free Demo',
+          trainer: selectedBatchData.trainer_name,
+          completion_date: selectedBatchData.schedule_completion_date||""
+        };
+  
+        const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+
+  
+        if ( response.data.status === 201) {
+          setMessage('Registered Successfully');
+          alert('Registered Successfully');
+        } else {
+          setMessage('Registered Successfully');
+        }
+       
       } catch (error) {
         console.error('Error enrolling in demo:', error);
         setMessage('Error occurred while enrolling.');
       }
-    } else {
-      setMessage('Successfully enrolled.');
     }
   };
-}
+  
+  
+  
   
   return (
     <div className='right'>

@@ -150,23 +150,28 @@ useEffect(() => {
           <div className="topic-details">
           <ul className="bullet-list" dangerouslySetInnerHTML={{ __html: item.topic }} />
 
-        <div>
-          {item.link && (
-            <button
-              className="play-btn"
-              onClick={() => {
-                const validUrl = item.link.startsWith('http') ? item.link : `https://${item.link}`;
-                window.open(validUrl, '_blank', 'noopener,noreferrer');
-              }}
-              title="Watch Video"
-            >
-              <div className="play-icon-btn">
-              <BsFillPlayCircleFill size={28} color="#00AEEF" /> 
-              </div>
-              Preview
-            </button>
-          )}
-          </div>
+          <div className="video-buttons">
+    {item.link &&
+        item.link.split('\n').map((videoLink, i) => {
+            const validUrl = videoLink.trim().startsWith('http')
+                ? videoLink.trim()
+                : `https://${videoLink.trim()}`;
+
+            return (
+                <button
+                    key={i}
+                    className="play-btn"
+                    onClick={() => window.open(validUrl, '_blank', 'noopener,noreferrer')}
+                    title="Watch Video"
+                >
+                    <div className="play-icon-btn">
+                        <BsFillPlayCircleFill size={24} color="#00AEEF" />
+                    </div>
+                    Preview
+                </button>
+            );
+        })}
+</div>
           </div>
         )}
       </div>

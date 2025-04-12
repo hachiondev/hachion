@@ -713,7 +713,8 @@ const quillModules = {
               <StyledTableCell align="left">
                   {course.content ? (
                       <div 
-                      style={{ maxWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                      style={{ Width: '400px',height: '100px',
+                        overflowY: 'auto', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
                       dangerouslySetInnerHTML={{ __html: course.content }} />
                   ) : (
                       <p>No content is available</p>
@@ -722,7 +723,8 @@ const quillModules = {
               <StyledTableCell align="left">
                   {course.details ? (
                       <div 
-                      style={{ maxWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
+                      style={{ Width: '400px',height: '100px',
+                        overflowY: 'auto', wordWrap: 'break-word', whiteSpace: 'pre-line' }}
                       dangerouslySetInnerHTML={{ __html: course.details }} />
                   ) : (
                       <p>No details is available</p>

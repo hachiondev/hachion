@@ -255,7 +255,7 @@ const [filterData, setFilterData] = useState({
           }
       
           const response = await axios.put(
-            `http://13.219.46.20:8080/curriculum/update/${editedRow.curriculum_id}`,
+            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
             formData,
             {
               headers: {
@@ -370,10 +370,12 @@ const [filterData, setFilterData] = useState({
     console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
   
     try {
-      const response = await axios.post("http://13.219.46.20:8080/curriculum/add", formData, {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
         headers: {
-          "Content-Type": "multipart/form-data" // Important for file uploads
-        }
+          "Content-Type": "multipart/form-data", // Important for file uploads
+        },
+        maxBodyLength: Infinity,  // Disable body size limit
+        maxContentLength: Infinity // Disable content size limit
       });
   
       if (response.status === 201) { // HTTP 201 means "Created"

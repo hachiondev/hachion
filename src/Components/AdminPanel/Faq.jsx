@@ -229,7 +229,7 @@ export default function Faq() {
           }
       
           const response = await axios.put(
-            `http://13.219.46.20:8080/faq/update/${editedRow.faq_id}`,
+            `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
             formData,
             {
               headers: {
@@ -442,7 +442,7 @@ const handleSubmit = async (e) => {
   console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
 
   try {
-    const response = await axios.post("http://13.219.46.20:8080/faq/add", formData, {
+    const response = await axios.post("https://api.hachion.co/faq/add", formData, {
       headers: {
         "Content-Type": "multipart/form-data" // Important for file uploads
       }

@@ -375,7 +375,8 @@ const [filterData, setFilterData] = useState({
           "Content-Type": "multipart/form-data", // Important for file uploads
         },
         maxBodyLength: Infinity,  // Disable body size limit
-        maxContentLength: Infinity // Disable content size limit
+        maxContentLength: Infinity, // Disable content size limit
+        timeout: 60000
       });
   
       if (response.status === 201) { // HTTP 201 means "Created"

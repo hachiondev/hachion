@@ -20,36 +20,40 @@ const QaTestingBlog = () => {
   const { category_name } = useParams(); // Get category from URL
   const [blogs, setBlogs] = useState([]); // State for API data
 const [helmetKey, setHelmetKey] = useState(0);
+const [selectedBlog, setSelectedBlog] = useState(null);
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await axios.get("https://api.hachion.co/blog");
-        const originalCategory = category_name.replace(/-/g, ' ');
-        const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
-        
-        setBlogs(filteredBlogs);
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-      }
-    };
+useEffect(() => {
+  const fetchBlogs = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/blog");
+      const originalCategory = category_name.replace(/-/g, ' ');
+      const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
 
-    fetchBlogs();
-  }, [category_name]); // Re-fetch when category changes
-
-  const handleDownload = () => {
-    if (blogs.length > 0 && blogs[0].blog_pdf) {
-      const pdfUrl = `https://api.hachion.co/blogs/${blogs[0].blog_pdf}`;
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.setAttribute("download", blogs[0].blog_pdf); // Set the filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      alert("No PDF available for this category.");
+      setBlogs(filteredBlogs);
+      setSelectedBlog(filteredBlogs[0] || null); // Set first blog as default
+    } catch (error) {
+      console.error("Error fetching blog data:", error);
     }
   };
+
+  fetchBlogs();
+}, [category_name]);
+
+
+const handleDownload = () => {
+  if (selectedBlog && selectedBlog.blog_pdf) {
+    const pdfUrl = `https://api.hachion.co/blogs/${selectedBlog.blog_pdf}`;
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.setAttribute("download", selectedBlog.blog_pdf);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    alert("No PDF available for this blog.");
+  }
+};
+
   
   return (
     <>
@@ -83,11 +87,23 @@ const [helmetKey, setHelmetKey] = useState(0);
       </div>
 
       <div className='salesforce-blog'>
-        <div className='salesforce-blog-left'>
-          <h3>Recommended Publications</h3>
-          <p>Salesforce admin interview FAQ's</p>
-          <p>Salesforce Developer interview FAQ's</p>
-        </div>
+      <div className='salesforce-blog-left'>
+  <h3>Recommended Publications</h3>
+  {blogs.length > 0 ? (
+    blogs.map(blog => (
+      <p
+        key={blog.id}
+        onClick={() => setSelectedBlog(blog)}
+        style={{ cursor: 'pointer', color: selectedBlog?.id === blog.id ? '#00AEEF' : 'black', fontWeight: selectedBlog?.id === blog.id ? 'bold' : 'normal' }}
+      >
+        {blog.title}
+      </p>
+    ))
+  ) : (
+    <p>No blogs available</p>
+  )}
+</div>
+
 
         <div className='salesforce-blog-right'>
           <div className='salesforce-right'>
@@ -102,39 +118,37 @@ const [helmetKey, setHelmetKey] = useState(0);
             </div>
           </div>
 
-          {blogs.length > 0 ? (
-            blogs.map((blog) => (
-              <div key={blog.id} className='salesforce-middle'>
-                <img src={`https://api.hachion.co/blogs/${blog.blog_image}`} alt={blog.title} />
-                <div>
-                  <h1>{blog.title}</h1>
-                  <div className='salesforce-top'>
-                    <h5><FaUserTie className='user-icon' /> {blog.author}</h5>
-                    <h5>{blog.views || '100'} Views</h5>
-                    {/* <h5>{blog.date}</h5> */}
-                    <h5>
-                      {(() => {
-                        const d = new Date(blog.date);
-                        const mm = String(d.getMonth() + 1).padStart(2, '0');
-                        const dd = String(d.getDate()).padStart(2, '0');
-                        const yyyy = d.getFullYear();
-                        return `${mm}-${dd}-${yyyy}`;
-                      })()}
-                    </h5>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No blogs found for this category.</p>
-          )}
-
-        <div
-          className="topics"
-          dangerouslySetInnerHTML={{ __html: blogs.length > 0 ? blogs[0].description : '' }}
-        />
-          
+          {selectedBlog ? (
+  <>
+    <div className='salesforce-middle'>
+      <img src={`https://api.hachion.co/blogs/${selectedBlog.blog_image}`} alt={selectedBlog.title} />
+      <div>
+        <h1>{selectedBlog.title}</h1>
+        <div className='salesforce-top'>
+          <h5><FaUserTie className='user-icon' /> {selectedBlog.author}</h5>
+          <h5>{selectedBlog.views || '100'} Views</h5>
+          <h5>
+            {(() => {
+              const d = new Date(selectedBlog.date);
+              const mm = String(d.getMonth() + 1).padStart(2, '0');
+              const dd = String(d.getDate()).padStart(2, '0');
+              const yyyy = d.getFullYear();
+              return `${mm}-${dd}-${yyyy}`;
+            })()}
+          </h5>
         </div>
+      </div>
+    </div>
+
+    <div
+      className="topics"
+      dangerouslySetInnerHTML={{ __html: selectedBlog.description }}
+    />
+  </>
+) : (
+  <p>No blog selected.</p>
+)}
+</div>
       </div>
 
       <div className='salesforce-entries'>

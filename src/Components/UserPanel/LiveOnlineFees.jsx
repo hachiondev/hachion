@@ -333,7 +333,13 @@ export const LiveOnlineFees = () => {
         </div>
 
         <div className='separator'></div>
-        <LiveOnlineFeesRight enrollText={enrollText} modeType={modeType} />
+        <LiveOnlineFeesRight 
+  enrollText={enrollText} 
+  modeType={modeType} 
+  selectedBatchData={filteredCourses.find(batch => batch.course_schedule_id === selectedBatch)}
+  courseName={courseName}
+/>
+
       </div>
     </>
   );

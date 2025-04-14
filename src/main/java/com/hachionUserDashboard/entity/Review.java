@@ -34,7 +34,8 @@ public class Review {
     @Column
     private String source;
     
-    @Column
+    @Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
     private String comment;
     
     

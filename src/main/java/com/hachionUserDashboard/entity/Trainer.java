@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 import java.time.LocalDate;
 
@@ -26,7 +27,8 @@ public class Trainer {
     @Column
     private String course_name;
     
-    @Column
+    @Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
     private String summary;
     
     @Column

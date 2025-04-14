@@ -176,6 +176,38 @@ const SalWorkshop = () => {
       </Helmet>
       <Topbar />
       <NavbarTop />
+      <div className='course-details'>
+      <div className='course-row'>
+      <div class="col-md-3">
+          <label for="inputState" class="form-label">Category Name</label>
+          <select
+        id="inputState"
+        className="form-select"
+        name="category_name"
+        // value={workshop.category_name}
+      >
+        <option value="" disabled>Select Category</option>
+      </select>
+      </div>
+      <div className="col-md-3">
+      <label htmlFor="course" className="form-label">Course Name</label>
+
+      <select
+        id="course"
+        className="form-select"
+        name="course_name"
+        // value={workshop.course_name}
+      >
+        <option value="" disabled>Select Course</option>
+      </select>
+            </div>
+      <div>
+        <button className="workshop-button">
+        Submit
+      </button>
+      </div>
+      </div>
+      </div>
       <div className='course-top'>
         <div className='about-banner'>
           {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}

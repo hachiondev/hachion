@@ -168,6 +168,9 @@ const Footer = () => {
    const handlePrivacy=()=>{
     navigate('/privacy')
   }
+  const handleWorkshop=()=>{
+    navigate('/workshop/:courseName')
+  }
   return (
     
     <div className='footer'>
@@ -208,6 +211,8 @@ const Footer = () => {
   <p className="footer-content">Internship</p>
   <span>|</span>
   <p className="footer-content">Sitemap</p>
+  <span>|</span>
+  <p className="footer-content" onClick={handleWorkshop}>Workshop</p>
 </div>
     </div>
       </div>

@@ -130,7 +130,9 @@ export default function Faq() {
                   category_name:"",
                     course_name: "",
                  faq_pdf:"",
-                    date:""
+                    date:"",
+                    faq_title:"",
+         description:"",
                  });
         
          }
@@ -233,10 +235,12 @@ export default function Faq() {
             formData,
             {
               headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "multipart/form-data", // Important for file uploads
               },
-            }
-          );
+              maxBodyLength: Infinity,  // Disable body size limit
+              maxContentLength: Infinity, // Disable content size limit
+              timeout: 60000  // Timeout set to 60 seconds (adjust as needed)
+            });
       
           setCurriculum((prev) =>
             prev.map((curr) =>
@@ -444,12 +448,16 @@ const handleSubmit = async (e) => {
   try {
     const response = await axios.post("https://api.hachion.co/faq/add", formData, {
       headers: {
-        "Content-Type": "multipart/form-data" // Important for file uploads
-      }
+        "Content-Type": "multipart/form-data", // Important for file uploads
+      },
+      maxBodyLength: Infinity,  // Disable body size limit
+      maxContentLength: Infinity, // Disable content size limit
+      timeout: 60000  // Timeout set to 60 seconds (adjust as needed)
     });
 
     if (response.status === 201) { // HTTP 201 means "Created"
       alert("FAQ details added successfully");
+      setShowAddCourse(false);
       setCurriculumData({}); // Reset form state
       handleReset(); // Call reset function if available
     }

@@ -423,7 +423,7 @@ const handleAddTrendingCourseClick = () => {
                   name="courseImage"
                   accept="image/*"
                   onChange={handleFileChange}
-                  required
+                
                 />
               </div>
             </div>

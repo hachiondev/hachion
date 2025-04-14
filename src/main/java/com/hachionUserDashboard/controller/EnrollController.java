@@ -31,42 +31,41 @@ public class EnrollController {
 	 @Autowired
 		public JavaMailSender javaMailSender;
 
-	@GetMapping("/enroll/{id}")
-	public ResponseEntity<Enroll> getEnroll(@PathVariable Integer id) {
-		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-	}
 
-	@GetMapping("/enroll")
-	public List<Enroll> getAllEnroll() {
-		return repo.findAll();
-	}
+
+	  @GetMapping("/enroll/{id}")
+	    public ResponseEntity<Enroll> getEnroll(@PathVariable Integer id) {
+	        return repo.findById(id)
+	                   .map(ResponseEntity::ok)
+	                   .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	    }
+
+	    @GetMapping("/enroll")
+	    public List<Enroll> getAllEnroll() {
+	        return repo.findAll();
+	    }
 
 	@PostMapping("/enroll/add")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void createEnroll(@RequestBody Enroll enroll) {
-		repo.save(enroll);
-	}
+	 public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) {
+        // Handle adding the request batch, including userName
+        Enroll enroll = new Enroll();
+        enroll.setName(requestEnroll.getName());
+        enroll.setEmail(requestEnroll.getEmail());
+        enroll.setCourse_name(requestEnroll.getCourse_name());
+        enroll.setEnroll_date(requestEnroll.getEnroll_date());
+        enroll.setMobile(requestEnroll.getMobile());
+        enroll.setMode(requestEnroll.getMode());
+        enroll.setTime(requestEnroll.getTime());
+        enroll.setAmount(requestEnroll.getAmount());
+        enroll.setTrainer(requestEnroll.getTrainer());
+    
 
-	@PutMapping("/enroll/update/{id}")
-	public ResponseEntity<Enroll> updatedEnroll(@PathVariable int id,
-			@RequestBody Enroll updatedEnroll) {
-		return repo.findById(id).map(enroll -> {
-			enroll.setName(updatedEnroll.getName());
-			enroll.setEmail(updatedEnroll.getEmail());
-			enroll.setCourse_name(updatedEnroll.getCourse_name());
-			enroll.setEnroll_date(updatedEnroll.getEnroll_date());
-			enroll.setMobile(updatedEnroll.getMobile());
-			enroll.setMode(updatedEnroll.getMode());
-			enroll.setTime(updatedEnroll.getTime());
-			enroll.setTrainer(updatedEnroll.getTrainer());
-			enroll.setAmount(updatedEnroll.getAmount());
-			
+        // Save requestBatch to the database
+        repo.save(enroll);
+        sendEnrollEmail(enroll);
+        return ResponseEntity.ok("Enrollment successfull");
+    }
 
-			repo.save(enroll);
-			 sendEnrollEmail(enroll);
-			return ResponseEntity.ok(enroll);
-		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-	}
 	 public void sendEnrollEmail(@RequestBody Enroll enrollRequest) {
 			SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 	        simpleMailMessage.setTo(enrollRequest.getEmail());

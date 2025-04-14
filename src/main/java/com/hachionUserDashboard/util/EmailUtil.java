@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.entity.Query;
 import com.hachionUserDashboard.entity.RequestBatch;
 
@@ -66,6 +67,23 @@ public class EmailUtil {
             
             requestBatchRequest.getSchedule_date(),
             requestBatchRequest.getTime_zone()
+        );
+
+        simpleMailMessage.setText(message);
+        javaMailSender.send(simpleMailMessage);
+    }
+    public void sendEnrollEmail(Enroll enrollRequest) {  // Removed @RequestBody
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(enrollRequest.getEmail());
+        simpleMailMessage.setSubject("Hachion Enrollment Confirmation");
+
+        String message = String.format(
+            "Hello %s,\n\nThank you for submitting enrollment request. Here are your details:\n\n"
+            + "Batch: %s\nSchedule: %s\nTime Zone: %s\n\nThank you,\nHachion Team",
+            enrollRequest.getName(),
+            
+            enrollRequest.getEnroll_date(),
+            enrollRequest.getTime()
         );
 
         simpleMailMessage.setText(message);

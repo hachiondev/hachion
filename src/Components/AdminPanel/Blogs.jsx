@@ -159,10 +159,7 @@ const handleSubmit = async (e) => {
   // Append Image File
   if (formData.blog_image) {
     formDataToSend.append("blogImage", formData.blog_image||"");
-  } else {
-    alert("Blog image is required!");
-    return;
-  }
+  } 
 
   // Append PDF File (optional)
   if (formData.blog_pdf) {
@@ -177,14 +174,31 @@ const handleSubmit = async (e) => {
   try {
     let response;
     if (formData.id) {
-      // Edit operation
       response = await axios.put(
         `https://api.hachion.co/blog/update/${formData.id}`,
-        formDataToSend
+        formDataToSend,
+        {
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 60000
+        }
       );
+      // Edit operation
+      // response = await axios.put(
+      //   `https://api.hachion.co/blog/update/${formData.id}`,
+      //   formDataToSend
+      // );
     } else {
       // Add operation
-      response = await axios.post("https://api.hachion.co/blog/add", formDataToSend);
+      response = await axios.post(
+        "https://api.hachion.co/blog/add",
+        formDataToSend,
+        {
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 60000
+        }
+      );
     }
 
     if (response.status === 200 || response.status === 201) {
@@ -372,7 +386,7 @@ const handleEditClick = async (id) => {
                   name="blog_image"
                    accept="image/*"
                   onChange={handleFileChange}
-                  required
+                 
                 />
               </div>
               <div class="mb-3">

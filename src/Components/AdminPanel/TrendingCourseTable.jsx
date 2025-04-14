@@ -260,8 +260,8 @@ const displayedCourse = filteredCourse.slice(
       
         try {
           const response = await axios.post("https://api.hachion.co/trendingcourse/add", dataToSubmit);
-          if (response.status === 200) {
-            alert("Courses added successfully");
+          if (response.status === 201) {
+            alert(response.data);
             setCourseData([...courseData, dataToSubmit]); // Update local state
             handleReset(); // Clear form fields
           }
@@ -601,37 +601,7 @@ const displayedCourse = filteredCourse.slice(
   </DialogActions>
 </Dialog>
 
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Courses Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
+   
    
  </> );
 }

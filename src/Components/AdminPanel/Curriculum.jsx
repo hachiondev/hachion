@@ -132,7 +132,9 @@ const [filterData, setFilterData] = useState({
                   category_name:"",
                     course_name: "",
                  curriculum_pdf:"",
-                    date:""
+                    date:"",
+                    title:"",
+                    topic:""
                  });
         
          }
@@ -259,10 +261,12 @@ const [filterData, setFilterData] = useState({
             formData,
             {
               headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "multipart/form-data", // Important for file uploads
               },
-            }
-          );
+              maxBodyLength: Infinity,  // Disable body size limit
+              maxContentLength: Infinity, // Disable content size limit
+              timeout: 60000  // Timeout set to 60 seconds (adjust as needed)
+            });
       
           setCurriculum((prev) =>
             prev.map((curr) =>
@@ -372,12 +376,16 @@ const [filterData, setFilterData] = useState({
     try {
       const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
         headers: {
-          "Content-Type": "multipart/form-data" // Important for file uploads
-        }
+          "Content-Type": "multipart/form-data", // Important for file uploads
+        },
+        maxBodyLength: Infinity,  // Disable body size limit
+        maxContentLength: Infinity, // Disable content size limit
+        timeout: 60000
       });
   
       if (response.status === 201) { // HTTP 201 means "Created"
         alert("Curriculum details added successfully");
+        setShowAddCourse(false);
         setCurriculumData({}); // Reset form state
         handleReset(); // Call reset function if available
       }

@@ -232,7 +232,7 @@ const handleChange = (e) => {
     
     try {
       const response = await axios.post("https://api.hachion.co/schedulecourse/add", formattedCourseData);
-      console.log("Course added successfully:", response.data);
+      alert("course schedule successfully");
     } catch (error) {
       console.error("Error adding course:", error.response?.data || error.message);
     }
@@ -824,37 +824,7 @@ const handleInputChange = (e) => {
         </DialogActions>
       </Dialog>
 
-      {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                    Course Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
+      
 
  </> );
 }

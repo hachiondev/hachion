@@ -1641,7 +1641,7 @@ border:2px solid white;
     margin: 5px;
   }
   .qa-automation{
-    width: 98% !important;
+    width: 90% !important;
     margin-left: 10px;
     height: 345px;
     padding: 0px;
@@ -1790,19 +1790,27 @@ border:2px solid white;
     position: relative;
     display: inline-block;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
   }
+  .qa-button-container{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 5px;
+    margin-bottom: 20px;
+    gap: 260px;
+    }
   
   .qa-video-image {
     width: 95%;
     display: block;
-    border-radius: 8px;
+    border-radius: 10px;
   }
   
   .play-btn-overlay {
     position: absolute;
     top: 40%;
-    left: 40%;
+    left: 50%;
     transform: translate(-50%, -50%);
   }
   
@@ -1902,11 +1910,21 @@ border:2px solid white;
 }
 @media (min-width:1024px) and (max-width: 1366px){
 .qa-automation{
-  width: 85%;
-  margin-left: 80px;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
+.top-course-name{
+  display: flex;
+  margin-left: 5%;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 600;
+  white-space: nowrap;
+  }
 .qa-automation-left img{
-  height: 110px;
+  height: 90px;
 }
 
 .batch-type{
@@ -1934,9 +1952,9 @@ border:2px solid white;
 }
 
 .qa-right img{
-  height: 220px !important;
-  width: 300px !important;
- 
+  height: 250px !important;
+  width: 350px !important;
+ margin-left: 30px;
 }
 .qa-button{
   margin: 5px;
@@ -1946,6 +1964,7 @@ border:2px solid white;
   font-size: 16px;
   margin-left: 40px;
   margin-top: 10px;
+  white-space: nowrap;
 }
 .certified{
   font-size: 16px;
@@ -1974,9 +1993,10 @@ border:2px solid white;
   margin: 5px;
   font-size: 18px;
   padding: 5px 10px;
+  white-space: nowrap;
 }
 .qa-content{
-  width: 450px !important;
+  width: 550px !important;
   margin-left: 0px;
   padding-top: 0px;
   padding-left: 20px;
@@ -2006,6 +2026,12 @@ border:2px solid white;
   padding: 0px;
   justify-content: space-evenly;
 }
+
+.qa-automation-middle{
+  display:flex;
+  flex-direction: column;
+  white-space: nowrap;
+  }
 
 .qa-automation-left{
   margin-left: 0px;

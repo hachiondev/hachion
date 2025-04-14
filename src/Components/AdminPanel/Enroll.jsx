@@ -51,6 +51,15 @@ export default function Enroll() {
       });
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+      setEnrollData(enrollData.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+    }
+  };
+  
   return (
     <>
     <h3>All Enrolls</h3>
@@ -91,7 +100,8 @@ export default function Enroll() {
                 <StyledTableCell align="center">{row.trainer}</StyledTableCell>
                 <StyledTableCell align="center">{row.completion_date}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <RiDeleteBin6Line className="delete" />
+                <RiDeleteBin6Line className="delete" onClick={() => handleDelete(row.id)} style={{ cursor: "pointer", color: "red" }} />
+
                 </StyledTableCell>
               </StyledTableRow>
             ))}

@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,10 +36,12 @@ public class WorkshopSchedule {
 	    
 	    @Column // Ensure the field is required
 		private String banner_image; 
-	    @Column
+	    @Lob
+		@Column(nullable = true, columnDefinition = "LONGTEXT")
 	    private String content;
 	    
-	    @Column
+	    @Lob
+		@Column(nullable = true, columnDefinition = "LONGTEXT")
 	    private String details;
 	    
 	    @Column(name = "created_date")  // Make sure the name matches your SQL column

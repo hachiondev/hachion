@@ -55,7 +55,8 @@ public class UserReview {
 	    @Column
 	    private int rating;
 	    
-	    @Column
+	    @Lob
+		@Column(nullable = true, columnDefinition = "LONGTEXT")
 	    private String review;
 	    
 	    @Column

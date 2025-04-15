@@ -143,10 +143,10 @@
   justify-content: space-between;
   gap: 20px;
 }
-.course-details{
+.work-details{
   box-shadow: 5px 5px 10px #d3d3d3;
-  margin: 10px;
-  padding: 20px;
+  /* margin: 10px; */
+  padding: 15px;
   box-sizing: border-box;
   border-radius: 20px;
   background-color: #FFE69D;
@@ -690,7 +690,7 @@
         justify-content: center;
         gap: 0px;
       }
-      .course-details{
+      .work-details{
         padding: 10px;
         border-radius: 10px;
       }
@@ -701,7 +701,9 @@
         font-size: 16px;
         margin-top: 10px;
       }
-
+      .form-select {
+        height: 35px !important;
+      }
       #workshop.mobile-number {
         width: 260px !important;
         height: 35px;

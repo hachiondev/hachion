@@ -11,7 +11,6 @@ import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import Pagination from '@mui/material/Pagination';
 import './Admin.css';
-import ManageCourse from './ManageCourse';
 import python from '../../Assets/image 90.png';
 import profileImage from '../../Assets/Ellipse 18.png';
 import { useNavigate } from 'react-router-dom';

@@ -31,9 +31,11 @@ const Blogs = () => {
   //   const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
   //  navigate(`/blogs/${slug}`);
   // };
-const handleClick=()=>{
-  navigate("/salesforce")
-}
+  const handleClick = (categoryName) => {
+    const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/blogs/${slug}`);
+  };
+  
   return (
     <>
     <Topbar/>
@@ -60,12 +62,13 @@ const handleClick=()=>{
 
    <div className="blogs-container">
       {categories.map((category, index) => (
-        <BlogCard
-          key={index}
-          imageSrc={category.imageUrl|| blogicon} // Make sure this matches your backend's image field
-          content={category.name}
-          onClick={() => handleClick(category.name)}
-        />
+     <BlogCard
+     key={index}
+     imageSrc={category.imageUrl || blogicon}
+     content={category.name}
+     onClick={() => handleClick(category.name)}
+   />
+   
       ))}
     </div>
      

@@ -193,7 +193,16 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseNam
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [message, setMessage] = useState('');
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('loginuserData'));
+    const isAlreadyEnrolled = localStorage.getItem(`enrolled-${selectedBatchData?.schedule_course_name}`);
+    if (user && isAlreadyEnrolled) {
+      setIsEnrolled(true);
+    }
+  }, [selectedBatchData]);
+  
   useEffect(() => {
     const fetchCourseAmount = async () => {
       try {
@@ -259,13 +268,43 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseNam
 
     fetchCourseAmount();
   }, [courseName, modeType, enrollText]);
+ 
+  const handleResend = async () => {
+    const user = JSON.parse(localStorage.getItem('loginuserData'));
+    const userEmail = user?.email;
+  
+    if (!userEmail) {
+      alert('No user email found!');
+      return;
+    }
+  
+    await resendEmail(userEmail); // ✅ pass just the email string
+  };
+  const resendEmail = async (userEmail) => {
+    try {
+      const response = await axios.post('https://api.hachion.co/enroll/resend-email', {
+        email: userEmail,
+      });
+  
+      alert(response.data);
+    } catch (error) {
+      console.error('Resend email failed:', error.response?.data || error.message);
+      alert('Failed to resend email.');
+    }
+  };
+    
 
+  
   const handleEnroll = async () => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
   
     if (!user || !user.email) {
-      alert('Please log in to enroll.');
-      navigate('/login');
+      const confirmRegister = window.confirm(
+        'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
+      );
+      if (confirmRegister) {
+        navigate('/registerhere');
+      }
       return;
     }
   
@@ -298,23 +337,29 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseNam
           mode: selectedBatchData.schedule_mode,
           type: 'Free Demo',
           trainer: selectedBatchData.trainer_name,
-          completion_date: selectedBatchData.schedule_completion_date||""
+          completion_date: selectedBatchData.schedule_duration||"",
+          meeting_link:selectedBatchData.meeting_link||""
         };
   
         const response = await axios.post('https://api.hachion.co/enroll/add', payload);
 
   
         if ( response.data.status === 201) {
+          
           setMessage('Registered Successfully');
-          alert('Registered Successfully');
+          
+         
         } else {
-          setMessage('Registered Successfully');
+          setMessage('Registered successfully');
         }
        
       } catch (error) {
         console.error('Error enrolling in demo:', error);
         setMessage('Error occurred while enrolling.');
       }
+      alert('You have successfully registered for the demo session. You will receive an email shortly with the meeting link, timing, and other details. Please check your registered email and dashboard for updates.');
+      localStorage.setItem(`enrolled-${selectedBatchData.schedule_course_name}`, true);
+      setIsEnrolled(true);
     }
   };
   
@@ -332,10 +377,27 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseNam
       )}
       
       {message && <p className="success-message">{message}</p>}
-
+{/* 
       <button className='fee-enroll-now' onClick={handleEnroll}>
         {enrollText}
-      </button>
+      </button> */}
+      <button
+  onClick={handleEnroll}
+  disabled={isEnrolled}
+  className={`fee-enroll-now ${
+    isEnrolled ? 'bg-blue-200 cursor-not-allowed' : 'fee-enroll-now'
+  } text-white`}
+>
+  {isEnrolled ? 'Enrolled' : enrollText}
+</button>
+<button
+  className='fee-enroll-now'
+  onClick={handleResend}
+  disabled={!isEnrolled} // ✅ Only enabled if enrolled
+>
+  Resend email
+</button>
+
     </div>
   );
 };

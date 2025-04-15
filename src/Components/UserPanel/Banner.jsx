@@ -197,8 +197,8 @@ const Banner = () => {
       });
   }, []);
 
-  const handleExploreMore = () => navigate("/course");
-  const handleJoinNow = () => navigate("/Salesforce-Workshop");
+  const handleExploreMore = () => navigate("/courseDetails");
+  const handleJoinNow = () => navigate("/workshop");
 
   const displayBanners = apiError ? [staticBanner] : banners;
 
@@ -225,13 +225,15 @@ const Banner = () => {
               className="d-block w-100"
               alt={`Banner ${index + 1}`}
             />
-            <div className="carousel-caption">
+           <div className="carousel-caption">
               <div className="carousel-btn">
                 {index === displayBanners.length - 1 ? (
+                  <div className='carousel-join-btn'>
                   <button className="join-now" onClick={handleJoinNow}>Join Now</button>
+                  </div>
                 ) : (
                   <button className="join-now" onClick={handleExploreMore}>Explore More</button>
-                )}
+                )}            
               </div>
             </div>
           </div>

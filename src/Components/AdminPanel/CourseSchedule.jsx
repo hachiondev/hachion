@@ -72,8 +72,8 @@ const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting:""});
-  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting:""});
+  const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting_link:""});
+  const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting_link:""});
   const currentDate = new Date().toISOString().split('T')[0];
   const [courseData, setCourseData] = useState({
   course_schedule_id:"",
@@ -88,7 +88,7 @@ const[message,setMessage]=useState(false);
     trainer_name:"",
       created_date:currentDate,
       pattern:"",
-      meeting:"",
+      meeting_link:"",
      
     
     });
@@ -112,10 +112,10 @@ const[message,setMessage]=useState(false);
               currentPage * rowsPerPage
             );
     const [selectedTime, setSelectedTime] = useState(null);
-    const [rows, setRows] = useState([{ id:"",frequency: "", time: "", duration: "", mode: "", pattern: "", meeting: "" }]);
+    const [rows, setRows] = useState([{ id:"",frequency: "", time: "", duration: "", mode: "", pattern: "", meeting_link: "" }]);
 
 const addRow = () => {
-    setRows([...rows, { id: Date.now(), frequency: "", time: "", duration: "", mode: "", pattern: "", meeting: "" }]);
+    setRows([...rows, { id: Date.now(), frequency: "", time: "", duration: "", mode: "", pattern: "", meeting_link: "" }]);
 };
 
 const deleteRow = (id) => {
@@ -228,10 +228,12 @@ const handleChange = (e) => {
       schedule_mode: courseData.schedule_mode,
       trainer_name: courseData.trainer_name || "", // Ensure trainer name is not null
       created_date: courseData.created_date,
+      meeting_link:courseData.meeting_link
     };
     
     try {
       const response = await axios.post("https://api.hachion.co/schedulecourse/add", formattedCourseData);
+      console.log(response.data);
       alert("course schedule successfully");
     } catch (error) {
       console.error("Error adding course:", error.response?.data || error.message);
@@ -503,10 +505,10 @@ const handleInputChange = (e) => {
               </div>
             </StyledTableCell>
             <StyledTableCell align="center" sx={{ padding: 0 }}>
-              <input name="pattern" className='table-curriculum' value={rows.pattern} onChange={handleChange} />
+              <input name="pattern" className='table-curriculum' value={courseData.pattern} onChange={handleChange} />
             </StyledTableCell>
             <StyledTableCell align="left" sx={{ padding: 0 }}>
-              <input name="meeting" className='table-curriculum' value={rows.meeting} onChange={handleChange} />
+              <input name="meeting_link" className='table-curriculum' value={courseData.meeting_link} onChange={handleChange} />
             </StyledTableCell>
             <StyledTableCell align="center" sx={{ padding: 0 }}>
               <GoPlus
@@ -805,7 +807,7 @@ const handleInputChange = (e) => {
         <div className="course-row">
         <div className="col">
         <label className="form-label">Meeting</label>
-        <input className="schedule-input" name="meeting" value={editedRow.meeting} onChange={handleInputChange} />
+        <input className="schedule-input" name="meeting_link" value={editedRow.meeting_link} onChange={handleInputChange} />
         </div>
 
         <div className="col">

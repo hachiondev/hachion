@@ -176,7 +176,7 @@ const SalWorkshop = () => {
       </Helmet>
       <Topbar />
       <NavbarTop />
-      <div className='course-details'>
+      <div className='work-details'>
       <div className='course-row'>
       <div class="col-md-3">
           <label for="inputState" class="form-label">Category Name</label>

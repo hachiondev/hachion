@@ -12,10 +12,7 @@ import Blogs from './Blogs';
 import Support from './Support';
 import Course from './Course';
 import Reports from './Reports';
-import AddCourseCategory from './AddCourseCategory';
-
 import Other from './Other';
-import ManageCategories from './ManageCategories';
 import CourseCategory from './CourseCategory';
 import CorporateCourses from './CorporateCourses';
 
@@ -37,7 +34,7 @@ const AdminDashboardView = () => {
 
   const renderContent = () => {
     if (showAddCategory) {
-      return <AddCourseCategory  />; // Pass onSelectCategory
+      return; // Pass onSelectCategory
     }
 
 

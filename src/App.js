@@ -28,29 +28,15 @@ import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
-import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Reports from './Components/AdminPanel/Reports';
 import Enrollment from './Components/UserPanel/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
-import AddCertificate from './Components/AdminPanel/AddCertificate';
-import AddBanner from './Components/AdminPanel/AddBanner';
-import AddCurriculum from './Components/AdminPanel/AddCurriculum';
-
-import AddFaq from './Components/AdminPanel/AddFaq';
-import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
-import AddResume from './Components/AdminPanel/AddResume';
-import AddReview from './Components/AdminPanel/AddReview';
-import AddSchedule from './Components/AdminPanel/AddSchedule';
-import AddCourseDetails from './Components/AdminPanel/AddCourseDetails'
-import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
-import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
-// import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
@@ -108,20 +94,8 @@ function App() {
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
-      <Route path='/addcourse' element={<AddCourseCategory/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
-      <Route path='/addcertificate' element={<AddCertificate/>}/>
-      <Route path='/addbanner' element={<AddBanner/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>
-      <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
-      <Route path='/addcurriculum' element={<AddCurriculum/>}/>
-      <Route path='/addfaq' element={<AddFaq/>}/>
-      <Route path='/addregularvideo' element={<AddRegularVideos/>}/>
-      <Route path='/addresume' element={<AddResume/>}/>
-      <Route path='/addreview' element={<AddReview/>}/>
-      <Route path='/addschedule' element={<AddSchedule/>}/>
-      <Route path='/addvideo' element={<Addvideo/>}/>
-      <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/Courseschedule' element={<CourseSchedule/>}/>
       <Route path='/corporatecourses' element={<CorporateCourses />} />
       <Route path='/reports' element={<Reports />} />

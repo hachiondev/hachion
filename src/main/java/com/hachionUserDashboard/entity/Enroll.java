@@ -50,6 +50,21 @@ public class Enroll {
     @Column
     private String completion_date;
     
+    @Column
+    private String meeting_link;
+    
+    public int getResendCount() {
+		return resendCount;
+	}
+
+	public void setResendCount(int resendCount) {
+		this.resendCount = resendCount;
+	}
+
+	@Column(name = "resend_count")
+    private int resendCount = 0;
+
+    
     public Enroll() {
     	
     }
@@ -92,6 +107,14 @@ public class Enroll {
 
 	public void setCourse_name(String course_name) {
 		this.course_name = course_name;
+	}
+
+	public String getMeeting_link() {
+		return meeting_link;
+	}
+
+	public void setMeeting_link(String meeting_link) {
+		this.meeting_link = meeting_link;
 	}
 
 	public String getEnroll_date() {
@@ -163,11 +186,11 @@ public class Enroll {
 		return "Enroll [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", course_name="
 				+ course_name + ", enroll_date=" + enroll_date + ", week=" + week + ", time=" + time + ", amount="
 				+ amount + ", mode=" + mode + ", type=" + type + ", trainer=" + trainer + ", completion_date="
-				+ completion_date + "]";
+				+ completion_date + ", meeting_link=" + meeting_link + ", resendCount=" + resendCount + "]";
 	}
 
 	public Enroll(int id, String name, String email, String mobile, String course_name, String enroll_date, String week,
-			String time, String amount, String mode, String type, String trainer, String completion_date) {
+			String time, String amount,String meeting_link, String mode, String type, String trainer, String completion_date) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -182,6 +205,8 @@ public class Enroll {
 		this.type = type;
 		this.trainer = trainer;
 		this.completion_date = completion_date;
+		this.meeting_link=meeting_link;
+		this.resendCount=resendCount;
 	}
     
     

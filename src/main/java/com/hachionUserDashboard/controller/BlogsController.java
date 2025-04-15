@@ -315,7 +315,7 @@ public class BlogsController {
 	            blog.setTitle(updatedBlog.getTitle());
 	            blog.setAuthor(updatedBlog.getAuthor());
 	            blog.setDescription(updatedBlog.getDescription());
-	            blog.setDate(updatedBlog.getDate());
+	           
 	            blog.setMeta_description(updatedBlog.getMeta_description());
 	            blog.setMeta_keyword(updatedBlog.getMeta_keyword());
 	            blog.setMeta_title(updatedBlog.getMeta_title());

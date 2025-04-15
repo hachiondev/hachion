@@ -16,7 +16,7 @@ public class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int banner_id;
-
+ 
     @Column
     private String banner_image;
     

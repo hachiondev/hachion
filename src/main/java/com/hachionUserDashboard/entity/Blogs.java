@@ -17,13 +17,13 @@ public class Blogs {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(nullable = false, length = 100) // Ensure the field is required and set a max length
+	@Column// Ensure the field is required and set a max length
 	private String category_name;
 
-	@Column(nullable = false, length = 200) // Ensure the field is required and set a max length
+	@Column // Ensure the field is required and set a max length
 	private String title;
 
-	@Column(nullable = false, length = 100) // Ensure the field is required and set a max length
+	@Column // Ensure the field is required and set a max length
 	private String author;
 
 	@Column // Ensure the field is required
@@ -43,7 +43,7 @@ public class Blogs {
 	
 	@Column
 	private String meta_keyword;
-	@Column(name = "date", nullable = false) // Ensure the field is required
+	@Column(name = "date") 
 	private LocalDate date;
 
 public Blogs() {

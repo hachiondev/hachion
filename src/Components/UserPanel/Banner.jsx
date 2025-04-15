@@ -198,7 +198,7 @@ const Banner = () => {
   });
 
   const handleExploreMore = () => navigate("/courseDetails");
-  const handleJoinNow = () => navigate("/workshop/:courseName");
+  const handleJoinNow = () => navigate("/workshop");
 
   const displayBanners = apiError ? [staticBanner] : banners;
 

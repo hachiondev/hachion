@@ -245,7 +245,7 @@ import { IoPlayCircleOutline } from 'react-icons/io5';
 import { BsFillPlayCircleFill } from 'react-icons/bs';
 import './Course.css';
 
-const QaTop = ({ onVideoButtonClick }) => {
+const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
   const navigate = useNavigate();
 
@@ -399,7 +399,7 @@ const QaTop = ({ onVideoButtonClick }) => {
         {/* Buttons Section */}
         <div className='qa-button-container'>
           <div className='qa-button'>
-            <button className='enroll-now' onClick={() => navigate(`/enroll/${courseName}`)}>Enroll Now</button>
+            <button className='enroll-now' onClick={onEnrollButtonClick}>Enroll Now</button>
             <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>
           <button className='video-btn' onClick={onVideoButtonClick}>

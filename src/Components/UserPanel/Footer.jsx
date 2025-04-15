@@ -169,7 +169,7 @@ const Footer = () => {
     navigate('/privacy')
   }
   const handleWorkshop=()=>{
-    navigate('/workshop/:courseName')
+    navigate('/workshop')
   }
   return (
     

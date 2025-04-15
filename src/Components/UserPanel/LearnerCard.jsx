@@ -134,10 +134,10 @@ const LearnerCard = (props) => {
           </div>
         </div>
         <div className='learner-description-bottom'>
-          <p className='learner-description'>
-            {props.content.substring(0, 150)}...
-            <span className='read-more' onClick={() => setOpen(true)}> Read More</span>
-          </p>
+        <p className='learner-description'>
+          {props.content ? props.content.substring(0, 150) : ''}...
+          <span className='read-more' onClick={() => setOpen(true)}> Read More</span>
+        </p>
         </div>
       </div>
 

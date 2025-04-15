@@ -32,134 +32,141 @@ public class Blogs {
 	@Column // Ensure the field is required
 	private String blog_pdf; // URL or file path to the PDF
 
-	@Column(nullable = true, length = 500) // Allow longer descriptions
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT") // Allow longer descriptions
 	private String description;
 
 	@Column
 	private String meta_title;
-	
-	@Column
+
+	@Lob
+	@Column(columnDefinition = "LONGTEXT")
 	private String meta_description;
 	
-	@Column
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
 	private String meta_keyword;
+<<<<<<< HEAD
 	@Column(name = "date") 
+=======
+
+	@Column(name = "date", nullable = false) // Ensure the field is required
+>>>>>>> f0f1d07a35dac3b5786c64c438a5981f78e1126d
 	private LocalDate date;
 
-public Blogs() {
-}
+	public Blogs() {
+	}
 
-public int getId() {
-	return id;
-}
+	public int getId() {
+		return id;
+	}
 
-public void setId(int id) {
-	this.id = id;
-}
+	public void setId(int id) {
+		this.id = id;
+	}
 
-public String getCategory_name() {
-	return category_name;
-}
+	public String getCategory_name() {
+		return category_name;
+	}
 
-public void setCategory_name(String category_name) {
-	this.category_name = category_name;
-}
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
+	}
 
-public String getTitle() {
-	return title;
-}
+	public String getTitle() {
+		return title;
+	}
 
-public void setTitle(String title) {
-	this.title = title;
-}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-public String getAuthor() {
-	return author;
-}
+	public String getAuthor() {
+		return author;
+	}
 
-public void setAuthor(String author) {
-	this.author = author;
-}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-public String getBlog_image() {
-	return blog_image;
-}
+	public String getBlog_image() {
+		return blog_image;
+	}
 
-public void setBlog_image(String blog_image) {
-	this.blog_image = blog_image;
-}
+	public void setBlog_image(String blog_image) {
+		this.blog_image = blog_image;
+	}
 
-public String getBlog_pdf() {
-	return blog_pdf;
-}
+	public String getBlog_pdf() {
+		return blog_pdf;
+	}
 
-public void setBlog_pdf(String blog_pdf) {
-	this.blog_pdf = blog_pdf;
-}
+	public void setBlog_pdf(String blog_pdf) {
+		this.blog_pdf = blog_pdf;
+	}
 
-public String getDescription() {
-	return description;
-}
+	public String getDescription() {
+		return description;
+	}
 
-public void setDescription(String description) {
-	this.description = description;
-}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-public LocalDate getDate() {
-	return date;
-}
+	public LocalDate getDate() {
+		return date;
+	}
 
-public void setDate(LocalDate date) {
-	this.date = date;
-}
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
+	public String getMeta_title() {
+		return meta_title;
+	}
 
-public String getMeta_title() {
-	return meta_title;
-}
+	public void setMeta_title(String meta_title) {
+		this.meta_title = meta_title;
+	}
 
-public void setMeta_title(String meta_title) {
-	this.meta_title = meta_title;
-}
+	public String getMeta_description() {
+		return meta_description;
+	}
 
-public String getMeta_description() {
-	return meta_description;
-}
+	public void setMeta_description(String meta_description) {
+		this.meta_description = meta_description;
+	}
 
-public void setMeta_description(String meta_description) {
-	this.meta_description = meta_description;
-}
+	public String getMeta_keyword() {
+		return meta_keyword;
+	}
 
-public String getMeta_keyword() {
-	return meta_keyword;
-}
+	public void setMeta_keyword(String meta_keyword) {
+		this.meta_keyword = meta_keyword;
+	}
 
-public void setMeta_keyword(String meta_keyword) {
-	this.meta_keyword = meta_keyword;
-}
+	@Override
+	public String toString() {
+		return "Blogs [id=" + id + ", category_name=" + category_name + ", title=" + title + ", author=" + author
+				+ ", blog_image=" + blog_image + ", blog_pdf=" + blog_pdf + ", description=" + description
+				+ ", meta_title=" + meta_title + ", meta_description=" + meta_description + ", meta_keyword="
+				+ meta_keyword + ", date=" + date + "]";
+	}
 
-@Override
-public String toString() {
-	return "Blogs [id=" + id + ", category_name=" + category_name + ", title=" + title + ", author=" + author
-			+ ", blog_image=" + blog_image + ", blog_pdf=" + blog_pdf + ", description=" + description + ", meta_title="
-			+ meta_title + ", meta_description=" + meta_description + ", meta_keyword=" + meta_keyword + ", date="
-			+ date + "]";
-}
-
-public Blogs(int id, String category_name, String title, String author, String blog_image, String blog_pdf,
-		String description,String meta_title, String meta_description, String meta_keyword, LocalDate date) {
-	super();
-	this.id = id;
-	this.category_name = category_name;
-	this.title = title;
-	this.author = author;
-	this.blog_image = blog_image;
-	this.blog_pdf = blog_pdf;
-	this.meta_title=meta_title;
-	this.meta_description=meta_description;
-	this.meta_keyword=meta_keyword;
-	this.description = description;
-	this.date = date;
-}
+	public Blogs(int id, String category_name, String title, String author, String blog_image, String blog_pdf,
+			String description, String meta_title, String meta_description, String meta_keyword, LocalDate date) {
+		super();
+		this.id = id;
+		this.category_name = category_name;
+		this.title = title;
+		this.author = author;
+		this.blog_image = blog_image;
+		this.blog_pdf = blog_pdf;
+		this.meta_title = meta_title;
+		this.meta_description = meta_description;
+		this.meta_keyword = meta_keyword;
+		this.description = description;
+		this.date = date;
+	}
 
 }

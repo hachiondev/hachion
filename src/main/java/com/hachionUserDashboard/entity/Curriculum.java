@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,10 +28,12 @@ public class Curriculum {
     @Column
     private String curriculum_pdf;
     
-    @Column
+    @Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
     private String title;
     
-    @Column
+    @Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
     private String topic;
     
     @Column

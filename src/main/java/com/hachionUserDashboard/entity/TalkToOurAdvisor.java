@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,9 +35,10 @@ public class TalkToOurAdvisor {
 	@Column(name = "training_course", nullable = false)
 	private String trainingCourse;
 
-	@Column(name = "comments")
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
 	private String comments;
-	
+
 	private String country;
 
 	public Long getId() {
@@ -103,7 +105,6 @@ public class TalkToOurAdvisor {
 		this.comments = comments;
 	}
 
-	
 	public String getCountry() {
 		return country;
 	}

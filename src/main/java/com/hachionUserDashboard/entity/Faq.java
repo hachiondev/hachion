@@ -7,40 +7,41 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "faq")
 public class Faq {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int faq_id;
-    
-    
-    @Column
-    private String category_name;
-    
-    @Column
-    private String course_name;
-    
-    @Column
-    private String faq_pdf;
-    
-    @Column
-    private String faq_title;
-    
-    @Column
-    private String description;
-    
-    
-    @Column(name = "date")  // Make sure the name matches your SQL column
-    private LocalDate date;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int faq_id;
 
-    public Faq() {
-    	
-    }
+	@Column
+	private String category_name;
 
-    public Faq(int faq_id, String category_name, String course_name, String faq_pdf, String faq_title,
+	@Column
+	private String course_name;
+
+	@Column
+	private String faq_pdf;
+
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String faq_title;
+
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String description;
+
+	@Column(name = "date") // Make sure the name matches your SQL column
+	private LocalDate date;
+
+	public Faq() {
+
+	}
+
+	public Faq(int faq_id, String category_name, String course_name, String faq_pdf, String faq_title,
 			String description, LocalDate date) {
 		super();
 		this.faq_id = faq_id;
@@ -51,7 +52,6 @@ public class Faq {
 		this.description = description;
 		this.date = date;
 	}
-
 
 	public int getFaq_id() {
 		return faq_id;
@@ -108,8 +108,6 @@ public class Faq {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
-
 
 	@Override
 	public String toString() {
@@ -117,4 +115,4 @@ public class Faq {
 				+ ", faq_pdf=" + faq_pdf + ", faq_title=" + faq_title + ", description=" + description + ", date="
 				+ date + "]";
 	}
-    }
+}

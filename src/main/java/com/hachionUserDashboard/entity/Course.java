@@ -1,177 +1,190 @@
 package com.hachionUserDashboard.entity;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "course")
 public class Course {
-	   @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private int id;
-	
-	    @Column
-	    private String courseName;
-	    
-	    
-	    @Lob
-	    private String courseImage; 
-	    
-	    @Column
-	    private String youtubeLink;
-	    
-	    @Column
-	    private String numberOfClasses;
-	    
-	    @Column
-	    private String dailySessions;
-	    
-	
-	    @Column
-	    private int starRating;
-	    @Column
-	    private int ratingByNumberOfPeople;
-	    @Column
-	    private int totalEnrollment;
-	  
-	    @Column
-	    private String keyHighlights1 ;
-	    @Column
-	    private String keyHighlights2;
-	    @Column
-	    private String keyHighlights3;
-	    @Column
-	    private String keyHighlights4;
-	    @Column
-	    private String keyHighlights5;
-	    @Column
-	    private String keyHighlights6;
-	    @Column
-	    private Double amount;
-	    @Column
-	    private Double discount;
-	    @Column
-	    private Double total;
-	    @Column
-	    private Double mamount;
-	    @Column
-	    private Double mdiscount;
-	    @Column
-	    private Double mtotal;
-	    @Column
-	    private Double samount;
-	    @Column
-	    private Double sdiscount;
-	    @Column
-	    private Double stotal;
-	    @Column
-	    private Double camount;
-	    @Column
-	    private Double cdiscount;
-	    @Column
-	    private Double ctotal;
-	    public Double getMamount() {
-			return mamount;
-		}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-		public void setMamount(Double mamount) {
-			this.mamount = mamount;
-		}
+	@Column
+	private String courseName;
 
-		public Double getMdiscount() {
-			return mdiscount;
-		}
+	@Lob
+	private String courseImage;
 
-		public void setMdiscount(Double mdiscount) {
-			this.mdiscount = mdiscount;
-		}
+	@Column
+	private String youtubeLink;
 
-		public Double getMtotal() {
-			return mtotal;
-		}
+	@Column
+	private String numberOfClasses;
 
-		public void setMtotal(Double mtotal) {
-			this.mtotal = mtotal;
-		}
+	@Column
+	private String dailySessions;
 
-		public Double getSamount() {
-			return samount;
-		}
+	@Column
+	private int starRating;
+	@Column
+	private int ratingByNumberOfPeople;
+	@Column
+	private int totalEnrollment;
 
-		public void setSamount(Double samount) {
-			this.samount = samount;
-		}
+	@Column
+	private String keyHighlights1;
+	@Column
+	private String keyHighlights2;
+	@Column
+	private String keyHighlights3;
+	@Column
+	private String keyHighlights4;
+	@Column
+	private String keyHighlights5;
+	@Column
+	private String keyHighlights6;
+	@Column
+	private Double amount;
+	@Column
+	private Double discount;
+	@Column
+	private Double total;
+	@Column
+	private Double mamount;
+	@Column
+	private Double mdiscount;
+	@Column
+	private Double mtotal;
+	@Column
+	private Double samount;
+	@Column
+	private Double sdiscount;
+	@Column
+	private Double stotal;
+	@Column
+	private Double camount;
+	@Column
+	private Double cdiscount;
+	@Column
+	private Double ctotal;
 
-		public Double getSdiscount() {
-			return sdiscount;
-		}
+	public Double getMamount() {
+		return mamount;
+	}
 
-		public void setSdiscount(Double sdiscount) {
-			this.sdiscount = sdiscount;
-		}
+	public void setMamount(Double mamount) {
+		this.mamount = mamount;
+	}
 
-		public Double getStotal() {
-			return stotal;
-		}
+	public Double getMdiscount() {
+		return mdiscount;
+	}
 
-		public void setStotal(Double stotal) {
-			this.stotal = stotal;
-		}
+	public void setMdiscount(Double mdiscount) {
+		this.mdiscount = mdiscount;
+	}
 
-		public Double getCamount() {
-			return camount;
-		}
+	public Double getMtotal() {
+		return mtotal;
+	}
 
-		public void setCamount(Double camount) {
-			this.camount = camount;
-		}
+	public void setMtotal(Double mtotal) {
+		this.mtotal = mtotal;
+	}
 
-		public Double getCdiscount() {
-			return cdiscount;
-		}
+	public Double getSamount() {
+		return samount;
+	}
 
-		public void setCdiscount(Double cdiscount) {
-			this.cdiscount = cdiscount;
-		}
+	public void setSamount(Double samount) {
+		this.samount = samount;
+	}
 
-		public Double getCtotal() {
-			return ctotal;
-		}
+	public Double getSdiscount() {
+		return sdiscount;
+	}
 
-		public void setCtotal(Double ctotal) {
-			this.ctotal = ctotal;
-		}
+	public void setSdiscount(Double sdiscount) {
+		this.sdiscount = sdiscount;
+	}
 
-		@Column
-	    private String mentoring1;
-	    @Column
-	    private String mentoring2;
-	    @Column
-	    private String self1;
-	    @Column
-	    private String self2;
-	    @Column
-	    private String metaTitle;
-	    @Column
-	    private String metaKeyword;
-	    @Column
-	    private String metaDescription;
-	    @Column
-	    private String courseHighlight;
-	    @Column
-	    private String courseDescription;
-	    
-	    
-	    @Column(name = "date")  
-	    private LocalDate date;
-	    
-	    @Column
-	    private String courseCategory;
-	    
-    public Course() {
-    }
+	public Double getStotal() {
+		return stotal;
+	}
+
+	public void setStotal(Double stotal) {
+		this.stotal = stotal;
+	}
+
+	public Double getCamount() {
+		return camount;
+	}
+
+	public void setCamount(Double camount) {
+		this.camount = camount;
+	}
+
+	public Double getCdiscount() {
+		return cdiscount;
+	}
+
+	public void setCdiscount(Double cdiscount) {
+		this.cdiscount = cdiscount;
+	}
+
+	public Double getCtotal() {
+		return ctotal;
+	}
+
+	public void setCtotal(Double ctotal) {
+		this.ctotal = ctotal;
+	}
+
+	@Column
+	private String mentoring1;
+	@Column
+	private String mentoring2;
+	@Column
+	private String self1;
+	@Column
+	private String self2;
+
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String metaTitle;
+
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String metaKeyword;
+
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String metaDescription;
+
+	@Lob
+	@Column(columnDefinition = "LONGTEXT")
+	private String courseHighlight;
+
+	@Lob
+	@Column(name = "course_description", nullable = true, columnDefinition = "LONGTEXT")
+	private String courseDescription;
+
+	@Column(name = "date")
+	private LocalDate date;
+
+	@Column
+	private String courseCategory;
+
+	public Course() {
+	}
 
 	public int getId() {
 		return id;
@@ -221,7 +234,6 @@ public class Course {
 		this.dailySessions = dailySessions;
 	}
 
-	
 	public int getStarRating() {
 		return starRating;
 	}
@@ -406,16 +418,14 @@ public class Course {
 		this.courseCategory = courseCategory;
 	}
 
-	
 	public Course(int id, String courseName, String courseImage, String youtubeLink, String numberOfClasses,
-			String dailySessions,
-			int starRating, int ratingByNumberOfPeople, int totalEnrollment, String keyHighlights1,
-			String keyHighlights2, String keyHighlights3, String keyHighlights4, String keyHighlights5,
-			String keyHighlights6, Double amount, Double discount, Double total, Double mamount, Double mdiscount,
-			Double mtotal, Double samount, Double sdiscount, Double stotal, Double camount, Double cdiscount,
-			Double ctotal, String mentoring1, String mentoring2, String self1, String self2, String metaTitle,
-			String metaKeyword, String metaDescription, String courseHighlight, String courseDescription,
-			LocalDate date, String courseCategory) {
+			String dailySessions, int starRating, int ratingByNumberOfPeople, int totalEnrollment,
+			String keyHighlights1, String keyHighlights2, String keyHighlights3, String keyHighlights4,
+			String keyHighlights5, String keyHighlights6, Double amount, Double discount, Double total, Double mamount,
+			Double mdiscount, Double mtotal, Double samount, Double sdiscount, Double stotal, Double camount,
+			Double cdiscount, Double ctotal, String mentoring1, String mentoring2, String self1, String self2,
+			String metaTitle, String metaKeyword, String metaDescription, String courseHighlight,
+			String courseDescription, LocalDate date, String courseCategory) {
 		super();
 		this.id = id;
 		this.courseName = courseName;
@@ -462,22 +472,17 @@ public class Course {
 	public String toString() {
 		return "Course [id=" + id + ", courseName=" + courseName + ", courseImage=" + courseImage + ", youtubeLink="
 				+ youtubeLink + ", numberOfClasses=" + numberOfClasses + ", dailySessions=" + dailySessions
-				+ ", starRating=" + starRating + ", ratingByNumberOfPeople="
-				+ ratingByNumberOfPeople + ", totalEnrollment=" + totalEnrollment + ", keyHighlights1=" + keyHighlights1
-				+ ", keyHighlights2=" + keyHighlights2 + ", keyHighlights3=" + keyHighlights3 + ", keyHighlights4="
-				+ keyHighlights4 + ", keyHighlights5=" + keyHighlights5 + ", keyHighlights6=" + keyHighlights6
-				+ ", amount=" + amount + ", discount=" + discount + ", total=" + total + ", mamount=" + mamount
-				+ ", mdiscount=" + mdiscount + ", mtotal=" + mtotal + ", samount=" + samount + ", sdiscount="
-				+ sdiscount + ", stotal=" + stotal + ", camount=" + camount + ", cdiscount=" + cdiscount + ", ctotal="
-				+ ctotal + ", mentoring1=" + mentoring1 + ", mentoring2=" + mentoring2 + ", self1=" + self1 + ", self2="
-				+ self2 + ", metaTitle=" + metaTitle + ", metaKeyword=" + metaKeyword
-				+ ", metaDescription=" + metaDescription + ", courseHighlight=" + courseHighlight
-				+ ", courseDescription=" + courseDescription + ", date=" + date + ", courseCategory=" + courseCategory
-				+ "]";
+				+ ", starRating=" + starRating + ", ratingByNumberOfPeople=" + ratingByNumberOfPeople
+				+ ", totalEnrollment=" + totalEnrollment + ", keyHighlights1=" + keyHighlights1 + ", keyHighlights2="
+				+ keyHighlights2 + ", keyHighlights3=" + keyHighlights3 + ", keyHighlights4=" + keyHighlights4
+				+ ", keyHighlights5=" + keyHighlights5 + ", keyHighlights6=" + keyHighlights6 + ", amount=" + amount
+				+ ", discount=" + discount + ", total=" + total + ", mamount=" + mamount + ", mdiscount=" + mdiscount
+				+ ", mtotal=" + mtotal + ", samount=" + samount + ", sdiscount=" + sdiscount + ", stotal=" + stotal
+				+ ", camount=" + camount + ", cdiscount=" + cdiscount + ", ctotal=" + ctotal + ", mentoring1="
+				+ mentoring1 + ", mentoring2=" + mentoring2 + ", self1=" + self1 + ", self2=" + self2 + ", metaTitle="
+				+ metaTitle + ", metaKeyword=" + metaKeyword + ", metaDescription=" + metaDescription
+				+ ", courseHighlight=" + courseHighlight + ", courseDescription=" + courseDescription + ", date=" + date
+				+ ", courseCategory=" + courseCategory + "]";
 	}
-	
-	
 
-	
-    
 }

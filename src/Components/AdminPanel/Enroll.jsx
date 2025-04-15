@@ -80,6 +80,7 @@ export default function Enroll() {
               <StyledTableCell align="center">Type</StyledTableCell>
               <StyledTableCell align="center">Trainer</StyledTableCell>
               <StyledTableCell align="center">Completed Date</StyledTableCell>
+              <StyledTableCell align="center">Resend email count</StyledTableCell>
               <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -99,6 +100,7 @@ export default function Enroll() {
                 <StyledTableCell align="center">{row.type}</StyledTableCell>
                 <StyledTableCell align="center">{row.trainer}</StyledTableCell>
                 <StyledTableCell align="center">{row.completion_date}</StyledTableCell>
+                <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
                 <StyledTableCell align="center">
                 <RiDeleteBin6Line className="delete" onClick={() => handleDelete(row.id)} style={{ cursor: "pointer", color: "red" }} />
 

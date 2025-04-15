@@ -36,8 +36,9 @@ public class TrendingCourseController {
 
 	@PostMapping("/trendingcourse/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void createTrendingCourse(@RequestBody TrendingCourse trendingcourse) {
+	public ResponseEntity<String> createTrendingCourse(@RequestBody TrendingCourse trendingcourse) {
 		repo.save(trendingcourse);
+		return ResponseEntity.status(HttpStatus.CREATED).body("Trending course added successfully.");
 	}
 
 	@PutMapping("/trendingcourse/update/{id}")

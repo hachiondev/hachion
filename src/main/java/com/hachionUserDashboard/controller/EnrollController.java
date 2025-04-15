@@ -1,6 +1,8 @@
 package com.hachionUserDashboard.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,7 @@ public class EnrollController {
         enroll.setTime(requestEnroll.getTime());
         enroll.setAmount(requestEnroll.getAmount());
         enroll.setTrainer(requestEnroll.getTrainer());
+        enroll.setMeeting_link(requestEnroll.getMeeting_link());
     
 
         // Save requestBatch to the database
@@ -83,7 +86,9 @@ public class EnrollController {
 
 	        		                "Batch Time: " + enrollRequest.getTime() + "\n" +
 
-	        		                "Meeting Link: [Link to Meeting Platform]"+ "\n\n" +
+	        		                "Meeting Link:"+ enrollRequest.getMeeting_link()+ "\n\n" +
+	        		                
+"Duration:"+ enrollRequest.getCompletion_date()+ "\n\n" +
 
 	        		                "Joining Instructions:"+ "\n" +
 	        		"1. Click the link above 5 minutes before the start time." + "\n" +
@@ -98,7 +103,7 @@ public class EnrollController {
 
 	        simpleMailMessage.setText(message);
 	        SimpleMailMessage supportMail = new SimpleMailMessage();
-	        supportMail.setTo("hachion.trainings@gmail.com"); // Replace with the actual support email ID
+	        supportMail.setTo("trainings@hachion.co"); // Replace with the actual support email ID
 	        supportMail.setSubject("New Enrollment Notification");
 	        supportMail.setText("Dear Support Team,\n\n" +
 	                "The following user has requested a batch:\n" +
@@ -114,6 +119,26 @@ public class EnrollController {
 	        javaMailSender.send(supportMail);
 	        javaMailSender.send(simpleMailMessage);
 	    }
+	 @PostMapping("/enroll/resend-email")
+	 public ResponseEntity<?> resendEnrollEmail(@RequestBody Map<String, String> request) {
+	     String email = request.get("email");
+	     List<Enroll> enrollments = repo.findByEmail(email);
+
+	     if (enrollments.isEmpty()) {
+	         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for this email.");
+	     }
+
+	     Enroll latest = enrollments.get(enrollments.size() - 1); // assuming latest is last
+	     latest.setResendCount(latest.getResendCount() + 1); // Increment the counter
+
+	     repo.save(latest); // Save the updated resend count
+
+	     sendEnrollEmail(latest); // Send the email
+
+	     return ResponseEntity.ok("Email resent successfully. Check your registered email.");
+	 }
+
+
 	@DeleteMapping("enroll/delete/{id}")
 	public ResponseEntity<?> deleteEnroll(@PathVariable int id) {
 		Enroll enroll = repo.findById(id).get();

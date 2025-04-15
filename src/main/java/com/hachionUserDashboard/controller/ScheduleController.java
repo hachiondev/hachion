@@ -88,6 +88,7 @@ public List<CourseSchedule>getAllCourseSchedule(){
 		         courseschedule.setSchedule_time(updatedCourseSchedule.getSchedule_time());
 		         courseschedule.setSchedule_week(updatedCourseSchedule.getSchedule_week());
 		         courseschedule.setSchedule_date(updatedCourseSchedule.getSchedule_date());
+		         courseschedule.setMeeting_link(updatedCourseSchedule.getMeeting_link());
 		      
 		         
 		         // Save the updated trainer to the repository

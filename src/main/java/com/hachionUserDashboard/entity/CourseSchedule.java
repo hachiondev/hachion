@@ -38,6 +38,8 @@ public class CourseSchedule {
 	    private String trainer_name;
 	    @Column
 	    private String created_date;
+	    @Column
+	    private String meeting_link;
 	    
 
 
@@ -46,7 +48,7 @@ public CourseSchedule() {
 }
 
 public CourseSchedule(String schedule_category_name, String schedule_course_name, String schedule_date, String schedule_week, String schedule_time,
-               String schedule_duration, String schedule_mode,String trainer_name) {
+               String schedule_duration, String schedule_mode,String trainer_name, String meeting_link) {
     this.schedule_category_name = schedule_category_name;
     this.schedule_course_name = schedule_course_name;
     this.schedule_date =schedule_date;
@@ -55,6 +57,15 @@ public CourseSchedule(String schedule_category_name, String schedule_course_name
     this.schedule_duration= schedule_duration;
     this.schedule_mode = schedule_mode;
     this.trainer_name = trainer_name;
+    this.meeting_link=meeting_link;
+}
+
+public String getMeeting_link() {
+	return meeting_link;
+}
+
+public void setMeeting_link(String meeting_link) {
+	this.meeting_link = meeting_link;
 }
 
 public int getCourse_schedule_id() {
@@ -145,7 +156,7 @@ public String toString() {
 			+ schedule_category_name + ", schedule_course_name=" + schedule_course_name + ", schedule_date="
 			+ schedule_date + ", schedule_week=" + schedule_week + ", schedule_time=" + schedule_time
 			+ ", schedule_duration=" + schedule_duration + ", schedule_mode=" + schedule_mode + ", trainer_name="
-			+ trainer_name + ", created_date=" + created_date + "]";
+			+ trainer_name + ", created_date=" + created_date + ", meeting_link=" + meeting_link + "]";
 }
 
 

@@ -38,8 +38,9 @@ public class CorporateCourseController {
 
 	@PostMapping("/corporatecourse/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void createCorporateCourse(@RequestBody CorporateCourse corporatecourse) {
+	public ResponseEntity<String> createCorporateCourse(@RequestBody CorporateCourse corporatecourse) {
 		repo.save(corporatecourse);
+		return ResponseEntity.status(HttpStatus.CREATED).body("Corporate course added successfully.");
 	}
 
 	@PutMapping("/corporatecourse/update/{id}")

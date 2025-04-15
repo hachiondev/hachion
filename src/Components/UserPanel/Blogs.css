@@ -137,6 +137,33 @@
   width: 80%;
   margin-left: 10vw;
 }
+.course-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+.course-details{
+  box-shadow: 5px 5px 10px #d3d3d3;
+  margin: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background-color: #FFE69D;
+}
+.workshop-button{
+  background-color: #00AEEF;
+  border-radius: 10px;
+  padding: 8px 20px;
+  box-shadow: 2px 2px 4px #d3d3d3;
+  border: none;
+  color: white;
+  font-size:1rem;
+  margin-top: 50px;
+}
+.workshop-button:hover{
+  background-color: #006489;
+}
 @media (min-width: 481px) and (max-width: 1025px){
 .salesforce-blog-left{
   width: 25%;
@@ -238,6 +265,8 @@
         padding-left: 4vh;
         padding-right: 4vh;
         text-align: justify;
+        word-spacing: 5px;
+        line-height: 30px;
       }
       .title{
         font-weight: 600;
@@ -655,6 +684,24 @@
           margin-top: 20px;
       }
 
+      .course-row{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0px;
+      }
+      .course-details{
+        padding: 10px;
+        border-radius: 10px;
+      }
+      .workshop-button{
+        width: 100%;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
       #workshop.mobile-number {
         width: 260px !important;
         height: 35px;
@@ -677,9 +724,10 @@
       padding: 2vh;
     }
     .story-div{
-      display: flex;
+      display: block;
       flex-direction: column;
       justify-content: center;
+      text-align: center;
     }
     .story-content{
       font-size: 1.5rem;
@@ -690,7 +738,7 @@
       font-size: 3rem;
     }
     .story-icon{
-      font-size: 5rem;
+      font-size: 60px;
       text-align: center;
     }
 

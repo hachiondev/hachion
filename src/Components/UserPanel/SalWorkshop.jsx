@@ -28,6 +28,13 @@ const SalWorkshop = () => {
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
+  const [workshopData, setWorkshopData] = useState({
+    category_name: '',
+    course_name: '',
+  });
+  const [workshops, setWorkshops] = useState([]);
+  const [categories, setCategories] = useState([]);
+const [courses, setCourses] = useState([]);
   const [workshop, setWorkshop] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -85,7 +92,50 @@ const SalWorkshop = () => {
     const openMenu = (event) => {
       setAnchorEl(event.currentTarget);
     };
-  
+    useEffect(() => {
+      const fetchWorkshops = async () => {
+        try {
+          const response = await axios.get('https://api.hachion.co/workshopschedule');
+          setWorkshops(response.data);
+    
+          // Get unique category names
+          const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
+          setCategories(uniqueCategories);
+        } catch (error) {
+          console.error('Error fetching workshop list:', error);
+        }
+      };
+    
+      fetchWorkshops();
+    }, []);
+    useEffect(() => {
+      if (workshopData.category_name) {
+        const filteredCourses = workshops
+          .filter(item => item.category_name === workshopData.category_name)
+          .map(item => item.course_name);
+    
+        const uniqueCourses = [...new Set(filteredCourses)];
+        setCourses(uniqueCourses);
+      } else {
+        setCourses([]);
+      }
+    }, [workshopData.category_name, workshops]);
+        
+
+    const handleSearch = async () => {
+      try {
+        const filteredWorkshop = workshops.find(
+          item =>
+            item.category_name === workshopData.category_name &&
+            item.course_name === workshopData.course_name
+        );
+    
+        setWorkshop(filteredWorkshop || null);
+      } catch (error) {
+        console.error('Error filtering workshop:', error);
+      }
+    };
+    
     const closeMenu = () => {
       setAnchorEl(null);
     };
@@ -176,6 +226,49 @@ const SalWorkshop = () => {
       </Helmet>
       <Topbar />
       <NavbarTop />
+      <div className='course-details'>
+      <div className='course-row'>
+      <div class="col-md-3">
+          <label for="inputState" class="form-label">Category Name</label>
+          <select
+    id="inputState"
+    className="form-select"
+    name="category_name"
+    value={workshopData.category_name}
+    onChange={(e) => setWorkshopData({ ...workshopData, category_name: e.target.value })}
+  >
+    <option value="" disabled>Select Category</option>
+    {categories.map((cat, idx) => (
+      <option key={idx} value={cat}>{cat}</option>
+    ))}
+  </select>
+      </div>
+      <div className="col-md-3">
+      <label htmlFor="course" className="form-label">Course Name</label>
+
+      <select
+    id="course"
+    className="form-select"
+    name="course_name"
+    value={workshopData.course_name}
+    onChange={(e) => setWorkshopData({ ...workshopData, course_name: e.target.value })}
+    disabled={!workshopData.category_name}
+  >
+    <option value="" disabled>Select Course</option>
+    {courses.map((course, idx) => (
+      <option key={idx} value={course}>{course}</option>
+    ))}
+  </select>
+
+            </div>
+      <div>
+        <button className="workshop-button" onClick={handleSearch}>
+        Submit
+      </button>
+      </div>
+      </div>
+      </div>
+      {workshop && (
       <div className='course-top'>
         <div className='about-banner'>
           {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
@@ -195,25 +288,11 @@ const SalWorkshop = () => {
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              {/* <p>{workshop?.content}</p> */}
+              
 
               <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.content.trim() || "" }} />
               
-              {/* <p><b>By participating along with us in the workshop, you'll learn:</b></p>
-              <ul>
-                <li>Learn the core concepts, architecture, and key features of Salesforce CRM.</li>
-                <li>Gain practical knowledge with live demonstrations and real-world scenarios.</li>
-                <li>Explore Salesforce automation tools like Flow, Process Builder, and Reports & Dashboards.</li>
-                <li>Discover career paths like Salesforce Admin, Developer, and Business Analyst.</li>
-                <li>Get guidance on Salesforce certifications to fast-track your career.</li>
-                <li>See how top companies leverage Salesforce for customer management and business growth.</li>
-                <li>Learn about in-demand Salesforce roles, salary trends, and career growth opportunities.</li>
-              </ul> */}
-
-              {/* <p><b>Is This Workshop for Me?</b></p>
-              <p>
-                This workshop is designed for individuals who want to gain hands-on experience with Salesforce CRM and build practical skills for real-world business solutions. By the end of this workshop, you'll be equipped to build business automation solutions, understand Salesforce architecture, and take your first steps toward Salesforce certifications.
-              </p> */}
+            
             </div>
 
             <div className='workshop-left-content'>
@@ -247,21 +326,7 @@ const SalWorkshop = () => {
 
       <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() || "" }} />
 
-              {/* <ul>
-                <li>What is the outline of the Training Program</li>
-                <li>Live case study</li>
-                <li>How can you make a career as a Salesforce professional</li>
-                <li>How to crack the interviews - mantras for your case rounds</li>
-                <li>Live Q&A</li>
-              </ul>
-
-              <p><b>Any Prerequisites?</b></p>
-              <ul>
-                <li>Basic Computer Skills</li>
-                <li>Understanding of Business Processes</li>
-                <li>Problem-Solving Mindset</li>
-                <li>Curiosity to Learn</li>
-              </ul> */}
+           
             </div>
           </div>
         </div>
@@ -438,7 +503,7 @@ const SalWorkshop = () => {
       </div>
       
       <StickyBar />
-      </div>
+      </div>)}
       
     </>
   );

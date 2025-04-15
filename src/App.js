@@ -96,14 +96,14 @@ function App() {
   <Route path='/admincourse' element={<CategoryTable />} />
 
 {/* </Route> */}
-<Route path='/workshop/:courseName' element={<SalWorkshop/>}/>
+<Route path='/workshop' element={<SalWorkshop/>}/>
 
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path='/qatesting' element={<QaTesting/>}/>
-      <Route path='/salesforce' element={<Salesforce/>}/>
+      <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
-      <Route path='/blogs/:category_name' element={<QaTestingBlog />} />
+      <Route path='/blogs/:category_name/content' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>

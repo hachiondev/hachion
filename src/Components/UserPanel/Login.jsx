@@ -24,13 +24,23 @@ const Login = () => {
    const[email,setEmail]=useState("");
    const [password,setPassword]=useState("");
    const [errorMessage, setErrorMessage] = useState('');
+   const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
+   const [captchaError, setCaptchaError] = useState('');
+   
+
    const navigate=useNavigate();
    const handleLogin = async (e) => {
     e.preventDefault();
+    if (!isCaptchaChecked) {
+      setCaptchaError("Captcha validation is mandatory to login.");
+     
+      return;
+    }
     const loginData = {
         email: email,
         password: password,
     };
+ 
 
     try {
         const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
@@ -53,7 +63,7 @@ const Login = () => {
         }
     } catch (error) {
         console.error("Error during login", error);
-        // setErrorMessage("An error occurred during login");
+        setErrorMessage("An error occurred during login");
     }
 };
 
@@ -132,16 +142,24 @@ const Login = () => {
 
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="flexCheckDefault"
-                  />
-                  <label className="form-check-label" htmlFor="flexCheckDefault">
-                    I'm not a robot
-                  </label>
-                  <img src={captcha} alt='captcha' className='captcha' />
-                </div>
+  <input
+    className="form-check-input"
+    type="checkbox"
+    id="flexCheckDefault"
+    onChange={(e) => {
+      setIsCaptchaChecked(e.target.checked);
+      if (e.target.checked) setCaptchaError('');
+    }}
+  />
+  <label className="form-check-label" htmlFor="flexCheckDefault">
+    I'm not a robot
+  </label>
+  <img src={captcha} alt='captcha' className='captcha' />
+</div>
+{captchaError && <p className="error-message">{captchaError}</p>}
+
+
+
 
               {/* <div className="form-check">
                   <ReCAPTCHA
@@ -151,7 +169,15 @@ const Login = () => {
                 </div> */}
 
                 <div className="d-grid gap-2">
-                  <button className="register-btn" type="submit" onClick={handleLogin}>Login</button>
+                <button
+  className="register-btn"
+  type="submit"
+  onClick={handleLogin}
+>
+  Login
+</button>
+
+
                 </div>
              
             </div>

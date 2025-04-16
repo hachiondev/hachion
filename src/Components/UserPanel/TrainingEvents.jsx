@@ -281,13 +281,20 @@ const TrainingEvents = () => {
 
   const [courseOptions, setCourseOptions] = useState([]);
 
+  // ✅ Get user's timezone
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
-          fetch('https://api.hachion.co/schedulecourse').then((res) => res.json()),
+          fetch(`https://api.hachion.co/schedulecourse?timezone=${userTimezone}`).then((res) => res.json()),
           fetch('https://api.hachion.co/courses/all').then((res) => res.json())
         ]);
+
+        if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
+          throw new Error("Invalid API response format");
+        }
 
         const mergedData = scheduleRes.map((scheduleItem) => {
           const matchingCourse = coursesRes.find(
@@ -304,6 +311,7 @@ const TrainingEvents = () => {
           };
         });
 
+        console.log('Merged Courses:', mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
@@ -316,7 +324,7 @@ const TrainingEvents = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userTimezone]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -382,11 +390,7 @@ const TrainingEvents = () => {
         <div className="filter-section">
           <select
             value={modeFilter}
-            onChange={(e) => {
-              setModeFilter(e.target.value);
-              // setCourseFilter('');
-              // setTimeFilter('');
-            }}
+            onChange={(e) => setModeFilter(e.target.value)}
           >
             <option value="">All Modes</option>
             <option value="Live Class">Live Class</option>
@@ -395,11 +399,7 @@ const TrainingEvents = () => {
 
           <select
             value={courseFilter}
-            onChange={(e) => {
-              setCourseFilter(e.target.value);
-              // setModeFilter('');
-              // setTimeFilter('');
-            }}
+            onChange={(e) => setCourseFilter(e.target.value)}
           >
             <option value="">All Courses</option>
             {courseOptions.map((course, idx) => (
@@ -411,11 +411,7 @@ const TrainingEvents = () => {
 
           <select
             value={timeFilter}
-            onChange={(e) => {
-              setTimeFilter(e.target.value);
-              // setCourseFilter('');
-              // setModeFilter('');
-            }}
+            onChange={(e) => setTimeFilter(e.target.value)}
           >
             <option value="">Any Time</option>
             <option value="new">Newly Added</option>

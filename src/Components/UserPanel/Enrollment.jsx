@@ -86,7 +86,7 @@ const Enrollment = () => {
       
         <form className='details'>
         
-        <div className='row'>
+        <div className='enroll-row'>
             <div className="col-md-5">
               <label htmlFor="inputName4" className="form-label">
                 Full Name<span className="required">*</span>
@@ -105,7 +105,7 @@ const Enrollment = () => {
                onBlur={handleBlur} />
             </div>
   </div>
-  <div className="row">
+  <div className='enroll-row'>
   <div className="col-md-5">
             <label className='form-label'>Mobile Number</label>
           <div class="input-group custom-width">
@@ -151,7 +151,7 @@ const Enrollment = () => {
               <label for="inputCity" className="form-label">
               Country<span className="required">*</span>
               </label>
-              <input type="text" className="form-control" id="enroll1" placeholder='India'
+              <input type="text" className="form-control" id="enroll1" placeholder='Enter mobile number'
              required/>
             </div>
   </div>

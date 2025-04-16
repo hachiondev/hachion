@@ -574,7 +574,10 @@ border-radius: 20px;
 font-weight: 700;
 font-size:24px;
 color: white;
-text-align: right;
+text-align: center;
+background-color: #007BFF;
+padding: 5px;
+border-radius: 10px;
 }
 
 .qa-video-container {
@@ -1591,6 +1594,37 @@ border:2px solid white;
   background-color: #EEEEEE;
   margin-left: 40px;
   margin-right: 25px;
+}
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.fee-enroll-now.enrolled {
+  background-color: #28a745 !important; /* green */
+  cursor: not-allowed;
+}
+
+.resend {
+  margin-top: 10px;
+  font-style: normal;
+  color: black;
+  cursor: default;
+}
+
+.attempt {
+  margin-top: 10px;
+  font-style: normal;
+  color: red;
+  cursor: default;
+}
+
+.resend .resend-link {
+  color: #007BFF;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
 }
 
 @media (min-width: 760px) and (max-width: 1024px){

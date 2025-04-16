@@ -132,37 +132,37 @@ const handleInputChange = (e, quillField = null, quillValue = null) => {
   });
 };
 
-const handleKeyDown = (e) => {
-  if (e.key === "Enter") {
-    setFormData((prevData) => {
-      const updatedData = { ...prevData };
-      const modes = ["", "m", "s", "c"];
+const handleCalculate = (e) => {
+  e.preventDefault();
 
-      modes.forEach((mode) => {
-        const amountKey = `${mode}amount`;
-        const discountKey = `${mode}discount`;
-        const totalKey = `${mode}total`;
+  setFormData((prevData) => {
+    const updatedData = { ...prevData };
+    const modes = ["", "m", "s", "c"];
 
-        const amount = parseFloat(updatedData[amountKey]);
-        const discount = parseFloat(updatedData[discountKey]);
-        const total = parseFloat(updatedData[totalKey]);
+    modes.forEach((mode) => {
+      const amountKey = `${mode}amount`;
+      const discountKey = `${mode}discount`;
+      const totalKey = `${mode}total`;
 
-        const hasAmount = !isNaN(amount);
-        const hasDiscount = !isNaN(discount);
-        const hasTotal = !isNaN(total);
+      const amount = parseFloat(updatedData[amountKey]);
+      const discount = parseFloat(updatedData[discountKey]);
+      const total = parseFloat(updatedData[totalKey]);
 
-        if (hasAmount && hasDiscount && !hasTotal) {
-          updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
-        } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
-          updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
-        } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
-          updatedData[amountKey] = Math.round(total / (1 - discount / 100));
-        }
-      });
+      const hasAmount = !isNaN(amount);
+      const hasDiscount = !isNaN(discount);
+      const hasTotal = !isNaN(total);
 
-      return updatedData;
+      if (hasAmount && hasDiscount && !hasTotal) {
+        updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
+      } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
+        updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
+      } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
+        updatedData[amountKey] = Math.round(total / (1 - discount / 100));
+      }
     });
-  }
+
+    return updatedData;
+  });
 };
 
 const handleFileChange = (event) => {
@@ -605,7 +605,7 @@ const handleAddTrendingCourseClick = () => {
           name={mode.amount}
           value={formData[mode.amount] || ""}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
         />
       </div>
       <div className="col-md-3">
@@ -616,7 +616,7 @@ const handleAddTrendingCourseClick = () => {
           name={mode.discount}
           value={formData[mode.discount] || ""}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
         />
       </div>
       <div className="col-md-3">
@@ -627,9 +627,12 @@ const handleAddTrendingCourseClick = () => {
           name={mode.total}
           value={formData[mode.total] || ""}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
         />
       </div>
+      <button className='filter' onClick={handleCalculate}>
+        Calculate
+      </button>
     </div>
   ))}
 </div>

@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -48,18 +49,19 @@ public class ScheduleController {
 		CourseSchedule courseschedule = repo.findById(id).get();
 		return courseschedule;
 	}
-	
+
 	@GetMapping("/schedulecourse")
 	public List<CourseSchedule> getAllCourseSchedule(@RequestParam(defaultValue = "UTC") String timezone,
 			@RequestParam(defaultValue = "user") String userType) {
 		List<CourseSchedule> coursescheduleList = repo.findAll();
 		if ("admin".equalsIgnoreCase(userType)) {
-			return coursescheduleList;		}
+			return coursescheduleList;
+		}
 
 		for (CourseSchedule schedule : coursescheduleList) {
 			try {
 
-				String inputDateTimeStr = schedule.getSchedule_date() + " " + schedule.getSchedule_time(); 
+				String inputDateTimeStr = schedule.getSchedule_date() + " " + schedule.getSchedule_time();
 
 				DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
 				LocalDateTime istDateTime = LocalDateTime.parse(inputDateTimeStr, inputFormatter);
@@ -77,8 +79,11 @@ public class ScheduleController {
 				schedule.setSchedule_date(convertedDate);
 				schedule.setSchedule_time(finalTime);
 
+				String weekDay = userZoned.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+				schedule.setSchedule_week(weekDay);
+
 			} catch (DateTimeParseException e) {
-				
+
 			}
 		}
 
@@ -96,12 +101,11 @@ public class ScheduleController {
 //		return courseschedule;
 //	}
 
-	
-//	@PostMapping("/schedulecourse/add")
-//	@ResponseStatus(code = HttpStatus.CREATED)
-//	public void createCourse(@RequestBody CourseSchedule courseschedule) {
-//		repo.save(courseschedule);
-//	}
+	@PostMapping("/schedulecourse/add")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public void createCourse(@RequestBody CourseSchedule courseschedule) {
+		repo.save(courseschedule);
+	}
 
 	/*
 	 * @PutMapping("trainer/update/{id}") public Trainer

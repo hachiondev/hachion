@@ -59,7 +59,7 @@ const RegisterNext = () => {
     try {
       // Step 1: Verify OTP
       const verifyResponse = await fetch(
-        "https://api.hachion.co/api/v1/user/verify-otp",
+        "http://localhost:8080/api/v1/user/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,7 +78,7 @@ const RegisterNext = () => {
 
       // Step 2: Proceed with Registration
       const registerResponse = await fetch(
-        "https://api.hachion.co/api/v1/user/register",
+        "http://localhost:8080/api/v1/user/register",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -127,7 +127,7 @@ const RegisterNext = () => {
 
     try {
       const response = await fetch(
-        `https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`,
+        `http://localhost:8080/api/v1/user/regenerate-otp?email=${email}`,
         {
           method: "PUT",
         }

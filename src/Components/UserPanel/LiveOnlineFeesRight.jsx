@@ -56,7 +56,7 @@
 
 //     const fetchCourseAmount = async (rate) => {
 //       try {
-//         const response = await axios.get('https://api.hachion.co/courses/all');
+//         const response = await axios.get('https://http://localhost:8080/courses/all');
 //         const courses = response.data;
 
 //         const matchedCourse = courses.find(
@@ -142,7 +142,7 @@
 //           return;
 //         }
 
-//         const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
+//         const response = await axios.post('https://http://localhost:8080/enrolldemo', { email: userEmail });
 
 //         if (response.data.success) {
 //           setMessage('Successfully enrolled for the free demo.');
@@ -185,18 +185,34 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
-  const { courseName } = useParams(); // Get course name from URL
+const LiveOnlineFeesRight = ({
+  enrollText,
+  modeType,
+  selectedBatchData,
+  courseName,
+}) => {
+  // const { courseName } = useParams(); // Get course name from URL
   const navigate = useNavigate();
   const [fee, setFee] = useState("");
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [message, setMessage] = useState("");
+  const [isEnrolled, setIsEnrolled] = useState(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("loginuserData"));
+    const isAlreadyEnrolled = localStorage.getItem(
+      `enrolled-${selectedBatchData?.schedule_course_name}`
+    );
+    if (user && isAlreadyEnrolled) {
+      setIsEnrolled(true);
+    }
+  }, [selectedBatchData]);
 
   useEffect(() => {
     const fetchCourseAmount = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://http://localhost:8080/courses/all");
         const courses = response.data;
 
         // Find the matching course by courseName
@@ -213,22 +229,22 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
               selectedFee = "0";
               originalFee = 0;
             } else {
-              selectedFee = matchedCourse.total;
-              originalFee = matchedCourse.amount;
+              selectedFee = Math.round(matchedCourse.total);
+              originalFee = Math.round(matchedCourse.amount);
             }
           } else {
             switch (modeType) {
               case "mentoring":
-                selectedFee = matchedCourse.mtotal;
-                originalFee = matchedCourse.mamount;
+                selectedFee = Math.round(matchedCourse.mtotal);
+                originalFee = Math.round(matchedCourse.mamount);
                 break;
               case "self":
-                selectedFee = matchedCourse.stotal;
-                originalFee = matchedCourse.samount;
+                selectedFee = Math.round(matchedCourse.stotal);
+                originalFee = Math.round(matchedCourse.samount);
                 break;
               case "corporate":
-                selectedFee = matchedCourse.ctotal;
-                originalFee = matchedCourse.camount;
+                selectedFee = Math.round(matchedCourse.ctotal);
+                originalFee = Math.round(matchedCourse.camount);
                 break;
               default:
                 selectedFee = "Not Available";
@@ -265,44 +281,104 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
     fetchCourseAmount();
   }, [courseName, modeType, enrollText]);
 
-  const handleEnroll = async () => {
-    const isLoggedIn = localStorage.getItem("userToken") ? true : false;
+  const handleResend = async () => {
+    const user = JSON.parse(localStorage.getItem("loginuserData"));
+    const userEmail = user?.email;
 
-    if (!isLoggedIn) {
-      alert("Please log in to enroll.");
-      window.location.href = "/login"; // Redirect to login page
+    if (!userEmail) {
+      alert("No user email found!");
       return;
     }
 
+    await resendEmail(userEmail); // ✅ pass just the email string
+  };
+  const resendEmail = async (userEmail) => {
+    try {
+      const response = await axios.post(
+        "https://http://localhost:8080/enroll/resend-email",
+        {
+          email: userEmail,
+        }
+      );
+
+      alert(response.data);
+    } catch (error) {
+      console.error(
+        "Resend email failed:",
+        error.response?.data || error.message
+      );
+      alert("Failed to resend email.");
+    }
+  };
+
+  const handleEnroll = async () => {
+    const user = JSON.parse(localStorage.getItem("loginuserData")) || null;
+
+    if (!user || !user.email) {
+      const confirmRegister = window.confirm(
+        'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
+      );
+      if (confirmRegister) {
+        navigate("/registerhere");
+      }
+      return;
+    }
+
+    const userEmail = user.email;
+    const userName = user.name || "";
+    const userMobile = user.mobile || "";
+
     if (modeType === "live" && enrollText === "Enroll Now") {
-      // Redirect to Enrollment.jsx page for Live Class
-      navigate("/enrollment");
+      const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, "-");
+      navigate(`/enroll/${formattedCourseName}`);
       return;
     }
 
     if (modeType === "live" && enrollText === "Enroll Free Demo") {
       try {
-        const userEmail = localStorage.getItem("userEmail");
-        if (!userEmail) {
-          alert("User email not found. Please log in again.");
+        if (!selectedBatchData) {
+          alert("Please select a batch before enrolling.");
           return;
         }
 
-        const response = await axios.post("https://api.hachion.co/enrolldemo", {
+        const payload = {
+          name: userName,
           email: userEmail,
-        });
+          mobile: userMobile || "",
+          course_name: selectedBatchData.schedule_course_name,
+          enroll_date: selectedBatchData.schedule_date,
+          week: selectedBatchData.schedule_week,
+          time: selectedBatchData.schedule_time,
+          amount: 0,
+          mode: selectedBatchData.schedule_mode,
+          type: "Free Demo",
+          trainer: selectedBatchData.trainer_name,
+          completion_date: selectedBatchData.schedule_duration || "",
+          meeting_link: selectedBatchData.meeting_link || "",
+        };
 
-        if (response.data.success) {
-          setMessage("Successfully enrolled for the free demo.");
+        const response = await axios.post(
+          "https://http://localhost:8080/enroll/add",
+          payload
+        );
+
+        if (response.data.status === 201) {
+          setMessage("Registered Successfully");
         } else {
-          setMessage("Failed to enroll. Please try again.");
+          setMessage("Registered successfully");
         }
       } catch (error) {
         console.error("Error enrolling in demo:", error);
         setMessage("Error occurred while enrolling.");
       }
-    } else {
-      setMessage("Successfully enrolled.");
+      alert(
+        "You have successfully registered for the demo session. You will receive an email shortly with the meeting link, timing, and other details. Please check your registered email and dashboard for updates."
+      );
+      localStorage.setItem(
+        `enrolled-${selectedBatchData.schedule_course_name}`,
+        true
+      );
+      setIsEnrolled(true);
     }
   };
 
@@ -321,10 +397,27 @@ const LiveOnlineFeesRight = ({ enrollText, modeType }) => {
       )}
 
       {message && <p className="success-message">{message}</p>}
-
-      <button className="fee-enroll-now" onClick={handleEnroll}>
+      {/* 
+      <button className='fee-enroll-now' onClick={handleEnroll}>
         {enrollText}
+      </button> */}
+      <button
+        onClick={handleEnroll}
+        disabled={isEnrolled}
+        className={`fee-enroll-now ${
+          isEnrolled ? "bg-blue-200 cursor-not-allowed" : "fee-enroll-now"
+        } text-white`}
+      >
+        {isEnrolled ? "Enrolled" : enrollText}
       </button>
+      <p
+        style={{ marginTop: "10px", fontStyle: "italic" }}
+        className="schedule-span"
+        onClick={handleResend}
+        disabled={!isEnrolled} // ✅ Only enabled if enrolled
+      >
+        Resend email
+      </p>
     </div>
   );
 };

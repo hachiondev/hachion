@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "homepage": "http://hachion.co",
   "private": true,
-  "proxy": "https://api.hachion.co",
+  "proxy": "http://localhost:8080/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

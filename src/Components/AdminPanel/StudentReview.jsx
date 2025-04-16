@@ -182,7 +182,7 @@ export default function Review() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -193,7 +193,7 @@ export default function Review() {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/userreview");
+        const response = await axios.get("http://localhost:8080/userreview");
         const filteredReviews = response.data.filter(
           (review) => review.type === true
         );
@@ -252,7 +252,7 @@ export default function Review() {
       }
 
       const response = await axios.put(
-        `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+        `http://localhost:8080/userreview/update/${editedData.review_id}`,
         formData,
         {
           headers: {
@@ -280,7 +280,7 @@ export default function Review() {
   const handleDelete = async (review_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/userreview/delete/${review_id}`
+        `http://localhost:8080/userreview/delete/${review_id}`
       );
       console.log("Review deleted successfully:", response.data);
     } catch (error) {
@@ -340,7 +340,7 @@ export default function Review() {
   //   }
   //     try {
   //         const response = await axios.post(
-  //             "https://api.hachion.co/userreview/add",
+  //             "http://localhost:8080/userreview/add",
   //             formData,
   //             {
   //                 headers: {
@@ -386,7 +386,7 @@ export default function Review() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/userreview/add",
+        "http://localhost:8080/userreview/add",
         formData,
         {
           headers: {
@@ -421,7 +421,7 @@ export default function Review() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -1018,31 +1018,37 @@ export default function Review() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Review Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Review Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

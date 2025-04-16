@@ -26,25 +26,66 @@ const Aboutus = () => {
   useEffect(() => {
     window.scrollTo(0, 0); // This will scroll to the top of the page
   }, []);
-  const [count, setCount] = useState(0);
+
+  // useEffect(() => {
+  //   let start = 0;
+  //   const end = 88000; // Target number
+  //   const duration = 2000; // Duration of the animation in milliseconds
+  //   const incrementTime = Math.ceil(duration / end);
+
+  //   const followertimer = setInterval(() => {
+  //     start += 500; // Increment value
+  //     if (start > end) {
+  //       start = end;
+  //       clearInterval(followertimer);
+  //     }
+  //     setfollowerCount(start);
+  //   }, incrementTime);
+
+  //   return () => clearInterval(followertimer); // Clean up interval
+  // }, []);
+
+  const [followerCount, setFollowerCount] = useState(0);
+  const [studentCount, setStudentCount] = useState(0);
+  const [teacherCount, setTeacherCount] = useState(0);
+  const [courseCount, setCourseCount] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const end = 88000; // Target number
-    const duration = 2000; // Duration of the animation in milliseconds
-    const incrementTime = Math.ceil(duration / end);
+    // Helper function to create counters
+    const startCounter = (setCount, endValue, incrementValue, duration) => {
+      let start = 0;
+      const incrementTime = Math.ceil(duration / endValue);
 
-    const timer = setInterval(() => {
-      start += 500; // Increment value
-      if (start > end) {
-        start = end;
-        clearInterval(timer);
-      }
-      setCount(start);
-    }, incrementTime);
+      const timer = setInterval(() => {
+        start += incrementValue;
+        if (start > endValue) {
+          start = endValue;
+          clearInterval(timer);
+        }
+        setCount(start);
+      }, incrementTime);
 
-    return () => clearInterval(timer); // Clean up interval
+      return () => clearInterval(timer); // Cleanup interval
+    };
+
+    // Follower Count
+    const cleanupFollower = startCounter(setFollowerCount, 88000, 500, 2000);
+    // Student Count
+    const cleanupStudent = startCounter(setStudentCount, 50000, 250, 2000);
+    // Teacher Count
+    const cleanupTeacher = startCounter(setTeacherCount, 500, 2, 2000);
+    // Course Count
+    const cleanupCourse = startCounter(setCourseCount, 25000, 100, 2000);
+
+    // Clean up all intervals when component unmounts
+    return () => {
+      cleanupFollower();
+      cleanupStudent();
+      cleanupTeacher();
+      cleanupCourse();
+    };
   }, []);
+
   return (
     <>
       <Topbar />
@@ -100,26 +141,26 @@ const Aboutus = () => {
               {/* <HiOutlineUserGroup className="story-icon" /> */}
               <Groups className="white-icon" />
               {/* <p className="number">88,000</p> */}
-              <p className="number"> {count.toLocaleString()}</p>
+              <p className="number"> {followerCount.toLocaleString()}</p>
 
               <p className="story-content"> Foreign Followers</p>
             </div>
             <div className="story-div">
               {/* <PiStudentLight className="story-icon" /> */}
               <School className="white-icon" />
-              <p className="number">100,000+</p>
+              <p className="number">{studentCount.toLocaleString()}</p>
               <p className="story-content"> Students Enrolled</p>
             </div>
             <div className="story-div">
               {/* <MdContacts className="story-icon" /> */}
               <Verified className="white-icon" />
-              <p className="number">500+</p>
+              <p className="number">{teacherCount.toLocaleString()}+</p>
               <p className="story-content"> Certified Trainers</p>
             </div>
             <div className="story-div">
               {/* <GrDocumentVerified className="story-icon" /> */}
               <MenuBook className="white-icon" />
-              <p className="number">25000+</p>
+              <p className="number">{courseCount.toLocaleString()}+</p>
               <p className="story-content"> Completed Courses</p>
             </div>
           </div>

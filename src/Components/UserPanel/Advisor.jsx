@@ -24,8 +24,9 @@ const Advisor = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({
-    code: "+91",
-    flag: "IN",
+    code: "+1",
+    flag: "US",
+    name: "United States",
   });
   const [selectedValue, setSelectedValue] = useState("");
   const {
@@ -79,7 +80,7 @@ const Advisor = () => {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/advisors",
+        "http://localhost:8080/advisors",
         requestData,
         {
           headers: {

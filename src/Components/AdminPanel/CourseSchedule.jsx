@@ -70,6 +70,7 @@ export default function CourseSchedule() {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [catChange, setCatChange] = useState(0);
   const [editedRow, setEditedRow] = useState({
     schedule_category_name: "",
     schedule_course_name: "",
@@ -129,7 +130,6 @@ export default function CourseSchedule() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
-  //console.log(displayedCategories);
   const [selectedTime, setSelectedTime] = useState(null);
   const [rows, setRows] = useState([
     {
@@ -161,9 +161,7 @@ export default function CourseSchedule() {
   const deleteRow = (id) => {
     setRows(rows.filter((row) => row.id !== id));
   };
-
   const handleDateChange = (newValue) => {
-    //alert(newValue);
     const parsedDate = dayjs(newValue); // Ensure proper parsing
 
     if (!parsedDate.isValid()) {
@@ -187,7 +185,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -199,7 +197,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -208,7 +206,11 @@ export default function CourseSchedule() {
     fetchCourseCategory();
   }, []);
   useEffect(() => {
+    // alert(courseData.schedule_category_name);
+    //console.log(courseData.schedule_category_name);
+
     if (courseData.schedule_category_name) {
+      //alert(courseData.schedule_category_name);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === courseData.schedule_category_name
       );
@@ -217,10 +219,11 @@ export default function CourseSchedule() {
       setFilterCourse([]); // Reset when no category is selected
     }
   }, [courseData.schedule_category_name, courseCategory]);
+
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/trainers");
+        const response = await axios.get("http://localhost:8080/trainers");
         setTrainer(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -286,7 +289,7 @@ export default function CourseSchedule() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/schedulecourse/add",
+        "http://localhost:8080/schedulecourse/add",
         formattedCourseData
       );
       console.log("Course added successfully:", response.data);
@@ -318,7 +321,7 @@ export default function CourseSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/schedulecourse"
+          "http://localhost:8080/schedulecourse"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -363,7 +366,7 @@ export default function CourseSchedule() {
   const handleDelete = async (course_schedule_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
+        `http://localhost:8080/schedulecourse/delete/${course_schedule_id}`
       );
       console.log("Courses deleted successfully:", response.data);
     } catch (error) {
@@ -389,13 +392,11 @@ export default function CourseSchedule() {
   };
   const handleSave = async () => {
     try {
-      //console.log(editedRow);
       const response = await axios.put(
-        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
 
-      console.log(response.data);
       // Update only the edited row in the trainers state
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
@@ -404,9 +405,6 @@ export default function CourseSchedule() {
             : course
         )
       );
-
-      console.log(courses);
-
       setMessage(true); // Show the success message
 
       // Hide the message after 5 seconds
@@ -425,8 +423,24 @@ export default function CourseSchedule() {
     setEditedRow((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
     }));
+
+    if (editedRow.schedule_category_name) {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
+    }
   };
+
+  //console.log(setEditedRow);
 
   // const handleCourseChange = (event) => setCourse(event.target.value);
   return (
@@ -1022,17 +1036,34 @@ export default function CourseSchedule() {
                   id="inputState"
                   className="form-select"
                   name="schedule_course_name"
-                  value={editedRow.schedule_course_name || ""}
+                  value={editedRow.schedule_course_name}
                   onChange={handleInputChange}
                 >
                   <option value="" disabled>
                     Select Course
                   </option>
-                  {courseCategory.map((curr) => (
+                  {catChange
+                    ? filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))
+                    : courseCategory.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
+
+                  {/* {courseCategory.map((curr) => (
                     <option key={curr.id} value={curr.courseName}>
                       {curr.courseName}
                     </option>
-                  ))}
+                  ))} */}
+                  {/* {filterCourse.map((curr) => (
+                    <option key={curr.id} value={curr.courseName}>
+                      {curr.courseName}
+                    </option>
+                  ))} */}
                 </select>
               </div>
             </div>
@@ -1053,15 +1084,15 @@ export default function CourseSchedule() {
               <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker
+                  sx={{
+                    "& .MuiIconButton-root": { color: "#00aeef" },
+                  }}
                   value={
                     editedRow.schedule_date
                       ? dayjs(editedRow.schedule_date)
                       : null
                   }
-                  onChange={(newValue) => handleDateChange(newValue)}
-                  sx={{
-                    "& .MuiIconButton-root": { color: "#00aeef" },
-                  }}
+                  onChange={handleDateChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>
@@ -1172,31 +1203,37 @@ export default function CourseSchedule() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Course Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                    Course Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

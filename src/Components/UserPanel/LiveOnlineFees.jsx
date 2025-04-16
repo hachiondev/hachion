@@ -92,7 +92,7 @@
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //       try {
-//         const response = await axios.get('https://api.hachion.co/schedulecourse');
+//         const response = await axios.get('https://http://localhost:8080/schedulecourse');
 //         setCourses(response.data);
 
 //         // Filter courses based on the courseName from URL
@@ -231,7 +231,7 @@ export const LiveOnlineFees = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/schedulecourse"
+          "https://http://localhost:8080/schedulecourse"
         );
         setCourses(response.data);
 
@@ -349,7 +349,14 @@ export const LiveOnlineFees = () => {
         </div>
 
         <div className="separator"></div>
-        <LiveOnlineFeesRight enrollText={enrollText} modeType={modeType} />
+        <LiveOnlineFeesRight
+          enrollText={enrollText}
+          modeType={modeType}
+          selectedBatchData={filteredCourses.find(
+            (batch) => batch.course_schedule_id === selectedBatch
+          )}
+          courseName={courseName}
+        />
       </div>
     </>
   );

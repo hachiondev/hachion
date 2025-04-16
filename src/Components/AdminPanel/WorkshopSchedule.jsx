@@ -42,6 +42,8 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import "./Admin.css";
 import AdminPagination from "./AdminPagination";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -68,6 +70,7 @@ export default function WorkshopSchedule() {
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState([]);
   const [courseCategory, setCourseCategory] = useState([]);
+  const [error, setError] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([courses]);
   const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -77,26 +80,35 @@ export default function WorkshopSchedule() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [editedRow, setEditedRow] = useState({
+    bannerImage: null,
     category_name: "",
     course_name: "",
     date: null,
     time: null,
     time_zone: "",
+    content: "",
+    details: "",
   });
   const [selectedRow, setSelectedRow] = React.useState({
+    bannerImage: null,
     category_name: "",
     course_name: "",
     date: "",
     time: "",
     time_zone: "",
+    content: "",
+    details: "",
   });
   const currentDate = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
+    bannerImage: null,
     category_name: "",
     course_name: "",
     date: "",
     time: "",
     time_zone: "",
+    content: "",
+    details: "",
     created_date: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,7 +151,7 @@ export default function WorkshopSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -151,7 +163,7 @@ export default function WorkshopSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -159,16 +171,16 @@ export default function WorkshopSchedule() {
     };
     fetchCourseCategory();
   }, []);
-  // useEffect(() => {
-  //   if (formData.category_name) {
-  //     const filtered = category_name.filter(
-  //       (course) => course.category_name === formData.category_name
-  //     );
-  //     setFilterCourse(filtered);
-  //   } else {
-  //     setFilterCourse([]); // Reset when no category is selected
-  //   }
-  // }, [formData.category_name]);
+  useEffect(() => {
+    if (formData.category_name) {
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === formData.category_name
+      );
+      setFilterCourse(filtered);
+    } else {
+      setFilterCourse([]); // Reset when no category is selected
+    }
+  }, [formData.category_name]);
 
   // Handle time change
   const handleTimeChange = (newValue) => {
@@ -185,42 +197,78 @@ export default function WorkshopSchedule() {
   //     [name]: value,
   //   }));
   // };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
+
+  const handleChange = (e, quillField = null, quillValue = null) => {
+    setFormData((prevData) => {
+      let { name, value } = e?.target || {};
+
+      // Handle ReactQuill input separately
+      if (quillField) {
+        name = quillField;
+        value =
+          quillValue.trim() === "" || quillValue === "<p><br></p>"
+            ? ""
+            : quillValue;
+      }
+
+      return { ...prevData, [name]: value };
+    });
   };
+
   const handleReset = () => {
     setFormData({
+      bannerImage: null,
       category_name: "",
       course_name: "",
       time: "",
       time_zone: "",
       date: "",
+      content: "",
+      details: "",
       created_date: "",
     });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const currentDate = new Date().toISOString().split("T")[0];
 
+    // Construct your JSON object
     const updatedFormData = {
       category_name: formData.category_name,
       course_name: formData.course_name || "Salesforce",
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
+      content: formData.content || "",
+      details: formData.details || "",
       created_date: currentDate,
     };
 
-    console.log("Submitting Data:", updatedFormData); // Debugging line
+    // Construct FormData for multipart
+    const formDataToSend = new FormData();
+    formDataToSend.append("workshop", JSON.stringify(updatedFormData)); // send JSON as 'workshop'
+
+    if (formData.bannerImage) {
+      formDataToSend.append("bannerImage", formData.bannerImage); // only add if exists
+    }
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/workshopschedule/add",
-        updatedFormData
+        "http://localhost:8080/workshopschedule/add",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       alert("Form submitted successfully!");
@@ -254,7 +302,7 @@ export default function WorkshopSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/workshopschedule"
+          "http://localhost:8080/workshopschedule"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -266,8 +314,6 @@ export default function WorkshopSchedule() {
     fetchCourse();
   }, []);
   useEffect(() => {
-    if (courses.length > 0) {
-    }
     const filtered = courses.filter(
       (course) =>
         course.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -297,7 +343,7 @@ export default function WorkshopSchedule() {
       }
 
       const response = await axios.delete(
-        `https://api.hachion.co/workshopschedule/delete/${id}`
+        `http://localhost:8080/workshopschedule/delete/${id}`
       );
       console.log("Courses deleted successfully:", response.data);
     } catch (error) {
@@ -325,28 +371,44 @@ export default function WorkshopSchedule() {
   };
   const handleSave = async () => {
     try {
+      const formDataToSend = new FormData();
+
+      // Add the updated JSON data as a string
+      formDataToSend.append("workshop", JSON.stringify(editedRow));
+
+      // If a new banner image is selected, add it
+      if (editedRow.bannerImage) {
+        formDataToSend.append("bannerImage", editedRow.bannerImage);
+      }
+
       const response = await axios.put(
-        `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
-        editedRow
+        `http://localhost:8080/workshopschedule/update/${selectedRow.id}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
-      // Update only the edited row in the trainers state
+      // Update only the edited row in the courses state
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
           course.id === selectedRow.id ? response.data : course
         )
       );
-      console.log(courses);
-      setMessage(true); // Show the success message
 
-      // Hide the message after 5 seconds
+      setMessage(true);
       setTimeout(() => {
         setMessage(false);
       }, 5000);
 
       setOpen(false); // Close the dialog
     } catch (error) {
-      console.error("Error updating trainer:", error);
+      console.error(
+        "Error updating workshop:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -356,6 +418,21 @@ export default function WorkshopSchedule() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ align: [] }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      ["blockquote"],
+      ["image"],
+      ["link"],
+      [{ color: [] }],
+      ["clean"],
+    ],
   };
 
   // const handleCourseChange = (event) => setCourse(event.target.value);
@@ -430,10 +507,27 @@ export default function WorkshopSchedule() {
                           ))}
                         </select>
                       </div>
+
+                      <div className="col-md-3">
+                        <label className="form-label">
+                          Banner Image (width=1440px, height=420px)
+                        </label>
+                        <input
+                          type="file"
+                          className="schedule-input"
+                          accept="image/*"
+                          name="bannerImage"
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              bannerImage: e.target.files[0],
+                            })
+                          }
+                        />
+                      </div>
                     </div>
 
                     <div className="course-row d-flex align-items-center">
-                      {/* Date Field */}
                       <div className="col">
                         <label className="form-label d-block">Date</label>
                         <DatePicker
@@ -472,7 +566,7 @@ export default function WorkshopSchedule() {
                         <label className="form-label d-block">Time Zone</label>
                         <input
                           type="text"
-                          className="form-select"
+                          className="form-control"
                           placeholder="Enter Time Zone"
                           name="time_zone"
                           value={formData.time_zone || "EST"}
@@ -481,6 +575,106 @@ export default function WorkshopSchedule() {
                       </div>
                     </div>
                   </LocalizationProvider>
+                  {/* <label className="form-label d-block">Key Takeaways</label>
+        <input type='text' placeholder='enter content' name='content' value={formData.content} onChange={handleChange}/> */}
+
+                  <div className="course-row" style={{ paddingBottom: "20px" }}>
+                    <div class="mb-3" style={{ paddingBottom: "20px" }}>
+                      <label
+                        for="exampleFormControlTextarea1"
+                        class="form-label"
+                      >
+                        Key Takeaways
+                      </label>
+                      <ReactQuill
+                        theme="snow"
+                        id="content"
+                        name="content"
+                        value={formData.content}
+                        onChange={(value) =>
+                          handleChange(null, "content", value)
+                        }
+                        style={{ height: "500px" }} // Increased editor height
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+                            ["bold", "italic", "underline"], // Text formatting
+                            [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+                            [{ align: [] }], // Text alignment
+                            [{ indent: "-1" }, { indent: "+1" }], // Indentation
+                            ["blockquote"], // Blockquote for paragraph formatting
+                            ["image"],
+                            ["link"], // Insert links
+                            [{ color: [] }], // Full color picker
+                            ["clean"], // Remove formatting
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                      />
+                      {error && <p className="error-message">{error}</p>}
+                    </div>
+
+                    <div class="mb-3" style={{ paddingBottom: "20px" }}>
+                      <label
+                        for="exampleFormControlTextarea1"
+                        class="form-label"
+                      >
+                        Workshop Details
+                      </label>
+                      <ReactQuill
+                        theme="snow"
+                        id="details"
+                        name="details"
+                        value={formData.details}
+                        onChange={(value) =>
+                          handleChange(null, "details", value)
+                        }
+                        style={{ height: "500px" }} // Increased editor height
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // Paragraph & heading options
+                            ["bold", "italic", "underline"], // Text formatting
+                            [{ list: "ordered" }, { list: "bullet" }], // Bullet points & numbering
+                            [{ align: [] }], // Text alignment
+                            [{ indent: "-1" }, { indent: "+1" }], // Indentation
+                            ["blockquote"], // Blockquote for paragraph formatting
+                            ["image"],
+                            ["link"], // Insert links
+                            [{ color: [] }], // Full color picker
+                            ["clean"], // Remove formatting
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                      />
+                      {error && <p className="error-message">{error}</p>}
+                    </div>
+                  </div>
 
                   <div className="course-row">
                     <button
@@ -610,16 +804,23 @@ export default function WorkshopSchedule() {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="center">
+                  <StyledTableCell align="center" sx={{ width: "50px" }}>
                     <Checkbox />
                   </StyledTableCell>
                   <StyledTableCell align="center">S.No.</StyledTableCell>
+                  <StyledTableCell align="center">Banner Image</StyledTableCell>
                   <StyledTableCell align="center">
                     Category Name
                   </StyledTableCell>
                   <StyledTableCell align="center">Course Name</StyledTableCell>
                   <StyledTableCell align="center">Date</StyledTableCell>
                   <StyledTableCell align="center">Time</StyledTableCell>
+                  <StyledTableCell align="center">
+                    Key Takeaways
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Workshop Details
+                  </StyledTableCell>
                   <StyledTableCell align="center">Created Date</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
@@ -634,6 +835,17 @@ export default function WorkshopSchedule() {
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {course.banner_image ? (
+                          <img
+                            src={`http://localhost:8080/${course.banner_image}`}
+                            alt={`Banner`}
+                            style={{ width: "100px", height: "50px" }}
+                          />
+                        ) : (
+                          "No Banner"
+                        )}
+                      </StyledTableCell>
                       <StyledTableCell align="left">
                         {course.category_name}
                       </StyledTableCell>
@@ -641,13 +853,49 @@ export default function WorkshopSchedule() {
                         {course.course_name}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {course.date}
+                        {course.date
+                          ? dayjs(course.date).format("MM-DD-YYYY")
+                          : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.time} {course.time_zone}
                       </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {course.content ? (
+                          <div
+                            style={{
+                              maxWidth: "500px",
+                              wordWrap: "break-word",
+                              whiteSpace: "pre-line",
+                            }}
+                            dangerouslySetInnerHTML={{ __html: course.content }}
+                          />
+                        ) : (
+                          <p>No content is available</p>
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {course.details ? (
+                          <div
+                            style={{
+                              maxWidth: "500px",
+                              wordWrap: "break-word",
+                              whiteSpace: "pre-line",
+                            }}
+                            dangerouslySetInnerHTML={{ __html: course.details }}
+                          />
+                        ) : (
+                          <p>No details is available</p>
+                        )}
+                      </StyledTableCell>
+                      {/* <StyledTableCell align="center">
+              <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.content.trim() || "" }} /></StyledTableCell> */}
+                      {/* <StyledTableCell align="center">
+              <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.details.trim() || "" }} /></StyledTableCell> */}
                       <StyledTableCell align="center">
-                        {course.created_date}
+                        {course.created_date
+                          ? dayjs(course.created_date).format("MM-DD-YYYY")
+                          : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         <div
@@ -671,7 +919,11 @@ export default function WorkshopSchedule() {
                     </StyledTableRow>
                   ))
                 ) : (
-                  <p>No Workshop schedules available</p>
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={11} align="center">
+                      No Workshop schedules available
+                    </StyledTableCell>
+                  </StyledTableRow>
                 )}
               </TableBody>
             </Table>
@@ -755,6 +1007,22 @@ export default function WorkshopSchedule() {
 
             <div className="course-row">
               <div className="col">
+                <label className="form-label">Banner Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="bannerImage"
+                  onChange={(e) =>
+                    setEditedRow({
+                      ...editedRow,
+                      bannerImage: e.target.files[0],
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker
                   sx={{
@@ -765,7 +1033,9 @@ export default function WorkshopSchedule() {
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>
+            </div>
 
+            <div className="course-row">
               <div className="col">
                 <label className="form-label">Time</label>
                 <TimePicker
@@ -786,7 +1056,7 @@ export default function WorkshopSchedule() {
                 <label className="form-label">Time Zone</label>
                 <input
                   type="text"
-                  className="form-select"
+                  className="form-control"
                   placeholder="Enter Time Zone"
                   name="time_zone"
                   value={editedRow.time_zone || ""}
@@ -794,6 +1064,28 @@ export default function WorkshopSchedule() {
                 />
               </div>
             </div>
+
+            <label htmlFor="content">Key Takeaways</label>
+            <ReactQuill
+              id="content"
+              name="content"
+              value={editedRow.content || ""}
+              onChange={(value) =>
+                setEditedRow((prevData) => ({ ...prevData, content: value }))
+              }
+              modules={quillModules}
+            />
+
+            <label htmlFor="details">Workshop Details</label>
+            <ReactQuill
+              id="details"
+              name="details"
+              value={editedRow.details || ""}
+              onChange={(value) =>
+                setEditedRow((prevData) => ({ ...prevData, details: value }))
+              }
+              modules={quillModules}
+            />
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
@@ -803,31 +1095,37 @@ export default function WorkshopSchedule() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Workshop Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                    Workshop Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

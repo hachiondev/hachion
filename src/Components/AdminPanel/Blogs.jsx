@@ -74,7 +74,7 @@ const Blogs = () => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCategories(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -99,7 +99,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/blog");
+        const response = await axios.get("http://localhost:8080/blog");
         setBlogs(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching blogs:", error.message);
@@ -158,13 +158,13 @@ const Blogs = () => {
       if (formData.id) {
         // Edit operation
         response = await axios.put(
-          `https://api.hachion.co/blog/update/${formData.id}`,
+          `http://localhost:8080/blog/update/${formData.id}`,
           formDataToSend
         );
       } else {
         // Add operation
         response = await axios.post(
-          "https://api.hachion.co/blog/add",
+          "http://localhost:8080/blog/add",
           formDataToSend
         );
       }
@@ -232,7 +232,7 @@ const Blogs = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/blog/delete/${id}`
+        `http://localhost:8080/blog/delete/${id}`
       );
       console.log("Blogs deleted successfully:", response.data);
     } catch (error) {
@@ -247,7 +247,7 @@ const Blogs = () => {
     setFormMode("Edit");
     setShowAddCourse(true);
     try {
-      const response = await fetch(`https://api.hachion.co/blog/${id}`);
+      const response = await fetch(`http://localhost:8080/blog/${id}`);
       if (response.ok) {
         const blog = await response.json();
         setFormData({
@@ -600,7 +600,7 @@ const Blogs = () => {
                         <StyledTableCell sx={{ width: 220 }} align="center">
                           {blogs.blog_image ? (
                             <img
-                              src={`https://api.hachion.co/blogs/${blogs.blog_image}`}
+                              src={`http://localhost:8080/blogs/${blogs.blog_image}`}
                               alt={blogs.category_name}
                               width="50"
                             />
@@ -628,7 +628,7 @@ const Blogs = () => {
                           {" "}
                           <p>
                             <a
-                              href={`https://api.hachion.co/${blogs.blog_pdf}`}
+                              href={`http://localhost:8080/${blogs.blog_pdf}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -691,31 +691,37 @@ const Blogs = () => {
           </div>
         </LocalizationProvider>
       )}
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Blogs Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Blogs Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 };

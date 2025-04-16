@@ -679,7 +679,7 @@ transition: background-color 0.3s ease,color 0.3s ease;
   margin: 8px 0;
 }
 
-.date {
+.card-date {
   text-align: left;
   flex: 1;
 
@@ -690,6 +690,41 @@ transition: background-color 0.3s ease,color 0.3s ease;
   text-align: right;
   flex: 1;
   font-weight: 600;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-section {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* background-color: #f9f9f9; */
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  padding: 10px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); */
+}
+
+.filter-section select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-width: 150px;
+  outline-color: #00aeef;
+}
+
+.no-schedules-message {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 18px;
+  color: #888;
 }
 
 .cards-view {
@@ -1285,6 +1320,29 @@ margin: 0;
     padding-top: 2px;
     margin-bottom: 0;
   }
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .filter-section {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 10px;
+  }
+
+  .filter-section select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    min-width: 150px;
+  }
 }
 
 @media (min-width: 1025px) and (max-width: 1366px) {
@@ -1494,6 +1552,29 @@ margin: 0;
   }
   .view-all {
     width: auto;
+  }
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .filter-section {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 10px;
+  }
+
+  .filter-section select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    min-width: 150px;
   }
 
   .card-header {
@@ -1912,6 +1993,29 @@ margin: 0;
     font-size: 16px;
     margin: 0.5vh 0.5vw;
   }
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .filter-section {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+  }
+
+  .filter-section select {
+    padding: 5px 8px;
+    font-size: 14px;
+    border-radius: 10px;
+    min-width: 100px;
+  }
 }
 
 /* Styles for Mobile (max-width: 480px) */
@@ -2158,6 +2262,29 @@ margin: 0;
     justify-content: center;
     left: 35%;
     bottom: 0vh;
+  }
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .filter-section {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 95%;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 5px;
+  }
+
+  .filter-section select {
+    padding: 3px 5px;
+    font-size: 12px;
+    border-radius: 5px;
+    min-width: 100px;
   }
 
   .coupon-btn,

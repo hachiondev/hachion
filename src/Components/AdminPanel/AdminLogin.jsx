@@ -23,7 +23,7 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/api/v1/user/adminlogin",
+        "http://localhost:8080/api/v1/user/adminlogin",
         { email, password }
       );
 

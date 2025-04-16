@@ -18,7 +18,7 @@ const AdminRegister = () => {
 
     try {
       const response = await fetch(
-        "https://api.hachion.co/api/v1/user/adminregister",
+        "http://localhost:8080/api/v1/user/adminregister",
         {
           method: "POST",
           headers: {

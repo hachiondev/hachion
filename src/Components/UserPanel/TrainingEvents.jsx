@@ -35,8 +35,8 @@
 //     const fetchData = async () => {
 //       try {
 //         const [scheduleResponse, coursesResponse] = await Promise.all([
-//           fetch('https://api.hachion.co/schedulecourse').then((res) => res.json()),
-//           fetch('https://api.hachion.co/courses/all').then((res) => res.json()),
+//           fetch('https://http://localhost:8080/schedulecourse').then((res) => res.json()),
+//           fetch('https://http://localhost:8080/courses/all').then((res) => res.json()),
 //         ]);
 
 //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -130,7 +130,7 @@
 //             key={course.course_id || index}
 //             id={course.course_id}
 //             heading={course.schedule_course_name}
-//             image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
+//             image={course.course_image ? `https://http://localhost:8080/${course.course_image}` : ''}
 //             date={formatDate(course.schedule_date)}
 //             time={formatTime(course.schedule_time)}
 //              duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
@@ -198,8 +198,8 @@
 // //     const fetchData = async () => {
 // //       try {
 // //         const [scheduleResponse, coursesResponse] = await Promise.all([
-// //           fetch("https://api.hachion.co/schedulecourse").then((res) => res.json()),
-// //           fetch("https://api.hachion.co/courseDetails/all").then((res) => res.json()),
+// //           fetch("https://http://localhost:8080/schedulecourse").then((res) => res.json()),
+// //           fetch("https://http://localhost:8080/courseDetails/all").then((res) => res.json()),
 // //         ]);
 
 // //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -258,6 +258,7 @@
 // // };
 
 // // export default TrainingEvents;
+
 import React, { useEffect, useState } from "react";
 import TrainingCard from "./TrainingCard";
 import "./Home.css";
@@ -268,39 +269,43 @@ const TrainingEvents = () => {
   const [mergedCourses, setMergedCourses] = useState([]);
   const [viewAll, setViewAll] = useState(false);
 
+  const [modeFilter, setModeFilter] = useState("");
+  const [courseFilter, setCourseFilter] = useState("");
+  const [timeFilter, setTimeFilter] = useState("");
+
+  const [courseOptions, setCourseOptions] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [scheduleResponse, coursesResponse] = await Promise.all([
-          fetch("https://api.hachion.co/schedulecourse").then((res) =>
+        const [scheduleRes, coursesRes] = await Promise.all([
+          fetch("https://http://localhost:8080/schedulecourse").then((res) =>
             res.json()
           ),
-          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+          fetch("https://http://localhost:8080/courses/all").then((res) => res.json()),
         ]);
 
-        if (
-          !Array.isArray(scheduleResponse) ||
-          !Array.isArray(coursesResponse)
-        ) {
-          throw new Error("Invalid API response format");
-        }
-
-        const mergedData = scheduleResponse.map((scheduleItem) => {
-          const matchingCourse = coursesResponse.find(
+        const mergedData = scheduleRes.map((scheduleItem) => {
+          const matchingCourse = coursesRes.find(
             (course) =>
-              course.courseName.toLowerCase() ===
-              scheduleItem.schedule_course_name.toLowerCase()
+              course.courseName.toLowerCase().trim() ===
+              scheduleItem.schedule_course_name.toLowerCase().trim()
           );
 
           return {
             ...scheduleItem,
             course_id: matchingCourse?.id || null,
-            course_image: matchingCourse?.courseImage || "", // Ensure a default empty string
+            course_image: matchingCourse?.courseImage || "",
+            created_at: matchingCourse?.createdAt || "",
           };
         });
 
-        console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
+
+        const uniqueCourses = [
+          ...new Set(coursesRes.map((course) => course.courseName.trim())),
+        ];
+        setCourseOptions(uniqueCourses);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -310,13 +315,54 @@ const TrainingEvents = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    if (!dateString) return "TBA";
+    if (!dateString) return "";
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     }).format(new Date(dateString));
   };
+
+  const getFilteredCourses = () => {
+    const now = new Date();
+
+    return mergedCourses.filter((course) => {
+      const courseDate = new Date(course.schedule_date);
+      const createdDate = new Date(course.created_at);
+
+      const isToday = courseDate.toDateString() === now.toDateString();
+      const isThisWeek =
+        (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
+        courseDate > now;
+      const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
+
+      const courseNameMatch =
+        !courseFilter ||
+        course.schedule_course_name?.toLowerCase().trim() ===
+          courseFilter.toLowerCase().trim();
+
+      const modeMatch =
+        !modeFilter ||
+        course.schedule_mode?.toLowerCase().trim() ===
+          modeFilter.toLowerCase().trim();
+
+      const timeMatch =
+        !timeFilter ||
+        (timeFilter === "today" && isToday) ||
+        (timeFilter === "week" && isThisWeek) ||
+        (timeFilter === "new" && isNewlyAdded);
+
+      return courseNameMatch && modeMatch && timeMatch;
+    });
+  };
+
+  const resetFilters = () => {
+    setModeFilter("");
+    setCourseFilter("");
+    setTimeFilter("");
+  };
+
+  const filteredCourses = getFilteredCourses();
 
   return (
     <div className="training-events">
@@ -325,38 +371,92 @@ const TrainingEvents = () => {
       </div>
 
       <div className="view-btn">
-        <button
-          className="view-all"
-          onClick={() =>
-            viewAll ? navigate("/CourseDetails") : setViewAll(true)
-          }
-        >
-          {viewAll ? "View Courses Page" : "View All"}
+        <button className="view-all" onClick={() => setViewAll(!viewAll)}>
+          {viewAll ? "View Less" : "View All"}
         </button>
       </div>
 
+      <div className="filter-container">
+        <div className="filter-section">
+          <select
+            value={modeFilter}
+            onChange={(e) => {
+              setModeFilter(e.target.value);
+              // setCourseFilter('');
+              // setTimeFilter('');
+            }}
+          >
+            <option value="">All Modes</option>
+            <option value="Live Class">Live Class</option>
+            <option value="Live Demo">Live Demo</option>
+          </select>
+
+          <select
+            value={courseFilter}
+            onChange={(e) => {
+              setCourseFilter(e.target.value);
+              // setModeFilter('');
+              // setTimeFilter('');
+            }}
+          >
+            <option value="">All Courses</option>
+            {courseOptions.map((course, idx) => (
+              <option key={idx} value={course}>
+                {course}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={timeFilter}
+            onChange={(e) => {
+              setTimeFilter(e.target.value);
+              // setCourseFilter('');
+              // setModeFilter('');
+            }}
+          >
+            <option value="">Any Time</option>
+            <option value="new">Newly Added</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+          </select>
+
+          <button className="view-all" onClick={resetFilters}>
+            Reset
+          </button>
+        </div>
+      </div>
+
       <div className="training-card-holder">
-        {(viewAll ? mergedCourses : mergedCourses.slice(0, 4)).map(
-          (course, index) => (
-            <TrainingCard
-              key={course.course_id || index}
-              id={course.course_id}
-              heading={course.schedule_course_name}
-              image={
-                course.course_image
-                  ? `https://api.hachion.co/${course.course_image}`
-                  : ""
-              }
-              date={formatDate(course.schedule_date)}
-              time={course.schedule_time || "TBA"}
-              duration={
-                course.schedule_duration
-                  ? `Duration: ${course.schedule_duration}`
-                  : "Duration: TBA"
-              }
-              mode={course.schedule_mode || "TBA"}
-            />
+        {filteredCourses.length > 0 ? (
+          (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
+            (course, index) => (
+              <TrainingCard
+                key={course.course_id || index}
+                id={course.course_id}
+                heading={course.schedule_course_name}
+                image={
+                  course.course_image
+                    ? `https://http://localhost:8080/${course.course_image}`
+                    : ""
+                }
+                date={
+                  course.schedule_date ? formatDate(course.schedule_date) : ""
+                }
+                time={course.schedule_time || ""}
+                duration={
+                  course.schedule_duration
+                    ? `Duration: ${course.schedule_duration}`
+                    : ""
+                }
+                mode={course.schedule_mode || ""}
+              />
+            )
           )
+        ) : (
+          <div className="no-schedules-message">
+            <p>No schedules are available</p>
+          </div>
         )}
       </div>
     </div>

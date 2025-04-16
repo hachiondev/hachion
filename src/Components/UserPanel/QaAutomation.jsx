@@ -19,9 +19,10 @@ import CurriculumMain from "./CurriculumMain";
 import QaAutomationFaq from "./QaAutomationFaq";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
-
+import { Link } from "react-router-dom";
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
+  const [helmetKey, setHelmetKey] = useState(0);
   const upcomingHeaderRef = useRef(null);
   const footerRef = useRef(null); // Footer reference for intersection observer
   const [isSticky, setIsSticky] = useState(false);
@@ -30,6 +31,7 @@ const QaAutomation = () => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const upcomingBatchRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,11 +86,12 @@ const QaAutomation = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://http://localhost:8080/courses/all");
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
         );
         setCourseData(course);
+        setHelmetKey((prevKey) => prevKey + 1); // Force re-render
       } catch (error) {
         console.error("Error fetching course details:", error);
       } finally {
@@ -104,8 +107,8 @@ const QaAutomation = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{courseData?.metaTitle || "Loading..."}</title>
+      <Helmet key={helmetKey}>
+        <title>{courseData?.metaTitle || "Hachion Courses"}</title>
         <meta
           name="description"
           content={courseData?.metaDescription || "Default description"}
@@ -151,12 +154,11 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="/CourseDetails">Courses</a> <MdKeyboardArrowRight />
+                <Link to="/CourseDetails">Courses</Link>{" "}
+                <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <a href={`/CourseDetails/${courseData?.courseCategory}`}>
-                  {courseData?.courseCategory}
-                </a>{" "}
+                <Link to="/CourseDetails">{courseData?.courseCategory}</Link>{" "}
                 <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
@@ -166,7 +168,12 @@ const QaAutomation = () => {
           </nav>
         </div>
         {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
-        <QaTop onVideoButtonClick={handleVideoButtonClick} />
+        <QaTop
+          onVideoButtonClick={handleVideoButtonClick}
+          onEnrollButtonClick={() =>
+            upcomingBatchRef.current?.scrollIntoView({ behavior: "smooth" })
+          }
+        />
         <KeyHighlights />
 
         {/* Sticky Header applies to the entire section below */}
@@ -177,7 +184,7 @@ const QaAutomation = () => {
             <UpcomingHeader />
           </div>
 
-          <div id="upcoming-batch">
+          <div id="upcoming-batch" ref={upcomingBatchRef}>
             <UpcomingBatch />
           </div>
 

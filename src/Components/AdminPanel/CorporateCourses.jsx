@@ -58,6 +58,7 @@ export default function CorporateCourses() {
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [trendingCourse, setTrendingCourse] = useState([]);
   const [filteredCourse, setFilteredCourse] = useState([]);
+  const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split("T")[0];
   const [message, setMessage] = useState(false);
@@ -69,7 +70,7 @@ export default function CorporateCourses() {
     status: false,
   });
   const [courseData, setCourseData] = useState({
-    trendingcourse_id: "",
+    corporatecourse_id: "",
     category_name: "",
     course_name: "",
     date: currentDate,
@@ -93,7 +94,16 @@ export default function CorporateCourses() {
   const handleSwitchToggle = () => {
     setStatus(!status);
   };
-
+  useEffect(() => {
+    if (courseData.category_name) {
+      const filtered = course.filter(
+        (course) => course.courseCategory === courseData.category_name
+      );
+      setFilterCourse(filtered);
+    } else {
+      setFilterCourse([]); // Reset when no category is selected
+    }
+  }, [courseData.category_name, course]);
   // const handleStatusChange = (e) => {
   //  if (!courseData || !courseData[0]) {
   //      console.error("courseData or the first item is undefined");
@@ -134,7 +144,7 @@ export default function CorporateCourses() {
   const handleReset = () => {
     setCourseData([
       {
-        trendingcourse_id: "",
+        corporatecourse_id: "",
         category_name: "",
         course_name: "",
         date: currentDate,
@@ -158,7 +168,7 @@ export default function CorporateCourses() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/trendingcourse"
+          "http://localhost:8080/corporatecourse"
         );
         setTrendingCourse(response.data); // Use the curriculum state
       } catch (error) {
@@ -169,9 +179,9 @@ export default function CorporateCourses() {
     setFilteredCourse(trendingCourse);
   }, []); // Empty dependency array ensures it runs only once
 
-  const handleDeleteConfirmation = (trendingcourse_id) => {
+  const handleDeleteConfirmation = (corporatecourse_id) => {
     if (window.confirm("Are you sure you want to delete this Course?")) {
-      handleDelete(trendingcourse_id);
+      handleDelete(corporatecourse_id);
     }
   };
 
@@ -189,12 +199,12 @@ export default function CorporateCourses() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,
+        `http://localhost:8080/corporatecourse/update/${editedData.corporatecourse_id}`,
         editedData
       );
       setTrendingCourse((prev) =>
         prev.map((curr) =>
-          curr.trendingcourse_id === editedData.trendingcourse_id
+          curr.corporatecourse_id === editedData.corporatecourse_id
             ? response.data
             : curr
         )
@@ -207,10 +217,10 @@ export default function CorporateCourses() {
     }
   };
 
-  const handleDelete = async (trendingcourse_id) => {
+  const handleDelete = async (corporatecourse_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`
+        `http://localhost:8080/corporatecourse/delete/${corporatecourse_id}`
       );
       console.log("Trending Courses deleted successfully:", response.data);
     } catch (error) {
@@ -258,7 +268,7 @@ export default function CorporateCourses() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/trendingcourse/add",
+        "http://localhost:8080/corporatecourse/add",
         dataToSubmit
       );
       if (response.status === 200) {
@@ -278,7 +288,7 @@ export default function CorporateCourses() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -290,7 +300,7 @@ export default function CorporateCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         console.log("API response:", response.data); // Check the API response
         if (Array.isArray(response.data)) {
           setCourse(response.data); // Update state
@@ -365,19 +375,16 @@ export default function CorporateCourses() {
                     name="course_name"
                     value={courseData.course_name}
                     onChange={handleChange}
+                    disabled={!courseData.category_name}
                   >
                     <option value="" disabled>
                       Select Course
                     </option>
-                    {course.length > 0 ? (
-                      course.map((current) => (
-                        <option key={current.id} value={current.courseName}>
-                          {current.courseName}
-                        </option>
-                      ))
-                    ) : (
-                      <option disabled>No Courses Available</option>
-                    )}
+                    {filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -544,7 +551,7 @@ export default function CorporateCourses() {
               <TableBody>
                 {displayedCourse.length > 0 ? (
                   displayedCourse.map((row, index) => (
-                    <StyledTableRow key={row.trendingcourse_id}>
+                    <StyledTableRow key={row.corporatecourse_id}>
                       <StyledTableCell align="center">
                         <Checkbox />
                       </StyledTableCell>
@@ -578,7 +585,7 @@ export default function CorporateCourses() {
                           <RiDeleteBin6Line
                             className="delete"
                             onClick={() =>
-                              handleDeleteConfirmation(row.trendingcourse_id)
+                              handleDeleteConfirmation(row.corporatecourse_id)
                             }
                           />
                         </div>
@@ -704,31 +711,37 @@ export default function CorporateCourses() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Courses Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Courses Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

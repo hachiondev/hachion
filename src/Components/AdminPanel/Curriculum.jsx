@@ -69,13 +69,23 @@ export default function Curriculum() {
   const [filteredCurriculum, setFilteredCurriculum] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = useState([
-    { id: "", title: "", topic: "", link: "" },
+    { id: "", title: "", topic: "", linl: "" },
   ]);
   const currentDate = new Date().toISOString().split("T")[0];
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
+  const [displayedCategories, setDisplayedCategories] = useState([]);
+  const [allData, setAllData] = useState([]); // All fetched data
+  const [catChange, setCatChange] = useState(0);
+  // Data to be displayed
+  const [filterData, setFilterData] = useState({
+    category_name: "",
+    course_name: "",
+  });
+
   const [endDate, setEndDate] = useState(null);
   const [editedRow, setEditedRow] = useState({
+    curriculum_id: "",
     category_name: "",
     course_name: "",
     curriculum_pdf: "",
@@ -108,10 +118,13 @@ export default function Curriculum() {
   };
 
   // Slice filteredCurriculum based on rowsPerPage and currentPage
-  const displayedCategories = filteredCurriculum.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  useEffect(() => {
+    const displayed = filteredCurriculum.slice(
+      (currentPage - 1) * rowsPerPage,
+      currentPage * rowsPerPage
+    );
+    setDisplayedCategories(displayed);
+  }, [filteredCurriculum, currentPage, rowsPerPage]);
 
   const quillModules = {
     toolbar: [
@@ -130,6 +143,8 @@ export default function Curriculum() {
       course_name: "",
       curriculum_pdf: "",
       date: "",
+      title: "",
+      topic: "",
     });
   };
   const addRow = () => {
@@ -147,7 +162,7 @@ export default function Curriculum() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -159,7 +174,7 @@ export default function Curriculum() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -177,41 +192,56 @@ export default function Curriculum() {
       setFilterCourse([]); // Reset when no category is selected
     }
   }, [curriculumData.category_name, courseCategory]);
+  //   useEffect(() => {
+  //     const fetchCurriculum = async () => {
+  //         try {
+  //             const response = await axios.get('http://localhost:8080/curriculum');
+  //             setCurriculum(response.data); // Use the curriculum state
+  //         } catch (error) {
+  //             console.error("Error fetching curriculum:", error.message);
+  //         }
+  //     };
+  //     fetchCurriculum();
+  //     setFilteredCurriculum(curriculum)
+  // }, [curriculum]); // Empty dependency array ensures it runs only once
   useEffect(() => {
-    const fetchCurriculum = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/curriculum");
-        setCurriculum(response.data); // Use the curriculum state
+        const response = await axios.get("http://localhost:8080/curriculum");
+        setAllData(response.data);
+        setFilteredCurriculum(response.data); // Used for paginated display
       } catch (error) {
-        console.error("Error fetching curriculum:", error.message);
+        console.error("Error fetching curriculum data", error);
       }
     };
-    fetchCurriculum();
-    setFilteredCurriculum(curriculum);
-  }, [curriculum]); // Empty dependency array ensures it runs only once
+    fetchData();
+  }, []);
 
   const handleDeleteConfirmation = (curriculum_id) => {
     if (window.confirm("Are you sure you want to delete this Curriculum?")) {
       handleDelete(curriculum_id);
     }
   };
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setEditedRow((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setEditedRow((prev) => ({
       ...prev,
-      [name]: name === "link" ? value.split("\n") : value, // Convert input to an array
+      [name]: value,
+      ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
     }));
+    if (editedRow.category_name) {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
+    }
   };
-
   const handleDateFilter = () => {
     const filtered = curriculum.filter((item) => {
       const curriculumDate = new Date(item.date); // Parse the date field
@@ -227,19 +257,51 @@ export default function Curriculum() {
   };
   const handleSave = async () => {
     try {
+      const formData = new FormData();
+
+      // Construct only the necessary fields
+      const curriculumData = {
+        category_name: editedRow.category_name,
+        course_name: editedRow.course_name,
+        title: editedRow.title,
+        topic: editedRow.topic,
+        link: editedRow.link,
+      };
+
+      formData.append("curriculumData", JSON.stringify(curriculumData));
+
+      // Append file only if it is selected and is a File object
+      if (
+        editedRow.curriculum_pdf &&
+        editedRow.curriculum_pdf instanceof File
+      ) {
+        formData.append("curriculumPdf", editedRow.curriculum_pdf);
+      }
+
       const response = await axios.put(
-        `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
-        editedRow
+        `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
+          maxBodyLength: Infinity, // Disable body size limit
+          maxContentLength: Infinity, // Disable content size limit
+          timeout: 60000, // Timeout set to 60 seconds (adjust as needed)
+        }
       );
+
       setCurriculum((prev) =>
         prev.map((curr) =>
           curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
         )
       );
+
       setMessage("Curriculum updated successfully!");
       setTimeout(() => setMessage(""), 5000);
       setOpen(false);
     } catch (error) {
+      console.error("Error updating curriculum:", error);
       setMessage("Error updating Curriculum.");
     }
   };
@@ -247,7 +309,7 @@ export default function Curriculum() {
   const handleDelete = async (curriculum_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/curriculum/delete/${curriculum_id}`
+        `http://localhost:8080/curriculum/delete/${curriculum_id}`
       );
       console.log("Curriculum deleted successfully:", response.data);
     } catch (error) {
@@ -279,14 +341,11 @@ export default function Curriculum() {
     }
   };
 
-  const handleEditFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setEditedRow((prev) => ({
-        ...prev,
-        curriculum_pdf: file, // Store the file object directly
-      }));
-    }
+  const handleEditFileUpload = (e) => {
+    setEditedRow((prev) => ({
+      ...prev,
+      curriculum_pdf: e.target.files[0], // this must be a File object
+    }));
   };
 
   const handleCloseModal = () => {
@@ -296,26 +355,59 @@ export default function Curriculum() {
     console.log(row);
     setEditedRow(row); // Set the selected row data
     setOpen(true); // Open the modal
-    console.log("tid", row.curriculum_id);
   };
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setCurriculumData((prevData) => ({
-  //         ...prevData,
-  //         [name]: value
-  //     }));
-  // };
-  const handleChange = (e, index) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
+    setCurriculumData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-    setRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = {
-        ...updatedRows[index],
-        [name]: value.split("\n"), // Convert new lines into an array of links
-      };
-      return updatedRows;
-    });
+  const handlecourseChange = (e) => {
+    const { name, value } = e.target;
+    setCurriculumData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    alert(value);
+    if (curriculumData.category_name) {
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    } else {
+      setFilterCourse([]); // Reset when no category is selected
+    }
+  };
+
+  const handlefilterChange = (e) => {
+    const { name, value } = e.target;
+    const newFilter = { ...filterData, [name]: value };
+    setFilterData(newFilter);
+
+    const filtered = allData.filter(
+      (item) =>
+        (!newFilter.category_name ||
+          item.category_name === newFilter.category_name) &&
+        (!newFilter.course_name || item.course_name === newFilter.course_name)
+    );
+
+    setFilteredCurriculum(filtered);
+    setCurrentPage(1); // Reset to first page
+    //alert(name);
+    if (name) {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -346,18 +438,22 @@ export default function Curriculum() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/curriculum/add",
+        "http://localhost:8080/curriculum/add",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data", // Important for file uploads
           },
+          maxBodyLength: Infinity, // Disable body size limit
+          maxContentLength: Infinity, // Disable content size limit
+          timeout: 60000,
         }
       );
 
       if (response.status === 201) {
         // HTTP 201 means "Created"
         alert("Curriculum details added successfully");
+        setShowAddCourse(false);
         setCurriculumData({}); // Reset form state
         handleReset(); // Call reset function if available
       }
@@ -520,18 +616,13 @@ export default function Curriculum() {
                           align="center"
                           sx={{ padding: 0 }}
                         >
-                          <textarea
+                          <input
                             className="table-curriculum"
                             name="link"
-                            value={
-                              Array.isArray(row.link) ? row.link.join("\n") : ""
-                            }
-                            onChange={(e) => handleChange(e, rows.indexOf(row))}
-                            placeholder="Enter each video link on a new line"
-                            rows={3}
+                            value={rows.link}
+                            onChange={handleChange}
                           />
                         </StyledTableCell>
-
                         <StyledTableCell align="center" sx={{ padding: 0 }}>
                           <>
                             <GoPlus
@@ -683,10 +774,10 @@ export default function Curriculum() {
                 </label>
                 <select
                   id="inputState"
-                  class="form-select"
+                  className="form-select"
                   name="category_name"
-                  value={curriculumData.category_name}
-                  onChange={handleChange}
+                  value={filterData.category_name}
+                  onChange={handlefilterChange}
                 >
                   <option value="" disabled>
                     Select Category
@@ -698,25 +789,37 @@ export default function Curriculum() {
                   ))}
                 </select>
               </div>
-              <div class="col-md-3">
-                <label for="inputState" class="form-label">
+              <div className="col-md-3">
+                <label htmlFor="course" className="form-label">
                   Course Name
                 </label>
+
                 <select
-                  id="inputState"
-                  class="form-select"
+                  id="course"
+                  className="form-select"
                   name="course_name"
-                  value={curriculumData.course_name}
-                  onChange={handleChange}
+                  value={filterData.course_name}
+                  onChange={handlefilterChange}
                 >
                   <option value="" disabled>
                     Select Course
                   </option>
-                  {courseCategory.map((curr) => (
+                  {catChange
+                    ? filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))
+                    : courseCategory.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
+                  {/* {courseCategory.map((curr) => (
                     <option key={curr.id} value={curr.courseName}>
                       {curr.courseName}
                     </option>
-                  ))}
+                  ))} */}
                 </select>
               </div>
               {/* <div class="mb-3">
@@ -725,8 +828,21 @@ export default function Curriculum() {
           name="curriculum_pdf"
           onChange={handleChange}/>
 </div> */}
+              <div style={{ marginTop: "50px" }}>
+                <button
+                  className="filter"
+                  onClick={() => {
+                    setFilterData({ category_name: "", course_name: "" });
+                    setFilteredCurriculum(allData);
+                    setCurrentPage(1);
+                  }}
+                >
+                  Reset Filter
+                </button>
+              </div>
             </div>
           </div>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
@@ -774,28 +890,7 @@ export default function Curriculum() {
                         )}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {course.link ? (
-                          <ul style={{ paddingLeft: "15px", margin: 0 }}>
-                            {(Array.isArray(course.link)
-                              ? course.link
-                              : course.link.split("\n")
-                            )
-                              .filter((link) => link.trim() !== "") // Remove empty lines
-                              .map((link, i) => (
-                                <li key={i} style={{ wordBreak: "break-word" }}>
-                                  <a
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {link}
-                                  </a>
-                                </li>
-                              ))}
-                          </ul>
-                        ) : (
-                          <p>No links available</p>
-                        )}
+                        {course.link}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.date
@@ -897,11 +992,22 @@ export default function Curriculum() {
                 <option value="" disabled>
                   Select Course
                 </option>
-                {courseCategory.map((curr) => (
+                {catChange
+                  ? filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))
+                  : courseCategory.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
+                {/* {courseCategory.map((curr) => (
                   <option key={curr.id} value={curr.courseName}>
                     {curr.courseName}
                   </option>
-                ))}
+                ))} */}
               </select>
             </div>
           </div>
@@ -911,12 +1017,14 @@ export default function Curriculum() {
               Curriculum's PDF
             </label>
             <input
-              className="form-control-sample"
               type="file"
-              id="curriculumPDF"
               accept=".pdf"
-              name="curriculum_pdf"
-              onChange={handleEditFileUpload}
+              onChange={(e) =>
+                setEditedRow((prev) => ({
+                  ...prev,
+                  curriculum_pdf: e.target.files[0], // must be a File object
+                }))
+              }
             />
           </div>
 
@@ -940,19 +1048,13 @@ export default function Curriculum() {
             modules={quillModules}
           />
 
-          <label htmlFor="link">Video Links</label>
-          <textarea
+          <label htmlFor="topic">Video Link</label>
+          <input
             id="link"
             className="form-control"
             name="link"
-            value={
-              Array.isArray(editedRow.link)
-                ? editedRow.link.join("\n")
-                : editedRow.link || ""
-            }
+            value={editedRow.link || ""}
             onChange={handleInputChange}
-            placeholder="Enter each video link on a new line"
-            rows={3}
           />
         </DialogContent>
         <DialogActions
@@ -964,32 +1066,6 @@ export default function Curriculum() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
-
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Curriculum Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

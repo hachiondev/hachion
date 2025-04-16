@@ -49,7 +49,7 @@ export default function CourseQuery() {
   useEffect(() => {
     const fetchCourseQuery = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/haveanyquery");
+        const response = await axios.get("http://localhost:8080/haveanyquery");
         setCourseQuery(response.data);
         setFilteredCourse(response.data); // Initialize filtered data
       } catch (error) {

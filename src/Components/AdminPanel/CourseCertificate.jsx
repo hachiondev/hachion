@@ -135,7 +135,7 @@ export default function CourseCertificate() {
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/certificate");
+        const response = await axios.get("http://localhost:8080/certificate");
         setCertificate(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching certificate:", error.message);
@@ -155,7 +155,7 @@ export default function CourseCertificate() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/certificate/${editedData.id}`,
+        `http://localhost:8080/certificate/${editedData.id}`,
         editedData
       );
       setCertificate((prev) =>
@@ -172,7 +172,7 @@ export default function CourseCertificate() {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/certificate/delete/${id}`
+        `http://localhost:8080/certificate/delete/${id}`
       );
       console.log("Certificate deleted successfully:", response.data);
     } catch (error) {
@@ -213,7 +213,7 @@ export default function CourseCertificate() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -225,7 +225,7 @@ export default function CourseCertificate() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -268,7 +268,7 @@ export default function CourseCertificate() {
     try {
       // Send the POST request with FormData
       const response = await axios.post(
-        "https://api.hachion.co/certificate/add",
+        "http://localhost:8080/certificate/add",
         formData,
         {
           headers: {
@@ -731,31 +731,37 @@ export default function CourseCertificate() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Certificate Added Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Certificate Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

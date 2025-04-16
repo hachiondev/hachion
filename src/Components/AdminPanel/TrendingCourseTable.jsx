@@ -61,6 +61,7 @@ export default function TrendingCourseTable() {
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [trendingCourse, setTrendingCourse] = useState([]);
   const [filteredCourse, setFilteredCourse] = useState([]);
+  const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split("T")[0];
   const [message, setMessage] = useState(false);
@@ -87,7 +88,16 @@ export default function TrendingCourseTable() {
     window.scrollTo(0, window.scrollY);
   };
   // Inside your CourseCategory component
-
+  useEffect(() => {
+    if (courseData.category_name) {
+      const filtered = course.filter(
+        (course) => course.courseCategory === courseData.category_name
+      );
+      setFilterCourse(filtered);
+    } else {
+      setFilterCourse([]); // Reset when no category is selected
+    }
+  }, [courseData.category_name, course]);
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1); // Reset to the first page whenever rows per page changes
@@ -161,7 +171,7 @@ export default function TrendingCourseTable() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/trendingcourse"
+          "http://localhost:8080/trendingcourse"
         );
         setTrendingCourse(response.data); // Use the curriculum state
       } catch (error) {
@@ -192,7 +202,7 @@ export default function TrendingCourseTable() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,
+        `http://localhost:8080/trendingcourse/update/${editedData.trendingcourse_id}`,
         editedData
       );
       setTrendingCourse((prev) =>
@@ -213,7 +223,7 @@ export default function TrendingCourseTable() {
   const handleDelete = async (trendingcourse_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`
+        `http://localhost:8080/trendingcourse/delete/${trendingcourse_id}`
       );
       console.log("Trending Courses deleted successfully:", response.data);
     } catch (error) {
@@ -261,7 +271,7 @@ export default function TrendingCourseTable() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/trendingcourse/add",
+        "http://localhost:8080/trendingcourse/add",
         dataToSubmit
       );
       if (response.status === 200) {
@@ -281,7 +291,7 @@ export default function TrendingCourseTable() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "http://localhost:8080/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -293,7 +303,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         console.log("API response:", response.data); // Check the API response
         if (Array.isArray(response.data)) {
           setCourse(response.data); // Update state
@@ -368,19 +378,16 @@ export default function TrendingCourseTable() {
                     name="course_name"
                     value={courseData.course_name}
                     onChange={handleChange}
+                    disabled={!courseData.category_name}
                   >
                     <option value="" disabled>
                       Select Course
                     </option>
-                    {course.length > 0 ? (
-                      course.map((current) => (
-                        <option key={current.id} value={current.courseName}>
-                          {current.courseName}
-                        </option>
-                      ))
-                    ) : (
-                      <option disabled>No Courses Available</option>
-                    )}
+                    {filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -707,31 +714,37 @@ export default function TrendingCourseTable() {
         </DialogActions>
       </Dialog>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <button
-              data-bs-dismiss="modal"
-              className="close-btn"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            >
-              <RiCloseCircleLine />
-            </button>
+      {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
 
-            <div className="modal-body">
-              <img src={success} alt="Success" className="success-gif" />
-              <p className="modal-para">Courses Successfully</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Courses Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
     </>
   );
 }

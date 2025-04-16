@@ -331,14 +331,15 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData,courseNam
           mobile: userMobile||"",
           course_name: selectedBatchData.schedule_course_name,
           enroll_date: selectedBatchData.schedule_date,
-          week: selectedBatchData.schedule_week,
+          week: selectedBatchData.schedule_week||"",
           time: selectedBatchData.schedule_time,
           amount: 0,
           mode: selectedBatchData.schedule_mode,
           type: 'Free Demo',
           trainer: selectedBatchData.trainer_name,
           completion_date: selectedBatchData.schedule_duration||"",
-          meeting_link:selectedBatchData.meeting_link||""
+          meeting_link:selectedBatchData.meeting_link||"",
+          resendCount:0
         };
   
         const response = await axios.post('https://api.hachion.co/enroll/add', payload);

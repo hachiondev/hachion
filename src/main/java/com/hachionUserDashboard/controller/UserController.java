@@ -27,6 +27,7 @@
 package com.hachionUserDashboard.controller;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,12 @@ public class UserController {
 
 		return ResponseEntity.ok("Password updated successfully");
 	}
+	@GetMapping("/students")
+	public ResponseEntity<List<User>> getAllRegisteredStudents() {
+	    List<User> students = userService.getAllRegisteredStudents();
+	    return new ResponseEntity<>(students, HttpStatus.OK);
+	}
+
 //	@PostMapping("/register")
 //	public String addUser(@RequestBody UserRegistrationRequest userDTO) {
 //		String Id = userService.addUser(userDTO);

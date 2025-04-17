@@ -47,13 +47,10 @@ public class Blogs {
 	@Column(nullable = true, columnDefinition = "LONGTEXT")
 	private String meta_keyword;
 
-<<<<<<< HEAD
+
 
 	@Column(name = "date", nullable = false) // Ensure the field is required>>>>>> f0f1d07a35dac3b5786c64c438a5981f78e1126d
-=======
-	@Column(name = "date", nullable = false) 
 
->>>>>>> 4b93f502d8023b732cc0cf8f0e0ed3b1e9690052
 	private LocalDate date;
 
 	public Blogs() {

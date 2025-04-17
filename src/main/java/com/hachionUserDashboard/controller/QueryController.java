@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.hachionUserDashboard.entity.Query;
+import com.hachionUserDashboard.entity.RequestBatch;
 import com.hachionUserDashboard.repository.QueryRepository;
 
 
@@ -135,5 +136,9 @@ public class QueryController {
         javaMailSender.send(supportMail);
         javaMailSender.send(simpleMailMessage);
     }
-
+	@DeleteMapping("haveanyquery/delete/{id}") public ResponseEntity<?>
+    deleteQuery(@PathVariable int id) { Query query=
+    repo.findById(id).get(); repo.delete(query); return null;
+    
+    }
 }

@@ -75,6 +75,7 @@ const[message,setMessage]=useState(false);
   const [editedRow, setEditedRow] = useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:null,schedule_frequency:"",schedule_time:null,schedule_duration:"",schedule_mode:"", pattern:"", meeting_link:""});
   const [selectedRow, setSelectedRow] = React.useState({schedule_category_name:"",schedule_course_name:"",trainer_name:"",schedule_date:"",schedule_frequency:"",schedule_time:"",schedule_duration:"",schedule_mode:"", pattern:"", meeting_link:""});
   const currentDate = new Date().toISOString().split('T')[0];
+  const [catChange, setCatChange] = useState(0);
   const [courseData, setCourseData] = useState({
   course_schedule_id:"",
     schedule_category_name:"",
@@ -342,12 +343,34 @@ const handleSave = async () => {
   }
 };
 
+// const handleInputChange = (e) => {
+//   const { name, value } = e.target;
+//   setEditedRow((prev) => ({
+//     ...prev,
+//     [name]: value,
+//   }));
+// };
+
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setEditedRow((prev) => ({
     ...prev,
     [name]: value,
+    ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
   }));
+
+  if (editedRow.schedule_category_name) {
+    // alert(name);
+    // alert(value);
+    setCatChange(1);
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === value
+    );
+    setFilterCourse(filtered);
+  } else {
+    setCatChange(0);
+    setFilterCourse([]);
+  }
 };
 
 // const handleCourseChange = (event) => setCourse(event.target.value);
@@ -629,7 +652,7 @@ const handleInputChange = (e) => {
               <StyledTableCell align="left">{course.schedule_course_name}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_date ? dayjs(course.schedule_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_week}</StyledTableCell>
-              <StyledTableCell align="center">{course.schedule_time} EST</StyledTableCell>
+              <StyledTableCell align="center">{course.schedule_time} IST</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_duration} Days</StyledTableCell>
               <StyledTableCell align="center">{course.schedule_mode}</StyledTableCell>
               <StyledTableCell align="center">{course.trainer_name}</StyledTableCell>
@@ -696,20 +719,26 @@ const handleInputChange = (e) => {
         <div className="col">
           <label htmlFor="inputState" className="form-label">Course Name</label>
           <select
-            id="inputState"
-            className="form-select"
-            name="schedule_course_name"
-            value={editedRow.schedule_course_name || ""}
-            onChange={handleInputChange}
-          >
-            <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
+                  id="inputState"
+                  className="form-select"
+                  name="schedule_course_name"
+                  value={editedRow.schedule_course_name}
+                  onChange={handleInputChange}
+                >
+                  <option value="" disabled>
+                    Select Course
+                  </option>
+                  {catChange
+                    ? filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))
+                    : courseCategory.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
           </select>
         </div>
         </div>

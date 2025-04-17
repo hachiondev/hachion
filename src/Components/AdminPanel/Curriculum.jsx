@@ -75,6 +75,7 @@ export default function Curriculum() {
     const [startDate, setStartDate] = useState(null);
     const [displayedCategories, setDisplayedCategories] = useState([]);
     const [allData, setAllData] = useState([]); // All fetched data
+    const [catChange, setCatChange] = useState(0);
 // Data to be displayed
 const [filterData, setFilterData] = useState({
   category_name: "",
@@ -212,13 +213,35 @@ const [filterData, setFilterData] = useState({
           handleDelete(curriculum_id);
         }
       };
+      // const handleInputChange = (e) => {
+      //   const { name, value } = e.target;
+      //   setEditedRow((prev) => ({
+      //     ...prev,
+      //     [name]: value,
+      //   }));
+      // };
+
       const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditedRow((prev) => ({
           ...prev,
           [name]: value,
+          ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
         }));
+        if (editedRow.category_name) {
+          // alert(name);
+          // alert(value);
+          setCatChange(1);
+          const filtered = courseCategory.filter(
+            (course) => course.courseCategory === value
+          );
+          setFilterCourse(filtered);
+        } else {
+          setCatChange(0);
+          setFilterCourse([]);
+        }
       };
+
       const handleDateFilter = () => {
         const filtered = curriculum.filter((item) => {
           const curriculumDate = new Date(item.date); // Parse the date field
@@ -341,14 +364,38 @@ const [filterData, setFilterData] = useState({
     const newFilter = { ...filterData, [name]: value };
     setFilterData(newFilter);
   
-    const filtered = allData.filter((item) =>
-      (!newFilter.category_name || item.category_name === newFilter.category_name) &&
-      (!newFilter.course_name || item.course_name === newFilter.course_name)
-    );
+  //   const filtered = allData.filter((item) =>
+  //     (!newFilter.category_name || item.category_name === newFilter.category_name) &&
+  //     (!newFilter.course_name || item.course_name === newFilter.course_name)
+  //   );
   
-    setFilteredCurriculum(filtered);
-    setCurrentPage(1); // Reset to first page
-  };
+  //   setFilteredCurriculum(filtered);
+  //   setCurrentPage(1); // Reset to first page
+  // };
+
+  const filtered = allData.filter(
+    (item) =>
+      (!newFilter.category_name ||
+        item.category_name === newFilter.category_name) &&
+      (!newFilter.course_name || item.course_name === newFilter.course_name)
+  );
+
+  setFilteredCurriculum(filtered);
+  setCurrentPage(1); // Reset to first page
+  //alert(name);
+  if (name) {
+    // alert(name);
+    // alert(value);
+    setCatChange(1);
+    const filtered = courseCategory.filter(
+      (course) => course.courseCategory === value
+    );
+    setFilterCourse(filtered);
+  } else {
+    setCatChange(0);
+    setFilterCourse([]);
+  }
+};
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -588,17 +635,26 @@ const [filterData, setFilterData] = useState({
 <label htmlFor="course" className="form-label">Course Name</label>
 
 <select
-  id="course"
-  className="form-select"
-  name="course_name"
-  value={filterData.course_name}
-  onChange={handlefilterChange}
-  
->
-  <option value="" disabled>Select Course</option>
-  {courseCategory.map((curr) => (
-    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-  ))}
+                  id="course"
+                  className="form-select"
+                  name="course_name"
+                  value={filterData.course_name}
+                  onChange={handlefilterChange}
+                >
+                  <option value="" disabled>
+                    Select Course
+                  </option>
+                  {catChange
+                    ? filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))
+                    : courseCategory.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
 </select>
       </div>
   {/* <div class="mb-3">
@@ -719,20 +775,26 @@ const [filterData, setFilterData] = useState({
     <div className="col">
       <label htmlFor="courseName" className="form-label">Course Name</label>
       <select
-        id="courseName"
-        className="form-select"
-        name="course_name"
-        value={editedRow.course_name || ""}
-        onChange={handleInputChange}
-      >
-        <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
+                id="courseName"
+                className="form-select"
+                name="course_name"
+                value={editedRow.course_name || ""}
+                onChange={handleInputChange}
+              >
+                <option value="" disabled>
+                  Select Course
+                </option>
+                {catChange
+                  ? filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))
+                  : courseCategory.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
       </select>
     </div>
     </div>

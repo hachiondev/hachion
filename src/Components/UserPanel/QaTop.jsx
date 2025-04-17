@@ -236,7 +236,7 @@
 // };
 
 // export default QaTop;
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { MdOutlineStar } from "react-icons/md";
@@ -244,18 +244,13 @@ import qaheader from '../../Assets/qa-video.png';
 import { IoPlayCircleOutline } from 'react-icons/io5';
 import { BsFillPlayCircleFill } from 'react-icons/bs';
 import './Course.css';
+import loginPopupImg from '../../Assets/loginpopup.png'
 
 const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
   const navigate = useNavigate();
 
-  const [curriculumData, setCurriculumData] = useState({
-    course_name: "",
-    curriculum_pdf: null,
-  });
-
   const [course, setCourse] = useState(null);
-  const [faq, setFaq] = useState([]);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -263,7 +258,23 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
 
   const [videoPopupOpen, setVideoPopupOpen] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
+  const modalRef = useRef(null);
 
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+
+  const isLoggedIn = localStorage.getItem('authToken');
+
+  // Show login modal
+  const showLoginModal = () => {
+    setIsLoginModalVisible(true);
+  };
+
+  // Hide login modal
+  const hideLoginModal = () => {
+    setIsLoginModalVisible(false);
+  };
+
+  // Fetch course & curriculum
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -277,8 +288,8 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
 
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
-          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
 
+          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
           const matchedCurriculum = curriculumResponse.data.find(
             (item) =>
               item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
@@ -288,6 +299,8 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`;
             setPdfUrl(fullPdfUrl);
           }
+
+          setCourse(matchedCourse);
         } else {
           setError('Course not found.');
         }
@@ -302,36 +315,29 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     fetchCourse();
   }, [courseName]);
 
+  // Download Curriculum
   const downloadPdf = () => {
-    if (!pdfUrl) {
-      alert('No brochure available for this course.');
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      showLoginModal();
       return;
     }
+
+    if (!pdfUrl) {
+      alert('No curriculum found for this course.');
+      return;
+    }
+
+    const fileName = pdfUrl.split('/').pop();
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.setAttribute('download', pdfUrl.split('/').pop());
+    link.target = '_blank';
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
-        const courseData = response.data.find(
-          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
-        );
-        setCourse(courseData);
-      } catch (error) {
-        console.error('Error fetching course details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourse();
-  }, [courseName]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -423,6 +429,26 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
               title="Demo Video"
             ></iframe>
             <button className="close-modal" onClick={() => setVideoPopupOpen(false)}>✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {isLoginModalVisible && (
+        <div className="login-modal" onClick={hideLoginModal}>
+          <div className="login-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
+            <h2 className="modal-title">Download Brochure</h2>
+            <div className="modal-body">
+              <div className="modal-left">
+                <p>To access this feature, please login to the Hachion website.</p>
+                <button className="login-btn" onClick={() => window.location.href = '/login'}>Login</button>
+                <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
+              </div>
+              <div className="modal-right">
+                <img src={loginPopupImg} alt="Login Visual" />
+              </div>
+            </div>
           </div>
         </div>
       )}

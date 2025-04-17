@@ -319,7 +319,7 @@ export const LiveOnlineFees = () => {
                       {/* <span className='date-span'>({course.schedule_duration} Hour)</span> */}
                     </p>
                     <p className='batch-date'>
-                    {course.schedule_duration} Days
+                    {course.schedule_duration}
                     </p>
                     <p className={course.schedule_mode === "Live Class" ? 'class' : 'demo'}>
                       <FaCircle className={course.schedule_mode === "Live Class" ? 'class-icon' : 'demo-icon'} />

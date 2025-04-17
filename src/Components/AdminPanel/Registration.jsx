@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import RegisterList from './RegisterList';
 import StudentDetails from './StudentDetails';
 import ImportLead from './ImportLead';
+import RegisterStudent from './RegisterStudent';
 
 
 export default function Registration() {
@@ -37,12 +38,18 @@ export default function Registration() {
         >
           Import Lead
         </div>
-       
+        <div 
+          className={`tab-item ${activeTab === 'registerStudent' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('registerStudent')}
+        >
+      Online Registered Students
+        </div>
       </div>
       
       {activeTab==='registerlist' && <RegisterList/>}
       {activeTab==='studentdetails' &&  <StudentDetails/>}
       {activeTab==='importlead' &&  <ImportLead/>}
+      {activeTab==='registerStudent' &&  <RegisterStudent/>}
      
      
     </>

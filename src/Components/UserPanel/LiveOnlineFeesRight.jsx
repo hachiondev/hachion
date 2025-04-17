@@ -205,19 +205,18 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loginuserData'));
-
     const uniqueBatchKey = selectedBatchData
       ? `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`
       : null;
 
-      if (user && uniqueBatchKey && localStorage.getItem(uniqueBatchKey)) {
-        setIsEnrolled(true);
-        setShowResend(true); 
-      } else {
-        setIsEnrolled(false);
-        setShowResend(false);
-      }
-    }, [selectedBatchData]);
+    if (user && uniqueBatchKey && localStorage.getItem(uniqueBatchKey)) {
+      setIsEnrolled(true);
+      setShowResend(true);
+    } else {
+      setIsEnrolled(false);
+      setShowResend(false);
+    }
+  }, [selectedBatchData]);
 
   useEffect(() => {
     setMessage('');
@@ -366,7 +365,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
         const payload = {
           name: userName,
           email: userEmail,
-          mobile: userMobile || "",
+          mobile: userMobile,
           course_name: selectedBatchData.schedule_course_name,
           enroll_date: selectedBatchData.schedule_date,
           week: selectedBatchData.schedule_week,
@@ -377,7 +376,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
           trainer: selectedBatchData.trainer_name,
           completion_date: selectedBatchData.schedule_duration || "",
           meeting_link: selectedBatchData.meeting_link || "",
-          resendCount:0
+          resendCount: 0
         };
 
         const response = await axios.post('https://api.hachion.co/enroll/add', payload);
@@ -393,7 +392,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
         const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
         localStorage.setItem(uniqueBatchKey, true);
         setIsEnrolled(true);
-        setShowResend(true); // Show Resend link after enrolling
+        setShowResend(true);
       } catch (error) {
         console.error('Error enrolling in demo:', error);
         setMessage('Error occurred while enrolling.');

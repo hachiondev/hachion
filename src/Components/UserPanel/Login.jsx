@@ -31,42 +31,42 @@ const Login = () => {
    const navigate=useNavigate();
    const handleLogin = async (e) => {
     e.preventDefault();
+  
     if (!isCaptchaChecked) {
       setCaptchaError("Captcha validation is mandatory to login.");
-     
       return;
     }
+  
     const loginData = {
-        email: email,
-        password: password,
+      email: email,
+      password: password,
     };
- 
-
+  
     try {
-        const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
-        console.log(response.data); // Debugging line
-
-        if (response.data.status) {
-            // Ensure the response contains 'userName' and 'email'
-            const loginuserData = { name: response.data.userName, email: response.data.email };
-
-            try {
-                localStorage.setItem('loginuserData', JSON.stringify(loginuserData)); // Try saving to localStorage
-                // console.log('User data saved to localStorage:', loginuserData); // Debugging line
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-            }
-
-            navigate('/'); // Navigate after saving data
-        } else {
-            setErrorMessage(response.data.message); // Show error message
+      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+      console.log(response.data);
+  
+      if (response.data.status) {
+        const loginuserData = { name: response.data.userName, email: response.data.email };
+  
+        try {
+          localStorage.setItem('loginuserData', JSON.stringify(loginuserData));
+          localStorage.setItem('authToken', response.data.token); // Save the token
+        } catch (error) {
+          console.error('Error saving to localStorage:', error);
         }
+  
+        const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
+        localStorage.removeItem('redirectAfterLogin');
+        window.location.href = redirectPath;
+      } else {
+        setErrorMessage(response.data.message);
+      }
     } catch (error) {
-        console.error("Error during login", error);
-        setErrorMessage("An error occurred during login");
+      console.error("Error during login", error);
+      setErrorMessage("An error occurred during login");
     }
-};
-
+  };  
 
 // Display error message
 

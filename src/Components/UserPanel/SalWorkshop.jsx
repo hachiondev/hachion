@@ -473,6 +473,7 @@ const [courses, setCourses] = useState([]);
             <option>CST</option>
             <option>MST</option>
             <option>PST</option>
+            <option>IST</option>
           </select>
             </div>
             </div>

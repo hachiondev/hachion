@@ -56,7 +56,7 @@
 
 //     const fetchCourseAmount = async (rate) => {
 //       try {
-//         const response = await axios.get('https://http://localhost:8080/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         const courses = response.data;
 
 //         const matchedCourse = courses.find(
@@ -142,7 +142,7 @@
 //           return;
 //         }
 
-//         const response = await axios.post('https://http://localhost:8080/enrolldemo', { email: userEmail });
+//         const response = await axios.post('https://api.hachion.co/enrolldemo', { email: userEmail });
 
 //         if (response.data.success) {
 //           setMessage('Successfully enrolled for the free demo.');
@@ -181,8 +181,9 @@
 // };
 
 // export default LiveOnlineFeesRight;
+
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const LiveOnlineFeesRight = ({
@@ -191,31 +192,50 @@ const LiveOnlineFeesRight = ({
   selectedBatchData,
   courseName,
 }) => {
-  // const { courseName } = useParams(); // Get course name from URL
   const navigate = useNavigate();
   const [fee, setFee] = useState("");
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [message, setMessage] = useState("");
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [resendExceeded, setResendExceeded] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+
+  const getResendKey = (batch) => {
+    return batch
+      ? `resendAttempts-${batch.schedule_course_name}-${batch.schedule_date}-${batch.schedule_time}`
+      : null;
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("loginuserData"));
-    const isAlreadyEnrolled = localStorage.getItem(
-      `enrolled-${selectedBatchData?.schedule_course_name}`
-    );
-    if (user && isAlreadyEnrolled) {
+
+    const uniqueBatchKey = selectedBatchData
+      ? `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`
+      : null;
+
+    if (user && uniqueBatchKey && localStorage.getItem(uniqueBatchKey)) {
       setIsEnrolled(true);
+      setShowResend(true);
+    } else {
+      setIsEnrolled(false);
+      setShowResend(false);
     }
+  }, [selectedBatchData]);
+
+  useEffect(() => {
+    setMessage("");
+    const key = getResendKey(selectedBatchData);
+    const attempts = key ? parseInt(localStorage.getItem(key), 10) || 0 : 0;
+    setResendExceeded(attempts >= 3);
   }, [selectedBatchData]);
 
   useEffect(() => {
     const fetchCourseAmount = async () => {
       try {
-        const response = await axios.get("https://http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const courses = response.data;
 
-        // Find the matching course by courseName
         const matchedCourse = courses.find(
           (course) =>
             course.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
@@ -268,7 +288,7 @@ const LiveOnlineFeesRight = ({
             setDiscountPercentage(0);
           }
 
-          setFee(selectedFee || "Not Available"); // Handle null values
+          setFee(selectedFee || "Not Available");
         } else {
           setFee("Not Available");
         }
@@ -281,21 +301,10 @@ const LiveOnlineFeesRight = ({
     fetchCourseAmount();
   }, [courseName, modeType, enrollText]);
 
-  const handleResend = async () => {
-    const user = JSON.parse(localStorage.getItem("loginuserData"));
-    const userEmail = user?.email;
-
-    if (!userEmail) {
-      alert("No user email found!");
-      return;
-    }
-
-    await resendEmail(userEmail); // ✅ pass just the email string
-  };
   const resendEmail = async (userEmail) => {
     try {
       const response = await axios.post(
-        "https://http://localhost:8080/enroll/resend-email",
+        "https://api.hachion.co/enroll/resend-email",
         {
           email: userEmail,
         }
@@ -308,6 +317,40 @@ const LiveOnlineFeesRight = ({
         error.response?.data || error.message
       );
       alert("Failed to resend email.");
+    }
+  };
+
+  const handleResend = async () => {
+    const key = getResendKey(selectedBatchData);
+    const currentAttempts = key
+      ? parseInt(localStorage.getItem(key), 10) || 0
+      : 0;
+
+    if (currentAttempts >= 3) {
+      alert(
+        "Maximum attempts exceeded. Please reach out to the support team to get the schedule."
+      );
+      setResendExceeded(true);
+      return;
+    }
+
+    const user = JSON.parse(localStorage.getItem("loginuserData"));
+    const userEmail = user?.email;
+
+    if (!userEmail) {
+      alert("No user email found!");
+      return;
+    }
+
+    try {
+      await resendEmail(userEmail);
+      const newAttempts = currentAttempts + 1;
+      localStorage.setItem(key, newAttempts);
+      if (newAttempts >= 3) {
+        setResendExceeded(true);
+      }
+    } catch (err) {
+      alert("Resend failed. Please try again.");
     }
   };
 
@@ -355,10 +398,11 @@ const LiveOnlineFeesRight = ({
           trainer: selectedBatchData.trainer_name,
           completion_date: selectedBatchData.schedule_duration || "",
           meeting_link: selectedBatchData.meeting_link || "",
+          resendCount: 0,
         };
 
         const response = await axios.post(
-          "https://http://localhost:8080/enroll/add",
+          "https://api.hachion.co/enroll/add",
           payload
         );
 
@@ -367,18 +411,19 @@ const LiveOnlineFeesRight = ({
         } else {
           setMessage("Registered successfully");
         }
+
+        alert(
+          "You have successfully registered for the demo session. You will receive an email shortly with the meeting link, timing, and other details. Please check your registered email and dashboard for updates."
+        );
+
+        const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
+        localStorage.setItem(uniqueBatchKey, true);
+        setIsEnrolled(true);
+        setShowResend(true); // Show Resend link after enrolling
       } catch (error) {
         console.error("Error enrolling in demo:", error);
         setMessage("Error occurred while enrolling.");
       }
-      alert(
-        "You have successfully registered for the demo session. You will receive an email shortly with the meeting link, timing, and other details. Please check your registered email and dashboard for updates."
-      );
-      localStorage.setItem(
-        `enrolled-${selectedBatchData.schedule_course_name}`,
-        true
-      );
-      setIsEnrolled(true);
     }
   };
 
@@ -386,8 +431,9 @@ const LiveOnlineFeesRight = ({
     <div className="right">
       <p className="batch-date-fee">Fee:</p>
       <p className="free">
-        {enrollText === "Enroll Free Demo" ? "Free" : `USD ${fee}`}
+        {enrollText === "Enroll Free Demo" ? "FREE" : `USD ${fee}`}
       </p>
+
       {discount > 0 && fee !== "Free" && (
         <p className="discount">
           Flash Sale! Get{" "}
@@ -397,27 +443,30 @@ const LiveOnlineFeesRight = ({
       )}
 
       {message && <p className="success-message">{message}</p>}
-      {/* 
-      <button className='fee-enroll-now' onClick={handleEnroll}>
-        {enrollText}
-      </button> */}
+
       <button
         onClick={handleEnroll}
         disabled={isEnrolled}
-        className={`fee-enroll-now ${
-          isEnrolled ? "bg-blue-200 cursor-not-allowed" : "fee-enroll-now"
-        } text-white`}
+        className={`fee-enroll-now ${isEnrolled ? "enrolled" : ""} text-white`}
       >
         {isEnrolled ? "Enrolled" : enrollText}
       </button>
-      <p
-        style={{ marginTop: "10px", fontStyle: "italic" }}
-        className="schedule-span"
-        onClick={handleResend}
-        disabled={!isEnrolled} // ✅ Only enabled if enrolled
-      >
-        Resend email
-      </p>
+
+      {showResend && isEnrolled && !resendExceeded && (
+        <p className="resend">
+          Didn’t receive the email?{" "}
+          <span className="resend-link" onClick={handleResend}>
+            Resend
+          </span>
+        </p>
+      )}
+
+      {showResend && isEnrolled && resendExceeded && (
+        <p className="attempt">
+          Maximum attempts exceeded. Please reach out to the support team to get
+          the schedule.
+        </p>
+      )}
     </div>
   );
 };

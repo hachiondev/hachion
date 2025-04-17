@@ -133,6 +133,33 @@
   width: 80%;
   margin-left: 10vw;
 }
+.course-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+.work-details {
+  box-shadow: 5px 5px 10px #d3d3d3;
+  /* margin: 10px; */
+  padding: 15px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background-color: #ffe69d;
+}
+.workshop-button {
+  background-color: #00aeef;
+  border-radius: 10px;
+  padding: 8px 20px;
+  box-shadow: 2px 2px 4px #d3d3d3;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  margin-top: 50px;
+}
+.workshop-button:hover {
+  background-color: #006489;
+}
 @media (min-width: 481px) and (max-width: 1025px) {
   .salesforce-blog-left {
     width: 25%;
@@ -649,6 +676,26 @@
     margin-top: 20px;
   }
 
+  .course-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0px;
+  }
+  .work-details {
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .workshop-button {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  .form-select {
+    height: 35px !important;
+  }
   #workshop.mobile-number {
     width: 260px !important;
     height: 35px;
@@ -686,10 +733,6 @@
   padding: 0;
   margin: 0;
 }
-.story-icon {
-  font-size: 60;
-  text-align: center;
-}
 
 .white-icon {
   color: white;
@@ -699,6 +742,10 @@
 
 .white-icon:hover {
   color: lightgray; /* Add hover effect */
+}
+.story-icon {
+  font-size: 60px;
+  text-align: center;
 }
 
 @media (min-width: 350px) and (max-width: 480px) {
@@ -1310,6 +1357,11 @@
     gap: 0px !important; /* Reduce gap between elements for mobile */
   }
 
+  .enroll-row {
+    flex-direction: column !important; /* Stack the form fields vertically */
+    gap: 0px !important; /* Reduce gap between elements for mobile */
+  }
+
   #enroll2.mobile-number {
     width: 220px !important;
     height: 35px;
@@ -1469,6 +1521,12 @@
 }
 
 .row {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-around;
+}
+
+.enroll-row {
   display: flex;
   flex-direction: row !important;
   justify-content: space-around;

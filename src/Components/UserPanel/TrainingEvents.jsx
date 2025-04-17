@@ -35,8 +35,8 @@
 //     const fetchData = async () => {
 //       try {
 //         const [scheduleResponse, coursesResponse] = await Promise.all([
-//           fetch('https://http://localhost:8080/schedulecourse').then((res) => res.json()),
-//           fetch('https://http://localhost:8080/courses/all').then((res) => res.json()),
+//           fetch('http://localhost:8080/schedulecourse').then((res) => res.json()),
+//           fetch('http://localhost:8080/courses/all').then((res) => res.json()),
 //         ]);
 
 //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -130,7 +130,7 @@
 //             key={course.course_id || index}
 //             id={course.course_id}
 //             heading={course.schedule_course_name}
-//             image={course.course_image ? `https://http://localhost:8080/${course.course_image}` : ''}
+//             image={course.course_image ? `http://localhost:8080/${course.course_image}` : ''}
 //             date={formatDate(course.schedule_date)}
 //             time={formatTime(course.schedule_time)}
 //              duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
@@ -198,8 +198,8 @@
 // //     const fetchData = async () => {
 // //       try {
 // //         const [scheduleResponse, coursesResponse] = await Promise.all([
-// //           fetch("https://http://localhost:8080/schedulecourse").then((res) => res.json()),
-// //           fetch("https://http://localhost:8080/courseDetails/all").then((res) => res.json()),
+// //           fetch("http://localhost:8080/schedulecourse").then((res) => res.json()),
+// //           fetch("http://localhost:8080/courseDetails/all").then((res) => res.json()),
 // //         ]);
 
 // //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -274,16 +274,23 @@ const TrainingEvents = () => {
   const [timeFilter, setTimeFilter] = useState("");
 
   const [courseOptions, setCourseOptions] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  // ✅ Get user's timezone
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
-          fetch("https://http://localhost:8080/schedulecourse").then((res) =>
-            res.json()
-          ),
-          fetch("https://http://localhost:8080/courses/all").then((res) => res.json()),
+          fetch(
+            `http://localhost:8080/schedulecourse?timezone=${userTimezone}`
+          ).then((res) => res.json()),
+          fetch("http://localhost:8080/courses/all").then((res) => res.json()),
         ]);
+
+        if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
+          throw new Error("Invalid API response format");
+        }
 
         const mergedData = scheduleRes.map((scheduleItem) => {
           const matchingCourse = coursesRes.find(
@@ -300,6 +307,7 @@ const TrainingEvents = () => {
           };
         });
 
+        console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
@@ -312,7 +320,7 @@ const TrainingEvents = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userTimezone]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -355,6 +363,22 @@ const TrainingEvents = () => {
       return courseNameMatch && modeMatch && timeMatch;
     });
   };
+  //setFilteredCourses(getFilteredCourses());
+
+  // Update filtered courses when a filter changes
+  // useEffect(() => {
+  //   setFilteredCourses(getFilteredCourses());
+  // }, [courseFilter, modeFilter, timeFilter, mergedCourses]);
+
+  useEffect(() => {
+    // console.log(getFilteredCourses());
+    // setFilteredCourses("");
+    // setFilteredCourses([...getFilteredCourses()]); // Force state update with new array
+    setFilteredCourses([]); // Reset state
+    setTimeout(() => {
+      setFilteredCourses([...getFilteredCourses()]);
+    }, 0);
+  }, [courseFilter, modeFilter, timeFilter, mergedCourses]);
 
   const resetFilters = () => {
     setModeFilter("");
@@ -362,8 +386,12 @@ const TrainingEvents = () => {
     setTimeFilter("");
   };
 
-  const filteredCourses = getFilteredCourses();
+  // Event handlers for dropdown changes
+  const handleCourseChange = (e) => setCourseFilter(e.target.value);
+  const handleModeChange = (e) => setModeFilter(e.target.value);
+  const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
+  //console.log(filteredCourses);
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
@@ -378,27 +406,13 @@ const TrainingEvents = () => {
 
       <div className="filter-container">
         <div className="filter-section">
-          <select
-            value={modeFilter}
-            onChange={(e) => {
-              setModeFilter(e.target.value);
-              // setCourseFilter('');
-              // setTimeFilter('');
-            }}
-          >
+          <select value={modeFilter} onChange={handleModeChange}>
             <option value="">All Modes</option>
             <option value="Live Class">Live Class</option>
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <select
-            value={courseFilter}
-            onChange={(e) => {
-              setCourseFilter(e.target.value);
-              // setModeFilter('');
-              // setTimeFilter('');
-            }}
-          >
+          <select value={courseFilter} onChange={handleCourseChange}>
             <option value="">All Courses</option>
             {courseOptions.map((course, idx) => (
               <option key={idx} value={course}>
@@ -407,14 +421,7 @@ const TrainingEvents = () => {
             ))}
           </select>
 
-          <select
-            value={timeFilter}
-            onChange={(e) => {
-              setTimeFilter(e.target.value);
-              // setCourseFilter('');
-              // setModeFilter('');
-            }}
-          >
+          <select value={timeFilter} onChange={handleTimeChange}>
             <option value="">Any Time</option>
             <option value="new">Newly Added</option>
             <option value="today">Today</option>
@@ -437,7 +444,7 @@ const TrainingEvents = () => {
                 heading={course.schedule_course_name}
                 image={
                   course.course_image
-                    ? `https://http://localhost:8080/${course.course_image}`
+                    ? `http://localhost:8080/${course.course_image}`
                     : ""
                 }
                 date={

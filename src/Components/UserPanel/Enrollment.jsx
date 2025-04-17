@@ -86,7 +86,7 @@ const Enrollment = () => {
           </div>
 
           <form className="details">
-            <div className="row">
+            <div className="enroll-row">
               <div className="col-md-5">
                 <label htmlFor="inputName4" className="form-label">
                   Full Name<span className="required">*</span>
@@ -115,7 +115,7 @@ const Enrollment = () => {
                 />
               </div>
             </div>
-            <div className="row">
+            <div className="enroll-row">
               <div className="col-md-5">
                 <label className="form-label">Mobile Number</label>
                 <div class="input-group custom-width">
@@ -170,7 +170,7 @@ const Enrollment = () => {
                   type="text"
                   className="form-control"
                   id="enroll1"
-                  placeholder="India"
+                  placeholder="Enter mobile number"
                   required
                 />
               </div>

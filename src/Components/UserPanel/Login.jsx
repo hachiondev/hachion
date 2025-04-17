@@ -24,9 +24,17 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
+  const [captchaError, setCaptchaError] = useState("");
+
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!isCaptchaChecked) {
+      setCaptchaError("Captcha validation is mandatory to login.");
+
+      return;
+    }
     const loginData = {
       email: email,
       password: password,
@@ -34,7 +42,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/user/login",
+        "https://api.hachion.co/api/v1/user/login",
         loginData
       );
       console.log(response.data); // Debugging line
@@ -66,21 +74,21 @@ const Login = () => {
   // Display error message
 
   const googleLogin = () => {
-    window.open("http://localhost:8080/oauth2/authorization/google", "_self");
+    window.open("https://api.hachion.co/oauth2/authorization/google", "_self");
   };
 
   const facebookLogin = () => {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/facebook"; // Backend Facebook OAuth
+      "https://api.hachion.co/oauth2/authorization/facebook"; // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
+      "https://api.hachion.co/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/apple"; // Backend Apple OAuth
+    window.location.href = "https://api.hachion.co/oauth2/authorization/apple"; // Backend Apple OAuth
   };
 
   // Toggle password visibility
@@ -147,12 +155,17 @@ const Login = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="flexCheckDefault"
+                  onChange={(e) => {
+                    setIsCaptchaChecked(e.target.checked);
+                    if (e.target.checked) setCaptchaError("");
+                  }}
                 />
                 <label className="form-check-label" htmlFor="flexCheckDefault">
                   I'm not a robot
                 </label>
                 <img src={captcha} alt="captcha" className="captcha" />
               </div>
+              {captchaError && <p className="error-message">{captchaError}</p>}
 
               {/* <div className="form-check">
                   <ReCAPTCHA

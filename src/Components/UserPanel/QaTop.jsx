@@ -78,7 +78,7 @@
 //     const fetchCourse = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('http://localhost:8080/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         console.log('API response:', response.data); // Check course data
 
 //         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -93,7 +93,7 @@
 //           console.log('Matched Course:', matchedCourse);
 
 //           // Fetch curriculum details
-//           const curriculumResponse = await axios.get('http://localhost:8080/curriculum');
+//           const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
 //           console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
 
 //           // Normalize both names for reliable comparison
@@ -105,7 +105,7 @@
 
 //           // Set the PDF URL if found
 //           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-//             const fullPdfUrl = `http://localhost:8080/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
+//             const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
 //             setPdfUrl(fullPdfUrl);
 //             console.log('PDF URL Set:', fullPdfUrl);
 //           } else {
@@ -145,7 +145,7 @@
 //     const fetchCourse = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('http://localhost:8080/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         const courseData = response.data.find(
 //           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
 //         );
@@ -190,7 +190,7 @@
 //           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
 //           </div>
 //           <div className='qa-automation-left'>
-//             <img src={`http://localhost:8080/${course.courseImage}`} alt='qa-image' />
+//             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
 //             <div className='qa-automation-middle'>
 //               {/* <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
 //               {course.total !== course.amount && (
@@ -239,15 +239,18 @@ import axios from "axios";
 import { MdOutlineStar } from "react-icons/md";
 import qaheader from "../../Assets/qa-video.png";
 import { IoPlayCircleOutline } from "react-icons/io5";
+import { BsFillPlayCircleFill } from "react-icons/bs";
 import "./Course.css";
 
-const QaTop = ({ onVideoButtonClick }) => {
-  const { courseName } = useParams(); // Extract course_id from URL params
+const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
+  const { courseName } = useParams();
   const navigate = useNavigate();
+
   const [curriculumData, setCurriculumData] = useState({
     course_name: "",
     curriculum_pdf: null,
   });
+
   const [course, setCourse] = useState(null);
   const [faq, setFaq] = useState([]);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -255,18 +258,18 @@ const QaTop = ({ onVideoButtonClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [videoPopupOpen, setVideoPopupOpen] = useState(false);
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:8080/courses/all");
-        console.log("API response:", response.data); // Check course data
+        const response = await axios.get("https://api.hachion.co/courses/all");
 
         const courseNameFromUrl = courseName
           ?.toLowerCase()
           ?.replace(/\s+/g, "-");
-        console.log("Course name from URL:", courseNameFromUrl);
-
         const matchedCourse = response.data.find(
           (c) =>
             c.courseName.toLowerCase().replace(/\s+/g, "-") ===
@@ -275,30 +278,19 @@ const QaTop = ({ onVideoButtonClick }) => {
 
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
-          console.log("Matched Course:", matchedCourse);
-
-          // Fetch curriculum details
           const curriculumResponse = await axios.get(
-            "http://localhost:8080/curriculum"
+            "https://api.hachion.co/curriculum"
           );
-          console.log("Curriculum API response:", curriculumResponse.data); // Log the curriculum data
 
-          // Normalize both names for reliable comparison
           const matchedCurriculum = curriculumResponse.data.find(
             (item) =>
               item.course_name?.trim().toLowerCase() ===
               matchedCourse.courseName.trim().toLowerCase()
           );
 
-          console.log("Matched Curriculum:", matchedCurriculum); // Debugging log
-
-          // Set the PDF URL if found
           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-            const fullPdfUrl = `http://localhost:8080/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
+            const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`;
             setPdfUrl(fullPdfUrl);
-            console.log("PDF URL Set:", fullPdfUrl);
-          } else {
-            console.log("No PDF found in FAQ for this course");
           }
         } else {
           setError("Course not found.");
@@ -313,26 +305,25 @@ const QaTop = ({ onVideoButtonClick }) => {
 
     fetchCourse();
   }, [courseName]);
+
   const downloadPdf = () => {
     if (!pdfUrl) {
       alert("No brochure available for this course.");
       return;
-    } else {
-      // Programmatically trigger download
-      const link = document.createElement("a");
-      link.href = pdfUrl; // Now, pdfUrl contains the correct full URL
-      link.setAttribute("download", pdfUrl.split("/").pop()); // Extract file name
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.setAttribute("download", pdfUrl.split("/").pop());
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
         );
@@ -350,16 +341,14 @@ const QaTop = ({ onVideoButtonClick }) => {
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
 
-  // Function to render stars dynamically based on rating
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        i <= rating ? (
-          <MdOutlineStar key={i} className="star-icon filled" />
-        ) : (
-          <MdOutlineStar key={i} className="star-icon" />
-        )
+        <MdOutlineStar
+          key={i}
+          className={`star-icon ${i <= rating ? "filled" : ""}`}
+        />
       );
     }
     return stars;
@@ -379,7 +368,7 @@ const QaTop = ({ onVideoButtonClick }) => {
             </div>
             <div className="qa-automation-left">
               <img
-                src={`http://localhost:8080/${course.courseImage}`}
+                src={`https://api.hachion.co/${course.courseImage}`}
                 alt="qa-image"
               />
               <div className="qa-automation-middle">
@@ -413,17 +402,36 @@ const QaTop = ({ onVideoButtonClick }) => {
             <p className="certified">
               Certified-students: {course.totalEnrollment}
             </p>
-            <img src={qaheader} alt="video-frame" />
+            <div className="qa-video-container">
+              <img
+                src={qaheader}
+                alt="video-frame"
+                className="qa-video-image"
+              />
+              {course.youtubeLink && (
+                <button
+                  className="play-btn-overlay"
+                  onClick={() => {
+                    const firstVideo = course.youtubeLink.split("\n")[0].trim();
+                    const validUrl = firstVideo.startsWith("http")
+                      ? firstVideo
+                      : `https://${firstVideo}`;
+                    setSelectedVideoUrl(validUrl);
+                    setVideoPopupOpen(true);
+                  }}
+                  title="Introduction Video"
+                >
+                  <BsFillPlayCircleFill size={64} color="#00AEEF" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Buttons Section */}
         <div className="qa-button-container">
           <div className="qa-button">
-            <button
-              className="enroll-now"
-              onClick={() => navigate(`/enroll/${courseName}`)}
-            >
+            <button className="enroll-now" onClick={onEnrollButtonClick}>
               Enroll Now
             </button>
             <button className="download" onClick={downloadPdf}>
@@ -436,6 +444,35 @@ const QaTop = ({ onVideoButtonClick }) => {
           </button>
         </div>
       </div>
+
+      {/* Video Modal Popup */}
+      {videoPopupOpen && selectedVideoUrl && (
+        <div
+          className="video-modal-overlay"
+          onClick={() => setVideoPopupOpen(false)}
+        >
+          <div
+            className="video-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src={selectedVideoUrl.replace("watch?v=", "embed/")}
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              title="Demo Video"
+            ></iframe>
+            <button
+              className="close-modal"
+              onClick={() => setVideoPopupOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

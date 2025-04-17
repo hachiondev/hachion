@@ -47,7 +47,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
         <h5 className="course-name">{heading}</h5>
         <div className="date-time-container">
           <p className="card-date">{date}</p>
-          <p className="time">{time} EST</p>
+          <p className="time">{time}</p>
         </div>
         {/* <h6 className="course-date">{duration} Hour</h6> */}
         {/* Prevent event propagation on button click */}

@@ -484,7 +484,7 @@ padding:10px; */
   width: 620px;
   font-size: 1rem;
   font-weight: 500;
-  text-align: left;
+  text-align: justify;
   padding-top: 10px;
   margin-left: 30px;
   padding-left: 20px;
@@ -567,7 +567,68 @@ padding:10px; */
   font-weight: 700;
   font-size: 24px;
   color: white;
-  text-align: right;
+  text-align: center;
+  background-color: #007bff;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.qa-video-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+}
+
+.qa-video-image {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+}
+
+.play-btn-overlay {
+  position: absolute;
+  top: 45%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.video-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  height: 450px;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .mob-cert {
@@ -1521,6 +1582,37 @@ display: none;
   margin-left: 40px;
   margin-right: 25px;
 }
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.fee-enroll-now.enrolled {
+  background-color: #28a745 !important; /* green */
+  cursor: not-allowed;
+}
+
+.resend {
+  margin-top: 10px;
+  font-style: normal;
+  color: black;
+  cursor: default;
+}
+
+.attempt {
+  margin-top: 10px;
+  font-style: normal;
+  color: red;
+  cursor: default;
+}
+
+.resend .resend-link {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
 
 @media (min-width: 760px) and (max-width: 1024px) {
   .upcoming-batch {
@@ -1570,7 +1662,7 @@ display: none;
     margin: 5px;
   }
   .qa-automation {
-    width: 98% !important;
+    width: 90% !important;
     margin-left: 10px;
     height: 345px;
     padding: 0px;
@@ -1715,6 +1807,56 @@ display: none;
     max-height: calc(65vh - 100px);
     gap: 5px;
   }
+  .qa-video-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 500px;
+  }
+  .qa-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 5px;
+    margin-bottom: 20px;
+    gap: 260px;
+  }
+
+  .qa-video-image {
+    width: 95%;
+    display: block;
+    border-radius: 10px;
+  }
+
+  .play-btn-overlay {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    height: 450px;
+    border-radius: 12px;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 24px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -1790,11 +1932,21 @@ display: none;
 }
 @media (min-width: 1024px) and (max-width: 1366px) {
   .qa-automation {
-    width: 85%;
-    margin-left: 80px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .top-course-name {
+    display: flex;
+    margin-left: 5%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    white-space: nowrap;
   }
   .qa-automation-left img {
-    height: 110px;
+    height: 90px;
   }
 
   .batch-type {
@@ -1822,8 +1974,9 @@ display: none;
   }
 
   .qa-right img {
-    height: 220px !important;
-    width: 300px !important;
+    height: 250px !important;
+    width: 350px !important;
+    margin-left: 30px;
   }
   .qa-button {
     margin: 5px;
@@ -1833,6 +1986,7 @@ display: none;
     font-size: 16px;
     margin-left: 40px;
     margin-top: 10px;
+    white-space: nowrap;
   }
   .certified {
     font-size: 16px;
@@ -1861,9 +2015,10 @@ display: none;
     margin: 5px;
     font-size: 18px;
     padding: 5px 10px;
+    white-space: nowrap;
   }
   .qa-content {
-    width: 450px !important;
+    width: 550px !important;
     margin-left: 0px;
     padding-top: 0px;
     padding-left: 20px;
@@ -1892,6 +2047,12 @@ display: none;
     height: 375px;
     padding: 0px;
     justify-content: space-evenly;
+  }
+
+  .qa-automation-middle {
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
   }
 
   .qa-automation-left {
@@ -2109,7 +2270,7 @@ display: none;
   }
 
   .qa-right img {
-    width: 310px;
+    width: 95%;
     height: auto; /* Ensure image remains responsive */
     border-radius: 10px;
     margin-left: 0px;
@@ -2130,6 +2291,63 @@ display: none;
   .fee {
     padding-top: 5px;
     font-size: 10px;
+  }
+  .qa-video-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .qa-video-image {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .play-btn-overlay {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+  }
+
+  .video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    height: 300px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
   }
   .video-btn {
     width: 100%;

@@ -259,7 +259,7 @@ const handleChange = (e) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/schedulecourse?userType=admin');
+      const response = await axios.get('https://api.hachion.co/schedulecourse');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -454,8 +454,8 @@ const handleInputChange = (e) => {
                 <select
                   id="inputState"
                   className="form-select"
-                  name="schedule_frequency"
-                  value={courseData.schedule_frequency}
+                  name="schedule_week"
+                  value={courseData.schedule_week}
                   onChange={handleChange}
                 >
                   <option selected>Select</option>

@@ -123,6 +123,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -309,6 +310,9 @@ public class Userimpl implements UserService {
 //       return user.getUserName(); // Ensure `getUsername` is defined in your `User` entity.
 // }
 //    
+	    public List<User> getAllRegisteredStudents() {
+	        return userRepository.findAll(); // This is correct
+	    }
 	@Override
 	public LoginResponse LoginUser(LoginRequest loginRequest) {
 		String msg = "";

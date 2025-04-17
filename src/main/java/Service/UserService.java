@@ -1,8 +1,11 @@
 package Service;
 
+import java.util.List;
+
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.User;
+import com.hachionUserDashboard.repository.UserRepository;
 
 import Response.LoginResponse;
 
@@ -39,4 +42,7 @@ public interface UserService {
 
 	User saveUser(String username, String email);
 //	Map<String, String> getUserInfo(String accessToken);
+
+	public List<User> getAllRegisteredStudents();
+
 }

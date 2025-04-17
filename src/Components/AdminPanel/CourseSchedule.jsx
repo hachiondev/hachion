@@ -259,7 +259,7 @@ const handleChange = (e) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/schedulecourse');
+      const response = await axios.get('https://api.hachion.co/schedulecourse?userType=admin');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data

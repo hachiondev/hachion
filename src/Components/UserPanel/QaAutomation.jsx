@@ -31,7 +31,7 @@ const QaAutomation = () => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const upcomingBatchRef = useRef(null);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -144,7 +144,12 @@ const QaAutomation = () => {
         </nav>
         </div>
         {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
-        <QaTop onVideoButtonClick={handleVideoButtonClick} />
+        <QaTop
+          onVideoButtonClick={handleVideoButtonClick}
+          onEnrollButtonClick={() =>
+            upcomingBatchRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }
+        />
         <KeyHighlights />
 
         {/* Sticky Header applies to the entire section below */}
@@ -154,7 +159,7 @@ const QaAutomation = () => {
         
         </div>
 
-        <div id="upcoming-batch">
+        <div id="upcoming-batch" ref={upcomingBatchRef}>
           <UpcomingBatch />
         </div>
 

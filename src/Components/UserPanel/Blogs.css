@@ -1350,6 +1350,12 @@ margin-bottom: 20px;
         gap: 0px !important; /* Reduce gap between elements for mobile */
       }
 
+      
+    .enroll-row {
+      flex-direction: column !important; /* Stack the form fields vertically */
+      gap: 0px !important; /* Reduce gap between elements for mobile */
+    }
+
     #enroll2.mobile-number{
         width: 220px !important;
         height: 35px;
@@ -1513,6 +1519,12 @@ background-color: #d3d3d3;
 }
 
 .row {
+  display: flex;
+    flex-direction: row !important;
+    justify-content: space-around;
+}
+
+.enroll-row {
   display: flex;
     flex-direction: row !important;
     justify-content: space-around;

@@ -24,6 +24,8 @@ import axios from "axios";
 
 const SalWorkshop = () => {
   const { courseName } = useParams();
+  const [error, setError] = useState('');
+  const [messageType, setMessageType] = useState(''); 
   const footerRef = useRef(null); // Footer reference for intersection observer
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -162,29 +164,42 @@ const [courses, setCourses] = useState([]);
     // Handle form submission
     const handleSubmit = async (e) => {
       e.preventDefault();
+    
+      // Validate required fields
+      if (!formData.mobileNumber || !formData.timeZone || !formData.fullName || !formData.emailId) {
+        setError('Please fill all the details to register.');
+        setMessageType('error');
+        return;
+      }
+    
+      // Clear previous error
+      setError('');
+      setMessageType('');
+    
       const currentDate = new Date().toISOString().split("T")[0];
     
       const updatedFormData = {
         fullName: formData.fullName,
         courseCategory: formData.courseCategory || "Salesforce",
-        time: "10:00",
+        time: formData.time || "",
         message: "register",
         emailId: formData.emailId,
         mobileNumber: formData.mobileNumber,
         timeZone: formData.timeZone || "GMT",
-        courseName: [formData.courseName || "Salesforce"], // ✅ Fixed property name
+        courseName: [formData.courseName || "Salesforce"],
         date: currentDate,
         country: selectedCountry.name
       };
     
       try {
         const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
-    
-        alert("Form submitted successfully!");
+        setError("Registration for workshop done successfully");
+        setMessageType('success'); // ✅ Mark message as success
         console.log("Response:", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
-        alert("Something went wrong. Please try again.");
+        setError("Something went wrong. Please try again.");
+        setMessageType('error');
       }
     };
     
@@ -473,9 +488,21 @@ const [courses, setCourses] = useState([]);
             <option>CST</option>
             <option>MST</option>
             <option>PST</option>
+            <option>IST</option>
           </select>
             </div>
             </div>
+            {error && (
+  <div
+    style={{
+      color: messageType === 'success' ? 'green' : 'red',
+      marginBottom: '10px', fontWeight:'700'
+    }}
+  >
+    {error}
+  </div>
+)}
+
 
             <button
               type="submit"

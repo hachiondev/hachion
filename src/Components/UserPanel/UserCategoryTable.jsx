@@ -18,42 +18,45 @@ export default function UserCategoryTable() {
       try {
         const user = JSON.parse(localStorage.getItem('loginuserData'));
         const email = user?.email;
-  
+
         if (!email) return;
-  
+
         const response = await axios.get('https://api.hachion.co/enroll');
         const allEnrollments = response.data;
-  
-        const currentDate = new Date();
-  
-        // Filter enrollments for logged-in user's email AND future or today’s date
-        const userEnrollments = allEnrollments.filter((enrollment) => {
-          const isUser = enrollment.email === email;
-          const isUpcoming =
-            new Date(enrollment.enroll_date).setHours(0, 0, 0, 0) >= currentDate.setHours(0, 0, 0, 0);
-  
-          return isUser && isUpcoming;
-        });
-  
+
+        const currentDate = new Date().setHours(0, 0, 0, 0);
+
+        // Show all enrollments of the logged-in user
+        const userEnrollments = allEnrollments
+          .filter((enrollment) => enrollment.email === email)
+          .map((enrollment) => {
+            const enrollDate = new Date(enrollment.enroll_date).setHours(0, 0, 0, 0);
+            const status = enrollDate >= currentDate ? 'Upcoming' : 'Completed';
+
+            return {
+              ...enrollment,
+              status,
+            };
+          });
+
         setEnrollments(userEnrollments);
       } catch (error) {
         console.error('Error fetching enrollments:', error);
       }
     };
-  
+
     fetchEnrollments();
   }, []);
-  
 
   return (
     <>
-      <div className='courses-enrolled'>
-        <nav className='dashboard-nav'>Courses Enrolled</nav>
+      <div className="courses-enrolled">
+        <nav className="dashboard-nav">Courses Enrolled</nav>
       </div>
       <div className="resume-div">
-        <div className='resume-div-table'>
+        <div className="resume-div-table">
           <TableContainer component={Paper}>
-            <Table className='resume-table' aria-label="customized table">
+            <Table className="resume-table" aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <TableCell align="center">S.No.</TableCell>
@@ -62,6 +65,7 @@ export default function UserCategoryTable() {
                   <TableCell align="center">Week</TableCell>
                   <TableCell align="center">Time</TableCell>
                   <TableCell align="center">Mode</TableCell>
+                  <TableCell align="center">Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -73,11 +77,14 @@ export default function UserCategoryTable() {
                     <TableCell align="left">{row.week || '-'}</TableCell>
                     <TableCell align="left">{row.time}</TableCell>
                     <TableCell align="center">{row.mode}</TableCell>
+                    <TableCell align="center" style={{ color: row.status === 'Upcoming' ? 'green' : 'gray' }}>
+                      {row.status}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {enrollments.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} align="center">
+                    <TableCell colSpan={7} align="center">
                       No enrolled courses found.
                     </TableCell>
                   </TableRow>

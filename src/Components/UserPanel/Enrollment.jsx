@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
+import axios from 'axios';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Blogs.css';
@@ -21,6 +22,7 @@ const initialValues = {
 };
 
 const Enrollment = () => {
+  const [studentData, setStudentData] = useState(null);
   const [mobileNumber, setMobileNumber] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
@@ -70,6 +72,30 @@ const Enrollment = () => {
   const closeMenu = () => {
     setAnchorEl(null);
   };
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      const user = JSON.parse(localStorage.getItem('loginuserData'));
+      const email = user?.email;
+
+      if (!email) return;
+
+      try {
+        const response = await axios.get('https://api.hachion.co/api/v1/user/students');
+        const allStudents = response.data;
+
+        const matchedStudent = allStudents.find((student) => student.email === email);
+
+        if (matchedStudent) {
+          setStudentData(matchedStudent);
+          setMobileNumber(matchedStudent.mobile || '');
+        }
+      } catch (err) {
+        console.error('Error fetching student data:', err);
+      }
+    };
+
+    fetchStudentDetails();
+  }, []);
 
   return (
     <>
@@ -85,31 +111,40 @@ const Enrollment = () => {
         </div>
       
         <form className='details'>
-        
-        <div className='row'>
-            <div className="col-md-5">
-              <label htmlFor="inputName4" className="form-label">
-                Full Name<span className="required">*</span>
-              </label>
-              <input type="text" className="form-control" id="enroll1" placeholder='Enter your full name' 
-             required/>
-            </div>
-            <div className="col-md-5">
-              <label htmlFor="inputEmail4" className="form-label">
-                Email ID<span className="required">*</span>
-              </label>
-              <input type="email" className="form-control" id="enroll1" placeholder='abc@gmail.com'
-               name='email'
-               value={values.email}
-               onChange={handleChange}
-               onBlur={handleBlur} />
-            </div>
-  </div>
-  <div className="row">
-  <div className="col-md-5">
-            <label className='form-label'>Mobile Number</label>
-          <div class="input-group custom-width">
-          <div className='input-group'>
+      <div className='enroll-row'>
+        <div className="col-md-5">
+          <label htmlFor="inputName4" className="form-label">
+            Full Name<span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="enroll1"
+            placeholder='Enter your full name'
+            value={studentData?.userName || ''}
+            readOnly
+            required
+          />
+        </div>
+        <div className="col-md-5">
+          <label htmlFor="inputEmail4" className="form-label">
+            Email ID<span className="required">*</span>
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="enroll1"
+            placeholder='abc@gmail.com'
+            value={studentData?.email || ''}
+            readOnly
+          />
+        </div>
+      </div>
+
+      <div className='enroll-row'>
+        <div className="col-md-5">
+          <label className='form-label'>Mobile Number</label>
+          <div className="input-group custom-width">
             <Button
               variant="outlined"
               onClick={openMenu}
@@ -119,43 +154,42 @@ const Enrollment = () => {
               <Flag code={selectedCountry.flag} className='country-flag' />
               {selectedCountry.code}
             </Button>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={closeMenu}
-            >
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
               {countries.map((country) => (
-                <MenuItem
-                  key={country.code}
-                  onClick={() => handleCountrySelect(country)}
-                >
+                <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
                   <Flag code={country.flag} className='country-flag' />
                   {country.name} ({country.code})
                 </MenuItem>
               ))}
             </Menu>
-            <input type='tel'
-            className="mobile-number"
-            ref={mobileInputRef}
+            <input
+              type='tel'
+              className="mobile-number"
+              ref={mobileInputRef}
               id='enroll2'
-              aria-label="Text input with segmented dropdown button" 
-              placeholder='Enter your mobile number' 
-            name='name'
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}/>
-            </div>
+              placeholder='Enter your mobile number'
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="col-md-5">
+          <label htmlFor="inputCity" className="form-label">
+            Country<span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="enroll1"
+            placeholder='Enter your country'
+            value={studentData?.country || ''}
+            readOnly
+            required
+          />
+        </div>
       </div>
-      </div>
-      <div className="col-md-5">
-              <label for="inputCity" className="form-label">
-              Country<span className="required">*</span>
-              </label>
-              <input type="text" className="form-control" id="enroll1" placeholder='India'
-             required/>
-            </div>
-  </div>
-  </form>
+    </form>
   
         </div>
         <div className='personal-details'>

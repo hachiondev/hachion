@@ -88,7 +88,6 @@ public class EnrollController {
 
 	        		                "Meeting Link:"+ enrollRequest.getMeeting_link()+ "\n\n" +
 	        		                
-"Duration:"+ enrollRequest.getCompletion_date()+ "\n\n" +
 
 	        		                "Joining Instructions:"+ "\n" +
 	        		"1. Click the link above 5 minutes before the start time." + "\n" +

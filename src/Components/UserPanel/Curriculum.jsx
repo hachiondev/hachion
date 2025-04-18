@@ -6,6 +6,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { BsFillPlayCircleFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 import loginPopupImg from '../../Assets/loginpopup.png';
+import logo from '../../Assets/logo.png';
 
 const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
@@ -102,12 +103,7 @@ const Curriculum = () => {
     if (curriculumWithPdf) {
       const fileName = curriculumWithPdf.curriculum_pdf.split('/').pop();
       const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
-      const link = document.createElement('a');
-link.href = fullPdfUrl;
-link.target = '_blank'; // This opens the link in a new tab
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
+      window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
     }
@@ -183,11 +179,18 @@ document.body.removeChild(link);
       {isLoginModalVisible && (
         <div className="login-modal">
           <div className="login-modal-content" ref={modalRef}>
+          <img
+              src={logo}
+              alt="logo"
+              className="hlogo"
+            />
             <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
             <h2 className="modal-title">Download Brochure</h2>
             <div className="modal-body">
               <div className="modal-left">
-                <p>To access this feature, please login to the Hachion website.</p>
+              <h4 style={{color: '#000'}}>Don’t miss out!</h4>
+                    <br/>
+                <p>Just log in to the <span className="web-name">Hachion website</span> to unlock this feature.</p>
                 <button
                   className="login-btn"
                   onClick={() => {

@@ -477,8 +477,8 @@ const handleInputChange = (e) => {
                 <select
                   id="inputState"
                   className="form-select"
-                  name="schedule_frequency"
-                  value={courseData.schedule_frequency}
+                  name="schedule_week"
+                  value={courseData.schedule_week}
                   onChange={handleChange}
                 >
                   <option selected>Select</option>
@@ -775,8 +775,8 @@ const handleInputChange = (e) => {
           <select
             id="inputState"
             className="form-select"
-            name="schedule_frequency"
-            value={editedRow.schedule_frequency || ""}
+            name="schedule_week"
+            value={editedRow.schedule_week || ""}
             onChange={handleInputChange}
           >
             <option value="">Select</option>

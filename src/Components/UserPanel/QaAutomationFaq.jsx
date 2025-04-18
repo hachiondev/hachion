@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Course.css';
 import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
+import loginPopupImg from '../../Assets/loginpopup.png';
+import logo from '../../Assets/logo.png';
 
 const QaAutomationFaq = () => {
   const [showMore, setShowMore] = useState(false);
@@ -14,6 +16,16 @@ const QaAutomationFaq = () => {
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+    const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+    const modalRef = useRef(null);
+
+     useEffect(() => {
+        const redirectPath = localStorage.getItem('redirectAfterLogin');
+        if (redirectPath) {
+          localStorage.removeItem('redirectAfterLogin');
+        }
+      }, []);  
+
   // Fetch course details to get the correct course_name
   useEffect(() => {
     const fetchCourse = async () => {
@@ -144,7 +156,17 @@ const QaAutomationFaq = () => {
     </div>
   ));
 };
+
+const showLoginModal = () => setIsLoginModalVisible(true);
+const hideLoginModal = () => setIsLoginModalVisible(false);
+
 const downloadPdf = () => {
+  const token = localStorage.getItem('authToken');
+  
+    if (!token) {
+      showLoginModal();
+      return;
+    }
   if (!faq || faq.length === 0) {
     alert('No faq found for this course.');
     return;
@@ -168,6 +190,16 @@ const downloadPdf = () => {
   }
 };
 
+useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        hideLoginModal();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
@@ -186,6 +218,40 @@ const downloadPdf = () => {
           </button>
         </div>
       )}
+
+      {isLoginModalVisible && (
+              <div className="login-modal">
+                <div className="login-modal-content" ref={modalRef}>
+                <img
+              src={logo}
+              alt="logo"
+              className="hlogo"
+            />
+                  <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
+                  <h2 className="modal-title">Download FAQ's</h2>
+                  <div className="modal-body">
+                    <div className="modal-left">
+                    <h4 style={{color: '#000'}}>Don’t miss out!</h4>
+                    <br/>
+                      <p>Just log in to the <span className="web-name">Hachion website</span> to unlock this feature.</p>
+                      <button
+                        className="login-btn"
+                        onClick={() => {
+                          localStorage.setItem('redirectAfterLogin', window.location.pathname);
+                          window.location.href = '/login';
+                        }}
+                      >
+                        Login
+                      </button>
+                      <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
+                    </div>
+                    <div className="modal-right">
+                      <img src={loginPopupImg} alt="Login Prompt" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
     </div>
   );
 };

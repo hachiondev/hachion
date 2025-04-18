@@ -244,7 +244,8 @@ import qaheader from '../../Assets/qa-video.png';
 import { IoPlayCircleOutline } from 'react-icons/io5';
 import { BsFillPlayCircleFill } from 'react-icons/bs';
 import './Course.css';
-import loginPopupImg from '../../Assets/loginpopup.png'
+import loginPopupImg from '../../Assets/loginpopup.png';
+import logo from '../../Assets/logo.png';
 
 const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
@@ -263,6 +264,69 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
   const isLoggedIn = localStorage.getItem('authToken');
+
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  
+  useEffect(() => {
+    const fetchGeolocationData = async () => {
+      try {
+        const geoResponse = await axios.get('https://ipinfo.io?token=9da91c409ab4b2');
+        console.log('Geolocation Data:', geoResponse.data);
+  
+        const currencyMap = {
+         'IN': 'INR',
+          'US': 'USD',
+          'GB': 'GBP',
+          'AU': 'AUD',
+          'CA': 'CAD',
+          'AE': 'AED',
+          'JP': 'JPY',
+          'EU': 'EUR',
+          'TH': 'THB',
+          'DE': 'EUR',
+          'FR': 'EUR',
+          'QA': 'QAR',
+          'CN': 'CNY',
+          'RU': 'RUB',
+          'KR': 'KRW',
+          'BR': 'BRL',
+          'MX': 'MXN',
+          'ZA': 'ZAR'
+        };
+        
+        const countryCode = geoResponse.data.country?.toUpperCase() || 'US';
+        const userCurrency = currencyMap[countryCode] || 'USD';
+         
+        console.log('Detected Currency:', userCurrency);
+        setCurrency(userCurrency);
+  
+        // Fetch Exchange Rate
+        const cachedRates = localStorage.getItem('exchangeRates');
+        if (cachedRates) {
+          const rates = JSON.parse(cachedRates);
+          setExchangeRate(rates[userCurrency] || 1);
+        } else {
+          try {
+            const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+            const rates = exchangeResponse.data.rates;
+            localStorage.setItem('exchangeRates', JSON.stringify(rates));
+            setExchangeRate(rates[userCurrency] || 1);
+          } catch (error) {
+            console.warn('Exchange rate API failed. Using default USD rate.');
+            setExchangeRate(1); 
+          }
+        };
+  
+      } catch (error) {
+        console.error('Error fetching geolocation or exchange rate data:', error);
+        setCurrency('USD'); // Fallback to USD if data fails
+      }
+    };
+  
+    fetchGeolocationData();
+  }, []);
 
   // Show login modal
   const showLoginModal = () => {
@@ -353,6 +417,9 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     return stars;
   };
 
+  const convertedTotalFee = (course.total * exchangeRate).toFixed(2);
+  const convertedOriginalFee = (course.amount * exchangeRate).toFixed(2);
+
   return (
     <>
       <div className='qa-automation'>
@@ -367,11 +434,11 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
               <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
               <div className='qa-automation-middle'>
                 <p className='fee'>
-                  Fee: <span className='amount'>USD {Math.round(course.total)}/-</span>
-                  {course.total !== course.amount && (
-                    <span className='strike-price'> USD {Math.round(course.amount)}/-</span>
-                  )}
-                </p>
+              Fee: <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
+              {course.total !== course.amount && (
+              <span className='strike-price'>{currency} {Math.round(convertedOriginalFee)}/-</span>
+                          )}
+            </p>
                 <h6 className='sidebar-course-review'>
                   Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
                 </h6>
@@ -436,12 +503,19 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
       {/* Login Modal */}
       {isLoginModalVisible && (
         <div className="login-modal" onClick={hideLoginModal}>
-          <div className="login-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="login-modal-content" ref={modalRef}>
+            <img
+                          src={logo}
+                          alt="logo"
+                          className="hlogo"
+                        />
             <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
             <h2 className="modal-title">Download Brochure</h2>
             <div className="modal-body">
               <div className="modal-left">
-                <p>To access this feature, please login to the Hachion website.</p>
+              <h4 style={{color: '#000'}}>Don’t miss out!</h4>
+                    <br/>
+                      <p>Just log in to the <span className="web-name">Hachion website</span> to unlock this feature.</p>
                 <button className="login-btn" onClick={() => window.location.href = '/login'}>Login</button>
                 <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
               </div>

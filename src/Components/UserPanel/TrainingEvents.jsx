@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from 'react'; 
+// import React, { useEffect, useState } from 'react';
 // import TrainingCard from './TrainingCard';
 // import './Home.css';
 // import { useNavigate } from 'react-router-dom';
@@ -70,7 +70,7 @@
 //     if (!dateString) return 'TBA';
 //     return dayjs(dateString).tz(dayjs.tz.guess()).format('MMM DD YYYY');
 //   };
-  
+
 //   // Format Time Only with Timezone Abbreviation (e.g., 02:30 AM IST)
 // // Format Time with Proper Timezone Abbreviation
 // const timezoneAbbreviationMap = {
@@ -109,9 +109,6 @@
 //   return `${formattedTime} ${abbreviation}`;
 // };
 
-
-
-
 //   return (
 //     <div className="training-events">
 //       <div className="training-events-head">
@@ -126,8 +123,6 @@
 //           {viewAll ? 'View Courses Page' : 'View All'}
 //         </button>
 //       </div>
-
-
 
 //       <div className="training-card-holder">
 //         {(viewAll ? mergedCourses : mergedCourses.slice(0, 4)).map((course, index) => (
@@ -264,23 +259,22 @@
 
 // // export default TrainingEvents;
 
-
-import React, { useEffect, useState } from 'react';
-import TrainingCard from './TrainingCard';
-import './Home.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import TrainingCard from "./TrainingCard";
+import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
 const TrainingEvents = () => {
   const navigate = useNavigate();
   const [mergedCourses, setMergedCourses] = useState([]);
   const [viewAll, setViewAll] = useState(false);
 
-  const [modeFilter, setModeFilter] = useState('');
-  const [courseFilter, setCourseFilter] = useState('');
-  const [timeFilter, setTimeFilter] = useState('');
+  const [modeFilter, setModeFilter] = useState("");
+  const [courseFilter, setCourseFilter] = useState("");
+  const [timeFilter, setTimeFilter] = useState("");
 
   const [courseOptions, setCourseOptions] = useState([]);
-
+  const [filteredCourses, setFilteredCourses] = useState([]);
   // ✅ Get user's timezone
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -288,8 +282,10 @@ const TrainingEvents = () => {
     const fetchData = async () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
-          fetch(`https://api.hachion.co/schedulecourse?timezone=${userTimezone}`).then((res) => res.json()),
-          fetch('https://api.hachion.co/courses/all').then((res) => res.json())
+          fetch(
+            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+          ).then((res) => res.json()),
+          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
         ]);
 
         if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
@@ -306,20 +302,20 @@ const TrainingEvents = () => {
           return {
             ...scheduleItem,
             course_id: matchingCourse?.id || null,
-            course_image: matchingCourse?.courseImage || '',
-            created_at: matchingCourse?.createdAt || ''
+            course_image: matchingCourse?.courseImage || "",
+            created_at: matchingCourse?.createdAt || "",
           };
         });
 
-        console.log('Merged Courses:', mergedData);
+        console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
-          ...new Set(coursesRes.map((course) => course.courseName.trim()))
+          ...new Set(coursesRes.map((course) => course.courseName.trim())),
         ];
         setCourseOptions(uniqueCourses);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -327,11 +323,11 @@ const TrainingEvents = () => {
   }, [userTimezone]);
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    if (!dateString) return "";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(new Date(dateString));
   };
 
@@ -350,30 +346,52 @@ const TrainingEvents = () => {
 
       const courseNameMatch =
         !courseFilter ||
-        course.schedule_course_name?.toLowerCase().trim() === courseFilter.toLowerCase().trim();
+        course.schedule_course_name?.toLowerCase().trim() ===
+          courseFilter.toLowerCase().trim();
 
       const modeMatch =
         !modeFilter ||
-        course.schedule_mode?.toLowerCase().trim() === modeFilter.toLowerCase().trim();
+        course.schedule_mode?.toLowerCase().trim() ===
+          modeFilter.toLowerCase().trim();
 
       const timeMatch =
         !timeFilter ||
-        (timeFilter === 'today' && isToday) ||
-        (timeFilter === 'week' && isThisWeek) ||
-        (timeFilter === 'new' && isNewlyAdded);
+        (timeFilter === "today" && isToday) ||
+        (timeFilter === "week" && isThisWeek) ||
+        (timeFilter === "new" && isNewlyAdded);
 
       return courseNameMatch && modeMatch && timeMatch;
     });
   };
+  //setFilteredCourses(getFilteredCourses());
+
+  // Update filtered courses when a filter changes
+  // useEffect(() => {
+  //   setFilteredCourses(getFilteredCourses());
+  // }, [courseFilter, modeFilter, timeFilter, mergedCourses]);
+
+  useEffect(() => {
+    // console.log(getFilteredCourses());
+    // setFilteredCourses("");
+    // setFilteredCourses([...getFilteredCourses()]); // Force state update with new array
+    setFilteredCourses([]); // Reset state
+    setTimeout(() => {
+      setFilteredCourses([...getFilteredCourses()]);
+    }, 0);
+  }, [courseFilter, modeFilter, timeFilter, mergedCourses]);
 
   const resetFilters = () => {
-    setModeFilter('');
-    setCourseFilter('');
-    setTimeFilter('');
+    setModeFilter("");
+    setCourseFilter("");
+    setTimeFilter("");
   };
 
-  const filteredCourses = getFilteredCourses();
+  // Event handlers for dropdown changes
+  const handleCourseChange = (e) => setCourseFilter(e.target.value);
+  const handleModeChange = (e) => setModeFilter(e.target.value);
+  const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
+  //console.log(filteredCourses);
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
@@ -382,25 +400,19 @@ const TrainingEvents = () => {
 
       <div className="view-btn">
         <button className="view-all" onClick={() => setViewAll(!viewAll)}>
-          {viewAll ? 'View Less' : 'View All'}
+          {viewAll ? "View Less" : "View All"}
         </button>
       </div>
 
       <div className="filter-container">
         <div className="filter-section">
-          <select
-            value={modeFilter}
-            onChange={(e) => setModeFilter(e.target.value)}
-          >
+          <select value={modeFilter} onChange={handleModeChange}>
             <option value="">All Modes</option>
             <option value="Live Class">Live Class</option>
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <select
-            value={courseFilter}
-            onChange={(e) => setCourseFilter(e.target.value)}
-          >
+          <select value={courseFilter} onChange={handleCourseChange}>
             <option value="">All Courses</option>
             {courseOptions.map((course, idx) => (
               <option key={idx} value={course}>
@@ -409,10 +421,7 @@ const TrainingEvents = () => {
             ))}
           </select>
 
-          <select
-            value={timeFilter}
-            onChange={(e) => setTimeFilter(e.target.value)}
-          >
+          <select value={timeFilter} onChange={handleTimeChange}>
             <option value="">Any Time</option>
             <option value="new">Newly Added</option>
             <option value="today">Today</option>
@@ -427,18 +436,30 @@ const TrainingEvents = () => {
 
       <div className="training-card-holder">
         {filteredCourses.length > 0 ? (
-          (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map((course, index) => (
-            <TrainingCard
-              key={course.course_id || index}
-              id={course.course_id}
-              heading={course.schedule_course_name}
-              image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
-              date={course.schedule_date ? formatDate(course.schedule_date) : ''}
-              time={course.schedule_time || ''}
-              duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : ''}
-              mode={course.schedule_mode || ''}
-            />
-          ))
+          (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
+            (course, index) => (
+              <TrainingCard
+                key={course.course_id || index}
+                id={course.course_id}
+                heading={course.schedule_course_name}
+                image={
+                  course.course_image
+                    ? `https://api.hachion.co/${course.course_image}`
+                    : ""
+                }
+                date={
+                  course.schedule_date ? formatDate(course.schedule_date) : ""
+                }
+                time={course.schedule_time || ""}
+                duration={
+                  course.schedule_duration
+                    ? `Duration: ${course.schedule_duration}`
+                    : ""
+                }
+                mode={course.schedule_mode || ""}
+              />
+            )
+          )
         ) : (
           <div className="no-schedules-message">
             <p>No schedules are available</p>

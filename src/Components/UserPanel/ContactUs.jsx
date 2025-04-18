@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
@@ -154,6 +155,32 @@ const ContactUs = () => {
         console.log(values);
       },
     });
+    const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
+  const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
+
+  useEffect(() => {
+    const detectUserCountry = async () => {
+      try {
+        const res = await fetch('https://ipwho.is/');
+        if (!res.ok) throw new Error('Failed to fetch location data');
+
+        const data = await res.json();
+        console.log('🌎 Detected country:', data.country_code);
+
+        if (data.country_code === 'IN') {
+          setWhatsappNumber('+91-949-032-3388');
+          setWhatsappLink('https://wa.me/919490323388');
+        } else {
+          setWhatsappNumber('+1 (732) 485-2499');
+          setWhatsappLink('https://wa.me/17324852499');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching user location:', error);
+      }
+    };
+
+    detectUserCountry();
+  }, []);
 
   return (
     <>
@@ -216,17 +243,17 @@ const ContactUs = () => {
           <div className="contact-us-left">
             <h3>Enquiries</h3>
             <div className="contact-block">
-              <img src={whatsappIcon} alt="whatsapp-icon" />
-              <p className="contact-info">
-                <a
-                  href="https://wa.me/17324852499"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                   +1 (732) 485-2499{" "}
-                </a>
-              </p>
-            </div>
+          <img src={whatsappIcon} alt="whatsapp-icon" />
+          <p className="contact-info">
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {whatsappNumber}
+            </a>
+          </p>
+        </div>
             <div className="contact-block">
               <img src={mailIcon} alt="mail-icon" />
               <p className="contact-info">

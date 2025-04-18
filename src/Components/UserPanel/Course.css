@@ -1384,7 +1384,7 @@ text-align: left;
 
 .login-modal-content {
   background-color: #fff;
-  padding: 30px;
+  padding: 20px;
   width: 600px;
   max-width: 95%;
   border-radius: 8px;
@@ -1428,13 +1428,23 @@ text-align: left;
 .modal-left {
   flex: 1;
   justify-items: center;
+  background-color: #f0fbff;
+  padding: 40px 10px;
+  border-radius: 10px;
+  border: 3px solid #00AAEF;
+  box-shadow: 5px 5px 10px #d3d3d3;
 }
 
 .modal-left p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   color: #242424;
   font-size: 16px;
   text-align: center;
+}
+
+.web-name{
+font-weight: 700px;
+color: #006489;
 }
 
 .login-btn,
@@ -1460,6 +1470,11 @@ text-align: left;
 .modal-right img {
   max-width: 300px;
   border-radius: 10px;
+}
+
+.hlogo{
+  width: 120px;
+  height: auto;
 }
 
 .curriculum-head{
@@ -2509,6 +2524,11 @@ font-size: 10px;
 
 .modal-right img {
   max-width: 150px;
+}
+
+.hlogo{
+  width: 90px;
+  height: auto;
 }
 
 .mob-sidebar-heading{

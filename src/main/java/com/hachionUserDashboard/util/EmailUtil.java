@@ -1,6 +1,7 @@
 package com.hachionUserDashboard.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -35,15 +36,56 @@ public class EmailUtil {
 
 
     // Send OTP Email
+//    public void sendOtpEmail(String email, String otp) {
+//        try {
+//            MimeMessage message = javaMailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+//
+//            helper.setFrom("trainings@hachion.co");  // ✅ Important for GoDaddy SMTP
+//            helper.setTo(email);
+//            helper.setSubject("Verify OTP");
+//            helper.setText("<h3>Hello,</h3><p>Your OTP is: <b>" + otp + "</b></p>", true); // ✅ HTML for better visibility
+//
+//            javaMailSender.send(message);
+//            System.out.println("OTP Email sent successfully!");
+//
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//            System.err.println("Error sending email: " + e.getMessage());
+//        }
+//    }
     public void sendOtpEmail(String email, String otp) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom("trainings@hachion.co");  // ✅ Important for GoDaddy SMTP
+            helper.setFrom("trainings@hachion.co");
             helper.setTo(email);
-            helper.setSubject("Verify OTP");
-            helper.setText("<h3>Hello,</h3><p>Your OTP is: <b>" + otp + "</b></p>", true); // ✅ HTML for better visibility
+            helper.setSubject("Your One-Time Password (OTP) to Access Your Account");
+
+            String htmlContent = "<div style='max-width: 600px; margin: auto; font-family: Arial, sans-serif;'>" +
+                    "    <div style='text-align: center; padding: 10px 0;'>" +
+                    "        <img src='https://hachion.co/logo.png' alt='Logo' height='40'/>" +
+                    "    </div>" +
+                    "    <div style='background-color: #0056b3; color: white; text-align: center; padding: 15px; font-size: 18px; font-weight: bold;'>" +
+                    "        Your One-Time Password (OTP) to Access Your Account" +
+                    "    </div>" +
+                    "    <div style='padding: 30px 20px;'>" +
+                    "        <p>Hi Candidate,</p>" +
+                    "        <p>We received a request to log in to your account on Hachion. Please use the One-Time Password (OTP) below to complete your login:</p>" +
+                    "        <div style='font-size: 36px; font-weight: bold; text-align: center; margin: 20px 0;'>" + otp + "</div>" +
+                    "        <hr/>" +
+                    "        <p><strong>Note:</strong> In case of any technical difficulty do drop us a mail at <a href='mailto:trainings@hachion.co'>trainings@hachion.co</a></p>" +
+                    "        <p>Regards,<br/>Team Hachion</p>" +
+                    "    </div>" +
+                    "</div>";
+
+            helper.setText(htmlContent, true);
+
+//            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/logo.png");
+//            helper.addInline("logoImage", res);
+
+
 
             javaMailSender.send(message);
             System.out.println("OTP Email sent successfully!");

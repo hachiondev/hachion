@@ -1416,7 +1416,7 @@ text-align: left;
   font-weight: 600;
 }
 
-.modal-body {
+.modal-body-login {
   display: flex;
   gap: 20px;
   align-items: center;

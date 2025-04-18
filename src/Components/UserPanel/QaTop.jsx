@@ -511,7 +511,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
                         />
             <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
             <h2 className="modal-title">Download Brochure</h2>
-            <div className="modal-body">
+            <div className="modal-body-login">
               <div className="modal-left">
               <h4 style={{color: '#000'}}>Don’t miss out!</h4>
                     <br/>

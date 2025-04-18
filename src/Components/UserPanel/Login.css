@@ -170,9 +170,9 @@
 }
 
 /* .input-group-text img {
-    width: 30px;
-    height: 30px;
-  } */
+  width: 30px;
+  height: 30px;
+} */
 
 .form-check-input {
   color: black !important;
@@ -794,17 +794,17 @@
 }
 
 /* .icon-text-img {
-    height: 6.5vh;
-    width: 3.25vw;
-    margin-right: -8px;
-    z-index: 1;
+  height: 6.5vh;
+  width: 3.25vw;
+  margin-right: -8px;
+  z-index: 1;
 } */
 
 /* .login-link {
-    display: flex;
-    justify-content: center;
-    font-weight: 400;
-    font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 1rem;
 } */
 .link-to {
   color: #00aeef;
@@ -1118,8 +1118,8 @@ hr {
     gap: 20px;
   }
   /* .otp{
-        width: 60vw;
-    } */
+      width: 60vw;
+  } */
   .otp-number {
     height: 50px;
     width: 50px;
@@ -1130,7 +1130,7 @@ hr {
   }
 
   /* .register-btn {
-        font-size: 0.85rem;
-        height: 5.5vh;
-    } */
+      font-size: 0.85rem;
+      height: 5.5vh;
+  } */
 }

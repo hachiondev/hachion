@@ -79,6 +79,7 @@ export default function WorkshopSchedule() {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [catChange, setCatChange] = useState(0);
   const [editedRow, setEditedRow] = useState({
     bannerImage: null,
     category_name: "",
@@ -418,6 +419,15 @@ export default function WorkshopSchedule() {
       ...prev,
       [name]: value,
     }));
+    if (name === "category_name") {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    }
   };
 
   const quillModules = {
@@ -996,11 +1006,23 @@ export default function WorkshopSchedule() {
                   <option value="" disabled>
                     Select Course
                   </option>
-                  {courseCategory.map((curr) => (
+                  {catChange
+                    ? filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))
+                    : courseCategory.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
+
+                  {/* {courseCategory.map((curr) => (
                     <option key={curr.id} value={curr.courseName}>
                       {curr.courseName}
                     </option>
-                  ))}
+                  ))} */}
                 </select>
               </div>
             </div>

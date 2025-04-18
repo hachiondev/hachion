@@ -224,6 +224,7 @@ export default function Curriculum() {
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // alert(name);
     setEditedRow((prev) => ({
       ...prev,
       [name]: value,
@@ -231,7 +232,7 @@ export default function Curriculum() {
     }));
     if (editedRow.category_name) {
       // alert(name);
-      // alert(value);
+      /// alert(value);
       setCatChange(1);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === value
@@ -277,7 +278,7 @@ export default function Curriculum() {
       ) {
         formData.append("curriculumPdf", editedRow.curriculum_pdf);
       }
-
+      //console.log(formData);
       const response = await axios.put(
         `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
         formData,
@@ -361,54 +362,86 @@ export default function Curriculum() {
     setCurriculumData((prevData) => ({
       ...prevData,
       [name]: value,
+      ...(name === "course_name" && { course_name: "" }), // Reset course when category changes
     }));
   };
 
-  const handlecourseChange = (e) => {
+  const handleEditcourseChange = (e) => {
     const { name, value } = e.target;
-    setCurriculumData((prevData) => ({
-      ...prevData,
+    // alert(name);
+    setEditedRow((prev) => ({
+      ...prev,
       [name]: value,
+      ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
     }));
-    alert(value);
-    if (curriculumData.category_name) {
-      const filtered = courseCategory.filter(
-        (course) => course.courseCategory === value
-      );
-      setFilterCourse(filtered);
-    } else {
-      setFilterCourse([]); // Reset when no category is selected
-    }
   };
+
+  // useEffect(() => {
+  //   // Load all curriculum data initially
+  //   setFilteredCurriculum(allData);
+  //   setFilterData([]);
+  // }, [allData]);
 
   const handlefilterChange = (e) => {
     const { name, value } = e.target;
     const newFilter = { ...filterData, [name]: value };
+    //setFilterData([]); // Reset state
+    // setTimeout(() => {
     setFilterData(newFilter);
+    //}, 0);
 
+    // Filter curriculum data based on selected category and/or course
+    //alert(newFilter.category_name);
     const filtered = allData.filter(
       (item) =>
         (!newFilter.category_name ||
           item.category_name === newFilter.category_name) &&
         (!newFilter.course_name || item.course_name === newFilter.course_name)
     );
-
     setFilteredCurriculum(filtered);
-    setCurrentPage(1); // Reset to first page
-    //alert(name);
-    if (name) {
+    setCurrentPage(1); // Reset to the first page
+
+    if (name === "category_name") {
       // alert(name);
-      // alert(value);
+      //alert(value);
       setCatChange(1);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
-    } else {
-      setCatChange(0);
-      setFilterCourse([]);
     }
   };
+  // const handlefilterChange = (e) => {
+  //   const { name, value } = e.target;
+  //   // setFilterData((prevData) => ({
+  //   //   ...prevData,
+  //   //   [name]: value,
+  //   //   ...(name === "course_name" && { course_name: value }), // Reset course when category changes
+  //   // }));
+  //   const newFilter = { ...filterData, [name]: value };
+  //   setFilterData(newFilter);
+
+  //   const filtered = allData.filter(
+  //     (item) =>
+  //       (!newFilter.category_name ||
+  //         item.category_name === newFilter.category_name) &&
+  //       (!newFilter.course_name || item.course_name === newFilter.course_name)
+  //   );
+
+  //   setFilteredCurriculum(filtered);
+  // //  alert(filteredCurriculum);
+  //   setCurrentPage(1); // Reset to first page
+  //   //alert(name);
+  //   if (name === "category_name") {
+  //     // alert(name);
+  //     //alert(value);
+  //     setCatChange(1);
+  //     const filtered = courseCategory.filter(
+  //       (course) => course.courseCategory === value
+  //     );
+  //     setFilterCourse(filtered);
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -801,9 +834,7 @@ export default function Curriculum() {
                   value={filterData.course_name}
                   onChange={handlefilterChange}
                 >
-                  <option value="" disabled>
-                    Select Course
-                  </option>
+                  <option value="">Select Course</option>
                   {catChange
                     ? filterCourse.map((curr) => (
                         <option key={curr.id} value={curr.courseName}>
@@ -987,7 +1018,7 @@ export default function Curriculum() {
                 className="form-select"
                 name="course_name"
                 value={editedRow.course_name || ""}
-                onChange={handleInputChange}
+                onChange={handleEditcourseChange}
               >
                 <option value="" disabled>
                   Select Course

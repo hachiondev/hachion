@@ -715,7 +715,7 @@
 .recent-entries {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: 2vh;
   overflow-x: auto; /* Enable horizontal scrolling */
   scrollbar-width: none; /* Hide scrollbar for Firefox */
@@ -767,6 +767,7 @@
 
 .date {
   color: #6a6a6a;
+  text-align: right;
 }
 .blog-bottom {
   margin: 4vh;

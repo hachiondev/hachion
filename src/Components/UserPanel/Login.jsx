@@ -30,11 +30,12 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!isCaptchaChecked) {
       setCaptchaError("Captcha validation is mandatory to login.");
-
       return;
     }
+
     const loginData = {
       email: email,
       password: password,
@@ -42,28 +43,29 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/api/v1/user/login",
+        "http://localhost:8080/api/v1/user/login",
         loginData
       );
-      console.log(response.data); // Debugging line
+      console.log(response.data);
 
       if (response.data.status) {
-        // Ensure the response contains 'userName' and 'email'
         const loginuserData = {
           name: response.data.userName,
           email: response.data.email,
         };
 
         try {
-          localStorage.setItem("loginuserData", JSON.stringify(loginuserData)); // Try saving to localStorage
-          // console.log('User data saved to localStorage:', loginuserData); // Debugging line
+          localStorage.setItem("loginuserData", JSON.stringify(loginuserData));
+          localStorage.setItem("authToken", response.data.token); // Save the token
         } catch (error) {
           console.error("Error saving to localStorage:", error);
         }
 
-        navigate("/"); // Navigate after saving data
+        const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirectPath;
       } else {
-        setErrorMessage(response.data.message); // Show error message
+        setErrorMessage(response.data.message);
       }
     } catch (error) {
       console.error("Error during login", error);
@@ -74,21 +76,21 @@ const Login = () => {
   // Display error message
 
   const googleLogin = () => {
-    window.open("https://api.hachion.co/oauth2/authorization/google", "_self");
+    window.open("http://localhost:8080/oauth2/authorization/google", "_self");
   };
 
   const facebookLogin = () => {
     window.location.href =
-      "https://api.hachion.co/oauth2/authorization/facebook"; // Backend Facebook OAuth
+      "http://localhost:8080/oauth2/authorization/facebook"; // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
     window.location.href =
-      "https://api.hachion.co/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
+      "http://localhost:8080/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = "https://api.hachion.co/oauth2/authorization/apple"; // Backend Apple OAuth
+    window.location.href = "http://localhost:8080/oauth2/authorization/apple"; // Backend Apple OAuth
   };
 
   // Toggle password visibility

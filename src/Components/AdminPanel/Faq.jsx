@@ -201,7 +201,7 @@ export default function Faq() {
       [name]: value,
       ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
     }));
-    if (editedRow.category_name) {
+    if (name === "category_name") {
       // alert(name);
       //alert(value);
       setCatChange(1);
@@ -209,9 +209,6 @@ export default function Faq() {
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
-    } else {
-      setCatChange(0);
-      setFilterCourse([]);
     }
   };
   const handleDateFilter = () => {
@@ -289,7 +286,7 @@ export default function Faq() {
     setFilteredCurriculum(filtered);
     setCurrentPage(1); // Reset to first page
 
-    if (name) {
+    if (name === "category_name") {
       // alert(name);
       // alert(value);
       setCatChange(1);
@@ -297,9 +294,6 @@ export default function Faq() {
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
-    } else {
-      setCatChange(0);
-      setFilterCourse([]);
     }
   };
 

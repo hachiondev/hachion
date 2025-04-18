@@ -71,6 +71,7 @@ export default function Review() {
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [catChange, setCatChange] = useState(0);
   const [selectedRow, setSelectedRow] = useState({
     category_name: "",
     course_name: "",
@@ -174,6 +175,15 @@ export default function Review() {
       ...prev,
       [name]: value, // Updates the corresponding field
     }));
+    if (name === "category_name") {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    }
   };
 
   const handleClose = () => {
@@ -928,11 +938,22 @@ export default function Review() {
                 <option value="" disabled>
                   Select Course
                 </option>
-                {courseCategory.map((curr) => (
+                {catChange
+                  ? filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))
+                  : courseCategory.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
+                {/* {courseCategory.map((curr) => (
                   <option key={curr.id} value={curr.courseName}>
                     {curr.courseName}
                   </option>
-                ))}
+                ))} */}
               </select>
             </div>
           </div>

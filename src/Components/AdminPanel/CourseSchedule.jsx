@@ -256,7 +256,6 @@ export default function CourseSchedule() {
     setCourseData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
     }));
   };
   const handleReset = () => {
@@ -426,7 +425,7 @@ export default function CourseSchedule() {
       ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
     }));
 
-    if (editedRow.schedule_category_name) {
+    if (name === "schedule_category_name") {
       // alert(name);
       // alert(value);
       setCatChange(1);
@@ -434,9 +433,6 @@ export default function CourseSchedule() {
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
-    } else {
-      setCatChange(0);
-      setFilterCourse([]);
     }
   };
 

@@ -92,7 +92,7 @@
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //       try {
-//         const response = await axios.get('https://api.hachion.co/schedulecourse');
+//         const response = await axios.get('http://localhost:8080/schedulecourse');
 //         setCourses(response.data);
 
 //         // Filter courses based on the courseName from URL
@@ -233,7 +233,7 @@ export const LiveOnlineFees = () => {
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         const response = await axios.get(
-          `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+          `http://localhost:8080/schedulecourse?timezone=${userTimezone}`
         );
         setCourses(response.data);
 

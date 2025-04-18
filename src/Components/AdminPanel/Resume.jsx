@@ -72,6 +72,7 @@ export default function Resume() {
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [catChange, setCatChange] = useState(0);
   const [editedData, setEditedData] = useState({
     category_name: "",
     course_name: "",
@@ -124,6 +125,15 @@ export default function Resume() {
       ...prev,
       [name]: value,
     }));
+    if (name === "category_name") {
+      // alert(name);
+      // alert(value);
+      setCatChange(1);
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === value
+      );
+      setFilterCourse(filtered);
+    }
   };
 
   const handleClose = () => {
@@ -665,11 +675,22 @@ export default function Resume() {
                 <option value="" disabled>
                   Select Course
                 </option>
-                {courseCategory.map((curr) => (
+                {catChange
+                  ? filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))
+                  : courseCategory.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>
+                        {curr.courseName}
+                      </option>
+                    ))}
+                {/* {courseCategory.map((curr) => (
                   <option key={curr.id} value={curr.courseName}>
                     {curr.courseName}
                   </option>
-                ))}
+                ))} */}
               </select>
             </div>
           </div>

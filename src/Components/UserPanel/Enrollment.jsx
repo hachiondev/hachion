@@ -80,7 +80,7 @@ const Enrollment = () => {
       if (!email) return;
 
       try {
-        const response = await axios.get('https://api.hachion.co/api/v1/user/students');
+        const response = await axios.get('/HachionUserDashboad/api/v1/user/students');
         const allStudents = response.data;
 
         const matchedStudent = allStudents.find((student) => student.email === email);

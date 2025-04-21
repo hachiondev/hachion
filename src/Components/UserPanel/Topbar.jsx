@@ -13,28 +13,47 @@ import './Home.css';
 const Topbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
+  const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
 
   useEffect(() => {
-    console.log("Checking for stored user data in localStorage...");
+    const detectUserCountry = async () => {
+      try {
+        const res = await fetch('https://ipwho.is/');
+        if (!res.ok) throw new Error('Failed to fetch location data');
 
-    // Check localStorage for user data on component mount
+        const data = await res.json();
+      
+
+        if (data.country_code === 'IN') {
+          setWhatsappNumber('+91-949-032-3388');
+          setWhatsappLink('https://wa.me/919490323388');
+        } else {
+          setWhatsappNumber('+1 (732) 485-2499');
+          setWhatsappLink('https://wa.me/17324852499');
+        }
+      } catch (error) {
+        console.error('❌ Location fetch error:', error);
+        // fallback to US number
+        setWhatsappNumber('+1 (732) 485-2499');
+        setWhatsappLink('https://wa.me/17324852499');
+      }
+    };
+
+    detectUserCountry();
+
     const storedUserData = localStorage.getItem('loginuserData');
     if (storedUserData) {
       const parsedData = JSON.parse(storedUserData);
-      setUserData(parsedData);  
-      setIsLoggedIn(true);  
-      console.log("User data found:", parsedData);
-    } else {
-      console.log("No user data found. User is not logged in.");
+      setUserData(parsedData);
+      setIsLoggedIn(true);
     }
-  }, []);  
+  }, []);
 
   const handleLogout = () => {
-    console.log("Logging out user...");
-    localStorage.removeItem('loginuserData'); // Clear user data
+    localStorage.removeItem('loginuserData');
     setIsLoggedIn(false);
     setUserData(null);
-    console.log("User logged out successfully.");
   };
 
   return (
@@ -42,26 +61,29 @@ const Topbar = () => {
       <div className='topbar-left'>
         <p className='query-title'>Have any query?</p>
         <div className="whatsapp-container">
-      <a 
-        href="https://wa.me/17324852499" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="whatsapp-link"
-      >
-        <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" />
-        <p className="whatsapp-number">+1 (732) 485-2499</p>
-      </a>
-    </div>
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whatsapp-link"
+          >
+            <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" />
+            <p className="whatsapp-number">{whatsappNumber}</p>
+          </a>
+        </div>
         <PiLineVerticalThin className='line-vertical' />
-        <IoIosMail className='training-mail-icon'/>
+        <IoIosMail className='training-mail-icon' />
         <p className='training-email'>
-  <a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
-    target="_blank" 
-    rel="noopener noreferrer">trainings@hachion.co</a>
-</p>
+          <a
+            href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            trainings@hachion.co
+          </a>
+        </p>
       </div>
 
-      {/* Conditional Rendering Based on Login Status */}
       {isLoggedIn ? (
         <div className='topbar-right'>
           <div className='user-info'>
@@ -76,22 +98,21 @@ const Topbar = () => {
                 >
                   {userData?.name || 'Hachion User'}
                 </Link>
-
                 <ul className="dropdown-menu">
                   <li>
-                    <Link className="dropdown-item" to={'/userdashboard'}>
-                      <FaUserAlt className="dropdown-icon"/> Dashboard
+                    <Link className="dropdown-item" to="/userdashboard">
+                      <FaUserAlt className="dropdown-icon" /> Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" href="#">
-                      <IoMdSettings className="dropdown-icon"/> Settings
+                    <Link className="dropdown-item" to="#">
+                      <IoMdSettings className="dropdown-icon" /> Settings
                     </Link>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
-                    <Link className="dropdown-item" href="#" onClick={handleLogout}>
-                      <IoLogOut className="dropdown-icon"/> Logout
+                    <Link className="dropdown-item" to="#" onClick={handleLogout}>
+                      <IoLogOut className="dropdown-icon" /> Logout
                     </Link>
                   </li>
                 </ul>
@@ -103,11 +124,11 @@ const Topbar = () => {
         <div className='topbar-right'>
           <div className='login-div'>
             <Link to='/login' className='login-link-home'>
-              <button className='login-div-content' onClick={() => console.log("Login button clicked")}>Login</button>
+              <button className='login-div-content'>Login</button>
             </Link>
             <PiLineVerticalThin style={{ color: 'white', fontSize: '2rem' }} />
             <Link to='/register' className='login-link-home'>
-              <button className='login-div-content' onClick={() => console.log("Register button clicked")}>Register</button>
+              <button className='login-div-content'>Register</button>
             </Link>
           </div>
         </div>

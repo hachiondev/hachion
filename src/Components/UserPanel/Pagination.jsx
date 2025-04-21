@@ -10,9 +10,7 @@ const Pagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
       onPageChange(page);
-      // Prevent scrolling to the top
-      // Instead, keep the current scroll position
-      // window.scrollTo(0, window.scrollY); // Uncomment this if you want to maintain scroll position
+      
     }
   };
 

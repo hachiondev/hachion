@@ -9,7 +9,6 @@ import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
 import RegisterNext from './Components/UserPanel/RegisterNext';
 import RegisterHere from './Components/UserPanel/RegisterHere';
-import LoginSuccess from './Components/UserPanel/LoginSuccess';
 import ForgotPassword from './Components/UserPanel/ForgotPassword';
 import Course from './Components/UserPanel/Course';
 import QaAutomation from './Components/UserPanel/QaAutomation';
@@ -18,11 +17,8 @@ import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
-import AdminDashboard from './Components/AdminPanel/AdminDashboard';
 import Blogs from './Components/UserPanel/Blogs';
-import QaTesting from './Components/UserPanel/QaTesting';
 import Salesforce from './Components/UserPanel/Salesforce';
-import SalesforceBlog from './Components/UserPanel/SalesforceBlog';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
@@ -63,7 +59,6 @@ function App() {
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
       <Route path='/registerhere' element={<RegisterHere/>}/>
-      <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
     
            <Route
@@ -99,10 +94,8 @@ function App() {
 <Route path='/workshop' element={<SalWorkshop/>}/>
 
       <Route path='/blogs' element={<Blogs/>}/>
-      <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
-      <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/blogs/:category_name/content' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>

@@ -81,33 +81,27 @@ const [courses, setCourses] = useState([]);
         console.warn("courseName param missing!");
         return;
       }
-    
       const originalName = courseName.replace(/-/g, " ");
-      // Now use originalName safely
     }, [courseName]);
     const handleCountrySelect = (country) => {
       setSelectedCountry(country);
       closeMenu();
       mobileInputRef.current?.focus();
     };
-  
     const openMenu = (event) => {
       setAnchorEl(event.currentTarget);
     };
     useEffect(() => {
       const fetchWorkshops = async () => {
         try {
-          const response = await axios.get('https://api.hachion.co/workshopschedule');
+          const response = await axios.get('/HachionUserDashboad/workshopschedule');
           setWorkshops(response.data);
-    
-          // Get unique category names
           const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
           setCategories(uniqueCategories);
         } catch (error) {
           console.error('Error fetching workshop list:', error);
         }
       };
-    
       fetchWorkshops();
     }, []);
     useEffect(() => {
@@ -143,10 +137,9 @@ const [courses, setCourses] = useState([]);
     };
   
     useEffect(() => {
-      fetch('https://api.hachion.co/workshopschedule')
+      fetch('/HachionUserDashboad/workshopschedule')
         .then((res) => res.json())
         .then((data) => {
-          // if API returns an array, pick the first item (or adjust accordingly)
           setWorkshop(Array.isArray(data) ? data[0] : data);
         })
         .catch((err) => console.error("Failed to fetch workshop:", err));
@@ -161,18 +154,13 @@ const [courses, setCourses] = useState([]);
       setFormData({ ...formData, [e.target.name]: e.target.value });
     };
   
-    // Handle form submission
     const handleSubmit = async (e) => {
       e.preventDefault();
-    
-      // Validate required fields
       if (!formData.mobileNumber || !formData.timeZone || !formData.fullName || !formData.emailId) {
         setError('Please fill all the details to register.');
         setMessageType('error');
         return;
       }
-    
-      // Clear previous error
       setError('');
       setMessageType('');
     
@@ -192,10 +180,9 @@ const [courses, setCourses] = useState([]);
       };
     
       try {
-        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+        const response = await axios.post("/HachionUserDashboad/workshops", updatedFormData);
         setError("Registration for workshop done successfully");
         setMessageType('success'); // ✅ Mark message as success
-        console.log("Response:", response.data);
       } catch (error) {
         console.error("Error submitting form:", error);
         setError("Something went wrong. Please try again.");
@@ -229,9 +216,6 @@ const [courses, setCourses] = useState([]);
         }
       };
     }, []);
-
-   
-
   return (
     <>
     <Helmet>
@@ -286,13 +270,11 @@ const [courses, setCourses] = useState([]);
       {workshop && (
       <div className='course-top'>
         <div className='about-banner'>
-          {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
           <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                  ? `https://api.hachion.co/${workshop.banner_image}` 
+                  ? `/HachionUserDashboad/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
-            // style={{ height: "420px"}}
             className="d-block w-100"
             onClick={handleScrollToWorkshop}
           />
@@ -303,13 +285,8 @@ const [courses, setCourses] = useState([]);
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              
-
               <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.content.trim() || "" }} />
-              
-            
             </div>
-
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
@@ -331,21 +308,13 @@ const [courses, setCourses] = useState([]);
                 })() : 'Loading...'}
               </p>
         <p>Time: {workshop?.time} {workshop?.time_zone}</p>
-        {/* <p>Date: 15th March</p>
-        <p>Time: 10AM EST</p> */}
         <p>(4 Days a Week: Monday - Thursday)</p>
         <p>Time Duration: 1 Hour Daily</p>
       </div>
-
-      {/* <p>{workshop?.details}</p> */}
-
       <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() || "" }} />
-
-           
             </div>
           </div>
         </div>
-
       <div className='workshop-banner'onClick={handleScrollToWorkshop}>
                     <p className='workshop-banner-content'>Register Now Before Seats Run Out !</p>
                     <button className='join' onClick={handleScrollToWorkshop}>Join Now</button>
@@ -383,9 +352,7 @@ const [courses, setCourses] = useState([]);
               </div>
             </div>
         </div>
-
         <WorkshopLearners />
-
         <div className='workshopfaq'>
         <WorkshopFAQ />
         </div>
@@ -502,38 +469,23 @@ const [courses, setCourses] = useState([]);
     {error}
   </div>
 )}
-
-
             <button
               type="submit"
               className="register-button"
             >
               Register
             </button>
-           
-
             </div>
-            
-           
         </div>
         </form> 
-        
         </div>
-        
-
         </div>
-       
-      {/* Footer section to stop the sticky behavior */}
       <div ref={footerRef}>
         <Footer />
-        
       </div>
-      
       <StickyBar />
       </div>)}
-      
     </>
   );
 };
-
 export default SalWorkshop;

@@ -7,7 +7,26 @@ import flexibleDesign from '../../Assets/flexibleDesign.png';
 import workforceNeeds from '../../Assets/workforceNeeds.png';
 import expertHelp from '../../Assets/expertHelp.png';
 
+// Reusable component for each training feature
+const TrainingFeature = ({ image, title, description }) => (
+  <div className='about-us-div-content'>
+    <img src={image} alt={title} />
+    <h6>{title}</h6>
+    <p>{description}</p>
+  </div>
+);
+
 const Hachion = () => {
+  // Data for each feature
+  const features = [
+    { image: slashTrainingBudget, title: 'Slash Training Budget', description: 'Optimising Cost without compromising quality' },
+    { image: remoteTraining, title: 'Remote Training For Employees', description: 'Access learning anytime, anywhere with flexibility.' },
+    { image: flexibleTraining, title: 'Flexible Training Schedules', description: 'Adaptable learning time that fit your needs' },
+    { image: flexibleDesign, title: 'Flexible Syllabus Design', description: 'Easily customize course content to suit your goals.' },
+    { image: workforceNeeds, title: 'Evaluate Workforce Needs', description: 'Assess skills and requirement for optimal performance.' },
+    { image: expertHelp, title: 'Expert help via chat', description: 'Immediate support from knowledgeable professionals.' }
+  ];
+
   return (
     <>
       <div className='association'>
@@ -15,36 +34,14 @@ const Hachion = () => {
       </div>
       <div className='hachion-content'>
         <div className='about-us-row'>
-          <div className='about-us-div-content'>
-            <img src={slashTrainingBudget} alt='slash-training-image' />
-            <h6>Slash Training Budget</h6>
-            <p>Optimising Cost without compromising quality</p>
-          </div>
-          <div className='about-us-div-content'>
-            <img src={remoteTraining} alt='remote-training' />
-            <h6>Remote Training For Employees</h6>
-            <p>Access learning anytime, anywhere with flexibility.</p>
-          </div>
-          <div className='about-us-div-content'>
-            <img src={flexibleTraining} alt='' />
-            <h6>Flexible Training Schedules</h6>
-            <p>Adaptable learning time that fit your needs</p>
-          </div>
-          <div className='about-us-div-content'>
-            <img src={flexibleDesign} alt='' />
-            <h6>Flexible Syllabus Design</h6>
-            <p>Easily customize course content to suit your goals.</p>
-          </div>
-          <div className='about-us-div-content'>
-            <img src={workforceNeeds} alt='' />
-            <h6>Evaluate Workforce Needs</h6>
-            <p>Assess skills and requirement for optimal performance.</p>
-          </div>
-          <div className='about-us-div-content'>
-            <img src={expertHelp} alt='' />
-            <h6>Expert help via chat</h6>
-            <p>Immediate support from knowledgeable professionals.</p>
-          </div>
+          {features.map(({ image, title, description }, index) => (
+            <TrainingFeature
+              key={index}
+              image={image}
+              title={title}
+              description={description}
+            />
+          ))}
         </div>
       </div>
     </>

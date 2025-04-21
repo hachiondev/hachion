@@ -92,7 +92,7 @@ const NavbarTop = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        {/* Logo */}
+      
         {!isMobileSearchOpen && (
           <img
             src={logo}
@@ -101,8 +101,6 @@ const NavbarTop = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
-
-        {/* Right section containing search and hamburger */}
         <div className="right-icons">
           {searchVisible ? (
             <div className="search-div-home" role="search">
@@ -143,7 +141,6 @@ const NavbarTop = () => {
             </button>
           )}
 
-          {/* Hamburger menu */}
           {!isMobileSearchOpen && !isDrawerOpen && (
             <button className="drawer-toggle-btn" onClick={toggleDrawer}>
               <GiHamburgerMenu className="toggle-icon" />
@@ -166,8 +163,6 @@ const NavbarTop = () => {
               onClick={handleClick}
               className="drawer-logo"
             />
-
-            {/* Conditional rendering for login/logout */}
             {isLoggedIn ? (
               <>
                 <div className="profile">
@@ -193,10 +188,10 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/corporate')}>
                       Corporate Training
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
                       Courses
                     </div>
-                    <div className="drawer-item">Hire from Us</div>
+                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
 
                     <button className="drawer-button" onClick={() => handleLogout()}>
                       <IoLogOut /> Logout
@@ -209,10 +204,10 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/corporate')}>
                   Corporate Training
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/CourseDetails')}>
+                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
                   Courses
                 </div>
-                <div className="drawer-item">Hire from Us</div>
+                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
@@ -235,18 +230,18 @@ const NavbarTop = () => {
             </Link>
           </button>
           <button
-            className={`nav-item ${activeLink === 'course' ? 'active' : ''}`}
-            onClick={() => handleNavClick('course')}
+            className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
+            onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="/CourseDetails" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Courses
             </Link>
           </button>
           <button
-            className={`nav-item ${activeLink === 'hire' ? 'active' : ''}`}
-            onClick={() => handleNavClick('hire')}
+            className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
+            onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="#" className="nav-item-link">
+            <Link to="/courseDetails" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

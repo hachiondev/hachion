@@ -49,12 +49,11 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
           <p className="card-date">{date}</p>
           <p className="time">{time}</p>
         </div>
-        {/* <h6 className="course-date">{duration} Hour</h6> */}
-        {/* Prevent event propagation on button click */}
+
         <button 
           className="enroll-btn" 
           onClick={(e) => { 
-            e.stopPropagation(); // Stop click from triggering card event
+            e.stopPropagation(); 
             navigateToCourse(); 
           }}
         >

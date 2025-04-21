@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Course.css';
 import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
+import loginPopupImg from '../../Assets/loginpopup.png';
+import logo from '../../Assets/logo.png';
 
 const QaAutomationFaq = () => {
   const [showMore, setShowMore] = useState(false);
@@ -14,13 +16,21 @@ const QaAutomationFaq = () => {
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Fetch course details to get the correct course_name
+    const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+    const modalRef = useRef(null);
+
+     useEffect(() => {
+        const redirectPath = localStorage.getItem('redirectAfterLogin');
+        if (redirectPath) {
+          localStorage.removeItem('redirectAfterLogin');
+        }
+      }, []);  
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
-        console.log('API response:', response.data); // Check course data
+        const response = await axios.get('/HachionUserDashboad/courses/all');
+        console.log('API response:', response.data); 
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         console.log('Course name from URL:', courseNameFromUrl);
@@ -31,26 +41,17 @@ const QaAutomationFaq = () => {
     
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
-          console.log('Matched Course:', matchedCourse);
-    
-          // Fetch curriculum details
-          const curriculumResponse = await axios.get('https://api.hachion.co/faq');
-          console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
-    
-          // Normalize both names for reliable comparison
+
+          const curriculumResponse = await axios.get('/HachionUserDashboad/faq');
           const matchedCurriculum = curriculumResponse.data.find(
             (item) => item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
           );
   
-          console.log('Matched Curriculum:', matchedCurriculum); // Debugging log
-  
-          // Set the PDF URL if found
           if (matchedCurriculum && matchedCurriculum.faq_pdf) {
-            const fullPdfUrl = `https://api.hachion.co/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
+            const fullPdfUrl = `/HachionUserDashboad/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
-            console.log('PDF URL Set:', fullPdfUrl);
           } else {
-            console.log('No PDF found in FAQ for this course');
+    
             setError('No PDF found in FAQ for this course.');
           }
         } else {
@@ -73,7 +74,7 @@ const QaAutomationFaq = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/faq');
+        const response = await axios.get('/HachionUserDashboad/faq');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
@@ -92,12 +93,10 @@ const QaAutomationFaq = () => {
     console.log('PDF URL:', pdfUrl); // Log pdfUrl whenever it changes
   }, [pdfUrl]);
 
-  // Toggle View More / View Less
   const handleViewMore = () => {
     setShowMore(!showMore);
   };
 
-  // Toggle individual FAQ expansion
   const handleToggleExpand = (index) => {
     setExpandedTopics((prevState) => ({
       ...prevState,
@@ -105,7 +104,7 @@ const QaAutomationFaq = () => {
     }));
   };
 
-  // Render FAQ topics
+ 
   const renderTopics = () => {
     const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
@@ -122,20 +121,6 @@ const QaAutomationFaq = () => {
           </p>
         </div>
 
-        {/* {expandedTopics[index] && (
-          <div className="topic-details">
-            <ul className="bullet-list">
-              {item.description &&
-                item.description.split(',').map((desc, i) => (
-                  <li key={i}>{desc.trim()}</li>
-                ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    ));
-  }; */}
-
 {expandedTopics[index] && (
         <div className="topic-details">
           <div className="quill-content" dangerouslySetInnerHTML={{ __html: item.description }} />
@@ -144,20 +129,27 @@ const QaAutomationFaq = () => {
     </div>
   ));
 };
- // Download PDF function
- const downloadPdf = () => {
+
+const showLoginModal = () => setIsLoginModalVisible(true);
+const hideLoginModal = () => setIsLoginModalVisible(false);
+
+const downloadPdf = () => {
+  const token = localStorage.getItem('authToken');
+  
+    if (!token) {
+      showLoginModal();
+      return;
+    }
   if (!faq || faq.length === 0) {
     alert('No faq found for this course.');
     return;
   }
 
-  // Search for the first curriculum entry with a valid PDF URL
   const curriculumWithPdf = faq.find(item => item.faq_pdf);
 
   if (curriculumWithPdf) {
-    const pdfUrl = `https://api.hachion.co/faq/${curriculumWithPdf.faq_pdf}`;
+    const pdfUrl = `/HachionUserDashboad/faq/${curriculumWithPdf.faq_pdf}`;
 
-    // Trigger download
     const link = document.createElement('a');
     link.href = pdfUrl;
     link.setAttribute('download', curriculumWithPdf.faq_pdf.split('/').pop());
@@ -165,12 +157,19 @@ const QaAutomationFaq = () => {
     link.click();
     document.body.removeChild(link);
   } else {
-    alert('No brochure available for this course.');
+    alert('No FAQ available for this course.');
   }
 };
 
-
-
+useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        hideLoginModal();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
@@ -190,6 +189,40 @@ const QaAutomationFaq = () => {
           </button>
         </div>
       )}
+
+      {isLoginModalVisible && (
+              <div className="login-modal">
+                <div className="login-modal-content" ref={modalRef}>
+                <img
+              src={logo}
+              alt="logo"
+              className="hlogo"
+            />
+                  <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
+                  <h2 className="modal-title">Download FAQ's</h2>
+                  <div className="modal-body-login">
+                    <div className="modal-left">
+                    <h4 style={{color: '#000'}}>Don’t miss out!</h4>
+                    <br/>
+                      <p>Just log in to the <span className="web-name">Hachion website</span> to unlock this feature.</p>
+                      <button
+                        className="login-btn"
+                        onClick={() => {
+                          localStorage.setItem('redirectAfterLogin', window.location.pathname);
+                          window.location.href = '/login';
+                        }}
+                      >
+                        Login
+                      </button>
+                      <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
+                    </div>
+                    <div className="modal-right">
+                      <img src={loginPopupImg} alt="Login Prompt" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
     </div>
   );
 };

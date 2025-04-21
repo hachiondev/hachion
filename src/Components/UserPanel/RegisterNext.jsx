@@ -14,9 +14,6 @@ const RegisterNext = () => {
   const [confirmPasswordType, setConfirmPasswordType] = useState('password');
   const [resendLoading, setResendLoading] = useState(false); // To manage resend OTP loading state
   const navigate = useNavigate();
-
-  // Assuming the data is in localStorage and looks like:
-  // { name: '', email: '', otp: '' }
   const userDataString = localStorage.getItem('registeruserData');
   const registeruserData = userDataString ? JSON.parse(userDataString) : {  email: '' };
 
@@ -57,7 +54,7 @@ const RegisterNext = () => {
 
     try {
         // Step 1: Verify OTP
-        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+        const verifyResponse = await fetch("/HachionUserDashboad/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -73,7 +70,7 @@ const RegisterNext = () => {
         }
 
         // Step 2: Proceed with Registration
-        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
+        const registerResponse = await fetch("/HachionUserDashboad/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -91,11 +88,11 @@ const RegisterNext = () => {
         }
 
         const data = await registerResponse.json();
-        alert(`User registered successfully: ${data.username}`);
+        alert("User registered successfully");
         navigate('/login');  // ✅ Navigate only on success
 
     } catch (error) {
-        alert(`Error: ${error.message}`);
+        
         navigate('/login');
     } finally {
         setIsLoading(false);  // ✅ Ensure loading spinner stops
@@ -110,7 +107,7 @@ const RegisterNext = () => {
     setConfirmPasswordType(confirmPasswordType === 'password' ? 'text' : 'password');
   };
 
-  // Function to resend OTP
+ 
   const resendOtp = async () => {
     if (resendLoading) return; // Prevent multiple requests if one is already in progress
     setResendLoading(true);
@@ -118,7 +115,7 @@ const RegisterNext = () => {
     const email = registeruserData.email; // Get email from localStorage
 
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`/HachionUserDashboad/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 

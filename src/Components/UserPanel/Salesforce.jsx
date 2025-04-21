@@ -16,7 +16,7 @@ const Salesforce = () => {
 
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/blog");
+        const response = await axios.get("/HachionUserDashboad/blog");
         setBlogs(response.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -57,7 +57,7 @@ const Salesforce = () => {
             filteredBlogs.map((blog) => (
               <RecentEntriesCard
                 key={blog.id}
-                imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
+                imageSrc={`/HachionUserDashboad/blogs/${blog.blog_image}`}
                 content={blog.title}
                 views={blog.views || '100'}
                 date={blog.date}
@@ -78,7 +78,7 @@ const Salesforce = () => {
             {blogs.map((blog) => (
               <RecentEntriesCard
                 key={blog.id}
-                imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
+                imageSrc={`/HachionUserDashboad/blogs/${blog.blog_image}`}
                 content={blog.title}
                 views={blog.views || '100'}
                 date={blog.date}

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './Course.css';
-import icon from '../../Assets/image 130.png';
-import icon2 from '../../Assets/image 131.png';
 import InterviewPreparation from './InterviewPreparation';
 import JobAssistance from './JobAssistance';
 import ProfileBuilding from './ProfileBuilding';
@@ -45,7 +43,7 @@ const CareerSupport = () => {
           </p>
         </div>
 
-        {/* Conditionally render content */}
+
         {renderContent()}
 
       

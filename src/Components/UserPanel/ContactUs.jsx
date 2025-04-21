@@ -81,12 +81,10 @@ const ContactUs = () => {
   };
 
   const openMenu = (event) => {
-    console.log("Opening country select menu");
     setAnchorEl(event.currentTarget);
   };
 
   const closeMenu = () => {
-    console.log("Closing country select menu");
     setAnchorEl(null);
   };
 
@@ -94,8 +92,14 @@ const ContactUs = () => {
     setIsChecked(e.target.checked);
   };
 
-  const handleContact = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (!isChecked) {
+      setError("Please select the checkbox to acknowledge the Privacy Notice.");
+      return;
+    }
+    setError("");
+  
     const currentDate = new Date().toISOString().split("T")[0];
     const requestData = {
       name: values.name,
@@ -103,58 +107,63 @@ const ContactUs = () => {
       mobile: mobileNumber,
       comment: values.comment,
       date: currentDate,
-      country: selectedCountry.name
+      country: selectedCountry.name,
     };
-
+  
     try {
-      console.log(requestData);
-      const response = await axios.post(
-        "https://api.hachion.co/haveanyquery/add",
-        requestData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await axios.post("/HachionUserDashboad/haveanyquery/add", requestData, {
+        headers: { "Content-Type": "application/json" }
+      });
+  
       if (response.status === 200) {
         setShowModal(true);
-        values.name = "";
-        values.email = "";
-        values.comment = "";
         setMobileNumber("");
+        formik.resetForm();
       }
     } catch (error) {
       console.error("Error submitting query:", error);
     }
   };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!isChecked) {
-      setError("Please select the checkbox to acknowledge the Privacy Notice.");
-    } else {
-      setError("");
-      // Handle form submission here
-      console.log("Form submitted");
-    }
-    handleContact(e);
-  };
+  
 
   const handlePrivacy = () => {
     navigate("/privacy");
   };
 
-  const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: LoginSchema,
-      onSubmit: (values) => {
-        console.log(values);
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: LoginSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+  
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+  } = formik;
+  
+    const officeLocations = [
+      {
+        name: "New Jersey, USA",
+        address: "HACH Technologies 239 US Highway 22 green Brook Township, New Jersey USA, ZIP 08812.",
+        flag: UsaFlag
       },
-    });
-
+      {
+        name: "Hyderabad, India",
+        address: "HACH Technologies GP Rao Enclaves, 301, 3rd floor Road No 3 KPHB colony, Hyderabad 500072.",
+        flag: indiaFlag
+      },
+      {
+        name: "Dubai, UAE",
+        address: "Sports City Dubai UAE",
+        flag: dubaiFlag
+      }
+    ];
   return (
     <>
       <Topbar />
@@ -176,41 +185,17 @@ const ContactUs = () => {
         <h1 className="about-us-heading">Office Location</h1>
 
         <div className="contact-us">
-          <div className="contact-us-div">
-            <h3>Head Quarters</h3>
-            <div className="contact-us-box">
-              <img src={UsaFlag} alt="usa" className="flag" />
-              <div className="office-location">
-                <p>New Jersey, USA</p>
-                <p>
-                  HACH Technologies 239 US Highway 22 green Brook Township, New
-                  Jersey USA, ZIP 08812.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="contact-us-div">
-            <div className="contact-us-box">
-              <img src={indiaFlag} alt="usa" className="flag" />
-              <div className="office-location">
-                <p>Hyderabad, India</p>
-                <p>
-                  HACH Technologies GP Rao Enclaves, 301, 3rd floor Road No 3
-                  KPHB colony, Hyderabad 500072.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="contact-us-div">
-            <div className="contact-us-box">
-              <img src={dubaiFlag} alt="usa" className="flag" />
-              <div className="office-location">
-                <p>Dubai, UAE</p>
-                <p>Sports City Dubai UAE</p>
-              </div>
-            </div>
-          </div>
+        {officeLocations.map((loc, i) => (
+  <div className="contact-us-div" key={i}>
+    <div className="contact-us-box">
+      <img src={loc.flag} alt={`${loc.name} flag`} className="flag" />
+      <div className="office-location">
+        <p>{loc.name}</p>
+        <p>{loc.address}</p>
+      </div>
+    </div>
+  </div>
+))}
         </div>
         <div className="contact-us-bottom-div">
           <div className="contact-us-left">

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Table from '@mui/material/Table';
@@ -21,7 +20,7 @@ export default function UserCategoryTable() {
 
         if (!email) return;
 
-        const response = await axios.get('https://api.hachion.co/enroll');
+        const response = await axios.get('/HachionUserDashboad/enroll');
         const allEnrollments = response.data;
 
         const currentDate = new Date().setHours(0, 0, 0, 0);

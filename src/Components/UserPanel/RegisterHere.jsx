@@ -83,7 +83,7 @@ const RegisterHere = () => {
     };
 
     try {
-      const response = await fetch("https://api.hachion.co/api/v1/user/send-otp?email=" + email, {
+      const response = await fetch("/HachionUserDashboad/api/v1/user/send-otp?email=" + email, {
         method: "POST", // Assuming POST request for OTP
         headers: {
           "Content-Type": "application/json",
@@ -96,24 +96,15 @@ const RegisterHere = () => {
        mobile 
       }));
       const contentType = response.headers.get("Content-Type");
-    // Save user data (name, email, OTP) to localStorage
   
       if (response.ok) {
         if (contentType && contentType.includes("application/json")) {
           const responseData = await response.json();
         
-          
-
-          // Check if OTP and message are present in the response
           if (responseData && responseData.otp) {
-            alert(`OTP sent to your email: ${responseData.message}`);
+            alert('OTP sent to your email');
             
-        
-
-            // Confirm if data was stored correctly
             console.log("Stored in LocalStorage:", localStorage.getItem("registeruserData"));
-
-            // Navigate after successfully storing data
            
           } else {
             alert("Failed to send OTP. Please try again.");

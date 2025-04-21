@@ -86,7 +86,7 @@ const QaAutomation = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('/HachionUserDashboad/courses/all');
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -123,9 +123,6 @@ const QaAutomation = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        {/* <div className='course-banner'>
-          <h3 className='course-banner-content'>{courseData?.courseName}</h3>
-        </div> */}
         <div className='blogs-header'>
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -143,7 +140,6 @@ const QaAutomation = () => {
           </ol>
         </nav>
         </div>
-        {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
         <QaTop
           onVideoButtonClick={handleVideoButtonClick}
           onEnrollButtonClick={() =>
@@ -151,8 +147,6 @@ const QaAutomation = () => {
           }
         />
         <KeyHighlights />
-
-        {/* Sticky Header applies to the entire section below */}
         <div ref={upcomingHeaderRef}>
           <div className={isSticky ? 'sticky upcoming-header' : 'upcoming-header'}>
             <UpcomingHeader />
@@ -192,7 +186,7 @@ const QaAutomation = () => {
           <QaAutomationFaq />
         </div>
         </div>
-        {/* Footer section to stop the sticky behavior */}
+     
         <div ref={footerRef}>
           <Footer />
         </div>

@@ -12,43 +12,16 @@ import axios from 'axios';
 const UpcomingBatch = () => {
   const [activeComponent, setActiveComponent] = useState('LiveOnlineFees');
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal visibility
-//  const { course_id } = useParams(); // Extract course_id from URL params
 const {courseName}= useParams();
   const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
     const [course, setCourse] = useState(null);
-  // Function to render the selected batch component
-  // useEffect(() => {
-  //   const fetchCourseData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(`https://api.hachion.co/courses/${course_id}`);
-        
-  //       if (response.data) {
-  //         setCourse(response.data); // Set course details from API response
-  //       } else {
-  //         setError('Course not found');
-  //       }
-  //     } catch (err) {
-  //       setError('Error fetching course data');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
 
-  //   if (course_id) {
-  //     fetchCourseData();
-  //   } else {
-  //     console.error('Course ID is missing!');
-  //   }
-  // }, [course_id]);
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
-  useEffect(() => {
+useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('/HachionUserDashboad/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -80,6 +53,7 @@ const {courseName}= useParams();
         return <LiveOnlineFees />;
     }
   };
+
 
   // Function to close the modal
   const handleCloseModal = () => {

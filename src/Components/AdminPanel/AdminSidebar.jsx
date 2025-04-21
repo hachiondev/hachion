@@ -1,70 +1,57 @@
 import React, { useState } from 'react';
-import { FaTachometerAlt, FaBook } from 'react-icons/fa';
-import { TbCategoryPlus } from 'react-icons/tb';
-import { MdLiveTv } from 'react-icons/md';
-import { FaMoneyBillTrendUp } from 'react-icons/fa6';
-import { TbDiscount } from 'react-icons/tb';
+import {FaTachometerAlt, FaBook} from 'react-icons/fa';
+import {FaMoneyBillTrendUp, FaRegPenToSquare, FaHandshakeAngle} from 'react-icons/fa6';
+import { TbCategoryPlus, TbDiscount, TbCertificate} from 'react-icons/tb';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
-import { TbCertificate } from 'react-icons/tb';
-import { FaRegPenToSquare } from 'react-icons/fa6';
-import { RiMoneyDollarCircleFill } from 'react-icons/ri';
-import { BiSolidBookContent } from 'react-icons/bi';
-import { MdOutlineVideoCameraFront } from 'react-icons/md';
-import { BiSupport } from 'react-icons/bi';
-import { FaHandshakeAngle } from 'react-icons/fa6';
-import { LuFocus } from 'react-icons/lu';
-import { HiOutlineDotsCircleHorizontal } from 'react-icons/hi';
-import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
-import { IoNewspaperOutline } from "react-icons/io5";
-import { MdCorporateFare } from "react-icons/md";
+import { MdLiveTv, MdOutlineVideoCameraFront, MdCorporateFare} from 'react-icons/md';
+import { RiMoneyDollarCircleFill} from 'react-icons/ri';
+import { BiSolidBookContent, BiSupport, BiArrowToLeft, BiArrowToRight} from 'react-icons/bi';
+import { LuFocus} from 'react-icons/lu';
+import { HiOutlineDotsCircleHorizontal} from 'react-icons/hi';
+import { IoNewspaperOutline} from 'react-icons/io5';
 import './Admin.css';
-
-const AdminSidebar = ({ onSelectCategory }) => {
+const menuItems = [
+  { title: 'Dashboard', icon: <FaTachometerAlt /> },
+  { title: 'Course Category', icon: <TbCategoryPlus /> },
+  { title: 'Course', icon: <FaBook /> },
+  { title: 'Corporate Training', icon: <MdCorporateFare /> },
+  { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
+  { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
+  { title: 'Discount Courses', icon: <TbDiscount /> },
+  { title: 'Trainer', icon: <LiaChalkboardTeacherSolid /> },
+  { title: 'Certificate', icon: <TbCertificate /> },
+  { title: 'All Enroll', icon: <FaRegPenToSquare /> },
+  { title: 'Payment Status', icon: <RiMoneyDollarCircleFill /> },
+  { title: 'Registration', icon: <BiSolidBookContent /> },
+  { title: 'Reports', icon: <IoNewspaperOutline /> },
+  { title: 'Schedule Request', icon: <BiSolidBookContent /> },
+  { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
+  { title: 'Support', icon: <BiSupport /> },
+  { title: 'Internship', icon: <FaHandshakeAngle /> },
+  { title: 'Live Class Tracking', icon: <LuFocus /> },
+  { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
+];
+const AdminSidebar = ({ onSelectCategory = () => {} }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
-  const menuItems = [
-    { title: 'Dashboard', icon: <FaTachometerAlt /> },
-    { title: 'Course Category', icon: <TbCategoryPlus /> },
-    { title: 'Course', icon: <FaBook /> },
-    { title: 'Corporate Training', icon: <MdCorporateFare /> },
-    { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
-    { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
-    { title: 'Discount Courses', icon: <TbDiscount /> },
-    { title: 'Trainer', icon: <LiaChalkboardTeacherSolid /> },
-    { title: 'Certificate', icon: <TbCertificate /> },
-    { title: 'All Enroll', icon: <FaRegPenToSquare /> },
-    { title: 'Payment Status', icon: <RiMoneyDollarCircleFill /> },
-    { title: 'Registration', icon: <BiSolidBookContent /> },
-    { title: 'Reports', icon: <IoNewspaperOutline /> },
-    { title: 'Schedule Request', icon: <BiSolidBookContent /> },
-    { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
-    { title: 'Support', icon: <BiSupport /> },
-    { title: 'Internship', icon: <FaHandshakeAngle /> },
-    { title: 'Live Class Tracking', icon: <LuFocus /> },
-    { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
-  ];
-
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
     onSelectCategory(title);
   };
-
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarCollapsed(prev => !prev);
   };
-
   return (
-    <div className={`sidebar-admin ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar-admin ${isSidebarCollapsed ? 'collapsed' : ''}`} aria-label="Admin Sidebar">
       <div className="heading-admin">
-      <div className="sidebar-heading-admin">
-        {!isSidebarCollapsed && <h3>Admin</h3>}
-      </div>
-      <div className="sidebar-toggle">
-        <button onClick={toggleSidebar} className="toggle-btn">
-          {isSidebarCollapsed ? <BiArrowToRight /> : <BiArrowToLeft />}
-        </button>
-      </div>
+        <div className="sidebar-heading-admin">
+          {!isSidebarCollapsed && <h3>Admin</h3>}
+        </div>
+        <div className="sidebar-toggle">
+          <button onClick={toggleSidebar} className="toggle-btn" aria-label="Toggle Sidebar">
+            {isSidebarCollapsed ? <BiArrowToRight /> : <BiArrowToLeft />}
+          </button>
+        </div>
       </div>
       <ul className="menu-list-admin">
         {menuItems.map((item, index) => (
@@ -72,6 +59,8 @@ const AdminSidebar = ({ onSelectCategory }) => {
             <button
               onClick={() => handleMenuItemClick(index, item.title)}
               className={`menu-item-admin ${activeIndex === index ? 'active' : ''}`}
+              aria-current={activeIndex === index ? 'true' : undefined}
+              aria-label={item.title}
             >
               <span className="menu-icon">{item.icon}</span>
               {!isSidebarCollapsed && <span className="menu-title">{item.title}</span>}
@@ -79,8 +68,7 @@ const AdminSidebar = ({ onSelectCategory }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 };
-
 export default AdminSidebar;

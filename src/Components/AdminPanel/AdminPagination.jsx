@@ -1,63 +1,57 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import { MdKeyboardArrowLeft } from 'react-icons/md';
-
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
+import './Admin.css';
 const Pagination = ({ currentPage, rowsPerPage, totalRows, onPageChange }) => {
   const totalPages = Math.ceil(totalRows / rowsPerPage);
-
+  if (totalRows <= rowsPerPage) return null;
   const handlePageClick = (page) => {
-    if (page >= 1 && page <= totalPages) {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
       onPageChange(page);
     }
   };
-
   const renderPageNumbers = () => {
-    let pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(
+    return Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return (
         <button
-          key={i}
-          className={`pagination-number ${i === currentPage ? 'active' : ''}`}
-          onClick={() => handlePageClick(i)}
+          key={page}
+          className={`pagination-number ${page === currentPage ? 'active' : ''}`}
+          onClick={() => handlePageClick(page)}
+          aria-current={page === currentPage ? 'page' : undefined}
+          aria-label={`Go to page ${page}`}
         >
-          {i}
+          {page}
         </button>
       );
-    }
-    return pageNumbers;
+    });
   };
-
-  if (totalRows <= rowsPerPage) {
-    return null;
-  }
-
   return (
-    <div className="pagination">
+    <div className='pagination'>
       <button
-        className="pagination-arrow"
+        className='pagination-arrow'
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label='Previous page'
       >
-       <MdKeyboardArrowLeft style={{fontSize: '24px'}}/>
+        <MdKeyboardArrowLeft className='pagination-icon' />
       </button>
       {renderPageNumbers()}
       <button
-        className="pagination-arrow"
+        className='pagination-arrow'
         onClick={() => handlePageClick(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label='Next page'
       >
-       <MdKeyboardArrowRight style={{fontSize: '24px'}}/>
+        <MdKeyboardArrowRight className='pagination-icon' />
       </button>
     </div>
   );
 };
-
 Pagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   totalRows: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
 };
-
-export default Pagination;
+export default memo(Pagination);

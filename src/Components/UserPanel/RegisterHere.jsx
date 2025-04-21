@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import "./Login.css";
 import logo from "../../Assets/logo.png";
 import LoginSide from "./LoginSide";
@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import {AiFillCaretDown } from 'react-icons/ai'
+
 
 const RegisterHere = () => {
   const [name, setName] = useState("");
@@ -39,8 +40,27 @@ const RegisterHere = () => {
     { name: 'Brazil', code: '+55', flag: 'BR' },
     { name: 'Mexico', code: '+52', flag: 'MX' },
     { name: 'South Africa', code: '+27', flag: 'ZA' },
+    { name: 'Netherlands', code: '+31', flag: 'NL' }
   ];
   
+  const defaultCountry = countries.find((c) => c.flag === "US");
+
+  
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((res) => res.json())
+      .then((data) => {
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => {
+       
+      });
+  }, []);
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
@@ -55,8 +75,6 @@ const RegisterHere = () => {
     setAnchorEl(null);
   };
 
-
-  // Basic email validation regex
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -64,7 +82,7 @@ const RegisterHere = () => {
 
   const handleClick = async () => {
     if (!name || !email || !mobile) {
-      alert("Please fill in both fields.");
+      alert("Please fill in all fields.");
       return;
     }
 
@@ -73,48 +91,32 @@ const RegisterHere = () => {
       return;
     }
 
-    setIsLoading(true); // Start loading state
+    setIsLoading(true);
 
-    const data = {
-      name,
-      email,
-      mobile
-      
-    };
+    const data = { name, email, mobile };
 
     try {
-      const response = await fetch("https://api.hachion.co/api/v1/user/send-otp?email=" + email, {
-        method: "POST", // Assuming POST request for OTP
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
-      localStorage.setItem("registeruserData", JSON.stringify({
-        name,
-        email,
-       mobile 
-      }));
+      const response = await fetch(
+        `/HachionUserDashboad/api/v1/user/send-otp?email=${email}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      localStorage.setItem("registeruserData", JSON.stringify(data));
+
       const contentType = response.headers.get("Content-Type");
-    // Save user data (name, email, OTP) to localStorage
-  
+
       if (response.ok) {
         if (contentType && contentType.includes("application/json")) {
           const responseData = await response.json();
-        
-          
 
-          // Check if OTP and message are present in the response
           if (responseData && responseData.otp) {
             alert(`OTP sent to your email: ${responseData.message}`);
-            
-        
-
-            // Confirm if data was stored correctly
             console.log("Stored in LocalStorage:", localStorage.getItem("registeruserData"));
-
-            // Navigate after successfully storing data
-           
           } else {
             alert("Failed to send OTP. Please try again.");
           }
@@ -130,9 +132,10 @@ const RegisterHere = () => {
       alert(`An error occurred: ${error.message}`);
     } finally {
       navigate("/registerverification");
-      setIsLoading(false); // End loading state
+      setIsLoading(false);
     }
   };
+
 
   return (
     <div className="login">

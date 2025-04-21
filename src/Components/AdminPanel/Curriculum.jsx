@@ -69,13 +69,12 @@ export default function Curriculum() {
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = useState([{ id:"",title:"",topic:"",linl: "" }]);
+   
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [displayedCategories, setDisplayedCategories] = useState([]);
     const [allData, setAllData] = useState([]); // All fetched data
-    const [catChange, setCatChange] = useState(0);
 // Data to be displayed
 const [filterData, setFilterData] = useState({
   category_name: "",
@@ -84,16 +83,16 @@ const [filterData, setFilterData] = useState({
 
     const [endDate, setEndDate] = useState(null);
     const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
+    const [rows, setRows] = useState([
+      { id: Date.now(), title: '', topic: '', link: '' }
+    ]);
+    
     const [curriculumData, setCurriculumData] = useState({
-        curriculum_id:"",
-          category_name:"",
-            course_name: "",
-         curriculum_pdf:"",
-         title:"",
-         topic: "<ul><li></li></ul>",
-         link: "",
-            date:currentDate,
-         });
+      category_name: '',
+      course_name: '',
+      curriculum_pdf: null
+    });
+    
         const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -102,7 +101,20 @@ const [filterData, setFilterData] = useState({
             window.scrollTo(0, window.scrollY);
           };
           // Inside your CourseCategory component
-        
+          const handleRowChange = (index, field, value) => {
+            const updatedRows = [...rows];
+            updatedRows[index][field] = value;
+            setRows(updatedRows);
+          };
+          const addRow = () => {
+            setRows([...rows, { id: Date.now(), title: '', topic: '', link: '' }]);
+          };
+          
+          const deleteRow = (id) => {
+            setRows(rows.filter(row => row.id !== id));
+          };
+          
+          
         const handleRowsPerPageChange = (rows) => {
           setRowsPerPage(rows);
           setCurrentPage(1); // Reset to the first page whenever rows per page changes
@@ -139,13 +151,7 @@ const [filterData, setFilterData] = useState({
                  });
         
          }
-         const addRow = () => {
-          setRows([...rows, { id: Date.now(), title: "", topic: "", link: "" }]);
-      };
-      
-      const deleteRow = (id) => {
-          setRows(rows.filter(row => row.id !== id));
-      };
+  
                 
     const handleClose = () => {
       setOpen(false); // Close the modal
@@ -153,7 +159,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("/HachionUserDashboad/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -164,7 +170,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("/HachionUserDashboad/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -185,7 +191,7 @@ const [filterData, setFilterData] = useState({
   //   useEffect(() => {
   //     const fetchCurriculum = async () => {
   //         try {
-  //             const response = await axios.get('https://api.hachion.co/curriculum');
+  //             const response = await axios.get('/HachionUserDashboad/curriculum');
   //             setCurriculum(response.data); // Use the curriculum state
   //         } catch (error) {
   //             console.error("Error fetching curriculum:", error.message);
@@ -197,7 +203,7 @@ const [filterData, setFilterData] = useState({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/curriculum");
+        const response = await axios.get("/HachionUserDashboad/curriculum");
         setAllData(response.data);
         setFilteredCurriculum(response.data); // Used for paginated display
       } catch (error) {
@@ -213,35 +219,13 @@ const [filterData, setFilterData] = useState({
           handleDelete(curriculum_id);
         }
       };
-      // const handleInputChange = (e) => {
-      //   const { name, value } = e.target;
-      //   setEditedRow((prev) => ({
-      //     ...prev,
-      //     [name]: value,
-      //   }));
-      // };
-
       const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditedRow((prev) => ({
           ...prev,
           [name]: value,
-          ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
         }));
-        if (editedRow.category_name) {
-          // alert(name);
-          // alert(value);
-          setCatChange(1);
-          const filtered = courseCategory.filter(
-            (course) => course.courseCategory === value
-          );
-          setFilterCourse(filtered);
-        } else {
-          setCatChange(0);
-          setFilterCourse([]);
-        }
       };
-
       const handleDateFilter = () => {
         const filtered = curriculum.filter((item) => {
           const curriculumDate = new Date(item.date); // Parse the date field
@@ -280,7 +264,7 @@ const [filterData, setFilterData] = useState({
           }
       
           const response = await axios.put(
-            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+            `/HachionUserDashboad/curriculum/update/${editedRow.curriculum_id}`,
             formData,
             {
               headers: {
@@ -310,7 +294,7 @@ const [filterData, setFilterData] = useState({
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`/HachionUserDashboad/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -347,7 +331,7 @@ const [filterData, setFilterData] = useState({
          
         }
         const handleClickOpen = (row) => {
-          console.log(row);
+     
             setEditedRow(row)// Set the selected row data
             setOpen(true); // Open the modal
             
@@ -364,83 +348,69 @@ const [filterData, setFilterData] = useState({
     const newFilter = { ...filterData, [name]: value };
     setFilterData(newFilter);
   
-  //   const filtered = allData.filter((item) =>
-  //     (!newFilter.category_name || item.category_name === newFilter.category_name) &&
-  //     (!newFilter.course_name || item.course_name === newFilter.course_name)
-  //   );
-  
-  //   setFilteredCurriculum(filtered);
-  //   setCurrentPage(1); // Reset to first page
-  // };
-
-  const filtered = allData.filter(
-    (item) =>
-      (!newFilter.category_name ||
-        item.category_name === newFilter.category_name) &&
+    const filtered = allData.filter((item) =>
+      (!newFilter.category_name || item.category_name === newFilter.category_name) &&
       (!newFilter.course_name || item.course_name === newFilter.course_name)
-  );
-
-  setFilteredCurriculum(filtered);
-  setCurrentPage(1); // Reset to first page
-  //alert(name);
-  if (name) {
-    // alert(name);
-    // alert(value);
-    setCatChange(1);
-    const filtered = courseCategory.filter(
-      (course) => course.courseCategory === value
     );
-    setFilterCourse(filtered);
-  } else {
-    setCatChange(0);
-    setFilterCourse([]);
-  }
-};
+  
+    setFilteredCurriculum(filtered);
+    setCurrentPage(1); // Reset to first page
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     const currentDate = new Date().toISOString().split("T")[0];
-    const formData = new FormData();
-    
-    // Append curriculum data fields (even if some are optional)
-    formData.append("curriculumData", JSON.stringify({
-      category_name: curriculumData?.category_name || "",
-      course_name: curriculumData?.course_name || "",
-      title: curriculumData?.title || "",
-      topic: curriculumData?.topic || "",
-      link: curriculumData?.link || "",
-      date: currentDate
-    }));
   
-    // Append PDF only if it's provided
-    if (curriculumData?.curriculum_pdf) {
-      formData.append("curriculumPdf", curriculumData.curriculum_pdf);
-    }
   
-    console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
+    const uploadPromises = rows.map(async (row) => {
+      const formData = new FormData();
   
-    try {
-      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Important for file uploads
-        },
-        maxBodyLength: Infinity,  // Disable body size limit
-        maxContentLength: Infinity, // Disable content size limit
-        timeout: 60000
-      });
+      // Append static shared values
+      formData.append("curriculumData", JSON.stringify({
+        category_name: curriculumData.category_name,
+        course_name: curriculumData.course_name,
+        title: row.title || "",
+        topic: row.topic || "",
+        link: row.link || "",
+        date: currentDate,
+      }));
   
-      if (response.status === 201) { // HTTP 201 means "Created"
-        alert("Curriculum details added successfully");
-        setShowAddCourse(false);
-        setCurriculumData({}); // Reset form state
-        handleReset(); // Call reset function if available
+      // Add the same PDF to each entry
+      if (curriculumData.curriculum_pdf) {
+        formData.append("curriculumPdf", curriculumData.curriculum_pdf);
       }
-    } catch (error) {
-      console.error("Error adding curriculum:", error.response?.data || error.message);
-      alert("Error adding curriculum.");
+  
+      try {
+        const response = await axios.post("/HachionUserDashboad/curriculum/add", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 60000,
+        });
+  
+        return response.status === 201;
+      } catch (error) {
+        console.error("Error adding curriculum:", error.response?.data || error.message);
+        return false;
+      }
+    });
+  
+    const results = await Promise.all(uploadPromises);
+    const allSuccessful = results.every((status) => status);
+  
+    if (allSuccessful) {
+      alert("All curriculum entries added successfully.");
+      setShowAddCourse(false);
+      setCurriculumData({});
+      setRows([{ id: Date.now(), title: "", topic: "", link: "" }]); // Reset to initial row
+    } else {
+      alert("Some entries failed to upload. Please check the console for errors.");
     }
   };
+  
      
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
@@ -515,33 +485,47 @@ const [filterData, setFilterData] = useState({
           </TableRow>
         </TableHead>
         <TableBody>
-        {rows.map((row) => (
-            <StyledTableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: '1px solid #d3d3d3 '} }}
-            >
-              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
-               <input className='table-curriculum' name='title' value={rows.title} onChange={handleChange}/>
-              </StyledTableCell>
-              <StyledTableCell sx={{ padding: 0 }} align="center">
-    <ReactQuill
+        {rows.map((row, index) => (
+  <StyledTableRow key={row.id}>
+    <StyledTableCell align='center'>
+      <input
+        className='table-curriculum'
+        name='title'
+        value={row.title}
+        onChange={(e) => handleRowChange(index, 'title', e.target.value)}
+      />
+    </StyledTableCell>
+
+    <StyledTableCell align='center'>
+      <ReactQuill
         theme="snow"
         modules={quillModules}
-        value={curriculumData.topic} 
-        onChange={(value) => setCurriculumData((prevData) => ({
-            ...prevData,
-            topic: value
-        }))}
-    />
-</StyledTableCell>
-              <StyledTableCell component="th" scope="row" align='center' sx={{ padding: 0, }}>
-               <input className='table-curriculum' name='link' value={rows.link} onChange={handleChange}/>
-              </StyledTableCell>
-              <StyledTableCell align="center" sx={{ padding: 0 }}><><GoPlus style={{fontSize:'2rem',color:'#00AEEF',marginRight:'10px'}} onClick={addRow} />
-                    <IoClose style={{fontSize:'2rem',color:'red'}} onClick={()=>deleteRow(row.id)}/></></StyledTableCell>
-                  </StyledTableRow>
-    
-          ))}
+        value={row.topic}
+        onChange={(value) =>
+          setRows((prevRows) =>
+            prevRows.map((r) =>
+              r.id === row.id ? { ...r, topic: value } : r
+            )
+          )
+        }
+      />
+    </StyledTableCell>
+
+    <StyledTableCell align='center'>
+      <input
+        className='table-curriculum'
+        name='link'
+        value={row.link}
+        onChange={(e) => handleRowChange(index, 'link', e.target.value)}
+      />
+    </StyledTableCell>
+
+    <StyledTableCell align='center'>
+      <GoPlus onClick={addRow} style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }} />
+      <IoClose onClick={() => deleteRow(row.id)} style={{ fontSize: '2rem', color: 'red' }} />
+    </StyledTableCell>
+  </StyledTableRow>
+))}
         </TableBody>
       </Table>
     </TableContainer>
@@ -635,26 +619,17 @@ const [filterData, setFilterData] = useState({
 <label htmlFor="course" className="form-label">Course Name</label>
 
 <select
-                  id="course"
-                  className="form-select"
-                  name="course_name"
-                  value={filterData.course_name}
-                  onChange={handlefilterChange}
-                >
-                  <option value="" disabled>
-                    Select Course
-                  </option>
-                  {catChange
-                    ? filterCourse.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))
-                    : courseCategory.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))}
+  id="course"
+  className="form-select"
+  name="course_name"
+  value={filterData.course_name}
+  onChange={handlefilterChange}
+  
+>
+  <option value="" disabled>Select Course</option>
+  {courseCategory.map((curr) => (
+    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+  ))}
 </select>
       </div>
   {/* <div class="mb-3">
@@ -686,6 +661,7 @@ const [filterData, setFilterData] = useState({
             <StyledTableCell align="center">Topic</StyledTableCell>
             <StyledTableCell align="center">Video Link</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
+            <StyledTableCell align="center">Curriculum pdf</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -711,6 +687,7 @@ const [filterData, setFilterData] = useState({
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+      <StyledTableCell align="left">{course.curriculum_pdf}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
@@ -775,26 +752,20 @@ const [filterData, setFilterData] = useState({
     <div className="col">
       <label htmlFor="courseName" className="form-label">Course Name</label>
       <select
-                id="courseName"
-                className="form-select"
-                name="course_name"
-                value={editedRow.course_name || ""}
-                onChange={handleInputChange}
-              >
-                <option value="" disabled>
-                  Select Course
-                </option>
-                {catChange
-                  ? filterCourse.map((curr) => (
-                      <option key={curr.id} value={curr.courseName}>
-                        {curr.courseName}
-                      </option>
-                    ))
-                  : courseCategory.map((curr) => (
-                      <option key={curr.id} value={curr.courseName}>
-                        {curr.courseName}
-                      </option>
-                    ))}
+        id="courseName"
+        className="form-select"
+        name="course_name"
+        value={editedRow.course_name || ""}
+        onChange={handleInputChange}
+      >
+        <option value="" disabled>
+          Select Course
+        </option>
+        {courseCategory.map((curr) => (
+          <option key={curr.id} value={curr.courseName}>
+            {curr.courseName}
+          </option>
+        ))}
       </select>
     </div>
     </div>

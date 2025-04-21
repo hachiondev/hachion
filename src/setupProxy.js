@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/HachionUserDashboad',
     createProxyMiddleware({
-      target: 'https://api.hachion.co/',
+      target: '/HachionUserDashboad/',
       changeOrigin: true,
       secure: false, // Disable SSL verification if using an HTTP API
       pathRewrite: {

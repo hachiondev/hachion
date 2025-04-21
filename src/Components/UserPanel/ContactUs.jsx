@@ -72,7 +72,26 @@ const ContactUs = () => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
+    { name: 'Netherlands', code: '+31', flag: 'NL' }
   ];
+
+  const defaultCountry = countries.find((c) => c.flag === "US");
+  
+    
+    useEffect(() => {
+      fetch("https://ipwho.is/")
+        .then((res) => res.json())
+        .then((data) => {
+          const userCountryCode = data?.country_code;
+          const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+          if (matchedCountry) {
+            setSelectedCountry(matchedCountry);
+          }
+        })
+        .catch(() => {
+         
+        });
+    }, []);
 
   const handleCountrySelect = (country) => {
     console.log("Country selected:", country.name, country.code);
@@ -110,7 +129,7 @@ const ContactUs = () => {
     try {
       console.log(requestData);
       const response = await axios.post(
-        "https://api.hachion.co/haveanyquery/add",
+        "/HachionUserDashboad/haveanyquery/add",
         requestData,
         {
           headers: {

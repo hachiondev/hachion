@@ -57,7 +57,7 @@ const RegisterNext = () => {
 
     try {
         // Step 1: Verify OTP
-        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+        const verifyResponse = await fetch("/HachionUserDashboad/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -73,7 +73,7 @@ const RegisterNext = () => {
         }
 
         // Step 2: Proceed with Registration
-        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
+        const registerResponse = await fetch("/HachionUserDashboad/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -95,7 +95,7 @@ const RegisterNext = () => {
         navigate('/login');  // ✅ Navigate only on success
 
     } catch (error) {
-        alert(`Error: ${error.message}`);
+        // alert(`Error: ${error.message}`);
         navigate('/login');
     } finally {
         setIsLoading(false);  // ✅ Ensure loading spinner stops
@@ -118,7 +118,7 @@ const RegisterNext = () => {
     const email = registeruserData.email; // Get email from localStorage
 
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`/HachionUserDashboad/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 
@@ -129,7 +129,7 @@ const RegisterNext = () => {
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
     }

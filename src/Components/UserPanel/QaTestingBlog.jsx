@@ -22,10 +22,11 @@ const QaTestingBlog = () => {
 const [helmetKey, setHelmetKey] = useState(0);
 const [selectedBlog, setSelectedBlog] = useState(null);
 
+
 useEffect(() => {
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/blog");
+      const response = await axios.get("/HachionUserDashboad/blog");
       const originalCategory = category_name.replace(/-/g, ' ');
       const filteredBlogs = response.data.filter(blog => blog.category_name?.toLowerCase() === originalCategory.toLowerCase());
 
@@ -39,10 +40,13 @@ useEffect(() => {
   fetchBlogs();
 }, [category_name]);
 
+useEffect(() => {
+  setHelmetKey(prev => prev + 1);
+}, [selectedBlog]);
 
 const handleDownload = () => {
   if (selectedBlog && selectedBlog.blog_pdf) {
-    const pdfUrl = `https://api.hachion.co/blogs/${selectedBlog.blog_pdf}`;
+    const pdfUrl = `/HachionUserDashboad/blogs/${selectedBlog.blog_pdf}`;
     const link = document.createElement("a");
     link.href = pdfUrl;
     link.setAttribute("download", selectedBlog.blog_pdf);
@@ -57,16 +61,17 @@ const handleDownload = () => {
   
   return (
     <>
-    <Helmet key={helmetKey}>
-  <title>{blogs?.meta_title || "Hachion Blogs"}</title>
-  <meta name="description" content={blogs?.meta_description || "Blogs description"} />
-  <meta name="keywords" content={blogs?.meta_keyword || "meta keywords"} />
-  <meta property="og:title" content={blogs?.meta_title || "Best Online IT Certification Courses"} />
-  <meta property="og:description" content={blogs?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
-  <meta property="og:image" content={blogs?.blog_image || "https://hachion.co/images/course-banner.jpg"} />
+   <Helmet key={helmetKey}>
+  <title>{selectedBlog?.meta_title || "Hachion Blogs"}</title>
+  <meta name="description" content={selectedBlog?.meta_description || "Blogs description"} />
+  <meta name="keywords" content={selectedBlog?.meta_keyword || "meta keywords"} />
+  <meta property="og:title" content={selectedBlog?.meta_title || "Best Online IT Certification Courses"} />
+  <meta property="og:description" content={selectedBlog?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
+  <meta property="og:image" content={selectedBlog?.blog_image ? `/HachionUserDashboad/blogs/${selectedBlog.blog_image}` : "https://hachion.co/images/course-banner.jpg"} />
   <meta property="og:url" content={`https://hachion.co/blogs/${category_name}`} />
   <meta name="robots" content="index, follow" />
 </Helmet>
+
       <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
@@ -121,7 +126,7 @@ const handleDownload = () => {
           {selectedBlog ? (
   <>
     <div className='salesforce-middle'>
-      <img src={`https://api.hachion.co/blogs/${selectedBlog.blog_image}`} alt={selectedBlog.title} />
+      <img src={`/HachionUserDashboad/blogs/${selectedBlog.blog_image}`} alt={selectedBlog.title} />
       <div>
         <h1>{selectedBlog.title}</h1>
         <div className='salesforce-top'>

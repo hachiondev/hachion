@@ -101,7 +101,7 @@
 //   useEffect(() => {
 //     const fetchBanners = async () => {
 //       try {
-//         const response = await axios.get('https://api.hachion.co/banner');
+//         const response = await axios.get('/HachionUserDashboad/banner');
         
 //         // Filter out banners where home_banner_image is missing or empty
 //         const filteredBanners = response.data.filter(banner => banner.home_banner_image?.trim());
@@ -139,7 +139,7 @@
 //             {banners.map((banner, index) => (
 //               <div key={banner.banner_id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
 //                 <img 
-//                   src={`https://api.hachion.co/${banner.home_banner_image}`} 
+//                   src={`/HachionUserDashboad/${banner.home_banner_image}`} 
 //                   className="d-block w-100" 
 //                   alt={`Banner ${banner.banner_id}`} 
 //                 />
@@ -180,7 +180,7 @@ const Banner = () => {
 
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/banner")
+      .get("/HachionUserDashboad/banner")
       .then((response) => {
         if (response.data.length > 0) {
           // Add static banner at the start
@@ -221,7 +221,7 @@ const Banner = () => {
         {displayBanners.map((banner, index) => (
           <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
             <img
-              src={apiError || index === 0 ? banner.home_banner_image : `https://api.hachion.co/${banner.home_banner_image}`}
+              src={apiError || index === 0 ? banner.home_banner_image : `/HachionUserDashboad/${banner.home_banner_image}`}
               className="d-block w-100"
               alt={`Banner ${index + 1}`}
             />

@@ -31,7 +31,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('/HachionUserDashboad/courses/all');
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -58,14 +58,14 @@ const Curriculum = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/curriculum');
+        const response = await axios.get('/HachionUserDashboad/curriculum');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
         );
         setFaq(filteredFaq);
       } catch (error) {
-        console.error('Error fetching FAQ:', error.message);
-        setError('Failed to load FAQs.');
+        console.error('Error fetching Curriculum:', error.message);
+        setError('Failed to load Curriculum.');
       }
     };
 
@@ -102,7 +102,7 @@ const Curriculum = () => {
     const curriculumWithPdf = faq.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
       const fileName = curriculumWithPdf.curriculum_pdf.split('/').pop();
-      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `/HachionUserDashboad/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');

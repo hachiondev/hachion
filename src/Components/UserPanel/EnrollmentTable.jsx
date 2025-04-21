@@ -76,7 +76,7 @@
 //     const fetchCourseData = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('https://api.hachion.co/courses/all');
+//         const response = await axios.get('/HachionUserDashboad/courses/all');
 
 //         const matchedCourse = response.data.find(
 //           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName.toLowerCase().replace(/\s+/g, '-')
@@ -181,7 +181,7 @@ export default function EnrollmentTable() {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('/HachionUserDashboad/courses/all');
         
         // Match course from URL
         const matchedCourse = response.data.find(

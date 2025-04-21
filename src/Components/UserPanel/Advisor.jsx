@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Corporate.css';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { Menu, MenuItem, Button } from '@mui/material';
@@ -8,6 +8,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../Schemas';
 import axios from 'axios';
+
 
 const initialValues = {
   name: "",
@@ -52,8 +53,26 @@ const Advisor = () => {
     { name: 'Brazil', code: '+55', flag: 'BR' },
     { name: 'Mexico', code: '+52', flag: 'MX' },
     { name: 'South Africa', code: '+27', flag: 'ZA' },
+    { name: 'Netherlands', code: '+31', flag: 'NL' }
   ];
 
+  const defaultCountry = countries.find((c) => c.flag === "US");
+  
+    
+    useEffect(() => {
+      fetch("https://ipwho.is/")
+        .then((res) => res.json())
+        .then((data) => {
+          const userCountryCode = data?.country_code;
+          const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+          if (matchedCountry) {
+            setSelectedCountry(matchedCountry);
+          }
+        })
+        .catch(() => {
+         
+        });
+    }, []);
 
   const handleSubmit  = async (e) => {
     e.preventDefault(); // Prevents form refresh
@@ -70,7 +89,7 @@ const Advisor = () => {
     };
   
     try {
-      const response = await axios.post('https://api.hachion.co/advisors', requestData, {
+      const response = await axios.post('/HachionUserDashboad/advisors', requestData, {
         headers: {
           'Content-Type': 'application/json'
         }

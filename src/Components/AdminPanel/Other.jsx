@@ -126,7 +126,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchBanner = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/banner');
+              const response = await axios.get('/HachionUserDashboad/banner');
               setBanner(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching resume:", error.message);
@@ -172,7 +172,7 @@ const [currentPage, setCurrentPage] = useState(1);
     
             // Send the update request
             const response = await axios.put(
-                `https://api.hachion.co/banner/update/${editedData.banner_id}`,
+                `/HachionUserDashboad/banner/update/${editedData.banner_id}`,
                 formDataToSend,
                 {
                     headers: {
@@ -200,7 +200,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (banner_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`); 
+          const response = await axios.delete(`/HachionUserDashboad/banner/delete/${banner_id}`); 
           console.log("Banner deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting banner:", error); 
@@ -253,7 +253,7 @@ const [currentPage, setCurrentPage] = useState(1);
         formDataToSend.append("banner", new Blob([JSON.stringify(jsonData)], { type: "application/json" }));
       
         try {
-          const response = await axios.post("https://api.hachion.co/banner/add", formDataToSend);
+          const response = await axios.post("/HachionUserDashboad/banner/add", formDataToSend);
       
           if (response.status === 201) {
             alert("Banner added successfully!");
@@ -441,7 +441,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.banner_image ? (
                 <img
-                src={`https://api.hachion.co/${curr.banner_image}`} 
+                src={`/HachionUserDashboad/${curr.banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -452,7 +452,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={`https://api.hachion.co/${curr.home_banner_image}`} 
+                src={`/HachionUserDashboad/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />

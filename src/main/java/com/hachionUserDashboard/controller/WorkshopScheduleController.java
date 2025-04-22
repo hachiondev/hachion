@@ -150,6 +150,9 @@ public class WorkshopScheduleController {
 	            if (updatedData.getTime_zone() != null) existing.setTime_zone(updatedData.getTime_zone());
 	            if (updatedData.getContent() != null) existing.setContent(updatedData.getContent());
 	            if (updatedData.getDetails() != null) existing.setDetails(updatedData.getDetails());
+	            if(updatedData.getMeta_description()!=null) existing.setMeta_description(updatedData.getMeta_description());
+	            if(updatedData.getMeta_title()!=null) existing.setMeta_title(updatedData.getMeta_title());
+	            if(updatedData.getMeta_keyword()!=null) existing.setMeta_keyword(updatedData.getMeta_keyword());
 
 	            // Handle image update only if a new one is uploaded
 	            if (bannerImage != null && !bannerImage.isEmpty()) {

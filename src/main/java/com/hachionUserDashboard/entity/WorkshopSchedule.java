@@ -44,12 +44,49 @@ public class WorkshopSchedule {
 		@Column(nullable = true, columnDefinition = "LONGTEXT")
 	    private String details;
 	    
+	    @Lob
+	  		@Column(nullable = true, columnDefinition = "LONGTEXT")
+	  	    private String meta_title;
+	    
+	    @Lob
+	  		@Column(nullable = true, columnDefinition = "LONGTEXT")
+	  	    private String meta_description;
+	    
+	    @Lob
+  		@Column(nullable = true, columnDefinition = "LONGTEXT")
+  	    private String meta_keyword;
+    
+	    
 	    @Column(name = "created_date")  // Make sure the name matches your SQL column
 	    private LocalDate created_date;
 	    
 	    public WorkshopSchedule() {
 	    	
 	    }
+
+		public String getMeta_title() {
+			return meta_title;
+		}
+
+		public void setMeta_title(String meta_title) {
+			this.meta_title = meta_title;
+		}
+
+		public String getMeta_description() {
+			return meta_description;
+		}
+
+		public void setMeta_description(String meta_description) {
+			this.meta_description = meta_description;
+		}
+
+		public String getMeta_keyword() {
+			return meta_keyword;
+		}
+
+		public void setMeta_keyword(String meta_keyword) {
+			this.meta_keyword = meta_keyword;
+		}
 
 		public int getId() {
 			return id;
@@ -134,12 +171,14 @@ public class WorkshopSchedule {
 		public String toString() {
 			return "WorkshopSchedule [id=" + id + ", category_name=" + category_name + ", course_name=" + course_name
 					+ ", date=" + date + ", time=" + time + ", time_zone=" + time_zone + ", banner_image="
-					+ banner_image + ", content=" + content + ", details=" + details + ", created_date=" + created_date
-					+ "]";
+					+ banner_image + ", content=" + content + ", details=" + details + ", meta_title=" + meta_title
+					+ ", meta_description=" + meta_description + ", meta_keyword=" + meta_keyword + ", created_date="
+					+ created_date + "]";
 		}
 
 		public WorkshopSchedule(int id, String category_name, String course_name, String date, String time,
-				String time_zone, String banner_image, String content, String details, LocalDate created_date) {
+				String time_zone, String banner_image, String content, String details, String meta_title,
+				String meta_description, String meta_keyword, LocalDate created_date) {
 			super();
 			this.id = id;
 			this.category_name = category_name;
@@ -150,8 +189,13 @@ public class WorkshopSchedule {
 			this.banner_image = banner_image;
 			this.content = content;
 			this.details = details;
+			this.meta_title = meta_title;
+			this.meta_description = meta_description;
+			this.meta_keyword = meta_keyword;
 			this.created_date = created_date;
 		}
+
+	
 
 		
 }

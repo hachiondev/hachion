@@ -372,7 +372,7 @@ public class BlogsController {
 			MediaType mediaType = type.equals("pdfs") ? MediaType.APPLICATION_PDF : MediaType.IMAGE_JPEG;
 
 			return ResponseEntity.ok().contentType(mediaType)
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
 					.body(resource);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -43,7 +43,7 @@ const Login = () => {
     };
   
     try {
-      const response = await axios.post('/HachionUserDashboad/api/v1/user/login', loginData);
+      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
       console.log(response.data);
   
       if (response.data.status) {
@@ -75,19 +75,19 @@ const Login = () => {
 
 
   const googleLogin = () => {
-    window.open('/HachionUserDashboad/oauth2/authorization/google', '_self');
+    window.open('https://api.hachion.co/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    window.location.href = '/HachionUserDashboad/oauth2/authorization/facebook';  // Backend Facebook OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    window.location.href = '/HachionUserDashboad/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = '/HachionUserDashboad/oauth2/authorization/apple';  // Backend Apple OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
   // Toggle password visibility

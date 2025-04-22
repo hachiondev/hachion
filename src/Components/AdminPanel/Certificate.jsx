@@ -1,40 +1,48 @@
 import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import TableRow from '@mui/material/TableRow';
 import './Admin.css';
+import CourseSchedule from './CourseSchedule';
 import CourseCertificate from './CourseCertificate';
 import CandidateCertificate from './CandidateCertificate';
+
+// Styling the table cells
+
+
+
 export default function Course() {
-  const [activeTab, setActiveTab] = useState('courseCertificate');
+  const [activeTab, setActiveTab] = useState('courseCertificate'); // Default tab is Course Details
+
+
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'courseCertificate':
-        return <CourseCertificate />;
-      case 'candidateCertificate':
-        return <CandidateCertificate />;
-      default:
-        return null;
-    }
-  };
+
+
   return (
-    <>
-      <h3>Certificate</h3>
+    <>   <h3>Certificate</h3>
       <div className="certificate-tabs">
-        <div
-          className={`tab-item ${activeTab === 'courseCertificate' ? 'active' : ''}`}
+        {/* Tab Navigation */}
+        <div 
+          className={`tab-item ${activeTab === 'courseCertificate' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('courseCertificate')}
         >
           Course Certificate
         </div>
-        <div
-          className={`tab-item ${activeTab === 'candidateCertificate' ? 'active' : ''}`}
+        <div 
+          className={`tab-item ${activeTab === 'candidateCertificate' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('candidateCertificate')}
         >
           Candidate Certificate
         </div>
+      
       </div>
-      <div className="tab-content">{renderTabContent()}</div>
+      
+      {activeTab==='courseCertificate' && <CourseCertificate/>}
+      {activeTab==='candidateCertificate' &&  <CandidateCertificate/>}
+   
+     
     </>
   );
 }

@@ -129,7 +129,7 @@ const ContactUs = () => {
     try {
       console.log(requestData);
       const response = await axios.post(
-        "/HachionUserDashboad/haveanyquery/add",
+        "https://api.hachion.co/haveanyquery/add",
         requestData,
         {
           headers: {

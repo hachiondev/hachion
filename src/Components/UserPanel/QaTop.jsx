@@ -81,7 +81,7 @@
 //     const fetchCourse = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('/HachionUserDashboad/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         console.log('API response:', response.data); // Check course data
     
 //         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -96,7 +96,7 @@
 //           console.log('Matched Course:', matchedCourse);
     
 //           // Fetch curriculum details
-//           const curriculumResponse = await axios.get('/HachionUserDashboad/curriculum');
+//           const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
 //           console.log('Curriculum API response:', curriculumResponse.data); // Log the curriculum data
     
 //           // Normalize both names for reliable comparison
@@ -108,7 +108,7 @@
   
 //           // Set the PDF URL if found
 //           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-//             const fullPdfUrl = `/HachionUserDashboad/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
+//             const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`; // Ensure full URL
 //             setPdfUrl(fullPdfUrl);
 //             console.log('PDF URL Set:', fullPdfUrl);
 //           } else {
@@ -148,7 +148,7 @@
 //     const fetchCourse = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get('/HachionUserDashboad/courses/all');
+//         const response = await axios.get('https://api.hachion.co/courses/all');
 //         const courseData = response.data.find(
 //           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
 //         );
@@ -193,7 +193,7 @@
 //           <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
 //           </div>
 //           <div className='qa-automation-left'>
-//             <img src={`/HachionUserDashboad/${course.courseImage}`} alt='qa-image' />
+//             <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
 //             <div className='qa-automation-middle'>
 //               {/* <p className='fee'>Fee: <span className='amount'>USD {course.total}/-</span>
 //               {course.total !== course.amount && (
@@ -250,7 +250,7 @@ import logo from '../../Assets/logo.png';
 const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
   const navigate = useNavigate();
-  const [faq, setFaq] = useState([]);
+  const [curriculum, setCurriculum] = useState([]);
   const [course, setCourse] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [matchedCourseName, setMatchedCourseName] = useState(null);
@@ -338,7 +338,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/HachionUserDashboad/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
 
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
@@ -348,14 +348,14 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
 
-          const curriculumResponse = await axios.get('/HachionUserDashboad/curriculum');
+          const curriculumResponse = await axios.get('https://api.hachion.co/curriculum');
           const matchedCurriculum = curriculumResponse.data.find(
             (item) =>
               item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
           );
 
           if (matchedCurriculum && matchedCurriculum.curriculum_pdf) {
-            const fullPdfUrl = `/HachionUserDashboad/curriculum/${matchedCurriculum.curriculum_pdf}`;
+            const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`;
             setPdfUrl(fullPdfUrl);
           }
 
@@ -374,29 +374,48 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     fetchCourse();
   }, [courseName]);
 
+    useEffect(() => {
+      if (!matchedCourseName) return;
+  
+      const fetchCurriculum = async () => {
+        try {
+          const response = await axios.get('https://api.hachion.co/curriculum');
+          const filteredCurriculum = response.data.filter(
+            (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
+          );
+          setCurriculum(filteredCurriculum);
+        } catch (error) {
+          console.error('Error fetching Curriculum:', error.message);
+          setError('Failed to load Curriculum.');
+        }
+      };
+  
+      fetchCurriculum();
+    }, [matchedCourseName]);
+
   // Download Curriculum
   const downloadPdf = () => {
     const token = localStorage.getItem('authToken');
-  
+
     if (!token) {
       showLoginModal();
-      return;
+      return; // Prevent proceeding to download
     }
   
-    if (!faq || faq.length === 0) {
+    if (!curriculum || curriculum.length === 0) {
       alert('No curriculum found for this course.');
       return;
     }
   
-    const curriculumWithPdf = faq.find(item => item.curriculum_pdf);
+    const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
       const fileName = curriculumWithPdf.curriculum_pdf.split('/').pop();
-      const fullPdfUrl = `/HachionUserDashboad/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
     }
-  };
+  }; 
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -426,7 +445,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
               <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
             </div>
             <div className='qa-automation-left'>
-              <img src={`/HachionUserDashboad/${course.courseImage}`} alt='qa-image' />
+              <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
               <div className='qa-automation-middle'>
                 <p className='fee'>
               Fee: <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>

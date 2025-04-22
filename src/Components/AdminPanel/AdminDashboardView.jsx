@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
-import AdminDashboard from './AdminDashboard';
+import AdminDashboard from './AdminDashboard'; // Default or dashboard component
 import TrendingCourseTable from './TrendingCourseTable';
 import Trainer from './Trainer';
 import Certificate from './Certificate';
@@ -15,34 +15,79 @@ import Reports from './Reports';
 import Other from './Other';
 import CourseCategory from './CourseCategory';
 import CorporateCourses from './CorporateCourses';
-const componentMap = {
-  'Dashboard': <AdminDashboard />,
-  'Course Category': <CourseCategory />,
-  'Course': <Course />,
-  'Corporate Training': <CorporateCourses />,
-  'Trending Courses': <TrendingCourseTable />,
-  'Trainer': <Trainer />,
-  'Certificate': <Certificate />,
-  'All Enroll': <Enroll />,
-  'Registration': <Registration />,
-  'Reports': <Reports />,
-  'Schedule Request': <ScheduleRequest />,
-  'Blog': <Blogs />,
-  'Support': <Support />,
-  'Other': <Other />,
-};
+
+
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
+
+  const [showAddCategory, setShowAddCategory] = useState(false);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setShowAddCategory(false);
+   
+  };
+
+  const handleAddCategoryClick = () => {
+    setShowAddCategory(true);
+  };
+
+  const renderContent = () => {
+    if (showAddCategory) {
+      return; // Pass onSelectCategory
+    }
+
+
+
+    switch (selectedCategory) {
+      case 'Dashboard':
+        return <AdminDashboard />;
+      case 'Course Category':
+        return <CourseCategory  />;
+
+        case 'Course':
+          return <Course />;
+
+          case 'Corporate Training':
+            return <CorporateCourses />;
+   
+        case 'Trending Courses':
+        
+        return <TrendingCourseTable/>
+      case 'Trainer':
+        return <Trainer />;
+      case 'Certificate':
+        return <Certificate />;
+      case 'All Enroll':
+        return <Enroll />;
+      case 'Registration':
+        return <Registration />;
+      case 'Reports':
+        return <Reports />;
+        case 'Schedule Request':
+        return <ScheduleRequest />;
+      case 'Blog':
+        return <Blogs />;
+      case 'Support':
+        return <Support />;
+      case 'Other':
+        return <Other />;
+      default:
+        return <AdminDashboard />;
+    }
+  };
+
   return (
-    <React.Fragment>
+    <>
       <AdminNavbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <AdminSidebar onSelectCategory={setSelectedCategory} />
+        <AdminSidebar onSelectCategory={handleCategorySelect} /> {/* Sidebar with onSelectCategory prop */}
         <div className='admin-right'>
-          {componentMap[selectedCategory] || <AdminDashboard />}
+          {renderContent()}
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
+
 export default AdminDashboardView;

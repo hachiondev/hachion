@@ -83,7 +83,7 @@ const HaveAnyQuery = ({ closeModal }) => {
 
     try {
       const response = await axios.post(
-        "/HachionUserDashboad/haveanyquery/add",
+        "https://api.hachion.co/haveanyquery/add",
         requestData,
         {
           headers: {

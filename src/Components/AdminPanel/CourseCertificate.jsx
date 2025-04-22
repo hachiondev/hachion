@@ -1,6 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
+import { RiCloseCircleLine } from 'react-icons/ri';
+import success from '../../Assets/success.gif';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,6 +26,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 
@@ -31,13 +35,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white',
+    borderRight: '1px solid white', // Add vertical lines
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0',
+    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -46,6 +51,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+
 export default function CourseCertificate() {
   const[course,setCourse]=useState([]);
   const[courseCategory,setCourseCategory]=useState([]);
@@ -68,24 +75,31 @@ export default function CourseCertificate() {
            category_name:"",
            title:"",
            description:"",
+           
          });
         const [currentPage, setCurrentPage] = useState(1);
                     const [rowsPerPage, setRowsPerPage] = useState(10);
+                    
                     const handlePageChange = (page) => {
                      setCurrentPage(page);
                      window.scrollTo(0, window.scrollY);
                    };
+                   // Inside your CourseCategory component
+                 
                  const handleRowsPerPageChange = (rows) => {
                    setRowsPerPage(rows);
-                   setCurrentPage(1);
+                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
                  };
+        
                  const displayedCourse = filteredCertificate.slice(
                   (currentPage - 1) * rowsPerPage,
                   currentPage * rowsPerPage
                 );
+
 const handleFileChange = (e) => {
     setCertificateData((prev) => ({ ...prev, certificate_image: e.target.files[0] }));
   };
+
          const handleReset=()=>{
             setCertificateData([{
               id:"",
@@ -95,7 +109,8 @@ const handleFileChange = (e) => {
                category_name:"",
                title:"",
                description:"",
-                 }]);       
+                 }]);
+        
          }
          const handleInputChange = (e) => {
             const { name, value } = e.target;
@@ -103,30 +118,37 @@ const handleFileChange = (e) => {
               ...prev,
               [name]: value,
             }));
-          }
+          };
+   
     const handleClose = () => {
-      setOpen(false); 
+      setOpen(false); // Close the modal
     };
+ 
     useEffect(() => {
       const fetchCertificate = async () => {
           try {
-              const response = await axios.get('/HachionUserDashboad/certificate');
-              setCertificate(response.data);
+              const response = await axios.get('https://api.hachion.co/certificate');
+              setCertificate(response.data); // Use the curriculum state
           } catch (error) {
+              console.error("Error fetching certificate:", error.message);
           }
       };
       fetchCertificate();
+
       setFilteredCertificate(certificate);
-  }, []);
+  }, []); // Empty dependency array ensures it runs only once
+
     const handleDeleteConfirmation = (id) => {
         if (window.confirm("Are you sure you want to delete this certificate")) {
           handleDelete(id);
         }
       };
+  
+   
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `/HachionUserDashboad/certificate/${editedData.id}`,editedData
+                `https://api.hachion.co/certificate/${editedData.id}`,editedData
             );
             setCertificate((prev) =>
                 prev.map(curr =>
@@ -140,26 +162,36 @@ const handleFileChange = (e) => {
             setMessage("Error updating Certificate.");
         }
     };
+            
       const handleDelete = async (id) => {
+       
          try { 
-          const response = await axios.delete(`/HachionUserDashboad/certificate/delete/${id}`); 
+          const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
+          console.log("Certificate deleted successfully:", response.data); 
         } catch (error) { 
+          console.error("Error deleting certificate:", error); 
         } }; 
         useEffect(() => {
           const filtered = certificate.filter(certificate =>
               certificate.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
               certificate.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              certificate.title.toLowerCase().includes(searchTerm.toLowerCase())     
+              certificate.title.toLowerCase().includes(searchTerm.toLowerCase()) 
+            
           );
           setFilteredCertificate(filtered);
       }, [searchTerm,filteredCertificate]);
+ 
         const handleCloseModal=()=>{
-          setShowAddCourse(false);     
+          setShowAddCourse(false);
+         
         }
         const handleClickOpen = (row) => {
-              setEditedData(row)
-              setOpen(true);
+            console.log(row);
+              setEditedData(row)// Set the selected row data
+              setOpen(true); // Open the modal
+             
             };
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCertificateData((prevData) => ({
@@ -170,9 +202,10 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCategory = async () => {
           try {
-            const response = await axios.get("/HachionUserDashboad/course-categories/all");
-            setCourse(response.data); 
+            const response = await axios.get("https://api.hachion.co/course-categories/all");
+            setCourse(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
+            console.error("Error fetching categories:", error.message);
           }
         };
         fetchCategory();
@@ -180,9 +213,10 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCourseCategory = async () => {
           try {
-            const response = await axios.get("/HachionUserDashboad/courses/all");
-            setCourseCategory(response.data);
+            const response = await axios.get("https://api.hachion.co/courses/all");
+            setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
           } catch (error) {
+            console.error("Error fetching categories:", error.message);
           }
         };
         fetchCourseCategory();
@@ -194,42 +228,57 @@ const handleFileChange = (e) => {
               );
               setFilterCourse(filtered);
             } else {
-              setFilterCourse([]);
+              setFilterCourse([]); // Reset when no category is selected
             }
           }, [certificateData.category_name, courseCategory]);
       const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        // Create a FormData object to handle file uploads
         const formData = new FormData();
-        const currentDate = new Date().toISOString().split("T")[0]; 
+        
+        // Add text data to the FormData object
+        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
         formData.append("date", currentDate);
         formData.append("course_name", certificateData.course_name);
         formData.append("category_name", certificateData.category_name);
         formData.append("title", certificateData.title);
         formData.append("description", certificateData.description);
+    
+        // Add the image file to the FormData object
         if (certificateData.certificate_image) {
             formData.append("certificate_image", certificateData.certificate_image);
         } else {
             alert("Please select an image.");
             return;
         }
+    
         try {
-            const response = await axios.post("/HachionUserDashboad/certificate/add", formData, {
+            // Send the POST request with FormData
+            const response = await axios.post("https://api.hachion.co/certificate/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
+    
             if (response.status === 201 || response.status === 200) {
                 alert("Certificate added successfully");
                 setCertificateData([...certificateData, { ...certificateData, date: currentDate }]); // Update local state
-                handleReset();
+                handleReset(); // Clear form fields
             }
         } catch (error) {
+            console.error("Error adding certicate:", error.message);
             alert("Error adding certificate.");
         }
     };
+    
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
+
+
+
   return (
+    
     <>  
      {showAddCourse ?  (<div className='course-category'>
       <nav aria-label="breadcrumb">
@@ -246,6 +295,7 @@ const handleFileChange = (e) => {
 <div className='category-header'>
 <p>Add Course Certificate </p>
 </div>
+
 <div className='course-details'>
 <div className='course-row'>
 <div class="col">
@@ -335,6 +385,7 @@ const handleFileChange = (e) => {
    }}
   />
             <button className='filter' >Filter</button>
+           
           </div>
           <div className='entries'>
             <div className='entries-left'>
@@ -429,7 +480,7 @@ const handleFileChange = (e) => {
                   <AdminPagination
               currentPage={currentPage}
               rowsPerPage={rowsPerPage}
-              totalRows={filteredCertificate.length} 
+              totalRows={filteredCertificate.length} // Use the full list for pagination
               onPageChange={handlePageChange}
             />
                       </div>
@@ -516,6 +567,38 @@ const handleFileChange = (e) => {
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>
+
+    {/* <div
+                  className='modal fade'
+                  id='exampleModal'
+                  tabIndex='-1'
+                  aria-labelledby='exampleModalLabel'
+                  aria-hidden='true'
+                >
+                  <div className='modal-dialog'>
+                    <div className='modal-content'>
+                      <button
+                        data-bs-dismiss='modal'
+                        className='close-btn'
+                        aria-label='Close'
+                        onClick={handleCloseModal}
+                      >
+                        <RiCloseCircleLine />
+                      </button>
+
+                      <div className='modal-body'>
+                        <img
+                          src={success}
+                          alt='Success'
+                          className='success-gif'
+                        />
+                        <p className='modal-para'>
+                     Certificate Added Successfully
+                        </p>
+                      </div>
+                    </div>
+                    </div>
+                    </div> */}
    
  </> );
 }

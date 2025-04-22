@@ -35,8 +35,8 @@
 //     const fetchData = async () => {
 //       try {
 //         const [scheduleResponse, coursesResponse] = await Promise.all([
-//           fetch('/HachionUserDashboad/schedulecourse').then((res) => res.json()),
-//           fetch('/HachionUserDashboad/courses/all').then((res) => res.json()),
+//           fetch('https://api.hachion.co/schedulecourse').then((res) => res.json()),
+//           fetch('https://api.hachion.co/courses/all').then((res) => res.json()),
 //         ]);
 
 //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -130,7 +130,7 @@
 //             key={course.course_id || index}
 //             id={course.course_id}
 //             heading={course.schedule_course_name}
-//             image={course.course_image ? `/HachionUserDashboad/${course.course_image}` : ''}
+//             image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ''}
 //             date={formatDate(course.schedule_date)}
 //             time={formatTime(course.schedule_time)}
 //              duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : 'Duration: TBA'}
@@ -198,8 +198,8 @@
 // //     const fetchData = async () => {
 // //       try {
 // //         const [scheduleResponse, coursesResponse] = await Promise.all([
-// //           fetch("/HachionUserDashboad/schedulecourse").then((res) => res.json()),
-// //           fetch("/HachionUserDashboad/courseDetails/all").then((res) => res.json()),
+// //           fetch("https://api.hachion.co/schedulecourse").then((res) => res.json()),
+// //           fetch("https://api.hachion.co/courseDetails/all").then((res) => res.json()),
 // //         ]);
 
 // //         if (!Array.isArray(scheduleResponse) || !Array.isArray(coursesResponse)) {
@@ -283,9 +283,9 @@ const TrainingEvents = () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
-            `/HachionUserDashboad/schedulecourse?timezone=${userTimezone}`
+            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
-          fetch("/HachionUserDashboad/courses/all").then((res) => res.json()),
+          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
         ]);
 
         if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
@@ -444,7 +444,7 @@ const TrainingEvents = () => {
                 heading={course.schedule_course_name}
                 image={
                   course.course_image
-                    ? `/HachionUserDashboad/${course.course_image}`
+                    ? `https://api.hachion.co/${course.course_image}`
                     : ""
                 }
                 date={

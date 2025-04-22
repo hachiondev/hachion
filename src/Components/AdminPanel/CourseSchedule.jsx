@@ -165,7 +165,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "/HachionUserDashboad/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data);
       } catch (error) {
@@ -176,7 +176,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("/HachionUserDashboad/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -196,7 +196,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("/HachionUserDashboad/trainers");
+        const response = await axios.get("https://api.hachion.co/trainers");
         setTrainer(response.data);
       } catch (error) {
       }
@@ -251,7 +251,7 @@ export default function CourseSchedule() {
     };
     try {
       const response = await axios.post(
-        "/HachionUserDashboad/schedulecourse/add",
+        "https://api.hachion.co/schedulecourse/add",
         formattedCourseData
       );
     } catch (error) {
@@ -271,7 +271,7 @@ export default function CourseSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "/HachionUserDashboad/schedulecourse"
+          "https://api.hachion.co/schedulecourse"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -301,7 +301,7 @@ export default function CourseSchedule() {
   const handleDelete = async (course_schedule_id) => {
     try {
       await axios.delete(
-        `/HachionUserDashboad/schedulecourse/delete/${course_schedule_id}`
+        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
       setCourses((prevCourses) =>
         prevCourses.filter(
@@ -323,7 +323,7 @@ export default function CourseSchedule() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `/HachionUserDashboad/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
       setCourses((prevCourses) =>

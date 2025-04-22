@@ -42,7 +42,7 @@ export default function RegisterStudent() {
     const [enrollData, setEnrollData] = useState([]);
 
     useEffect(() => {
-        axios.get("/HachionUserDashboad/api/v1/user/students")
+        axios.get("https://api.hachion.co/api/v1/user/students")
             .then((response) => {
                 setEnrollData(response.data);
             })
@@ -53,7 +53,7 @@ export default function RegisterStudent() {
 
     // const handleDelete = async (id) => {
     //     try {
-    //         await axios.delete(`/HachionUserDashboad/enroll/delete/${id}`);
+    //         await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
     //         setEnrollData(enrollData.filter((item) => item.id !== id));
     //     } catch (error) {
     //         console.error("Error deleting entry:", error);

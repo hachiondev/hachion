@@ -123,7 +123,7 @@
     useEffect(() => {
       const fetchWorkshops = async () => {
         try {
-          const response = await axios.get('/HachionUserDashboad/workshopschedule');
+          const response = await axios.get('https://api.hachion.co/workshopschedule');
           setWorkshops(response.data);
     
           const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
@@ -290,7 +290,7 @@
 
   // Use new code with time conversion when fetching workshop data
   useEffect(() => {
-    fetch("/HachionUserDashboad/workshopschedule")
+    fetch("https://api.hachion.co/workshopschedule")
       .then((res) => res.json())
       .then((data) => {
         const selectedWorkshop = Array.isArray(data) ? data[0] : data;
@@ -350,7 +350,7 @@
       };
 
       try {
-        const response = await axios.post("/HachionUserDashboad/workshops", updatedFormData);
+        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
         setError("Registration for workshop done successfully");
         setMessageType('success');
         console.log("Response:", response.data);
@@ -448,7 +448,7 @@
             {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
             <img
               src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                    ? `/HachionUserDashboad/${workshop.banner_image}` 
+                    ? `https://api.hachion.co/${workshop.banner_image}` 
                     : Banner2}
               alt="Workshop Banner"
               // style={{ height: "420px"}}

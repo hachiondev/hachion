@@ -97,7 +97,7 @@ const RegisterHere = () => {
 
     try {
       const response = await fetch(
-        `/HachionUserDashboad/api/v1/user/send-otp?email=${email}`,
+        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
         {
           method: "POST",
           headers: {

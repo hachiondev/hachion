@@ -141,7 +141,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -152,7 +152,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -173,7 +173,7 @@ const [filterData, setFilterData] = useState({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/HachionUserDashboad/curriculum");
+        const response = await axios.get("https://api.hachion.co/curriculum");
         setAllData(response.data);
         setFilteredCurriculum(response.data); 
       } catch (error) {
@@ -227,7 +227,7 @@ const [filterData, setFilterData] = useState({
             formData.append("curriculumPdf", editedRow.curriculum_pdf);
           }      
           const response = await axios.put(
-            `/HachionUserDashboad/curriculum/update/${editedRow.curriculum_id}`,
+            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
             formData,
             {
               headers: {
@@ -255,7 +255,7 @@ const [filterData, setFilterData] = useState({
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`/HachionUserDashboad/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -329,7 +329,7 @@ const [filterData, setFilterData] = useState({
       }
   
       try {
-        const response = await axios.post("/HachionUserDashboad/curriculum/add", formData, {
+        const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -80,8 +80,8 @@ export default function WorkshopSchedule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({bannerImage:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:""});
-  const [selectedRow, setSelectedRow] = React.useState({bannerImage:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:""});
+  const [editedRow, setEditedRow] = useState({bannerImage:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
+  const [selectedRow, setSelectedRow] = React.useState({bannerImage:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
   const currentDate = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
       bannerImage:null,
@@ -93,6 +93,9 @@ export default function WorkshopSchedule() {
         content:"",
         details:"",
         created_date:"",
+        meta_title:"",
+        meta_keyword:"",
+        meta_description:""
       });
     const [currentPage, setCurrentPage] = useState(1);
      const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -133,7 +136,7 @@ const handleDateChange = (newValue) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/course-categories/all");
+      const response = await axios.get("http://localhost:8080/course-categories/all");
       setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -144,7 +147,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/courses/all");
+      const response = await axios.get("http://localhost:8080/courses/all");
       setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -227,6 +230,9 @@ const handleChange = (e, quillField = null, quillValue = null) => {
       time_zone: formData.time_zone || "GMT",
       content: formData.content || "",
       details: formData.details || "",
+      meta_title:formData.meta_title||"",
+      meta_description:formData.meta_description||"",
+      meta_keyword:formData.meta_keyword||"",
       created_date: currentDate,
     };
   
@@ -240,7 +246,7 @@ const handleChange = (e, quillField = null, quillValue = null) => {
   
     try {
       const response = await axios.post(
-        "https://api.hachion.co/workshopschedule/add",
+        "http://localhost:8080/workshopschedule/add",
         formDataToSend,
         {
           headers: {
@@ -276,7 +282,7 @@ const handleChange = (e, quillField = null, quillValue = null) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/workshopschedule');
+      const response = await axios.get('http://localhost:8080/workshopschedule');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -313,7 +319,7 @@ const handleDelete = async (id) => {
       return;
     }
 
-    const response = await axios.delete(`https://api.hachion.co/workshopschedule/delete/${id}`);
+    const response = await axios.delete(`/HachionUserDashboad/workshopschedule/delete/${id}`);
     console.log("Courses deleted successfully:", response.data);
   } catch (error) {
     console.error("Error deleting workshop:", error.response ? error.response.data : error.message);
@@ -350,7 +356,7 @@ const handleSave = async () => {
     }
 
     const response = await axios.put(
-      `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
+      `/HachionUserDashboad/workshopschedule/update/${selectedRow.id}`,
       formDataToSend,
       {
         headers: {
@@ -598,10 +604,43 @@ const quillModules = {
             "color",
           ]}
          />
+          
+        
          {error && <p className="error-message">{error}</p>}
          </div> 
          </div>
-          
+         <label className="form-label d-block">Meta Title</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta title"
+          name="meta_title"
+          value={formData.meta_title}
+          onChange={handleChange}
+        />
+      
+      
+        <label className="form-label d-block">Meta keywords</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta keywords"
+          name="meta_keyword"
+          value={formData.meta_keyword}
+          onChange={handleChange}
+        />
+     
+      
+        <label className="form-label d-block">Meta Description</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta description"
+          name="meta_description"
+          value={formData.meta_description}
+          onChange={handleChange}
+        />
+
           <div className="course-row">
         <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
@@ -701,7 +740,7 @@ const quillModules = {
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="center">
               {course.banner_image ? <img
-                src={`https://api.hachion.co/${course.banner_image}`} 
+                src={`/HachionUserDashboad/${course.banner_image}`} 
                     alt={`Banner`}
                     style={{ width: "100px", height: "50px" }}
                 /> : 'No Banner'}

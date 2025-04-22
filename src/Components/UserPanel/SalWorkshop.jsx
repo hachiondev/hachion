@@ -218,11 +218,14 @@ const [courses, setCourses] = useState([]);
     }, []);
   return (
     <>
-    <Helmet>
-        <title>Best Salesforce Training & Workshop in USA | Expert Guidance</title>
-        <meta name="description" content="Unlock your potential with our expert-led Salesforce training & workshop in USA. Enhance skills, boost career & transform businesses." />
-        <meta name="keywords" content="Salesforce Training, Salesforce Workshop, USA Salesforce Training, Expert Guidance, Career Development" />
-      </Helmet>
+      <Helmet>
+   <title>{workshop?.meta_title || "Hachion Workshop"}</title>
+   <meta name="description" content={workshop?.meta_description || "Workshop description"} />
+   <meta name="keywords" content={workshop?.meta_keyword || "workshop"} />
+   <meta property="og:title" content={workshop?.meta_title || "Best Online IT Workshop Courses"} />
+   <meta property="og:description" content={workshop?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
+
+ </Helmet>
       <Topbar />
       <NavbarTop />
       <div className='work-details'>

@@ -92,16 +92,9 @@ export default function CourseSchedule() {
     course_schedule_id: "",
     schedule_category_name: "",
     schedule_course_name: "",
-    schedule_date: null,
-    schedule_frequency: "",
-    schedule_week: "",
-    schedule_time: null,
-    schedule_duration: "",
-    schedule_mode: "",
     trainer_name: "",
     created_date: currentDate,
-    pattern: "",
-    meeting: "",
+   
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -120,52 +113,48 @@ export default function CourseSchedule() {
   const [rows, setRows] = useState([
     {
       id: "",
-      frequency: "",
-      time: "",
-      duration: "",
-      mode: "",
-      pattern: "",
-      meeting: "",
+    schedule_date: null,
+    schedule_frequency: "",
+    schedule_week: "",
+    schedule_time: null,
+    schedule_duration: "",
+    schedule_mode: "",
+    pattern: "",
+    meeting: "",
     },
   ]);
+  const handleRowChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
   const addRow = () => {
-    setRows([
-      ...rows,
-      {
-        id: Date.now(),
-        frequency: "",
-        time: "",
-        duration: "",
-        mode: "",
-        pattern: "",
-        meeting: "",
-      },
-    ]);
+    setRows([...rows, { id: Date.now(),  schedule_date: "",  schedule_frequency: "", schedule_week: '',
+      schedule_time:"",schedule_duration:"",schedule_mode:"",pattern:"",meeting:""
+     }]);
   };
+  
   const deleteRow = (id) => {
-    setRows(rows.filter((row) => row.id !== id));
+    setRows(rows.filter(row => row.id !== id));
   };
-  const handleDateChange = (newValue) => {
+  const handleDateChange = (index, newValue) => {
     const parsedDate = dayjs(newValue);
-    if (!parsedDate.isValid()) {
-      return;
-    }
-    setCourseData((prevData) => ({
-      ...prevData,
-      schedule_date: parsedDate.format("MM-DD-YYYY"),
+    if (!parsedDate.isValid()) return;
+  
+    const updatedRows = [...rows];
+    updatedRows[index] = {
+      ...updatedRows[index],
+      schedule_date: parsedDate.format("YYYY-MM-DD"),
       schedule_week: parsedDate.format("dddd"),
-    }));
-    setEditedRow((prev) => ({
-      ...prev,
-      schedule_date: parsedDate.format("MM-DD-YYYY"),
-      schedule_week: parsedDate.format("dddd"),
-    }));
+    };
+    setRows(updatedRows);
   };
+  
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "/HachionUserDashboad/course-categories/all"
         );
         setCategory(response.data);
       } catch (error) {
@@ -176,7 +165,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("/HachionUserDashboad/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -196,23 +185,22 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/trainers");
+        const response = await axios.get("/HachionUserDashboad/trainers");
         setTrainer(response.data);
       } catch (error) {
       }
     };
     fetchTrainer();
   }, []);
-  const handleTimeChange = (newValue) => {
-    setCourseData((prevData) => ({
-      ...prevData,
+  const handleTimeChange = (index, newValue) => {
+    const updatedRows = [...rows];
+    updatedRows[index] = {
+      ...updatedRows[index],
       schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
-    }));
-    setEditedRow((prev) => ({
-      ...prev,
-      schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
-    }));
+    };
+    setRows(updatedRows);
   };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourseData((prev) => ({
@@ -236,25 +224,48 @@ export default function CourseSchedule() {
     });
   };
   const handleSubmit = async () => {
-    const formattedCourseData = {
-      course_schedule_id: courseData.course_schedule_id,
-      schedule_category_name: courseData.schedule_category_name,
-      schedule_course_name: courseData.schedule_course_name,
-      schedule_date: courseData.schedule_date,
-      schedule_week: courseData.schedule_week,
-      schedule_time: courseData.schedule_time,
-      schedule_duration: courseData.schedule_duration,
-      schedule_mode: courseData.schedule_mode,
-      trainer_name: courseData.trainer_name || "",
-      created_date: courseData.created_date,
-      meeting:courseData.meeting
-    };
-    try {
-      const response = await axios.post(
-        "https://api.hachion.co/schedulecourse/add",
-        formattedCourseData
-      );
-    } catch (error) {
+    if (!Array.isArray(rows)) {
+      console.error("rows is not an array:", rows);
+      alert("Something went wrong. Please try again.");
+      return;
+    }
+  
+    const uploadPromises = rows.map(async (row) => {
+      const formattedCourseData = {
+        course_schedule_id: courseData.course_schedule_id,
+        schedule_category_name: courseData.schedule_category_name,
+        schedule_course_name: courseData.schedule_course_name,
+        schedule_date: row.schedule_date,
+        schedule_week: row.schedule_week,
+        schedule_time: row.schedule_time,
+        schedule_duration: row.schedule_duration,
+        schedule_mode: row.schedule_mode,
+        trainer_name: courseData.trainer_name || "",
+        created_date: courseData.created_date,
+        meeting: row.meeting,
+      };
+  
+      try {
+        const response = await axios.post(
+          "/HachionUserDashboad/schedulecourse/add",
+          formattedCourseData
+        );
+        return response.status === 201 || response.status === 200;
+      } catch (error) {
+        console.error("Error adding schedule:", error.response?.data || error.message);
+        return false;
+      }
+    });
+  
+    const results = await Promise.all(uploadPromises);
+    const allSuccessful = results.every((status) => status);
+  
+    if (allSuccessful) {
+      alert("All schedule entries added successfully.");
+      setShowAddCourse(false);
+      setRows([{ id: Date.now(), schedule_date: "", schedule_week: "", schedule_time: "", schedule_duration: "", schedule_mode: "", trainer_name: "", created_date: "", meeting: "" }]);
+    } else {
+      alert("Some schedule entries failed to upload. Please check the console for errors.");
     }
   };
   const handleDateFilter = () => {
@@ -271,7 +282,7 @@ export default function CourseSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/schedulecourse"
+          "/HachionUserDashboad/schedulecourse?userType=admin"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -301,7 +312,7 @@ export default function CourseSchedule() {
   const handleDelete = async (course_schedule_id) => {
     try {
       await axios.delete(
-        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
+        `/HachionUserDashboad/schedulecourse/delete/${course_schedule_id}`
       );
       setCourses((prevCourses) =>
         prevCourses.filter(
@@ -323,7 +334,7 @@ export default function CourseSchedule() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `/HachionUserDashboad/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
       setCourses((prevCourses) =>
@@ -341,6 +352,23 @@ export default function CourseSchedule() {
     } catch (error) {
     }
   };
+  const handleEditDateChange = (newValue) => {
+    const parsedDate = dayjs(newValue);
+    if (!parsedDate.isValid()) return;
+  
+    setEditedRow((prev) => ({
+      ...prev,
+      schedule_date: parsedDate.format("YYYY-MM-DD"),  // or use ISO format if backend expects it
+      schedule_week: parsedDate.format("dddd"),
+    }));
+  };
+  const handleEditTimeChange = (newValue) => {
+    setEditedRow((prev) => ({
+      ...prev,
+      schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
+    }));
+  };
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedRow((prev) => ({
@@ -483,7 +511,7 @@ export default function CourseSchedule() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {rows.map((row) => (
+                        {rows.map((row,index) => (
                           <StyledTableRow
                             key={row.id}
                             sx={{
@@ -494,12 +522,8 @@ export default function CourseSchedule() {
                           >
                             <StyledTableCell component="th" scope="row" sx={{ padding: 0 }}>
                               <DatePicker
-                                value={
-                                  courseData.schedule_date
-                                    ? dayjs(courseData.schedule_date)
-                                    : null
-                                }
-                                onChange={(newValue) => handleDateChange(newValue)}
+                              value={row.schedule_date ? dayjs(row.schedule_date, "MM-DD-YYYY") : null}
+                              onChange={(newValue) => handleDateChange(index, newValue)}
                                 renderInput={(params) => <TextField {...params} />}
                                 sx={{
                                   "& .MuiInputBase-root": {
@@ -516,9 +540,9 @@ export default function CourseSchedule() {
                                 <select
                                   id="inputState"
                                   className="form-select"
-                                  name="schedule_week"
-                                  value={courseData.schedule_week}
-                                  onChange={handleChange}
+                                  name="schedule_frequency"
+                                  value={row.schedule_frequency}
+                                  onChange={(e) => handleRowChange(index, 'schedule_frequency', e.target.value)}
                                 >
                                   <option value="">Select</option>
                                   <option>Only Weekends</option>
@@ -531,12 +555,8 @@ export default function CourseSchedule() {
                               <TimePicker
                                 label="Select Time"
                                 ampm={true}
-                                value={
-                                  courseData.schedule_time
-                                    ? dayjs(courseData.schedule_time, "hh:mm A")
-                                    : null
-                                }
-                                onChange={handleTimeChange}
+                                value={row.schedule_time ? dayjs(row.schedule_time, "hh:mm A") : null}
+                                onChange={(newValue) => handleTimeChange(index, newValue)}
                                 renderInput={(params) => <TextField {...params} />}
                                 sx={{
                                   "& .MuiInputBase-root": {
@@ -552,8 +572,8 @@ export default function CourseSchedule() {
                               <input
                                 name="schedule_duration"
                                 className="table-curriculum"
-                                value={courseData.schedule_duration}
-                                onChange={handleChange}
+                                value={rows.schedule_duration}
+                                onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
@@ -562,8 +582,8 @@ export default function CourseSchedule() {
                                   id="inputState"
                                   className="form-select"
                                   name="schedule_mode"
-                                  value={courseData.schedule_mode}
-                                  onChange={handleChange}
+                                  value={rows.schedule_mode}
+                                  onChange={(e) => handleRowChange(index, 'schedule_mode', e.target.value)}
                                 >
                                   <option value="">Select</option>
                                   <option>Live Class</option>
@@ -575,16 +595,16 @@ export default function CourseSchedule() {
                               <input
                                 name="pattern"
                                 className="table-curriculum"
-                                value={courseData.pattern}
-                                onChange={handleChange}
+                                value={rows.pattern}
+                                onChange={(e) => handleRowChange(index, 'pattern', e.target.value)}
                               />
                             </StyledTableCell>
                             <StyledTableCell align="left" sx={{ padding: 0 }}>
                               <input
                                 name="meeting"
                                 className="table-curriculum"
-                                value={courseData.meeting}
-                                onChange={handleChange}
+                                value={rows.meeting}
+                                onChange={(e) => handleRowChange(index, 'pattern', e.target.value)}
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
@@ -778,7 +798,7 @@ export default function CourseSchedule() {
                         {course.schedule_week}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {course.schedule_time}
+                        {course.schedule_time} IST
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.schedule_duration}
@@ -929,7 +949,7 @@ export default function CourseSchedule() {
                       ? dayjs(editedRow.schedule_date)
                       : null
                   }
-                  onChange={handleDateChange}
+                  onChange={handleEditDateChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>
@@ -940,8 +960,8 @@ export default function CourseSchedule() {
                 <select
                   id="inputState"
                   className="form-select"
-                  name="schedule_week"
-                  value={editedRow.schedule_week || ""}
+                  name="schedule_frequency"
+                  value={editedRow.schedule_frequency || ""}
                   onChange={handleInputChange}
                 >
                   <option value="">Select</option>
@@ -962,7 +982,7 @@ export default function CourseSchedule() {
                       : null
                   }
                   ampm={true}
-                  onChange={handleTimeChange}
+                  onChange={handleEditTimeChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>

@@ -89,7 +89,7 @@ const Advisor = () => {
     };
   
     try {
-      const response = await axios.post('https://api.hachion.co/advisors', requestData, {
+      const response = await axios.post('/HachionUserDashboad/advisors', requestData, {
         headers: {
           'Content-Type': 'application/json'
         }

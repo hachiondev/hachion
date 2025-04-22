@@ -123,7 +123,7 @@
     useEffect(() => {
       const fetchWorkshops = async () => {
         try {
-          const response = await axios.get('https://api.hachion.co/workshopschedule');
+          const response = await axios.get('/HachionUserDashboad/workshopschedule');
           setWorkshops(response.data);
     
           const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
@@ -290,7 +290,7 @@
 
   // Use new code with time conversion when fetching workshop data
   useEffect(() => {
-    fetch("https://api.hachion.co/workshopschedule")
+    fetch("/HachionUserDashboad/workshopschedule")
       .then((res) => res.json())
       .then((data) => {
         const selectedWorkshop = Array.isArray(data) ? data[0] : data;
@@ -350,7 +350,7 @@
       };
 
       try {
-        const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+        const response = await axios.post("/HachionUserDashboad/workshops", updatedFormData);
         setError("Registration for workshop done successfully");
         setMessageType('success');
         console.log("Response:", response.data);
@@ -392,10 +392,12 @@
     return (
       <>
       <Helmet>
-          <title>Best Salesforce Training & Workshop in USA | Expert Guidance</title>
-          <meta name="description" content="Unlock your potential with our expert-led Salesforce training & workshop in USA. Enhance skills, boost career & transform businesses." />
-          <meta name="keywords" content="Salesforce Training, Salesforce Workshop, USA Salesforce Training, Expert Guidance, Career Development" />
-        </Helmet>
+    <title>{workshop?.meta_title || "Hachion Workshop"}</title>
+    <meta name="description" content={workshop?.meta_description || "Workshop description"} />
+    <meta name="keywords" content={workshop?.meta_keyword || "workshop"} />
+    <meta property="og:title" content={workshop?.meta_title || "Best Online IT Workshop Courses"} />
+    <meta property="og:description" content={workshop?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
+     </Helmet>
         <Topbar />
         <NavbarTop />
         <div className='work-details'>
@@ -446,7 +448,7 @@
             {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
             <img
               src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                    ? `https://api.hachion.co/${workshop.banner_image}` 
+                    ? `/HachionUserDashboad/${workshop.banner_image}` 
                     : Banner2}
               alt="Workshop Banner"
               // style={{ height: "420px"}}

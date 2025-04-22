@@ -48,7 +48,7 @@ const[joinedWorkshop,setJoinedWorkshop]=useState([]);
 useEffect(() => {
   const fetchJoinedWorkshop = async () => {
       try {
-          const response = await axios.get('https://api.hachion.co/workshops'); // Check API URL
+          const response = await axios.get('/HachionUserDashboad/workshops'); // Check API URL
           console.log("API Response:", response.data); // Debugging line
           setJoinedWorkshop(response.data);
           setFilteredWorkshop(response.data);

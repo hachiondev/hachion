@@ -154,7 +154,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("/HachionUserDashboad/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -175,7 +175,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("/HachionUserDashboad/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -257,7 +257,7 @@ export default function Faq() {
           }
       
           const response = await axios.put(
-            `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
+            `/HachionUserDashboad/faq/update/${editedRow.faq_id}`,
             formData,
             {
               headers: {
@@ -316,7 +316,7 @@ export default function Faq() {
       // useEffect(() => {
       //   const fetchData = async () => {
       //     try {
-      //       const response = await axios.get("https://api.hachion.co/faq");
+      //       const response = await axios.get("/HachionUserDashboad/faq");
       //       setAllData(response.data);
       //       setDisplayedCategories(response.data); // initially display all
       //     } catch (error) {
@@ -329,7 +329,7 @@ export default function Faq() {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const response = await axios.get("https://api.hachion.co/faq");
+              const response = await axios.get("/HachionUserDashboad/faq");
               setAllData(response.data);
               setFilteredCurriculum(response.data); // Used for paginated display
             } catch (error) {
@@ -341,7 +341,7 @@ export default function Faq() {
       const handleDelete = async (faq_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`); 
+          const response = await axios.delete(`/HachionUserDashboad/faq/delete/${faq_id}`); 
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
@@ -409,7 +409,7 @@ export default function Faq() {
 //     console.log("Data being sent:", dataToSubmit); // Debugging
 
 //     try {
-//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
+//         const response = await axios.post("/HachionUserDashboad/curriculum/add", dataToSubmit, {
 //             headers: {
 //                 "Content-Type": "multipart/form-data" 
 //             }
@@ -448,7 +448,7 @@ export default function Faq() {
 //   console.log("Data being sent:", formData); // Debugging
 
 //   try {
-//       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+//       const response = await axios.post("/HachionUserDashboad/faq/add", formData, {
 //           headers: {
 //               "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
 //           }
@@ -488,7 +488,7 @@ const handleSubmit = async (e) => {
     }
 
     try {
-      const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+      const response = await axios.post("/HachionUserDashboad/faq/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -757,7 +757,7 @@ const handleSubmit = async (e) => {
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Description</StyledTableCell>
-            {/* <StyledTableCell align="center">faq pdf</StyledTableCell> */}
+            <StyledTableCell align="center">FAQ pdf</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
@@ -780,7 +780,13 @@ const handleSubmit = async (e) => {
     dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
   />
 </StyledTableCell>
-{/* <StyledTableCell align="center">{course.faq_pdf}</StyledTableCell> */}
+<StyledTableCell align="left" style={{ width: '100px' }}>
+                        {course.faq_pdf ? (
+                          course.faq_pdf.split('/').pop()
+                        ) : (
+                          'No PDF'
+                        )}
+                      </StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

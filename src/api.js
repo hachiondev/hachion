@@ -1,16 +1,15 @@
-// api.js
-import axios from 'axios';
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
-// Retrieve the token from localStorage or your preferred storage
-const token = localStorage.getItem('authToken');
-
-// Create an Axios instance
-const api = axios.create({
-  baseURL: 'https://api.hachion.co/',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
-  },
-});
-
-export default api;
+module.exports = function(app) {
+  app.use(
+    '/HachionUserDashboad',
+    createProxyMiddleware({
+      target: 'https://api.hachion.co/',
+      changeOrigin: true,
+      secure: false, // Disable SSL verification if using an HTTP API
+      pathRewrite: {
+        '^/HachionUserDashboad': '', // Rewrite the path if necessary
+      },
+    })
+  );
+};

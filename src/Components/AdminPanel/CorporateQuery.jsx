@@ -48,7 +48,7 @@ const[filteredCorporate,setFilteredCorporate]=useState([])
 useEffect(() => {
   const fetchCorporateQuery = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/advisors');
+      const response = await axios.get('/HachionUserDashboad/advisors');
       console.log("API Response:", response.data);
       setCorporateQuery(response.data);
       setFilteredCorporate(response.data); // Initialize the filteredCorporate with the fetched data

@@ -31,7 +31,7 @@ const QaAutomationFaq = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('/HachionUserDashboad/courses/all');
         console.log('API response:', response.data); // Check course data
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -46,7 +46,7 @@ const QaAutomationFaq = () => {
           console.log('Matched Course:', matchedCourse);
     
           // Fetch faq details
-          const faqResponse = await axios.get('https://api.hachion.co/faq');
+          const faqResponse = await axios.get('/HachionUserDashboad/faq');
           console.log('faq API response:', faqResponse.data); // Log the faq data
     
           // Normalize both names for reliable comparison
@@ -58,7 +58,7 @@ const QaAutomationFaq = () => {
   
           // Set the PDF URL if found
           if (matchedfaq && matchedfaq.faq_pdf) {
-            const fullPdfUrl = `https://api.hachion.co/faq/${matchedfaq.faq_pdf}`; // Ensure full URL
+            const fullPdfUrl = `/HachionUserDashboad/faq/${matchedfaq.faq_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
@@ -85,7 +85,7 @@ const QaAutomationFaq = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/faq');
+        const response = await axios.get('/HachionUserDashboad/faq');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
@@ -134,20 +134,6 @@ const QaAutomationFaq = () => {
           </p>
         </div>
 
-        {/* {expandedTopics[index] && (
-          <div className="topic-details">
-            <ul className="bullet-list">
-              {item.description &&
-                item.description.split(',').map((desc, i) => (
-                  <li key={i}>{desc.trim()}</li>
-                ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    ));
-  }; */}
-
 {expandedTopics[index] && (
         <div className="topic-details">
           <div className="quill-content" dangerouslySetInnerHTML={{ __html: item.description }} />
@@ -172,11 +158,17 @@ const downloadPdf = () => {
     return;
   }
 
+  const userData = JSON.parse(localStorage.getItem('loginuserData'));
+  if (!userData) {
+    showLoginModal();
+    return;
+  }
+
   // Search for the first faq entry with a valid PDF URL
   const faqWithPdf = faq.find(item => item.faq_pdf);
 
   if (faqWithPdf) {
-    const pdfUrl = `https://api.hachion.co/faq/${faqWithPdf.faq_pdf}`;
+    const pdfUrl = `/HachionUserDashboad/faq/${faqWithPdf.faq_pdf}`;
 
     // Trigger download
     const link = document.createElement('a');

@@ -18,7 +18,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     review: "",
     user_image: "",
     rating: 0,
-    type: "",
+    type: false,
     social_id: "",
   });
 
@@ -28,12 +28,12 @@ const UserWriteReview = ({ setShowReviewForm }) => {
   // Fetch courses and trainers data on component load
   useEffect(() => {
     axios
-      .get("http://localhost:8080/courses/all")
+      .get("https://api.hachion.co/courses/all")
       .then((response) => setCourses(response.data))
       .catch((error) => console.error("Error fetching courses:", error));
 
     axios
-      .get("http://localhost:8080/trainers")
+      .get("https://api.hachion.co/trainers")
       .then((response) => setTrainers(response.data))
       .catch((error) => console.error("Error fetching trainers:", error));
   }, []);
@@ -66,6 +66,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
       rating: reviewData.rating ? Number(reviewData.rating) : 5,
       review: reviewData.review || "",
       location: reviewData.location || "",
+      display: "course",
       date: new Date().toISOString().split("T")[0],
     };
 
@@ -87,7 +88,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/userreview/add",
+        "https://api.hachion.co/userreview/add",
         formData,
         {
           headers: {
@@ -96,7 +97,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
         }
       );
 
-      alert("Review added successfully:", response.data);
+      console.log("Review added successfully:", response.data);
     } catch (error) {
       console.error(
         "Error adding review:",
@@ -145,12 +146,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
           </div>
           <div className="col-md-5">
             <label className="form-label">Review Type</label>
-            <select
-              className="form-select"
-              name="type"
-              value={reviewData.type}
-              onChange={handleChange}
-            >
+            <select className="form-select">
               <option value="">Select Type</option>
               <option value="Course Review">Course Review</option>
               <option value="Trainer Review">Trainer Review</option>

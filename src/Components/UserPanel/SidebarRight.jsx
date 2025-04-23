@@ -11,7 +11,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("/HachionUserDashboad/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data); // Set the courses if data is an array
         } else {
@@ -52,7 +52,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
             key={course.id || index}
             title={course.courseName}
             RatingByPeople={course.ratingByNumberOfPeople}
-            image={`http://localhost:8080/${course.courseImage}`} // Correct property
+            image={`/HachionUserDashboad/${course.courseImage}`} // Correct property
             Rating={course.starRating}
             student={course.totalEnrollment}
             month={course.numberOfClasses}

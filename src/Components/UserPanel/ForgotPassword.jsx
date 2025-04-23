@@ -28,7 +28,7 @@ const ForgotPassword = () => {
     try {
       // Call the API with the email
       const response = await axios.put(
-        `http://localhost:8080/api/v1/user/forgotpassword?email=${email}`
+        `https://api.hachion.co/api/v1/user/forgotpassword?email=${email}`
       );
 
       // If successful, show success message

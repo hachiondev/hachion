@@ -31,6 +31,8 @@ const initialValues = {
   email: "",
   number: "",
   comment: "",
+  date: "",
+  country: "",
 };
 
 const ContactUs = () => {
@@ -69,7 +71,25 @@ const ContactUs = () => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
+    { name: "Netherlands", code: "+31", flag: "NL" },
   ];
+
+  const defaultCountry = countries.find((c) => c.flag === "US");
+
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((res) => res.json())
+      .then((data) => {
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find(
+          (c) => c.flag === userCountryCode
+        );
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleCountrySelect = (country) => {
     console.log("Country selected:", country.name, country.code);
@@ -94,18 +114,20 @@ const ContactUs = () => {
 
   const handleContact = async (e) => {
     e.preventDefault();
-
+    const currentDate = new Date().toISOString().split("T")[0];
     const requestData = {
       name: values.name,
       email: values.email,
       mobile: mobileNumber,
       comment: values.comment,
+      date: currentDate,
+      country: selectedCountry.name,
     };
 
     try {
       console.log(requestData);
       const response = await axios.post(
-        "http://localhost:8080/haveanyquery/add",
+        "https://api.hachion.co/haveanyquery/add",
         requestData,
         {
           headers: {
@@ -150,6 +172,32 @@ const ContactUs = () => {
         console.log(values);
       },
     });
+  const [whatsappNumber, setWhatsappNumber] = useState("+1 (732) 485-2499");
+  const [whatsappLink, setWhatsappLink] = useState("https://wa.me/17324852499");
+
+  useEffect(() => {
+    const detectUserCountry = async () => {
+      try {
+        const res = await fetch("https://ipwho.is/");
+        if (!res.ok) throw new Error("Failed to fetch location data");
+
+        const data = await res.json();
+        console.log("🌎 Detected country:", data.country_code);
+
+        if (data.country_code === "IN") {
+          setWhatsappNumber("+91-949-032-3388");
+          setWhatsappLink("https://wa.me/919490323388");
+        } else {
+          setWhatsappNumber("+1 (732) 485-2499");
+          setWhatsappLink("https://wa.me/17324852499");
+        }
+      } catch (error) {
+        console.error("❌ Error fetching user location:", error);
+      }
+    };
+
+    detectUserCountry();
+  }, []);
 
   return (
     <>
@@ -215,11 +263,11 @@ const ContactUs = () => {
               <img src={whatsappIcon} alt="whatsapp-icon" />
               <p className="contact-info">
                 <a
-                  href="https://wa.me/17324852499"
+                  href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   +1 (732) 485-2499{" "}
+                  {whatsappNumber}
                 </a>
               </p>
             </div>

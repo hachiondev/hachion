@@ -43,7 +43,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/user/login",
+        "https://api.hachion.co/api/v1/user/login",
         loginData
       );
       console.log(response.data);
@@ -76,21 +76,21 @@ const Login = () => {
   // Display error message
 
   const googleLogin = () => {
-    window.open("http://localhost:8080/oauth2/authorization/google", "_self");
+    window.open("https://api.hachion.co/oauth2/authorization/google", "_self");
   };
 
   const facebookLogin = () => {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/facebook"; // Backend Facebook OAuth
+      "https://api.hachion.co/oauth2/authorization/facebook"; // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
+      "https://api.hachion.co/oauth2/authorization/linkedin"; // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/apple"; // Backend Apple OAuth
+    window.location.href = "https://api.hachion.co/oauth2/authorization/apple"; // Backend Apple OAuth
   };
 
   // Toggle password visibility

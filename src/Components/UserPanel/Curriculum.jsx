@@ -6,11 +6,12 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import loginPopupImg from "../../Assets/loginpopup.png";
+import logo from "../../Assets/logo.png";
 
 const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
-  const [faq, setFaq] = useState([]);
+  const [curriculum, setCurriculum] = useState([]);
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +31,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const courseNameFromUrl = courseName
           ?.toLowerCase()
           ?.replace(/\s+/g, "-");
@@ -59,23 +60,23 @@ const Curriculum = () => {
   useEffect(() => {
     if (!matchedCourseName) return;
 
-    const fetchFaq = async () => {
+    const fetchCurriculum = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/curriculum");
-        const filteredFaq = response.data.filter(
+        const response = await axios.get("https://api.hachion.co/curriculum");
+        const filteredCurriculum = response.data.filter(
           (item) =>
             item.course_name &&
             item.course_name.trim().toLowerCase() ===
               matchedCourseName.toLowerCase()
         );
-        setFaq(filteredFaq);
+        setCurriculum(filteredCurriculum);
       } catch (error) {
-        console.error("Error fetching FAQ:", error.message);
-        setError("Failed to load FAQs.");
+        console.error("Error fetching Curriculum:", error.message);
+        setError("Failed to load Curriculum.");
       }
     };
 
-    fetchFaq();
+    fetchCurriculum();
   }, [matchedCourseName]);
 
   const handleViewMore = () => {
@@ -100,30 +101,22 @@ const Curriculum = () => {
       return;
     }
 
-    if (!faq || faq.length === 0) {
+    if (!curriculum || curriculum.length === 0) {
       alert("No curriculum found for this course.");
       return;
     }
 
-    const curriculumWithPdf = faq.find((item) => item.curriculum_pdf);
-    // if (curriculumWithPdf) {
-    //   const fileName = curriculumWithPdf.curriculum_pdf.split("/").pop();
-    //   const fullPdfUrl = `http://localhost:8080/curriculum/${curriculumWithPdf.curriculum_pdf}`;
-    //   const link = document.createElement("a");
-    //   link.href = fullPdfUrl;
-    //   link.target = "_blank"; // This opens the link in a new tab
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // } else {
-    //   alert("No brochure available for this course.");
-    // }
+    const userData = JSON.parse(localStorage.getItem("loginuserData"));
+    if (!userData) {
+      showLoginModal();
+      return;
+    }
 
-    if (curriculumWithPdf && curriculumWithPdf.curriculum_pdf) {
-      const fullPdfUrl = `http://localhost:8080/curriculum/${curriculumWithPdf.curriculum_pdf}`;
-
-      // Open the PDF in a new tab
-      window.open(fullPdfUrl, "_blank");
+    const curriculumWithPdf = curriculum.find((item) => item.curriculum_pdf);
+    if (curriculumWithPdf) {
+      const fileName = curriculumWithPdf.curriculum_pdf.split("/").pop();
+      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      window.open(fullPdfUrl, "_blank", "noopener,noreferrer");
     } else {
       alert("No brochure available for this course.");
     }
@@ -149,58 +142,63 @@ const Curriculum = () => {
       </div>
 
       <div className="curriculum-topic">
-        {faq.length > 0 ? (
-          faq.slice(0, showMore ? faq.length : 5).map((item, index) => (
-            <div key={index}>
-              <div
-                className="curriculum-content"
-                onClick={() => handleToggleExpand(index)}
-              >
-                <p>{item.title}</p>
-                <p>{expandedTopics[index] ? <FaMinus /> : <FaPlus />}</p>
-              </div>
-              {expandedTopics[index] && (
-                <div className="topic-details">
-                  <ul
-                    className="bullet-list"
-                    dangerouslySetInnerHTML={{ __html: item.topic }}
-                  />
-                  <div className="video-buttons">
-                    {item.link &&
-                      item.link.split("\n").map((videoLink, i) => {
-                        const validUrl = videoLink.trim().startsWith("http")
-                          ? videoLink.trim()
-                          : `https://${videoLink.trim()}`;
-                        return (
-                          <button
-                            key={i}
-                            className="play-btn"
-                            onClick={() =>
-                              window.open(
-                                validUrl,
-                                "_blank",
-                                "noopener,noreferrer"
-                              )
-                            }
-                          >
-                            <div className="play-icon-btn">
-                              <BsFillPlayCircleFill size={24} color="#00AEEF" />
-                            </div>
-                            Preview
-                          </button>
-                        );
-                      })}
-                  </div>
+        {curriculum.length > 0 ? (
+          curriculum
+            .slice(0, showMore ? curriculum.length : 5)
+            .map((item, index) => (
+              <div key={index}>
+                <div
+                  className="curriculum-content"
+                  onClick={() => handleToggleExpand(index)}
+                >
+                  <p>{item.title}</p>
+                  <p>{expandedTopics[index] ? <FaMinus /> : <FaPlus />}</p>
                 </div>
-              )}
-            </div>
-          ))
+                {expandedTopics[index] && (
+                  <div className="topic-details">
+                    <ul
+                      className="bullet-list"
+                      dangerouslySetInnerHTML={{ __html: item.topic }}
+                    />
+                    <div className="video-buttons">
+                      {item.link &&
+                        item.link.split("\n").map((videoLink, i) => {
+                          const validUrl = videoLink.trim().startsWith("http")
+                            ? videoLink.trim()
+                            : `https://${videoLink.trim()}`;
+                          return (
+                            <button
+                              key={i}
+                              className="play-btn"
+                              onClick={() =>
+                                window.open(
+                                  validUrl,
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                )
+                              }
+                            >
+                              <div className="play-icon-btn">
+                                <BsFillPlayCircleFill
+                                  size={24}
+                                  color="#00AEEF"
+                                />
+                              </div>
+                              Preview
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))
         ) : (
           <p>No Curriculum available for this course.</p>
         )}
       </div>
 
-      {faq.length > 5 && (
+      {curriculum.length > 5 && (
         <div className="view-div">
           <button className="view-more-btn" onClick={handleViewMore}>
             {showMore ? "View Less" : "View More"}
@@ -211,14 +209,19 @@ const Curriculum = () => {
       {isLoginModalVisible && (
         <div className="login-modal">
           <div className="login-modal-content" ref={modalRef}>
+            <img src={logo} alt="logo" className="hlogo" />
             <button className="close-modal-btn" onClick={hideLoginModal}>
               ×
             </button>
             <h2 className="modal-title">Download Brochure</h2>
-            <div className="modal-body">
+            <div className="modal-body-login">
               <div className="modal-left">
+                <h4 style={{ color: "#000" }}>Don’t miss out!</h4>
+                <br />
                 <p>
-                  To access this feature, please login to the Hachion website.
+                  Just log in to the{" "}
+                  <span className="web-name">Hachion website</span> to unlock
+                  this feature.
                 </p>
                 <button
                   className="login-btn"

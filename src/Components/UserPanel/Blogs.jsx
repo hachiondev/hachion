@@ -18,7 +18,7 @@ const Blogs = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://http://localhost:8080/course-categories/all"
+          "/HachionUserDashboad/course-categories/all"
         );
         setCategories(response.data); // assuming the API returns an array of categories
       } catch (error) {

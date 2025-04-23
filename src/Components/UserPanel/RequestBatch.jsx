@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Course.css";
 import { AiOutlineCloseCircle, AiFillCaretDown } from "react-icons/ai";
 import { Menu, MenuItem, Button } from "@mui/material";
@@ -43,7 +43,25 @@ const RequestBatch = ({ closeModal, courseName = "Qa Automation" }) => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
+    { name: "Netherlands", code: "+31", flag: "NL" },
   ];
+
+  const defaultCountry = countries.find((c) => c.flag === "US");
+
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((res) => res.json())
+      .then((data) => {
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find(
+          (c) => c.flag === userCountryCode
+        );
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -79,7 +97,7 @@ const RequestBatch = ({ closeModal, courseName = "Qa Automation" }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/requestbatch/add", {
+      const response = await fetch("https://api.hachion.co/requestbatch/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -92,7 +92,7 @@
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:8080/schedulecourse');
+//         const response = await axios.get('https://api.hachion.co/schedulecourse');
 //         setCourses(response.data);
 
 //         // Filter courses based on the courseName from URL
@@ -233,7 +233,7 @@ export const LiveOnlineFees = () => {
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         const response = await axios.get(
-          `http://localhost:8080/schedulecourse?timezone=${userTimezone}`
+          `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
         );
         setCourses(response.data);
 
@@ -323,9 +323,7 @@ export const LiveOnlineFees = () => {
                       {course.schedule_time}
                       {/* <span className='date-span'>({course.schedule_duration} Hour)</span> */}
                     </p>
-                    <p className="batch-date">
-                      {course.schedule_duration} Days
-                    </p>
+                    <p className="batch-date">{course.schedule_duration}</p>
                     <p
                       className={
                         course.schedule_mode === "Live Class" ? "class" : "demo"

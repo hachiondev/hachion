@@ -11,7 +11,7 @@ const RecentEntries = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/blog");
+        const response = await axios.get("https://api.hachion.co/blog");
         setBlogs(response.data); // Store API data in state
       } catch (error) {
         console.error("Error fetching blog data:", error);
@@ -26,12 +26,18 @@ const RecentEntries = () => {
       {blogs.length > 0 ? (
         blogs.map((blog) => (
           <RecentEntriesCard
-            key={blog.id} // Unique key
-            imageSrc={`http://localhost:8080/blogs/${blog.blog_image}`} // Correct image URL
+            key={blog.id}
+            imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
             content={blog.title}
-            views={blog.views || "100"} // Fallback if views are missing
+            views={blog.views || "100"}
             date={blog.date}
-            onClick={() => navigate(`/blogs/${blog.category_name}`)} // Dynamic navigation
+            onClick={() =>
+              navigate(
+                `/blogs/${blog.category_name
+                  .replace(/\s+/g, "-")
+                  .toLowerCase()}`
+              )
+            }
           />
         ))
       ) : (

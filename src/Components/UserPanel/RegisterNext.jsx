@@ -59,7 +59,7 @@ const RegisterNext = () => {
     try {
       // Step 1: Verify OTP
       const verifyResponse = await fetch(
-        "http://localhost:8080/api/v1/user/verify-otp",
+        "https://api.hachion.co/api/v1/user/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,7 +78,7 @@ const RegisterNext = () => {
 
       // Step 2: Proceed with Registration
       const registerResponse = await fetch(
-        "http://localhost:8080/api/v1/user/register",
+        "https://api.hachion.co/api/v1/user/register",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -101,7 +101,7 @@ const RegisterNext = () => {
       alert(`User registered successfully: ${data.username}`);
       navigate("/login"); // ✅ Navigate only on success
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
       navigate("/login");
     } finally {
       setIsLoading(false); // ✅ Ensure loading spinner stops
@@ -127,7 +127,7 @@ const RegisterNext = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/v1/user/regenerate-otp?email=${email}`,
+        `https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`,
         {
           method: "PUT",
         }
@@ -140,7 +140,7 @@ const RegisterNext = () => {
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
     }

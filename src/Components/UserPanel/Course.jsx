@@ -8,13 +8,14 @@ import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import "./Course.css";
 import { Helmet } from "react-helmet-async";
-
+import axios from "axios";
 const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
+  const [totalfilterCards, settotalfilterCards] = useState(0);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -23,6 +24,39 @@ const Course = () => {
       window.scrollTo(0, 400);
     }
   };
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/HachionUserDashboad/courses/all");
+        if (Array.isArray(response.data)) {
+          setTotalCards(response.data); // Set the courses if data is an array
+        } else {
+          console.error("Unexpected API response format:", response.data);
+          setTotalCards([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+        setTotalCards([]); // Fallback to an empty array
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Filter courses based on the selected category
+  useEffect(() => {
+    if (selectedCategory === "All") {
+      settotalfilterCards(totalCards);
+    } else {
+      const filtered = totalCards.filter(
+        (course) => course.courseCategory === selectedCategory
+      );
+      settotalfilterCards(filtered);
+    }
+  }, [selectedCategory, totalCards]);
+
+  //console.log(getTotalCards.length);
 
   const updateTotalCards = (total) => {
     setTotalCards(total);
@@ -117,7 +151,9 @@ const Course = () => {
             <div className="pagination-container">
               <Pagination
                 currentPage={currentPage}
-                totalCards={totalCards} // Total number of cards in the selected category
+                totalCards={
+                  totalfilterCards ? totalfilterCards.length : totalCards.length
+                } // Total number of cards in the selected category
                 cardsPerPage={cardsPerPage}
                 onPageChange={handlePageChange} // Custom handler for page change
               />

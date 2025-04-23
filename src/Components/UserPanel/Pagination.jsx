@@ -1,12 +1,16 @@
-
-import React from 'react';
+import React from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import './Course.css';
+import "./Course.css";
 
-const Pagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => {
+const Pagination = ({
+  currentPage,
+  totalCards,
+  cardsPerPage,
+  onPageChange,
+}) => {
   const totalPages = Math.ceil(totalCards / cardsPerPage);
-  
+
   const handlePageChange = (page) => {
     if (page !== currentPage) {
       onPageChange(page);
@@ -16,25 +20,47 @@ const Pagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => 
     }
   };
 
+  console.log(totalCards);
+  // console.log(cardsPerPage);
+  const renderPageNumbers = () => {
+    let pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          className={`pagination-number ${i === currentPage ? "active" : ""}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    // console.log(pageNumbers);
+    return pageNumbers;
+  };
+
   return (
     <div className="course-pagination">
-      <button className="arrow"
-        onClick={() => handlePageChange(currentPage - 1)} 
+      <button
+        className="arrow"
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         <IoIosArrowBack />
       </button>
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button 
-          key={index + 1} 
-          onClick={() => handlePageChange(index + 1)} 
-          className={currentPage === index + 1 ? 'active' : ''}
+      {/* {Array.from({ length: totalPages }, (_, index) => (
+        <button
+          key={index + 1}
+          onClick={() => handlePageChange(index + 1)}
+          className={currentPage === index + 1 ? "active" : ""}
         >
           {index + 1}
         </button>
-      ))}
-      <button className="arrow"
-        onClick={() => handlePageChange(currentPage + 1)} 
+      ))} */}
+      {renderPageNumbers()}
+      <button
+        className="arrow"
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
         <IoIosArrowForward />

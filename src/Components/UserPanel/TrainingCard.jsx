@@ -51,6 +51,8 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
         </div>
         {/* <h6 className="course-date">{duration} Hour</h6> */}
         {/* Prevent event propagation on button click */}
+        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+        <p style={{marginBottom: 0, marginRight: '10px'}}> 1+ </p>
         <button 
           className="enroll-btn" 
           onClick={(e) => { 
@@ -58,8 +60,9 @@ const TrainingCard = ({ mode, heading, date, time, duration, image }) => {
             navigateToCourse(); 
           }}
         >
-          View Details
+         View More Schedules
         </button>
+        </div>
       </div>
     </div>
   );

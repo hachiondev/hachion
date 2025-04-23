@@ -144,7 +144,7 @@ export default function CourseSchedule() {
     const updatedRows = [...rows];
     updatedRows[index] = {
       ...updatedRows[index],
-      schedule_date: parsedDate.format("YYYY-MM-DD"),
+      schedule_date: parsedDate.format("MM-DD-YYYY"),
       schedule_week: parsedDate.format("dddd"),
     };
     setRows(updatedRows);
@@ -235,14 +235,15 @@ export default function CourseSchedule() {
         course_schedule_id: courseData.course_schedule_id,
         schedule_category_name: courseData.schedule_category_name,
         schedule_course_name: courseData.schedule_course_name,
-        schedule_date: row.schedule_date,
+        // schedule_date: row.schedule_date,
+        schedule_date: dayjs(row.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
         schedule_week: row.schedule_week,
         schedule_time: row.schedule_time,
         schedule_duration: row.schedule_duration,
         schedule_mode: row.schedule_mode,
         trainer_name: courseData.trainer_name || "",
         created_date: courseData.created_date,
-        meeting: row.meeting,
+        meeting_link: row.meeting,
       };
   
       try {
@@ -333,6 +334,10 @@ export default function CourseSchedule() {
   };
   const handleSave = async () => {
     try {
+      const updatedEditedRow = {
+        ...editedRow,
+        schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
+      };
       const response = await axios.put(
         `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
@@ -358,7 +363,7 @@ export default function CourseSchedule() {
   
     setEditedRow((prev) => ({
       ...prev,
-      schedule_date: parsedDate.format("YYYY-MM-DD"),  // or use ISO format if backend expects it
+      schedule_date: parsedDate.format("MM-DD-YYYY"),  // or use ISO format if backend expects it
       schedule_week: parsedDate.format("dddd"),
     }));
   };
@@ -604,7 +609,7 @@ export default function CourseSchedule() {
                                 name="meeting"
                                 className="table-curriculum"
                                 value={rows.meeting}
-                                onChange={(e) => handleRowChange(index, 'pattern', e.target.value)}
+                                onChange={(e) => handleRowChange(index, 'meeting', e.target.value)}
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>

@@ -13,7 +13,6 @@ import { FiUpload } from "react-icons/fi";
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -25,7 +24,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: '1px solid #e0e0e0',
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -34,7 +32,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 export default function CandidateCertificate() {
   const [course, setCourse] = useState([]);
   const [courseCategory, setCourseCategory] = useState([]);
@@ -144,7 +141,6 @@ export default function CandidateCertificate() {
     };
     fetchCandidateCertificate();
   }, []);
-
   useEffect(() => {
     if (certificateData.category_name) {
       const filtered = courseCategory.filter(
@@ -301,7 +297,6 @@ export default function CandidateCertificate() {
                   ))}
                 </select>
               </div>
-
               <div className="col">
                 <label htmlFor="inputState" className="form-label">Status</label>
                 <select
@@ -317,7 +312,6 @@ export default function CandidateCertificate() {
                 </select>
               </div>
             </div>
-
             <div className="course-row">
               <div className="col">
                 <label htmlFor="inputState" className="form-label">Completed Date</label>
@@ -330,7 +324,6 @@ export default function CandidateCertificate() {
                   onChange={handleInputChange}
                 />
               </div>
-
               <div className="col">
                 <label className="form-label">Upload Certificate</label>
                 <input

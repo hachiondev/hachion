@@ -68,7 +68,6 @@ const AdminNavbar = () => {
                   </Link>
                 </li>
                 <li>
-                  {/* <hr className='dropdown-divider' /> */}
                 </li>
                 <li>
                   <button className='dropdown-item' onClick={handleLogout}>

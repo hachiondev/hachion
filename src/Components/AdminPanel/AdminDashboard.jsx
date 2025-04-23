@@ -17,7 +17,6 @@ import {
 } from 'react-icons/pi';
 import { MdPeopleAlt } from 'react-icons/md';
 import { AiFillContacts } from 'react-icons/ai';
-
 const dashboardCards = [
   {
     icon: FaUserGraduate,
@@ -86,7 +85,6 @@ const dashboardCards = [
     content: "Total Visitors",
   },
 ];
-
 const AdminDashboard = () => {
   return (
     <div className='admin-dashboard'>
@@ -105,5 +103,4 @@ const AdminDashboard = () => {
     </div>
   );
 };
-
 export default AdminDashboard;

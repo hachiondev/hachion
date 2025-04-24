@@ -113,38 +113,78 @@ public class EmailUtil {
         simpleMailMessage.setText(message);
         javaMailSender.send(simpleMailMessage);
     }
-    public void sendEnrollEmail(Enroll enrollRequest) {  // Removed @RequestBody
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(enrollRequest.getEmail());
-        simpleMailMessage.setSubject("Hachion Enrollment Confirmation");
+    public void sendEnrollEmail(Enroll enrollRequest) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String message = String.format(
-            "Hello %s,\n\nThank you for submitting enrollment request. Here are your details:\n\n"
-            + "Batch: %s\nSchedule: %s\nTime Zone: %s\n\nThank you,\nHachion Team",
-            enrollRequest.getName(),
-            
-            enrollRequest.getEnroll_date(),
-            enrollRequest.getTime()
-        );
+            helper.setTo(enrollRequest.getEmail());
+            helper.setSubject("Hachion Enrollment Confirmation");
 
-        simpleMailMessage.setText(message);
-        javaMailSender.send(simpleMailMessage);
+            String htmlContent = """
+                <html>
+                <body style="font-family: Arial, sans-serif; text-align: center;">
+                    <img src='cid:logoImage' alt='Logo' style='height:40px;margin-bottom:20px;' />
+                    <img src="cid:bannerImage" alt="Live Demo" style="max-width: 100%%; height: auto;"/>
+                    <h2 style="color: #333;">Hi %s,</h2>
+                    <p>Thank you for showing interest in our training program by clicking <b>Enroll Now!</b></p>
+                    <p>We're excited to invite you to a <b>Free Demo Session</b> where you'll get a complete overview of what we offer, how the training works, and how it can help you get hired — even if you're from a non-IT background!</p>
+                    <div style="background-color: #2c006b; color: white; padding: 10px; font-weight: bold; margin-top: 20px;">
+                        Demo Session Details
+                    </div>
+                    <p><b>Date:</b> %s<br/><b>Time:</b> %s ISY</p>
+                    <a href="https://your-link.com/demo-details" style="display: inline-block; margin-top: 20px; background-color: #3399ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Demo Session Details</a>
+                    <p style="margin-top: 30px;">If you have any questions before the session, feel free to reply to this email.<br/>We look forward to seeing you there!</p>
+                    <p>Regards,<br/>Team Hachion</p>
+                </body>
+                </html>
+            """.formatted(enrollRequest.getName(), enrollRequest.getEnroll_date(), enrollRequest.getTime());
+
+            helper.setText(htmlContent, true); // Enable HTML
+
+            // ✅ Make sure these paths point to the exact location of your saved image files
+            FileSystemResource logo = new FileSystemResource(new String("C:/Users/hp/loads/images/logo.png"));
+            FileSystemResource banner = new FileSystemResource(new String("C:/Users/hp/uploads/images/unnamed.jpg"));
+
+            helper.addInline("logoImage", logo);     // referenced in `cid:logoImage`
+            helper.addInline("bannerImage", banner); // referenced in `cid:bannerImage`
+
+            javaMailSender.send(mimeMessage);
+        } catch (Exception e) {
+            e.printStackTrace(); // Optional: log or rethrow
+        }
     }
+
 
     // Send Set Password Email
     public void sendSetPasswordEmail(String email, String newPassword) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject("Your New Password");
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        String message = String.format(
-            "Hello,\n\nYour new password is: %s\n\nPlease log in using this password. "
-            + "We recommend changing it immediately after logging in.\n\nBest regards,\nHachion Team",
-            newPassword
-        );
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("Reset Your Password");
 
-        simpleMailMessage.setText(message);
-        javaMailSender.send(simpleMailMessage);
+            String htmlContent = "<div style=\"background-color:#B6E685;padding:40px;text-align:center;font-family:Arial, sans-serif;\">" +
+                    "<img src='cid:logoImage' alt='Logo' style='height:40px;margin-bottom:20px;' />"
+                    + "<h1 style=\"color:#000;\">Reset Your Password</h1>" +
+                    "<p style=\"font-size:16px;color:#000;\"><strong>Hello,</strong><br><br>" +
+                    "You have requested to reset your Hachion’s login password. Kindly use the below password to log in:</p>" +
+                    "<h2 style=\"font-size:36px;letter-spacing:10px;margin:20px 0;color:#000;\">" + newPassword + "</h2>" +
+                    "<p style=\"font-size:16px;color:#000;font-weight:bold;\">We look forward to seeing you back on Hachion.</p>" +
+                    "<br><p style=\"color:#000;\">Regards,<br><i>Team Hachion</i></p></div>";
+
+            helper.setText(htmlContent, true);
+
+            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Local image path
+            helper.addInline("logoImage", res);
+
+
+            javaMailSender.send(mimeMessage);
+
+        } catch (MessagingException e) {
+            e.printStackTrace(); // or handle appropriately
+        }
     }
     public void sendQueryEmail(Query queryRequest) {  // Removed @RequestBody
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

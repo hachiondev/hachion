@@ -10,7 +10,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import UsaFlag from "../../Assets/usflag.jpg";
 import "./Blogs.css";
 import indiaFlag from "../../Assets/india.jpg";
-import dubaiFlag from "../../Assets/canada.jpg";
+import dubaiFlag from "../../Assets/dubai.jpg";
 import whatsappIcon from "../../Assets/logos_whatsapp-icon.png";
 import mailIcon from "../../Assets/uiw_mail.png";
 import facebookIcon from "../../Assets/facebook_symbol.svg.png";

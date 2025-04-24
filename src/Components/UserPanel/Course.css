@@ -203,7 +203,6 @@ color: black;
 .course-banner{
 height:200px;
 width: 100%;
-background-image: url('../../Assets/course_banner.png');
 background-repeat: no-repeat;
 background-size: cover;
 display: flex;
@@ -316,11 +315,6 @@ padding: 10px;
  }
 
 .sidebar-right-all {
-/* display: flex;
-flex-wrap: wrap;
-justify-content: flex-start; 
-align-items: stretch; 
-gap: 20px;  */
 margin: 0 auto; 
 overflow-y: auto;
 max-height: calc(100vh - 100px); 
@@ -330,21 +324,6 @@ display: grid;
 grid-template-columns: repeat(3, 1fr);
 gap: 10px;
 }
-
-/* .sidebar-card {
-  flex: 1 1 calc(25% - 10px);
-  box-sizing: border-box;
-  max-width: calc(30% - 20px); 
-  min-height: 340px;
-  min-width: 300px; 
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  background-color: #fff;
-} */
 
 .sidebar-card {
   box-sizing: border-box;

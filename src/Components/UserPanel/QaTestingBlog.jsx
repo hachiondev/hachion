@@ -13,7 +13,6 @@ import RecentEntries from './RecentEntries';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import automation from '../../Assets/automationtesting.png';
 import { Helmet } from 'react-helmet-async';
 
 const QaTestingBlog = () => {

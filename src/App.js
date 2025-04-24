@@ -20,9 +20,7 @@ import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
 import AdminDashboard from './Components/AdminPanel/AdminDashboard';
 import Blogs from './Components/UserPanel/Blogs';
-import QaTesting from './Components/UserPanel/QaTesting';
 import Salesforce from './Components/UserPanel/Salesforce';
-import SalesforceBlog from './Components/UserPanel/SalesforceBlog';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
@@ -44,51 +42,30 @@ function App() {
    
     <BrowserRouter>
     <Routes>
-      
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
-    
-           <Route
-          path="/"
-          element={
-            
-              <Home />
-            
-          }
-        />
+      <Route path="/" element={<Home />} />
       <Route path='/CourseDetails' element={<Course/>}/>
       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
-
-      {/* <Route path='/Courses/:courseName' element={<QaAutomation/>}/> */}
-      {/* <Route path='/CourseDetails/CourseDetailsData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-    
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      {/* <Route path='/admin'> */}
       <Route path="adminlogin" element={<AdminLogin />} />
         <Route path="adminregister" element={<AdminRegister />} />
         <Route path="/adminforgot" element={<AdminForgot />} />
-
-        {/* Protected Admin Dashboard Route */}
         <Route element={<ProtectedRoute />}>
           <Route path="admindashboardview" element={<AdminDashboardView />} />
         </Route>
-  <Route path='/admincourse' element={<CategoryTable />} />
-
-{/* </Route> */}
-<Route path='/workshop' element={<SalWorkshop/>}/>
-
+      <Route path='/admincourse' element={<CategoryTable />} />
+      <Route path='/workshop' element={<SalWorkshop/>}/>
       <Route path='/blogs' element={<Blogs/>}/>
-      <Route path='/qatesting' element={<QaTesting/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
-      <Route path='/salesforceblog' element={<SalesforceBlog/>}/>
       <Route path='/blogs/:category_name/content' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
@@ -101,9 +78,8 @@ function App() {
       <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
-  
-      </Routes></BrowserRouter>
- 
+      </Routes>
+      </BrowserRouter>
     </>
   );
 }

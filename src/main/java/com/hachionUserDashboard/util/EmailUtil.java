@@ -65,7 +65,7 @@ public class EmailUtil {
 
             String htmlContent = "<div style='max-width: 600px; margin: auto; font-family: Arial, sans-serif;'>" +
                     "    <div style='text-align: center; padding: 10px 0;'>" +
-                    "        <img src='https://hachion.co/logo.png' alt='Logo' height='40'/>" +
+                    "        <img src='cid:logoImage' alt='Logo' height='40'/>" +
                     "    </div>" +
                     "    <div style='background-color: #0056b3; color: white; text-align: center; padding: 15px; font-size: 18px; font-weight: bold;'>" +
                     "        Your One-Time Password (OTP) to Access Your Account" +
@@ -82,9 +82,8 @@ public class EmailUtil {
 
             helper.setText(htmlContent, true);
 
-//            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/logo.png");
-//            helper.addInline("logoImage", res);
-
+            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Local image path
+            helper.addInline("logoImage", res);
 
 
             javaMailSender.send(message);

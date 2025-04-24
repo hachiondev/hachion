@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,9 @@ import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.entity.RequestBatch;
 import com.hachionUserDashboard.repository.CorporateCourseRepository;
 import com.hachionUserDashboard.repository.EnrollRepository;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @CrossOrigin
 @RestController
@@ -69,40 +73,71 @@ public class EnrollController {
         return ResponseEntity.ok("Enrollment successfull");
     }
 
-	 public void sendEnrollEmail(@RequestBody Enroll enrollRequest) {
-			SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-	        simpleMailMessage.setTo(enrollRequest.getEmail());
-	        simpleMailMessage.setSubject("Hachion Enrollment Confirmation");
+	public void sendEnrollEmail(@RequestBody Enroll enrollRequest) {
+	    try {
+	        MimeMessage message = javaMailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-	        String message = String.format(
-	        		"Hii," + enrollRequest.getName() + "\n" +
+	        helper.setTo(enrollRequest.getEmail());
+	        helper.setSubject("Hachion - Free Demo Session Invitation");
 
-	        		"Welcome to the Hachion Free Demo session, We're excited to have you join us." + "\n"+
+	        String htmlContent = "<div style='font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background-color:#f9f9f9;'>"
+	            + "  <div style='text-align:center;'>"
+	            + "    <img src='https://hachion.co/logo.png' alt='Logo' height='50'/>"
+	            + "    <h3 style='margin-top:20px;'>Hi " + enrollRequest.getName() + ",</h3>"
+	            + "    <p>Thank you for showing interest in our training program by clicking <strong>Enroll Now!</strong></p>"
+	            + "    <p>We're excited to invite you to a <strong>Free Demo Session</strong> where you’ll get a complete overview of what we offer, how the training works, and how it can help you get hired – even if you're from a non-IT background!</p>"
+	            + "  </div>"
 
-	        		"Demo session details:" +"\n" +
-	        		 
+	            + "  <div style='margin:30px 0;background-color:#30003F;color:#fff;padding:10px 0;text-align:center;font-weight:bold;'>"
+	            + "    Trainings Details"
+	            + "  </div>"
 
-	        		                "Batch Date: " + enrollRequest.getEnroll_date() + "\n" +
+	            + "  <table style='width:100%;margin-bottom:20px;'>"
+	            + "    <tr>"
+	            + "      <td><strong>Training Mode:</strong> Online Live Class</td>"
+	            + "      <td><strong>Date:</strong> " + enrollRequest.getEnroll_date() + "</td>"
+	            + "    </tr>"
+	            + "    <tr>"
+	            + "      <td><strong>Course Name:</strong> QA Manual Testing</td>"
+	            + "      <td><strong>Time:</strong> " + enrollRequest.getTime() + "</td>"
+	            + "    </tr>"
+	            + "  </table>"
 
-	        		                "Batch Time: " + enrollRequest.getTime() + "\n" +
+	            + "  <div style='text-align:center;margin:30px;'>"
+	            + "    <a href='" + enrollRequest.getMeeting_link() + "' style='display:inline-block;background-color:#333;color:white;padding:10px 30px;border-radius:25px;text-decoration:none;'>Meeting Link</a>"
+	            + "  </div>"
 
-	        		                "Meeting Link:"+ enrollRequest.getMeeting_link()+ "\n\n" +
-	        		                
+	            + "  <div style='background-color:#30003F;color:#fff;padding:10px 0;text-align:center;font-weight:bold;'>"
+	            + "    What to Expect:"
+	            + "  </div>"
 
-	        		                "Joining Instructions:"+ "\n" +
-	        		"1. Click the link above 5 minutes before the start time." + "\n" +
-	        		"2. You may need to download any necessary software (e.g., Zoom client)."+ "\n" +
-	        		"Need Help?" + "\n\n" +
-	"If you have any questions, please contact our support team at [Support Email Address] or call us at [Phone Number]. We look forward to seeing you there!"+ "\n" +
-	        		"Best regards,"+ "\n" +
-	        		"Hachion Support Team "+ "\n" +
-	        		"Whatsapp: https://wa.me/17324852499");
-	              
-	        
+	            + "  <table style='width:100%;text-align:center;margin-top:10px;'>"
+	            + "    <tr>"
+	            + "      <td>Introduction to the course</td>"
+	            + "      <td>Overview of our program</td>"
+	            + "      <td>Real-time project insights</td>"
+	            + "    </tr>"
+	            + "    <tr>"
+	            + "      <td>Q&A to clarify your doubts</td>"
+	            + "      <td>Daily Class Recordings</td>"
+	            + "      <td>Assignments</td>"
+	            + "    </tr>"
+	            + "  </table>"
 
-	        simpleMailMessage.setText(message);
+	            + "  <p style='margin-top:30px;text-align:center;'>"
+	            + "    If you have any questions before the session, feel free to reply to this email."
+	            + "  </p>"
+
+	            + "  <p style='text-align:center;margin-top:40px;'>Regards,<br/><strong style='color:#30003F;'>Team Hachion</strong></p>"
+	            + "</div>";
+
+	        helper.setText(htmlContent, true);
+	        javaMailSender.send(message);
+
+	        // Support team email remains the same
 	        SimpleMailMessage supportMail = new SimpleMailMessage();
-	        supportMail.setTo("trainings@hachion.co"); // Replace with the actual support email ID
+	        supportMail.setTo("trainings@hachion.co");
 	        supportMail.setSubject("New Enrollment Notification");
 	        supportMail.setText("Dear Support Team,\n\n" +
 	                "The following user has requested a batch:\n" +
@@ -116,8 +151,12 @@ public class EnrollController {
 	                "Best Regards,\nSystem Notification");
 
 	        javaMailSender.send(supportMail);
-	        javaMailSender.send(simpleMailMessage);
+
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
 	    }
+	}
+
 	 @PostMapping("/enroll/resend-email")
 	 public ResponseEntity<?> resendEnrollEmail(@RequestBody Map<String, String> request) {
 	     String email = request.get("email");

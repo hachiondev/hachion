@@ -122,49 +122,8 @@ const TrainingEvents = () => {
     return Object.values(grouped);
   };
   
-  // const getFilteredCourses = () => {
-  //   const now = new Date();
-
-  //   return mergedCourses.filter((course) => {
-  //     const courseDate = new Date(course.schedule_date);
-  //     const createdDate = new Date(course.created_at);
-
-  //     const isToday = courseDate.toDateString() === now.toDateString();
-  //     const isThisWeek =
-  //       (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
-  //       courseDate > now;
-  //     const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
-
-  //     const courseNameMatch =
-  //       !courseFilter ||
-  //       course.schedule_course_name?.toLowerCase().trim() ===
-  //         courseFilter.toLowerCase().trim();
-
-  //     const modeMatch =
-  //       !modeFilter ||
-  //       course.schedule_mode?.toLowerCase().trim() ===
-  //         modeFilter.toLowerCase().trim();
-
-  //     const timeMatch =
-  //       !timeFilter ||
-  //       (timeFilter === "today" && isToday) ||
-  //       (timeFilter === "week" && isThisWeek) ||
-  //       (timeFilter === "new" && isNewlyAdded);
-
-  //     return courseNameMatch && modeMatch && timeMatch;
-  //   });
-  // };
-  //setFilteredCourses(getFilteredCourses());
-
-  // Update filtered courses when a filter changes
-  // useEffect(() => {
-  //   setFilteredCourses(getFilteredCourses());
-  // }, [courseFilter, modeFilter, timeFilter, mergedCourses]);
-
+  
   useEffect(() => {
-    // console.log(getFilteredCourses());
-    // setFilteredCourses("");
-    // setFilteredCourses([...getFilteredCourses()]); // Force state update with new array
     setFilteredCourses([]); // Reset state
     setTimeout(() => {
       setFilteredCourses([...getFilteredCourses()]);
@@ -230,25 +189,45 @@ const TrainingEvents = () => {
           (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
             (course, index) => (
               <TrainingCard
-                key={course.course_id || index}
-                id={course.course_id}
-                heading={course.schedule_course_name}
-                image={
-                  course.course_image
-                    ? `https://api.hachion.co/${course.course_image}`
-                    : ""
-                }
-                date={
-                  course.schedule_date ? formatDate(course.schedule_date) : ""
-                }
-                time={course.schedule_time || ""}
-                duration={
-                  course.schedule_duration
-                    ? `Duration: ${course.schedule_duration}`
-                    : ""
-                }
-                mode={course.schedule_mode || ""}
-              />
+  key={course.course_id || index}
+  id={course.course_id}
+  heading={course.schedule_course_name}
+  image={
+    course.course_image
+      ? `https://api.hachion.co/${course.course_image}`
+      : ""
+  }
+  date={course.schedule_date ? formatDate(course.schedule_date) : ""}
+  time={course.schedule_time || ""}
+  duration={
+    course.schedule_duration
+      ? `Duration: ${course.schedule_duration}`
+      : ""
+  }
+  mode={course.schedule_mode || ""}
+  scheduleCount={course.sessions?.length || 0} // 👈 Pass count here
+/>
+
+              // <TrainingCard
+              //   key={course.course_id || index}
+              //   id={course.course_id}
+              //   heading={course.schedule_course_name}
+              //   image={
+              //     course.course_image
+              //       ? `https://api.hachion.co/${course.course_image}`
+              //       : ""
+              //   }
+              //   date={
+              //     course.schedule_date ? formatDate(course.schedule_date) : ""
+              //   }
+              //   time={course.schedule_time || ""}
+              //   duration={
+              //     course.schedule_duration
+              //       ? `Duration: ${course.schedule_duration}`
+              //       : ""
+              //   }
+              //   mode={course.schedule_mode || ""}
+              // />
             )
           )
         ) : (

@@ -434,7 +434,8 @@ background-color: #EA4335;
   }
 
   .d-block{
-    max-height: 470px;
+    height: 450px;
+    width: 100%;
     }
 
 .association{

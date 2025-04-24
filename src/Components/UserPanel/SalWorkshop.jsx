@@ -403,7 +403,7 @@
         <div className='work-details'>
         <div className='course-row'>
         <div class="col-md-3">
-            <label for="inputState" class="form-label">Category Name</label>
+            <label for="inputState" class="form-label">Workshop Category Name</label>
             <select
       id="inputState"
       className="form-select"
@@ -418,7 +418,7 @@
     </select>
         </div>
         <div className="col-md-3">
-        <label htmlFor="course" className="form-label">Course Name</label>
+        <label htmlFor="course" className="form-label">Workshop Course Name</label>
 
         <select
       id="course"

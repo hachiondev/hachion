@@ -205,12 +205,7 @@ const [currentPage, setCurrentPage] = useState(1);
         } catch (error) { 
           console.error("Error deleting banner:", error); 
         } }; 
-      
- 
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
+
         const handleClickOpen = (row) => {
             console.log(row);
               setEditedData(row)// Set the selected row data
@@ -264,16 +259,11 @@ const [currentPage, setCurrentPage] = useState(1);
           alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
         }
       };
-      
-      
-      
     
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
 
-
   return (
-    
     <>  
      {showAddCourse ?  (<div className='course-category'>
       <nav aria-label="breadcrumb">

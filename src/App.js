@@ -4,7 +4,8 @@ import Login from './Components/UserPanel/Login';
 import AdminLogin from './Components/AdminPanel/AdminLogin';
 import AdminRegister from './Components/AdminPanel/AdminRegister';
 import AdminForgot from './Components/AdminPanel/AdminForgot';
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
 import RegisterNext from './Components/UserPanel/RegisterNext';
@@ -18,7 +19,6 @@ import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
-import AdminDashboard from './Components/AdminPanel/AdminDashboard';
 import Blogs from './Components/UserPanel/Blogs';
 import Salesforce from './Components/UserPanel/Salesforce';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
@@ -36,12 +36,25 @@ import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 
-function App() {
+const TrackPageView = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-TE1LPJJ75K', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+
+  return null;
+};
+
+function AppRoutes() {
   return (
     <>
-   
-    <BrowserRouter>
-    <Routes>
+      <TrackPageView />
+      <Routes>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
@@ -56,11 +69,11 @@ function App() {
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
       <Route path="adminlogin" element={<AdminLogin />} />
-        <Route path="adminregister" element={<AdminRegister />} />
-        <Route path="/adminforgot" element={<AdminForgot />} />
-        <Route element={<ProtectedRoute />}>
+      <Route path="adminregister" element={<AdminRegister />} />
+      <Route path="/adminforgot" element={<AdminForgot />} />
+      <Route element={<ProtectedRoute />}>
           <Route path="admindashboardview" element={<AdminDashboardView />} />
-        </Route>
+      </Route>
       <Route path='/admincourse' element={<CategoryTable />} />
       <Route path='/workshop' element={<SalWorkshop/>}/>
       <Route path='/blogs' element={<Blogs/>}/>
@@ -79,8 +92,15 @@ function App() {
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
       </Routes>
-      </BrowserRouter>
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

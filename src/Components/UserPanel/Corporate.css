@@ -111,8 +111,8 @@
 }
 .association{
     margin-top: 50px;
-    margin-left: 40%;
-    justify-content: space-between;
+    /* margin-left: 40%; */
+    justify-content: center;
     display: flex;
     padding-top: 20px;
     margin-bottom: 50px;

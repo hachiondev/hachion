@@ -2,20 +2,20 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 
-const baseUrl = "https://hachion.co"; // ✅ your domain
-const apiUrl = "https://api.hachion.co/courses/all"; // ✅ your actual course API
+const baseUrl = "https://hachion.co";
+const apiUrl = "https://api.hachion.co/courses/all";
 
-// Converts "QA Automation" => "qa-automation"
-const toKebabCase = str =>
-  str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+// Convert course name to URL-friendly slug
+const toSlug = str =>
+  encodeURIComponent(str.trim().toLowerCase().replace(/\s+/g, "-"));
 
 const staticRoutes = [
   "/", "/login", "/register", "/registerverification", "/registerhere",
-  "/loginsuccess", "/forgotpassword", "/CourseDetails", "/corporate",
+  "/loginsuccess", "/forgotpassword", "/courseDetails", "/corporate",
   "/haveanyquery", "/adminlogin", "/adminregister", "/adminforgot",
   "/admindashboardview", "/admincourse", "/workshop", "/blogs", 
   "/aboutus", "/contactus", "/userdashboard", "/review",
-  "/addtrending", "/Courseschedule", "/corporatecourses", 
+  "/addtrending", "/courseschedule", "/corporatecourses", 
   "/reports", "/terms", "/privacy"
 ];
 
@@ -25,8 +25,8 @@ const generateSitemap = async () => {
     const courses = response.data;
 
     const courseRoutes = courses.map(course => {
-      const slug = toKebabCase(course.courseName);
-      return [`/CourseDetails/${slug}`, `/enroll/${slug}`];
+      const slug = toSlug(course.courseName);
+      return [`/coursedetails/${slug}`, `/enroll/${slug}`]; // use lowercase route
     }).flat();
 
     const allRoutes = [...staticRoutes, ...courseRoutes];

@@ -345,35 +345,64 @@ width:80%;
 border-radius: 20px;
 background-image: url('../../Assets/qa_background.png');
 background-repeat: no-repeat;
-background-size: 100%;
-/* margin:10px;
-padding:10px; */
+background-size: cover;
+background-position: center;
 display: flex;
 flex-direction: column;
 box-shadow: 5px 5px 5px #D3D3D3;
-margin-left:10vw;
+/* margin-left:10vw;
 margin-right: 10vw;
 margin-top: 15px;
-margin-bottom: 50px;
+margin-bottom: 50px; */
+margin: 15px auto 50px auto;
+overflow: visible;
 }
 
-.qa-inside{
+/* .qa-inside{
   width:100%;
   display: flex;
   flex-direction: row;
   gap: 60px;
+  } */
+
+  .qa-inside {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    flex-wrap: wrap; 
+    align-items: flex-start;
   }
+
+.qa-left-part{
+  width: 50%;
+}
 
 .qa-automation-left{
 display: flex;
 flex-direction: row;
 }
 
-.qa-automation-left img{
+/* .qa-automation-left img{
 margin-right: 80px;
 margin-left: 10%;
 padding-left: 10px;
 height:140px;
+} */
+
+.qa-automation-left img {
+  margin-right: 80px;
+  padding-left: 20px;
+  height: auto;
+  max-height: 140px;
+  width: auto;
+  object-fit: contain;
+}
+
+.title-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 .video-btn{
@@ -383,11 +412,12 @@ border: 1px solid white;
 background-color:#00AAEF;
 box-shadow:2px 2px 2px white;
 color:white;
-font-size: 1.5rem;
+font-size: 24px;
+white-space: nowrap;
 font-weight: 700;
-margin-top: 10px;
+/* margin-top: 10px; */
 margin-left: 10px;
-margin-bottom: 30px;
+/* margin-bottom: 30px; */
 margin-right: 20px;
 }
 
@@ -403,12 +433,12 @@ background-color: #0D6EFD;
 
 .top-course-name{
   display: flex;
+  width: 500px;
   margin-left: 5%;
   margin-bottom: 10px;
   margin-top: 20px;
-  font-size: 2.2rem;
   font-weight: 600;
-  white-space: nowrap;
+  white-space: wrap;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -483,7 +513,8 @@ background-color: #00AEEF;
 color: white;
 padding:5px 30px 5px 30px;
 font-weight: 700;
-font-size: 1.5rem;
+font-size: 24px;
+white-space: nowrap;
 box-shadow: 5px 5px 5px #d3d3d3;
 }
 
@@ -510,7 +541,8 @@ border: 4px solid #00AEEF;
 background-color: #ffffff;
 padding:5px 20px 5px 20px;
 color:#00AEEF;
-font-size:1.5rem;
+font-size: 24px;
+white-space: nowrap;
 font-weight: 700;
 box-shadow: 5px 5px 5px #D3D3D3;
 }
@@ -541,6 +573,8 @@ gap: 220px;
 display:flex;
 flex-direction:column;
 justify-content: space-evenly;
+width: 40%;
+padding-top: 20px;
 }
 
 .qa-right img{
@@ -549,7 +583,7 @@ height:350px;
 border-radius: 20px;
 }
 
-.certified{
+/* .certified{
 font-weight: 700;
 font-size:24px;
 color: white;
@@ -557,6 +591,15 @@ text-align: center;
 background-color: #007BFF;
 padding: 5px;
 border-radius: 10px;
+} */
+
+.cert{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  white-space: wrap;
+  font-size: 20px;
 }
 
 .qa-video-container {
@@ -1616,7 +1659,8 @@ font-weight: 600;
 font-size: 14px;
 position: fixed;
 bottom: 0;
-width: 100vw;
+/* width: 100vw; */
+width: 100%;
 height: 50px;
 background-color: #000000; 
 color: white;
@@ -1625,7 +1669,7 @@ align-items: center;
 justify-content: space-between;
 padding: 0 10px;
 z-index: 1000;
-padding-right: 25px;
+/* padding-right: 25px; */
 }
 
 .contact-info {
@@ -2276,7 +2320,7 @@ border:2px solid white;
 }
 
 .qa-inside{
-  width:100%;
+  width:95%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2288,6 +2332,7 @@ border:2px solid white;
   flex-direction: row; /* Make the content stack vertically */
   margin-left: 0;
   justify-content: space-around !important;
+  width: 100%;
 }
 
 .qa-automation-left img {
@@ -2345,11 +2390,17 @@ border:2px solid white;
   border-radius: 5px;
 }
 
+.qa-left-part{
+  width: 100%;
+}
+
 .qa-right{
   display:flex;
   flex-direction:column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  padding-top: 0;
   }
 
 .qa-right img {
@@ -2359,13 +2410,17 @@ border:2px solid white;
   margin-left: 0px;
 }
 
-.mob-cert {
+/* .mob-cert {
   display: flex;
   font-size: 10px;
   justify-content: flex-end;
   font-weight: 700;
   color: #000;
   margin: 0 10px 0 0;
+} */
+
+.cert{
+  font-size: 16px;
 }
 
 .certified{
@@ -2771,7 +2826,7 @@ max-height: 3em;
   margin-bottom: 5px;
   margin-top: 0px;
   font-size: 16px;
-  white-space: nowrap;
+  white-space: wrap;
   font-weight: 600;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
@@ -2900,13 +2955,12 @@ max-height: 3em;
 }
 
 .fee-enroll-now {
-  width: 100%;
+  width: 90%;
   height: 40px;
-  margin: 0px;
   padding: 5px;
   font-size: 14px;
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 .schedule img{

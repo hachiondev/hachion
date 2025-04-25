@@ -54,7 +54,7 @@ const Banner = () => {
           <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
             <img
               src={apiError || index === 0 ? banner.home_banner_image : `https://api.hachion.co/${banner.home_banner_image}`}
-              className="d-block"
+              className="banner-img"
               alt={`Banner ${index + 1}`}
             />
             <div className="carousel-caption">

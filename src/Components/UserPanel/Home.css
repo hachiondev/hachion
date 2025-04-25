@@ -433,7 +433,7 @@ background-color: #EA4335;
   background-color: #006489;
   }
 
-  .d-block{
+  .banner-img{
     height: 450px;
     width: 100%;
     }
@@ -442,6 +442,7 @@ background-color: #EA4335;
 display: flex;
 justify-content: center;
 align-items: center;
+text-align: center;
 margin: 20px;
 }
 .association-head{
@@ -1307,7 +1308,7 @@ gap:1vh;
       justify-content: center;
   }
 
-  .d-block{
+  .banner-img{
     max-height: 450px;
     }
   
@@ -2319,7 +2320,7 @@ border-radius: 20px;
   white-space: nowrap;
   }
 
-.d-block{
+.banner-img{
 height: 130px;
 }
 
@@ -2354,8 +2355,14 @@ width: 120px;
 height: 100%;
 }
 
+.card-date, .time {
+ margin-bottom: 2px;
+}
+
 .enroll-btn{
-display: none;
+  padding: 3px 8px;
+  font-size:12px;
+  border-radius: 5px;
 }
 
 .view-btn{

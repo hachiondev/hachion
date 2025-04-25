@@ -1,6 +1,7 @@
 package com.hachionUserDashboard.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ public class EmailUtil {
 
     @Autowired
     private JavaMailSender javaMailSender;
+	private String imageUploadPath;
 
 	
 //	public void sendOtpEmail(String email,String otp) {
@@ -82,8 +84,9 @@ public class EmailUtil {
 
             helper.setText(htmlContent, true);
 
-            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Local image path
-            helper.addInline("logoImage", res);
+            ClassPathResource logoImage = new ClassPathResource("static/images/logo.png");
+            helper.addInline("logoImage", logoImage);
+
 
 
             javaMailSender.send(message);
@@ -122,29 +125,31 @@ public class EmailUtil {
             helper.setSubject("Hachion Enrollment Confirmation");
 
             String htmlContent = """
-                <html>
-                <body style="font-family: Arial, sans-serif; text-align: center;">
-                    <img src='cid:logoImage' alt='Logo' style='height:40px;margin-bottom:20px;' />
-                    <img src="cid:bannerImage" alt="Live Demo" style="max-width: 100%%; height: auto;"/>
-                    <h2 style="color: #333;">Hi %s,</h2>
-                    <p>Thank you for showing interest in our training program by clicking <b>Enroll Now!</b></p>
-                    <p>We're excited to invite you to a <b>Free Demo Session</b> where you'll get a complete overview of what we offer, how the training works, and how it can help you get hired — even if you're from a non-IT background!</p>
-                    <div style="background-color: #2c006b; color: white; padding: 10px; font-weight: bold; margin-top: 20px;">
-                        Demo Session Details
-                    </div>
-                    <p><b>Date:</b> %s<br/><b>Time:</b> %s ISY</p>
-                    <a href="https://your-link.com/demo-details" style="display: inline-block; margin-top: 20px; background-color: #3399ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Demo Session Details</a>
-                    <p style="margin-top: 30px;">If you have any questions before the session, feel free to reply to this email.<br/>We look forward to seeing you there!</p>
-                    <p>Regards,<br/>Team Hachion</p>
-                </body>
-                </html>
-            """.formatted(enrollRequest.getName(), enrollRequest.getEnroll_date(), enrollRequest.getTime());
+            	    <html>
+            	    <body style="font-family: Arial, sans-serif; text-align: center;">
+            	        <img src='cid:logoImage' alt='Logo' style='height:40px;margin-bottom:20px;' />
+            	        <img src='cid:bannerImage' alt='Live Demo' style='max-width: 100%%; height: auto;'/>
+            	        <h2 style="color: #333;">Hi %s,</h2>
+            	        <p>Thank you for showing interest in our training program by clicking <b>Enroll Now!</b></p>
+            	        <p>We're excited to invite you to a <b>Free Demo Session</b> where you'll get a complete overview of what we offer, how the training works, and how it can help you get hired — even if you're from a non-IT background!</p>
+            	        <div style="background-color: #2c006b; color: white; padding: 10px; font-weight: bold; margin-top: 20px;">
+            	            Demo Session Details
+            	        </div>
+            	        <p><b>Date:</b> %s<br/><b>Time:</b> %s IST</p>
+            	        <a href="https://your-link.com/demo-details" style="display: inline-block; margin-top: 20px; background-color: #3399ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Demo Session Details</a>
+            	        <p style="margin-top: 30px;">If you have any questions before the session, feel free to reply to this email.<br/>We look forward to seeing you there!</p>
+            	        <p>Regards,<br/>Team Hachion</p>
+            	    </body>
+            	    </html>
+            	""".formatted(enrollRequest.getName(), enrollRequest.getEnroll_date(), enrollRequest.getTime());
+
+      
 
             helper.setText(htmlContent, true); // Enable HTML
 
-            // ✅ Make sure these paths point to the exact location of your saved image files
-            FileSystemResource logo = new FileSystemResource(new String("C:/Users/hp/loads/images/logo.png"));
-            FileSystemResource banner = new FileSystemResource(new String("C:/Users/hp/uploads/images/unnamed.jpg"));
+            ClassPathResource logo = new ClassPathResource("static/images/logo.png");
+            ClassPathResource banner = new ClassPathResource("static/images/unnamed.jpg");
+           
 
             helper.addInline("logoImage", logo);     // referenced in `cid:logoImage`
             helper.addInline("bannerImage", banner); // referenced in `cid:bannerImage`

@@ -389,8 +389,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -407,20 +405,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.hachionUserDashboard.entity.Blogs;
-import com.hachionUserDashboard.entity.Curriculum;
 import com.hachionUserDashboard.entity.Faq;
-import com.hachionUserDashboard.entity.RegularVideo;
-import com.hachionUserDashboard.repository.CurriculumRepository;
 import com.hachionUserDashboard.repository.FaqRepository;
 
 @CrossOrigin
@@ -428,138 +419,140 @@ import com.hachionUserDashboard.repository.FaqRepository;
 @RestController
 public class FaqController {
 
-    
+	@Autowired
+	private FaqRepository repo;
 
-    @Autowired
-    private FaqRepository repo;
+	@GetMapping("/faq/{id}")
+	public ResponseEntity<Faq> getFaq(@PathVariable Integer id) {
+		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @GetMapping("/faq/{id}")
-    public ResponseEntity<Faq> getFaq(@PathVariable Integer id) {
-        return repo.findById(id)
-                   .map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@GetMapping("/faq")
+	public List<Faq> getAllFaq() {
+		return repo.findAll();
+	}
 
-    @GetMapping("/faq")
-    public List<Faq> getAllFaq() {
-        return repo.findAll();
-    }
+	private final String uploadDir = System.getProperty("user.home") + "/uploads/faq/";
 
-    private final String uploadDir = System.getProperty("user.home") + "/uploads/faq/";
+	private String saveFile(MultipartFile file, String subFolder) throws IOException {
+		if (file != null && !file.isEmpty()) {
 
-    private String saveFile(MultipartFile file, String subFolder) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            // Ensure the directory exists
-            File directory = new File(uploadDir + subFolder);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
+			File directory = new File(uploadDir + subFolder);
+			if (!directory.exists()) {
+				directory.mkdirs();
+			}
 
-            // Save file
-            Path filePath = Paths.get(directory.getAbsolutePath(), file.getOriginalFilename());
-            Files.write(filePath, file.getBytes());
-            return subFolder + "/" + file.getOriginalFilename();
-        }
-        return null;
-    }
-    @PostMapping("faq/add")
-    public ResponseEntity<String> addFaq(
-            @RequestPart("faqData") String faqData,
-            @RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            Faq faq = objectMapper.readValue(faqData, Faq.class);
+			Path filePath = Paths.get(directory.getAbsolutePath(), file.getOriginalFilename());
+			Files.write(filePath, file.getBytes());
+			return subFolder + "/" + file.getOriginalFilename();
+		}
+		return null;
+	}
 
-            // Save PDF only if provided
-            if (faqPdf != null && !faqPdf.isEmpty()) {
-                String pdfPath = saveFile(faqPdf, "pdfs");
-                faq.setFaq_pdf(pdfPath != null ? pdfPath : "");
-            } else {
-                faq.setFaq_pdf(""); // Store empty string if no PDF is provided
-            }
+	@PostMapping("faq/add")
+	public ResponseEntity<String> addFaq(@RequestPart("faqData") String faqData,
+			@RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			Faq faq = objectMapper.readValue(faqData, Faq.class);
 
-            // Save curriculum to DB
-            repo.save(faq);
+			if (faqPdf != null && !faqPdf.isEmpty()) {
+				String normalizedPdfName = "pdfs/" + faqPdf.getOriginalFilename();
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Faq added successfully.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding faq: " + e.getMessage());
-        }
-    }
+				Optional<Faq> existingFaq = repo.findPdfByExactName(normalizedPdfName);
 
-    @PutMapping(value = "/faq/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateFaq(
-            @PathVariable int id,
-            @RequestPart("faqData") String faqData,
-            @RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {
-        try {
-            Optional<Faq> optionalFaq = repo.findById(id);
-            if (!optionalFaq.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faq not found");
-            }
+				if (existingFaq.isPresent()) {
 
-            Faq existing = optionalFaq.get();
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+							.body("PDF with the same name already exists.");
+				}
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            Faq updatedData = objectMapper.readValue(faqData, Faq.class);
+				String pdfPath = saveFile(faqPdf, "pdfs");
+				faq.setFaq_pdf(pdfPath != null ? pdfPath : "");
+			} else {
+				faq.setFaq_pdf("");
+			}
 
-            // Update only non-null values
-            if (updatedData.getCategory_name() != null) existing.setCategory_name(updatedData.getCategory_name());
-            if (updatedData.getCourse_name() != null) existing.setCourse_name(updatedData.getCourse_name());
-            if (updatedData.getFaq_title() != null) existing.setFaq_title(updatedData.getFaq_title());
-            if (updatedData.getDescription() != null) existing.setDescription(updatedData.getDescription());
-            
+			repo.save(faq);
 
-            // Optional: Handle new PDF file
-            if (faqPdf != null && !faqPdf.isEmpty()) {
-                String pdfPath = saveFile(faqPdf, "pdfs");
-                if (pdfPath != null) {
-                    existing.setFaq_pdf(pdfPath);
-                }
-            }
+			return ResponseEntity.status(HttpStatus.CREATED).body("Faq added successfully.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
 
-            Faq saved = repo.save(existing);
-            return ResponseEntity.ok(saved);
+	@PutMapping(value = "/faq/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> updateFaq(@PathVariable int id, @RequestPart("faqData") String faqData,
+			@RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {
+		try {
+			Optional<Faq> optionalFaq = repo.findById(id);
+			if (!optionalFaq.isPresent()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faq not found");
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error updating faq: " + e.getMessage());
-        }
-    }
-    @DeleteMapping("faq/delete/{id}")
-    public ResponseEntity<String> deleteFaq(@PathVariable int id) {
-        return repo.findById(id).map(faq -> {
-            repo.delete(faq);
-            return ResponseEntity.ok("FAQ deleted successfully.");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("FAQ not found."));
-    }
+			Faq existing = optionalFaq.get();
 
-    @GetMapping("/faq/pdf/{filename}")
-    public ResponseEntity<Resource> getPdf(@PathVariable String filename) {
-        try {
-            // Define the path where PDFs are stored
-            Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/faq/pdfs/" + filename);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			Faq updatedData = objectMapper.readValue(faqData, Faq.class);
 
-            if (!Files.exists(filePath)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+			// Update only non-null values
+			if (updatedData.getCategory_name() != null)
+				existing.setCategory_name(updatedData.getCategory_name());
+			if (updatedData.getCourse_name() != null)
+				existing.setCourse_name(updatedData.getCourse_name());
+			if (updatedData.getFaq_title() != null)
+				existing.setFaq_title(updatedData.getFaq_title());
+			if (updatedData.getDescription() != null)
+				existing.setDescription(updatedData.getDescription());
 
-            // Load file as a resource
-            Resource resource = new UrlResource(filePath.toUri());
+			// Optional: Handle new PDF file
+			if (faqPdf != null && !faqPdf.isEmpty()) {
+				String pdfPath = saveFile(faqPdf, "pdfs");
+				if (pdfPath != null) {
+					existing.setFaq_pdf(pdfPath);
+				}
+			}
 
-            // Return the PDF as an attachment
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
-                    .body(resource);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+			Faq saved = repo.save(existing);
+			return ResponseEntity.ok(saved);
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error updating faq: " + e.getMessage());
+		}
+	}
+
+	@DeleteMapping("faq/delete/{id}")
+	public ResponseEntity<String> deleteFaq(@PathVariable int id) {
+		return repo.findById(id).map(faq -> {
+			repo.delete(faq);
+			return ResponseEntity.ok("FAQ deleted successfully.");
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("FAQ not found."));
+	}
+
+	@GetMapping("/faq/pdf/{filename}")
+	public ResponseEntity<Resource> getPdf(@PathVariable String filename) {
+		try {
+			// Define the path where PDFs are stored
+			Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/faq/pdfs/" + filename);
+
+			if (!Files.exists(filePath)) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+			}
+
+			// Load file as a resource
+			Resource resource = new UrlResource(filePath.toUri());
+
+			// Return the PDF as an attachment
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"").body(resource);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 
 }

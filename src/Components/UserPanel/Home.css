@@ -730,6 +730,16 @@ text-align: center;
   outline-color: #00AEEF;
 }
 
+.all-courses
+{
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-width:500px;
+  outline-color: #00AEEF;
+}
+
 .no-schedules-message {
   text-align: center;
   padding: 40px 0;
@@ -2303,6 +2313,14 @@ display: none !important; /* Hide the normal navbar items on mobile */
   font-size: 12px;
   border-radius: 5px;
   min-width: 100px;
+}
+
+.all-courses
+{
+  padding: 3px 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  min-width:200px;
 }
 
 .coupon-btn, .register-now-btn {

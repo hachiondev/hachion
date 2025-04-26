@@ -21,8 +21,11 @@ import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 
 const SalWorkshop = () => {
+  const navigate = useNavigate();
   const { courseName } = useParams();
   const [error, setError] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -170,6 +173,13 @@ const SalWorkshop = () => {
           localTime,
           timeZone,
         });
+
+    //     const course = filteredWorkshop.course_name.toLowerCase().replace(/\s+/g, '-');
+    // navigate(`/workshop/${course}`);
+        
+
+    const course = filteredWorkshop.course_name.toLowerCase().replace(/\s+/g, '-');
+    window.history.pushState(null, '', `/workshop/${course}`);
       } else {
         setWorkshop(null);
       }

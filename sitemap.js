@@ -5,9 +5,18 @@ const axios = require("axios");
 const baseUrl = "https://hachion.co";
 const apiUrl = "https://api.hachion.co/courses/all";
 
-// Convert course name to URL-friendly slug
+// Slug generator - keep special characters like (), +, &
+// Only lowercase and replace spaces with hyphens
 const toSlug = str =>
-  encodeURIComponent(str.trim().toLowerCase().replace(/\s+/g, "-"));
+  str.trim().toLowerCase().replace(/\s+/g, "-");
+
+// Escape characters that break XML
+const escapeXml = unsafe => unsafe
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&apos;");
 
 const staticRoutes = [
   "/", "/login", "/register", "/registerverification", "/registerhere",
@@ -26,7 +35,7 @@ const generateSitemap = async () => {
 
     const courseRoutes = courses.map(course => {
       const slug = toSlug(course.courseName);
-      return [`/coursedetails/${slug}`, `/enroll/${slug}`]; // use lowercase route
+      return [`/courseDetails/${slug}`, `/enroll/${slug}`];
     }).flat();
 
     const allRoutes = [...staticRoutes, ...courseRoutes];
@@ -34,14 +43,16 @@ const generateSitemap = async () => {
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allRoutes
-    .map(route => `
+    .map(route => {
+      const fullUrl = baseUrl + route;
+      return `
   <url>
-    <loc>${baseUrl}${route}</loc>
+    <loc>${escapeXml(encodeURI(fullUrl))}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>${route === "/" ? "1.0" : "0.9"}</priority>
-  </url>`)
-    .join("")}
+  </url>`;
+    }).join("")}
 </urlset>`;
 
     fs.writeFileSync(path.resolve(__dirname, "public", "sitemap.xml"), sitemap);

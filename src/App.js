@@ -4,7 +4,7 @@ import Login from './Components/UserPanel/Login';
 import AdminLogin from './Components/AdminPanel/AdminLogin';
 import AdminRegister from './Components/AdminPanel/AdminRegister';
 import AdminForgot from './Components/AdminPanel/AdminForgot';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
@@ -36,6 +36,21 @@ import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 
+const RedirectToLowercase = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathName = location.pathname;
+    const lowercasePath = pathName.toLowerCase();
+    if (pathName !== lowercasePath) {
+      navigate(lowercasePath, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
+  return null;
+};
+
 const TrackPageView = () => {
   const location = useLocation();
 
@@ -54,6 +69,7 @@ function AppRoutes() {
   return (
     <>
       <TrackPageView />
+      <RedirectToLowercase />
       <Routes>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>

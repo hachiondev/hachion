@@ -37,6 +37,7 @@
     "react-router-dom": "^6.25.1",
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.10.1",
     "react-time-picker": "^7.0.0",
     "react-world-flags": "^1.6.0",
     "sitemap": "^8.0.0",

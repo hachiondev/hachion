@@ -261,6 +261,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         {/* Buttons Section */}
         <div className='qa-button-container'>
           <div className='qa-button'>
+          <p className='mob-cert'>{course.totalEnrollment}+ Certified Students</p>
             <button className='enroll-now' onClick={onEnrollButtonClick}>Enroll Now</button>
             <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>

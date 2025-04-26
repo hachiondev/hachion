@@ -455,7 +455,7 @@ font-weight: 500;
 }
 
 .amount{
-font-size: 2.2rem;
+font-size: 24px;
 font-weight: 600;
 background: linear-gradient( #00AEEF,#006489);
 -webkit-background-clip: text;
@@ -497,9 +497,8 @@ flex-direction: column;
 
 .qa-content{
 /* height:150px; */
-width: 620px;
-font-size:1rem;
-font-weight:500;
+max-width: 620px;
+font-size: 16pxs;
 text-align:justify;
 padding-top: 10px;
 margin-left: 30px;
@@ -595,11 +594,13 @@ border-radius: 10px;
 
 .cert{
   display: flex;
-  justify-content: center;
+  justify-content: left;
   text-align: center;
   font-weight: 700;
   white-space: wrap;
-  font-size: 20px;
+  font-size: 18px;
+  margin-left: 30px;
+  padding-left: 20px;
 }
 
 .qa-video-container {
@@ -612,7 +613,7 @@ border-radius: 10px;
 .qa-video-image {
   width: 100%;
   display: block;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .play-btn-overlay {
@@ -884,7 +885,7 @@ scroll-behavior: smooth;
 }
 
 .upcoming-header-content {
-font-size: 1.1rem;
+font-size: 16px;
 font-weight: 400;
 color: white;
 display: flex;
@@ -934,7 +935,7 @@ background: linear-gradient(to right,#006489,#00AEEF,#006489);
 display: flex;
 justify-content: space-between;
 color:white;
-font-size: 1.25rem;
+font-size: 14px;
 font-weight: 400;
 text-align: center;
 }
@@ -999,11 +1000,11 @@ margin-right: 50px;
 
 .profile-building-div h5{
 font-weight: 700;
-font-size: 20px;
+font-size: 14px;
 }
 
 .profile-building-div p{
-font-size: 18px;
+font-size: 12px;
 }
 
 .profile-building-div{
@@ -1141,12 +1142,12 @@ width: 100%;
 }
 
 .batch-date {
-font-size: 20px;
+font-size: 16px;
 font-weight: 600;
 }
 
 .batch-date-fee {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   }
 
@@ -1165,7 +1166,7 @@ color: #F4111F;
 
 .demo {
 color: #FF5C01;
-font-size: 20px;
+font-size: 16px;
 font-weight: 300;
 font-style: italic;
 display: flex;
@@ -1253,12 +1254,12 @@ white-space: nowrap;
 
 .schedule{
   text-align:center;
-  font-size:20px;
+  font-size: 14px;
   margin-top: 10px;
 }
 
 .schedule-span{
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
@@ -1280,7 +1281,7 @@ margin-left: 15px;
 }
 
 .qa-heading{
-  font-size: 2rem;
+  font-size: 24px;
   font-weight: 700;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
@@ -1289,14 +1290,14 @@ padding-bottom: 1.5vh;
 }
 
 .qa-subheading{
-  font-size: 1.2rem;
+  font-size: 16px;
   font-weight:600;
   padding-bottom: 2vh;
   color:#006489;
 }
 
 .qa-sub-content{
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -1327,7 +1328,7 @@ padding-bottom: 1.5vh;
 align-content: center;
 text-align: left;
   background-color: #EEEEEE;
-  font-size: 1.2rem;
+  font-size: 14px;
   font-weight: 600;
   color: #006489;
   cursor: pointer;
@@ -1339,7 +1340,7 @@ text-align: left;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 1vh;
-  font-size: 1.2rem;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
   display: flex;
@@ -1357,7 +1358,7 @@ text-align: left;
 }
 
 .btn-pdf-icon{
-  font-size: 30px;
+  font-size: 28px;
   color: red;
   }
 
@@ -1367,7 +1368,7 @@ text-align: left;
   box-shadow: 5px 5px 10px #d3d3d3;
   background-color: #FFFFFF;
   color: #006489;
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 600;
   border:none;
 }
@@ -1442,7 +1443,7 @@ text-align: left;
 .modal-left p {
   margin-bottom: 30px;
   color: #242424;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -1504,7 +1505,7 @@ color: #006489;
   box-shadow: 5px 5px 5px #D3D3D3;
   color: white;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .view-more-btn:hover{
@@ -1558,11 +1559,12 @@ color: #006489;
  margin-top: 10vh !important;
   background-color: white;
   margin: 2vh;
-  margin-left: 10vw;
-  margin-right: 10vw;
+  margin-left: 10%;
+  margin-right: 10%;
   border-radius: 10px;
   padding: 18px 43px 20px 43px;
   box-shadow: 5px 5px 5px #D3D3D3;
+  width: 80%;
 }
 
 .mode-of-training-head{
@@ -1572,7 +1574,7 @@ color: #006489;
 .live-mode{
   padding-top: 2vh;
   padding-left: 7vh;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color:black;
   padding-right: 4vh;
@@ -1585,7 +1587,7 @@ gap: 2vh;
 }
 
 .live-head{
-font-size:1.2rem;
+font-size:14px;
 font-weight:600;
 padding-left: 7vh;
 padding-right: 4vh;
@@ -1594,7 +1596,7 @@ margin-bottom: 0;
 
 .feature-content{
 font-weight: 400;
-font-size: 1rem;
+font-size: 12px;
 padding-top: 2vh;
 cursor: pointer;
 }
@@ -1627,7 +1629,7 @@ background: linear-gradient( #00AEEF,#006489);
   -webkit-text-fill-color: transparent;
   padding:1vh;
   padding-left:6.5vh;
-  font-size:2.2rem;
+  font-size:24px;
   font-weight:600;
 }
 
@@ -1646,12 +1648,12 @@ width: 2vw;
 }
 
 .career-support-content-header{
-font-size: 1.25rem;
+font-size: 14px;
 font-weight: 400;
 }
 
 .career-support-content-para{
-font-size: 1rem;
+font-size: 12px;
 font-weight: 600;
 }
 
@@ -1680,7 +1682,7 @@ gap:10px;
 
 .contact-item {
 margin-right: 20px; 
-font-size: 16px;
+font-size: 14px;
 }
 
 .contact-button {
@@ -1690,7 +1692,7 @@ border: none;
 margin:10px;
 padding: 5px 10px;
 border-radius: 5px;
-font-size: 16px;
+font-size: 14px;
 font-weight: 700;
 cursor: pointer;
 transition: background-color 0.3s ease;
@@ -1744,9 +1746,9 @@ border:2px solid white;
 
 @media (min-width: 760px) and (max-width: 1024px){
   .upcoming-batch{
-    width: 95%;
-    margin-left: 20px;
-    padding-left: 20px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
   .batch-type{
     margin-left: 5px;
@@ -1755,7 +1757,7 @@ border:2px solid white;
     margin: 1px;
   }
   .batch-schedule{
-    width: 95%;
+    width: 80%;
     margin-left: 20px;
   }
   .qa-course-heading img{
@@ -1765,8 +1767,9 @@ border:2px solid white;
   }
   
   .key-highlights{
-    width: 95%;
-    margin-left: 20px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
   .key-icons{
     height: 45px;
@@ -1780,7 +1783,7 @@ border:2px solid white;
   .qa-right img{
     height: 150px !important;
     width: 260px !important;
-    margin-top: -15px;
+    margin-top: 10px;
   }
   .qa-automation-left img{
     height: 80px;
@@ -1796,39 +1799,22 @@ border:2px solid white;
     padding: 0px;
     justify-content: space-evenly;
   }
-  .qa-right{
-    margin-right: 0px;
-  }
   .video-btn{
     margin-top: 2px;
     font-size: 16px;
     margin-left: 10px;
     margin-top: 20px;
   }
-  .certified{
+  /* .certified{
     font-size: 16px;
-  }
+  } */
   .blogs-header{
     margin-left: 2vw;
   }
   .fee{
     padding-top: 5px;
   }
-
-  .qa-content{
-    width: 400px !important;
-    margin-left: 0px;
-    padding-top: 0px;
-    font-size: 14px;
-  }
  
-  .qa-automation-left{
-    margin-left: 0px;
-  }
-  .mode-of-training{
-    width: 95%;
-    margin-left: 20px;
-  }
   .qa-right{
     margin-right: 0px;
   }
@@ -1837,7 +1823,7 @@ border:2px solid white;
     margin-left: 5px;
     margin-right: 22px;
   }
-  .certified{
+  .cert{
     font-size: 16px;
   }
   .blogs-header{
@@ -1851,30 +1837,13 @@ border:2px solid white;
     font-size: 18px;
     padding: 5px 10px;
   }
-  .qa-content{
-    width: 400px !important;
-    margin-left: 0px;
-    padding-top: 0px;
-    font-size: 14px;
-  }
-
-  .qa-automation-left{
-    margin-left: 0px;
-  }
-  .mode-of-training{
-    width: 95%;
-    margin-left: 20px;
-  }
-  .qa-right{
-    margin-right: 0px;
-  }
   .video-btn{
     margin-top: 2px;
     font-size: 16px;
     margin-left: 10px;
    
   }
-  .certified{
+  .cert{
     font-size: 16px;
   }
   .blogs-header{
@@ -1889,7 +1858,7 @@ border:2px solid white;
     margin-left: 0px;
     padding-top: 0px;
     padding-left: 20px;
-    font-size: 14px;
+    font-size: 12px;
   }
   .qa-automation{
     height: 345px;
@@ -1907,13 +1876,10 @@ border:2px solid white;
   .amount{
     font-size: 1.5rem;
   }
-  .mode-of-training{
-    width: 95%;
-    margin-left: 20px;
-  }
-  .career-support{
-    width: 95%;
-    margin-left: 20px;
+  .career-support, .mode-of-training{
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 }
   
@@ -1936,9 +1902,6 @@ border:2px solid white;
     gap: 5px;
   }
   .qa-video-container {
-    position: relative;
-    display: inline-block;
-    width: 100%;
     max-width: 500px;
   }
   .qa-button-container{
@@ -1946,20 +1909,19 @@ border:2px solid white;
     align-items: center;
     justify-content: flex-start;
     margin: 5px;
-    margin-bottom: 20px;
-    gap: 260px;
+    margin-bottom: 10px;
+    gap: 250px;
     }
   
   .qa-video-image {
-    width: 95%;
+    width: 100%;
     display: block;
-    border-radius: 10px;
   }
   
   .play-btn-overlay {
     position: absolute;
     top: 40%;
-    left: 50%;
+    left: 40%;
     transform: translate(-50%, -50%);
   }
   
@@ -2058,11 +2020,24 @@ border:2px solid white;
 }
 }
 @media (min-width:1024px) and (max-width: 1366px){
-.qa-automation{
+.qa-automation, .key-highlights, .career-support, .mode-of-training{
   width: 80%;
   margin-left: 10%;
   margin-right: 10%;
 }
+
+ .batch-schedule, .batch-type, .batch-content-background, .profile-building
+ .mode-of-training-content{
+  width: 96%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.qa-heading{
+  font-size: 24px;
+  padding-left: 2%;
+}
+
 .top-course-name{
   display: flex;
   margin-left: 5%;
@@ -2076,15 +2051,8 @@ border:2px solid white;
   height: 90px;
 }
 
-.batch-type{
-  margin-left: 5px;
-}
 .separator{
   margin: 1px;
-}
-.batch-schedule{
-  width: 95%;
-  margin-left: 20px;
 }
 .qa-course-heading img{
   height: 400px;
@@ -2092,10 +2060,6 @@ border:2px solid white;
   padding: 30px;
 }
 
-.key-highlights{
-  width: 85%;
-  margin-left: 80px;
-}
 .key-highlights-para{
   font-size: 12px;
 }
@@ -2115,8 +2079,11 @@ border:2px solid white;
   margin-top: 10px;
   white-space: nowrap;
 }
-.certified{
+.cert{
   font-size: 16px;
+  margin-left: 0;
+  padding-left: 20px;
+  margin-bottom: 0;
 }
 .blogs-header{
   margin-left: 2vw;
@@ -2125,17 +2092,8 @@ border:2px solid white;
   padding-top: 5px;
 }
 
-
 .qa-automation-left{
   margin-left: 0px;
-}
-.qa-right{
-  margin-right: 0px;
-}
-
-.batch-content-background{
-  margin-left: 5px;
-  margin-right: 35px;
 }
 
 .enroll-now,.download{
@@ -2145,11 +2103,11 @@ border:2px solid white;
   white-space: nowrap;
 }
 .qa-content{
-  width: 550px !important;
-  margin-left: 0px;
+  max-width: 600px !important;
   padding-top: 0px;
   padding-left: 20px;
-  font-size: 16px;
+  margin-left: 10px;
+  font-size: 14px;
 }
 
 .qa-automation-left{
@@ -2188,14 +2146,7 @@ border:2px solid white;
 .amount{
   font-size: 1.5rem;
 }
-.mode-of-training{
-  width: 85% !important;
-  margin-left: 80px;
-}
-.career-support{
-  width: 85%;
-  margin-left: 80px;
-}
+
 .query-content, .whatsapp-number-footer, .training-email-footer { 
   font-size: 16px;        /* Adjust text size if needed */
 }
@@ -2419,11 +2370,17 @@ border:2px solid white;
   margin: 0 10px 0 0;
 } */
 
-.cert{
-  font-size: 16px;
+.mob-cert{
+  display: flex;
+  justify-content: left;
+  text-align: center;
+  font-weight: 700;
+  white-space: wrap;
+  font-size: 14px;
+  margin-bottom: 0;
 }
 
-.certified{
+.cert{
  display: none;
   }
 .fee{
@@ -2431,16 +2388,12 @@ padding-top: 5px;
 font-size: 10px;
 }
 .qa-video-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
   max-width: 400px;
 }
 
 .qa-video-image {
   width: 100%;
   display: block;
-  border-radius: 8px;
 }
 
 .play-btn-overlay {

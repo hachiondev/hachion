@@ -147,12 +147,12 @@ public class EmailUtil {
 
             helper.setText(htmlContent, true); // Enable HTML
 
-            ClassPathResource logo = new ClassPathResource("static/images/logo.png");
-            ClassPathResource banner = new ClassPathResource("static/images/unnamed.jpg");
-           
+            ClassPathResource logo = new ClassPathResource("images/logo.png");
+            ClassPathResource banner = new ClassPathResource("images/unnamed.jpg");
 
-            helper.addInline("logoImage", logo);     // referenced in `cid:logoImage`
-            helper.addInline("bannerImage", banner); // referenced in `cid:bannerImage`
+
+            helper.addInline("logoImage", logo, "image/png");
+            helper.addInline("bannerImage", banner, "image/jpeg");
 
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
@@ -170,27 +170,39 @@ public class EmailUtil {
             helper.setTo(email);
             helper.setSubject("Reset Your Password");
 
-            String htmlContent = "<div style=\"background-color:#B6E685;padding:40px;text-align:center;font-family:Arial, sans-serif;\">" +
-                    "<img src='cid:logoImage' alt='Logo' style='height:40px;margin-bottom:20px;' />"
-                    + "<h1 style=\"color:#000;\">Reset Your Password</h1>" +
-                    "<p style=\"font-size:16px;color:#000;\"><strong>Hello,</strong><br><br>" +
-                    "You have requested to reset your Hachion’s login password. Kindly use the below password to log in:</p>" +
-                    "<h2 style=\"font-size:36px;letter-spacing:10px;margin:20px 0;color:#000;\">" + newPassword + "</h2>" +
-                    "<p style=\"font-size:16px;color:#000;font-weight:bold;\">We look forward to seeing you back on Hachion.</p>" +
-                    "<br><p style=\"color:#000;\">Regards,<br><i>Team Hachion</i></p></div>";
+            String htmlContent = "<div style=\"padding: 30px; text-align: center; font-family: Arial, sans-serif;\">" +
+                    "<img src='cid:logoImage' alt='Hachion Logo' style='height: 50px; margin-bottom: 20px;'/>" +
+                    "<div style=\"background-color: #0056b3; color: white; padding: 10px; font-size: 24px; font-weight: bold;\">" +
+                    "Reset Your Password</div>" +
+                    "<div style=\"padding: 30px;\">" +
+                    "<p style=\"font-size: 16px; color: #000;\">Hello Candidate,</p>" +
+                    "<p style=\"font-size: 16px; color: #000;\">" +
+                    "You have requested to reset your Hachion’s login password. Kindly enter the below Password to proceed further." +
+                    "</p>" +
+                    "<h2 style=\"letter-spacing: 10px; font-size: 30px; color: #000;\">" + newPassword + "</h2>" +
+                    "<p style=\"font-size: 16px; color: #000;\">We look forward to seeing you back on Hachion.</p>" +
+                    "<br><p style=\"color: #000;\">Regards,<br><i>Team Hachion</i></p>" +
+                    "<hr style=\"margin: 30px 0;\">" +
+                    "<p style=\"font-size: 12px; color: #666;\">" +
+                    "Want to change how you receive these emails?<br>" +
+                    "You can <a href=\"#\" style=\"color: #0056b3;\">update your preferences</a> or <a href=\"#\" style=\"color: #0056b3;\">unsubscribe</a>." +
+                    "</p>" +
+                    "</div>" +
+                    "</div>";
 
             helper.setText(htmlContent, true);
 
-            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Local image path
+            // Attach the logo image
+            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Your logo path
             helper.addInline("logoImage", res);
-
 
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            e.printStackTrace(); // or handle appropriately
+            e.printStackTrace(); // handle error properly
         }
     }
+
     public void sendQueryEmail(Query queryRequest) {  // Removed @RequestBody
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(queryRequest.getEmail());

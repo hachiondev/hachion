@@ -1,8 +1,9 @@
 package com.hachionUserDashboard.service;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
-
 import com.hachionUserDashboard.repository.UserRepository;
 
 @Service
@@ -35,16 +35,32 @@ public class OtpCleanupScheduler {
 	}
 
 //	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
-	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
-//	@Scheduled(cron = "0 0 0 */7 * ?") // runs after 7 days
-//	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight UTC
+////	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
+////	@Scheduled(cron = "0 0 0 */7 * ?") // runs after 7 days
+////	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight UTC
+//	@Scheduled(cron = "0 * * * * ?")
+//	@Transactional
+//	public void deletePastWorkshops() {
+//		// Write UTC timezone
+//		ZonedDateTime nowInUtc = ZonedDateTime.now(ZoneOffset.UTC);
+//		String todayDateInUtc = nowInUtc.format(DateTimeFormatter.ISO_LOCAL_DATE);
+//
+//		int deletedRows = courseScheduleRepository.deletePastWorkshops(todayDateInUtc);
+//		System.out.println(deletedRows + " past workshop records deleted.");
+//	}
+
+//	@Scheduled(cron = "0 * * * * ?") // every minute
+	@Scheduled(cron = "0 0 * * * ?")
 	@Transactional
 	public void deletePastWorkshops() {
-		// Write UTC timezone
-		ZonedDateTime nowInUtc = ZonedDateTime.now(ZoneOffset.UTC);
-		String todayDateInUtc = nowInUtc.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		// Use IST or UTC depending on your system standard
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Kolkata")); // or ZoneOffset.UTC
 
-		int deletedRows = courseScheduleRepository.deletePastWorkshops(todayDateInUtc);
-		System.out.println(deletedRows + " past workshop records deleted.");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+		String formattedNow = now.format(formatter); // leave it as is
+
+
+		int deletedRows = courseScheduleRepository.deletePastWorkshops(formattedNow);
+		System.out.println(deletedRows + " past workshop records deleted at " + formattedNow);
 	}
 }

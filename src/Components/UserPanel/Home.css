@@ -730,15 +730,42 @@ text-align: center;
   outline-color: #00AEEF;
 }
 
-.all-courses
-{
-  padding: 8px 12px;
+.course-search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.course-search-input {
+  width: 100%;
+  padding: 8px 40px 8px 12px; /* Add enough padding to the right for the icon */
   font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  min-width:500px;
   outline-color: #00AEEF;
 }
+
+.course-search-icon {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  background-color: rgba(0, 174, 239, 1);
+  padding: 5px 30px;
+  border-radius: 0px 10px 10px 0px;
+  font-size: 1.3rem;
+  pointer-events: auto;
+  cursor: pointer; 
+}
+.search-icon-style {
+  font-size: 24px;
+  color: white;
+}
+
+
+
+
 
 .no-schedules-message {
   text-align: center;
@@ -2315,12 +2342,43 @@ display: none !important; /* Hide the normal navbar items on mobile */
   min-width: 100px;
 }
 
-.all-courses
+/* .all-courses
 {
   padding: 3px 5px;
   font-size: 12px;
   border-radius: 5px;
   min-width:200px;
+} */
+
+.course-search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.course-search-input {
+  width: 100%;
+  padding: 4px 20px 4px 4px; /* Add enough padding to the right for the icon */
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.course-search-icon {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  background-color: rgba(0, 174, 239, 1);
+  padding: 2px;
+  border-radius: 0px 5px 5px 0px;
+  /* font-size: 1.3rem; */
+  pointer-events: auto;
+  cursor: pointer; 
+}
+.search-icon-style {
+  font-size: 12px;
+  color: white;
 }
 
 .coupon-btn, .register-now-btn {

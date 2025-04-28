@@ -3,6 +3,7 @@ import TrainingCard from "./TrainingCard";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { IoSearch } from "react-icons/io5";
 
 
 const TrainingEvents = () => {
@@ -148,6 +149,11 @@ const TrainingEvents = () => {
   const handleModeChange = (e) => setModeFilter(e.target.value);
   const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
+  const handleSearchIconClick = () => {
+    // Optional: You can also filter data manually here if you want
+    console.log('Search icon clicked with input:', courseFilter);
+    // No clearing of input box ✅
+  };
   //console.log(filteredCourses);
   return (
     <div className="training-events">
@@ -169,23 +175,38 @@ const TrainingEvents = () => {
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <input 
+          <div className="course-search-container">
+      <input
+        type="text"
+        className="course-search-input"
+        placeholder="All Courses"
+        value={courseFilter}
+        onChange={handleCourseChange}
+        list="course-options"
+      />
+      <div className="course-search-icon" onClick={handleSearchIconClick}>
+        <IoSearch className="search-icon-style" />
+      </div>
+    </div>
+
+          {/* <input 
 type="text"
 className="all-courses"
 placeholder="All Courses"
 value={courseFilter}
 onChange={handleCourseChange}
 list="course-options"
-/>
+/> */}
 
 <datalist id="course-options">
-{courseOptions
-.filter((course) =>
-  course.toLowerCase().includes(courseFilter.toLowerCase())
-)
-.map((course, idx) => (
-  <option key={idx} value={course} />
-))}
+  {courseOptions
+    .filter((course) =>
+      course.toLowerCase() !== courseFilter.toLowerCase() && // ✨ Hide exact match
+      course.toLowerCase().includes(courseFilter.toLowerCase())
+    )
+    .map((course, idx) => (
+      <option key={idx} value={course} />
+    ))}
 </datalist>
 
           {/* <select value={courseFilter} onChange={handleCourseChange}>

@@ -6,8 +6,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,23 +57,25 @@ public class ScheduleController {
 	public List<CourseSchedule> getAllCourseSchedule(@RequestParam(defaultValue = "UTC") String timezone,
 			@RequestParam(defaultValue = "user") String userType) {
 		List<CourseSchedule> coursescheduleList = repo.findAll();
+
 		if ("admin".equalsIgnoreCase(userType)) {
 			return coursescheduleList;
 		}
 
+		Map<CourseSchedule, ZonedDateTime> scheduleToDateTimeMap = new HashMap<>();
+
 		for (CourseSchedule schedule : coursescheduleList) {
 			try {
-
 				String inputDateTimeStr = schedule.getSchedule_date() + " " + schedule.getSchedule_time();
-
 				DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
-				LocalDateTime istDateTime = LocalDateTime.parse(inputDateTimeStr, inputFormatter);
 
+				LocalDateTime istDateTime = LocalDateTime.parse(inputDateTimeStr, inputFormatter);
 				ZonedDateTime istZoned = istDateTime.atZone(ZoneId.of("Asia/Kolkata"));
 				ZonedDateTime userZoned = istZoned.withZoneSameInstant(ZoneId.of(timezone));
 
-				String convertedDate = userZoned.toLocalDate().toString();
+				scheduleToDateTimeMap.put(schedule, userZoned);
 
+				String convertedDate = userZoned.toLocalDate().toString();
 				String convertedTime = userZoned.toLocalTime()
 						.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
 				String timeZoneAbbreviation = userZoned.format(DateTimeFormatter.ofPattern("zzz", Locale.ENGLISH));
@@ -87,8 +92,50 @@ public class ScheduleController {
 			}
 		}
 
+		coursescheduleList.sort(Comparator.comparing(scheduleToDateTimeMap::get));
+
 		return coursescheduleList;
 	}
+
+//	@GetMapping("/schedulecourse")
+//	public List<CourseSchedule> getAllCourseSchedule(@RequestParam(defaultValue = "UTC") String timezone,
+//			@RequestParam(defaultValue = "user") String userType) {
+//		List<CourseSchedule> coursescheduleList = repo.findAll();
+//		if ("admin".equalsIgnoreCase(userType)) {
+//			return coursescheduleList;
+//		}
+//
+//		for (CourseSchedule schedule : coursescheduleList) {
+//			try {
+//
+//				String inputDateTimeStr = schedule.getSchedule_date() + " " + schedule.getSchedule_time();
+//
+//				DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+//				LocalDateTime istDateTime = LocalDateTime.parse(inputDateTimeStr, inputFormatter);
+//
+//				ZonedDateTime istZoned = istDateTime.atZone(ZoneId.of("Asia/Kolkata"));
+//				ZonedDateTime userZoned = istZoned.withZoneSameInstant(ZoneId.of(timezone));
+//
+//				String convertedDate = userZoned.toLocalDate().toString();
+//
+//				String convertedTime = userZoned.toLocalTime()
+//						.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
+//				String timeZoneAbbreviation = userZoned.format(DateTimeFormatter.ofPattern("zzz", Locale.ENGLISH));
+//				String finalTime = convertedTime + " " + timeZoneAbbreviation;
+//
+//				schedule.setSchedule_date(convertedDate);
+//				schedule.setSchedule_time(finalTime);
+//
+//				String weekDay = userZoned.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+//				schedule.setSchedule_week(weekDay);
+//
+//			} catch (DateTimeParseException e) {
+//
+//			}
+//		}
+//
+//		return coursescheduleList;
+//	}
 
 //	    @GetMapping("/trainers/{id}")
 //	    public Trainer getTrainer(@PathVariable int id) {

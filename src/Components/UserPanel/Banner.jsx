@@ -27,7 +27,7 @@ const Banner = () => {
         console.error("Error fetching banners:", error);
         setApiError(true);
       });
-  });
+  },[]);
 
   const handleExploreMore = () => navigate("/courseDetails");
   const handleJoinNow = () => navigate("/workshop");

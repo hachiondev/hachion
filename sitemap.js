@@ -21,8 +21,7 @@ const escapeXml = unsafe => unsafe
 const staticRoutes = [
   "/", "/login", "/register", "/registerverification", "/registerhere",
   "/loginsuccess", "/forgotpassword", "/courseDetails", "/corporate",
-  "/haveanyquery", "/adminlogin", "/adminregister", "/adminforgot",
-  "/admindashboardview", "/admincourse", "/workshop", "/blogs", 
+  "/haveanyquery", "/workshop", "/blogs", 
   "/aboutus", "/contactus", "/userdashboard", "/review",
   "/addtrending", "/courseschedule", "/corporatecourses", 
   "/reports", "/terms", "/privacy"

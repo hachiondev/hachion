@@ -1226,7 +1226,7 @@ white-space: nowrap;
   position: absolute;
   right: 13%; /* Position button towards the right of the image */
   bottom: 15%; /* Position button slightly above the bottom */
-  padding: 10px 20px;
+  padding: 8px 15px;
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.438);

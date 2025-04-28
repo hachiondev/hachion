@@ -12,7 +12,6 @@ import axios from 'axios';
 const UpcomingBatch = () => {
   const [activeComponent, setActiveComponent] = useState('LiveOnlineFees');
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal visibility
-//  const { course_id } = useParams(); // Extract course_id from URL params
 const {courseName}= useParams();
   const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);

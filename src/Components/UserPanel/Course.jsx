@@ -75,15 +75,13 @@ const Course = () => {
       <meta property="og:description" content="Transform your career with Hachion's Online IT Courses. Enroll now, earn a certificate
       ,get job assistance & try our free demo! Join Today!" />
       <meta property="og:image" content="https://hachion.co/images/course-banner.jpg" />
-      <meta property="og:url" content="https://hachion.co/courseDetails" />
+      <meta property="og:url" content="https://hachion.co/CourseDetails" />
       <meta name="robots" content="index, follow" />
     </Helmet>
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
-        {/* <div className='course-banner' ref={bannerRef}>
-          <h3 className='course-banner-content'>Courses</h3>
-        </div> */}
+     
         <div>
           <h3 className='course-banner-content'>Courses</h3>
         </div>
@@ -92,7 +90,7 @@ const Course = () => {
           <Sidebar onSelectCategory={handleCategorySelect} />
           <div className='sidebar-right-container'>
           <meta name="description" content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`} />
-            {/* SidebarRight renders the course cards */}
+         
             <SidebarRight
               category={selectedCategory}
               currentPage={currentPage}

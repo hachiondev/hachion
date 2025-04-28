@@ -23,7 +23,6 @@ const CorporateTraining = () => {
     }
   };
 
-  // Handle Scroll - Show/Hide Button
     useEffect(() => {
       const handleScroll = () => {
         if (window.scrollY > 300) {
@@ -71,7 +70,6 @@ useEffect(() => {
       </div>
       <Footer />
 
-      {/* Scroll to Top Button */}
             {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />

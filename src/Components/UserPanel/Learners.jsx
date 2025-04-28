@@ -18,14 +18,12 @@ const Learners = ({ page }) => {
         const data = await response.json();
   
         if (Array.isArray(data)) {
-          // Filter reviews that match the display condition and have type = true
           const filteredReviews = data.filter((review) => 
-            review.type === true && // Only include reviews where type is true
-            review.display && typeof review.display === "string" 
+            review.type === true &&
+            review.display && typeof review.display === "string"
               ? review.display.split(",").map(item => item.trim()).includes(page)
               : false
           );
-  
           setReviews(filteredReviews);
         } else {
           console.error("Invalid API response", data);
@@ -40,10 +38,8 @@ const Learners = ({ page }) => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [page]); // Runs when the page prop changes
-  
+  }, [page]);
 
-  // Function to chunk reviews into slides
   const chunkArray = (arr, chunkSize) => {
     return arr.reduce((acc, _, i) => {
       if (i % chunkSize === 0) acc.push(arr.slice(i, i + chunkSize));
@@ -51,10 +47,8 @@ const Learners = ({ page }) => {
     }, []);
   };
 
-  // Create slides: 3 cards per slide for desktop, 1 per slide for mobile
   const groupedReviews = chunkArray(reviews, isMobile ? 1 : 3);
 
-  // Open modal on "Read More" click
   const handleReadMore = (index) => {
     setActiveIndex(index);
     setShowModal(true);
@@ -68,7 +62,9 @@ const Learners = ({ page }) => {
 
       <div className="learner-background">
         <Carousel
-          indicators={true}
+          activeIndex={activeIndex}
+          onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
+          indicators={false}
           prevIcon={<FaAngleLeft className="custom-prev-icon" />}
           nextIcon={<FaAngleRight className="custom-next-icon" />}
           interval={null}
@@ -93,6 +89,15 @@ const Learners = ({ page }) => {
             </Carousel.Item>
           ))}
         </Carousel>
+        <ul className="carousel-indicators">
+          {groupedReviews.map((_, index) => (
+            <li
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={index === activeIndex ? "active" : ""}
+            />
+          ))}
+        </ul>
       </div>
 
       {/* Modal for Full Review */}
@@ -104,6 +109,7 @@ const Learners = ({ page }) => {
           <Carousel
             activeIndex={activeIndex}
             onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
+            indicators={false}
             prevIcon={<FaAngleLeft className="custom-prev-icon" />}
             nextIcon={<FaAngleRight className="custom-next-icon" />}
             interval={null}

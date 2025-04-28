@@ -9,13 +9,12 @@ import { FaArrowUp } from 'react-icons/fa';
 
 const Terms = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  // Scroll to top when component is mounted
+
   useEffect(() => {
-    console.log("Terms component mounted. Scrolling to top...");
+  
     window.scrollTo(0, 0);
   }, []);
 
-  // Handle Scroll - Show/Hide Button
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 300) {
@@ -130,8 +129,7 @@ const Terms = () => {
         </div>
 
       <Footer />
-      
-      {/* Scroll to Top Button */}
+
       {showScrollButton && (
         <button className="scroll-to-top" onClick={scrollToTop}>
           <FaArrowUp />

@@ -253,7 +253,7 @@ const NavbarTop = () => {
   src={
     item.type === 'course'
       ? `https://api.hachion.co/${item.courseImage}`
-      : `/blogs/${item.blog_image}`
+      : `HachionUserDashboad/blogs/${item.blog_image}`
   }
   alt={item.type === 'course' ? 'course' : 'blog'}
   style={{ height: '40px', width: '60px', objectFit: 'cover' }}

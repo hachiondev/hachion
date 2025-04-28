@@ -7,11 +7,11 @@
 }
 /* Base styles for large screens (desktop, laptop) */
 .topbar {
-height: 80px;
+/* height: 80px; */
 background-color: rgba(0, 174, 239, 1);
 display: flex;
 justify-content: space-between;
-padding: 0 20px;
+padding: 5px 15px;
 font-size: 24px;
 align-items: center; /* Ensure items are vertically centered */
 flex-wrap: nowrap; /* Prevent wrapping */
@@ -36,7 +36,7 @@ font-weight: 500;
 color: white;
 cursor: pointer;
 padding: 0 10px;
-font-size: 1.15rem;
+font-size: 16px;
 white-space: nowrap; /* Prevent text from breaking */
 padding-top: 15px;
 }
@@ -44,7 +44,7 @@ padding-top: 15px;
 .whatsapp-number,
 .training-email {
 font-weight: 500;
-font-size: 1.15rem;
+font-size: 16px;
 color: white;
 padding: 0 10px;
 padding-top: 15px;
@@ -106,7 +106,7 @@ padding: 10px;
 
 .whatsapp-number-footer{
 font-weight: 500;
-font-size: 1.15rem;
+font-size: 16px;
 color: white;
 padding: 0 10px;
 padding-top: 15px;
@@ -114,7 +114,7 @@ padding-top: 15px;
 
 .training-email-footer{
 font-weight: 500;
-font-size: 1.25rem;
+font-size: 16px;
 cursor: pointer;
 color: white;
 padding-top: 2vh;
@@ -204,22 +204,29 @@ padding: 10px;
 
 /* Navbar items */
 .navbar {
-height: 120px;
+height: auto;
+min-height: 100px;
 background-color: #EEEEEE !important;
 display: flex;
 align-items: center;
 justify-content: space-between;
-flex-wrap: nowrap; 
+flex-wrap: wrap; 
+padding: 10px 20px;
+}
+
+.navbar-expand-lg {
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .search-div-home {
-height: 60px;
+height: 50px;
 width: 600px;
 border-radius: 20px;
 box-shadow: 5px 5px 5px #BABABA;
 display: flex;
 background-color: white;
-margin-left: 17vw;
+margin-left: 16vw;
 }
 
 .search-input-home {
@@ -233,7 +240,7 @@ background-color: white;
 
 .btn-search-home {
 width: 100px;
-height: 60px;
+height: 50px;
 background-color: rgba(0, 174, 239, 1);
 color: white;
 border-radius: 0px 10px 10px 0px;
@@ -241,7 +248,7 @@ border: none;
 cursor: pointer;
 }
 
-.navbar-nav {
+/* .navbar-nav {
 display: flex;
 justify-content: space-evenly;
 flex-direction: row;
@@ -259,12 +266,38 @@ text-decoration: none;
 padding: 10px 15px;
 transition: color 0.3s ease;
 white-space: nowrap;
-}
+} */
 
 /* .nav-item-link:hover {
 color: #00AEEF;
 font-weight: 500;
 } */
+
+.navbar-nav {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px;
+  margin-left: 0;
+}
+
+.navbar-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-item-link {
+  height: 8vh;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+  white-space: nowrap; /* Prevent text wrap */
+}
 
 .nav-item {
 background: none;
@@ -530,7 +563,7 @@ padding: 5px 10px;
 background-color: rgba(0, 174, 239, 1);
 color:rgba(255, 255, 255, 1);
 font-weight:700;
-font-size: 1.1rem;
+font-size: 16px;
 border: none;
 box-shadow:5px 5px 5px #d3d3d3;
 }
@@ -545,21 +578,21 @@ margin-top: 3vh;
 }
 
 .training-events-head-upcoming{
-margin-top: 50px;
+margin-top: 30px;
 margin-left: 40%;
 justify-content: space-between;
 display: flex;
 padding-top: 20px;
-margin-bottom: 50px;
+margin-bottom: 30px;
 }
 
 .view-btn{
 display: flex;
 align-items: center;
 justify-content: flex-end;
-margin-right: 255px;
+margin-right: 10%;
 margin-top:-100px;
-margin-bottom: 50px;
+margin-bottom: 30px;
 }
 
 .view-btn:hover{
@@ -598,7 +631,7 @@ transition: all 0.3s ease;
 }
 .card-header{
 font-weight: 600;
-font-size: 16px;
+font-size: 14px;
 font-style:italic;
 position: absolute;
 left: 47%;
@@ -670,7 +703,7 @@ transition: background-color 0.3s ease;
 }
 
 .course-name {
-font-size: 1.1rem;
+font-size: 16px;
 font-weight: 600;
 color: black; 
 margin: 1vh 0;
@@ -688,12 +721,14 @@ text-align: center;
   text-align: left;
   flex: 1;
   font-weight: 600;
+  font-size: 14px;
 }
 
 .time {
   text-align: right;
   flex: 1;
   font-weight: 600;
+  font-size: 14px;
 }
 
 .more-schedules{
@@ -730,15 +765,42 @@ text-align: center;
   outline-color: #00AEEF;
 }
 
-.all-courses
-{
-  padding: 8px 12px;
+.course-search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.course-search-input {
+  width: 100%;
+  padding: 8px 40px 8px 12px; /* Add enough padding to the right for the icon */
   font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  min-width:500px;
   outline-color: #00AEEF;
 }
+
+.course-search-icon {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  background-color: rgba(0, 174, 239, 1);
+  padding: 5px 30px;
+  border-radius: 0px 10px 10px 0px;
+  font-size: 1.3rem;
+  pointer-events: auto;
+  cursor: pointer; 
+}
+.search-icon-style {
+  font-size: 24px;
+  color: white;
+}
+
+
+
+
 
 .no-schedules-message {
   text-align: center;
@@ -777,15 +839,14 @@ margin: 5px 0;
 transition: all 0.3s ease;
 }
 .enroll-btn{
-border-radius:10px;
+border-radius: 8px;
 padding: 5px 10px;
-font-size:1.1rem;
+font-size:14px;
 font-weight: 700;
 background-color: rgba(0, 174, 239, 1);
 color: white;
 box-shadow:5px 5px 5px #d3d3d3;
 border: none;
-margin-top: 0.5vh;
 transition: all 0.3s ease
 }
 .enroll-btn:hover{
@@ -904,7 +965,7 @@ margin-right: 10vw;
 
 .course-names {
 font-weight:400;
-font-size:1.25rem;
+font-size:16px;
 color:gray;
 text-decoration: none;
 cursor: pointer;
@@ -966,8 +1027,8 @@ width: 80%;
 }
 
 .career-img {
-  width: 80px; 
-  height: 80px;
+  width: 70px; 
+  height: 70px;
   }
 
 .online-training-div {
@@ -996,7 +1057,7 @@ padding-top: 1.5vh;
 }
 .training-content{
 font-weight:400;
-font-size:1rem;
+font-size:14px;
 color: rgba(97, 97, 97, 1);
 padding-left:20px;
 padding-right:20px;
@@ -1032,7 +1093,7 @@ margin-bottom: 10px;
 
 .footer-copyright {
 font-weight: 600;
-font-size: 1.1rem;
+font-size: 16px;
 text-align: center;
 white-space: nowrap;
 }
@@ -1040,14 +1101,14 @@ white-space: nowrap;
 .footer-head {
   width: 80%; 
   margin-bottom: 20px;
-  margin-left: 15%; 
+  margin-left: 10%; 
   display: flex;
   flex-direction: column;
   }
 
 .footer-heading {
 font-weight: 600;
-font-size: 1.15rem;
+font-size: 16px;
 margin-right: 10px;
 display: flex;
 justify-content: left;
@@ -1055,7 +1116,7 @@ justify-content: left;
 
 .footer-content {
 font-weight: 400;
-font-size: 1.05rem;
+font-size: 14px;
 cursor: pointer;
 }
 
@@ -1092,7 +1153,7 @@ cursor: pointer;
 
   .footer-term {
 font-weight: 400;
-font-size: 1.05rem;
+font-size: 14px;
 cursor: pointer;
 white-space: nowrap;
 }
@@ -1103,30 +1164,35 @@ white-space: nowrap;
   }
 
 .footer-bottom {
+width: 80%;
+margin: 0 auto;
 display: flex;
-flex-direction: row;
+flex-direction: column; 
+align-items: center;
 justify-content: center;
+text-align: center; 
+padding: 20px 0;
 }
 
 .footer-p {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* padding-left: 12vh; */
-  gap: 10vh;
+  width: 100%;
+  gap: 30px;
   }
 
 .footer-link {
 display: flex;
 flex-direction: row;
 justify-content: space-evenly;
-padding-left: 10vh;
-gap: 4vh;
+padding-left: 50px;
+gap: 30px;
 }
 
 .footer-link img {
-height: 40px;
-width: 40px;
+height: 30px;
+width: 30px;
 cursor: pointer;
 transition: transform 0.3s ease; 
 }
@@ -1304,12 +1370,6 @@ gap:1vh;
   margin-bottom: 5px;
 }
 
-@media only screen and (min-width: 1700px) and (max-width: 1920px){
-  .view-btn{
-    margin-right: 280px;
-  }
-}
-
 @media  (min-width:1025px) and (max-width: 1366px)  {
   .career-div {
       width: 80%; 
@@ -1331,18 +1391,14 @@ gap:1vh;
     width: 430px; /* Reduce width for tablet screens */
     margin-left: 0 !important /* Remove margin for better alignment */
   }
-.courses-list{
-  gap: 15px;
-  margin-left: 20px;
-}
 
 .course-names {
-  font-size: 20px;
-  margin: 15px;
+  font-size: 18px;
+  margin: 10px;
   gap: 15px;
   }
   .Live-online{
-    font-size: 18px;
+    font-size: 16px;
     padding-top: 2px;
     margin-bottom: 0;
     }
@@ -1373,33 +1429,25 @@ gap:1vh;
 
 @media (min-width: 1025px) and (max-width: 1366px){
     .training-card-holder{
-      max-width: 85vw;
+      max-width: 80%;
+      margin-left: 10%;
+      margin-right: 10%;
       gap: 10px;
-    }
-    .card {
-      width: calc(33.33% - 10px); 
-      
     }
     
     .view-btn{
-      margin-right: 105px;
-      margin-top: -120px;
+      margin-right: 10%;
     }
     
     .whatsapp-number,
     .training-email,
     .query-title {
-      font-size: 20px;
+      font-size: 16px;
      
     }
 }
 
-@media screen and (max-width: 1180px) {
-.topbar {
-  height: 60px;
-  padding: 0 5vw;
-}
-
+@media (min-width: 1025px) and (max-width: 1180px) {
 .topbar-left {
   width: auto; /* Allow auto width to fit content */
 }
@@ -1407,7 +1455,7 @@ gap:1vh;
 .whatsapp-number,
 .training-email,
 .query-title {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .training-mail-icon {
@@ -1418,35 +1466,23 @@ gap:1vh;
   font-size: 1rem;
 }
 
-.training-card-holder{
-  max-width: 94vw;
-  gap: 10px;
-}
-
 .navbar-nav {
-  gap: 2px;
+  gap: 0;
   font-size: 12px;
-  margin: 0;
   margin-left: 0px;
-  padding: 0 5px;
-  justify-content: space-around;
+  padding: 0 2px;
+  justify-content: space-between;
 }
 
 .search-div-home {
-  width: 250px;
+  width: 220px;
   margin-left: 0 !important
 }
 
-.btn-search-home {
-  width: 80px;
-  height: 60px;
-  }
-
-.nav-item-link {
-  height: auto;
-  font-size: 16px;
-  padding: 5px;
-  white-space: nowrap;
+  .nav-item-link {
+    font-size: 14px;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
 
 #autoScrollingBanner .carousel-indicators {
@@ -1466,10 +1502,6 @@ gap:1vh;
   padding: 3px 10px;
   font-size: 20px;
   white-space: nowrap;
-  }
-  .footer-bottom{
-    justify-content: center;
-    flex-direction: column;
   }
 
   .footer-p {
@@ -1534,11 +1566,11 @@ gap:1vh;
     }
     
     .training-events-head-upcoming{
-    margin-top: 50px;
+    margin-top: 30px;
     margin-left: 25%;
     justify-content: space-between;
     display: flex;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     }
   
   .drawer-toggle-btn {
@@ -1738,6 +1770,8 @@ gap:1vh;
       padding: 5px;
       font-size: 16px;
       margin-left: 5px;
+      position: relative;
+      z-index: 20;
       }
       
       .btn-search-mobile {
@@ -1943,8 +1977,7 @@ gap:1vh;
     }
 
     .topbar {
-      height: 50px;
-      padding: 0 2vw;
+      padding: 3px 10px;
        display: block;
       align-content: center;
     }
@@ -1971,7 +2004,7 @@ gap:1vh;
     .whatsapp-number,
     .training-email,
     .query-title {
-      font-size: 16px;
+      font-size: 14px;
     }
     
     .login-div-content {
@@ -2138,6 +2171,7 @@ display: block;
 border:none;
 margin-right: 2px !important; /* Show toggle button only on mobile */
 justify-content: flex-end;
+background: none;
 }
 
 .drawer-logo {
@@ -2149,12 +2183,12 @@ display: block; /* Drawer becomes visible when toggled */
 }
 
 .navbar {
-height: 50px;
+min-height: 40px;
 display: flex;
 position: relative;
 align-items: center;
 justify-content: space-between; /* Ensures space between logo and right section */
-padding: 10px;
+padding: 5px 10px;
 }
 
 .navbar img {
@@ -2205,6 +2239,8 @@ height: 32px;
 padding: 5px;
 font-size: 10px;
 margin-left: 5px;
+position: relative;
+z-index: 20;
 }
 
 .btn-search-mobile {
@@ -2302,9 +2338,9 @@ display: none !important; /* Hide the normal navbar items on mobile */
   gap: 10px;
   flex-wrap: nowrap;
   justify-content: center;
-  width: 95%;
-  margin-left: 2%;
-  margin-right: 2%;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
   padding: 5px;
 }
 
@@ -2315,12 +2351,37 @@ display: none !important; /* Hide the normal navbar items on mobile */
   min-width: 100px;
 }
 
-.all-courses
+/* .all-courses
 {
   padding: 3px 5px;
   font-size: 12px;
   border-radius: 5px;
   min-width:200px;
+} */
+
+.course-search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.course-search-input {
+  width: 100%;
+  padding: 4px 20px 4px 4px; /* Add enough padding to the right for the icon */
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.course-search-icon {
+  height: 28px;
+  position: absolute;
+  right: 0px;
+  padding: 2px;
+  border-radius: 0px 5px 5px 0px;
+}
+.search-icon-style {
+  font-size: 12px;
+  margin-bottom: 10px;
 }
 
 .coupon-btn, .register-now-btn {

@@ -3,6 +3,7 @@ import TrainingCard from "./TrainingCard";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { IoSearch } from "react-icons/io5";
 
 
 const TrainingEvents = () => {
@@ -77,10 +78,61 @@ const TrainingEvents = () => {
     }).format(localDate);
   };
   
+  // const getFilteredCourses = () => {
+  //   const now = new Date();
+  
+  //   // Filter based on mode, course name, and time
+  //   const filtered = mergedCourses.filter((course) => {
+  //     const courseDate = new Date(course.schedule_date);
+  //     const createdDate = new Date(course.created_at);
+  
+  //     const isToday = courseDate.toDateString() === now.toDateString();
+  //     const isThisWeek =
+  //       (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
+  //       courseDate > now;
+  //     const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
+  
+  //     const courseNameMatch =
+  //       !courseFilter ||
+  //       course.schedule_course_name?.toLowerCase().trim() ===
+  //         courseFilter.toLowerCase().trim();
+  
+  //     const modeMatch =
+  //       !modeFilter ||
+  //       course.schedule_mode?.toLowerCase().trim() ===
+  //         modeFilter.toLowerCase().trim();
+  
+  //     const timeMatch =
+  //       !timeFilter ||
+  //       (timeFilter === "today" && isToday) ||
+  //       (timeFilter === "week" && isThisWeek) ||
+  //       (timeFilter === "new" && isNewlyAdded);
+  
+  //     return courseNameMatch && modeMatch && timeMatch;
+  //   });
+  
+  //   // Group by course name
+  //   const grouped = {};
+  //   filtered.forEach((item) => {
+  //     const key = item.schedule_course_name.trim().toLowerCase();
+  //     if (!grouped[key]) {
+  //       grouped[key] = {
+  //         ...item,
+  //         sessions: [],
+  //       };
+  //     }
+  //     grouped[key].sessions.push({
+  //       date: item.schedule_date,
+  //       time: item.schedule_time,
+  //     });
+  //   });
+  
+  //   return Object.values(grouped);
+  // };
+  
   const getFilteredCourses = () => {
     const now = new Date();
   
-    // Filter based on mode, course name, and time
     const filtered = mergedCourses.filter((course) => {
       const courseDate = new Date(course.schedule_date);
       const createdDate = new Date(course.created_at);
@@ -93,8 +145,7 @@ const TrainingEvents = () => {
   
       const courseNameMatch =
         !courseFilter ||
-        course.schedule_course_name?.toLowerCase().trim() ===
-          courseFilter.toLowerCase().trim();
+        course.schedule_course_name?.toLowerCase().trim().includes(courseFilter.toLowerCase().trim());
   
       const modeMatch =
         !modeFilter ||
@@ -110,7 +161,6 @@ const TrainingEvents = () => {
       return courseNameMatch && modeMatch && timeMatch;
     });
   
-    // Group by course name
     const grouped = {};
     filtered.forEach((item) => {
       const key = item.schedule_course_name.trim().toLowerCase();
@@ -148,6 +198,11 @@ const TrainingEvents = () => {
   const handleModeChange = (e) => setModeFilter(e.target.value);
   const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
+  const handleSearchIconClick = () => {
+    // Optional: You can also filter data manually here if you want
+    console.log('Search icon clicked with input:', courseFilter);
+    // No clearing of input box ✅
+  };
   //console.log(filteredCourses);
   return (
     <div className="training-events">
@@ -169,23 +224,38 @@ const TrainingEvents = () => {
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <input 
+          <div className="course-search-container">
+      <input
+        type="text"
+        className="course-search-input"
+        placeholder="All Courses"
+        value={courseFilter}
+        onChange={handleCourseChange}
+        list="course-options"
+      />
+      <div className="course-search-icon" onClick={handleSearchIconClick}>
+        <IoSearch className="search-icon-style" />
+      </div>
+    </div>
+
+          {/* <input 
 type="text"
 className="all-courses"
 placeholder="All Courses"
 value={courseFilter}
 onChange={handleCourseChange}
 list="course-options"
-/>
+/> */}
 
 <datalist id="course-options">
-{courseOptions
-.filter((course) =>
-  course.toLowerCase().includes(courseFilter.toLowerCase())
-)
-.map((course, idx) => (
-  <option key={idx} value={course} />
-))}
+  {courseOptions
+    .filter((course) =>
+      course.toLowerCase() !== courseFilter.toLowerCase() && // ✨ Hide exact match
+      course.toLowerCase().includes(courseFilter.toLowerCase())
+    )
+    .map((course, idx) => (
+      <option key={idx} value={course} />
+    ))}
 </datalist>
 
           {/* <select value={courseFilter} onChange={handleCourseChange}>

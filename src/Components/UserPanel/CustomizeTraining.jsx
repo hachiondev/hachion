@@ -3,24 +3,35 @@ import img1 from '../../Assets/image.png';
 import img2 from '../../Assets/image27.png';
 import './Corporate.css';
 
+const trainingOptions = [
+  {
+    img: img1,
+    alt: 'Instructor-Led Live, Online Training',
+    text: 'Instructor-Led Live, Online Training'
+  },
+  {
+    img: img2,
+    alt: 'Blended Training',
+    text: 'Blended Training'
+  }
+];
+
 const CustomizeTraining = () => {
   return (
-   <>
-   <div className='association'>
-    <h1 className='association-head'>Customized Training to Fit Your Needs</h1>
-    </div>
-    <div className='customize-training'>
-        <div className='customize-training-div'>
-            <img src={img1} alt='customize-training-image'/>
-            <p className='customize-training-div-content'>Instructor-Led Live, Online Training</p>
-        </div>
-        <div className='customize-training-div'>
-            <img src={img2} alt='customize-training-image2'/>
-            <p className='customize-training-div-content'>Blended Training</p>
-        </div>
-    </div>
-   </>
-  )
-}
+    <>
+      <div className='association'>
+        <h1 className='association-head'>Customized Training to Fit Your Needs</h1>
+      </div>
+      <div className='customize-training'>
+        {trainingOptions.map((option, index) => (
+          <div className='customize-training-div' key={index}>
+            <img src={option.img} alt={option.alt} />
+            <p className='customize-training-div-content'>{option.text}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
-export default CustomizeTraining
+export default CustomizeTraining;

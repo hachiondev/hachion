@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -51,7 +50,6 @@ export default function EnrollmentTable() {
 
         if (matchedCourse) {
           setCourseData(matchedCourse);
-          console.log(courseData);
         } else {
           console.error("Course not found.");
         }

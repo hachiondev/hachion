@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Course.css';
 import Footer from './Footer';
@@ -22,11 +22,11 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
+  const location = useLocation();
   const [helmetKey, setHelmetKey] = useState(0);
   const upcomingHeaderRef = useRef(null);
-  const footerRef = useRef(null); // Footer reference for intersection observer
+  const footerRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
-  // const { course_id } = useParams(); // Get course_id from URL
   const { courseName } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,6 +81,14 @@ const QaAutomation = () => {
       curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  useEffect(() => {
+    if (!loading && location?.state?.scrollTo === 'upcoming-batch') {
+      upcomingBatchRef.current?.scrollIntoView({ behavior: 'smooth' });
+      // Clear state to avoid repeating
+      window.history.replaceState({}, document.title);
+    }
+  }, [loading, location]);
   
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -123,6 +131,9 @@ const QaAutomation = () => {
       <div className='course-top'>
         <Topbar />
         <NavbarTop />
+        {/* <div className='course-banner'>
+          <h3 className='course-banner-content'>{courseData?.courseName}</h3>
+        </div> */}
         <div className='blogs-header'>
           <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -140,6 +151,7 @@ const QaAutomation = () => {
           </ol>
         </nav>
         </div>
+        {/* <h3 className='top-course-name' >{courseData?.courseName}</h3> */}
         <QaTop
           onVideoButtonClick={handleVideoButtonClick}
           onEnrollButtonClick={() =>
@@ -147,6 +159,8 @@ const QaAutomation = () => {
           }
         />
         <KeyHighlights />
+
+        {/* Sticky Header applies to the entire section below */}
         <div ref={upcomingHeaderRef}>
           <div className={isSticky ? 'sticky upcoming-header' : 'upcoming-header'}>
             <UpcomingHeader />
@@ -186,7 +200,7 @@ const QaAutomation = () => {
           <QaAutomationFaq />
         </div>
         </div>
-     
+        {/* Footer section to stop the sticky behavior */}
         <div ref={footerRef}>
           <Footer />
         </div>

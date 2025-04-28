@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseName }) => {
+const countryToCurrencyMap = {
+  'IN': 'INR', 'US': 'USD', 'GB': 'GBP', 'AU': 'AUD', 'CA': 'CAD',
+  'AE': 'AED', 'JP': 'JPY', 'EU': 'EUR', 'TH': 'THB', 'DE': 'EUR',
+  'FR': 'EUR', 'QA': 'QAR', 'CN': 'CNY', 'RU': 'RUB', 'KR': 'KRW',
+  'BR': 'BRL', 'MX': 'MXN', 'ZA': 'ZAR', 'NL': 'EUR'
+};
+
+const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
+  const { courseName } = useParams();
   const navigate = useNavigate();
-  const [fee, setFee] = useState('');
+  const [fee, setFee] = useState('Not Available');
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [message, setMessage] = useState('');
@@ -41,75 +51,72 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
   }, [selectedBatchData]);
 
   useEffect(() => {
-    const fetchCourseAmount = async () => {
+    const fetchGeolocationAndCourseData = async () => {
       try {
+        const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+        const countryCode = geoResponse.data.country || 'US';
+        const userCurrency = countryToCurrencyMap[countryCode] || 'USD';
+        setCurrency(userCurrency);
+
+        localStorage.removeItem('exchangeRates');
+        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+        const rates = exchangeResponse.data.rates;
+        localStorage.setItem('exchangeRates', JSON.stringify(rates));
+        const rate = rates[userCurrency] || 1;
+        setExchangeRate(rate);
+
         const response = await axios.get('/HachionUserDashboad/courses/all');
         const courses = response.data;
-
         const matchedCourse = courses.find(
           (course) => course.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
 
         if (matchedCourse) {
-          let selectedFee, originalFee;
+          let selectedFeeAmount = 0;
+          let selectedOriginalAmount = 0;
 
           if (modeType === 'live') {
-            if (enrollText.toLowerCase().includes('demo')) {
-              selectedFee = '0';
-              originalFee = 0;
-            } else {
-              selectedFee = Math.round(matchedCourse.total);
-              originalFee = Math.round(matchedCourse.amount);
-            }
-          } else {
-            switch (modeType) {
-              case 'mentoring':
-                selectedFee = Math.round(matchedCourse.mtotal);
-                originalFee = Math.round(matchedCourse.mamount);
-                break;
-              case 'self':
-                selectedFee = Math.round(matchedCourse.stotal);
-                originalFee = Math.round(matchedCourse.samount);
-                break;
-              case 'corporate':
-                selectedFee = Math.round(matchedCourse.ctotal);
-                originalFee = Math.round(matchedCourse.camount);
-                break;
-              default:
-                selectedFee = 'Not Available';
-                originalFee = 0;
-            }
+            selectedFeeAmount = parseFloat(matchedCourse.total) || 0;
+            selectedOriginalAmount = parseFloat(matchedCourse.amount) || 0;
+          } else if (modeType === 'mentoring') {
+            selectedFeeAmount = parseFloat(matchedCourse.mtotal) || 0;
+            selectedOriginalAmount = parseFloat(matchedCourse.mamount) || 0;
+          } else if (modeType === 'self') {
+            selectedFeeAmount = parseFloat(matchedCourse.stotal) || 0;
+            selectedOriginalAmount = parseFloat(matchedCourse.samount) || 0;
+          } else if (modeType === 'corporate') {
+            setFee('Not Available');
+            return;
           }
 
-          if (originalFee && selectedFee !== 'Free' && originalFee > selectedFee) {
-            const calculatedDiscount = originalFee - selectedFee;
-            const calculatedDiscountPercentage = Math.round((calculatedDiscount / originalFee) * 100);
-            setDiscount(calculatedDiscount);
+          setFee((selectedFeeAmount * rate).toFixed(2) || 'Not Available');
+
+          if (selectedOriginalAmount && selectedFeeAmount !== 0 && selectedOriginalAmount > selectedFeeAmount) {
+            const calculatedDiscount = selectedOriginalAmount - selectedFeeAmount;
+            const calculatedDiscountPercentage = Math.round((calculatedDiscount / selectedOriginalAmount) * 100);
+            setDiscount((calculatedDiscount * rate).toFixed(2));
             setDiscountPercentage(calculatedDiscountPercentage);
           } else {
             setDiscount(0);
             setDiscountPercentage(0);
           }
-
-          setFee(selectedFee || 'Not Available');
         } else {
           setFee('Not Available');
         }
       } catch (error) {
-        console.error("Error fetching course amount:", error.message);
+        console.error('Error fetching data:', error);
         setFee('Error Loading Fee');
       }
     };
 
-    fetchCourseAmount();
-  }, [courseName, modeType, enrollText]);
+    fetchGeolocationAndCourseData();
+  }, [courseName, modeType]);
 
   const resendEmail = async (userEmail) => {
     try {
       const response = await axios.post('/HachionUserDashboad/enroll/resend-email', {
         email: userEmail,
       });
-
       alert(response.data);
     } catch (error) {
       console.error('Resend email failed:', error.response?.data || error.message);
@@ -180,7 +187,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
         const payload = {
           name: userName,
           email: userEmail,
-          mobile: userMobile,
+          mobile: userMobile || "",
           course_name: selectedBatchData.schedule_course_name,
           enroll_date: selectedBatchData.schedule_date,
           week: selectedBatchData.schedule_week,
@@ -202,7 +209,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
           setMessage('Registered successfully');
         }
 
-        alert('You have successfully registered for the demo session. You will receive an email shortly with the meeting link, timing, and other details. Please check your registered email and dashboard for updates.');
+        alert('You have successfully registered for the demo session. You will receive an email shortly.');
 
         const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
         localStorage.setItem(uniqueBatchKey, true);
@@ -217,24 +224,47 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData, courseNa
 
   return (
     <div className='right'>
-      <p className='batch-date-fee'>Fee:</p>
-      <p className='free'>{enrollText === 'Enroll Free Demo' ? 'FREE' : `USD ${fee}`}</p>
+      {modeType === 'corporate' ? (
+        <>
+          <p className='free'>Talk to our Advisor</p>
+          <button
+            onClick={() => navigate('/corporate', { state: { scrollToAdvisor: true } })}
+            className="fee-enroll-now text-white"
+          >
+            Contact Us
+          </button>
+        </>
+      ) : (
+        <>
+          <p className='batch-date-fee'>Fee:</p>
+          <p className='free'>
+            {enrollText === 'Enroll Free Demo'
+              ? 'FREE'
+              : fee !== 'Not Available' && fee !== 'Error Loading Fee'
+                ? `${currency} ${Math.round(parseFloat(fee))}`
+                : fee
+            }
+          </p>
+        </>
+      )}
 
-      {discount > 0 && fee !== 'Free' && (
+      {discount > 0 && parseFloat(fee) > 0 && enrollText !== 'Enroll Free Demo' && modeType !== 'corporate' && (
         <p className='discount'>
-          Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & Save USD {Math.round(discount)}/-
+          Flash Sale! Get <span className="discount-percent">{discountPercentage}% OFF</span> & Save {currency} {Math.round(discount)}/-
         </p>
       )}
 
       {message && <p className="success-message">{message}</p>}
 
-      <button
-        onClick={handleEnroll}
-        disabled={isEnrolled}
-        className={`fee-enroll-now ${isEnrolled ? 'enrolled' : ''} text-white`}
-      >
-        {isEnrolled ? 'Enrolled' : enrollText}
-      </button>
+      {modeType !== 'corporate' && (
+        <button
+          onClick={handleEnroll}
+          disabled={isEnrolled}
+          className={`fee-enroll-now ${isEnrolled ? 'enrolled' : ''} text-white`}
+        >
+          {isEnrolled ? 'Enrolled' : enrollText}
+        </button>
+      )}
 
       {showResend && isEnrolled && !resendExceeded && (
         <p className='resend'>

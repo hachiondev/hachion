@@ -1,9 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Banner3 from "../../Assets/banner3.png";
-
 
 const Banner = () => {
   const [banners, setBanners] = useState([]);
@@ -29,7 +27,7 @@ const Banner = () => {
         console.error("Error fetching banners:", error);
         setApiError(true);
       });
-  }, []);
+  });
 
   const handleExploreMore = () => navigate("/courseDetails");
   const handleJoinNow = () => navigate("/workshop");
@@ -56,18 +54,18 @@ const Banner = () => {
           <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
             <img
               src={apiError || index === 0 ? banner.home_banner_image : `/HachionUserDashboad/${banner.home_banner_image}`}
-              className="d-block w-100"
+              className="banner-img"
               alt={`Banner ${index + 1}`}
             />
-           <div className="carousel-caption">
+            <div className="carousel-caption">
               <div className="carousel-btn">
-                {index === displayBanners.length - 1 ? (
-                  <div className='carousel-join-btn'>
-                  <button className="join-now" onClick={handleJoinNow}>Join Now</button>
-                  </div>
-                ) : (
+              {index === 0 ? (
                   <button className="join-now" onClick={handleExploreMore}>Explore More</button>
-                )}            
+                ) : (
+                  <div className='carousel-join-btn'>
+                    <button className="join-now" onClick={handleJoinNow}>Join Now</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -77,5 +75,3 @@ const Banner = () => {
   );
 };
 export default Banner;
-
-

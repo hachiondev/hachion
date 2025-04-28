@@ -4,7 +4,8 @@ import Login from './Components/UserPanel/Login';
 import AdminLogin from './Components/AdminPanel/AdminLogin';
 import AdminRegister from './Components/AdminPanel/AdminRegister';
 import AdminForgot from './Components/AdminPanel/AdminForgot';
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
 import RegisterNext from './Components/UserPanel/RegisterNext';
@@ -24,75 +25,72 @@ import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
-import AddCourseCategory from './Components/AdminPanel/AddCourseCategory';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Reports from './Components/AdminPanel/Reports';
 import Enrollment from './Components/UserPanel/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
-import AddCertificate from './Components/AdminPanel/AddCertificate';
-import AddBanner from './Components/AdminPanel/AddBanner';
-import AddCurriculum from './Components/AdminPanel/AddCurriculum';
-
-import AddFaq from './Components/AdminPanel/AddFaq';
-import AddRegularVideos from './Components/AdminPanel/AddRegularVideos';
-import AddResume from './Components/AdminPanel/AddResume';
-import AddReview from './Components/AdminPanel/AddReview';
-import AddSchedule from './Components/AdminPanel/AddSchedule';
-import AddCourseDetails from './Components/AdminPanel/AddCourseDetails'
-import AddVideoAccess from './Components/AdminPanel/AddVideoAccess';
-import Addvideo from './Components/AdminPanel/Addvideo';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
-// import ProtectedRoute from './ProtectedRoute';
 
-function App() {
+const RedirectToLowercase = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathName = location.pathname;
+    const lowercasePath = pathName.toLowerCase();
+    if (pathName !== lowercasePath) {
+      navigate(lowercasePath, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
+  return null;
+};
+
+const TrackPageView = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-TE1LPJJ75K', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+
+  return null;
+};
+
+function AppRoutes() {
   return (
     <>
-   
-    <BrowserRouter>
-    <Routes>
-      
+      <TrackPageView />
+      <RedirectToLowercase />
+      <Routes>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
       <Route path='/registerhere' element={<RegisterHere/>}/>
+     
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
-    
-           <Route
-          path="/"
-          element={
-            
-              <Home />
-            
-          }
-        />
+      <Route path="/" element={<Home />} />
       <Route path='/CourseDetails' element={<Course/>}/>
       <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
-
-      {/* <Route path='/Courses/:courseName' element={<QaAutomation/>}/> */}
-      {/* <Route path='/CourseDetails/CourseDetailsData?.courseCategory' element={<QaAutomation/>}/> */}
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-    
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      {/* <Route path='/admin'> */}
       <Route path="adminlogin" element={<AdminLogin />} />
-        <Route path="adminregister" element={<AdminRegister />} />
-        <Route path="/adminforgot" element={<AdminForgot />} />
-
-        {/* Protected Admin Dashboard Route */}
-        <Route element={<ProtectedRoute />}>
+      <Route path="adminregister" element={<AdminRegister />} />
+      <Route path="/adminforgot" element={<AdminForgot />} />
+      <Route element={<ProtectedRoute />}>
           <Route path="admindashboardview" element={<AdminDashboardView />} />
-        </Route>
-  <Route path='/admincourse' element={<CategoryTable />} />
-
-{/* </Route> */}
-<Route path='/workshop' element={<SalWorkshop/>}/>
-
+      </Route>
+      <Route path='/admincourse' element={<CategoryTable />} />
+      <Route path='/workshop' element={<SalWorkshop/>}/>
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
@@ -101,29 +99,23 @@ function App() {
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/userdashboard' element={<UserDashboard/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
-      <Route path='/addcourse' element={<AddCourseCategory/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
-      <Route path='/addcertificate' element={<AddCertificate/>}/>
-      <Route path='/addbanner' element={<AddBanner/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>
-      <Route path='/addcoursedetail' element={<AddCourseDetails/>}/>
-      <Route path='/addcurriculum' element={<AddCurriculum/>}/>
-      <Route path='/addfaq' element={<AddFaq/>}/>
-      <Route path='/addregularvideo' element={<AddRegularVideos/>}/>
-      <Route path='/addresume' element={<AddResume/>}/>
-      <Route path='/addreview' element={<AddReview/>}/>
-      <Route path='/addschedule' element={<AddSchedule/>}/>
-      <Route path='/addvideo' element={<Addvideo/>}/>
-      <Route path='/addvideoaccess' element={<AddVideoAccess/>}/>
       <Route path='/Courseschedule' element={<CourseSchedule/>}/>
       <Route path='/corporatecourses' element={<CorporateCourses />} />
       <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>
       <Route path='/privacy' element={<Privacy/>}/>
-  
-      </Routes></BrowserRouter>
- 
+      </Routes>
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

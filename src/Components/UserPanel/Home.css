@@ -433,14 +433,16 @@ background-color: #EA4335;
   background-color: #006489;
   }
 
-  .d-block{
-    max-height: 470px;
+  .banner-img{
+    height: 450px;
+    width: 100%;
     }
 
 .association{
 display: flex;
 justify-content: center;
 align-items: center;
+text-align: center;
 margin: 20px;
 }
 .association-head{
@@ -685,7 +687,6 @@ text-align: center;
 .card-date {
   text-align: left;
   flex: 1;
-  
   font-weight: 600;
 }
 
@@ -693,6 +694,12 @@ text-align: center;
   text-align: right;
   flex: 1;
   font-weight: 600;
+}
+
+.more-schedules{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-container {
@@ -720,6 +727,16 @@ text-align: center;
   border-radius: 10px;
   border: 1px solid #ccc;
   min-width: 150px;
+  outline-color: #00AEEF;
+}
+
+.all-courses
+{
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-width:500px;
   outline-color: #00AEEF;
 }
 
@@ -1301,7 +1318,7 @@ gap:1vh;
       justify-content: center;
   }
 
-  .d-block{
+  .banner-img{
     max-height: 450px;
     }
   
@@ -2298,6 +2315,14 @@ display: none !important; /* Hide the normal navbar items on mobile */
   min-width: 100px;
 }
 
+.all-courses
+{
+  padding: 3px 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  min-width:200px;
+}
+
 .coupon-btn, .register-now-btn {
 font-size: 10px;
 padding: 2px 5px;
@@ -2313,7 +2338,7 @@ border-radius: 20px;
   white-space: nowrap;
   }
 
-.d-block{
+.banner-img{
 height: 130px;
 }
 
@@ -2348,8 +2373,14 @@ width: 120px;
 height: 100%;
 }
 
+.card-date, .time {
+ margin-bottom: 2px;
+}
+
 .enroll-btn{
-display: none;
+  padding: 3px 8px;
+  font-size:12px;
+  border-radius: 5px;
 }
 
 .view-btn{

@@ -9,7 +9,6 @@ const Trending = () => {
   const navigate = useNavigate();
   const [trendingCourses, setTrendingCourses] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -17,12 +16,18 @@ const Trending = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        
+        // Fetch trending courses
         const trendingResponse = await axios.get('/HachionUserDashboad/trendingcourse');
         const trendingData = trendingResponse.data || [];
+  
+        // Filter courses with status: true
         const activeTrendingCourses = trendingData.filter(course => course.status);
+  
+        // Fetch all courses to get detailed information
         const allCoursesResponse = await axios.get('/HachionUserDashboad/courses/all');
         const allCourses = allCoursesResponse.data || [];
+  
+        // Map active trending courses to include detailed info
         const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
           const courseDetails = allCourses.find(course => course.courseName === trendingCourse.course_name);
           return {
@@ -31,6 +36,7 @@ const Trending = () => {
           };
         });
   
+        // Extract unique categories from the active trending courses
         const uniqueCategories = [
           'All',
           ...new Set(detailedTrendingCourses.map(course => course.category_name)),

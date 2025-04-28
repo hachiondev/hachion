@@ -12,18 +12,17 @@ import CorporateTrainingFeature from './CorporateTrainingFeature';
 import Learners from './Learners';
 import Advisor from './Advisor';
 import { FaArrowUp } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 const CorporateTraining = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const advisorRef = useRef(null); // Create a ref for Advisor
-
   const scrollToAdvisor = () => {
     if (advisorRef.current) {
       advisorRef.current.scrollIntoView({ behavior: 'smooth' }); // Scroll to Advisor section smoothly
     }
   };
 
-  // Handle Scroll - Show/Hide Button
     useEffect(() => {
       const handleScroll = () => {
         if (window.scrollY > 300) {
@@ -43,6 +42,16 @@ const CorporateTraining = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const location = useLocation();
+
+useEffect(() => {
+  if (location.state?.scrollToAdvisor) {
+    setTimeout(() => {
+      scrollToAdvisor();
+    }, 100);
+  }
+}, [location.state]);
+
   return (
     <>
       <Topbar />
@@ -54,14 +63,13 @@ const CorporateTraining = () => {
         <CustomizeTraining />
         <LeadingExpert />
         <CorporateTrainingFeature />
-        <Learners page="corporate" />
+        <Learners />
         <div ref={advisorRef}>
           <Advisor /> {/* Set the ref to Advisor component */}
         </div>
       </div>
       <Footer />
 
-      {/* Scroll to Top Button */}
             {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />

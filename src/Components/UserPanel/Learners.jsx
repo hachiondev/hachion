@@ -85,7 +85,7 @@ const Learners = ({ page }) => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `proxy/${review.user_image}` : ""}
+                    profileImage={review.user_image ? `/HachionUserDashboad/${review.user_image}` : ""}
                     onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
                   />
                 ))}

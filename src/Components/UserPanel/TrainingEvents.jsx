@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import TrainingCard from "./TrainingCard";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+
 
 const TrainingEvents = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const TrainingEvents = () => {
 
   const [courseOptions, setCourseOptions] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  // ✅ Get user's timezone
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
@@ -62,47 +65,71 @@ const TrainingEvents = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
+  
+    // Force date to be parsed as local
+    const parts = dateString.split("-");
+    const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
-    }).format(new Date(dateString));
+    }).format(localDate);
   };
-
+  
   const getFilteredCourses = () => {
     const now = new Date();
-
-    return mergedCourses.filter((course) => {
+  
+    // Filter based on mode, course name, and time
+    const filtered = mergedCourses.filter((course) => {
       const courseDate = new Date(course.schedule_date);
       const createdDate = new Date(course.created_at);
-
+  
       const isToday = courseDate.toDateString() === now.toDateString();
       const isThisWeek =
         (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
         courseDate > now;
       const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
-
+  
       const courseNameMatch =
         !courseFilter ||
         course.schedule_course_name?.toLowerCase().trim() ===
           courseFilter.toLowerCase().trim();
-
+  
       const modeMatch =
         !modeFilter ||
         course.schedule_mode?.toLowerCase().trim() ===
           modeFilter.toLowerCase().trim();
-
+  
       const timeMatch =
         !timeFilter ||
         (timeFilter === "today" && isToday) ||
         (timeFilter === "week" && isThisWeek) ||
         (timeFilter === "new" && isNewlyAdded);
-
+  
       return courseNameMatch && modeMatch && timeMatch;
     });
+  
+    // Group by course name
+    const grouped = {};
+    filtered.forEach((item) => {
+      const key = item.schedule_course_name.trim().toLowerCase();
+      if (!grouped[key]) {
+        grouped[key] = {
+          ...item,
+          sessions: [],
+        };
+      }
+      grouped[key].sessions.push({
+        date: item.schedule_date,
+        time: item.schedule_time,
+      });
+    });
+  
+    return Object.values(grouped);
   };
- 
-
+  
+  
   useEffect(() => {
     setFilteredCourses([]); // Reset state
     setTimeout(() => {
@@ -116,9 +143,12 @@ const TrainingEvents = () => {
     setTimeFilter("");
   };
 
+  // Event handlers for dropdown changes
   const handleCourseChange = (e) => setCourseFilter(e.target.value);
   const handleModeChange = (e) => setModeFilter(e.target.value);
   const handleTimeChange = (e) => setTimeFilter(e.target.value);
+
+  //console.log(filteredCourses);
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
@@ -139,14 +169,33 @@ const TrainingEvents = () => {
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <select value={courseFilter} onChange={handleCourseChange}>
+          <input 
+type="text"
+className="all-courses"
+placeholder="All Courses"
+value={courseFilter}
+onChange={handleCourseChange}
+list="course-options"
+/>
+
+<datalist id="course-options">
+{courseOptions
+.filter((course) =>
+  course.toLowerCase().includes(courseFilter.toLowerCase())
+)
+.map((course, idx) => (
+  <option key={idx} value={course} />
+))}
+</datalist>
+
+          {/* <select value={courseFilter} onChange={handleCourseChange}>
             <option value="">All Courses</option>
             {courseOptions.map((course, idx) => (
               <option key={idx} value={course}>
                 {course}
               </option>
             ))}
-          </select>
+          </select> */}
 
           <select value={timeFilter} onChange={handleTimeChange}>
             <option value="">Any Time</option>
@@ -166,25 +215,24 @@ const TrainingEvents = () => {
           (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
             (course, index) => (
               <TrainingCard
-                key={course.course_id || index}
-                id={course.course_id}
-                heading={course.schedule_course_name}
-                image={
-                  course.course_image
-                    ? `/HachionUserDashboad/${course.course_image}`
-                    : ""
-                }
-                date={
-                  course.schedule_date ? formatDate(course.schedule_date) : ""
-                }
-                time={course.schedule_time || ""}
-                duration={
-                  course.schedule_duration
-                    ? `Duration: ${course.schedule_duration}`
-                    : ""
-                }
-                mode={course.schedule_mode || ""}
-              />
+  key={course.course_id || index}
+  id={course.course_id}
+  heading={course.schedule_course_name}
+  image={
+    course.course_image
+      ? `/HachionUserDashboad/${course.course_image}`
+      : ""
+  }
+  date={course.schedule_date ? formatDate(course.schedule_date) : ""}
+  time={course.schedule_time || ""}
+  duration={
+    course.schedule_duration
+      ? `Duration: ${course.schedule_duration}`
+      : ""
+  }
+  mode={course.schedule_mode || ""}
+  scheduleCount={course.sessions?.length || 0} // 👈 Pass count here
+/>                  
             )
           )
         ) : (

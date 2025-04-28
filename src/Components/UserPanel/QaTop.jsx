@@ -8,29 +8,24 @@ import { BsFillPlayCircleFill } from 'react-icons/bs';
 import './Course.css';
 import loginPopupImg from '../../Assets/loginpopup.png';
 import logo from '../../Assets/logo.png';
+import truncate from 'html-truncate';
 
 const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
   const navigate = useNavigate();
-
+  const [curriculum, setCurriculum] = useState([]);
   const [course, setCourse] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [videoPopupOpen, setVideoPopupOpen] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
   const modalRef = useRef(null);
-
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-
-  const isLoggedIn = localStorage.getItem('authToken');
-
   const [currency, setCurrency] = useState('USD');
   const [exchangeRate, setExchangeRate] = useState(1);
 
-  
   useEffect(() => {
     const fetchGeolocationData = async () => {
       try {
@@ -55,12 +50,14 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
           'KR': 'KRW',
           'BR': 'BRL',
           'MX': 'MXN',
-          'ZA': 'ZAR'
+          'ZA': 'ZAR',
+          'NL': 'EUR'
         };
         
         const countryCode = geoResponse.data.country?.toUpperCase() || 'US';
         const userCurrency = currencyMap[countryCode] || 'USD';
-      
+         
+        console.log('Detected Currency:', userCurrency);
         setCurrency(userCurrency);
   
         // Fetch Exchange Rate
@@ -140,29 +137,54 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     fetchCourse();
   }, [courseName]);
 
+    useEffect(() => {
+      if (!matchedCourseName) return;
+  
+      const fetchCurriculum = async () => {
+        try {
+          const response = await axios.get('/HachionUserDashboad/curriculum');
+          const filteredCurriculum = response.data.filter(
+            (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
+          );
+          setCurriculum(filteredCurriculum);
+        } catch (error) {
+          console.error('Error fetching Curriculum:', error.message);
+          setError('Failed to load Curriculum.');
+        }
+      };
+  
+      fetchCurriculum();
+    }, [matchedCourseName]);
+
   // Download Curriculum
   const downloadPdf = () => {
     const token = localStorage.getItem('authToken');
 
     if (!token) {
       showLoginModal();
-      return;
+      return; // Prevent proceeding to download
     }
-
-    if (!pdfUrl) {
+  
+    if (!curriculum || curriculum.length === 0) {
       alert('No curriculum found for this course.');
       return;
     }
 
-    const fileName = pdfUrl.split('/').pop();
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.target = '_blank';
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    const userData = JSON.parse(localStorage.getItem('loginuserData'));
+    if (!userData) {
+      showLoginModal(); // Show login modal if user not logged in
+      return;
+    }
+  
+    const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
+    if (curriculumWithPdf) {
+      const fileName = curriculumWithPdf.curriculum_pdf.split('/').pop();
+      const fullPdfUrl = `/HachionUserDashboad/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      alert('No brochure available for this course.');
+    }
+  }; 
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -189,7 +211,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             <div className='top-course-data-mob'>
               <h3 className='top-course-name'>{course?.courseName}</h3>
               <h4 className='top-course-name-mob'>{course?.courseName}</h4>
-              <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p>
+              {/* <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p> */}
             </div>
             <div className='qa-automation-left'>
               <img src={`/HachionUserDashboad/${course.courseImage}`} alt='qa-image' />
@@ -205,11 +227,17 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
                 </h6>
               </div>
             </div>
-            <div className="qa-content" dangerouslySetInnerHTML={{ __html: course.courseHighlight.trim() }} />
+            <div
+                className='qa-content'
+                dangerouslySetInnerHTML={{
+                  __html: truncate(course.courseHighlight, 360, { ellipsis: '...' })
+                }}
+              />
+            <p className='cert'>{course.totalEnrollment}+ Certified Students</p>
           </div>
 
           <div className='qa-right'>
-            <p className='certified'>Certified-students: {course.totalEnrollment}</p>
+            {/* <p className='certified'>Certified-students: {course.totalEnrollment}</p> */}
             <div className="qa-video-container">
               <img src={qaheader} alt='video-frame' className="qa-video-image" />
               {course.youtubeLink && (
@@ -233,6 +261,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         {/* Buttons Section */}
         <div className='qa-button-container'>
           <div className='qa-button'>
+          <p className='mob-cert'>{course.totalEnrollment}+ Certified Students</p>
             <button className='enroll-now' onClick={onEnrollButtonClick}>Enroll Now</button>
             <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>
@@ -242,6 +271,8 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
           </button>
         </div>
       </div>
+
+      {/* Video Modal Popup */}
       {videoPopupOpen && selectedVideoUrl && (
         <div className="video-modal-overlay" onClick={() => setVideoPopupOpen(false)}>
           <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>

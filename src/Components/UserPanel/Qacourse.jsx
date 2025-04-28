@@ -36,6 +36,7 @@ const { courseName } = useParams(); // Extract course_id from URL params
     <div className='qa-course'>
         <div className='qa-course-heading'>
  <h1 className='qa-heading'> About {course.courseName}</h1>
+
  <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course?.courseDescription?.trim() || "" }} />
         </div>
     </div>
@@ -43,3 +44,4 @@ const { courseName } = useParams(); // Extract course_id from URL params
 }
 
 export default Qacourse
+

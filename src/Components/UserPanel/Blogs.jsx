@@ -27,6 +27,7 @@ const Blogs = () => {
     fetchCategories();
   }, []);
   const navigate=useNavigate();
+
   const handleClick = (categoryName) => {
     const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
     navigate(`/blogs/${slug}`);

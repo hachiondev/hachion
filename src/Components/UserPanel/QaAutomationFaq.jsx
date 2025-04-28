@@ -25,12 +25,14 @@ const QaAutomationFaq = () => {
           localStorage.removeItem('redirectAfterLogin');
         }
       }, []);  
+
+  // Fetch course details to get the correct course_name
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
         const response = await axios.get('/HachionUserDashboad/courses/all');
-        console.log('API response:', response.data); 
+        console.log('API response:', response.data); // Check course data
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         console.log('Course name from URL:', courseNameFromUrl);
@@ -41,17 +43,26 @@ const QaAutomationFaq = () => {
     
         if (matchedCourse) {
           setMatchedCourseName(matchedCourse.courseName.trim());
-
-          const curriculumResponse = await axios.get('/HachionUserDashboad/faq');
-          const matchedCurriculum = curriculumResponse.data.find(
+          console.log('Matched Course:', matchedCourse);
+    
+          // Fetch faq details
+          const faqResponse = await axios.get('/HachionUserDashboad/faq');
+          console.log('faq API response:', faqResponse.data); // Log the faq data
+    
+          // Normalize both names for reliable comparison
+          const matchedfaq = faqResponse.data.find(
             (item) => item.course_name?.trim().toLowerCase() === matchedCourse.courseName.trim().toLowerCase()
           );
   
-          if (matchedCurriculum && matchedCurriculum.faq_pdf) {
-            const fullPdfUrl = `/HachionUserDashboad/faq/${matchedCurriculum.faq_pdf}`; // Ensure full URL
+          console.log('Matched faq:', matchedfaq); // Debugging log
+  
+          // Set the PDF URL if found
+          if (matchedfaq && matchedfaq.faq_pdf) {
+            const fullPdfUrl = `/HachionUserDashboad/faq/${matchedfaq.faq_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
+            console.log('PDF URL Set:', fullPdfUrl);
           } else {
-    
+            console.log('No PDF found in FAQ for this course');
             setError('No PDF found in FAQ for this course.');
           }
         } else {
@@ -93,10 +104,12 @@ const QaAutomationFaq = () => {
     console.log('PDF URL:', pdfUrl); // Log pdfUrl whenever it changes
   }, [pdfUrl]);
 
+  // Toggle View More / View Less
   const handleViewMore = () => {
     setShowMore(!showMore);
   };
 
+  // Toggle individual FAQ expansion
   const handleToggleExpand = (index) => {
     setExpandedTopics((prevState) => ({
       ...prevState,
@@ -104,7 +117,7 @@ const QaAutomationFaq = () => {
     }));
   };
 
- 
+  // Render FAQ topics
   const renderTopics = () => {
     const visibleFaq = showMore ? faq : faq.slice(0, 5);
 
@@ -145,14 +158,22 @@ const downloadPdf = () => {
     return;
   }
 
-  const curriculumWithPdf = faq.find(item => item.faq_pdf);
+  const userData = JSON.parse(localStorage.getItem('loginuserData'));
+  if (!userData) {
+    showLoginModal();
+    return;
+  }
 
-  if (curriculumWithPdf) {
-    const pdfUrl = `/HachionUserDashboad/faq/${curriculumWithPdf.faq_pdf}`;
+  // Search for the first faq entry with a valid PDF URL
+  const faqWithPdf = faq.find(item => item.faq_pdf);
 
+  if (faqWithPdf) {
+    const pdfUrl = `/HachionUserDashboad/faq/${faqWithPdf.faq_pdf}`;
+
+    // Trigger download
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.setAttribute('download', curriculumWithPdf.faq_pdf.split('/').pop());
+    link.setAttribute('download', faqWithPdf.faq_pdf.split('/').pop());
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

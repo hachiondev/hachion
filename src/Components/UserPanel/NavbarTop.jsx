@@ -10,6 +10,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from 'react-icons/io5';
 import './Home.css';
+import axios from 'axios';
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -20,6 +21,78 @@ const NavbarTop = () => {
   const navigate = useNavigate();
   const drawerRef = useRef(null); // Reference to the drawer for click detection
    const [userData, setUserData] = useState(null);
+   const [searchQuery, setSearchQuery] = useState('');
+   const [courses, setCourses] = useState([]);
+   const [searchResults, setSearchResults] = useState([]);
+   const [blogs, setBlogs] = useState([]);
+
+ 
+   // Helper function to format course name for the URL
+   const formatCourseName = (courseName) => {
+     return courseName
+       .toLowerCase()
+       .replace(/\s+/g, '-') // Replace spaces with hyphens
+       // Remove any non-alphanumeric characters
+   };
+ 
+   useEffect(() => {
+    const fetchCoursesAndBlogs = async () => {
+      try {
+        const [coursesRes, blogsRes] = await Promise.all([
+          axios.get('/HachionUserDashboad/courses/all'),
+          axios.get('/HachionUserDashboad/blog'),
+        ]);
+  
+        setCourses(coursesRes.data);
+        setBlogs(blogsRes.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchCoursesAndBlogs();
+  }, []);
+  
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+  
+    if (query.trim() === '') {
+      setSearchResults([]);
+      return;
+    }
+  
+    const filteredCourses = courses.filter(course =>
+      course.courseName?.toLowerCase().includes(query.toLowerCase())
+    );
+  
+    const filteredBlogs = blogs.filter(blog =>
+      blog.title?.toLowerCase().includes(query.toLowerCase()) ||
+      blog.category_name?.toLowerCase().includes(query.toLowerCase())
+    );
+  
+    const combinedResults = [
+      ...filteredCourses.map(course => ({ ...course, type: 'course' })),
+      ...filteredBlogs.map(blog => ({ ...blog, type: 'blog' })),
+    ];
+  
+    setSearchResults(combinedResults);
+  };
+  
+  
+  
+   // Navigate to the course details page when a course card is clicked
+   const handleCourseClick = (item) => {
+    if (item.type === 'course') {
+      const formattedCourseName = formatCourseName(item.courseName);
+      navigate(`/courseDetails/${formattedCourseName}`);
+    } else if (item.type === 'blog') {
+      const formattedCategory = item.category_name.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/blogs/${formattedCategory}/content`);
+    }
+  };
+  
+ 
   
    useEffect(() => {
     console.log("Checking localStorage for user data...");
@@ -108,6 +181,8 @@ const NavbarTop = () => {
                 className="search-input-home"
                 type="search"
                 placeholder="Enter Courses, Category or Keywords"
+                value={searchQuery}
+                onChange={handleSearchChange}
                 aria-label="Search"
               />
               <button className="btn-search-home">
@@ -121,6 +196,8 @@ const NavbarTop = () => {
                 type="search"
                 placeholder="Enter Courses, Category or Keywords"
                 aria-label="Search"
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
               <button className="btn-search-mobile">
                 <IoSearch className="search-icon" />
@@ -132,6 +209,7 @@ const NavbarTop = () => {
                 <MdCancel />
               </button>
             </div>
+          
           ) : (
             <button
               className="btn-search-icon-mobile"
@@ -147,6 +225,46 @@ const NavbarTop = () => {
             </button>
           )}
         </div>
+        {searchResults.length > 0 && (
+  <div className="search-results" style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10 }}>
+    {searchResults.map(item => (
+      <div
+        key={item.id}
+        className="result-card"
+        onClick={() => handleCourseClick(item)}
+        style={{
+          cursor: 'pointer',
+          border: '1px solid #ccc',
+          padding: '10px',
+          margin: '5px auto',
+          width: '35%',
+          borderRadius: '5px',
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <p style={{ fontWeight: 'bold' }}>{item.type === 'course' ? item.courseName : item.title}</p>
+            <p style={{ color: '#555' }}>{item.type === 'course' ? item.courseCategory : item.category_name}</p>
+          </div>
+          <div>
+          <img
+  src={
+    item.type === 'course'
+      ? `/HachionUserDashboad/${item.courseImage}`
+      : `/blogs/${item.blog_image}`
+  }
+  alt={item.type === 'course' ? 'course' : 'blog'}
+  style={{ height: '40px', width: '60px', objectFit: 'cover' }}
+/>
+
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* Drawer content, only visible when isDrawerOpen is true */}
         {isDrawerOpen && (

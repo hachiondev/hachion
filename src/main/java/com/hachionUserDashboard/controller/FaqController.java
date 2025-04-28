@@ -435,20 +435,19 @@ public class FaqController {
 	private final String uploadDir = System.getProperty("user.home") + "/uploads/faq/";
 
 	private String saveFile(MultipartFile file, String subFolder) throws IOException {
-		if (file != null && !file.isEmpty()) {
+	    if (file != null && !file.isEmpty()) {
+	        System.out.println("Saving file: " + file.getOriginalFilename());
+	        File directory = new File(uploadDir + subFolder);
+	        if (!directory.exists()) {
+	            directory.mkdirs();
+	        }
 
-			File directory = new File(uploadDir + subFolder);
-			if (!directory.exists()) {
-				directory.mkdirs();
-			}
-
-			Path filePath = Paths.get(directory.getAbsolutePath(), file.getOriginalFilename());
-			Files.write(filePath, file.getBytes());
-			return subFolder + "/" + file.getOriginalFilename();
-		}
-		return null;
+	        Path filePath = Paths.get(directory.getAbsolutePath(), file.getOriginalFilename());
+	        Files.write(filePath, file.getBytes());
+	        return subFolder + "/" + file.getOriginalFilename();
+	    }
+	    return null;
 	}
-
 	@PostMapping("faq/add")
 	public ResponseEntity<String> addFaq(@RequestPart("faqData") String faqData,
 			@RequestPart(value = "faqPdf", required = false) MultipartFile faqPdf) {

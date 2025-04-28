@@ -191,6 +191,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -251,7 +252,6 @@ public class BlogsController {
 		}
 		return null;
 	}
-
 	@PostMapping("blog/add")
 	public ResponseEntity<String> addBlog(
 	        @RequestPart("blogData") String blogData,
@@ -262,7 +262,6 @@ public class BlogsController {
 	        objectMapper.registerModule(new JavaTimeModule());
 	        Blogs blog = objectMapper.readValue(blogData, Blogs.class);
 
-	        // Save image if provided
 	        if (blogImage != null && !blogImage.isEmpty()) {
 	            String imagePath = saveFile(blogImage, "images");
 	            if (imagePath != null) {
@@ -271,22 +270,26 @@ public class BlogsController {
 	                return ResponseEntity.badRequest().body("Failed to save image.");
 	            }
 	        } else {
-	            blog.setBlog_image(""); // Set empty string if not provided
+	            blog.setBlog_image("");
 	        }
 
-	        // Save PDF if provided
 	        if (blogPdf != null && !blogPdf.isEmpty()) {
-	            String pdfPath = saveFile(blogPdf, "pdfs");
-	            if (pdfPath != null) {
-	                blog.setBlog_pdf(pdfPath);
+	            String pdfPath = "pdfs/" + blogPdf.getOriginalFilename();
+	            Optional<Blogs> existingPdf = repo.findByExactPdfName(pdfPath);
+	            if (existingPdf.isPresent()) {
+	                return ResponseEntity.badRequest().body("PDF already exists in the database.");
+	            }
+
+	            String savedPdfPath = saveFile(blogPdf, "pdfs");
+	            if (savedPdfPath != null) {
+	                blog.setBlog_pdf(savedPdfPath);
 	            } else {
 	                return ResponseEntity.badRequest().body("Failed to save PDF.");
 	            }
 	        } else {
-	            blog.setBlog_pdf(""); // Set empty string if not provided
+	            blog.setBlog_pdf("");
 	        }
 
-	        // Save blog to DB
 	        repo.save(blog);
 	        return ResponseEntity.status(HttpStatus.CREATED).body("Blog added successfully.");
 	    } catch (Exception e) {
@@ -294,6 +297,45 @@ public class BlogsController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding blog: " + e.getMessage());
 	    }
 	}
+
+
+//	@PostMapping("blog/add")
+//	public ResponseEntity<String> addBlog(
+//	        @RequestPart("blogData") String blogData,
+//	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+//	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+//	    try {
+//	        ObjectMapper objectMapper = new ObjectMapper();
+//	        objectMapper.registerModule(new JavaTimeModule());
+//	        Blogs blog = objectMapper.readValue(blogData, Blogs.class);
+//
+//	        if (blogImage != null && !blogImage.isEmpty()) {
+//	            String imagePath = saveFile(blogImage, "images");
+//	            if (imagePath != null) {
+//	                blog.setBlog_image(imagePath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save image.");
+//	            }
+//	        } else {
+//	            blog.setBlog_image(""); // Set empty string if not provided
+//	        }
+//	        if (blogPdf != null && !blogPdf.isEmpty()) {
+//	            String pdfPath = saveFile(blogPdf, "pdfs");
+//	            if (pdfPath != null) {
+//	                blog.setBlog_pdf(pdfPath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save PDF.");
+//	            }
+//	        } else {
+//	            blog.setBlog_pdf(""); 
+//	        }
+//	        repo.save(blog);
+//	        return ResponseEntity.status(HttpStatus.CREATED).body("Blog added successfully.");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding blog: " + e.getMessage());
+//	    }
+//	}
 
 	@PutMapping("/blog/update/{id}")
 	public ResponseEntity<?> updateBlogs(

@@ -2822,3 +2822,124 @@ to{
     transform: translateX(-100%);
 }
 }
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-left: 33%;
+  padding: 0;
+  width: 35%;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.result-card {
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  background-color: #fff;
+  transition: background 0.2s ease-in-out;
+}
+
+.result-card:hover {
+  background-color: rgba(0, 174, 239, 1);
+}
+.result-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Title */
+.result-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Subtitle */
+.result-subtitle {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+/* Image */
+.result-image {
+  height: 40px;
+  max-width: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* No Results */
+.no-results {
+ padding: 10px;
+  text-align: center;
+  color: black;
+  background-color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) and ( min-width: 480px) {
+  .search-results {
+    position: absolute;
+    top: 110px; /* below navbar */
+    left: 0;
+    width: 70%;
+  
+    max-height: 50vh;
+    margin-left: 2%;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: white;
+    padding: 5px;
+    z-index: 1000;
+  }
+
+  .result-card {
+    padding: 8px;
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .result-image {
+display: none !important; 
+  }
+
+.result-title{
+  font-size: 0.8rem;
+}
+  .result-card:hover {
+    background-color: rgba(0, 174, 239, 1);
+  }
+}
+  @media (max-width: 480px)  {
+    .search-results {
+      position: absolute;
+      top: 50px; /* below navbar */
+      left: 0;
+      width: 75%;
+      max-height: 35vh;
+      padding: 0px !important;
+      margin: 0px;
+      margin-left: 5%;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      background-color: white;
+      z-index: 1000;
+    }
+    .result-title{
+      font-size: 0.6rem;
+    }
+    .result-image {
+      display: none !important;
+    }
+    .result-card:hover {
+      background-color: rgba(0, 174, 239, 1);
+    }
+}

@@ -17,14 +17,14 @@ const Trending = () => {
     const fetchTrendingCourses = async () => {
       try {
         // Fetch trending courses
-        const trendingResponse = await axios.get('/HachionUserDashboad/trendingcourse');
+        const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
         const trendingData = trendingResponse.data || [];
   
         // Filter courses with status: true
         const activeTrendingCourses = trendingData.filter(course => course.status);
   
         // Fetch all courses to get detailed information
-        const allCoursesResponse = await axios.get('/HachionUserDashboad/courses/all');
+        const allCoursesResponse = await axios.get('https://api.hachion.co/courses/all');
         const allCourses = allCoursesResponse.data || [];
   
         // Map active trending courses to include detailed info
@@ -129,7 +129,7 @@ const Trending = () => {
             heading={course.courseName}
             month={course.numberOfClasses}
             time={course.liveTrainingHours}
-            image={`/HachionUserDashboad/${course.courseImage}`}
+            image={`https://api.hachion.co/${course.courseImage}`}
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}

@@ -129,7 +129,7 @@ export default function Support() {
   useEffect(() => {
     const fetchSupport = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/support");
+        const response = await axios.get("https://api.hachion.co/support");
         setSupport(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching support:", error.message);
@@ -159,7 +159,7 @@ export default function Support() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/support/update/${editedData.support_id}`,
+        `https://api.hachion.co/support/update/${editedData.support_id}`,
         editedData
       );
       setSupport((prev) =>
@@ -178,7 +178,7 @@ export default function Support() {
   const handleDelete = async (support_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/support/delete/${support_id}`
+        `https://api.hachion.co/support/delete/${support_id}`
       );
       console.log("Support deleted successfully:", response.data);
     } catch (error) {
@@ -223,7 +223,7 @@ export default function Support() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/support/add",
+        "https://api.hachion.co/support/add",
         dataToSubmit
       );
       if (response.status === 200) {

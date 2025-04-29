@@ -71,7 +71,6 @@ export default function Review() {
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [catChange, setCatChange] = useState(0);
   const [selectedRow, setSelectedRow] = useState({
     category_name: "",
     course_name: "",
@@ -175,15 +174,6 @@ export default function Review() {
       ...prev,
       [name]: value, // Updates the corresponding field
     }));
-    if (name === "category_name") {
-      // alert(name);
-      // alert(value);
-      setCatChange(1);
-      const filtered = courseCategory.filter(
-        (course) => course.courseCategory === value
-      );
-      setFilterCourse(filtered);
-    }
   };
 
   const handleClose = () => {
@@ -192,7 +182,7 @@ export default function Review() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -203,7 +193,7 @@ export default function Review() {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/userreview");
+        const response = await axios.get("https://api.hachion.co/userreview");
         const filteredReviews = response.data.filter(
           (review) => review.type === true
         );
@@ -262,7 +252,7 @@ export default function Review() {
       }
 
       const response = await axios.put(
-        `http://localhost:8080/userreview/update/${editedData.review_id}`,
+        `https://api.hachion.co/userreview/update/${editedData.review_id}`,
         formData,
         {
           headers: {
@@ -290,7 +280,7 @@ export default function Review() {
   const handleDelete = async (review_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/userreview/delete/${review_id}`
+        `https://api.hachion.co/userreview/delete/${review_id}`
       );
       console.log("Review deleted successfully:", response.data);
     } catch (error) {
@@ -350,7 +340,7 @@ export default function Review() {
   //   }
   //     try {
   //         const response = await axios.post(
-  //             "http://localhost:8080/userreview/add",
+  //             "https://api.hachion.co/userreview/add",
   //             formData,
   //             {
   //                 headers: {
@@ -396,7 +386,7 @@ export default function Review() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/userreview/add",
+        "https://api.hachion.co/userreview/add",
         formData,
         {
           headers: {
@@ -431,7 +421,7 @@ export default function Review() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -938,22 +928,11 @@ export default function Review() {
                 <option value="" disabled>
                   Select Course
                 </option>
-                {catChange
-                  ? filterCourse.map((curr) => (
-                      <option key={curr.id} value={curr.courseName}>
-                        {curr.courseName}
-                      </option>
-                    ))
-                  : courseCategory.map((curr) => (
-                      <option key={curr.id} value={curr.courseName}>
-                        {curr.courseName}
-                      </option>
-                    ))}
-                {/* {courseCategory.map((curr) => (
+                {courseCategory.map((curr) => (
                   <option key={curr.id} value={curr.courseName}>
                     {curr.courseName}
                   </option>
-                ))} */}
+                ))}
               </select>
             </div>
           </div>

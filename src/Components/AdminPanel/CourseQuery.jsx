@@ -16,7 +16,6 @@ import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AdminPagination from "./AdminPagination";
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#00AEEF",
@@ -28,7 +27,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: "1px solid #e0e0e0",
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -37,60 +35,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 export default function CourseQuery() {
   const [courseQuery, setCourseQuery] = useState([]);
-  const [startDate, setStartDate] = useState([]);
-  const [endDate, setEndDate] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCourse, setFilteredCourse] = useState([]);
   const [message, setMessage] = useState(false);
-
   useEffect(() => {
     const fetchCourseQuery = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/haveanyquery");
+        const response = await axios.get("https://api.hachion.co/haveanyquery");
         setCourseQuery(response.data);
-        setFilteredCourse(response.data); // Initialize filtered data
+        setFilteredCourse(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error.message);
+        console.error("Error fetching course queries:", error);
       }
     };
     fetchCourseQuery();
   }, []);
-
   const handleDateFilter = () => {
     const filtered = courseQuery.filter((item) => {
-      const Date = new Date(item.date); // Parse the date field
+      const date = new Date(item.date);
       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-
-      return (!start || Date >= start) && (!end || Date <= end);
+      return (!start || date >= start) && (!end || date <= end);
     });
-
-    setCourseQuery(filtered);
+    setFilteredCourse(filtered);
   };
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  // Inside your WorkshopCategory component
-
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
-    setCurrentPage(1); // Reset to the first page whenever rows per page changes
+    setCurrentPage(1);
   };
-
-  // Slice filteredCourse based on rowsPerPage and currentPage
   const displayedCategories = filteredCourse.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
-
   return (
     <>
       <div>
@@ -103,7 +89,7 @@ export default function CourseQuery() {
               <div className="date-schedule">
                 Start Date
                 <DatePicker
-                  selected={startDate}
+                  value={startDate}
                   onChange={(date) => setStartDate(date)}
                   isClearable
                   sx={{
@@ -112,7 +98,7 @@ export default function CourseQuery() {
                 />
                 End Date
                 <DatePicker
-                  selected={endDate}
+                  value={endDate}
                   onChange={(date) => setEndDate(date)}
                   isClearable
                   sx={{
@@ -234,7 +220,7 @@ export default function CourseQuery() {
                 ))
               ) : (
                 <StyledTableRow>
-                  <StyledTableCell colSpan={6} align="center">
+                  <StyledTableCell colSpan={8} align="center">
                     No Data Available
                   </StyledTableCell>
                 </StyledTableRow>
@@ -242,8 +228,6 @@ export default function CourseQuery() {
             </TableBody>
           </Table>
         </TableContainer>
-
-        {/* Pagination */}
         <div className="pagination-container">
           <AdminPagination
             currentPage={currentPage}

@@ -143,7 +143,7 @@ export default function Trainer() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/trainer/add",
+        "https://api.hachion.co/trainer/add",
         trainerData
       );
 
@@ -181,7 +181,7 @@ export default function Trainer() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/trainers");
+        const response = await axios.get("https://api.hachion.co/trainers");
         setTrainers(response.data);
         setFilteredTrainers(response.data);
       } catch (error) {
@@ -221,7 +221,7 @@ export default function Trainer() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -233,7 +233,7 @@ export default function Trainer() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -254,7 +254,7 @@ export default function Trainer() {
   const handleDelete = async (trainer_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/trainer/delete/${trainer_id}`
+        `https://api.hachion.co/trainer/delete/${trainer_id}`
       );
       console.log("Trainer deleted successfully:", response.data);
     } catch (error) {
@@ -280,7 +280,7 @@ export default function Trainer() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/trainer/update/${selectedRow.trainer_id}`,
+        `https://api.hachion.co/trainer/update/${selectedRow.trainer_id}`,
         editedRow
       );
 

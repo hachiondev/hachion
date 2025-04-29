@@ -56,7 +56,7 @@
   /* margin-top: 1.25px; */
   /* margin-right: 1px; */
   border: none;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .admin-nav-middle {
@@ -69,8 +69,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 30vw;
-  gap: 2vw;
+  margin-left: 25vw;
+  gap: 20px;
 }
 
 .icon-container {
@@ -82,6 +82,11 @@
   justify-content: center;
   align-items: center;
   margin-left: 0.5vw;
+}
+
+.admin-icon {
+  color: #00aeef;
+  font-size: 20px;
 }
 
 .user-info {
@@ -104,7 +109,7 @@
 }
 
 .btn-logout {
-  background-color: #00aeef;
+  background-color: transparent;
   color: white;
   font-size: 1.5rem;
   font-weight: 600;
@@ -140,7 +145,7 @@
 }
 /* Sidebar when collapsed */
 .sidebar-admin.collapsed {
-  width: 100px; /* Sidebar width when collapsed */
+  width: 80px; /* Sidebar width when collapsed */
 }
 
 /* Toggle button for collapsing the sidebar */
@@ -154,7 +159,7 @@
   background: none;
   border: none;
   color: #ecf0f1;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -176,7 +181,7 @@
   justify-content: flex-start;
   /* background: linear-gradient(90deg, #006489 0%, #00AEEF 100%); */
   color: white;
-  font-size: 2rem;
+  font-size: 16px;
   font-weight: 600;
   text-align: center;
   padding: 2vh;
@@ -226,7 +231,7 @@
 .menu-item-admin {
   background: transparent;
   color: white;
-  width: 300px;
+  width: 280px;
   border: none;
   text-align: left;
   padding: 1.5vh;
@@ -240,7 +245,7 @@
   margin-right: 10px;
   color: white;
   margin-top: 5px;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 /* Hover effect on menu item */
@@ -257,6 +262,10 @@
   color: white;
   border-radius: 0px 30px 30px 0px;
   border: 1px solid white;
+}
+
+.menu-title {
+  font-size: 16px;
 }
 
 /* Sidebar collapsed state styles */
@@ -293,8 +302,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 230px;
-  height: 140px;
+  width: 200px;
+  height: 120px;
   border-radius: 20px;
   padding: 15px;
   box-shadow: 5px 5px 5px #d3d3d3;
@@ -342,6 +351,13 @@
   flex-direction: row;
   gap: 3vh;
 }
+.course-filter {
+  padding: 1.5vh;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 3vh;
+}
 .filter {
   /* width:4vw; */
   background-color: #00aeef;
@@ -351,6 +367,9 @@
   border: none;
   color: white;
   font-size: 1rem;
+}
+.resetfilter {
+  margin-top: 50px;
 }
 .btn-number {
   /* width: 3.5vw; */

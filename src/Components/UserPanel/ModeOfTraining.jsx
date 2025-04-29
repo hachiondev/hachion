@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import LiveOnlineTrainingMain from './LiveOnlineTrainingMain';
-import CorporateMode from './CorporateMode';
-import MentoringMode from './MentoringMode';
-import SelfPlaced from './SelfPlaced';
-import './Course.css';
+import React, { useState } from "react";
+import LiveOnlineTrainingMain from "./LiveOnlineTrainingMain";
+import CorporateMode from "./CorporateMode";
+import MentoringMode from "./MentoringMode";
+import SelfPlaced from "./SelfPlaced";
+import "./Course.css";
 
 const ModeOfTraining = () => {
-  const [selectedMode, setSelectedMode] = useState('LiveOnlineTraining'); // Default selected mode
+  const [selectedMode, setSelectedMode] = useState("LiveOnlineTraining"); // Default selected mode
 
   const renderComponent = () => {
     switch (selectedMode) {
-      case 'LiveOnlineTraining':
+      case "LiveOnlineTraining":
         return <LiveOnlineTrainingMain />;
-      case 'CorporateMode':
+      case "CorporateMode":
         return <CorporateMode />;
-      case 'MentoringMode':
+      case "MentoringMode":
         return <MentoringMode />;
-      case 'SelfPlaced':
+      case "SelfPlaced":
         return <SelfPlaced />;
       default:
         return <LiveOnlineTrainingMain />;
@@ -24,37 +24,43 @@ const ModeOfTraining = () => {
   };
 
   return (
-    <div className='mode-of-training'>
-      <h1 className='qa-heading'>Mode of Training</h1>
-      <div className='batch-type'>
+    <div className="mode-of-training">
+      <h1 className="qa-heading">Mode of Training</h1>
+      <div className="batch-type">
         <p
-          className={`batch-type-content ${selectedMode === 'LiveOnlineTraining' ? 'active' : ''}`}
-          onClick={() => setSelectedMode('LiveOnlineTraining')}
+          className={`batch-type-content ${
+            selectedMode === "LiveOnlineTraining" ? "active" : ""
+          }`}
+          onClick={() => setSelectedMode("LiveOnlineTraining")}
         >
           Live Online Training
         </p>
         <p
-          className={`batch-type-content ${selectedMode === 'CorporateMode' ? 'active' : ''}`}
-          onClick={() => setSelectedMode('CorporateMode')}
+          className={`batch-type-content ${
+            selectedMode === "CorporateMode" ? "active" : ""
+          }`}
+          onClick={() => setSelectedMode("CorporateMode")}
         >
           Corporate Training
         </p>
         <p
-          className={`batch-type-content ${selectedMode === 'MentoringMode' ? 'active' : ''}`}
-          onClick={() => setSelectedMode('MentoringMode')}
+          className={`batch-type-content ${
+            selectedMode === "MentoringMode" ? "active" : ""
+          }`}
+          onClick={() => setSelectedMode("MentoringMode")}
         >
           Mentoring Mode
         </p>
         <p
-          className={`batch-type-content ${selectedMode === 'SelfPlaced' ? 'active' : ''}`}
-          onClick={() => setSelectedMode('SelfPlaced')}
+          className={`batch-type-content ${
+            selectedMode === "SelfPlaced" ? "active" : ""
+          }`}
+          onClick={() => setSelectedMode("SelfPlaced")}
         >
           Self-Paced Learning
         </p>
       </div>
-      <div className='mode-of-training-content'>
-        {renderComponent()}
-      </div>
+      <div className="mode-of-training-content">{renderComponent()}</div>
     </div>
   );
 };

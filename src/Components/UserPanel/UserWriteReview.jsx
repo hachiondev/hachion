@@ -97,7 +97,7 @@ const UserWriteReview = ({ setShowReviewForm }) => {
         }
       );
 
-      console.log("Review added successfully:", response.data);
+      alert("Review added successfully:");
     } catch (error) {
       console.error(
         "Error adding review:",

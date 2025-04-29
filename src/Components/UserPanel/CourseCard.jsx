@@ -66,9 +66,6 @@ const CourseCard = ({
           <h6 className="course-month">
             <RxCalendar /> {month} Days
           </h6>
-          {/* <h6 className="course-month">
-            <BiTimeFive /> {time} Hours
-          </h6> */}
         </div>
 
         <h6 className="course-review">
@@ -81,7 +78,6 @@ const CourseCard = ({
           </p>
         </div>
 
-        {/* Button for non-mobile users */}
         {!isMobile && (
           <button
             className="enroll-btn"

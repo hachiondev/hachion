@@ -69,12 +69,13 @@ export default function Faq() {
   const [filteredCurriculum, setFilteredCurriculum] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = useState([
-    { id: "", faq_title: "", description: "" },
+    { id: Date.now(), faq_title: "", description: "" },
   ]);
   const currentDate = new Date().toISOString().split("T")[0];
   const [message, setMessage] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState([]);
   const [allData, setAllData] = useState([]); // All fetched data
+  const [catChange, setCatChange] = useState(0);
   // Data to be displayed
   const [filterData, setFilterData] = useState({
     category_name: "",
@@ -91,22 +92,30 @@ export default function Faq() {
     description: "",
   });
   const [curriculumData, setCurriculumData] = useState({
-    faq_id: "",
     category_name: "",
     course_name: "",
     faq_pdf: "",
-    faq_title: "",
-    description: "",
     date: currentDate,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [catChange, setCatChange] = useState(0);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  // Inside your CourseCategory component
+  const handleRowChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
+  const addRow = () => {
+    setRows([...rows, { id: Date.now(), faq_title: "", description: "" }]);
+  };
+
+  const deleteRow = (id) => {
+    setRows(rows.filter((row) => row.id !== id));
+  };
 
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
@@ -143,13 +152,6 @@ export default function Faq() {
       description: "",
     });
   };
-  const addRow = () => {
-    setRows([...rows, { id: Date.now(), faq_title: "", description: "" }]);
-  };
-
-  const deleteRow = (id) => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
 
   const handleClose = () => {
     setOpen(false); // Close the modal
@@ -158,7 +160,7 @@ export default function Faq() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -180,7 +182,7 @@ export default function Faq() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -194,6 +196,14 @@ export default function Faq() {
       handleDelete(faq_id);
     }
   };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setEditedRow((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedRow((prev) => ({
@@ -201,7 +211,7 @@ export default function Faq() {
       [name]: value,
       ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
     }));
-    if (name === "category_name") {
+    if (editedRow.category_name) {
       // alert(name);
       //alert(value);
       setCatChange(1);
@@ -209,8 +219,12 @@ export default function Faq() {
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
     }
   };
+
   const handleDateFilter = () => {
     const filtered = curriculum.filter((item) => {
       const curriculumDate = new Date(item.date); // Parse the date field
@@ -244,7 +258,7 @@ export default function Faq() {
       }
 
       const response = await axios.put(
-        `http://localhost:8080/faq/update/${editedRow.faq_id}`,
+        `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
         formData,
         {
           headers: {
@@ -286,7 +300,7 @@ export default function Faq() {
     setFilteredCurriculum(filtered);
     setCurrentPage(1); // Reset to first page
 
-    if (name === "category_name") {
+    if (name) {
       // alert(name);
       // alert(value);
       setCatChange(1);
@@ -294,13 +308,16 @@ export default function Faq() {
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
     }
   };
 
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await axios.get("http://localhost:8080/faq");
+  //       const response = await axios.get("https://api.hachion.co/faq");
   //       setAllData(response.data);
   //       setDisplayedCategories(response.data); // initially display all
   //     } catch (error) {
@@ -313,7 +330,7 @@ export default function Faq() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/faq");
+        const response = await axios.get("https://api.hachion.co/faq");
         setAllData(response.data);
         setFilteredCurriculum(response.data); // Used for paginated display
       } catch (error) {
@@ -325,7 +342,7 @@ export default function Faq() {
   const handleDelete = async (faq_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/faq/delete/${faq_id}`
+        `https://api.hachion.co/faq/delete/${faq_id}`
       );
       console.log("FAQ deleted successfully:", response.data);
     } catch (error) {
@@ -399,7 +416,7 @@ export default function Faq() {
   //     console.log("Data being sent:", dataToSubmit); // Debugging
 
   //     try {
-  //         const response = await axios.post("http://localhost:8080/curriculum/add", dataToSubmit, {
+  //         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
   //             headers: {
   //                 "Content-Type": "multipart/form-data"
   //             }
@@ -438,7 +455,7 @@ export default function Faq() {
   //   console.log("Data being sent:", formData); // Debugging
 
   //   try {
-  //       const response = await axios.post("http://localhost:8080/faq/add", formData, {
+  //       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
   //           headers: {
   //               "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
   //           }
@@ -458,51 +475,63 @@ export default function Faq() {
     e.preventDefault();
 
     const currentDate = new Date().toISOString().split("T")[0];
-    const formData = new FormData();
 
-    // Append curriculum data fields (even if some are optional)
-    formData.append(
-      "faqData",
-      JSON.stringify({
-        category_name: curriculumData?.category_name || "",
-        course_name: curriculumData?.course_name || "",
-        faq_title: curriculumData?.faq_title || "",
-        description: curriculumData?.description || "",
-        date: currentDate,
-      })
-    );
+    const uploadPromises = rows.map(async (row) => {
+      const formData = new FormData();
 
-    // Append PDF only if it's provided
-    if (curriculumData?.faq_pdf) {
-      formData.append("faqPdf", curriculumData.faq_pdf);
-    }
-
-    console.log("Data being sent:", Object.fromEntries(formData)); // Debugging
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/faq/add",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
-          },
-          maxBodyLength: Infinity, // Disable body size limit
-          maxContentLength: Infinity, // Disable content size limit
-          timeout: 60000, // Timeout set to 60 seconds (adjust as needed)
-        }
+      // Append static shared values
+      formData.append(
+        "faqData",
+        JSON.stringify({
+          category_name: curriculumData.category_name,
+          course_name: curriculumData.course_name,
+          faq_title: row.faq_title || "",
+          description: row.description || "",
+          date: currentDate,
+        })
       );
 
-      if (response.status === 201) {
-        // HTTP 201 means "Created"
-        alert("FAQ details added successfully");
-        setShowAddCourse(false);
-        setCurriculumData({}); // Reset form state
-        handleReset(); // Call reset function if available
+      // Add the same PDF to each entry
+      if (curriculumData.faq_pdf) {
+        formData.append("faqPdf", curriculumData.faq_pdf);
       }
-    } catch (error) {
-      console.error("Error adding faq:", error.response?.data || error.message);
-      alert("Error adding faq.");
+
+      try {
+        const response = await axios.post(
+          "https://api.hachion.co/faq/add",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
+            timeout: 60000,
+          }
+        );
+
+        return response.status === 201;
+      } catch (error) {
+        console.error(
+          "Error adding faq:",
+          error.response?.data || error.message
+        );
+        return false;
+      }
+    });
+
+    const results = await Promise.all(uploadPromises);
+    const allSuccessful = results.every((status) => status);
+
+    if (allSuccessful) {
+      alert("All faq entries added successfully.");
+      setShowAddCourse(false);
+      setCurriculumData({});
+      setRows([{ id: Date.now(), faq_title: "", description: "" }]); // Reset to initial row
+    } else {
+      alert(
+        "Some entries failed to upload. Please check the console for errors."
+      );
     }
   };
 
@@ -612,7 +641,7 @@ export default function Faq() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {rows.map((row, index) => (
                       <StyledTableRow
                         key={row.name}
                         sx={{
@@ -630,20 +659,29 @@ export default function Faq() {
                           <input
                             className="table-curriculum"
                             name="faq_title"
-                            value={rows.faq_title}
-                            onChange={handleChange}
+                            value={row.faq_title}
+                            onChange={(e) =>
+                              handleRowChange(
+                                index,
+                                "faq_title",
+                                e.target.value
+                              )
+                            }
                           />
                         </StyledTableCell>
                         <StyledTableCell sx={{ padding: 0 }} align="center">
                           <ReactQuill
                             theme="snow"
                             modules={quillModules}
-                            value={curriculumData.description}
+                            value={row.description}
                             onChange={(value) =>
-                              setCurriculumData((prevData) => ({
-                                ...prevData,
-                                description: value,
-                              }))
+                              setRows((prevRows) =>
+                                prevRows.map((r) =>
+                                  r.id === row.id
+                                    ? { ...r, description: value }
+                                    : r
+                                )
+                              )
                             }
                           />
                         </StyledTableCell>
@@ -817,7 +855,6 @@ export default function Faq() {
                 <label htmlFor="course" className="form-label">
                   Course Name
                 </label>
-
                 <select
                   id="course"
                   className="form-select"
@@ -839,11 +876,6 @@ export default function Faq() {
                           {curr.courseName}
                         </option>
                       ))}
-                  {/* {courseCategory.map((curr) => (
-                    <option key={curr.id} value={curr.courseName}>
-                      {curr.courseName}
-                    </option>
-                  ))} */}
                 </select>
               </div>
               {/* <div class="mb-3">
@@ -878,6 +910,7 @@ export default function Faq() {
                   </StyledTableCell>
                   <StyledTableCell align="center">Title</StyledTableCell>
                   <StyledTableCell align="center">Description</StyledTableCell>
+                  <StyledTableCell align="center">FAQ pdf</StyledTableCell>
                   <StyledTableCell align="center">Created Date</StyledTableCell>
                   <StyledTableCell align="center" sx={{ width: "150px" }}>
                     Action
@@ -915,6 +948,11 @@ export default function Faq() {
                             __html: course.description || "No topics available",
                           }}
                         />
+                      </StyledTableCell>
+                      <StyledTableCell align="left" style={{ width: "100px" }}>
+                        {course.faq_pdf
+                          ? course.faq_pdf.split("/").pop()
+                          : "No PDF"}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.date
@@ -1027,23 +1065,18 @@ export default function Faq() {
                         {curr.courseName}
                       </option>
                     ))}
-                {/* {courseCategory.map((curr) => (
-                  <option key={curr.id} value={curr.courseName}>
-                    {curr.courseName}
-                  </option>
-                ))} */}
               </select>
             </div>
           </div>
 
           <div className="mb-3">
-            <label htmlFor="curriculumPDF" className="form-label">
+            <label htmlFor="faqPDF" className="form-label">
               FAQ's PDF
             </label>
             <input
               className="form-control-sample"
               type="file"
-              id="curriculumPDF"
+              id="faqPDF"
               accept=".pdf"
               name="faq_pdf"
               onChange={(e) =>

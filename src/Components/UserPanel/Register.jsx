@@ -2,10 +2,6 @@ import React from "react";
 import LoginSide from "./LoginSide";
 import logo from "../../Assets/logo.png";
 import "./Login.css";
-import facebook from "../../Assets/facebook_symbol.svg.png";
-import google from "../../Assets/google_symbol.svg.png";
-import linkedin from "../../Assets/linkedins.png";
-import apple from "../../Assets/Apple.png";
 import email from "../../Assets/Group 39487.png";
 import { Link } from "react-router-dom";
 
@@ -23,22 +19,6 @@ const Register = () => {
             <h3 className="register-head">Register to start learning</h3>
             <h5 className="option">Tap on any option to create an account</h5>
             <div className="icon-places">
-              {/* <div className='icon-text'>
-  <img src={google} alt='google' className='icon-text-img'/>
-   <button className='icon-text-holder-google' onClick={googleLogin}>Google</button>
-    </div>
-    <div className='icon-text' >
-  <img src={facebook} alt='facebook' className='icon-text-img'/>
-   <div className='icon-text-holder-facebook'>Facebook</div>
-    </div>
-    <div className='icon-text'>
-  <img src={linkedin} alt='linkedin' className='icon-text-img'/>
-   <div className='icon-text-holder-linkedin'>Linkedin</div>
-    </div>
-    <div className='icon-text'>
-  <img src={apple} alt='login-with-apple' className='icon-text-img'/>
-   <div className='icon-text-holder-apple'>Apple</div>
-    </div> */}
               <Link to="/registerhere" className="register-link-to">
                 <div className="icon-text">
                   <img

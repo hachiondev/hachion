@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { duration, styled } from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -10,9 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import dayjs from "dayjs";
-import { RiCloseCircleLine } from "react-icons/ri";
-import success from "../../Assets/success.gif";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -34,19 +30,17 @@ import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import "./Admin.css";
 import AdminPagination from "./AdminPagination";
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#00AEEF",
     color: theme.palette.common.white,
-    borderRight: "1px solid white", // Add vertical lines
+    borderRight: "1px solid white",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: "1px solid #e0e0e0", // Add vertical lines for body rows
+    borderRight: "1px solid #e0e0e0",
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -55,16 +49,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 export default function CourseSchedule() {
   const [trainer, setTrainer] = useState([]);
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState([]);
   const [courseCategory, setCourseCategory] = useState([]);
-  const [filteredCourses, setFilteredCourses] = useState([courses]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [filterCourse, setFilterCourse] = useState([]);
-  const [date, setDate] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [message, setMessage] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,7 +75,7 @@ export default function CourseSchedule() {
     pattern: "",
     meeting: "",
   });
-  const [selectedRow, setSelectedRow] = React.useState({
+  const [selectedRow, setSelectedRow] = useState({
     schedule_category_name: "",
     schedule_course_name: "",
     trainer_name: "",
@@ -100,58 +92,52 @@ export default function CourseSchedule() {
     course_schedule_id: "",
     schedule_category_name: "",
     schedule_course_name: "",
-    schedule_date: null,
-    schedule_frequency: "",
-    schedule_week: "",
-    schedule_time: null,
-    schedule_duration: "",
-    schedule_mode: "",
     trainer_name: "",
     created_date: currentDate,
-    pattern: "",
-    meeting: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  // Inside your CourseCategory component
-
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
-    setCurrentPage(1); // Reset to the first page whenever rows per page changes
+    setCurrentPage(1);
   };
-
-  // Slice filteredCourses based on rowsPerPage and currentPage
   const displayedCategories = filteredCourses.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
-  const [selectedTime, setSelectedTime] = useState(null);
   const [rows, setRows] = useState([
     {
       id: "",
-      frequency: "",
-      time: "",
-      duration: "",
-      mode: "",
+      schedule_date: null,
+      schedule_frequency: "",
+      schedule_week: "",
+      schedule_time: null,
+      schedule_duration: "",
+      schedule_mode: "",
       pattern: "",
       meeting: "",
     },
   ]);
-
+  const handleRowChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
   const addRow = () => {
     setRows([
       ...rows,
       {
         id: Date.now(),
-        frequency: "",
-        time: "",
-        duration: "",
-        mode: "",
+        schedule_date: "",
+        schedule_frequency: "",
+        schedule_week: "",
+        schedule_time: "",
+        schedule_duration: "",
+        schedule_mode: "",
         pattern: "",
         meeting: "",
       },
@@ -161,101 +147,73 @@ export default function CourseSchedule() {
   const deleteRow = (id) => {
     setRows(rows.filter((row) => row.id !== id));
   };
-  const handleDateChange = (newValue) => {
-    const parsedDate = dayjs(newValue); // Ensure proper parsing
+  const handleDateChange = (index, newValue) => {
+    const parsedDate = dayjs(newValue);
+    if (!parsedDate.isValid()) return;
 
-    if (!parsedDate.isValid()) {
-      // Validate the date
-      console.error("Invalid date:", newValue);
-      return;
-    }
-
-    setCourseData((prevData) => ({
-      ...prevData,
-      schedule_date: parsedDate.format("YYYY-MM-DD"), // Format the date
-      schedule_week: parsedDate.format("dddd"), // Format the weekday
-    }));
-    setEditedRow((prev) => ({
-      ...prev,
-      schedule_date: parsedDate.format("YYYY-MM-DD"), // Format the date
-      schedule_week: parsedDate.format("dddd"), // Format the weekday
-    }));
+    const updatedRows = [...rows];
+    updatedRows[index] = {
+      ...updatedRows[index],
+      schedule_date: parsedDate.format("MM-DD-YYYY"),
+      schedule_week: parsedDate.format("dddd"),
+    };
+    setRows(updatedRows);
   };
+
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
-        setCategory(response.data); // Assuming the data contains an array of trainer objects
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
+        setCategory(response.data);
+      } catch (error) {}
     };
     fetchCategory();
   }, []);
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
-        setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
+        const response = await axios.get("https://api.hachion.co/courses/all");
+        setCourseCategory(response.data);
+      } catch (error) {}
     };
     fetchCourseCategory();
   }, []);
   useEffect(() => {
-    // alert(courseData.schedule_category_name);
-    //console.log(courseData.schedule_category_name);
-
     if (courseData.schedule_category_name) {
-      //alert(courseData.schedule_category_name);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === courseData.schedule_category_name
       );
       setFilterCourse(filtered);
     } else {
-      setFilterCourse([]); // Reset when no category is selected
+      setFilterCourse([]);
     }
   }, [courseData.schedule_category_name, courseCategory]);
-
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/trainers");
-        setTrainer(response.data); // Assuming the data contains an array of trainer objects
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
+        const response = await axios.get("https://api.hachion.co/trainers");
+        setTrainer(response.data);
+      } catch (error) {}
     };
     fetchTrainer();
   }, []);
-
-  // Handle time change
-  const handleTimeChange = (newValue) => {
-    setCourseData((prevData) => ({
-      ...prevData,
+  const handleTimeChange = (index, newValue) => {
+    const updatedRows = [...rows];
+    updatedRows[index] = {
+      ...updatedRows[index],
       schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
-    }));
-    setEditedRow((prev) => ({
-      ...prev,
-      schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
-    }));
+    };
+    setRows(updatedRows);
   };
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setCourseData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourseData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "schedule_category_name" && { schedule_course_name: "" }),
     }));
   };
   const handleReset = () => {
@@ -265,69 +223,97 @@ export default function CourseSchedule() {
       schedule_date: "",
       schedule_week: "",
       schedule_time: "",
-      scheule_frequency: "",
+      schedule_frequency: "",
       schedule_duration: "",
       schedule_mode: "",
       trainer_name: "",
       created_date: "",
     });
   };
-  const handleSubmit = async (e) => {
-    const formattedCourseData = {
-      course_schedule_id: courseData.course_schedule_id,
-      schedule_category_name: courseData.schedule_category_name,
-      schedule_course_name: courseData.schedule_course_name,
-      schedule_date: courseData.schedule_date,
-      schedule_week: courseData.schedule_week,
-      schedule_time: courseData.schedule_time,
-      schedule_duration: courseData.schedule_duration,
-      schedule_mode: courseData.schedule_mode,
-      trainer_name: courseData.trainer_name || "", // Ensure trainer name is not null
-      created_date: courseData.created_date,
-    };
+  const handleSubmit = async () => {
+    if (!Array.isArray(rows)) {
+      console.error("rows is not an array:", rows);
+      alert("Something went wrong. Please try again.");
+      return;
+    }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/schedulecourse/add",
-        formattedCourseData
-      );
-      console.log("Course added successfully:", response.data);
-    } catch (error) {
-      console.error(
-        "Error adding course:",
-        error.response?.data || error.message
+    const uploadPromises = rows.map(async (row) => {
+      const formattedCourseData = {
+        course_schedule_id: courseData.course_schedule_id,
+        schedule_category_name: courseData.schedule_category_name,
+        schedule_course_name: courseData.schedule_course_name,
+        // schedule_date: row.schedule_date,
+        schedule_date: dayjs(row.schedule_date, "MM-DD-YYYY").format(
+          "YYYY-MM-DD"
+        ),
+        schedule_week: row.schedule_week,
+        schedule_time: row.schedule_time,
+        schedule_duration: row.schedule_duration,
+        schedule_mode: row.schedule_mode,
+        trainer_name: courseData.trainer_name || "",
+        created_date: courseData.created_date,
+        meeting_link: row.meeting,
+      };
+
+      try {
+        const response = await axios.post(
+          "https://api.hachion.co/schedulecourse/add",
+          formattedCourseData
+        );
+        return response.status === 201 || response.status === 200;
+      } catch (error) {
+        console.error(
+          "Error adding schedule:",
+          error.response?.data || error.message
+        );
+        return false;
+      }
+    });
+
+    const results = await Promise.all(uploadPromises);
+    const allSuccessful = results.every((status) => status);
+
+    if (allSuccessful) {
+      alert("All schedule entries added successfully.");
+      setShowAddCourse(false);
+      setRows([
+        {
+          id: Date.now(),
+          schedule_date: "",
+          schedule_week: "",
+          schedule_time: "",
+          schedule_duration: "",
+          schedule_mode: "",
+          trainer_name: "",
+          created_date: "",
+          meeting: "",
+        },
+      ]);
+    } else {
+      alert(
+        "Some schedule entries failed to upload. Please check the console for errors."
       );
     }
   };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   const handleDateFilter = () => {
     const filtered = courses.filter((course) => {
-      const courseDate = new Date(course.schedule_date); // Ensure schedule_date is parseable
+      const courseDate = new Date(course.schedule_date);
       return (
         (!startDate || courseDate >= new Date(startDate)) &&
         (!endDate || courseDate <= new Date(endDate))
       );
     });
-
-    setCourses(filtered);
+    setFilteredCourses(filtered);
   };
-
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/schedulecourse"
+          "https://api.hachion.co/schedulecourse?userType=admin"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
-        //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
+      } catch (error) {}
     };
     fetchCourse();
   }, []);
@@ -343,60 +329,45 @@ export default function CourseSchedule() {
         course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCourses(filtered);
-  }, [searchTerm, filteredCourses]);
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedData = filteredCourses.slice(
-    startIndex,
-    startIndex + rowsPerPage
-  );
-  const pageCount = Math.ceil(filteredCourses.length / rowsPerPage);
-
+  }, [searchTerm, courses]);
   const handleDeleteConfirmation = (course_schedule_id) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this course?",
-        courseData.trainer_name
-      )
-    ) {
+    if (window.confirm("Are you sure you want to delete this course?")) {
       handleDelete(course_schedule_id);
     }
   };
-
   const handleDelete = async (course_schedule_id) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/schedulecourse/delete/${course_schedule_id}`
+      await axios.delete(
+        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
-      console.log("Courses deleted successfully:", response.data);
-    } catch (error) {
-      console.error("Error deleting Trainer:", error);
-    }
+      setCourses((prevCourses) =>
+        prevCourses.filter(
+          (course) => course.course_schedule_id !== course_schedule_id
+        )
+      );
+    } catch (error) {}
   };
-
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
   const handleClickOpen = (row) => {
-    console.log(row);
     setSelectedRow(row);
-    setEditedRow(row); // Set the selected row data
-    setOpen(true); // Open the modal
-    console.log("tid", row.course_schedule_id);
+    setEditedRow(row);
+    setOpen(true);
   };
-
   const handleClose = () => {
-    setOpen(false); // Close the modal
-  };
-  const handleCloseModal = () => {
-    setShowAddCourse(false);
+    setOpen(false);
   };
   const handleSave = async () => {
     try {
+      const updatedEditedRow = {
+        ...editedRow,
+        schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format(
+          "YYYY-MM-DD"
+        ),
+      };
       const response = await axios.put(
-        `http://localhost:8080/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
-
-      // Update only the edited row in the trainers state
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
           course.course_schedule_id === selectedRow.course_schedule_id
@@ -404,17 +375,28 @@ export default function CourseSchedule() {
             : course
         )
       );
-      setMessage(true); // Show the success message
-
-      // Hide the message after 5 seconds
+      setMessage(true);
       setTimeout(() => {
         setMessage(false);
       }, 5000);
+      setOpen(false);
+    } catch (error) {}
+  };
+  const handleEditDateChange = (newValue) => {
+    const parsedDate = dayjs(newValue);
+    if (!parsedDate.isValid()) return;
 
-      setOpen(false); // Close the dialog
-    } catch (error) {
-      console.error("Error updating trainer:", error);
-    }
+    setEditedRow((prev) => ({
+      ...prev,
+      schedule_date: parsedDate.format("MM-DD-YYYY"), // or use ISO format if backend expects it
+      schedule_week: parsedDate.format("dddd"),
+    }));
+  };
+  const handleEditTimeChange = (newValue) => {
+    setEditedRow((prev) => ({
+      ...prev,
+      schedule_time: newValue ? dayjs(newValue).format("hh:mm A") : null,
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -422,350 +404,350 @@ export default function CourseSchedule() {
     setEditedRow((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "schedule_category_name" && { schedule_course_name: "" }), // Reset course when category changes
+      ...(name === "schedule_category_name" && { schedule_course_name: "" }),
     }));
-
-    if (name === "schedule_category_name") {
-      // alert(name);
-      // alert(value);
+    if (editedRow.schedule_category_name) {
       setCatChange(1);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === value
       );
       setFilterCourse(filtered);
+    } else {
+      setCatChange(0);
+      setFilterCourse([]);
     }
   };
-
-  //console.log(setEditedRow);
-
-  // const handleCourseChange = (event) => setCourse(event.target.value);
   return (
     <>
       {showAddCourse ? (
-        <>
-          {" "}
-          <div style={{ flexGrow: 1, padding: "20px" }}>
-            <div className="course-category">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="#!" onClick={() => setShowAddCourse(false)}>
-                      {" "}
-                      Schedule{" "}
-                    </a>{" "}
-                    <MdKeyboardArrowRight />
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Add Schedule
-                  </li>
-                </ol>
-              </nav>
-              <div className="category">
-                <div className="category-header">
-                  <p>Add Schedule</p>
+        <div style={{ flexGrow: 1, padding: "20px" }}>
+          <div className="course-category">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                  <a href="#!" onClick={() => setShowAddCourse(false)}>
+                    Schedule
+                  </a>
+                  <MdKeyboardArrowRight />
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Add Schedule
+                </li>
+              </ol>
+            </nav>
+            <div className="category">
+              <div className="category-header">
+                <p>Add Schedule</p>
+              </div>
+              <div className="course-details">
+                <div className="course-row">
+                  <div className="col-md-3">
+                    <label htmlFor="inputState" className="form-label">
+                      Category Name
+                    </label>
+                    <select
+                      id="inputState"
+                      className="form-select"
+                      name="schedule_category_name"
+                      value={courseData.schedule_category_name}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Select Category
+                      </option>
+                      {category.map((curr) => (
+                        <option key={curr.id} value={curr.name}>
+                          {curr.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <label htmlFor="course" className="form-label">
+                      Course Name
+                    </label>
+                    <select
+                      id="course"
+                      className="form-select"
+                      name="schedule_course_name"
+                      value={courseData.schedule_course_name}
+                      onChange={handleChange}
+                      disabled={!courseData.schedule_category_name}
+                    >
+                      <option value="" disabled>
+                        Select Course
+                      </option>
+                      {filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>
+                          {curr.courseName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <label htmlFor="inputState" className="form-label">
+                      Trainer Name
+                    </label>
+                    <select
+                      id="inputState"
+                      className="form-select"
+                      name="trainer_name"
+                      value={courseData.trainer_name}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Select Trainer
+                      </option>
+                      {trainer.map((curr) => (
+                        <option key={curr.id} value={curr.trainer_name}>
+                          {curr.trainer_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <div className="course-details">
-                  <div className="course-row">
-                    <div class="col-md-3">
-                      <label for="inputState" class="form-label">
-                        Category Name
-                      </label>
-                      <select
-                        id="inputState"
-                        class="form-select"
-                        name="schedule_category_name"
-                        value={courseData.schedule_category_name}
-                        onChange={handleChange}
-                      >
-                        <option value="" disabled>
-                          Select Category
-                        </option>
-                        {category.map((curr) => (
-                          <option key={curr.id} value={curr.name}>
-                            {curr.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col-md-3">
-                      <label htmlFor="course" className="form-label">
-                        Course Name
-                      </label>
-                      <select
-                        id="course"
-                        className="form-select"
-                        name="schedule_course_name"
-                        value={courseData.schedule_course_name}
-                        onChange={handleChange}
-                        disabled={!courseData.schedule_category_name}
-                      >
-                        <option value="" disabled>
-                          Select Course
-                        </option>
-                        {filterCourse.map((curr) => (
-                          <option key={curr.id} value={curr.courseName}>
-                            {curr.courseName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="inputState" class="form-label">
-                        Trainer Name
-                      </label>
-                      <select
-                        id="inputState"
-                        class="form-select"
-                        name="trainer_name"
-                        value={courseData.trainer_name}
-                        onChange={handleChange}
-                      >
-                        <option value="" disabled>
-                          Select Trainer
-                        </option>
-                        {trainer.map((curr) => (
-                          <option key={curr.id} value={curr.trainer_name}>
-                            {curr.trainer_name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <TableContainer component={Paper}>
-                    <Table
-                      sx={{ minWidth: 650, marginTop: 5 }}
-                      aria-label="customized table"
-                    >
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <TableHead>
-                          <TableRow>
+                <TableContainer component={Paper}>
+                  <Table
+                    sx={{ minWidth: 650, marginTop: 5 }}
+                    aria-label="customized table"
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Date
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Frequency
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Time
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Duration
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Mode
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Pattern
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px", width: "500px" }}
+                          >
+                            Meeting
+                          </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            sx={{ fontSize: "16px" }}
+                          >
+                            Add/Delete Row
+                          </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rows.map((row, index) => (
+                          <StyledTableRow
+                            key={row.id}
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: "1px solid #d3d3d3 ",
+                              },
+                            }}
+                          >
                             <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
+                              component="th"
+                              scope="row"
+                              sx={{ padding: 0 }}
                             >
-                              Date
+                              <DatePicker
+                                value={
+                                  row.schedule_date
+                                    ? dayjs(row.schedule_date, "MM-DD-YYYY")
+                                    : null
+                                }
+                                onChange={(newValue) =>
+                                  handleDateChange(index, newValue)
+                                }
+                                renderInput={(params) => (
+                                  <TextField {...params} />
+                                )}
+                                sx={{
+                                  "& .MuiInputBase-root": {
+                                    width: "200px",
+                                  },
+                                  "& .MuiIconButton-root": {
+                                    color: "#00aeef",
+                                  },
+                                }}
+                              />
                             </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Frequency
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Time
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Duration
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Mode
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Pattern
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px", width: "500px" }}
-                            >
-                              Meeting
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              sx={{ fontSize: "16px" }}
-                            >
-                              Add/Delete Row
-                            </StyledTableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows.map((row) => (
-                            <StyledTableRow
-                              key={row.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: "1px solid #d3d3d3 ",
-                                },
-                              }}
-                            >
-                              <StyledTableCell
-                                component="th"
-                                scope="row"
-                                sx={{ padding: 0 }}
-                              >
-                                <DatePicker
-                                  value={
-                                    courseData.schedule_date
-                                      ? dayjs(courseData.schedule_date)
-                                      : null
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <div className="col-md-3">
+                                <select
+                                  id="inputState"
+                                  className="form-select"
+                                  name="schedule_frequency"
+                                  value={row.schedule_frequency}
+                                  onChange={(e) =>
+                                    handleRowChange(
+                                      index,
+                                      "schedule_frequency",
+                                      e.target.value
+                                    )
                                   }
-                                  onChange={(newValue) =>
-                                    handleDateChange(newValue)
+                                >
+                                  <option value="">Select</option>
+                                  <option>Only Weekends</option>
+                                  <option>Week Days</option>
+                                  <option>Any Days</option>
+                                </select>
+                              </div>
+                            </StyledTableCell>
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <TimePicker
+                                label="Select Time"
+                                ampm={true}
+                                value={
+                                  row.schedule_time
+                                    ? dayjs(row.schedule_time, "hh:mm A")
+                                    : null
+                                }
+                                onChange={(newValue) =>
+                                  handleTimeChange(index, newValue)
+                                }
+                                renderInput={(params) => (
+                                  <TextField {...params} />
+                                )}
+                                sx={{
+                                  "& .MuiInputBase-root": {
+                                    width: "200px",
+                                  },
+                                  "& .MuiIconButton-root": {
+                                    color: "#00aeef",
+                                  },
+                                }}
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <input
+                                name="schedule_duration"
+                                className="table-curriculum"
+                                value={rows.schedule_duration}
+                                onChange={(e) =>
+                                  handleRowChange(
+                                    index,
+                                    "schedule_duration",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <div className="col-md-3">
+                                <select
+                                  id="inputState"
+                                  className="form-select"
+                                  name="schedule_mode"
+                                  value={rows.schedule_mode}
+                                  onChange={(e) =>
+                                    handleRowChange(
+                                      index,
+                                      "schedule_mode",
+                                      e.target.value
+                                    )
                                   }
-                                  renderInput={(params) => (
-                                    <TextField {...params} />
-                                  )}
-                                  sx={{
-                                    "& .MuiInputBase-root": {
-                                      width: "200px",
-                                    },
-                                    "& .MuiIconButton-root": {
-                                      color: "#00aeef",
-                                    },
-                                  }}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <div className="col-md-3">
-                                  <select
-                                    id="inputState"
-                                    className="form-select"
-                                    name="schedule_frequency"
-                                    value={courseData.schedule_frequency}
-                                    onChange={handleChange}
-                                  >
-                                    <option selected>Select</option>
-                                    <option>Only Weekends</option>
-                                    <option>Week Days</option>
-                                    <option>Any Days</option>
-                                  </select>
-                                </div>
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <DemoContainer components={["TimePicker"]}>
-                                  <TimePicker
-                                    label="Select Time"
-                                    ampm={true}
-                                    value={
-                                      courseData.schedule_time
-                                        ? dayjs(
-                                            courseData.schedule_time,
-                                            "hh:mm A"
-                                          )
-                                        : null
-                                    }
-                                    onChange={handleTimeChange}
-                                    renderInput={(params) => (
-                                      <TextField {...params} />
-                                    )}
-                                    sx={{
-                                      "& .MuiInputBase-root": {
-                                        width: "200px",
-                                      },
-                                      "& .MuiIconButton-root": {
-                                        color: "#00aeef",
-                                      },
-                                    }}
-                                  />
-                                </DemoContainer>
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <input
-                                  name="schedule_duration"
-                                  className="table-curriculum"
-                                  value={courseData.schedule_duration}
-                                  onChange={handleChange}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <div className="col-md-3">
-                                  <select
-                                    id="inputState"
-                                    className="form-select"
-                                    name="schedule_mode"
-                                    value={courseData.schedule_mode}
-                                    onChange={handleChange}
-                                  >
-                                    <option selected>Select</option>
-                                    <option>Live Class</option>
-                                    <option>Live Demo</option>
-                                  </select>
-                                </div>
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <input
-                                  name="pattern"
-                                  className="table-curriculum"
-                                  value={rows.pattern}
-                                  onChange={handleChange}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell align="left" sx={{ padding: 0 }}>
-                                <input
-                                  name="meeting"
-                                  className="table-curriculum"
-                                  value={rows.meeting}
-                                  onChange={handleChange}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="center"
-                                sx={{ padding: 0 }}
-                              >
-                                <GoPlus
-                                  style={{
-                                    fontSize: "2rem",
-                                    color: "#00AEEF",
-                                    marginRight: "10px",
-                                  }}
-                                  onClick={addRow}
-                                />
-                                <IoClose
-                                  style={{ fontSize: "2rem", color: "red" }}
-                                  onClick={() => deleteRow(row.id)}
-                                />
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                        </TableBody>
-                      </LocalizationProvider>
-                    </Table>
-                  </TableContainer>
-
-                  <div className="course-row">
-                    <button
-                      className="submit-btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
-                      onClick={handleSubmit}
-                    >
-                      Submit
-                    </button>
-                    <button className="reset-btn" onClick={handleReset}>
-                      Reset
-                    </button>
-                  </div>
+                                >
+                                  <option value="">Select</option>
+                                  <option>Live Class</option>
+                                  <option>Live Demo</option>
+                                </select>
+                              </div>
+                            </StyledTableCell>
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <input
+                                name="pattern"
+                                className="table-curriculum"
+                                value={rows.pattern}
+                                onChange={(e) =>
+                                  handleRowChange(
+                                    index,
+                                    "pattern",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell align="left" sx={{ padding: 0 }}>
+                              <input
+                                name="meeting"
+                                className="table-curriculum"
+                                value={rows.meeting}
+                                onChange={(e) =>
+                                  handleRowChange(
+                                    index,
+                                    "meeting",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell align="center" sx={{ padding: 0 }}>
+                              <GoPlus
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "#00AEEF",
+                                  marginRight: "10px",
+                                }}
+                                onClick={addRow}
+                              />
+                              <IoClose
+                                style={{ fontSize: "2rem", color: "red" }}
+                                onClick={() => deleteRow(row.id)}
+                              />
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </LocalizationProvider>
+                  </Table>
+                </TableContainer>
+                <div className="course-row">
+                  <button
+                    className="submit-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </button>
+                  <button className="reset-btn" onClick={handleReset}>
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -778,7 +760,7 @@ export default function CourseSchedule() {
                 <div className="date-schedule">
                   Start Date
                   <DatePicker
-                    selected={startDate}
+                    value={startDate}
                     onChange={(date) => setStartDate(date)}
                     isClearable
                     sx={{
@@ -787,7 +769,7 @@ export default function CourseSchedule() {
                   />
                   End Date
                   <DatePicker
-                    selected={endDate}
+                    value={endDate}
                     onChange={(date) => setEndDate(date)}
                     isClearable
                     sx={{
@@ -817,6 +799,7 @@ export default function CourseSchedule() {
                             href="#!"
                             onClick={() => handleRowsPerPageChange(10)}
                           >
+                            {" "}
                             10
                           </a>
                         </li>
@@ -826,6 +809,7 @@ export default function CourseSchedule() {
                             href="#!"
                             onClick={() => handleRowsPerPageChange(25)}
                           >
+                            {" "}
                             25
                           </a>
                         </li>
@@ -835,6 +819,7 @@ export default function CourseSchedule() {
                             href="#!"
                             onClick={() => handleRowsPerPageChange(50)}
                           >
+                            {" "}
                             50
                           </a>
                         </li>
@@ -923,10 +908,10 @@ export default function CourseSchedule() {
                         {course.schedule_week}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {course.schedule_time} EST
+                        {course.schedule_time} IST
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {course.schedule_duration} Days
+                        {course.schedule_duration}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.schedule_mode}
@@ -950,8 +935,7 @@ export default function CourseSchedule() {
                           <FaEdit
                             className="edit"
                             onClick={() => handleClickOpen(course)}
-                          />{" "}
-                          {/* Open modal on edit click */}
+                          />
                           <RiDeleteBin6Line
                             className="delete"
                             onClick={() =>
@@ -965,7 +949,11 @@ export default function CourseSchedule() {
                     </StyledTableRow>
                   ))
                 ) : (
-                  <p>No schedules available</p>
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={12} align="center">
+                      No schedules available
+                    </StyledTableCell>
+                  </StyledTableRow>
                 )}
               </TableBody>
             </Table>
@@ -974,14 +962,13 @@ export default function CourseSchedule() {
             <AdminPagination
               currentPage={currentPage}
               rowsPerPage={rowsPerPage}
-              totalRows={filteredCourses.length} // Use the full list for pagination
+              totalRows={filteredCourses.length}
               onPageChange={handlePageChange}
             />
           </div>
           {message && <div className="success-message">{message}</div>}
         </div>
       )}
-
       <Dialog
         className="dialog-box"
         open={open}
@@ -1023,7 +1010,6 @@ export default function CourseSchedule() {
                   ))}
                 </select>
               </div>
-
               <div className="col">
                 <label htmlFor="inputState" className="form-label">
                   Course Name
@@ -1049,21 +1035,9 @@ export default function CourseSchedule() {
                           {curr.courseName}
                         </option>
                       ))}
-
-                  {/* {courseCategory.map((curr) => (
-                    <option key={curr.id} value={curr.courseName}>
-                      {curr.courseName}
-                    </option>
-                  ))} */}
-                  {/* {filterCourse.map((curr) => (
-                    <option key={curr.id} value={curr.courseName}>
-                      {curr.courseName}
-                    </option>
-                  ))} */}
                 </select>
               </div>
             </div>
-
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Trainer</label>
@@ -1076,7 +1050,6 @@ export default function CourseSchedule() {
                   onChange={handleInputChange}
                 />
               </div>
-
               <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker
@@ -1088,12 +1061,11 @@ export default function CourseSchedule() {
                       ? dayjs(editedRow.schedule_date)
                       : null
                   }
-                  onChange={handleDateChange}
+                  onChange={handleEditDateChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>
             </div>
-
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Frequency</label>
@@ -1110,26 +1082,23 @@ export default function CourseSchedule() {
                   <option>Any Days</option>
                 </select>
               </div>
-
               <div className="col">
                 <label className="form-label">Time</label>
                 <TimePicker
                   sx={{
                     "& .MuiIconButton-root": { color: "#00aeef" },
                   }}
-                  // label="Select Time"
                   value={
                     editedRow.schedule_time
                       ? dayjs(editedRow.schedule_time, "hh:mm A")
                       : null
                   }
                   ampm={true}
-                  onChange={handleTimeChange}
+                  onChange={handleEditTimeChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </div>
             </div>
-
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Duration</label>
@@ -1140,7 +1109,6 @@ export default function CourseSchedule() {
                   onChange={handleInputChange}
                 />
               </div>
-
               <div className="col">
                 <label htmlFor="inputState" className="form-label">
                   Mode
@@ -1157,7 +1125,6 @@ export default function CourseSchedule() {
                   <option>Live Demo</option>
                 </select>
               </div>
-
               <div className="col">
                 <label className="form-label">Pattern</label>
                 <input
@@ -1168,7 +1135,6 @@ export default function CourseSchedule() {
                 />
               </div>
             </div>
-
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Meeting</label>
@@ -1179,7 +1145,6 @@ export default function CourseSchedule() {
                   onChange={handleInputChange}
                 />
               </div>
-
               <div className="col">
                 <label className="form-label">Batch ID</label>
                 <input
@@ -1198,38 +1163,6 @@ export default function CourseSchedule() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                    Course Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
     </>
   );
 }

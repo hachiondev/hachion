@@ -14,29 +14,7 @@ const Pagination = ({
   const handlePageChange = (page) => {
     if (page !== currentPage) {
       onPageChange(page);
-      // Prevent scrolling to the top
-      // Instead, keep the current scroll position
-      // window.scrollTo(0, window.scrollY); // Uncomment this if you want to maintain scroll position
     }
-  };
-
-  console.log(totalCards);
-  // console.log(cardsPerPage);
-  const renderPageNumbers = () => {
-    let pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(
-        <button
-          key={i}
-          className={`pagination-number ${i === currentPage ? "active" : ""}`}
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-    // console.log(pageNumbers);
-    return pageNumbers;
   };
 
   return (
@@ -48,7 +26,7 @@ const Pagination = ({
       >
         <IoIosArrowBack />
       </button>
-      {/* {Array.from({ length: totalPages }, (_, index) => (
+      {Array.from({ length: totalPages }, (_, index) => (
         <button
           key={index + 1}
           onClick={() => handlePageChange(index + 1)}
@@ -56,8 +34,7 @@ const Pagination = ({
         >
           {index + 1}
         </button>
-      ))} */}
-      {renderPageNumbers()}
+      ))}
       <button
         className="arrow"
         onClick={() => handlePageChange(currentPage + 1)}

@@ -1,6 +1,14 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-font-style: Open-Sans;
+  font-style: Open-Sans;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }

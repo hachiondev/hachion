@@ -134,7 +134,7 @@ export default function Other() {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/banner");
+        const response = await axios.get("https://api.hachion.co/banner");
         setBanner(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching resume:", error.message);
@@ -185,7 +185,7 @@ export default function Other() {
 
       // Send the update request
       const response = await axios.put(
-        `http://localhost:8080/banner/update/${editedData.banner_id}`,
+        `https://api.hachion.co/banner/update/${editedData.banner_id}`,
         formDataToSend,
         {
           headers: {
@@ -216,7 +216,7 @@ export default function Other() {
   const handleDelete = async (banner_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/banner/delete/${banner_id}`
+        `https://api.hachion.co/banner/delete/${banner_id}`
       );
       console.log("Banner deleted successfully:", response.data);
     } catch (error) {
@@ -224,9 +224,6 @@ export default function Other() {
     }
   };
 
-  const handleCloseModal = () => {
-    setShowAddCourse(false);
-  };
   const handleClickOpen = (row) => {
     console.log(row);
     setEditedData(row); // Set the selected row data
@@ -268,7 +265,7 @@ export default function Other() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/banner/add",
+        "https://api.hachion.co/banner/add",
         formDataToSend
       );
 
@@ -298,12 +295,12 @@ export default function Other() {
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
                 <a href="#!" onClick={() => setShowAddCourse(false)}>
-                  Banner/Amount Conversion Details
+                  Banner
                 </a>{" "}
                 <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-                Add Banner/Amount Conversion
+                Add Banner
               </li>
             </ol>
           </nav>
@@ -523,7 +520,7 @@ export default function Other() {
                     <StyledTableCell align="center">
                       {curr.banner_image ? (
                         <img
-                          src={`http://localhost:8080/${curr.banner_image}`}
+                          src={`https://api.hachion.co/${curr.banner_image}`}
                           alt={`Banner ${index + 1}`}
                           style={{ width: "100px", height: "auto" }}
                         />
@@ -534,7 +531,7 @@ export default function Other() {
                     <StyledTableCell align="center">
                       {curr.home_banner_image ? (
                         <img
-                          src={`http://localhost:8080/${curr.home_banner_image}`}
+                          src={`https://api.hachion.co/${curr.home_banner_image}`}
                           alt={`Banner ${index + 1}`}
                           style={{ width: "100px", height: "auto" }}
                         />

@@ -8,14 +8,13 @@ import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import "./Course.css";
 import { Helmet } from "react-helmet-async";
-import axios from "axios";
+
 const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
-  const [totalfilterCards, settotalfilterCards] = useState(0);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -24,39 +23,6 @@ const Course = () => {
       window.scrollTo(0, 400);
     }
   };
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get("/HachionUserDashboad/courses/all");
-        if (Array.isArray(response.data)) {
-          setTotalCards(response.data); // Set the courses if data is an array
-        } else {
-          console.error("Unexpected API response format:", response.data);
-          setTotalCards([]); // Fallback to an empty array
-        }
-      } catch (error) {
-        console.error("Error fetching courses:", error.message);
-        setTotalCards([]); // Fallback to an empty array
-      }
-    };
-
-    fetchCourses();
-  }, []);
-
-  // Filter courses based on the selected category
-  useEffect(() => {
-    if (selectedCategory === "All") {
-      settotalfilterCards(totalCards);
-    } else {
-      const filtered = totalCards.filter(
-        (course) => course.courseCategory === selectedCategory
-      );
-      settotalfilterCards(filtered);
-    }
-  }, [selectedCategory, totalCards]);
-
-  //console.log(getTotalCards.length);
 
   const updateTotalCards = (total) => {
     setTotalCards(total);
@@ -121,15 +87,13 @@ const Course = () => {
           property="og:image"
           content="https://hachion.co/images/course-banner.jpg"
         />
-        <meta property="og:url" content="https://hachion.co/courseDetails" />
+        <meta property="og:url" content="https://hachion.co/CourseDetails" />
         <meta name="robots" content="index, follow" />
       </Helmet>
       <div className="course-top">
         <Topbar />
         <NavbarTop />
-        {/* <div className='course-banner' ref={bannerRef}>
-          <h3 className='course-banner-content'>Courses</h3>
-        </div> */}
+
         <div>
           <h3 className="course-banner-content">Courses</h3>
         </div>
@@ -140,7 +104,7 @@ const Course = () => {
               name="description"
               content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
             />
-            {/* SidebarRight renders the course cards */}
+
             <SidebarRight
               category={selectedCategory}
               currentPage={currentPage}
@@ -151,9 +115,7 @@ const Course = () => {
             <div className="pagination-container">
               <Pagination
                 currentPage={currentPage}
-                totalCards={
-                  totalfilterCards ? totalfilterCards.length : totalCards.length
-                } // Total number of cards in the selected category
+                totalCards={totalCards} // Total number of cards in the selected category
                 cardsPerPage={cardsPerPage}
                 onPageChange={handlePageChange} // Custom handler for page change
               />

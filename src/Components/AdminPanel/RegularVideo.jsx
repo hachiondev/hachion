@@ -146,7 +146,7 @@ export default function RegularVideo() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/regularvideo");
+        const response = await axios.get("https://api.hachion.co/regularvideo");
         setRegularVideo(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching video:", error.message);
@@ -172,7 +172,7 @@ export default function RegularVideo() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -184,7 +184,7 @@ export default function RegularVideo() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -216,7 +216,7 @@ export default function RegularVideo() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/regularvideo/update/${editedRow.regularvideo_id}`,
+        `https://api.hachion.co/regularvideo/update/${editedRow.regularvideo_id}`,
         editedRow
       );
       setRegularVideo((prev) =>
@@ -237,7 +237,7 @@ export default function RegularVideo() {
   const handleDelete = async (regularvideo_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/regularvideo/delete/${regularvideo_id}`
+        `https://api.hachion.co/regularvideo/delete/${regularvideo_id}`
       );
       console.log("Demo Video deleted successfully:", response.data);
     } catch (error) {
@@ -290,7 +290,7 @@ export default function RegularVideo() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/regularvideo/add",
+        "https://api.hachion.co/regularvideo/add",
         dataToSubmit
       );
       if (response.status === 200) {

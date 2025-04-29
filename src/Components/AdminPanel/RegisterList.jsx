@@ -155,7 +155,7 @@ export default function RegisterList() {
     const fetchStudent = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/registerstudent"
+          "https://api.hachion.co/registerstudent"
         );
         setRegisterStudent(response.data); // Use the curriculum state
       } catch (error) {
@@ -186,7 +186,7 @@ export default function RegisterList() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/registerstudent/update/${editedData.student_id}`,
+        `https://api.hachion.co/registerstudent/update/${editedData.student_id}`,
         editedData
       );
       setRegisterStudent((prev) =>
@@ -205,7 +205,7 @@ export default function RegisterList() {
   const handleDelete = async (student_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/registerstudent/delete/${student_id}`
+        `https://api.hachion.co/registerstudent/delete/${student_id}`
       );
       console.log("Register Student deleted successfully:", response.data);
     } catch (error) {
@@ -260,7 +260,7 @@ export default function RegisterList() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/registerstudent/add",
+        "https://api.hachion.co/registerstudent/add",
         dataToSubmit
       );
       if (response.status === 200) {
@@ -280,7 +280,7 @@ export default function RegisterList() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching courses:", error.message);

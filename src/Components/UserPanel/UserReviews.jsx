@@ -62,7 +62,7 @@ export default function UserReviews({ userId }) {
         review: reviewData.review,
       })
       .then((response) => {
-        console.log("Review added:", response.data);
+        alert("Review added successfully");
         fetchReviews(); // Refresh reviews after addition
         setShowReviewForm(false);
       })

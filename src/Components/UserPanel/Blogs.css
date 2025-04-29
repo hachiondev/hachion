@@ -183,7 +183,6 @@
 
 .about-banner img {
   width: 100%;
-
   object-fit: cover;
 }
 .about-us {
@@ -730,18 +729,6 @@
 .number {
   font-weight: 700;
   font-size: 3rem;
-  padding: 0;
-  margin: 0;
-}
-
-.white-icon {
-  color: white;
-  font-size: 80px !important; /* Adjust size */
-  transition: all 0.3s ease;
-}
-
-.white-icon:hover {
-  color: lightgray; /* Add hover effect */
 }
 .story-icon {
   font-size: 60px;
@@ -749,12 +736,6 @@
 }
 
 @media (min-width: 350px) and (max-width: 480px) {
-  .white-icon {
-    color: white;
-    font-size: 30px !important; /* Adjust size */
-    transition: all 0.3s ease;
-  }
-
   .our-story {
     justify-content: flex-start;
     overflow-x: auto;
@@ -1343,6 +1324,12 @@
     margin: 5px 5px 5px 3px !important;
   }
 
+  .input-group-checkbox {
+    display: block !important;
+    width: 500px !important;
+    margin: 5px 5px 5px 3px !important;
+  }
+
   #enroll1.form-control-contact {
     height: 35px !important;
     width: 310px !important;
@@ -1544,6 +1531,13 @@
   width: 550px;
 }
 
+.input-group-checkbox {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 550px;
+}
 #enroll1 {
   height: 50px !important;
   width: 550px !important;

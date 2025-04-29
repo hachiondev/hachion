@@ -171,7 +171,7 @@ export default function TrendingCourseTable() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/trendingcourse"
+          "https://api.hachion.co/trendingcourse"
         );
         setTrendingCourse(response.data); // Use the curriculum state
       } catch (error) {
@@ -202,7 +202,7 @@ export default function TrendingCourseTable() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/trendingcourse/update/${editedData.trendingcourse_id}`,
+        `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,
         editedData
       );
       setTrendingCourse((prev) =>
@@ -223,7 +223,7 @@ export default function TrendingCourseTable() {
   const handleDelete = async (trendingcourse_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/trendingcourse/delete/${trendingcourse_id}`
+        `https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`
       );
       console.log("Trending Courses deleted successfully:", response.data);
     } catch (error) {
@@ -271,11 +271,11 @@ export default function TrendingCourseTable() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/trendingcourse/add",
+        "https://api.hachion.co/trendingcourse/add",
         dataToSubmit
       );
-      if (response.status === 200) {
-        alert("Courses added successfully");
+      if (response.status === 201) {
+        alert(response.data);
         setCourseData([...courseData, dataToSubmit]); // Update local state
         handleReset(); // Clear form fields
       }
@@ -291,7 +291,7 @@ export default function TrendingCourseTable() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -303,7 +303,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         console.log("API response:", response.data); // Check the API response
         if (Array.isArray(response.data)) {
           setCourse(response.data); // Update state
@@ -713,38 +713,6 @@ export default function TrendingCourseTable() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Courses Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
     </>
   );
 }

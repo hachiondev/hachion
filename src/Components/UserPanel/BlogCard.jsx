@@ -1,5 +1,5 @@
-import React from 'react';
-import './Corporate.css';
+import React from "react";
+import "./Corporate.css";
 
 const BlogCard = ({ imageSrc, content, onClick }) => {
   return (

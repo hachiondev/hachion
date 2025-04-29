@@ -73,8 +73,6 @@ const Login = () => {
     }
   };
 
-  // Display error message
-
   const googleLogin = () => {
     window.open("https://api.hachion.co/oauth2/authorization/google", "_self");
   };
@@ -145,7 +143,6 @@ const Login = () => {
                   )}
                 </span>
               </div>
-              {/* {errors.password && touched.password ? (<p className='form-error'>{errors.password}</p>) : null} */}
 
               <Link to="/forgotpassword" style={{ textDecoration: "none" }}>
                 <p className="forgot-password">Forgot Password?</p>
@@ -169,13 +166,6 @@ const Login = () => {
               </div>
               {captchaError && <p className="error-message">{captchaError}</p>}
 
-              {/* <div className="form-check">
-                  <ReCAPTCHA
-                    sitekey="YOUR_SITE_KEY" 
-                    onChange={handleCaptchaChange}
-                  />
-                </div> */}
-
               <div className="d-grid gap-2">
                 <button
                   className="register-btn"
@@ -186,27 +176,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
-            {/* <div className='login-with'> */}
-            {/* <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
-              <p className='login-option'>Or Login with</p>
-              <hr width='20%' size='2' style={{ marginTop: '2vh' }}></hr>
-            </div> */}
-
-            {/* <div className='icon-holder'>
-              <button className="social-login-btn" onClick={googleLogin}>
-                <img src={google} alt='google'  />
-              </button>
-              <button className="social-login-btn" onClick={facebookLogin}>
-                <img src={facebook} alt='facebook'/>
-              </button>
-              <button className="social-login-btn" onClick={linkedinLogin}>
-                <img src={linkedin} alt='linkedin' />
-              </button>
-              <button className="social-login-btn" onClick={appleLogin}>
-                <img src={apple} alt='apple' />
-              </button>
-            </div> */}
 
             <p className="go-to-register">
               Don't have an account?{" "}

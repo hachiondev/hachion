@@ -427,7 +427,7 @@ const SalWorkshop = () => {
         <div className="course-row">
           <div class="col-md-3">
             <label for="inputState" class="form-label">
-              Category Name
+              Workshop Category Name
             </label>
             <select
               id="inputState"
@@ -453,7 +453,7 @@ const SalWorkshop = () => {
           </div>
           <div className="col-md-3">
             <label htmlFor="course" className="form-label">
-              Course Name
+              Workshop Course Name
             </label>
 
             <select

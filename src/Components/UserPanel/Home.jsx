@@ -44,9 +44,7 @@ export const Home = () => {
         <Trending />
         <Corporate />
         <Career />
-        {/* <Learners/> */}
         <Learners page="home" />
-
         <Footer />
       </div>
       <StickyBar />

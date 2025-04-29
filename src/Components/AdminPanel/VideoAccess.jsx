@@ -147,7 +147,7 @@ export default function TrendingCourseTable() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/trendingcourse"
+          "https://api.hachion.co/trendingcourse"
         );
         setTrendingCourse(response.data); // Use the curriculum state
       } catch (error) {
@@ -178,7 +178,7 @@ export default function TrendingCourseTable() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/trendingcourse/update/${editedData.trendingcourse_id}`,
+        `https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,
         editedData
       );
       setTrendingCourse((prev) =>
@@ -199,7 +199,7 @@ export default function TrendingCourseTable() {
   const handleDelete = async (trendingcourse_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/trendingcourse/delete/${trendingcourse_id}`
+        `https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`
       );
       console.log("Trending Courses deleted successfully:", response.data);
     } catch (error) {
@@ -247,7 +247,7 @@ export default function TrendingCourseTable() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/trendingcourse/add",
+        "https://api.hachion.co/trendingcourse/add",
         dataToSubmit
       );
       if (response.status === 200) {
@@ -267,7 +267,7 @@ export default function TrendingCourseTable() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -279,7 +279,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         console.log("API response:", response.data); // Check the API response
         if (Array.isArray(response.data)) {
           setCourse(response.data); // Update state

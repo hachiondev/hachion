@@ -1,13 +1,3 @@
-// import React from 'react'
-
-// function WorkshopSchedule() {
-//   return (
-//     <div>WorkshopSchedule</div>
-//   )
-// }
-
-// export default WorkshopSchedule
-
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { duration, styled } from "@mui/material/styles";
@@ -20,8 +10,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import dayjs from "dayjs";
-import { RiCloseCircleLine } from "react-icons/ri";
-import success from "../../Assets/success.gif";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -79,7 +67,6 @@ export default function WorkshopSchedule() {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [catChange, setCatChange] = useState(0);
   const [editedRow, setEditedRow] = useState({
     bannerImage: null,
     category_name: "",
@@ -89,6 +76,9 @@ export default function WorkshopSchedule() {
     time_zone: "",
     content: "",
     details: "",
+    meta_title: "",
+    meta_keyword: "",
+    meta_description: "",
   });
   const [selectedRow, setSelectedRow] = React.useState({
     bannerImage: null,
@@ -99,6 +89,9 @@ export default function WorkshopSchedule() {
     time_zone: "",
     content: "",
     details: "",
+    meta_title: "",
+    meta_keyword: "",
+    meta_description: "",
   });
   const currentDate = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
@@ -111,6 +104,9 @@ export default function WorkshopSchedule() {
     content: "",
     details: "",
     created_date: "",
+    meta_title: "",
+    meta_keyword: "",
+    meta_description: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -152,7 +148,7 @@ export default function WorkshopSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
@@ -164,7 +160,7 @@ export default function WorkshopSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -190,21 +186,6 @@ export default function WorkshopSchedule() {
       time: newValue ? dayjs(newValue).format("hh:mm A") : null,
     }));
   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setformData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value
-  //   }));
-  // };
 
   const handleChange = (e, quillField = null, quillValue = null) => {
     setFormData((prevData) => {
@@ -250,6 +231,9 @@ export default function WorkshopSchedule() {
       time_zone: formData.time_zone || "GMT",
       content: formData.content || "",
       details: formData.details || "",
+      meta_title: formData.meta_title || "",
+      meta_description: formData.meta_description || "",
+      meta_keyword: formData.meta_keyword || "",
       created_date: currentDate,
     };
 
@@ -263,7 +247,7 @@ export default function WorkshopSchedule() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/workshopschedule/add",
+        "https://api.hachion.co/workshopschedule/add",
         formDataToSend,
         {
           headers: {
@@ -303,7 +287,7 @@ export default function WorkshopSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/workshopschedule"
+          "https://api.hachion.co/workshopschedule"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -344,7 +328,7 @@ export default function WorkshopSchedule() {
       }
 
       const response = await axios.delete(
-        `http://localhost:8080/workshopschedule/delete/${id}`
+        `https://api.hachion.co/workshopschedule/delete/${id}`
       );
       console.log("Courses deleted successfully:", response.data);
     } catch (error) {
@@ -383,7 +367,7 @@ export default function WorkshopSchedule() {
       }
 
       const response = await axios.put(
-        `http://localhost:8080/workshopschedule/update/${selectedRow.id}`,
+        `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
         formDataToSend,
         {
           headers: {
@@ -419,15 +403,6 @@ export default function WorkshopSchedule() {
       ...prev,
       [name]: value,
     }));
-    if (name === "category_name") {
-      // alert(name);
-      // alert(value);
-      setCatChange(1);
-      const filtered = courseCategory.filter(
-        (course) => course.courseCategory === value
-      );
-      setFilterCourse(filtered);
-    }
   };
 
   const quillModules = {
@@ -682,9 +657,39 @@ export default function WorkshopSchedule() {
                           "color",
                         ]}
                       />
+
                       {error && <p className="error-message">{error}</p>}
                     </div>
                   </div>
+                  <label className="form-label d-block">Meta Title</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter meta title"
+                    name="meta_title"
+                    value={formData.meta_title}
+                    onChange={handleChange}
+                  />
+
+                  <label className="form-label d-block">Meta keywords</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter meta keywords"
+                    name="meta_keyword"
+                    value={formData.meta_keyword}
+                    onChange={handleChange}
+                  />
+
+                  <label className="form-label d-block">Meta Description</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter meta description"
+                    name="meta_description"
+                    value={formData.meta_description}
+                    onChange={handleChange}
+                  />
 
                   <div className="course-row">
                     <button
@@ -848,7 +853,7 @@ export default function WorkshopSchedule() {
                       <StyledTableCell align="center">
                         {course.banner_image ? (
                           <img
-                            src={`http://localhost:8080/${course.banner_image}`}
+                            src={`https://api.hachion.co/${course.banner_image}`}
                             alt={`Banner`}
                             style={{ width: "100px", height: "50px" }}
                           />
@@ -874,7 +879,9 @@ export default function WorkshopSchedule() {
                         {course.content ? (
                           <div
                             style={{
-                              maxWidth: "500px",
+                              Width: "400px",
+                              height: "100px",
+                              overflowY: "auto",
                               wordWrap: "break-word",
                               whiteSpace: "pre-line",
                             }}
@@ -888,7 +895,9 @@ export default function WorkshopSchedule() {
                         {course.details ? (
                           <div
                             style={{
-                              maxWidth: "500px",
+                              Width: "400px",
+                              height: "100px",
+                              overflowY: "auto",
                               wordWrap: "break-word",
                               whiteSpace: "pre-line",
                             }}
@@ -1006,23 +1015,11 @@ export default function WorkshopSchedule() {
                   <option value="" disabled>
                     Select Course
                   </option>
-                  {catChange
-                    ? filterCourse.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))
-                    : courseCategory.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))}
-
-                  {/* {courseCategory.map((curr) => (
+                  {courseCategory.map((curr) => (
                     <option key={curr.id} value={curr.courseName}>
                       {curr.courseName}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
               </div>
             </div>
@@ -1116,38 +1113,6 @@ export default function WorkshopSchedule() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                    Workshop Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
     </>
   );
 }

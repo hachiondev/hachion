@@ -19,7 +19,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image, scheduleCoun
   const navigateToCourse = () => {
     if (heading) {
       const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/courseDetails/${formattedName}`, {
+      navigate(`/courseDetails/${formattedName}#upcoming-batch`, {
         state: { scrollTo: 'upcoming-batch' }  // pass scroll target
       });
     }

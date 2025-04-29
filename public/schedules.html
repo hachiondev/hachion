@@ -31,10 +31,11 @@
   <thead>
     <tr>
       <th>Course Name</th>
-      <th>Trainer Name</th>
+     
       <th>Start Date</th>
       <th>Mode</th>
       <th>Time</th>
+      <th>Meeting link</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -48,11 +49,12 @@ fetch('https://api.hachion.co/schedulecourse')
     data.forEach(schedule => {
       const row = `
         <tr>
-          <td>${schedule.course_name || 'N/A'}</td>
-          <td>${schedule.trainer_name || 'N/A'}</td>
-          <td>${schedule.start_date || 'N/A'}</td>
-          <td>${schedule.mode || 'N/A'}</td>
-          <td>${schedule.time || 'N/A'}</td>
+          <td>${schedule.schedule_course_name || 'N/A'}</td>
+       
+          <td>${schedule.schedule_date || 'N/A'}</td>
+          <td>${schedule.schedule_mode || 'N/A'}</td>
+          <td>${schedule.schedule_time || 'N/A'}</td>
+          <td>${schedule.meeting_link || 'N/A'}</td>
         </tr>
       `;
       tableBody.innerHTML += row;

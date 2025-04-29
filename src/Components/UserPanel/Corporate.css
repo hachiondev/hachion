@@ -1116,9 +1116,6 @@ padding: 20px;
       transform: translateY(-50%);
       margin: 0px;
     }
-    .custom-next-icon{
-      margin-right: -220px;
-  }
 
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
@@ -1145,7 +1142,6 @@ padding: 20px;
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  top: 290px;
 }
 
 .custom-prev-icon, .custom-next-icon {
@@ -1154,17 +1150,20 @@ padding: 20px;
   transform: translateY(-50%);
   margin: 0px;
 }
-.custom-next-icon{
-  margin-right: -300px;
+.custom-prev-icon {
+  margin-left: -8vh;
+}
+.custom-next-icon {
+  margin-right: -8vh;
 }
 
   .learner-card {
   display: block;
-    width: 60vw; 
+  max-width: 250px; 
   }
   .learner-card-container {
-    flex-direction: column;
-    align-items: center;
+    /* flex-direction: column; */
+   justify-content: center;
     max-width: 900px;
   }
 }

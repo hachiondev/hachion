@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +31,7 @@ public interface CourseScheduleRepository extends JpaRepository <CourseSchedule,
 	""", nativeQuery = true)
 	int deletePastWorkshops(@Param("currentDateTime") String currentDateTime);
 
+	 @Query(value = "SELECT DISTINCT schedule_course_name FROM schedule", nativeQuery = true)
+	    List<String> findAllCourseNames();
 
 }

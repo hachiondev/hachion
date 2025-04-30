@@ -213,4 +213,14 @@ public class ScheduleController {
 	 * 
 	 */
 
+	 @GetMapping("/schedulecourse/all")
+	    public ResponseEntity<?> getAllCourseNames() {
+	        List<String> courseNames = repo.findAllCourseNames();
+
+	        if (courseNames.isEmpty()) {
+	            return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); // No courses available
+	        }
+
+	        return new ResponseEntity<>(courseNames, HttpStatus.OK); // Return course names only
+	    }
 }

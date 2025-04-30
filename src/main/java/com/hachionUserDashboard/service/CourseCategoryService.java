@@ -31,7 +31,7 @@ public class CourseCategoryService {
 
     // Retrieve all categories
     public Iterable<CourseCategory> getAllCategories() {
-        return courseCategoryRepository.findAll();
+        return courseCategoryRepository.findAllByOrderByNameAsc();
     }
 
     // Retrieve a category by ID

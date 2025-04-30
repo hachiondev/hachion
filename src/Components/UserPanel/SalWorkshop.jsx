@@ -125,13 +125,37 @@ const SalWorkshop = () => {
       try {
         const response = await axios.get('https://api.hachion.co/workshopschedule');
         setWorkshops(response.data);
-  
+    
         const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
         setCategories(uniqueCategories);
+    
+        // ✅ Auto-select default category & course and display data
+        const defaultWorkshop = response.data[0];
+        const defaultCategory = defaultWorkshop?.category_name;
+        const defaultCourse = defaultWorkshop?.course_name;
+    
+        setWorkshopData({
+          category_name: defaultCategory,
+          course_name: defaultCourse,
+        });
+    
+        const { localDate, localTime, timeZone } = convertISTtoLocalTime(
+          defaultWorkshop?.datetime || defaultWorkshop?.date,
+          defaultWorkshop?.time
+        );
+    
+        setWorkshop({
+          ...defaultWorkshop,
+          localDate,
+          localTime,
+          timeZone,
+        });
+    
       } catch (error) {
-        // Error silently caught, no console output
+        // handle error silently or set fallback state
       }
     };
+    
   
     fetchWorkshops();
   }, []);
@@ -260,28 +284,21 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
   }
 };
 
-  
-  // ✅ New code: Fetch user's timezone from IP
   useEffect(() => {
     fetch("https://ipwho.is/")
       .then((res) => res.json())
       .then((data) => {
-        // Set timezone globally
         if (data?.timezone?.id) {
           window.userTimeZoneFromIP = data.timezone.id;
         } else {
           window.userTimeZoneFromIP = "America/New_York"; // fallback timezone
         }
-  
-        // Get user country code
         const userCountryCode = data?.country_code || "US";
   
-        // Match with predefined country list
         const matchedCountry = countries.find(
           (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
         );
   
-        // Set country (fallback to USA)
         setSelectedCountry(
           matchedCountry || {
             name: "United States",
@@ -291,10 +308,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         );
       })
       .catch(() => {
-        // If IP lookup fails (e.g., permission denied or network error)
         window.userTimeZoneFromIP = "America/New_York";
-  
-        // Set default USA flag + code
         setSelectedCountry({
           name: "United States",
           code: "+1",
@@ -302,35 +316,25 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         });
       });
   }, []);
-
-
-
   const handleScrollToWorkshop = () => {
     if (workshopRef.current) {
       workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.mobileNumber || !formData.fullName || !formData.emailId) {
       setError('Please fill all the details to register.');
       setMessageType('error');
       return;
     }
-
     setError('');
     setMessageType('');
-
     const currentDate = new Date().toISOString().split("T")[0];
     const timeZoneShort = timeZoneAbbreviationMap[resolvedTimeZone] || resolvedTimeZone || "IST";
-    
-    
     const updatedFormData = {
       fullName: formData.fullName,
       courseCategory: formData.courseCategory || "Salesforce",
@@ -343,7 +347,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       date: currentDate,
       country: selectedCountry.name
     };
-
     try {
       const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
       setError("Registration for workshop done successfully");
@@ -355,7 +358,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       setMessageType('error');
     }
   };
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -371,19 +373,15 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       },
       { rootMargin: '0px', threshold: 0.1 }
     );
-
     if (footerRef.current) {
       observer.observe(footerRef.current);
     }
-
     return () => {
       if (footerRef.current) {
         observer.unobserve(footerRef.current);
       }
     };
   }, []);
-
-  
   return (
     <>
     <Helmet>
@@ -413,9 +411,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
   </select>
       </div>
       <div className="col-md-3">
-      <label htmlFor="course" className="form-label">Workshop Course Name</label>
-
-      <select
+      <label htmlFor="course" className="form-label">Workshop Course Name</label>      <select
     id="course"
     className="form-select"
     name="course_name"
@@ -428,8 +424,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       <option key={idx} value={course}>{course}</option>
     ))}
   </select>
-
-            </div>
+    </div>
       <div>
         <button className="workshop-button" onClick={handleSearch}>
         Submit
@@ -440,30 +435,23 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       {workshop && (
       <div className='course-top'>
         <div className='about-banner'>
-          {/* <img src={Banner2} alt="Banner2" onClick={handleScrollToWorkshop}/> */}
-          <img
+            <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
                   ? `https://api.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
-            // style={{ height: "420px"}}
+      
             className="d-block w-100"
             onClick={handleScrollToWorkshop}
           />
         </div>
-
         <div className='workshop-content'>
           <h2 className='workshop-heading'>About training program</h2>
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>
-              
-
               <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.content.trim() || "" }} />
-              
-            
             </div>
-
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
@@ -484,14 +472,9 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
   <p>
     Time: {workshop?.localTime} {workshop?.timeZone}
   </p>
-        {/* <p>Date: 15th March</p>
-        <p>Time: 10AM EST</p> */}
         <p>(4 Days a Week: Monday - Thursday)</p>
         <p>Time Duration: 1 Hour Daily</p>
       </div>
-
-      {/* <p>{workshop?.details}</p> */}
-
       <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() || "" }} />
 
           
@@ -536,27 +519,19 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
               </div>
             </div>
         </div>
-
         <WorkshopLearners />
-
         <div className='workshopfaq'>
         <WorkshopFAQ />
         </div>
-      
         <div className='workshopform' ref={workshopRef}>
-        
         <div className='workshop-content'>
         <form onSubmit={handleSubmit}>
           <h2 className='workshop-reg'>Join the Workshop Now!</h2>
           <div className='workshop-top-form'>
           <img className='workshop-reg-img' src={salreg} alt='' />
-
           <div>
-          
           <div className='join-form'>
-        
             <div className="form-group col-10" style={{marginBottom: '20px'}}>
-              
           <label htmlFor="inputName" className="form-label">
           Full Name<span className='star'>*</span>
           </label>
@@ -570,7 +545,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
             placeholder="Enter your name"
           />
         </div>
-
         <div className="form-group col-10" style={{marginBottom: '20px'}}>
           <label htmlFor="inputEmail" className="form-label">
             Email ID<span className='star'>*</span>
@@ -585,7 +559,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
             placeholder="abc@gmail.com"
           />
         </div>
-
         <div className="form-group col-10" style={{marginBottom: '20px'}}>
           <label className="form-label">Mobile Number</label>
                   <div className="input-group mb-3 custom-width">
@@ -600,7 +573,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
                         <Flag code={selectedCountry.flag} className="country-flag" />
                         {selectedCountry.code}
                       </Button>
-          
                       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
                         {countries.map((country) => (
                           <MenuItem
@@ -612,7 +584,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
                           </MenuItem>
                         ))}
                       </Menu>
-          
                       <input
                         type="tel"
                         className="mobile-number"
@@ -627,22 +598,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
                     </div>
                   </div>
                   </div>
-
           <div className='form-group col-10' style={{ position: 'relative' }}>
-            {/* <label for="inputState" className='form-label'>
-              Time Zone<span className="star">*</span>
-            </label> */}
-            {/* <div className="input-group mb-2"> */}
-              {/* <select id='query1' class="form-select mode" name="timeZone"
-          value={formData.timeZone}
-          onChange={handleChange}>
-            <option selected>Select Time Zone</option>
-            <option>EST</option>
-            <option>CST</option>
-            <option>MST</option>
-            <option>PST</option>
-            <option>IST</option>
-          </select> */}
             </div>
             </div>
             {error && (
@@ -655,33 +611,20 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
     {error}
   </div>
 )}
-
-
             <button
               type="submit"
               className="register-button"
             >
               Register
             </button>
-          
-
             </div>
-            
-          
         </div>
         </form> 
-        
         </div>
-        
-
         </div>
-      
-      {/* Footer section to stop the sticky behavior */}
       <div ref={footerRef}>
         <Footer />
-        
       </div>
-      
       <StickyBar />
       </div>)}
       

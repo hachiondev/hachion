@@ -340,7 +340,13 @@ const [filterData, setFilterData] = useState({
   
         return response.status === 201;
       } catch (error) {
-        console.error("Error adding curriculum:", error.response?.data || error.message);
+        const backendMessage = error.response?.data?.message || error.response?.data || error.message;
+      
+        console.error("Error adding curriculum:", backendMessage);
+      
+        // Display specific backend message to user
+        alert(`Error uploading file: ${backendMessage}`);
+      
         return false;
       }
     });
@@ -353,9 +359,10 @@ const [filterData, setFilterData] = useState({
       setShowAddCourse(false);
       setCurriculumData({});
       setRows([{ id: Date.now(), title: "", topic: "", link: "" }]); // Reset to initial row
-    } else {
-      alert("Some entries failed to upload. Please check the console for errors.");
-    }
+    } 
+    // else {
+    //   alert("Some entries failed to upload. Please check the console for errors.");
+    // }
   };
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (

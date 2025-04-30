@@ -1,4 +1,3 @@
-// TrainingCard.js
 import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { FaCircle } from "react-icons/fa";
@@ -19,7 +18,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image, scheduleCoun
   const navigateToCourse = () => {
     if (heading) {
       const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/courseDetails/${formattedName}#upcoming-batch`, {
+      navigate(`/courseDetails/${formattedName}`, {
         state: { scrollTo: 'upcoming-batch' }  // pass scroll target
       });
     }

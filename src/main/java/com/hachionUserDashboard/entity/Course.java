@@ -180,7 +180,7 @@ public class Course {
 	@Column(name = "date")
 	private LocalDate date;
 
-	@Column
+	@Column(name = "course_category")
 	private String courseCategory;
 
 	public Course() {

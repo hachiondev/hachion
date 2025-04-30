@@ -403,43 +403,52 @@ public class CurriculumController {
 
 	@PostMapping("curriculum/add")
 	public ResponseEntity<String> addCurriculum(@RequestPart("curriculumData") String curriculumData,
-			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf) {
-		try {
-			// ObjectMapper to convert JSON string to Curriculum object
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			Curriculum curriculum = objectMapper.readValue(curriculumData, Curriculum.class);
+	        @RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf) {
+	    try {
+	        // ObjectMapper to convert JSON string to Curriculum object
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.registerModule(new JavaTimeModule());
+	        Curriculum curriculum = objectMapper.readValue(curriculumData, Curriculum.class);
 
-			if (curriculumPdf != null && !curriculumPdf.isEmpty()) {
-				String pdfFileName = "pdfs/" + curriculumPdf.getOriginalFilename();
+	        if (curriculumPdf != null && !curriculumPdf.isEmpty()) {
+	            String originalFileName = curriculumPdf.getOriginalFilename();
 
-				System.out.println("Checking for PDF: " + pdfFileName);
+	            // Validate file name
+	            if (!originalFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                        .body("Invalid file name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
+	            }
 
-				Optional<Curriculum> existingCurriculum = repo.findPdfByExactName(pdfFileName);
+	            String pdfFileName = "pdfs/" + originalFileName;
 
-				if (existingCurriculum.isPresent()) {
-					System.out.println("PDF already exists in the database: " + pdfFileName);
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-							.body("This PDF already exists in the database.");
-				} else {
-					System.out.println("No existing PDF found for: " + pdfFileName);
-				}
+	            System.out.println("Checking for PDF: " + pdfFileName);
 
-				String pdfPath = saveFile(curriculumPdf, "pdfs");
-				curriculum.setCurriculum_pdf(pdfPath != null ? pdfPath : "");
-			} else {
-				curriculum.setCurriculum_pdf(""); // If no PDF is provided, store empty string
-			}
+	            Optional<Curriculum> existingCurriculum = repo.findPdfByExactName(pdfFileName);
 
-			repo.save(curriculum);
+	            if (existingCurriculum.isPresent()) {
+	                System.out.println("PDF already exists in the database: " + pdfFileName);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                        .body("This PDF already exists in the database.");
+	            } else {
+	                System.out.println("No existing PDF found for: " + pdfFileName);
+	            }
 
-			return ResponseEntity.status(HttpStatus.CREATED).body("Curriculum added successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error adding curriculum: " + e.getMessage());
-		}
+	            String pdfPath = saveFile(curriculumPdf, "pdfs");
+	            curriculum.setCurriculum_pdf(pdfPath != null ? pdfPath : "");
+	        } else {
+	            curriculum.setCurriculum_pdf(""); // If no PDF is provided, store empty string
+	        }
+
+	        repo.save(curriculum);
+
+	        return ResponseEntity.status(HttpStatus.CREATED).body("Curriculum added successfully.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error adding curriculum: " + e.getMessage());
+	    }
 	}
+
 
 //    @PostMapping("curriculum/add")
 //    public ResponseEntity<String> addCurriculum(

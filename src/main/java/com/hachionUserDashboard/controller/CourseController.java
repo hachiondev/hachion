@@ -382,4 +382,14 @@ public class CourseController {
 		return null;
 
 	}
+	 @GetMapping("/category")
+	    public ResponseEntity<?> getCoursesByCategory(@RequestParam String courseCategory) {
+	        List<Course> courses = repo.findCoursesByCategory(courseCategory);
+	        
+	        if (courses.isEmpty()) {
+	            return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); // Custom message
+	        }
+	        
+	        return new ResponseEntity<>(courses, HttpStatus.OK);
+	    }
 }

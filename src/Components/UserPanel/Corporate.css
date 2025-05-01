@@ -476,7 +476,7 @@
   cursor: pointer;
   z-index: 1;
   border-radius: 50%;
-  margin-left: -10vh; /* Move slightly further left */
+  margin-left: -10vh;
 }
 .custom-next-icon {
   font-size: 2rem;
@@ -485,11 +485,11 @@
   cursor: pointer;
   z-index: 1;
   border-radius: 50%;
-  margin-right: -10vh; /* Move slightly further left */
+  margin-right: -10vh;
 }
 .carousel-control-next,
 .carousel-control-prev {
-  position: relative;
+  position: absolute;
   top: 0;
   bottom: 0;
   z-index: 1;
@@ -503,7 +503,6 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  align-items: center;
   list-style: none;
 }
 
@@ -1106,9 +1105,6 @@
     transform: translateY(-50%);
     margin: 0px;
   }
-  .custom-next-icon {
-    margin-right: -220px;
-  }
 
   .blogs-container {
     grid-template-columns: repeat(4, 1fr);
@@ -1145,19 +1141,19 @@
     margin: 0px;
   }
   .custom-prev-icon {
-    margin-left: -8vh; /* Slight adjustment */
+    margin-left: -8vh;
   }
   .custom-next-icon {
-    margin-right: -8vh; /* Slight adjustment */
+    margin-right: -8vh;
   }
 
   .learner-card {
     display: block;
-    width: 60vw;
+    max-width: 250px;
   }
   .learner-card-container {
-    flex-direction: column;
-    align-items: center;
+    /* flex-direction: column; */
+    justify-content: center;
     max-width: 900px;
   }
 }
@@ -1177,16 +1173,17 @@
   .carousel-indicators {
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-top: 20px;
+    top: 460px;
   }
 
   .custom-prev-icon,
   .custom-next-icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0px;
+    /* position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0px; */
+    display: none;
   }
 
   .learner-card-item {
@@ -1666,7 +1663,6 @@
   .carousel-indicators {
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-top: 10px;
   }
 

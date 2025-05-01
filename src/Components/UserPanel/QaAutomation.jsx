@@ -28,6 +28,7 @@ const QaAutomation = () => {
   const [isSticky, setIsSticky] = useState(false);
   // const { course_id } = useParams(); // Get course_id from URL
   const { courseName } = useParams();
+  // alert(courseName);
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

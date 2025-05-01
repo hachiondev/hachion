@@ -225,6 +225,13 @@ const TrainingEvents = () => {
             <option value="Live Demo">Live Demo</option>
           </select>
 
+          <select value={timeFilter} onChange={handleTimeChange}>
+            <option value="">Any Time</option>
+            <option value="new">Newly Added</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+          </select>
+
           <div className="course-search-container">
             <input
               type="text"
@@ -268,13 +275,6 @@ list="course-options"
               </option>
             ))}
           </select> */}
-
-          <select value={timeFilter} onChange={handleTimeChange}>
-            <option value="">Any Time</option>
-            <option value="new">Newly Added</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-          </select>
 
           <button className="view-all" onClick={resetFilters}>
             Reset

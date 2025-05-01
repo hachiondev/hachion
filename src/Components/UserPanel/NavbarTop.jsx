@@ -11,6 +11,7 @@ import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
 import "./Home.css";
 import axios from "axios";
+import Fuse from "fuse.js";
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -25,6 +26,7 @@ const NavbarTop = () => {
   const [courses, setCourses] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   // Helper function to format course name for the URL
   const formatCourseName = (courseName) => {
@@ -39,42 +41,105 @@ const NavbarTop = () => {
           axios.get("https://api.hachion.co/courses/all"),
           axios.get("https://api.hachion.co/blog"),
         ]);
-
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        alert("Unable to fetch search results. Please try again.");
       }
     };
 
     fetchCoursesAndBlogs();
   }, []);
 
+  const highlightMatch = (text, query) => {
+    const parts = text.split(new RegExp(`(${query})`, "gi"));
+    return parts.map((part, index) =>
+      part.toLowerCase() === query.toLowerCase() ? (
+        <strong key={index}>{part}</strong>
+      ) : (
+        part
+      )
+    );
+  };
+
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
+    setSelectedItem(null);
 
-    if (query.trim() === "") {
+    if (query.trim().length < 2) {
       setSearchResults([]);
       return;
     }
 
-    const filteredCourses = courses.filter((course) =>
-      course.courseName?.toLowerCase().includes(query.toLowerCase())
-    );
+    const courseFuse = new Fuse(courses, {
+      keys: ["courseName", "courseCategory"],
+      threshold: 0.4,
+      ignoreLocation: true,
+    });
 
-    const filteredBlogs = blogs.filter(
-      (blog) =>
-        blog.title?.toLowerCase().includes(query.toLowerCase()) ||
-        blog.category_name?.toLowerCase().includes(query.toLowerCase())
-    );
+    const blogFuse = new Fuse(blogs, {
+      keys: ["title", "category_name"],
+      threshold: 0.4,
+      ignoreLocation: true,
+    });
 
-    const combinedResults = [
-      ...filteredCourses.map((course) => ({ ...course, type: "course" })),
-      ...filteredBlogs.map((blog) => ({ ...blog, type: "blog" })),
-    ];
+    const courseResults = courseFuse
+      .search(query)
+      .map((res) => ({ ...res.item, type: "course" }));
+    const blogResults = blogFuse
+      .search(query)
+      .map((res) => ({ ...res.item, type: "blog" }));
+    const combinedResults = [...courseResults, ...blogResults];
+
+    // ✅ Sort alphabetically (case-insensitive)
+    combinedResults.sort((a, b) => {
+      const nameA = (a.courseName || a.title || "").toLowerCase();
+      const nameB = (b.courseName || b.title || "").toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
 
     setSearchResults(combinedResults);
+  };
+
+  const handleSearchSubmit = () => {
+    if (!searchQuery.trim()) {
+      alert("Please enter a search term.");
+      return;
+    }
+
+    if (
+      selectedItem &&
+      (selectedItem.courseName || selectedItem.title).toLowerCase() ===
+        searchQuery.toLowerCase()
+    ) {
+      handleCourseClick(selectedItem);
+      return;
+    }
+
+    const fuseCourse = new Fuse(courses, {
+      keys: ["courseName", "courseCategory"],
+      threshold: 0.4,
+      ignoreLocation: true,
+    });
+
+    const fuseBlog = new Fuse(blogs, {
+      keys: ["title", "category_name"],
+      threshold: 0.4,
+      ignoreLocation: true,
+    });
+
+    const courseResult = fuseCourse.search(searchQuery);
+    const blogResult = fuseBlog.search(searchQuery);
+
+    if (courseResult.length > 0) {
+      handleCourseClick({ ...courseResult[0].item, type: "course" });
+    } else if (blogResult.length > 0) {
+      handleCourseClick({ ...blogResult[0].item, type: "blog" });
+    } else {
+      alert("No matching content found. Please refine your search.");
+    }
   };
 
   // Navigate to the course details page when a course card is clicked
@@ -178,9 +243,16 @@ const NavbarTop = () => {
                 placeholder="Enter Courses, Category or Keywords"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearchSubmit();
+                }}
                 aria-label="Search"
               />
-              <button className="btn-search-home">
+              <button
+                className="btn-search-home"
+                onClick={handleSearchSubmit}
+                disabled={!searchQuery.trim()}
+              >
                 <IoSearch style={{ fontSize: "1.8rem" }} />
               </button>
             </div>
@@ -193,8 +265,15 @@ const NavbarTop = () => {
                 aria-label="Search"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearchSubmit();
+                }}
               />
-              <button className="btn-search-mobile">
+              <button
+                className="btn-search-mobile"
+                onClick={handleSearchSubmit}
+                disabled={!searchQuery.trim()}
+              >
                 <IoSearch className="search-icon" />
               </button>
               <button
@@ -219,68 +298,43 @@ const NavbarTop = () => {
             </button>
           )}
         </div>
-        {searchResults.length > 0 && (
-          <div
-            className="search-results"
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-              zIndex: 10,
-            }}
-          >
-            {searchResults.map((item) => (
-              <div
-                key={item.id}
-                className="result-card"
-                onClick={() => handleCourseClick(item)}
-                style={{
-                  cursor: "pointer",
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  margin: "5px auto",
-                  width: "35%",
-                  borderRadius: "5px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                }}
-              >
+        {searchQuery.length >= 2 && !selectedItem && (
+          <div className="search-results">
+            {searchResults.length === 0 ? (
+              <div className="no-results">No Results Found</div>
+            ) : (
+              searchResults.map((item) => (
                 <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                  key={item.id}
+                  className="result-card"
+                  onClick={() => {
+                    setSearchQuery(item.courseName || item.title);
+                    setSearchResults([]);
+                    setSelectedItem(item);
                   }}
                 >
-                  <div>
-                    <p style={{ fontWeight: "bold" }}>
-                      {item.type === "course" ? item.courseName : item.title}
-                    </p>
-                    <p style={{ color: "#555" }}>
-                      {item.type === "course"
-                        ? item.courseCategory
-                        : item.category_name}
-                    </p>
-                  </div>
-                  <div>
+                  <div className="result-content">
+                    <div>
+                      <p className="result-title">
+                        {highlightMatch(
+                          item.courseName || item.title,
+                          searchQuery
+                        )}
+                      </p>
+                    </div>
                     <img
+                      className="result-image"
                       src={
                         item.type === "course"
                           ? `https://api.hachion.co/${item.courseImage}`
-                          : `HachionUserDashboad/blogs/${item.blog_image}`
+                          : `https://api.hachion.co/blogs/${item.blog_image}`
                       }
-                      alt={item.type === "course" ? "course" : "blog"}
-                      style={{
-                        height: "40px",
-                        width: "60px",
-                        objectFit: "cover",
-                      }}
+                      alt={item.type}
                     />
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 

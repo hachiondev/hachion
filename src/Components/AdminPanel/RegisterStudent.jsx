@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import * as React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import { FaEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { tableCellClasses } from "@mui/material/TableCell";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { IoSearch } from "react-icons/io5";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import AdminPagination from "./AdminPagination";
 import "./Admin.css";
-import CourseCategory from "./CourseCategory";
-import Pagination from "@mui/material/Pagination";
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#00AEEF",
@@ -26,7 +29,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: "1px solid #e0e0e0", // Add vertical lines for body rows
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -35,10 +37,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 export default function RegisterStudent() {
   const [enrollData, setEnrollData] = useState([]);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   useEffect(() => {
     axios
       .get("https://api.hachion.co/api/v1/user/students")
@@ -49,19 +54,104 @@ export default function RegisterStudent() {
         console.error("Error fetching enrollment data:", error);
       });
   }, []);
+  const filteredData = enrollData.filter((item) => {
+    const date = new Date(item.date || item.enroll_date);
+    const matchesSearch =
+      searchTerm === "" ||
+      [item.userName, item.email, item.country]
+        .map((field) => (field || "").toLowerCase())
+        .some((field) => field.includes(searchTerm.toLowerCase()));
+    const inDateRange =
+      (!startDate || date >= new Date(startDate)) &&
+      (!endDate || date <= new Date(endDate));
+    return matchesSearch && inDateRange;
+  });
 
-  // const handleDelete = async (id) => {
-  //     try {
-  //         await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
-  //         setEnrollData(enrollData.filter((item) => item.id !== id));
-  //     } catch (error) {
-  //         console.error("Error deleting entry:", error);
-  //     }
-  // };
+  const displayedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   return (
     <>
-      <h3>Online Registered Student</h3>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="course-category">
+          <div className="category-header">
+            <p>Online Registered Student</p>
+          </div>
+          <div className="date-schedule">
+            Start Date
+            <DatePicker value={startDate} onChange={setStartDate} />
+            End Date
+            <DatePicker value={endDate} onChange={setEndDate} />
+          </div>
+          <div className="entries">
+            <div className="entries-left">
+              <p style={{ marginBottom: "0" }}>Show</p>
+              <div className="btn-group">
+                <button
+                  type="button"
+                  className="btn-number dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {rowsPerPage}
+                </button>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      href="#!"
+                      onClick={() => setRowsPerPage(10)}
+                    >
+                      10
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      href="#!"
+                      onClick={() => setRowsPerPage(25)}
+                    >
+                      25
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      href="#!"
+                      onClick={() => setRowsPerPage(50)}
+                    >
+                      50
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <p style={{ marginBottom: "0" }}>entries</p>
+            </div>
+            <div className="entries-right">
+              <div
+                className="search-div"
+                role="search"
+                style={{ border: "1px solid #d3d3d3" }}
+              >
+                <input
+                  className="search-input"
+                  type="search"
+                  placeholder="Enter Name, email or country"
+                  aria-label="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button className="btn-search" type="submit">
+                  <IoSearch style={{ fontSize: "2rem" }} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </LocalizationProvider>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -78,28 +168,43 @@ export default function RegisterStudent() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {enrollData.map((row, index) => (
-              <StyledTableRow key={row.id}>
-                <StyledTableCell>
-                  <Checkbox />
-                </StyledTableCell>
-                <StyledTableCell>{index + 1}</StyledTableCell>
-                <StyledTableCell align="left">{row.userName}</StyledTableCell>
-                <StyledTableCell align="left">{row.email}</StyledTableCell>
-                <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-                <StyledTableCell align="center">{row.country}</StyledTableCell>
-                {/* <StyledTableCell align="center">
+            {displayedData.length > 0 ? (
+              displayedData.map((row, index) => (
+                <StyledTableRow key={row.batch_id || index}>
+                  <StyledTableCell>
+                    <Checkbox />
+                  </StyledTableCell>
+                  <StyledTableCell>{index + 1}</StyledTableCell>
+                  <StyledTableCell align="left">{row.userName}</StyledTableCell>
+                  <StyledTableCell align="left">{row.email}</StyledTableCell>
+                  <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.country}
+                  </StyledTableCell>
+                  {/* <StyledTableCell align="center">
                                     <RiDeleteBin6Line className="delete" onClick={() => handleDelete(row.id)} style={{ cursor: "pointer", color: "red" }} />
 
                                 </StyledTableCell> */}
+                </StyledTableRow>
+              ))
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={15} align="center">
+                  No data available
+                </StyledTableCell>
               </StyledTableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <div className="pagination">
-        <Pagination count={10} color="primary" />
+      <div className="pagination-container">
+        <AdminPagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalRows={filteredData.length}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </>
   );

@@ -959,7 +959,7 @@
   width: 100px;
 }
 .contact-us-right {
-  width: 668px;
+  width: 41.75rem;
   background-color: #ffffff;
   margin-top: 4vh;
   border-radius: 20px;
@@ -1326,7 +1326,7 @@
 
   .input-group-checkbox {
     display: block !important;
-    width: 500px !important;
+    width: 70% !important;
     margin: 5px 5px 5px 3px !important;
   }
 

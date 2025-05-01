@@ -51,6 +51,9 @@ const Footer = () => {
   const handleWorkshop = () => {
     navigate("/workshop");
   };
+  const handleUnsubscribe = () => {
+    navigate("/unsubscribe");
+  };
   return (
     <div className="footer">
       <div className="footer-top">
@@ -115,6 +118,9 @@ const Footer = () => {
             </p>
             <p className="footer-term" onClick={handlePrivacy}>
               Privacy Policy
+            </p>
+            <p className="footer-term" onClick={handleUnsubscribe}>
+              Unsubscribe
             </p>
           </div>
           <div className="footer-link">

@@ -7,7 +7,7 @@ import Flag from "react-world-flags";
 import contactUsBanner from "../../Assets/contactus.png";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import UsaFlag from "../../Assets/usflag.jpg";
-import "./Blogs.css";
+import "./unsubscribe.css";
 import indiaFlag from "../../Assets/india.jpg";
 import dubaiFlag from "../../Assets/dubai.jpg";
 import whatsappIcon from "../../Assets/logos_whatsapp-icon.png";
@@ -213,7 +213,7 @@ const ContactUs = () => {
     <>
       <Topbar />
       <NavbarTop />
-      <div className="contact-us-all">
+      <div className="unsubscribe-container">
         <div className="contact-us-bottom-div">
           <div className="contact-us-right">
             <div className="contact-us-right-header">
@@ -294,9 +294,9 @@ const ContactUs = () => {
                   </Menu>
                   <input
                     type="tel"
-                    className="mobile-number"
+                    className="u-mobile-number"
                     ref={mobileInputRef}
-                    id="contact2"
+                    id="unsubscribe-txt"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     aria-label="Text input with segmented dropdown button"
@@ -308,7 +308,7 @@ const ContactUs = () => {
                 Unsubscribe From
               </label>
               {error && <p className="error-message">{error}</p>}
-              <div className="input-group-checkbox custom-width">
+              <div className="input-group-checkbox">
                 <div class="form-check pe-4">
                   <input
                     class="form-check-input"
@@ -349,7 +349,7 @@ const ContactUs = () => {
               <div class="mb-3">
                 <button
                   type="button"
-                  class="submit-button"
+                  class="u-submit-button"
                   onClick={handleFormSubmit}
                 >
                   Submit

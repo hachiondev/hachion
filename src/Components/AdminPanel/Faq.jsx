@@ -68,6 +68,7 @@ export default function Faq() {
     const[curriculum,setCurriculum]=useState([]);
     const[filterCourse,setFilterCourse]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
+    const [homeFilter,setHomeFilter]=useState([]);
     const [open, setOpen] = React.useState(false);
     const [rows, setRows] = useState([{ id:Date.now(),faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
@@ -154,7 +155,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -172,10 +173,20 @@ export default function Faq() {
             setFilterCourse([]); // Reset when no category is selected
           }
         }, [curriculumData.category_name, courseCategory]);
+          useEffect(() => {
+              if (filterData.category_name) {
+                const filtered = courseCategory.filter(
+                  (course) => course.courseCategory === filterData.category_name
+                );
+                setHomeFilter(filtered);
+              } else {
+                setHomeFilter([]); 
+              }
+            }, [filterData.category_name, courseCategory]);
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -257,7 +268,7 @@ export default function Faq() {
           }
       
           const response = await axios.put(
-            `/HachionUserDashboad/faq/update/${editedRow.faq_id}`,
+            `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
             formData,
             {
               headers: {
@@ -316,7 +327,7 @@ export default function Faq() {
       // useEffect(() => {
       //   const fetchData = async () => {
       //     try {
-      //       const response = await axios.get("/HachionUserDashboad/faq");
+      //       const response = await axios.get("https://api.hachion.co/faq");
       //       setAllData(response.data);
       //       setDisplayedCategories(response.data); // initially display all
       //     } catch (error) {
@@ -329,7 +340,7 @@ export default function Faq() {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const response = await axios.get("/HachionUserDashboad/faq");
+              const response = await axios.get("https://api.hachion.co/faq");
               setAllData(response.data);
               setFilteredCurriculum(response.data); // Used for paginated display
             } catch (error) {
@@ -341,7 +352,7 @@ export default function Faq() {
       const handleDelete = async (faq_id) => {
        
          try { 
-          const response = await axios.delete(`/HachionUserDashboad/faq/delete/${faq_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`); 
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
@@ -409,7 +420,7 @@ export default function Faq() {
 //     console.log("Data being sent:", dataToSubmit); // Debugging
 
 //     try {
-//         const response = await axios.post("/HachionUserDashboad/curriculum/add", dataToSubmit, {
+//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
 //             headers: {
 //                 "Content-Type": "multipart/form-data" 
 //             }
@@ -448,7 +459,7 @@ export default function Faq() {
 //   console.log("Data being sent:", formData); // Debugging
 
 //   try {
-//       const response = await axios.post("/HachionUserDashboad/faq/add", formData, {
+//       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
 //           headers: {
 //               "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
 //           }
@@ -488,7 +499,7 @@ const handleSubmit = async (e) => {
     }
 
     try {
-      const response = await axios.post("/HachionUserDashboad/faq/add", formData, {
+      const response = await axios.post("https://api.hachion.co/faq/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -693,6 +704,35 @@ const handleSubmit = async (e) => {
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select" name='category_name' value={filterData.category_name} onChange={handlefilterChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    </select>
+  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={filterData.course_name}
+          onChange={handlefilterChange}
+          disabled={!filterData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {homeFilter.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
+{/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
     <select
   id="inputState"
   className="form-select"
@@ -730,7 +770,7 @@ const handleSubmit = async (e) => {
                         </option>
                       ))}
 </select>
-      </div>
+      </div> */}
   {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -747,6 +787,7 @@ const handleSubmit = async (e) => {
 </div>
 </div>
 </div>
+{(filterData.category_name || filterData.course_name) ?(
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -798,7 +839,8 @@ const handleSubmit = async (e) => {
 )}
 </TableBody>
     </Table>
-    </TableContainer>
+    </TableContainer>):(<p>Please select category or courses to display data</p>)}
+    {(filterData.category_name || filterData.course_name) ?(
     <div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
@@ -806,7 +848,7 @@ const handleSubmit = async (e) => {
       totalRows={filteredCurriculum.length} // Use the full list for pagination
       onPageChange={handlePageChange}
     />
-              </div>
+              </div>):(<p></p>)}
     {message && <div className="success-message">{message}</div>}
 
     </div>)}

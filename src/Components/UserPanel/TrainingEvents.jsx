@@ -25,10 +25,13 @@ const TrainingEvents = () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
-            `/HachionUserDashboad/schedulecourse?timezone=${userTimezone}`
+            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
-          fetch("/HachionUserDashboad/courses/all").then((res) => res.json()),
+          
+          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
         ]);
+        console.log("Received schedule data:", JSON.stringify(scheduleRes, null, 2));
+        console.log("Received curses data:", JSON.stringify(coursesRes, null, 2));
 
         if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
           throw new Error("Invalid API response format");
@@ -53,9 +56,12 @@ const TrainingEvents = () => {
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
-          ...new Set(coursesRes.map((course) => course.courseName.trim())),
+          ...new Set(scheduleRes.map((course) => course.schedule_course_name.trim())),
         ];
+        console.log("unique courses:", JSON.stringify(uniqueCourses, null, 2));
+
         setCourseOptions(uniqueCourses);
+        console.log("unique for set courses:", JSON.stringify(uniqueCourses, null, 2));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -78,10 +84,61 @@ const TrainingEvents = () => {
     }).format(localDate);
   };
   
+  // const getFilteredCourses = () => {
+  //   const now = new Date();
+  
+  //   // Filter based on mode, course name, and time
+  //   const filtered = mergedCourses.filter((course) => {
+  //     const courseDate = new Date(course.schedule_date);
+  //     const createdDate = new Date(course.created_at);
+  
+  //     const isToday = courseDate.toDateString() === now.toDateString();
+  //     const isThisWeek =
+  //       (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
+  //       courseDate > now;
+  //     const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
+  
+  //     const courseNameMatch =
+  //       !courseFilter ||
+  //       course.schedule_course_name?.toLowerCase().trim() ===
+  //         courseFilter.toLowerCase().trim();
+  
+  //     const modeMatch =
+  //       !modeFilter ||
+  //       course.schedule_mode?.toLowerCase().trim() ===
+  //         modeFilter.toLowerCase().trim();
+  
+  //     const timeMatch =
+  //       !timeFilter ||
+  //       (timeFilter === "today" && isToday) ||
+  //       (timeFilter === "week" && isThisWeek) ||
+  //       (timeFilter === "new" && isNewlyAdded);
+  
+  //     return courseNameMatch && modeMatch && timeMatch;
+  //   });
+  
+  //   // Group by course name
+  //   const grouped = {};
+  //   filtered.forEach((item) => {
+  //     const key = item.schedule_course_name.trim().toLowerCase();
+  //     if (!grouped[key]) {
+  //       grouped[key] = {
+  //         ...item,
+  //         sessions: [],
+  //       };
+  //     }
+  //     grouped[key].sessions.push({
+  //       date: item.schedule_date,
+  //       time: item.schedule_time,
+  //     });
+  //   });
+  
+  //   return Object.values(grouped);
+  // };
+  
   const getFilteredCourses = () => {
     const now = new Date();
   
-    // Filter based on mode, course name, and time
     const filtered = mergedCourses.filter((course) => {
       const courseDate = new Date(course.schedule_date);
       const createdDate = new Date(course.created_at);
@@ -94,8 +151,7 @@ const TrainingEvents = () => {
   
       const courseNameMatch =
         !courseFilter ||
-        course.schedule_course_name?.toLowerCase().trim() ===
-          courseFilter.toLowerCase().trim();
+        course.schedule_course_name?.toLowerCase().trim().includes(courseFilter.toLowerCase().trim());
   
       const modeMatch =
         !modeFilter ||
@@ -111,7 +167,6 @@ const TrainingEvents = () => {
       return courseNameMatch && modeMatch && timeMatch;
     });
   
-    // Group by course name
     const grouped = {};
     filtered.forEach((item) => {
       const key = item.schedule_course_name.trim().toLowerCase();
@@ -175,6 +230,13 @@ const TrainingEvents = () => {
             <option value="Live Demo">Live Demo</option>
           </select>
 
+          <select value={timeFilter} onChange={handleTimeChange}>
+            <option value="">Any Time</option>
+            <option value="new">Newly Added</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+          </select>
+
           <div className="course-search-container">
       <input
         type="text"
@@ -218,13 +280,6 @@ list="course-options"
             ))}
           </select> */}
 
-          <select value={timeFilter} onChange={handleTimeChange}>
-            <option value="">Any Time</option>
-            <option value="new">Newly Added</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-          </select>
-
           <button className="view-all" onClick={resetFilters}>
             Reset
           </button>
@@ -241,7 +296,7 @@ list="course-options"
   heading={course.schedule_course_name}
   image={
     course.course_image
-      ? `/HachionUserDashboad/${course.course_image}`
+      ? `https://api.hachion.co/${course.course_image}`
       : ""
   }
   date={course.schedule_date ? formatDate(course.schedule_date) : ""}

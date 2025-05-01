@@ -1,7 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
-import { duration, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -12,9 +11,6 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
 import dayjs from 'dayjs';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import success from '../../Assets/success.gif';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,8 +18,6 @@ import { IoSearch } from "react-icons/io5";
 import { FiPlus } from 'react-icons/fi';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -59,17 +53,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 export default function Curriculum() {
     const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [filterCourse,setFilterCourse]=useState([]);
-  const [searchTerm,setSearchTerm]=useState("")
+  const [searchTerm,setSearchTerm]=useState("");
+  const [homeFilter,setHomeFilter]=useState([]);
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
     const [open, setOpen] = React.useState(false);
-   
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
@@ -100,7 +93,6 @@ const [filterData, setFilterData] = useState({
             setCurrentPage(page);
             window.scrollTo(0, window.scrollY);
           };
-          // Inside your CourseCategory component
           const handleRowChange = (index, field, value) => {
             const updatedRows = [...rows];
             updatedRows[index][field] = value;
@@ -112,15 +104,11 @@ const [filterData, setFilterData] = useState({
           
           const deleteRow = (id) => {
             setRows(rows.filter(row => row.id !== id));
-          };
-          
-          
+          }; 
         const handleRowsPerPageChange = (rows) => {
           setRowsPerPage(rows);
-          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+          setCurrentPage(1); 
         };
-        
-        // Slice filteredCurriculum based on rowsPerPage and currentPage
         useEffect(() => {
           const displayed = filteredCurriculum.slice(
             (currentPage - 1) * rowsPerPage,
@@ -128,7 +116,6 @@ const [filterData, setFilterData] = useState({
           );
           setDisplayedCategories(displayed);
         }, [filteredCurriculum, currentPage, rowsPerPage]);
-
         const quillModules = {
           toolbar: [
               [{ 'list': 'ordered' }, { 'list': 'bullet' }], 
@@ -138,7 +125,6 @@ const [filterData, setFilterData] = useState({
               ['clean'] 
           ]
       };
-
          const handleReset=()=>{
             setCurriculumData({
                 curriculum_id:"",
@@ -149,17 +135,14 @@ const [filterData, setFilterData] = useState({
                     title:"",
                     topic:""
                  });
-        
-         }
-  
-                
+         }      
     const handleClose = () => {
       setOpen(false); // Close the modal
     };
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -170,8 +153,8 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("/HachionUserDashboad/courses/all");
-          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+          const response = await axios.get("https://api.hachion.co/courses/all");
+          setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -185,35 +168,31 @@ const [filterData, setFilterData] = useState({
         );
         setFilterCourse(filtered);
       } else {
-        setFilterCourse([]); // Reset when no category is selected
+        setFilterCourse([]); 
       }
     }, [curriculumData.category_name, courseCategory]);
-  //   useEffect(() => {
-  //     const fetchCurriculum = async () => {
-  //         try {
-  //             const response = await axios.get('/HachionUserDashboad/curriculum');
-  //             setCurriculum(response.data); // Use the curriculum state
-  //         } catch (error) {
-  //             console.error("Error fetching curriculum:", error.message);
-  //         }
-  //     };
-  //     fetchCurriculum();
-  //     setFilteredCurriculum(curriculum)
-  // }, [curriculum]); // Empty dependency array ensures it runs only once
+    useEffect(() => {
+      if (filterData.category_name) {
+        const filtered = courseCategory.filter(
+          (course) => course.courseCategory === filterData.category_name
+        );
+        setHomeFilter(filtered);
+      } else {
+        setHomeFilter([]); 
+      }
+    }, [filterData.category_name, courseCategory]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/HachionUserDashboad/curriculum");
+        const response = await axios.get("https://api.hachion.co/curriculum");
         setAllData(response.data);
-        setFilteredCurriculum(response.data); // Used for paginated display
+        setFilteredCurriculum(response.data); 
       } catch (error) {
         console.error("Error fetching curriculum data", error);
       }
     };
     fetchData();
   }, []);
-  
-  
     const handleDeleteConfirmation = (curriculum_id) => {
         if (window.confirm("Are you sure you want to delete this Curriculum?")) {
           handleDelete(curriculum_id);
@@ -243,8 +222,6 @@ const [filterData, setFilterData] = useState({
       const handleSave = async () => {
         try {
           const formData = new FormData();
-      
-          // Construct only the necessary fields
           const curriculumData = {
             category_name: editedRow.category_name,
             course_name: editedRow.course_name,
@@ -254,17 +231,14 @@ const [filterData, setFilterData] = useState({
           };
       
           formData.append("curriculumData", JSON.stringify(curriculumData));
-      
-          // Append file only if it is selected and is a File object
           if (
             editedRow.curriculum_pdf &&
             editedRow.curriculum_pdf instanceof File
           ) {
             formData.append("curriculumPdf", editedRow.curriculum_pdf);
-          }
-      
+          }      
           const response = await axios.put(
-            `/HachionUserDashboad/curriculum/update/${editedRow.curriculum_id}`,
+            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
             formData,
             {
               headers: {
@@ -289,12 +263,10 @@ const [filterData, setFilterData] = useState({
           setMessage("Error updating Curriculum.");
         }
       };
-      
-
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`/HachionUserDashboad/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -322,19 +294,13 @@ const [filterData, setFilterData] = useState({
         ...prev,
         curriculum_pdf: e.target.files[0], // this must be a File object
       }));
-  };
-  
-  
-        
+  };   
         const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
+          setShowAddCourse(false);         
         }
         const handleClickOpen = (row) => {
-     
-            setEditedRow(row)// Set the selected row data
-            setOpen(true); // Open the modal
-            
+            setEditedRow(row)
+            setOpen(true);             
           };
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -347,26 +313,18 @@ const [filterData, setFilterData] = useState({
     const { name, value } = e.target;
     const newFilter = { ...filterData, [name]: value };
     setFilterData(newFilter);
-  
     const filtered = allData.filter((item) =>
       (!newFilter.category_name || item.category_name === newFilter.category_name) &&
       (!newFilter.course_name || item.course_name === newFilter.course_name)
     );
-  
     setFilteredCurriculum(filtered);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); 
   };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     const currentDate = new Date().toISOString().split("T")[0];
-  
-  
     const uploadPromises = rows.map(async (row) => {
       const formData = new FormData();
-  
-      // Append static shared values
       formData.append("curriculumData", JSON.stringify({
         category_name: curriculumData.category_name,
         course_name: curriculumData.course_name,
@@ -382,7 +340,7 @@ const [filterData, setFilterData] = useState({
       }
   
       try {
-        const response = await axios.post("/HachionUserDashboad/curriculum/add", formData, {
+        const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -393,7 +351,13 @@ const [filterData, setFilterData] = useState({
   
         return response.status === 201;
       } catch (error) {
-        console.error("Error adding curriculum:", error.response?.data || error.message);
+        const backendMessage = error.response?.data?.message || error.response?.data || error.message;
+      
+        console.error("Error adding curriculum:", backendMessage);
+      
+        // Display specific backend message to user
+        alert(`Error uploading file: ${backendMessage}`);
+      
         return false;
       }
     });
@@ -406,12 +370,11 @@ const [filterData, setFilterData] = useState({
       setShowAddCourse(false);
       setCurriculumData({});
       setRows([{ id: Date.now(), title: "", topic: "", link: "" }]); // Reset to initial row
-    } else {
-      alert("Some entries failed to upload. Please check the console for errors.");
-    }
+    } 
+    // else {
+    //   alert("Some entries failed to upload. Please check the console for errors.");
+    // }
   };
-  
-     
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -427,13 +390,13 @@ const [filterData, setFilterData] = useState({
                       </li>
                     </ol>
                   </nav>
-<div className='category'>
-<div className='category-header'>
-<p>Add Curriculum</p>
-</div>
-<div className='course-details'>
-<div className='course-row'>
-<div class="col-md-3">
+    <div className='category'>
+    <div className='category-header'>
+    <p>Add Curriculum</p>
+    </div>
+    <div className='course-details'>
+    <div className='course-row'>
+    <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
     <option value="" disabled>
@@ -471,7 +434,6 @@ const [filterData, setFilterData] = useState({
     name='curriculum_pdf'
     onChange={handleFileUpload}
 />
-
 </div>
   </div>
   <TableContainer component={Paper}>
@@ -495,7 +457,6 @@ const [filterData, setFilterData] = useState({
         onChange={(e) => handleRowChange(index, 'title', e.target.value)}
       />
     </StyledTableCell>
-
     <StyledTableCell align='center'>
       <ReactQuill
         theme="snow"
@@ -510,7 +471,6 @@ const [filterData, setFilterData] = useState({
         }
       />
     </StyledTableCell>
-
     <StyledTableCell align='center'>
       <input
         className='table-curriculum'
@@ -519,7 +479,6 @@ const [filterData, setFilterData] = useState({
         onChange={(e) => handleRowChange(index, 'link', e.target.value)}
       />
     </StyledTableCell>
-
     <StyledTableCell align='center'>
       <GoPlus onClick={addRow} style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }} />
       <IoClose onClick={() => deleteRow(row.id)} style={{ fontSize: '2rem', color: 'red' }} />
@@ -529,7 +488,6 @@ const [filterData, setFilterData] = useState({
         </TableBody>
       </Table>
     </TableContainer>
-  
     <div className="course-row">
   <button className='submit-btn' data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
@@ -541,7 +499,6 @@ const [filterData, setFilterData] = useState({
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-       
         <div className='category'>
           <div className='category-header'>
             <p>View Curriculum</p>
@@ -602,6 +559,35 @@ const [filterData, setFilterData] = useState({
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select" name='category_name' value={filterData.category_name} onChange={handlefilterChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    </select>
+  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={filterData.course_name}
+          onChange={handlefilterChange}
+          disabled={!filterData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {homeFilter.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
+{/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
     <select
   id="inputState"
   className="form-select"
@@ -631,7 +617,7 @@ const [filterData, setFilterData] = useState({
     <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
   ))}
 </select>
-      </div>
+      </div> */}
   {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -648,7 +634,7 @@ const [filterData, setFilterData] = useState({
 </div>
 </div>
 </div>
-
+{(filterData.category_name || filterData.course_name) ? (
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -675,7 +661,8 @@ const [filterData, setFilterData] = useState({
       <StyledTableCell align="center">
         {index + 1 + (currentPage - 1) * rowsPerPage}
       </StyledTableCell>
-      <StyledTableCell align="left">{course.title}</StyledTableCell>
+      <StyledTableCell align="left"
+      style={{ width: '200px', whiteSpace: 'wrap' }}>{course.title}</StyledTableCell>
       <StyledTableCell align="left">
     {course.topic ? (
         <div 
@@ -687,7 +674,13 @@ const [filterData, setFilterData] = useState({
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
-      <StyledTableCell align="left">{course.curriculum_pdf}</StyledTableCell>
+      <StyledTableCell align="left" style={{ width: '100px' }}>
+        {course.curriculum_pdf ? (
+          course.curriculum_pdf.split('/').pop()
+        ) : (
+          'No PDF'
+        )}
+      </StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
@@ -704,15 +697,16 @@ const [filterData, setFilterData] = useState({
 )}
 </TableBody>
     </Table>
-    </TableContainer>
-    <div className='pagination-container'>
+    </TableContainer>):(<p>Please select category and courses to display data</p>)}
+   { (filterData.category_name || filterData.course_name) ?
+    (<div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
       rowsPerPage={rowsPerPage}
       totalRows={filteredCurriculum.length} // Use the full list for pagination
       onPageChange={handlePageChange}
     />
-              </div>
+              </div>):(<p></p>)}
     {message && <div className="success-message">{message}</div>}
 
     </div>)}

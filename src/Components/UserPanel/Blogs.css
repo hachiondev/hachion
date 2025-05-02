@@ -1738,3 +1738,71 @@
   font-size: 14px;
   padding-top: 5px;
 }
+
+/*----SiteMap CSS----*/
+.sitemap-content {
+  padding: 2px 10px;
+}
+.div_category {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  padding: 0px 0px 0px 30px;
+  align-items: center;
+  text-align: justify;
+  align-content: flex-start;
+}
+.txtCategory {
+  flex: 1 1 100%; /* Default: Full width */
+  font-size: 16px;
+  font-weight: 400;
+  text-align: justify;
+  line-height: 20px;
+  white-space: normal; /* Ensures wrapping */
+  word-break: break-word; /* Breaks long words */
+  overflow-wrap: break-word; /* Ensures text does not overflow */
+}
+.txtCategory a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.txtCoursebtn {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6c757d;
+  background: none;
+  border: none;
+  max-width: 100%; /* Prevents overflow */
+  white-space: normal; /* Ensures text wraps inside button */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left; /* Centers text */
+  padding: 5px;
+}
+
+.txtCoursebtn:hover {
+  color: #00aeef;
+}
+.txtCategory a:hover {
+  color: #00aeef;
+}
+
+.title_allcourse {
+  padding: 10px;
+}
+
+@media (min-width: 350px) and (max-width: 480px) {
+  .title_allcourse {
+    padding-top: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .div_category p {
+    flex: 1 1 calc(33.333% - 10px); /* 3-column layout */
+  }
+}

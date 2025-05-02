@@ -36,6 +36,7 @@ import SalWorkshop from "./Components/UserPanel/SalWorkshop";
 import ProtectedRoute from "./ProtectedRoute";
 import CorporateCourses from "./Components/AdminPanel/CorporateCourses";
 import Unsubscribe from "./Components/UserPanel/Unsubscribe";
+import Sitemap from "./Components/UserPanel/Sitemap";
 const TrackPageView = () => {
   const location = useLocation();
 
@@ -95,6 +96,7 @@ function AppRoutes() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/sitemap" element={<Sitemap />} />
       </Routes>
     </>
   );

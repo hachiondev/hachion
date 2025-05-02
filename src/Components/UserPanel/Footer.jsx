@@ -51,6 +51,9 @@ const Footer = () => {
   const handleWorkshop = () => {
     navigate("/workshop");
   };
+  const handleSitemap = () => {
+    navigate("/sitemap");
+  };
   const handleUnsubscribe = () => {
     navigate("/unsubscribe");
   };
@@ -98,7 +101,9 @@ const Footer = () => {
             <span>|</span>
             <p className="footer-content">Internship</p>
             <span>|</span>
-            <p className="footer-content">Sitemap</p>
+            <p className="footer-content" onClick={handleSitemap}>
+              Sitemap
+            </p>
             <span>|</span>
             <p className="footer-content" onClick={handleWorkshop}>
               Workshop

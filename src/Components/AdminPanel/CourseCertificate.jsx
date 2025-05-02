@@ -153,9 +153,6 @@ const handleFileChange = (e) => {
           );
           setFilteredCertificate(filtered);
       }, [searchTerm,filteredCertificate]);
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);     
-        }
         const handleClickOpen = (row) => {
               setEditedData(row)
               setOpen(true);
@@ -284,11 +281,11 @@ const handleFileChange = (e) => {
     <input type="text" class="schedule-input" id="inputEmail4" name='title' value={certificateData.title} onChange={handleChange}/>
   </div>
 <div className="col">
-                <label className="form-label">Banner Image</label>
+                <label className="form-label">Certificate Image</label>
                 <input
                   type="file"
                   className="schedule-input"
-                  name="banner_image"
+                  name="certificate_image"
                   onChange={handleFileChange}
                   required
                 />
@@ -442,10 +439,11 @@ const handleFileChange = (e) => {
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Course Certificate</DialogTitle>
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Course Certificate
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
+    </DialogTitle>
   </div>
   <DialogContent>
   <div className="course-row">
@@ -476,7 +474,6 @@ const handleFileChange = (e) => {
     </select>
   </div>
   </div>
-  <div className="course-row">
   <div className="col">
       <label htmlFor="courseName" className="form-label">Certificate Title</label>
       <input
@@ -488,7 +485,7 @@ const handleFileChange = (e) => {
      />
      
     </div>
-  <div className="col-md-4">
+  <div className="col">
                 <label className="form-label">Certificate Image</label>
                 <input
                   type="file"
@@ -497,8 +494,6 @@ const handleFileChange = (e) => {
                   onChange={handleFileChange}
                   required
                 />
-                
-              </div>
               </div>
             
     <div className="mb-6">

@@ -68,6 +68,7 @@ export default function Faq() {
     const[curriculum,setCurriculum]=useState([]);
     const[filterCourse,setFilterCourse]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
+    const [homeFilter,setHomeFilter]=useState([]);
     const [open, setOpen] = React.useState(false);
     const [rows, setRows] = useState([{ id:Date.now(),faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
@@ -172,6 +173,16 @@ export default function Faq() {
             setFilterCourse([]); // Reset when no category is selected
           }
         }, [curriculumData.category_name, courseCategory]);
+          useEffect(() => {
+              if (filterData.category_name) {
+                const filtered = courseCategory.filter(
+                  (course) => course.courseCategory === filterData.category_name
+                );
+                setHomeFilter(filtered);
+              } else {
+                setHomeFilter([]); 
+              }
+            }, [filterData.category_name, courseCategory]);
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
@@ -693,6 +704,35 @@ const handleSubmit = async (e) => {
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select" name='category_name' value={filterData.category_name} onChange={handlefilterChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    </select>
+  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={filterData.course_name}
+          onChange={handlefilterChange}
+          disabled={!filterData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {homeFilter.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
+{/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
     <select
   id="inputState"
   className="form-select"
@@ -730,7 +770,7 @@ const handleSubmit = async (e) => {
                         </option>
                       ))}
 </select>
-      </div>
+      </div> */}
   {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -747,6 +787,7 @@ const handleSubmit = async (e) => {
 </div>
 </div>
 </div>
+{(filterData.category_name || filterData.course_name) ?(
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -757,7 +798,7 @@ const handleSubmit = async (e) => {
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Description</StyledTableCell>
-            <StyledTableCell align="center">FAQ pdf</StyledTableCell>
+            {/* <StyledTableCell align="center">faq pdf</StyledTableCell> */}
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
@@ -780,13 +821,7 @@ const handleSubmit = async (e) => {
     dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
   />
 </StyledTableCell>
-<StyledTableCell align="left" style={{ width: '100px' }}>
-                        {course.faq_pdf ? (
-                          course.faq_pdf.split('/').pop()
-                        ) : (
-                          'No PDF'
-                        )}
-                      </StyledTableCell>
+{/* <StyledTableCell align="center">{course.faq_pdf}</StyledTableCell> */}
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -804,7 +839,8 @@ const handleSubmit = async (e) => {
 )}
 </TableBody>
     </Table>
-    </TableContainer>
+    </TableContainer>):(<p>Please select category or courses to display data</p>)}
+    {(filterData.category_name || filterData.course_name) ?(
     <div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
@@ -812,7 +848,7 @@ const handleSubmit = async (e) => {
       totalRows={filteredCurriculum.length} // Use the full list for pagination
       onPageChange={handlePageChange}
     />
-              </div>
+              </div>):(<p></p>)}
     {message && <div className="success-message">{message}</div>}
 
     </div>)}

@@ -39,8 +39,7 @@ export default function Enroll() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     axios.get("https://api.hachion.co/enroll")
@@ -74,62 +73,98 @@ export default function Enroll() {
     return matchesSearch && inDateRange;
   });
 
-  const displayedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
-
+  const handleDateFilter = () => {
+      const filtered = enrollData.filter((item) => {
+        const date = new Date(item.date);
+        const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+        const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+        return (
+          (!start || date >= start) &&
+          (!end || date <= end)
+        );
+      });
+      setEnrollData(filtered);
+    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const handlePageChange = (page) => {
+      setCurrentPage(page);
+      window.scrollTo(0, window.scrollY);
+    };
+    const handleRowsPerPageChange = (rows) => {
+      setRowsPerPage(rows);
+      setCurrentPage(1);
+    };
+    const displayedCategories = filteredData.slice(
+      (currentPage - 1) * rowsPerPage,
+      currentPage * rowsPerPage
+    );
   return (
     <>
+        <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className='course-category'>
+        <div className='category'>
           <div className='category-header'><p>All Enrolls</p></div>
-          <div className='date-schedule'>
-            Start Date
-            <DatePicker value={startDate} onChange={setStartDate} />
-            End Date
-            <DatePicker value={endDate} onChange={setEndDate} />
-          </div>
-          <div className='entries'>
-            <div className='entries-left'>
-              <p style={{ marginBottom: '0' }}>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  {rowsPerPage}
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#!" onClick={() => setRowsPerPage(10)}>10</a></li>
-                  <li><a className="dropdown-item" href="#!" onClick={() => setRowsPerPage(25)}>25</a></li>
-                  <li><a className="dropdown-item" href="#!" onClick={() => setRowsPerPage(50)}>50</a></li>
-                </ul>
-              </div>
-              <p style={{ marginBottom: '0' }}>entries</p>
-            </div>
-            <div className='entries-right'>
-              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input
-                  className="search-input"
-                  type="search"
-                  placeholder="Enter Name, Course or Mode"
-                  aria-label="Search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+              <div className='date-schedule'>
+                Start Date
+                <DatePicker
+                  value={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }}
                 />
-                <button className="btn-search" type="submit">
-                  <IoSearch style={{ fontSize: '2rem' }} />
-                </button>
+                End Date
+                <DatePicker
+                  value={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }}
+                />
+                <button className='filter' onClick={handleDateFilter}>Filter</button>
+              </div>
+              <div className='entries'>
+                <div className='entries-left'>
+                  <p style={{ marginBottom: '0' }}>Show</p>
+                  <div className="btn-group">
+                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      {rowsPerPage}
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                    </ul>
+                  </div>
+                  <p style={{ marginBottom: '0' }}>entries</p>
+                </div>
+                <div className='entries-right'>
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                    <input
+                      className="search-input"
+                      type="search"
+                      placeholder="Enter Names, Courses, or Mode"
+                      aria-label="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </LocalizationProvider>
-
+        </LocalizationProvider>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell><Checkbox /></StyledTableCell>
-              <StyledTableCell>S.No.</StyledTableCell>
+              <StyledTableCell sx={{ width: 50 }} align='center'>S.No.</StyledTableCell>
               <StyledTableCell align="center">Student Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
               <StyledTableCell align="center">Mobile</StyledTableCell>
@@ -146,11 +181,13 @@ export default function Enroll() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {displayedData.length > 0 ? (
-              displayedData.map((row, index) => (
-                <StyledTableRow key={row.batch_id || index}>
+          {displayedCategories.length > 0 ? (
+                displayedCategories.map((row, index) => (
+                  <StyledTableRow key={row.id}>
                   <StyledTableCell><Checkbox /></StyledTableCell>
-                  <StyledTableCell>{(currentPage - 1) * rowsPerPage + index + 1}</StyledTableCell>
+                  <StyledTableCell align="center">
+                      {index + 1 + (currentPage - 1) * rowsPerPage}
+                    </StyledTableCell>
                   <StyledTableCell align="left">{row.name}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>
@@ -186,9 +223,11 @@ export default function Enroll() {
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
           totalRows={filteredData.length}
-          onPageChange={setCurrentPage}
-        />
-      </div>
-    </>
-  );
-}
+          onPageChange={handlePageChange}
+          />
+          </div>
+          {message && <div className="success-message">{message}</div>}
+        </div>
+      </>
+    );
+  };

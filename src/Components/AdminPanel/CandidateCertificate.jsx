@@ -273,10 +273,11 @@ export default function CandidateCertificate() {
             style: { borderRadius: 20 },
           }}>
           <div>
-            <DialogTitle className="dialog-title" id="edit-schedule-dialog">Upload Candidate Certificate</DialogTitle>
+            <DialogTitle className="dialog-title" id="edit-schedule-dialog">Upload Candidate Certificate
             <Button onClick={handleClose} className="close-btn">
               <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
             </Button>
+            </DialogTitle>
           </div>
           <DialogContent>
             <div className="course-row">

@@ -9,6 +9,9 @@ import { BiSolidBookContent, BiSupport, BiArrowToLeft, BiArrowToRight} from 'rea
 import { LuFocus} from 'react-icons/lu';
 import { HiOutlineDotsCircleHorizontal} from 'react-icons/hi';
 import { IoNewspaperOutline} from 'react-icons/io5';
+import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
+import { PiStudentFill } from "react-icons/pi";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -19,10 +22,16 @@ const menuItems = [
   { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },
   { title: 'Trainer', icon: <LiaChalkboardTeacherSolid /> },
-  { title: 'Certificate', icon: <TbCertificate /> },
-  { title: 'All Enroll', icon: <FaRegPenToSquare /> },
-  { title: 'Payment Status', icon: <RiMoneyDollarCircleFill /> },
-  { title: 'Registration', icon: <BiSolidBookContent /> },
+  {
+    title: 'Student Admin',
+    icon: <PiStudentFill />,
+    children: [
+      { title: 'Registration', icon: <BiSolidBookContent /> },
+      { title: 'Enrollments', icon: <FaRegPenToSquare /> },
+      { title: 'Payments', icon: <RiMoneyDollarCircleFill /> },
+      { title: 'Certificates', icon: <TbCertificate /> },
+    ],
+  },
   { title: 'Reports', icon: <IoNewspaperOutline /> },
   { title: 'Schedule Request', icon: <BiSolidBookContent /> },
   { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
@@ -34,13 +43,21 @@ const menuItems = [
 const AdminSidebar = ({ onSelectCategory = () => {} }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
     onSelectCategory(title);
   };
+
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(prev => !prev);
+    setIsSidebarCollapsed((prev) => !prev);
   };
+
+  const toggleDropdown = (index) => {
+    setOpenDropdownIndex((prev) => (prev === index ? null : index));
+  };
+
   return (
     <aside className={`sidebar-admin ${isSidebarCollapsed ? 'collapsed' : ''}`} aria-label="Admin Sidebar">
       <div className="heading-admin">
@@ -57,18 +74,50 @@ const AdminSidebar = ({ onSelectCategory = () => {} }) => {
         {menuItems.map((item, index) => (
           <li key={index} className="menu-item-container-admin">
             <button
-              onClick={() => handleMenuItemClick(index, item.title)}
+              onClick={() => {
+                if (item.children) {
+                  toggleDropdown(index);
+                } else {
+                  handleMenuItemClick(index, item.title);
+                }
+              }}
               className={`menu-item-admin ${activeIndex === index ? 'active' : ''}`}
-              aria-current={activeIndex === index ? 'true' : undefined}
               aria-label={item.title}
             >
-              <span className="menu-icon">{item.icon}</span>
-              {!isSidebarCollapsed && <span className="menu-title">{item.title}</span>}
-            </button>
+              <div className="menu-icon-title-container">
+                <span className="menu-icon">{item.icon}</span>
+                {!isSidebarCollapsed && <span className="menu-title">{item.title}</span>}
+              </div>
+              {item.children && (
+              <span className="dropdown-icon">
+                {openDropdownIndex === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </span>
+            )}
+          </button>
+
+            {/* Dropdown Submenu BELOW main item */}
+            {item.children && openDropdownIndex === index && (
+            <ul className={`submenu-list-admin ${isSidebarCollapsed ? 'collapsed-submenu' : ''}`}>
+              {item.children.map((subItem, subIndex) => (
+                <li key={subIndex} className="submenu-item-container-admin">
+                  <button
+                    onClick={() => handleMenuItemClick(`${index}-${subIndex}`, subItem.title)}
+                    className={`submenu-item-admin ${activeIndex === `${index}-${subIndex}` ? 'active' : ''}`}
+                  >
+                    <div className="menu-icon-title-container">
+                      <span className="menu-icon">{subItem.icon}</span>
+                      {!isSidebarCollapsed && <span className="menu-title">{subItem.title}</span>}
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
           </li>
         ))}
       </ul>
     </aside>
   );
 };
+
 export default AdminSidebar;

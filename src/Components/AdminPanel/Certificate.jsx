@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Admin.css';
 import CourseCertificate from './CourseCertificate';
 import CandidateCertificate from './CandidateCertificate';
+import GenerateCertificate from './GenerateCertificate';
 export default function Certificate() {
   const [activeTab, setActiveTab] = useState('courseCertificate');
   const handleTabChange = (tab) => {
@@ -23,9 +24,16 @@ export default function Certificate() {
         >
           Candidate Certificate
         </div>
+        <div 
+          className={`tab-item ${activeTab === 'generateCertificate' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('generateCertificate')}
+        >
+          Generate Certificate
+        </div>
       </div>  
       {activeTab==='courseCertificate' &&  <CourseCertificate/>}
       {activeTab==='candidateCertificate' &&  <CandidateCertificate/>}
+      {activeTab==='generateCertificate' &&  <GenerateCertificate/>}
     </>
   );
 }

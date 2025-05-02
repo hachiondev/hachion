@@ -57,7 +57,8 @@ export default function Curriculum() {
     const [courseCategory,setCourseCategory]=useState([]);
   const [course,setCourse]=useState([]);
   const [filterCourse,setFilterCourse]=useState([]);
-  const [searchTerm,setSearchTerm]=useState("")
+  const [searchTerm,setSearchTerm]=useState("");
+  const [homeFilter,setHomeFilter]=useState([]);
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[curriculum,setCurriculum]=useState([]);
     const[filteredCurriculum,setFilteredCurriculum]=useState([])
@@ -170,6 +171,16 @@ const [filterData, setFilterData] = useState({
         setFilterCourse([]); 
       }
     }, [curriculumData.category_name, courseCategory]);
+    useEffect(() => {
+      if (filterData.category_name) {
+        const filtered = courseCategory.filter(
+          (course) => course.courseCategory === filterData.category_name
+        );
+        setHomeFilter(filtered);
+      } else {
+        setHomeFilter([]); 
+      }
+    }, [filterData.category_name, courseCategory]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -548,6 +559,35 @@ const [filterData, setFilterData] = useState({
 <div className='course-row'>
 <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
+    <select id="inputState" class="form-select" name='category_name' value={filterData.category_name} onChange={handlefilterChange}>
+    <option value="" disabled>
+          Select Category
+        </option>
+        {course.map((curr) => (
+          <option key={curr.id} value={curr.name}>
+            {curr.name}
+          </option>
+        ))}
+    </select>
+  </div>
+  <div className="col-md-3">
+        <label htmlFor="course" className="form-label">Course Name</label>
+        <select
+          id="course"
+          className="form-select"
+          name="course_name"
+          value={filterData.course_name}
+          onChange={handlefilterChange}
+          disabled={!filterData.category_name}
+        >
+          <option value="" disabled>Select Course</option>
+          {homeFilter.map((curr) => (
+            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+          ))}
+        </select>
+      </div>
+{/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
     <select
   id="inputState"
   className="form-select"
@@ -577,7 +617,7 @@ const [filterData, setFilterData] = useState({
     <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
   ))}
 </select>
-      </div>
+      </div> */}
   {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -594,7 +634,7 @@ const [filterData, setFilterData] = useState({
 </div>
 </div>
 </div>
-
+{(filterData.category_name || filterData.course_name) ? (
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -657,15 +697,16 @@ const [filterData, setFilterData] = useState({
 )}
 </TableBody>
     </Table>
-    </TableContainer>
-    <div className='pagination-container'>
+    </TableContainer>):(<p>Please select category and courses to display data</p>)}
+   { (filterData.category_name || filterData.course_name) ?
+    (<div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
       rowsPerPage={rowsPerPage}
       totalRows={filteredCurriculum.length} // Use the full list for pagination
       onPageChange={handlePageChange}
     />
-              </div>
+              </div>):(<p></p>)}
     {message && <div className="success-message">{message}</div>}
 
     </div>)}

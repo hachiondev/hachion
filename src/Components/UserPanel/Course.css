@@ -3006,7 +3006,7 @@ max-height: 3em;
       border-radius: 5px;
       margin-bottom: 5px;
       font-size: 10px;
-      text-align: justify;
+      text-align: left;
     }
     
     .bullet-list {

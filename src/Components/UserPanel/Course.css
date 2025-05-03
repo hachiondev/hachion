@@ -172,6 +172,9 @@ color: black;
   font-weight: 600;
   text-align: center;
   padding: 1vh;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .menu-item:hover {
@@ -2713,7 +2716,7 @@ max-height: 3em;
 }
 
 .course-banner-content{
-  color: white;
+  color: #00AAEF;
   font-weight: 600;
   font-size: 16px;
 }

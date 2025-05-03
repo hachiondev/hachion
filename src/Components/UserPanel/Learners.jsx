@@ -16,13 +16,14 @@ const Learners = ({ page }) => {
       try {
         const response = await fetch("https://api.hachion.co/userreview");
         const data = await response.json();
-  
+
         if (Array.isArray(data)) {
-          const filteredReviews = data.filter((review) => 
-            review.type === true &&
-            review.display && typeof review.display === "string"
-              ? review.display.split(",").map(item => item.trim()).includes(page)
-              : false
+          const filteredReviews = data.filter(
+            (review) =>
+              review.type === true &&
+              review.display &&
+              typeof review.display === "string" &&
+              review.display.split(",").map((d) => d.trim()).includes(page)
           );
           setReviews(filteredReviews);
         } else {
@@ -32,9 +33,9 @@ const Learners = ({ page }) => {
         console.error("Error fetching reviews:", error);
       }
     };
-  
+
     fetchReviews();
-  
+
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -54,6 +55,16 @@ const Learners = ({ page }) => {
     setShowModal(true);
   };
 
+  const goToPrev = () => {
+    setActiveIndex((prevIndex) =>
+      prevIndex === 0 ? groupedReviews.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % groupedReviews.length);
+  };
+
   return (
     <div className="training-events">
       <div className="association">
@@ -65,8 +76,7 @@ const Learners = ({ page }) => {
           activeIndex={activeIndex}
           onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
           indicators={false}
-          prevIcon={<FaAngleLeft className="custom-prev-icon" />}
-          nextIcon={<FaAngleRight className="custom-next-icon" />}
+          controls={false}
           interval={null}
         >
           {groupedReviews.map((group, index) => (
@@ -81,50 +91,71 @@ const Learners = ({ page }) => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ""}
-                    onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
+                    profileImage={
+                      review.user_image
+                        ? `https://api.hachion.co/${review.user_image}`
+                        : ""
+                    }
+                    onReadMore={() =>
+                      handleReadMore(index * (isMobile ? 1 : 3) + idx)
+                    }
                   />
                 ))}
               </div>
             </Carousel.Item>
           ))}
         </Carousel>
-        <ul className="carousel-indicators">
-          {groupedReviews.map((_, index) => (
-            <li
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={index === activeIndex ? "active" : ""}
-            />
-          ))}
-        </ul>
-      </div>
 
-      {/* Modal for Full Review */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Student Review</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Carousel
-            activeIndex={activeIndex}
-            onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
-            indicators={false}
-            prevIcon={<FaAngleLeft className="custom-prev-icon" />}
-            nextIcon={<FaAngleRight className="custom-next-icon" />}
-            interval={null}
-          >
-            {reviews.map((review, index) => (
-              <Carousel.Item key={index}>
-                <div className="full-review">
-                  <h3>{review.name}</h3>
-                  <p>{review.review}</p>
-                </div>
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </Modal.Body>
-      </Modal>
+        {/* Arrows and Line Indicators */}
+        <div className="carousel-nav">
+  <FaAngleLeft className="custom-prev-icon" onClick={goToPrev} />
+
+  <div className="indicator-wrapper">
+    <ul className="carousel-indicators-line">
+      {groupedReviews.map((_, index) => (
+        <li
+          key={index}
+          onClick={() => setActiveIndex(index)}
+          className={index === activeIndex ? "active" : ""}
+        />
+      ))}
+    </ul>
+  </div>
+
+  <FaAngleRight className="custom-next-icon" onClick={goToNext} />
+</div>
+
+        {/* Modal */}
+        <Modal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          centered
+          size="lg"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Student Review</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Carousel
+              activeIndex={activeIndex}
+              onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
+              indicators={false}
+              prevIcon={<FaAngleLeft className="custom-prev-icon" />}
+              nextIcon={<FaAngleRight className="custom-next-icon" />}
+              interval={null}
+            >
+              {reviews.map((review, index) => (
+                <Carousel.Item key={index}>
+                  <div className="full-review">
+                    <h3>{review.name}</h3>
+                    <p>{review.review}</p>
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          </Modal.Body>
+        </Modal>
+      </div>
     </div>
   );
 };

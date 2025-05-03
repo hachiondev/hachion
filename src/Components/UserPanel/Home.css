@@ -1168,6 +1168,7 @@ align-items: center;
 justify-content: center;
 text-align: center; 
 padding: 20px 0;
+white-space: wrap;
 }
 
 .footer-p {
@@ -1175,15 +1176,15 @@ padding: 20px 0;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  gap: 30px;
+  gap: 20px;
   }
 
 .footer-link {
 display: flex;
 flex-direction: row;
 justify-content: space-evenly;
-padding-left: 50px;
-gap: 30px;
+padding-left: 5%;
+gap: 20px;
 }
 
 .footer-link img {

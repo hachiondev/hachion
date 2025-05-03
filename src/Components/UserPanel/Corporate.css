@@ -496,20 +496,60 @@ position: relative;
      margin-right: -10vh;
    }
    .carousel-control-next, .carousel-control-prev {
-    position: absolute;
+    width: auto;
+    height: 100%;
     top: 0;
     bottom: 0;
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3% !important;
+    background: none;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+.indicator-wrapper {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-indicators-line {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  width: 100%;
+  gap: 5px;
+}
+
+.carousel-indicators-line li {
+  flex: 1;
+  height: 4px;
+  background-color: #c4c4c4;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-indicators-line li.active {
+  background-color: #00a4e0;
 }
  
 .carousel-indicators {
   display: flex;
   justify-content: center;
-  align-content: center;
+  gap: 10px;
+  padding-top: 10px;
+  margin-top: 20px;
   list-style: none;
 }
 
@@ -522,6 +562,10 @@ position: relative;
   cursor: pointer;
   opacity: 1;
   transition: background-color 0.3s ease;
+}
+
+.carousel-indicators-custom .active {
+  background-color: #00AAEF;
 }
 
 .carousel-indicators .active {
@@ -1633,11 +1677,11 @@ padding: 20px;
       }
   
     .job-profile{
-      text-align: center;
+      text-align: left;
       font-size: 14px;
       margin-left: 0px;
       margin-bottom: 5px;
-      white-space: nowrap;
+      white-space: wrap;
     }
 
     .job-location {
@@ -1665,18 +1709,28 @@ padding: 20px;
       flex-direction: column;
       align-items: center;
       max-width: 430px;
-      margin-bottom: 25px;
+      margin-bottom: 0;
     }
-  
-    .custom-prev-icon, .custom-next-icon {
-   display: none;
-    }
-  
-    /* Ensure carousel indicators are visible and positioned below the card */
-    .carousel-indicators {
+
+    .carousel-indicators-line {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
-      justify-content: center;
-      margin-top: 10px;
+      width: 100%;
+      gap: 0;
+  }
+  
+    .carousel-indicators-line li {
+      max-width: 18px;
+      height: 2px;
+      gap: 0;
+      display: flex;
+    }
+  
+    .custom-prev-icon,
+    .custom-next-icon {
+      font-size: 20px;
     }
   
     .carousel-indicators li {
@@ -1954,13 +2008,13 @@ padding: 20px;
   .carousel-control-next, .carousel-control-prev {
     display: none;
 } 
-.custom-prev-icon
+/* .custom-prev-icon
 {
   display: none;
  }
  .custom-next-icon {
   display: none;
-   }      
+   }       */
   
 }
 

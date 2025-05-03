@@ -51,6 +51,12 @@ const Footer = () => {
   const handleWorkshop=()=>{
     navigate('/workshop')
   }
+  const handleSitemap = () => {
+    navigate("/sitemap");
+  };
+  const handleUnsubscribe = () => {
+    navigate("/unsubscribe");
+  };
   return (
     
     <div className='footer'>
@@ -90,7 +96,7 @@ const Footer = () => {
   <span>|</span>
   <p className="footer-content">Internship</p>
   <span>|</span>
-  <p className="footer-content">Sitemap</p>
+  <p className="footer-content" onClick={handleSitemap}>Sitemap</p>
   <span>|</span>
   <p className="footer-content" onClick={handleWorkshop}>Workshop</p>
 </div>
@@ -103,6 +109,7 @@ const Footer = () => {
       <div className='term'>
       <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
       <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>
+      <p className="footer-term" onClick={handleUnsubscribe}>Unsubscribe</p>
       </div>
       <div className='footer-link'>
       <a href="https://www.facebook.com/hachion.co" 

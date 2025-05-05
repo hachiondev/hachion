@@ -111,14 +111,14 @@ const RegisterHere = () => {
           }
         } else {
           const responseText = await response.text();
-          alert(`Error: ${responseText}`);
+          // alert(`Error: ${responseText}`);
         }
       } else {
         const responseText = await response.text();
-        alert(`Error: ${responseText}`);
+        // alert(`Error: ${responseText}`);
       }
     } catch (error) {
-      alert(`An error occurred: ${error.message}`);
+      // alert(`An error occurred: ${error.message}`);
     } finally {
       navigate("/registerverification");
       setIsLoading(false); // End loading state

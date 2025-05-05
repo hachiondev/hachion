@@ -1476,6 +1476,15 @@ gap:1vh;
   margin-left: 0 !important
 }
 
+.search-input-home {
+  max-width: 300px;
+  }
+  
+  .btn-search-home {
+  width: 100px;
+  height: 50px;
+  }
+
   .nav-item-link {
     font-size: 14px;
     padding: 4px 8px;
@@ -1627,7 +1636,7 @@ gap:1vh;
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
-    width: 90%;
+    width: 80%;
     margin-left: 5%;
     margin-right: 5%;
     padding: 10px;
@@ -1642,7 +1651,7 @@ gap:1vh;
   }
   .course-search-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
 }
 
 .course-search-icon {

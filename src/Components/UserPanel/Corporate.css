@@ -476,23 +476,21 @@ position: relative;
      margin-top: 0;
      text-align: justify;
  }
- .custom-prev-icon
-{
-   font-size: 2rem;
+
+ .custom-prev-icon,
+.custom-next-icon {
+  font-size: 2rem;
    background-color:#00AAEF;
    color: #ffffff; 
    cursor: pointer;
    z-index: 1;
    border-radius: 50%;
+}
+ .custom-prev-icon
+{
    margin-left: -10vh;
  }
  .custom-next-icon {
-     font-size: 2rem;
-     background-color:#00AAEF;
-     color: #ffffff; 
-     cursor: pointer;
-     z-index: 1;
-     border-radius: 50%;
      margin-right: -10vh;
    }
    .carousel-control-next, .carousel-control-prev {
@@ -511,7 +509,7 @@ position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
   gap: 15px;
 }
 
@@ -1156,7 +1154,7 @@ padding: 20px;
   
   .custom-prev-icon, .custom-next-icon {
       position: absolute;
-      top: 50%;
+      /* top: 50%; */
       transform: translateY(-50%);
       margin: 0px;
     }
@@ -1190,7 +1188,7 @@ padding: 20px;
 
 .custom-prev-icon, .custom-next-icon {
   position: absolute;
-  top: 50%;
+  /* top: 50%; */
   transform: translateY(-50%);
   margin: 0px;
 }
@@ -1219,30 +1217,30 @@ padding: 20px;
 
   .learner-card {
   display: block;
-    width: 80%; 
-    margin-left: 10%;
-    margin-right: 10%;
+    width: 95%; 
+    height: 400px;
+    margin-left: 1%;
+    margin-right: 1%;
   }
 
   .carousel-indicators {
       display: flex;
       justify-content: center;
       margin-top: 20px;
-      top: 460px;
+      top: 430px;
     }
   
-  .custom-prev-icon, .custom-next-icon {
-      /* position: absolute;
+  /* .custom-prev-icon, .custom-next-icon {
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      margin: 0px; */
-      display: none;
-    }
+      margin: 0px;
+    } */
 
   .learner-card-item {
       display: block;
       flex-direction: column;
-      height: 350px;
+      height: 400px;
       overflow: hidden;
     }
     .learner-card-item > div {
@@ -1261,7 +1259,6 @@ padding: 20px;
   }
 
   .learner-card-container {
-      flex-direction: column;
       align-items: center;
       max-width: 700px;
     }
@@ -2106,6 +2103,6 @@ padding: 20px;
       justify-content: center;
       max-width: 800px;
       gap: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
     }
   }

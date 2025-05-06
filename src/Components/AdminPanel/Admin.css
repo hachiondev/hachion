@@ -474,6 +474,35 @@
   .submit-btn:hover{
     background-color: #0D6EFD;
   }
+  .generate-btn {
+    font-size: 20px;
+    height: 50px;
+    padding: 5px 25px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #00AEEF;
+    font-weight: 700;
+    color: #fff;
+    justify-content: center;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .generate-btn:hover {
+    background-color: #0D6EFD;
+    color: white;
+  }
+ 
+  .generate-btn:disabled {
+    background-color: #ccc;   
+    color: #666;             
+    cursor: not-allowed;      
+    opacity: 0.7;            
+  }
+  .generate-btn:disabled:hover {
+    background-color: #ccc;
+    color: #666;
+  }
   .reset-btn{
     font-size: 20px;
     height: 50px;

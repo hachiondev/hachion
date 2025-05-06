@@ -107,17 +107,17 @@ const handleFileChange = (e) => {
     const handleClose = () => {
       setOpen(false); 
     };
-    useEffect(() => {
-      const fetchCertificate = async () => {
-          try {
-              const response = await axios.get('https://api.hachion.co/certificate');
-              setCertificate(response.data);
-          } catch (error) {
-          }
-      };
-      fetchCertificate();
-      setFilteredCertificate(certificate);
-  }, []);
+  //   useEffect(() => {
+  //     const fetchCertificate = async () => {
+  //         try {
+  //             const response = await axios.get('https://api.hachion.co/certificate');
+  //             setCertificate(response.data);
+  //         } catch (error) {
+  //         }
+  //     };
+  //     fetchCertificate();
+  //     setFilteredCertificate(certificate);
+  // }, []);
     const handleDeleteConfirmation = (id) => {
         if (window.confirm("Are you sure you want to delete this certificate")) {
           handleDelete(id);
@@ -145,14 +145,14 @@ const handleFileChange = (e) => {
           const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
         } catch (error) { 
         } }; 
-        useEffect(() => {
-          const filtered = certificate.filter(certificate =>
-              certificate.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              certificate.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              certificate.title.toLowerCase().includes(searchTerm.toLowerCase())     
-          );
-          setFilteredCertificate(filtered);
-      }, [searchTerm,filteredCertificate]);
+      //   useEffect(() => {
+      //     const filtered = certificate.filter(certificate =>
+      //         certificate.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //         certificate.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //         certificate.title.toLowerCase().includes(searchTerm.toLowerCase())     
+      //     );
+      //     setFilteredCertificate(filtered);
+      // }, [searchTerm,filteredCertificate]);
         const handleClickOpen = (row) => {
               setEditedData(row)
               setOpen(true);

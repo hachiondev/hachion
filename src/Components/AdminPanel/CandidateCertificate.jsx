@@ -81,17 +81,17 @@ export default function CandidateCertificate() {
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
-  useEffect(() => {
-    const fetchCertificate = async () => {
-      try {
-        const response = await axios.get('https://api.hachion.co/certificate');
-        setCertificate(response.data);
-        setFilteredCertificate(response.data);
-      } catch (error) {
-      }
-    };
-    fetchCertificate();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCertificate = async () => {
+  //     try {
+  //       const response = await axios.get('https://api.hachion.co/certificate');
+  //       setCertificate(response.data);
+  //       setFilteredCertificate(response.data);
+  //     } catch (error) {
+  //     }
+  //   };
+  //   fetchCertificate();
+  // }, []);
   const handleSave = useCallback(async () => {
     try {
       const response = await axios.put(
@@ -109,14 +109,14 @@ export default function CandidateCertificate() {
       setMessage("Error updating Certificate.");
     }
   }, [editedData]);
-  useEffect(() => {
-    const filtered = certificate.filter(certificate =>
-      certificate.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      certificate.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      certificate.email?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCertificate(filtered);
-  }, [searchTerm, certificate]);
+  // useEffect(() => {
+  //   const filtered = certificate.filter(certificate =>
+  //     certificate.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     certificate.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     certificate.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredCertificate(filtered);
+  // }, [searchTerm, certificate]);
   const handleClickOpen = useCallback((row) => {
     setEditedData(row);
     setOpen(true);

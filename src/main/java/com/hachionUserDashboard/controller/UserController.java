@@ -29,6 +29,7 @@ package com.hachionUserDashboard.controller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,13 +47,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hachionUserDashboard.dto.CompletionDateResponse;
+import com.hachionUserDashboard.dto.CourseUserRequest;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.OtpRequest;
+import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.User;
 import com.hachionUserDashboard.util.EmailUtil;
 
 import Response.LoginResponse;
+import Response.UserProfileResponse;
 import Service.UserService;
 
 @CrossOrigin
@@ -280,4 +286,43 @@ public class UserController {
 //public ResponseEntity<String> forgotpassword(@RequestParam String email){
 //	return new ResponseEntity<>(userService.forgotpassword(email),HttpStatus.OK);
 //}
+	
+	@GetMapping("/students/{courseName}")
+	public ResponseEntity<List<StudentInfoResponse>> getStudentsByCourse(@PathVariable String courseName) {
+	    List<StudentInfoResponse> students = userService.getStudentsByCourse(courseName);
+	    return ResponseEntity.ok(students);
+	}
+	@GetMapping("/lookup")
+	public ResponseEntity<?> getStudentInfo(@RequestParam(required = false) String studentId,
+	                                        @RequestParam(required = false) String userName) {
+	    try {
+	        StudentInfoResponse response = userService.getStudentInfo(studentId, userName);
+	        return ResponseEntity.ok(response);
+	    } catch (RuntimeException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	    }
+	}
+
+	@PostMapping("/completiondate")
+	public ResponseEntity<?> getCompletionDate(@RequestBody CourseUserRequest request) {
+	    try {
+	        CompletionDateResponse response = userService.getCompletionDate(
+	            request.getCourseName(), request.getUserName()
+	        );
+	        return ResponseEntity.ok(response);
+	    } catch (RuntimeException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	    }
+	}
+
+	 @GetMapping("/myprofile")
+	    public ResponseEntity<UserProfileResponse> getUserProfile(@RequestParam String email) {
+	        UserProfileResponse profile = userService.getUserProfileByEmail(email);
+	        return ResponseEntity.ok(profile);
+	    }
+	  @PostMapping("/reset-password")
+	    public ResponseEntity<String> resetPassword(@RequestBody UserRegistrationRequest request) {
+	        userService.resetPassword(request);
+	        return ResponseEntity.ok("Password updated successfully");
+	    }
 }

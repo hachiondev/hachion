@@ -122,6 +122,7 @@ package com.hachionUserDashboard.service;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
+import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.User;
 import com.hachionUserDashboard.repository.UserRepository;
@@ -146,6 +149,7 @@ import com.hachionUserDashboard.util.EmailUtil;
 import com.hachionUserDashboard.util.OtpUtil;
 
 import Response.LoginResponse;
+import Response.UserProfileResponse;
 import Service.UserService;
 
 @Service
@@ -185,22 +189,22 @@ public class Userimpl implements UserService {
 
 	@Override
 	public String verifyOtp(String email, String otp) {
-	    User user = userRepository.findByEmail(email);
+		User user = userRepository.findByEmail(email);
 
-	    if (user == null) {
-	        return "Email does not exist in the database.";
-	    }
+		if (user == null) {
+			return "Email does not exist in the database.";
+		}
 
-	    if (user.getOTP().equals(otp)) {
-	        
-	        user.setOTPStatus(true);
-	        user.setOTP(null); 
-	        userRepository.save(user);
+		if (user.getOTP().equals(otp)) {
 
-	        return "User verified successfully with OTP.";
-	    } else {
-	        return "Invalid OTP.";
-	    }
+			user.setOTPStatus(true);
+			user.setOTP(null);
+			userRepository.save(user);
+
+			return "User verified successfully with OTP.";
+		} else {
+			return "Invalid OTP.";
+		}
 	}
 
 	@Override
@@ -214,18 +218,37 @@ public class Userimpl implements UserService {
 			return "Email does not exist.";
 		}
 		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
-		
+
 		user.setPassword(hashedPassword);
 		user.setUserName(registrationRequest.getUserName());
 		user.setMobile(registrationRequest.getMobile());
+		user.setStudentId(generateNextStudentId());
 		userRepository.save(user);
 
 		return "Password and user details updated successfully.";
 	}
 
+	private String generateNextStudentId() {
+		String prefix = "HACH";
+		String lastStudentId = userRepository.findTopByOrderByStudentIdDesc();
+
+		int nextNumber = 1;
+
+		if (lastStudentId != null && lastStudentId.startsWith(prefix)) {
+			String numberPart = lastStudentId.substring(prefix.length());
+			try {
+				nextNumber = Integer.parseInt(numberPart) + 1;
+			} catch (NumberFormatException e) {
+				nextNumber = 1;
+			}
+		}
+
+		return prefix + String.format("%03d", nextNumber);
+	}
+
 	@Override
 	public String addUser(UserRegistrationRequest userDTO) {
-	
+
 		User user = new User();
 
 		user.setUserName(userDTO.getUserName());
@@ -235,32 +258,32 @@ public class Userimpl implements UserService {
 		user.setMobile(userDTO.getMobile());
 		user.setOTP(userDTO.getOTP());
 		user.setOtpGeneratedTime(LocalDateTime.now());
-		
+
 		userRepository.save(user);
 		return user.getUserName();
 	}
-	
+
 	@Override
 	public User saveUser(String username, String email) {
-	    // Check if the user already exists
-	    Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
-	    if (existingUser.isPresent()) {
-	        return existingUser.get();
-	    }
+		// Check if the user already exists
+		Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
+		if (existingUser.isPresent()) {
+			return existingUser.get();
+		}
 
-	    // Create a new user without using builder
-	    User newUser = new User();
-	    newUser.setUserName(username);
-	    newUser.setEmail(email);
-	    newUser.setOTPStatus(true);
+		// Create a new user without using builder
+		User newUser = new User();
+		newUser.setUserName(username);
+		newUser.setEmail(email);
+		newUser.setOTPStatus(true);
 
-	    return userRepository.save(newUser);
+		return userRepository.save(newUser);
 	}
 
-	    public Optional<User> getUserByEmail(String email) {
-	        return userRepository.findBYEmailForOauth(email);
-	    }
-	    
+	public Optional<User> getUserByEmail(String email) {
+		return userRepository.findBYEmailForOauth(email);
+	}
+
 //	    @Override
 //	    public void saveUser(String email, String username) {
 //	        Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
@@ -310,9 +333,10 @@ public class Userimpl implements UserService {
 //       return user.getUserName(); // Ensure `getUsername` is defined in your `User` entity.
 // }
 //    
-	    public List<User> getAllRegisteredStudents() {
-	        return userRepository.findAll(); // This is correct
-	    }
+	public List<User> getAllRegisteredStudents() {
+		return userRepository.findAll(); // This is correct
+	}
+
 	@Override
 	public LoginResponse LoginUser(LoginRequest loginRequest) {
 		String msg = "";
@@ -494,5 +518,106 @@ public class Userimpl implements UserService {
 		userRepository.save(user);
 		return "New Password set successfully login with new password";
 	}
+	
+	public List<StudentInfoResponse> getStudentsByCourse(String courseName) {
+	    List<Object[]> results = userRepository.findUsersByCourseName(courseName);
+	    List<StudentInfoResponse> responseList = new ArrayList<>();
+
+	    for (Object[] row : results) {
+	        StudentInfoResponse res = new StudentInfoResponse();
+	        res.setUserName((String) row[0]);
+	        res.setStudentId((String) row[1]);
+	        res.setEmail((String) row[2]);
+	        responseList.add(res);
+	    }
+
+	    return responseList;
+	}
+
+	public StudentInfoResponse getStudentInfo(String studentId, String userName) {
+	    if (studentId != null) {
+	        List<Object[]> result = userRepository.findUserNameEmailByStudentId(studentId);
+	        if (!result.isEmpty()) {
+	            Object[] row = result.get(0); // Get the first row (assuming only one result)
+	            return new StudentInfoResponse(
+	                (String) row[0], // userName
+	                studentId,
+	                (String) row[1]  // email
+	            );
+	        } else {
+	            throw new RuntimeException("Student ID not found");
+	        }
+	    } else if (userName != null) {
+	        List<Object[]> result = userRepository.findStudentIdEmailByUserName(userName);
+	        if (!result.isEmpty()) {
+	            Object[] row = result.get(0); // Get the first row (assuming only one result)
+	            return new StudentInfoResponse(
+	                userName,
+	                (String) row[0], // studentId
+	                (String) row[1]  // email
+	            );
+	        } else {
+	            throw new RuntimeException("User not found");
+	        }
+	    }
+	    throw new IllegalArgumentException("Provide either studentId or userName");
+	}
+
+	public CompletionDateResponse getCompletionDate(String courseName, String userName) {
+	    String date = userRepository.findCompletionDateByCourseAndUser(courseName, userName);
+	    if (date == null) {
+	        throw new RuntimeException("Completion date not found for given course and user");
+	    }
+	    return new CompletionDateResponse(date);
+	}
+	
+	 public UserProfileResponse getUserProfileByEmail(String email) {
+	        Optional<User> userOpt = userRepository.findByEmailForProfile(email);
+	        if (userOpt.isPresent()) {
+	            User user = userOpt.get();
+	            return new UserProfileResponse(
+	                user.getUserName(),
+	                user.getEmail(),
+	                user.getMobile()
+	                
+	            );
+	        } else {
+	            throw new RuntimeException("User not found for email: " + email);
+	        }
+	    }
+	 public void resetPassword(UserRegistrationRequest request) {
+		    Optional<User> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
+
+		    if (optionalUser.isPresent()) {
+		        User user = optionalUser.get();
+
+		        // 1. Check if old password matches the encrypted password in DB
+		        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+		            System.out.println("Old password is incorrect");
+		            return;
+		        }
+
+		        // 2. Check if new password and confirm password match
+		        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+		            System.out.println("New password and confirm password do not match");
+		            return;
+		        }
+
+		        // 3. Check if old password and new password are the same
+		        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+		            System.out.println("New password must be different from the old password");
+		            return;
+		        }
+
+		        // 4. Encrypt and update the new password
+		        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+		        user.setPassword(encodedPassword);
+		        userRepository.save(user);
+		        System.out.println("Password updated successfully");
+
+		    } else {
+		        System.out.println("User not found with email: " + request.getEmail());
+		    }
+		}
 
 }

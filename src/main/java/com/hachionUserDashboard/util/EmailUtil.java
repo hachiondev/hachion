@@ -84,7 +84,7 @@ public class EmailUtil {
 
             helper.setText(htmlContent, true);
 
-            ClassPathResource logoImage = new ClassPathResource("static/images/logo.png");
+            ClassPathResource logoImage = new ClassPathResource("images/logo.png");
             helper.addInline("logoImage", logoImage);
 
 
@@ -192,9 +192,11 @@ public class EmailUtil {
 
             helper.setText(htmlContent, true);
 
-            // Attach the logo image
-            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Your logo path
+            ClassPathResource res = new ClassPathResource("images/logo.png");
             helper.addInline("logoImage", res);
+            // Attach the logo image
+//            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Your logo path
+//            helper.addInline("logoImage", res);
 
             javaMailSender.send(mimeMessage);
 

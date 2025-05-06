@@ -18,6 +18,8 @@ public class Enroll {
     @Column
     private String name;
     
+    
+    
     @Column
     private String email;
     

@@ -2,21 +2,29 @@ package com.hachionUserDashboard.dto;
 
 public class UserRegistrationRequest {
 
-
 	private String userName;
-	  private String email;
-	  private String password;
-	  private String OTP;
-	  private Long mobile;
-	  private String confirmPassword;
-	    
-		public String getConfirmPassword() {
-			return confirmPassword;
-		}
-		public void setConfirmPassword(String confirmPassword) {
-			this.confirmPassword = confirmPassword;
-		}
-	  
+	private String email;
+	private String password;
+	private String OTP;
+	private Long mobile;
+	private String newPassword;
+	private String confirmPassword;
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
 
 	public Long getMobile() {
 		return mobile;
@@ -27,8 +35,8 @@ public class UserRegistrationRequest {
 	}
 
 	public UserRegistrationRequest() {
-		  
-	  }
+
+	}
 
 	public String getUserName() {
 		return userName;
@@ -61,5 +69,4 @@ public class UserRegistrationRequest {
 	public void setOTP(String oTP) {
 		OTP = oTP;
 	}
-	}
-
+}

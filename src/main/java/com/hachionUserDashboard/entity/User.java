@@ -153,6 +153,9 @@ public class User {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
+	@Column(name = "student_id")
+	private String studentId;
+
 //    @Column(name = "mobile",nullable=true)
 	private Long mobile;
 
@@ -163,7 +166,6 @@ public class User {
 
 	@Column(name = "otp_status")
 	private boolean OTPStatus;
-
 
 	public boolean isOTPStatus() {
 		return OTPStatus;
@@ -273,6 +275,21 @@ public class User {
 	public boolean isActive() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public User(String userName, String email, Long mobile) {
+		super();
+		this.userName = userName;
+		this.email = email;
+		this.mobile = mobile;
 	}
 
 }

@@ -1,11 +1,17 @@
 package Service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import Response.UserProfileResponse;
+import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
+import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.User;
-import com.hachionUserDashboard.repository.UserRepository;
 
 import Response.LoginResponse;
 
@@ -37,7 +43,7 @@ public interface UserService {
 	Object setpassword(String email, String newPassword);
 
 	String verifyOtp(String email, String otp);
-	
+
 	String updatePassword(UserRegistrationRequest registrationRequest);
 
 	User saveUser(String username, String email);
@@ -45,4 +51,12 @@ public interface UserService {
 
 	public List<User> getAllRegisteredStudents();
 
+	List<StudentInfoResponse> getStudentsByCourse(String courseName);
+
+	public StudentInfoResponse getStudentInfo(String studentId, String userName);
+
+	public CompletionDateResponse getCompletionDate(String courseName, String userName);
+	public UserProfileResponse getUserProfileByEmail(String email);
+	
+	public void resetPassword(UserRegistrationRequest request);
 }

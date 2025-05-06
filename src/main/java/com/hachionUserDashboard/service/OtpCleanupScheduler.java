@@ -35,9 +35,9 @@ public class OtpCleanupScheduler {
 	}
 
 //	@Scheduled(cron = "0 * * * * ?") // runs every 1 minute
-////	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
-////	@Scheduled(cron = "0 0 0 */7 * ?") // runs after 7 days
-////	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight UTC
+//	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
+//	@Scheduled(cron = "0 0 0 */7 * ?") // runs after 7 days
+//	@Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight UTC
 //	@Scheduled(cron = "0 * * * * ?")
 //	@Transactional
 //	public void deletePastWorkshops() {
@@ -53,12 +53,11 @@ public class OtpCleanupScheduler {
 	@Scheduled(cron = "0 0 * * * ?")
 	@Transactional
 	public void deletePastWorkshops() {
-		// Use IST or UTC depending on your system standard
+
 		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Kolkata")); // or ZoneOffset.UTC
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
-		String formattedNow = now.format(formatter); // leave it as is
-
+		String formattedNow = now.format(formatter);
 
 		int deletedRows = courseScheduleRepository.deletePastWorkshops(formattedNow);
 		System.out.println(deletedRows + " past workshop records deleted at " + formattedNow);

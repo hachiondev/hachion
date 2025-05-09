@@ -47,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +92,13 @@ public class Certificateimp implements CertificateService {
 			        return existingEntity.get();
 			    }
 		
+			    String path = generateCertificatePdf(request.getStudentName(), request.getStudentId(), request.getCourseName(),
+						request.getCompletionDate());
+			    
+			    if (path == null) {
+			        throw new RuntimeException("PDF generation failed. Certificate will not be saved.");
+			    }
+			    
 		CertificateEntity entity = new CertificateEntity();
 		entity.setStudentId(request.getStudentId());
 		entity.setStudentName(request.getStudentName());
@@ -100,9 +108,6 @@ public class Certificateimp implements CertificateService {
 		entity.setStatus(request.getStatus());
 
 		entity = certificateRepository.save(entity);
-
-		String path = generateCertificatePdf(request.getStudentName(), request.getStudentId(), request.getCourseName(),
-				request.getCompletionDate());
 
 		entity.setCertificatePath(path);
 		certificateRepository.save(entity);
@@ -219,6 +224,10 @@ public class Certificateimp implements CertificateService {
 		return null;
 	}
 
+	public List<CertificateEntity> getCertificatesByStudentName(String studentName) {
+	    List<CertificateEntity> list = certificateRepository.findByStudentNameNative(studentName);
+	    return list != null ? list : new ArrayList<>();
+	}
 //	private String generateCertificatePdf(String studentName, String studentId, String courseName, String completionDate) {
 //	    String folderPath = "certificates";
 //	    String outputPdfPath = folderPath + "/" + studentId + "_Certificat	e.pdf";
@@ -315,6 +324,12 @@ public class Certificateimp implements CertificateService {
 //	        return null;
 //	    }
 //	}
+
+	
+	public List<CertificateEntity> findByStudentNameIgnoreCase(String studentName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 //	private String generateCertificatePdf(String studentName, String studentId, String courseName, String completionDate) {
 //	    String folderPath = "certificates";

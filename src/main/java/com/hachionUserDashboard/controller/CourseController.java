@@ -193,19 +193,12 @@
 //}
 package com.hachionUserDashboard.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.ZoneId;
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -226,8 +219,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hachionUserDashboard.entity.Course;
 import com.hachionUserDashboard.repository.CourseRepository;
-
-import net.minidev.json.JSONObject;
 
 @CrossOrigin
 @RestController

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -72,7 +73,7 @@ public class EnrollController {
 
 			String htmlContent = "<div style='font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background-color:#f9f9f9;'>"
 					+ "  <div style='text-align:center;'>"
-					+ "    <img src='https://hachion.co/logo.png' alt='Logo' height='50'/>"
+					+ "    <img src='cid:logoImage' alt='Logo' height='50'/>"
 					+ "    <h3 style='margin-top:20px;'>Hi " + enrollRequest.getName() + ",</h3>"
 					+ "    <p>Thank you for showing interest in our training program by clicking <strong>Enroll Now!</strong></p>"
 					+ "    <p>We're excited to invite you to a <strong>Free Demo Session</strong> where you’ll get a complete overview of what we offer, how the training works, and how it can help you get hired – even if you're from a non-IT background!</p>"
@@ -84,7 +85,7 @@ public class EnrollController {
 					+ "  <table style='width:100%;margin-bottom:20px;'>" + "    <tr>"
 					+ "      <td><strong>Training Mode:</strong> Online Live Class</td>"
 					+ "      <td><strong>Date:</strong> " + enrollRequest.getEnroll_date() + "</td>" + "    </tr>"
-					+ "    <tr>" + "      <td><strong>Course Name:</strong> QA Manual Testing</td>"
+					+ "    <tr>" + "      <td><strong>Course Name:</strong> " + enrollRequest.getCourse_name() + "</td>"
 					+ "      <td><strong>Time:</strong> " + enrollRequest.getTime() + "</td>" + "    </tr>"
 					+ "  </table>"
 
@@ -109,6 +110,8 @@ public class EnrollController {
 					+ "</div>";
 
 			helper.setText(htmlContent, true);
+			ClassPathResource logoImage = new ClassPathResource("images/logo.png");
+			helper.addInline("logoImage", logoImage);
 			javaMailSender.send(message);
 
 			// Support team email remains the same
@@ -121,6 +124,7 @@ public class EnrollController {
 					+ "Batch Time: " + enrollRequest.getTime() + "\n" + "Mode: " + enrollRequest.getMode() + "\n\n"
 					+ "Please contact the user to assist them further.\n\n" + "Best Regards,\nSystem Notification");
 
+			
 			javaMailSender.send(supportMail);
 
 		} catch (MessagingException e) {

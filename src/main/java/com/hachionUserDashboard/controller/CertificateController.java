@@ -232,5 +232,15 @@ public class CertificateController {
 	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	     }
 	 }
+	 @GetMapping("/certificate/byname/{studentName}")
+	 public ResponseEntity<List<CertificateEntity>> getByStudentName(@PathVariable String studentName) {
+	     List<CertificateEntity> certificates = certificateService.getCertificatesByStudentName(studentName);
+
+	     if (certificates.isEmpty()) {
+	         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(certificates);
+	     }
+
+	     return ResponseEntity.ok(certificates);
+	 }
 
 }

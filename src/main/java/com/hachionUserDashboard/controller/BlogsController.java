@@ -194,6 +194,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -216,6 +217,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hachionUserDashboard.entity.Blogs;
 import com.hachionUserDashboard.repository.BlogRepository;
 
+import jakarta.annotation.PostConstruct;
+
 @RequestMapping()
 @CrossOrigin
 //@CrossOrigin(origins ="http://localhost:3000")
@@ -224,6 +227,16 @@ public class BlogsController {
 
 	@Autowired
 	private BlogRepository repo;
+
+	@Value("${file.upload-dir}")
+	private String upload;
+
+	private String uploadDir;
+
+	@PostConstruct
+	public void initUploadDir() {
+		this.uploadDir = upload + "blogs/";
+	}
 
 	@GetMapping("/blog/{id}")
 	public ResponseEntity<Blogs> getBlog(@PathVariable Integer id) {
@@ -235,11 +248,11 @@ public class BlogsController {
 		return repo.findAll();
 	}
 
-	private final String uploadDir = System.getProperty("user.home") + "/uploads/blogs/";
+//	private final String uploadDir = System.getProperty("user.home") + "/uploads/blogs/";
 
 	private String saveFile(MultipartFile file, String subFolder) throws IOException {
 		if (file != null && !file.isEmpty()) {
-			// Ensure the directory exists
+
 			File directory = new File(uploadDir + subFolder);
 			if (!directory.exists()) {
 				directory.mkdirs();
@@ -252,52 +265,226 @@ public class BlogsController {
 		}
 		return null;
 	}
+
 	@PostMapping("blog/add")
-	public ResponseEntity<String> addBlog(
-	        @RequestPart("blogData") String blogData,
-	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
-	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
-	    try {
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        objectMapper.registerModule(new JavaTimeModule());
-	        Blogs blog = objectMapper.readValue(blogData, Blogs.class);
+	public ResponseEntity<?> addBlog(@RequestPart("blogData") String blogData,
+			@RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+			@RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			Blogs blog = objectMapper.readValue(blogData, Blogs.class);
 
-	        if (blogImage != null && !blogImage.isEmpty()) {
-	            String imagePath = saveFile(blogImage, "images");
-	            if (imagePath != null) {
-	                blog.setBlog_image(imagePath);
-	            } else {
-	                return ResponseEntity.badRequest().body("Failed to save image.");
-	            }
-	        } else {
-	            blog.setBlog_image("");
-	        }
+			if (blogImage != null && !blogImage.isEmpty()) {
+				String imagePath = saveFile(blogImage, "images");
+				if (imagePath != null) {
+					blog.setBlog_image(imagePath);
+				} else {
+					return ResponseEntity.badRequest().body("Failed to save image.");
+				}
+			} else {
+				blog.setBlog_image("");
+			}
 
-	        if (blogPdf != null && !blogPdf.isEmpty()) {
-	            String pdfPath = "pdfs/" + blogPdf.getOriginalFilename();
-	            Optional<Blogs> existingPdf = repo.findByExactPdfName(pdfPath);
-	            if (existingPdf.isPresent()) {
-	                return ResponseEntity.badRequest().body("PDF already exists in the database.");
-	            }
+			if (blogPdf != null && !blogPdf.isEmpty()) {
+				String originalFileName = blogPdf.getOriginalFilename();
+				if (!originalFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+							"Invalid file name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
+				}
 
-	            String savedPdfPath = saveFile(blogPdf, "pdfs");
-	            if (savedPdfPath != null) {
-	                blog.setBlog_pdf(savedPdfPath);
-	            } else {
-	                return ResponseEntity.badRequest().body("Failed to save PDF.");
-	            }
-	        } else {
-	            blog.setBlog_pdf("");
-	        }
+				String pdfPath = "pdfs/" + originalFileName;
+				Optional<Blogs> existingPdf = repo.findByExactPdfName(pdfPath);
+				if (existingPdf.isPresent()) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This PDF already exists.");
+				}
 
-	        repo.save(blog);
-	        return ResponseEntity.status(HttpStatus.CREATED).body("Blog added successfully.");
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding blog: " + e.getMessage());
-	    }
+				String savedPdfPath = saveFile(blogPdf, "pdfs");
+				if (savedPdfPath != null) {
+					blog.setBlog_pdf(savedPdfPath);
+				} else {
+					return ResponseEntity.badRequest().body("Failed to save PDF.");
+				}
+			} else {
+				blog.setBlog_pdf("");
+			}
+
+			Blogs save = repo.save(blog);
+			return ResponseEntity.status(HttpStatus.CREATED).body(save);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding blog: " + e.getMessage());
+		}
 	}
 
+	@PutMapping("/blog/update/{id}")
+	public ResponseEntity<?> updateBlogs(@PathVariable int id, @RequestPart("blogData") String blogData,
+			@RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+			@RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+
+		return repo.findById(id).map(blog -> {
+			try {
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				Blogs updatedBlog = objectMapper.readValue(blogData, Blogs.class);
+
+				blog.setCategory_name(updatedBlog.getCategory_name());
+				blog.setTitle(updatedBlog.getTitle());
+				blog.setAuthor(updatedBlog.getAuthor());
+				blog.setDescription(updatedBlog.getDescription());
+				blog.setMeta_description(updatedBlog.getMeta_description());
+				blog.setMeta_keyword(updatedBlog.getMeta_keyword());
+				blog.setMeta_title(updatedBlog.getMeta_title());
+
+				if (blogImage != null && !blogImage.isEmpty()) {
+					String oldImagePath = blog.getBlog_image();
+					if (oldImagePath != null) {
+						Path oldImage = Paths.get(uploadDir + oldImagePath); // Use uploadDir here
+						Files.deleteIfExists(oldImage);
+					}
+					String imagePath = saveFile(blogImage, "images");
+					blog.setBlog_image(imagePath);
+				}
+
+				System.out.println("EC2 Instance Upload Path: " + uploadDir);
+
+				if (blogPdf != null && !blogPdf.isEmpty()) {
+					String originalFileName = blogPdf.getOriginalFilename();
+					if (!originalFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+								"Invalid file name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
+					}
+
+					String normalizedPdfName = "pdfs/" + originalFileName;
+
+					Optional<Blogs> existingBlogWithSamePdf = repo.findByExactPdfName(normalizedPdfName);
+					if (existingBlogWithSamePdf.isPresent() && existingBlogWithSamePdf.get().getId() != id) {
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This PDF already exists.");
+					}
+
+					// Delete old PDF
+					String oldPdfPath = blog.getBlog_pdf();
+
+					if (oldPdfPath != null && !oldPdfPath.isEmpty()) {
+						File oldFile = new File(uploadDir + oldPdfPath); // Use uploadDir here
+
+						if (oldFile.exists()) {
+							System.out.println("Old file path: " + oldFile);
+							boolean deleted = oldFile.delete();
+							System.out.println("Old file deleted: " + deleted);
+						} else {
+							System.out.println("Old file not found at: " + oldFile.getAbsolutePath());
+						}
+					}
+
+					String pdfPath = saveFile(blogPdf, "pdfs");
+					if (pdfPath != null) {
+						System.out.println("New file saved at: " + uploadDir + pdfPath);
+						blog.setBlog_pdf(pdfPath);
+					}
+				}
+
+				Blogs saved = repo.save(blog);
+				return ResponseEntity.ok(saved);
+
+			} catch (IOException e) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+						.body("Error updating blog: " + e.getMessage());
+			}
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found with ID: " + id));
+	}
+//	@PostMapping("blog/add")
+//	public ResponseEntity<?> addBlog(
+//	        @RequestPart("blogData") String blogData,
+//	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+//	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+//	    try {
+//	        ObjectMapper objectMapper = new ObjectMapper();
+//	        objectMapper.registerModule(new JavaTimeModule());
+//	        Blogs blog = objectMapper.readValue(blogData, Blogs.class);
+//
+//	        if (blogImage != null && !blogImage.isEmpty()) {
+//	            String imagePath = saveFile(blogImage, "images");
+//	            if (imagePath != null) {
+//	                blog.setBlog_image(imagePath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save image.");
+//	            }
+//	        } else {
+//	            blog.setBlog_image("");
+//	        }
+//
+//	        if (blogPdf != null && !blogPdf.isEmpty()) {
+//	            String pdfPath = "pdfs/" + blogPdf.getOriginalFilename();
+//	            Optional<Blogs> existingPdf = repo.findByExactPdfName(pdfPath);
+//	            if (existingPdf.isPresent()) {
+//	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This PDF already exists.");
+//	            }
+//
+//	            String savedPdfPath = saveFile(blogPdf, "pdfs");
+//	            if (savedPdfPath != null) {
+//	                blog.setBlog_pdf(savedPdfPath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save PDF.");
+//	            }
+//	        } else {
+//	            blog.setBlog_pdf("");
+//	        }
+//
+//	        repo.save(blog);
+//	        return ResponseEntity.status(HttpStatus.CREATED).body("Blog added successfully.");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//	                .body("Error adding blog: " + e.getMessage());
+//	    }
+//	}
+
+//	@PostMapping("blog/add")
+//	public ResponseEntity<String> addBlog(
+//	        @RequestPart("blogData") String blogData,
+//	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+//	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+//	    try {
+//	        ObjectMapper objectMapper = new ObjectMapper();
+//	        objectMapper.registerModule(new JavaTimeModule());
+//	        Blogs blog = objectMapper.readValue(blogData, Blogs.class);
+//
+//	        if (blogImage != null && !blogImage.isEmpty()) {
+//	            String imagePath = saveFile(blogImage, "images");
+//	            if (imagePath != null) {
+//	                blog.setBlog_image(imagePath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save image.");
+//	            }
+//	        } else {
+//	            blog.setBlog_image("");
+//	        }
+//
+//	        if (blogPdf != null && !blogPdf.isEmpty()) {
+//	            String pdfPath = "pdfs/" + blogPdf.getOriginalFilename();
+//	            Optional<Blogs> existingPdf = repo.findByExactPdfName(pdfPath);
+//	            if (existingPdf.isPresent()) {
+//	                return ResponseEntity.badRequest().body("PDF already exists in the database.");
+//	            }
+//
+//	            String savedPdfPath = saveFile(blogPdf, "pdfs");
+//	            if (savedPdfPath != null) {
+//	                blog.setBlog_pdf(savedPdfPath);
+//	            } else {
+//	                return ResponseEntity.badRequest().body("Failed to save PDF.");
+//	            }
+//	        } else {
+//	            blog.setBlog_pdf("");
+//	        }
+//
+//	        repo.save(blog);
+//	        return ResponseEntity.status(HttpStatus.CREATED).body("Blog added successfully.");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding blog: " + e.getMessage());
+//	    }
+//	}
 
 //	@PostMapping("blog/add")
 //	public ResponseEntity<String> addBlog(
@@ -337,59 +524,58 @@ public class BlogsController {
 //	    }
 //	}
 
-	@PutMapping("/blog/update/{id}")
-	public ResponseEntity<?> updateBlogs(
-	        @PathVariable int id,
-	        @RequestPart("blogData") String blogData,
-	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
-	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
-
-	    return repo.findById(id).map(blog -> {
-	        try {
-	            // Parse blogData JSON to object
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            Blogs updatedBlog = objectMapper.readValue(blogData, Blogs.class);
-
-	            // Update fields from blogData
-	            blog.setCategory_name(updatedBlog.getCategory_name());
-	            blog.setTitle(updatedBlog.getTitle());
-	            blog.setAuthor(updatedBlog.getAuthor());
-	            blog.setDescription(updatedBlog.getDescription());
-	           
-	            blog.setMeta_description(updatedBlog.getMeta_description());
-	            blog.setMeta_keyword(updatedBlog.getMeta_keyword());
-	            blog.setMeta_title(updatedBlog.getMeta_title());
-
-	            // Handle image update
-	            if (blogImage != null && !blogImage.isEmpty()) {
-	                String oldImagePath = blog.getBlog_image();
-	                if (oldImagePath != null) {
-	                    Path oldImage = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + oldImagePath);
-	                    Files.deleteIfExists(oldImage);
-	                }
-	                String imagePath = saveFile(blogImage, "images");
-	                blog.setBlog_image(imagePath);
-	            }
-
-	            // Handle PDF update
-	            if (blogPdf != null && !blogPdf.isEmpty()) {
-	                String oldPdfPath = blog.getBlog_pdf();
-	                if (oldPdfPath != null) {
-	                    Path oldPdf = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + oldPdfPath);
-	                    Files.deleteIfExists(oldPdf);
-	                }
-	                String pdfPath = saveFile(blogPdf, "pdfs");
-	                blog.setBlog_pdf(pdfPath);
-	            }
-
-	            repo.save(blog);
-	            return ResponseEntity.ok(blog);
-	        } catch (IOException e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating blog: " + e.getMessage());
-	        }
-	    }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found with ID: " + id));
-	}
-
+//	@PutMapping("/blog/update/{id}")
+//	public ResponseEntity<?> updateBlogs(
+//	        @PathVariable int id,
+//	        @RequestPart("blogData") String blogData,
+//	        @RequestPart(value = "blogImage", required = false) MultipartFile blogImage,
+//	        @RequestPart(value = "blogPdf", required = false) MultipartFile blogPdf) {
+//
+//	    return repo.findById(id).map(blog -> {
+//	        try {
+//	            // Parse blogData JSON to object
+//	            ObjectMapper objectMapper = new ObjectMapper();
+//	            Blogs updatedBlog = objectMapper.readValue(blogData, Blogs.class);
+//
+//	            // Update fields from blogData
+//	            blog.setCategory_name(updatedBlog.getCategory_name());
+//	            blog.setTitle(updatedBlog.getTitle());
+//	            blog.setAuthor(updatedBlog.getAuthor());
+//	            blog.setDescription(updatedBlog.getDescription());
+//	           
+//	            blog.setMeta_description(updatedBlog.getMeta_description());
+//	            blog.setMeta_keyword(updatedBlog.getMeta_keyword());
+//	            blog.setMeta_title(updatedBlog.getMeta_title());
+//
+//	            // Handle image update
+//	            if (blogImage != null && !blogImage.isEmpty()) {
+//	                String oldImagePath = blog.getBlog_image();
+//	                if (oldImagePath != null) {
+//	                    Path oldImage = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + oldImagePath);
+//	                    Files.deleteIfExists(oldImage);
+//	                }
+//	                String imagePath = saveFile(blogImage, "images");
+//	                blog.setBlog_image(imagePath);
+//	            }
+//
+//	            // Handle PDF update
+//	            if (blogPdf != null && !blogPdf.isEmpty()) {
+//	                String oldPdfPath = blog.getBlog_pdf();
+//	                if (oldPdfPath != null) {
+//	                    Path oldPdf = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + oldPdfPath);
+//	                    Files.deleteIfExists(oldPdf);
+//	                }
+//	                String pdfPath = saveFile(blogPdf, "pdfs");
+//	                blog.setBlog_pdf(pdfPath);
+//	            }
+//
+//	            repo.save(blog);
+//	            return ResponseEntity.ok(blog);
+//	        } catch (IOException e) {
+//	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating blog: " + e.getMessage());
+//	        }
+//	    }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found with ID: " + id));
+//	}
 
 	@GetMapping("/blog/download/{type}/{filename}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String type, @PathVariable String filename) {
@@ -399,32 +585,53 @@ public class BlogsController {
 				return ResponseEntity.badRequest().build();
 			}
 
-			// Construct file path
-			Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + type + "/" + filename);
+			Path filePath = Paths.get(uploadDir + type + "/" + filename);
+
+//			Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + type + "/" + filename);
 			if (!Files.exists(filePath)) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 
-			// Load file as a resource
 			Resource resource = new UrlResource(filePath.toUri());
 
-			// Set appropriate content type
 			MediaType mediaType = type.equals("pdfs") ? MediaType.APPLICATION_PDF : MediaType.IMAGE_JPEG;
 
 			return ResponseEntity.ok().contentType(mediaType)
-					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
-					.body(resource);
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"").body(resource);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@DeleteMapping("blog/delete/{id}")
-	public ResponseEntity<?> deleteBlog(@PathVariable int id) {
-		Blogs blog = repo.findById(id).get();
-		repo.delete(blog);
-		return null;
+	public ResponseEntity<String> deleteBlog(@PathVariable int id) {
+		Optional<Blogs> optionalBlog = repo.findById(id);
+		if (!optionalBlog.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found.");
+		}
 
+		Blogs blog = optionalBlog.get();
+
+		String filePath = uploadDir + blog.getBlog_pdf();
+		if (filePath != null && !filePath.isEmpty()) {
+			File file = new File(filePath);
+			if (file.exists()) {
+				boolean deleted = file.delete();
+				if (!deleted) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete PDF file.");
+				}
+			}
+		}
+		repo.delete(blog);
+		return ResponseEntity.ok("Blog deleted successfully.");
 	}
+
+//	@DeleteMapping("blog/delete/{id}")
+//	public ResponseEntity<?> deleteBlog(@PathVariable int id) {
+//		Blogs blog = repo.findById(id).get();
+//		repo.delete(blog);
+//		return null;
+//
+//	}
 
 }

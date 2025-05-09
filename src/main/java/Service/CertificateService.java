@@ -15,4 +15,5 @@ public interface CertificateService {
 	 
 	 public void sendCertificateByEmail(Long certificateId) throws IOException, MessagingException;
 	 public List<CertificateEntity> getAllCertificates();
+	 public List<CertificateEntity> getCertificatesByStudentName(String studentName);
 }

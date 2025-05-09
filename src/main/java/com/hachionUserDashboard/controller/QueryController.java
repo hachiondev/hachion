@@ -1,6 +1,7 @@
 package com.hachionUserDashboard.controller;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.hachionUserDashboard.entity.Query;
-import com.hachionUserDashboard.entity.RequestBatch;
 import com.hachionUserDashboard.repository.QueryRepository;
 
 

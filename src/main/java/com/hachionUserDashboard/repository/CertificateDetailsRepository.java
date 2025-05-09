@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,10 @@ public interface CertificateDetailsRepository extends JpaRepository<CertificateE
 	Optional<CertificateEntity> findByStudentIdAndCourseNameAndCompletionDate(@Param("studentId") String studentId,
 	                                                                          @Param("courseName") String courseName,
 	                                                                          @Param("completionDate") String completionDate);
+	@Query(value = "SELECT * FROM certificate_details WHERE LOWER(student_name) = LOWER(:studentName)", nativeQuery = true)
+	List<CertificateEntity> findByStudentNameNative(@Param("studentName") String studentName);
+
+
+	
 }
+

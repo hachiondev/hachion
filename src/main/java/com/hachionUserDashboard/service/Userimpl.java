@@ -123,21 +123,13 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
@@ -168,15 +160,16 @@ public class Userimpl implements UserService {
 	@Override
 	public String sendOtp(String email) {
 
-		String otp = String.valueOf(new Random().nextInt(9999));
-
 		User user = userRepository.findByEmail(email);
 
-		if (user == null) {
-			user = new User();
-			user.setEmail(email);
-			user.setOTPStatus(false);
+		if (user != null) {
+			throw new IllegalArgumentException("This email already exists.");
 		}
+		String otp = String.format("%04d", new Random().nextInt(10000));
+
+		user = new User();
+		user.setEmail(email);
+		user.setOTPStatus(false);
 
 		user.setOTP(otp);
 		user.setOTPStatus(false);
@@ -518,106 +511,100 @@ public class Userimpl implements UserService {
 		userRepository.save(user);
 		return "New Password set successfully login with new password";
 	}
-	
+
 	public List<StudentInfoResponse> getStudentsByCourse(String courseName) {
-	    List<Object[]> results = userRepository.findUsersByCourseName(courseName);
-	    List<StudentInfoResponse> responseList = new ArrayList<>();
+		List<Object[]> results = userRepository.findUsersByCourseName(courseName);
+		List<StudentInfoResponse> responseList = new ArrayList<>();
 
-	    for (Object[] row : results) {
-	        StudentInfoResponse res = new StudentInfoResponse();
-	        res.setUserName((String) row[0]);
-	        res.setStudentId((String) row[1]);
-	        res.setEmail((String) row[2]);
-	        responseList.add(res);
-	    }
+		for (Object[] row : results) {
+			StudentInfoResponse res = new StudentInfoResponse();
+			res.setUserName((String) row[0]);
+			res.setStudentId((String) row[1]);
+			res.setEmail((String) row[2]);
+			responseList.add(res);
+		}
 
-	    return responseList;
+		return responseList;
 	}
 
 	public StudentInfoResponse getStudentInfo(String studentId, String userName) {
-	    if (studentId != null) {
-	        List<Object[]> result = userRepository.findUserNameEmailByStudentId(studentId);
-	        if (!result.isEmpty()) {
-	            Object[] row = result.get(0); // Get the first row (assuming only one result)
-	            return new StudentInfoResponse(
-	                (String) row[0], // userName
-	                studentId,
-	                (String) row[1]  // email
-	            );
-	        } else {
-	            throw new RuntimeException("Student ID not found");
-	        }
-	    } else if (userName != null) {
-	        List<Object[]> result = userRepository.findStudentIdEmailByUserName(userName);
-	        if (!result.isEmpty()) {
-	            Object[] row = result.get(0); // Get the first row (assuming only one result)
-	            return new StudentInfoResponse(
-	                userName,
-	                (String) row[0], // studentId
-	                (String) row[1]  // email
-	            );
-	        } else {
-	            throw new RuntimeException("User not found");
-	        }
-	    }
-	    throw new IllegalArgumentException("Provide either studentId or userName");
+		if (studentId != null) {
+			List<Object[]> result = userRepository.findUserNameEmailByStudentId(studentId);
+			if (!result.isEmpty()) {
+				Object[] row = result.get(0); // Get the first row (assuming only one result)
+				return new StudentInfoResponse((String) row[0], // userName
+						studentId, (String) row[1] // email
+				);
+			} else {
+				throw new RuntimeException("Student ID not found");
+			}
+		} else if (userName != null) {
+			List<Object[]> result = userRepository.findStudentIdEmailByUserName(userName);
+			if (!result.isEmpty()) {
+				Object[] row = result.get(0); // Get the first row (assuming only one result)
+				return new StudentInfoResponse(userName, (String) row[0], // studentId
+						(String) row[1] // email
+				);
+			} else {
+				throw new RuntimeException("User not found");
+			}
+		}
+		throw new IllegalArgumentException("Provide either studentId or userName");
 	}
 
 	public CompletionDateResponse getCompletionDate(String courseName, String userName) {
-	    String date = userRepository.findCompletionDateByCourseAndUser(courseName, userName);
-	    if (date == null) {
-	        throw new RuntimeException("Completion date not found for given course and user");
-	    }
-	    return new CompletionDateResponse(date);
-	}
-	
-	 public UserProfileResponse getUserProfileByEmail(String email) {
-	        Optional<User> userOpt = userRepository.findByEmailForProfile(email);
-	        if (userOpt.isPresent()) {
-	            User user = userOpt.get();
-	            return new UserProfileResponse(
-	                user.getUserName(),
-	                user.getEmail(),
-	                user.getMobile()
-	                
-	            );
-	        } else {
-	            throw new RuntimeException("User not found for email: " + email);
-	        }
-	    }
-	 public void resetPassword(UserRegistrationRequest request) {
-		    Optional<User> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
-
-		    if (optionalUser.isPresent()) {
-		        User user = optionalUser.get();
-
-		        // 1. Check if old password matches the encrypted password in DB
-		        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-		            System.out.println("Old password is incorrect");
-		            return;
-		        }
-
-		        // 2. Check if new password and confirm password match
-		        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-		            System.out.println("New password and confirm password do not match");
-		            return;
-		        }
-
-		        // 3. Check if old password and new password are the same
-		        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
-		            System.out.println("New password must be different from the old password");
-		            return;
-		        }
-
-		        // 4. Encrypt and update the new password
-		        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
-		        user.setPassword(encodedPassword);
-		        userRepository.save(user);
-		        System.out.println("Password updated successfully");
-
-		    } else {
-		        System.out.println("User not found with email: " + request.getEmail());
-		    }
+		String date = userRepository.findCompletionDateByCourseAndUser(courseName, userName);
+		if (date == null) {
+			throw new RuntimeException("Completion date not found for given course and user");
 		}
+		return new CompletionDateResponse(date);
+	}
+
+	public UserProfileResponse getUserProfileByEmail(String email) {
+		Optional<User> userOpt = userRepository.findByEmailForProfile(email);
+		if (userOpt.isPresent()) {
+			User user = userOpt.get();
+			return new UserProfileResponse(user.getUserName(), user.getEmail(), user.getMobile()
+
+			);
+		} else {
+			throw new RuntimeException("User not found for email: " + email);
+		}
+	}
+
+	public void resetPassword(UserRegistrationRequest request) {
+		Optional<User> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
+
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+
+			// 1. Check if old password matches the encrypted password in DB
+			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+				System.out.println("Old password is incorrect");
+				return;
+			}
+
+			// 2. Check if new password and confirm password match
+			if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+				System.out.println("New password and confirm password do not match");
+				return;
+			}
+
+			// 3. Check if old password and new password are the same
+			if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+				System.out.println("New password must be different from the old password");
+				return;
+			}
+
+			// 4. Encrypt and update the new password
+			String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+			user.setPassword(encodedPassword);
+			userRepository.save(user);
+			System.out.println("Password updated successfully");
+
+		} else {
+			System.out.println("User not found with email: " + request.getEmail());
+		}
+	}
 
 }

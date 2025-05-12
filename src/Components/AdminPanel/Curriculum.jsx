@@ -242,11 +242,11 @@ const [filterData, setFilterData] = useState({
             formData,
             {
               headers: {
-                "Content-Type": "multipart/form-data", // Important for file uploads
+                "Content-Type": "multipart/form-data", 
               },
-              maxBodyLength: Infinity,  // Disable body size limit
-              maxContentLength: Infinity, // Disable content size limit
-              timeout: 60000  // Timeout set to 60 seconds (adjust as needed)
+              maxBodyLength: Infinity,  
+              maxContentLength: Infinity, 
+              timeout: 60000  
             });
       
           setCurriculum((prev) =>
@@ -259,8 +259,11 @@ const [filterData, setFilterData] = useState({
           setTimeout(() => setMessage(""), 5000);
           setOpen(false);
         } catch (error) {
-          console.error("Error updating curriculum:", error);
-          setMessage("Error updating Curriculum.");
+          const backendMessage = error.response?.data?.message || error.response?.data || error.message;
+          console.error("Error updating curriculum:", backendMessage);
+          setMessage(backendMessage);
+          // console.error("Error updating curriculum:", error);
+          // setMessage("Error updating Curriculum.");
         }
       };
       const handleDelete = async (curriculum_id) => {

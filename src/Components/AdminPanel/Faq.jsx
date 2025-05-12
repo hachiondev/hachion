@@ -272,11 +272,11 @@ export default function Faq() {
             formData,
             {
               headers: {
-                "Content-Type": "multipart/form-data", // Important for file uploads
+                "Content-Type": "multipart/form-data", 
               },
-              maxBodyLength: Infinity,  // Disable body size limit
-              maxContentLength: Infinity, // Disable content size limit
-              timeout: 60000  // Timeout set to 60 seconds (adjust as needed)
+              maxBodyLength: Infinity,  
+              maxContentLength: Infinity, 
+              timeout: 60000  
             });
       
           setCurriculum((prev) =>
@@ -289,8 +289,9 @@ export default function Faq() {
           setTimeout(() => setMessage(""), 5000);
           setOpen(false);
         } catch (error) {
+          const backendMessage = error.response?.data || error.message;
           console.error("Error updating faq:", error);
-          setMessage("Error updating Faq.");
+          setMessage(backendMessage);
         }
       };
       
@@ -391,12 +392,24 @@ export default function Faq() {
           setShowAddCourse(false);
          
         }
+        // const handleClickOpen = (row) => {
+        //   console.log(row);
+        //     setEditedRow(row)// Set the selected row data
+        //     setOpen(true); // Open the modal
+        //     console.log("tid",row.faq_id)
+        //   };
         const handleClickOpen = (row) => {
-          console.log(row);
-            setEditedRow(row)// Set the selected row data
-            setOpen(true); // Open the modal
-            console.log("tid",row.faq_id)
-          };
+          console.log("Editing row:", row);
+          setEditedRow(row); 
+          if (row.category_name) {
+            const filtered = courseCategory.filter(
+              (course) => course.courseCategory === row.category_name
+            );
+            setFilterCourse(filtered);
+          }
+          setOpen(true); 
+        };
+        
     const handleChange = (e) => {
       const { name, value } = e.target;
       setCurriculumData((prevData) => ({
@@ -510,8 +523,9 @@ const handleSubmit = async (e) => {
 
       return response.status === 201;
     } catch (error) {
-      console.error("Error adding faq:", error.response?.data || error.message);
-      return false;
+      const backendMessage = error.response?.data || error.message;
+      console.error("Error adding faq:", backendMessage);
+      return { success: false, error: backendMessage };
     }
   });
 

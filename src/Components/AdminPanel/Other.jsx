@@ -435,7 +435,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={`https://api.hachion.co/${curr.home_banner_image}`} 
+                src={curr.banner_image.startsWith("http") ? curr.banner_image : `https://api.hachion.co/${curr.banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -501,8 +501,8 @@ const [currentPage, setCurrentPage] = useState(1);
       <FormControlLabel
         control={
           <Switch
-            checked={editedData?.status === 'enabled'}
-            onChange={(e) => setEditedData(prev => ({ ...prev, status: e.target.checked ? 'enabled' : 'disabled' }))}
+            checked={editedData?.status === 'Enabled'}
+            onChange={(e) => setEditedData(prev => ({ ...prev, status: e.target.checked ? 'Enabled' : 'Disabled' }))}
           />
         }
       />
@@ -521,8 +521,8 @@ const [currentPage, setCurrentPage] = useState(1);
       <FormControlLabel
         control={
           <Switch
-            checked={editedData?.home_status === 'enabled'}
-            onChange={(e) => setEditedData(prev => ({ ...prev, home_status: e.target.checked ? 'enabled' : 'disabled' }))}
+            checked={editedData?.home_status === 'Enabled'}
+            onChange={(e) => setEditedData(prev => ({ ...prev, home_status: e.target.checked ? 'Enabled' : 'Disabled' }))}
           />
         }
       />

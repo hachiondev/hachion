@@ -11,12 +11,14 @@ import axios from 'axios';
 
 
 const initialValues = {
-  name: "",
+  full_name: "",
   company_name:"",
   email: "",
   number:"",
   course_name:"",
-  comment:""
+  comment:"",
+  noOfPeople: "",
+
 };
 
 
@@ -27,6 +29,7 @@ const Advisor = () => {
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState({ code: '+1', flag: 'US' });
   const [selectedValue, setSelectedValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { values, errors, handleBlur, touched, handleChange, handleSubmit: formikSubmit } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
@@ -74,9 +77,25 @@ const Advisor = () => {
         });
     }, []);
 
-  const handleSubmit  = async (e) => {
-    e.preventDefault(); // Prevents form refresh
-  
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Prevents form refresh
+    
+      if (
+        !values.full_name ||
+        !values.email ||
+        !selectedValue ||
+        !values.company_name ||
+        !mobileNumber ||
+        !values.course_name ||
+        !values.comment ||
+        !selectedCountry?.name
+      ) 
+      
+      {
+        setErrorMessage("Please fill in all required fields before submitting.");
+        return;
+      }
+      setErrorMessage("");
     const requestData = {
       fullName: values.full_name,
       emailId: values.email,
@@ -140,11 +159,14 @@ const Advisor = () => {
                 Full Name<span className="required">*</span>
               </label>
               <input type="text" className="form-control-advisor" id="advisor1" placeholder='Enter your full name' 
-             name='full_name'
+             name="full_name"
              value={values.full_name}
              onChange={handleChange}
              onBlur={handleBlur} 
-             required/>
+             />
+               {errors.name && touched.name ? (
+    <p className="form-error">{errors.full_name}</p>
+  ) : null}
             </div>
             <div className="col-md-5">
               <label htmlFor="inputCompany4" className="form-label">
@@ -155,7 +177,11 @@ const Advisor = () => {
                value={values.company_name}
                onChange={handleChange}
                onBlur={handleBlur} />
+               {errors.email && touched.email ? (
+              <p className="form-error">{errors.company_name}</p>
+            ) : null}
             </div>
+            
             </div>
             <div className='advisor-row'>
             <div className="col-md-5">
@@ -167,7 +193,11 @@ const Advisor = () => {
                value={values.email}
                onChange={handleChange}
                onBlur={handleBlur} />
+                {errors.email && touched.email ? (
+              <p className="form-error">{errors.email}</p>
+            ) : null}
             </div>
+           
             <div className="col-md-5">
             <label className='form-label'>Mobile Number</label>
           <div class="input-group custom-width">
@@ -224,6 +254,9 @@ const Advisor = () => {
                   <option key={i + 1}>{i + 1}</option>
                 ))}
               </select>
+              {errors.name && touched.name ? (
+              <p className="form-error">{errors.noOfPeople}</p>
+            ) : null}
             </div>
             <div className="col-md-5">
               <label htmlFor="inputCourse4" className="form-label">
@@ -234,6 +267,9 @@ const Advisor = () => {
                value={values.course_name}
                onChange={handleChange}
                onBlur={handleBlur}/>
+               {errors.name && touched.name ? (
+                <p className="form-error">{errors.course_name}</p>
+              ) : null}
             </div>
             </div>
             <div className="col-10">
@@ -243,10 +279,16 @@ const Advisor = () => {
                value={values.comment}
                onChange={handleChange}
                onBlur={handleBlur}/>
+               {errors.comment && touched.comment ? (
+              <p className="form-error">{errors.comment}</p>
+            ) : null}
             </div>
             <div className="col-12 text-center">
-              <button type="submit" className='submit-btn'>Submit</button>
-            </div>
+  <button type="submit" className="submit-btn">
+    Submit
+  </button>
+  {errorMessage && <p className="form-error">{errorMessage}</p>} 
+</div>
           </form>
 
           {showModal && (

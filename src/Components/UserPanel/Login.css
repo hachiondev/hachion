@@ -91,7 +91,7 @@ background-size:cover;
     display: flex;
     justify-content: flex-end;
     font-size: 1rem;
-    font-style: italic;
+    /* font-style: italic; */
     font-weight: 500;
     color:#00AEEF;
     cursor: pointer;
@@ -188,7 +188,7 @@ background-size:cover;
   
   .forgot-password {
     font-size: 0.9rem;
-    font-style: italic;
+    /* font-style: italic; */
     color: #00AEEF;
     cursor: pointer;
     margin-top: 15px;

@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Dashboard.css';
@@ -31,6 +31,7 @@ const UserDashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState('Dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for collapsed sidebar
 
+  
   const toggleDropdown = (index) => {
     setDropdownOpen((prevState) => ({
       ...prevState,
@@ -50,13 +51,15 @@ const UserDashboard = () => {
     { title: 'Settings', icon: <TbSettingsBolt /> },
   ];
 
+  const loginuserData = JSON.parse(localStorage.getItem('loginuserData'));
+const email = loginuserData?.email || ''; 
+
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
     setSelectedCategory(title); 
     toggleDropdown(index);
   };
 
-  // Function to render the selected component
   const renderSelectedComponent = () => {
     switch (selectedCategory) {
       case 'Dashboard':
@@ -92,7 +95,8 @@ const UserDashboard = () => {
       <NavbarTop />
 
       <div className="user-dashboard-heading">
-        <h3>Welcome Hachion</h3>
+      <h3>Welcome {loginuserData?.name || 'User'}</h3>
+
       </div>
       <div className="user-dashboard">
         {/* Sidebar with collapse functionality */}

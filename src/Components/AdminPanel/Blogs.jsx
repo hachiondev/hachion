@@ -121,7 +121,9 @@ const Blogs = () => {
         setShowForm(false);
       }
     } catch (error) {
-      alert("Error submitting blog. Please check required fields.");
+      const backendMessage = error.response?.data || error.message;
+      console.error("Error submitting blog:", error);
+      alert(backendMessage);
     }
   };
   const handleDelete = async (id) => {

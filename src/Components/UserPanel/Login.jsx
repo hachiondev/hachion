@@ -130,10 +130,10 @@ const Login = () => {
                   </span>
                 </div>
               
-
-                <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
+                {/* <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
-                </Link>
+                </Link> */}
+                <p> <Link to='/forgotpassword' style={{ textDecoration: 'none' }} className='forgot-password'> Forgot Password? </Link></p>
 
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="form-check">

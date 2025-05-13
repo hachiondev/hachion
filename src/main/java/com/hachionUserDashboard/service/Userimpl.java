@@ -211,9 +211,10 @@ public class Userimpl implements UserService {
 			return "Email does not exist.";
 		}
 		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
-
+		user.setFirstName(registrationRequest.getFirstName());
+		user.setLastName(registrationRequest.getLastName());
+		user.setUserName(registrationRequest.getFirstName() + " " +registrationRequest.getLastName());
 		user.setPassword(hashedPassword);
-		user.setUserName(registrationRequest.getUserName());
 		user.setMobile(registrationRequest.getMobile());
 		user.setStudentId(generateNextStudentId());
 		userRepository.save(user);

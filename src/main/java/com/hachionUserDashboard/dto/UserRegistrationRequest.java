@@ -9,6 +9,8 @@ public class UserRegistrationRequest {
 	private Long mobile;
 	private String newPassword;
 	private String confirmPassword;
+	private String firstName;
+	private String lastName;
 
 	public String getConfirmPassword() {
 		return confirmPassword;
@@ -69,4 +71,21 @@ public class UserRegistrationRequest {
 	public void setOTP(String oTP) {
 		OTP = oTP;
 	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
 }

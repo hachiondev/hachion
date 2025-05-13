@@ -99,7 +99,7 @@ const Banner = () => {
               className="banner-img"
               alt={`Banner ${index + 1}`}
             /> */}
-            <div className="carousel-caption">
+            {/* <div className="carousel-caption">
               <div className="carousel-btn">
                 {index === 0 ? (
                   <button className="join-now" onClick={handleExploreMore}>
@@ -113,7 +113,7 @@ const Banner = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

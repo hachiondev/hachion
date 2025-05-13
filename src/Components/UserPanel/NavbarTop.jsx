@@ -324,9 +324,6 @@ const NavbarTop = () => {
   </div>
 )}
 
-
-
-
         {/* Drawer content, only visible when isDrawerOpen is true */}
         {isDrawerOpen && (
           <div className="mobile-drawer" ref={drawerRef}>

@@ -1,19 +1,13 @@
-
-import  React, { useEffect } from 'react';
-import { useState } from 'react';
-import { IoIosArrowForward } from 'react-icons/io'
-import { duration, styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import React, { useEffect, useState } from 'react';
+import { IoIosArrowForward } from 'react-icons/io';
+import { styled } from '@mui/material/styles';
+import {
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Checkbox
+} from '@mui/material';
+import { tableCellClasses } from '@mui/material/TableCell';
 import './Admin.css';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import success from '../../Assets/success.gif';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -37,11 +31,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -54,219 +48,203 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 export default function Other() {
-  const [searchTerm,setSearchTerm]=useState("")
-    const [showAddCourse, setShowAddCourse] = useState(false);
-    const[banner,setBanner]=useState([]);
-    const[filteredBanner,setFilteredBanner]=useState([])
-    const [open, setOpen] = React.useState(false);
-    const currentDate = new Date().toISOString().split('T')[0];
-    const[message,setMessage]=useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({banner_image:"",home_banner_image:"",path:"",status:"Enabled",home_status:"Enabled",});
-    const [bannerData, setBannerData] = useState([{
-        banner_id:"",
-          banner_image:"",
-          home_banner_image:"",
-          path:"",
-            date:currentDate,
-           status:"Enabled",
-           home_status:"Enabled",
-         }]);
-const [currentPage, setCurrentPage] = useState(1);
-            const [rowsPerPage, setRowsPerPage] = useState(10);
-            
-            const handlePageChange = (page) => {
-             setCurrentPage(page);
-             window.scrollTo(0, window.scrollY);
-           };
-           // Inside your CourseCategory component
-         
-         const handleRowsPerPageChange = (rows) => {
-           setRowsPerPage(rows);
-           setCurrentPage(1); // Reset to the first page whenever rows per page changes
-         };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [banner, setBanner] = useState([]);
+  const [filteredBanner, setFilteredBanner] = useState([]);
+  const [open, setOpen] = useState(false);
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [message, setMessage] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-         const displayedCourse = filteredBanner.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+  const [editedData, setEditedData] = useState({
+    banner_image: "",
+    home_banner_image: "",
+    path: "",
+    status: "Enabled",
+    home_status: "Enabled",
+  });
 
-        useEffect(() => {
-          setCurrentPage(1);
-        }, [searchTerm]);        
+  const [bannerData, setBannerData] = useState({
+    banner_id: "",
+    banner_image: "",
+    home_banner_image: "",
+    path: "",
+    date: currentDate,
+    status: "Enabled",
+    home_status: "Enabled",
+  });
 
-        // const handleFileChange = (e) => {
-        //   setBannerData((prev) => ({ ...prev, banner_image: e.target.files[0] }));
-        // };
-        // const handleImageFileChange = (e) => {
-        //   setBannerData((prev) => ({ ...prev, home_banner_image: e.target.files[0] }));
-        // };
-        const handleFileChange = (e, imageType) => {
-          setBannerData((prev) => ({
-            ...prev,
-            [imageType]: e.target.files[0],
-          }));
-        };                
-         const handleInputChange = (e) => {
-            const { name, value } = e.target;
-            setEditedData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-          useEffect(() => {
-            const filtered = banner.filter(item =>
-              item?.path?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item?.date?.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredBanner(filtered);
-          }, [searchTerm, banner]);          
-   
-    const handleClose = () => {
-      setOpen(false); // Close the modal
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+
+  const handleRowsPerPageChange = (rows) => {
+    setRowsPerPage(rows);
+    setCurrentPage(1);
+  };
+
+  const displayedCourse = filteredBanner.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const handleFileChange = (e, imageType) => {
+    setBannerData((prev) => ({
+      ...prev,
+      [imageType]: e.target.files[0],
+    }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    const filtered = banner.filter(item =>
+      item?.path?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.date?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredBanner(filtered);
+  }, [searchTerm, banner]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const response = await axios.get('https://api.hachion.co/banner');
+        setBanner(response.data);
+        setFilteredBanner(response.data);
+      } catch (error) {
+        console.error("Error fetching banners:", error.message);
+      }
     };
- 
-    useEffect(() => {
-      const fetchBanner = async () => {
-          try {
-              const response = await axios.get('https://api.hachion.co/banner');
-              setBanner(response.data); // Use the curriculum state
-              setFilteredBanner(response.data);
-          } catch (error) {
-              console.error("Error fetching resume:", error.message);
-          }
-      };
-      fetchBanner();
-    }, []);
+    fetchBanner();
+  }, []);
 
-    const handleDeleteConfirmation = (banner_id) => {
-        if (window.confirm("Are you sure you want to delete this banner")) {
-          handleDelete(banner_id);
-        }
-      };
-  
-      const handleSave = async () => {
-        try {
-            const formDataToSend = new FormData();
-    
-            // Convert JSON data to string and append it as a Blob
-            formDataToSend.append("banner", new Blob([JSON.stringify(editedData)], { type: "application/json" }));
-    
-            // Ensure banner_image is sent only if updated
-            if (editedData.banner_image instanceof File) {
-                formDataToSend.append("banner_image", editedData.banner_image);
-            } else {
-                formDataToSend.append("banner_image", ""); // Prevent missing key issue
-            }
-    
-            // Ensure home_banner_image is sent only if updated
-            if (editedData.home_banner_image instanceof File) {
-                formDataToSend.append("home_banner_image", editedData.home_banner_image);
-            } else {
-                formDataToSend.append("home_banner_image", "");
-            }
-    
-            console.log("FormData Entries:");
-            for (let pair of formDataToSend.entries()) {
-                console.log(pair[0], pair[1]); // Debugging output
-            }
-    
-            // Send the update request
-            const response = await axios.put(
-                `https://api.hachion.co/banner/update/${editedData.banner_id}`,
-                formDataToSend,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-    
-            // Update banner list state
-            setBanner((prev) =>
-                prev.map(curr =>
-                    curr.banner_id === editedData.banner_id ? response.data : curr
-                )
-            );
-    
-            setMessage("Banner updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
-        } catch (error) {
-            console.error("Error updating banner:", error.response?.data || error.message);
-            setMessage("Error updating Banner.");
-        }
-    };
-    
-      const handleDelete = async (banner_id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`); 
-          console.log("Banner deleted successfully:", response.data); 
-        } catch (error) { 
-          console.error("Error deleting banner:", error); 
-        } }; 
-
-        const handleClickOpen = (row) => {
-            console.log(row);
-              setEditedData(row)// Set the selected row data
-              setOpen(true); // Open the modal
-             
-            };
-    
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setBannerData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-      const handleSubmit = async (e, actionType) => {
-        e.preventDefault();
-      
-        const formDataToSend = new FormData();
-        const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
-      
-        // Prepare the JSON data
-        const jsonData = {
-          date: currentDate,
-          path: bannerData.path,
-         
-        };
-      
-        // Conditionally append images and JSON fields based on actionType
-        if (actionType === "banner" && bannerData.banner_image) {
-          formDataToSend.append("banner_image", bannerData.banner_image);
-          formDataToSend.append("home_banner_image", "");
-        } 
-        else if (actionType === "homeBanner" && bannerData.home_banner_image) {
-          formDataToSend.append("banner_image", "");
-          formDataToSend.append("home_banner_image", bannerData.home_banner_image);
-        } 
-     
-      
-        // Append JSON data as a Blob
-        formDataToSend.append("banner", new Blob([JSON.stringify(jsonData)], { type: "application/json" }));
-      
-        try {
-          const response = await axios.post("https://api.hachion.co/banner/add", formDataToSend);
-      
-          if (response.status === 201) {
-            alert("Banner added successfully!");
-            
-          }
-        } catch (error) {
-          console.error("Error submitting banner:", error.response?.data || error.message);
-          alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
-        }
-      };
-    
-    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
+  const handleDeleteConfirmation = (banner_id) => {
+    if (window.confirm("Are you sure you want to delete this banner?")) {
+      handleDelete(banner_id);
     }
+  };
+
+  const handleSave = async () => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("banner", new Blob([JSON.stringify(editedData)], { type: "application/json" }));
+
+      if (editedData.banner_image instanceof File) {
+        formDataToSend.append("banner_image", editedData.banner_image);
+      } else {
+        formDataToSend.append("banner_image", "");
+      }
+
+      if (editedData.home_banner_image instanceof File) {
+        formDataToSend.append("home_banner_image", editedData.home_banner_image);
+      } else {
+        formDataToSend.append("home_banner_image", "");
+      }
+
+      const response = await axios.put(
+        `https://api.hachion.co/banner/update/${editedData.banner_id}`,
+        formDataToSend,
+        {
+          headers: { "Content-Type": "multipart/form-data" }
+        }
+      );
+
+      setBanner(prev =>
+        prev.map(curr => curr.banner_id === editedData.banner_id ? response.data : curr)
+      );
+
+      setMessage("Banner updated successfully!");
+      setTimeout(() => setMessage(""), 5000);
+      setOpen(false);
+    } catch (error) {
+      console.error("Error updating banner:", error.response?.data || error.message);
+      setMessage("Error updating Banner.");
+    }
+  };
+
+  const handleDelete = async (banner_id) => {
+    try {
+      await axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`);
+      setBanner(prev => prev.filter(item => item.banner_id !== banner_id));
+    } catch (error) {
+      console.error("Error deleting banner:", error);
+    }
+  };
+
+  const handleClickOpen = (row) => {
+    const updatedRow = {
+      ...row,
+      home_status: row.home_banner_image ? "Enabled" : "Disabled",
+      status: row.banner_image ? "Enabled" : "Disabled",
+    };
+    setEditedData(updatedRow);
+    setOpen(true);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBannerData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e, actionType) => {
+    e.preventDefault();
+
+    const formDataToSend = new FormData();
+    const jsonData = {
+      date: currentDate,
+      path: bannerData.path,
+    };
+
+    if (actionType === "banner" && bannerData.banner_image) {
+      formDataToSend.append("banner_image", bannerData.banner_image);
+      formDataToSend.append("home_banner_image", "");
+    } else if (actionType === "homeBanner" && bannerData.home_banner_image) {
+      formDataToSend.append("banner_image", "");
+      formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+    }
+
+    formDataToSend.append("banner", new Blob([JSON.stringify(jsonData)], { type: "application/json" }));
+
+    try {
+      const response = await axios.post("https://api.hachion.co/banner/add", formDataToSend);
+      if (response.status === 201) {
+        alert("Banner added successfully!");
+        setShowAddCourse(false);
+        setBanner(prev => [response.data, ...prev]);
+      }
+    } catch (error) {
+      console.error("Error submitting banner:", error.response?.data || error.message);
+      alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
+    }
+  };
+
+  const handleAddTrendingCourseClick = () => {
+    setShowAddCourse(true);
+  };
 
   return (
     <>  
@@ -435,7 +413,7 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">
             {curr.home_banner_image ? (
                 <img
-                src={curr.banner_image.startsWith("http") ? curr.banner_image : `https://api.hachion.co/${curr.banner_image}`} 
+                src={curr.home_banner_image.startsWith("http") ? curr.home_banner_image : `https://api.hachion.co/${curr.home_banner_image}`} 
                     alt={`Banner ${index + 1}`}
                     style={{ width: "100px", height: "auto" }}
                 />
@@ -443,7 +421,10 @@ const [currentPage, setCurrentPage] = useState(1);
                 "No Image"
             )}
         </StyledTableCell>
-        <StyledTableCell align="center">{curr.home_status ? "Enabled" : "Disabled"}</StyledTableCell>
+        <StyledTableCell align="center">
+  {curr.home_banner_image ? "Enabled" : "Disabled"}
+</StyledTableCell>
+
         <StyledTableCell align="center">{curr.path}</StyledTableCell>
         <StyledTableCell align="center">{curr.date}</StyledTableCell>
         <StyledTableCell align="center">
@@ -536,7 +517,9 @@ const [currentPage, setCurrentPage] = useState(1);
         className="form-control"
         name="path"
         value={editedData?.path || ""}
-        onChange={handleInputChange}
+        onChange={(e) =>
+            setEditedData({ ...editedData, path: e.target.value })
+          }
       />
     </div>
   </DialogContent>

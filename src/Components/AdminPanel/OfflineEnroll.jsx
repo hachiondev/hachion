@@ -434,13 +434,13 @@ const handleFileChange = (e) => {
               <a href="#!" onClick={() => setShowAddCourse(false)}>Offline Erollment</a> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-              Add Enroll
+              Add Enrollment
               </li>
             </ol>
           </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Enroll </p>
+<p>Add Enrollment </p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -538,7 +538,7 @@ const handleFileChange = (e) => {
                     <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
                   </div>
                    <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                       <FiPlus /> Add Enroll
+                       <FiPlus /> Add Enrollment
                    </button>
                 </div>
               </div>

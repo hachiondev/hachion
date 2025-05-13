@@ -1269,11 +1269,11 @@ margin: 0;
   min-width: 180px;
 }
 
-.dropdown-icon {
+.dropdown-icon-top {
   color:#00AEEF;
 }
 
-.dropdown-item:hover .dropdown-icon {
+.dropdown-item:hover .dropdown-icon-top {
   color: white;
 }
 

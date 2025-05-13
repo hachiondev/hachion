@@ -191,7 +191,8 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
         <nav className='dashboard-nav'>My Profile</nav>
       </div>
       <div className="resume-div">
-        <form className="row">
+      <div className="write-review">
+        <form className='review-form-content'>
           <div className="input-row">
             <div className="profile">
               <StyledBadge
@@ -222,27 +223,27 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
               <label htmlFor="inputName" className="form-label">Name</label>
               <input
                 type="text"
-                className="form-control mb-2"
+                className="form-control"
                 id="inputName"
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+          {/* </div> */}
+      
+          {/* <div className="input-row"> */}
             <div className="me-3">
               <label htmlFor="inputEmail" className="form-label">Email</label>
               <input
                 type="email"
-                className="form-control mb-2"
+                className="form-control"
                 id="inputEmail"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-          </div>
-      
-          <div className="input-row">
             <div className="me-3">
               <label htmlFor="inputNumber4" className="form-label">Mobile</label>
               <div className="add">
@@ -281,7 +282,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
                 />
               </div>
             </div>
-            <div className="me-3">
+            {/* <div className="col-md-5"> */}
               {/* <label htmlFor="inputLocation4" className="form-label">Location</label>
 <input
   type="text"
@@ -290,7 +291,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   value={locationName}
   readOnly
 /> */}
-            </div>
+            {/* </div> */}
             
           </div>
 
@@ -341,6 +342,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
 
     </div>
         </form>
+      </div>
       </div>
     </>
   );

@@ -16,7 +16,7 @@ const RegisterNext = () => {
   const navigate = useNavigate();
   const userDataString = localStorage.getItem('registeruserData');
   const registeruserData = userDataString ? JSON.parse(userDataString) : {  email: '' };
-
+const [registerMessage, setRegisterMessage] = useState("");
   const handleOtpChange = (e, index) => {
     const value = e.target.value.replace(/\D/g, ""); // Allow digits only
     if (value.length <= 1) {
@@ -88,14 +88,19 @@ const RegisterNext = () => {
         }
 
         const data = await registerResponse.json();
-        alert("User registered successfully");
-        navigate('/login');  // ✅ Navigate only on success
+        // alert("User registered successfully");
+        console.log("You are successfully registered!");
 
+        setRegisterMessage("You are successfully registered!");
+
+        // setTimeout(() => navigate('/login'), 10000);
+        // navigate('/login'); 
     } catch (error) {
         
-        navigate('/login');
+        // navigate('/login');
     } finally {
-        setIsLoading(false);  // ✅ Ensure loading spinner stops
+      setTimeout(() => navigate('/login'), 10000);
+        setIsLoading(false); 
     }
 };
 
@@ -197,7 +202,11 @@ const RegisterNext = () => {
                 {confirmPasswordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
               </span>
             </div>
-
+{registerMessage && (
+  <div style={{ color: "green", marginBottom: "10px" }}>
+    {registerMessage}
+  </div>
+)}
             <button
               type="button"
               className="register-btn"

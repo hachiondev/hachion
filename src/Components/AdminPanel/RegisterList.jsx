@@ -61,8 +61,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function RegisterList() {
-  const [course,setCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
+    const [formMode, setFormMode] = useState("Add");
     const [showAddCourse, setShowAddCourse] = useState(false);
     const[registerStudent,setRegisterStudent]=useState([]);
     const[filteredStudent,setFilteredStudent]=useState([])
@@ -71,26 +71,22 @@ export default function RegisterList() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({student_name:"",email:"",mobile:"",password:"",location:"",state:"",time:"",course_name:"",additional_email:"",additional_mobile:""});
+    const [editedData, setEditedData] = useState({student_ID:"",name:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [studentData, setStudentData] = useState({
-        student_id:"",
+        student_ID:"",
         name:"",
         email:"",
         mobile:"",
         country:"",
         location:"",
-       time:"",
+       time_zone:"",
        analyst_name:"",
        source:"",
-       course_name:"",
        remarks:"",
-       additional_email: "",
-  additional_phone: "",
-  password: "",
        comments:"",
        date:currentDate,
             visa_status:"",
-            send_details:"yes"
+            mode:"",
          });
         
 const [currentPage, setCurrentPage] = useState(1);
@@ -113,20 +109,20 @@ const [currentPage, setCurrentPage] = useState(1);
         );
          const handleReset=()=>{
             setStudentData({
-                student_id:"",
+                student_ID:"",
         name:"",
         email:"",
         mobile:"",
         country:"",
         location:"",
-       time:"",
+       time_zone:"",
        analyst_name:"",
        source:"",
-       course_name:"",
        remarks:"",
        comments:"",
        date:currentDate,
-            visa_status:""
+        visa_status:"",
+        mode:""
                  });
         
          }
@@ -203,23 +199,38 @@ const [currentPage, setCurrentPage] = useState(1);
         } }; 
         useEffect(() => {
           const filtered = registerStudent.filter(registerStudent =>
-              registerStudent.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              registerStudent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              registerStudent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              registerStudent.mobile.toLowerCase().includes(searchTerm.toLowerCase()) ||
               registerStudent.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
               registerStudent.visa_status.toLowerCase().includes(searchTerm.toLowerCase()) 
           );
           setFilteredStudent(filtered);
       }, [searchTerm,filteredStudent]);
         
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
-        const handleClickOpen = (row) => {
-            console.log(row);
-              setEditedData(row)// Set the selected row data
-              setOpen(true); // Open the modal
-             
-            };
+     const handleClickOpen = (row) => {
+      setFormMode("Edit");
+      setStudentData(row);
+      setShowAddCourse(true);
+    };
+    const handleUpdate = async () => {
+      try {
+        const response = await axios.put(
+          `https://api.hachion.co/registerstudent/update/${studentData.student_id}`,
+          studentData
+        );
+        setRegisterStudent((prev) =>
+          prev.map((s) => s.student_id === studentData.student_id ? response.data : s)
+        );
+        setMessage("Student updated successfully!");
+        setShowAddCourse(false);
+        setFormMode("Add");
+        handleReset();
+      } catch (error) {
+        console.error("Error updating student:", error.message);
+        setMessage("Error updating student.");
+      }
+    };
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -235,9 +246,6 @@ const [currentPage, setCurrentPage] = useState(1);
         const dataToSubmit = { 
           ...studentData, 
           date: currentDate,
-          additional_email: studentData.additional_email || null,
-  additional_phone: studentData.additional_phone || 0,
-  password: studentData.password || null
         };
         
         console.log("Data being sent:", dataToSubmit);
@@ -258,17 +266,17 @@ const [currentPage, setCurrentPage] = useState(1);
       };
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
-    useEffect(() => {
-      const fetchCourse = async () => {
-        try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
-          setCourse(response.data); // Assuming the data contains an array of trainer objects
-        } catch (error) {
-          console.error("Error fetching courses:", error.message);
-        }
-      };
-      fetchCourse();
-    }, []);
+    // useEffect(() => {
+    //   const fetchCourse = async () => {
+    //     try {
+    //       const response = await axios.get("https://api.hachion.co/courses/all");
+    //       setCourse(response.data);
+    //     } catch (error) {
+    //       console.error("Error fetching courses:", error.message);
+    //     }
+    //   };
+    //   fetchCourse();
+    // }, []);
 
   return (
     
@@ -282,14 +290,14 @@ const [currentPage, setCurrentPage] = useState(1);
                 <a href="#!" onClick={() => setShowAddCourse(false)}>Register List</a> <MdKeyboardArrowRight />
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                Add Student
-                </li>
+                {formMode === "Edit" ? "Edit Student" : "Add Student"}
+              </li>
               </ol>
             </nav>
     
      <div className='category'>
      <div className='category-header'>
-     <p>Add Student</p>
+     <p>{formMode === "Edit" ? "Edit Student" : "Add Student"}</p>
      </div>
      <div className="course-row">
        <div class="col">
@@ -322,7 +330,7 @@ const [currentPage, setCurrentPage] = useState(1);
        </div>
        <div class="col">
          <label for="inputPassword4" class="form-label">Location</label>
-         <input type="email" class="schedule-input" id="inputPassword4"  name="location"
+         <input type="text" class="schedule-input" id="inputPassword4"  name="location"
          value={studentData.location}
          onChange={handleChange}/>
        </div>
@@ -339,7 +347,7 @@ const [currentPage, setCurrentPage] = useState(1);
        <div class="col">
          <label for="inputState" class="form-label">Time Zone</label>
          <input type="text" class="schedule-input"
-         name="time" value={studentData.time} onChange={handleChange}/>
+         name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
        </div>
        <div class="col">
          <label for="inputState" class="form-label">Entered by</label>
@@ -354,9 +362,10 @@ const [currentPage, setCurrentPage] = useState(1);
            <option>Instagram</option>
            <option>Facebook</option>
            <option>Twitter</option>
+           <option>Other</option>
          </select>
        </div>
-       <div class="col">
+       {/* <div class="col">
          <label for="inputState" class="form-label">Course Name</label>
          <select id="inputState" class="form-select" name='course_name' value={studentData.course_name} onChange={handleChange}>
          <option value="" disabled>
@@ -369,7 +378,7 @@ const [currentPage, setCurrentPage] = useState(1);
         ))}
    
          </select>
-       </div>
+       </div> */}
        </div>
        <div className='row'>
        <div class="mb-3">
@@ -394,11 +403,13 @@ const [currentPage, setCurrentPage] = useState(1);
            
            </RadioGroup> */}
         <div className="course-row">
-  <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
-  <button className='reset-btn' onClick={handleReset}>Reset</button>
-  </div>
-     
+        {formMode === "Edit" ? (
+          <button className='submit-btn' onClick={handleUpdate}>Update</button>
+        ) : (
+          <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+        )}
+        <button className='reset-btn' onClick={handleReset}>Reset</button>
+      </div>
      </div>
         
      </div>):(
@@ -471,17 +482,20 @@ const [currentPage, setCurrentPage] = useState(1);
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align='center'>Student ID</StyledTableCell>
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align="center">Mobile</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
-            <StyledTableCell align="center">State</StyledTableCell>
             <StyledTableCell align="center">Location</StyledTableCell>
+            <StyledTableCell align="center">Time Zone</StyledTableCell>
+            <StyledTableCell align="center">Visa Status</StyledTableCell>
+            <StyledTableCell align='center'>Entered By</StyledTableCell>
+            <StyledTableCell align='center'>Source</StyledTableCell>
+            <StyledTableCell align='center'>Remark</StyledTableCell>
+            <StyledTableCell align='center'>Comment</StyledTableCell>
+            <StyledTableCell align='center'>Mode</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
-            <StyledTableCell align="center">Time</StyledTableCell>
-            <StyledTableCell align="center">Course Name</StyledTableCell>
-            <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Status Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -494,18 +508,20 @@ const [currentPage, setCurrentPage] = useState(1);
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell> {/* S.No. */}
+        <StyledTableCell align="center">{row.student_ID}</StyledTableCell>
       <StyledTableCell align="center">{row.name}</StyledTableCell>
       <StyledTableCell align="center">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
-      <StyledTableCell align="center">{row.state}</StyledTableCell>
-            <StyledTableCell align="center">{row.location}</StyledTableCell>
-            <StyledTableCell align="center">{row.date}</StyledTableCell>
-            <StyledTableCell align="center">{row.time}</StyledTableCell>
-            <StyledTableCell align="center">{row.course_name}</StyledTableCell>
-            <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
-            <StyledTableCell align="center">status date</StyledTableCell>
-           
+        <StyledTableCell align="center">{row.location}</StyledTableCell>
+        <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
+        <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
+        <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
+        <StyledTableCell align="center">{row.source}</StyledTableCell>
+        <StyledTableCell align="center">{row.remarks}</StyledTableCell>
+        <StyledTableCell align="center">{row.comments}</StyledTableCell> 
+        <StyledTableCell align="center">{row.mode}</StyledTableCell> 
+        <StyledTableCell align="center">{row.date}</StyledTableCell>          
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
@@ -516,7 +532,7 @@ const [currentPage, setCurrentPage] = useState(1);
   ))
   : (
     <StyledTableRow>
-      <StyledTableCell colSpan={14} align="center">
+      <StyledTableCell colSpan={17} align="center">
         No data available.
       </StyledTableCell>
     </StyledTableRow>
@@ -537,15 +553,16 @@ const [currentPage, setCurrentPage] = useState(1);
     </div>
     </>)}
 
-    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+    {/* <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
     PaperProps={{
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Registered Student</DialogTitle>
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Registered Student
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
+    </DialogTitle>
   </div>
   <DialogContent>
   <div className='course-row'>
@@ -555,7 +572,13 @@ const [currentPage, setCurrentPage] = useState(1);
   value={editedData.name}
   onChange={handleInputChange}/>
        </div>
-      
+      <div class="col">
+         <label for="inputPassword4" class="form-label">Email</label>
+         <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
+         name="email"
+         value={editedData.email}
+         onChange={handleInputChange}/>
+       </div>
        <div class="col">
          <label for="inputPassword4" class="form-label">Mobile</label>
          <input type="number" class="form-control" id="inputPassword4" placeholder='enter mobile number'
@@ -564,45 +587,47 @@ const [currentPage, setCurrentPage] = useState(1);
           onChange={handleInputChange}/>
        </div>
        </div>
+       
        <div className='course-row'>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Email</label>
-         <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
-         name="email"
-         value={editedData.email}
+               <div class="col">
+         <label for="inputPassword4" class="form-label">Country</label>
+         <input type="text" class="form-control" id="inputPassword4"  name="country"
+         value={editedData.country}
          onChange={handleInputChange}/>
        </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Password</label>
-         <input type="text" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
-         name="password"
-         value={editedData.password}
-         onChange={handleInputChange}/>
-       </div>
-       </div>
-       <div className='course-row'>
        <div class="col">
          <label for="inputPassword4" class="form-label">Location</label>
          <input type="text" class="form-control" id="inputPassword4"  name="location"
          value={editedData.location}
          onChange={handleInputChange}/>
        </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">State</label>
-         <input type="text" class="form-control" id="inputPassword4"  name="state"
-         value={editedData.state}
-         onChange={handleInputChange}/>
+        <div class="col">
+         <label for="inputPassword4" class="form-label">Visa Status</label>
+         <select id="inputState" class="form-select" name="visa_status" value={editedData.visa_status} onChange={handleInputChange}>
+           <option selected>Select Visa Status</option>
+           <option>Active</option>
+           <option>In Active</option>
+         </select>
        </div>
        </div>
-       
        <div className='course-row'>
        <div class="col">
          <label for="inputEmail4" class="form-label">Time Zone</label>
          <input type="text" class="form-control" id="inputTime4" 
-         name="time" value={editedData.time} onChange={handleInputChange}/>
+         name="time_zone" value={editedData.time_zone} onChange={handleInputChange}/>
        </div>
-    
        <div class="col">
+         <label for="inputEmail4" class="form-label">Entered By</label>
+         <input type="text" class="form-control" id="inputTime4" 
+         name="analyst_name" value={editedData.analyst_name} onChange={handleInputChange}/>
+       </div>
+        <div class="col">
+         <label for="inputEmail4" class="form-label">Source</label>
+         <input type="text" class="form-control" id="inputTime4" 
+         name="source" value={editedData.source} onChange={handleInputChange}/>
+       </div> */}
+    
+       {/* <div class="col">
          <label for="inputState" class="form-label">Course Name</label>
          <select id="inputState" class="form-select" name='course_name' value={editedData.course_name} onChange={handleInputChange}>
          <option value="" disabled>
@@ -615,26 +640,28 @@ const [currentPage, setCurrentPage] = useState(1);
         ))}
    
          </select>
+       </div> */}
+       {/* </div>
+       <div class="col">
+         <label for="inputPassword4" class="form-label">Remarks</label>
+         <text type="text" class="form-control" id="inputPassword4"
+         name="remarks"
+         value={editedData.remarks}
+         onChange={handleInputChange}/>
        </div>
+              <div class="col">
+         <label for="inputPassword4" class="form-label">Comments</label>
+         <text type="text" class="form-control" id="inputPassword4"
+         name="comments"
+         value={editedData.comments}
+         onChange={handleInputChange}/>
        </div>
-       <div className='row'>
-       <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Additional Email</label>
-       <input class="form-control" id="exampleFormControlTextarea1" type='email'
-       name='additinal_email' value={editedData.additional_email} onChange={handleInputChange}/>
-     </div>
-     <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Additional Mobile</label>
-       <input class="form-control" id="exampleFormControlTextarea1" type="number"
-       name='additional_mobile' value={editedData.additional_mobile} onChange={handleInputChange}/>
-     </div>
-     </div>
        
   </DialogContent>
   <DialogActions>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
-</Dialog>
+</Dialog> */}
 
   
    

@@ -1,3 +1,229 @@
+// import * as React from 'react';
+// import {
+//   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox,
+// } from '@mui/material';
+// import { styled } from '@mui/material/styles';
+// import { tableCellClasses } from '@mui/material/TableCell';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+// import { IoSearch } from "react-icons/io5";
+// import axios from 'axios';
+// import { useState, useEffect } from 'react';
+// import { RiDeleteBin6Line } from 'react-icons/ri';
+// import AdminPagination from './AdminPagination';
+// import './Admin.css';
+
+// const StyledTableCell = styled(TableCell)(({ theme }) => ({
+//   [`&.${tableCellClasses.head}`]: {
+//     backgroundColor: '#00AEEF',
+//     color: theme.palette.common.white,
+//     borderRight: '1px solid white',
+//   },
+//   [`&.${tableCellClasses.body}`]: {
+//     fontSize: 14,
+//     borderRight: '1px solid #e0e0e0',
+//   },
+// }));
+
+// const StyledTableRow = styled(TableRow)(({ theme }) => ({
+//   '&:nth-of-type(odd)': {
+//     backgroundColor: theme.palette.action.hover,
+//   },
+//   '&:last-child td, &:last-child th': {
+//     border: 0,
+//   },
+// }));
+
+// export default function OfflineEnroll() {
+//   const [enrollData, setEnrollData] = useState([]);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [startDate, setStartDate] = useState(null);
+//   const [endDate, setEndDate] = useState(null);
+//   const [message, setMessage] = useState(false);
+
+//   const handleDelete = async (id) => {
+//     try {
+//       await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+//       setEnrollData(enrollData.filter((item) => item.id !== id));
+//     } catch (error) {
+//       console.error("Error deleting entry:", error);
+//     }
+//   };
+
+//   const filteredData = enrollData.filter((item) => {
+//     const date = new Date(item.date || item.enroll_date);
+//     const matchesSearch =
+//       searchTerm === '' ||
+//       [item.name, item.course_name, item.mode]
+//         .map(field => (field || '').toLowerCase())
+//         .some(field => field.includes(searchTerm.toLowerCase()));
+//     const inDateRange =
+//       (!startDate || date >= new Date(startDate)) &&
+//       (!endDate || date <= new Date(endDate));
+//     return matchesSearch && inDateRange;
+//   });
+
+//   const handleDateFilter = () => {
+//       const filtered = enrollData.filter((item) => {
+//         const date = new Date(item.date);
+//         const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+//         const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+//         return (
+//           (!start || date >= start) &&
+//           (!end || date <= end)
+//         );
+//       });
+//       setEnrollData(filtered);
+//     };
+//     const [currentPage, setCurrentPage] = useState(1);
+//     const [rowsPerPage, setRowsPerPage] = useState(10);
+//     const handlePageChange = (page) => {
+//       setCurrentPage(page);
+//       window.scrollTo(0, window.scrollY);
+//     };
+//     const handleRowsPerPageChange = (rows) => {
+//       setRowsPerPage(rows);
+//       setCurrentPage(1);
+//     };
+//     const displayedCategories = filteredData.slice(
+//       (currentPage - 1) * rowsPerPage,
+//       currentPage * rowsPerPage
+//     );
+//   return (
+//     <>
+//         <div>
+//       <LocalizationProvider dateAdapter={AdapterDayjs}>
+//         <div className='course-category'>
+//         <div className='category'>
+//           <div className='category-header'><p>View Offline Enrollment List</p></div>
+//               <div className='date-schedule'>
+//                 Start Date
+//                 <DatePicker
+//                   value={startDate}
+//                   onChange={(date) => setStartDate(date)}
+//                   isClearable
+//                   sx={{
+//                     '& .MuiIconButton-root': { color: '#00aeef' }
+//                   }}
+//                 />
+//                 End Date
+//                 <DatePicker
+//                   value={endDate}
+//                   onChange={(date) => setEndDate(date)}
+//                   isClearable
+//                   sx={{
+//                     '& .MuiIconButton-root': { color: '#00aeef' }
+//                   }}
+//                 />
+//                 <button className='filter' onClick={handleDateFilter}>Filter</button>
+//               </div>
+//               <div className='entries'>
+//                 <div className='entries-left'>
+//                   <p style={{ marginBottom: '0' }}>Show</p>
+//                   <div className="btn-group">
+//                     <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+//                       {rowsPerPage}
+//                     </button>
+//                     <ul className="dropdown-menu">
+//                       <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+//                       <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+//                       <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+//                     </ul>
+//                   </div>
+//                   <p style={{ marginBottom: '0' }}>entries</p>
+//                 </div>
+//                 <div className='entries-right'>
+//                   <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+//                     <input
+//                       className="search-input"
+//                       type="search"
+//                       placeholder="Enter Names, Courses, or Mode"
+//                       aria-label="Search"
+//                       value={searchTerm}
+//                       onChange={(e) => setSearchTerm(e.target.value)}
+//                     />
+//                     <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </LocalizationProvider>
+//       <TableContainer component={Paper}>
+//         <Table sx={{ minWidth: 700 }} aria-label="customized table">
+//           <TableHead>
+//             <TableRow>
+//               <StyledTableCell><Checkbox /></StyledTableCell>
+//               <StyledTableCell sx={{ width: 50 }} align='center'>S.No.</StyledTableCell>
+//               <StyledTableCell align="center">Student ID</StyledTableCell>
+//               <StyledTableCell align="center">Student Name</StyledTableCell>
+//               <StyledTableCell align="center">Email</StyledTableCell>
+//               <StyledTableCell align="center">Mobile</StyledTableCell>
+//               <StyledTableCell align="center">Course Name</StyledTableCell>
+//               <StyledTableCell align="center">Enrollment Date</StyledTableCell>
+//               <StyledTableCell align="center">Week</StyledTableCell>
+//               <StyledTableCell align="center">Time</StyledTableCell>
+//               <StyledTableCell align="center">Mode</StyledTableCell>
+//               <StyledTableCell align="center">Type</StyledTableCell>
+//               <StyledTableCell align="center">Trainer</StyledTableCell>
+//               <StyledTableCell align="center">Completed Date</StyledTableCell>
+//               <StyledTableCell align="center">Resend email count</StyledTableCell>
+//               <StyledTableCell align="center">Action</StyledTableCell>
+//             </TableRow>
+//           </TableHead>
+//           <TableBody>
+//           {displayedCategories.length > 0 ? (
+//                 displayedCategories.map((row, index) => (
+//                   <StyledTableRow key={row.id}>
+//                   <StyledTableCell><Checkbox /></StyledTableCell>
+//                   <StyledTableCell align="center">
+//                       {index + 1 + (currentPage - 1) * rowsPerPage}
+//                     </StyledTableCell>
+//                   <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
+//                   <StyledTableCell align="left">{row.name}</StyledTableCell>
+//                   <StyledTableCell align="left">{row.email}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+//                   <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.enroll_date}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.week}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.time}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.mode}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.type}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.trainer}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.completion_date}</StyledTableCell>
+//                   <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
+//                   <StyledTableCell align="center">
+//                     <RiDeleteBin6Line
+//                       className="delete"
+//                       onClick={() => handleDelete(row.id)}
+//                       style={{ cursor: "pointer", color: "red" }}
+//                     />
+//                   </StyledTableCell>
+//                 </StyledTableRow>
+//               ))
+//             ) : (
+//               <StyledTableRow>
+//                 <StyledTableCell colSpan={15} align="center">No data available</StyledTableCell>
+//               </StyledTableRow>
+//             )}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+
+//       <div className='pagination-container'>
+//         <AdminPagination
+//           currentPage={currentPage}
+//           rowsPerPage={rowsPerPage}
+//           totalRows={filteredData.length}
+//           onPageChange={handlePageChange}
+//           />
+//           </div>
+//           {message && <div className="success-message">{message}</div>}
+//         </div>
+//       </>
+//     );
+//   };
+
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
@@ -46,14 +272,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-export default function CourseCertificate() {
+export default function OfflineEnroll() {
   const [course, setCourse] = useState([]);
   const [courseCategory, setCourseCategory] = useState([]);
   const [filterCourse, setFilterCourse] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const [certificate, setCertificate] = useState([]);
-  const [filteredCertificate, setFilteredCertificate] = useState([]);
+  const [enroll, setEnroll] = useState([]);
+  const [filteredEnroll, setFilteredEnroll] = useState([]);
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split("T")[0];
   const [message, setMessage] = useState(false);
@@ -66,15 +292,7 @@ export default function CourseCertificate() {
     title: "",
     description: "",
   });
-  const [certificateData, setCertificateData] = useState({
-    id: "",
-    certificate_image: null,
-    course_name: "",
-    date: currentDate,
-    category_name: "",
-    title: "",
-    description: "",
-  });
+  const [enrollData, setEnrollData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handlePageChange = (page) => {
@@ -85,18 +303,18 @@ export default function CourseCertificate() {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
-  const displayedCourse = filteredCertificate.slice(
+  const displayedCourse = filteredEnroll.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
   const handleFileChange = (e) => {
-    setCertificateData((prev) => ({
+    setEnrollData((prev) => ({
       ...prev,
       certificate_image: e.target.files[0],
     }));
   };
   const handleReset = () => {
-    setCertificateData([
+    setEnrollData([
       {
         id: "",
         certificate_image: null,
@@ -118,105 +336,56 @@ export default function CourseCertificate() {
   const handleClose = () => {
     setOpen(false);
   };
-  //   useEffect(() => {
-  //     const fetchCertificate = async () => {
-  //         try {
-  //             const response = await axios.get('https://api.hachion.co/certificate');
-  //             setCertificate(response.data);
-  //         } catch (error) {
-  //         }
-  //     };
-  //     fetchCertificate();
-  //     setFilteredCertificate(certificate);
-  // }, []);
+
   const handleDeleteConfirmation = (id) => {
-    if (window.confirm("Are you sure you want to delete this certificate")) {
+    if (window.confirm("Are you sure you want to delete this Enroll")) {
       handleDelete(id);
     }
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(
-        `https://api.hachion.co/certificate/${editedData.id}`,
-        editedData
-      );
-      setCertificate((prev) =>
-        prev.map((curr) => (curr.id === editedData.id ? response.data : curr))
-      );
-      setMessage("Certificate updated successfully!");
-      setTimeout(() => setMessage(""), 5000);
-      setOpen(false);
     } catch (error) {
-      setMessage("Error updating Certificate.");
+      setMessage("Error updating Enroll.");
     }
   };
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(
-        `https://api.hachion.co/certificate/delete/${id}`
-      );
     } catch (error) {}
   };
-  //   useEffect(() => {
-  //     const filtered = certificate.filter(certificate =>
-  //         certificate.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //         certificate.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //         certificate.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //     );
-  //     setFilteredCertificate(filtered);
-  // }, [searchTerm,filteredCertificate]);
+
   const handleClickOpen = (row) => {
     setEditedData(row);
     setOpen(true);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCertificateData((prevData) => ({
+    setEnrollData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
-        );
-        setCourse(response.data);
-      } catch (error) {}
-    };
-    fetchCategory();
-  }, []);
-  useEffect(() => {
-    const fetchCourseCategory = async () => {
-      try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
-        setCourseCategory(response.data);
-      } catch (error) {}
-    };
-    fetchCourseCategory();
-  }, []);
-  useEffect(() => {
-    if (certificateData.category_name) {
+    if (enrollData.category_name) {
       const filtered = courseCategory.filter(
-        (course) => course.courseCategory === certificateData.category_name
+        (course) => course.courseCategory === enrollData.category_name
       );
       setFilterCourse(filtered);
     } else {
       setFilterCourse([]);
     }
-  }, [certificateData.category_name, courseCategory]);
+  }, [enrollData.category_name, courseCategory]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     const currentDate = new Date().toISOString().split("T")[0];
     formData.append("date", currentDate);
-    formData.append("course_name", certificateData.course_name);
-    formData.append("category_name", certificateData.category_name);
-    formData.append("title", certificateData.title);
-    formData.append("description", certificateData.description);
-    if (certificateData.certificate_image) {
-      formData.append("certificate_image", certificateData.certificate_image);
+    formData.append("course_name", enrollData.course_name);
+    formData.append("category_name", enrollData.category_name);
+    formData.append("title", enrollData.title);
+    formData.append("description", enrollData.description);
+    if (enrollData.certificate_image) {
+      formData.append("certificate_image", enrollData.certificate_image);
     } else {
       alert("Please select an image.");
       return;
@@ -225,24 +394,44 @@ export default function CourseCertificate() {
       const response = await axios.post(
         "https://api.hachion.co/certificate/add",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        {}
       );
       if (response.status === 201 || response.status === 200) {
-        alert("Certificate added successfully");
-        setCertificateData([
-          ...certificateData,
-          { ...certificateData, date: currentDate },
-        ]); // Update local state
+        alert("Enrollment added successfully");
+        setEnrollData([...enrollData, { ...enrollData, date: currentDate }]); // Update local state
         handleReset();
       }
     } catch (error) {
-      alert("Error adding certificate.");
+      alert("Error adding enroll.");
     }
   };
+
+  const filteredData = enroll.filter((item) => {
+    const date = new Date(item.date || item.enroll_date);
+    const matchesSearch =
+      searchTerm === "" ||
+      [item.name, item.course_name, item.email]
+        .map((field) => (field || "").toLowerCase())
+        .some((field) => field.includes(searchTerm.toLowerCase()));
+    const inDateRange =
+      (!startDate || date >= new Date(startDate)) &&
+      (!endDate || date <= new Date(endDate));
+    return matchesSearch && inDateRange;
+  });
+
+  const handleDateFilter = () => {
+    const filtered = enroll.filter((item) => {
+      const date = new Date(item.date);
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!start || date >= start) && (!end || date <= end);
+    });
+    setEnrollData(filtered);
+  };
+  const displayedCategories = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
   };
@@ -254,18 +443,18 @@ export default function CourseCertificate() {
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
                 <a href="#!" onClick={() => setShowAddCourse(false)}>
-                  Course Certificate
+                  Offline Erollment
                 </a>{" "}
                 <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-                Add Course Certificate
+                Add Enroll
               </li>
             </ol>
           </nav>
           <div className="category">
             <div className="category-header">
-              <p>Add Course Certificate </p>
+              <p>Add Enroll </p>
             </div>
             <div className="course-details">
               <div className="course-row">
@@ -277,7 +466,7 @@ export default function CourseCertificate() {
                     id="inputState"
                     class="form-select"
                     name="category_name"
-                    value={certificateData.category_name}
+                    value={enrollData.category_name}
                     onChange={handleChange}
                   >
                     <option value="" disabled>
@@ -298,9 +487,9 @@ export default function CourseCertificate() {
                     id="course"
                     className="form-select"
                     name="course_name"
-                    value={certificateData.course_name}
+                    value={enrollData.course_name}
                     onChange={handleChange}
-                    disabled={!certificateData.category_name}
+                    disabled={!enrollData.category_name}
                   >
                     <option value="" disabled>
                       Select Course
@@ -313,45 +502,7 @@ export default function CourseCertificate() {
                   </select>
                 </div>
               </div>
-              <div className="course-row">
-                <div class="col">
-                  <label for="inputEmail4" class="form-label">
-                    Certificate Title
-                  </label>
-                  <input
-                    type="text"
-                    class="schedule-input"
-                    id="inputEmail4"
-                    name="title"
-                    value={certificateData.title}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col">
-                  <label className="form-label">Certificate Image</label>
-                  <input
-                    type="file"
-                    className="schedule-input"
-                    name="certificate_image"
-                    onChange={handleFileChange}
-                    required
-                  />
-                </div>
-              </div>
 
-              <div class="mb-6">
-                <label for="inputEmail4" class="form-label">
-                  Description
-                </label>
-                <textarea
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlTextarea1"
-                  name="description"
-                  value={certificateData.description}
-                  onChange={handleChange}
-                />
-              </div>
               <div className="course-row">
                 <button
                   className="submit-btn"
@@ -374,12 +525,12 @@ export default function CourseCertificate() {
             <div className="course-category">
               <div className="category">
                 <div className="category-header">
-                  <p>Course Certificate</p>
+                  <p>View Offline Enrollment List</p>
                 </div>
                 <div className="date-schedule">
                   Start Date
                   <DatePicker
-                    selected={startDate}
+                    value={startDate}
                     onChange={(date) => setStartDate(date)}
                     isClearable
                     sx={{
@@ -388,14 +539,16 @@ export default function CourseCertificate() {
                   />
                   End Date
                   <DatePicker
-                    selected={endDate}
+                    value={endDate}
                     onChange={(date) => setEndDate(date)}
                     isClearable
                     sx={{
                       "& .MuiIconButton-root": { color: "#00aeef" },
                     }}
                   />
-                  <button className="filter">Filter</button>
+                  <button className="filter" onClick={handleDateFilter}>
+                    Filter
+                  </button>
                 </div>
                 <div className="entries">
                   <div className="entries-left">
@@ -450,7 +603,7 @@ export default function CourseCertificate() {
                       <input
                         className="search-input"
                         type="search"
-                        placeholder="Enter Courses, Category or Keywords"
+                        placeholder="Enter Names, Courses, or Email"
                         aria-label="Search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -464,7 +617,7 @@ export default function CourseCertificate() {
                       className="btn-category"
                       onClick={handleAddTrendingCourseClick}
                     >
-                      <FiPlus /> Add Course Certificate
+                      <FiPlus /> Add Enroll
                     </button>
                   </div>
                 </div>
@@ -478,90 +631,85 @@ export default function CourseCertificate() {
                   <StyledTableCell align="center">
                     <Checkbox />
                   </StyledTableCell>
-                  <StyledTableCell align="center">S.No.</StyledTableCell>
+                  <StyledTableCell sx={{ width: 50 }} align="center">
+                    S.No.
+                  </StyledTableCell>
+                  <StyledTableCell align="center">Student ID</StyledTableCell>
+                  <StyledTableCell align="center">Student Name</StyledTableCell>
+                  <StyledTableCell align="center">Email</StyledTableCell>
+                  <StyledTableCell align="center">Mobile</StyledTableCell>
                   <StyledTableCell align="center">Course Name</StyledTableCell>
                   <StyledTableCell align="center">
-                    Certificate Title
+                    Enrollment Date
                   </StyledTableCell>
+                  <StyledTableCell align="center">Time</StyledTableCell>
+                  <StyledTableCell align="center">Mode</StyledTableCell>
                   <StyledTableCell align="center">
-                    Certificate Image
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Description</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Created Date{" "}
+                    Completed Date
                   </StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {displayedCourse.length > 0 ? (
-                  displayedCourse.map((curr, index) => (
-                    <StyledTableRow key={curr.id}>
-                      <StyledTableCell align="center">
+                {displayedCategories.length > 0 ? (
+                  displayedCategories.map((row, index) => (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell>
                         <Checkbox />
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
-                      </StyledTableCell>{" "}
-                      {/* S.No. */}
-                      <StyledTableCell align="center">
-                        {curr.course_name}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.student_ID}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">{row.name}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.email}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.title}
+                        {row.mobile}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.course_name}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.certificate_image ? (
-                          <img
-                            src={curr.certificate_image}
-                            alt={`Certificate ${index + 1}`}
-                            style={{ width: "100px", height: "auto" }}
-                          />
-                        ) : (
-                          "No Image"
-                        )}
+                        {row.enroll_date}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.description}
+                        {row.time}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.date}
+                        {row.mode}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            alignItems: "center",
-                          }}
-                        >
-                          <FaEdit
-                            className="edit"
-                            onClick={() => handleClickOpen(curr)}
-                          />
-                          <RiDeleteBin6Line
-                            className="delete"
-                            onClick={() => handleDeleteConfirmation(curr.id)}
-                          />
-                        </div>
+                        {row.completion_date}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <RiDeleteBin6Line
+                          className="delete"
+                          onClick={() => handleDelete(row.id)}
+                          style={{ cursor: "pointer", color: "red" }}
+                        />
                       </StyledTableCell>
                     </StyledTableRow>
                   ))
                 ) : (
                   <StyledTableRow>
-                    <StyledTableCell colSpan={9} align="center">
-                      No data available.
+                    <StyledTableCell colSpan={12} align="center">
+                      No data available
                     </StyledTableCell>
                   </StyledTableRow>
                 )}
               </TableBody>
             </Table>
           </TableContainer>
+
           <div className="pagination-container">
             <AdminPagination
               currentPage={currentPage}
               rowsPerPage={rowsPerPage}
-              totalRows={filteredCertificate.length}
+              totalRows={filteredEnroll.length}
               onPageChange={handlePageChange}
             />
           </div>
@@ -580,7 +728,7 @@ export default function CourseCertificate() {
       >
         <div>
           <DialogTitle className="dialog-title" id="edit-schedule-dialog">
-            Edit Course Certificate
+            Edit Offline Enrollment
             <Button onClick={handleClose} className="close-btn">
               <IoMdCloseCircleOutline
                 style={{ color: "white", fontSize: "2rem" }}
@@ -632,41 +780,6 @@ export default function CourseCertificate() {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="col">
-            <label htmlFor="courseName" className="form-label">
-              Certificate Title
-            </label>
-            <input
-              id="courseName"
-              className="form-control"
-              name="title"
-              value={editedData.title || ""}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="col">
-            <label className="form-label">Certificate Image</label>
-            <input
-              type="file"
-              className="form-control"
-              name="image"
-              onChange={handleFileChange}
-              required
-            />
-          </div>
-
-          <div className="mb-6">
-            <label htmlFor="courseName" className="form-label">
-              Description
-            </label>
-            <input
-              id="exampleFormControlTextarea1"
-              className="form-control"
-              name="description"
-              value={editedData.description || ""}
-              onChange={handleInputChange}
-            />
           </div>
         </DialogContent>
         <DialogActions

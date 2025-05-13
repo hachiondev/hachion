@@ -20,6 +20,7 @@ import QaAutomationFaq from "./QaAutomationFaq";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
   const [helmetKey, setHelmetKey] = useState(0);
@@ -33,7 +34,7 @@ const QaAutomation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const upcomingBatchRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -41,6 +42,7 @@ const QaAutomation = () => {
   // Sticky logic
   useEffect(() => {
     const handleScroll = () => {
+      //console.log(upcomingHeaderRef.current);
       if (upcomingHeaderRef.current) {
         const { top } = upcomingHeaderRef.current.getBoundingClientRect();
         setIsSticky(top <= 0); // Set sticky if the header's top reaches 0 or less
@@ -105,6 +107,13 @@ const QaAutomation = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+  console.log(window.location.href.includes("#upcoming-batch"));
+  if (window.location.href.includes("#upcoming-batch")) {
+    const formattedName = courseName.toLowerCase().replace(/\s+/g, "-");
+    navigate(`/courseDetails/${formattedName}#upcoming-batch`, {
+      state: { scrollTo: "upcoming-batch" }, // pass scroll target
+    });
+  }
 
   return (
     <>

@@ -67,6 +67,7 @@ export default function Faq() {
   const [curriculum, setCurriculum] = useState([]);
   const [filterCourse, setFilterCourse] = useState([]);
   const [filteredCurriculum, setFilteredCurriculum] = useState([]);
+  const [homeFilter, setHomeFilter] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = useState([
     { id: Date.now(), faq_title: "", description: "" },
@@ -180,6 +181,16 @@ export default function Faq() {
     }
   }, [curriculumData.category_name, courseCategory]);
   useEffect(() => {
+    if (filterData.category_name) {
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === filterData.category_name
+      );
+      setHomeFilter(filtered);
+    } else {
+      setHomeFilter([]);
+    }
+  }, [filterData.category_name, courseCategory]);
+  useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
         const response = await axios.get("https://api.hachion.co/courses/all");
@@ -262,11 +273,11 @@ export default function Faq() {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
+            "Content-Type": "multipart/form-data",
           },
-          maxBodyLength: Infinity, // Disable body size limit
-          maxContentLength: Infinity, // Disable content size limit
-          timeout: 60000, // Timeout set to 60 seconds (adjust as needed)
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 60000,
         }
       );
 
@@ -280,8 +291,9 @@ export default function Faq() {
       setTimeout(() => setMessage(""), 5000);
       setOpen(false);
     } catch (error) {
+      const backendMessage = error.response?.data || error.message;
       console.error("Error updating faq:", error);
-      setMessage("Error updating Faq.");
+      setMessage(backendMessage);
     }
   };
 
@@ -387,12 +399,24 @@ export default function Faq() {
   const handleCloseModal = () => {
     setShowAddCourse(false);
   };
+  // const handleClickOpen = (row) => {
+  //   console.log(row);
+  //     setEditedRow(row)// Set the selected row data
+  //     setOpen(true); // Open the modal
+  //     console.log("tid",row.faq_id)
+  //   };
   const handleClickOpen = (row) => {
-    console.log(row);
-    setEditedRow(row); // Set the selected row data
-    setOpen(true); // Open the modal
-    console.log("tid", row.faq_id);
+    console.log("Editing row:", row);
+    setEditedRow(row);
+    if (row.category_name) {
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === row.category_name
+      );
+      setFilterCourse(filtered);
+    }
+    setOpen(true);
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCurriculumData((prevData) => ({
@@ -512,11 +536,9 @@ export default function Faq() {
 
         return response.status === 201;
       } catch (error) {
-        console.error(
-          "Error adding faq:",
-          error.response?.data || error.message
-        );
-        return false;
+        const backendMessage = error.response?.data || error.message;
+        console.error("Error adding faq:", backendMessage);
+        return { success: false, error: backendMessage };
       }
     });
 
@@ -836,7 +858,7 @@ export default function Faq() {
                 </label>
                 <select
                   id="inputState"
-                  className="form-select"
+                  class="form-select"
                   name="category_name"
                   value={filterData.category_name}
                   onChange={handlefilterChange}
@@ -861,6 +883,41 @@ export default function Faq() {
                   name="course_name"
                   value={filterData.course_name}
                   onChange={handlefilterChange}
+                  disabled={!filterData.category_name}
+                >
+                  <option value="" disabled>
+                    Select Course
+                  </option>
+                  {homeFilter.map((curr) => (
+                    <option key={curr.id} value={curr.courseName}>
+                      {curr.courseName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* <div class="col-md-3">
+    <label for="inputState" class="form-label">Category Name</label>
+    <select
+  id="inputState"
+  className="form-select"
+  name="category_name"
+  value={filterData.category_name}
+  onChange={handlefilterChange}
+>
+  <option value="" disabled>Select Category</option>
+  {course.map((curr) => (
+    <option key={curr.id} value={curr.name}>{curr.name}</option>
+  ))}
+</select>
+</div>
+<div className="col-md-3">
+<label htmlFor="course" className="form-label">Course Name</label>
+<select
+                  id="course"
+                  className="form-select"
+                  name="course_name"
+                  value={filterData.course_name}
+                  onChange={handlefilterChange}
                 >
                   <option value="" disabled>
                     Select Course
@@ -876,8 +933,8 @@ export default function Faq() {
                           {curr.courseName}
                         </option>
                       ))}
-                </select>
-              </div>
+</select>
+      </div> */}
               {/* <div class="mb-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input class="form-control" type="file" id="formFile"
@@ -898,103 +955,112 @@ export default function Faq() {
               </div>
             </div>
           </div>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="center" sx={{ width: "100px" }}>
-                    <Checkbox />
-                  </StyledTableCell>
-                  <StyledTableCell align="center" sx={{ width: "100px" }}>
-                    S.No.
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Title</StyledTableCell>
-                  <StyledTableCell align="center">Description</StyledTableCell>
-                  <StyledTableCell align="center">FAQ pdf</StyledTableCell>
-                  <StyledTableCell align="center">Created Date</StyledTableCell>
-                  <StyledTableCell align="center" sx={{ width: "150px" }}>
-                    Action
-                  </StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {displayedCategories.length > 0 ? (
-                  displayedCategories.map((course, index) => (
-                    <StyledTableRow key={course.curr_id}>
-                      <StyledTableCell align="center">
-                        <Checkbox />
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {index + 1 + (currentPage - 1) * rowsPerPage}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="left"
-                        style={{
-                          maxWidth: "500px",
-                          wordWrap: "break-word",
-                          whiteSpace: "pre-line",
-                        }}
-                      >
-                        {course.faq_title}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <div
+          {filterData.category_name || filterData.course_name ? (
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center" sx={{ width: "100px" }}>
+                      <Checkbox />
+                    </StyledTableCell>
+                    <StyledTableCell align="center" sx={{ width: "100px" }}>
+                      S.No.
+                    </StyledTableCell>
+                    <StyledTableCell align="center">Title</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Description
+                    </StyledTableCell>
+                    {/* <StyledTableCell align="center">faq pdf</StyledTableCell> */}
+                    <StyledTableCell align="center">
+                      Created Date
+                    </StyledTableCell>
+                    <StyledTableCell align="center" sx={{ width: "150px" }}>
+                      Action
+                    </StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {displayedCategories.length > 0 ? (
+                    displayedCategories.map((course, index) => (
+                      <StyledTableRow key={course.curr_id}>
+                        <StyledTableCell align="center">
+                          <Checkbox />
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {index + 1 + (currentPage - 1) * rowsPerPage}
+                        </StyledTableCell>
+                        <StyledTableCell
+                          align="left"
                           style={{
-                            maxWidth: "1000px",
+                            maxWidth: "500px",
                             wordWrap: "break-word",
                             whiteSpace: "pre-line",
                           }}
-                          dangerouslySetInnerHTML={{
-                            __html: course.description || "No topics available",
-                          }}
-                        />
-                      </StyledTableCell>
-                      <StyledTableCell align="left" style={{ width: "100px" }}>
-                        {course.faq_pdf
-                          ? course.faq_pdf.split("/").pop()
-                          : "No PDF"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {course.date
-                          ? dayjs(course.date).format("MM-DD-YYYY")
-                          : "N/A"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            alignItems: "center",
-                          }}
                         >
-                          <FaEdit
-                            className="edit"
-                            onClick={() => handleClickOpen(course)}
+                          {course.faq_title}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          <div
+                            style={{
+                              maxWidth: "1000px",
+                              wordWrap: "break-word",
+                              whiteSpace: "pre-line",
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                course.description || "No topics available",
+                            }}
                           />
-                          <RiDeleteBin6Line
-                            className="delete"
-                            onClick={() =>
-                              handleDeleteConfirmation(course.faq_id)
-                            }
-                          />
-                        </div>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-                ) : (
-                  <p>No categories available</p>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <div className="pagination-container">
-            <AdminPagination
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              totalRows={filteredCurriculum.length} // Use the full list for pagination
-              onPageChange={handlePageChange}
-            />
-          </div>
+                        </StyledTableCell>
+                        {/* <StyledTableCell align="center">{course.faq_pdf}</StyledTableCell> */}
+                        <StyledTableCell align="center">
+                          {course.date
+                            ? dayjs(course.date).format("MM-DD-YYYY")
+                            : "N/A"}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                              alignItems: "center",
+                            }}
+                          >
+                            <FaEdit
+                              className="edit"
+                              onClick={() => handleClickOpen(course)}
+                            />
+                            <RiDeleteBin6Line
+                              className="delete"
+                              onClick={() =>
+                                handleDeleteConfirmation(course.faq_id)
+                              }
+                            />
+                          </div>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))
+                  ) : (
+                    <p>No categories available</p>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <p>Please select category or courses to display data</p>
+          )}
+          {filterData.category_name || filterData.course_name ? (
+            <div className="pagination-container">
+              <AdminPagination
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                totalRows={filteredCurriculum.length} // Use the full list for pagination
+                onPageChange={handlePageChange}
+              />
+            </div>
+          ) : (
+            <p></p>
+          )}
           {message && <div className="success-message">{message}</div>}
         </div>
       )}

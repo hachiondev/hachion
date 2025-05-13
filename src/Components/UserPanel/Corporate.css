@@ -469,15 +469,8 @@
   margin-top: 0;
   text-align: justify;
 }
-.custom-prev-icon {
-  font-size: 2rem;
-  background-color: #00aaef;
-  color: #ffffff;
-  cursor: pointer;
-  z-index: 1;
-  border-radius: 50%;
-  margin-left: -10vh;
-}
+
+.custom-prev-icon,
 .custom-next-icon {
   font-size: 2rem;
   background-color: #00aaef;
@@ -485,24 +478,69 @@
   cursor: pointer;
   z-index: 1;
   border-radius: 50%;
+}
+.custom-prev-icon {
+  margin-left: -10vh;
+}
+.custom-next-icon {
   margin-right: -10vh;
 }
 .carousel-control-next,
 .carousel-control-prev {
-  position: absolute;
+  width: auto;
+  height: 100%;
   top: 0;
   bottom: 0;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3% !important;
+  background: none;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 15px;
+}
+
+.indicator-wrapper {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-indicators-line {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  width: 100%;
+  gap: 5px;
+}
+
+.carousel-indicators-line li {
+  flex: 1;
+  height: 4px;
+  background-color: #c4c4c4;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-indicators-line li.active {
+  background-color: #00a4e0;
 }
 
 .carousel-indicators {
   display: flex;
   justify-content: center;
-  align-content: center;
+  gap: 10px;
+  padding-top: 10px;
+  margin-top: 20px;
   list-style: none;
 }
 
@@ -515,6 +553,10 @@
   cursor: pointer;
   opacity: 1;
   transition: background-color 0.3s ease;
+}
+
+.carousel-indicators-custom .active {
+  background-color: #00aaef;
 }
 
 .carousel-indicators .active {
@@ -1101,7 +1143,7 @@
   .custom-prev-icon,
   .custom-next-icon {
     position: absolute;
-    top: 50%;
+    /* top: 50%; */
     transform: translateY(-50%);
     margin: 0px;
   }
@@ -1136,7 +1178,7 @@
   .custom-prev-icon,
   .custom-next-icon {
     position: absolute;
-    top: 50%;
+    /* top: 50%; */
     transform: translateY(-50%);
     margin: 0px;
   }
@@ -1165,31 +1207,30 @@
 
   .learner-card {
     display: block;
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
+    width: 95%;
+    height: 400px;
+    margin-left: 1%;
+    margin-right: 1%;
   }
 
   .carousel-indicators {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    top: 460px;
+    top: 430px;
   }
 
-  .custom-prev-icon,
-  .custom-next-icon {
-    /* position: absolute;
+  /* .custom-prev-icon, .custom-next-icon {
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      margin: 0px; */
-    display: none;
-  }
+      margin: 0px;
+    } */
 
   .learner-card-item {
     display: block;
     flex-direction: column;
-    height: 350px;
+    height: 400px;
     overflow: hidden;
   }
   .learner-card-item > div {
@@ -1208,7 +1249,6 @@
   }
 
   .learner-card-container {
-    flex-direction: column;
     align-items: center;
     max-width: 700px;
   }
@@ -1621,11 +1661,11 @@
   }
 
   .job-profile {
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     margin-left: 0px;
     margin-bottom: 5px;
-    white-space: nowrap;
+    white-space: wrap;
   }
 
   .job-location {
@@ -1651,19 +1691,28 @@
     flex-direction: column;
     align-items: center;
     max-width: 430px;
-    margin-bottom: 25px;
+    margin-bottom: 0;
+  }
+
+  .carousel-indicators-line {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    gap: 0;
+  }
+
+  .carousel-indicators-line li {
+    max-width: 18px;
+    height: 2px;
+    gap: 0;
+    display: flex;
   }
 
   .custom-prev-icon,
   .custom-next-icon {
-    display: none;
-  }
-
-  /* Ensure carousel indicators are visible and positioned below the card */
-  .carousel-indicators {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+    font-size: 20px;
   }
 
   .carousel-indicators li {
@@ -1942,12 +1991,13 @@
   .carousel-control-prev {
     display: none;
   }
-  .custom-prev-icon {
-    display: none;
-  }
-  .custom-next-icon {
-    display: none;
-  }
+  /* .custom-prev-icon
+{
+  display: none;
+ }
+ .custom-next-icon {
+  display: none;
+   }       */
 }
 
 #advisor1 {
@@ -2036,6 +2086,6 @@
     justify-content: center;
     max-width: 800px;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
   }
 }

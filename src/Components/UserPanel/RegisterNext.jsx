@@ -135,7 +135,7 @@ const RegisterNext = () => {
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
     }

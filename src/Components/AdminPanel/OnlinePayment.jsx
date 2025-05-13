@@ -14,8 +14,7 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { IoSearch } from "react-icons/io5";
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdminPagination from "./AdminPagination";
 import "./Admin.css";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,28 +36,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-export default function RegisterStudent() {
-  const [enrollData, setEnrollData] = useState([]);
+export default function OnlinePayment() {
+  const [onlinePayment, setOnlinePayment] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  useEffect(() => {
-    axios
-      .get("https://api.hachion.co/api/v1/user/students")
-      .then((response) => {
-        setEnrollData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching enrollment data:", error);
-      });
-  }, []);
-  const filteredData = enrollData.filter((item) => {
-    const date = new Date(item.date || item.enroll_date);
+  const filteredData = onlinePayment.filter((item) => {
+    const date = new Date(item.date || item.payment_date);
     const matchesSearch =
       searchTerm === "" ||
-      [item.userName, item.email, item.country]
+      [item.name, item.email, item.course_name, item.method]
         .map((field) => (field || "").toLowerCase())
         .some((field) => field.includes(searchTerm.toLowerCase()));
     const inDateRange =
@@ -77,7 +66,7 @@ export default function RegisterStudent() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className="course-category">
           <div className="category-header">
-            <p>Online Registered Student</p>
+            <p>View OnlinePayment List</p>
           </div>
           <div className="date-schedule">
             Start Date
@@ -153,7 +142,7 @@ export default function RegisterStudent() {
                 <input
                   className="search-input"
                   type="search"
-                  placeholder="Enter Name, email or country"
+                  placeholder="Enter Name, Course Name or Method"
                   aria-label="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -171,16 +160,18 @@ export default function RegisterStudent() {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>
+              <StyledTableCell align="center">
                 <Checkbox />
               </StyledTableCell>
-              <StyledTableCell>S.No.</StyledTableCell>
+              <StyledTableCell align="center">S.No.</StyledTableCell>
               <StyledTableCell align="center">Student ID</StyledTableCell>
               <StyledTableCell align="center">Student Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
               <StyledTableCell align="center">Mobile</StyledTableCell>
-              <StyledTableCell align="center">Country</StyledTableCell>
-              {/* <StyledTableCell align="center">Action</StyledTableCell> */}
+              <StyledTableCell align="center">Course Name</StyledTableCell>
+              <StyledTableCell align="center">Course Fee</StyledTableCell>
+              <StyledTableCell align="center">Payment Method</StyledTableCell>
+              <StyledTableCell align="center">Created Date </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -197,18 +188,17 @@ export default function RegisterStudent() {
                   <StyledTableCell align="left">{row.userName}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.country}
+                  <StyledTableCell align="left">
+                    {row.course_name}
                   </StyledTableCell>
-                  {/* <StyledTableCell align="center">
-                                    <RiDeleteBin6Line className="delete" onClick={() => handleDelete(row.id)} style={{ cursor: "pointer", color: "red" }} />
-
-                                </StyledTableCell> */}
+                  <StyledTableCell align="left">{row.fee}</StyledTableCell>
+                  <StyledTableCell align="left">{row.method}</StyledTableCell>
+                  <StyledTableCell align="center">{row.date}</StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (
               <StyledTableRow>
-                <StyledTableCell colSpan={15} align="center">
+                <StyledTableCell colSpan={9} align="center">
                   No data available
                 </StyledTableCell>
               </StyledTableRow>

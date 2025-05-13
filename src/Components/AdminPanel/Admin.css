@@ -148,6 +148,10 @@
   width: 80px; /* Sidebar width when collapsed */
 }
 
+.sidebar-admin.collapsed ~ .admin-right {
+  margin-left: 80px;
+}
+
 /* Toggle button for collapsing the sidebar */
 .sidebar-toggle {
   display: flex;
@@ -167,12 +171,15 @@
 .sidebar-admin {
   background: linear-gradient(90deg, #006489 0%, #00aeef 100%);
   color: white;
-  left: 0;
-  right: 5px;
-  overflow-y: auto; /* Vertical scrolling */
+  width: 280px;
+  overflow-y: auto;
+  overflow-x: hidden;
   height: 100vh;
-  margin: 0;
-  transition: width 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+  transition: width 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 /* Sidebar heading */
@@ -197,12 +204,6 @@
   border-bottom: 1px solid #ffffff;
 }
 
-/* Hide heading when sidebar is collapsed */
-.sidebar-admin.collapsed .sidebar-heading-admin {
-  opacity: 0;
-  visibility: hidden;
-}
-
 /* Menu list styles */
 .menu-list-admin {
   list-style-type: none; /* Remove bullet points */
@@ -210,20 +211,24 @@
   margin: 0;
 }
 
+.admin-layout {
+  display: flex;
+}
+
 /* Admin content area */
 .admin-right {
   flex-grow: 1;
   padding: 20px;
-  width: 100%;
-  overflow-y: auto;
-  height: 85vh;
-  overflow-x: auto;
+  margin-left: 280px; /* default sidebar width */
+  transition: margin-left 0.3s ease;
 }
 
 /* Menu item container */
 .menu-item-container-admin {
   display: flex;
   align-items: center;
+  flex-direction: column;
+  width: 100%;
   background: linear-gradient(90deg, #006489 0%, #00aeef 100%);
 }
 
@@ -231,12 +236,24 @@
 .menu-item-admin {
   background: transparent;
   color: white;
-  width: 280px;
+  width: 100%;
   border: none;
   text-align: left;
-  padding: 1.5vh;
   display: flex;
   align-items: center;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition */
+}
+
+.submenu-item-admin {
+  background: transparent;
+  color: white;
+  border: none;
+  text-align: right;
+  padding: 15px 8px 15px 15px;
+  display: flex;
+  align-items: center;
+  list-style: none;
   transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition */
 }
 
@@ -248,29 +265,37 @@
   font-size: 20px;
 }
 
-/* Hover effect on menu item */
-.menu-item-admin:hover {
-  background-color: #0d6efd; /* Hover background color */
-  color: white;
-  border-radius: 0px 30px 30px 0px;
-  border: 1px solid white;
+.menu-icon-title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Active state of menu item */
-.menu-item-admin.active {
-  background-color: #0d6efd; /* Active state background color */
-  color: white;
-  border-radius: 0px 30px 30px 0px;
-  border: 1px solid white;
+.menu-item-admin:hover,
+.submenu-item-admin:hover,
+.menu-item-admin.active,
+.submenu-item-admin.active {
+  background-color: #0d6efd;
+  border-radius: 0 30px 30px 0;
 }
 
 .menu-title {
   font-size: 16px;
 }
 
+.dropdown-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: white;
+}
+
 /* Sidebar collapsed state styles */
 .sidebar-admin.collapsed .menu-item-admin {
   padding: 1vh;
+  color: #2c3e50;
+  justify-content: center;
 }
 
 .sidebar-admin.collapsed .menu-title {
@@ -281,14 +306,15 @@
   margin: 0 auto;
 }
 
-.sidebar-admin.collapsed .menu-item-admin {
-  color: #2c3e50; /* Change text color when collapsed */
-}
-
 /* Optional: Transition for collapsing sidebar */
 .sidebar-admin.collapsed .sidebar-heading-admin {
   opacity: 0;
   visibility: hidden;
+}
+
+.sidebar-admin.collapsed .dropdown-icon {
+  margin-left: 0;
+  justify-content: center;
 }
 
 .admin-dashboard-content {
@@ -445,6 +471,35 @@
 .submit-btn:hover {
   background-color: #0d6efd;
 }
+.generate-btn {
+  font-size: 20px;
+  height: 50px;
+  padding: 5px 25px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+  background-color: #00aeef;
+  font-weight: 700;
+  color: #fff;
+  justify-content: center;
+  display: inline-block;
+  text-align: center;
+}
+
+.generate-btn:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.generate-btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.generate-btn:disabled:hover {
+  background-color: #ccc;
+  color: #666;
+}
 .reset-btn {
   font-size: 20px;
   height: 50px;
@@ -573,6 +628,31 @@ width: 350px;
   flex-direction: row;
   justify-content: space-between;
   gap: 20px;
+}
+
+.course-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.cert-img {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.prev-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .course-details {
   box-shadow: 5px 5px 10px #d3d3d3;

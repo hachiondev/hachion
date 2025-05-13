@@ -15,6 +15,7 @@ import Reports from "./Reports";
 import Other from "./Other";
 import CourseCategory from "./CourseCategory";
 import CorporateCourses from "./CorporateCourses";
+import Payments from "./Payments";
 const componentMap = {
   Dashboard: <AdminDashboard />,
   "Course Category": <CourseCategory />,
@@ -22,8 +23,9 @@ const componentMap = {
   "Corporate Training": <CorporateCourses />,
   "Trending Courses": <TrendingCourseTable />,
   Trainer: <Trainer />,
-  Certificate: <Certificate />,
-  "All Enroll": <Enroll />,
+  Certificates: <Certificate />,
+  Enrollments: <Enroll />,
+  Payments: <Payments />,
   Registration: <Registration />,
   Reports: <Reports />,
   "Schedule Request": <ScheduleRequest />,
@@ -36,7 +38,7 @@ const AdminDashboardView = () => {
   return (
     <React.Fragment>
       <AdminNavbar />
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div className="admin-layout">
         <AdminSidebar onSelectCategory={setSelectedCategory} />
         <div className="admin-right">
           {componentMap[selectedCategory] || <AdminDashboard />}

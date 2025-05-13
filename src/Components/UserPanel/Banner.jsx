@@ -12,11 +12,12 @@ const Banner = () => {
 
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/banner")
+      .get("http://localhost:8080/banner")
       .then((response) => {
         if (response.data.length > 0) {
           // Add static banner at the start
           const combinedBanners = [staticBanner, ...response.data];
+          console.log(combinedBanners);
           setBanners(combinedBanners);
           setApiError(false);
         } else {
@@ -32,7 +33,13 @@ const Banner = () => {
   const handleExploreMore = () => navigate("/courseDetails");
   const handleJoinNow = () => navigate("/workshop");
 
-  const displayBanners = apiError ? [staticBanner] : banners;
+  // const displayBanners = apiError ? [staticBanner] : banners;
+  const displayBanners = apiError
+    ? [staticBanner]
+    : [
+        staticBanner,
+        ...banners.filter((banner) => banner.home_status === "enabled"),
+      ];
 
   return (
     <div
@@ -60,7 +67,30 @@ const Banner = () => {
             key={index}
             className={`carousel-item ${index === 0 ? "active" : ""}`}
           >
-            <img
+            {banner.path ? (
+              <a href={banner.path}>
+                <img
+                  src={
+                    apiError || index === 0
+                      ? banner.home_banner_image
+                      : `https://api.hachion.co/${banner.home_banner_image}`
+                  }
+                  className="banner-img"
+                  alt={`Banner ${index + 1}`}
+                />
+              </a>
+            ) : (
+              <img
+                src={
+                  apiError || index === 0
+                    ? banner.home_banner_image
+                    : `https://api.hachion.co/${banner.home_banner_image}`
+                }
+                className="banner-img"
+                alt={`Banner ${index + 1}`}
+              />
+            )}
+            {/* <img
               src={
                 apiError || index === 0
                   ? banner.home_banner_image
@@ -68,7 +98,7 @@ const Banner = () => {
               }
               className="banner-img"
               alt={`Banner ${index + 1}`}
-            />
+            /> */}
             <div className="carousel-caption">
               <div className="carousel-btn">
                 {index === 0 ? (

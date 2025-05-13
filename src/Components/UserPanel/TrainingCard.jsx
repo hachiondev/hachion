@@ -23,6 +23,15 @@ const TrainingCard = ({
     mediaQuery.addEventListener("change", handleResize);
     return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
+  //console.log(heading);
+  // const navigateToCourse = () => {
+  //   if (heading) {
+  //     const formattedName = heading.toLowerCase().replace(/\s+/g, "-");
+  //     navigate(`/courseDetails/${formattedName}#upcoming-batch`, {
+  //       state: { scrollTo: "upcoming-batch" }, // pass scroll target
+  //     });
+  //   }
+  // };
 
   const navigateToCourse = () => {
     if (heading) {

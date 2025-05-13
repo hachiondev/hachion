@@ -170,6 +170,9 @@
   font-weight: 600;
   text-align: center;
   padding: 1vh;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .menu-item:hover {
@@ -2709,7 +2712,7 @@ html {
   }
 
   .course-banner-content {
-    color: white;
+    color: #00aaef;
     font-weight: 600;
     font-size: 16px;
   }
@@ -3003,7 +3006,7 @@ html {
     border-radius: 5px;
     margin-bottom: 5px;
     font-size: 10px;
-    text-align: justify;
+    text-align: left;
   }
 
   .bullet-list {

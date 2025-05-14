@@ -109,7 +109,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
       const parsedEmail = parsedUser.email;
       console.log("Parsed email:", parsedEmail);
   
-      axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
+      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -148,7 +148,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   
     setIsUpdating(true); 
   
-    axios.post('https://api.test.hachion.co/api/v1/user/reset-password', {
+    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,

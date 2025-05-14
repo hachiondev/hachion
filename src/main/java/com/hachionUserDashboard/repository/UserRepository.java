@@ -48,10 +48,13 @@ public interface UserRepository extends ListCrudRepository<User, Long> {
 	@Query(value = "SELECT student_id FROM user_tbl WHERE student_id IS NOT NULL ORDER BY LENGTH(student_id) DESC, student_id DESC LIMIT 1", nativeQuery = true)
 	String findTopByOrderByStudentIdDesc();
 
-	@Query(value = "SELECT u.user_name AS userName, u.student_id AS studentId, u.email " + "FROM user_tbl u "
-			+ "JOIN enroll e ON u.user_name = e.name " + "WHERE e.course_name = :courseName", nativeQuery = true)
-	List<Object[]> findUsersByCourseName(@Param("courseName") String courseName);
+//	@Query(value = "SELECT u.user_name AS userName, u.student_id AS studentId, u.email " + "FROM user_tbl u "
+//			+ "JOIN enroll e ON u.user_name = e.name " + "WHERE e.course_name = :courseName", nativeQuery = true)
+//	List<Object[]> findUsersByCourseName(@Param("courseName") String courseName);
 
+	@Query(value = "SELECT name, student_id, email FROM enroll WHERE course_name = :courseName", nativeQuery = true)
+	List<Object[]> findUsersByCourseName(@Param("courseName") String courseName);
+	
 	@Query(value = "SELECT user_name, email FROM user_tbl WHERE student_id = :studentId", nativeQuery = true)
 	List<Object[]> findUserNameEmailByStudentId(@Param("studentId") String studentId);
 

@@ -4,15 +4,29 @@ public class UserProfileResponse {
 	private String name;
 	private String email;
 	private Long mobile;
+	private String studentId;
 
 	public UserProfileResponse() {
 	}
 
-	public UserProfileResponse(String name, String email, Long mobile) {
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
+	}
+
+	public UserProfileResponse(String name, String email, Long mobile, String studentId) {
+		super();
 		this.name = name;
 		this.email = email;
 		this.mobile = mobile;
-
+		this.studentId = studentId;
 	}
 
 	// Getters and Setters

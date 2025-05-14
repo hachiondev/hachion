@@ -43,204 +43,188 @@ import Service.CertificateService;
 @RestController
 public class CertificateController {
 
-	@Value("${upload.path}") 
+	@Value("${upload.path}")
 	private String uploadPath;
 
 	@Autowired
 	private CertificateRepository repo;
-	
+
 	@Autowired
 	private CertificateDetailsRepository certificateRepository;
 
 	@Autowired
 	private CertificateService certificateService;
 
-    @GetMapping("/certificate/{id}")
-    public ResponseEntity<Certificate> getCertificate(@PathVariable Integer id) {
-        return repo.findById(id)
-                   .map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@GetMapping("/certificate/{id}")
+	public ResponseEntity<Certificate> getCertificate(@PathVariable Integer id) {
+		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @GetMapping("/certificate")
-    public List<Certificate> getAllCertificate() {
-        return repo.findAll();
-    }
+	@GetMapping("/certificate")
+	public List<Certificate> getAllCertificate() {
+		return repo.findAll();
+	}
 
-    @PostMapping("/certificate/add")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<String> createCertificate(
-            @RequestParam("certificate_image") MultipartFile file,
-            @RequestParam("course_name") String course_name,
-            @RequestParam("category_name") String category_name,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description) {
+	@PostMapping("/certificate/add")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public ResponseEntity<String> createCertificate(@RequestParam("certificate_image") MultipartFile file,
+			@RequestParam("course_name") String course_name, @RequestParam("category_name") String category_name,
+			@RequestParam("title") String title, @RequestParam("description") String description) {
 
-        // Debugging: Log the provided path
-        System.out.println("Upload Path: " + uploadPath);
+		System.out.println("Upload Path: " + uploadPath);
 
-        // Generate file name
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        File uploadDir = new File(uploadPath);
+		String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		File uploadDir = new File(uploadPath);
 
-        try {
-            // Create directory if not exists
-            if (!uploadDir.exists()) {
-                boolean created = uploadDir.mkdirs();
-                System.out.println("Directory created: " + created);
-            }
+		try {
 
-            // Save file
-            File destinationFile = new File(uploadPath + "/" + fileName);
-            file.transferTo(destinationFile);
-            System.out.println("File saved to: " + destinationFile.getAbsolutePath());
+			if (!uploadDir.exists()) {
+				boolean created = uploadDir.mkdirs();
+				System.out.println("Directory created: " + created);
+			}
 
-            // Save banner details in database
-           Certificate certificate = new Certificate();
-            certificate.setCertificate_image("/uploads/" + fileName); // Set relative path
-            certificate.setTitle(title);
-            certificate.setCategory_name(category_name);
-            certificate.setCourse_name(course_name);
-            certificate.setDescription(description);
-            repo.save(certificate);
+			File destinationFile = new File(uploadPath + "/" + fileName);
+			file.transferTo(destinationFile);
+			System.out.println("File saved to: " + destinationFile.getAbsolutePath());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Details addes successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Error saving file: " + e.getMessage());
-        }
-    }
+			Certificate certificate = new Certificate();
+			certificate.setCertificate_image("/uploads/" + fileName); // Set relative path
+			certificate.setTitle(title);
+			certificate.setCategory_name(category_name);
+			certificate.setCourse_name(course_name);
+			certificate.setDescription(description);
+			repo.save(certificate);
 
+			return ResponseEntity.status(HttpStatus.CREATED).body("Details addes successfully");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
+		}
+	}
 
+	@PutMapping("/certificate/update/{id}")
+	public ResponseEntity<Certificate> updateCertificate(@PathVariable int id,
+			@RequestBody Certificate updatedCertificate) {
+		return repo.findById(id).map(certificate -> {
+			certificate.setCertificate_image(updatedCertificate.getCertificate_image());
+			certificate.setCourse_name(updatedCertificate.getCourse_name());
+			certificate.setCategory_name(updatedCertificate.getCategory_name());
+			certificate.setTitle(updatedCertificate.getTitle());
+			certificate.setDescription(updatedCertificate.getDescription());
+			repo.save(certificate);
+			return ResponseEntity.ok(certificate);
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @PutMapping("/certificate/update/{id}")
-    public ResponseEntity<Certificate> updateCertificate(@PathVariable int id, @RequestBody Certificate updatedCertificate) {
-        return repo.findById(id).map(certificate -> {
-            certificate.setCertificate_image(updatedCertificate.getCertificate_image());
-            certificate.setCourse_name(updatedCertificate.getCourse_name());
-            certificate.setCategory_name(updatedCertificate.getCategory_name());
-            certificate.setTitle(updatedCertificate.getTitle());
-            certificate.setDescription(updatedCertificate.getDescription());
-            repo.save(certificate);
-            return ResponseEntity.ok(certificate);
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @DeleteMapping("/certificate/delete/{id}")
-    public ResponseEntity<?> deleteCertificate(@PathVariable int id) {
-        return repo.findById(id).map(certificate -> {
-            repo.delete(certificate);
-            return ResponseEntity.ok("Certificate deleted successfully");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-
+	@DeleteMapping("/certificate/delete/{id}")
+	public ResponseEntity<?> deleteCertificate(@PathVariable int id) {
+		return repo.findById(id).map(certificate -> {
+			repo.delete(certificate);
+			return ResponseEntity.ok("Certificate deleted successfully");
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
 	@PostMapping("/certificate/generate")
 	public ResponseEntity<byte[]> generateCertificate(@RequestBody CertificateRequest request) {
-	    CertificateEntity saved = certificateService.generateCertificate(request);
+		CertificateEntity saved = certificateService.generateCertificate(request);
 
-	    try {
-	        byte[] pdfBytes = Files.readAllBytes(Paths.get(saved.getCertificatePath()));
+		try {
+			byte[] pdfBytes = Files.readAllBytes(Paths.get(saved.getCertificatePath()));
 
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_PDF);
-	        headers.setContentDisposition(ContentDisposition.inline()
-	                .filename(saved.getStudentId() + "_Certificate.pdf")
-	                .build());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_PDF);
+			headers.setContentDisposition(
+					ContentDisposition.inline().filename(saved.getStudentId() + "_Certificate.pdf").build());
 
-	        
-	        headers.add("Certificate-Id", String.valueOf(saved.getCertificateId()));
+			headers.add("Certificate-Id", String.valueOf(saved.getCertificateId()));
 
-	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+			return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-
 
 	@GetMapping("/certificate/download/{certificateId}")
 	public ResponseEntity<byte[]> downloadCertificate(@PathVariable Long certificateId) {
-	    Optional<CertificateEntity> optional = certificateRepository.findById(certificateId);
+		Optional<CertificateEntity> optional = certificateRepository.findById(certificateId);
 
-	    if (optional.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	    }
+		if (optional.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 
-	    CertificateEntity certificate = optional.get();
-	    String filePath = certificate.getCertificatePath();
+		CertificateEntity certificate = optional.get();
+		String filePath = certificate.getCertificatePath();
 
-	    File file = new File(filePath);
-	    if (!file.exists()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	    }
+		File file = new File(filePath);
+		if (!file.exists()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 
-	    try {
-	        byte[] pdfBytes = Files.readAllBytes(file.toPath());
+		try {
+			byte[] pdfBytes = Files.readAllBytes(file.toPath());
 
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_PDF);
-	        headers.setContentDisposition(ContentDisposition.attachment()
-	                .filename(certificate.getStudentId() + "_Certificate.pdf")
-	                .build());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_PDF);
+			headers.setContentDisposition(
+					ContentDisposition.attachment().filename(certificate.getStudentId() + "_Certificate.pdf").build());
 
-	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	    }
+			return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
 
-	 @PostMapping("/certificate/send-email/{certificateId}")
-	    public ResponseEntity<String> sendCertificateEmail(@PathVariable Long certificateId) {
-	        try {
-	            certificateService.sendCertificateByEmail(certificateId);
-	            return ResponseEntity.ok("Certificate sent successfully!");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email.");
-	        }
-	    }
-	 @GetMapping("/certificate/all")
-	    public ResponseEntity<List<CertificateEntity>> getAllCertificates() {
-	        List<CertificateEntity> certificates = certificateService.getAllCertificates();
-	        return new ResponseEntity<>(certificates, HttpStatus.OK);
-	    }
-	 @GetMapping("/download/filename/{fileName}")
-	 public ResponseEntity<byte[]> downloadByFileName(@PathVariable String fileName) {
-	     String filePath = "certificates/" + fileName;
+	@PostMapping("/certificate/send-email/{certificateId}")
+	public ResponseEntity<String> sendCertificateEmail(@PathVariable Long certificateId) {
+		try {
+			certificateService.sendCertificateByEmail(certificateId);
+			return ResponseEntity.ok("Certificate sent successfully!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email.");
+		}
+	}
 
-	     File file = new File(filePath);
-	     if (!file.exists()) {
-	         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	     }
+	@GetMapping("/certificate/all")
+	public ResponseEntity<List<CertificateEntity>> getAllCertificates() {
+		List<CertificateEntity> certificates = certificateService.getAllCertificates();
+		return new ResponseEntity<>(certificates, HttpStatus.OK);
+	}
 
-	     try {
-	         byte[] pdfBytes = Files.readAllBytes(file.toPath());
+	@GetMapping("/download/filename/{fileName}")
+	public ResponseEntity<byte[]> downloadByFileName(@PathVariable String fileName) {
+		String filePath = "certificates/" + fileName;
 
-	         HttpHeaders headers = new HttpHeaders();
-	         headers.setContentType(MediaType.APPLICATION_PDF);
-	         headers.setContentDisposition(ContentDisposition.inline()
-	                 .filename(fileName)
-	                 .build());
+		File file = new File(filePath);
+		if (!file.exists()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 
-	         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-	     } catch (IOException e) {
-	         e.printStackTrace();
-	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	     }
-	 }
-	 @GetMapping("/certificate/byname/{studentName}")
-	 public ResponseEntity<List<CertificateEntity>> getByStudentName(@PathVariable String studentName) {
-	     List<CertificateEntity> certificates = certificateService.getCertificatesByStudentName(studentName);
+		try {
+			byte[] pdfBytes = Files.readAllBytes(file.toPath());
 
-	     if (certificates.isEmpty()) {
-	         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(certificates);
-	     }
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_PDF);
+			headers.setContentDisposition(ContentDisposition.inline().filename(fileName).build());
 
-	     return ResponseEntity.ok(certificates);
-	 }
+			return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
+
+	@GetMapping("/certificate/byname/{studentName}")
+	public ResponseEntity<List<CertificateEntity>> getByStudentName(@PathVariable String studentName) {
+		List<CertificateEntity> certificates = certificateService.getCertificatesByStudentName(studentName);
+
+		if (certificates.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(certificates);
+		}
+
+		return ResponseEntity.ok(certificates);
+	}
 
 }

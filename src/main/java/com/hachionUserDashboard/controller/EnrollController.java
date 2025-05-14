@@ -44,8 +44,9 @@ public class EnrollController {
 
 	@PostMapping("/enroll/add")
 	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) {
-		// Handle adding the request batch, including userName
+		
 		Enroll enroll = new Enroll();
+		enroll.setStudentId(requestEnroll.getStudentId());
 		enroll.setName(requestEnroll.getName());
 		enroll.setEmail(requestEnroll.getEmail());
 		enroll.setCourse_name(requestEnroll.getCourse_name());
@@ -57,7 +58,7 @@ public class EnrollController {
 		enroll.setTrainer(requestEnroll.getTrainer());
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
 
-		// Save requestBatch to the database
+		
 		repo.save(enroll);
 		sendEnrollEmail(enroll);
 		return ResponseEntity.ok("Enrollment successfull");

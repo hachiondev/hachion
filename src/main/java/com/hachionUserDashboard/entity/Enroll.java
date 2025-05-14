@@ -11,51 +11,51 @@ import jakarta.persistence.Table;
 @Table(name = "enroll")
 public class Enroll {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @Column
-    private String name;
-    
-    
-    
-    @Column
-    private String email;
-    
+	@Column
+	private String name;
 
-    @Column
-    private String mobile;
-    
-    @Column
-    private String course_name;
-    
-    @Column
-    private String enroll_date;
-    @Column
-    private String week;
-    
-    @Column
-    private String time;
-    @Column
-    private String amount;
-    
-    @Column
-    private String mode;
-    
-    @Column
-    private String type;
-    
-    @Column
-    private String trainer;
-    
-    @Column
-    private String completion_date;
-    
-    @Column
-    private String meeting_link;
-    
-    public int getResendCount() {
+	@Column(name = "student_id")
+	private String studentId;
+
+	@Column
+	private String email;
+
+	@Column
+	private String mobile;
+
+	@Column
+	private String course_name;
+
+	@Column
+	private String enroll_date;
+	@Column
+	private String week;
+
+	@Column
+	private String time;
+	@Column
+	private String amount;
+
+	@Column
+	private String mode;
+
+	@Column
+	private String type;
+
+	@Column
+	private String trainer;
+
+	@Column
+	private String completion_date;
+
+	@Column
+	private String meeting_link;
+
+	public int getResendCount() {
 		return resendCount;
 	}
 
@@ -64,12 +64,11 @@ public class Enroll {
 	}
 
 	@Column(name = "resend_count")
-    private int resendCount = 0;
+	private int resendCount = 0;
 
-    
-    public Enroll() {
-    	
-    }
+	public Enroll() {
+
+	}
 
 	public int getId() {
 		return id;
@@ -183,19 +182,30 @@ public class Enroll {
 		this.completion_date = completion_date;
 	}
 
-	@Override
-	public String toString() {
-		return "Enroll [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", course_name="
-				+ course_name + ", enroll_date=" + enroll_date + ", week=" + week + ", time=" + time + ", amount="
-				+ amount + ", mode=" + mode + ", type=" + type + ", trainer=" + trainer + ", completion_date="
-				+ completion_date + ", meeting_link=" + meeting_link + ", resendCount=" + resendCount + "]";
+	public String getStudentId() {
+		return studentId;
 	}
 
-	public Enroll(int id, String name, String email, String mobile, String course_name, String enroll_date, String week,
-			String time, String amount,String meeting_link, String mode, String type, String trainer, String completion_date) {
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	@Override
+	public String toString() {
+		return "Enroll [id=" + id + ", name=" + name + ", studentId=" + studentId + ", email=" + email + ", mobile="
+				+ mobile + ", course_name=" + course_name + ", enroll_date=" + enroll_date + ", week=" + week
+				+ ", time=" + time + ", amount=" + amount + ", mode=" + mode + ", type=" + type + ", trainer=" + trainer
+				+ ", completion_date=" + completion_date + ", meeting_link=" + meeting_link + ", resendCount="
+				+ resendCount + "]";
+	}
+
+	public Enroll(int id, String name, String studentId, String email, String mobile, String course_name,
+			String enroll_date, String week, String time, String amount, String mode, String type, String trainer,
+			String completion_date, String meeting_link, int resendCount) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.studentId = studentId;
 		this.email = email;
 		this.mobile = mobile;
 		this.course_name = course_name;
@@ -207,18 +217,8 @@ public class Enroll {
 		this.type = type;
 		this.trainer = trainer;
 		this.completion_date = completion_date;
-		this.meeting_link=meeting_link;
-		this.resendCount=resendCount;
+		this.meeting_link = meeting_link;
+		this.resendCount = resendCount;
 	}
-    
-    
-    
-    
-    
-    
-    
-    
-
-
 
 }

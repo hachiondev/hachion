@@ -328,12 +328,13 @@ public class Userimpl implements UserService {
 // }
 //    
 	public List<User> getAllRegisteredStudents() {
-		return userRepository.findAll(); // This is correct
+		return userRepository.findAll(); 
 	}
 
 	@Override
 	public LoginResponse LoginUser(LoginRequest loginRequest) {
 		String msg = "";
+		String msg1 = "";
 		User user1 = userRepository.findByEmail(loginRequest.getEmail());
 
 		if (user1 != null) { // Check if email exists
@@ -341,21 +342,22 @@ public class Userimpl implements UserService {
 			String encodedPassword = user1.getPassword();
 			String name = user1.getUserName();
 			String email = user1.getEmail();
+			String studentId = user1.getStudentId();
 
 			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
 			if (isPwdRight) {
 				Optional<User> user = userRepository.findOneByEmailAndPassword(loginRequest.getEmail(),
 						encodedPassword);
 				if (user.isPresent()) {
-					return new LoginResponse("Login success", true, name, email);
+					return new LoginResponse("Login success", true, name, email, studentId);
 				} else {
-					return new LoginResponse("Login Failed", false, name, email);
+					return new LoginResponse("Login Failed", false, name, email, studentId);
 				}
 			} else {
-				return new LoginResponse("password must match", false, name, email);
+				return new LoginResponse("password must match", false, name, email, studentId);
 			}
 		} else {
-			return new LoginResponse("email not exist", false, null, msg);
+			return new LoginResponse("email not exist", false, null, msg, msg1);
 		}
 	}
 
@@ -565,7 +567,7 @@ public class Userimpl implements UserService {
 		Optional<User> userOpt = userRepository.findByEmailForProfile(email);
 		if (userOpt.isPresent()) {
 			User user = userOpt.get();
-			return new UserProfileResponse(user.getUserName(), user.getEmail(), user.getMobile()
+			return new UserProfileResponse(user.getUserName(), user.getEmail(), user.getMobile(), user.getStudentId()
 
 			);
 		} else {

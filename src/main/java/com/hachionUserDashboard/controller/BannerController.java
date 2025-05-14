@@ -119,25 +119,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hachionUserDashboard.entity.Banner;
+import com.hachionUserDashboard.entity.Blogs;
+import com.hachionUserDashboard.entity.UserReview;
 import com.hachionUserDashboard.repository.BannerRepository;
 
 @RequestMapping
@@ -162,6 +158,7 @@ public class BannerController {
     public List<Banner> getAllBanner() {
         return repo.findAll();
     }
+    
     private final String uploadDir = System.getProperty("user.home") + "/uploads/";
 
     // Method to upload image file
@@ -189,6 +186,11 @@ public class BannerController {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             Banner banner = objectMapper.readValue(bannerData, Banner.class);
+
+            // Set the path field (Example: Default or from request data)
+            if (banner.getPath() == null || banner.getPath().isEmpty()) {
+                banner.setPath(""); // You can replace with actual logic
+            }
 
             // Process banner image (if available)
             if (bannerImage != null && !bannerImage.isEmpty()) {
@@ -281,16 +283,27 @@ public class BannerController {
             @PathVariable int id,
             @RequestPart("banner") String bannerData,
             @RequestPart(value = "banner_image", required = false) MultipartFile bannerImage,
-            @RequestPart(value = "home_banner_image", required = false) MultipartFile homeBannerImage) {
+            @RequestPart(value = "home_banner_image", required = false) MultipartFile homeBannerImage)
+		   
+    {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule()); // Support for Java 8 Date/Time types
             Banner updatedBanner = objectMapper.readValue(bannerData, Banner.class);
 
             return repo.findById(id).map(banner -> {
-               
+            	 // **Update status and home_status**
+                banner.setStatus(updatedBanner.getStatus());
+                banner.setHome_status(updatedBanner.getHome_status());
+                
+                // Set the path field (Example: Default or from request data)
+             // Ensure the user-inputted path is correctly set
+                banner.setPath(updatedBanner.getPath() != null && !updatedBanner.getPath().isEmpty() ? updatedBanner.getPath() : banner.getPath());
                
                 try {
+                	// System.out.println("Received banner data: " + bannerData);
+                    // System.out.println("Banner Image: " + (bannerImage != null ? bannerImage.getOriginalFilename() : "None"));
+                    // System.out.println("Home Banner Image: " + (homeBannerImage != null ? homeBannerImage.getOriginalFilename() : "None"));
                     // If a new banner image is uploaded, update it
                     if (bannerImage != null && !bannerImage.isEmpty()) {
                         String bannerImagePath = saveImage(bannerImage);
@@ -315,7 +328,7 @@ public class BannerController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body("Error saving images: " + e.getMessage());
                 }
-
+                System.out.println("Banner Data Received: " + bannerData);
                 repo.save(banner); // Save the updated banner
                 return ResponseEntity.ok("Banner updated successfully.");
             }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banner not found."));

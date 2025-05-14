@@ -189,7 +189,7 @@ export default function OnlineEnroll() {
                   <StyledTableCell align="center">
                       {index + 1 + (currentPage - 1) * rowsPerPage}
                     </StyledTableCell>
-                  <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
+                  <StyledTableCell align="left">{row.studentId}</StyledTableCell>
                   <StyledTableCell align="left">{row.name}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>

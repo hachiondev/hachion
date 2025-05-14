@@ -89,12 +89,12 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
             return;
           }
 
-          setFee((selectedFeeAmount * rate).toFixed(2) || 'Not Available');
+          setFee((selectedFeeAmount * rate) || 'Not Available');
 
           if (selectedOriginalAmount && selectedFeeAmount !== 0 && selectedOriginalAmount > selectedFeeAmount) {
             const calculatedDiscount = selectedOriginalAmount - selectedFeeAmount;
             const calculatedDiscountPercentage = Math.round((calculatedDiscount / selectedOriginalAmount) * 100);
-            setDiscount((calculatedDiscount * rate).toFixed(2));
+            setDiscount((calculatedDiscount * rate));
             setDiscountPercentage(calculatedDiscountPercentage);
           } else {
             setDiscount(0);
@@ -154,73 +154,180 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     }
   };
 
-  const handleEnroll = async () => {
-    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+//   const handleEnroll = async () => {
+//     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+// console.log("User from localStorage:", user);
 
-    if (!user || !user.email) {
-      const confirmRegister = window.confirm(
-        'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
-      );
-      if (confirmRegister) {
-        navigate('/registerhere');
+
+//     if (!user || !user.email) {
+//       const confirmRegister = window.confirm(
+//         'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
+//       );
+//       if (confirmRegister) {
+//         navigate('/registerhere');
+//       }
+//       return;
+//     }
+
+//     const userEmail = user.email;
+//     const studentId = user.studentId || '';
+//     const userName = user.name || '';
+//     const userMobile = user.mobile || '';
+
+//   console.log("User Email:", userEmail);
+//   console.log("Student ID:", studentId);
+//   console.log("User Name:", userName);
+//   console.log("User Mobile:", userMobile);
+
+//   if (!studentId) {
+//     console.warn("⚠️ Student ID is missing in localStorage.");
+//   } else {
+//     console.log("✅ Student ID exists:", studentId);
+//   }
+
+//     if (modeType === 'live' && enrollText === 'Enroll Now') {
+//       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
+//       navigate(`/enroll/${formattedCourseName}`);
+//       return;
+//     }
+
+//     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
+//       try {
+//         if (!selectedBatchData) {
+//           alert('Please select a batch before enrolling.');
+//           return;
+//         }
+
+//         const payload = {
+//           name: userName,
+//           studentId: studentId,
+//           email: userEmail,
+//           mobile: userMobile || "",
+//           course_name: selectedBatchData.schedule_course_name,
+//           enroll_date: selectedBatchData.schedule_date,
+//           week: selectedBatchData.schedule_week,
+//           time: selectedBatchData.schedule_time,
+//           amount: 0,
+//           mode: selectedBatchData.schedule_mode,
+//           type: 'Free Demo',
+//           trainer: selectedBatchData.trainer_name,
+//           completion_date: selectedBatchData.schedule_duration || "",
+//           meeting_link: selectedBatchData.meeting_link || "",
+//           resendCount: 0
+//         };
+
+//         const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+
+//         if (response.data.status === 201) {
+//           setMessage('Registered Successfully');
+//         } else {
+//           setMessage('Registered successfully');
+//         }
+
+//         alert('You have successfully registered for the demo session. You will receive an email shortly.');
+
+//         const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
+//         localStorage.setItem(uniqueBatchKey, true);
+//         setIsEnrolled(true);
+//         setShowResend(true);
+//       } catch (error) {
+//         console.error('Error enrolling in demo:', error);
+//         setMessage('Error occurred while enrolling.');
+//       }
+//     }
+//   };
+const handleEnroll = async () => {
+  const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+  console.log("User from localStorage:", user);
+
+  if (!user || !user.email) {
+    const confirmRegister = window.confirm(
+      'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
+    );
+    if (confirmRegister) {
+      navigate('/registerhere');
+    }
+    return;
+  }
+
+  const userEmail = user.email;
+  const userName = user.name || '';
+  const userMobile = user.mobile || '';
+
+  let studentId = '';
+
+  try {
+    // ✅ Fetch studentId via API
+    const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      params: { email: userEmail },
+    });
+
+    if (profileResponse.data && profileResponse.data.studentId) {
+      studentId = profileResponse.data.studentId;
+      console.log("✅ Student ID fetched from API:", studentId);
+    } else {
+      console.warn("⚠️ studentId not found in API response.");
+    }
+  } catch (error) {
+    console.error("❌ Error fetching studentId:", error);
+    return alert("Unable to fetch your student ID. Please try again later.");
+  }
+
+  console.log("User Email:", userEmail);
+  console.log("User Name:", userName);
+  console.log("User Mobile:", userMobile);
+
+  if (modeType === 'live' && enrollText === 'Enroll Now') {
+    const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/enroll/${formattedCourseName}`);
+    return;
+  }
+
+  if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
+    try {
+      if (!selectedBatchData) {
+        alert('Please select a batch before enrolling.');
+        return;
       }
-      return;
-    }
 
-    const userEmail = user.email;
-    const userName = user.name || '';
-    const userMobile = user.mobile || '';
+      const payload = {
+        name: userName,
+        studentId: studentId,
+        email: userEmail,
+        mobile: userMobile || "",
+        course_name: selectedBatchData.schedule_course_name,
+        enroll_date: selectedBatchData.schedule_date,
+        week: selectedBatchData.schedule_week,
+        time: selectedBatchData.schedule_time,
+        amount: 0,
+        mode: selectedBatchData.schedule_mode,
+        type: 'Free Demo',
+        trainer: selectedBatchData.trainer_name,
+        completion_date: selectedBatchData.schedule_duration || "",
+        meeting_link: selectedBatchData.meeting_link || "",
+        resendCount: 0
+      };
 
-    if (modeType === 'live' && enrollText === 'Enroll Now') {
-      const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/enroll/${formattedCourseName}`);
-      return;
-    }
+      const response = await axios.post('https://api.hachion.co/enroll/add', payload);
 
-    if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
-      try {
-        if (!selectedBatchData) {
-          alert('Please select a batch before enrolling.');
-          return;
-        }
-
-        const payload = {
-          name: userName,
-          email: userEmail,
-          mobile: userMobile || "",
-          course_name: selectedBatchData.schedule_course_name,
-          enroll_date: selectedBatchData.schedule_date,
-          week: selectedBatchData.schedule_week,
-          time: selectedBatchData.schedule_time,
-          amount: 0,
-          mode: selectedBatchData.schedule_mode,
-          type: 'Free Demo',
-          trainer: selectedBatchData.trainer_name,
-          completion_date: selectedBatchData.schedule_duration || "",
-          meeting_link: selectedBatchData.meeting_link || "",
-          resendCount: 0
-        };
-
-        const response = await axios.post('https://api.hachion.co/enroll/add', payload);
-
-        if (response.data.status === 201) {
-          setMessage('Registered Successfully');
-        } else {
-          setMessage('Registered successfully');
-        }
-
-        alert('You have successfully registered for the demo session. You will receive an email shortly.');
-
-        const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
-        localStorage.setItem(uniqueBatchKey, true);
-        setIsEnrolled(true);
-        setShowResend(true);
-      } catch (error) {
-        console.error('Error enrolling in demo:', error);
-        setMessage('Error occurred while enrolling.');
+      if (response.data.status === 201) {
+        setMessage('Registered Successfully');
+      } else {
+        setMessage('Registered successfully');
       }
+
+      alert('You have successfully registered for the demo session. You will receive an email shortly.');
+
+      const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
+      localStorage.setItem(uniqueBatchKey, true);
+      setIsEnrolled(true);
+      setShowResend(true);
+    } catch (error) {
+      console.error('Error enrolling in demo:', error);
+      setMessage('Error occurred while enrolling.');
     }
-  };
+  }
+};
 
   return (
     <div className='right'>

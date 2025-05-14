@@ -14,11 +14,12 @@ const RegisterNext = () => {
   const [confirmPasswordType, setConfirmPasswordType] = useState('password');
   const [resendLoading, setResendLoading] = useState(false); // To manage resend OTP loading state
   const navigate = useNavigate();
+  const [messageType, setMessageType] = useState("");
   const userDataString = localStorage.getItem('registeruserData');
   const registeruserData = userDataString ? JSON.parse(userDataString) : {  email: '' };
 const [registerMessage, setRegisterMessage] = useState("");
   const handleOtpChange = (e, index) => {
-    const value = e.target.value.replace(/\D/g, ""); // Allow digits only
+    const value = e.target.value.replace(/\D/g, ""); 
     if (value.length <= 1) {
       setOtp((prev) => {
         const newOtp = [...prev];
@@ -26,34 +27,36 @@ const [registerMessage, setRegisterMessage] = useState("");
         return newOtp;
       });
   
-      // Attempt to focus the next input
+      
       if (value && index < otp.length - 1) {
         const nextInput = document.getElementById(`otp-input-${index + 1}`);
         if (nextInput) {
-          nextInput.focus(); // Safeguard against null
+          nextInput.focus();
         }
       }
     }
   };
   
 
-  const verifyAccount = async (otpArray, password, confirmPassword) => {
-    const otp = otpArray.join(""); // Convert OTP array to string
+const verifyAccount = async (otpArray, password, confirmPassword) => {
+    const otp = otpArray.join(""); 
 
     if (!otp || !password || !confirmPassword) {
-        alert("Please fill in all fields");
+        setRegisterMessage("Please fill in all fields");
+        setMessageType("error");
         return;
     }
 
     if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        setRegisterMessage("Passwords do not match");
+        setMessageType("error");
         return;
     }
 
     setIsLoading(true);
 
     try {
-        // Step 1: Verify OTP
+        
         const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -65,42 +68,42 @@ const [registerMessage, setRegisterMessage] = useState("");
 
         if (!verifyResponse.ok) {
             const error = await verifyResponse.text();
-            alert(`Invalid OTP: ${error}`);
-            throw new Error("OTP verification failed");  // Stop execution if OTP fails
+            setRegisterMessage(`Invalid OTP: ${error}`);
+            setMessageType("error");
+            throw error;
         }
 
-        // Step 2: Proceed with Registration
+        
         const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userName: registeruserData.name,
+                firstName: registeruserData.firstName,
+                lastName: registeruserData.lastName,
                 email: registeruserData.email,
                 mobile: registeruserData.mobile,
-                password: password,           // Ensure password is sent as string
+                password: password,
                 confirmPassword: confirmPassword
             }),
         });
 
+        const message = await registerResponse.text();
+
         if (!registerResponse.ok) {
-            const error = await registerResponse.text();
-            throw new Error(error || "Registration failed");
+            setRegisterMessage(message || "Registration failed");
+            setMessageType("error");
+            throw message || "Registration failed";
         }
 
-        const data = await registerResponse.json();
-        // alert("User registered successfully");
-        console.log("You are successfully registered!");
-
         setRegisterMessage("You are successfully registered!");
-
-        // setTimeout(() => navigate('/login'), 10000);
-        // navigate('/login'); 
+        setMessageType("success");
+        setTimeout(() => navigate('/login'), 5000);
     } catch (error) {
-        
-        // navigate('/login');
+        const msg = typeof error === "string" ? error : error.message || "An unexpected error occurred";
+        setRegisterMessage(msg);
+        // setTimeout(() => navigate('/login'), 5000);
     } finally {
-      setTimeout(() => navigate('/login'), 10000);
-        setIsLoading(false); 
+        setIsLoading(false);
     }
 };
 
@@ -111,13 +114,12 @@ const [registerMessage, setRegisterMessage] = useState("");
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordType(confirmPasswordType === 'password' ? 'text' : 'password');
   };
-
  
   const resendOtp = async () => {
-    if (resendLoading) return; // Prevent multiple requests if one is already in progress
+    if (resendLoading) return;
     setResendLoading(true);
 
-    const email = registeruserData.email; // Get email from localStorage
+    const email = registeruserData.email; 
 
     try {
       const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
@@ -125,12 +127,15 @@ const [registerMessage, setRegisterMessage] = useState("");
       });
 
       if (response.ok) {
-        alert("OTP sent successfully!");
+        setRegisterMessage("OTP sent successfully!");
+        setMessageType("success");
       } else {
         const error = await response.text();
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
+      setRegisterMessage(error.message);
+      setMessageType("error");
       // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
@@ -202,11 +207,16 @@ const [registerMessage, setRegisterMessage] = useState("");
                 {confirmPasswordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
               </span>
             </div>
-{registerMessage && (
-  <div style={{ color: "green", marginBottom: "10px" }}>
-    {registerMessage}
-  </div>
-)}
+            {registerMessage && (
+              <div
+                style={{
+                  color: messageType === "success" ? "green" : "red",
+                  marginBottom: "10px"
+                }}
+              >
+                {registerMessage}
+            </div>
+          )}
             <button
               type="button"
               className="register-btn"

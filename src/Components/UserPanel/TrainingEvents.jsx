@@ -30,8 +30,7 @@ const TrainingEvents = () => {
           
           fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
         ]);
-        console.log("Received schedule data:", JSON.stringify(scheduleRes, null, 2));
-        console.log("Received curses data:", JSON.stringify(coursesRes, null, 2));
+  
 
         if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
           throw new Error("Invalid API response format");
@@ -52,16 +51,16 @@ const TrainingEvents = () => {
           };
         });
 
-        console.log("Merged Courses:", mergedData);
+        // console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
           ...new Set(scheduleRes.map((course) => course.schedule_course_name.trim())),
         ];
-        console.log("unique courses:", JSON.stringify(uniqueCourses, null, 2));
+        // console.log("unique courses:", JSON.stringify(uniqueCourses, null, 2));
 
         setCourseOptions(uniqueCourses);
-        console.log("unique for set courses:", JSON.stringify(uniqueCourses, null, 2));
+        // console.log("unique for set courses:", JSON.stringify(uniqueCourses, null, 2));
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -18,6 +18,7 @@
     const [anchorEl, setAnchorEl] = useState(null);
     const mobileInputRef = useRef(null);
     const [otpMessage, setOtpMessage] = useState("");
+    const [formError, setFormError] = useState("");
     const [selectedCountry, setSelectedCountry] = useState({
       code: '+1',
       flag: 'US',
@@ -82,65 +83,69 @@
       return emailRegex.test(email);
     };
 
-    const handleClick = async () => {
-      if (!firstName || !lastName|| !email || !mobile) {
-        alert("Please fill in all fields.");
-        return;
-      }
+const handleClick = async () => {
+    setFormError("");
+    setOtpMessage("");
 
-      if (!isValidEmail(email)) {
-        alert("Please enter a valid email.");
-        return;
-      }
-
-      setIsLoading(true);
-
-      const data = { firstName, lastName, email, mobile };
-
-      try {
-        const response = await fetch(
-          `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        localStorage.setItem("registeruserData", JSON.stringify(data));
-
-        const contentType = response.headers.get("Content-Type");
-    let responseData;
-
-    if (contentType && contentType.includes("application/json")) {
-      responseData = await response.json();
-    } else {
-      const text = await response.text();
-      responseData = { message: text };
+    if (!firstName || !lastName || !email || !mobile) {
+      setFormError("Please fill in all required fields.");
+      return;
     }
 
-    if (response.ok) {
-      if (responseData && responseData.otp) {
-        console.log("OTP sent to your email");
-        setOtpMessage(`OTP sent to your email`);
-        localStorage.setItem("registeruserData", JSON.stringify(data));
+    if (!isValidEmail(email)) {
+      setFormError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!/^\d{6,15}$/.test(mobile)) {
+      setFormError("Please enter a valid mobile number (6–15 digits).");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const data = { firstName, lastName, email, mobile };
+
+    try {
+      const response = await fetch(
+        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const contentType = response.headers.get("Content-Type");
+      let responseData;
+
+      if (contentType && contentType.includes("application/json")) {
+        responseData = await response.json();
       } else {
-       setOtpMessage(`${responseData.message}`);
+        const text = await response.text();
+        responseData = { message: text };
       }
-    } else {
-      const backendMessage = responseData.message || responseData || "Unknown error";
-      setOtpMessage(`Error: ${backendMessage}`);
+
+      console.log("OTP responseData:", responseData);
+
+      if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
+        setFormError("");
+        setOtpMessage("OTP sent to your email.");
+        localStorage.setItem("registeruserData", JSON.stringify(data));
+        setTimeout(() => navigate('/registerverification'), 3000);
+      } else {
+        const errorMsg = responseData?.message || "Failed to send OTP. Please try again.";
+        setFormError(errorMsg);
+      }
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.message || error.response?.data || error.message;
+      setFormError(`An error occurred: ${backendMessage}`);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    const backendMessage = error.response?.data?.message || error.response?.data || error.message;
-    setOtpMessage(`An error occurred: ${backendMessage}`);
-  } finally {
-      setTimeout(() => navigate('/registerverification'), 10000);
-    // navigate("/registerverification");
-    setIsLoading(false);
-  }
-    };
+  };
     //     const contentType = response.headers.get("Content-Type");
 
     //     if (response.ok) {
@@ -275,11 +280,15 @@
                       />
                     </div>
                   </div>
-                  {otpMessage && (
-  <div style={{ color: "green", marginBottom: "10px" }}>
-    {otpMessage}
-  </div>
-)}
+                  {formError ? (
+                  <div style={{ color: "red", marginBottom: "10px" }}>
+                    {formError}
+                  </div>
+                ) : otpMessage ? (
+                  <div style={{ color: "green", marginBottom: "10px" }}>
+                    {otpMessage}
+                  </div>
+                ) : null}
               <button
                 type="button"
                 className="register-btn"

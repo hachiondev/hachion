@@ -99,7 +99,7 @@ export default function TotalOrder() {
         </Table>
       </TableContainer>
       
-      <div className="radio-group">
+      {/* <div className="radio-group">
         <Radio
           checked={selectedValue === 'a'}
           onChange={handleChange}
@@ -108,9 +108,14 @@ export default function TotalOrder() {
           inputProps={{ 'aria-label': 'A' }}
         />
         <img src={payumoney} alt="payumoney" />
-      </div>
-      
+      </div> */}
+      <div className="input-row">
       <button className="payment-btn">Proceed to Pay</button>
+      <div className="paylater">
+      <button className="payment-btn">Pay Later</button>
+      <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
+      </div>
+      </div>
     </>
   );
 }

@@ -57,7 +57,26 @@ const Enrollment = () => {
     { name: 'Brazil', code: '+55', flag: 'BR' },
     { name: 'Mexico', code: '+52', flag: 'MX' },
     { name: 'South Africa', code: '+27', flag: 'ZA' },
+    { name: 'Netherlands', code: '+31', flag: 'NL' }
   ];
+
+   const defaultCountry = countries.find((c) => c.flag === "US");
+  
+      
+      useEffect(() => {
+        fetch("https://ipwho.is/")
+          .then((res) => res.json())
+          .then((data) => {
+            const userCountryCode = data?.country_code;
+            const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+            if (matchedCountry) {
+              setSelectedCountry(matchedCountry);
+            }
+          })
+          .catch(() => {
+          
+          });
+      }, []);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -111,7 +130,7 @@ const Enrollment = () => {
         </div>
       
         <form className='details'>
-      <div className='enroll-row'>
+      <div className='input-row'>
         <div className="col-md-5">
           <label htmlFor="inputName4" className="form-label">
             Full Name<span className="required">*</span>
@@ -119,7 +138,7 @@ const Enrollment = () => {
           <input
             type="text"
             className="form-control"
-            id="enroll1"
+            // id="enroll1"
             placeholder='Enter your full name'
             value={studentData?.userName || ''}
             readOnly
@@ -133,7 +152,7 @@ const Enrollment = () => {
           <input
             type="email"
             className="form-control"
-            id="enroll1"
+            // id="enroll1"
             placeholder='abc@gmail.com'
             value={studentData?.email || ''}
             readOnly
@@ -141,7 +160,7 @@ const Enrollment = () => {
         </div>
       </div>
 
-      <div className='enroll-row'>
+      <div className='input-row'>
         <div className="col-md-5">
           <label className='form-label'>Mobile Number</label>
           <div className="input-group custom-width">
@@ -181,7 +200,7 @@ const Enrollment = () => {
           <input
             type="text"
             className="form-control"
-            id="enroll1"
+            // id="enroll1"
             placeholder='Enter your country'
             value={studentData?.country || ''}
             readOnly
@@ -194,7 +213,7 @@ const Enrollment = () => {
         </div>
         <div className='personal-details'>
         <div className='personal-details-header'>
-            <p>1. Course Details</p>
+            <p>2. Course Details</p>
             </div>
             <div className='enroll-table'>
             <EnrollmentTable/>

@@ -1345,14 +1345,16 @@ margin-bottom: 20px;
     }
 
     .row {
-        flex-direction: column !important; /* Stack the form fields vertically */
-        gap: 0px !important; /* Reduce gap between elements for mobile */
+      display: flex;
+        flex-direction: column; /* Stack the form fields vertically */
+        gap: 0px; /* Reduce gap between elements for mobile */
       }
 
       
     .enroll-row {
-      flex-direction: column !important; /* Stack the form fields vertically */
-      gap: 0px !important; /* Reduce gap between elements for mobile */
+      display: flex;
+      flex-direction: column;
+      gap: 0px; 
     }
 
     #enroll2.mobile-number{
@@ -1419,8 +1421,12 @@ margin-bottom: 20px;
           font-weight: 700;
           box-shadow: 5px 5px 10px #d3d3d3;
           margin-left: 10px !important;
-          margin-bottom: 20px;
+          margin-bottom: 10px;
+          margin-top: 10px;
         }
+        .paylater{
+        margin-top: 10px !important;
+}
 }
 
 @media (min-width: 481px) and (max-width: 1024px) {
@@ -1477,15 +1483,17 @@ margin-left: 0px;
 }
 
 .enrollment{
-  height: 100px;
+  height: 90px;
 padding: 10px;
 background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
 color: white;
-font-size: 36px;
+font-size: 32px;
 font-weight: 700;
 padding-left: 40px;
 align-items: center;
-
+}
+.enrollment p{
+  margin-bottom: 0;
 }
 .personal-details{
   width: 85%;
@@ -1497,7 +1505,7 @@ align-items: center;
   margin-left: 10vw;
 }
 .personal-details-header{
-height: 80px;
+height: 70px;
 background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
 color: white;
 font-size: 24px;
@@ -1519,13 +1527,13 @@ background-color: #d3d3d3;
 
 .row {
   display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     justify-content: space-around;
 }
 
 .enroll-row {
   display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     justify-content: space-around;
 }
 
@@ -1631,7 +1639,7 @@ font-weight: 600;
 }
 
 .table-container {
-  max-width: 450px;
+  max-width: 500px;
   margin-left: 40px;
   border-collapse: collapse;
 }
@@ -1681,6 +1689,16 @@ font-weight: 600;
   box-shadow: 5px 5px 10px #d3d3d3;
   margin-left: 30px;
 
+}
+.paylater{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.note{
+  color: #FF0000;
 }
 .custom-width .btn, 
 .custom-width .form-control {

@@ -54,7 +54,7 @@ const Aboutus = () => {
           <p className='about-us-left-content'>
           Our placement services focus on providing extensive end-to- end services as per the customized requirement of our clients enabling them to get the right candidates by helping them to save the time and resources. Identifying and sourcing candidates from our extensive network of clients and candidates who are engaged in similar business related to our clients as well as usage of various platforms enable us to find the right candidates at a quicker time frame along with the right fit to the requisite profile. We believe that the key to effective service is to truly understand from the client requirements, operations and their philosophies by engaging them as partners.
           </p>
-          <h1 className='about-us-heading'>Our Story</h1>
+          <h2 className='about-us-heading'>Our Story</h2>
           <div className='our-story'>
             <div className='story-div'>
               <HiOutlineUserGroup className='story-icon' />
@@ -78,19 +78,19 @@ const Aboutus = () => {
             </div>
           </div>
 
-          <h1 className='about-us-heading'>Our Vision</h1>
+          <h2 className='about-us-heading'>Our Vision</h2>
           <div className='about-us-top'>
             <p className='about-us-left-content'>
             Our Vision is to synergize the “right talent” with the “right requirement” and to see that quality manpower is constructively and appropriately channelized. To help talented and specialized individuals in building their own career and to ensure our clients find employees according to their specific requirements is a constant driving force in line with our vision. As a part of our mission we are aligned with various institutions from various regions aided by our expansive network to fetch formerly unexposed talents and avail them to our reputed clients.
             </p>
             <img src={visionImage} alt='' />
           </div>
-          <h1 className='about-us-heading'>What We Do ?</h1>
+          <h2 className='about-us-heading'>What We Do ?</h2>
           <p className='about-us-left-content'>
 We provide a wide range of online courses to both large organizations and individual learners. Over 100+ online courses are available on our intuitive and interactive platform www.hachion.com. Some of the most popular courses are QA Testing, AWS, DevOps, Tableau, PowerBI, Business Analyst, Salesforce and Hadoop.
 
 Our Real-time experts with over 10 years of experience in IT are ready to take you to the next level and increase your career opportunities. We are extremely passionate and committed to what we do. It shows in our interactions which are consistent with valuable information, designed strategically to be acquired with ease.</p>
-          <h1 className='about-us-heading'>Why to choose Hachion ? </h1>
+          <h2 className='about-us-heading'>Why to choose Hachion ? </h2>
 
           <p className='about-us-left-content'>
             Hachion offers you the flexibility to learn anytime, anywhere with instructor-led online training programs...

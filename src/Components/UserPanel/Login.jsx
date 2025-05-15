@@ -26,8 +26,6 @@ const Login = () => {
    const [errorMessage, setErrorMessage] = useState('');
    const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
    const [captchaError, setCaptchaError] = useState('');
-   
-
    const navigate=useNavigate();
    const handleLogin = async (e) => {
     e.preventDefault();
@@ -43,7 +41,7 @@ const Login = () => {
     };
   
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
       console.log(response.data);
   
       if (response.data.status) {
@@ -68,21 +66,20 @@ const Login = () => {
     }
   };  
 
-
   const googleLogin = () => {
-    window.open('https://api.hachion.co/oauth2/authorization/google', '_self');
+    window.open('https://api.test.hachion.co/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
+    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
+    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
+    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
   // Toggle password visibility
@@ -96,23 +93,18 @@ const Login = () => {
         <div className='login-left'>
           <div className='login-top'>
             <img src={logo} alt='logo' className='login-logo' />
-            
             <h3 className='welcome-back'>Welcome back!</h3>
             <h4 className='login-continue'>Login to continue learning</h4>
-<div className='login-mid'>
-              
+            <div className='login-mid'>  
                 <label className='login-label'>Email ID<span className='star'>*</span></label>
                 <div className="input-group mb-2">
                   <input
                     type="email"
                     className="form-control"
                     placeholder="abc@gmail.com"
-              
                     value={email}
                     onChange={(e)=>setEmail(e.target.value)}/>
                     </div>
-
-
 
                 <label className='login-label'>Password<span className='star'>*</span></label>
                 <div className="input-group mb-2">
@@ -120,10 +112,8 @@ const Login = () => {
                     type={passwordType}
                     className="form-control"
                     placeholder="Enter your password"
-                   
                     value={password}
                     onChange={(e)=>setPassword(e.target.value)}
-
                   />
                   <span className="input-group-text" onClick={togglePasswordVisibility}>
                     {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
@@ -134,42 +124,34 @@ const Login = () => {
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link> */}
                 <p> <Link to='/forgotpassword' style={{ textDecoration: 'none' }} className='forgot-password'> Forgot Password? </Link></p>
-
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="form-check">
-  <input
-    className="form-check-input"
-    type="checkbox"
-    id="flexCheckDefault"
-    onChange={(e) => {
-      setIsCaptchaChecked(e.target.checked);
-      if (e.target.checked) setCaptchaError('');
-    }}
-  />
-  <label className="form-check-label" htmlFor="flexCheckDefault">
-    I'm not a robot
-  </label>
-  <img src={captcha} alt='captcha' className='captcha' />
-</div>
-{captchaError && <p className="error-message">{captchaError}</p>}
-
-
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="flexCheckDefault"
+                  onChange={(e) => {
+                    setIsCaptchaChecked(e.target.checked);
+                    if (e.target.checked) setCaptchaError('');
+                  }}
+                />
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  I'm not a robot
+                </label>
+                <img src={captcha} alt='captcha' className='captcha' />
+              </div>
                 <div className="d-grid gap-2">
                 <button
-  className="register-btn"
-  type="submit"
-  onClick={handleLogin}
->
-  Login
-</button>
-
-
+                className="register-btn"
+                type="submit"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
                 </div>
-             
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              {captchaError && <p className="error-message">{captchaError}</p>}
             </div>
-
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Register </Link></p>
-          
           </div>
         </div>
         <LoginSide />

@@ -3,7 +3,7 @@ const path = require("path");
 const axios = require("axios");
 
 const baseUrl = "https://hachion.co";
-const apiUrl = "https://api.hachion.co/courses/all";
+const apiUrl = "https://api.test.hachion.co/courses/all";
 
 // Slug generator - keep special characters like (), +, &
 // Only lowercase and replace spaces with hyphens

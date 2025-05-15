@@ -14,7 +14,7 @@ const Learners = ({ page }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("https://api.hachion.co/userreview");
+        const response = await fetch("https://api.test.hachion.co/userreview");
         const data = await response.json();
 
         if (Array.isArray(data)) {
@@ -68,7 +68,7 @@ const Learners = ({ page }) => {
   return (
     <div className="training-events">
       <div className="association">
-        <h1 className="association-head">Our Students Feedback</h1>
+        <h2 className="association-head">Our Students Feedback</h2>
       </div>
 
       <div className="learner-background">
@@ -93,7 +93,7 @@ const Learners = ({ page }) => {
                     rating={review.rating}
                     profileImage={
                       review.user_image
-                        ? `https://api.hachion.co/${review.user_image}`
+                        ? `https://api.test.hachion.co/${review.user_image}`
                         : ""
                     }
                     onReadMore={() =>

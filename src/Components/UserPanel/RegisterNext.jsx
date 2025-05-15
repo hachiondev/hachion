@@ -57,7 +57,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
 
     try {
         
-        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+        const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -74,7 +74,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
         }
 
         
-        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
+        const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -122,7 +122,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     const email = registeruserData.email; 
 
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`https://api.test.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 
@@ -159,8 +159,9 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
               <h6 className="steps-head-one">2</h6>
             </div>
           </div>
-
+          <div className="login-mid-name">
           <div className="otp-verify">
+            <p className='tag'>OTP has been sent to your Email. Please check your inbox</p>
             <h6 className="enter-otp">Enter OTP: </h6>
             <div className="otp">
   {otp.map((digit, index) => (
@@ -176,10 +177,9 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
   ))}
 </div>
 
-            <p className="forgot-password" onClick={resendOtp}>
-              {resendLoading ? "Resending..." : "Resend OTP"}
+            <p className='go-to-register'> Didn't receive the code? <span className='link-to-register' onClick={resendOtp}> 
+              {resendLoading ? "Resending..." : "Resend OTP"}</span>
             </p>
-
             <label className="login-label">Password</label>
             <div className="input-group mb-2">
               <input
@@ -207,16 +207,6 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
                 {confirmPasswordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
               </span>
             </div>
-            {registerMessage && (
-              <div
-                style={{
-                  color: messageType === "success" ? "green" : "red",
-                  marginBottom: "10px"
-                }}
-              >
-                {registerMessage}
-            </div>
-          )}
             <button
               type="button"
               className="register-btn"
@@ -225,6 +215,18 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
             >
               {isLoading ? "Verifying..." : "Verify and Register"}
             </button>
+            </div>
+            <p><span className="note">*Note :</span>If you don't see OTP in your inbox, Kindly check your spam folder.</p>
+            {registerMessage && (
+              <div
+                style={{
+                  color: messageType === "success" ? "green" : "red",
+                  marginTop: "10px"
+                }}
+              >
+                {registerMessage}
+            </div>
+          )}
           </div>
         </div>
       </div>

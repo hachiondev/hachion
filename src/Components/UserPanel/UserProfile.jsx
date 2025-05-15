@@ -109,7 +109,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
       const parsedEmail = parsedUser.email;
       console.log("Parsed email:", parsedEmail);
   
-      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -148,7 +148,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   
     setIsUpdating(true); 
   
-    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
+    axios.post('https://api.test.hachion.co/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,
@@ -245,12 +245,12 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
               />
             </div>
             <div className="me-3">
-              <label htmlFor="inputNumber4" className="form-label">Mobile</label>
-              <div className="add">
+              <label className="form-label">Mobile Number</label>
+              <div className="input-group custom-width">
                 <Button
                   variant="outlined"
                   onClick={openMenu}
-                  className="country-code-profile"
+                  className="country-code-dropdown"
                   endIcon={<AiFillCaretDown />}
                 >
                   <Flag code={selectedCountry.flag} className='country-flag' />
@@ -274,8 +274,8 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
                 </Menu>
                 <input
                   type="tel"
-                  className="form-control"
-                  id="inputNumber4"
+                  className="mobile"
+                  id='profile'
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}

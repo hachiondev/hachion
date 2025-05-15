@@ -700,8 +700,10 @@
         font-size: 16px;
         margin-top: 10px;
       }
-      .form-select {
+      .form-select, .form-control {
         height: 35px !important;
+        font-size: small;
+        padding: 5px;
       }
       #workshop.mobile-number {
         width: 260px !important;

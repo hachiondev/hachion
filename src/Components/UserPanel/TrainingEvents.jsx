@@ -25,10 +25,10 @@ const TrainingEvents = () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
-            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+            `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
           
-          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+          fetch("https://api.test.hachion.co/courses/all").then((res) => res.json()),
         ]);
   
 
@@ -82,60 +82,7 @@ const TrainingEvents = () => {
       year: "numeric",
     }).format(localDate);
   };
-  
-  // const getFilteredCourses = () => {
-  //   const now = new Date();
-  
-  //   // Filter based on mode, course name, and time
-  //   const filtered = mergedCourses.filter((course) => {
-  //     const courseDate = new Date(course.schedule_date);
-  //     const createdDate = new Date(course.created_at);
-  
-  //     const isToday = courseDate.toDateString() === now.toDateString();
-  //     const isThisWeek =
-  //       (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
-  //       courseDate > now;
-  //     const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
-  
-  //     const courseNameMatch =
-  //       !courseFilter ||
-  //       course.schedule_course_name?.toLowerCase().trim() ===
-  //         courseFilter.toLowerCase().trim();
-  
-  //     const modeMatch =
-  //       !modeFilter ||
-  //       course.schedule_mode?.toLowerCase().trim() ===
-  //         modeFilter.toLowerCase().trim();
-  
-  //     const timeMatch =
-  //       !timeFilter ||
-  //       (timeFilter === "today" && isToday) ||
-  //       (timeFilter === "week" && isThisWeek) ||
-  //       (timeFilter === "new" && isNewlyAdded);
-  
-  //     return courseNameMatch && modeMatch && timeMatch;
-  //   });
-  
-  //   // Group by course name
-  //   const grouped = {};
-  //   filtered.forEach((item) => {
-  //     const key = item.schedule_course_name.trim().toLowerCase();
-  //     if (!grouped[key]) {
-  //       grouped[key] = {
-  //         ...item,
-  //         sessions: [],
-  //       };
-  //     }
-  //     grouped[key].sessions.push({
-  //       date: item.schedule_date,
-  //       time: item.schedule_time,
-  //     });
-  //   });
-  
-  //   return Object.values(grouped);
-  // };
-  
-  const getFilteredCourses = () => {
+ const getFilteredCourses = () => {
     const now = new Date();
   
     const filtered = mergedCourses.filter((course) => {
@@ -295,7 +242,7 @@ list="course-options"
   heading={course.schedule_course_name}
   image={
     course.course_image
-      ? `https://api.hachion.co/${course.course_image}`
+      ? `https://api.test.hachion.co/${course.course_image}`
       : ""
   }
   date={course.schedule_date ? formatDate(course.schedule_date) : ""}

@@ -13,7 +13,7 @@ const { courseName } = useParams(); // Extract course_id from URL params
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -35,7 +35,7 @@ const { courseName } = useParams(); // Extract course_id from URL params
   return (<>
     <div className='qa-course'>
         <div className='qa-course-heading'>
- <h1 className='qa-heading'> About {course.courseName}</h1>
+ <h2 className='qa-heading'> About {course.courseName}</h2>
 
  <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course?.courseDescription?.trim() || "" }} />
         </div>

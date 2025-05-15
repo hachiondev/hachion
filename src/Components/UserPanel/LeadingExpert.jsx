@@ -12,8 +12,8 @@ const LeadingExpert = () => {
     const fetchCourses = async () => {
       try {
         const [corporateRes, allCoursesRes] = await Promise.all([
-          axios.get("https://api.hachion.co/corporatecourse"),
-          axios.get("https://api.hachion.co/courses/all"),
+          axios.get("https://api.test.hachion.co/corporatecourse"),
+          axios.get("https://api.test.hachion.co/courses/all"),
         ]);
 
         const activeCorporateCourses = corporateRes.data.filter(
@@ -30,7 +30,7 @@ const LeadingExpert = () => {
           return {
             courseName: corpCourse.course_name,
             image: matchedCourse
-              ? `https://api.hachion.co/${matchedCourse.courseImage}`
+              ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
               : "", // fallback image or empty
           };
         });
@@ -47,7 +47,7 @@ const LeadingExpert = () => {
   return (
     <>
       <div className='training-events-head'>
-        <h1 className='association-head'>Skill-Building Curriculum</h1>
+        <h2 className='association-head'>Skill-Building Curriculum</h2>
         <div className='view-all-div'>
           <button className='view-all-corporate' onClick={() => navigate('/courseDetails')}>
             View All

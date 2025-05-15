@@ -16,13 +16,33 @@ export const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Hachion - Your Learning Partner</title>
-        <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
-        <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
-        <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
-        <meta property="og:description" content="Learn online with the best courses at Hachion." />
-        <meta property="og:image" content="/Hachion-logo.png" />
-      </Helmet>
+  <title>Hachion - Your Learning Partner</title>
+  <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
+  <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
+  <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
+  <meta property="og:description" content="Learn online with the best courses at Hachion." />
+  <meta property="og:image" content="/Hachion-logo.png" />
+  <link rel="canonical" href="https://www.hachion.com/" />
+  <script type="application/ld+json">
+    {`
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Hachion",
+        "url": "https://www.hachion.com",
+        "logo": "https://www.hachion.com/Hachion-logo.png",
+        "sameAs": [
+        "https://www.facebook.com/hachion.co",
+        "https://x.com/hachion_co",
+        "https://www.linkedin.com/company/hachion",
+        "https://www.instagram.com/hachion_trainings",
+        "https://www.quora.com/profile/Hachion-4",
+        "https://www.youtube.com/@hachion"
+      ]
+      }
+    `}
+  </script>
+</Helmet>
    <div className='home-background'>
   
 <Topbar/>

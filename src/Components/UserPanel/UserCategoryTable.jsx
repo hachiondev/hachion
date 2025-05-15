@@ -20,7 +20,7 @@ export default function UserCategoryTable() {
 
         if (!email) return;
 
-        const response = await axios.get('https://api.hachion.co/enroll');
+        const response = await axios.get('https://api.test.hachion.co/enroll');
         const allEnrollments = response.data;
 
         const currentDate = new Date().setHours(0, 0, 0, 0);
@@ -30,7 +30,7 @@ export default function UserCategoryTable() {
           .filter((enrollment) => enrollment.email === email)
           .map((enrollment) => {
             const enrollDate = new Date(enrollment.enroll_date).setHours(0, 0, 0, 0);
-            const status = enrollDate >= currentDate ? 'Upcoming' : 'Completed';
+            const status = enrollDate >= currentDate ? 'Upcoming Demo' : 'Enrolled to Demo';
 
             return {
               ...enrollment,
@@ -76,7 +76,7 @@ export default function UserCategoryTable() {
                     <TableCell align="left">{row.week || '-'}</TableCell>
                     <TableCell align="left">{row.time}</TableCell>
                     <TableCell align="center">{row.mode}</TableCell>
-                    <TableCell align="center" style={{ color: row.status === 'Upcoming' ? 'green' : 'gray' }}>
+                    <TableCell align="center" style={{ color: row.status === 'Upcoming Demo' ? 'green' : 'gray' }}>
                       {row.status}
                     </TableCell>
                   </TableRow>

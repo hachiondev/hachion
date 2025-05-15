@@ -123,11 +123,12 @@ background-size:cover;
    white-space: nowrap;
 }
 .go-to-register{
-    padding: 1vh;
-    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
     font-weight: 400;
+    margin-top: 10px;
 }
-
   
 .login .form-group {
     display: flex;
@@ -631,6 +632,7 @@ cursor: pointer;
     color:#00AEEF;
     text-decoration-line: none;
     font-weight: bold;
+     margin-left: 5px;
 }
 @media (max-width: 1366px){
     .icon-text img{
@@ -973,8 +975,6 @@ hr {
 }
 
 @media (min-width: 350px) and (max-width: 480px) {
-   
-
     .steps {
         flex-direction: row;
         align-items: center;
@@ -1025,7 +1025,7 @@ hr {
    font-weight:bold;
 }
 .otp-verify{
-    padding: 2vh;
+    padding: 1vh;
 }
 .otp-number{
 height: 50px;
@@ -1038,12 +1038,21 @@ align-items: center;
 justify-items: center;
 }
 
+.tag{
+font-weight: 600;
+display: flex;
+justify-content: center;
+text-align: center;
+white-space: wrap;
+}
+
 .otp{
    /* width: 20vw; */
     height: 5vh;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 20px;
 }
 .register-btn{
     width: 520px;
@@ -1124,7 +1133,7 @@ justify-items: center;
     }
 }
 
-@media screen and (max-width: 480px) {
+@media (min-width: 350px) and (max-width: 480px) {
     .otp-verify{
         margin-top: 0vh;
         padding: 10px;
@@ -1133,7 +1142,7 @@ justify-items: center;
     .otp {
         width: auto;
         height: 50px;
-        justify-content: space-between;
+        justify-content: center;
         gap: 20px;
 
     }

@@ -30,7 +30,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -57,7 +57,7 @@ const Curriculum = () => {
 
     const fetchCurriculum = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/curriculum');
+        const response = await axios.get('https://api.test.hachion.co/curriculum');
         const filteredCurriculum = response.data.filter(
           (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
         );
@@ -106,7 +106,7 @@ const Curriculum = () => {
 
     const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
-      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `https://api.test.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
@@ -126,7 +126,7 @@ const Curriculum = () => {
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
-        <h1 className="qa-heading">{matchedCourseName} Curriculum</h1>
+        <h2 className="qa-heading">{matchedCourseName} Curriculum</h2>
         <button className="btn-curriculum" onClick={downloadPdf}>
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download Brochure
         </button>

@@ -15,7 +15,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/trendingcourse');
+        const response = await fetch('https://api.test.hachion.co/trendingcourse');
         const data = await response.json();
         // Filter courses with status true
         const activeCourses = data.filter(course => course.status === true);
@@ -112,22 +112,22 @@ const Footer = () => {
       <p className="footer-term" onClick={handleUnsubscribe}>Unsubscribe</p>
       </div>
       <div className='footer-link'>
-      <a href="https://www.facebook.com/hachion.co" 
+      <a href="https://www.facebook.com/hachion.co" aria-label="Facebook"
     target="_blank" 
     rel="noopener noreferrer"><img src={facebook} alt='facebook-icon'/></a>
-    <a href="https://x.com/hachion_co" 
+    <a href="https://x.com/hachion_co" aria-label="Twitter"
     target="_blank" 
     rel="noopener noreferrer"><img src={twitter} alt='twitter-icon'/></a>
-    <a href="https://www.linkedin.com/company/hachion" 
+    <a href="https://www.linkedin.com/company/hachion" aria-label="Linkedin"
     target="_blank" 
     rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon'/></a>
-    <a href="https://www.instagram.com/hachion_trainings" 
+    <a href="https://www.instagram.com/hachion_trainings" aria-label="Instagram"
     target="_blank" 
     rel="noopener noreferrer"><img src={instagram} alt='instagram-icon'/></a>
-    <a href="https://www.quora.com/profile/Hachion-4" 
+    <a href="https://www.quora.com/profile/Hachion-4" aria-label="Quora"
     target="_blank" 
     rel="noopener noreferrer"><img src={quora} alt='quora-icon'/></a>
-      <a href="https://www.youtube.com/@hachion" 
+      <a href="https://www.youtube.com/@hachion" aria-label="YouTube"
     target="_blank" 
     rel="noopener noreferrer"><img src={youtube} alt='youtube'/></a>
       </div>

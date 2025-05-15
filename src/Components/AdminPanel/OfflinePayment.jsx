@@ -105,7 +105,7 @@ export default function OfflinePayment() {
       const handleUpdate = async () => {
         try {
           const response = await axios.put(
-            `https://api.hachion.co/offlinepayment/${paymentData.id}`, paymentData
+            `https://api.test.hachion.co/offlinepayment/${paymentData.id}`, paymentData
           );
           setOfflinePayment(prev =>
             prev.map(item => item.id === paymentData.id ? response.data : item)
@@ -214,7 +214,7 @@ export default function OfflinePayment() {
             return;
         }
         try {
-            const response = await axios.post("https://api.hachion.co/offlinepayment/add", formData, {
+            const response = await axios.post("https://api.test.hachion.co/offlinepayment/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

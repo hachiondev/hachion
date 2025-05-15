@@ -1448,6 +1448,9 @@ gap:1vh;
 .topbar-left {
   width: auto; /* Allow auto width to fit content */
 }
+.topbar {
+height: 80px;
+}
 
 .whatsapp-number,
 .training-email,

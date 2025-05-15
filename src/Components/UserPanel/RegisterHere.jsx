@@ -108,7 +108,7 @@ const handleClick = async () => {
 
     try {
       const response = await fetch(
-        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
+        `https://api.test.hachion.co/api/v1/user/send-otp?email=${email}`,
         {
           method: "POST",
           headers: {
@@ -280,15 +280,7 @@ const handleClick = async () => {
                       />
                     </div>
                   </div>
-                  {formError ? (
-                  <div style={{ color: "red", marginBottom: "10px" }}>
-                    {formError}
-                  </div>
-                ) : otpMessage ? (
-                  <div style={{ color: "green", marginBottom: "10px" }}>
-                    {otpMessage}
-                  </div>
-                ) : null}
+                  
               <button
                 type="button"
                 className="register-btn"
@@ -297,8 +289,16 @@ const handleClick = async () => {
               >
                 {isLoading ? "Sending OTP..." : "Verify"}
               </button>
+              {formError ? (
+                  <div style={{ color: "red", marginTop: "5px", marginBottom: "5px" }}>
+                    {formError}
+                  </div>
+                ) : otpMessage ? (
+                  <div style={{ color: "green", marginTop: "5px", marginBottom: "5px"}}>
+                    {otpMessage}
+                  </div>
+                ) : null}
             </div>
-
             <p className="login-with-hachion">
               Do you have an account with Hachion?{" "}
               <Link to="/login" className="link-to">

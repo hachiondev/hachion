@@ -188,7 +188,7 @@ const QaTesting = () => {
         </div>
         
         <div className='blog-bottom'>
-          <h1 className='blog-heading'>Recent Entries</h1>
+          <h2 className='blog-heading'>Recent Entries</h2>
           <Suspense fallback={<div>Loading...</div>}>
             <RecentEntries />
           </Suspense>

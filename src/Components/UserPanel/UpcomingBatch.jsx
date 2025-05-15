@@ -21,7 +21,7 @@ useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courseData = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -63,7 +63,7 @@ useEffect(() => {
   return (
     <>
       <div className='upcoming-batch'>
-        <p className='qa-heading'>Upcoming Batches for {course.courseName}</p>
+        <h1 className='qa-heading'>Upcoming Batches for {course.courseName}</h1>
         <div className='batch-type'>
           <p 
             className='batch-type-content' 

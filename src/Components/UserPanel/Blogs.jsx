@@ -17,7 +17,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
         setCategories(response.data); // assuming the API returns an array of categories
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -70,7 +70,7 @@ const Blogs = () => {
     </div>
      
 <div className='blog-bottom'>
-<h1 className='blog-heading'>Recent Entries</h1>
+<h2 className='blog-heading'>Recent Entries</h2>
 <RecentEntries/>
 </div>
 

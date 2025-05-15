@@ -21,7 +21,7 @@ const CareerSupport = () => {
   return (
     <>
       <div className='career-support'>
-        <h1 className='career-support-head'>Career Support</h1>
+        <h2 className='career-support-head'>Career Support</h2>
         <div className='batch-type'>
           <p 
             className={`batch-type-content ${activeTab === 'Profile Building' ? 'active' : ''}`}

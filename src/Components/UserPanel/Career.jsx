@@ -32,7 +32,7 @@ const Career = () => {
   return (
     <>
       <div className='association'>
-        <h1 className='association-head'>Hachion enhances career advancement</h1>
+        <h2 className='association-head'>Hachion enhances career advancement</h2>
       </div>
 
       <div className='career-div'>

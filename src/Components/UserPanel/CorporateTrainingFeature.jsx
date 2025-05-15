@@ -45,7 +45,7 @@ const CorporateTrainingFeature = () => {
   return (
     <>
       <div className='association'>
-        <h1 className='association-head'>Corporate Training Features</h1>
+        <h2 className='association-head'>Corporate Training Features</h2>
       </div>
       <div className='corporate-training-features'>
         <div className='customized-column'>

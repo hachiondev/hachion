@@ -531,6 +531,30 @@ box-shadow: 5px 5px 5px #d3d3d3;
   box-shadow: 5px 5px 5px #d3d3d3;
   white-space: nowrap;
   }
+  .prompt{
+    color: red;
+    background-color: #d9ecf3;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  .log{
+    color: #ffffff;
+    background-color: #00AAEF;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: medium;
+    border: none;
+    margin: 3px 10px;
+  }
+  .cancel{
+    color: #6a6a6a;
+    background-color: #b3b3b3;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: medium;
+    border: none;
+    margin: 3px 10px;
+  }
 
 .enroll-now:hover{
 background-color: #0D6EFD;

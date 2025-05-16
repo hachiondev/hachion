@@ -123,7 +123,7 @@ const SalWorkshop = () => {
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
+        const response = await axios.get('https://api.hachion.co/workshopschedule');
         setWorkshops(response.data);
     
         const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
@@ -348,7 +348,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       country: selectedCountry.name
     };
     try {
-      const response = await axios.post("https://api.test.hachion.co/workshops", updatedFormData);
+      const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
       setError("Registration for workshop done successfully");
       setMessageType('success');
       console.log("Response:", response.data);
@@ -437,7 +437,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         <div className='about-banner'>
             <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                  ? `https://api.test.hachion.co/${workshop.banner_image}` 
+                  ? `https://api.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
       

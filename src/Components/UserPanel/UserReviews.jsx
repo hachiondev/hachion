@@ -26,7 +26,7 @@ export default function UserReviews({ userId }) {
       return;
     }
 
-    axios.get(`https://api.test.hachion.co/userreview/${userId}`)
+    axios.get(`https://api.hachion.co/userreview/${userId}`)
       .then(response => {
         console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
@@ -49,7 +49,7 @@ export default function UserReviews({ userId }) {
 
   // Handle adding a new review
   const handleAddReview = (reviewData) => {
-    axios.post(`https://api.test.hachion.co/userreview`, {
+    axios.post(`https://api.hachion.co/userreview`, {
       user_id: userId,
       course_name: reviewData.course_name,
       rating: reviewData.rating,
@@ -67,7 +67,7 @@ export default function UserReviews({ userId }) {
 
   // Fetch updated reviews
   const fetchReviews = () => {
-    axios.get(`https://api.test.hachion.co/userreview/${userId}`)
+    axios.get(`https://api.hachion.co/userreview/${userId}`)
       .then(response => {
         console.log("Updated reviews fetched:", response.data);
         setReviews(response.data.map((review, index) => ({
@@ -85,7 +85,7 @@ export default function UserReviews({ userId }) {
 
   // Handle review deletion
   const handleDeleteReview = (reviewId) => {
-    axios.delete(`https://api.test.hachion.co/userreview/${reviewId}`)
+    axios.delete(`https://api.hachion.co/userreview/${reviewId}`)
       .then(() => {
         console.log("Review deleted:", reviewId);
         fetchReviews(); // Refresh reviews after deletion

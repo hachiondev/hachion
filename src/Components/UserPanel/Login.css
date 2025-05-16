@@ -37,7 +37,7 @@ background-size:cover;
     margin-top: 2.5vh;
     font-weight:700;
     margin-bottom: 1vh;
-    font-size:2.1rem;
+    font-size:2rem;
 }
 .login-top{
     display: flex;
@@ -128,6 +128,11 @@ background-size:cover;
     padding: 10px;
     font-weight: 400;
     margin-top: 10px;
+}
+.spam-msg{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
 }
   
 .login .form-group {
@@ -274,7 +279,7 @@ background-size:cover;
       }
     
       .welcome-back {
-        font-size: 2.25rem;
+        font-size: 2rem;
         margin-top: 1vh;
         margin-right: 4vh;
       }
@@ -286,6 +291,9 @@ background-size:cover;
     .login-with hr{
       width: 20%;
     }
+    .login-mid-name{
+    padding-top: 2vh;
+   }
     
       .icon-holder {
         justify-content:space-evenly;
@@ -443,7 +451,7 @@ background-size:cover;
     }
   
     .welcome-back {
-      font-size: 32px;
+      font-size: 28px;
       margin-top: 10px;
     }
   
@@ -635,6 +643,13 @@ cursor: pointer;
      margin-left: 5px;
 }
 @media (max-width: 1366px){
+    .login-mid-name{
+    padding-top: 2vh;
+    }
+    .otp{
+    height: 50px;
+    }
+
     .icon-text img{
         height: 75px;
         width: 75px;
@@ -839,7 +854,7 @@ padding: 1vh;
     font-weight:bold;
 }
 .register-learning{
-    font-size: 2.25rem;
+    font-size: 2rem;
     margin-top: 2vh;
     margin-bottom: 1vh;
 }
@@ -1004,7 +1019,7 @@ hr {
     }
 
     .register-learning{
-        font-size: 30px;
+        font-size: 28px;
         margin-top: 10px;
         margin-bottom: 0;
         white-space: nowrap;
@@ -1030,7 +1045,7 @@ hr {
 .otp-number{
 height: 50px;
 width: 50px;
-border:1px solid #6A6A6A;
+border:1px solid #b3b3b3;
 border-radius: 10px;
 box-shadow: darkgrey;
 display: flex;
@@ -1039,7 +1054,6 @@ justify-items: center;
 }
 
 .tag{
-font-weight: 600;
 display: flex;
 justify-content: center;
 text-align: center;
@@ -1048,11 +1062,13 @@ white-space: wrap;
 
 .otp{
    /* width: 20vw; */
-    height: 5vh;
+    height: 50px;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .register-btn{
     width: 520px;
@@ -1104,7 +1120,7 @@ white-space: wrap;
     }
     .otp{
         width: 40vw;
-        height: 5vh;
+        height: 50px;
     }
     .otp-verify{
         margin-top: 0vh;

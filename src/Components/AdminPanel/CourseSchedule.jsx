@@ -154,7 +154,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data);
       } catch (error) {
@@ -165,7 +165,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -185,7 +185,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/trainers");
+        const response = await axios.get("https://api.hachion.co/trainers");
         setTrainer(response.data);
       } catch (error) {
       }
@@ -223,52 +223,126 @@ export default function CourseSchedule() {
       created_date: "",
     });
   };
-  const handleSubmit = async () => {
-    if (!Array.isArray(rows)) {
-      console.error("rows is not an array:", rows);
-      alert("Something went wrong. Please try again.");
-      return;
+const handleSubmit = async () => {
+  const newErrors = [];
+
+  let hasError = false;
+
+  rows.forEach((row, index) => {
+    const rowErrors = {};
+
+    if (!row.schedule_date) {
+      rowErrors.schedule_date = "Date is required";
+      hasError = true;
     }
-  
-    const uploadPromises = rows.map(async (row) => {
-      const formattedCourseData = {
-        course_schedule_id: courseData.course_schedule_id,
-        schedule_category_name: courseData.schedule_category_name,
-        schedule_course_name: courseData.schedule_course_name,
-        // schedule_date: row.schedule_date,
-        schedule_date: dayjs(row.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
-        schedule_week: row.schedule_week,
-        schedule_time: row.schedule_time,
-        schedule_duration: row.schedule_duration,
-        schedule_mode: row.schedule_mode,
-        trainer_name: courseData.trainer_name || "",
-        created_date: courseData.created_date,
-        meeting_link: row.meeting,
-      };
-  
-      try {
-        const response = await axios.post(
-          "https://api.test.hachion.co/schedulecourse/add",
-          formattedCourseData
-        );
-        return response.status === 201 || response.status === 200;
-      } catch (error) {
-        console.error("Error adding schedule:", error.response?.data || error.message);
-        return false;
-      }
-    });
-  
-    const results = await Promise.all(uploadPromises);
-    const allSuccessful = results.every((status) => status);
-  
-    if (allSuccessful) {
-      alert("All schedule entries added successfully.");
-      setShowAddCourse(false);
-      setRows([{ id: Date.now(), schedule_date: "", schedule_week: "", schedule_time: "", schedule_duration: "", schedule_mode: "", trainer_name: "", created_date: "", meeting: "" }]);
-    } else {
-      alert("Some schedule entries failed to upload. Please check the console for errors.");
+
+    if (!row.schedule_frequency) {
+      rowErrors.schedule_frequency = "Frequency is required";
+      hasError = true;
     }
-  };
+
+    if (!row.schedule_time) {
+      rowErrors.schedule_time = "Time is required";
+      hasError = true;
+    }
+
+    if (!row.schedule_duration) {
+      rowErrors.schedule_duration = "Duration is required";
+      hasError = true;
+    }
+
+    if (!row.schedule_mode) {
+      rowErrors.schedule_mode = "Mode is required";
+      hasError = true;
+    }
+
+    if (!row.pattern) {
+      rowErrors.pattern = "Pattern is required";
+      hasError = true;
+    }
+
+    if (!row.meeting) {
+      rowErrors.meeting = "Meeting is required";
+      hasError = true;
+    }
+
+    newErrors[index] = rowErrors;
+  });
+
+  if (hasError) {
+    setFormErrors(newErrors);
+    alert("Please fix the errors before submitting.");
+    return;
+  }
+
+  const uploadPromises = rows.map(async (row) => {
+    const formattedCourseData = {
+      course_schedule_id: courseData.course_schedule_id,
+      schedule_category_name: courseData.schedule_category_name,
+      schedule_course_name: courseData.schedule_course_name,
+      schedule_date: dayjs(row.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
+      schedule_week: row.schedule_week,
+      schedule_time: row.schedule_time,
+      schedule_duration: row.schedule_duration,
+      schedule_mode: row.schedule_mode,
+      trainer_name: courseData.trainer_name || "",
+      created_date: courseData.created_date,
+      meeting_link: row.meeting,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://api.hachion.co/schedulecourse/add",
+        formattedCourseData
+      );
+      return response.status === 201 || response.status === 200;
+    } catch (error) {
+      console.error("Error adding schedule:", error.response?.data || error.message);
+      return false;
+    }
+  });
+
+  const results = await Promise.all(uploadPromises);
+  const allSuccessful = results.every((status) => status);
+
+  if (allSuccessful) {
+    alert("All schedule entries added successfully.");
+    setShowAddCourse(false);
+    setRows([{
+      id: Date.now(),
+      schedule_date: "",
+      schedule_week: "",
+      schedule_time: "",
+      schedule_duration: "",
+      schedule_mode: "",
+      trainer_name: "",
+      created_date: "",
+      meeting: ""
+    }]);
+  } else {
+    alert("Some schedule entries failed to upload. Please check the console for errors.");
+  }
+};
+const isFormValid = () => {
+  if (!courseData.schedule_category_name || !courseData.schedule_course_name) {
+    return false;
+  }
+
+  for (let row of rows) {
+    if (
+      !row.schedule_date ||
+      !row.schedule_time ||
+      !row.schedule_duration ||
+      !row.schedule_mode ||
+      !row.pattern ||
+      !row.meeting 
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
   const handleDateFilter = () => {
     const filtered = courses.filter((course) => {
       const courseDate = new Date(course.schedule_date);
@@ -283,7 +357,7 @@ export default function CourseSchedule() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/schedulecourse?userType=admin"
+          "https://api.hachion.co/schedulecourse?userType=admin"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -313,7 +387,7 @@ export default function CourseSchedule() {
   const handleDelete = async (course_schedule_id) => {
     try {
       await axios.delete(
-        `https://api.test.hachion.co/schedulecourse/delete/${course_schedule_id}`
+        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
       setCourses((prevCourses) =>
         prevCourses.filter(
@@ -339,7 +413,7 @@ export default function CourseSchedule() {
         schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
       };
       const response = await axios.put(
-        `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
       setCourses((prevCourses) =>
@@ -392,6 +466,45 @@ export default function CourseSchedule() {
       setFilterCourse([]);
     }
   };
+
+  const [formErrors, setFormErrors] = useState([]);
+
+  const validateForm = () => {
+  const rowErrors = [];
+
+  // Validate main form fields
+  const newErrors = {
+    schedule_category_name: courseData.schedule_category_name ? "" : "Category is required",
+    schedule_course_name: courseData.schedule_course_name ? "" : "Course is required",
+    rows: [],
+  };
+
+  // Validate each row
+  rows.forEach((row) => {
+    const rowError = {
+      schedule_date: row.schedule_date ? "" : "Date is required",
+      schedule_frequency: row.schedule_frequency ? "" : "Frequency is required",
+      schedule_time: row.schedule_time ? "" : "Time is required",
+      schedule_duration: row.schedule_duration ? "" : "Duration is required",
+      schedule_mode: row.schedule_mode ? "" : "Mode is required",
+      pattern: row.pattern ? "" : "Pattern is required",
+      meeting: row.meeting ? "" : "Meeting link is required",
+    };
+    rowErrors.push(rowError);
+  });
+
+  newErrors.rows = rowErrors;
+  setFormErrors(newErrors);
+
+  // Return true if no errors
+  const hasMainErrors = newErrors.schedule_category_name || newErrors.schedule_course_name;
+  const hasRowErrors = rowErrors.some((err) =>
+    Object.values(err).some((val) => val !== "")
+  );
+
+  return !(hasMainErrors || hasRowErrors);
+};
+
   return (
     <>
       {showAddCourse ? (
@@ -417,26 +530,29 @@ export default function CourseSchedule() {
               <div className="course-details">
                 <div className="course-row">
                   <div className="col-md-3">
-                    <label htmlFor="inputState" className="form-label">
-                      Category Name
-                    </label>
-                    <select
-                      id="inputState"
-                      className="form-select"
-                      name="schedule_category_name"
-                      value={courseData.schedule_category_name}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select Category
+                  <label htmlFor="inputState" className="form-label">
+                    Category Name
+                  </label>
+                  <select
+                    id="inputState"
+                    className={`form-select ${formErrors.schedule_category_name ? "is-invalid" : ""}`}
+                    name="schedule_category_name"
+                    value={courseData.schedule_category_name}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>
+                      Select Category
+                    </option>
+                    {category.map((curr) => (
+                      <option key={curr.id} value={curr.name}>
+                        {curr.name}
                       </option>
-                      {category.map((curr) => (
-                        <option key={curr.id} value={curr.name}>
-                          {curr.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                    ))}
+                  </select>
+                  {formErrors.schedule_category_name && (
+                    <div className="invalid-feedback">{formErrors.schedule_category_name}</div>
+                  )}
+                </div>
                   <div className="col-md-3">
                     <label htmlFor="course" className="form-label">
                       Course Name
@@ -461,7 +577,7 @@ export default function CourseSchedule() {
                   </div>
                   <div className="col-md-3">
                     <label htmlFor="inputState" className="form-label">
-                      Trainer Name
+                      Trainer Name (Not Mandatory)
                     </label>
                     <select
                       id="inputState"
@@ -539,6 +655,11 @@ export default function CourseSchedule() {
                                   },
                                 }}
                               />
+                              {formErrors[index]?.schedule_date && (
+                      <div style={{ color: "red", fontSize: "12px" }}>
+                        {formErrors[index].schedule_date}
+                      </div>
+                    )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <div className="col-md-3">
@@ -555,6 +676,11 @@ export default function CourseSchedule() {
                                   <option>Any Days</option>
                                 </select>
                               </div>
+                              {formErrors[index]?.schedule_frequency && (
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                              {formErrors[index].schedule_frequency}
+                            </div>
+                          )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <TimePicker
@@ -572,6 +698,11 @@ export default function CourseSchedule() {
                                   },
                                 }}
                               />
+                              {formErrors[index]?.schedule_time && (
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                              {formErrors[index].schedule_time}
+                            </div>
+                          )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <input
@@ -580,6 +711,11 @@ export default function CourseSchedule() {
                                 value={rows.schedule_duration}
                                 onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
                               />
+                              {formErrors[index]?.schedule_duration && (
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                              {formErrors[index].schedule_duration}
+                            </div>
+                          )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <div className="col-md-3">
@@ -595,6 +731,11 @@ export default function CourseSchedule() {
                                   <option>Live Demo</option>
                                 </select>
                               </div>
+                              {formErrors[index]?.schedule_mode && (
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                              {formErrors[index].schedule_mode}
+                            </div>
+                          )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <input
@@ -603,6 +744,11 @@ export default function CourseSchedule() {
                                 value={rows.pattern}
                                 onChange={(e) => handleRowChange(index, 'pattern', e.target.value)}
                               />
+                              {formErrors[index]?.pattern && (
+                              <div style={{ color: "red", fontSize: "12px" }}>
+                                {formErrors[index].pattern}
+                              </div>
+                            )}
                             </StyledTableCell>
                             <StyledTableCell align="left" sx={{ padding: 0 }}>
                               <input
@@ -611,6 +757,11 @@ export default function CourseSchedule() {
                                 value={rows.meeting}
                                 onChange={(e) => handleRowChange(index, 'meeting', e.target.value)}
                               />
+                              {formErrors[index]?.meeting && (
+                              <div style={{ color: "red", fontSize: "12px" }}>
+                                {formErrors[index].meeting}
+                              </div>
+                            )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <GoPlus
@@ -638,6 +789,7 @@ export default function CourseSchedule() {
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={handleSubmit}
+                    disabled={!isFormValid()}
                   >
                     Submit
                   </button>

@@ -732,6 +732,18 @@ width: 100%;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem;
+}
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 
 .form-select {
   width: 100%;

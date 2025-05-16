@@ -15,7 +15,7 @@ const WorkshopLearners = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.test.hachion.co/userreview');
+        const response = await fetch('https://api.hachion.co/userreview');
         const data = await response.json();
         setReviews(data);
       } catch (error) {
@@ -72,7 +72,7 @@ const WorkshopLearners = () => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.test.hachion.co/${review.user_image}` : ''}
+                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ''}
                     onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
                   />
                 ))}

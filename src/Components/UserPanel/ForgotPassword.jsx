@@ -27,7 +27,7 @@ const ForgotPassword = () => {
   const handleSendClick = async () => {
     try {
       // Call the API with the email
-      const response = await axios.put(`https://api.test.hachion.co/api/v1/user/forgotpassword?email=${email}`);
+      const response = await axios.put(`https://api.hachion.co/api/v1/user/forgotpassword?email=${email}`);
       
       // If successful, show success message
       if (response.status === 200) {

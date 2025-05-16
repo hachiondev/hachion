@@ -57,7 +57,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
 
     try {
         
-        const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
+        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -74,7 +74,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
         }
 
         
-        const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
+        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -122,7 +122,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     const email = registeruserData.email; 
 
     try {
-      const response = await fetch(`https://api.test.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 
@@ -161,8 +161,9 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
           </div>
           <div className="login-mid-name">
           <div className="otp-verify">
-            <p className='tag'>OTP has been sent to your Email. Please check your inbox</p>
-            <h6 className="enter-otp">Enter OTP: </h6>
+            <p className='tag' style={{marginBottom: '0'}}>Please check your inbox</p>
+            <p className='tag'>OTP has been sent to  <span className='link-to-register'>{registeruserData.email}</span></p>
+            {/* <h6 className="enter-otp">Enter OTP: </h6> */}
             <div className="otp">
   {otp.map((digit, index) => (
     <input
@@ -177,11 +178,11 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
   ))}
 </div>
 
-            <p className='go-to-register'> Didn't receive the code? <span className='link-to-register' onClick={resendOtp}> 
-              {resendLoading ? "Resending..." : "Resend OTP"}</span>
+            <p className='go-to-register'> Didn't receive the OTP? <span className='link-to-register' onClick={resendOtp}> 
+              {resendLoading ? "Resending..." : "Resend"}</span>
             </p>
             <label className="login-label">Password</label>
-            <div className="input-group mb-2">
+            <div className="password-field">
               <input
                 type={passwordType}
                 className="form-control"
@@ -189,13 +190,13 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <span className="toggle-password" onClick={togglePasswordVisibility}>
-                {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+              <span className="eye-icon" onClick={togglePasswordVisibility}>
+                {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
               </span>
             </div>
 
             <label className="login-label">Confirm Password</label>
-            <div className="input-group mb-2">
+            <div className="password-field">
               <input
                 type={confirmPasswordType}
                 className="form-control"
@@ -203,8 +204,8 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <span className="toggle-password" onClick={toggleConfirmPasswordVisibility}>
-                {confirmPasswordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+              <span className="eye-icon" onClick={toggleConfirmPasswordVisibility}>
+                {confirmPasswordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
               </span>
             </div>
             <button
@@ -215,18 +216,19 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
             >
               {isLoading ? "Verifying..." : "Verify and Register"}
             </button>
-            </div>
-            <p><span className="note">*Note :</span>If you don't see OTP in your inbox, Kindly check your spam folder.</p>
             {registerMessage && (
               <div
                 style={{
                   color: messageType === "success" ? "green" : "red",
-                  marginTop: "10px"
+                  marginTop: "5px",
+                  marginBottom: "5px"
                 }}
               >
                 {registerMessage}
             </div>
           )}
+            </div>
+            <p className='spam-msg'><span className="note">*Note :</span>If you don't see OTP in your inbox, Kindly check your spam folder.</p>
           </div>
         </div>
       </div>

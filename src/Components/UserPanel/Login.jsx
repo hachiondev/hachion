@@ -11,7 +11,7 @@ import facebook from '../../Assets/facebook_symbol.svg.png';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { LoginSchema } from '../Schemas';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // For eye icons
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Topbar from './Topbar';
 
 const initialValues = {
@@ -41,7 +41,7 @@ const Login = () => {
     };
   
     try {
-      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
+      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
       console.log(response.data);
   
       if (response.data.status) {
@@ -67,19 +67,19 @@ const Login = () => {
   };  
 
   const googleLogin = () => {
-    window.open('https://api.test.hachion.co/oauth2/authorization/google', '_self');
+    window.open('https://api.hachion.co/oauth2/authorization/google', '_self');
   };
 
   const facebookLogin = () => {
-    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
   };
 
   const linkedinLogin = () => {
-    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
   };
 
   const appleLogin = () => {
-    window.location.href = 'https://api.test.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
   };
 
   // Toggle password visibility
@@ -107,7 +107,7 @@ const Login = () => {
                     </div>
 
                 <label className='login-label'>Password<span className='star'>*</span></label>
-                <div className="input-group mb-2">
+                <div className="password-field">
                   <input
                     type={passwordType}
                     className="form-control"
@@ -115,8 +115,8 @@ const Login = () => {
                     value={password}
                     onChange={(e)=>setPassword(e.target.value)}
                   />
-                  <span className="input-group-text" onClick={togglePasswordVisibility}>
-                    {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  <span className="eye-icon" onClick={togglePasswordVisibility}>
+                    {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
                   </span>
                 </div>
               

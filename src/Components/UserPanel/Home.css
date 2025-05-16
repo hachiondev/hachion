@@ -1368,6 +1368,9 @@ gap:1vh;
 }
 
 @media  (min-width:1025px) and (max-width: 1366px)  {
+  .topbar {
+  height: 80px;
+}
   .career-div {
       width: 80%; 
       margin-left: auto;

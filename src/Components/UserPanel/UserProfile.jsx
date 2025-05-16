@@ -9,6 +9,7 @@ import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import axios from 'axios';
 import './Dashboard.css';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -49,6 +50,17 @@ const UserProfile = () => {
     newPassword: '',
     confirmPassword: ''
   });
+  const [showPasswords, setShowPasswords] = useState({
+  oldPassword: false,
+  newPassword: false,
+  confirmPassword: false
+});
+const togglePasswordVisibility = (field) => {
+  setShowPasswords(prev => ({
+    ...prev,
+    [field]: !prev[field]
+  }));
+};
   const [isUpdating, setIsUpdating] = useState(false);  // Added for loading state
 const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   
@@ -109,7 +121,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
       const parsedEmail = parsedUser.email;
       console.log("Parsed email:", parsedEmail);
   
-      axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
+      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -148,7 +160,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   
     setIsUpdating(true); 
   
-    axios.post('https://api.test.hachion.co/api/v1/user/reset-password', {
+    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,
@@ -219,32 +231,31 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
                 </LargeAvatar>
               </StyledBadge>
             </div>
-            <div className="me-3">
+            
+            <div className="col-md-5">
               <label htmlFor="inputName" className="form-label">Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="inputName"
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-          {/* </div> */}
-      
-          {/* <div className="input-row"> */}
-            <div className="me-3">
+            </div>
+
+            <div className="input-row">
+            <div className="col-md-5">
               <label htmlFor="inputEmail" className="form-label">Email</label>
               <input
                 type="email"
                 className="form-control"
-                id="inputEmail"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="me-3">
+            <div className="col-md-5">
               <label className="form-label">Mobile Number</label>
               <div className="input-group custom-width">
                 <Button
@@ -274,66 +285,69 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
                 </Menu>
                 <input
                   type="tel"
-                  className="mobile"
-                  id='profile'
+                  className="mobile-number"
+                  ref={mobileInputRef}
+                  id='enroll2'
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
                 />
               </div>
             </div>
-            {/* <div className="col-md-5"> */}
-              {/* <label htmlFor="inputLocation4" className="form-label">Location</label>
-<input
-  type="text"
-  className="form-control"
-  id="inputLocation4"
-  value={locationName}
-  readOnly
-/> */}
-            {/* </div> */}
-            
-          </div>
-
-          <div className="center">
+            </div>
+          {/* <div className="center">
             <button className='update-btn'>Update</button>
-          </div>
+          </div> */}
 
           <div className="password-title">Reset Password</div>
-<div className="input-row">
-  <div className="me-3">
-    <label htmlFor="oldPassword" className="form-label">Old Password</label>
+          <div className="input-row">
+<div className="me-3 password-input-wrapper">
+  <label htmlFor="oldPassword" className="form-label">Old Password</label>
+  <div className="password-field">
     <input
-      type="password"
+      type={showPasswords.oldPassword ? 'text' : 'password'}
       className="form-control"
-      id="oldPassword"
       name="oldPassword"
       value={passwords.oldPassword}
       onChange={handlePasswordChange}
     />
+    <span className="eye-icon" onClick={() => togglePasswordVisibility('oldPassword')}>
+      {showPasswords.oldPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+    </span>
   </div>
-  <div className="me-3">
-    <label htmlFor="newPassword" className="form-label">New Password</label>
+</div>
+
+<div className="me-3 password-input-wrapper">
+  <label htmlFor="newPassword" className="form-label">New Password</label>
+  <div className="password-field">
     <input
-      type="password"
+      type={showPasswords.newPassword ? 'text' : 'password'}
       className="form-control"
-      id="newPassword"
       name="newPassword"
       value={passwords.newPassword}
       onChange={handlePasswordChange}
     />
+    <span className="eye-icon" onClick={() => togglePasswordVisibility('newPassword')}>
+      {showPasswords.newPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+    </span>
   </div>
-  <div className="me-3">
-    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+</div>
+
+<div className="me-3 password-input-wrapper">
+  <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+  <div className="password-field">
     <input
-      type="password"
+      type={showPasswords.confirmPassword ? 'text' : 'password'}
       className="form-control"
-      id="confirmPassword"
       name="confirmPassword"
       value={passwords.confirmPassword}
       onChange={handlePasswordChange}
     />
+    <span className="eye-icon" onClick={() => togglePasswordVisibility('confirmPassword')}>
+      {showPasswords.confirmPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+    </span>
   </div>
+</div>
 </div>
 {passwordUpdateMessage && <div className="message">{passwordUpdateMessage}</div>}
 

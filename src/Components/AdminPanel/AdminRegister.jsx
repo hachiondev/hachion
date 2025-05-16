@@ -20,7 +20,7 @@ const AdminRegister = () => {
     setIsSubmitting(true);
     setErrorMessage('');
     try {
-      const response = await fetch('https://api.test.hachion.co/api/v1/user/adminregister', {
+      const response = await fetch('https://api.hachion.co/api/v1/user/adminregister', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

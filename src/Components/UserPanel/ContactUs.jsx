@@ -94,6 +94,14 @@ const ContactUs = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Stop browser validation tooltips
+
+    // ✅ Mark all fields as "touched" to trigger error messages
+    Object.keys(values).forEach((field) => {
+      touched[field] = true; // ✅ Force validation messages to appear
+    });
+
+    handleSubmit(); // ✅ Calls Formik's submit function
     if (!isChecked) {
       setError("Please select the checkbox to acknowledge the Privacy Notice.");
       return;
@@ -104,7 +112,7 @@ const ContactUs = () => {
     const requestData = {
       name: values.name,
       email: values.email,
-      mobile: mobileNumber,
+      mobile: values.number,
       comment: values.comment,
       date: currentDate,
       country: selectedCountry.name,
@@ -276,11 +284,16 @@ const ContactUs = () => {
                   id="contact1"
                   placeholder="Enter your full name"
                   name="name"
+                  required
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </div>
+              {errors.name && touched.name ? (
+                <p className="form-error">{errors.name}</p>
+              ) : null}
+
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
                   Email Id
@@ -291,11 +304,15 @@ const ContactUs = () => {
                   id="contact1"
                   placeholder="Enter your emailid"
                   name="email"
+                  required
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </div>
+              {errors.email && touched.email ? (
+                <p className="form-error">{errors.email}</p>
+              ) : null}
               <label className="form-label">Mobile Number</label>
               <div class="input-group custom-width">
                 <div className="input-group">
@@ -332,13 +349,23 @@ const ContactUs = () => {
                     className="mobile-number"
                     ref={mobileInputRef}
                     id="contact2"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
+                    name="number"
+                    value={values.number} // ✅ Now Formik manages state properly
+                    onChange={(e) => {
+                      const numericValue = e.target.value.replace(/\D/g, ""); // ✅ Allows only numbers
+                      handleChange({
+                        target: { name: e.target.name, value: numericValue },
+                      }); // ✅ Updates Formik values
+                    }}
+                    onBlur={handleBlur}
                     aria-label="Text input with segmented dropdown button"
                     placeholder="Enter your mobile number"
                   />
                 </div>
               </div>
+              {errors.number && touched.number ? (
+                <p className="form-error">{errors.number}</p>
+              ) : null}
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">
                   Comments
@@ -351,8 +378,12 @@ const ContactUs = () => {
                   value={values.comment}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  required
                 ></textarea>
               </div>
+              {errors.comment && touched.comment ? (
+                <p className="form-error">{errors.comment}</p>
+              ) : null}
               <div class="mb-3">
                 <button
                   type="button"

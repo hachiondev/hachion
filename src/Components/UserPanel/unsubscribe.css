@@ -182,7 +182,7 @@
     margin-bottom: 0;
   }
 
-  #contact1.form-control-contact {
+  #u_contact1.form-control-contact {
     max-width: 100%;
     width: 80vw; /* 80% of the screen width */
 
@@ -322,7 +322,7 @@
 .custom-width .dropdown-menu {
   min-width: 100px; /* Adjust dropdown menu width if necessary */
 }
-#contact1 {
+#u_contact1 {
   width: 90%;
   max-width: 550px;
   height: 50px;

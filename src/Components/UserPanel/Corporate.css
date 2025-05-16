@@ -2089,3 +2089,6 @@
     margin-bottom: 5px;
   }
 }
+input:invalid {
+  box-shadow: none; /* Removes browser default styling */
+}

@@ -37,10 +37,11 @@ const Advisor = () => {
     touched,
     handleChange,
     handleSubmit: formikSubmit,
+    resetForm, // ✅ Add resetForm here
   } = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values, { resetForm }) => {
       console.log("Form Submitted with values:", values);
     },
   });
@@ -85,6 +86,7 @@ const Advisor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents form refresh
+    e.stopPropagation(); // Prevent browser default tooltips
 
     if (
       !values.full_name ||
@@ -97,9 +99,13 @@ const Advisor = () => {
       !selectedCountry?.name
     ) {
       setErrorMessage("Please fill in all required fields before submitting.");
+      setShowModal(false);
       return;
+    } else {
+      setErrorMessage("");
     }
-    setErrorMessage("");
+
+    //setErrorMessage("");
     const requestData = {
       fullName: values.full_name,
       emailId: values.email,
@@ -125,6 +131,11 @@ const Advisor = () => {
       if (response.status === 200) {
         console.log("Successfully submitted:", response.data);
         setShowModal(true); // Show success modal only when API call succeeds
+        // Reset all text fields by clearing state values
+        resetForm();
+        setMobileNumber(""); // Reset mobile number field
+        setSelectedValue(""); // ✅ Resets the dropdown
+        // Reset form fields using Formik's resetForm()
       }
     } catch (error) {
       console.error("Error submitting request:", error);
@@ -160,8 +171,10 @@ const Advisor = () => {
           <div className="advisor-head">
             <p>Talk to our Advisor</p>
           </div>
+
           <form
-            className="enquiry-form"
+            class="needs-validation enquiry-form"
+            novalidate
             onSubmit={(e) => {
               handleModal(e);
               handleSubmit(e);
@@ -169,36 +182,39 @@ const Advisor = () => {
           >
             <div className="advisor-row">
               <div className="col-md-5">
-                <label htmlFor="inputName4" className="form-label">
+                <label htmlFor="advisor1" className="form-label">
                   Full Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
-                  className="form-control-advisor"
+                  className="form-control-advisor is-invalid"
                   id="advisor1"
                   placeholder="Enter your full name"
                   name="full_name"
                   value={values.full_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  required
                 />
+                {/* <div class="invalid-feedback">Please enter your full name.</div> */}
                 {errors.name && touched.name ? (
                   <p className="form-error">{errors.full_name}</p>
                 ) : null}
               </div>
-              <div className="col-md-5">
+              <div class="col-md-5">
                 <label htmlFor="inputCompany4" className="form-label">
                   Company Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
-                  className="form-control-advisor"
+                  className="form-control-advisor is-invalid"
                   id="advisor1"
                   placeholder="Enter your company name"
                   name="company_name"
                   value={values.company_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  required
                 />
                 {errors.email && touched.email ? (
                   <p className="form-error">{errors.company_name}</p>
@@ -267,6 +283,7 @@ const Advisor = () => {
                       name="name"
                       value={mobileNumber}
                       onChange={(e) => setMobileNumber(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
@@ -307,6 +324,7 @@ const Advisor = () => {
                   value={values.course_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  required
                 />
                 {errors.name && touched.name ? (
                   <p className="form-error">{errors.course_name}</p>

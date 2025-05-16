@@ -70,17 +70,14 @@ export default function Other() {
     status: "Enabled",
     home_status: "Enabled",
   });
-  const [bannerData, setBannerData] = useState([
-    {
-      banner_id: "",
-      banner_image: "",
-      home_banner_image: "",
-      path: "",
-      date: currentDate,
-      status: "Enabled",
-      home_status: "Enabled",
-    },
-  ]);
+  const [bannerData, setBannerData] = useState({
+    banner_image: "",
+    home_banner_image: "",
+    path: "",
+    date: currentDate,
+    status: "enabled",
+    home_status: "enabled",
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -294,6 +291,28 @@ export default function Other() {
       return;
     }
 
+    console.log("Action Type:", actionType);
+    console.log("Banner Data:", bannerData);
+    console.log("Banner Image:", bannerData?.home_banner_image);
+    if (
+      actionType === "homeBanner" &&
+      (!bannerData || // Ensure the object exists
+        !bannerData.home_banner_image ||
+        bannerData.home_banner_image === undefined ||
+        bannerData.home_banner_image === null)
+    ) {
+      alert("Please select a file before submitting.");
+      return;
+    }
+
+    console.log("Validation triggered!");
+
+    console.log(
+      "Type of bannerData.home_banner_image:",
+      typeof bannerData?.home_banner_image
+    );
+    console.log("Banner Image Value:", bannerData?.home_banner_image);
+
     const formDataToSend = new FormData();
     const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
     //  console.log(bannerData.path);
@@ -302,10 +321,10 @@ export default function Other() {
       date: currentDate,
       path: bannerData.path,
     };
-    console.log(bannerData.path);
-    console.log(jsonData);
-    console.log(actionType);
-    console.log(bannerData.banner_image);
+    // console.log(bannerData.path);
+    // console.log(jsonData);
+    // console.log(actionType);
+    // console.log(bannerData.banner_image);
     // Conditionally append images and JSON fields based on actionType
     if (actionType === "banner" && bannerData.banner_image) {
       formDataToSend.append("banner_image", bannerData.banner_image);

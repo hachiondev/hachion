@@ -1179,7 +1179,7 @@
     width: 300px;
     height: 35px;
     font-size: 12px;
-    padding: 5px;
+    padding: 5px !important;
   }
   .country-code-dropdown {
     font-size: 12px;
@@ -1691,6 +1691,10 @@
   height: 50px;
   outline: none;
   border: 1px solid #b3b3b3;
+}
+
+#contact1.form-control-contact {
+  padding: 5px !important;
 }
 
 .country-code-dropdown {

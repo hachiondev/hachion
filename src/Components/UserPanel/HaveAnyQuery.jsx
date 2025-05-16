@@ -69,13 +69,22 @@ const HaveAnyQuery = ({ closeModal }) => {
   }, []);
 
   const handleContact = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default refresh
+    e.stopPropagation(); // Stop browser validation tooltips
+
+    // ✅ Mark all fields as "touched" to trigger error messages
+    Object.keys(values).forEach((field) => {
+      touched[field] = true; // ✅ Force validation messages to appear
+    });
+
+    handleSubmit(); // ✅ Calls Formik's submit function
+
     const currentDate = new Date().toISOString().split("T")[0];
 
     const requestData = {
       name: values.name,
       email: values.email,
-      mobile: mobileNumber,
+      mobile: values.number,
       comment: values.comment,
       date: currentDate,
       country: selectedCountry.name,
@@ -128,7 +137,6 @@ const HaveAnyQuery = ({ closeModal }) => {
         <div className="request-batch">
           <div className="request-header">Have any Query ?</div>
           <AiOutlineCloseCircle onClick={closeModal} className="button-close" />
-
           <form className="query-form" onSubmit={handleSubmit}>
             <div className="form-group col-10">
               <label htmlFor="inputName" className="form-label">
@@ -140,6 +148,7 @@ const HaveAnyQuery = ({ closeModal }) => {
                 id="query1"
                 placeholder="Enter your full name"
                 name="name"
+                required
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -162,6 +171,7 @@ const HaveAnyQuery = ({ closeModal }) => {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
               />
             </div>
             {errors.email && touched.email ? (
@@ -203,9 +213,17 @@ const HaveAnyQuery = ({ closeModal }) => {
                   ref={mobileInputRef}
                   aria-label="Text input with segmented dropdown button"
                   id="query2"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
+                  name="number"
+                  value={values.number} // ✅ Now Formik manages state properly
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/\D/g, ""); // ✅ Allows only numbers
+                    handleChange({
+                      target: { name: e.target.name, value: numericValue },
+                    }); // ✅ Updates Formik values
+                  }}
+                  onBlur={handleBlur}
                   placeholder="Enter your mobile number"
+                  required
                 />
               </div>
             </div>
@@ -227,6 +245,7 @@ const HaveAnyQuery = ({ closeModal }) => {
                 value={values.comment}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
               ></textarea>
             </div>
             {errors.comment && touched.comment ? (

@@ -234,7 +234,7 @@ const ContactUs = () => {
                 <input
                   type="text"
                   className="form-control-contact"
-                  id="contact1"
+                  id="u_contact1"
                   placeholder="Enter your full name"
                   name="name"
                   value={values.name}
@@ -251,7 +251,7 @@ const ContactUs = () => {
                 <input
                   type="email"
                   className="form-control-contact"
-                  id="contact1"
+                  id="u_contact1"
                   placeholder="Enter your emailid"
                   name="email"
                   value={values.email}

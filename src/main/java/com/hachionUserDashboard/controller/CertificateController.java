@@ -226,5 +226,6 @@ public class CertificateController {
 
 		return ResponseEntity.ok(certificates);
 	}
+	
 
 }

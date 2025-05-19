@@ -44,7 +44,7 @@ public class EnrollController {
 
 	@PostMapping("/enroll/add")
 	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) {
-		
+
 		Enroll enroll = new Enroll();
 		enroll.setStudentId(requestEnroll.getStudentId());
 		enroll.setName(requestEnroll.getName());
@@ -57,10 +57,10 @@ public class EnrollController {
 		enroll.setAmount(requestEnroll.getAmount());
 		enroll.setTrainer(requestEnroll.getTrainer());
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
-
-		
-		repo.save(enroll);
 		sendEnrollEmail(enroll);
+
+		repo.save(enroll);
+
 		return ResponseEntity.ok("Enrollment successfull");
 	}
 
@@ -73,8 +73,7 @@ public class EnrollController {
 			helper.setSubject("Hachion - Free Demo Session Invitation");
 
 			String htmlContent = "<div style='font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;background-color:#f9f9f9;'>"
-					+ "  <div style='text-align:center;'>"
-					+ "    <img src='cid:logoImage' alt='Logo' height='50'/>"
+					+ "  <div style='text-align:center;'>" + "    <img src='cid:logoImage' alt='Logo' height='50'/>"
 					+ "    <h3 style='margin-top:20px;'>Hi " + enrollRequest.getName() + ",</h3>"
 					+ "    <p>Thank you for showing interest in our training program by clicking <strong>Enroll Now!</strong></p>"
 					+ "    <p>We're excited to invite you to a <strong>Free Demo Session</strong> where you’ll get a complete overview of what we offer, how the training works, and how it can help you get hired – even if you're from a non-IT background!</p>"
@@ -125,7 +124,6 @@ public class EnrollController {
 					+ "Batch Time: " + enrollRequest.getTime() + "\n" + "Mode: " + enrollRequest.getMode() + "\n\n"
 					+ "Please contact the user to assist them further.\n\n" + "Best Regards,\nSystem Notification");
 
-			
 			javaMailSender.send(supportMail);
 
 		} catch (MessagingException e) {

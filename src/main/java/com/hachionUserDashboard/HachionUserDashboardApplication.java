@@ -24,7 +24,7 @@ public class HachionUserDashboardApplication extends SpringBootServletInitialize
 		SpringApplication.run(HachionUserDashboardApplication.class, args);
 
 	}
-
+	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(HachionUserDashboardApplication.class);

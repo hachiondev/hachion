@@ -14,4 +14,8 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 	@Query(value = "SELECT DISTINCT course_name FROM enroll", nativeQuery = true)
 	List<String> findAllCourseNames();
 
+	@Query(value = "SELECT student_id, name, email, mobile, course_name FROM enroll WHERE (:studentId IS NULL OR student_id = :studentId) AND (:email IS NULL OR email = :email) AND (:mobile IS NULL OR mobile = :mobile)", nativeQuery = true)
+
+//	@Query(value = "SELECT student_id, name, email, mobile, course_name FROM enroll WHERE (:studentId IS NULL OR student_id = :studentId) OR (:email IS NULL OR email = :email) OR (:mobile IS NULL OR mobile = :mobile)", nativeQuery = true)
+	List<Object[]> findStudentCourseInfo(String studentId, String email, String mobile);
 }

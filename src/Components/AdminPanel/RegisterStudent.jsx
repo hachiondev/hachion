@@ -143,7 +143,7 @@ export default function RegisterStudent() {
                 <StyledTableRow key={row.batch_id || index}>
                             <StyledTableCell><Checkbox /></StyledTableCell>
                             <StyledTableCell>{index + 1}</StyledTableCell>
-                            <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
+                            <StyledTableCell align="left">{row.studentId}</StyledTableCell>
                             <StyledTableCell align="left">{row.userName}</StyledTableCell>
                             <StyledTableCell align="left">{row.email}</StyledTableCell>
                             <StyledTableCell align="center">{row.mobile}</StyledTableCell>

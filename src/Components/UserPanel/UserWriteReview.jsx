@@ -5,7 +5,7 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import './Dashboard.css';
 
-const UserWriteReview = ({ setShowReviewForm }) => {
+const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
   const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
 
   const [reviewData, setReviewData] = useState({
@@ -24,6 +24,11 @@ const UserWriteReview = ({ setShowReviewForm }) => {
 
   const [courses, setCourses] = useState([]);
   const [trainers, setTrainers] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [enrollments, setEnrollments] = useState([]); // New state for user enrollments
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   // Fetch courses and trainers data on component load
   useEffect(() => {
@@ -34,6 +39,33 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     axios.get('https://api.hachion.co/trainers')
       .then(response => setTrainers(response.data))
       .catch(error => console.error("Error fetching trainers:", error));
+    const fetchEnrollments = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('loginuserData'));
+        const email = user?.email;
+        if (!email) return;
+
+        const response = await axios.get('https://api.hachion.co/enroll');
+        const allEnrollments = response.data;
+
+        // Filter enrollments only for this user
+        const userEnrollments = allEnrollments.filter(e => e.email === email);
+
+        setEnrollments(userEnrollments);
+
+        // Extract unique categories and courses from enrollments
+        const uniqueCategories = [...new Set(userEnrollments.map(e => e.category_name))].filter(Boolean);
+        const uniqueCourses = [...new Set(userEnrollments.map(e => e.course_name))].filter(Boolean);
+
+        setFilteredCategories(uniqueCategories);
+        setFilteredCourses(uniqueCourses);
+
+      } catch (error) {
+        console.error("Error fetching user enrollments:", error);
+      }
+    };
+
+    fetchEnrollments();
   }, []);
 
   // Handle input changes
@@ -52,6 +84,16 @@ const UserWriteReview = ({ setShowReviewForm }) => {
       user_image: e.target.files[0], // Store file object
     }));
   };
+  const isFormValid = () => {
+  return (
+    reviewData.student_name.trim() !== "" &&
+    reviewData.email?.trim() !== "" &&
+    reviewData.course_name.trim() !== "" &&
+    reviewData.category_name.trim() !== "" &&
+    reviewData.review.trim() !== "" &&
+    reviewData.rating > 0
+  );
+};
 
   const handleSubmit = async () => {
     const reviewPayload = {
@@ -81,29 +123,48 @@ const UserWriteReview = ({ setShowReviewForm }) => {
     }
 
     try {
-        const response = await axios.post(
-            "https://api.hachion.co/userreview/add",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
-        );
+      const response = await axios.post(
+        "https://api.hachion.co/userreview/add",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
 
-        alert("Review added successfully:");
-        
+      setSuccessMessage("Review submitted successfully!");
+      setErrorMessage(""); 
+      onSubmitReview(reviewPayload);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setShowReviewForm(false);
+      }, 2000);
+
     } catch (error) {
-        console.error("Error adding review:", error.response?.data || error.message);
+      console.error("Error adding review:", error.response?.data || error.message);
+      setErrorMessage("Failed to submit review. Please try again.");
+      setTimeout(() => setErrorMessage(""), 3000);
+      setSuccessMessage(""); 
     }
-};
-
-  
+        onSubmitReview(reviewPayload);
+      setShowReviewForm(false);
+    };
   
   return (
     <div className="resume-div">
     <div className='write-review'>
       <div className='review-form-content'>
+              {errorMessage && (
+            <div className="error-message">
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div className="success-message">
+              {successMessage}
+            </div>
+          )}
         <div className="input-row">
           <div className="col-md-5">
             <label className='form-label'>Student Name</label>
@@ -157,26 +218,26 @@ const UserWriteReview = ({ setShowReviewForm }) => {
             <label className='form-label'>Category Name</label>
             <input
               type="text"
-              className="form-control"
+              className="form-select"
               placeholder="Enter Category"
               name="category_name"
               value={reviewData.category_name}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-5">
-            <label className="form-label">Course Name</label>
-            <select
-              className="form-select"
-              name="course_name"
-              value={reviewData.course_name}
-              onChange={handleChange}
-            >
-              <option value="">Select Course</option>
-              {courses.map(course => (
-                <option key={course.id} value={course.courseName}>{course.courseName}</option>
-              ))}
-            </select>
+            <div className="col-md-5">
+              <label className="form-label">Course Name</label>
+              <select
+                className="form-select"
+                name="course_name"
+                value={reviewData.course_name}
+                onChange={handleChange}
+              >
+                <option value="">Select Course</option>
+                {filteredCourses.map((course, index) => (
+                  <option key={index} value={course}>{course}</option>
+                ))}
+              </select>
           </div>
         </div>
 
@@ -226,7 +287,13 @@ const UserWriteReview = ({ setShowReviewForm }) => {
       </div>
 
         <div className='center'>
-          <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+          <button
+            className='submit-btn'
+            onClick={handleSubmit}
+            disabled={!isFormValid()}
+          >
+            Submit
+          </button>
         </div>
       </div>
       </div>

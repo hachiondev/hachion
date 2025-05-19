@@ -33,6 +33,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import SalWorkshop from './Components/UserPanel/SalWorkshop';
+import Workshop from './Components/UserPanel/Workshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 import Unsubscribe from "./Components/UserPanel/Unsubscribe";
@@ -92,14 +93,15 @@ function AppRoutes() {
           <Route path="admindashboardview" element={<AdminDashboardView />} />
       </Route>
       <Route path='/admincourse' element={<CategoryTable />} />
-      <Route path='/workshop' element={<SalWorkshop/>}/>
+      <Route path='/workshop' element={<Workshop/>}/>
+      <Route path='/workshop/:slug' element={<SalWorkshop/>}/>
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path='/blogs/:category_name/content' element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
-      <Route path='/userdashboard' element={<UserDashboard/>}/>
+      <Route path="/userdashboard/:section?" element={<UserDashboard />} />
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>

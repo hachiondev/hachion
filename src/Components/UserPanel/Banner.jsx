@@ -17,6 +17,7 @@ const Banner = () => {
         if (response.data.length > 0) {
           // Add static banner at the start
           const combinedBanners = [staticBanner, ...response.data];
+          console.log(combinedBanners);
           setBanners(combinedBanners);
           setApiError(false);
         } else {
@@ -27,15 +28,26 @@ const Banner = () => {
         console.error("Error fetching banners:", error);
         setApiError(true);
       });
-  },[]);
+  }, []);
 
   const handleExploreMore = () => navigate("/courseDetails");
   const handleJoinNow = () => navigate("/workshop");
 
-  const displayBanners = apiError ? [staticBanner] : banners;
+  // const displayBanners = apiError ? [staticBanner] : banners;
+  const displayBanners = apiError
+    ? [staticBanner]
+    : [
+        staticBanner,
+        ...banners.filter((banner) => banner.home_status === "enabled"),
+      ];
 
   return (
-    <div id="autoScrollingBanner" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div
+      id="autoScrollingBanner"
+      className="carousel slide"
+      data-bs-ride="carousel"
+      data-bs-interval="3000"
+    >
       <div className="carousel-indicators">
         {displayBanners.map((_, index) => (
           <button
@@ -51,23 +63,57 @@ const Banner = () => {
 
       <div className="carousel-inner">
         {displayBanners.map((banner, index) => (
-          <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-            <img
-              src={apiError || index === 0 ? banner.home_banner_image : `https://api.hachion.co/${banner.home_banner_image}`}
+          <div
+            key={index}
+            className={`carousel-item ${index === 0 ? "active" : ""}`}
+          >
+            {banner.path ? (
+              <a href={banner.path}>
+                <img
+                  src={
+                    apiError || index === 0
+                      ? banner.home_banner_image
+                      : `https://api.hachion.co/${banner.home_banner_image}`
+                  }
+                  className="banner-img"
+                  alt={`Banner ${index + 1}`}
+                />
+              </a>
+            ) : (
+              <img
+                src={
+                  apiError || index === 0
+                    ? banner.home_banner_image
+                    : `https://api.hachion.co/${banner.home_banner_image}`
+                }
+                className="banner-img"
+                alt={`Banner ${index + 1}`}
+              />
+            )}
+            {/* <img
+              src={
+                apiError || index === 0
+                  ? banner.home_banner_image
+                  : `https://api.hachion.co/${banner.home_banner_image}`
+              }
               className="banner-img"
               alt={`Banner ${index + 1}`}
-            />
-            <div className="carousel-caption">
+            /> */}
+            {/* <div className="carousel-caption">
               <div className="carousel-btn">
-              {index === 0 ? (
-                  <button className="join-now" onClick={handleExploreMore}>Explore More</button>
+                {index === 0 ? (
+                  <button className="join-now" onClick={handleExploreMore}>
+                    Explore More
+                  </button>
                 ) : (
-                  <div className='carousel-join-btn'>
-                    <button className="join-now" onClick={handleJoinNow}>Join Now</button>
+                  <div className="carousel-join-btn">
+                    <button className="join-now" onClick={handleJoinNow}>
+                      Join Now
+                    </button>
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

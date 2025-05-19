@@ -21,6 +21,7 @@ import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
+import {MdKeyboardArrowRight} from 'react-icons/md';
 
 const SalWorkshop = () => {
   const { courseName } = useParams();
@@ -47,7 +48,7 @@ const SalWorkshop = () => {
     mobileNumber: "",
     timeZone: "",
     date: "",
-    courseName: "Salesforce",
+    courseName: "",
   });
   const mobileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -337,13 +338,13 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
     const timeZoneShort = timeZoneAbbreviationMap[resolvedTimeZone] || resolvedTimeZone || "IST";
     const updatedFormData = {
       fullName: formData.fullName,
-      courseCategory: formData.courseCategory || "Salesforce",
+      courseCategory: formData.courseCategory || "",
       time: formData.time || "",
       message: "register",
       emailId: formData.emailId,
       mobileNumber: formData.mobileNumber,
       timeZone: timeZoneShort  || "IST",
-      courseName: [formData.courseName || "Salesforce"],
+      courseName: [formData.courseName || ""],
       date: currentDate,
       country: selectedCountry.name
     };
@@ -393,7 +394,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
    </Helmet>
       <Topbar />
       <NavbarTop />
-      <div className='work-details'>
+      {/* <div className='work-details'>
       <div className='course-row'>
       <div class="col-md-3">
           <label for="inputState" class="form-label">Workshop Category Name</label>
@@ -431,7 +432,20 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       </button>
       </div>
       </div>
-      </div>
+      </div> */}
+      <div className='blogs-header'>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <a href="/">Home</a> <MdKeyboardArrowRight/> </li>
+                    <li className="breadcrumb-item">
+                    <a href="/workshop">Workshop</a> <MdKeyboardArrowRight/> </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                  {workshop?.title || workshop?.course_name || "Workshop Details"}
+                  </li>
+                </ol>
+              </nav>
+              </div>
       {workshop && (
       <div className='course-top'>
         <div className='about-banner'>
@@ -519,7 +533,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
               </div>
             </div>
         </div>
-        <WorkshopLearners />
+        <WorkshopLearners page="course"/>
         <div className='workshopfaq'>
         <WorkshopFAQ />
         </div>

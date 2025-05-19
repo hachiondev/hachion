@@ -162,7 +162,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
           <div className="login-mid-name">
           <div className="otp-verify">
             <p className='tag' style={{marginBottom: '0'}}>Please check your inbox</p>
-            <p className='tag'>OTP has been sent to  <span className='link-to-register'>{registeruserData.email}</span></p>
+            <p className='tag'>OTP has been sent to  <span className='mail-to-register'>{registeruserData.email}</span></p>
             {/* <h6 className="enter-otp">Enter OTP: </h6> */}
             <div className="otp">
   {otp.map((digit, index) => (
@@ -177,7 +177,6 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     />
   ))}
 </div>
-
             <p className='go-to-register'> Didn't receive the OTP? <span className='link-to-register' onClick={resendOtp}> 
               {resendLoading ? "Resending..." : "Resend"}</span>
             </p>

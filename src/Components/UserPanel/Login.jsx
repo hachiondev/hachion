@@ -123,7 +123,9 @@ const Login = () => {
                 {/* <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
                   <p className='forgot-password'>Forgot Password?</p>
                 </Link> */}
-                <p> <Link to='/forgotpassword' style={{ textDecoration: 'none' }} className='forgot-password'> Forgot Password? </Link></p>
+                <div className='forgot-align'> 
+                  <Link to='/forgotpassword' className='forgot-password'> Forgot Password? </Link>
+                </div>
                 <div className="form-check">
                 <input
                   className="form-check-input"

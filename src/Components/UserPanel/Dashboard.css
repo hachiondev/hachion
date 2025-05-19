@@ -392,6 +392,25 @@ padding: 0px;
  padding: 2vh;
  flex-direction: column;
   }
+.success-message {
+  text-align: center;
+  color: green;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.error-message {
+  text-align: center;
+  color: red;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 10px 0;
+}
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 
   .password-title {
     display: flex;

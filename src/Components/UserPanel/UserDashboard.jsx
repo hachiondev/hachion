@@ -24,13 +24,14 @@ import UserResume from './UserResume';
 import UserProfile from './UserProfile';
 import { BiArrowToLeft } from "react-icons/bi";
 import { BiArrowToRight } from "react-icons/bi";
+import { useParams } from 'react-router-dom';
 
 const UserDashboard = () => {
+  const { section } = useParams();
   const [dropdownOpen, setDropdownOpen] = useState({});
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Enrolls');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for collapsed sidebar
-
   
   const toggleDropdown = (index) => {
     setDropdownOpen((prevState) => ({
@@ -38,6 +39,16 @@ const UserDashboard = () => {
       [index]: !prevState[index],
     }));
   };
+
+  useEffect(() => {
+    if (section) {
+      const foundIndex = menuItems.findIndex(item => item.title === section);
+      if (foundIndex !== -1) {
+        setSelectedCategory(section);
+        setActiveIndex(foundIndex);
+      }
+    }
+  }, [section]);
 
   const menuItems = [
     // { title: 'Dashboard', icon: <AiFillDashboard /> },

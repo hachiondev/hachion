@@ -192,6 +192,10 @@ const Blogs = () => {
               </li>
             </ol>
           </nav>
+          <div className="category">
+            <div className="category-header">
+              <p>{formMode === 'Add' ? 'Add Blog' : 'Edit Blog'}</p>
+            </div>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="course-details">
               <div className="course-row">
@@ -305,6 +309,7 @@ const Blogs = () => {
               </div>
             </div>
           </form>
+        </div>
         </div>
       ) : (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

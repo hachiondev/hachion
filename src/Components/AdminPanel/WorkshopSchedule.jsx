@@ -67,13 +67,14 @@ export default function WorkshopSchedule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedRow, setEditedRow] = useState({bannerImage:null,category_name:"",course_name:"",date:null,time:null,time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
-  const [selectedRow, setSelectedRow] = React.useState({bannerImage:null,category_name:"",course_name:"",date:"",time:"",time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
+  const [editedRow, setEditedRow] = useState({bannerImage:null,category_name:"",course_name:"",title:"",date:null,time:null,time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
+  const [selectedRow, setSelectedRow] = React.useState({bannerImage:null,category_name:"",course_name:"",title:"",date:"",time:"",time_zone:"",content:"",details:"",meta_title:"",meta_keyword:"",meta_description:""});
   const currentDate = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
       bannerImage:null,
       category_name:"",
       course_name:"",
+      title:"",
       date:"",
         time:"",
         time_zone: "",
@@ -180,6 +181,7 @@ const handleChange = (e, quillField = null, quillValue = null) => {
       bannerImage:null,
       category_name: "",
       course_name:"",
+      title:"",
       time:"",
       time_zone: "",
       date:"",
@@ -196,7 +198,8 @@ const handleChange = (e, quillField = null, quillValue = null) => {
     // Construct your JSON object
     const updatedFormData = {
       category_name: formData.category_name,
-      course_name: formData.course_name || "Salesforce",
+      course_name: formData.course_name || "",
+      title: formData.title,
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
@@ -450,6 +453,17 @@ const quillModules = {
         </div>
         
         <div className='course-row d-flex align-items-center'>
+          <div className="col">
+        <label className="form-label d-block">Title</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter Title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+        />
+      </div>
       <div className='col'>
         <label className="form-label d-block">Date</label>
         <DatePicker
@@ -487,7 +501,7 @@ const quillModules = {
           className="form-control"
           placeholder="Enter Time Zone"
           name="time_zone"
-          value={formData.time_zone || "EST"}
+          value={formData.time_zone || "IST"}
           onChange={handleChange}
         />
       </div>
@@ -696,6 +710,7 @@ const quillModules = {
             <StyledTableCell align="center">Banner Image</StyledTableCell>
             <StyledTableCell align="center">Category Name</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
+            <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Time</StyledTableCell>
             <StyledTableCell align="center">Key Takeaways</StyledTableCell>
@@ -719,6 +734,7 @@ const quillModules = {
               </StyledTableCell>
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
+              <StyledTableCell align="left">{course.title}</StyledTableCell>
               <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
               <StyledTableCell align="left">
@@ -830,6 +846,18 @@ const quillModules = {
         </div>
         </div>
 
+         <div className="col">
+        <label className="form-label">Title</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter Title"
+          name="title"
+          value={editedRow.title}
+          onChange={handleInputChange}
+        />
+      </div>
+
         <div className="course-row">
         <div className="col">
         <label className="form-label">Banner Image</label>
@@ -843,7 +871,6 @@ const quillModules = {
           required
         />
         </div>
-
         <div className="col">
           <label className="form-label">Date</label>
        <DatePicker

@@ -205,6 +205,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     const userMobile = user.mobile || '';
 
     let studentId = '';
+    let mobile = '';
     try {
       // Fetch studentId via API
       const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
@@ -213,6 +214,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
 
       if (profileResponse.data && profileResponse.data.studentId) {
         studentId = profileResponse.data.studentId;
+        mobile = profileResponse.data.mobile || '';
       } else {
         setMessage('Unable to find your student ID.');
         setMessageType('error');
@@ -243,7 +245,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           name: userName,
           studentId: studentId,
           email: userEmail,
-          mobile: userMobile || '',
+          mobile: mobile || '',
           course_name: selectedBatchData.schedule_course_name,
           enroll_date: selectedBatchData.schedule_date,
           week: selectedBatchData.schedule_week,

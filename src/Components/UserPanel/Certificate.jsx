@@ -55,18 +55,18 @@ export default function Certificate() {
             <Table className='resume-table' aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">S.No.</TableCell>
+                  <TableCell align="center" style={{width: '50px'}}>S.No.</TableCell>
                   <TableCell align="center">Course Name</TableCell>
                   <TableCell align="center">Course Status</TableCell>
                   <TableCell align="center">Completion Date</TableCell>
-                  <TableCell align="center">Certificate</TableCell>
+                  <TableCell align="center" style={{width: '60px'}}>Certificate</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {certificates.map((certificate, index) => (
                   <TableRow key={certificate.certificateId}>
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{certificate.courseName}</TableCell>
+                    <TableCell align="left">{certificate.courseName}</TableCell>
                     <TableCell align="center">{certificate.status}</TableCell>
                     <TableCell align="center">{certificate.completionDate}</TableCell>
                     <TableCell align="center">

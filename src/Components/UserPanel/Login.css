@@ -87,16 +87,19 @@ background-size:cover;
     font-weight:400;
     color:rgba(0, 0,0,1);
 }
+.forgot-align{
+display: flex;
+justify-content: flex-end;
+}
 .forgot-password{
-    display: flex;
-    justify-content: flex-end;
+    display: inline;
     font-size: 1rem;
-    /* font-style: italic; */
     font-weight: 500;
     color:#00AEEF;
     cursor: pointer;
     margin-right: 1% !important;
     margin-top: 15px;
+    text-decoration: underline;
 }
 
 .login-right-header{
@@ -194,9 +197,6 @@ background-size:cover;
   
   .forgot-password {
     font-size: 0.9rem;
-    /* font-style: italic; */
-    color: #00AEEF;
-    cursor: pointer;
     margin-top: 15px;
   }
   
@@ -405,7 +405,6 @@ background-size:cover;
         margin-top: 10px;
         margin-bottom: 0;
         font-size: 12px;
-        justify-content: flex-end;
         margin-right: 1%;
     }
       .login-left
@@ -480,10 +479,11 @@ background-size:cover;
     }
 
     .link-to-register{
-        color:#00AEEF;
-        text-decoration-line: none;
-        font-weight: bold;
-        font-size: 14px;
+        font-size: 12px;
+    }
+
+       .mail-to-register{
+        font-size: 12px;
     }
 
     .register-btn {
@@ -638,10 +638,16 @@ cursor: pointer;
 }
 .link-to-register{
     color:#00AEEF;
-    text-decoration-line: none;
+    text-decoration: underline;
+    cursor: pointer;
     font-weight: bold;
      margin-left: 5px;
 }
+ .mail-to-register{
+    color:#00AEEF;
+    text-decoration: none;
+    font-weight: bold;
+    }
 @media (max-width: 1366px){
     .login-mid-name{
     padding-top: 2vh;
@@ -827,24 +833,10 @@ padding: 1vh;
     cursor: pointer;
 }
 
-/* .icon-text-img {
-    height: 6.5vh;
-    width: 3.25vw;
-    margin-right: -8px;
-    z-index: 1;
-} */
-
-
-
-/* .login-link {
-    display: flex;
-    justify-content: center;
-    font-weight: 400;
-    font-size: 1rem;
-} */
 .link-to{
     color:#00AEEF;
-    text-decoration-line: none;
+    text-decoration-line: underline;
+    cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
 }

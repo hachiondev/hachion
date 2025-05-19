@@ -105,7 +105,7 @@ const Topbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="/userdashboard/Settings">
                       <IoMdSettings className="dropdown-icon-top" /> Settings
                     </Link>
                   </li>

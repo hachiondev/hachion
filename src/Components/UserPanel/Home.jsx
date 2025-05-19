@@ -11,6 +11,7 @@ import Footer from './Footer';
 import Corporate from './Corporate';
 import StickyBar from './StickyBar';
 import { Helmet } from "react-helmet-async";
+import PopupBanner from "./PopupBanner";
 
 export const Home = () => {
   return (
@@ -44,7 +45,7 @@ export const Home = () => {
   </script>
 </Helmet>
    <div className='home-background'>
-  
+  <PopupBanner/>
 <Topbar/>
 <NavbarTop/>
 <Banner/>

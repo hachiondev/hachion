@@ -174,7 +174,7 @@ public class Userimpl implements UserService {
 		user.setOTP(otp);
 		user.setOTPStatus(false);
 
-//		emailUtil.sendOtpEmail(email, otp);
+		emailUtil.sendOtpEmail(email, otp);
 		userRepository.save(user);
 //		emailUtil.sendOtpEmail(email, otp);
 

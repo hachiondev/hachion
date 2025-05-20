@@ -42,7 +42,7 @@ const CourseTable = ({ courses, fetchCourses }) => {
   };
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://api.hachion.co/courses/all/${id}`);
+      await axios.delete(`https://api.test.hachion.co/courses/all/${id}`);
       setSuccessMessage('Course deleted successfully!');
       fetchCourses();
     } catch (error) {
@@ -51,7 +51,7 @@ const CourseTable = ({ courses, fetchCourses }) => {
   };
   const handleSave = async () => {
     try {
-      await axios.put(`https://api.hachion.co/courses/all/${selectedRow.id}`, selectedRow);
+      await axios.put(`https://api.test.hachion.co/courses/all/${selectedRow.id}`, selectedRow);
       setSuccessMessage('Course updated successfully!');
       fetchCourses();
       setOpen(false);

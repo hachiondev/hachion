@@ -307,7 +307,7 @@
      .workshop-top-img, .workshop-top-form{
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        justify-content: space-around;
         align-items: center;
         gap: 50px;
       }
@@ -415,13 +415,13 @@
       }
 
       .register-button {
-        width: 520px;
+        width: 500px;
         height: 50px;
         background-color: #00AEEF;
         color: white;
         font-weight: bold;
         font-size: 20;
-        margin: 1vh;
+        margin: 2px;
         border: 0px;
         border-radius: 5px;
         margin-top: 30px;
@@ -431,8 +431,8 @@
       background-color: #006489;
     }
 
-    #workshop.mobile-number {
-      width: 400px !important;
+    #workshop.mobile-workshop {
+      width: 400px;
       height: 50px;
       border-radius: 0 5px 5px 0;
       outline: none;
@@ -560,15 +560,15 @@
           margin-bottom: 30px;
         }
         .workshop-heading{
-      padding: 10px;
+      padding: 5px;
         }
   
         .workshop-reg{
-      padding: 10px;
+      padding: 5px;
         }
         .workshop-reg-img{
           width: 90%;
-          margin: 0 5%;
+          margin: 0 4%;
             }
         .workshop-top, .workshop-top-form{
           display: flex;
@@ -577,13 +577,14 @@
           margin-left: 5px;
           margin-right: 5px;
           gap: 20px;
+          align-items: center;
         }
 
         .workshop-top-img{
           display: flex;
           flex-direction: row;
-          justify-content: space-evenly;
-          gap: 20px;
+          justify-content: space-around;
+          gap: 10px;
         }
   
         .workshop-text{
@@ -604,11 +605,11 @@
           font-weight: 400;
           padding-top: 10px;
           padding-bottom: 10px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 5%;
+          padding-right: 5%;
           text-align: justify;
           width: 90%;
-          margin: 0 5%;
+          margin: 0 3%;
         }
   
         .workshop-banner{
@@ -628,7 +629,7 @@
         }
   
         .workshop-img{
-          width: 100px;
+          width: 90px;
           height: auto;
           border-radius: 10px;
         }
@@ -705,8 +706,8 @@
         font-size: small;
         padding: 5px;
       }
-      #workshop.mobile-number {
-        width: 260px !important;
+      #workshop.mobile-workshop {
+        width: 260px;
         height: 35px;
         padding: 10px;
     }
@@ -1060,7 +1061,7 @@ margin-bottom: 20px;
 }
 
 .workshop-div-content h6{
-  font-size: 14px;
+  font-size: 12px;
   }
 
 .about-us-div-content img{

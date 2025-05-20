@@ -57,7 +57,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
 
     try {
         
-        const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+        const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -74,7 +74,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
         }
 
         
-        const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
+        const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -122,7 +122,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     const email = registeruserData.email; 
 
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`https://api.test.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 

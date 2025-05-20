@@ -25,10 +25,10 @@ const TrainingEvents = () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
-            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+            `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
           
-          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+          fetch("https://api.test.hachion.co/courses/all").then((res) => res.json()),
         ]);
   
 
@@ -242,7 +242,7 @@ list="course-options"
   heading={course.schedule_course_name}
   image={
     course.course_image
-      ? `https://api.hachion.co/${course.course_image}`
+      ? `https://api.test.hachion.co/${course.course_image}`
       : ""
   }
   date={course.schedule_date ? formatDate(course.schedule_date) : ""}

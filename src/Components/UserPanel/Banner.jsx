@@ -12,7 +12,7 @@ const Banner = () => {
 
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/banner")
+      .get("https://api.test.hachion.co/banner")
       .then((response) => {
         if (response.data.length > 0) {
           // Add static banner at the start
@@ -73,7 +73,7 @@ const Banner = () => {
                   src={
                     apiError || index === 0
                       ? banner.home_banner_image
-                      : `https://api.hachion.co/${banner.home_banner_image}`
+                      : `https://api.test.hachion.co/${banner.home_banner_image}`
                   }
                   className="banner-img"
                   alt={`Banner ${index + 1}`}
@@ -84,7 +84,7 @@ const Banner = () => {
                 src={
                   apiError || index === 0
                     ? banner.home_banner_image
-                    : `https://api.hachion.co/${banner.home_banner_image}`
+                    : `https://api.test.hachion.co/${banner.home_banner_image}`
                 }
                 className="banner-img"
                 alt={`Banner ${index + 1}`}
@@ -94,7 +94,7 @@ const Banner = () => {
               src={
                 apiError || index === 0
                   ? banner.home_banner_image
-                  : `https://api.hachion.co/${banner.home_banner_image}`
+                  : `https://api.test.hachion.co/${banner.home_banner_image}`
               }
               className="banner-img"
               alt={`Banner ${index + 1}`}

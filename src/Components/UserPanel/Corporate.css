@@ -596,6 +596,7 @@ padding: 20px;
 .top{
   display: flex;
   justify-content: space-between;
+  background-color: #dfdfdf;
 }
 
 .close-button {
@@ -683,6 +684,50 @@ padding: 20px;
   padding: 2vh;
   width: 75%;
   margin-left: 12vw;
+}
+.workshop-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1vw; 
+  padding: 2vh;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  padding-top: 0;
+}
+.workshop-page {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.filter-workshop {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+}
+
+.workshop-sidebar {
+  min-width: 180px;
+  max-width: 300px;
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.workshop-sidebar h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.workshop-sidebar label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  gap: 10px;
 }
 
 .blog-card {
@@ -799,7 +844,7 @@ padding: 20px;
 }
 
 .main-card {
-  width: 330px; /* Adjust width to display 2 cards on mobile */
+  min-width: 330px; /* Adjust width to display 2 cards on mobile */
   flex: 0 0 auto; /* Prevent cards from shrinking */
   margin-right: 10px; /* Add some space between cards */
   background-color: white;
@@ -1162,11 +1207,20 @@ padding: 20px;
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
     }
+    .workshop-container {
+      grid-template-columns: repeat(3, 1fr);
+      width: 95%;
+      margin-left: 2%;
+      margin-right: 2%;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
+    }
+    .workshop-container {
+      grid-template-columns: repeat(3, 1fr); 
     }
 
   .learner-card-item {
@@ -1213,6 +1267,9 @@ padding: 20px;
 @media(min-width:481px) and (max-width: 768px) {
   .blogs-container {
       grid-template-columns: repeat(3, 1fr); 
+    }
+    .workshop-container {
+      grid-template-columns: repeat(2, 1fr); 
     }
 
   .learner-card {
@@ -1410,6 +1467,14 @@ padding: 20px;
       gap: 10px;
       justify-items: center;
     }
+      .workshop-container {
+      grid-template-columns: repeat(1, 1fr); 
+      width: auto;
+      margin: 0 auto;
+      padding: 10px;
+      gap: 10px;
+      justify-items: center;
+    }
 
     .blog-card {
       border-radius: 10px;
@@ -1471,7 +1536,7 @@ padding: 20px;
   }
 
   .main-card {
-      width: 330px; /* Adjust width to display 2 cards on mobile */
+      max-width: 330px; /* Adjust width to display 2 cards on mobile */
       flex: 0 0 auto; /* Prevent cards from shrinking */
       margin-right: 10px; /* Add some space between cards */
   }

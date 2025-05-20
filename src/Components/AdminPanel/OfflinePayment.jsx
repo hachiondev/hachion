@@ -22,6 +22,11 @@ import { FaTimesCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,6 +50,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function OfflinePayment() {
   const[course,setCourse]=useState([]);
   const[courseCategory,setCourseCategory]=useState([]);
+  
     const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
@@ -56,6 +62,10 @@ export default function OfflinePayment() {
     const [endDate, setEndDate] = useState(null);
     const [rows, Rows] = useState([]);
     const [formMode, setFormMode] = useState("Add");
+    const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+
     const [paymentData, setPaymentData] = useState({
             id:"",
             student_ID: "",
@@ -92,141 +102,459 @@ export default function OfflinePayment() {
                   (currentPage - 1) * rowsPerPage,
                   currentPage * rowsPerPage
                 );
-          const handleFileUpload = (index, e) => {
-            const updatedRows = [...rows];
-            updatedRows[index]['proof_image'] = e.target.files[0];
-            Rows(updatedRows);
-          };
+                const handleFileUpload = (index, e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const updatedRows = [...rows];
+  updatedRows[index].proof_image = file;
+  Rows(updatedRows);
+};
+useEffect(() => {
+    if (rows.length === 0) {
+      const today = dayjs();
+      const defaultRows = Array.from({ length: 3 }, (_, idx) => ({
+        pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
+        // due_date: today.add(idx, 'day').format('DD-MM-YYYY'),
+         due_date: '',    // <-- start empty here
+        method: '',
+        actual_pay: '',
+        received_pay: '',
+        proof_image: '',
+        reference: '',
+        installments: `${idx + 1}`,
+        installmentId: undefined,
+      }));
+      Rows(defaultRows);
+    }
+  }, []);
+
     const handleDeleteConfirmation = (id) => {
         if (window.confirm("Are you sure you want to delete this Offline payment")) {
           handleDelete(id);
         }
       };
-      const handleUpdate = async () => {
-        try {
-          const response = await axios.put(
-            `https://api.hachion.co/offlinepayment/${paymentData.id}`, paymentData
-          );
-          setOfflinePayment(prev =>
-            prev.map(item => item.id === paymentData.id ? response.data : item)
-          );
-          alert("Payment updated successfully");
-          setShowAddCourse(false);
-          setFormMode("Add");
-        } catch (error) {
-          alert("Error updating payment.");
-        }
-      };
+      // const handleUpdate = async () => {
+      //   try {
+      //     const response = await axios.put(
+      //       `https://api.test.hachion.co/offlinepayment/${paymentData.id}`, paymentData
+      //     );
+      //     setOfflinePayment(prev =>
+      //       prev.map(item => item.id === paymentData.id ? response.data : item)
+      //     );
+      //     alert("Payment updated successfully");
+      //     setShowAddCourse(false);
+      //     setFormMode("Add");
+      //   } catch (error) {
+      //     alert("Error updating payment.");
+      //   }
+      // };
+      // const handleDelete = async (id) => {
+      //    try { 
+      //   } catch (error) { 
+      //   } }; 
       const handleDelete = async (id) => {
-         try { 
-        } catch (error) { 
-        } }; 
+         console.log("Deleting id:", id);
+          if (!id) {
+    console.error("❌ Cannot delete: id is undefined or null");
+    return;
+  }
+  try {
+    const response = await axios.delete(`https://api.test.hachion.co/payments/${id}`);
+    
+    if (response.status === 200) {
+      
+      setSuccessMessage("✅ Payment deleted successfully.");
+setErrorMessage("");
+
+      
+      setFilteredPayment((prev) => prev.filter((item) => item.id !== id));
+    } else {
+      setSuccessMessage("");
+setErrorMessage("❌ Failed to delete payment.");
+
+      
+    }
+  } catch (error) {
+    console.error("Error deleting payment:", error);
+     setSuccessMessage("");
+    setErrorMessage("❌ Something went wrong while deleting the payment.");
+  }
+};
+
+
       const handleClickOpen = (row) => {
-        setPaymentData(row);
-        setFormMode("Edit");
-        setShowAddCourse(true);
-      };
-    const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedData = {
-      ...paymentData,
-      [name]: value,
-    };
-    setPaymentData(updatedData);
+       
+  setFormMode("Edit");
+  setShowAddCourse(true);
+  setSelectedPaymentId(row.id); 
 
-    const courseFee = parseFloat(updatedData.course_fee) || 0;
-    const tax = parseFloat(updatedData.tax) || 0;
-    const discount = parseFloat(updatedData.discount) || 0;
-    const count = parseInt(updatedData.installments) || 0;
+  
+  setPaymentData({
+    student_ID: row.student_ID || "",
+    student_name: row.student_name || "",
+    email: row.email || "",
+    mobile: row.mobile || "",
+    course_name: row.course_name || "",
+    course_fee: row.course_fee || "",
+    tax: row.tax || 0,
+    discount: row.discount || 0,
+    installments: row.installments || "",
+    days: row.days || "",
+    total: row.total || "",
+    balance: row.balance || "",
+  });
 
-    const actualTotalFee = Math.round(courseFee + tax - discount);
-    const perInstallment = count > 0 ? Math.round(actualTotalFee / count) : 0;
+ 
+  const rowData = (row.rawInstallments || []).map((inst) => ({
+    pay_date: inst.payDate ? dayjs(inst.payDate).format("DD-MM-YYYY") : "",
+    due_date: inst.dueDate ? dayjs(inst.dueDate).format("DD-MM-YYYY") : "",
+    method: inst.paymentMethod || "",
+    actual_pay: inst.actualPay || "",
+    received_pay: inst.receivedPay || "",
+    proof_image: inst.proof ? inst.proof.split('/').pop() : "",
+    reference: inst.reference || "",
+    installments: inst.numberOfInstallments || "",
+    installmentId: inst.installmentId, // required for update
+  }));
 
-    if (name === 'installments' || ['course_fee', 'tax', 'discount'].includes(name)) {
-      if (!isNaN(count) && count > 0) {
-        const generatedRows = Array.from({ length: count }, (_, idx) => ({
-          pay_date: '',
-          due_date: '',
-          method: '',
-          actual_pay: perInstallment,
-          received_pay: '',
-          proof_image: '',
-          reference: '',
-          installments: `${idx + 1}`
+  Rows(rowData); // Populate child table
+};
+
+    
+    useEffect(() => {
+  const fetchByStudentId = async () => {
+    if (paymentData.student_ID) {
+      try {
+        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
+        const data = await res.json();
+        setPaymentData((prev) => ({
+          ...prev,
+          student_name: data.studentName,
+          email: data.emailId,
+          mobile: data.mobileNumber,
         }));
-        Rows(generatedRows);
-      } else {
-        Rows([]);
+        setFilterCourse(data.courses.map((course, i) => ({ id: i, courseName: course })));
+      } catch (err) {
+        console.error("Error fetching by student ID:", err);
       }
-
-      // Also update total and balance
-      setPaymentData((prev) => ({
-        ...prev,
-        total: actualTotalFee,
-        balance: actualTotalFee,
-      }));
     }
   };
-      const handleRowChange = (index, e) => {
-      const { name, value } = e.target;
-      const updatedRows = [...rows];
-      updatedRows[index][name] = value;
-      Rows(updatedRows);
+  fetchByStudentId();
+}, [paymentData.student_ID]);
+useEffect(() => {
+  const fetchByEmail = async () => {
+    if (paymentData.email) {
+      try {
+        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?email=${paymentData.email}`);
+        const data = await res.json();
+        setPaymentData((prev) => ({
+          ...prev,
+          student_ID: data.studentId,
+          student_name: data.studentName,
+          mobile: data.mobileNumber,
+        }));
+        setFilterCourse(data.courses.map((course, i) => ({ id: i, courseName: course })));
+      } catch (err) {
+        console.error("Error fetching by email:", err);
+      }
+    }
+  };
+  fetchByEmail();
+}, [paymentData.email]);
 
-      // Parse numeric values from main form
-      const courseFee = parseFloat(paymentData.course_fee) || 0;
-      const tax = parseFloat(paymentData.tax) || 0;
-      const discount = parseFloat(paymentData.discount) || 0;
-      const actualTotalFee = courseFee + tax - discount;
+useEffect(() => {
+  const fetchByMobile = async () => {
+    if (paymentData.mobile) {
+      try {
+        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
+        const data = await res.json();
+        setPaymentData((prev) => ({
+          ...prev,
+          student_ID: data.studentId,
+          student_name: data.studentName,
+          email: data.emailId,
+        }));
+        setFilterCourse(data.courses.map((course, i) => ({ id: i, courseName: course })));
+      } catch (err) {
+        console.error("Error fetching by mobile:", err);
+      }
+    }
+  };
+  fetchByMobile();
+}, [paymentData.mobile]);
+useEffect(() => {
+  const fetchCourseFee = async () => {
+    if (paymentData.course_name) {
+      try {
+        const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+        const data = await res.json();
+        if (data && data.courseFee !== undefined) {
+          setPaymentData((prev) => ({
+            ...prev,
+            course_fee: data.courseFee
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching course fee:", error);
+      }
+    }
+  };
 
-      // Sum of received_pay
-      const totalReceived = updatedRows.reduce((sum, row) => {
-        const received = parseFloat(row.received_pay) || 0;
-        return sum + received;
-      }, 0);
+  fetchCourseFee();
+}, [paymentData.course_name]);
 
-      // Update total and balance in paymentData
-      setPaymentData((prev) => ({
-        ...prev,
-        total: actualTotalFee,
-        balance: Math.max(actualTotalFee - totalReceived, 0),
+useEffect(() => {
+  axios.get("https://api.test.hachion.co/payments")
+    .then((response) => {
+      const normalizedData = response.data.map((item) => ({
+        id: item.paymentId,
+        student_ID: item.studentId,
+        student_name: item.studentName,
+        email: item.email,
+        mobile: item.mobile,
+        course_name: item.courseName,
+        course_fee: item.courseFee,
+        installments: item.noOfInstallments,
+        tax: item.tax,
+        discount: item.discount,
+        days: item.noOfDays,
+        total: item.totalAmount,
+        balance: item.balancePay,
+        date: item.installments?.[0]?.payDate || "", 
+        rawInstallments: item.installments, 
       }));
-    };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        const currentDate = new Date().toISOString().split("T")[0]; 
-        formData.append("date", currentDate);
-        formData.append("course_name", paymentData.course_name);
-        formData.append("student_name", paymentData.student_name);
-         formData.append("student_ID", paymentData.student_ID);
-        formData.append("email", paymentData.email);
-        formData.append("mobile", paymentData.mobile);
-        formData.append("course_fee", paymentData.course_fee);
-        formData.append("tax", paymentData.tax);
-         formData.append("discount", paymentData.discount);
-        formData.append("installments", paymentData.installments);
-        formData.append("days", paymentData.days);
-        if (paymentData.proof_image) {
-            formData.append("proof_image", paymentData.proof_image);
-        } else {
-            alert("Please select an image.");
-            return;
-        }
-        try {
-            const response = await axios.post("https://api.hachion.co/offlinepayment/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            if (response.status === 201 || response.status === 200) {
-                alert("Payment added successfully");
-               setOfflinePayment(prev => [...prev, { ...paymentData, date: currentDate }]);
-            }
-        } catch (error) {
-            alert("Error adding payment.");
-        }
-    };
+      setFilteredPayment(normalizedData);
+    })
+    .catch((error) => {
+      console.error("❌ Failed to fetch payments:", error);
+    });
+}, []);
+
+ const handleChange = async (e) => {
+  const { name, value } = e.target;
+
+  const updatedData = {
+    ...paymentData,
+    [name]: value,
+  };
+  setPaymentData(updatedData);
+
+  const courseFee = parseFloat(updatedData.course_fee) || 0;
+  const tax = parseFloat(updatedData.tax) || 0;
+  const discount = parseFloat(updatedData.discount) || 0;
+  const count = parseInt(updatedData.installments) || 0;  // user input installments
+  const dayGap = parseInt(updatedData.days) || 0;
+
+  const actualTotalFee = Math.round(courseFee + tax - discount);
+  const perInstallment = count > 0 ? Math.round(actualTotalFee / count) : 0;
+
+  // Calculate total received from rows
+  const totalReceived = rows.reduce((sum, row) => {
+    const received = parseFloat(row.received_pay) || 0;
+    return sum + received;
+  }, 0);
+
+  setPaymentData((prev) => ({
+    ...prev,
+    total: actualTotalFee,
+    balance: Math.max(actualTotalFee - totalReceived, 0),
+  }));
+
+  if (name === 'installments' || name === 'days') {
+    const today = dayjs();
+
+    // Update only up to `count` rows, clear rest
+    const updatedRows = rows.map((row, idx) => {
+      if (idx < count) {
+        return {
+          ...row,
+          due_date: today.add(dayGap * idx, 'day').format('DD-MM-YYYY'),
+          actual_pay: perInstallment,
+          installments: `${idx + 1}`,
+        };
+      } else {
+        return {
+          ...row,
+          due_date: '',
+          actual_pay: '',
+          installments: `${idx + 1}`, // Keep installment number for consistency
+        };
+      }
+    });
+
+    Rows(updatedRows);
+  }
+};
+
+
+  // handleRowChange stays the same - update rows only by user
+  const handleRowChange = (index, e) => {
+    const { name, value, files } = e.target;
+    const updatedRows = [...rows];
+
+    if (name === 'proof_image') {
+      updatedRows[index][name] = files[0]; // File object
+    } else {
+      updatedRows[index][name] = value;
+    }
+
+    Rows(updatedRows);
+
+    const courseFee = parseFloat(paymentData.course_fee) || 0;
+    const tax = parseFloat(paymentData.tax) || 0;
+    const discount = parseFloat(paymentData.discount) || 0;
+    const actualTotalFee = courseFee + tax - discount;
+
+    const totalReceived = updatedRows.reduce((sum, row) => {
+      const received = parseFloat(row.received_pay) || 0;
+      return sum + received;
+    }, 0);
+
+    setPaymentData((prev) => ({
+      ...prev,
+      total: actualTotalFee,
+      balance: Math.max(actualTotalFee - totalReceived, 0),
+    }));
+  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  const formData = new FormData();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const formattedInstallments = rows.map((row) => ({
+    payDate: row.pay_date
+      ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD")
+      : "",
+    dueDate: row.due_date
+      ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD")
+      : "",
+    paymentMethod: row.method,
+    numberOfInstallments: parseInt(row.installments),
+    actualPay: parseFloat(row.actual_pay),
+    receivedPay: parseFloat(row.received_pay),
+    proof: row.proof_image?.name || "", // filename
+    reference: row.reference,
+  }));
+
+  const payload = {
+    studentId: paymentData.student_ID,
+    studentName: paymentData.student_name,
+    email: paymentData.email,
+    mobile: paymentData.mobile,
+    courseName: paymentData.course_name,
+    courseFee: parseFloat(paymentData.course_fee),
+    tax: parseFloat(paymentData.tax),
+    discount: parseFloat(paymentData.discount),
+    noOfInstallments: parseInt(paymentData.installments),
+    noOfDays: parseInt(paymentData.days),
+    totalAmount: parseFloat(paymentData.total),
+    balancePay: parseFloat(paymentData.balance),
+    installments: formattedInstallments,
+    date: currentDate,
+  };
+
+  
+  formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+
+  
+  rows.forEach((row) => {
+    if (row.proof_image && typeof row.proof_image !== "string") {
+      formData.append("proof", row.proof_image);
+    }
+  });
+
+  try {
+    const response = await axios.post("https://api.test.hachion.co/payments", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 200 || response.status === 201) {
+      setSuccessMessage("✅ Payment added successfully.");
+      setErrorMessage("");
+    }
+  } catch (error) {
+    setSuccessMessage("");
+    setErrorMessage("❌ Error adding payment. Please try again.");
+  }
+};
+const handleUpdate = async (e) => {
+  e.preventDefault();
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  if (!selectedPaymentId) {
+    setErrorMessage("❌ Cannot update: payment ID is missing.");
+    return;
+  }
+
+  const formData = new FormData();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const formattedInstallments = rows.map((row) => ({
+    installmentId: row.installmentId,
+    payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+    dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+    paymentMethod: row.method,
+    numberOfInstallments: parseInt(row.installments),
+    actualPay: parseFloat(row.actual_pay),
+    receivedPay: parseFloat(row.received_pay),
+    proof: typeof row.proof_image === "string" ? row.proof_image : "", 
+    reference: row.reference,
+  }));
+
+  const payload = {
+    studentId: paymentData.student_ID,
+    studentName: paymentData.student_name,
+    email: paymentData.email,
+    mobile: paymentData.mobile,
+    courseName: paymentData.course_name,
+    courseFee: parseFloat(paymentData.course_fee),
+    tax: parseFloat(paymentData.tax),
+    discount: parseFloat(paymentData.discount),
+    noOfInstallments: parseInt(paymentData.installments),
+    noOfDays: parseInt(paymentData.days),
+    totalAmount: parseFloat(paymentData.total),
+    balancePay: parseFloat(paymentData.balance),
+    installments: formattedInstallments,
+    date: currentDate,
+  };
+
+  formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+
+  // Append file and installmentId only if file is new
+  rows.forEach((row) => {
+    if (row.proof_image && typeof row.proof_image !== "string") {
+      formData.append("proof", row.proof_image);
+      formData.append("proofInstallmentId", row.installmentId);
+    }
+  });
+
+  try {
+    const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 200) {
+      setSuccessMessage("✅ Payment updated successfully.");
+      setErrorMessage("");
+    }
+  } catch (error) {
+    console.error("❌ Update failed:", error);
+    setSuccessMessage("");
+    setErrorMessage("❌ Error updating payment. Please try again.");
+  }
+};
+
+
+
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
   return (
@@ -254,22 +582,42 @@ export default function OfflinePayment() {
 </div>
 <div className='course-details'>
 <div className='course-row'>
-  <div class="col">
-    <label for="inputEmail4" class="form-label">Student ID</label>
-    <input type="text" class="schedule-input" id="inputEmail4" name='student_ID' value={paymentData.student_ID} onChange={handleChange}/>
+<div className="col">
+    <label className="form-label">Student ID</label>
+    <input
+      type="text"
+      className="schedule-input"
+      name="student_ID"
+      value={paymentData.student_ID}
+      onChange={(e) => setPaymentData({ ...paymentData, student_ID: e.target.value })}
+    />
   </div>
 <div class="col">
     <label for="inputEmail4" class="form-label">Student Name</label>
     <input type="text" class="schedule-input" id="inputEmail4" name='student_name' value={paymentData.student_name} onChange={handleChange}/>
   </div>
-  <div class="col">
-    <label for="inputEmail4" class="form-label">Email</label>
-    <input type="text" class="schedule-input" id="inputEmail4" name='email' value={paymentData.email} onChange={handleChange}/>
+   <div className="col">
+    <label className="form-label">Email</label>
+    <input
+      type="text"
+      className="schedule-input"
+      name="email"
+      value={paymentData.email}
+      onChange={(e) => setPaymentData({ ...paymentData, email: e.target.value })}
+    />
   </div>
-  <div class="col">
-    <label for="inputEmail4" class="form-label">Mobile Number</label>
-    <input type="text" class="schedule-input" id="inputEmail4" name='mobile' value={paymentData.mobile} onChange={handleChange}/>
+ <div className="col">
+    <label className="form-label">Mobile Number</label>
+    <input
+      type="text"
+      className="schedule-input"
+      name="mobile"
+      value={paymentData.mobile}
+      onChange={(e) => setPaymentData({ ...paymentData, mobile: e.target.value })}
+    />
   </div>
+  
+
   </div>
   <div className='course-row'>
   <div className="col">
@@ -287,10 +635,20 @@ export default function OfflinePayment() {
           ))}
         </select>
       </div>
-  <div class="col">
-    <label for="inputEmail4" class="form-label">Course Fee</label>
-    <input type="text" class="schedule-input" id="inputEmail4" name='course_fee' value={paymentData.course_fee} onChange={handleChange}/>
-  </div>
+      <div className="col">
+  <label className="form-label">Course Fee</label>
+  <input
+    type="text"
+    className="schedule-input"
+    name="course_fee"
+    value={paymentData.course_fee}
+    onChange={(e) =>
+      setPaymentData({ ...paymentData, course_fee: e.target.value })
+    }
+    
+  />
+</div>
+
     <div class="col">
     <label for="inputEmail4" class="form-label">TAX</label>
     <input type="text" class="schedule-input" id="inputEmail4" name='tax' value={paymentData.tax} onChange={handleChange}/>
@@ -326,12 +684,29 @@ export default function OfflinePayment() {
           {rows.map((curr, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell align='center'>
-                <input
+                {/* <input
                   className='table-curriculum'
                   name='pay_date'
                   value={curr.pay_date}
                   onChange={(e) => handleRowChange(index, e)}
-                />
+                /> */}
+                <input
+  type="date"
+  className="table-curriculum"
+  name="pay_date"
+  value={dayjs(curr.pay_date, 'DD-MM-YYYY').format('YYYY-MM-DD')}
+  onChange={(e) => {
+    const formattedDate = dayjs(e.target.value).format('DD-MM-YYYY');
+    const fakeEvent = {
+      target: {
+        name: 'pay_date',
+        value: formattedDate,
+      },
+    };
+    handleRowChange(index, fakeEvent);
+  }}
+/>
+
               </StyledTableCell>
               <StyledTableCell align='center'>
                 <input
@@ -373,7 +748,7 @@ export default function OfflinePayment() {
                   onChange={(e) => handleRowChange(index, e)}
                 />
               </StyledTableCell>
-              <StyledTableCell align='center'>
+              {/* <StyledTableCell align='center'>
                 {curr.proof_image && typeof curr.proof_image !== 'string' ? (
                   <div style={{ position: 'relative', display: 'inline-block' }}>
                     <img
@@ -417,7 +792,63 @@ export default function OfflinePayment() {
                     />
                   </label>
                 )}
-              </StyledTableCell>
+              </StyledTableCell> */}
+              <StyledTableCell align="center">
+  {curr.proof_image ? (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <img
+        src={
+          typeof curr.proof_image === 'string'
+            ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+            : URL.createObjectURL(curr.proof_image)
+        }
+        alt="proof"
+        style={{
+          width: 50,
+          height: 50,
+          cursor: 'pointer',
+          objectFit: 'cover',
+          borderRadius: 4,
+          border: '1px solid #ccc',
+        }}
+        onClick={() =>
+          window.open(
+            typeof curr.proof_image === 'string'
+              ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+              : URL.createObjectURL(curr.proof_image),
+            '_blank'
+          )
+        }
+      />
+      <FaTimesCircle
+        style={{
+          position: 'absolute',
+          top: -8,
+          right: -8,
+          fontSize: '1rem',
+          color: 'red',
+          cursor: 'pointer',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+        }}
+        onClick={() => {
+          const updatedRows = [...rows];
+          updatedRows[index].proof_image = '';
+          Rows(updatedRows);
+        }}
+      />
+    </div>
+  ) : (
+    <label style={{ cursor: 'pointer' }}>
+      <FiUpload className="edit" />
+      <input
+        type="file"
+        style={{ display: 'none' }}
+        onChange={(e) => handleFileUpload(index, e)} // You already have this
+      />
+    </label>
+  )}
+</StyledTableCell>
               <StyledTableCell align='center'>
                 <input
                   className='table-curriculum'
@@ -443,12 +874,18 @@ export default function OfflinePayment() {
   </div>
   <div className='course-row'>
   {formMode === "Add" ? (
-  <>
+  <>   
+      {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+      
     <button className='submit-btn' onClick={handleSubmit}>Save</button>
     <button className='submit-btn' onClick={handleSubmit}>Send to Email</button>
   </>
 ) : (
   <>
+  {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+
     <button className='submit-btn' onClick={handleUpdate}>Update</button>
     <button className='submit-btn' onClick={handleSubmit}>Send to Email</button>
   </>
@@ -554,7 +991,7 @@ export default function OfflinePayment() {
         <StyledTableCell align="center">{curr.course_fee}</StyledTableCell>
         <StyledTableCell align="center">{curr.installments}</StyledTableCell>
         <StyledTableCell align="center">{curr.balance}</StyledTableCell>
-        <StyledTableCell align="center">{curr.date}</StyledTableCell>
+        <StyledTableCell align="center">{curr.date ? dayjs(curr.date).format('MMM-DD-YYYY') : ''}</StyledTableCell>
         <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
             <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
@@ -570,9 +1007,18 @@ export default function OfflinePayment() {
     </StyledTableCell>
   </StyledTableRow>
 )}
+
 </TableBody>
     </Table>
     </TableContainer>
+    <div style={{ marginTop: "8px", textAlign: "left" }}>
+  {successMessage && (
+    <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>
+  )}
+  {errorMessage && (
+    <p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>
+  )}
+</div>
     <div className='pagination-container'>
               <AdminPagination
               currentPage={currentPage}

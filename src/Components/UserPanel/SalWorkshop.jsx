@@ -14,6 +14,7 @@ import cv from '../../Assets/cv.png';
 import inter from '../../Assets/inter.png';
 import support from '../../Assets/247.png';
 import salreg from '../../Assets/salreg.png';
+import WorkshopHighlights from './WorkshopHighlights';
 import WorkshopLearners from './WorkshopLearners';
 import WorkshopFAQ from './WorkshopFAQ';
 import './Blogs.css';
@@ -31,13 +32,7 @@ const SalWorkshop = () => {
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
-  const [workshopData, setWorkshopData] = useState({
-    category_name: '',
-    course_name: '',
-  });
   const [workshops, setWorkshops] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [workshop, setWorkshop] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -124,21 +119,11 @@ const SalWorkshop = () => {
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/workshopschedule');
+        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
         setWorkshops(response.data);
-    
-        const uniqueCategories = [...new Set(response.data.map(item => item.category_name))];
-        setCategories(uniqueCategories);
     
         // ✅ Auto-select default category & course and display data
         const defaultWorkshop = response.data[0];
-        const defaultCategory = defaultWorkshop?.category_name;
-        const defaultCourse = defaultWorkshop?.course_name;
-    
-        setWorkshopData({
-          category_name: defaultCategory,
-          course_name: defaultCourse,
-        });
     
         const { localDate, localTime, timeZone } = convertISTtoLocalTime(
           defaultWorkshop?.datetime || defaultWorkshop?.date,
@@ -160,49 +145,6 @@ const SalWorkshop = () => {
   
     fetchWorkshops();
   }, []);
-  
-
-  useEffect(() => {
-    if (workshopData.category_name) {
-      const filteredCourses = workshops
-        .filter(item => item.category_name === workshopData.category_name)
-        .map(item => item.course_name);
-  
-      const uniqueCourses = [...new Set(filteredCourses)];
-      setCourses(uniqueCourses);
-    } else {
-      setCourses([]);
-    }
-  }, [workshopData.category_name, workshops]);
-  
-  const handleSearch = async () => {
-    try {
-      const filteredWorkshop = workshops.find(
-        item =>
-          item.category_name === workshopData.category_name &&
-          item.course_name === workshopData.course_name
-      );
-  
-      if (filteredWorkshop) {
-        const { localDate, localTime, timeZone } = convertISTtoLocalTime(
-          filteredWorkshop.datetime || filteredWorkshop.date,
-          filteredWorkshop.time
-        );
-  
-        setWorkshop({
-          ...filteredWorkshop,
-          localDate,
-          localTime,
-          timeZone,
-        });
-      } else {
-        setWorkshop(null);
-      }
-    } catch (error) {
-      console.error("Error filtering workshop:", error);
-    }
-  };
-  
   
   const closeMenu = () => {
     setAnchorEl(null);
@@ -349,7 +291,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       country: selectedCountry.name
     };
     try {
-      const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+      const response = await axios.post("https://api.test.hachion.co/workshops", updatedFormData);
       setError("Registration for workshop done successfully");
       setMessageType('success');
       console.log("Response:", response.data);
@@ -451,7 +393,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         <div className='about-banner'>
             <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                  ? `https://api.hachion.co/${workshop.banner_image}` 
+                  ? `https://api.test.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
       
@@ -490,8 +432,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         <p>Time Duration: 1 Hour Daily</p>
       </div>
       <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: workshop?.details.trim() || "" }} />
-
-          
             </div>
           </div>
         </div>
@@ -500,39 +440,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
                     <p className='workshop-banner-content'>Register Now Before Seats Run Out !</p>
                     <button className='join' onClick={handleScrollToWorkshop}>Join Now</button>
                   </div>
-
-            <div className='workshop-content'>
-          <h2 className='workshop-heading'>Program Highlights</h2>
-          <div className='workshop-top-img'>
-            <div className='workshop-div-content'>
-                <img className='workshop-img' src={Exp} alt='' />
-                <h6>Expert Guidance</h6>
-              </div>
-              <div className='workshop-div-content'>
-                <img className='workshop-img' src={Assig} alt='' />
-                <h6>Assignment Practices</h6>
-              </div>
-              <div className='workshop-div-content'>
-                <img className='workshop-img' src={Handexp} alt='' />
-                <h6>Hands on Projects</h6>
-              </div>
-            </div>
-
-            <div className='workshop-top-img'>
-            <div className='workshop-div-content'>
-                <img className='workshop-img' src={cv} alt='' />
-                <h6>Resume Building</h6>
-              </div>
-              <div className='workshop-div-content'>
-                <img className='workshop-img' src={inter} alt='' />
-                <h6>Interview Preparation</h6>
-              </div>
-              <div className='workshop-div-content'>
-                <img className='workshop-img' src={support} alt='' />
-                <h6>24/7 Support</h6>
-              </div>
-            </div>
-        </div>
+        <WorkshopHighlights />
         <WorkshopLearners page="course"/>
         <div className='workshopfaq'>
         <WorkshopFAQ />
@@ -573,45 +481,44 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
             placeholder="abc@gmail.com"
           />
         </div>
-        <div className="form-group col-10" style={{marginBottom: '20px'}}>
-          <label className="form-label">Mobile Number</label>
-                  <div className="input-group mb-3 custom-width">
-                    <div className="input-group">
-                      <Button
-                        variant="outlined"
-                        onClick={openMenu}
-                        className="country-code-dropdown"
-                        endIcon={<AiFillCaretDown />}
-                        style={{backgroundColor: '#FFF'}}
-                      >
-                        <Flag code={selectedCountry.flag} className="country-flag" />
-                        {selectedCountry.code}
-                      </Button>
-                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                        {countries.map((country) => (
-                          <MenuItem
-                            key={country.code}
-                            onClick={() => handleCountrySelect(country)}
-                          >
-                            <Flag code={country.flag} className="country-flag" />
-                            {country.name} ({country.code})
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                      <input
-                        type="tel"
-                        className="mobile-number"
-                        ref={mobileInputRef}
-                        aria-label="Text input with segmented dropdown button"
-                        id="workshop"
-                        name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleChange}
-                        placeholder="Enter your mobile number"
-                      />
-                    </div>
-                  </div>
-                  </div>
+<div className="form-group col-10" style={{ marginBottom: '20px' }}>
+  <label htmlFor="mobileNumber" className="form-label">
+    Mobile Number <span className="star">*</span>
+  </label>
+
+  <div className="input-wrapper" style={{ position: 'relative' }}>
+    {/* Country code dropdown button (inside input field) */}
+    <button
+      variant="text"
+      onClick={openMenu}
+      className='mobile-button'
+    >
+      <Flag code={selectedCountry.flag} className="country-flag me-1" />
+      <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+      <AiFillCaretDown />
+    </button>
+    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+      {countries.map((country) => (
+        <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+          <Flag code={country.flag} className="country-flag me-2" />
+          {country.name} ({country.code})
+        </MenuItem>
+      ))}
+    </Menu>
+          <input
+            type="tel"
+            className="form-control-query"
+            id="query1"
+            name="mobileNumber"
+            value={formData.mobileNumber}
+            onChange={handleChange}
+            placeholder="Enter your mobile number"
+            style={{
+          paddingLeft: '100px',
+        }}
+          />
+        </div>
+      </div>
           <div className='form-group col-10' style={{ position: 'relative' }}>
             </div>
             </div>

@@ -3307,6 +3307,22 @@ max-height: 3em;
   width: 20px;
   margin-right: 5px;
 }
+.mobile-button{
+position: absolute;
+top: 50%;
+left: 10px;
+transform: translateY(-50%);
+padding: 0 5px;
+min-Width: 70px;
+z-Index: 1;
+display: flex;
+align-items: center;
+background-color: transparent;
+border: none;
+cursor: pointer;
+color: #00AAEF;
+font-size: medium;
+}
 
 .input-group {
   display: flex;
@@ -3336,11 +3352,12 @@ border: 1px solid #b3b3b3;
  }
 
 #query1{
-  width: 520px ;
+  width: 500px ;
   height: 50px ;
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #b3b3b3;
+  outline: none;
 }
 .query-form{
   margin-left: 20px;

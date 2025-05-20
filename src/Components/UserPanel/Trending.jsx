@@ -34,12 +34,12 @@ const Trending = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
+        const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
         const trendingData = trendingResponse.data || [];
 
         const activeTrendingCourses = trendingData.filter(course => course.status);
 
-        const allCoursesResponse = await axios.get('https://api.hachion.co/courses/all');
+        const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/all');
         const allCourses = allCoursesResponse.data || [];
 
         const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
@@ -169,7 +169,7 @@ const Trending = () => {
             heading={course.courseName}
             month={course.numberOfClasses}
             time={course.liveTrainingHours}
-            image={`https://api.hachion.co/${course.courseImage}`}
+            image={`https://api.test.hachion.co/${course.courseImage}`}
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}

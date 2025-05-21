@@ -112,7 +112,7 @@ export default function OfflinePayment() {
 useEffect(() => {
     if (rows.length === 0) {
       const today = dayjs();
-      const defaultRows = Array.from({ length: 3 }, (_, idx) => ({
+      const defaultRows = Array.from({ length: 4 }, (_, idx) => ({
         pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
         // due_date: today.add(idx, 'day').format('DD-MM-YYYY'),
          due_date: '',    // <-- start empty here
@@ -133,25 +133,7 @@ useEffect(() => {
           handleDelete(id);
         }
       };
-      // const handleUpdate = async () => {
-      //   try {
-      //     const response = await axios.put(
-      //       `https://api.test.hachion.co/offlinepayment/${paymentData.id}`, paymentData
-      //     );
-      //     setOfflinePayment(prev =>
-      //       prev.map(item => item.id === paymentData.id ? response.data : item)
-      //     );
-      //     alert("Payment updated successfully");
-      //     setShowAddCourse(false);
-      //     setFormMode("Add");
-      //   } catch (error) {
-      //     alert("Error updating payment.");
-      //   }
-      // };
-      // const handleDelete = async (id) => {
-      //    try { 
-      //   } catch (error) { 
-      //   } }; 
+      
       const handleDelete = async (id) => {
          console.log("Deleting id:", id);
           if (!id) {
@@ -361,30 +343,78 @@ useEffect(() => {
     balance: Math.max(actualTotalFee - totalReceived, 0),
   }));
 
-  if (name === 'installments' || name === 'days') {
-    const today = dayjs();
+    if (name === 'installments' || name === 'days') {
+  let count = parseInt(updatedData.installments); // changed to let
+  const dayGap = parseInt(updatedData.days) || 0;
 
-    // Update only up to `count` rows, clear rest
-    const updatedRows = rows.map((row, idx) => {
-      if (idx < count) {
-        return {
-          ...row,
-          due_date: today.add(dayGap * idx, 'day').format('DD-MM-YYYY'),
+  if (name === 'installments') {
+    if (count > 4) {
+      setErrorMessage("❌ Maximum 4 installments are allowed.");
+      setSuccessMessage("");
+
+      updatedData.installments = "4"; 
+      setPaymentData(updatedData);
+
+      count = 4;
+    } else {
+      setErrorMessage("");
+    }
+  }
+
+    const today = dayjs();
+    const updatedRows = [];
+
+    for (let i = 0; i < count; i++) {
+      const existingRow = rows[i];
+      const baseRow = {
+        due_date: today.add(dayGap * i, 'day').format('DD-MM-YYYY'),
+        installments: `${i + 1}`,
+      };
+
+      if (formMode === "Add") {
+        updatedRows.push({
+          ...existingRow,
+          ...baseRow,
           actual_pay: perInstallment,
-          installments: `${idx + 1}`,
-        };
+        });
       } else {
-        return {
-          ...row,
-          due_date: '',
-          actual_pay: '',
-          installments: `${idx + 1}`, // Keep installment number for consistency
-        };
+        // Edit mode: keep existing actual_pay or set blank for new rows
+        updatedRows.push({
+          ...existingRow,
+          ...baseRow,
+          actual_pay: existingRow?.actual_pay ?? '',
+        });
       }
-    });
+    }
 
     Rows(updatedRows);
   }
+
+
+  // if (name === 'installments' || name === 'days') {
+  //   const today = dayjs();
+
+  //   // Update only up to `count` rows, clear rest
+  //   const updatedRows = rows.map((row, idx) => {
+  //     if (idx < count) {
+  //       return {
+  //         ...row,
+  //         due_date: today.add(dayGap * idx, 'day').format('DD-MM-YYYY'),
+  //         actual_pay: perInstallment,
+  //         installments: `${idx + 1}`,
+  //       };
+  //     } else {
+  //       return {
+  //         ...row,
+  //         due_date: '',
+  //         actual_pay: '',
+  //         installments: `${idx + 1}`, // Keep installment number for consistency
+  //       };
+  //     }
+  //   });
+
+  //   Rows(updatedRows);
+  // }
 };
 
 

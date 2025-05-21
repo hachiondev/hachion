@@ -3,14 +3,13 @@ const path = require("path");
 const axios = require("axios");
 
 const baseUrl = "https://hachion.co";
-const apiUrl = "https://api.test.hachion.co/courses/all";
+const coursesApi = "https://api.test.hachion.co/courses/all";
+const workshopsApi = "https://api.test.hachion.co/workshopschedule";
 
-// Slug generator - keep special characters like (), +, &
-// Only lowercase and replace spaces with hyphens
-const toSlug = str =>
-  str.trim().toLowerCase().replace(/\s+/g, "-");
+// Slug generator — lowercase and replace spaces with hyphens
+const toSlug = str => str.trim().toLowerCase().replace(/\s+/g, "-");
 
-// Escape characters that break XML
+// Escape special XML characters
 const escapeXml = unsafe => unsafe
   .replace(/&/g, "&amp;")
   .replace(/</g, "&lt;")
@@ -20,24 +19,39 @@ const escapeXml = unsafe => unsafe
 
 const staticRoutes = [
   "/", "/login", "/register", "/registerverification", "/registerhere",
-  "/loginsuccess", "/forgotpassword", "/courseDetails", "/corporate",
-  "/haveanyquery", "/workshop", "/blogs", 
+  "/loginsuccess", "/forgotpassword", "/coursedetails", "/corporate",
+  "/haveanyquery", "/workshop", "/blogs",
   "/aboutus", "/contactus", "/userdashboard", "/review",
-  "/addtrending", "/courseschedule", "/corporatecourses", 
+  "/addtrending", "/courseschedule", "/corporatecourses",
   "/reports", "/terms", "/privacy"
 ];
 
 const generateSitemap = async () => {
   try {
-    const response = await axios.get(apiUrl);
-    const courses = response.data;
+    // Fetch both APIs in parallel
+    const [coursesResponse, workshopsResponse] = await Promise.all([
+      axios.get(coursesApi),
+      axios.get(workshopsApi)
+    ]);
 
-    const courseRoutes = courses.map(course => {
-      const slug = toSlug(course.courseName);
-      return [`/courseDetails/${slug}`, `/enroll/${slug}`];
-    }).flat();
+    const courses = coursesResponse.data || [];
+    const workshops = workshopsResponse.data || [];
 
-    const allRoutes = [...staticRoutes, ...courseRoutes];
+    // Generate course routes
+    const courseRoutes = courses.flatMap(course => {
+      const slug = toSlug(course.courseName || "");
+      return [`/coursedetails/${slug}`, `/enroll/${slug}`];
+    });
+
+    // Generate workshop routes
+    const workshopRoutes = workshops
+      .filter(workshop => workshop.title)
+      .map(workshop => {
+        const slug = toSlug(workshop.title);
+        return `/workshop/${slug}`;
+      });
+
+    const allRoutes = [...staticRoutes, ...courseRoutes, ...workshopRoutes];
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -54,7 +68,13 @@ const generateSitemap = async () => {
     }).join("")}
 </urlset>`;
 
-    fs.writeFileSync(path.resolve(__dirname, "public", "sitemap.xml"), sitemap);
+    // Ensure the public directory exists
+    const publicDir = path.resolve(__dirname, "public");
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(publicDir, "sitemap.xml"), sitemap);
     console.log("✅ Sitemap created successfully.");
   } catch (err) {
     console.error("❌ Failed to generate sitemap:", err.message);

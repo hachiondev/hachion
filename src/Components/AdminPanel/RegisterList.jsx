@@ -71,10 +71,10 @@ export default function RegisterList() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({student_ID:"",name:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
+    const [editedData, setEditedData] = useState({student_ID:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [studentData, setStudentData] = useState({
         student_ID:"",
-        name:"",
+        userName:"",
         email:"",
         mobile:"",
         country:"",
@@ -86,7 +86,7 @@ export default function RegisterList() {
        comments:"",
        date:currentDate,
             visa_status:"",
-            mode:"",
+            mode:"offline",
          });
         
 const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +110,7 @@ const [currentPage, setCurrentPage] = useState(1);
          const handleReset=()=>{
             setStudentData({
                 student_ID:"",
-        name:"",
+        userName:"",
         email:"",
         mobile:"",
         country:"",
@@ -122,7 +122,7 @@ const [currentPage, setCurrentPage] = useState(1);
        comments:"",
        date:currentDate,
         visa_status:"",
-        mode:""
+        mode: "offline"
                  });
         
          }
@@ -197,16 +197,17 @@ const [currentPage, setCurrentPage] = useState(1);
         } catch (error) { 
           console.error("Error deleting Student:", error); 
         } }; 
-        useEffect(() => {
-          const filtered = registerStudent.filter(registerStudent =>
-              registerStudent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              registerStudent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              registerStudent.mobile.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              registerStudent.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              registerStudent.visa_status.toLowerCase().includes(searchTerm.toLowerCase()) 
-          );
-          setFilteredStudent(filtered);
-      }, [searchTerm,filteredStudent]);
+       useEffect(() => {
+    const filtered = registerStudent.filter(registerStudent =>
+        registerStudent.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.visa_status?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredStudent(filtered);
+}, [searchTerm, registerStudent]);
+
         
      const handleClickOpen = (row) => {
       setFormMode("Edit");
@@ -231,6 +232,7 @@ const [currentPage, setCurrentPage] = useState(1);
         setMessage("Error updating student.");
       }
     };
+
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -302,8 +304,8 @@ const [currentPage, setCurrentPage] = useState(1);
      <div className="course-row">
        <div class="col">
          <label for="inputEmail4" class="form-label">Student Name</label>
-         <input type="text" class="schedule-input" id="inputEmail4" name="name"
-  value={studentData.name}
+         <input type="text" class="schedule-input" id="inputEmail4" name="userName"
+  value={studentData.userName}
   onChange={handleChange}/>
        </div>
        <div class="col">
@@ -508,8 +510,8 @@ const [currentPage, setCurrentPage] = useState(1);
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell> {/* S.No. */}
-        <StyledTableCell align="center">{row.student_ID}</StyledTableCell>
-      <StyledTableCell align="center">{row.name}</StyledTableCell>
+        <StyledTableCell align="center">{row.studentId}</StyledTableCell>
+      <StyledTableCell align="center">{row.userName}</StyledTableCell>
       <StyledTableCell align="center">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>

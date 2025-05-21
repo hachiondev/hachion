@@ -17,59 +17,47 @@ const Workshop = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [sortOrder, setSortOrder] = useState('newest');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-  const fetchWorkshops = async () => {
-    try {
-      const response = await axios.get('https://api.test.hachion.co/workshopschedule');
-      const data = response.data;
+    const fetchWorkshops = async () => {
+      try {
+        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
+        const data = response.data;
 
-      setWorkshops(data);
-      setFilteredWorkshops(data);
+        setWorkshops(data);
+        setFilteredWorkshops(data);
 
-      // Extract unique categories
-      const categoryMap = new Map();
-      data.forEach(w => {
-        if (w.category && w.category.name && !categoryMap.has(w.category.name)) {
-          categoryMap.set(w.category.name, w.category);
-        }
-      });
+        // Extract unique used category and course names from workshops
+        const categoriesUsed = Array.from(new Set(data.map(w => w.category_name).filter(Boolean)));
+        const coursesUsed = Array.from(new Set(data.map(w => w.course_name).filter(Boolean)));
 
-      // Extract unique courses
-      const courseMap = new Map();
-      data.forEach(w => {
-        if (w.course && w.course.title && !courseMap.has(w.course.title)) {
-          courseMap.set(w.course.title, w.course);
-        }
-      });
+        setCategory(categoriesUsed);
+        setCourseCategory(coursesUsed);
+      } catch (error) {
+        console.error('Error fetching workshop data:', error);
+      }
+    };
 
-      setCategory(Array.from(categoryMap.values()));
-      setCourseCategory(Array.from(courseMap.values()));
-
-    } catch (error) {
-      console.error('Error fetching workshop data:', error);
-    }
-  };
-
-  fetchWorkshops();
-}, []);
+    fetchWorkshops();
+  }, []);
 
   useEffect(() => {
     let filtered = [...workshops];
 
-   if (selectedCategories.length > 0) {
-  filtered = filtered.filter(w =>
-    selectedCategories.includes(w.category?.category_name)
-  );
-}
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(w =>
+        selectedCategories.includes(w.category_name)
+      );
+    }
 
-if (selectedCourses.length > 0) {
-  filtered = filtered.filter(w =>
-    selectedCourses.includes(w.course?.course_name)
-  );
-}
+    if (selectedCourses.length > 0) {
+      filtered = filtered.filter(w =>
+        selectedCourses.includes(w.course_name)
+      );
+    }
 
     if (sortOrder === 'newest') {
       filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -122,38 +110,44 @@ if (selectedCourses.length > 0) {
           </nav>
         </div>
 
+        <div className="mobile-filter-toggle">
+        <button className='clear-button' onClick={() => setShowMobileFilters(!showMobileFilters)}>
+          {showMobileFilters ? 'Hide Filters' : 'Show Filters'}
+        </button>
+      </div>
         <div className="workshop-page">
-          <aside className="workshop-sidebar">
+          <aside className={`workshop-sidebar ${showMobileFilters ? 'show' : 'hide'}`}>
             <h4>Filter</h4>
-
+            <p className="workshop-note">Select either Category or Course filter not both.</p>
             <h6>Category</h6>
-{category.map((cat) => (
-  <label key={cat.id} style={{ display: 'block', marginBottom: '6px' }}>
-    <input
-      type="checkbox"
-      checked={selectedCategories.includes(cat.category_name)}
-      onChange={() => handleCheckboxChange(cat.category_name, 'category')}
-      style={{ marginRight: '8px' }}
-    />
-    {cat.category_name}
-  </label>
-))}
+            {category.map((cat, index) => (
+              <label key={index} style={{ display: 'block', marginBottom: '6px', marginLeft: '8px' }}>
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(cat)}
+                  onChange={() => handleCheckboxChange(cat, 'category')}
+                  style={{ marginRight: '8px' }}
+                />
+                {cat}
+              </label>
+            ))}
 
-           <h6>Course</h6>
-{courseCategory.map((course) => (
-  <label key={course.id} style={{ display: 'block', marginBottom: '6px' }}>
-    <input
-      type="checkbox"
-      checked={selectedCourses.includes(course.course_name)}
-      onChange={() => handleCheckboxChange(course.course_name, 'course')}
-      style={{ marginRight: '8px' }}
-    />
-    {course.course_name}
-  </label>
-))}
+            <h6>Course</h6>
+            {courseCategory.map((course, index) => (
+              <label key={index} style={{ display: 'block', marginBottom: '6px', marginLeft: '8px' }}>
+                <input
+                  type="checkbox"
+                  checked={selectedCourses.includes(course)}
+                  onChange={() => handleCheckboxChange(course, 'course')}
+                  style={{ marginRight: '8px' }}
+                />
+                {course}
+              </label>
+            ))}
 
             <h6 style={{ whiteSpace: 'nowrap' }}>Sort by Date</h6>
             <div className="filter-workshop">
+              <div>
               <label>
                 <input
                   type="radio"
@@ -164,6 +158,8 @@ if (selectedCourses.length > 0) {
                 />
                 Newest
               </label>
+              </div>
+              <div>
               <label>
                 <input
                   type="radio"
@@ -174,7 +170,20 @@ if (selectedCourses.length > 0) {
                 />
                 Oldest
               </label>
+              </div>
             </div>
+            <div className='clear-align'>
+            <button
+            onClick={() => {
+              setSelectedCategories([]);
+              setSelectedCourses([]);
+              setSortOrder('newest');
+            }}
+            className='clear-button'
+          >
+            Clear Filters
+          </button>
+          </div>
           </aside>
 
           <div className="workshop-container">

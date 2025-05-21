@@ -686,48 +686,94 @@ padding: 20px;
   margin-left: 12vw;
 }
 .workshop-container {
+  flex: 1;
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr); 
-  gap: 1vw; 
+  gap: 1vw;  */
   padding: 2vh;
-  width: 90%;
+  /* width: 90%;
   margin-left: 5%;
-  margin-right: 5%;
+  margin-right: 5%; */
   padding-top: 0;
+}
+.mobile-filter-toggle {
+  display: none;
+  text-align: center;
+  margin: 10px 0;
 }
 .workshop-page {
   display: flex;
+  align-items: flex-start;
   gap: 10px;
   padding: 10px;
 }
 
 .filter-workshop {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 10px;
+    flex-direction: column;
+    padding: 5px;
 }
-
+.workshop-note{
+  font-size: small;
+  font-weight: 600;
+}
 .workshop-sidebar {
-  min-width: 180px;
-  max-width: 300px;
+  width: 250px;
+  max-height: 80vh;
+  overflow-y: auto;
   background: #f8f9fa;
-  padding: 10px;
+ border: 1px solid #ddd;
+  padding: 15px;
+  background: #fff;
+  flex-shrink: 0;
   border-radius: 8px;
+  position: sticky;
+  top: 10px;
 }
 
 .workshop-sidebar h4 {
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
   margin-bottom: 10px;
   font-weight: bold;
+  background-color: #00AAEF;
+  color: #ffffff;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
+
+.workshop-sidebar h6 {
+  display: flex;
+  justify-content: center;
+  background-color: #d6d6d6;
+  padding: 5px 8px;
 }
 
 .workshop-sidebar label {
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 12px;
   gap: 10px;
+}
+.clear-align{
+    display: flex;
+    justify-content: center;
+}
+.clear-button{
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #00AAEF;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .blog-card {
@@ -847,6 +893,16 @@ padding: 20px;
   min-width: 330px; /* Adjust width to display 2 cards on mobile */
   flex: 0 0 auto; /* Prevent cards from shrinking */
   margin-right: 10px; /* Add some space between cards */
+  background-color: white;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.main-work-card {
+  min-width: 330px; 
+  flex: 0 0 auto; 
+  margin-right: 10px;
   background-color: white;
   box-shadow: 5px 5px 5px #d3d3d3;
   display: flex;
@@ -1208,10 +1264,7 @@ padding: 20px;
       grid-template-columns: repeat(4, 1fr); 
     }
     .workshop-container {
-      grid-template-columns: repeat(3, 1fr);
-      width: 95%;
-      margin-left: 2%;
-      margin-right: 2%;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
 }
 
@@ -1220,7 +1273,7 @@ padding: 20px;
       grid-template-columns: repeat(4, 1fr); 
     }
     .workshop-container {
-      grid-template-columns: repeat(3, 1fr); 
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 
   .learner-card-item {
@@ -1269,7 +1322,7 @@ padding: 20px;
       grid-template-columns: repeat(3, 1fr); 
     }
     .workshop-container {
-      grid-template-columns: repeat(2, 1fr); 
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 
   .learner-card {
@@ -1467,14 +1520,39 @@ padding: 20px;
       gap: 10px;
       justify-items: center;
     }
-      .workshop-container {
-      grid-template-columns: repeat(1, 1fr); 
-      width: auto;
-      margin: 0 auto;
-      padding: 10px;
-      gap: 10px;
-      justify-items: center;
-    }
+.mobile-filter-toggle {
+    display: block;
+  }
+
+  .workshop-page {
+    flex-direction: column;
+  }
+.main-work-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .workshop-sidebar {
+    width: 100%;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+  }
+
+  .workshop-sidebar.hide {
+    max-height: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .workshop-sidebar.show {
+    max-height: 1000px;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  .workshop-container {
+    grid-template-columns: 1fr;
+  }
 
     .blog-card {
       border-radius: 10px;
@@ -1536,9 +1614,9 @@ padding: 20px;
   }
 
   .main-card {
-      max-width: 330px; /* Adjust width to display 2 cards on mobile */
-      flex: 0 0 auto; /* Prevent cards from shrinking */
-      margin-right: 10px; /* Add some space between cards */
+      max-width: 330px;
+      flex: 0 0 auto;
+      margin-right: 10px;
   }
   
   .main-content {

@@ -80,8 +80,8 @@ function AppRoutes() {
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path="/" element={<Home />} />
-      <Route path='/CourseDetails' element={<Course/>}/>
-      <Route path='/CourseDetails/:courseName' element={<QaAutomation />} />
+      <Route path='/coursedetails' element={<Course/>}/>
+      <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminnav' element={<AdminNavbar/>}/>
@@ -105,7 +105,7 @@ function AppRoutes() {
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>
-      <Route path='/Courseschedule' element={<CourseSchedule/>}/>
+      <Route path='/courseschedule' element={<CourseSchedule/>}/>
       <Route path='/corporatecourses' element={<CorporateCourses />} />
       <Route path='/reports' element={<Reports />} />
       <Route path='/terms' element={<Terms/>}/>

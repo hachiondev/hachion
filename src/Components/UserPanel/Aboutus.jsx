@@ -87,7 +87,7 @@ const Aboutus = () => {
           </div>
           <h2 className='about-us-heading'>What We Do ?</h2>
           <p className='about-us-left-content'>
-We provide a wide range of online courses to both large organizations and individual learners. Over 100+ online courses are available on our intuitive and interactive platform www.hachion.com. Some of the most popular courses are QA Testing, AWS, DevOps, Tableau, PowerBI, Business Analyst, Salesforce and Hadoop.
+We provide a wide range of online courses to both large organizations and individual learners. Over 100+ online courses are available on our intuitive and interactive platform www.hachion.co. Some of the most popular courses are QA Testing, AWS, DevOps, Tableau, PowerBI, Business Analyst, Salesforce and Hadoop.
 
 Our Real-time experts with over 10 years of experience in IT are ready to take you to the next level and increase your career opportunities. We are extremely passionate and committed to what we do. It shows in our interactions which are consistent with valuable information, designed strategically to be acquired with ease.</p>
           <h2 className='about-us-heading'>Why to choose Hachion ? </h2>

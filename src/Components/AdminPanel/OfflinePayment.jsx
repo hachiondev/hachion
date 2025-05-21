@@ -201,7 +201,8 @@ setErrorMessage("❌ Failed to delete payment.");
     installments: row.installments || "",
     days: row.days || "",
     total: row.total || "",
-    balance: row.balance || "",
+    // balance: row.balance || "",
+    balance: row.balance ?? "",
   });
 
  

@@ -68,10 +68,10 @@ const Course = () => {
   return (
     <>
       <Helmet>
-  <title>Explore Our Wide Range of Courses - Hachion</title>
+  <title>Best Online IT Certification Courses & Programs | Hachion</title>
   <meta
     name="description"
-    content="Explore top-notch courses on various subjects. Find the best programs for your skill growth at Hachion."
+    content="Transform your career with Hachion's online IT courses! Enroll now, earn a certificate, get job assistance & try our FREE demo! Join today!"
   />
   <meta
     name="keywords"
@@ -91,10 +91,10 @@ const Course = () => {
   />
   <meta
     property="og:url"
-    content="https://www.hachion.com/CourseDetails"
+    content="https://www.hachion.co/coursedetails"
   />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.hachion.com/CourseDetails" />
+  <link rel="canonical" href="https://www.hachion.co/coursedetails" />
 
   <script type="application/ld+json">
     {JSON.stringify({
@@ -105,7 +105,7 @@ const Course = () => {
       "provider": {
         "@type": "Organization",
         "name": "Hachion",
-        "url": "https://www.hachion.com",
+        "url": "https://www.hachion.co",
         "sameAs": [
               "https://www.facebook.com/hachion.co",
               "https://x.com/hachion_co",

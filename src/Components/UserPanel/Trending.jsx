@@ -86,7 +86,7 @@ const Trending = () => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/courseDetails/${courseSlug}`);
+    navigate(`/coursedetails/${courseSlug}`);
   };
 
   return (
@@ -96,7 +96,7 @@ const Trending = () => {
       </div>
 
       <div className="view-btn">
-        <button className="view-all" onClick={() => navigate('/courseDetails')}>
+        <button className="view-all" onClick={() => navigate('/coursedetails')}>
           View All
         </button>
       </div>
@@ -105,14 +105,14 @@ const Trending = () => {
       {topCount > 0 && (
         <div className="courses-list">
           {categories.slice(0, topCount).map((category) => (
-            <h2
+            <h3
               key={category}
               className={`course-names ${activeCategory === category ? 'active' : ''}`}
               onClick={() => handleCategorySelection(category)}
               style={{ cursor: 'pointer' }}
             >
               {category}
-            </h2>
+            </h3>
           ))}
 
           {categories.length > topCount && (
@@ -139,7 +139,7 @@ const Trending = () => {
       {/* Mobile Dropdown */}
       {topCount === 0 && (
         <div className="course-title-container">
-          <h1 className="course-title">{activeCategory}</h1>
+          <h4 className="course-title">{activeCategory}</h4>
           <div className="mobile-dropdown-container">
             <RiMenuUnfold3Line className="course-menu-icon" onClick={handleDropdownClick} />
             {dropdownVisible && (

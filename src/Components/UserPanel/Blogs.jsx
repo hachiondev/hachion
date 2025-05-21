@@ -10,6 +10,7 @@ import StickyBar from './StickyBar';
 import BlogCard from './BlogCard';
 import blogicon from '../../Assets/blogicon.png';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const Blogs = () => {
   const [categories, setCategories] = useState([]);
@@ -35,6 +36,34 @@ const Blogs = () => {
   
   return (
     <>
+    <Helmet>
+      <title>Hachion's Blog | Online learning news, trends & insights</title>
+      <meta name="description" content="Get the latest from Hachion, a global online learning platform offering world-class learning experiences to transform lives worldwide." />
+      <meta name="keywords" content="IT training, Software Courses, Blogs, Technology, Latest insights" />
+      <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
+      <meta property="og:description" content="Learn online with the best courses at Hachion." />
+      <meta property="og:image" content="/Hachion-logo.png" />
+      <link rel="canonical" href="https://hachion.co/blogs" />
+      <script type="application/ld+json">
+        {`
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Hachion",
+            "url": "https://www.hachion.co",
+            "logo": "https://www.hachion.co/Hachion-logo.png",
+            "sameAs": [
+            "https://www.facebook.com/hachion.co",
+            "https://x.com/hachion_co",
+            "https://www.linkedin.com/company/hachion",
+            "https://www.instagram.com/hachion_trainings",
+            "https://www.quora.com/profile/Hachion-4",
+            "https://www.youtube.com/@hachion"
+          ]
+          }
+        `}
+      </script>
+    </Helmet>
     <Topbar/>
     <NavbarTop/>
     <div className='blog'>

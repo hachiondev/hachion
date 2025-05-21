@@ -81,12 +81,15 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
                 firstName: registeruserData.firstName,
                 lastName: registeruserData.lastName,
                 email: registeruserData.email,
+                country: registeruserData.country,
                 mobile: registeruserData.mobile,
+                mode: "Online",
                 password: password,
                 confirmPassword: confirmPassword
             }),
         });
 
+      
         const message = await registerResponse.text();
 
         if (!registerResponse.ok) {

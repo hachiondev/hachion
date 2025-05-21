@@ -104,7 +104,7 @@ const handleClick = async () => {
 
     setIsLoading(true);
 
-    const data = { firstName, lastName, email, mobile };
+    const data = { firstName, lastName, email, mobile, country: selectedCountry.name };
 
     try {
       const response = await fetch(

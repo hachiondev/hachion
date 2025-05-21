@@ -605,11 +605,11 @@
           font-weight: 400;
           padding-top: 10px;
           padding-bottom: 10px;
-          padding-left: 5%;
-          padding-right: 5%;
+          padding-left: 3%;
+          padding-right: 3%;
           text-align: justify;
-          width: 90%;
-          margin: 0 3%;
+          width: 85%;
+          margin: 0 2%;
         }
   
         .workshop-banner{

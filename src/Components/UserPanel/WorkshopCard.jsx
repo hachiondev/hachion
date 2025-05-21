@@ -1,9 +1,9 @@
 import React from 'react';
 import './Corporate.css';
 
-const WorkshopCards = ({ banner_image, title, date, time, timeZone, onClick }) => {
+const WorkshopCard = ({ banner_image, title, date, time, timeZone, onClick }) => {
   return (
-    <div className='main-card' onClick={onClick}>
+    <div className='main-work-card' onClick={onClick}>
       <div 
         className='main-card-banner' >
        <img src={banner_image} alt='card-image' className='main-card-image' />
@@ -19,4 +19,4 @@ const WorkshopCards = ({ banner_image, title, date, time, timeZone, onClick }) =
   );
 };
 
-export default WorkshopCards;
+export default WorkshopCard;

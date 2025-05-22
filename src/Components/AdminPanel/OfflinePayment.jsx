@@ -50,7 +50,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function OfflinePayment() {
   const[course,setCourse]=useState([]);
   const[courseCategory,setCourseCategory]=useState([]);
-  
     const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
@@ -65,7 +64,6 @@ export default function OfflinePayment() {
     const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
-
     const [paymentData, setPaymentData] = useState({
             id:"",
             student_ID: "",
@@ -86,6 +84,7 @@ export default function OfflinePayment() {
            reference:"",
            total:"",
            balance:"",
+           status:"",
            date:currentDate,
          });
         const [currentPage, setCurrentPage] = useState(1);
@@ -147,13 +146,11 @@ useEffect(() => {
       
       setSuccessMessage("✅ Payment deleted successfully.");
 setErrorMessage("");
-
       
       setFilteredPayment((prev) => prev.filter((item) => item.id !== id));
     } else {
       setSuccessMessage("");
 setErrorMessage("❌ Failed to delete payment.");
-
       
     }
   } catch (error) {
@@ -163,14 +160,11 @@ setErrorMessage("❌ Failed to delete payment.");
   }
 };
 
-
-      const handleClickOpen = (row) => {
-       
+  const handleClickOpen = (row) => {
   setFormMode("Edit");
   setShowAddCourse(true);
   setSelectedPaymentId(row.id); 
 
-  
   setPaymentData({
     student_ID: row.student_ID || "",
     student_name: row.student_name || "",
@@ -185,9 +179,9 @@ setErrorMessage("❌ Failed to delete payment.");
     total: row.total || "",
     // balance: row.balance || "",
     balance: row.balance ?? "",
+    status: row.status ?? "",
   });
 
- 
   const rowData = (row.rawInstallments || []).map((inst) => ({
     pay_date: inst.payDate ? dayjs(inst.payDate).format("DD-MM-YYYY") : "",
     due_date: inst.dueDate ? dayjs(inst.dueDate).format("DD-MM-YYYY") : "",
@@ -202,7 +196,6 @@ setErrorMessage("❌ Failed to delete payment.");
 
   Rows(rowData); // Populate child table
 };
-
     
     useEffect(() => {
   const fetchByStudentId = async () => {
@@ -306,12 +299,42 @@ useEffect(() => {
         date: item.installments?.[0]?.payDate || "", 
         rawInstallments: item.installments, 
       }));
+      setOfflinePayment(normalizedData);
       setFilteredPayment(normalizedData);
     })
     .catch((error) => {
       console.error("❌ Failed to fetch payments:", error);
     });
 }, []);
+
+useEffect(() => {
+  const filteredData = offlinePayment.filter((item) => {
+    const date = new Date(item.date); // Assuming 'date' is the created date
+    const term = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      searchTerm === '' ||
+      [
+        item.student_ID,
+        item.student_name,
+        item.email,
+        item.mobile,
+        item.course_name,
+        item.status,
+        item.date ? dayjs(item.date).format('MMM-DD-YYYY') : ''
+      ]
+        .map(field => String(field || '').toLowerCase())
+        .some(field => field.includes(term));
+
+    const inDateRange =
+      (!startDate || date >= new Date(startDate)) &&
+      (!endDate || date <= new Date(new Date(endDate).setHours(23, 59, 59, 999)));
+
+    return matchesSearch && inDateRange;
+  });
+
+  setFilteredPayment(filteredData);
+}, [searchTerm, startDate, endDate, offlinePayment]);
 
  const handleChange = async (e) => {
   const { name, value } = e.target;
@@ -344,50 +367,47 @@ useEffect(() => {
   }));
 
     if (name === 'installments' || name === 'days') {
-  let count = parseInt(updatedData.installments); // changed to let
-  const dayGap = parseInt(updatedData.days) || 0;
-
-  if (name === 'installments') {
-    if (count > 4) {
-      setErrorMessage("❌ Maximum 4 installments are allowed.");
-      setSuccessMessage("");
-
-      updatedData.installments = "4"; 
-      setPaymentData(updatedData);
-
-      count = 4;
-    } else {
-      setErrorMessage("");
-    }
-  }
-
-    const today = dayjs();
-    const updatedRows = [];
-
-    for (let i = 0; i < count; i++) {
-      const existingRow = rows[i];
-      const baseRow = {
-        due_date: today.add(dayGap * i, 'day').format('DD-MM-YYYY'),
-        installments: `${i + 1}`,
-      };
-
-      if (formMode === "Add") {
-        updatedRows.push({
-          ...existingRow,
-          ...baseRow,
-          actual_pay: perInstallment,
-        });
-      } else {
-        // Edit mode: keep existing actual_pay or set blank for new rows
-        updatedRows.push({
-          ...existingRow,
-          ...baseRow,
-          actual_pay: existingRow?.actual_pay ?? '',
-        });
+      let count = parseInt(updatedData.installments); 
+      const dayGap = parseInt(updatedData.days) || 0;
+    
+      if (name === 'installments') {
+        if (count > 4) {
+          setErrorMessage("❌ Maximum 4 installments are allowed.");
+          setSuccessMessage("");
+          updatedData.installments = "4"; 
+          setPaymentData(updatedData);
+          count = 4;
+        } else {
+          setErrorMessage("");
+        }
       }
-    }
-
-    Rows(updatedRows);
+    
+      const today = dayjs();
+      const updatedRows = [...rows];
+    
+      // Always keep 4 rows
+      for (let i = 0; i < 4; i++) {
+        const baseRow = {
+          due_date: i < count ? today.add(dayGap * i, 'day').format('DD-MM-YYYY') : '',
+          installments: `${i + 1}`,
+        };
+    
+        if (formMode === "Add") {
+          updatedRows[i] = {
+            ...updatedRows[i],
+            ...baseRow,
+            actual_pay: i < count ? perInstallment : '',  // reset actual_pay if beyond count
+          };
+        } else {
+          updatedRows[i] = {
+            ...updatedRows[i],
+            ...baseRow,
+            actual_pay: i < count ? (updatedRows[i]?.actual_pay ?? '') : '', // keep existing or empty if beyond count
+          };
+        }
+      }
+    
+      Rows(updatedRows);
   }
 
 
@@ -1001,6 +1021,7 @@ const handleUpdate = async (e) => {
             <StyledTableCell align="center">Course Fee</StyledTableCell>
             <StyledTableCell align="center">No. of Installments</StyledTableCell>
             <StyledTableCell align="center">Balance Fee</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
             <StyledTableCell align="center">Created Date </StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
@@ -1022,6 +1043,7 @@ const handleUpdate = async (e) => {
         <StyledTableCell align="center">{curr.course_fee}</StyledTableCell>
         <StyledTableCell align="center">{curr.installments}</StyledTableCell>
         <StyledTableCell align="center">{curr.balance}</StyledTableCell>
+        <StyledTableCell align="center">{curr.status}</StyledTableCell>
         <StyledTableCell align="center">{curr.date ? dayjs(curr.date).format('MMM-DD-YYYY') : ''}</StyledTableCell>
         <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>

@@ -61,7 +61,7 @@ const SidebarRight = ({ category, currentPage, cardsPerPage }) => {
       />
     ))
   ): (
-    <h4 style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</h4>
+    <p style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</p>
       )}
     </div>
   );

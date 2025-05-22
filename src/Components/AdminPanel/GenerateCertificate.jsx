@@ -140,58 +140,6 @@ export default function CandidateCertificate() {
       alert("An error occurred.");
     }
   };
-  
-  // const handleGenerate = async () => {
-    
-  //   if (
-  //     !certificateData.student_id ||
-  //     !certificateData.student_name ||
-  //     !certificateData.course_name ||
-  //     !certificateData.completed_date
-  //   ) {
-  //     alert("Please fill in all required fields before generating the certificate.");
-  //     return;
-  //   }
-  
-  //   // Prepare payload
-  //   const payload = {
-  //     studentId: certificateData.student_id,
-  //     studentName: certificateData.student_name,
-  //     courseName: certificateData.course_name,
-  //     completionDate: certificateData.completed_date,
-  //   };
-  
-  //   try {
-  //     const response = await fetch('https://api.test.hachion.co/certificate/generate', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(payload),
-  //     });
-    
-  //     if (response.ok) {
-  //       const blob = await response.blob();
-  //       const url = URL.createObjectURL(blob);
-  //       setPreviewUrl(url); // this is the key
-  //       alert("Certificate generated successfully!");
-  //     } else {
-  //       alert("Failed to generate certificate.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error generating certificate:", error);
-  //     alert("An error occurred.");
-  //   }
-  // };
-  // const handleGenerate = () => {
-  //   if (selectedFile) {
-  //     const url = URL.createObjectURL(selectedFile);
-  //     setPreviewUrl(url);
-  //     setShowPreview(true);
-  //   } else {
-  //     alert("Please select a file first.");
-  //   }
-  // };
   const handleImgReset = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
@@ -212,17 +160,7 @@ export default function CandidateCertificate() {
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
-  // useEffect(() => {
-  //   const fetchCertificate = async () => {
-  //     try {
-  //       const response = await axios.get('https://api.hachin.co/certificate');
-  //       setCertificate(response.data);
-  //       setFilteredCertificate(response.data);
-  //     } catch (error) {
-  //     }
-  //   };
-  //   fetchCertificate();
-  // }, []);
+
   const handleSave = useCallback(async () => {
     try {
       const response = await axios.put(
@@ -385,15 +323,35 @@ export default function CandidateCertificate() {
             const response = await axios.delete(`https://api.test.hachion.co/certificate/delete/${id}`); 
           } catch (error) { 
           } }; 
-        //   useEffect(() => {
-        //     const filtered = certificate.filter(certificate =>
-        //         certificate.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //         certificate.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //         certificate.completed_date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //         certificate.status?.toLowerCase().includes(searchTerm.toLowerCase())     
-        //     );
-        //     setFilteredCertificate(filtered);
-        // }, [searchTerm,certificate]);
+       useEffect(() => {
+  const filtered = certificate.filter((item) => {
+    const date = new Date(item.completed_date);
+    const term = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      searchTerm === '' ||
+      [
+        item.student_id,
+        item.student_name,
+        item.email,
+        item.course_name,
+        item.status,
+        item.certificate_id,
+        item.completed_date
+      ]
+        .map(field => String(field || '').toLowerCase())
+        .some(field => field.includes(term));
+
+    const inDateRange =
+      (!startDate || date >= new Date(startDate)) &&
+      (!endDate || date <= new Date(new Date(endDate).setHours(23, 59, 59, 999)));
+
+    return matchesSearch && inDateRange;
+  });
+
+  setFilteredCertificate(filtered);
+}, [searchTerm, startDate, endDate, certificate]);
+
   const handleDeleteConfirmation = (id) => {
     if (window.confirm("Are you sure you want to delete this certificate")) {
       handleDelete(id);
@@ -447,40 +405,8 @@ export default function CandidateCertificate() {
       alert("Failed to download certificate.");
     }
   };
-  
-  // const handleSubmit = async (e) => {
-  //         e.preventDefault();
-  //         const formData = new FormData();
-  //         const currentDate = new Date().toISOString().split("T")[0]; 
-  //         formData.append("student_id", certificateData.student_id);
-  //         formData.append("student_name", certificateData.student_name);
-  //         formData.append("email", certificateData.email);
-  //         formData.append("course_name", certificateData.course_name);
-  //         formData.append("status", certificateData.status);
-  //         formData.append("certificate_id", certificateData.certificate_id);
-  //         formData.append("completed_date", certificateData.completed_date);
-  //         if (certificateData.certificate_img) {
-  //             formData.append("certificate_img", certificateData.certificate_img);
-  //         } else {
-  //             alert("Please select an image.");
-  //             return;
-  //         }
-  //         try {
-  //             const response = await axios.post("https://api.test.hachion.co/certificate/add", formData, {
-  //                 headers: {
-  //                     "Content-Type": "multipart/form-data",
-  //                 },
-  //             });
-  //             if (response.status === 201 || response.status === 200) {
-  //                 alert("Certificate added successfully");
-  //                 setCertificate((prev) => [...prev, { ...certificateData, date: currentDate }]);
-  //                 handleReset();
-  //             }
-  //         } catch (error) {
-  //             alert("Error adding certificate.");
-  //         }
-  //     };
-      const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
+
+  const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
       }
   return (
    <>  
@@ -590,25 +516,20 @@ export default function CandidateCertificate() {
                 </select>
                 </div>
                 <div className="col">
-  <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
-  <input
-  className="schedule-input"
-  id="inputEmail4"
-  name="completed_date"
-  value={
-    certificateData.completed_date
-      ? dayjs(certificateData.completed_date).format("DD-MM-YYYY")
-      : ""
-  }
-  readOnly
-/>
-
-</div>
-                {/* <div class="col">
-                    <label for="inputEmail4" class="form-label">Completed Date</label>
-                    <input class="schedule-input" id="inputEmail4" name='completed_date' value={certificateData.completed_date} onChange={handleChange}/>
-                </div> */}
-                </div>
+                <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
+                <input
+                className="schedule-input"
+                id="inputEmail4"
+                name="completed_date"
+                value={
+                  certificateData.completed_date
+                    ? dayjs(certificateData.completed_date).format("DD-MM-YYYY")
+                    : ""
+                }
+                readOnly
+              />
+              </div>
+        </div>
         <div className="course-row">
         <div className='course-column'>
         <div class="col">
@@ -675,51 +596,6 @@ export default function CandidateCertificate() {
     )}
   </div>
 </div>
-      {/* <div className="col">
-      <label className="form-label">Certificate Image</label>
-        <div className='cert-img' >
-        {previewUrl ? (
-            <img
-            src={previewUrl}
-            alt="Certificate Img"
-            className='prev-img'
-            />
-        ) : (
-            <span style={{ color: "#aaa" }}>Preview will appear here</span>
-        )}
-        </div>
-        </div> */}
-      {/* <div className='cert-img'>      
-        {!showPreview ? (
-        <>
-          <label className="form-label">Certificate Image</label>
-          <input
-            type="file"
-            className="schedule-input"
-            name="certificate_img"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </>
-      ) : (
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            borderRadius: "6px",
-            backgroundColor: "#f9f9f9",
-            marginBottom: "10px",
-          }}
-        >
-          <label className="form-label">Certificate Preview</label>
-          <img
-            src={previewUrl}
-            alt="Certificate Preview"
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
-        </div>
-      )}
-      </div> */}
     </div>  
     </div>
             <div className='course-row'>
@@ -741,22 +617,27 @@ export default function CandidateCertificate() {
                       </div>
                       <div className='date-schedule'>
                         Start Date
-                        <DatePicker 
-                selected={startDate} 
-                onChange={(date) => setStartDate(date)} 
-                isClearable 
-                sx={{
-                  '& .MuiIconButton-root':{color: '#00aeef'}
-               }}/>
+                         <DatePicker
+                        views={['year', 'month']}
+                        label="Start Month"
+                        value={startDate}
+                        onChange={(newValue) => setStartDate(newValue)}
+                        format="MMMM YYYY"
+                        sx={{
+                          '& .MuiIconButton-root': { color: '#00aeef' }
+                        }}
+                      />
                         End Date
-                        <DatePicker 
-                selected={endDate} 
-                onChange={(date) => setEndDate(date)} 
-                isClearable 
-                sx={{
-                  '& .MuiIconButton-root':{color: '#00aeef'}
-               }}
-              />
+                      <DatePicker
+                          views={['year', 'month']}
+                          label="End Month"
+                          value={endDate}
+                          onChange={(newValue) => setEndDate(newValue)}
+                          format="MMMM YYYY"
+                          sx={{
+                            '& .MuiIconButton-root': { color: '#00aeef' }
+                          }}
+                        />
                         <button className='filter' >Filter</button>
                       </div>
                       <div className='entries'>

@@ -37,8 +37,8 @@ const Blogs = () => {
   return (
     <>
     <Helmet>
-      <title>Hachion's Blog | Online learning news, trends & insights</title>
-      <meta name="description" content="Get the latest from Hachion, a global online learning platform offering world-class learning experiences to transform lives worldwide." />
+      <title>Hachion's Blog | Online learning news, trends & insights</title>
+      <meta name="description" content="Get the latest from Hachion, a global online learning platform offering world-class learning experiences to transform lives worldwide." />
       <meta name="keywords" content="IT training, Software Courses, Blogs, Technology, Latest insights" />
       <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
       <meta property="og:description" content="Learn online with the best courses at Hachion." />

@@ -2402,6 +2402,7 @@ display: none !important; /* Hide the normal navbar items on mobile */
   display: flex;
   justify-content: center;
   margin-bottom: 0;
+  max-width: 450px;
 }
 
 .filter-section {
@@ -2416,30 +2417,23 @@ display: none !important; /* Hide the normal navbar items on mobile */
 }
 
 .filter-section select {
-  padding: 3px 5px;
+  padding: 5px;
   font-size: 12px;
   border-radius: 5px;
   min-width: 100px;
   width: 45%;
-}
 
-/* .all-courses
-{
-  padding: 3px 5px;
-  font-size: 12px;
-  border-radius: 5px;
-  min-width:200px;
-} */
+}
 
 .course-search-container {
   position: relative;
   width: 80%;
-  max-width: 300px;
+  max-width: 320px;
 }
 
 .course-search-input {
   width: 100%;
-  padding: 4px 20px 4px 4px; /* Add enough padding to the right for the icon */
+  padding: 4px 20px 4px 4px;
   font-size: 12px;
   border-radius: 5px;
 }
@@ -2448,7 +2442,7 @@ display: none !important; /* Hide the normal navbar items on mobile */
   height: 28px;
   position: absolute;
   right: 0px;
-  padding: 2px 6px;
+  padding: 2px 15px;
   border-radius: 0px 5px 5px 0px;
 }
 .search-icon-style {

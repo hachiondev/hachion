@@ -199,10 +199,16 @@ const [currentPage, setCurrentPage] = useState(1);
         } }; 
        useEffect(() => {
     const filtered = registerStudent.filter(registerStudent =>
+        registerStudent.studentId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         registerStudent.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         registerStudent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         registerStudent.mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         registerStudent.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.analyst_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.source?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.mode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registerStudent.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         registerStudent.visa_status?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredStudent(filtered);
@@ -340,8 +346,10 @@ const [currentPage, setCurrentPage] = useState(1);
          <label for="inputState" class="form-label">Visa Status</label>
          <select id="inputState" class="form-select" name="visa_status" value={studentData.visa_status} onChange={handleChange}>
            <option selected>Select Visa Status</option>
-           <option>Active</option>
-           <option>In Active</option>
+           <option>H1B</option>
+           <option>GC</option>
+           <option>EAD</option>
+           <option>F1</option>
          </select>
        </div>
        </div>

@@ -71,7 +71,7 @@ const Course = () => {
   <title>Best Online IT Certification Courses & Programs | Hachion</title>
   <meta
     name="description"
-    content="Transform your career with Hachion's online IT courses! Enroll now, earn a certificate, get job assistance & try our FREE demo! Join today!"
+    content="Transform your career with Hachion's online IT courses! Enroll now, earn a certificate, get job assistance & try our FREE demo! Join today!"
   />
   <meta
     name="keywords"
@@ -124,7 +124,7 @@ const Course = () => {
         <NavbarTop />
      
         <div>
-          <h1 className='course-banner-content'>Courses</h1>
+          <h1 className='course-banner-content'>Online IT Courses</h1>
         </div>
         <div className='course-content'>
           

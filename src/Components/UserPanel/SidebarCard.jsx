@@ -45,22 +45,22 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
     <div className="sidebar-card"
     onClick={isMobile ? handleClick : undefined} >
       <div className="sidebar-card-header-div">
-        <h4 className="sidebar-card-heading">Certified Students: {student}</h4>
+        <p className="sidebar-card-heading">Certified Students: {student}</p>
         <img src={image} alt="card-img" className="sidebar-card-icon" />
       </div>
       <div className="sidebar-course-details">
-        <h5 className="sidebar-course-name">{title}</h5>
+        <h3 className="sidebar-course-name">{title}</h3>
         <div className="sidebar-course-time">
-          <h6 className="sidebar-course-month">
+          <p className="sidebar-course-month">
             <RxCalendar /> {month} Days
-          </h6>
-          {/* <h6 className="sidebar-course-month">
+          </p>
+          {/* <p className="sidebar-course-month">
             <BiTimeFive /> {time} Hours
-          </h6> */}
+          </p> */}
         </div>
-        <h6 className="sidebar-course-review">
+        <p className="sidebar-course-review">
           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
-        </h6>
+        </p>
         <button className="sidebar-enroll-btn" onClick={(e) => {
           e.stopPropagation(); // Prevent parent click event
           handleClick();

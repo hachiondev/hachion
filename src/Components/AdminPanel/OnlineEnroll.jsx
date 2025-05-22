@@ -68,7 +68,7 @@ export default function OnlineEnroll() {
     const date = new Date(item.date || item.enroll_date);
     const matchesSearch =
       searchTerm === '' ||
-      [item.name, item.course_name, item.mode]
+      [item.studentId, item.name, item.email, item.mobile, item.completion_date, item.course_name, item.mode]
         .map(field => (field || '').toLowerCase())
         .some(field => field.includes(searchTerm.toLowerCase()));
     const inDateRange =

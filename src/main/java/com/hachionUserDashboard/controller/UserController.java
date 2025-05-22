@@ -26,7 +26,8 @@ import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.OtpRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
-import com.hachionUserDashboard.entity.User;
+import com.hachionUserDashboard.entity.RegisterStudent;
+
 
 import Response.LoginResponse;
 import Response.UserProfileResponse;
@@ -71,8 +72,8 @@ public class UserController {
 	}
 
 	@GetMapping("/students")
-	public ResponseEntity<List<User>> getAllRegisteredStudents() {
-		List<User> students = userService.getAllRegisteredStudents();
+	public ResponseEntity<List<RegisterStudent>> getAllRegisteredStudents() {
+		List<RegisterStudent> students = userService.getAllRegisteredStudents();
 		return new ResponseEntity<>(students, HttpStatus.OK);
 	}
 
@@ -112,7 +113,7 @@ public class UserController {
 		String email = user.getAttribute("email");
 		String username = user.getAttribute("name");
 
-		User savedUser = userService.saveUser(username, email);
+		RegisterStudent savedUser = userService.saveUser(username, email);
 
 		return ResponseEntity.ok(Map.of("email", savedUser.getEmail(), "name", savedUser.getUserName()));
 	}

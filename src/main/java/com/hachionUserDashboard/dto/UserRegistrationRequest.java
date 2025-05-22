@@ -6,11 +6,13 @@ public class UserRegistrationRequest {
 	private String email;
 	private String password;
 	private String OTP;
-	private Long mobile;
+	private String mobile;
 	private String newPassword;
 	private String confirmPassword;
 	private String firstName;
 	private String lastName;
+	private String country;
+	private String mode;
 
 	public String getConfirmPassword() {
 		return confirmPassword;
@@ -28,11 +30,11 @@ public class UserRegistrationRequest {
 		this.newPassword = newPassword;
 	}
 
-	public Long getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Long mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 
@@ -86,6 +88,22 @@ public class UserRegistrationRequest {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 	
 }

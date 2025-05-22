@@ -8,10 +8,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,10 +43,12 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private CourseRepository courseRepository;
 
-	private static final String UPLOAD_DIR = "uploads/images/";
+//	private static final String UPLOAD_DIR = "uploads/images/";
+
+	@Value("${payments.upload.path}")
+	private String paymentsUploadPath;
 
 	@Override
-
 	public PaymentResponse addPayment(PaymentRequest paymentRequest, List<MultipartFile> files) {
 		Payment payment = new Payment();
 
@@ -79,16 +83,38 @@ public class PaymentServiceImpl implements PaymentService {
 			installment.setReceivedPay(instReq.getReceivedPay());
 			installment.setPaymentMethod(instReq.getPaymentMethod());
 
+//			if (files != null && files.size() > i && !files.get(i).isEmpty()) {
+//				MultipartFile file = files.get(i);
+//				try {
+//					String uploadDir = "uploads/images/";
+//					String originalFilename = file.getOriginalFilename();
+//					Path path = Paths.get(uploadDir + originalFilename);
+//					Files.createDirectories(path.getParent());
+//					Files.write(path, file.getBytes());
+//					installment.setProof("images/" + originalFilename);
+//				} catch (IOException e) {
+//					throw new RuntimeException("Failed to save file for installment " + (i + 1));
+//				}
+//			}
+
 			if (files != null && files.size() > i && !files.get(i).isEmpty()) {
 				MultipartFile file = files.get(i);
 				try {
-					String uploadDir = "uploads/images/";
-					String originalFilename = file.getOriginalFilename();
-					Path path = Paths.get(uploadDir + originalFilename);
-					Files.createDirectories(path.getParent());
-					Files.write(path, file.getBytes());
-					installment.setProof("images/" + originalFilename);
+					Path dirPath = Paths.get(paymentsUploadPath);
+					System.out.println("Creating directories at: " + dirPath.toAbsolutePath());
+					Files.createDirectories(dirPath);
+
+					Path filePath = dirPath.resolve(file.getOriginalFilename());
+					System.out.println("Resolved file path: " + filePath.toAbsolutePath());
+					System.out.println("Parent exists: " + Files.exists(filePath.getParent()));
+					System.out.println("Writing file: " + file.getOriginalFilename());
+
+					Files.write(filePath, file.getBytes());
+
+					System.out.println("File successfully written to: " + filePath.toAbsolutePath());
+					installment.setProof(filePath.toString()); 
 				} catch (IOException e) {
+					System.err.println("IOException while writing file: " + e.getMessage());
 					throw new RuntimeException("Failed to save file for installment " + (i + 1));
 				}
 			}
@@ -187,12 +213,20 @@ public class PaymentServiceImpl implements PaymentService {
 				if (proofInstallmentId != null && file != null && !file.isEmpty()) {
 					if (proofInstallmentId.equals(instReq.getInstallmentId())) {
 						try {
-							String uploadDir = "uploads/images/";
+//							String uploadDir = "uploads/images/";
+//							String originalFilename = file.getOriginalFilename();
+//							Path path = Paths.get(uploadDir + originalFilename);
+//							Files.createDirectories(path.getParent());
+//							Files.write(path, file.getBytes());
+//							installment.setProof("images/" + originalFilename);
 							String originalFilename = file.getOriginalFilename();
-							Path path = Paths.get(uploadDir + originalFilename);
-							Files.createDirectories(path.getParent());
-							Files.write(path, file.getBytes());
-							installment.setProof("images/" + originalFilename);
+							Path uploadDirPath = Paths.get(paymentsUploadPath);
+							Files.createDirectories(uploadDirPath);
+
+							Path filePath = uploadDirPath.resolve(originalFilename);
+							Files.write(filePath, file.getBytes());
+
+							installment.setProof(originalFilename);
 						} catch (IOException e) {
 							throw new RuntimeException(
 									"Failed to save file for installment " + instReq.getInstallmentId());
@@ -249,19 +283,57 @@ public class PaymentServiceImpl implements PaymentService {
 		return amount;
 	}
 
-	public void deletePaymentById(Long id) {
-		paymentRepository.deleteById(id);
-	}
+//	public void deletePaymentById(Long id) {
+//		paymentRepository.deleteById(id);
+//	}
 
 	@Override
-	public byte[] getFileAsBytes(String filename) throws IOException {
-		Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
+	public void deletePaymentById(Long id) {
+		Optional<Payment> optionalPayment = paymentRepository.findById(id);
 
-		if (!Files.exists(filePath)) {
-			throw new IOException("File not found: " + filename);
+		if (optionalPayment.isPresent()) {
+			Payment payment = optionalPayment.get();
+
+			List<PaymentInstallment> installments = payment.getInstallments();
+			if (installments != null) {
+				for (PaymentInstallment installment : installments) {
+					String proofPath = installment.getProof();
+					if (proofPath != null && !proofPath.isBlank()) {
+						try {
+							Path filePath = Paths.get("uploads", proofPath);
+							Files.deleteIfExists(filePath);
+						} catch (IOException e) {
+							System.err.println("Failed to delete file: " + proofPath);
+						}
+					}
+				}
+			}
+
+			paymentRepository.deleteById(id);
+		} else {
+			throw new RuntimeException("Payment not found with id: " + id);
 		}
+	}
 
-		return Files.readAllBytes(filePath);
+//	@Override
+//	public byte[] getFileAsBytes(String filename) throws IOException {
+//		Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
+//
+//		if (!Files.exists(filePath)) {
+//			throw new IOException("File not found: " + filename);
+//		}
+//
+//		return Files.readAllBytes(filePath);
+//	}
+	@Override
+	public byte[] getFileAsBytes(String filename) throws IOException {
+	    Path filePath = Paths.get(paymentsUploadPath).resolve(filename).normalize();
+
+	    if (!Files.exists(filePath)) {
+	        throw new IOException("File not found: " + filename);
+	    }
+
+	    return Files.readAllBytes(filePath);
 	}
 
 	@Override

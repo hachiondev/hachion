@@ -429,25 +429,27 @@ public class BlogsController {
 
 	@DeleteMapping("blog/delete/{id}")
 	public ResponseEntity<String> deleteBlog(@PathVariable int id) {
-		Optional<Blogs> optionalBlog = repo.findById(id);
-		if (!optionalBlog.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found.");
-		}
+	    Optional<Blogs> optionalBlog = repo.findById(id);
+	    if (!optionalBlog.isPresent()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found.");
+	    }
 
-		Blogs blog = optionalBlog.get();
+	    Blogs blog = optionalBlog.get();
 
-		String filePath = uploadDir + blog.getBlog_pdf();
-		if (filePath != null && !filePath.isEmpty()) {
-			File file = new File(filePath);
-			if (file.exists()) {
-				boolean deleted = file.delete();
-				if (!deleted) {
-					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete PDF file.");
-				}
-			}
-		}
-		repo.delete(blog);
-		return ResponseEntity.ok("Blog deleted successfully.");
+	    if (blog.getBlog_pdf() != null && !blog.getBlog_pdf().isEmpty()) {
+	        String filePath = uploadDir + blog.getBlog_pdf();
+	        File file = new File(filePath);
+	        if (file.exists()) {
+	            boolean deleted = file.delete();
+	            if (!deleted) {
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete PDF file.");
+	            }
+	        }
+	    }
+
+	    repo.delete(blog);
+	    return ResponseEntity.ok("Blog deleted successfully.");
 	}
+
 
 }

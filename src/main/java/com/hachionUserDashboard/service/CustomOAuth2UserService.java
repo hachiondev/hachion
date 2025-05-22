@@ -9,36 +9,56 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.hachionUserDashboard.entity.User;
-import com.hachionUserDashboard.repository.UserRepository;
+import com.hachionUserDashboard.entity.RegisterStudent;
+
+import com.hachionUserDashboard.repository.RegisterStudentRepository;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final UserRepository userRepository;
+	private final RegisterStudentRepository userRepository;
 
-    public CustomOAuth2UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	public CustomOAuth2UserService(RegisterStudentRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+//    @Override
+//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+//        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+//
+//        // Extract user details
+//        Map<String, Object> attributes = oAuth2User.getAttributes();
+//        String email = (String) attributes.get("email");
+//        String name = (String) attributes.get("name");
+//
+//        // Check if user already exists, else save
+//        RegisterStudent existingUser = userRepository.findByEmail(email);
+//        if (existingUser.isEmpty()) {
+//        	RegisterStudent newUser = new RegisterStudent();
+//            newUser.setEmail(email);
+//            newUser.setUserName(name);
+//            userRepository.save(newUser);
+//        }
+//
+//        return oAuth2User;
+//    }
+	@Override
+	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+		OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
 
-        // Extract user details
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("name");
+		Map<String, Object> attributes = oAuth2User.getAttributes();
+		String email = (String) attributes.get("email");
+		String name = (String) attributes.get("name");
 
-        // Check if user already exists, else save
-        User existingUser = userRepository.findByEmail(email);
-        if (existingUser.isEmpty()) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setUserName(name);
-            userRepository.save(newUser);
-        }
+		RegisterStudent existingUser = userRepository.findByEmail(email);
 
-        return oAuth2User;
-    }
+		if (existingUser == null) {
+			RegisterStudent newUser = new RegisterStudent();
+			newUser.setEmail(email);
+			newUser.setUserName(name);
+			userRepository.save(newUser);
+		}
+
+		return oAuth2User;
+	}
 }

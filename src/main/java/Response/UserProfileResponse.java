@@ -3,7 +3,7 @@ package Response;
 public class UserProfileResponse {
 	private String name;
 	private String email;
-	private Long mobile;
+	private String mobile;
 	private String studentId;
 
 	public UserProfileResponse() {
@@ -17,11 +17,11 @@ public class UserProfileResponse {
 		this.studentId = studentId;
 	}
 
-	public void setMobile(Long mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 
-	public UserProfileResponse(String name, String email, Long mobile, String studentId) {
+	public UserProfileResponse(String name, String email, String mobile, String studentId) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -47,11 +47,11 @@ public class UserProfileResponse {
 		this.email = email;
 	}
 
-	public Long getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setPhone(Long mobile) {
+	public void setPhone(String mobile) {
 		this.mobile = mobile;
 	}
 

@@ -82,7 +82,6 @@ import com.hachionUserDashboard.dto.AdminDTO;
 import com.hachionUserDashboard.dto.LoginAdminDTO;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.Admin;
-import com.hachionUserDashboard.entity.User;
 import com.hachionUserDashboard.repository.AdminRepository;
 
 import Response.LoginMessage;

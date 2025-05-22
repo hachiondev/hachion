@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
-import com.hachionUserDashboard.repository.UserRepository;
+import com.hachionUserDashboard.repository.RegisterStudentRepository;
 
 @Service
 public class OtpCleanupScheduler {
 
 	@Autowired
-	private UserRepository userRepository;
+	private RegisterStudentRepository userRepository;
 	@Autowired
 	private CourseScheduleRepository courseScheduleRepository;
 

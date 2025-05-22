@@ -135,8 +135,8 @@ import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
-import com.hachionUserDashboard.entity.User;
-import com.hachionUserDashboard.repository.UserRepository;
+import com.hachionUserDashboard.entity.RegisterStudent;
+import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.hachionUserDashboard.util.EmailUtil;
 import com.hachionUserDashboard.util.OtpUtil;
 
@@ -147,8 +147,11 @@ import Service.UserService;
 @Service
 public class Userimpl implements UserService {
 
+//	@Autowired
+//	private UserRepository userRepository;
+
 	@Autowired
-	private UserRepository userRepository;
+	private RegisterStudentRepository userRepository;
 
 	private OtpUtil otpUtil;
 	@Autowired
@@ -160,21 +163,22 @@ public class Userimpl implements UserService {
 	@Override
 	public String sendOtp(String email) {
 
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 
 		if (user != null) {
 			throw new IllegalArgumentException("This email already exists.");
 		}
 		String otp = String.format("%04d", new Random().nextInt(10000));
 
-		user = new User();
+		user = new RegisterStudent();
 		user.setEmail(email);
 		user.setOTPStatus(false);
 
 		user.setOTP(otp);
+		System.out.println(otp);
 		user.setOTPStatus(false);
 
-		emailUtil.sendOtpEmail(email, otp);
+//		emailUtil.sendOtpEmail(email, otp);
 		userRepository.save(user);
 //		emailUtil.sendOtpEmail(email, otp);
 
@@ -183,7 +187,7 @@ public class Userimpl implements UserService {
 
 	@Override
 	public String verifyOtp(String email, String otp) {
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 
 		if (user == null) {
 			return "Email does not exist in the database.";
@@ -207,17 +211,19 @@ public class Userimpl implements UserService {
 		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirmPassword())) {
 			return "Password and Confirm Password do not match.";
 		}
-		User user = userRepository.findByEmail(registrationRequest.getEmail());
+		RegisterStudent user = userRepository.findByEmail(registrationRequest.getEmail());
 		if (user == null) {
 			return "Email does not exist.";
 		}
 		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 		user.setFirstName(registrationRequest.getFirstName());
 		user.setLastName(registrationRequest.getLastName());
-		user.setUserName(registrationRequest.getFirstName() + " " +registrationRequest.getLastName());
+		user.setUserName(registrationRequest.getFirstName() + " " + registrationRequest.getLastName());
 		user.setPassword(hashedPassword);
 		user.setMobile(registrationRequest.getMobile());
+		user.setCountry(registrationRequest.getCountry());
 		user.setStudentId(generateNextStudentId());
+		user.setMode(registrationRequest.getMode());
 		userRepository.save(user);
 
 		return "Password and user details updated successfully.";
@@ -244,7 +250,7 @@ public class Userimpl implements UserService {
 	@Override
 	public String addUser(UserRegistrationRequest userDTO) {
 
-		User user = new User();
+		RegisterStudent user = new RegisterStudent();
 
 		user.setUserName(userDTO.getUserName());
 		user.setEmail(userDTO.getEmail());
@@ -259,15 +265,15 @@ public class Userimpl implements UserService {
 	}
 
 	@Override
-	public User saveUser(String username, String email) {
+	public RegisterStudent saveUser(String username, String email) {
 		// Check if the user already exists
-		Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
+		Optional<RegisterStudent> existingUser = userRepository.findBYEmailForOauth(email);
 		if (existingUser.isPresent()) {
 			return existingUser.get();
 		}
 
 		// Create a new user without using builder
-		User newUser = new User();
+		RegisterStudent newUser = new RegisterStudent();
 		newUser.setUserName(username);
 		newUser.setEmail(email);
 		newUser.setOTPStatus(true);
@@ -275,7 +281,7 @@ public class Userimpl implements UserService {
 		return userRepository.save(newUser);
 	}
 
-	public Optional<User> getUserByEmail(String email) {
+	public Optional<RegisterStudent> getUserByEmail(String email) {
 		return userRepository.findBYEmailForOauth(email);
 	}
 
@@ -328,15 +334,15 @@ public class Userimpl implements UserService {
 //       return user.getUserName(); // Ensure `getUsername` is defined in your `User` entity.
 // }
 //    
-	public List<User> getAllRegisteredStudents() {
-		return userRepository.findAll(); 
+	public List<RegisterStudent> getAllRegisteredStudents() {
+		return userRepository.findAll();
 	}
 
 	@Override
 	public LoginResponse LoginUser(LoginRequest loginRequest) {
 		String msg = "";
 		String msg1 = "";
-		User user1 = userRepository.findByEmail(loginRequest.getEmail());
+		RegisterStudent user1 = userRepository.findByEmail(loginRequest.getEmail());
 
 		if (user1 != null) { // Check if email exists
 			String password = loginRequest.getPassword();
@@ -347,7 +353,7 @@ public class Userimpl implements UserService {
 
 			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
 			if (isPwdRight) {
-				Optional<User> user = userRepository.findOneByEmailAndPassword(loginRequest.getEmail(),
+				Optional<RegisterStudent> user = userRepository.findOneByEmailAndPassword(loginRequest.getEmail(),
 						encodedPassword);
 				if (user.isPresent()) {
 					return new LoginResponse("Login success", true, name, email, studentId);
@@ -363,7 +369,7 @@ public class Userimpl implements UserService {
 	}
 
 	@Autowired
-	public void UserServiceImpl(UserRepository userRepository) {
+	public void UserServiceImpl(RegisterStudentRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 //public String login(LoginRequest loginDto) {
@@ -417,7 +423,7 @@ public class Userimpl implements UserService {
 //}
 
 	public String verifyAccount(String email, String otp) {
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 		if (user == null) {
 			throw new RuntimeException("User not found with this email: " + email);
 		}
@@ -433,7 +439,7 @@ public class Userimpl implements UserService {
 	}
 
 	public String regenerateOtp(String email) {
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 		if (user == null) {
 			throw new RuntimeException("Email not found.");
 		}
@@ -452,7 +458,7 @@ public class Userimpl implements UserService {
 	}
 
 	public String forgotpassword(String email) {
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 
 		// Generate a random password
 		String randomPassword = generateRandomPassword();
@@ -510,7 +516,7 @@ public class Userimpl implements UserService {
 
 	@Override
 	public Object setpassword(String email, String newPassword) {
-		User user = userRepository.findByEmail(email);
+		RegisterStudent user = userRepository.findByEmail(email);
 		user.setPassword(newPassword);
 		userRepository.save(user);
 		return "New Password set successfully login with new password";
@@ -565,50 +571,99 @@ public class Userimpl implements UserService {
 	}
 
 	public UserProfileResponse getUserProfileByEmail(String email) {
-		Optional<User> userOpt = userRepository.findByEmailForProfile(email);
-		if (userOpt.isPresent()) {
-			User user = userOpt.get();
-			return new UserProfileResponse(user.getUserName(), user.getEmail(), user.getMobile(), user.getStudentId()
+		Optional<RegisterStudent> userOpt = userRepository.findByEmailForProfile(email);
 
-			);
+		if (userOpt.isPresent()) {
+			RegisterStudent user = userOpt.get();
+
+			UserProfileResponse response = new UserProfileResponse();
+			response.setName(user.getUserName());
+			response.setEmail(user.getEmail());
+			response.setMobile(user.getMobile());
+			response.setStudentId(user.getStudentId());
+
+			return response;
 		} else {
 			throw new RuntimeException("User not found for email: " + email);
 		}
 	}
 
+//	public void resetPassword(UserRegistrationRequest request) {
+//		Optional<RegisterStudent> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
+//
+//		if (optionalUser.isPresent()) {
+//			RegisterStudent user = optionalUser.get();
+//
+//			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//				System.out.println("Old password is incorrect");
+//				return;
+//			}
+//
+//			if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+//				System.out.println("New password and confirm password do not match");
+//				return;
+//			}
+//
+//			if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+//				System.out.println("New password must be different from the old password");
+//				return;
+//			}
+//
+//			String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+//			user.setPassword(encodedPassword);
+//			userRepository.save(user);
+//			System.out.println("Password updated successfully");
+//
+//		} else {
+//			System.out.println("User not found with email: " + request.getEmail());
+//		}
+//	}
 	public void resetPassword(UserRegistrationRequest request) {
-		Optional<User> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
+		Optional<RegisterStudent> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
 
 		if (optionalUser.isPresent()) {
-			User user = optionalUser.get();
+			RegisterStudent user = optionalUser.get();
 
-			// 1. Check if old password matches the encrypted password in DB
-			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-				System.out.println("Old password is incorrect");
-				return;
+			if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+					System.out.println("Old password is incorrect");
+					return;
+				}
+
+				if (request.getNewPassword() == null || request.getNewPassword().isEmpty() ||
+					request.getConfirmPassword() == null || request.getConfirmPassword().isEmpty()) {
+					System.out.println("New password and confirm password are required when changing password");
+					return;
+				}
+
+				if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+					System.out.println("New password and confirm password do not match");
+					return;
+				}
+
+				if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+					System.out.println("New password must be different from the old password");
+					return;
+				}
+
+				String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+				user.setPassword(encodedPassword);
+				System.out.println("Password updated successfully");
 			}
 
-			// 2. Check if new password and confirm password match
-			if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-				System.out.println("New password and confirm password do not match");
-				return;
+			if (request.getUserName() != null && !request.getUserName().isEmpty()) {
+				user.setUserName(request.getUserName());
+			}
+			if (request.getMobile() != null && !request.getMobile().isEmpty()) {
+				user.setMobile(request.getMobile());
 			}
 
-			// 3. Check if old password and new password are the same
-			if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
-				System.out.println("New password must be different from the old password");
-				return;
-			}
-
-			// 4. Encrypt and update the new password
-			String encodedPassword = passwordEncoder.encode(request.getNewPassword());
-			user.setPassword(encodedPassword);
 			userRepository.save(user);
-			System.out.println("Password updated successfully");
 
 		} else {
 			System.out.println("User not found with email: " + request.getEmail());
 		}
 	}
+
 
 }

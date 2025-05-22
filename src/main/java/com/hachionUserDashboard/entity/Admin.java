@@ -129,7 +129,7 @@ public class Admin {
 			return false;
 		}
 
-		public User orElseThrow(Object object) {
+		public RegisterStudent orElseThrow(Object object) {
 			// TODO Auto-generated method stub
 			return null;
 		}

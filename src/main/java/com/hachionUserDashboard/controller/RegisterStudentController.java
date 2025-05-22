@@ -45,9 +45,28 @@ public class RegisterStudentController {
         student.setAdditional_email(null);
         student.setAdditional_phone(0); // Assuming 0 as default value for int
         student.setPassword(null);
+        student.setStudentId(generateNextStudentId());
        repo.save(student);
+       System.out.println("Add data: " +student);
         return ResponseEntity.ok("Student added successfully");
     }
+    private String generateNextStudentId() {
+		String prefix = "HACH";
+		String lastStudentId = repo.findTopByOrderByStudentIdDesc();
+
+		int nextNumber = 1;
+
+		if (lastStudentId != null && lastStudentId.startsWith(prefix)) {
+			String numberPart = lastStudentId.substring(prefix.length());
+			try {
+				nextNumber = Integer.parseInt(numberPart) + 1;
+			} catch (NumberFormatException e) {
+				nextNumber = 1;
+			}
+		}
+
+		return prefix + String.format("%03d", nextNumber);
+	}
 
 //    @PutMapping("/registerstudent/update/{id}")
 //    public ResponseEntity<String> editStudent(
@@ -77,7 +96,7 @@ public class RegisterStudentController {
     @PutMapping("/registerstudent/update/{id}")
     public ResponseEntity<RegisterStudent> updateRegisterStudent(@PathVariable int id, @RequestBody RegisterStudent updatedRegisterStudent) {
         return repo.findById(id).map(registerstudent -> {
-            registerstudent.setName(updatedRegisterStudent.getName());
+            registerstudent.setUserName(updatedRegisterStudent.getUserName());
            registerstudent.setMobile(updatedRegisterStudent.getMobile());
            registerstudent.setEmail(updatedRegisterStudent.getEmail());
            registerstudent.setLocation(updatedRegisterStudent.getLocation());

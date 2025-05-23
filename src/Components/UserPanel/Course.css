@@ -6,10 +6,10 @@
 }
 .sidebar {
   flex: 1;
-  width: 420px;
+  width: 300px;
   background-color: white;
   color: black;
-  min-width: 420px;
+  max-width: 350px;
   left: 0;
   right:5px;
   overflow-y: auto;
@@ -152,12 +152,12 @@ color: black;
 
 .menu-item {
   width: 100%;
-  padding: 15px 20px;
+  padding: 8px 15px;
   text-align: left;
   background: none;
   border: none;
   font-weight:600;
-  font-size: 20px;
+  font-size: 16px;
   background-color: white;
   color: black;
   cursor: pointer;
@@ -168,7 +168,7 @@ color: black;
 .sidebar-heading{
   background-color: rgba(0, 174, 239, 1);
   color:rgba(255, 255, 255, 1);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   text-align: center;
   padding: 1vh;
@@ -235,7 +235,7 @@ height: 150px;
 .sidebar-card-icon{
 position: absolute;
 height: 80px;
-top: 52px;
+top: 35px;
 left: 50%;
 transform: translateX(-50%);
 width: auto;
@@ -246,7 +246,7 @@ height:90px;
 }
 .sidebar-card-header{
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   position: absolute;
   left: 45%;
   top:0px;
@@ -255,7 +255,7 @@ height:90px;
   text-align: center;
  }
 .sidebar-course-name{
-  font-size:22px;
+  font-size:20px;
   font-weight:600;
   margin:0px 5px;
   color: #00AEEF;
@@ -278,7 +278,7 @@ padding: 10px;
   padding: 10px;
 }
 .sidebar-course-month{  
-font-size: 20px;
+font-size: 16px;
 font-weight: 400;
 margin: 5px 0;
 }
@@ -290,7 +290,7 @@ font-style: italic;
 .sidebar-enroll-btn{
   border-radius:10px;
 padding:5px 15px;
-font-size:20px;
+font-size:16px;
 font-weight: 700;
 background-color: rgba(0, 174, 239, 1);
 color: white;
@@ -305,9 +305,10 @@ background-color: #0D6EFD;
 .sidebar-card-heading{
 color:black;
 text-align: center;
-font-size: 20px;
-font-weight: 700;
-padding: 10px;
+font-size: 16px;
+font-weight: 600;
+padding: 5px;
+margin-bottom: 0;
 }
 
 .sidebar-right{
@@ -1919,8 +1920,8 @@ border:2px solid white;
     margin-right: 10px;
   }
   .sidebar{
-    width: 350px;
-    min-width: 320px;
+    width: 250px;
+    max-width: 300px;
   }
   .sidebar-right-all{
     display: grid;
@@ -2029,7 +2030,7 @@ border:2px solid white;
 .sidebar{
   margin-left: 5px;
   width: auto;
-  min-width: 250px;
+  max-width: 250px;
   margin-bottom: 30px;
   margin-top: 20px;
   overflow-y: scroll;
@@ -2072,7 +2073,7 @@ border:2px solid white;
   margin-top: 10px;
   font-size: 24px;
   font-weight: 600;
-  white-space: nowrap;
+  white-space: wrap;
   }
 .qa-automation-left img{
   height: 90px;
@@ -2186,8 +2187,8 @@ border:2px solid white;
   }
   .sidebar{
     margin-left: 5px;
-    width: 280px;
-    min-width: 250px;
+    width: 250px;
+    max-width: 280px;
     margin-bottom: 30px;
     margin-top: 20px;
     overflow-y: visible;

@@ -140,7 +140,7 @@ useEffect(() => {
     return;
   }
   try {
-    const response = await axios.delete(`https://api.test.hachion.co/payments/${id}`);
+    const response = await axios.delete(`https://api.hachion.co/payments/${id}`);
     
     if (response.status === 200) {
       
@@ -201,7 +201,7 @@ setErrorMessage("❌ Failed to delete payment.");
   const fetchByStudentId = async () => {
     if (paymentData.student_ID) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -221,7 +221,7 @@ useEffect(() => {
   const fetchByEmail = async () => {
     if (paymentData.email) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?email=${paymentData.email}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?email=${paymentData.email}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -242,7 +242,7 @@ useEffect(() => {
   const fetchByMobile = async () => {
     if (paymentData.mobile) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -262,7 +262,7 @@ useEffect(() => {
   const fetchCourseFee = async () => {
     if (paymentData.course_name) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+        const res = await fetch(`https://api.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
         const data = await res.json();
         if (data && data.courseFee !== undefined) {
           setPaymentData((prev) => ({
@@ -280,7 +280,7 @@ useEffect(() => {
 }, [paymentData.course_name]);
 
 useEffect(() => {
-  axios.get("https://api.test.hachion.co/payments")
+  axios.get("https://api.hachion.co/payments")
     .then((response) => {
       const normalizedData = response.data.map((item) => ({
         id: item.paymentId,
@@ -519,7 +519,7 @@ const handleSubmit = async (e) => {
   });
 
   try {
-    const response = await axios.post("https://api.test.hachion.co/payments", formData, {
+    const response = await axios.post("https://api.hachion.co/payments", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -587,7 +587,7 @@ const handleUpdate = async (e) => {
   });
 
   try {
-    const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
+    const response = await axios.put(`https://api.hachion.co/payments/${selectedPaymentId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -850,7 +850,7 @@ const handleUpdate = async (e) => {
       <img
         src={
           typeof curr.proof_image === 'string'
-            ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+            ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
             : URL.createObjectURL(curr.proof_image)
         }
         alt="proof"
@@ -865,7 +865,7 @@ const handleUpdate = async (e) => {
         onClick={() =>
           window.open(
             typeof curr.proof_image === 'string'
-              ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+              ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
               : URL.createObjectURL(curr.proof_image),
             '_blank'
           )

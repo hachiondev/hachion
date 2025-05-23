@@ -3,8 +3,8 @@ const path = require("path");
 const axios = require("axios");
 
 const baseUrl = "https://hachion.co";
-const coursesApi = "https://api.test.hachion.co/courses/all";
-const workshopsApi = "https://api.test.hachion.co/workshopschedule";
+const coursesApi = "https://api.hachion.co/courses/all";
+// const workshopsApi = "https://api.hachion.co/workshopschedule";
 
 // Slug generator — lowercase and replace spaces with hyphens
 const toSlug = str => str.trim().toLowerCase().replace(/\s+/g, "-");
@@ -23,19 +23,20 @@ const staticRoutes = [
   "/haveanyquery", "/workshop", "/blogs",
   "/aboutus", "/contactus", "/userdashboard", "/review",
   "/addtrending", "/courseschedule", "/corporatecourses",
-  "/reports", "/terms", "/privacy"
+   "/terms", "/privacy"
 ];
 
 const generateSitemap = async () => {
   try {
     // Fetch both APIs in parallel
-    const [coursesResponse, workshopsResponse] = await Promise.all([
+    const [coursesResponse] = await Promise.all([
+      // const [coursesResponse, workshopsResponse] = await Promise.all([
       axios.get(coursesApi),
-      axios.get(workshopsApi)
+      // axios.get(workshopsApi)
     ]);
 
     const courses = coursesResponse.data || [];
-    const workshops = workshopsResponse.data || [];
+    // const workshops = workshopsResponse.data || [];
 
     // Generate course routes
     const courseRoutes = courses.flatMap(course => {
@@ -44,14 +45,15 @@ const generateSitemap = async () => {
     });
 
     // Generate workshop routes
-    const workshopRoutes = workshops
-      .filter(workshop => workshop.title)
-      .map(workshop => {
-        const slug = toSlug(workshop.title);
-        return `/workshop/${slug}`;
-      });
+    // const workshopRoutes = workshops
+    //   .filter(workshop => workshop.title)
+    //   .map(workshop => {
+    //     const slug = toSlug(workshop.title);
+    //     return `/workshop/${slug}`;
+    //   });
 
-    const allRoutes = [...staticRoutes, ...courseRoutes, ...workshopRoutes];
+    const allRoutes = [...staticRoutes, ...courseRoutes];
+    // const allRoutes = [...staticRoutes, ...courseRoutes, ...workshopRoutes];
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

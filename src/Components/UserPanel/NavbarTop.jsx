@@ -43,8 +43,8 @@ const NavbarTop = () => {
     const fetchCoursesAndBlogs = async () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
-          axios.get('https://api.test.hachion.co/courses/all'),
-          axios.get('https://api.test.hachion.co/blog'),
+          axios.get('https://api.hachion.co/courses/all'),
+          axios.get('https://api.hachion.co/blog'),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -143,7 +143,7 @@ const NavbarTop = () => {
    const handleCourseClick = (item) => {
     if (item.type === 'course') {
       const formattedCourseName = formatCourseName(item.courseName);
-      navigate(`/courseDetails/${formattedCourseName}`);
+      navigate(`/coursedetails/${formattedCourseName}`);
     } else if (item.type === 'blog') {
       const formattedCategory = item.category_name.toLowerCase().replace(/\s+/g, '-');
       navigate(`/blogs/${formattedCategory}/content`);
@@ -312,8 +312,8 @@ const NavbarTop = () => {
               className="result-image"
               src={
                 item.type === 'course'
-                  ? `https://api.test.hachion.co/${item.courseImage}`
-                  : `https://api.test.hachion.co/blogs/${item.blog_image}`
+                  ? `https://api.hachion.co/${item.courseImage}`
+                  : `https://api.hachion.co/blogs/${item.blog_image}`
               }
               alt={item.type}
             />
@@ -364,10 +364,10 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/corporate')}>
                       Corporate Training
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
+                    <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                       Courses
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
+                    <div className="drawer-item" onClick={() => navigate('/coursedetails')}>Hire from Us</div>
 
                     <button className="drawer-button" onClick={() => handleLogout()}>
                       <IoLogOut /> Logout
@@ -380,10 +380,10 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/corporate')}>
                   Corporate Training
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>
+                <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                   Courses
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/courseDetails')}>Hire from Us</div>
+                <div className="drawer-item" onClick={() => navigate('/coursedetails')}>Hire from Us</div>
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
@@ -409,7 +409,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
             onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="/courseDetails" className="nav-item-link">
+            <Link to="/coursedetails" className="nav-item-link">
               Courses
             </Link>
           </button>
@@ -417,7 +417,7 @@ const NavbarTop = () => {
             className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
             onClick={() => handleNavClick('CourseDetails')}
           >
-            <Link to="/courseDetails" className="nav-item-link">
+            <Link to="/coursedetails" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

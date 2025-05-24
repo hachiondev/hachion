@@ -37,7 +37,7 @@ export default function CorporateQuery() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/advisors');
+        const response = await axios.get('https://api.test.hachion.co/advisors');
         setQueries(response.data);
       } catch (err) {
         console.error("Failed to fetch queries", err.message);

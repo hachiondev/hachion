@@ -86,7 +86,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         const rate = rates[userCurrency] || 1;
         setExchangeRate(rate);
 
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courses = response.data;
         const matchedCourse = courses.find(
           (course) => course.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
@@ -141,7 +141,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
 
   const resendEmail = async (userEmail) => {
     try {
-      const response = await axios.post('https://api.hachion.co/enroll/resend-email', {
+      const response = await axios.post('https://api.test.hachion.co/enroll/resend-email', {
         email: userEmail,
       });
       setMessage(response.data || 'Email resent successfully.');
@@ -208,7 +208,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     let mobile = '';
     try {
       // Fetch studentId via API
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -259,7 +259,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           resendCount: 0,
         };
 
-        const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+        const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
 
         if (response.data.status === 201) {
           setMessage('Registered Successfully');

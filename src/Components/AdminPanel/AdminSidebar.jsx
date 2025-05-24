@@ -30,6 +30,7 @@ const menuItems = [
       { title: 'Enrollments', icon: <FaRegPenToSquare /> },
       { title: 'Payments', icon: <RiMoneyDollarCircleFill /> },
       { title: 'Certificates', icon: <TbCertificate /> },
+      { title: 'Tracking', icon: <LuFocus /> },
     ],
   },
   { title: 'Reports', icon: <IoNewspaperOutline /> },

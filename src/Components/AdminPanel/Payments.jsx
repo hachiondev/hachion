@@ -9,7 +9,7 @@ export default function Certificate() {
   };
   return (
     <>   
-    <h3>Payment Traking</h3>
+    <h3>Payment Tracking</h3>
       <div className="certificate-tabs">
         <div 
           className={`tab-item ${activeTab === 'onlinePayment' ? 'active-tab' : ''}`}

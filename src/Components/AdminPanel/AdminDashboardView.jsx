@@ -16,6 +16,7 @@ import Other from './Other';
 import CourseCategory from './CourseCategory';
 import CorporateCourses from './CorporateCourses';
 import Payments from './Payments';
+import Tracking from './Tracking';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -27,6 +28,7 @@ const componentMap = {
   'Enrollments': <Enroll />,
   'Payments': <Payments />,
   'Registration': <Registration />,
+  'Tracking': <Tracking />,
   'Reports': <Reports />,
   'Schedule Request': <ScheduleRequest />,
   'Blog': <Blogs />,

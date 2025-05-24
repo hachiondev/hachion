@@ -46,7 +46,7 @@ export default function OnlineEnroll() {
   const [message, setMessage] = useState(false);
 
   useEffect(() => {
-    axios.get("https://api.hachion.co/enroll")
+    axios.get("https://api.test.hachion.co/enroll")
       .then((response) => {
         setEnrollData(response.data);
       })
@@ -57,7 +57,7 @@ export default function OnlineEnroll() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+      await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
       setEnrollData(enrollData.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Error deleting entry:", error);

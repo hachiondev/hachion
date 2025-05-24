@@ -108,7 +108,7 @@ const handleClick = async () => {
 
     try {
       const response = await fetch(
-        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
+        `https://api.test.hachion.co/api/v1/user/send-otp?email=${email}`,
         {
           method: "POST",
           headers: {

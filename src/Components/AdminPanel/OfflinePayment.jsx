@@ -48,8 +48,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 export default function OfflinePayment() {
-  const[course,setCourse]=useState([]);
-  const[courseCategory,setCourseCategory]=useState([]);
     const [filterCourse,setFilterCourse]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
     const [showAddCourse, setShowAddCourse] = useState(false);
@@ -64,6 +62,11 @@ export default function OfflinePayment() {
     const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+const [isSaved, setIsSaved] = useState(false);
+const [invoiceNumber, setInvoiceNumber] = useState("");
+
+const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
+
     const [paymentData, setPaymentData] = useState({
             id:"",
             student_ID: "",
@@ -85,7 +88,9 @@ export default function OfflinePayment() {
            total:"",
            balance:"",
            status:"",
+           invoiceNumber:"",
            date:currentDate,
+           selectedInstallmentId:null
          });
         const [currentPage, setCurrentPage] = useState(1);
         const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -113,8 +118,7 @@ useEffect(() => {
       const today = dayjs();
       const defaultRows = Array.from({ length: 4 }, (_, idx) => ({
         pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
-        // due_date: today.add(idx, 'day').format('DD-MM-YYYY'),
-         due_date: '',    // <-- start empty here
+         due_date: '',    
         method: '',
         actual_pay: '',
         received_pay: '',
@@ -136,7 +140,7 @@ useEffect(() => {
       const handleDelete = async (id) => {
          console.log("Deleting id:", id);
           if (!id) {
-    console.error("❌ Cannot delete: id is undefined or null");
+
     return;
   }
   try {
@@ -154,7 +158,7 @@ setErrorMessage("❌ Failed to delete payment.");
       
     }
   } catch (error) {
-    console.error("Error deleting payment:", error);
+    
      setSuccessMessage("");
     setErrorMessage("❌ Something went wrong while deleting the payment.");
   }
@@ -177,7 +181,6 @@ setErrorMessage("❌ Failed to delete payment.");
     installments: row.installments || "",
     days: row.days || "",
     total: row.total || "",
-    // balance: row.balance || "",
     balance: row.balance ?? "",
     status: row.status ?? "",
   });
@@ -191,10 +194,10 @@ setErrorMessage("❌ Failed to delete payment.");
     proof_image: inst.proof ? inst.proof.split('/').pop() : "",
     reference: inst.reference || "",
     installments: inst.numberOfInstallments || "",
-    installmentId: inst.installmentId, // required for update
+    installmentId: inst.installmentId, 
   }));
 
-  Rows(rowData); // Populate child table
+  Rows(rowData); 
 };
     
     useEffect(() => {
@@ -309,7 +312,7 @@ useEffect(() => {
 
 useEffect(() => {
   const filteredData = offlinePayment.filter((item) => {
-    const date = new Date(item.date); // Assuming 'date' is the created date
+    const date = new Date(item.date);
     const term = searchTerm.toLowerCase();
 
     const matchesSearch =
@@ -354,7 +357,6 @@ useEffect(() => {
   const actualTotalFee = Math.round(courseFee + tax - discount);
   const perInstallment = count > 0 ? Math.round(actualTotalFee / count) : 0;
 
-  // Calculate total received from rows
   const totalReceived = rows.reduce((sum, row) => {
     const received = parseFloat(row.received_pay) || 0;
     return sum + received;
@@ -384,8 +386,6 @@ useEffect(() => {
     
       const today = dayjs();
       const updatedRows = [...rows];
-    
-      // Always keep 4 rows
       for (let i = 0; i < 4; i++) {
         const baseRow = {
           due_date: i < count ? today.add(dayGap * i, 'day').format('DD-MM-YYYY') : '',
@@ -409,48 +409,26 @@ useEffect(() => {
     
       Rows(updatedRows);
   }
-
-
-  // if (name === 'installments' || name === 'days') {
-  //   const today = dayjs();
-
-  //   // Update only up to `count` rows, clear rest
-  //   const updatedRows = rows.map((row, idx) => {
-  //     if (idx < count) {
-  //       return {
-  //         ...row,
-  //         due_date: today.add(dayGap * idx, 'day').format('DD-MM-YYYY'),
-  //         actual_pay: perInstallment,
-  //         installments: `${idx + 1}`,
-  //       };
-  //     } else {
-  //       return {
-  //         ...row,
-  //         due_date: '',
-  //         actual_pay: '',
-  //         installments: `${idx + 1}`, // Keep installment number for consistency
-  //       };
-  //     }
-  //   });
-
-  //   Rows(updatedRows);
-  // }
 };
 
-
-  // handleRowChange stays the same - update rows only by user
   const handleRowChange = (index, e) => {
     const { name, value, files } = e.target;
     const updatedRows = [...rows];
 
     if (name === 'proof_image') {
-      updatedRows[index][name] = files[0]; // File object
+      updatedRows[index][name] = files[0]; 
     } else {
       updatedRows[index][name] = value;
     }
 
     Rows(updatedRows);
 
+     if (name === 'pay_date' || name === 'received_pay') {
+    const modifiedInstallmentId = updatedRows[index]?.installmentId;
+    if (modifiedInstallmentId) {
+      setLastModifiedInstallmentId(modifiedInstallmentId);
+    }
+  }
     const courseFee = parseFloat(paymentData.course_fee) || 0;
     const tax = parseFloat(paymentData.tax) || 0;
     const discount = parseFloat(paymentData.discount) || 0;
@@ -467,8 +445,7 @@ useEffect(() => {
       balance: Math.max(actualTotalFee - totalReceived, 0),
     }));
   };
-
-const handleSubmit = async (e) => {
+const handleSave = async (e) => {
   e.preventDefault();
   setSuccessMessage("");
   setErrorMessage("");
@@ -477,17 +454,13 @@ const handleSubmit = async (e) => {
   const currentDate = new Date().toISOString().split("T")[0];
 
   const formattedInstallments = rows.map((row) => ({
-    payDate: row.pay_date
-      ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD")
-      : "",
-    dueDate: row.due_date
-      ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD")
-      : "",
+    payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+    dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
     paymentMethod: row.method,
     numberOfInstallments: parseInt(row.installments),
     actualPay: parseFloat(row.actual_pay),
     receivedPay: parseFloat(row.received_pay),
-    proof: row.proof_image?.name || "", // filename
+    proof: row.proof_image?.name || "",
     reference: row.reference,
   }));
 
@@ -508,10 +481,8 @@ const handleSubmit = async (e) => {
     date: currentDate,
   };
 
-  
   formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
 
-  
   rows.forEach((row) => {
     if (row.proof_image && typeof row.proof_image !== "string") {
       formData.append("proof", row.proof_image);
@@ -527,13 +498,60 @@ const handleSubmit = async (e) => {
 
     if (response.status === 200 || response.status === 201) {
       setSuccessMessage("✅ Payment added successfully.");
-      setErrorMessage("");
+      setSelectedPaymentId(response.data.paymentId); 
+      setInvoiceNumber(response.data.invoiceNumber);
+       setIsSaved(true);
     }
   } catch (error) {
-    setSuccessMessage("");
     setErrorMessage("❌ Error adding payment. Please try again.");
   }
 };
+const handleSendToEmail = async (e) => {
+  e.preventDefault();
+
+  if (!selectedPaymentId) {
+    setErrorMessage("❌ Please save the payment before sending the invoice.");
+    return;
+  }
+
+  const selectedInstallmentId = lastModifiedInstallmentId || rows[0]?.installmentId;
+  console.log("📤 Sending invoice with selectedInstallmentId:", selectedInstallmentId);
+ const totalReceivedPay = rows.reduce((sum, row) => {
+    const received = parseFloat(row.received_pay);
+    return sum + (isNaN(received) ? 0 : received);
+  }, 0);
+  console.log("📤 received pay :", totalReceivedPay);
+  const invoicePayload = {
+    paymentId: selectedPaymentId,
+    invoiceNumber: invoiceNumber,
+    studentName: paymentData.student_name,
+    email: paymentData.email,
+    mobile: paymentData.mobile,
+    balancePay: parseFloat(paymentData.balance),
+    courseName: paymentData.course_name,
+    courseFee: parseFloat(paymentData.course_fee),
+    discount: parseFloat(paymentData.discount),
+    tax: parseFloat(paymentData.tax),
+    totalAmount: parseFloat(paymentData.total),
+    status: parseFloat(paymentData.balance) === 0 ? "PAID" : "PARTIALLY PAID",
+    selectedInstallmentId: selectedInstallmentId,
+    installments: rows.map((row) => ({
+      installmentId: row.installmentId,
+      payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+      dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+      receivedPay: totalReceivedPay 
+    })),
+  };
+
+  try {
+    await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
+    setSuccessMessage("📩 Invoice generated and sent to email.");
+  } catch (err) {
+    console.error("❌ Invoice generation failed:", err);
+    setErrorMessage("❌ Failed to generate invoice. Try again.");
+  }
+};
+
 const handleUpdate = async (e) => {
   e.preventDefault();
   setSuccessMessage("");
@@ -574,11 +592,10 @@ const handleUpdate = async (e) => {
     balancePay: parseFloat(paymentData.balance),
     installments: formattedInstallments,
     date: currentDate,
+    
   };
 
   formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
-
-  // Append file and installmentId only if file is new
   rows.forEach((row) => {
     if (row.proof_image && typeof row.proof_image !== "string") {
       formData.append("proof", row.proof_image);
@@ -586,6 +603,17 @@ const handleUpdate = async (e) => {
     }
   });
 
+   const updatedRow = rows.find(
+  (row) =>
+    row.pay_date?.trim() !== "" ||
+    (row.received_pay !== undefined && row.received_pay !== null && row.received_pay !== "")
+);
+const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentId;
+
+  setPaymentData((prev) => ({
+    ...prev,
+    selectedInstallmentId: selectedInstallmentId,
+  }));
   try {
     const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
       headers: {
@@ -596,16 +624,16 @@ const handleUpdate = async (e) => {
     if (response.status === 200) {
       setSuccessMessage("✅ Payment updated successfully.");
       setErrorMessage("");
+      setSelectedPaymentId(response.data.paymentId); 
+      setInvoiceNumber(response.data.invoiceNumber);
+       setIsSaved(true);
+       
     }
   } catch (error) {
-    console.error("❌ Update failed:", error);
     setSuccessMessage("");
     setErrorMessage("❌ Error updating payment. Please try again.");
   }
 };
-
-
-
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
   return (
@@ -735,12 +763,7 @@ const handleUpdate = async (e) => {
           {rows.map((curr, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell align='center'>
-                {/* <input
-                  className='table-curriculum'
-                  name='pay_date'
-                  value={curr.pay_date}
-                  onChange={(e) => handleRowChange(index, e)}
-                /> */}
+                
                 <input
   type="date"
   className="table-curriculum"
@@ -799,51 +822,7 @@ const handleUpdate = async (e) => {
                   onChange={(e) => handleRowChange(index, e)}
                 />
               </StyledTableCell>
-              {/* <StyledTableCell align='center'>
-                {curr.proof_image && typeof curr.proof_image !== 'string' ? (
-                  <div style={{ position: 'relative', display: 'inline-block' }}>
-                    <img
-                      src={URL.createObjectURL(curr.proof_image)}
-                      alt="proof"
-                      style={{
-                        width: 50,
-                        height: 50,
-                        cursor: 'pointer',
-                        objectFit: 'cover',
-                        borderRadius: 4,
-                        border: '1px solid #ccc'
-                      }}
-                      onClick={() => window.open(URL.createObjectURL(curr.proof_image), '_blank')}
-                    />
-                    <FaTimesCircle
-                      style={{
-                        position: 'absolute',
-                        top: -8,
-                        right: -8,
-                        fontSize: '1rem',
-                        color: 'red',
-                        cursor: 'pointer',
-                        backgroundColor: '#fff',
-                        borderRadius: '50%',
-                      }}
-                      onClick={() => {
-                        const updatedRows = [...rows];
-                        updatedRows[index].proof_image = '';
-                        Rows(updatedRows);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <label style={{ cursor: 'pointer' }}>
-                    <FiUpload className="edit" />
-                    <input
-                      type="file"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleFileUpload(index, e)}
-                    />
-                  </label>
-                )}
-              </StyledTableCell> */}
+              
               <StyledTableCell align="center">
   {curr.proof_image ? (
     <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -929,8 +908,16 @@ const handleUpdate = async (e) => {
       {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
       
-    <button className='submit-btn' onClick={handleSubmit}>Save</button>
-    <button className='submit-btn' onClick={handleSubmit}>Send to Email</button>
+    <button className='submit-btn' onClick={handleSave}>Save</button>
+    
+  <button
+  className='submit-btn'
+  onClick={handleSendToEmail}
+  disabled={!isSaved} 
+  style={{ cursor: isSaved ? 'pointer' : 'not-allowed' }}
+>
+  Send to Email
+</button>
   </>
 ) : (
   <>
@@ -938,7 +925,15 @@ const handleUpdate = async (e) => {
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
 
     <button className='submit-btn' onClick={handleUpdate}>Update</button>
-    <button className='submit-btn' onClick={handleSubmit}>Send to Email</button>
+    
+  <button
+  className='submit-btn'
+  onClick={handleSendToEmail}
+  disabled={!isSaved} 
+  style={{ cursor: isSaved ? 'pointer' : 'not-allowed' }}
+>
+  Send to Email
+</button>
   </>
 )}
 </div>

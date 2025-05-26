@@ -257,41 +257,33 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
             </div>
             <div className="col-md-5">
               <label className="form-label">Mobile Number</label>
-              <div className="input-group custom-width">
-                <Button
-                  variant="outlined"
-                  onClick={openMenu}
-                  className="country-code-dropdown"
-                  endIcon={<AiFillCaretDown />}
-                >
-                  <Flag code={selectedCountry.flag} className='country-flag' />
-                  {selectedCountry.code}
-                </Button>
-
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={closeMenu}
-                >
-                  {countries.map((country) => (
-                    <MenuItem
-                      key={country.code}
-                      onClick={() => handleCountrySelect(country)}
-                    >
-                      <Flag code={country.flag} className='country-flag' />
-                      {country.name} ({country.code})
-                    </MenuItem>
-                  ))}
-                </Menu>
+              <div className="input-wrapper" style={{ position: 'relative' }}>
+    <button
+      variant="text"
+      onClick={openMenu}
+      className='mobile-button'
+    >
+      <Flag code={selectedCountry.flag} className="country-flag me-1" />
+      <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+      <AiFillCaretDown />
+    </button>
+    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+      {countries.map((country) => (
+        <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+          <Flag code={country.flag} className="country-flag me-2" />
+          {country.name} ({country.code})
+        </MenuItem>
+      ))}
+    </Menu>
                 <input
                   type="tel"
-                  className="mobile-number"
+                  className="form-control"
                   ref={mobileInputRef}
-                  id='enroll2'
+                  // id='enroll2'
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                />
+                style={{paddingLeft: '100px',}}/>
               </div>
             </div>
             </div>

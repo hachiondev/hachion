@@ -518,7 +518,10 @@ display: flex;
 justify-content: center;
 align-items: center;
 text-align: center;
-margin: 20px;
+margin: 10px;
+min-height: 50px;
+max-width: 100%;
+width: 90%;
 }
 .association-head{
 font-size: 1.9rem;
@@ -1290,7 +1293,7 @@ text-decoration: none;
 .btn-group {
 display: flex;
 align-items: center;
-gap: 20px;
+gap: 10px;
 }
 
 /* .dropdown-menu {
@@ -1520,12 +1523,12 @@ height: 80px;
 }
 
 .search-div-home {
-  width: 220px;
+  width: 500px;
   margin-left: 0 !important
 }
 
 .search-input-home {
-  max-width: 300px;
+  max-width: 600px;
   }
   
   .btn-search-home {
@@ -1576,7 +1579,7 @@ height: 80px;
   }
   
   .search-div-home {
-    width: 200px; /* Reduce width for tablet screens */
+    max-width: 400px; /* Reduce width for tablet screens */
     margin-left: 0 !important /* Remove margin for better alignment */
   }
   
@@ -1612,6 +1615,10 @@ height: 80px;
           font-size: 12px;
           white-space: nowrap;
           }
+  .course-search-input {
+    width: 100%;
+    padding: 8px 20px 8px 6px;
+}
   
   .training-events{
     margin-bottom:10px;
@@ -1690,15 +1697,15 @@ height: 80px;
   }
   
   .filter-section select {
-    padding: 8px 10px;
+    padding: 10px;
     font-size: 14px;
     border-radius: 8px;
-    width: 40%;
+    width: 42%;
     min-width: 100px;
   }
   .course-search-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 575px;
 }
 
 .course-search-icon {
@@ -2618,6 +2625,8 @@ justify-content: space-between;
   justify-content: center !important;
   margin: 5px;
   padding-bottom: 20px;
+  max-width: 100%;
+  width: 100%;
   }
 
 .association-head {

@@ -262,48 +262,36 @@ const ContactUs = () => {
                 <div class="invalid-feedback">PLease Enter Your Email ID.</div>
               </div>
               <label className="form-label">Mobile Number</label>
-              <div class="input-group has-validation custom-width">
-                <div className="input-group">
-                  <Button
-                    variant="outlined"
-                    onClick={openMenu}
-                    className="country-code-dropdown"
-                    endIcon={<AiFillCaretDown />}
-                  >
-                    <Flag
-                      code={selectedCountry.flag}
-                      className="country-flag"
-                    />
-                    {selectedCountry.code}
-                  </Button>
-
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={closeMenu}
-                  >
-                    {countries.map((country) => (
-                      <MenuItem
-                        key={country.code}
-                        onClick={() => handleCountrySelect(country)}
+                <div className="input-wrapper" style={{ position: 'relative' }}>
+                  <button
+                        variant="text"
+                        onClick={openMenu}
+                        className='mobile-button'
                       >
-                        <Flag code={country.flag} className="country-flag" />
-                        {country.name} ({country.code})
-                      </MenuItem>
-                    ))}
-                  </Menu>
+                        <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                        <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+                        <AiFillCaretDown />
+                      </button>
+                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+                        {countries.map((country) => (
+                          <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+                            <Flag code={country.flag} className="country-flag me-2" />
+                            {country.name} ({country.code})
+                          </MenuItem>
+                        ))}
+                      </Menu>
                   <input
                     type="tel"
-                    className="u-mobile-number"
                     ref={mobileInputRef}
-                    id="unsubscribe-txt"
+                    className="form-control-contact"
+                    id="contact1"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     aria-label="Text input with segmented dropdown button"
                     placeholder="Enter your mobile number"
+                    style={{ paddingLeft: '100px' }}
                   />
                 </div>
-              </div>
               <label htmlFor="inputEmail" className="form-label">
                 Unsubscribe From
               </label>

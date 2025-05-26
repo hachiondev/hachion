@@ -186,7 +186,7 @@ const Advisor = () => {
             <div className='advisor-row'>
             <div className="col-md-5">
               <label htmlFor="inputEmail4" className="form-label">
-                Email ID<span className="required">*</span>
+                Email Address<span className="required">*</span>
               </label>
               <input type="email" className="form-control-advisor" id="advisor1" placeholder='abc@gmail.com'
                name='email'
@@ -199,7 +199,7 @@ const Advisor = () => {
             </div>
            
             <div className="col-md-5">
-            <label className='form-label'>Mobile Number</label>
+            {/* <label className='form-label'>Mobile Number</label>
           <div class="input-group custom-width">
           <div className='input-group'>
             <Button
@@ -238,7 +238,44 @@ const Advisor = () => {
             onChange={(e) => setMobileNumber(e.target.value)}/>
             </div>
             </div>
-            </div>
+            </div> */}
+            <label htmlFor="mobileNumber" className="form-label">
+                Mobile Number <span className="star">*</span>
+              </label>
+            
+              <div className="input-wrapper" style={{ position: 'relative' }}>
+                <button
+                  variant="text"
+                  onClick={openMenu}
+                  className='mobile-button'
+                >
+                  <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                  <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+                  <AiFillCaretDown />
+                </button>
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+                  {countries.map((country) => (
+                    <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+                      <Flag code={country.flag} className="country-flag me-2" />
+                      {country.name} ({country.code})
+                    </MenuItem>
+                  ))}
+                </Menu>
+                      <input type='tel'
+                      className="mobile-number"
+                      ref={mobileInputRef}
+                        id='advisor1'
+                        aria-label="Text input with segmented dropdown button" 
+                        placeholder='Enter your mobile number' 
+                      name='name'
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                        style={{
+                      paddingLeft: '100px',
+                    }}
+                      />
+                    </div>
+                  </div>
             </div>
             <div className='advisor-row'>
             <div className="col-md-5">
@@ -272,7 +309,8 @@ const Advisor = () => {
               ) : null}
             </div>
             </div>
-            <div className="col-10">
+            <div className="center-wrapper">
+            <div className="col-11">
               <label htmlFor="Textarea" className="form-label">Comments</label>
               <textarea className="form-control-advisor" id="advisor3" placeholder="Enter comments here"
                name='comment'
@@ -282,6 +320,7 @@ const Advisor = () => {
                {errors.comment && touched.comment ? (
               <p className="form-error">{errors.comment}</p>
             ) : null}
+            </div>
             </div>
             <div className="col-12 text-center">
   <button type="submit" className="submit-btn">

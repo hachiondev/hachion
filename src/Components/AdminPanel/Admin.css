@@ -119,7 +119,8 @@
     flex-direction:row;
     justify-content: space-between;
     height:8vh !important;
-    width:10vw;
+    /* width:10vw; */
+    padding: auto;
     padding-top: 3vh !important;
 
 }
@@ -785,6 +786,15 @@ width: 150px;
   font-weight: 700 !important;
   border-radius: 10px;
   box-shadow: 5px 5px 10px #d3d3d3;
+  align-items: center;
+}
+.update-row{
+  padding: 3px 6px;
+  background-color: #00AEEF;
+  color: white;
+  border: none;
+  font-size: medium;
+  border-radius: 5px;
   align-items: center;
 }
 

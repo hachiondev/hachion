@@ -12,7 +12,7 @@ const LeadingExpertCard = ({ CourseName, image }) => {
 
   return (
     <div className='leading-expert-card'>
-      <img src={image} alt='card-img' className='card-image' />
+      <img src={image} alt='card-img'/>
       <p className='leading-expert-card-content'>{CourseName}</p>
       <button className='view-details-corporate' onClick={handleViewDetails}>
         View Details

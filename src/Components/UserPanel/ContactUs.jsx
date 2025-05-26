@@ -197,7 +197,7 @@ const ContactUs = () => {
   </div>
 ))}
         </div>
-        <div className="contact-us-bottom-div">
+        <div className="contact-us-bottom-box">
           <div className="contact-us-left">
             <h3>Enquiries</h3>
             <div className="contact-block">
@@ -290,7 +290,7 @@ const ContactUs = () => {
                   type="email"
                   className="form-control-contact"
                   id="contact1"
-                  placeholder="Enter your emailid"
+                  placeholder="Enter your email id"
                   name="email"
                   value={values.email}
                   onChange={handleChange}
@@ -298,48 +298,38 @@ const ContactUs = () => {
                 />
               </div>
               <label className="form-label">Mobile Number</label>
-              <div class="input-group custom-width">
-                <div className="input-group">
-                  <Button
-                    variant="outlined"
+              <div className="input-wrapper" style={{ position: 'relative' }}>
+                  <button
+                    variant="text"
                     onClick={openMenu}
-                    className="country-code-dropdown"
-                    endIcon={<AiFillCaretDown />}
+                    className='mobile-button'
                   >
-                    <Flag
-                      code={selectedCountry.flag}
-                      className="country-flag"
-                    />
-                    {selectedCountry.code}
-                  </Button>
-
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={closeMenu}
-                  >
+                    <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                    <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+                    <AiFillCaretDown />
+                  </button>
+                  <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
                     {countries.map((country) => (
-                      <MenuItem
-                        key={country.code}
-                        onClick={() => handleCountrySelect(country)}
-                      >
-                        <Flag code={country.flag} className="country-flag" />
+                      <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+                        <Flag code={country.flag} className="country-flag me-2" />
                         {country.name} ({country.code})
                       </MenuItem>
                     ))}
                   </Menu>
-                  <input
-                    type="tel"
-                    className="mobile-number"
-                    ref={mobileInputRef}
-                    id="contact2"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
-                    aria-label="Text input with segmented dropdown button"
-                    placeholder="Enter your mobile number"
-                  />
-                </div>
-              </div>
+                        <input
+                        type="tel"
+                        className="form-control-contact"
+                        ref={mobileInputRef}
+                        id="contact1"
+                        value={mobileNumber}
+                        onChange={(e) => setMobileNumber(e.target.value)}
+                        aria-label="Text input with segmented dropdown button"
+                        placeholder="Enter your mobile number"
+                          style={{
+                        paddingLeft: '100px',
+                      }}
+                        />
+                      </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">
                   Comments

@@ -912,6 +912,7 @@ const isFormValid = () => {
                     <Checkbox />
                   </StyledTableCell>
                   <StyledTableCell align="center">S.No.</StyledTableCell>
+                  <StyledTableCell align="center">Batch ID</StyledTableCell>
                   <StyledTableCell align="center">
                     Category Name
                   </StyledTableCell>
@@ -939,6 +940,9 @@ const isFormValid = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {course.batch_id}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {course.schedule_category_name}
@@ -1190,7 +1194,7 @@ const isFormValid = () => {
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col">
+              {/* <div className="col">
                 <label className="form-label">Batch ID</label>
                 <input
                   className="schedule-input"
@@ -1198,7 +1202,7 @@ const isFormValid = () => {
                   value={editedRow.batch_id}
                   onChange={handleInputChange}
                 />
-              </div>
+              </div> */}
             </div>
           </LocalizationProvider>
         </DialogContent>

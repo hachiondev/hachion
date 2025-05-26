@@ -984,7 +984,7 @@ box-shadow: 5px 5px 10px #d3d3d3;
   margin-left: 40px;
   padding: 10px;
 }
-.contact-us-bottom-div{
+.contact-us-bottom-box{
 display: flex;
 flex-direction: row;
 justify-content: space-evenly;
@@ -1165,7 +1165,7 @@ margin-bottom: 20px;
     margin-left: 5px;
     padding: 10px;
   }
-  .contact-us-bottom-div{
+  .contact-us-bottom-box{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1454,7 +1454,7 @@ margin-bottom: 20px;
 .contact-us-left{
   margin-left: 10px;
 }
-.contact-us-bottom-div{
+.contact-us-bottom-box{
 flex-direction: column;
 }
 
@@ -1717,6 +1717,7 @@ font-weight: 600;
   height: 50px;
   outline: none;
   border: 1px solid #b3b3b3;
+  padding: 5px;
 }
 
 .country-code-dropdown {

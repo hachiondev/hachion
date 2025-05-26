@@ -4,34 +4,12 @@ import { useState } from 'react';
 import './Admin.css';
 
 export default function StudentTracking() {
-    const [studentTracking, setStudentTracking] = useState([]);
     const [tracking, setTracking] = useState([]);
     const [filterCourse, setFilterCourse] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
      const [studentData, setStudentData] = useState({
         student_id: "", email: "", category_name:"", course_name: "", status: "", batch_id: "", student_number: "", start_date: "", completed_date: "",
       });
-    const filteredData = studentTracking.filter((item) => {
-        const date = new Date(item.date || item.payment_date);
-        const matchesSearch =
-          searchTerm === '' ||
-          [item.name, item.email, item.course_name, item.method]
-            .map(field => (field || '').toLowerCase())
-            .some(field => field.includes(searchTerm.toLowerCase()));
-        const inDateRange =
-          (!startDate || date >= new Date(startDate)) &&
-          (!endDate || date <= new Date(endDate));
-        return matchesSearch && inDateRange;
-      });
-    
-      const displayedData = filteredData.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
-      );
+
       const handleChange = (e) => {
     const { name, value } = e.target;
     setStudentData((prevData) => ({
@@ -107,7 +85,7 @@ export default function StudentTracking() {
                     </div>
                     <div className='course-row'>
                     <div className="col">
-                    <label htmlFor="batch_id" className="form-label"> Batch Id</label>
+                    <label htmlFor="batch_id" className="form-label"> Batch ID</label>
                     <input
                       type="text"
                       className="schedule-input"

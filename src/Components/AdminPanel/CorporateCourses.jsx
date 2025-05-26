@@ -258,11 +258,16 @@ export default function CorporateCourses() {
           )}
         </div>
       </LocalizationProvider>
-      <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ style: { borderRadius: 20 } }}>
-        <DialogTitle>Edit Corporate Course
-          <Button onClick={() => setOpen(false)}><IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} /></Button>
-        </DialogTitle>
-        <DialogContent>
+      <Dialog className="dialog-box" open={open} onClose={() => setOpen(false)} aria-labelledby="edit-schedule-dialog"
+          PaperProps={{
+            style: { borderRadius: 20 },
+          }}>
+        <div >
+          <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Corporate Course
+          <Button onClick={() => setOpen(false)} className="close-btn"><IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} /></Button>
+          </DialogTitle>
+            </div>
+            <DialogContent>
           <div className="col">
             <label className="form-label">Category Name</label>
             <select className="form-select" name="category_name" value={editedData.category_name || ""} onChange={(e) => setEditedData({ ...editedData, category_name: e.target.value })}>

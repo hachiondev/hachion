@@ -1,11 +1,17 @@
 package com.hachionUserDashboard.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +21,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.hachionUserDashboard.dto.PaymentInstallmentRequest;
 import com.hachionUserDashboard.dto.PaymentInstallmentResponse;
@@ -28,6 +37,7 @@ import com.hachionUserDashboard.exception.ResourceNotFoundException;
 import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.EnrollRepository;
 import com.hachionUserDashboard.repository.PaymentRepository;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import Service.PaymentService;
 
@@ -43,10 +53,19 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private CourseRepository courseRepository;
 
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private SpringTemplateEngine templateEngine;
+
 //	private static final String UPLOAD_DIR = "uploads/images/";
 
 	@Value("${payments.upload.path}")
 	private String paymentsUploadPath;
+
+	@Value("${invoice.path}")
+	private String invoiceDirectoryPath;
 
 	@Override
 	public PaymentResponse addPayment(PaymentRequest paymentRequest, List<MultipartFile> files) {
@@ -83,20 +102,6 @@ public class PaymentServiceImpl implements PaymentService {
 			installment.setReceivedPay(instReq.getReceivedPay());
 			installment.setPaymentMethod(instReq.getPaymentMethod());
 
-//			if (files != null && files.size() > i && !files.get(i).isEmpty()) {
-//				MultipartFile file = files.get(i);
-//				try {
-//					String uploadDir = "uploads/images/";
-//					String originalFilename = file.getOriginalFilename();
-//					Path path = Paths.get(uploadDir + originalFilename);
-//					Files.createDirectories(path.getParent());
-//					Files.write(path, file.getBytes());
-//					installment.setProof("images/" + originalFilename);
-//				} catch (IOException e) {
-//					throw new RuntimeException("Failed to save file for installment " + (i + 1));
-//				}
-//			}
-
 			if (files != null && files.size() > i && !files.get(i).isEmpty()) {
 				MultipartFile file = files.get(i);
 				try {
@@ -112,7 +117,9 @@ public class PaymentServiceImpl implements PaymentService {
 					Files.write(filePath, file.getBytes());
 
 					System.out.println("File successfully written to: " + filePath.toAbsolutePath());
-					installment.setProof(filePath.toString()); 
+//					installment.setProof(filePath.toString()); 
+					installment.setProof(file.getOriginalFilename());
+
 				} catch (IOException e) {
 					System.err.println("IOException while writing file: " + e.getMessage());
 					throw new RuntimeException("Failed to save file for installment " + (i + 1));
@@ -138,6 +145,17 @@ public class PaymentServiceImpl implements PaymentService {
 
 		payment.setInstallments(installmentEntities);
 		Payment savedPayment = paymentRepository.save(payment);
+
+		String courseName = savedPayment.getCourseName();
+		String courseAbbreviation = courseName.replaceAll("[^A-Za-z]", "").toUpperCase();
+		courseAbbreviation = courseAbbreviation.length() > 5 ? courseAbbreviation.substring(0, 5) : courseAbbreviation;
+
+		String formattedDate = new SimpleDateFormat("MMddyyyy").format(new Date());
+		String invoiceNumber = "HACH" + courseAbbreviation + formattedDate + "-" + savedPayment.getPaymentId();
+
+		savedPayment.setInvoiceNumber(invoiceNumber);
+		paymentRepository.save(savedPayment);
+
 		return createPaymentResponse(savedPayment);
 	}
 
@@ -213,12 +231,6 @@ public class PaymentServiceImpl implements PaymentService {
 				if (proofInstallmentId != null && file != null && !file.isEmpty()) {
 					if (proofInstallmentId.equals(instReq.getInstallmentId())) {
 						try {
-//							String uploadDir = "uploads/images/";
-//							String originalFilename = file.getOriginalFilename();
-//							Path path = Paths.get(uploadDir + originalFilename);
-//							Files.createDirectories(path.getParent());
-//							Files.write(path, file.getBytes());
-//							installment.setProof("images/" + originalFilename);
 							String originalFilename = file.getOriginalFilename();
 							Path uploadDirPath = Paths.get(paymentsUploadPath);
 							Files.createDirectories(uploadDirPath);
@@ -315,25 +327,15 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 	}
 
-//	@Override
-//	public byte[] getFileAsBytes(String filename) throws IOException {
-//		Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
-//
-//		if (!Files.exists(filePath)) {
-//			throw new IOException("File not found: " + filename);
-//		}
-//
-//		return Files.readAllBytes(filePath);
-//	}
 	@Override
 	public byte[] getFileAsBytes(String filename) throws IOException {
-	    Path filePath = Paths.get(paymentsUploadPath).resolve(filename).normalize();
+		Path filePath = Paths.get(paymentsUploadPath).resolve(filename).normalize();
 
-	    if (!Files.exists(filePath)) {
-	        throw new IOException("File not found: " + filename);
-	    }
+		if (!Files.exists(filePath)) {
+			throw new IOException("File not found: " + filename);
+		}
 
-	    return Files.readAllBytes(filePath);
+		return Files.readAllBytes(filePath);
 	}
 
 	@Override
@@ -371,6 +373,7 @@ public class PaymentServiceImpl implements PaymentService {
 		response.setNoOfDays(savedPayment.getNumberOfDays());
 		response.setTotalAmount(savedPayment.getTotalAmount());
 		response.setBalancePay(savedPayment.getBalancePay());
+		response.setInvoiceNumber(savedPayment.getInvoiceNumber());
 
 		List<PaymentInstallmentResponse> installmentResponses = new ArrayList<>();
 		for (PaymentInstallment savedInstallment : savedPayment.getInstallments()) {
@@ -390,5 +393,88 @@ public class PaymentServiceImpl implements PaymentService {
 
 		response.setInstallments(installmentResponses);
 		return response;
+	}
+
+	@Override
+	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
+		Context context = new Context();
+		context.setVariable("studentName", paymentRequest.getStudentName());
+		context.setVariable("studentEmail", paymentRequest.getEmail());
+		context.setVariable("studentPhone", paymentRequest.getMobile());
+		context.setVariable("courseName", paymentRequest.getCourseName());
+		context.setVariable("coursePrice", String.format("%.2f", paymentRequest.getCourseFee()));
+		context.setVariable("discount", paymentRequest.getDiscount() + ".00");
+		context.setVariable("tax", paymentRequest.getTax() + ".00");
+		context.setVariable("totalAmount", String.format("%.2f", paymentRequest.getTotalAmount()));
+
+		String status = paymentRequest.getStatus();
+		if (status == null || status.trim().isEmpty()) {
+			status = "PARTIALLY PAID";
+		}
+		context.setVariable("status", status.trim());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
+		String formattedDate = sdf.format(new Date());
+		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
+
+		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
+		PaymentInstallmentRequest selectedInstallment = null;
+		if (installments != null && !installments.isEmpty()) {
+			Long selectedId = paymentRequest.getSelectedInstallmentId();
+			if (selectedId != null) {
+				for (PaymentInstallmentRequest inst : installments) {
+					if (selectedId.equals(inst.getInstallmentId())) {
+						selectedInstallment = inst;
+						break;
+					}
+				}
+			}
+			if (selectedInstallment == null) {
+				selectedInstallment = installments.get(0);
+			}
+
+			LocalDate payDate = selectedInstallment.getPayDate();
+			LocalDate dueDate = selectedInstallment.getDueDate();
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
+			String formattedPayDate = payDate.format(formatter);
+			String formattedDueDate = dueDate.format(formatter);
+
+			context.setVariable("invoiceDate", formattedPayDate);
+			context.setVariable("dueDate", formattedDueDate);
+			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
+		}
+
+		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
+
+		String renderedHtml = templateEngine.process("invoice_template", context);
+
+		File directory = new File(invoiceDirectoryPath);
+		System.out.println("Invoice : " + invoiceDirectoryPath);
+		System.out.println("directory : " + directory);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		String safeFileName = paymentRequest.getStudentName().replaceAll("\\s+", "_") + "_"
+				+ paymentRequest.getCourseName().replaceAll("\\s+", "_") + "_" + formattedDate;
+		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
+
+		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
+			PdfRendererBuilder builder = new PdfRendererBuilder();
+			builder.useFastMode();
+			String baseUri = new File("src/main/resources").toURI().toString();
+			builder.withHtmlContent(renderedHtml, baseUri);
+			builder.toStream(os);
+			builder.run();
+
+			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+		} catch (Exception e) {
+
+		}
+
+		model.addAttribute("studentName", paymentRequest.getStudentName());
+		return "invoice_template";
 	}
 }

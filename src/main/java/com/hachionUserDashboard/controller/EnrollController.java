@@ -57,7 +57,7 @@ public class EnrollController {
 		enroll.setAmount(requestEnroll.getAmount());
 		enroll.setTrainer(requestEnroll.getTrainer());
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
-//		sendEnrollEmail(enroll);
+		sendEnrollEmail(enroll);
 
 		repo.save(enroll);
 

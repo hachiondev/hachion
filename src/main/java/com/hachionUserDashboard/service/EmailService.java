@@ -1,11 +1,13 @@
 package com.hachionUserDashboard.service;
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.ByteArrayResource;
-
+import org.springframework.core.io.FileSystemResource;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -37,5 +39,24 @@ public class EmailService {
         helper.addAttachment("Certificate.pdf", new ByteArrayResource(attachmentBytes));
 
         mailSender.send(message);
+    }
+    public void sendInvoiceEmail(String toEmail, String studentName, String invoicePath) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(toEmail);
+            helper.setSubject("Invoice from Hachion");
+            helper.setText("Dear " + studentName + ",\n\nPlease find your invoice attached.\n\nRegards,\nHachion");
+
+            FileSystemResource file = new FileSystemResource(new File(invoicePath));
+            helper.addAttachment("Invoice.pdf", file);
+
+            mailSender.send(message);
+            System.out.println("Invoice email sent to: " + toEmail);
+        } catch (MessagingException e) {
+            System.err.println("Failed to send email: " + e.getMessage());
+            throw new RuntimeException("Email sending failed", e);
+        }
     }
 }

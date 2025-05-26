@@ -3,6 +3,7 @@ package Service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.PaymentRequest;
@@ -27,4 +28,7 @@ public interface PaymentService {
 	public byte[] getFileAsBytes(String filename) throws IOException;
 
 	public String getContentType(String filename);
+
+	public String generateInvoice(PaymentRequest paymentRequest, Model model);
+
 }

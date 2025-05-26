@@ -57,6 +57,9 @@ public class Payment {
 	@Column(name = "balance_pay")
 	private Double balancePay;
 
+	@Column(name = "invoice_number")
+	private String invoiceNumber;
+	
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentInstallment> installments = new ArrayList<>();
 
@@ -170,6 +173,14 @@ public class Payment {
 
 	public void setInstallments(List<PaymentInstallment> installments) {
 		this.installments = installments;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
 }

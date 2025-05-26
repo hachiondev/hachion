@@ -17,6 +17,7 @@ public class PaymentResponse {
     private Integer noOfDays;
     private Double totalAmount;
     private Double balancePay;
+    private String invoiceNumber;
 
     private List<PaymentInstallmentResponse> paymentInstallmentsResponse;
 
@@ -130,6 +131,14 @@ public class PaymentResponse {
 
 	public void setInstallments(List<PaymentInstallmentResponse> installments) {
 		this.paymentInstallmentsResponse = installments;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
     

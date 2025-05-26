@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PaymentRequest {
 
+	private Long paymentId;
 	private String studentId;
 	private String studentName;
 	private String email;
@@ -16,8 +17,20 @@ public class PaymentRequest {
 	private Integer noOfDays;
 	private Double totalAmount;
 	private Double balancePay;
+	private Long selectedInstallmentId;
+	private String status;
+	private String invoiceNumber;
 
 	private List<PaymentInstallmentRequest> installments;
+
+	
+	public Long getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(Long paymentId) {
+		this.paymentId = paymentId;
+	}
 
 	public String getStudentId() {
 		return studentId;
@@ -121,6 +134,30 @@ public class PaymentRequest {
 
 	public void setInstallments(List<PaymentInstallmentRequest> installments) {
 		this.installments = installments;
+	}
+
+	public Long getSelectedInstallmentId() {
+		return selectedInstallmentId;
+	}
+
+	public void setSelectedInstallmentId(Long selectedInstallmentId) {
+		this.selectedInstallmentId = selectedInstallmentId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
 }

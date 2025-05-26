@@ -178,7 +178,7 @@ public class Userimpl implements UserService {
 		System.out.println(otp);
 		user.setOTPStatus(false);
 
-//		emailUtil.sendOtpEmail(email, otp);
+		emailUtil.sendOtpEmail(email, otp);
 		userRepository.save(user);
 //		emailUtil.sendOtpEmail(email, otp);
 

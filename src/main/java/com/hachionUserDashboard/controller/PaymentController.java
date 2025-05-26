@@ -8,17 +8,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -38,6 +41,10 @@ public class PaymentController {
 
 	@Autowired
 	private PaymentService paymentService;
+
+
+	@Value("${invoice.path}")
+	private String invoiceDirectoryPath;
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<PaymentResponse> addOfflinePayment(@RequestPart("paymentData") PaymentRequest paymentRequest,
@@ -103,7 +110,7 @@ public class PaymentController {
 	@GetMapping("/download/{filename:.+}")
 	public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) {
 		try {
-			
+
 			String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.name());
 
 			byte[] fileData = paymentService.getFileAsBytes(decodedFilename);
@@ -118,4 +125,10 @@ public class PaymentController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
+
+	@PostMapping("/generateInvoice")
+	public String generateInvoice(@RequestBody PaymentRequest paymentRequest, Model model) {
+		return paymentService.generateInvoice(paymentRequest, model);
+	}
+
 }

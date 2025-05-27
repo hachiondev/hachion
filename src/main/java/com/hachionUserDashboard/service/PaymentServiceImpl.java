@@ -394,7 +394,89 @@ public class PaymentServiceImpl implements PaymentService {
 		response.setInstallments(installmentResponses);
 		return response;
 	}
-
+//
+//	@Override
+//	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
+//		Context context = new Context();
+//		context.setVariable("studentName", paymentRequest.getStudentName());
+//		context.setVariable("studentEmail", paymentRequest.getEmail());
+//		context.setVariable("studentPhone", paymentRequest.getMobile());
+//		context.setVariable("courseName", paymentRequest.getCourseName());
+//		context.setVariable("coursePrice", String.format("%.2f", paymentRequest.getCourseFee()));
+//		context.setVariable("discount", paymentRequest.getDiscount() + ".00");
+//		context.setVariable("tax", paymentRequest.getTax() + ".00");
+//		context.setVariable("totalAmount", String.format("%.2f", paymentRequest.getTotalAmount()));
+//
+//		String status = paymentRequest.getStatus();
+//		if (status == null || status.trim().isEmpty()) {
+//			status = "PARTIALLY PAID";
+//		}
+//		context.setVariable("status", status.trim());
+//
+//		SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
+//		String formattedDate = sdf.format(new Date());
+//		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
+//
+//		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
+//		PaymentInstallmentRequest selectedInstallment = null;
+//		if (installments != null && !installments.isEmpty()) {
+//			Long selectedId = paymentRequest.getSelectedInstallmentId();
+//			if (selectedId != null) {
+//				for (PaymentInstallmentRequest inst : installments) {
+//					if (selectedId.equals(inst.getInstallmentId())) {
+//						selectedInstallment = inst;
+//						break;
+//					}
+//				}
+//			}
+//			if (selectedInstallment == null) {
+//				selectedInstallment = installments.get(0);
+//			}
+//
+//			LocalDate payDate = selectedInstallment.getPayDate();
+//			LocalDate dueDate = selectedInstallment.getDueDate();
+//
+//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+//
+//			String formattedPayDate = payDate.format(formatter);
+//			String formattedDueDate = dueDate.format(formatter);
+//
+//			context.setVariable("invoiceDate", formattedPayDate);
+//			context.setVariable("dueDate", formattedDueDate);
+//			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
+//		}
+//
+//		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
+//
+//		String renderedHtml = templateEngine.process("invoice_template", context);
+//
+//		File directory = new File(invoiceDirectoryPath);
+//		System.out.println("Invoice : " + invoiceDirectoryPath);
+//		System.out.println("directory : " + directory);
+//		if (!directory.exists()) {
+//			directory.mkdirs();
+//		}
+//
+//		String safeFileName = paymentRequest.getStudentName().replaceAll("\\s+", "_") + "_"
+//				+ paymentRequest.getCourseName().replaceAll("\\s+", "_") + "_" + formattedDate;
+//		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
+//
+//		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
+//			PdfRendererBuilder builder = new PdfRendererBuilder();
+//			builder.useFastMode();
+//			String baseUri = new File("src/main/resources").toURI().toString();
+//			builder.withHtmlContent(renderedHtml, baseUri);
+//			builder.toStream(os);
+//			builder.run();
+//
+//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+//		} catch (Exception e) {
+//
+//		}
+//
+//		model.addAttribute("studentName", paymentRequest.getStudentName());
+//		return "invoice_template";
+//	}
 	@Override
 	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
 		Context context = new Context();
@@ -448,11 +530,15 @@ public class PaymentServiceImpl implements PaymentService {
 
 		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
 
+		// ✅ Absolute path to image on cloud server
+		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
+		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/")); // ensure proper file URL
+
+		// Render HTML
 		String renderedHtml = templateEngine.process("invoice_template", context);
 
+		// Create directory if not exists
 		File directory = new File(invoiceDirectoryPath);
-		System.out.println("Invoice : " + invoiceDirectoryPath);
-		System.out.println("directory : " + directory);
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
@@ -461,20 +547,24 @@ public class PaymentServiceImpl implements PaymentService {
 				+ paymentRequest.getCourseName().replaceAll("\\s+", "_") + "_" + formattedDate;
 		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
 
+		
 		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
 			PdfRendererBuilder builder = new PdfRendererBuilder();
 			builder.useFastMode();
-			String baseUri = new File("src/main/resources").toURI().toString();
+
+			// ✅ baseUri must be the folder that contains the image
+			String baseUri = new File("/home/ec2-user/uploads").toURI().toString();
 			builder.withHtmlContent(renderedHtml, baseUri);
 			builder.toStream(os);
 			builder.run();
 
 			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
 		} catch (Exception e) {
-
+			
 		}
 
 		model.addAttribute("studentName", paymentRequest.getStudentName());
 		return "invoice_template";
 	}
+
 }

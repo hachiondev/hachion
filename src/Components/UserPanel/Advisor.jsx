@@ -262,7 +262,7 @@ const Advisor = () => {
                   ))}
                 </Menu>
                       <input type='tel'
-                      className="mobile-number"
+                      className="form-control-advisor"
                       ref={mobileInputRef}
                         id='advisor1'
                         aria-label="Text input with segmented dropdown button" 

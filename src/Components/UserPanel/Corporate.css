@@ -816,7 +816,7 @@ padding: 20px;
   font-weight: 500;
   color:#00AAEF;
 }
-.recent-entries {
+.recent-entries, .workshop-entries {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -830,7 +830,7 @@ padding: 20px;
   display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
 
-.recent-card {
+.recent-card, .workshop-card {
   width: 330px; /* Adjust width to display 2 cards on mobile */
   flex: 0 0 auto; /* Prevent cards from shrinking */
   margin-right: 10px; /* Add some space between cards */
@@ -844,6 +844,12 @@ padding: 20px;
 .recent-card-image {
   flex: 1;
   width: 100%;
+  object-fit: cover;
+}
+.workshop-card-image {
+  flex: 1;
+  width: 100%;
+  aspect-ratio: 330 / 108;
   object-fit: cover;
 }
 
@@ -913,6 +919,7 @@ padding: 20px;
 .main-card-image {
   flex: 1;
   width: 100%;
+  aspect-ratio: 330/135;
   object-fit: cover;
 }
 
@@ -925,7 +932,7 @@ padding: 20px;
   padding: 2vh;
 }
 
-.main-content {
+.main-content, .workshop-title {
   font-size: 1rem;
   font-weight: 700;
 }
@@ -946,9 +953,10 @@ padding: 20px;
   color: #6A6A6A;
 }
 
-.main-date {
+.main-date, .work-date {
   font-size: 16px;
   color: #6A6A6A;
+  white-space: nowrap;
 }
 
 .user {
@@ -1499,7 +1507,7 @@ padding: 20px;
       font-size: 10px !important;
   }
 
-  .recent-entries {
+  .recent-entries, .workshop-entries {
       justify-content: flex-start; 
   }
 
@@ -1510,6 +1518,15 @@ padding: 20px;
 
   .recent-card-image {
       width: 170px !important;
+  }
+
+    .workshop-card {
+      width: 180px;
+      height: 180px;
+  }
+
+  .workshop-card-image {
+      width: 180px !important;
   }
 
   /* Blog page */
@@ -1637,6 +1654,9 @@ padding: 20px;
   .main-content {
       font-size: 14px;
   }
+  .workshop-title{
+     font-size: 12px;
+  }
   
   .bottom-main-content {
       font-size: 14px;
@@ -1648,6 +1668,9 @@ padding: 20px;
 
   .main-date {
       font-size: 14px;
+  }
+    .work-date {
+      font-size: 10px;
   }
   
     .user {
@@ -1973,8 +1996,8 @@ padding: 20px;
   }
 
   .advisor-row {
-      flex-direction: column !important; /* Stack the form fields vertically */
-      gap: 0px !important; /* Reduce gap between elements for mobile */
+      flex-direction: column !important;
+      gap: 0px !important;
     }
 
     .country-code-dropdown {
@@ -2174,6 +2197,8 @@ padding: 20px;
 }
 
 #advisor1{
+  display: flex;
+  justify-content: center;
   height: 50px !important;
   width: 450px !important;
   border-radius: 5px;

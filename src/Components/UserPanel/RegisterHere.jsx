@@ -146,34 +146,6 @@ const handleClick = async () => {
       setIsLoading(false);
     }
   };
-    //     const contentType = response.headers.get("Content-Type");
-
-    //     if (response.ok) {
-    //       if (contentType && contentType.includes("application/json")) {
-    //         const responseData = await response.json();
-
-    //         if (responseData && responseData.otp) {
-    //           alert(`OTP sent to your email: ${responseData.message}`);
-    //           console.log("Stored in LocalStorage:", localStorage.getItem("registeruserData"));
-    //         } else {
-    //           alert("Failed to send OTP. Please try again.");
-    //         }
-    //       } else {
-    //         const responseText = await response.text();
-    //         alert(`${responseText}`);
-    //       }
-    //     } else {
-    //       const responseText = await response.text();
-    //       alert(`${responseText}`);
-    //     }
-    //   } catch (error) {
-    //     alert(`An error occurred: ${error.message}`);
-    //   } finally {
-    //     navigate("/registerverification");
-    //     setIsLoading(false);
-    //   }
-    // };
-
 
     return (
       <div className="login">
@@ -238,48 +210,39 @@ const handleClick = async () => {
               <label className="login-label">
                     Mobile Number<span className="star">*</span>
                   </label>
-                  <div className="input-group mb-3 custom-width">
-                    <div className="input-group">
-                      <Button
-                        variant="outlined"
+                  <div className="input-wrapper" style={{ position: 'relative' }}>
+                      <button
+                        variant="text"
                         onClick={openMenu}
-                        className="country-dropdown"
-                        endIcon={<AiFillCaretDown />}
+                        className='mobile-button'
                       >
-                        <Flag code={selectedCountry.flag} className="country-flag" />
-                        {selectedCountry.code}
-                      </Button>
-
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={closeMenu}
-                      >
+                        <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                        <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+                        <AiFillCaretDown />
+                      </button>
+                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
                         {countries.map((country) => (
-                          <MenuItem
-                            key={country.code}
-                            onClick={() => handleCountrySelect(country)}
-                          >
-                            <Flag code={country.flag} className="country-flag" />
+                          <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+                            <Flag code={country.flag} className="country-flag me-2" />
                             {country.name} ({country.code})
                           </MenuItem>
                         ))}
                       </Menu>
-
                       <input
                         type="tel"
-                        className="mobilenumber"
+                        className="form-control"
                         ref={mobileInputRef}
                         name="mobile"
                         aria-label="Text input with segmented dropdown button"
-                        id="register"
+                        id="floatingName"
                         value={mobile}
                         onChange={(e)=>setMobile(e.target.value)}
-                      
                         placeholder="Enter your mobile number"
+                        style={{
+                        paddingLeft: '100px', border: '1px solid #d3d3d3'
+                      }}
                       />
                     </div>
-                  </div>
                   
               <button
                 type="button"

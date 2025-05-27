@@ -745,18 +745,22 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
     <input type="text" class="schedule-input" id="inputEmail4" name='days' value={paymentData.days} onChange={handleChange}/>
   </div>
 </div>
+<div className='course-row' style={{ marginTop: 5 }}>
+<button className='filter' >Send Remainder</button>
+<button className='filter' >Send Invoice</button>
+</div>
  <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
+      <Table sx={{ minWidth: 650, marginTop: 2 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align='center' sx={{ fontSize: '16px' }}> Pay Date</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Due Date</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}> Payment Method</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Installment</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Actual Pay</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Received Pay</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Proof</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Reference</StyledTableCell>
+            <StyledTableCell align='center' sx={{ fontSize: '14px' }}> Pay Date</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Due Date</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}> Payment Method</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Installment</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Actual Pay</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Received Pay</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Proof</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Reference</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -874,7 +878,7 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
       <input
         type="file"
         style={{ display: 'none' }}
-        onChange={(e) => handleFileUpload(index, e)} // You already have this
+        onChange={(e) => handleFileUpload(index, e)}
       />
     </label>
   )}
@@ -902,12 +906,11 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
     <input type="text" class="schedule-input" id="inputEmail4" name='balance' value={paymentData.balance} onChange={handleChange}/>
   </div>
   </div>
+  {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
   <div className='course-row'>
   {formMode === "Add" ? (
   <>   
-      {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-      
     <button className='submit-btn' onClick={handleSave}>Save</button>
     
   <button
@@ -921,9 +924,6 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
   </>
 ) : (
   <>
-  {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-
     <button className='submit-btn' onClick={handleUpdate}>Update</button>
     
   <button

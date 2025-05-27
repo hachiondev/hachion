@@ -1,12 +1,16 @@
 import React from 'react';
 import './Corporate.css';
+import placeholderImage from '../../Assets/workshopplaceholder.jpg';
 
 const WorkshopCard = ({ banner_image, title, date, time, timeZone, onClick }) => {
+  const handleImageError = (e) => {
+      e.target.src = placeholderImage;
+    };
   return (
     <div className='main-work-card' onClick={onClick}>
       <div 
         className='main-card-banner' >
-       <img src={banner_image} alt='card-image' className='main-card-image' />
+       <img src={banner_image} alt='card-image' className='main-card-image' onError={handleImageError}/>
       </div>
       <div className='main-content-block'>
         <p className='main-content'>{title}</p>

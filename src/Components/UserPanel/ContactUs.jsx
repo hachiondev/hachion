@@ -48,6 +48,35 @@ const ContactUs = () => {
   });
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
+    const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
+    const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
+  
+    useEffect(() => {
+      const detectUserCountry = async () => {
+        try {
+          const res = await fetch('https://ipwho.is/');
+          if (!res.ok) throw new Error('Failed to fetch location data');
+  
+          const data = await res.json();
+        
+  
+          if (data.country_code === 'IN') {
+            setWhatsappNumber('+91-949-032-3388');
+            setWhatsappLink('https://wa.me/919490323388');
+          } else {
+            setWhatsappNumber('+1 (732) 485-2499');
+            setWhatsappLink('https://wa.me/17324852499');
+          }
+        } catch (error) {
+          console.error('❌ Location fetch error:', error);
+          // fallback to US number
+          setWhatsappNumber('+1 (732) 485-2499');
+          setWhatsappLink('https://wa.me/17324852499');
+        }
+      };
+  
+      detectUserCountry();
+       }, []);
   useEffect(() => {
     window.scrollTo(0, 0); // This will scroll to the top of the page
     console.log("Page loaded and scrolled to top");
@@ -71,14 +100,30 @@ const ContactUs = () => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
-  ];
-
-  const handleCountrySelect = (country) => {
-    console.log("Country selected:", country.name, country.code);
-    setSelectedCountry(country);
-    closeMenu();
-    mobileInputRef.current?.focus();
-  };
+    { name: "Netherlands", code: "+31", flag: "NL" },
+    ];
+  
+    useEffect(() => {
+      fetch("https://ipwho.is/")
+        .then((res) => res.json())
+        .then((data) => {
+          const userCountryCode = data?.country_code;
+          const matchedCountry = countries.find(
+            (c) => c.flag === userCountryCode
+          );
+          if (matchedCountry) {
+            setSelectedCountry(matchedCountry);
+          }
+        })
+        .catch(() => {});
+    }, []);
+  
+    const handleCountrySelect = (country) => {
+      console.log("Country selected:", country.name, country.code);
+      setSelectedCountry(country);
+      closeMenu();
+      mobileInputRef.current?.focus();
+    };
 
   const openMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -208,7 +253,7 @@ const ContactUs = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   +1 (732) 485-2499{" "}
+                 {whatsappNumber}
                 </a>
               </p>
             </div>

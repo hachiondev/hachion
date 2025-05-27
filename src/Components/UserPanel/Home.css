@@ -513,15 +513,15 @@ background-color: #EA4335;
   display: flex;
   justify-content: center;
 }
-.association{
+.association-home{
 display: flex;
 justify-content: center;
 align-items: center;
 text-align: center;
 margin: 10px;
 min-height: 50px;
-max-width: 100%;
-width: 90%;
+max-width: 90%;
+width: 80%;
 }
 .association-head{
 font-size: 1.9rem;
@@ -2476,11 +2476,6 @@ border-radius: 20px;
 height: 130px;
 }
 
-.association{
-height: 50px !important;
-margin-top: 0px !important;
-}
-
 .logos{
 padding: 2px 0;
 }
@@ -2621,12 +2616,16 @@ margin-left: 2%;
 justify-content: space-between;
 }
 
-.association{
+.association-home{
+  display: flex;
   justify-content: center !important;
+  text-align: center;
   margin: 5px;
   padding-bottom: 20px;
-  max-width: 100%;
-  width: 100%;
+  max-width: 80%;
+  width: 80%;
+  height: 50px !important;
+  margin-top: 0px !important;
   }
 
 .association-head {

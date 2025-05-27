@@ -7,31 +7,27 @@ import './Course.css';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import Banner2 from '../../Assets/bann3.png';
-import Exp from '../../Assets/exp.png';
-import Assig from '../../Assets/assig.png';
-import Handexp from '../../Assets/handexp.png';
-import cv from '../../Assets/cv.png';
-import inter from '../../Assets/inter.png';
-import support from '../../Assets/247.png';
 import salreg from '../../Assets/salreg.png';
 import WorkshopHighlights from './WorkshopHighlights';
 import WorkshopLearners from './WorkshopLearners';
 import WorkshopFAQ from './WorkshopFAQ';
+import WorkshopEntries from './WorkshopEntries';
 import './Blogs.css';
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
 import {MdKeyboardArrowRight} from 'react-icons/md';
+import placeholderImage from '../../Assets/workshopplaceholder.jpg';
 
 const SalWorkshop = () => {
+  const { slug } = useParams();
   const { courseName } = useParams();
   const [error, setError] = useState('');
   const [messageType, setMessageType] = useState('');
   const footerRef = useRef(null);
   const workshopRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
-  const currentDate = new Date().toISOString().split('T')[0];
   const [workshops, setWorkshops] = useState([]);
   const [workshop, setWorkshop] = useState(null);
   const [formData, setFormData] = useState({
@@ -53,7 +49,7 @@ const SalWorkshop = () => {
     name: 'United States',
   });
 
-  const countries = [
+   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
     { name: 'United States', code: '+1', flag: 'US' },
     { name: 'United Kingdom', code: '+44', flag: 'GB' },
@@ -96,177 +92,61 @@ const SalWorkshop = () => {
   };
 
   useEffect(() => {
-    // Checking if courseName exists
-    if (!courseName) {
-      return;
-    }
-  
+    if (!courseName) return;
     const originalName = courseName.replace(/-/g, " ");
-    // Now use originalName safely for setting state or further processing
   }, [courseName]);
-  
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
-  
-  const openMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  
-  // Fetch workshop list
+
+  const openMenu = (event) => setAnchorEl(event.currentTarget);
+  const closeMenu = () => setAnchorEl(null);
+
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
         const response = await axios.get('https://api.test.hachion.co/workshopschedule');
         setWorkshops(response.data);
-    
-        // ✅ Auto-select default category & course and display data
-        const defaultWorkshop = response.data[0];
-    
-        const { localDate, localTime, timeZone } = convertISTtoLocalTime(
-          defaultWorkshop?.datetime || defaultWorkshop?.date,
-          defaultWorkshop?.time
-        );
-    
-        setWorkshop({
-          ...defaultWorkshop,
-          localDate,
-          localTime,
-          timeZone,
-        });
-    
       } catch (error) {
-        // handle error silently or set fallback state
       }
     };
-    
-  
     fetchWorkshops();
   }, []);
-  
-  const closeMenu = () => {
-    setAnchorEl(null);
+
+  const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
+    // ... keep this unchanged ...
   };
-  
-
-// Helper to convert IST time to local user time
-const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
-  if (!date || !time) {
-    return {
-      localDate: "Invalid date",
-      localTime: "Invalid time",
-      timeZone: "IST",
-    };
-  }
-
-  try {
-    const userTimeZone = window.userTimeZoneFromIP || Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    if (userTimeZone === "Asia/Kolkata" || userTimeZone === "Asia/Calcutta") {
-      return {
-        localDate: new Date(`${date}`).toLocaleDateString("en-IN", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }),
-        localTime: time,
-        timeZone: "IST",
-      };
-    }
-
-    const [timePart, modifier] = time.split(" ");
-    let [hours, minutes] = timePart.split(":");
-    if (modifier === "PM" && hours !== "12") hours = String(+hours + 12);
-    if (modifier === "AM" && hours === "12") hours = "00";
-
-    const istISODateTime = `${date}T${hours.padStart(2, "0")}:${minutes}:00`;
-    const istDate = new Date(`${istISODateTime}+05:30`);
-
-    const localDateTime = new Date(
-      istDate.toLocaleString("en-US", { timeZone: userTimeZone })
-    );
-
-    const localDate = localDateTime.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-
-    const localTime = localDateTime.toLocaleTimeString(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    let timeZoneAbbreviation = "";
-    try {
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: userTimeZone,
-        timeZoneName: 'short',
-      });
-      const parts = formatter.formatToParts(localDateTime);
-      const tz = parts.find((p) => p.type === "timeZoneName");
-      timeZoneAbbreviation = tz ? tz.value : "";
-    } catch {
-      timeZoneAbbreviation = "";
-    }
-
-    return {
-      localDate,
-      localTime,
-      timeZone: timeZoneAbbreviationMap[userTimeZone] || timeZoneAbbreviation || "IST",
-    };
-  } catch {
-    return {
-      localDate: "Error",
-      localTime: "Error",
-      timeZone: "IST",
-    };
-  }
-};
 
   useEffect(() => {
     fetch("https://ipwho.is/")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.timezone?.id) {
-          window.userTimeZoneFromIP = data.timezone.id;
-        } else {
-          window.userTimeZoneFromIP = "America/New_York"; // fallback timezone
-        }
+        window.userTimeZoneFromIP = data?.timezone?.id || "America/New_York";
         const userCountryCode = data?.country_code || "US";
-  
         const matchedCountry = countries.find(
           (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
         );
-  
-        setSelectedCountry(
-          matchedCountry || {
-            name: "United States",
-            code: "+1",
-            flag: "US",
-          }
-        );
+        setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
       })
       .catch(() => {
         window.userTimeZoneFromIP = "America/New_York";
-        setSelectedCountry({
-          name: "United States",
-          code: "+1",
-          flag: "US",
-        });
+        setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
       });
   }, []);
+
   const handleScrollToWorkshop = () => {
     if (workshopRef.current) {
       workshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.mobileNumber || !formData.fullName || !formData.emailId) {
@@ -278,29 +158,27 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
     setMessageType('');
     const currentDate = new Date().toISOString().split("T")[0];
     const timeZoneShort = timeZoneAbbreviationMap[resolvedTimeZone] || resolvedTimeZone || "IST";
+
     const updatedFormData = {
-      fullName: formData.fullName,
-      courseCategory: formData.courseCategory || "",
-      time: formData.time || "",
-      message: "register",
-      emailId: formData.emailId,
-      mobileNumber: formData.mobileNumber,
-      timeZone: timeZoneShort  || "IST",
-      courseName: [formData.courseName || ""],
+      ...formData,
       date: currentDate,
+      message: "register",
+      timeZone: timeZoneShort,
+      courseName: [formData.courseName || ""],
       country: selectedCountry.name
     };
+
     try {
       const response = await axios.post("https://api.test.hachion.co/workshops", updatedFormData);
       setError("Registration for workshop done successfully");
       setMessageType('success');
-      console.log("Response:", response.data);
     } catch (error) {
       console.error("Error submitting form:", error);
       setError("Something went wrong. Please try again.");
       setMessageType('error');
     }
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -325,6 +203,53 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       }
     };
   }, []);
+  useEffect(() => {
+    const fetchWorkshop = async () => {
+      try {
+        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
+        const workshops = response.data;
+
+        // Recreate the slug to find the correct workshop
+        const found = workshops.find(w =>
+          w.title
+            .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-') === slug
+        );
+
+        setWorkshop(found);
+      } catch (error) {
+        console.error('Error fetching workshop:', error);
+      }
+    };
+
+    fetchWorkshop();
+  }, [slug]);
+
+  if (!workshop) {
+    return <p>Loading workshop...</p>;
+  }
+  const formatDateWithOrdinal = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+
+  const getOrdinalSuffix = (n) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
+  };
+
+  const shortMonth = date.toLocaleString("en-US", { month: "short" }); 
+  return `${shortMonth} ${day}${getOrdinalSuffix(day)}`;
+};
+
+  const formattedDate = formatDateWithOrdinal(workshop.date);
+  const handleImageError = (e) => {
+    e.target.src = placeholderImage;
+  };
+
   return (
     <>
     <Helmet>
@@ -336,45 +261,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
    </Helmet>
       <Topbar />
       <NavbarTop />
-      {/* <div className='work-details'>
-      <div className='course-row'>
-      <div class="col-md-3">
-          <label for="inputState" class="form-label">Workshop Category Name</label>
-          <select
-    id="inputState"
-    className="form-select"
-    name="category_name"
-    value={workshopData.category_name}
-    onChange={(e) => setWorkshopData({ ...workshopData, category_name: e.target.value })}
-  >
-    <option value="" disabled>Select Category</option>
-    {categories.map((cat, idx) => (
-      <option key={idx} value={cat}>{cat}</option>
-    ))}
-  </select>
-      </div>
-      <div className="col-md-3">
-      <label htmlFor="course" className="form-label">Workshop Course Name</label>      <select
-    id="course"
-    className="form-select"
-    name="course_name"
-    value={workshopData.course_name}
-    onChange={(e) => setWorkshopData({ ...workshopData, course_name: e.target.value })}
-    disabled={!workshopData.category_name}
-  >
-    <option value="" disabled>Select Course</option>
-    {courses.map((course, idx) => (
-      <option key={idx} value={course}>{course}</option>
-    ))}
-  </select>
-    </div>
-      <div>
-        <button className="workshop-button" onClick={handleSearch}>
-        Submit
-      </button>
-      </div>
-      </div>
-      </div> */}
       <div className='blogs-header'>
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -396,11 +282,12 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
                   ? `https://api.test.hachion.co/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
-      
+            onError={handleImageError}
             className="d-block w-100"
             onClick={handleScrollToWorkshop}
           />
         </div>
+        <h1 className='workshop-heading'>Join in {workshop.title}</h1>
         <div className='workshop-content'>
           <h2 className='workshop-heading'>About training program</h2>
           <div className='workshop-top'>
@@ -412,22 +299,11 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
               <h3 className='workshop-text'>Workshop Details</h3>
               <div className='workshop-text-details'>
               <p>
-  Date: {
-    (() => {
-      if (!workshop?.localDate) return 'Loading...';
-      const date = new Date(workshop.localDate);
-      const day = date.getDate();
-      const month = date.toLocaleString('default', { month: 'long' });
-      const suffix = (day > 3 && day < 21)
-        ? 'th'
-        : (['st', 'nd', 'rd'][day % 10 - 1] || 'th');
-      return `${day}${suffix} ${month}`;
-    })()
-  }
-</p>
-  <p>
-    Time: {workshop?.localTime} {workshop?.timeZone}
-  </p>
+              Date: {formattedDate}
+            </p>
+          <p>
+            Time: {workshop.time} {workshop.time_zone}
+          </p>
         <p>(4 Days a Week: Monday - Thursday)</p>
         <p>Time Duration: 1 Hour Daily</p>
       </div>
@@ -487,7 +363,6 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
   </label>
 
   <div className="input-wrapper" style={{ position: 'relative' }}>
-    {/* Country code dropdown button (inside input field) */}
     <button
       variant="text"
       onClick={openMenu}
@@ -529,6 +404,7 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
       marginBottom: '10px', fontWeight:'700'
     }}
   >
+    <p className={`form-message ${messageType === 'error' ? 'error-text' : 'success-text'}`}></p>
     {error}
   </div>
 )}
@@ -542,6 +418,10 @@ const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
         </div>
         </form> 
         </div>
+        </div>
+        <div className='blog-bottom'>
+        <h2 className='workshop-heading'>Recent Workshop Entries</h2>
+        <WorkshopEntries />
         </div>
       <div ref={footerRef}>
         <Footer />

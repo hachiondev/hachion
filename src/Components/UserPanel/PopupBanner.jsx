@@ -13,7 +13,7 @@ const PopupBanner = () => {
   useEffect(() => {
     const fetchPopupBanner = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/banner");
+        const response = await axios.get("https://api.hachion.co/banner");
         const enabledPopup = response.data.find(
           (banner) => banner.status === "Enabled" && banner.banner_image
         );
@@ -59,7 +59,7 @@ const PopupBanner = () => {
         </button>
         <a href="/coursedetails">
           <img
-            src={`https://api.test.hachion.co/${popupBanner.banner_image}`}
+            src={`https://api.hachion.co/${popupBanner.banner_image}`}
             alt="Popup Banner"
             className="popup-image"
           />

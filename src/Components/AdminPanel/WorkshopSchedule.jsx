@@ -124,7 +124,7 @@ const handleDateChange = (newValue) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+      const response = await axios.get("https://api.hachion.co/course-categories/all");
       setCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -135,7 +135,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
-      const response = await axios.get("https://api.test.hachion.co/courses/all");
+      const response = await axios.get("https://api.hachion.co/courses/all");
       setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -221,7 +221,7 @@ const handleChange = (e, quillField = null, quillValue = null) => {
   
     try {
       const response = await axios.post(
-        "https://api.test.hachion.co/workshopschedule/add",
+        "https://api.hachion.co/workshopschedule/add",
         formDataToSend,
         {
           headers: {
@@ -257,7 +257,7 @@ const handleChange = (e, quillField = null, quillValue = null) => {
 useEffect(() => {
   const fetchCourse = async () => {
     try {
-      const response = await axios.get('https://api.test.hachion.co/workshopschedule');
+      const response = await axios.get('https://api.hachion.co/workshopschedule');
       setCourses(response.data);
       setFilteredCourses(response.data);
     //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -294,7 +294,7 @@ const handleDelete = async (id) => {
       return;
     }
 
-    const response = await axios.delete(`https://api.test.hachion.co/workshopschedule/delete/${id}`);
+    const response = await axios.delete(`https://api.hachion.co/workshopschedule/delete/${id}`);
     console.log("Courses deleted successfully:", response.data);
   } catch (error) {
     console.error("Error deleting workshop:", error.response ? error.response.data : error.message);
@@ -331,7 +331,7 @@ const handleSave = async () => {
     }
 
     const response = await axios.put(
-      `https://api.test.hachion.co/workshopschedule/update/${selectedRow.id}`,
+      `https://api.hachion.co/workshopschedule/update/${selectedRow.id}`,
       formDataToSend,
       {
         headers: {
@@ -727,7 +727,7 @@ const quillModules = {
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
               <StyledTableCell align="center">
               {course.banner_image ? <img
-                src={`https://api.test.hachion.co/${course.banner_image}`} 
+                src={`https://api.hachion.co/${course.banner_image}`} 
                     alt={`Banner`}
                     style={{ width: "100px", height: "50px" }}
                 /> : 'No Banner'}

@@ -144,7 +144,7 @@ useEffect(() => {
     return;
   }
   try {
-    const response = await axios.delete(`https://api.test.hachion.co/payments/${id}`);
+    const response = await axios.delete(`https://api.hachion.co/payments/${id}`);
     
     if (response.status === 200) {
       
@@ -204,7 +204,7 @@ setErrorMessage("❌ Failed to delete payment.");
   const fetchByStudentId = async () => {
     if (paymentData.student_ID) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -224,7 +224,7 @@ useEffect(() => {
   const fetchByEmail = async () => {
     if (paymentData.email) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?email=${paymentData.email}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?email=${paymentData.email}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -245,7 +245,7 @@ useEffect(() => {
   const fetchByMobile = async () => {
     if (paymentData.mobile) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
+        const res = await fetch(`https://api.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
         const data = await res.json();
         setPaymentData((prev) => ({
           ...prev,
@@ -265,7 +265,7 @@ useEffect(() => {
   const fetchCourseFee = async () => {
     if (paymentData.course_name) {
       try {
-        const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+        const res = await fetch(`https://api.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
         const data = await res.json();
         if (data && data.courseFee !== undefined) {
           setPaymentData((prev) => ({
@@ -283,7 +283,7 @@ useEffect(() => {
 }, [paymentData.course_name]);
 
 useEffect(() => {
-  axios.get("https://api.test.hachion.co/payments")
+  axios.get("https://api.hachion.co/payments")
     .then((response) => {
       const normalizedData = response.data.map((item) => ({
         id: item.paymentId,
@@ -453,9 +453,8 @@ const handleSave = async (e) => {
   const formData = new FormData();
   const currentDate = new Date().toISOString().split("T")[0];
 
-  const formattedInstallments = rows.map((row) => ({
+  const formattedInstallments = rows.map((row, index) => ({
     payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
-    dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
     paymentMethod: row.method,
     numberOfInstallments: parseInt(row.installments),
     actualPay: parseFloat(row.actual_pay),
@@ -490,7 +489,7 @@ const handleSave = async (e) => {
   });
 
   try {
-    const response = await axios.post("https://api.test.hachion.co/payments", formData, {
+    const response = await axios.post("https://api.hachion.co/payments", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -544,7 +543,7 @@ const handleSendToEmail = async (e) => {
   };
 
   try {
-    await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
+    await axios.post("https://api.hachion.co/payments/generateInvoice", invoicePayload);
     setSuccessMessage("📩 Invoice generated and sent to email.");
   } catch (err) {
     console.error("❌ Invoice generation failed:", err);
@@ -615,7 +614,7 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
     selectedInstallmentId: selectedInstallmentId,
   }));
   try {
-    const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
+    const response = await axios.put(`https://api.hachion.co/payments/${selectedPaymentId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -632,6 +631,101 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
   } catch (error) {
     setSuccessMessage("");
     setErrorMessage("❌ Error updating payment. Please try again.");
+  }
+};
+const handleSaveAndSendInvoice = async (e) => {
+  e.preventDefault();
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  const formData = new FormData();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const formattedInstallments = rows.map((row) => ({
+    payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+    dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+    paymentMethod: row.method,
+    numberOfInstallments: parseInt(row.installments),
+    actualPay: parseFloat(row.actual_pay),
+    receivedPay: parseFloat(row.received_pay),
+    proof: row.proof_image?.name || "",
+    reference: row.reference,
+  }));
+
+  const payload = {
+    studentId: paymentData.student_ID,
+    studentName: paymentData.student_name,
+    email: paymentData.email,
+    mobile: paymentData.mobile,
+    courseName: paymentData.course_name,
+    courseFee: parseFloat(paymentData.course_fee),
+    tax: parseFloat(paymentData.tax),
+    discount: parseFloat(paymentData.discount),
+    noOfInstallments: parseInt(paymentData.installments),
+    noOfDays: parseInt(paymentData.days),
+    totalAmount: parseFloat(paymentData.total),
+    balancePay: parseFloat(paymentData.balance),
+    installments: formattedInstallments,
+    date: currentDate,
+  };
+
+  formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+
+  rows.forEach((row) => {
+    if (row.proof_image && typeof row.proof_image !== "string") {
+      formData.append("proof", row.proof_image);
+    }
+  });
+
+  try {
+    // Step 1: Save payment
+    const saveResponse = await axios.post("https://api.hachion.co/payments", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (saveResponse.status === 200 || saveResponse.status === 201) {
+      const paymentId = saveResponse.data.paymentId;
+      const invoiceNumber = saveResponse.data.invoiceNumber;
+      setSuccessMessage("✅ Payment added successfully.");
+      setSelectedPaymentId(paymentId);
+      setInvoiceNumber(invoiceNumber);
+      setIsSaved(true);
+
+      // Step 2: Send invoice
+      const selectedInstallmentId = lastModifiedInstallmentId || rows[0]?.installmentId;
+      const totalReceivedPay = rows.reduce((sum, row) => {
+        const received = parseFloat(row.received_pay);
+        return sum + (isNaN(received) ? 0 : received);
+      }, 0);
+
+      const invoicePayload = {
+        paymentId,
+        invoiceNumber,
+        studentName: paymentData.student_name,
+        email: paymentData.email,
+        mobile: paymentData.mobile,
+        balancePay: parseFloat(paymentData.balance),
+        courseName: paymentData.course_name,
+        courseFee: parseFloat(paymentData.course_fee),
+        discount: parseFloat(paymentData.discount),
+        tax: parseFloat(paymentData.tax),
+        totalAmount: parseFloat(paymentData.total),
+        status: parseFloat(paymentData.balance) === 0 ? "PAID" : "PARTIALLY PAID",
+        selectedInstallmentId: selectedInstallmentId,
+        installments: rows.map((row) => ({
+          installmentId: row.installmentId,
+          payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+          dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+          receivedPay: totalReceivedPay,
+        })),
+      };
+
+      await axios.post("https://api.hachion.co/payments/generateInvoice", invoicePayload);
+      setSuccessMessage("📩 Invoice generated and sent to email.");
+    }
+  } catch (error) {
+    console.error("❌ Error:", error);
+    setErrorMessage("❌ Something went wrong. Please try again.");
   }
 };
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
@@ -747,7 +841,7 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
 </div>
 <div className='course-row' style={{ marginTop: 5 }}>
 <button className='filter' >Send Remainder</button>
-<button className='filter' >Send Invoice</button>
+<button className='filter' onClick={handleSaveAndSendInvoice}>Send Invoice</button>
 </div>
  <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650, marginTop: 2 }} aria-label="customized table">
@@ -833,7 +927,7 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
       <img
         src={
           typeof curr.proof_image === 'string'
-            ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+            ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
             : URL.createObjectURL(curr.proof_image)
         }
         alt="proof"
@@ -848,7 +942,7 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
         onClick={() =>
           window.open(
             typeof curr.proof_image === 'string'
-              ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+              ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
               : URL.createObjectURL(curr.proof_image),
             '_blank'
           )

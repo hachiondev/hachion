@@ -154,7 +154,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCategory(response.data);
       } catch (error) {
@@ -165,7 +165,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -185,7 +185,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/trainers");
+        const response = await axios.get("https://api.hachion.co/trainers");
         setTrainer(response.data);
       } catch (error) {
       }
@@ -292,7 +292,7 @@ const handleSubmit = async () => {
 
     try {
       const response = await axios.post(
-        "https://api.test.hachion.co/schedulecourse/add",
+        "https://api.hachion.co/schedulecourse/add",
         formattedCourseData
       );
       return response.status === 201 || response.status === 200;
@@ -357,7 +357,7 @@ const isFormValid = () => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/schedulecourse?userType=admin"
+          "https://api.hachion.co/schedulecourse?userType=admin"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -387,7 +387,7 @@ const isFormValid = () => {
   const handleDelete = async (course_schedule_id) => {
     try {
       await axios.delete(
-        `https://api.test.hachion.co/schedulecourse/delete/${course_schedule_id}`
+        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
       setCourses((prevCourses) =>
         prevCourses.filter(
@@ -413,7 +413,7 @@ const isFormValid = () => {
         schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
       };
       const response = await axios.put(
-        `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
         editedRow
       );
       setCourses((prevCourses) =>

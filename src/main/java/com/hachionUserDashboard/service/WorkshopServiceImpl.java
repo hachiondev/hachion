@@ -190,10 +190,8 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 		helper.setTo(formRequest.getEmailId());
-//	    helper.setCc("trainings@hachion.co");
 		helper.setSubject("Your Registration for " + formRequest.getCourseName() + " Workshop is Successful!");
 
-		// HTML Email Content
 		String emailContent = "<html><head><style>"
 				+ "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; text-align: center; }"
 				+ ".email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; "
@@ -270,7 +268,6 @@ public class WorkshopServiceImpl implements WorkshopServiceInterface {
 		// Attach LinkedIn icon
 		FileSystemResource linkedinRes = new FileSystemResource(new File(imageUploadPath + "linkedin.png"));
 		helper.addInline("linkedinIcon", linkedinRes);
-
 
 		// Attach header image
 //		FileSystemResource headerRes = new FileSystemResource(

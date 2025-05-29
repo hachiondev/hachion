@@ -40,16 +40,16 @@ public interface RegisterStudentRepository extends JpaRepository <RegisterStuden
 	@Query(value = "SELECT name, student_id, email FROM enroll WHERE course_name = :courseName", nativeQuery = true)
 	List<Object[]> findUsersByCourseName(@Param("courseName") String courseName);
 	
-	@Query(value = "SELECT user_name, email FROM user_tbl WHERE student_id = :studentId", nativeQuery = true)
+	@Query(value = "SELECT name, email FROM enroll WHERE student_id = :studentId", nativeQuery = true)
 	List<Object[]> findUserNameEmailByStudentId(@Param("studentId") String studentId);
 
-	@Query(value = "SELECT student_id, email FROM registerstudent WHERE user_name = :userName", nativeQuery = true)
+	@Query(value = "SELECT student_id, email FROM enroll WHERE name = :userName", nativeQuery = true)
 	List<Object[]> findStudentIdEmailByUserName(@Param("userName") String userName);
 
 	@Query(value = "SELECT e.completion_date " +
-            "FROM registerstudent u " +
-            "JOIN enroll e ON u.user_name = e.name " +
-            "WHERE e.course_name = :courseName AND u.user_name = :userName", nativeQuery = true)
+            "FROM enroll e " +
+            "WHERE e.course_name = :courseName AND e.name = :userName", 
+    nativeQuery = true)
 String findCompletionDateByCourseAndUser(@Param("courseName") String courseName,
                                        @Param("userName") String userName);
 

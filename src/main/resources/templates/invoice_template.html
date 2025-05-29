@@ -214,7 +214,7 @@
 
 		            <!-- Right Column: Amount Info -->
 		            <td style="vertical-align: top; width: 40%; text-align: right;">
-						<div style="margin-bottom: 5px;">
+						<div th:if="${status != null}" style="margin-bottom: 5px;">
 						    <span style="color: rgb(3, 153, 3); border: 1px solid rgb(3, 153, 3); font-weight: 600; padding: 2px 5px; border-radius: 5px; display: inline-block;">
 						        <span th:text="${status == 'PAID'} ? 'PAID' : 'PARTIALLY PAID'"></span>
 						    </span>

@@ -25,9 +25,15 @@ public interface CourseScheduleRepository extends JpaRepository <CourseSchedule,
 	@Transactional
 	@Query(value = """
 	    DELETE FROM schedule 
-	    WHERE 
+	    WHERE schedule_mode = 'Live Demo' AND  
 	      STR_TO_DATE(CONCAT(schedule_date, ' ', LOWER(schedule_time)), '%Y-%m-%d %h:%i %p') 
 	      < STR_TO_DATE(:currentDateTime, '%Y-%m-%d %h:%i %p')
+	      OR
+      (
+        schedule_mode = 'Live Class' AND  
+        DATE_ADD(STR_TO_DATE(schedule_date, '%Y-%m-%d'), INTERVAL 3 DAY) 
+        < STR_TO_DATE(:currentDateTime, '%Y-%m-%d %h:%i %p')
+      )
 	""", nativeQuery = true)
 	int deletePastWorkshops(@Param("currentDateTime") String currentDateTime);
 

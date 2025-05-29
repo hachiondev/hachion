@@ -199,6 +199,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -240,18 +241,17 @@ public class CourseController {
 
 	private final String uploadDir = System.getProperty("user.home") + "/uploads/";
 
-	// Method to upload image file
 	private String saveImage(MultipartFile image) throws IOException {
 		if (image != null && !image.isEmpty()) {
-			// Ensure the image directory exists
+
 			File directory = new File(uploadDir + "images/");
 			if (!directory.exists()) {
-				directory.mkdirs(); // Create directories if they do not exist
+				directory.mkdirs();
 			}
 
 			Path imagePath = Paths.get(directory.getAbsolutePath(), image.getOriginalFilename());
-			Files.write(imagePath, image.getBytes()); // Save image to disk
-			return "images/" + image.getOriginalFilename(); // Save relative path in DB
+			Files.write(imagePath, image.getBytes());
+			return "images/" + image.getOriginalFilename();
 		}
 		return null;
 	}
@@ -260,17 +260,16 @@ public class CourseController {
 	public ResponseEntity<String> addCourse(@RequestPart("course") String courseData,
 			@RequestPart("courseImage") MultipartFile courseImage) {
 		try {
-			// Parse the course data (course details, excluding image)
+
 			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule()); // Register the module for Java 8 Date/Time types
+			objectMapper.registerModule(new JavaTimeModule());
 			Course course = objectMapper.readValue(courseData, Course.class);
 
-			// Process the image
 			if (!courseImage.isEmpty()) {
-				// Save the image and get the relative path
+
 				String imagePath = saveImage(courseImage);
 				if (imagePath != null) {
-					course.setCourseImage(imagePath); // Save image path in the course object
+					course.setCourseImage(imagePath);
 				} else {
 					return ResponseEntity.badRequest().body("Failed to save image.");
 				}
@@ -278,10 +277,8 @@ public class CourseController {
 				return ResponseEntity.badRequest().body("Course image is required.");
 			}
 
-			// Save the course data to the database
 			repo.save(course);
 
-			// Respond with a success message
 			return ResponseEntity.status(HttpStatus.CREATED).body("Course added successfully.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -366,21 +363,49 @@ public class CourseController {
 		}
 	}
 
+//	@DeleteMapping("/delete/{id}")
+//	public ResponseEntity<?> deleteCourse(@PathVariable int id) {
+//		Course course = repo.findById(id).get();
+//		repo.delete(course);
+//		return null;
+//
+//	}
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteCourse(@PathVariable int id) {
-		Course course = repo.findById(id).get();
-		repo.delete(course);
-		return null;
+		try {
+			Optional<Course> optionalCourse = repo.findById(id);
+			if (optionalCourse.isPresent()) {
+				Course course = optionalCourse.get();
 
+				String imagePath = course.getCourseImage();
+				if (imagePath != null) {
+					Path fullImagePath = Paths.get(System.getProperty("user.home") + "/uploads/", imagePath);
+					File imageFile = fullImagePath.toFile();
+					if (imageFile.exists()) {
+						imageFile.delete();
+					}
+				}
+
+				repo.delete(course);
+
+				return ResponseEntity.ok("Course and image deleted successfully.");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting course.");
+		}
 	}
-	 @GetMapping("/category")
-	    public ResponseEntity<?> getCoursesByCategory(@RequestParam String courseCategory) {
-	        List<Course> courses = repo.findCoursesByCategory(courseCategory);
-	        
-	        if (courses.isEmpty()) {
-	            return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); // Custom message
-	        }
-	        
-	        return new ResponseEntity<>(courses, HttpStatus.OK);
-	    }
+
+	@GetMapping("/category")
+	public ResponseEntity<?> getCoursesByCategory(@RequestParam String courseCategory) {
+		List<Course> courses = repo.findCoursesByCategory(courseCategory);
+
+		if (courses.isEmpty()) {
+			return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); // Custom message
+		}
+
+		return new ResponseEntity<>(courses, HttpStatus.OK);
+	}
 }

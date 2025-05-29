@@ -63,4 +63,20 @@ public class EmailService {
 			throw new RuntimeException("Email sending failed", e);
 		}
 	}
+
+	public void sendEmailForReminder(String to, String subject, String htmlContent) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setText(htmlContent, true);
+			helper.setFrom("hachion.trainings@gmail.com");
+
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			throw new RuntimeException("Failed to send email", e);
+		}
+	}
 }

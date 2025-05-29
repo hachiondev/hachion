@@ -58,6 +58,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hachionUserDashboard.dto.CertificateRequest;
@@ -75,6 +76,9 @@ public class Certificateimp implements CertificateService {
 	
 	@Autowired
 	private EmailService emailService;
+
+	@Value("${certificate.base-path}")
+	private String certificateBasePath;
 
 	@Override
 	public CertificateEntity generateCertificate(CertificateRequest request) {
@@ -117,12 +121,13 @@ public class Certificateimp implements CertificateService {
 
 	public String generateCertificatePdf(String studentName, String studentId, String courseName,
 			String completionDate) {
-		String folderPath = "certificates";
-		String outputPdfPath = folderPath + "/" + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
+//		String folderPath = "certificates";
+//		String outputPdfPath = folderPath + "/" + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
+//		String inputPdfPath = "src/main/resources/templates/Hachion's CertificateFinal.pdf";
 
-//		String outputPdfPath = folderPath + "/" + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_Certificate.pdf";
-//		String outputPdfPath = folderPath + "/" + studentId + "_Certificate.pdf";
-		String inputPdfPath = "src/main/resources/templates/Hachion's CertificateFinal.pdf";
+		String folderPath = certificateBasePath;
+		String outputPdfPath = folderPath + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
+		String inputPdfPath = folderPath + "Hachion's CertificateFinal.pdf";
 
 		try {
 			File folder = new File(folderPath);

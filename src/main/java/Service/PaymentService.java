@@ -31,4 +31,10 @@ public interface PaymentService {
 
 	public String generateInvoice(PaymentRequest paymentRequest, Model model);
 
+//	String generateInvoiceBeforePayment(PaymentRequest paymentRequest, Model model);
+	
+	public void sendReminderEmail(PaymentRequest paymentRequest);
+
+//	public String generateInvoiceBeforePayment(PaymentRequest paymentRequest, Model model)
+
 }

@@ -11,11 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hachionUserDashboard.entity.RegisterStudent;
 
-public interface RegisterStudentRepository extends JpaRepository <RegisterStudent,Integer> {
+public interface RegisterStudentRepository extends JpaRepository<RegisterStudent, Integer> {
 
-	
 	RegisterStudent findByEmail(String email);
-	
+
 	@Query("SELECT u FROM RegisterStudent u WHERE u.email = :email")
 	Optional<RegisterStudent> findByEmailForProfile(String email);
 
@@ -23,7 +22,8 @@ public interface RegisterStudentRepository extends JpaRepository <RegisterStuden
 	Optional<RegisterStudent> findBYEmailForOauth(@Param("email") String email);
 
 	@Query("SELECT u FROM RegisterStudent u WHERE u.email = :email AND u.password = :password")
-	Optional<RegisterStudent> findOneByEmailAndPassword(@Param("email") String email, @Param("password") String password);
+	Optional<RegisterStudent> findOneByEmailAndPassword(@Param("email") String email,
+			@Param("password") String password);
 
 	@Modifying
 	@Transactional
@@ -39,18 +39,19 @@ public interface RegisterStudentRepository extends JpaRepository <RegisterStuden
 
 	@Query(value = "SELECT name, student_id, email FROM enroll WHERE course_name = :courseName", nativeQuery = true)
 	List<Object[]> findUsersByCourseName(@Param("courseName") String courseName);
-	
+
 	@Query(value = "SELECT name, email FROM enroll WHERE student_id = :studentId", nativeQuery = true)
 	List<Object[]> findUserNameEmailByStudentId(@Param("studentId") String studentId);
 
 	@Query(value = "SELECT student_id, email FROM enroll WHERE name = :userName", nativeQuery = true)
 	List<Object[]> findStudentIdEmailByUserName(@Param("userName") String userName);
 
-	@Query(value = "SELECT e.completion_date " +
-            "FROM enroll e " +
-            "WHERE e.course_name = :courseName AND e.name = :userName", 
-    nativeQuery = true)
-String findCompletionDateByCourseAndUser(@Param("courseName") String courseName,
-                                       @Param("userName") String userName);
+	@Query(value = "SELECT e.completion_date " + "FROM enroll e "
+			+ "WHERE e.course_name = :courseName AND e.name = :userName", nativeQuery = true)
+	String findCompletionDateByCourseAndUser(@Param("courseName") String courseName,
+			@Param("userName") String userName);
+
+	@Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM register_student WHERE email = :email", nativeQuery = true)
+	boolean existsByEmail(@Param("email") String email);
 
 }

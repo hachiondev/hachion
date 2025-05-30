@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
+import com.hachionUserDashboard.service.EmailService;
 
 @CrossOrigin
 //@CrossOrigin(origins ="http://localhost:3000")
@@ -23,34 +25,49 @@ import com.hachionUserDashboard.repository.RegisterStudentRepository;
 @RestController
 public class RegisterStudentController {
 
-    
+	@Autowired
+	private RegisterStudentRepository repo;
 
-    @Autowired
-    private RegisterStudentRepository repo;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private EmailService emailService;
 
-    @GetMapping("/registerstudent/{id}")
-    public ResponseEntity<RegisterStudent> getRegisterStudent(@PathVariable Integer id) {
-        return repo.findById(id)
-                   .map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@GetMapping("/registerstudent/{id}")
+	public ResponseEntity<RegisterStudent> getRegisterStudent(@PathVariable Integer id) {
+		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @GetMapping("/registerstudent")
-    public List<RegisterStudent> getAllRegisterStudent() {
-        return repo.findAll();
-    }
-    @PostMapping("registerstudent/add")
-    public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) {
-        student.setAdditional_email(null);
-        student.setAdditional_phone(0); // Assuming 0 as default value for int
-        student.setPassword(null);
-        student.setStudentId(generateNextStudentId());
-       repo.save(student);
-       System.out.println("Add data: " +student);
-        return ResponseEntity.ok("Student added successfully");
-    }
-    private String generateNextStudentId() {
+	@GetMapping("/registerstudent")
+	public List<RegisterStudent> getAllRegisterStudent() {
+		return repo.findAll();
+	}
+
+	@PostMapping("registerstudent/add")
+	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) {
+
+		if (repo.existsByEmail(student.getEmail())) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists in the system");
+		}
+
+		student.setAdditional_email(null);
+		student.setAdditional_phone(0);
+
+		String tempPassword = "Hach@123";
+		String hashedPassword = passwordEncoder.encode(tempPassword);
+		student.setPassword(hashedPassword);
+
+		student.setStudentId(generateNextStudentId());
+
+		emailService.sendWelcomeEmail(student.getEmail(), tempPassword);
+
+		repo.save(student);
+		System.out.println("Add data: " + student);
+		return ResponseEntity.ok("Student added successfully");
+	}
+
+	private String generateNextStudentId() {
 		String prefix = "HACH";
 		String lastStudentId = repo.findTopByOrderByStudentIdDesc();
 
@@ -86,34 +103,36 @@ public class RegisterStudentController {
 //        }
 //    }
 
-
 //    @PostMapping("/registerstudent/add")
 //    @ResponseStatus(code = HttpStatus.CREATED)
 //    public void createRegisterStudent(@RequestBody RegisterStudent registerstudent) {
 //        repo.save(registerstudent);
 //    }
 //
-    @PutMapping("/registerstudent/update/{id}")
-    public ResponseEntity<RegisterStudent> updateRegisterStudent(@PathVariable int id, @RequestBody RegisterStudent updatedRegisterStudent) {
-        return repo.findById(id).map(registerstudent -> {
-            registerstudent.setUserName(updatedRegisterStudent.getUserName());
-           registerstudent.setMobile(updatedRegisterStudent.getMobile());
-           registerstudent.setEmail(updatedRegisterStudent.getEmail());
-           registerstudent.setLocation(updatedRegisterStudent.getLocation());
-           registerstudent.setCountry(updatedRegisterStudent.getCountry());
-           registerstudent.setTime_zone(updatedRegisterStudent.getTime_zone());
-           registerstudent.setCourse_name(updatedRegisterStudent.getCourse_name());
-           registerstudent.setAdditional_email(updatedRegisterStudent.getAdditional_email());
-           registerstudent.setAdditional_phone(updatedRegisterStudent.getAdditional_phone());
-           registerstudent.setPassword(updatedRegisterStudent.getPassword());
-            repo.save(registerstudent);
-            return ResponseEntity.ok(registerstudent);
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+	@PutMapping("/registerstudent/update/{id}")
+	public ResponseEntity<RegisterStudent> updateRegisterStudent(@PathVariable int id,
+			@RequestBody RegisterStudent updatedRegisterStudent) {
+		return repo.findById(id).map(registerstudent -> {
+			registerstudent.setUserName(updatedRegisterStudent.getUserName());
+			registerstudent.setMobile(updatedRegisterStudent.getMobile());
+			registerstudent.setEmail(updatedRegisterStudent.getEmail());
+			registerstudent.setLocation(updatedRegisterStudent.getLocation());
+			registerstudent.setCountry(updatedRegisterStudent.getCountry());
+			registerstudent.setTime_zone(updatedRegisterStudent.getTime_zone());
+			registerstudent.setCourse_name(updatedRegisterStudent.getCourse_name());
+			registerstudent.setAdditional_email(updatedRegisterStudent.getAdditional_email());
+			registerstudent.setAdditional_phone(updatedRegisterStudent.getAdditional_phone());
+			registerstudent.setPassword(updatedRegisterStudent.getPassword());
+			repo.save(registerstudent);
+			return ResponseEntity.ok(registerstudent);
+		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
-    @DeleteMapping("registerstudent/delete/{id}") public ResponseEntity<?>
-    deleteRegisterStudent(@PathVariable int id) { RegisterStudent registerstudent=
-    repo.findById(id).get(); repo.delete(registerstudent); return null;
-    
-    }
+	@DeleteMapping("registerstudent/delete/{id}")
+	public ResponseEntity<?> deleteRegisterStudent(@PathVariable int id) {
+		RegisterStudent registerstudent = repo.findById(id).get();
+		repo.delete(registerstudent);
+		return null;
+
+	}
 }

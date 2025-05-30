@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.repository.EnrollRepository;
+import com.hachionUserDashboard.service.EmailService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -29,9 +30,14 @@ import jakarta.mail.internet.MimeMessage;
 public class EnrollController {
 	@Autowired
 	private EnrollRepository repo;
+	
 	@Autowired
-	public JavaMailSender javaMailSender;
+	private JavaMailSender javaMailSender;
+	
+	@Autowired
+	private EmailService emailService;
 
+	
 	@GetMapping("/enroll/{id}")
 	public ResponseEntity<Enroll> getEnroll(@PathVariable Integer id) {
 		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -43,7 +49,7 @@ public class EnrollController {
 	}
 
 	@PostMapping("/enroll/add")
-	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) {
+	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) throws MessagingException {
 
 		Enroll enroll = new Enroll();
 		enroll.setStudentId(requestEnroll.getStudentId());
@@ -57,7 +63,8 @@ public class EnrollController {
 		enroll.setAmount(requestEnroll.getAmount());
 		enroll.setTrainer(requestEnroll.getTrainer());
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
-		sendEnrollEmail(enroll);
+//		sendEnrollEmail(enroll);
+		emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(), null, requestEnroll.getEnroll_date(), requestEnroll.getTime(), null, requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), null, null, null, null, null, null, null, null);
 
 		repo.save(enroll);
 

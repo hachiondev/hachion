@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Exclusive Demo Session Confirmation</title>
+  <style>
+    /* Base Styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f9ff;
+    }
+    .email-container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: linear-gradient(to bottom, #ffffff 0%, #f8fbff 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 82, 204, 0.15);
+    }
+    
+    /* Header Section */
+    .header {
+      background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+      padding: 40px 30px 80px;
+      text-align: center;
+      position: relative;
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+    }
+    .header h1 {
+      color: white;
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .header p {
+      color: #e0f0ff;
+      font-size: 18px;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .tech-badge {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      padding: 12px 30px;
+      display: inline-block;
+      margin: 25px 0;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Session Details */
+    .session-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin: -60px 30px 30px;
+      box-shadow: 0 10px 25px rgba(26, 86, 219, 0.15);
+      position: relative;
+      z-index: 3;
+      border: 1px solid rgba(26, 86, 219, 0.1);
+    }
+    .detail-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(26, 86, 219, 0.08);
+    }
+    .detail-icon {
+      width: 50px;
+      height: 50px;
+      background: #e6f0ff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+    .detail-content h3 {
+      margin: 0 0 6px;
+      color: #1a3d7c;
+      font-size: 18px;
+    }
+    .detail-content p {
+      margin: 0;
+      color: #4a5568;
+      font-size: 17px;
+      font-weight: 500;
+    }
+    .calendar-button {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      margin: 30px 0 15px;
+      transition: all 0.3s ease;
+    }
+    .calendar-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(26, 86, 219, 0.3);
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+      padding: 0 30px 30px;
+    }
+    .section-title {
+      text-align: center;
+      color: #1a3d7c;
+      font-size: 26px;
+      margin: 0 0 30px;
+      position: relative;
+    }
+    .section-title:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+      border-radius: 2px;
+      margin: 10px auto;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .benefit-card {
+      background: rgba(26, 86, 219, 0.03);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(26, 86, 219, 0.05);
+      transition: all 0.3s ease;
+    }
+    .benefit-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(26, 86, 219, 0.1);
+    }
+    .benefit-card h4 {
+      color: #1a56db;
+      margin: 0 0 10px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+    .benefit-card h4:before {
+      content: '✓';
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      background: #e6f0ff;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 26px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .benefit-card p {
+      color: #4a5568;
+      margin: 0;
+      line-height: 1.6;
+    }
+    
+    /* Tech Updates */
+    .tech-updates {
+      background: linear-gradient(135deg, #f8f9ff 0%, #edf2ff 100%);
+      padding: 40px 30px;
+      margin: 0 30px 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(26, 86, 219, 0.1);
+    }
+    .update-item {
+      padding: 15px 0;
+      border-bottom: 1px dashed rgba(26, 86, 219, 0.15);
+    }
+    .update-item:last-child {
+      border-bottom: none;
+    }
+    .update-item strong {
+      color: #1a56db;
+      font-weight: 600;
+    }
+    
+    /* Footer */
+    .footer-bar {
+      background: #0e2e6d;
+      color: #a3b8ff;
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+    }
+    .footer-bar-links {
+      margin: 15px 0;
+    }
+    .footer-bar-links a {
+      color: #e0f0ff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    .social-icons {
+      margin: 20px 0;
+    }
+    .social-icons a {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      margin: 0 8px;
+      line-height: 40px;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    .social-icons a:hover {
+      background: #1a56db;
+      transform: translateY(-3px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 28px;
+      }
+      .tech-badge {
+        font-size: 18px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="header">
+		<img src="cid:hachion-logo" alt="Hachion Logo" style="display: block; margin: 0 auto;">
+      <div class="header-content">
+        <h1>Your Exclusive Demo Session</h1>
+        <p>Get ready to experience industry-leading training in your chosen technology domain</p>
+        <div class="tech-badge">[Technology Name] Masterclass</div>
+      </div>
+    </div>
+    
+    <!-- Session Details -->
+    <div class="session-card">
+      <div class="detail-item">
+        <div class="detail-icon">📅</div>
+        <div class="detail-content">
+          <h3>Date & Time</h3>
+          <p>[Day], [Date] at [Time] ([Timezone])</p>
+          <p>Duration: 90 minutes</p>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-icon">📍</div>
+        <div class="detail-content">
+          <h3>Join Session</h3>
+          <p>Google Meet: <a href="[Google Meet Link]">Click to Join Session</a></p>
+          <p>Meeting ID: [Meeting ID] | Passcode: [Passcode]</p>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-icon">👨‍💻</div>
+        <div class="detail-content">
+          <h3>Your Instructor</h3>
+          <p>[Instructor Name], [Experience] years experience</p>
+          <p>Ex-[Company] | Certified [Technology] Professional</p>
+        </div>
+      </div>
+      
+      <a href="[Google Calendar Link]" class="calendar-button">Add to Calendar</a>
+      <p style="text-align: center; color: #4a5568; margin-top: 0;">We recommend joining 5 minutes early</p>
+    </div>
+      
+    <!-- Benefits Section -->
+    <div class="benefits-section">
+      <h2 class="section-title">Why Join Hachion Learning Portal?</h2>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <h4>Industry-Aligned Curriculum</h4>
+          <p>Courses designed with direct input from tech leaders at Google, Amazon, and Microsoft</p>
+        </div>
+        <div class="benefit-card">
+          <h4>Real Project Experience</h4>
+          <p>Build portfolio-worthy projects using actual industry datasets and scenarios</p>
+        </div>
+        <div class="benefit-card">
+          <h4>Career Acceleration</h4>
+          <p>92% of our students report career advancement within 6 months of completion</p>
+        </div>
+        <div class="benefit-card">
+          <h4>Personalized Learning Path</h4>
+          <p>AI-driven recommendations tailored to your skill level and career goals</p>
+        </div>
+        <div class="benefit-card">
+          <h4>Expert Mentorship</h4>
+          <p>Weekly 1:1 sessions with industry practitioners</p>
+        </div>
+        <div class="benefit-card">
+          <h4>Job Placement Support</h4>
+          <p>Access to our exclusive hiring partner network with 850+ companies</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer-bar">
+		<div class="social-icons" style="text-align: center; margin-top: 20px;">
+		  <a href="https://www.linkedin.com/company/hachion" target="_blank" style="margin: 0 8px;">
+		    <img src="cid:linkedin-icon" alt="LinkedIn" style="width:40px; height:40px;" />
+		  </a>
+		  <a href="https://www.instagram.com/hachion_trainings" target="_blank" style="margin: 0 8px;">
+		    <img src="cid:instagram-icon" alt="Instagram" style="width:40px; height:40px;" />
+		  </a>
+		  <a href="https://www.facebook.com/hachion.co" target="_blank" style="margin: 0 8px;">
+		    <img src="cid:facebook-icon" alt="Facebook" style="width:40px; height:40px;" />
+		  </a>
+		  <a href="https://www.youtube.com/@hachion" target="_blank" style="margin: 0 8px;">
+		    <img src="cid:youtube-icon" alt="YouTube" style="width:40px; height:40px;" />
+		  </a>
+		  <a href="https://x.com/hachion_co" target="_blank" style="margin: 0 8px;">
+		    <img src="cid:twitter-icon" alt="Twitter" style="width:40px; height:40px;" />
+		  </a>
+		</div>
+      <div class="footer-bar-links">
+        <a href="#">Dashboard</a> | 
+        <a href="#">Browse Courses</a> | 
+        <a href="#">Career Support</a>
+      </div>
+      <p>Hachion Learning Portal · Transform Your Tech Career</p>
+      <p>Questions? Contact us at <a href="mailto:support@hachion.co" style="color: #e0f0ff;">support@hachion.co</a></p>
+      <p>&copy; 2025 Hachion. All rights reserved. 123 Tech Park, Innovation City</p>
+      <p><a href="#" style="color: #a3b8ff;">Unsubscribe</a> | <a href="#" style="color: #a3b8ff;">Privacy Policy</a></p>
+    </div>
+  </div>
+</body>
+</html>

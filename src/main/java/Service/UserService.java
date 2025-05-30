@@ -10,6 +10,7 @@ import com.hachionUserDashboard.entity.RegisterStudent;
 
 import Response.LoginResponse;
 import Response.UserProfileResponse;
+import jakarta.mail.MessagingException;
 
 public interface UserService {
 
@@ -83,7 +84,7 @@ public interface UserService {
 
 	String verifyOtp(String email, String otp);
 
-	String updatePassword(UserRegistrationRequest registrationRequest);
+	String updatePassword(UserRegistrationRequest registrationRequest) throws MessagingException;
 
 	RegisterStudent saveUser(String username, String email);
 //	Map<String, String> getUserInfo(String accessToken);

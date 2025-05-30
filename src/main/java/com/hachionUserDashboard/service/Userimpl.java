@@ -143,6 +143,7 @@ import com.hachionUserDashboard.util.OtpUtil;
 import Response.LoginResponse;
 import Response.UserProfileResponse;
 import Service.UserService;
+import jakarta.mail.MessagingException;
 
 @Service
 public class Userimpl implements UserService {
@@ -156,6 +157,9 @@ public class Userimpl implements UserService {
 	private OtpUtil otpUtil;
 	@Autowired
 	private EmailUtil emailUtil;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -206,8 +210,11 @@ public class Userimpl implements UserService {
 		}
 	}
 
+//	if (userRepository.existsByMobile(registrationRequest.getMobile())) {
+//	throw new RuntimeException("Mobile number already exists in the system");
+//}
 	@Override
-	public String updatePassword(UserRegistrationRequest registrationRequest) {
+	public String updatePassword(UserRegistrationRequest registrationRequest) throws MessagingException {
 
 		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirmPassword())) {
 			return "Password and Confirm Password do not match.";
@@ -217,9 +224,6 @@ public class Userimpl implements UserService {
 			return "Email does not exist.";
 		}
 
-//		if (userRepository.existsByMobile(registrationRequest.getMobile())) {
-//			throw new RuntimeException("Mobile number already exists in the system");
-//		}
 		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 		user.setFirstName(registrationRequest.getFirstName());
 		user.setLastName(registrationRequest.getLastName());
@@ -229,6 +233,9 @@ public class Userimpl implements UserService {
 		user.setCountry(registrationRequest.getCountry());
 		user.setStudentId(generateNextStudentId());
 		user.setMode(registrationRequest.getMode());
+
+		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(), registrationRequest.getUserName());
+
 		userRepository.save(user);
 
 		return "Password and user details updated successfully.";

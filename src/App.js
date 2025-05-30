@@ -38,6 +38,7 @@ import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 import Unsubscribe from "./Components/UserPanel/Unsubscribe";
 import Sitemap from "./Components/UserPanel/Sitemap";
+import KidsSummer from "./Components/UserPanel/KidsSummer";
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -112,6 +113,7 @@ function AppRoutes() {
       <Route path='/privacy' element={<Privacy/>}/>
       <Route path="/unsubscribe" element={<Unsubscribe />} />
       <Route path="/sitemap" element={<Sitemap />} />
+      <Route path="/kids_summer_training" element={<KidsSummer />} />
       </Routes>
     </>
   );

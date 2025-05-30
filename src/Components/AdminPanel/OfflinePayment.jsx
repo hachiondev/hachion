@@ -165,9 +165,12 @@ setErrorMessage("❌ Failed to delete payment.");
 };
 
   const handleClickOpen = (row) => {
+    
   setFormMode("Edit");
   setShowAddCourse(true);
   setSelectedPaymentId(row.id); 
+
+setInvoiceNumber(row.invoiceNumber || "");
 
   setPaymentData({
     student_ID: row.student_ID || "",
@@ -285,6 +288,7 @@ useEffect(() => {
 useEffect(() => {
   axios.get("https://api.hachion.co/payments")
     .then((response) => {
+      
       const normalizedData = response.data.map((item) => ({
         id: item.paymentId,
         student_ID: item.studentId,
@@ -301,10 +305,13 @@ useEffect(() => {
         balance: item.balancePay,
         date: item.installments?.[0]?.payDate || "", 
         rawInstallments: item.installments, 
+        invoiceNumber: item.invoiceNumber,
+        
       }));
       setOfflinePayment(normalizedData);
       setFilteredPayment(normalizedData);
     })
+    
     .catch((error) => {
       console.error("❌ Failed to fetch payments:", error);
     });
@@ -500,11 +507,21 @@ const handleSave = async (e) => {
       setSelectedPaymentId(response.data.paymentId); 
       setInvoiceNumber(response.data.invoiceNumber);
        setIsSaved(true);
+
+        if (response.data.invoiceNumber) {
+        setInvoiceNumber(response.data.invoiceNumber);
+      } else {
+        console.warn("⚠️ No invoice number in update response");
+      }
     }
   } catch (error) {
     setErrorMessage("❌ Error adding payment. Please try again.");
   }
 };
+
+
+
+
 const handleSendToEmail = async (e) => {
   e.preventDefault();
 
@@ -514,12 +531,12 @@ const handleSendToEmail = async (e) => {
   }
 
   const selectedInstallmentId = lastModifiedInstallmentId || rows[0]?.installmentId;
-  console.log("📤 Sending invoice with selectedInstallmentId:", selectedInstallmentId);
+  
  const totalReceivedPay = rows.reduce((sum, row) => {
     const received = parseFloat(row.received_pay);
     return sum + (isNaN(received) ? 0 : received);
   }, 0);
-  console.log("📤 received pay :", totalReceivedPay);
+  
   const invoicePayload = {
     paymentId: selectedPaymentId,
     invoiceNumber: invoiceNumber,
@@ -633,6 +650,40 @@ const selectedInstallmentId = updatedRow?.installmentId || rows[0]?.installmentI
     setErrorMessage("❌ Error updating payment. Please try again.");
   }
 };
+
+const handleSendReminder = async () => {
+  try {
+      setSuccessMessage("");
+    setErrorMessage("");
+
+    if (!invoiceNumber) {
+      setErrorMessage("❌ Invoice number missing. Please update/save payment first.");
+      return;
+    }
+    const reminderPayload = {
+      email: paymentData.email,
+      invoiceNumber: invoiceNumber,
+      balancePay: parseFloat(paymentData.balance),
+      totalAmount: parseFloat(paymentData.total),
+    };
+
+    const response = await axios.post("https://api.hachion.co/payments/reminder", reminderPayload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+       setSuccessMessage("✅ Reminder sent successfully.");
+    } else {
+       setErrorMessage("⚠️ Reminder not sent.");
+    }
+  } catch (error) {
+    
+    setErrorMessage("❌ Failed to send reminder.");
+  }
+};
+
 const handleSaveAndSendInvoice = async (e) => {
   e.preventDefault();
   setSuccessMessage("");
@@ -840,7 +891,8 @@ const handleSaveAndSendInvoice = async (e) => {
   </div>
 </div>
 <div className='course-row' style={{ marginTop: 5 }}>
-<button className='filter' >Send Remainder</button>
+<button className='filter' onClick={handleSendReminder}>Send Reminder</button>
+
 <button className='filter' onClick={handleSaveAndSendInvoice}>Send Invoice</button>
 </div>
  <TableContainer component={Paper}>
@@ -1115,7 +1167,7 @@ const handleSaveAndSendInvoice = async (e) => {
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        {/* <TableBody>
         {displayedCourse.length > 0
     ? displayedCourse.map((curr, index) => (
     <StyledTableRow key={curr.id}>
@@ -1150,7 +1202,48 @@ const handleSaveAndSendInvoice = async (e) => {
   </StyledTableRow>
 )}
 
+</TableBody> */}
+<TableBody>
+  {displayedCourse.length > 0 ? (
+    displayedCourse.map((curr, index) => {
+            return (
+        <StyledTableRow key={curr.id}>
+          <StyledTableCell align='center'>
+            <Checkbox />
+          </StyledTableCell>
+          <StyledTableCell align="center">
+            {index + 1 + (currentPage - 1) * rowsPerPage}
+          </StyledTableCell>
+          <StyledTableCell align="center">{curr.student_ID}</StyledTableCell>
+          <StyledTableCell align="center">{curr.student_name}</StyledTableCell>
+          <StyledTableCell align="center">{curr.email}</StyledTableCell>
+          <StyledTableCell align="center">{curr.mobile}</StyledTableCell>
+          <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
+          <StyledTableCell align="center">{curr.course_fee}</StyledTableCell>
+          <StyledTableCell align="center">{curr.installments}</StyledTableCell>
+          <StyledTableCell align="center">{curr.balance}</StyledTableCell>
+          <StyledTableCell align="center">{curr.status}</StyledTableCell>
+          <StyledTableCell align="center">
+            {curr.date ? dayjs(curr.date).format('MMM-DD-YYYY') : ''}
+          </StyledTableCell>
+          <StyledTableCell align="center">
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+              <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
+              <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.id)} />
+            </div>
+          </StyledTableCell>
+        </StyledTableRow>
+      );
+    })
+  ) : (
+    <StyledTableRow>
+      <StyledTableCell colSpan={13} align="center">
+        No data available.
+      </StyledTableCell>
+    </StyledTableRow>
+  )}
 </TableBody>
+
     </Table>
     </TableContainer>
     <div style={{ marginTop: "8px", textAlign: "left" }}>

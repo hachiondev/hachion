@@ -61,6 +61,8 @@ const CourseDetail = ({
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
@@ -77,17 +79,30 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-  useEffect(() => {
+//   useEffect(() => {
+//     const fetchCourses = async () => {
+//         try {
+//             const response = await axios.get('https://api.hachion.co/courses/all');
+//             setCategories(response.data); 
+//         } catch (error) {
+//         }
+//     };
+//     fetchCourses();
+//     setFilteredCourses(categories)
+// }, [categories]);
+useEffect(() => {
     const fetchCourses = async () => {
         try {
             const response = await axios.get('https://api.hachion.co/courses/all');
-            setCategories(response.data); 
+            setCategories(response.data);
+            setFilteredCourses(response.data); 
         } catch (error) {
+            console.error(error);
         }
     };
     fetchCourses();
-    setFilteredCourses(categories)
-}, [categories]);
+}, []);
+
 const handleInputChange = (e, quillField = null, quillValue = null) => {
   setFormData((prevData) => {
     let { name, value } = e?.target || {};
@@ -154,6 +169,7 @@ const handleSubmit = async (e) => {
     mentoring2: formData.mentoring2,
     self1: formData.self1,
     self2: formData.self2,
+    dailySessions: formData.dailySessions,
     metaTitle: formData.headerTitle,
   metaKeyword: formData.courseKeyword,
   metaDescription: formData.courseKeywordDescription,
@@ -173,7 +189,9 @@ const handleSubmit = async (e) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (response.status === 200) {
-        alert("Course updated successfully");
+
+         setSuccessMessage("✅ Course updated successfully.");
+      setErrorMessage("");
         setCourses((prevCourses) =>
           prevCourses.map((course) =>
             course.id === formData.id ? response.data : course
@@ -182,26 +200,31 @@ const handleSubmit = async (e) => {
         setShowAddCourse(false); 
       }
     } else {
+      
       const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 201) {
-        alert("Course added successfully");
+         setSuccessMessage("✅ Course added successfully.");
+      setErrorMessage("");
         setCourses((prevCourses) => [...prevCourses, response.data]);
         setShowAddCourse(false); 
       }
     }
   } catch (error) {
-    alert("Error submitting course.");
+     setSuccessMessage("");
+  setErrorMessage("❌ Error submitting course.");
   }
 };
+
 const handleEditClick = async (courseId) => {
   setShowAddCourse(true);
   try {
     const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
     if (response.ok) {
       const course = await response.json();
+      
       setFormData({
         id: course.id, 
        courseCategory: course.courseCategory ,
@@ -227,8 +250,14 @@ const handleEditClick = async (courseId) => {
         mentoring2:course.mentoring2,
         self1:course.self1,
     self2:course.self2,
-    metaTitle:course.headerTitle,metaKeyword:course.courseKeyword,metaDescription:course.courseDescription,
-    courseHighlight:course.courseHighlight,courseDescription:course.courseDescription
+    // metaTitle:course.headerTitle,
+    headerTitle: course.metaTitle, 
+    // metaKeyword:course.courseKeyword,
+    courseKeyword: course.metaKeyword, 
+    // metaDescription:course.courseDescription,
+    courseKeywordDescription: course.metaDescription, 
+    courseHighlight:course.courseHighlight,
+    courseDescription:course.courseDescription
             });
             setFormMode('Edit');     
     } else {
@@ -272,10 +301,24 @@ const handleDeleteConfirmation = (id) => {
   }
 };
 const handleDelete = async (id) => {
-  try { 
-   const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`); 
- } catch (error) { 
- } }; 
+  try {
+    const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
+    
+    if (response.status === 200) {
+      setSuccessMessage("✅ Course deleted successfully.");
+      setErrorMessage("");
+
+      setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
+    } else {
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete the course.");
+    }
+  } catch (error) {
+    setSuccessMessage("");
+    setErrorMessage("❌ Something went wrong while deleting the course.");
+  }
+};
+ 
 const handleAddTrendingCourseClick = () => {
   setFormMode('Add'); 
   setShowAddCourse(true); 
@@ -307,6 +350,7 @@ const handleAddTrendingCourseClick = () => {
                 {message.text}
               </div>
             )}
+
             <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="course-details">
                 <div className="course-row">
@@ -698,6 +742,8 @@ const handleAddTrendingCourseClick = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
               <div className="pagination-container">
                 <AdminPagination
                   currentPage={currentPage}

@@ -289,7 +289,7 @@ const SalWorkshop = () => {
         </div>
         <h1 className='workshop-heading'>Join in {workshop.title}</h1>
         <div className='workshop-content'>
-          <h2 className='workshop-heading'>About training program</h2>
+          {/* <h2 className='workshop-heading'>About training program</h2> */}
           <div className='workshop-top'>
             <div className='workshop-left-content'>
               <h3 className='workshop-text'>Key Takeaways</h3>

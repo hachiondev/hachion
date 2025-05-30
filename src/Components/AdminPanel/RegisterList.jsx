@@ -71,6 +71,8 @@ export default function RegisterList() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [successMessage, setSuccessMessage] = useState("");
+        const [errorMessage, setErrorMessage] = useState("");
     const [editedData, setEditedData] = useState({student_ID:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [studentData, setStudentData] = useState({
         student_ID:"",
@@ -86,7 +88,7 @@ export default function RegisterList() {
        comments:"",
        date:currentDate,
             visa_status:"",
-            mode:"offline",
+            mode:"Offline",
          });
         
 const [currentPage, setCurrentPage] = useState(1);
@@ -248,30 +250,43 @@ const [currentPage, setCurrentPage] = useState(1);
         }));
       };
       const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        const dataToSubmit = { 
-          ...studentData, 
-          date: currentDate,
-        };
-        
-        console.log("Data being sent:", dataToSubmit);
+  e.preventDefault();
 
-      
-        try {
-          const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
-          if (response.status === 200) {
-            alert("Student added successfully");
-            setStudentData(dataToSubmit);
-           // Update local state
-            handleReset(); // Clear form fields
-          }
-        } catch (error) {
-          console.error("Error adding student:", error.message);
-          alert("Error adding student.");
-        }
-      };
+  const currentDate = new Date().toISOString().split("T")[0];
+  const dataToSubmit = {
+    ...studentData,
+    date: currentDate,
+  };
+
+  console.log("Data being sent:", dataToSubmit);
+
+  try {
+    const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
+    if (response.status === 200) {
+      setSuccessMessage("✅ Student added successfully.");
+      setErrorMessage("");
+      setStudentData(dataToSubmit);
+      handleReset();
+    }
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.message) {
+      const message = error.response.data.message;
+
+      if (message.includes("Email already exists")) {
+        setErrorMessage("❌ Email already exists in the system.");
+      } else if (message.includes("Mobile number already exists")) {
+        setErrorMessage("❌ Mobile number already exists in the system.");
+      } else {
+        setErrorMessage("❌ Failed to add student: " + message);
+      }
+    } else {
+      console.error("Error adding student:", error.message);
+      setErrorMessage("❌ An unexpected error occurred.");
+    }
+    setSuccessMessage("");
+  }
+};
+
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
     // useEffect(() => {
@@ -412,6 +427,8 @@ const [currentPage, setCurrentPage] = useState(1);
              <FormControlLabel value="male" control={<Radio />} label="Send details via email and whtsapp" />
            
            </RadioGroup> */}
+           {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
         <div className="course-row">
         {formMode === "Edit" ? (
           <button className='submit-btn' onClick={handleUpdate}>Update</button>
@@ -563,117 +580,5 @@ const [currentPage, setCurrentPage] = useState(1);
     </div>
     </>)}
 
-    {/* <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-    PaperProps={{
-      style: { borderRadius: 20 },
-    }}>
-  <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Registered Student
-    <Button onClick={handleClose} className="close-btn">
-      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
-    </Button>
-    </DialogTitle>
-  </div>
-  <DialogContent>
-  <div className='course-row'>
-  <div class="col">
-         <label for="inputEmail4" class="form-label">Student Name</label>
-         <input type="text" class="form-control" id="inputEmail4" name="name"
-  value={editedData.name}
-  onChange={handleInputChange}/>
-       </div>
-      <div class="col">
-         <label for="inputPassword4" class="form-label">Email</label>
-         <input type="email" class="form-control" id="inputPassword4" placeholder='abc@gmail.com'
-         name="email"
-         value={editedData.email}
-         onChange={handleInputChange}/>
-       </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Mobile</label>
-         <input type="number" class="form-control" id="inputPassword4" placeholder='enter mobile number'
-          name="mobile"
-          value={editedData.mobile}
-          onChange={handleInputChange}/>
-       </div>
-       </div>
-       
-       <div className='course-row'>
-               <div class="col">
-         <label for="inputPassword4" class="form-label">Country</label>
-         <input type="text" class="form-control" id="inputPassword4"  name="country"
-         value={editedData.country}
-         onChange={handleInputChange}/>
-       </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Location</label>
-         <input type="text" class="form-control" id="inputPassword4"  name="location"
-         value={editedData.location}
-         onChange={handleInputChange}/>
-       </div>
-        <div class="col">
-         <label for="inputPassword4" class="form-label">Visa Status</label>
-         <select id="inputState" class="form-select" name="visa_status" value={editedData.visa_status} onChange={handleInputChange}>
-           <option selected>Select Visa Status</option>
-           <option>Active</option>
-           <option>In Active</option>
-         </select>
-       </div>
-       </div>
-       <div className='course-row'>
-       <div class="col">
-         <label for="inputEmail4" class="form-label">Time Zone</label>
-         <input type="text" class="form-control" id="inputTime4" 
-         name="time_zone" value={editedData.time_zone} onChange={handleInputChange}/>
-       </div>
-       <div class="col">
-         <label for="inputEmail4" class="form-label">Entered By</label>
-         <input type="text" class="form-control" id="inputTime4" 
-         name="analyst_name" value={editedData.analyst_name} onChange={handleInputChange}/>
-       </div>
-        <div class="col">
-         <label for="inputEmail4" class="form-label">Source</label>
-         <input type="text" class="form-control" id="inputTime4" 
-         name="source" value={editedData.source} onChange={handleInputChange}/>
-       </div> */}
-    
-       {/* <div class="col">
-         <label for="inputState" class="form-label">Course Name</label>
-         <select id="inputState" class="form-select" name='course_name' value={editedData.course_name} onChange={handleInputChange}>
-         <option value="" disabled>
-          Select Course
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.course_name}>
-            {curr.course_name}
-          </option>
-        ))}
-   
-         </select>
-       </div> */}
-       {/* </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Remarks</label>
-         <text type="text" class="form-control" id="inputPassword4"
-         name="remarks"
-         value={editedData.remarks}
-         onChange={handleInputChange}/>
-       </div>
-              <div class="col">
-         <label for="inputPassword4" class="form-label">Comments</label>
-         <text type="text" class="form-control" id="inputPassword4"
-         name="comments"
-         value={editedData.comments}
-         onChange={handleInputChange}/>
-       </div>
-       
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleSave} className="update-btn">Update</Button>
-  </DialogActions>
-</Dialog> */}
-
-  
-   
  </> );
 }

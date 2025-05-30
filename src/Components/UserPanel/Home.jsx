@@ -49,11 +49,11 @@ export const Home = () => {
 <Topbar/>
 <NavbarTop/>
 <Banner/>
-<Association/>
-<TrainingEvents/>
 <Trending/>
+<TrainingEvents/>
 <Corporate/>
 <Career/>
+<Association/>
 <Learners page="home"/>
 
 <Footer/>

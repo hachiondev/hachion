@@ -30,7 +30,7 @@ const Footer = () => {
 
   const handleNavigation = (courseName) => {
     const formattedName = courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/Coursedetails/${formattedName}`);
+    navigate(`/coursedetails/${formattedName}`);
   };
 
   const handleBlog=()=>{
@@ -50,6 +50,9 @@ const Footer = () => {
   }
   const handleWorkshop=()=>{
     navigate('/workshop')
+  }
+   const handleKidsSummer=()=>{
+    navigate('/kids_summer_training')
   }
   const handleSitemap = () => {
     navigate("/sitemap");
@@ -99,6 +102,8 @@ const Footer = () => {
   <p className="footer-content" onClick={handleSitemap}>Sitemap</p>
   <span>|</span>
   <p className="footer-content" onClick={handleWorkshop}>Workshop</p>
+  <span>|</span>
+  <p className="footer-content" onClick={handleKidsSummer}>Kids Summer Training</p>
 </div>
     </div>
       </div>

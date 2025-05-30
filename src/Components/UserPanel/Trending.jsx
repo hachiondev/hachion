@@ -92,7 +92,7 @@ const Trending = () => {
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
-        <h2 className="association-head">Trending Courses</h2>
+        <h1 className="association-head">Top IT Certification Courses</h1>
       </div>
 
       <div className="view-btn">

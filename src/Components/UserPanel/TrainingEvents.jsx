@@ -159,7 +159,7 @@ const TrainingEvents = () => {
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
-        <h1 className="association-head">Upcoming Training Events</h1>
+        <h2 className="association-head">Upcoming Training Events</h2>
       </div>
 
       <div className="view-btn">

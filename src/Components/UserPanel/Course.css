@@ -6,10 +6,10 @@
 }
 .sidebar {
   flex: 1;
-  width: 420px;
+  width: 300px;
   background-color: white;
   color: black;
-  min-width: 420px;
+  max-width: 350px;
   left: 0;
   right: 5px;
   overflow-y: auto;
@@ -150,12 +150,12 @@
 
 .menu-item {
   width: 100%;
-  padding: 15px 20px;
+  padding: 8px 15px;
   text-align: left;
   background: none;
   border: none;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   background-color: white;
   color: black;
   cursor: pointer;
@@ -166,7 +166,7 @@
 .sidebar-heading {
   background-color: rgba(0, 174, 239, 1);
   color: rgba(255, 255, 255, 1);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   text-align: center;
   padding: 1vh;
@@ -231,7 +231,7 @@
 .sidebar-card-icon {
   position: absolute;
   height: 80px;
-  top: 52px;
+  top: 35px;
   left: 50%;
   transform: translateX(-50%);
   width: auto;
@@ -241,7 +241,7 @@
 }
 .sidebar-card-header {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   position: absolute;
   left: 45%;
   top: 0px;
@@ -250,7 +250,7 @@
   text-align: center;
 }
 .sidebar-course-name {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   margin: 0px 5px;
   color: #00aeef;
@@ -273,7 +273,7 @@
   padding: 10px;
 }
 .sidebar-course-month {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   margin: 5px 0;
 }
@@ -285,7 +285,7 @@
 .sidebar-enroll-btn {
   border-radius: 10px;
   padding: 5px 15px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   background-color: rgba(0, 174, 239, 1);
   color: white;
@@ -299,9 +299,10 @@
 .sidebar-card-heading {
   color: black;
   text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  padding: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 5px;
+  margin-bottom: 0;
 }
 
 .sidebar-right {
@@ -523,6 +524,30 @@ height:140px;
   font-size: 1.5rem;
   box-shadow: 5px 5px 5px #d3d3d3;
   white-space: nowrap;
+}
+.prompt {
+  color: red;
+  background-color: #d9ecf3;
+  padding: 10px;
+  margin: 10px 0;
+}
+.log {
+  color: #ffffff;
+  background-color: #00aaef;
+  border-radius: 5px;
+  padding: 3px 5px;
+  font-size: medium;
+  border: none;
+  margin: 3px 10px;
+}
+.cancel {
+  color: #6a6a6a;
+  background-color: #b3b3b3;
+  border-radius: 5px;
+  padding: 3px 5px;
+  font-size: medium;
+  border: none;
+  margin: 3px 10px;
 }
 
 .enroll-now:hover {
@@ -1884,8 +1909,8 @@ html {
     margin-right: 10px;
   }
   .sidebar {
-    width: 350px;
-    min-width: 320px;
+    width: 250px;
+    max-width: 300px;
   }
   .sidebar-right-all {
     display: grid;
@@ -1995,7 +2020,7 @@ html {
   .sidebar {
     margin-left: 5px;
     width: auto;
-    min-width: 250px;
+    max-width: 250px;
     margin-bottom: 30px;
     margin-top: 20px;
     overflow-y: scroll;
@@ -2043,7 +2068,7 @@ html {
     margin-top: 10px;
     font-size: 24px;
     font-weight: 600;
-    white-space: nowrap;
+    white-space: wrap;
   }
   .qa-automation-left img {
     height: 90px;
@@ -2159,8 +2184,8 @@ html {
   }
   .sidebar {
     margin-left: 5px;
-    width: 280px;
-    min-width: 250px;
+    width: 250px;
+    max-width: 280px;
     margin-bottom: 30px;
     margin-top: 20px;
     overflow-y: visible;
@@ -3282,6 +3307,22 @@ html {
   width: 20px;
   margin-right: 5px;
 }
+.mobile-button {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  padding: 0 5px;
+  min-width: 70px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #00aaef;
+  font-size: medium;
+}
 
 .input-group {
   display: flex;
@@ -3316,6 +3357,7 @@ html {
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #b3b3b3;
+  outline: none;
 }
 .query-form {
   margin-left: 20px;

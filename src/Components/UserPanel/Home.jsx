@@ -11,12 +11,13 @@ import Footer from "./Footer";
 import Corporate from "./Corporate";
 import StickyBar from "./StickyBar";
 import { Helmet } from "react-helmet-async";
+import PopupBanner from "./PopupBanner";
 
 export const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Hachion - Your Learning Partner</title>
+        <title>Online IT Training: Get Certified, Find Your Dream Job</title>
         <meta
           name="description"
           content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts."
@@ -34,17 +35,39 @@ export const Home = () => {
           content="Learn online with the best courses at Hachion."
         />
         <meta property="og:image" content="/Hachion-logo.png" />
+        <link rel="canonical" href="https://www.hachion.co/" />
+        <script type="application/ld+json">
+          {`
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Hachion",
+        "url": "https://www.hachion.co",
+        "logo": "https://www.hachion.co/Hachion-logo.png",
+        "sameAs": [
+        "https://www.facebook.com/hachion.co",
+        "https://x.com/hachion_co",
+        "https://www.linkedin.com/company/hachion",
+        "https://www.instagram.com/hachion_trainings",
+        "https://www.quora.com/profile/Hachion-4",
+        "https://www.youtube.com/@hachion"
+      ]
+      }
+    `}
+        </script>
       </Helmet>
       <div className="home-background">
+        <PopupBanner />
         <Topbar />
         <NavbarTop />
         <Banner />
-        <Association />
-        <TrainingEvents />
         <Trending />
+        <TrainingEvents />
         <Corporate />
         <Career />
+        <Association />
         <Learners page="home" />
+
         <Footer />
       </div>
       <StickyBar />

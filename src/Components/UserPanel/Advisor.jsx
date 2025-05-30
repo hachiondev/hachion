@@ -10,7 +10,7 @@ import { LoginSchema } from "../Schemas";
 import axios from "axios";
 
 const initialValues = {
-  full_name: "",
+  name: "",
   company_name: "",
   email: "",
   number: "",
@@ -30,21 +30,6 @@ const Advisor = () => {
   });
   const [selectedValue, setSelectedValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const {
-    values,
-    errors,
-    handleBlur,
-    touched,
-    handleChange,
-    handleSubmit: formikSubmit,
-    resetForm, // ✅ Add resetForm here
-  } = useFormik({
-    initialValues: initialValues,
-    validationSchema: LoginSchema,
-    onSubmit: async (values, { resetForm }) => {
-      console.log("Form Submitted with values:", values);
-    },
-  });
 
   const countries = [
     { name: "India", code: "+91", flag: "IN" },
@@ -84,34 +69,34 @@ const Advisor = () => {
       .catch(() => {});
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevents form refresh
-    e.stopPropagation(); // Prevent browser default tooltips
 
+    // ✅ Mark all fields as "touched" to trigger error messages
+    Object.keys(values).forEach((field) => {
+      touched[field] = true; // ✅ Force validation messages to appear
+    });
+    handleSubmit(e); // ✅ Calls Formik's submit function
     if (
       !values.full_name ||
       !values.email ||
       !selectedValue ||
       !values.company_name ||
-      !mobileNumber ||
+      !values.number ||
       !values.course_name ||
       !values.comment ||
       !selectedCountry?.name
     ) {
       setErrorMessage("Please fill in all required fields before submitting.");
-      setShowModal(false);
       return;
-    } else {
-      setErrorMessage("");
     }
-
-    //setErrorMessage("");
+    setErrorMessage("");
     const requestData = {
-      fullName: values.full_name,
+      fullName: values.name,
       emailId: values.email,
       noOfPeople: selectedValue,
       companyName: values.company_name,
-      mobileNumber: mobileNumber,
+      mobileNumber: values.number,
       trainingCourse: values.course_name,
       comments: values.comment,
       country: selectedCountry.name,
@@ -131,16 +116,23 @@ const Advisor = () => {
       if (response.status === 200) {
         console.log("Successfully submitted:", response.data);
         setShowModal(true); // Show success modal only when API call succeeds
-        // Reset all text fields by clearing state values
-        resetForm();
-        setMobileNumber(""); // Reset mobile number field
-        setSelectedValue(""); // ✅ Resets the dropdown
-        // Reset form fields using Formik's resetForm()
       }
     } catch (error) {
       console.error("Error submitting request:", error);
     }
   };
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: LoginSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik;
+
   const handleCountrySelect = (country) => {
     console.log("Country selected:", country);
     setSelectedCountry(country);
@@ -171,50 +163,44 @@ const Advisor = () => {
           <div className="advisor-head">
             <p>Talk to our Advisor</p>
           </div>
-
           <form
-            class="needs-validation enquiry-form"
-            novalidate
+            className="enquiry-form"
             onSubmit={(e) => {
               handleModal(e);
-              handleSubmit(e);
             }}
           >
             <div className="advisor-row">
               <div className="col-md-5">
-                <label htmlFor="advisor1" className="form-label">
+                <label htmlFor="inputName4" className="form-label">
                   Full Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
-                  className="form-control-advisor is-invalid"
+                  className="form-control-advisor"
                   id="advisor1"
                   placeholder="Enter your full name"
-                  name="full_name"
+                  name="name"
                   value={values.full_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  required
                 />
-                {/* <div class="invalid-feedback">Please enter your full name.</div> */}
                 {errors.name && touched.name ? (
-                  <p className="form-error">{errors.full_name}</p>
+                  <p className="form-error">{errors.name}</p>
                 ) : null}
               </div>
-              <div class="col-md-5">
+              <div className="col-md-5">
                 <label htmlFor="inputCompany4" className="form-label">
                   Company Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
-                  className="form-control-advisor is-invalid"
+                  className="form-control-advisor"
                   id="advisor1"
                   placeholder="Enter your company name"
                   name="company_name"
                   value={values.company_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  required
                 />
                 {errors.email && touched.email ? (
                   <p className="form-error">{errors.company_name}</p>
@@ -281,12 +267,20 @@ const Advisor = () => {
                       aria-label="Text input with segmented dropdown button"
                       placeholder="Enter your mobile number"
                       name="name"
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
-                      required
+                      value={values.number} // ✅ Now Formik manages state properly
+                      onChange={(e) => {
+                        const numericValue = e.target.value.replace(/\D/g, ""); // ✅ Allows only numbers
+                        handleChange({
+                          target: { name: e.target.name, value: numericValue },
+                        }); // ✅ Updates Formik values
+                      }}
+                      onBlur={handleBlur}
                     />
                   </div>
                 </div>
+                {errors.number && touched.number ? (
+                  <p className="form-error">{errors.number}</p>
+                ) : null}
               </div>
             </div>
             <div className="advisor-row">
@@ -307,7 +301,7 @@ const Advisor = () => {
                     <option key={i + 1}>{i + 1}</option>
                   ))}
                 </select>
-                {errors.name && touched.name ? (
+                {errors.noOfPeople && touched.noOfPeople ? (
                   <p className="form-error">{errors.noOfPeople}</p>
                 ) : null}
               </div>
@@ -324,9 +318,8 @@ const Advisor = () => {
                   value={values.course_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  required
                 />
-                {errors.name && touched.name ? (
+                {errors.course_name && touched.course_name ? (
                   <p className="form-error">{errors.course_name}</p>
                 ) : null}
               </div>
@@ -349,7 +342,11 @@ const Advisor = () => {
               ) : null}
             </div>
             <div className="col-12 text-center">
-              <button type="submit" className="submit-btn">
+              <button
+                type="submit"
+                className="submit-btn"
+                onClick={handleFormSubmit}
+              >
                 Submit
               </button>
               {errorMessage && <p className="form-error">{errorMessage}</p>}

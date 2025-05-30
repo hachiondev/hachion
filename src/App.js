@@ -4,7 +4,13 @@ import Login from "./Components/UserPanel/Login";
 import AdminLogin from "./Components/AdminPanel/AdminLogin";
 import AdminRegister from "./Components/AdminPanel/AdminRegister";
 import AdminForgot from "./Components/AdminPanel/AdminForgot";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 import Register from "./Components/UserPanel/Register";
 import HaveAnyQuery from "./Components/UserPanel/HaveAnyQuery";
@@ -33,10 +39,27 @@ import UserWriteReview from "./Components/UserPanel/UserWriteReview";
 import TrendingCourse from "./Components/AdminPanel/TrendingCourseTable";
 import CourseSchedule from "./Components/AdminPanel/CourseSchedule";
 import SalWorkshop from "./Components/UserPanel/SalWorkshop";
+import Workshop from "./Components/UserPanel/Workshop";
 import ProtectedRoute from "./ProtectedRoute";
 import CorporateCourses from "./Components/AdminPanel/CorporateCourses";
 import Unsubscribe from "./Components/UserPanel/Unsubscribe";
 import Sitemap from "./Components/UserPanel/Sitemap";
+import KidsSummer from "./Components/UserPanel/KidsSummer";
+const RedirectToLowercase = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathName = location.pathname;
+    const lowercasePath = pathName.toLowerCase();
+    if (pathName !== lowercasePath) {
+      navigate(lowercasePath, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
+  return null;
+};
+
 const TrackPageView = () => {
   const location = useLocation();
 
@@ -55,6 +78,7 @@ function AppRoutes() {
   return (
     <>
       <TrackPageView />
+      <RedirectToLowercase />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -63,8 +87,8 @@ function AppRoutes() {
         <Route path="/loginsuccess" element={<LoginSuccess />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/" element={<Home />} />
-        <Route path="/CourseDetails" element={<Course />} />
-        <Route path="/CourseDetails/:courseName" element={<QaAutomation />} />
+        <Route path="/coursedetails" element={<Course />} />
+        <Route path="/coursedetails/:courseName" element={<QaAutomation />} />
         <Route path="/corporate" element={<CorporateTraining />} />
         <Route path="/haveanyquery" element={<HaveAnyQuery />} />
         <Route path="/adminnav" element={<AdminNavbar />} />
@@ -76,27 +100,26 @@ function AppRoutes() {
           <Route path="admindashboardview" element={<AdminDashboardView />} />
         </Route>
         <Route path="/admincourse" element={<CategoryTable />} />
-        <Route path="/workshop" element={<SalWorkshop />} />
+        <Route path="/workshop" element={<Workshop />} />
+        <Route path="/workshop/:slug" element={<SalWorkshop />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:category" element={<Salesforce />} />
         <Route path="/enroll/:courseName" element={<Enrollment />} />
-        <Route
-          path="/blogs/:category_name/content"
-          element={<QaTestingBlog />}
-        />
+        <Route path="/blogs/:category_name/:id" element={<QaTestingBlog />} />
         <Route path="/aboutus" element={<Aboutus />} />
         <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/userdashboard" element={<UserDashboard />} />
+        <Route path="/userdashboard/:section?" element={<UserDashboard />} />
         <Route path="/admindashboardview" element={<AdminDashboardView />} />
         <Route path="/review" element={<UserWriteReview />} />
         <Route path="/addtrending" element={<TrendingCourse />} />
-        <Route path="/Courseschedule" element={<CourseSchedule />} />
+        <Route path="/courseschedule" element={<CourseSchedule />} />
         <Route path="/corporatecourses" element={<CorporateCourses />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/sitemap" element={<Sitemap />} />
+        <Route path="/kids_summer_training" element={<KidsSummer />} />
       </Routes>
     </>
   );

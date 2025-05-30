@@ -75,8 +75,8 @@ export default function Other() {
     home_banner_image: "",
     path: "",
     date: currentDate,
-    status: "enabled",
-    home_status: "enabled",
+    status: "",
+    home_status: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -146,7 +146,7 @@ export default function Other() {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/banner");
+        const response = await axios.get("https://api.test.hachion.co/banner");
         console.log(response.data);
         setBanner(response.data); // Use the curriculum state
         setFilteredBanner(response.data);
@@ -257,9 +257,13 @@ export default function Other() {
   };
 
   const handleClickOpen = (row) => {
-    console.log(row);
-    setEditedData(row); // Set the selected row data
-    setOpen(true); // Open the modal
+    setEditedData({
+      ...row,
+      home_status:
+        row.home_status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled",
+      status: row.status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled",
+    });
+    setOpen(true);
   };
 
   const handleChange = (e) => {
@@ -273,7 +277,7 @@ export default function Other() {
 
   const fetchBanners = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/banner");
+      const response = await axios.get("https://api.test.hachion.co/banner");
       setFilteredBanner(response.data);
     } catch (error) {
       console.error("Error fetching banners:", error);
@@ -328,8 +332,10 @@ export default function Other() {
     // Conditionally append images and JSON fields based on actionType
     if (actionType === "banner" && bannerData.banner_image) {
       formDataToSend.append("banner_image", bannerData.banner_image);
+      jsonData.status = "Enabled";
     } else if (actionType === "homeBanner" && bannerData.home_banner_image) {
       formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+      jsonData.home_status = "Enabled";
     }
 
     // Append JSON data as a Blob
@@ -371,6 +377,7 @@ export default function Other() {
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
   };
+  const capitalize = (s) => s && s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
     <>
@@ -603,7 +610,7 @@ export default function Other() {
                       <StyledTableCell align="center">
                         {curr.banner_image ? (
                           <img
-                            src={`https://api.hachion.co/${curr.banner_image}`}
+                            src={`https://api.test.hachion.co/${curr.banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />
@@ -612,12 +619,16 @@ export default function Other() {
                         )}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.status}
+                        {curr.banner_image
+                          ? curr.status
+                            ? capitalize(curr.status)
+                            : "Enabled"
+                          : ""}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {curr.home_banner_image ? (
                           <img
-                            src={`https://api.hachion.co/${curr.home_banner_image}`}
+                            src={`https://api.test.hachion.co/${curr.home_banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />
@@ -626,7 +637,11 @@ export default function Other() {
                         )}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.home_status}
+                        {curr.home_banner_image
+                          ? curr.home_status
+                            ? capitalize(curr.home_status)
+                            : "Enabled"
+                          : ""}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {curr.path}
@@ -706,21 +721,30 @@ export default function Other() {
               name="banner_image"
               onChange={(e) => handleEditFileChange(e, "banner_image")}
             />
+            {/* Show selected or existing banner image name */}
+            {editedData.banner_image && (
+              <p style={{ fontSize: "0.9rem", color: "#555" }}>
+                {editedData.banner_image instanceof File
+                  ? `Selected: ${editedData.banner_image.name}`
+                  : `Existing: ${editedData.banner_image.split("/").pop()}`}
+              </p>
+            )}
             <label>Status (Banner):</label>
             <FormControlLabel
               control={
                 <Switch
-                  checked={editedData?.status === "enabled"}
+                  checked={editedData?.status === "Enabled"}
                   onChange={(e) =>
                     setEditedData((prev) => ({
                       ...prev,
-                      status: e.target.checked ? "enabled" : "disabled",
+                      status: e.target.checked ? "Enabled" : "Disabled",
                     }))
                   }
+                  disabled={!editedData.banner_image}
                 />
               }
             />
-            <span>{editedData?.status}</span>
+            <span>{editedData?.banner_image ? editedData?.status : ""}</span>
           </div>
 
           <div className="col">
@@ -731,21 +755,34 @@ export default function Other() {
               name="home_banner_image"
               onChange={(e) => handleEditFileChange(e, "home_banner_image")}
             />
+            {/* Show selected or existing home banner image name */}
+            {editedData.home_banner_image && (
+              <p style={{ fontSize: "0.9rem", color: "#555" }}>
+                {editedData.home_banner_image instanceof File
+                  ? `Selected: ${editedData.home_banner_image.name}`
+                  : `Existing: ${editedData.home_banner_image
+                      .split("/")
+                      .pop()}`}
+              </p>
+            )}
             <label>Status (Home):</label>
             <FormControlLabel
               control={
                 <Switch
-                  checked={editedData?.home_status === "enabled"}
+                  checked={editedData?.home_status === "Enabled"}
                   onChange={(e) =>
                     setEditedData((prev) => ({
                       ...prev,
-                      home_status: e.target.checked ? "enabled" : "disabled",
+                      home_status: e.target.checked ? "Enabled" : "Disabled",
                     }))
                   }
+                  disabled={!editedData.home_banner_image}
                 />
               }
             />
-            <span>{editedData?.home_status}</span>
+            <span>
+              {editedData?.home_banner_image ? editedData?.home_status : ""}
+            </span>
           </div>
 
           <div className="col">

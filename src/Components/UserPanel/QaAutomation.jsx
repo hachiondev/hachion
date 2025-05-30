@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./Course.css";
 import Footer from "./Footer";
@@ -20,21 +20,19 @@ import QaAutomationFaq from "./QaAutomationFaq";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
+  const location = useLocation();
   const [helmetKey, setHelmetKey] = useState(0);
   const upcomingHeaderRef = useRef(null);
-  const footerRef = useRef(null); // Footer reference for intersection observer
+  const footerRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
-  // const { course_id } = useParams(); // Get course_id from URL
   const { courseName } = useParams();
-  // alert(courseName);
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const upcomingBatchRef = useRef(null);
-  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -42,7 +40,6 @@ const QaAutomation = () => {
   // Sticky logic
   useEffect(() => {
     const handleScroll = () => {
-      //console.log(upcomingHeaderRef.current);
       if (upcomingHeaderRef.current) {
         const { top } = upcomingHeaderRef.current.getBoundingClientRect();
         setIsSticky(top <= 0); // Set sticky if the header's top reaches 0 or less
@@ -86,10 +83,18 @@ const QaAutomation = () => {
   };
 
   useEffect(() => {
+    if (!loading && location?.state?.scrollTo === "upcoming-batch") {
+      upcomingBatchRef.current?.scrollIntoView({ behavior: "smooth" });
+      // Clear state to avoid repeating
+      window.history.replaceState({}, document.title);
+    }
+  }, [loading, location]);
+
+  useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/HachionUserDashboad/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
         );
@@ -107,13 +112,6 @@ const QaAutomation = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  console.log(window.location.href.includes("#upcoming-batch"));
-  if (window.location.href.includes("#upcoming-batch")) {
-    const formattedName = courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courseDetails/${formattedName}#upcoming-batch`, {
-      state: { scrollTo: "upcoming-batch" }, // pass scroll target
-    });
-  }
 
   return (
     <>
@@ -149,7 +147,7 @@ const QaAutomation = () => {
         />
         <meta
           property="og:url"
-          content={`https://hachion.co/CourseDetails/${courseName}`}
+          content={`https://hachion.co/coursedetails/${courseName}`}
         />
         <meta name="robots" content="index, follow" />
       </Helmet>
@@ -164,11 +162,11 @@ const QaAutomation = () => {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <Link to="/CourseDetails">Courses</Link>{" "}
+                <Link to="/coursedetails">Courses</Link>{" "}
                 <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <Link to="/CourseDetails">{courseData?.courseCategory}</Link>{" "}
+                <Link to="/coursedetails">{courseData?.courseCategory}</Link>{" "}
                 <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">

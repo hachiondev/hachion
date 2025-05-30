@@ -100,24 +100,25 @@ const Topbar = () => {
                 <ul className="dropdown-menu">
                   <li>
                     <Link className="dropdown-item" to="/userdashboard">
-                      <FaUserAlt className="dropdown-icon" /> Dashboard
+                      <FaUserAlt className="dropdown-icon-top" /> Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
-                      <IoMdSettings className="dropdown-icon" /> Settings
+                    <Link
+                      className="dropdown-item"
+                      to="/userdashboard/Settings"
+                    >
+                      <IoMdSettings className="dropdown-icon-top" /> Settings
                     </Link>
                   </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
+                  {/* <li><hr className="dropdown-divider" /></li> */}
                   <li>
                     <Link
                       className="dropdown-item"
                       to="#"
                       onClick={handleLogout}
                     >
-                      <IoLogOut className="dropdown-icon" /> Logout
+                      <IoLogOut className="dropdown-icon-top" /> Logout
                     </Link>
                   </li>
                 </ul>

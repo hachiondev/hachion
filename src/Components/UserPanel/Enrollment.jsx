@@ -58,7 +58,25 @@ const Enrollment = () => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
+    { name: "Netherlands", code: "+31", flag: "NL" },
   ];
+
+  const defaultCountry = countries.find((c) => c.flag === "US");
+
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((res) => res.json())
+      .then((data) => {
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find(
+          (c) => c.flag === userCountryCode
+        );
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -116,7 +134,7 @@ const Enrollment = () => {
           </div>
 
           <form className="details">
-            <div className="enroll-row">
+            <div className="input-row">
               <div className="col-md-5">
                 <label htmlFor="inputName4" className="form-label">
                   Full Name<span className="required">*</span>
@@ -124,7 +142,7 @@ const Enrollment = () => {
                 <input
                   type="text"
                   className="form-control"
-                  id="enroll1"
+                  // id="enroll1"
                   placeholder="Enter your full name"
                   value={studentData?.userName || ""}
                   readOnly
@@ -138,7 +156,7 @@ const Enrollment = () => {
                 <input
                   type="email"
                   className="form-control"
-                  id="enroll1"
+                  // id="enroll1"
                   placeholder="abc@gmail.com"
                   value={studentData?.email || ""}
                   readOnly
@@ -146,22 +164,24 @@ const Enrollment = () => {
               </div>
             </div>
 
-            <div className="enroll-row">
+            <div className="input-row">
               <div className="col-md-5">
                 <label className="form-label">Mobile Number</label>
-                <div className="input-group custom-width">
-                  <Button
-                    variant="outlined"
+                <div className="input-wrapper" style={{ position: "relative" }}>
+                  <button
+                    variant="text"
                     onClick={openMenu}
-                    className="country-code-dropdown"
-                    endIcon={<AiFillCaretDown />}
+                    className="mobile-button"
                   >
                     <Flag
                       code={selectedCountry.flag}
-                      className="country-flag"
+                      className="country-flag me-1"
                     />
-                    {selectedCountry.code}
-                  </Button>
+                    <span style={{ marginRight: "5px" }}>
+                      {selectedCountry.code}
+                    </span>
+                    <AiFillCaretDown />
+                  </button>
                   <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
@@ -172,19 +192,23 @@ const Enrollment = () => {
                         key={country.code}
                         onClick={() => handleCountrySelect(country)}
                       >
-                        <Flag code={country.flag} className="country-flag" />
+                        <Flag
+                          code={country.flag}
+                          className="country-flag me-2"
+                        />
                         {country.name} ({country.code})
                       </MenuItem>
                     ))}
                   </Menu>
                   <input
                     type="tel"
-                    className="mobile-number"
+                    className="form-control"
                     ref={mobileInputRef}
-                    id="enroll2"
+                    // id='enroll1'
                     placeholder="Enter your mobile number"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
+                    style={{ paddingLeft: "100px" }}
                   />
                 </div>
               </div>
@@ -196,7 +220,7 @@ const Enrollment = () => {
                 <input
                   type="text"
                   className="form-control"
-                  id="enroll1"
+                  // id="enroll1"
                   placeholder="Enter your country"
                   value={studentData?.country || ""}
                   readOnly
@@ -208,7 +232,7 @@ const Enrollment = () => {
         </div>
         <div className="personal-details">
           <div className="personal-details-header">
-            <p>1. Course Details</p>
+            <p>2. Course Details</p>
           </div>
           <div className="enroll-table">
             <EnrollmentTable />

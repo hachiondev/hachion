@@ -48,6 +48,34 @@ const ContactUs = () => {
   });
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState("+1 (732) 485-2499");
+  const [whatsappLink, setWhatsappLink] = useState("https://wa.me/17324852499");
+
+  useEffect(() => {
+    const detectUserCountry = async () => {
+      try {
+        const res = await fetch("https://ipwho.is/");
+        if (!res.ok) throw new Error("Failed to fetch location data");
+
+        const data = await res.json();
+
+        if (data.country_code === "IN") {
+          setWhatsappNumber("+91-949-032-3388");
+          setWhatsappLink("https://wa.me/919490323388");
+        } else {
+          setWhatsappNumber("+1 (732) 485-2499");
+          setWhatsappLink("https://wa.me/17324852499");
+        }
+      } catch (error) {
+        console.error("❌ Location fetch error:", error);
+        // fallback to US number
+        setWhatsappNumber("+1 (732) 485-2499");
+        setWhatsappLink("https://wa.me/17324852499");
+      }
+    };
+
+    detectUserCountry();
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0); // This will scroll to the top of the page
     console.log("Page loaded and scrolled to top");
@@ -71,7 +99,23 @@ const ContactUs = () => {
     { name: "Brazil", code: "+55", flag: "BR" },
     { name: "Mexico", code: "+52", flag: "MX" },
     { name: "South Africa", code: "+27", flag: "ZA" },
+    { name: "Netherlands", code: "+31", flag: "NL" },
   ];
+
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((res) => res.json())
+      .then((data) => {
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find(
+          (c) => c.flag === userCountryCode
+        );
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleCountrySelect = (country) => {
     console.log("Country selected:", country.name, country.code);
@@ -94,14 +138,6 @@ const ContactUs = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    e.stopPropagation(); // Stop browser validation tooltips
-
-    // ✅ Mark all fields as "touched" to trigger error messages
-    Object.keys(values).forEach((field) => {
-      touched[field] = true; // ✅ Force validation messages to appear
-    });
-
-    handleSubmit(); // ✅ Calls Formik's submit function
     if (!isChecked) {
       setError("Please select the checkbox to acknowledge the Privacy Notice.");
       return;
@@ -112,7 +148,7 @@ const ContactUs = () => {
     const requestData = {
       name: values.name,
       email: values.email,
-      mobile: values.number,
+      mobile: mobileNumber,
       comment: values.comment,
       date: currentDate,
       country: selectedCountry.name,
@@ -204,7 +240,7 @@ const ContactUs = () => {
             </div>
           ))}
         </div>
-        <div className="contact-us-bottom-div">
+        <div className="contact-us-bottom-box">
           <div className="contact-us-left">
             <h3>Enquiries</h3>
             <div className="contact-block">
@@ -215,7 +251,7 @@ const ContactUs = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   +1 (732) 485-2499{" "}
+                  {whatsappNumber}
                 </a>
               </p>
             </div>
@@ -284,16 +320,11 @@ const ContactUs = () => {
                   id="contact1"
                   placeholder="Enter your full name"
                   name="name"
-                  required
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </div>
-              {errors.name && touched.name ? (
-                <p className="form-error">{errors.name}</p>
-              ) : null}
-
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
                   Email Id
@@ -302,70 +333,58 @@ const ContactUs = () => {
                   type="email"
                   className="form-control-contact"
                   id="contact1"
-                  placeholder="Enter your emailid"
+                  placeholder="Enter your email id"
                   name="email"
-                  required
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </div>
-              {errors.email && touched.email ? (
-                <p className="form-error">{errors.email}</p>
-              ) : null}
               <label className="form-label">Mobile Number</label>
-              <div class="input-group custom-width">
-                <div className="input-group">
-                  <Button
-                    variant="outlined"
-                    onClick={openMenu}
-                    className="country-code-dropdown"
-                    endIcon={<AiFillCaretDown />}
-                  >
-                    <Flag
-                      code={selectedCountry.flag}
-                      className="country-flag"
-                    />
-                    {selectedCountry.code}
-                  </Button>
-
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={closeMenu}
-                  >
-                    {countries.map((country) => (
-                      <MenuItem
-                        key={country.code}
-                        onClick={() => handleCountrySelect(country)}
-                      >
-                        <Flag code={country.flag} className="country-flag" />
-                        {country.name} ({country.code})
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                  <input
-                    type="tel"
-                    className="mobile-number"
-                    ref={mobileInputRef}
-                    id="contact2"
-                    name="number"
-                    value={values.number} // ✅ Now Formik manages state properly
-                    onChange={(e) => {
-                      const numericValue = e.target.value.replace(/\D/g, ""); // ✅ Allows only numbers
-                      handleChange({
-                        target: { name: e.target.name, value: numericValue },
-                      }); // ✅ Updates Formik values
-                    }}
-                    onBlur={handleBlur}
-                    aria-label="Text input with segmented dropdown button"
-                    placeholder="Enter your mobile number"
+              <div className="input-wrapper" style={{ position: "relative" }}>
+                <button
+                  variant="text"
+                  onClick={openMenu}
+                  className="mobile-button"
+                >
+                  <Flag
+                    code={selectedCountry.flag}
+                    className="country-flag me-1"
                   />
-                </div>
+                  <span style={{ marginRight: "5px" }}>
+                    {selectedCountry.code}
+                  </span>
+                  <AiFillCaretDown />
+                </button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={closeMenu}
+                >
+                  {countries.map((country) => (
+                    <MenuItem
+                      key={country.code}
+                      onClick={() => handleCountrySelect(country)}
+                    >
+                      <Flag code={country.flag} className="country-flag me-2" />
+                      {country.name} ({country.code})
+                    </MenuItem>
+                  ))}
+                </Menu>
+                <input
+                  type="tel"
+                  className="form-control-contact"
+                  ref={mobileInputRef}
+                  id="contact1"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  aria-label="Text input with segmented dropdown button"
+                  placeholder="Enter your mobile number"
+                  style={{
+                    paddingLeft: "100px",
+                  }}
+                />
               </div>
-              {errors.number && touched.number ? (
-                <p className="form-error">{errors.number}</p>
-              ) : null}
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">
                   Comments
@@ -378,12 +397,8 @@ const ContactUs = () => {
                   value={values.comment}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  required
                 ></textarea>
               </div>
-              {errors.comment && touched.comment ? (
-                <p className="form-error">{errors.comment}</p>
-              ) : null}
               <div class="mb-3">
                 <button
                   type="button"

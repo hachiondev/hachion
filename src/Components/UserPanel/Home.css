@@ -449,14 +449,13 @@ font-weight: 500;
 }
 
 .join-now {
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 3px 10px;
   background-color: #00aeef;
   color: #fff;
   border: none;
   margin-top: 2vh;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
   white-space: nowrap;
 }
 .join-now:hover {
@@ -467,13 +466,59 @@ font-weight: 500;
   height: 450px;
   width: 100%;
 }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-.association {
+.popup-container {
+  position: relative;
+  max-width: 600px;
+  width: 90%;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.popup-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.close-popup {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: white;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.button-center {
+  display: flex;
+  justify-content: center;
+}
+.association-home {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin: 20px;
+  margin: 10px;
+  min-height: 50px;
+  max-width: 90%;
+  width: 80%;
 }
 .association-head {
   font-size: 1.9rem;
@@ -1162,6 +1207,7 @@ transition: background-color 0.3s ease,color 0.3s ease;
   justify-content: center;
   text-align: center;
   padding: 20px 0;
+  white-space: wrap;
 }
 
 .footer-p {
@@ -1169,15 +1215,15 @@ transition: background-color 0.3s ease,color 0.3s ease;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  gap: 30px;
+  gap: 20px;
 }
 
 .footer-link {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  padding-left: 50px;
-  gap: 30px;
+  padding-left: 5%;
+  gap: 20px;
 }
 
 .footer-link img {
@@ -1240,7 +1286,7 @@ transition: background-color 0.3s ease,color 0.3s ease;
 .btn-group {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 /* .dropdown-menu {
@@ -1261,11 +1307,11 @@ margin: 0;
   min-width: 180px;
 }
 
-.dropdown-icon {
+.dropdown-icon-top {
   color: #00aeef;
 }
 
-.dropdown-item:hover .dropdown-icon {
+.dropdown-item:hover .dropdown-icon-top {
   color: white;
 }
 
@@ -1358,6 +1404,9 @@ margin: 0;
 }
 
 @media (min-width: 1025px) and (max-width: 1366px) {
+  .topbar {
+    height: 80px;
+  }
   .career-div {
     width: 80%;
     margin-left: auto;
@@ -1437,6 +1486,9 @@ margin: 0;
   .topbar-left {
     width: auto; /* Allow auto width to fit content */
   }
+  .topbar {
+    height: 80px;
+  }
 
   .whatsapp-number,
   .training-email,
@@ -1461,8 +1513,17 @@ margin: 0;
   }
 
   .search-div-home {
-    width: 220px;
+    width: 500px;
     margin-left: 0 !important;
+  }
+
+  .search-input-home {
+    max-width: 600px;
+  }
+
+  .btn-search-home {
+    width: 100px;
+    height: 50px;
   }
 
   .nav-item-link {
@@ -1485,7 +1546,6 @@ margin: 0;
   }
 
   .join-now {
-    border-radius: 10px;
     padding: 3px 10px;
     font-size: 20px;
     white-space: nowrap;
@@ -1510,7 +1570,7 @@ margin: 0;
   }
 
   .search-div-home {
-    width: 200px; /* Reduce width for tablet screens */
+    max-width: 400px; /* Reduce width for tablet screens */
     margin-left: 0 !important; /* Remove margin for better alignment */
   }
 
@@ -1546,6 +1606,10 @@ margin: 0;
     padding: 3px 5px;
     font-size: 12px;
     white-space: nowrap;
+  }
+  .course-search-input {
+    width: 100%;
+    padding: 8px 20px 8px 6px;
   }
 
   .training-events {
@@ -1618,22 +1682,22 @@ margin: 0;
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
-    width: 90%;
+    width: 80%;
     margin-left: 5%;
     margin-right: 5%;
     padding: 10px;
   }
 
   .filter-section select {
-    padding: 8px 10px;
+    padding: 10px;
     font-size: 14px;
     border-radius: 8px;
-    width: 40%;
+    width: 42%;
     min-width: 100px;
   }
   .course-search-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 575px;
   }
 
   .course-search-icon {
@@ -2335,44 +2399,37 @@ margin: 0;
     display: flex;
     justify-content: center;
     margin-bottom: 0;
+    max-width: 450px;
   }
 
   .filter-section {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    justify-content: center;
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: 0%;
     padding: 5px;
   }
 
   .filter-section select {
-    padding: 3px 5px;
+    padding: 5px;
     font-size: 12px;
     border-radius: 5px;
     min-width: 100px;
     width: 45%;
   }
 
-  /* .all-courses
-{
-  padding: 3px 5px;
-  font-size: 12px;
-  border-radius: 5px;
-  min-width:200px;
-} */
-
   .course-search-container {
     position: relative;
     width: 80%;
-    max-width: 300px;
+    max-width: 320px;
   }
 
   .course-search-input {
     width: 100%;
-    padding: 4px 20px 4px 4px; /* Add enough padding to the right for the icon */
+    padding: 4px 20px 4px 4px;
     font-size: 12px;
     border-radius: 5px;
   }
@@ -2381,7 +2438,7 @@ margin: 0;
     height: 28px;
     position: absolute;
     right: 0px;
-    padding: 2px 6px;
+    padding: 2px 15px;
     border-radius: 0px 5px 5px 0px;
   }
   .search-icon-style {
@@ -2400,18 +2457,13 @@ margin: 0;
   .join-now {
     border-radius: 5px;
     padding: 2px 5px;
-    margin-bottom: 1px;
     font-size: 10px;
     white-space: nowrap;
+    margin-top: 10px;
   }
 
   .banner-img {
     height: 130px;
-  }
-
-  .association {
-    height: 50px !important;
-    margin-top: 0px !important;
   }
 
   .logos {
@@ -2555,10 +2607,16 @@ margin: 0;
     justify-content: space-between;
   }
 
-  .association {
+  .association-home {
+    display: flex;
     justify-content: center !important;
+    text-align: center;
     margin: 5px;
     padding-bottom: 20px;
+    max-width: 80%;
+    width: 80%;
+    height: 50px !important;
+    margin-top: 0px !important;
   }
 
   .association-head {
@@ -2843,9 +2901,9 @@ margin: 0;
   z-index: 10;
   max-height: 400px;
   overflow-y: auto;
-  margin-left: 26%;
+  margin-left: 34%;
   padding: 0;
-  width: 33%;
+  width: 35%;
   border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }

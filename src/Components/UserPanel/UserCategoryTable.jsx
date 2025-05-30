@@ -8,6 +8,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./Dashboard.css";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 export default function UserCategoryTable() {
   const [enrollments, setEnrollments] = useState([]);
@@ -35,7 +39,8 @@ export default function UserCategoryTable() {
               0,
               0
             );
-            const status = enrollDate >= currentDate ? "Upcoming" : "Completed";
+            const status =
+              enrollDate >= currentDate ? "Upcoming Demo" : "Enrolled to Demo";
 
             return {
               ...enrollment,
@@ -77,14 +82,19 @@ export default function UserCategoryTable() {
                   <TableRow key={row.id}>
                     <TableCell align="center">{index + 1}</TableCell>
                     <TableCell align="left">{row.course_name}</TableCell>
-                    <TableCell align="center">{row.enroll_date}</TableCell>
+                    <TableCell align="center">
+                      {row.enroll_date
+                        ? dayjs(row.enroll_date).format("MMM-DD-YYYY")
+                        : ""}
+                    </TableCell>
                     <TableCell align="left">{row.week || "-"}</TableCell>
                     <TableCell align="left">{row.time}</TableCell>
                     <TableCell align="center">{row.mode}</TableCell>
                     <TableCell
                       align="center"
                       style={{
-                        color: row.status === "Upcoming" ? "green" : "gray",
+                        color:
+                          row.status === "Upcoming Demo" ? "green" : "gray",
                       }}
                     >
                       {row.status}

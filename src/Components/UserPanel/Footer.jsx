@@ -30,7 +30,7 @@ const Footer = () => {
 
   const handleNavigation = (courseName) => {
     const formattedName = courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/CourseDetails/${formattedName}`);
+    navigate(`/coursedetails/${formattedName}`);
   };
 
   const handleBlog = () => {
@@ -50,6 +50,9 @@ const Footer = () => {
   };
   const handleWorkshop = () => {
     navigate("/workshop");
+  };
+  const handleKidsSummer = () => {
+    navigate("/kids_summer_training");
   };
   const handleSitemap = () => {
     navigate("/sitemap");
@@ -108,6 +111,10 @@ const Footer = () => {
             <p className="footer-content" onClick={handleWorkshop}>
               Workshop
             </p>
+            <span>|</span>
+            <p className="footer-content" onClick={handleKidsSummer}>
+              Kids Summer Training
+            </p>
           </div>
         </div>
       </div>
@@ -131,6 +138,7 @@ const Footer = () => {
           <div className="footer-link">
             <a
               href="https://www.facebook.com/hachion.co"
+              aria-label="Facebook"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -138,6 +146,7 @@ const Footer = () => {
             </a>
             <a
               href="https://x.com/hachion_co"
+              aria-label="Twitter"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -145,6 +154,7 @@ const Footer = () => {
             </a>
             <a
               href="https://www.linkedin.com/company/hachion"
+              aria-label="Linkedin"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -152,6 +162,7 @@ const Footer = () => {
             </a>
             <a
               href="https://www.instagram.com/hachion_trainings"
+              aria-label="Instagram"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -159,6 +170,7 @@ const Footer = () => {
             </a>
             <a
               href="https://www.quora.com/profile/Hachion-4"
+              aria-label="Quora"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -166,6 +178,7 @@ const Footer = () => {
             </a>
             <a
               href="https://www.youtube.com/@hachion"
+              aria-label="YouTube"
               target="_blank"
               rel="noopener noreferrer"
             >

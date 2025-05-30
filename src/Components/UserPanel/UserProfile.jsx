@@ -9,6 +9,7 @@ import { Menu, MenuItem, Button } from "@mui/material";
 import Flag from "react-world-flags";
 import axios from "axios";
 import "./Dashboard.css";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -49,6 +50,17 @@ const UserProfile = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const [showPasswords, setShowPasswords] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
   const [isUpdating, setIsUpdating] = useState(false); // Added for loading state
   const [passwordUpdateMessage, setPasswordUpdateMessage] = useState("");
 
@@ -109,7 +121,7 @@ const UserProfile = () => {
       console.log("Parsed email:", parsedEmail);
 
       axios
-        .get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
+        .get(`https://api.hachion.co/api/v1/user/myprofile`, {
           params: { email: parsedEmail },
         })
         .then((response) => {
@@ -149,7 +161,7 @@ const UserProfile = () => {
     setIsUpdating(true);
 
     axios
-      .post("https://api.test.hachion.co/api/v1/user/reset-password", {
+      .post("https://api.hachion.co/api/v1/user/reset-password", {
         email,
         password: passwords.oldPassword,
         newPassword: passwords.newPassword,
@@ -192,170 +204,197 @@ const UserProfile = () => {
         <nav className="dashboard-nav">My Profile</nav>
       </div>
       <div className="resume-div">
-        <form className="row">
-          <div className="input-row">
-            <div className="profile">
-              <StyledBadge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={
-                  profileImage ? (
-                    <FiX size={16} color="red" onClick={removeImage} />
-                  ) : (
-                    <label htmlFor="imageUpload">
-                      <FiCamera size={16} />
-                      <input
-                        type="file"
-                        id="imageUpload"
-                        style={{ display: "none" }}
-                        onChange={handleImageUpload}
-                      />
-                    </label>
-                  )
-                }
-              >
-                <LargeAvatar src={profileImage}>
-                  {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
-                </LargeAvatar>
-              </StyledBadge>
-            </div>
-            <div className="me-3">
-              <label htmlFor="inputName" className="form-label">
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="inputName"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="me-3">
-              <label htmlFor="inputEmail" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control mb-2"
-                id="inputEmail"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="input-row">
-            <div className="me-3">
-              <label htmlFor="inputNumber4" className="form-label">
-                Mobile
-              </label>
-              <div className="add">
-                <Button
-                  variant="outlined"
-                  onClick={openMenu}
-                  className="country-code-profile"
-                  endIcon={<AiFillCaretDown />}
+        <div className="write-review">
+          <form className="review-form-content">
+            <div className="input-row">
+              <div className="profile">
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  badgeContent={
+                    profileImage ? (
+                      <FiX size={16} color="red" onClick={removeImage} />
+                    ) : (
+                      <label htmlFor="imageUpload">
+                        <FiCamera size={16} />
+                        <input
+                          type="file"
+                          id="imageUpload"
+                          style={{ display: "none" }}
+                          onChange={handleImageUpload}
+                        />
+                      </label>
+                    )
+                  }
                 >
-                  <Flag code={selectedCountry.flag} className="country-flag" />
-                  {selectedCountry.code}
-                </Button>
+                  <LargeAvatar src={profileImage}>
+                    {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
+                  </LargeAvatar>
+                </StyledBadge>
+              </div>
 
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={closeMenu}
-                >
-                  {countries.map((country) => (
-                    <MenuItem
-                      key={country.code}
-                      onClick={() => handleCountrySelect(country)}
-                    >
-                      <Flag code={country.flag} className="country-flag" />
-                      {country.name} ({country.code})
-                    </MenuItem>
-                  ))}
-                </Menu>
+              <div className="col-md-5">
+                <label htmlFor="inputName" className="form-label">
+                  Name
+                </label>
                 <input
-                  type="tel"
+                  type="text"
                   className="form-control"
-                  id="inputNumber4"
-                  placeholder="Enter your mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
-            <div className="me-3">
-              {/* <label htmlFor="inputLocation4" className="form-label">Location</label>
-<input
-  type="text"
-  className="form-control"
-  id="inputLocation4"
-  value={locationName}
-  readOnly
-/> */}
-            </div>
-          </div>
 
-          <div className="center">
-            <button className="update-btn">Update</button>
-          </div>
+            <div className="input-row">
+              <div className="col-md-5">
+                <label htmlFor="inputEmail" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="col-md-5">
+                <label className="form-label">Mobile Number</label>
+                <div className="input-group custom-width">
+                  <Button
+                    variant="outlined"
+                    onClick={openMenu}
+                    className="country-code-dropdown"
+                    endIcon={<AiFillCaretDown />}
+                  >
+                    <Flag
+                      code={selectedCountry.flag}
+                      className="country-flag"
+                    />
+                    {selectedCountry.code}
+                  </Button>
 
-          <div className="password-title">Reset Password</div>
-          <div className="input-row">
-            <div className="me-3">
-              <label htmlFor="oldPassword" className="form-label">
-                Old Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="oldPassword"
-                name="oldPassword"
-                value={passwords.oldPassword}
-                onChange={handlePasswordChange}
-              />
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={closeMenu}
+                  >
+                    {countries.map((country) => (
+                      <MenuItem
+                        key={country.code}
+                        onClick={() => handleCountrySelect(country)}
+                      >
+                        <Flag code={country.flag} className="country-flag" />
+                        {country.name} ({country.code})
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                  <input
+                    type="tel"
+                    className="mobile-number"
+                    ref={mobileInputRef}
+                    id="enroll2"
+                    placeholder="Enter your mobile number"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="me-3">
-              <label htmlFor="newPassword" className="form-label">
-                New Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="newPassword"
-                name="newPassword"
-                value={passwords.newPassword}
-                onChange={handlePasswordChange}
-              />
-            </div>
-            <div className="me-3">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={passwords.confirmPassword}
-                onChange={handlePasswordChange}
-              />
-            </div>
-          </div>
-          {passwordUpdateMessage && (
-            <div className="message">{passwordUpdateMessage}</div>
-          )}
+            {/* <div className="center">
+            <button className='update-btn'>Update</button>
+          </div> */}
 
-          <div className="center">
-            <button className="update-btn" onClick={handleResetPassword}>
-              Update
-            </button>
-          </div>
-        </form>
+            <div className="password-title">Reset Password</div>
+            <div className="input-row">
+              <div className="me-3 password-input-wrapper">
+                <label htmlFor="oldPassword" className="form-label">
+                  Old Password
+                </label>
+                <div className="password-field">
+                  <input
+                    type={showPasswords.oldPassword ? "text" : "password"}
+                    className="form-control"
+                    name="oldPassword"
+                    value={passwords.oldPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => togglePasswordVisibility("oldPassword")}
+                  >
+                    {showPasswords.oldPassword ? (
+                      <AiFillEyeInvisible />
+                    ) : (
+                      <AiFillEye />
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <div className="me-3 password-input-wrapper">
+                <label htmlFor="newPassword" className="form-label">
+                  New Password
+                </label>
+                <div className="password-field">
+                  <input
+                    type={showPasswords.newPassword ? "text" : "password"}
+                    className="form-control"
+                    name="newPassword"
+                    value={passwords.newPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => togglePasswordVisibility("newPassword")}
+                  >
+                    {showPasswords.newPassword ? (
+                      <AiFillEyeInvisible />
+                    ) : (
+                      <AiFillEye />
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <div className="me-3 password-input-wrapper">
+                <label htmlFor="confirmPassword" className="form-label">
+                  Confirm Password
+                </label>
+                <div className="password-field">
+                  <input
+                    type={showPasswords.confirmPassword ? "text" : "password"}
+                    className="form-control"
+                    name="confirmPassword"
+                    value={passwords.confirmPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => togglePasswordVisibility("confirmPassword")}
+                  >
+                    {showPasswords.confirmPassword ? (
+                      <AiFillEyeInvisible />
+                    ) : (
+                      <AiFillEye />
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {passwordUpdateMessage && (
+              <div className="message">{passwordUpdateMessage}</div>
+            )}
+
+            <div className="center">
+              <button className="update-btn" onClick={handleResetPassword}>
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   );

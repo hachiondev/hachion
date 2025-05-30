@@ -32,9 +32,9 @@ const Association = () => {
   return (
     <>
       <div className="association">
-        <h1 className="association-head">
+        <h2 className="association-head">
           Top IT firms collaborate with Hachion
-        </h1>
+        </h2>
       </div>
       <div className="logos">
         {[...Array(2)].map((_, i) => (

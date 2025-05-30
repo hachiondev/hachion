@@ -20,34 +20,42 @@ const QaTestingBlog = () => {
   const [blogs, setBlogs] = useState([]); // State for API data
   const [helmetKey, setHelmetKey] = useState(0);
   const [selectedBlog, setSelectedBlog] = useState(null);
+  const { id } = useParams();
 
+  //  console.log(id);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/blog");
+        const response = await axios.get(`http://localhost:8080/blog/${id}`);
         const originalCategory = category_name.replace(/-/g, " ");
-        const filteredBlogs = response.data.filter(
-          (blog) =>
-            blog.category_name?.toLowerCase() === originalCategory.toLowerCase()
-        );
+        const filteredBlogs = response.data;
+        //.filter(
+        //   (blog) =>
+        //     blog.category_name?.toLowerCase() === originalCategory.toLowerCase()
+        // );
+        //console.log(filteredBlogs);
+        setBlogs(response.data);
 
-        setBlogs(filteredBlogs);
-        setSelectedBlog(filteredBlogs[0] || null); // Set first blog as default
+        console.log("API Response:", response.data);
+        console.log("Is Response an Array?", Array.isArray(response.data));
+
+        setSelectedBlog(filteredBlogs || null); // Set first blog as default
       } catch (error) {
         console.error("Error fetching blog data:", error);
       }
     };
 
     fetchBlogs();
-  }, [category_name]);
+  }, [id]);
 
+  // console.log("Blogs Type:", typeof blogs);
   useEffect(() => {
     setHelmetKey((prev) => prev + 1);
   }, [selectedBlog]);
 
   const handleDownload = () => {
     if (selectedBlog && selectedBlog.blog_pdf) {
-      const pdfUrl = `https://api.hachion.co/blogs/${selectedBlog.blog_pdf}`;
+      const pdfUrl = `http://localhost:8080/blogs/${selectedBlog.blog_pdf}`;
       const link = document.createElement("a");
       link.href = pdfUrl;
       link.setAttribute("download", selectedBlog.blog_pdf);
@@ -57,6 +65,21 @@ const QaTestingBlog = () => {
     } else {
       alert("No PDF available for this blog.");
     }
+  };
+
+  const blogUrl = encodeURIComponent(window.location.href);
+
+  const shareOnFacebook = () => {
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`;
+    window.open(facebookShareUrl, "_blank"); // Opens in a new tab
+  };
+  const shareOnLinkedIn = () => {
+    const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`;
+    window.open(linkedInShareUrl, "_blank"); // Opens in a new tab
+  };
+  const shareOnTwitter = () => {
+    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${blogUrl}`;
+    window.open(twitterShareUrl, "_blank"); // Opens in a new tab
   };
 
   return (
@@ -92,10 +115,8 @@ const QaTestingBlog = () => {
               : "https://hachion.co/images/course-banner.jpg"
           }
         />
-        <meta
-          property="og:url"
-          content={`https://hachion.co/blogs/${category_name}`}
-        />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:type" content={"article"} />
         <meta name="robots" content="index, follow" />
       </Helmet>
 
@@ -120,20 +141,18 @@ const QaTestingBlog = () => {
       <div className="salesforce-blog">
         <div className="salesforce-blog-left">
           <h3>Recommended Publications</h3>
-          {blogs.length > 0 ? (
-            blogs.map((blog) => (
-              <p
-                key={blog.id}
-                onClick={() => setSelectedBlog(blog)}
-                style={{
-                  cursor: "pointer",
-                  color: selectedBlog?.id === blog.id ? "#00AEEF" : "black",
-                  fontWeight: selectedBlog?.id === blog.id ? "bold" : "normal",
-                }}
-              >
-                {blog.title}
-              </p>
-            ))
+          {blogs ? (
+            <p
+              key={blogs.id}
+              onClick={() => setSelectedBlog(blogs)}
+              style={{
+                cursor: "pointer",
+                color: selectedBlog?.id === blogs.id ? "#00AEEF" : "black",
+                fontWeight: selectedBlog?.id === blogs.id ? "bold" : "normal",
+              }}
+            >
+              {blogs.title}
+            </p>
           ) : (
             <p>No blogs available</p>
           )}
@@ -146,29 +165,46 @@ const QaTestingBlog = () => {
             </button>
             <div className="salesforce-right-icon">
               <p>Share :</p>
-              <img src={facebook} alt="facebook" />
-              <img src={twitter} alt="twitter" />
-              <img src={linkedin} alt="linkedin" />
+
+              <img
+                src={facebook}
+                alt="facebook"
+                style={{ cursor: "pointer" }}
+                onClick={shareOnFacebook}
+              />
+
+              <img
+                src={twitter}
+                alt="twitter"
+                style={{ cursor: "pointer" }}
+                onClick={shareOnTwitter}
+              />
+              <img
+                src={linkedin}
+                alt="linkedin"
+                style={{ cursor: "pointer" }}
+                onClick={shareOnLinkedIn}
+              />
             </div>
           </div>
 
-          {selectedBlog ? (
+          {blogs ? (
             <>
               <div className="salesforce-middle">
                 <img
-                  src={`https://api.hachion.co/blogs/${selectedBlog.blog_image}`}
-                  alt={selectedBlog.title}
+                  src={`http://localhost:8080/blogs/${blogs.blog_image}`}
+                  alt={blogs.title}
                 />
                 <div>
-                  <h1>{selectedBlog.title}</h1>
+                  <h1>{blogs.title}</h1>
                   <div className="salesforce-top">
                     <h5>
-                      <FaUserTie className="user-icon" /> {selectedBlog.author}
+                      <FaUserTie className="user-icon" /> {blogs.author}
                     </h5>
-                    <h5>{selectedBlog.views || "100"} Views</h5>
+                    <h5>{blogs.views || "100"} Views</h5>
                     <h5>
                       {(() => {
-                        const d = new Date(selectedBlog.date);
+                        const d = new Date(blogs.date);
                         const mm = String(d.getMonth() + 1).padStart(2, "0");
                         const dd = String(d.getDate()).padStart(2, "0");
                         const yyyy = d.getFullYear();
@@ -181,7 +217,7 @@ const QaTestingBlog = () => {
 
               <div
                 className="topics"
-                dangerouslySetInnerHTML={{ __html: selectedBlog.description }}
+                dangerouslySetInnerHTML={{ __html: blogs.description }}
               />
             </>
           ) : (
@@ -191,7 +227,7 @@ const QaTestingBlog = () => {
       </div>
 
       <div className="salesforce-entries">
-        <h1 className="salesforce-entries-heading">Recent Entries</h1>
+        <h2 className="salesforce-entries-heading">Recent Entries</h2>
         <RecentEntries />
       </div>
       <Footer />

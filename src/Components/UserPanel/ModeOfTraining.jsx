@@ -25,7 +25,7 @@ const ModeOfTraining = () => {
 
   return (
     <div className="mode-of-training">
-      <h1 className="qa-heading">Mode of Training</h1>
+      <h2 className="qa-heading">Mode of Training</h2>
       <div className="batch-type">
         <p
           className={`batch-type-content ${

@@ -107,7 +107,7 @@ const CourseDetail = ({
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         setCourse(response.data);
       } catch (error) {}
@@ -117,7 +117,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCategories(response.data);
       } catch (error) {}
     };
@@ -219,7 +219,7 @@ const CourseDetail = ({
     try {
       if (formMode === "Edit") {
         const response = await axios.put(
-          `http://localhost:8080/courses/update/${formData.id}`,
+          `https://api.hachion.co/courses/update/${formData.id}`,
           formNewData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -234,7 +234,7 @@ const CourseDetail = ({
         }
       } else {
         const response = await axios.post(
-          "http://localhost:8080/courses/add",
+          "https://api.hachion.co/courses/add",
           formNewData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -254,7 +254,9 @@ const CourseDetail = ({
   const handleEditClick = async (courseId) => {
     setShowAddCourse(true);
     try {
-      const response = await fetch(`http://localhost:8080/courses/${courseId}`);
+      const response = await fetch(
+        `https://api.hachion.co/courses/${courseId}`
+      );
       if (response.ok) {
         const course = await response.json();
         setFormData({
@@ -339,7 +341,7 @@ const CourseDetail = ({
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/courses/delete/${id}`
+        `https://api.hachion.co/courses/delete/${id}`
       );
     } catch (error) {}
   };
@@ -1013,7 +1015,7 @@ const CourseDetail = ({
                           <StyledTableCell align="center">
                             {course.courseImage ? (
                               <img
-                                src={`http://localhost:8080/${course.courseImage}`}
+                                src={`https://api.hachion.co/${course.courseImage}`}
                                 alt="Course"
                                 width="50"
                               />

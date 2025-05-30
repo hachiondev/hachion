@@ -1,0 +1,247 @@
+/*------- Blog Page CSS ------*/
+
+.blog-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+/* .Blogsidebar {
+  width: 35%;
+  overflow-y: auto;
+  border-right: 2px solid #ddd;
+  padding: 0px;
+} */
+
+.Blogsidebar {
+  width: 250px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  background: #fff;
+  flex-shrink: 0;
+  border-radius: 8px;
+  position: sticky;
+}
+
+.Blogsidebar h4 {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  background-color: #00aaef;
+  color: #ffffff;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
+
+.card {
+  width: 100%; /* Makes card take full width inside the container */
+  max-width: 400px; /* Prevents it from becoming too large */
+  padding: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out; /* ✅ Adds smooth hover effect */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.blog-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(292px, 1fr)); /* 3 equal columns */
+  gap: 20px;
+  padding-left: 15px;
+}
+
+.card:hover {
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* ✅ Slightly larger shadow on hover */
+}
+
+.card-img-top {
+  height: auto;
+  flex: 1;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 15px; /* Adjust the roundness */
+}
+
+.txtReadmore {
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #00aeef;
+  text-decoration: none;
+}
+
+.form-check-input {
+  width: 20px; /* Adjust size */
+  height: 20px;
+  appearance: none; /* Removes default styling */
+  border: 2px solid black; /* Black border */
+  background-color: transparent; /* Transparent background */
+  cursor: pointer;
+  border-radius: none; /* ✅ Removes rounded corners */
+}
+
+.txtfilter {
+  padding-bottom: 15px;
+}
+
+.form-check {
+  text-align: left;
+  margin: 0px;
+}
+.mobile-filter-toggle {
+  display: none;
+  text-align: center;
+  margin: 10px 0;
+}
+.clear-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #00aaef;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (min-width: 820px) and (max-width: 912px) {
+  .blog-list {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+  }
+  .blog-container {
+    width: 100%;
+  }
+}
+/* @media (min-width: 769px) and (max-width: 1024px) {
+  .blog-list {
+    grid-template-columns: repeat(2, minmax(292px, 1fr));
+  }
+} */
+
+@media (min-width: 481px) and (max-width: 768px) {
+  /* .Blogsidebar {
+    width: 100%; 
+    border-right: none; 
+  } */
+  .blog-container {
+    width: 100%;
+  }
+  .blog-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column; /* ✅ Image above text */
+  }
+
+  .card-img-top {
+    margin-bottom: 10px; /* ✅ Ensures spacing */
+  }
+}
+@media (min-width: 350px) and (max-width: 480px) {
+  .blog-container {
+    flex-direction: column;
+  }
+  .Blogsidebar {
+    width: 100%;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+  }
+
+  .Blogsidebar.hide {
+    max-height: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .Blogsidebar.show {
+    max-height: 1000px;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  .blog-list {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    display: flex !important; /* ✅ Forces flex behavior */
+    flex-direction: column !important; /* ✅ Ensures stacking */
+
+    border-radius: 10px;
+    padding: 5px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: auto;
+    display: block; /* ✅ Forces full width */
+    margin-bottom: 10px; /* ✅ Adds space between image & text */
+  }
+  .mobile-filter-toggle {
+    display: block;
+  }
+}
+
+/* Blog-pagination for course page */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  cursor: pointer;
+  border: 1px solid #00aeef; /* Remove default border */
+  background-color: #d9d9d9; /* Bootstrap primary color */
+  color: #00aeef; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 50%; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth color transition */
+}
+
+.pagination .arrow {
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+  margin: 0 10px; /* Space between buttons */
+  padding: 5px; /* Add some padding */
+  border: none; /* Remove default border */
+  background-color: #00aeef; /* Bootstrap primary color */
+  color: #fff; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 50%; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth color transition */
+}
+
+.pagination button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  color: white;
+}
+
+.pagination button:disabled {
+  color: #6a6a6a;
+  background-color: #d9d9d9; /* Gray background for disabled */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+.pagination .active {
+  background-color: #00aeef; /* Active page button color */
+  color: white;
+  font-weight: bold;
+}

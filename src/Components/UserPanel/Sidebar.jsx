@@ -65,7 +65,7 @@ const Sidebar = ({ onSelectCategory }) => {
       {isMobileView ? (
         // Dropdown for mobile view
         <div>
-          <h3 className="mob-sidebar-heading">Categories</h3>
+          <h2 className="mob-sidebar-heading">Categories</h2>
           <div className="mobile-dropdown">
             <h3 className="mob-sidebar-text">
               Please select Category from the below dropdown
@@ -86,7 +86,7 @@ const Sidebar = ({ onSelectCategory }) => {
       ) : (
         // Sidebar for desktop view
         <div className={`sidebar ${activeIndex !== null ? "show-cards" : ""}`}>
-          <h3 className="sidebar-heading">Categories</h3>
+          <h2 className="sidebar-heading">Categories</h2>
           <ul className="menu">
             {menuItems.map((item, index) => (
               <li key={index}>

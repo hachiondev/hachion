@@ -12,8 +12,10 @@ const Banner = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/banner")
+      .get("https://api.test.hachion.co/banner")
       .then((response) => {
+        console.log("API Response:", response.data); // Check the exact structure
+
         if (response.data.length > 0) {
           // Add static banner at the start
           const combinedBanners = [staticBanner, ...response.data];
@@ -25,7 +27,7 @@ const Banner = () => {
         }
       })
       .catch((error) => {
-        console.error("Error fetching banners:", error);
+        console.error("Error fetching banners:", error.response);
         setApiError(true);
       });
   }, []);
@@ -38,7 +40,7 @@ const Banner = () => {
     ? [staticBanner]
     : [
         staticBanner,
-        ...banners.filter((banner) => banner.home_status === "enabled"),
+        ...banners.filter((banner) => banner.home_status === "Enabled"),
       ];
 
   return (
@@ -73,7 +75,7 @@ const Banner = () => {
                   src={
                     apiError || index === 0
                       ? banner.home_banner_image
-                      : `http://localhost:8080/${banner.home_banner_image}`
+                      : `https://api.test.hachion.co/${banner.home_banner_image}`
                   }
                   className="banner-img"
                   alt={`Banner ${index + 1}`}
@@ -84,7 +86,7 @@ const Banner = () => {
                 src={
                   apiError || index === 0
                     ? banner.home_banner_image
-                    : `http://localhost:8080/${banner.home_banner_image}`
+                    : `https://api.test.hachion.co/${banner.home_banner_image}`
                 }
                 className="banner-img"
                 alt={`Banner ${index + 1}`}
@@ -94,7 +96,7 @@ const Banner = () => {
               src={
                 apiError || index === 0
                   ? banner.home_banner_image
-                  : `https://api.hachion.co/${banner.home_banner_image}`
+                  : `http://localhost:8080/${banner.home_banner_image}`
               }
               className="banner-img"
               alt={`Banner ${index + 1}`}

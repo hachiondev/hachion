@@ -18,15 +18,15 @@ const Learners = ({ page }) => {
         const data = await response.json();
 
         if (Array.isArray(data)) {
-          const filteredReviews = data.filter((review) =>
-            review.type === true &&
-            review.display &&
-            typeof review.display === "string"
-              ? review.display
-                  .split(",")
-                  .map((item) => item.trim())
-                  .includes(page)
-              : false
+          const filteredReviews = data.filter(
+            (review) =>
+              review.type === true &&
+              review.display &&
+              typeof review.display === "string" &&
+              review.display
+                .split(",")
+                .map((d) => d.trim())
+                .includes(page)
           );
           setReviews(filteredReviews);
         } else {
@@ -58,10 +58,20 @@ const Learners = ({ page }) => {
     setShowModal(true);
   };
 
+  const goToPrev = () => {
+    setActiveIndex((prevIndex) =>
+      prevIndex === 0 ? groupedReviews.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % groupedReviews.length);
+  };
+
   return (
     <div className="training-events">
       <div className="association">
-        <h1 className="association-head">Our Students Feedback</h1>
+        <h2 className="association-head">Our Students Feedback</h2>
       </div>
 
       <div className="learner-background">
@@ -69,8 +79,7 @@ const Learners = ({ page }) => {
           activeIndex={activeIndex}
           onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
           indicators={false}
-          prevIcon={<FaAngleLeft className="custom-prev-icon" />}
-          nextIcon={<FaAngleRight className="custom-next-icon" />}
+          controls={false}
           interval={null}
         >
           {groupedReviews.map((group, index) => (
@@ -99,47 +108,57 @@ const Learners = ({ page }) => {
             </Carousel.Item>
           ))}
         </Carousel>
-        <ul className="carousel-indicators">
-          {groupedReviews.map((_, index) => (
-            <li
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={index === activeIndex ? "active" : ""}
-            />
-          ))}
-        </ul>
-      </div>
 
-      {/* Modal for Full Review */}
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-        size="lg"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Student Review</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Carousel
-            activeIndex={activeIndex}
-            onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
-            indicators={false}
-            prevIcon={<FaAngleLeft className="custom-prev-icon" />}
-            nextIcon={<FaAngleRight className="custom-next-icon" />}
-            interval={null}
-          >
-            {reviews.map((review, index) => (
-              <Carousel.Item key={index}>
-                <div className="full-review">
-                  <h3>{review.name}</h3>
-                  <p>{review.review}</p>
-                </div>
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </Modal.Body>
-      </Modal>
+        {/* Arrows and Line Indicators */}
+        <div className="carousel-nav">
+          <FaAngleLeft className="custom-prev-icon" onClick={goToPrev} />
+
+          <div className="indicator-wrapper">
+            <ul className="carousel-indicators-line">
+              {groupedReviews.map((_, index) => (
+                <li
+                  key={index}
+                  onClick={() => setActiveIndex(index)}
+                  className={index === activeIndex ? "active" : ""}
+                />
+              ))}
+            </ul>
+          </div>
+
+          <FaAngleRight className="custom-next-icon" onClick={goToNext} />
+        </div>
+
+        {/* Modal */}
+        <Modal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          centered
+          size="lg"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Student Review</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Carousel
+              activeIndex={activeIndex}
+              onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
+              indicators={false}
+              prevIcon={<FaAngleLeft className="custom-prev-icon" />}
+              nextIcon={<FaAngleRight className="custom-next-icon" />}
+              interval={null}
+            >
+              {reviews.map((review, index) => (
+                <Carousel.Item key={index}>
+                  <div className="full-review">
+                    <h3>{review.name}</h3>
+                    <p>{review.review}</p>
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          </Modal.Body>
+        </Modal>
+      </div>
     </div>
   );
 };

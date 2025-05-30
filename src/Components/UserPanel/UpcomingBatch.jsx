@@ -61,7 +61,7 @@ const UpcomingBatch = () => {
   return (
     <>
       <div className="upcoming-batch">
-        <p className="qa-heading">Upcoming Batches for {course.courseName}</p>
+        <h1 className="qa-heading">Upcoming Batches for {course.courseName}</h1>
         <div className="batch-type">
           <p
             className="batch-type-content"

@@ -8,6 +8,7 @@ import { BsFillPlayCircleFill } from "react-icons/bs";
 import "./Course.css";
 import loginPopupImg from "../../Assets/loginpopup.png";
 import logo from "../../Assets/logo.png";
+import truncate from "html-truncate";
 
 const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   const { courseName } = useParams();
@@ -229,9 +230,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             <div className="top-course-data-mob">
               <h3 className="top-course-name">{course?.courseName}</h3>
               <h4 className="top-course-name-mob">{course?.courseName}</h4>
-              <p className="mob-cert">
-                Certified-students: {course.totalEnrollment}
-              </p>
+              {/* <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p> */}
             </div>
             <div className="qa-automation-left">
               <img
@@ -259,15 +258,16 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             <div
               className="qa-content"
               dangerouslySetInnerHTML={{
-                __html: course.courseHighlight.trim(),
+                __html: truncate(course.courseHighlight, 360, {
+                  ellipsis: "...",
+                }),
               }}
             />
+            <p className="cert">{course.totalEnrollment}+ Certified Students</p>
           </div>
 
           <div className="qa-right">
-            <p className="certified">
-              Certified-students: {course.totalEnrollment}
-            </p>
+            {/* <p className='certified'>Certified-students: {course.totalEnrollment}</p> */}
             <div className="qa-video-container">
               <img
                 src={qaheader}
@@ -297,6 +297,9 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         {/* Buttons Section */}
         <div className="qa-button-container">
           <div className="qa-button">
+            <p className="mob-cert">
+              {course.totalEnrollment}+ Certified Students
+            </p>
             <button className="enroll-now" onClick={onEnrollButtonClick}>
               Enroll Now
             </button>

@@ -18,6 +18,8 @@ import "./Dashboard.css";
 export default function UserReviews({ userId }) {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Fetch user reviews by ID
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function UserReviews({ userId }) {
     }
 
     axios
-      .get(`http://localhost:8080/userreview/${userId}`)
+      .get(`https://api.hachion.co/userreview/${userId}`)
       .then((response) => {
         console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
@@ -53,32 +55,46 @@ export default function UserReviews({ userId }) {
   }, [userId]);
 
   // Handle adding a new review
-  const handleAddReview = (reviewData) => {
-    axios
-      .post(`http://localhost:8080/userreview`, {
+  const handleAddReview = async (reviewData) => {
+    try {
+      const response = await axios.post(`https://api.hachion.co/userreview`, {
         user_id: userId,
-        course_name: reviewData.course_name,
-        rating: reviewData.rating,
-        review: reviewData.review,
-      })
-      .then((response) => {
-        alert("Review added successfully");
-        fetchReviews(); // Refresh reviews after addition
-        setShowReviewForm(false);
-      })
-      .catch((error) => {
-        console.error("Error adding review:", error);
+        ...reviewData,
       });
+
+      if (response.status === 200 || response.status === 201) {
+        setSuccessMessage("Review added successfully!");
+        setErrorMessage("");
+
+        // Wait for backend to process before fetching
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        await fetchReviews(); // Await to ensure it's completed
+        setShowReviewForm(false);
+
+        // Clear message after short delay
+        setTimeout(() => setSuccessMessage(""), 2000);
+      } else {
+        setErrorMessage("Failed to add review. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+      setErrorMessage("Failed to add review. Please try again.");
+      setSuccessMessage("");
+    }
   };
 
   // Fetch updated reviews
-  const fetchReviews = () => {
-    axios
-      .get(`http://localhost:8080/userreview/${userId}`)
-      .then((response) => {
-        console.log("Updated reviews fetched:", response.data);
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.hachion.co/userreview/${userId}`
+      );
+      const data = response.data;
+
+      if (Array.isArray(data)) {
         setReviews(
-          response.data.map((review, index) => ({
+          data.map((review, index) => ({
             S_No: index + 1,
             review_id: review.review_id,
             course_name: review.course_name,
@@ -88,16 +104,20 @@ export default function UserReviews({ userId }) {
             review: review.review,
           }))
         );
-      })
-      .catch((error) => {
-        console.error("Error fetching updated reviews:", error);
-      });
+      } else {
+        setReviews([]);
+        setErrorMessage("Unexpected API response. Please contact support.");
+      }
+    } catch (error) {
+      console.error("Error fetching updated reviews:", error);
+      setErrorMessage("Could not fetch reviews. Please try again later.");
+    }
   };
 
   // Handle review deletion
   const handleDeleteReview = (reviewId) => {
     axios
-      .delete(`http://localhost:8080/userreview/${reviewId}`)
+      .delete(`https://api.hachion.co/userreview/${reviewId}`)
       .then(() => {
         console.log("Review deleted:", reviewId);
         fetchReviews(); // Refresh reviews after deletion
@@ -112,9 +132,7 @@ export default function UserReviews({ userId }) {
       <div className="courses-enrolled">
         <nav className="dashboard-nav">
           <div className="nav-content">
-            <div className="title">
-              {showReviewForm ? "Write a Review" : "User Reviews"}
-            </div>
+            <div>{showReviewForm ? "Write a Review" : "User Reviews"}</div>
             {!showReviewForm && (
               <button
                 className="write-btn"
@@ -147,47 +165,73 @@ export default function UserReviews({ userId }) {
         className="content-wrapper"
         style={{ display: "flex", flexDirection: "row" }}
       >
-        <div className="resume-div" style={{ flex: 1 }}>
+        <div style={{ flex: 1 }}>
           {showReviewForm ? (
             <UserWriteReview
               setShowReviewForm={setShowReviewForm}
               onSubmitReview={handleAddReview}
             />
           ) : (
-            <TableContainer component={Paper}>
-              <Table className="resume-table" aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">S.No.</TableCell>
-                    <TableCell align="center">Course Name</TableCell>
-                    <TableCell align="center">Rating</TableCell>
-                    <TableCell align="center">Review</TableCell>
-                    <TableCell align="center">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {reviews.map((row) => (
-                    <TableRow key={row.S_No}>
-                      <TableCell align="center">{row.S_No}</TableCell>
-                      <TableCell align="left">{row.course_name}</TableCell>
-                      <TableCell align="center">{row.rating}</TableCell>
-                      <TableCell align="left">{row.review}</TableCell>
-                      <TableCell align="center">
-                        <IconButton className="edit-button">
-                          <BiSolidEditAlt />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDeleteReview(row.review_id)}
-                          className="delete-button"
-                        >
-                          <MdOutlineDeleteForever />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <div className="resume-div">
+              {successMessage && (
+                <div className="success-message">{successMessage}</div>
+              )}
+              {errorMessage && (
+                <div className="error-message">{errorMessage}</div>
+              )}
+              <div className="resume-div-table">
+                <TableContainer component={Paper}>
+                  <Table className="resume-table" aria-label="customized table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center" style={{ width: "50px" }}>
+                          S.No.
+                        </TableCell>
+                        <TableCell align="center">Course Name</TableCell>
+                        <TableCell align="center">Rating</TableCell>
+                        <TableCell align="center">Review</TableCell>
+                        <TableCell align="center" style={{ width: "70px" }}>
+                          Actions
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {reviews.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center">
+                            No reviews found.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        reviews.map((row) => (
+                          <TableRow key={row.S_No}>
+                            <TableCell align="center">{row.S_No}</TableCell>
+                            <TableCell align="left">
+                              {row.course_name}
+                            </TableCell>
+                            <TableCell align="center">{row.rating}</TableCell>
+                            <TableCell align="left">{row.review}</TableCell>
+                            <TableCell align="center">
+                              <IconButton className="edit-button">
+                                <BiSolidEditAlt />
+                              </IconButton>
+                              <IconButton
+                                onClick={() =>
+                                  handleDeleteReview(row.review_id)
+                                }
+                                className="delete-button"
+                              >
+                                <MdOutlineDeleteForever />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -8,13 +8,16 @@ import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
 
 const RegisterHere = () => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [isLoading, setIsLoading] = useState(false); // For loading state
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [formError, setFormError] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     code: "+1",
     flag: "US",
@@ -79,19 +82,33 @@ const RegisterHere = () => {
   };
 
   const handleClick = async () => {
-    if (!name || !email || !mobile) {
-      alert("Please fill in all fields.");
+    setFormError("");
+    setOtpMessage("");
+
+    if (!firstName || !lastName || !email || !mobile) {
+      setFormError("Please fill in all required fields.");
       return;
     }
 
     if (!isValidEmail(email)) {
-      alert("Please enter a valid email.");
+      setFormError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!/^\d{6,15}$/.test(mobile)) {
+      setFormError("Please enter a valid mobile number (6–15 digits).");
       return;
     }
 
     setIsLoading(true);
 
-    const data = { name, email, mobile };
+    const data = {
+      firstName,
+      lastName,
+      email,
+      mobile,
+      country: selectedCountry.name,
+    };
 
     try {
       const response = await fetch(
@@ -104,35 +121,36 @@ const RegisterHere = () => {
         }
       );
 
-      localStorage.setItem("registeruserData", JSON.stringify(data));
-
       const contentType = response.headers.get("Content-Type");
+      let responseData;
 
-      if (response.ok) {
-        if (contentType && contentType.includes("application/json")) {
-          const responseData = await response.json();
-
-          if (responseData && responseData.otp) {
-            alert(`OTP sent to your email: ${responseData.message}`);
-            console.log(
-              "Stored in LocalStorage:",
-              localStorage.getItem("registeruserData")
-            );
-          } else {
-            alert("Failed to send OTP. Please try again.");
-          }
-        } else {
-          const responseText = await response.text();
-          alert(`${responseText}`);
-        }
+      if (contentType && contentType.includes("application/json")) {
+        responseData = await response.json();
       } else {
-        const responseText = await response.text();
-        alert(`${responseText}`);
+        const text = await response.text();
+        responseData = { message: text };
+      }
+
+      console.log("OTP responseData:", responseData);
+
+      if (
+        response.ok &&
+        (responseData?.otp || responseData?.message?.includes("OTP"))
+      ) {
+        setFormError("");
+        setOtpMessage("OTP sent to your email.");
+        localStorage.setItem("registeruserData", JSON.stringify(data));
+        setTimeout(() => navigate("/registerverification"), 3000);
+      } else {
+        const errorMsg =
+          responseData?.message || "Failed to send OTP. Please try again.";
+        setFormError(errorMsg);
       }
     } catch (error) {
-      alert(`An error occurred: ${error.message}`);
+      const backendMessage =
+        error.response?.data?.message || error.response?.data || error.message;
+      setFormError(`An error occurred: ${backendMessage}`);
     } finally {
-      navigate("/registerverification");
       setIsLoading(false);
     }
   };
@@ -157,16 +175,30 @@ const RegisterHere = () => {
 
           <div className="login-mid-name">
             <label className="login-label">
-              Full Name<span className="star">*</span>
+              First Name<span className="star">*</span>
             </label>
             <div className="input-group mb-2">
               <input
                 type="text"
                 className="form-control"
                 id="floatingName"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your first name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+
+            <label className="login-label">
+              Last Name<span className="star">*</span>
+            </label>
+            <div className="input-group mb-2">
+              <input
+                type="text"
+                className="form-control"
+                id="floatingName"
+                placeholder="Enter your last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </div>
 
@@ -186,47 +218,53 @@ const RegisterHere = () => {
             <label className="login-label">
               Mobile Number<span className="star">*</span>
             </label>
-            <div className="input-group mb-3 custom-width">
-              <div className="input-group">
-                <Button
-                  variant="outlined"
-                  onClick={openMenu}
-                  className="country-dropdown"
-                  endIcon={<AiFillCaretDown />}
-                >
-                  <Flag code={selectedCountry.flag} className="country-flag" />
-                  {selectedCountry.code}
-                </Button>
-
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={closeMenu}
-                >
-                  {countries.map((country) => (
-                    <MenuItem
-                      key={country.code}
-                      onClick={() => handleCountrySelect(country)}
-                    >
-                      <Flag code={country.flag} className="country-flag" />
-                      {country.name} ({country.code})
-                    </MenuItem>
-                  ))}
-                </Menu>
-
-                <input
-                  type="tel"
-                  className="mobilenumber"
-                  ref={mobileInputRef}
-                  name="mobile"
-                  aria-label="Text input with segmented dropdown button"
-                  id="register"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  placeholder="Enter your mobile number"
+            <div className="input-wrapper" style={{ position: "relative" }}>
+              <button
+                variant="text"
+                onClick={openMenu}
+                className="mobile-button"
+              >
+                <Flag
+                  code={selectedCountry.flag}
+                  className="country-flag me-1"
                 />
-              </div>
+                <span style={{ marginRight: "5px" }}>
+                  {selectedCountry.code}
+                </span>
+                <AiFillCaretDown />
+              </button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={closeMenu}
+              >
+                {countries.map((country) => (
+                  <MenuItem
+                    key={country.code}
+                    onClick={() => handleCountrySelect(country)}
+                  >
+                    <Flag code={country.flag} className="country-flag me-2" />
+                    {country.name} ({country.code})
+                  </MenuItem>
+                ))}
+              </Menu>
+              <input
+                type="tel"
+                className="form-control"
+                ref={mobileInputRef}
+                name="mobile"
+                aria-label="Text input with segmented dropdown button"
+                id="floatingName"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                placeholder="Enter your mobile number"
+                style={{
+                  paddingLeft: "100px",
+                  border: "1px solid #d3d3d3",
+                }}
+              />
             </div>
+
             <button
               type="button"
               className="register-btn"
@@ -235,8 +273,24 @@ const RegisterHere = () => {
             >
               {isLoading ? "Sending OTP..." : "Verify"}
             </button>
+            {formError ? (
+              <div
+                style={{ color: "red", marginTop: "5px", marginBottom: "5px" }}
+              >
+                {formError}
+              </div>
+            ) : otpMessage ? (
+              <div
+                style={{
+                  color: "green",
+                  marginTop: "5px",
+                  marginBottom: "5px",
+                }}
+              >
+                {otpMessage}
+              </div>
+            ) : null}
           </div>
-
           <p className="login-with-hachion">
             Do you have an account with Hachion?{" "}
             <Link to="/login" className="link-to">

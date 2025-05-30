@@ -24,11 +24,13 @@ import UserResume from "./UserResume";
 import UserProfile from "./UserProfile";
 import { BiArrowToLeft } from "react-icons/bi";
 import { BiArrowToRight } from "react-icons/bi";
+import { useParams } from "react-router-dom";
 
 const UserDashboard = () => {
+  const { section } = useParams();
   const [dropdownOpen, setDropdownOpen] = useState({});
   const [activeIndex, setActiveIndex] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("Dashboard");
+  const [selectedCategory, setSelectedCategory] = useState("Enrolls");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for collapsed sidebar
 
   const toggleDropdown = (index) => {
@@ -38,14 +40,24 @@ const UserDashboard = () => {
     }));
   };
 
+  useEffect(() => {
+    if (section) {
+      const foundIndex = menuItems.findIndex((item) => item.title === section);
+      if (foundIndex !== -1) {
+        setSelectedCategory(section);
+        setActiveIndex(foundIndex);
+      }
+    }
+  }, [section]);
+
   const menuItems = [
-    { title: "Dashboard", icon: <AiFillDashboard /> },
+    // { title: 'Dashboard', icon: <AiFillDashboard /> },
     { title: "Enrolls", icon: <PiNotePencilBold /> },
-    { title: "Orders", icon: <PiTrolleySuitcaseFill /> },
-    { title: "Resume", icon: <FaIdCard /> },
+    // { title: 'Orders', icon: <PiTrolleySuitcaseFill /> },
+    // { title: 'Resume', icon: <FaIdCard /> },
     { title: "Certificate", icon: <PiCertificateBold /> },
-    { title: "Videos", icon: <MdOutlineVideoCameraFront /> },
-    { title: "Messages", icon: <BsFillEnvelopeFill /> },
+    // { title: 'Videos', icon: <MdOutlineVideoCameraFront /> },
+    // { title: 'Messages', icon: <BsFillEnvelopeFill /> },
     { title: "Review", icon: <MdRateReview /> },
     { title: "Settings", icon: <TbSettingsBolt /> },
   ];
@@ -61,26 +73,26 @@ const UserDashboard = () => {
 
   const renderSelectedComponent = () => {
     switch (selectedCategory) {
-      case "Dashboard":
-        return <UserDashboardCard />;
-      case "Orders":
-        return <UserOrders />;
+      // case 'Dashboard':
+      //   return <UserDashboardCard />;
+      // case 'Orders':
+      //   return <UserOrders />;
       case "Certificate":
         return <Certificate />;
       case "Enrolls":
         return <UserCategoryTable />;
-      case "Messages":
-        return <UserMessages />;
+      // case 'Messages':
+      //   return <UserMessages />;
       case "Review":
         return <UserReviews />;
-      case "Videos":
-        return <UserVideos />;
-      case "Resume":
-        return <UserResume />;
+      // case 'Videos':
+      //   return <UserVideos />;
+      // case 'Resume':
+      //   return <UserResume />;
       case "Settings":
         return <UserProfile />;
       default:
-        return <UserDashboardCard />;
+        return <UserCategoryTable />;
     }
   };
 

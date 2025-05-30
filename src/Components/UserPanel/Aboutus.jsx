@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import "./Blogs.css";
@@ -19,71 +19,11 @@ import Assistance from "../../Assets/Assistance.png";
 import careerSupport from "../../Assets/careerSupport.png";
 import handsOnLearning from "../../Assets/handsonLearning.png";
 import onlineTeaching from "../../Assets/onlineTeaching.png";
-import { Groups, School, Verified, MenuBook } from "@mui/icons-material";
 
 const Aboutus = () => {
   // Scroll to top when component is mounted
   useEffect(() => {
     window.scrollTo(0, 0); // This will scroll to the top of the page
-  }, []);
-
-  // useEffect(() => {
-  //   let start = 0;
-  //   const end = 88000; // Target number
-  //   const duration = 2000; // Duration of the animation in milliseconds
-  //   const incrementTime = Math.ceil(duration / end);
-
-  //   const followertimer = setInterval(() => {
-  //     start += 500; // Increment value
-  //     if (start > end) {
-  //       start = end;
-  //       clearInterval(followertimer);
-  //     }
-  //     setfollowerCount(start);
-  //   }, incrementTime);
-
-  //   return () => clearInterval(followertimer); // Clean up interval
-  // }, []);
-
-  const [followerCount, setFollowerCount] = useState(0);
-  const [studentCount, setStudentCount] = useState(0);
-  const [teacherCount, setTeacherCount] = useState(0);
-  const [courseCount, setCourseCount] = useState(0);
-
-  useEffect(() => {
-    // Helper function to create counters
-    const startCounter = (setCount, endValue, incrementValue, duration) => {
-      let start = 0;
-      const incrementTime = Math.ceil(duration / endValue);
-
-      const timer = setInterval(() => {
-        start += incrementValue;
-        if (start > endValue) {
-          start = endValue;
-          clearInterval(timer);
-        }
-        setCount(start);
-      }, incrementTime);
-
-      return () => clearInterval(timer); // Cleanup interval
-    };
-
-    // Follower Count
-    const cleanupFollower = startCounter(setFollowerCount, 88000, 500, 2000);
-    // Student Count
-    const cleanupStudent = startCounter(setStudentCount, 50000, 250, 2000);
-    // Teacher Count
-    const cleanupTeacher = startCounter(setTeacherCount, 500, 2, 2000);
-    // Course Count
-    const cleanupCourse = startCounter(setCourseCount, 25000, 100, 2000);
-
-    // Clean up all intervals when component unmounts
-    return () => {
-      cleanupFollower();
-      cleanupStudent();
-      cleanupTeacher();
-      cleanupCourse();
-    };
   }, []);
 
   return (
@@ -135,37 +75,31 @@ const Aboutus = () => {
             client requirements, operations and their philosophies by engaging
             them as partners.
           </p>
-          <h1 className="about-us-heading">Our Story</h1>
+          <h2 className="about-us-heading">Our Story</h2>
           <div className="our-story">
             <div className="story-div">
-              {/* <HiOutlineUserGroup className="story-icon" /> */}
-              <Groups className="white-icon" />
-              {/* <p className="number">88,000</p> */}
-              <p className="number"> {followerCount.toLocaleString()}</p>
-
+              <HiOutlineUserGroup className="story-icon" />
+              <p className="number">88,000</p>
               <p className="story-content"> Foreign Followers</p>
             </div>
             <div className="story-div">
-              {/* <PiStudentLight className="story-icon" /> */}
-              <School className="white-icon" />
-              <p className="number">{studentCount.toLocaleString()}</p>
+              <PiStudentLight className="story-icon" />
+              <p className="number">4789</p>
               <p className="story-content"> Students Enrolled</p>
             </div>
             <div className="story-div">
-              {/* <MdContacts className="story-icon" /> */}
-              <Verified className="white-icon" />
-              <p className="number">{teacherCount.toLocaleString()}+</p>
-              <p className="story-content"> Certified Trainers</p>
+              <MdContacts className="story-icon" />
+              <p className="number">96</p>
+              <p className="story-content"> Certified Teachers</p>
             </div>
             <div className="story-div">
-              {/* <GrDocumentVerified className="story-icon" /> */}
-              <MenuBook className="white-icon" />
-              <p className="number">{courseCount.toLocaleString()}+</p>
-              <p className="story-content"> Completed Courses</p>
+              <GrDocumentVerified className="story-icon" />
+              <p className="number">488</p>
+              <p className="story-content"> Complete Courses</p>
             </div>
           </div>
 
-          <h1 className="about-us-heading">Our Vision</h1>
+          <h2 className="about-us-heading">Our Vision</h2>
           <div className="about-us-top">
             <p className="about-us-left-content">
               Our Vision is to synergize the “right talent” with the “right
@@ -180,11 +114,11 @@ const Aboutus = () => {
             </p>
             <img src={visionImage} alt="" />
           </div>
-          <h1 className="about-us-heading">What We Do ?</h1>
+          <h2 className="about-us-heading">What We Do ?</h2>
           <p className="about-us-left-content">
             We provide a wide range of online courses to both large
             organizations and individual learners. Over 100+ online courses are
-            available on our intuitive and interactive platform www.hachion.com.
+            available on our intuitive and interactive platform www.hachion.co.
             Some of the most popular courses are QA Testing, AWS, DevOps,
             Tableau, PowerBI, Business Analyst, Salesforce and Hadoop. Our
             Real-time experts with over 10 years of experience in IT are ready
@@ -193,7 +127,7 @@ const Aboutus = () => {
             do. It shows in our interactions which are consistent with valuable
             information, designed strategically to be acquired with ease.
           </p>
-          <h1 className="about-us-heading">Why to choose Hachion ? </h1>
+          <h2 className="about-us-heading">Why to choose Hachion ? </h2>
 
           <p className="about-us-left-content">
             Hachion offers you the flexibility to learn anytime, anywhere with

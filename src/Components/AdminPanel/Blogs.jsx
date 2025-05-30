@@ -68,13 +68,13 @@ const Blogs = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/course-categories/all")
+      .get("http://localhost:8080/course-categories/all")
       .then((res) => setCategories(res.data))
       .catch(console.error);
   }, []);
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/blog")
+      .get("http://localhost:8080/blog")
       .then((res) => setBlogs(res.data))
       .catch(console.error);
   }, []);
@@ -130,8 +130,8 @@ const Blogs = () => {
     if (formData.blog_pdf) formDataToSend.append("blogPdf", formData.blog_pdf);
     try {
       const endpoint = formData.id
-        ? `https://api.hachion.co/blog/update/${formData.id}`
-        : "https://api.hachion.co/blog/add";
+        ? `http://localhost:8080/blog/update/${formData.id}`
+        : "http://localhost:8080/blog/add";
       const method = formData.id ? axios.put : axios.post;
       const response = await method(endpoint, formDataToSend, {
         maxBodyLength: Infinity,
@@ -159,7 +159,7 @@ const Blogs = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Blog?")) return;
     try {
-      await axios.delete(`https://api.hachion.co/blog/delete/${id}`);
+      await axios.delete(`http://localhost:8080/blog/delete/${id}`);
       setBlogs((prev) => prev.filter((blog) => blog.id !== id));
     } catch (error) {
       alert("Failed to delete blog");
@@ -169,7 +169,7 @@ const Blogs = () => {
     setFormMode("Edit");
     setShowForm(true);
     try {
-      const res = await axios.get(`https://api.hachion.co/blog/${id}`);
+      const res = await axios.get(`http://localhost:8080/blog/${id}`);
       const blog = res.data;
       setFormData({
         id: blog.id,
@@ -448,7 +448,7 @@ const Blogs = () => {
                         <StyledTableCell align="center">
                           {blog.blog_image ? (
                             <img
-                              src={`https://api.hachion.co/blogs/${blog.blog_image}`}
+                              src={`http://localhost:8080/blogs/${blog.blog_image}`}
                               alt="Blog"
                               width="50"
                             />

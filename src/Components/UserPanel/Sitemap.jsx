@@ -64,7 +64,7 @@ const Sitemap = () => {
   const handleCourseDetails = (coursename) => {
     if (coursename) {
       const formattedName = coursename.toLowerCase().replace(/\s+/g, "-"); // Format course name
-      navigate(`/courseDetails/${formattedName}`);
+      navigate(`/coursedetails/${formattedName}`);
     }
   };
 
@@ -93,7 +93,7 @@ const Sitemap = () => {
               {Category.map((item, index) => (
                 <div key={index} class="col-12 col-md-6">
                   <p class="txtCategory mt-2">
-                    <a href="/CourseDetails">{item.name}</a>
+                    <a href="/coursedetails">{item.name}</a>
                   </p>
                 </div>
               ))}

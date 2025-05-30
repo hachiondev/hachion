@@ -20,9 +20,9 @@ const CustomizeTraining = () => {
   return (
     <>
       <div className="association">
-        <h1 className="association-head">
+        <h2 className="association-head">
           Customized Training to Fit Your Needs
-        </h1>
+        </h2>
       </div>
       <div className="customize-training">
         {trainingOptions.map((option, index) => (

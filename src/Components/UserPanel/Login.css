@@ -36,7 +36,7 @@
   margin-top: 2.5vh;
   font-weight: 700;
   margin-bottom: 1vh;
-  font-size: 2.1rem;
+  font-size: 2rem;
 }
 .login-top {
   display: flex;
@@ -85,16 +85,19 @@
   font-weight: 400;
   color: rgba(0, 0, 0, 1);
 }
-.forgot-password {
+.forgot-align {
   display: flex;
   justify-content: flex-end;
+}
+.forgot-password {
+  display: inline;
   font-size: 1rem;
-  /* font-style: italic; */
   font-weight: 500;
   color: #00aeef;
   cursor: pointer;
   margin-right: 1% !important;
   margin-top: 15px;
+  text-decoration: underline;
 }
 
 .login-right-header {
@@ -121,9 +124,16 @@
   white-space: nowrap;
 }
 .go-to-register {
-  padding: 1vh;
-  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
   font-weight: 400;
+  margin-top: 10px;
+}
+.spam-msg {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
 }
 
 .login .form-group {
@@ -186,9 +196,6 @@
 
 .forgot-password {
   font-size: 0.9rem;
-  /* font-style: italic; */
-  color: #00aeef;
-  cursor: pointer;
   margin-top: 15px;
 }
 
@@ -266,7 +273,7 @@
   }
 
   .welcome-back {
-    font-size: 2.25rem;
+    font-size: 2rem;
     margin-top: 1vh;
     margin-right: 4vh;
   }
@@ -277,6 +284,9 @@
   }
   .login-with hr {
     width: 20%;
+  }
+  .login-mid-name {
+    padding-top: 2vh;
   }
 
   .icon-holder {
@@ -385,7 +395,6 @@
     margin-top: 10px;
     margin-bottom: 0;
     font-size: 12px;
-    justify-content: flex-end;
     margin-right: 1%;
   }
   .login-left {
@@ -430,7 +439,7 @@
   }
 
   .welcome-back {
-    font-size: 32px;
+    font-size: 28px;
     margin-top: 10px;
   }
 
@@ -458,10 +467,11 @@
   }
 
   .link-to-register {
-    color: #00aeef;
-    text-decoration-line: none;
-    font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .mail-to-register {
+    font-size: 12px;
   }
 
   .register-btn {
@@ -613,10 +623,24 @@
 }
 .link-to-register {
   color: #00aeef;
-  text-decoration-line: none;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 5px;
+}
+.mail-to-register {
+  color: #00aeef;
+  text-decoration: none;
   font-weight: bold;
 }
 @media (max-width: 1366px) {
+  .login-mid-name {
+    padding-top: 2vh;
+  }
+  .otp {
+    height: 50px;
+  }
+
   .icon-text img {
     height: 75px;
     width: 75px;
@@ -793,22 +817,10 @@
   cursor: pointer;
 }
 
-/* .icon-text-img {
-  height: 6.5vh;
-  width: 3.25vw;
-  margin-right: -8px;
-  z-index: 1;
-} */
-
-/* .login-link {
-  display: flex;
-  justify-content: center;
-  font-weight: 400;
-  font-size: 1rem;
-} */
 .link-to {
   color: #00aeef;
-  text-decoration-line: none;
+  text-decoration-line: underline;
+  cursor: pointer;
   font-weight: bold;
   font-size: 1rem;
 }
@@ -818,7 +830,7 @@
   font-weight: bold;
 }
 .register-learning {
-  font-size: 2.25rem;
+  font-size: 2rem;
   margin-top: 2vh;
   margin-bottom: 1vh;
 }
@@ -985,7 +997,7 @@ hr {
   }
 
   .register-learning {
-    font-size: 30px;
+    font-size: 28px;
     margin-top: 10px;
     margin-bottom: 0;
     white-space: nowrap;
@@ -1006,12 +1018,12 @@ hr {
   font-weight: bold;
 }
 .otp-verify {
-  padding: 2vh;
+  padding: 1vh;
 }
 .otp-number {
   height: 50px;
   width: 50px;
-  border: 1px solid #6a6a6a;
+  border: 1px solid #b3b3b3;
   border-radius: 10px;
   box-shadow: darkgrey;
   display: flex;
@@ -1019,12 +1031,22 @@ hr {
   justify-items: center;
 }
 
+.tag {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  white-space: wrap;
+}
+
 .otp {
   /* width: 20vw; */
-  height: 5vh;
+  height: 50px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .register-btn {
   width: 520px;
@@ -1076,7 +1098,7 @@ hr {
   }
   .otp {
     width: 40vw;
-    height: 5vh;
+    height: 50px;
   }
   .otp-verify {
     margin-top: 0vh;
@@ -1105,7 +1127,7 @@ hr {
   }
 }
 
-@media screen and (max-width: 480px) {
+@media (min-width: 350px) and (max-width: 480px) {
   .otp-verify {
     margin-top: 0vh;
     padding: 10px;
@@ -1114,7 +1136,7 @@ hr {
   .otp {
     width: auto;
     height: 50px;
-    justify-content: space-between;
+    justify-content: center;
     gap: 20px;
   }
   /* .otp{

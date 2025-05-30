@@ -146,7 +146,7 @@ const NavbarTop = () => {
   const handleCourseClick = (item) => {
     if (item.type === "course") {
       const formattedCourseName = formatCourseName(item.courseName);
-      navigate(`/courseDetails/${formattedCourseName}`);
+      navigate(`/coursedetails/${formattedCourseName}`);
     } else if (item.type === "blog") {
       const formattedCategory = item.category_name
         .toLowerCase()
@@ -392,13 +392,13 @@ const NavbarTop = () => {
                     </div>
                     <div
                       className="drawer-item"
-                      onClick={() => navigate("/courseDetails")}
+                      onClick={() => navigate("/coursedetails")}
                     >
                       Courses
                     </div>
                     <div
                       className="drawer-item"
-                      onClick={() => navigate("/courseDetails")}
+                      onClick={() => navigate("/coursedetails")}
                     >
                       Hire from Us
                     </div>
@@ -422,13 +422,13 @@ const NavbarTop = () => {
                 </div>
                 <div
                   className="drawer-item"
-                  onClick={() => navigate("/courseDetails")}
+                  onClick={() => navigate("/coursedetails")}
                 >
                   Courses
                 </div>
                 <div
                   className="drawer-item"
-                  onClick={() => navigate("/courseDetails")}
+                  onClick={() => navigate("/coursedetails")}
                 >
                   Hire from Us
                 </div>
@@ -465,7 +465,7 @@ const NavbarTop = () => {
             }`}
             onClick={() => handleNavClick("CourseDetails")}
           >
-            <Link to="/courseDetails" className="nav-item-link">
+            <Link to="/coursedetails" className="nav-item-link">
               Courses
             </Link>
           </button>
@@ -475,7 +475,7 @@ const NavbarTop = () => {
             }`}
             onClick={() => handleNavClick("CourseDetails")}
           >
-            <Link to="/courseDetails" className="nav-item-link">
+            <Link to="/coursedetails" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

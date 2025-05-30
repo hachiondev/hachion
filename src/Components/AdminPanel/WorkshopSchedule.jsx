@@ -71,6 +71,7 @@ export default function WorkshopSchedule() {
     bannerImage: null,
     category_name: "",
     course_name: "",
+    title: "",
     date: null,
     time: null,
     time_zone: "",
@@ -84,6 +85,7 @@ export default function WorkshopSchedule() {
     bannerImage: null,
     category_name: "",
     course_name: "",
+    title: "",
     date: "",
     time: "",
     time_zone: "",
@@ -98,6 +100,7 @@ export default function WorkshopSchedule() {
     bannerImage: null,
     category_name: "",
     course_name: "",
+    title: "",
     date: "",
     time: "",
     time_zone: "",
@@ -209,6 +212,7 @@ export default function WorkshopSchedule() {
       bannerImage: null,
       category_name: "",
       course_name: "",
+      title: "",
       time: "",
       time_zone: "",
       date: "",
@@ -225,7 +229,8 @@ export default function WorkshopSchedule() {
     // Construct your JSON object
     const updatedFormData = {
       category_name: formData.category_name,
-      course_name: formData.course_name || "Salesforce",
+      course_name: formData.course_name || "",
+      title: formData.title,
       time: formData.time,
       date: formData.date,
       time_zone: formData.time_zone || "GMT",
@@ -514,6 +519,17 @@ export default function WorkshopSchedule() {
 
                     <div className="course-row d-flex align-items-center">
                       <div className="col">
+                        <label className="form-label d-block">Title</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter Title"
+                          name="title"
+                          value={formData.title}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="col">
                         <label className="form-label d-block">Date</label>
                         <DatePicker
                           value={formData.date ? dayjs(formData.date) : null}
@@ -554,7 +570,7 @@ export default function WorkshopSchedule() {
                           className="form-control"
                           placeholder="Enter Time Zone"
                           name="time_zone"
-                          value={formData.time_zone || "EST"}
+                          value={formData.time_zone || "IST"}
                           onChange={handleChange}
                         />
                       </div>
@@ -828,6 +844,7 @@ export default function WorkshopSchedule() {
                     Category Name
                   </StyledTableCell>
                   <StyledTableCell align="center">Course Name</StyledTableCell>
+                  <StyledTableCell align="center">Title</StyledTableCell>
                   <StyledTableCell align="center">Date</StyledTableCell>
                   <StyledTableCell align="center">Time</StyledTableCell>
                   <StyledTableCell align="center">
@@ -866,6 +883,9 @@ export default function WorkshopSchedule() {
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {course.course_name}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {course.title}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.date
@@ -1024,6 +1044,18 @@ export default function WorkshopSchedule() {
               </div>
             </div>
 
+            <div className="col">
+              <label className="form-label">Title</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter Title"
+                name="title"
+                value={editedRow.title}
+                onChange={handleInputChange}
+              />
+            </div>
+
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Banner Image</label>
@@ -1040,7 +1072,6 @@ export default function WorkshopSchedule() {
                   required
                 />
               </div>
-
               <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker

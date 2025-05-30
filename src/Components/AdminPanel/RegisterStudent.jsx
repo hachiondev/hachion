@@ -192,7 +192,7 @@ export default function RegisterStudent() {
                   </StyledTableCell>
                   <StyledTableCell>{index + 1}</StyledTableCell>
                   <StyledTableCell align="left">
-                    {row.student_ID}
+                    {row.studentId}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.userName}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>

@@ -14,13 +14,14 @@ const RegisterNext = () => {
   const [confirmPasswordType, setConfirmPasswordType] = useState("password");
   const [resendLoading, setResendLoading] = useState(false); // To manage resend OTP loading state
   const navigate = useNavigate();
+  const [messageType, setMessageType] = useState("");
   const userDataString = localStorage.getItem("registeruserData");
   const registeruserData = userDataString
     ? JSON.parse(userDataString)
     : { email: "" };
-
+  const [registerMessage, setRegisterMessage] = useState("");
   const handleOtpChange = (e, index) => {
-    const value = e.target.value.replace(/\D/g, ""); // Allow digits only
+    const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 1) {
       setOtp((prev) => {
         const newOtp = [...prev];
@@ -28,33 +29,33 @@ const RegisterNext = () => {
         return newOtp;
       });
 
-      // Attempt to focus the next input
       if (value && index < otp.length - 1) {
         const nextInput = document.getElementById(`otp-input-${index + 1}`);
         if (nextInput) {
-          nextInput.focus(); // Safeguard against null
+          nextInput.focus();
         }
       }
     }
   };
 
   const verifyAccount = async (otpArray, password, confirmPassword) => {
-    const otp = otpArray.join(""); // Convert OTP array to string
+    const otp = otpArray.join("");
 
     if (!otp || !password || !confirmPassword) {
-      alert("Please fill in all fields");
+      setRegisterMessage("Please fill in all fields");
+      setMessageType("error");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setRegisterMessage("Passwords do not match");
+      setMessageType("error");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Step 1: Verify OTP
       const verifyResponse = await fetch(
         "https://api.hachion.co/api/v1/user/verify-otp",
         {
@@ -69,38 +70,49 @@ const RegisterNext = () => {
 
       if (!verifyResponse.ok) {
         const error = await verifyResponse.text();
-        alert(`Invalid OTP: ${error}`);
-        throw new Error("OTP verification failed"); // Stop execution if OTP fails
+        setRegisterMessage(`Invalid OTP: ${error}`);
+        setMessageType("error");
+        throw error;
       }
 
-      // Step 2: Proceed with Registration
       const registerResponse = await fetch(
         "https://api.hachion.co/api/v1/user/register",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userName: registeruserData.name,
+            firstName: registeruserData.firstName,
+            lastName: registeruserData.lastName,
             email: registeruserData.email,
+            country: registeruserData.country,
             mobile: registeruserData.mobile,
-            password: password, // Ensure password is sent as string
+            mode: "Online",
+            password: password,
             confirmPassword: confirmPassword,
           }),
         }
       );
 
+      const message = await registerResponse.text();
+
       if (!registerResponse.ok) {
-        const error = await registerResponse.text();
-        throw new Error(error || "Registration failed");
+        setRegisterMessage(message || "Registration failed");
+        setMessageType("error");
+        throw message || "Registration failed";
       }
 
-      const data = await registerResponse.json();
-      alert("User registered successfully");
-      navigate("/login"); // ✅ Navigate only on success
+      setRegisterMessage("You are successfully registered!");
+      setMessageType("success");
+      setTimeout(() => navigate("/login"), 5000);
     } catch (error) {
-      navigate("/login");
+      const msg =
+        typeof error === "string"
+          ? error
+          : error.message || "An unexpected error occurred";
+      setRegisterMessage(msg);
+      // setTimeout(() => navigate('/login'), 5000);
     } finally {
-      setIsLoading(false); // ✅ Ensure loading spinner stops
+      setIsLoading(false);
     }
   };
 
@@ -115,10 +127,10 @@ const RegisterNext = () => {
   };
 
   const resendOtp = async () => {
-    if (resendLoading) return; // Prevent multiple requests if one is already in progress
+    if (resendLoading) return;
     setResendLoading(true);
 
-    const email = registeruserData.email; // Get email from localStorage
+    const email = registeruserData.email;
 
     try {
       const response = await fetch(
@@ -129,12 +141,15 @@ const RegisterNext = () => {
       );
 
       if (response.ok) {
-        alert("OTP sent successfully!");
+        setRegisterMessage("OTP sent successfully!");
+        setMessageType("success");
       } else {
         const error = await response.text();
         throw new Error(error || "Failed to resend OTP");
       }
     } catch (error) {
+      setRegisterMessage(error.message);
+      setMessageType("error");
       // alert(`Error: ${error.message}`);
     } finally {
       setResendLoading(false);
@@ -158,77 +173,100 @@ const RegisterNext = () => {
               <h6 className="steps-head-one">2</h6>
             </div>
           </div>
-
-          <div className="otp-verify">
-            <h6 className="enter-otp">Enter OTP: </h6>
-            <div className="otp">
-              {otp.map((digit, index) => (
+          <div className="login-mid-name">
+            <div className="otp-verify">
+              <p className="tag" style={{ marginBottom: "0" }}>
+                Please check your inbox
+              </p>
+              <p className="tag">
+                OTP has been sent to{" "}
+                <span className="mail-to-register">
+                  {registeruserData.email}
+                </span>
+              </p>
+              {/* <h6 className="enter-otp">Enter OTP: </h6> */}
+              <div className="otp">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    id={`otp-input-${index}`} // Assign unique ID
+                    className="otp-number"
+                    type="text"
+                    maxLength="1"
+                    value={digit}
+                    onChange={(e) => handleOtpChange(e, index)}
+                  />
+                ))}
+              </div>
+              <p className="go-to-register">
+                {" "}
+                Didn't receive the OTP?{" "}
+                <span className="link-to-register" onClick={resendOtp}>
+                  {resendLoading ? "Resending..." : "Resend"}
+                </span>
+              </p>
+              <label className="login-label">Password</label>
+              <div className="password-field">
                 <input
-                  key={index}
-                  id={`otp-input-${index}`} // Assign unique ID
-                  className="otp-number"
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  onChange={(e) => handleOtpChange(e, index)}
+                  type={passwordType}
+                  className="form-control"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-              ))}
-            </div>
+                <span className="eye-icon" onClick={togglePasswordVisibility}>
+                  {passwordType === "password" ? (
+                    <AiFillEye />
+                  ) : (
+                    <AiFillEyeInvisible />
+                  )}
+                </span>
+              </div>
 
-            <p className="forgot-password" onClick={resendOtp}>
-              {resendLoading ? "Resending..." : "Resend OTP"}
+              <label className="login-label">Confirm Password</label>
+              <div className="password-field">
+                <input
+                  type={confirmPasswordType}
+                  className="form-control"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <span
+                  className="eye-icon"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {confirmPasswordType === "password" ? (
+                    <AiFillEye />
+                  ) : (
+                    <AiFillEyeInvisible />
+                  )}
+                </span>
+              </div>
+              <button
+                type="button"
+                className="register-btn"
+                onClick={() => verifyAccount(otp, password, confirmPassword)}
+                disabled={isLoading}
+              >
+                {isLoading ? "Verifying..." : "Verify and Register"}
+              </button>
+              {registerMessage && (
+                <div
+                  style={{
+                    color: messageType === "success" ? "green" : "red",
+                    marginTop: "5px",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {registerMessage}
+                </div>
+              )}
+            </div>
+            <p className="spam-msg">
+              <span className="note">*Note :</span>If you don't see OTP in your
+              inbox, Kindly check your spam folder.
             </p>
-
-            <label className="login-label">Password</label>
-            <div className="input-group mb-2">
-              <input
-                type={passwordType}
-                className="form-control"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              >
-                {passwordType === "password" ? (
-                  <AiFillEyeInvisible />
-                ) : (
-                  <AiFillEye />
-                )}
-              </span>
-            </div>
-
-            <label className="login-label">Confirm Password</label>
-            <div className="input-group mb-2">
-              <input
-                type={confirmPasswordType}
-                className="form-control"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <span
-                className="toggle-password"
-                onClick={toggleConfirmPasswordVisibility}
-              >
-                {confirmPasswordType === "password" ? (
-                  <AiFillEyeInvisible />
-                ) : (
-                  <AiFillEye />
-                )}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              className="register-btn"
-              onClick={() => verifyAccount(otp, password, confirmPassword)}
-              disabled={isLoading}
-            >
-              {isLoading ? "Verifying..." : "Verify and Register"}
-            </button>
           </div>
         </div>
       </div>

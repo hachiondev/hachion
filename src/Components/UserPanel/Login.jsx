@@ -11,7 +11,7 @@ import facebook from "../../Assets/facebook_symbol.svg.png";
 import { useFormik } from "formik";
 import axios from "axios";
 import { LoginSchema } from "../Schemas";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // For eye icons
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Topbar from "./Topbar";
 
 const initialValues = {
@@ -26,7 +26,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
   const [captchaError, setCaptchaError] = useState("");
-
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -104,7 +103,6 @@ const Login = () => {
         <div className="login-left">
           <div className="login-top">
             <img src={logo} alt="logo" className="login-logo" />
-
             <h3 className="welcome-back">Welcome back!</h3>
             <h4 className="login-continue">Login to continue learning</h4>
             <div className="login-mid">
@@ -124,7 +122,7 @@ const Login = () => {
               <label className="login-label">
                 Password<span className="star">*</span>
               </label>
-              <div className="input-group mb-2">
+              <div className="password-field">
                 <input
                   type={passwordType}
                   className="form-control"
@@ -132,23 +130,24 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <span
-                  className="input-group-text"
-                  onClick={togglePasswordVisibility}
-                >
+                <span className="eye-icon" onClick={togglePasswordVisibility}>
                   {passwordType === "password" ? (
-                    <AiFillEyeInvisible />
-                  ) : (
                     <AiFillEye />
+                  ) : (
+                    <AiFillEyeInvisible />
                   )}
                 </span>
               </div>
 
-              <Link to="/forgotpassword" style={{ textDecoration: "none" }}>
-                <p className="forgot-password">Forgot Password?</p>
-              </Link>
-
-              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              {/* <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
+                  <p className='forgot-password'>Forgot Password?</p>
+                </Link> */}
+              <div className="forgot-align">
+                <Link to="/forgotpassword" className="forgot-password">
+                  {" "}
+                  Forgot Password?{" "}
+                </Link>
+              </div>
               <div className="form-check">
                 <input
                   className="form-check-input"
@@ -164,8 +163,6 @@ const Login = () => {
                 </label>
                 <img src={captcha} alt="captcha" className="captcha" />
               </div>
-              {captchaError && <p className="error-message">{captchaError}</p>}
-
               <div className="d-grid gap-2">
                 <button
                   className="register-btn"
@@ -175,8 +172,9 @@ const Login = () => {
                   Login
                 </button>
               </div>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              {captchaError && <p className="error-message">{captchaError}</p>}
             </div>
-
             <p className="go-to-register">
               Don't have an account?{" "}
               <Link to="/register" className="link-to-register">

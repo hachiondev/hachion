@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import TrainingCard from "./TrainingCard";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
-// import Select from "react-select";
 import { IoSearch } from "react-icons/io5";
 
 const TrainingEvents = () => {
@@ -26,6 +25,7 @@ const TrainingEvents = () => {
           fetch(
             `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
+
           fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
         ]);
 
@@ -48,13 +48,18 @@ const TrainingEvents = () => {
           };
         });
 
-        console.log("Merged Courses:", mergedData);
+        // console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
-          ...new Set(coursesRes.map((course) => course.courseName.trim())),
+          ...new Set(
+            scheduleRes.map((course) => course.schedule_course_name.trim())
+          ),
         ];
+        // console.log("unique courses:", JSON.stringify(uniqueCourses, null, 2));
+
         setCourseOptions(uniqueCourses);
+        // console.log("unique for set courses:", JSON.stringify(uniqueCourses, null, 2));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -76,59 +81,6 @@ const TrainingEvents = () => {
       year: "numeric",
     }).format(localDate);
   };
-
-  // const getFilteredCourses = () => {
-  //   const now = new Date();
-
-  //   // Filter based on mode, course name, and time
-  //   const filtered = mergedCourses.filter((course) => {
-  //     const courseDate = new Date(course.schedule_date);
-  //     const createdDate = new Date(course.created_at);
-
-  //     const isToday = courseDate.toDateString() === now.toDateString();
-  //     const isThisWeek =
-  //       (courseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) <= 7 &&
-  //       courseDate > now;
-  //     const isNewlyAdded = (now - createdDate) / (1000 * 60 * 60 * 24) <= 7;
-
-  //     const courseNameMatch =
-  //       !courseFilter ||
-  //       course.schedule_course_name?.toLowerCase().trim() ===
-  //         courseFilter.toLowerCase().trim();
-
-  //     const modeMatch =
-  //       !modeFilter ||
-  //       course.schedule_mode?.toLowerCase().trim() ===
-  //         modeFilter.toLowerCase().trim();
-
-  //     const timeMatch =
-  //       !timeFilter ||
-  //       (timeFilter === "today" && isToday) ||
-  //       (timeFilter === "week" && isThisWeek) ||
-  //       (timeFilter === "new" && isNewlyAdded);
-
-  //     return courseNameMatch && modeMatch && timeMatch;
-  //   });
-
-  //   // Group by course name
-  //   const grouped = {};
-  //   filtered.forEach((item) => {
-  //     const key = item.schedule_course_name.trim().toLowerCase();
-  //     if (!grouped[key]) {
-  //       grouped[key] = {
-  //         ...item,
-  //         sessions: [],
-  //       };
-  //     }
-  //     grouped[key].sessions.push({
-  //       date: item.schedule_date,
-  //       time: item.schedule_time,
-  //     });
-  //   });
-
-  //   return Object.values(grouped);
-  // };
-
   const getFilteredCourses = () => {
     const now = new Date();
 
@@ -208,7 +160,7 @@ const TrainingEvents = () => {
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
-        <h1 className="association-head">Upcoming Training Events</h1>
+        <h2 className="association-head">Upcoming Training Events</h2>
       </div>
 
       <div className="view-btn">

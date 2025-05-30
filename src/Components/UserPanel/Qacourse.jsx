@@ -35,7 +35,7 @@ const Qacourse = () => {
     <>
       <div className="qa-course">
         <div className="qa-course-heading">
-          <h1 className="qa-heading"> About {course.courseName}</h1>
+          <h2 className="qa-heading"> About {course.courseName}</h2>
 
           <div
             className="qa-sub-content"

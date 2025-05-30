@@ -27,15 +27,20 @@ const countryToCurrencyMap = {
 const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   const { courseName } = useParams();
   const navigate = useNavigate();
+
   const [fee, setFee] = useState("Not Available");
   const [currency, setCurrency] = useState("USD");
   const [exchangeRate, setExchangeRate] = useState(1);
   const [discount, setDiscount] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
+
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [resendExceeded, setResendExceeded] = useState(false);
   const [showResend, setShowResend] = useState(false);
+  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
 
   const getResendKey = (batch) => {
     return batch
@@ -60,6 +65,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
 
   useEffect(() => {
     setMessage("");
+    setMessageType("");
     const key = getResendKey(selectedBatchData);
     const attempts = key ? parseInt(localStorage.getItem(key), 10) || 0 : 0;
     setResendExceeded(attempts >= 3);
@@ -109,7 +115,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
             return;
           }
 
-          setFee((selectedFeeAmount * rate).toFixed(2) || "Not Available");
+          setFee(selectedFeeAmount * rate || "Not Available");
 
           if (
             selectedOriginalAmount &&
@@ -121,7 +127,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
             const calculatedDiscountPercentage = Math.round(
               (calculatedDiscount / selectedOriginalAmount) * 100
             );
-            setDiscount((calculatedDiscount * rate).toFixed(2));
+            setDiscount(calculatedDiscount * rate);
             setDiscountPercentage(calculatedDiscountPercentage);
           } else {
             setDiscount(0);
@@ -147,13 +153,15 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           email: userEmail,
         }
       );
-      alert(response.data);
+      setMessage(response.data || "Email resent successfully.");
+      setMessageType("success");
     } catch (error) {
       console.error(
         "Resend email failed:",
         error.response?.data || error.message
       );
-      alert("Failed to resend email.");
+      setMessage("Failed to resend email.");
+      setMessageType("error");
     }
   };
 
@@ -164,9 +172,10 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       : 0;
 
     if (currentAttempts >= 3) {
-      alert(
+      setMessage(
         "Maximum attempts exceeded. Please reach out to the support team to get the schedule."
       );
+      setMessageType("error");
       setResendExceeded(true);
       return;
     }
@@ -175,7 +184,8 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     const userEmail = user?.email;
 
     if (!userEmail) {
-      alert("No user email found!");
+      setMessage("No user email found!");
+      setMessageType("error");
       return;
     }
 
@@ -187,7 +197,8 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         setResendExceeded(true);
       }
     } catch (err) {
-      alert("Resend failed. Please try again.");
+      setMessage("Resend failed. Please try again.");
+      setMessageType("error");
     }
   };
 
@@ -195,18 +206,45 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     const user = JSON.parse(localStorage.getItem("loginuserData")) || null;
 
     if (!user || !user.email) {
-      const confirmRegister = window.confirm(
-        'Please register on the portal to enroll in demo and live sessions.\n\nClick "OK" to Register Now.'
-      );
-      if (confirmRegister) {
-        navigate("/registerhere");
-      }
+      const currentPath = window.location.pathname + window.location.search;
+      localStorage.setItem("redirectAfterLogin", currentPath);
+      setShowRegisterPrompt(true);
       return;
     }
+
+    setShowRegisterPrompt(false);
+    setMessage("");
+    setMessageType("");
 
     const userEmail = user.email;
     const userName = user.name || "";
     const userMobile = user.mobile || "";
+
+    let studentId = "";
+    let mobile = "";
+    try {
+      // Fetch studentId via API
+      const profileResponse = await axios.get(
+        `https://api.hachion.co/api/v1/user/myprofile`,
+        {
+          params: { email: userEmail },
+        }
+      );
+
+      if (profileResponse.data && profileResponse.data.studentId) {
+        studentId = profileResponse.data.studentId;
+        mobile = profileResponse.data.mobile || "";
+      } else {
+        setMessage("Unable to find your student ID.");
+        setMessageType("error");
+        return;
+      }
+    } catch (error) {
+      console.error("Error fetching studentId:", error);
+      setMessage("Unable to fetch your student ID. Please try again later.");
+      setMessageType("error");
+      return;
+    }
 
     if (modeType === "live" && enrollText === "Enroll Now") {
       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, "-");
@@ -217,14 +255,16 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     if (modeType === "live" && enrollText === "Enroll Free Demo") {
       try {
         if (!selectedBatchData) {
-          alert("Please select a batch before enrolling.");
+          setMessage("Please select a batch before enrolling.");
+          setMessageType("error");
           return;
         }
 
         const payload = {
           name: userName,
+          studentId: studentId,
           email: userEmail,
-          mobile: userMobile || "",
+          mobile: mobile || "",
           course_name: selectedBatchData.schedule_course_name,
           enroll_date: selectedBatchData.schedule_date,
           week: selectedBatchData.schedule_week,
@@ -245,13 +285,11 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
 
         if (response.data.status === 201) {
           setMessage("Registered Successfully");
+          setMessageType("success");
         } else {
           setMessage("Registered successfully");
+          setMessageType("success");
         }
-
-        alert(
-          "You have successfully registered for the demo session. You will receive an email shortly."
-        );
 
         const uniqueBatchKey = `enrolled-${selectedBatchData.schedule_course_name}-${selectedBatchData.schedule_date}-${selectedBatchData.schedule_time}`;
         localStorage.setItem(uniqueBatchKey, true);
@@ -260,6 +298,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       } catch (error) {
         console.error("Error enrolling in demo:", error);
         setMessage("Error occurred while enrolling.");
+        setMessageType("error");
       }
     }
   };
@@ -302,7 +341,37 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           </p>
         )}
 
-      {message && <p className="success-message">{message}</p>}
+      {/* Inline Success/Error message */}
+      {message && (
+        <p
+          style={{
+            color: messageType === "success" ? "green" : "red",
+            marginTop: "10px",
+            marginBottom: "10px",
+          }}
+          className={
+            messageType === "success" ? "success-message" : "error-message"
+          }
+        >
+          {message}
+        </p>
+      )}
+
+      {/* Register prompt instead of popup */}
+      {showRegisterPrompt && (
+        <div className="prompt">
+          <p>Please Login to the portal to enroll in demo and live sessions.</p>
+          <button className="log" onClick={() => navigate("/login")}>
+            Login
+          </button>
+          <button
+            className="cancel"
+            onClick={() => setShowRegisterPrompt(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
       {modeType !== "corporate" && (
         <button

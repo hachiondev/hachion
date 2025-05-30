@@ -208,7 +208,7 @@ const QaAutomationFaq = () => {
   return (
     <div className={`curriculum ${showMore ? "curriculum-expanded" : ""}`}>
       <div className="curriculum-head">
-        <h1 className="qa-heading">{matchedCourseName} FAQ's</h1>
+        <h2 className="qa-heading">{matchedCourseName} FAQ's</h2>
         <button className="btn-curriculum" onClick={downloadPdf}>
           <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download FAQ's
         </button>

@@ -79,4 +79,24 @@ public class EmailService {
 			throw new RuntimeException("Failed to send email", e);
 		}
 	}
+	public void sendWelcomeEmail(String toEmail, String tempPassword) {
+	    try {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(toEmail);
+	        message.setCc("hachion.trainings@gmail.com");
+	        message.setSubject("Welcome to Hachion");
+	        message.setText("Welcome to Hachion!\n\n"
+	                + "You have successfully registered on Hachion.\n\n"
+	                + "Here are your login credentials:\n"
+	                + "Email ID: " + toEmail + "\n"
+	                + "Password: " + tempPassword + "\n\n"
+	                + "This is your temporary password. You can change it anytime from your user dashboard settings.\n\n"
+	                + "Best regards,\nHachion Team");
+
+	        mailSender.send(message);
+	    } catch (Exception e) {
+	        System.err.println("Failed to send email: " + e.getMessage());
+	    }
+	}
+
 }

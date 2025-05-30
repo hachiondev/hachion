@@ -168,6 +168,7 @@ public class Userimpl implements UserService {
 		if (user != null) {
 			throw new IllegalArgumentException("This email already exists.");
 		}
+
 		String otp = String.format("%04d", new Random().nextInt(10000));
 
 		user = new RegisterStudent();
@@ -215,6 +216,10 @@ public class Userimpl implements UserService {
 		if (user == null) {
 			return "Email does not exist.";
 		}
+
+//		if (userRepository.existsByMobile(registrationRequest.getMobile())) {
+//			throw new RuntimeException("Mobile number already exists in the system");
+//		}
 		String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 		user.setFirstName(registrationRequest.getFirstName());
 		user.setLastName(registrationRequest.getLastName());
@@ -630,8 +635,8 @@ public class Userimpl implements UserService {
 					return;
 				}
 
-				if (request.getNewPassword() == null || request.getNewPassword().isEmpty() ||
-					request.getConfirmPassword() == null || request.getConfirmPassword().isEmpty()) {
+				if (request.getNewPassword() == null || request.getNewPassword().isEmpty()
+						|| request.getConfirmPassword() == null || request.getConfirmPassword().isEmpty()) {
 					System.out.println("New password and confirm password are required when changing password");
 					return;
 				}
@@ -664,6 +669,5 @@ public class Userimpl implements UserService {
 			System.out.println("User not found with email: " + request.getEmail());
 		}
 	}
-
 
 }

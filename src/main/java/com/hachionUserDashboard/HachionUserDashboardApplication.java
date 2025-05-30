@@ -22,21 +22,21 @@ public class HachionUserDashboardApplication extends SpringBootServletInitialize
 
 	public static void main(String[] args) {
 		SpringApplication.run(HachionUserDashboardApplication.class, args);
-
 	}
-	
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(HachionUserDashboardApplication.class);
 	}
-	 @Bean
-	    public CommandLineRunner run(DataSource dataSource) {
-	        return args -> {
-	            try (Connection connection = dataSource.getConnection()) {
-	                System.out.println("Connected to database: " + connection.getCatalog());
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        };
-	 }
+
+	@Bean
+	public CommandLineRunner run(DataSource dataSource) {
+		return args -> {
+			try (Connection connection = dataSource.getConnection()) {
+				System.out.println("Connected to database: " + connection.getCatalog());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		};
+	}
 }

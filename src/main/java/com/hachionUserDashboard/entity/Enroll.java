@@ -15,15 +15,17 @@ public class Enroll {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	
 	@Column
 	private String name;
 
 	@Column(name = "student_id")
 	private String studentId;
 
+
 	@Column
 	private String email;
-
+	
 	@Column
 	private String mobile;
 

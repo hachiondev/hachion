@@ -19,6 +19,8 @@ import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.hachionUserDashboard.service.EmailService;
 
+import jakarta.mail.MessagingException;
+
 @CrossOrigin
 //@CrossOrigin(origins ="http://localhost:3000")
 //@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
@@ -44,8 +46,42 @@ public class RegisterStudentController {
 		return repo.findAll();
 	}
 
+//	@PostMapping("registerstudent/add")
+//	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) {
+//
+//		if (student.getEmail() == null || student.getEmail().isBlank()) {
+//			throw new IllegalArgumentException("Email is required");
+//		}
+//		if (student.getMobile() == null || student.getMobile().isBlank()) {
+//			throw new IllegalArgumentException("Mobile number is required");
+//		}
+//
+//		if (repo.existsByEmail(student.getEmail())) {
+//			throw new RuntimeException("Email already exists in the system");
+//		}
+//		if (repo.existsByMobile(student.getMobile())) {
+//			throw new RuntimeException("Mobile number already exists in the system");
+//		}
+//
+//		student.setAdditional_email(null);
+//		student.setAdditional_phone(0);
+//
+//		String tempPassword = "Hach@123";
+//		String hashedPassword = passwordEncoder.encode(tempPassword);
+//		student.setPassword(hashedPassword);
+//
+//		String fullName = student.getUserName();
+//		student.setStudentId(generateNextStudentId());
+//
+//		emailService.sendWelcomeEmail(student.getEmail(), tempPassword, fullName);
+//
+//		repo.save(student);
+//		System.out.println("Add data: " + student);
+//		return ResponseEntity.ok("Student added successfully");
+//	}
+
 	@PostMapping("registerstudent/add")
-	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) {
+	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) throws MessagingException {
 
 		if (student.getEmail() == null || student.getEmail().isBlank()) {
 			throw new IllegalArgumentException("Email is required");
@@ -60,7 +96,6 @@ public class RegisterStudentController {
 		if (repo.existsByMobile(student.getMobile())) {
 			throw new RuntimeException("Mobile number already exists in the system");
 		}
-
 		student.setAdditional_email(null);
 		student.setAdditional_phone(0);
 
@@ -68,12 +103,12 @@ public class RegisterStudentController {
 		String hashedPassword = passwordEncoder.encode(tempPassword);
 		student.setPassword(hashedPassword);
 
+		String fullName = student.getUserName();
 		student.setStudentId(generateNextStudentId());
 
-		emailService.sendWelcomeEmail(student.getEmail(), tempPassword);
+		emailService.sendEmailForRegisterOfflineStudent(student.getEmail(), tempPassword, fullName);
 
 		repo.save(student);
-		System.out.println("Add data: " + student);
 		return ResponseEntity.ok("Student added successfully");
 	}
 

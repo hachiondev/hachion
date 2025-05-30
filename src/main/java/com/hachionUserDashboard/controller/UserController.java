@@ -28,10 +28,10 @@ import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 
-
 import Response.LoginResponse;
 import Response.UserProfileResponse;
 import Service.UserService;
+import jakarta.mail.MessagingException;
 
 @CrossOrigin
 @RestController
@@ -64,7 +64,8 @@ public class UserController {
 	}
 
 	@PutMapping("/register")
-	public ResponseEntity<?> updatePassword(@RequestBody UserRegistrationRequest registrationRequest) {
+	public ResponseEntity<?> updatePassword(@RequestBody UserRegistrationRequest registrationRequest)
+			throws MessagingException {
 
 		String response = userService.updatePassword(registrationRequest);
 

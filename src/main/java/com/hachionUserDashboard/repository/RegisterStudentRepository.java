@@ -18,6 +18,12 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 	@Query("SELECT u FROM RegisterStudent u WHERE u.email = :email")
 	Optional<RegisterStudent> findByEmailForProfile(String email);
 
+	@Query("SELECT COUNT(u) > 0 FROM RegisterStudent u WHERE u.email = :email")
+	boolean existsByEmail(@Param("email") String email);
+
+	@Query("SELECT COUNT(u) > 0 FROM RegisterStudent u WHERE u.mobile = :mobile")
+	boolean existsByMobile(@Param("mobile") String mobile);
+
 	@Query("SELECT u FROM RegisterStudent u WHERE u.email = :email")
 	Optional<RegisterStudent> findBYEmailForOauth(@Param("email") String email);
 
@@ -50,8 +56,5 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 			+ "WHERE e.course_name = :courseName AND e.name = :userName", nativeQuery = true)
 	String findCompletionDateByCourseAndUser(@Param("courseName") String courseName,
 			@Param("userName") String userName);
-
-	@Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM register_student WHERE email = :email", nativeQuery = true)
-	boolean existsByEmail(@Param("email") String email);
 
 }

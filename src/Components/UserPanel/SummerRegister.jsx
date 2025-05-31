@@ -149,7 +149,7 @@ const SummerRegister = () => {
           <div className='summer-part'>
             <img className='reg-img' src={regkid} alt='Register' />
             <div>
-              <div className='join-form' style={{maxWidth: '500px'}}>
+              <div className='reg-form'>
                 <div className="form-group col-10" style={{ marginBottom: '20px' }}>
                   <label className="form-label">Full Name<span className='star'>*</span></label>
                   <input
@@ -203,6 +203,7 @@ const SummerRegister = () => {
                       placeholder="Enter your mobile number"
                       style={{ paddingLeft: '100px' }}
                     />
+                  </div>
                   </div>
                   <div className="form-group col-10" style={{ marginBottom: '20px' }}>
                   <label className="form-label">Country<span className='star'>*</span></label>
@@ -262,7 +263,6 @@ const SummerRegister = () => {
                 <button type="submit" className="summer-register-button">
                   Register
                 </button>
-                </div>
               </div>
             </div>
           </div>

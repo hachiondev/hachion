@@ -26,30 +26,30 @@ export default function Registration() {
         >
           Register List
         </div>
-        <div 
+        {/* <div 
           className={`tab-item ${activeTab === 'studentdetails' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('studentdetails')}
         >
           Student Details
-        </div>
+        </div> */}
         <div 
           className={`tab-item ${activeTab === 'importlead' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('importlead')}
         >
           Import Lead
         </div>
-        <div 
+        {/* <div 
           className={`tab-item ${activeTab === 'registerStudent' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('registerStudent')}
         >
       Online Registered Students
-        </div>
+        </div> */}
       </div>
       
       {activeTab==='registerlist' && <RegisterList/>}
-      {activeTab==='studentdetails' &&  <StudentDetails/>}
+      {/* {activeTab==='studentdetails' &&  <StudentDetails/>} */}
       {activeTab==='importlead' &&  <ImportLead/>}
-      {activeTab==='registerStudent' &&  <RegisterStudent/>}
+      {/* {activeTab==='registerStudent' &&  <RegisterStudent/>} */}
      
      
     </>

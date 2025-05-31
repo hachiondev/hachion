@@ -509,6 +509,8 @@ const [currentPage, setCurrentPage] = useState(1);
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell align='center'>S.No.</StyledTableCell>
+            <StyledTableCell align="center">Date of Registration</StyledTableCell>
+            <StyledTableCell align='center'>Mode</StyledTableCell>
             <StyledTableCell align='center'>Student ID</StyledTableCell>
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
@@ -521,8 +523,6 @@ const [currentPage, setCurrentPage] = useState(1);
             <StyledTableCell align='center'>Source</StyledTableCell>
             <StyledTableCell align='center'>Remark</StyledTableCell>
             <StyledTableCell align='center'>Comment</StyledTableCell>
-            <StyledTableCell align='center'>Mode</StyledTableCell>
-            <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -535,6 +535,8 @@ const [currentPage, setCurrentPage] = useState(1);
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell> {/* S.No. */}
+         <StyledTableCell align="center">{row.date}</StyledTableCell>
+         <StyledTableCell align="center">{row.mode}</StyledTableCell>        
         <StyledTableCell align="center">{row.studentId}</StyledTableCell>
       <StyledTableCell align="center">{row.userName}</StyledTableCell>
       <StyledTableCell align="center">{row.email}</StyledTableCell>
@@ -547,8 +549,6 @@ const [currentPage, setCurrentPage] = useState(1);
         <StyledTableCell align="center">{row.source}</StyledTableCell>
         <StyledTableCell align="center">{row.remarks}</StyledTableCell>
         <StyledTableCell align="center">{row.comments}</StyledTableCell> 
-        <StyledTableCell align="center">{row.mode}</StyledTableCell> 
-        <StyledTableCell align="center">{row.date}</StyledTableCell>          
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

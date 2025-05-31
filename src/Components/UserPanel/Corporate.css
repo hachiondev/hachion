@@ -514,7 +514,7 @@ position: relative;
 }
 
 .indicator-wrapper {
-  width: 120px;
+  width: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1284,11 +1284,17 @@ padding: 20px;
     .workshop-container {
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
+    .indicator-wrapper {
+  width: 100px;
+}
+.carousel-nav {
+  gap: 10px;
+}
 
   .learner-card-item {
       display: block;
       flex-direction: column;
-      height: 295px;
+      height: 300px;
       overflow: hidden;
   }
 
@@ -1299,25 +1305,26 @@ padding: 20px;
 .carousel-indicators {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .custom-prev-icon, .custom-next-icon {
-  position: absolute;
+  /* position: absolute; */
   /* top: 50%; */
   transform: translateY(-50%);
   margin: 0px;
 }
 .custom-prev-icon {
-  margin-left: -8vh;
+  margin-left: -10vh;
 }
 .custom-next-icon {
-  margin-right: -8vh;
+  margin-right: -10vh;
 }
 
   .learner-card {
   display: block;
-  max-width: 250px; 
+  max-width: 250px;
+  height: 360px;
   }
   .learner-card-container {
     /* flex-direction: column; */

@@ -1,17 +1,17 @@
 package com.hachionUserDashboard.service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -113,8 +113,14 @@ public class EmailService {
 			String safeEmail = toEmail != null ? toEmail : "";
 			String safePassword = tempPassword != null ? tempPassword : "Hach@123";
 
+//			ClassPathResource resource = new ClassPathResource("templates/register_offline_students_email.html");
+//			String htmlContent = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
+
 			ClassPathResource resource = new ClassPathResource("templates/register_offline_students_email.html");
-			String htmlContent = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
+			String htmlContent;
+			try (InputStream inputStream = resource.getInputStream()) {
+				htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+			}
 
 			htmlContent = htmlContent.replace("[Student First Name]", safeUserName)
 					.replace("[Student Email]", safeEmail).replace("Hach@123", safePassword);
@@ -127,8 +133,10 @@ public class EmailService {
 			helper.setSubject("Welcome to Hachion");
 			helper.setText(htmlContent, true);
 
-			File logoFile = new ClassPathResource("templates/logo.png").getFile();
-			helper.addInline("hachion-logo", logoFile);
+//			File logoFile = new ClassPathResource("templates/logo.png").getFile();
+//			helper.addInline("hachion-logo", logoFile);
+
+			helper.addInline("hachion-logo", new ClassPathResource("templates/logo.png"));
 
 			mailSender.send(mimeMessage);
 
@@ -146,8 +154,10 @@ public class EmailService {
 			String safeUserName = userName != null ? userName : "Student";
 
 			ClassPathResource resource = new ClassPathResource("templates/register_online_students_email.html");
-			String htmlContent = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
-
+			String htmlContent;
+			try (InputStream inputStream = resource.getInputStream()) {
+				htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+			}
 			htmlContent = htmlContent.replace("[Student First Name]", safeUserName);
 
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -158,8 +168,9 @@ public class EmailService {
 			helper.setSubject("Welcome to Hachion");
 			helper.setText(htmlContent, true);
 
-			File logoFile = new ClassPathResource("templates/logo.png").getFile();
-			helper.addInline("hachion-logo", logoFile);
+//			File logoFile = new ClassPathResource("templates/logo.png").getFile();
+//			helper.addInline("hachion-logo", logoFile);
+			helper.addInline("hachion-logo", new ClassPathResource("templates/logo.png"));
 
 			mailSender.send(mimeMessage);
 
@@ -274,7 +285,10 @@ public class EmailService {
 			String safeTechnologyName = technologyName != null ? technologyName : "Technology";
 
 			ClassPathResource resource = new ClassPathResource("templates/course_enroll_email.html");
-			String htmlContent = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
+			String htmlContent;
+			try (InputStream inputStream = resource.getInputStream()) {
+				htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+			}
 
 			htmlContent = htmlContent.replace("[Technology Name]", technologyName != null ? technologyName : "")
 					.replace("[Day]", day != null ? day : "").replace("[Date]", date != null ? date : "")
@@ -301,23 +315,106 @@ public class EmailService {
 			helper.setSubject("Your Exclusive Demo Session - " + safeTechnologyName);
 			helper.setText(htmlContent, true);
 
-			File logoFile = new ClassPathResource("templates/logo.png").getFile();
-			helper.addInline("hachion-logo", logoFile);
+			helper.addInline("hachion-logo", new ClassPathResource("templates/hachion_whiltecolour.png"));
+			helper.addInline("linkedin-icon", new ClassPathResource("templates/linkedin.png"));
+			helper.addInline("instagram-icon", new ClassPathResource("templates/instagram.png"));
+			helper.addInline("facebook-icon", new ClassPathResource("templates/facebook.png"));
+			helper.addInline("youtube-icon", new ClassPathResource("templates/youtube.png"));
+			helper.addInline("twitter-icon", new ClassPathResource("templates/twitter.png"));
 
-			File linkedinIcon = new ClassPathResource("templates/linkedin.png").getFile();
-			helper.addInline("linkedin-icon", linkedinIcon);
+			mailSender.send(mimeMessage);
 
-			File instagramIcon = new ClassPathResource("templates/instagram.png").getFile();
-			helper.addInline("instagram-icon", instagramIcon);
+		} catch (Exception e) {
+			throw new MessagingException("Failed to send demo session email", e);
+		}
+	}
 
-			File facebookIcon = new ClassPathResource("templates/facebook.png").getFile();
-			helper.addInline("facebook-icon", facebookIcon);
+	public void sendEmailForEnrollForLiveClass(String toEmail, String studentFullName, String technologyName,
+			String day, String date, String time, String timezone, String googleMeetLink, String meetingId,
+			String passcode, String instructorName, String experience, String company, String version, String feature,
+			String percentage, String salaryAmount, String keyConcept, String calendarLink) throws MessagingException {
+		try {
 
-			File youtubeIcon = new ClassPathResource("templates/youtube.png").getFile();
-			helper.addInline("youtube-icon", youtubeIcon);
+			if (technologyName == null || technologyName.isEmpty())
+				System.out.println("technologyName is null or empty");
+			if (day == null || day.isEmpty())
+				System.out.println("day is null or empty");
+			if (date == null || date.isEmpty())
+				System.out.println("date is null or empty");
+			if (time == null || time.isEmpty())
+				System.out.println("time is null or empty");
+			if (timezone == null || timezone.isEmpty())
+				System.out.println("timezone is null or empty");
+			if (googleMeetLink == null || googleMeetLink.isEmpty())
+				System.out.println("googleMeetLink is null or empty");
+			if (meetingId == null || meetingId.isEmpty())
+				System.out.println("meetingId is null or empty");
+			if (passcode == null || passcode.isEmpty())
+				System.out.println("passcode is null or empty");
+			if (instructorName == null || instructorName.isEmpty())
+				System.out.println("instructorName is null or empty");
+			if (experience == null || experience.isEmpty())
+				System.out.println("experience is null or empty");
+			if (company == null || company.isEmpty())
+				System.out.println("company is null or empty");
+			if (version == null || version.isEmpty())
+				System.out.println("version is null or empty");
+			if (feature == null || feature.isEmpty())
+				System.out.println("feature is null or empty");
+			if (percentage == null || percentage.isEmpty())
+				System.out.println("percentage is null or empty");
+			if (salaryAmount == null || salaryAmount.isEmpty())
+				System.out.println("salaryAmount is null or empty");
+			if (keyConcept == null || keyConcept.isEmpty())
+				System.out.println("keyConcept is null or empty");
+			if (calendarLink == null || calendarLink.isEmpty())
+				System.out.println("calendarLink is null or empty");
 
-			File twitterIcon = new ClassPathResource("templates/twitter.png").getFile();
-			helper.addInline("twitter-icon", twitterIcon);
+			String userName = (studentFullName != null && studentFullName.contains(" ")) ? studentFullName.split(" ")[0]
+					: studentFullName;
+
+			String safeUserName = userName != null ? userName : "Student";
+
+			String safeTechnologyName = technologyName != null ? technologyName : "Technology";
+
+			ClassPathResource resource = new ClassPathResource("templates/course_live_class_enroll_email.html");
+			String htmlContent;
+			try (InputStream inputStream = resource.getInputStream()) {
+				htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+			}
+
+			htmlContent = htmlContent.replace("[Student Name]", safeUserName != null ? safeUserName : "")
+					.replace("[Technology Name]", technologyName != null ? technologyName : "")
+					.replace("[Days]", day != null ? day : "").replace("[Start Date]", date != null ? date : "")
+					.replace("[Time]", time != null ? time : "").replace("[Timezone]", timezone != null ? timezone : "")
+					.replace("[Google Meet Link]", googleMeetLink != null ? googleMeetLink : "")
+					.replace("[Meeting ID]", meetingId != null ? meetingId : "")
+					.replace("[Passcode]", passcode != null ? passcode : "")
+					.replace("[Instructor Name]", instructorName != null ? instructorName : "")
+					.replace("[Experience]", experience != null ? experience : "")
+					.replace("[Company]", company != null ? company : "")
+					.replace("[Technology]", technologyName != null ? technologyName : "")
+					.replace("[Version]", version != null ? version : "")
+					.replace("[Feature]", feature != null ? feature : "")
+					.replace("[Percentage]", percentage != null ? percentage : "")
+					.replace("[Amount]", salaryAmount != null ? salaryAmount : "")
+					.replace("[Key Concept]", keyConcept != null ? keyConcept : "")
+					.replace("[Google Calendar Link]", calendarLink != null ? calendarLink : "");
+
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+			helper.setTo(toEmail);
+			helper.setCc("hachion.trainings@gmail.com");
+			helper.setSubject("Your Exclusive Demo Session - " + safeTechnologyName);
+			helper.setText(htmlContent, true);
+
+			helper.addInline("hachion-logo", new ClassPathResource("templates/hachion_whiltecolour.png"));
+			helper.addInline("linkedin-icon", new ClassPathResource("templates/linkedin.png"));
+			helper.addInline("instagram-icon", new ClassPathResource("templates/instagram.png"));
+			helper.addInline("facebook-icon", new ClassPathResource("templates/facebook.png"));
+			helper.addInline("youtube-icon", new ClassPathResource("templates/youtube.png"));
+			helper.addInline("twitter-icon", new ClassPathResource("templates/twitter.png"));
 
 			mailSender.send(mimeMessage);
 

@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ComponentScan(basePackages = { "com.hachionUserDashboard" })
 public class HachionUserDashboardApplication extends SpringBootServletInitializer {
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(HachionUserDashboardApplication.class, args);
 	}

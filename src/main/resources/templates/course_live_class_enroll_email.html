@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Welcome to Your LIVE [Technology] Class</title>
+	<style>
+		/* Base Styles */
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Poppins', sans-serif;
+			background-color: #f8faff;
+			color: #333;
+			line-height: 1.6;
+		}
+
+		.email-container {
+			max-width: 650px;
+			margin: 30px auto;
+			background: #ffffff;
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 15px 40px rgba(8, 72, 146, 0.1);
+		}
+
+		/* Header Section */
+		.header {
+			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+			padding: 50px 40px 80px;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.header::before {
+			content: '';
+			position: absolute;
+			top: -50px;
+			right: -50px;
+			width: 200px;
+			height: 200px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.1);
+		}
+
+		.header::after {
+			content: '';
+			position: absolute;
+			bottom: -80px;
+			left: -50px;
+			width: 250px;
+			height: 250px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.08);
+		}
+
+		.header-content {
+			position: relative;
+			z-index: 2;
+		}
+
+		.header h1 {
+			color: white;
+			font-size: 42px;
+			font-weight: 700;
+			margin: 0 0 15px;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		}
+
+		.header p {
+			color: #e0f0ff;
+			font-size: 20px;
+			max-width: 500px;
+			margin: 0 auto 25px;
+			line-height: 1.5;
+		}
+
+		.tech-badge {
+			background: rgba(255, 255, 255, 0.15);
+			backdrop-filter: blur(10px);
+			border-radius: 50px;
+			padding: 15px 35px;
+			display: inline-block;
+			margin: 20px 0;
+			color: white;
+			font-size: 24px;
+			font-weight: 600;
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+		}
+
+		/* Enrollment Confirmation */
+		.confirmation-section {
+			background: white;
+			border-radius: 16px;
+			padding: 50px 40px 40px;
+			margin: -60px 30px 30px;
+			position: relative;
+			z-index: 3;
+			box-shadow: 0 10px 40px rgba(26, 86, 219, 0.15);
+			border: 1px solid rgba(26, 86, 219, 0.1);
+		}
+
+		.confirmation-icon {
+			width: 100px;
+			height: 100px;
+			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: -85px auto 25px;
+			box-shadow: 0 8px 25px rgba(26, 86, 219, 0.4);
+		}
+
+		.confirmation-icon i {
+			font-size: 48px;
+			color: white;
+		}
+
+		.confirmation-content h2 {
+			color: #1a3d7c;
+			text-align: center;
+			font-size: 32px;
+			margin-bottom: 20px;
+		}
+
+		.confirmation-content p {
+			color: #4a5568;
+			font-size: 18px;
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		.highlight-box {
+			background: rgba(26, 86, 219, 0.05);
+			border-radius: 12px;
+			padding: 25px;
+			border-left: 4px solid #1a56db;
+			margin: 30px 0;
+		}
+
+		.highlight-box h3 {
+			color: #1a56db;
+			margin-bottom: 15px;
+			font-size: 22px;
+			display: flex;
+			align-items: center;
+		}
+
+		.highlight-box h3 i {
+			margin-right: 12px;
+		}
+
+		.highlight-box p {
+			text-align: left;
+			margin-bottom: 15px;
+		}
+
+		/* Class Details */
+		.class-details {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 25px;
+			margin: 40px 0;
+		}
+
+		.detail-card {
+			background: rgba(26, 86, 219, 0.03);
+			border-radius: 12px;
+			padding: 25px;
+			border: 1px solid rgba(26, 86, 219, 0.05);
+			transition: all 0.3s ease;
+		}
+
+		.detail-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(26, 86, 219, 0.1);
+		}
+
+		.detail-card h4 {
+			color: #1a56db;
+			margin-bottom: 15px;
+			font-size: 20px;
+			display: flex;
+			align-items: center;
+		}
+
+		.detail-card h4 i {
+			margin-right: 10px;
+		}
+
+		.detail-card ul {
+			padding-left: 25px;
+		}
+
+		.detail-card li {
+			margin-bottom: 12px;
+			color: #4a5568;
+		}
+
+		/* CTA Button */
+		.cta-container {
+			text-align: center;
+			margin: 40px 0 30px;
+		}
+
+		.cta-button {
+			display: inline-block;
+			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%) !important;
+			color: white !important;
+			padding: 18px 45px;
+			text-decoration: none;
+			border-radius: 12px;
+			font-weight: 600;
+			font-size: 20px;
+			transition: all 0.3s ease;
+			box-shadow: 0 8px 25px rgba(26, 86, 219, 0.35);
+		}
+
+		.cta-button:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 12px 30px rgba(26, 86, 219, 0.45);
+		}
+
+		/* Benefits Section */
+		.benefits-section {
+			padding: 0 30px 40px;
+		}
+
+		.section-title {
+			text-align: center;
+			color: #1a3d7c;
+			font-size: 32px;
+			margin: 0 0 40px;
+			position: relative;
+		}
+
+		.section-title:after {
+			content: '';
+			display: block;
+			width: 100px;
+			height: 5px;
+			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
+			border-radius: 3px;
+			margin: 15px auto;
+		}
+
+		.benefits-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 25px;
+		}
+
+		.benefit-card {
+			background: white;
+			border-radius: 12px;
+			padding: 30px;
+			border: 1px solid rgba(26, 86, 219, 0.1);
+			transition: all 0.3s ease;
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+		}
+
+		.benefit-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 30px rgba(26, 86, 219, 0.15);
+		}
+
+		.benefit-card h4 {
+			color: #1a56db;
+			margin: 0 0 15px;
+			font-size: 22px;
+			display: flex;
+			align-items: center;
+		}
+
+		.benefit-card h4 i {
+			width: 50px;
+			height: 50px;
+			background: rgba(26, 86, 219, 0.1);
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 15px;
+		}
+
+		.benefit-card p {
+			color: #4a5568;
+			margin: 0;
+			line-height: 1.7;
+		}
+
+		/* Footer */
+		.footer {
+			background: #0e2e6d;
+			color: #a3b8ff;
+			text-align: center;
+			padding: 50px 30px 40px;
+			font-size: 16px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.footer::before {
+			content: '';
+			position: absolute;
+			top: -100px;
+			right: -50px;
+			width: 250px;
+			height: 250px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.03);
+		}
+
+		.footer-logo {
+			max-width: 150px;
+			margin: 0 auto 25px;
+			display: block;
+		}
+
+		.social-icons {
+			margin: 30px 0;
+		}
+
+		.social-icons a {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 50px;
+			height: 50px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 50%;
+			margin: 0 10px;
+			color: white;
+			font-size: 20px;
+			transition: all 0.3s ease;
+			text-decoration: none;
+		}
+
+		.social-icons a:hover {
+			background: #1a56db;
+			transform: translateY(-5px);
+		}
+
+		.footer-links {
+			margin: 25px 0;
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+
+		.footer-links a {
+			color: #e0f0ff;
+			margin: 0 15px 15px;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+
+		.footer-links a:hover {
+			color: white;
+			text-decoration: underline;
+		}
+
+		.contact-info {
+			margin: 25px 0;
+			line-height: 1.8;
+		}
+
+		.copyright {
+			margin-top: 30px;
+			padding-top: 25px;
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		/* Responsive */
+		@media (max-width: 650px) {
+			.email-container {
+				margin: 0 auto;
+				border-radius: 0;
+			}
+
+			.header {
+				padding: 40px 25px 70px;
+			}
+
+			.header h1 {
+				font-size: 32px;
+			}
+
+			.header p {
+				font-size: 18px;
+			}
+
+			.tech-badge {
+				font-size: 20px;
+				padding: 12px 25px;
+			}
+
+			.confirmation-section {
+				margin: -50px 20px 20px;
+				padding: 40px 25px 30px;
+			}
+
+			.class-details,
+			.benefits-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.section-title {
+				font-size: 28px;
+			}
+
+			.cta-button {
+				padding: 16px 35px;
+				font-size: 18px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="email-container">
+		<!-- Header -->
+		<div class="header">
+			<img src="cid:hachion-logo" alt="Hachion Logo" style="display: block; margin: 0 auto;">
+			<div class="header-content">
+				<h1>Welcome to Your LIVE Class!</h1>
+				<p>Your journey to mastering [Technology Name] begins now</p>
+				<div class="tech-badge">[Technology Name] Professional Program</div>
+			</div>
+		</div>
+
+		<!-- Enrollment Confirmation -->
+		<div class="confirmation-section">
+			<div class="confirmation-icon">
+				<i>✓</i>
+			</div>
+			<div class="confirmation-content">
+				<h2>Enrollment Confirmed!</h2>
+				<p>Hi [Student Name], we're thrilled to have you join our LIVE [Technology Name] class starting on
+					[Start Date].</p>
+
+				<div class="highlight-box">
+					<h3><i>⭐</i> Your Trial Access</h3>
+					<p>To ensure you get the best learning experience, we're giving you access to <strong>3 FREE trial
+							sessions</strong> where you can:</p>
+					<p>• Evaluate teaching quality and methodology</p>
+					<p>• Experience our interactive learning platform</p>
+					<p>• Get familiar with course structure and content</p>
+					<p>• Ask questions directly to your instructor</p>
+					<p><strong>Your meeting link will remain valid for 3 days after each session</strong></p>
+				</div>
+			</div>
+
+			<!-- Class Details -->
+			<div class="class-details">
+				<div class="detail-card">
+					<h4><i>📅</i> Class Schedule</h4>
+					<ul>
+						<li><strong>Start Date:</strong> [Start Date]</li>
+						<li><strong>Days:</strong> [Days]</li>
+						<li><strong>Time:</strong> [Time] </li>
+						<li><strong>Duration:</strong> 8 Weeks</li>
+						<li><strong>Trial Sessions:</strong> First 3 classes</li>
+					</ul>
+				</div>
+
+				<div class="detail-card">
+					<h4><i>🔗</i> Access Details</h4>
+					<ul>
+						<li><strong>Platform:</strong> Google Meet</li>
+						<li><strong>Meeting Link:</strong> <a href="[Google Meet Link]">Click to Join Session</a></li>
+						<li><strong>Meeting ID:</strong> [Meeting ID]</li>
+						<li><strong>Passcode:</strong> [Passcode]</li>
+						<li><strong>Validity:</strong> Each link valid for 3 days</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="cta-container">
+				<a href="#" class="cta-button">Access Your Classroom Now</a>
+				<p style="color: #4a5568; margin-top: 15px;">We recommend joining 10 minutes before session starts</p>
+			</div>
+		</div>
+
+		<!-- Benefits Section -->
+		<div class="benefits-section">
+			<h2 class="section-title">Why Learn With Hachion?</h2>
+			<div class="benefits-grid">
+				<div class="benefit-card">
+					<h4><i>👨‍🏫</i> Expert Instructors</h4>
+					<p>Learn from industry veterans with 10+ years experience at top tech companies like Google, Amazon,
+						and Microsoft.</p>
+				</div>
+				<div class="benefit-card">
+					<h4><i>🔄</i> Hands-on Projects</h4>
+					<p>Build real-world applications through our project-based curriculum that simulates actual
+						workplace scenarios.</p>
+				</div>
+				<div class="benefit-card">
+					<h4><i>📊</i> Progress Tracking</h4>
+					<p>Monitor your skill development with our analytics dashboard showing weekly progress and
+						competency levels.</p>
+				</div>
+				<div class="benefit-card">
+					<h4><i>👥</i> Community Access</h4>
+					<p>Join our exclusive community of 10,000+ learners for networking, collaboration, and peer support.
+					</p>
+				</div>
+				<div class="benefit-card">
+					<h4><i>💼</i> Career Support</h4>
+					<p>Get resume reviews, mock interviews, and direct access to our hiring partner network with 850+
+						companies.</p>
+				</div>
+				<div class="benefit-card">
+					<h4><i>🎓</i> Certification</h4>
+					<p>Earn industry-recognized certificates to showcase your skills to employers upon course
+						completion.</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div class="footer-bar">
+
+			<div class="social-icons" style="text-align: center; margin-top: 20px;">
+				<a href="https://www.linkedin.com/company/hachion" target="_blank" style="margin: 0 8px;">
+					<img src="cid:linkedin-icon" alt="LinkedIn" style="width:40px; height:40px;" />
+				</a>
+				<a href="https://www.instagram.com/hachion_trainings" target="_blank" style="margin: 0 8px;">
+					<img src="cid:instagram-icon" alt="Instagram" style="width:40px; height:40px;" />
+				</a>
+				<a href="https://www.facebook.com/hachion.co" target="_blank" style="margin: 0 8px;">
+					<img src="cid:facebook-icon" alt="Facebook" style="width:40px; height:40px;" />
+				</a>
+				<a href="https://www.youtube.com/@hachion" target="_blank" style="margin: 0 8px;">
+					<img src="cid:youtube-icon" alt="YouTube" style="width:40px; height:40px;" />
+				</a>
+				<a href="https://x.com/hachion_co" target="_blank" style="margin: 0 8px;">
+					<img src="cid:twitter-icon" alt="Twitter" style="width:40px; height:40px;" />
+				</a>
+			</div>
+
+			<div class="contact-info">
+				<p>Hachion Learning Portal · Transform Your Tech Career</p>
+				<p>Email: <a href="mailto:support@hachion.co" style="color: #e0f0ff;">support@hachion.co</a> | Phone: +1
+					(800) 123-4567</p>
+				<p>123 Innovation Drive, Tech City, TC 12345</p>
+			</div>
+
+			<div class="footer-links">
+				<a href="#">Student Dashboard</a>
+				<a href="#">Browse Courses</a>
+				<a href="#">Learning Resources</a>
+				<a href="#">Career Support</a>
+				<a href="#">FAQs</a>
+			</div>
+
+			<div class="copyright">
+				<p>&copy; 2025 Hachion. All rights reserved.</p>
+				<p><a href="#" style="color: #a3b8ff;">Privacy Policy</a> | <a href="#" style="color: #a3b8ff;">Terms of
+						Service</a> | <a href="#" style="color: #a3b8ff;">Unsubscribe</a></p>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

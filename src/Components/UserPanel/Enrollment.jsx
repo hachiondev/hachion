@@ -239,6 +239,13 @@ const Enrollment = () => {
                 <p>3. Order summary</p>
                 </div>
                <TotalOrder/>
+               <div className="input-row">
+              <button className="payment-btn">Proceed to Pay</button>
+              <div className="paylater">
+              <button className="payment-btn">Enroll Now, Pay Later</button>
+              <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
+              </div>
+              </div>
                 </div>
     </div>
     <Footer/>

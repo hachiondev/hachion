@@ -3,6 +3,7 @@ import './Admin.css';
 import CourseQuery from './CourseQuery';
 import CorporateQuery from './CorporateQuery';
 import JoinedWorkshop from './JoinedWorkshop';
+import SummerTraining from './SummerTraining';
 export default function Reports() {
   const [activeTab, setActiveTab] = useState('courseQuery');
   const handleTabChange = (tab) => {
@@ -30,10 +31,17 @@ export default function Reports() {
         >
           Joined in Workshop
         </div>
+        <div 
+          className={`tab-item ${activeTab === 'summerTraining' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('summerTraining')}
+        >
+          Kids Summer Training
+        </div>
       </div>
       {activeTab==='courseQuery' &&  <CourseQuery/>}
       {activeTab==='corporateQuery' &&  <CorporateQuery/>}
       {activeTab==='joinedWorkshop' &&  <JoinedWorkshop/>}
+      {activeTab==='summerTraining' &&  <SummerTraining/>}
     </>
   );
 }

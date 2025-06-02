@@ -42,30 +42,39 @@ export default function CourseQuery() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCourse, setFilteredCourse] = useState([]);
   const [message, setMessage] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     const fetchCourseQuery = async () => {
       try {
         const response = await axios.get("https://api.hachion.co/haveanyquery");
         setCourseQuery(response.data);
-        setFilteredCourse(response.data);
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching course queries:", error);
       }
     };
     fetchCourseQuery();
   }, []);
-  const handleDateFilter = () => {
-    const filtered = courseQuery.filter((item) => {
-      const date = new Date(item.date);
-      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      return (
-        (!start || date >= start) &&
-        (!end || date <= end)
-      );
-    });
-    setFilteredCourse(filtered);
-  };
+  const searchedData = filteredData.filter((item) => {
+  return (
+    searchTerm === '' ||
+    [item.studentId, item.name, item.email, item.mobile, item.date, item.comment, item.country]
+      .map(field => (field || '').toLowerCase())
+      .some(field => field.includes(searchTerm.toLowerCase()))
+  );
+});
+const handleDateFilter = () => {
+  const filtered = courseQuery.filter((item) => {
+    const date = new Date(item.date || item.enroll_date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    return (
+      (!start || date >= start) &&
+      (!end || date <= end)
+    );
+  });
+  setFilteredData(filtered);
+};
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handlePageChange = (page) => {
@@ -76,10 +85,10 @@ export default function CourseQuery() {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
-  const displayedCategories = filteredCourse.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+    const displayedCategories = searchedData.slice(
+      (currentPage - 1) * rowsPerPage,
+      currentPage * rowsPerPage
+    );
   return (
     <>
       <div>
@@ -146,7 +155,7 @@ export default function CourseQuery() {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>
+                <StyledTableCell sx={{ width: '30px' }} align="center">
                   <Checkbox />
                 </StyledTableCell>
                 <StyledTableCell align="center">S.No.</StyledTableCell>
@@ -171,7 +180,7 @@ export default function CourseQuery() {
                     <StyledTableCell align="center">{row.name}</StyledTableCell>
                     <StyledTableCell align="center">{row.email}</StyledTableCell>
                     <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-                    <StyledTableCell align="center">{row.comment}</StyledTableCell>
+                    <StyledTableCell sx={{ width: "180px",whiteSpace: "pre-wrap" }} align="left">{row.comment}</StyledTableCell>
                     <StyledTableCell align="center">{row.date}</StyledTableCell>
                     <StyledTableCell align="center">{row.country}</StyledTableCell>
                   </StyledTableRow>

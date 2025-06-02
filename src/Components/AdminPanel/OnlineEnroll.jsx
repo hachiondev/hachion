@@ -44,11 +44,12 @@ export default function OnlineEnroll() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [message, setMessage] = useState(false);
-
+  const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     axios.get("https://api.hachion.co/enroll")
       .then((response) => {
         setEnrollData(response.data);
+        setFilteredData(response.data);
       })
       .catch((error) => {
         console.error("Error fetching enrollment data:", error);
@@ -64,31 +65,27 @@ export default function OnlineEnroll() {
     }
   };
 
-  const filteredData = enrollData.filter((item) => {
-    const date = new Date(item.date || item.enroll_date);
-    const matchesSearch =
-      searchTerm === '' ||
-      [item.studentId, item.name, item.email, item.mobile, item.completion_date, item.course_name, item.mode]
-        .map(field => (field || '').toLowerCase())
-        .some(field => field.includes(searchTerm.toLowerCase()));
-    const inDateRange =
-      (!startDate || date >= new Date(startDate)) &&
-      (!endDate || date <= new Date(endDate));
-    return matchesSearch && inDateRange;
-  });
+const searchedData = filteredData.filter((item) => {
+  return (
+    searchTerm === '' ||
+    [item.studentId, item.name, item.email, item.mobile, item.completion_date, item.course_name, item.mode]
+      .map(field => (field || '').toLowerCase())
+      .some(field => field.includes(searchTerm.toLowerCase()))
+  );
+});
 
-  const handleDateFilter = () => {
-      const filtered = enrollData.filter((item) => {
-        const date = new Date(item.date);
-        const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-        const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-        return (
-          (!start || date >= start) &&
-          (!end || date <= end)
-        );
-      });
-      setEnrollData(filtered);
-    };
+const handleDateFilter = () => {
+  const filtered = enrollData.filter((item) => {
+    const date = new Date(item.date || item.enroll_date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    return (
+      (!start || date >= start) &&
+      (!end || date <= end)
+    );
+  });
+  setFilteredData(filtered);
+};
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const handlePageChange = (page) => {
@@ -99,7 +96,7 @@ export default function OnlineEnroll() {
       setRowsPerPage(rows);
       setCurrentPage(1);
     };
-    const displayedCategories = filteredData.slice(
+    const displayedCategories = searchedData.slice(
       (currentPage - 1) * rowsPerPage,
       currentPage * rowsPerPage
     );

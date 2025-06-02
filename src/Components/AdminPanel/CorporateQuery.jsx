@@ -34,29 +34,40 @@ export default function CorporateQuery() {
   const [endDate, setEndDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://api.hachion.co/advisors');
         setQueries(response.data);
+        setFilteredData(response.data);
       } catch (err) {
         console.error("Failed to fetch queries", err.message);
       }
     };
     fetchData();
   }, []);
-  const filteredData = queries.filter((item) => {
-    const date = new Date(item.date);
-    const matchesSearch = searchTerm === '' || (
-      item.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.trainingCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.companyName?.toLowerCase().includes(searchTerm.toLowerCase())
+    const searchedData = filteredData.filter((item) => {
+  return (
+    searchTerm === '' ||
+    [item.studentId, item.fullName, item.emailId, item.mobileNumber, item.date, item.trainingCourse, item.companyName, item.trainingCourse]
+      .map(field => (field || '').toLowerCase())
+      .some(field => field.includes(searchTerm.toLowerCase()))
+  );
+});
+const handleDateFilter = () => {
+  const filtered = queries.filter((item) => {
+    const date = new Date(item.date || item.enroll_date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    return (
+      (!start || date >= start) &&
+      (!end || date <= end)
     );
-    const inDateRange = (!startDate || date >= new Date(startDate)) &&
-                        (!endDate || date <= new Date(endDate));
-    return matchesSearch && inDateRange;
   });
-  const displayedData = filteredData.slice(
+  setFilteredData(filtered);
+};
+  const displayedData = searchedData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -66,11 +77,26 @@ export default function CorporateQuery() {
         <div className='course-category'>
           <div className='category-header'><p>Corporate Query</p></div>
           <div className='date-schedule'>
-            Start Date
-            <DatePicker value={startDate} onChange={setStartDate} />
-            End Date
-            <DatePicker value={endDate} onChange={setEndDate} />
-          </div>
+                Start Date
+                <DatePicker
+                  value={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }}
+                />
+                End Date
+                <DatePicker
+                  value={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }}
+                />
+                <button className='filter' onClick={handleDateFilter}>Filter</button>
+              </div>
           <div className='entries'>
             <div className='entries-left'>
               <p style={{ marginBottom: '0' }}>Show</p>
@@ -108,7 +134,7 @@ export default function CorporateQuery() {
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell><Checkbox /></StyledTableCell>
+              <StyledTableCell sx={{ width: '30px' }} align='center'><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">S.No.</StyledTableCell>
               <StyledTableCell align="center">Full Name</StyledTableCell>
               <StyledTableCell align="center">Company Name</StyledTableCell>
@@ -118,6 +144,7 @@ export default function CorporateQuery() {
               <StyledTableCell align="center">No. of People</StyledTableCell>
               <StyledTableCell align="center">Training Course</StyledTableCell>
               <StyledTableCell align="center">Comment</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -133,7 +160,8 @@ export default function CorporateQuery() {
                   <StyledTableCell align="center">{row.country || "N/A"}</StyledTableCell>
                   <StyledTableCell align="center">{row.noOfPeople}</StyledTableCell>
                   <StyledTableCell align="center">{row.trainingCourse}</StyledTableCell>
-                  <StyledTableCell align="center">{row.comments}</StyledTableCell>
+                  <StyledTableCell sx={{ width: "180px",whiteSpace: "pre-wrap" }} align="left">{row.comments}</StyledTableCell>
+                  <StyledTableCell align="center">{row.date}</StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (

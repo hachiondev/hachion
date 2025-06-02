@@ -466,8 +466,8 @@ background-color: #EA4335;
   }
 
   .banner-img{
-    height: 450px;
     width: 100%;
+    aspect-ratio: 16/5;
     }
   .popup-overlay {
   position: fixed;
@@ -1422,10 +1422,6 @@ gap:1vh;
       margin-right: auto;
       justify-content: center;
   }
-
-  .banner-img{
-    max-height: 450px;
-    }
   
   .online-training-div {
     width: 250px;
@@ -2471,10 +2467,6 @@ border-radius: 20px;
   white-space: nowrap;
   margin-top: 10px;
   }
-
-.banner-img{
-height: 130px;
-}
 
 .logos{
 padding: 2px 0;

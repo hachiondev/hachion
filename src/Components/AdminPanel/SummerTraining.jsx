@@ -38,42 +38,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function JoinedWorkshop() {
+export default function SummerTraining() {
   const [startDate,setStartDate]=useState([]);
   const[endDate,setEndDate]=useState([]);
   const [searchTerm,setSearchTerm]=useState("")
 const[message,setMessage]=useState(false);
-// const[filteredWorkshop,setFilteredWorkshop]=useState([])
-const[joinedWorkshop,setJoinedWorkshop]=useState([]);
-useEffect(() => {
-  const fetchJoinedWorkshop = async () => {
-      try {
-          const response = await axios.get('https://api.hachion.co/workshops'); // Check API URL
-          console.log("API Response:", response.data); // Debugging line
-          setJoinedWorkshop(response.data);
-          // setFilteredWorkshop(response.data);
-      } catch (error) {
-          console.error("Error fetching workshop list:", error.message);
-      }
-  };
-  fetchJoinedWorkshop();
-}, []);
-const filteredWorkshop = joinedWorkshop.filter((item) => {
-    const date = new Date(item.date);
-    const matchesSearch = searchTerm === '' || (
-      item.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.emailId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.mobileNumber?.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.timeZone?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const inDateRange = (!startDate || date >= new Date(startDate)) &&
-                        (!endDate || date <= new Date(endDate));
-    return matchesSearch && inDateRange;
-  });
+// const[filteredTraining,setFilteredTraining]=useState([])
+const[summerTraining,setSummerTraining]=useState([]);
 
  const handleDateFilter = () => {
-  const filtered = joinedWorkshop.filter((item) => {
+  const filtered = summerTraining.filter((item) => {
     const Date = new Date(item.date); // Parse the date field
     const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
     const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
@@ -84,8 +58,22 @@ const filteredWorkshop = joinedWorkshop.filter((item) => {
     );
   });
 
-  setJoinedWorkshop(filtered);
+  setSummerTraining(filtered);
 };
+const filteredTraining = summerTraining.filter((item) => {
+    const date = new Date(item.date);
+    const matchesSearch = searchTerm === '' || (
+      item.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.emailId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.mobileNumber?.toLowerCase().includes(searchTerm.toLowerCase())||
+      item.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.interested?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.batch?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const inDateRange = (!startDate || date >= new Date(startDate)) &&
+                        (!endDate || date <= new Date(endDate));
+    return matchesSearch && inDateRange;
+  });
 
 const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -94,15 +82,13 @@ const [currentPage, setCurrentPage] = useState(1);
             setCurrentPage(page);
             window.scrollTo(0, window.scrollY);
           };
-          // Inside your WorkshopCategory component
         
         const handleRowsPerPageChange = (rows) => {
           setRowsPerPage(rows);
-          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+          setCurrentPage(1); 
         };
         
-        // Slice filteredWorkshop based on rowsPerPage and currentPage
-        const displayedCategories = filteredWorkshop.slice(
+        const displayedCategories = filteredTraining.slice(
           (currentPage - 1) * rowsPerPage,
           currentPage * rowsPerPage
         );
@@ -115,7 +101,7 @@ const [currentPage, setCurrentPage] = useState(1);
        
         <div className='category'>
           <div className='category-header'>
-            <p>Joined in Workshop</p>
+            <p>Kids Summer Training List</p>
           </div>
           <div className='date-schedule'>
                       Start Date
@@ -155,7 +141,7 @@ const [currentPage, setCurrentPage] = useState(1);
             </div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                <input className="search-input" type="search" placeholder="Enter Courses, Name or Keywords" aria-label="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
@@ -179,7 +165,8 @@ const [currentPage, setCurrentPage] = useState(1);
             <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align='center'>Mobile</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
-            <StyledTableCell align="center">Time Zone</StyledTableCell>
+            <StyledTableCell align="center">Course Interested</StyledTableCell>
+            <StyledTableCell align="center">Batch Time</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -195,14 +182,14 @@ const [currentPage, setCurrentPage] = useState(1);
       <StyledTableCell align="center">{row.emailId}</StyledTableCell>
       <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
-      <StyledTableCell align="center">{row.timeZone}</StyledTableCell>
+      <StyledTableCell align="center">{row.interested}</StyledTableCell>
+      <StyledTableCell align="center">{row.batch}</StyledTableCell>
       <StyledTableCell align="center">{row.date}</StyledTableCell>
-   
     </StyledTableRow>
  ))
 ) : (
-  <StyledTableRow>
-      <StyledTableCell colSpan={7} align="center">
+    <StyledTableRow>
+      <StyledTableCell colSpan={8} align="center">
         No Data available
       </StyledTableCell>
     </StyledTableRow>
@@ -214,7 +201,7 @@ const [currentPage, setCurrentPage] = useState(1);
               <AdminPagination
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
-          totalRows={filteredWorkshop.length} // Use the full list for pagination
+          totalRows={filteredTraining.length}
           onPageChange={handlePageChange}
         />
                   </div>

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Banner3 from "../../Assets/banner3.png";
 
 const Banner = () => {
   const [banners, setBanners] = useState([]);
   const [apiError, setApiError] = useState(false);
-  const navigate = useNavigate();
 
-  const staticBanner = { home_banner_image: Banner3 }; // This one will always be included
+  const staticBanner = { home_banner_image: Banner3 };
 
   useEffect(() => {
     axios
@@ -30,10 +28,6 @@ const Banner = () => {
       });
   }, []);
 
-  const handleExploreMore = () => navigate("/coursedetails");
-  const handleJoinNow = () => navigate("/workshop");
-
-  // const displayBanners = apiError ? [staticBanner] : banners;
   const displayBanners = apiError
     ? [staticBanner]
     : [
@@ -90,30 +84,6 @@ const Banner = () => {
                 alt={`Banner ${index + 1}`}
               />
             )}
-            {/* <img
-              src={
-                apiError || index === 0
-                  ? banner.home_banner_image
-                  : `https://api.hachion.co/${banner.home_banner_image}`
-              }
-              className="banner-img"
-              alt={`Banner ${index + 1}`}
-            /> */}
-            {/* <div className="carousel-caption">
-              <div className="carousel-btn">
-                {index === 0 ? (
-                  <button className="join-now" onClick={handleExploreMore}>
-                    Explore More
-                  </button>
-                ) : (
-                  <div className="carousel-join-btn">
-                    <button className="join-now" onClick={handleJoinNow}>
-                      Join Now
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div> */}
           </div>
         ))}
       </div>

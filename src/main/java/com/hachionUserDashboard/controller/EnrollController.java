@@ -1,6 +1,10 @@
 package com.hachionUserDashboard.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -52,7 +56,8 @@ public class EnrollController {
 	}
 
 	@PostMapping("/enroll/add")
-	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll) throws MessagingException {
+	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll)
+			throws MessagingException, UnsupportedEncodingException {
 
 		Enroll enroll = new Enroll();
 		enroll.setStudentId(requestEnroll.getStudentId());
@@ -76,7 +81,7 @@ public class EnrollController {
 		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time + " " + " ()";
 		enroll.setWeek(dayOfWeek);
 
-		//live class purpose added this logic starting point
+		// live class purpose added this logic starting point
 		StringBuilder weekDaysBuilder = new StringBuilder();
 
 		for (int i = 0; i < 3; i++) {
@@ -88,14 +93,35 @@ public class EnrollController {
 			}
 		}
 		String weekDays = weekDaysBuilder.toString();
-		//ending point
-	
-	
+		// ending point
+
+		String dateTimeStr = requestEnroll.getEnroll_date() + " " + requestEnroll.getTime(); // e.g., "2025-06-03 10:00
+																								// AM CDT"
+		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a z", Locale.ENGLISH);
+		ZonedDateTime zonedStart = ZonedDateTime.parse(dateTimeStr, inputFormatter);
+
+		// Add duration for end time (e.g., 1.5 hours)
+		ZonedDateTime zonedEnd = zonedStart.plusMinutes(90);
+
+		// Google Calendar format: yyyyMMdd'T'HHmmss'Z'
+		DateTimeFormatter calendarFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")
+				.withZone(ZoneOffset.UTC);
+
+		System.out.println("Generating Calendar Link for Course: " + requestEnroll.getCourse_name());
+
+		String calendarLink = "https://www.google.com/calendar/render?action=TEMPLATE" + "&text="
+				+ URLEncoder.encode(requestEnroll.getCourse_name() + " Live Demo", "UTF-8") + "&dates="
+				+ calendarFormatter.format(zonedStart) + "/" + calendarFormatter.format(zonedEnd) + "&details="
+				+ URLEncoder.encode("Join our live demo session with trainer " + requestEnroll.getTrainer()
+						+ "!\n\nMeeting Link: " + requestEnroll.getMeeting_link(), "UTF-8")
+				+ "&location=" + URLEncoder.encode("Online", "UTF-8") + "&sf=true&output=xml";
+		System.out.println("HTML calendar link injected: " + calendarLink);
+		System.out.println("Generating Calendar Link for Course: after calendar " + requestEnroll.getCourse_name());
 
 		if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
 					dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
-					requestEnroll.getTrainer(), null, null, null, null, null, null, null, null);
+					requestEnroll.getTrainer(), null, null, null, null, null, null, null, calendarLink);
 		}
 		if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
@@ -103,11 +129,12 @@ public class EnrollController {
 					requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), null, null, null, null,
 					null, null, null, null);
 		}
+
 		repo.save(enroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}
-	
+
 	@PostMapping("/enroll/resend-email")
 	public ResponseEntity<?> resendEnrollEmail(@RequestBody Map<String, String> request) throws MessagingException {
 		String email = request.get("email");

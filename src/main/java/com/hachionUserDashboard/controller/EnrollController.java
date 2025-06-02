@@ -1,6 +1,10 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +34,13 @@ import jakarta.mail.internet.MimeMessage;
 public class EnrollController {
 	@Autowired
 	private EnrollRepository repo;
-	
+
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+
 	@Autowired
 	private EmailService emailService;
 
-	
 	@GetMapping("/enroll/{id}")
 	public ResponseEntity<Enroll> getEnroll(@PathVariable Integer id) {
 		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -63,12 +66,92 @@ public class EnrollController {
 		enroll.setAmount(requestEnroll.getAmount());
 		enroll.setTrainer(requestEnroll.getTrainer());
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
-//		sendEnrollEmail(enroll);
-		emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(), null, requestEnroll.getEnroll_date(), requestEnroll.getTime(), null, requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), null, null, null, null, null, null, null, null);
 
+		LocalDate date = LocalDate.parse(requestEnroll.getEnroll_date());
+		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"));
+
+		String time = requestEnroll.getTime();
+
+		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time + " " + " ()";
+		enroll.setWeek(dayOfWeek);
+
+		//live class purpose added this logic starting point
+		StringBuilder weekDaysBuilder = new StringBuilder();
+
+		for (int i = 0; i < 3; i++) {
+			LocalDate currentDay = date.plusDays(i);
+			String dayName = currentDay.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+			weekDaysBuilder.append(dayName);
+			if (i < 2) {
+				weekDaysBuilder.append(", ");
+			}
+		}
+		String weekDays = weekDaysBuilder.toString();
+		//ending point
+	
+	
+
+		if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
+			emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
+					dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
+					requestEnroll.getTrainer(), null, null, null, null, null, null, null, null);
+		}
+		if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
+			emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
+					requestEnroll.getCourse_name(), weekDays, formattedDate, time, null,
+					requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), null, null, null, null,
+					null, null, null, null);
+		}
 		repo.save(enroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
+	}
+	
+	@PostMapping("/enroll/resend-email")
+	public ResponseEntity<?> resendEnrollEmail(@RequestBody Map<String, String> request) throws MessagingException {
+		String email = request.get("email");
+		List<Enroll> enrollments = repo.findByEmail(email);
+
+		if (enrollments.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for this email.");
+		}
+
+		Enroll latest = enrollments.get(enrollments.size() - 1); // assuming latest is last
+		latest.setResendCount(latest.getResendCount() + 1); // Increment the counter
+
+		repo.save(latest); // Save the updated resend count
+
+//		sendEnrollEmail(latest); // Send the email
+
+		LocalDate date = LocalDate.parse(latest.getEnroll_date());
+		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"));
+
+		String time = latest.getTime();
+
+		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time + " " + " ()";
+		latest.setWeek(dayOfWeek);
+
+		emailService.sendEmailForEnrollForLiveDemo(latest.getEmail(), latest.getCourse_name(), dayOfWeek,
+				formattedDateTime, time, null, latest.getMeeting_link(), null, null, latest.getTrainer(), null, null,
+				null, null, null, null, null, null);
+
+		return ResponseEntity.ok("Email resent successfully. Check your registered email.");
+	}
+
+	@DeleteMapping("enroll/delete/{id}")
+	public ResponseEntity<?> deleteEnroll(@PathVariable int id) {
+		Enroll enroll = repo.findById(id).get();
+		repo.delete(enroll);
+		return null;
+
+	}
+
+	@GetMapping("/enroll/coursenames")
+	public ResponseEntity<List<String>> getAllCourseNames() {
+		List<String> courseNames = repo.findAllCourseNames();
+		return ResponseEntity.ok(courseNames);
 	}
 
 	public void sendEnrollEmail(@RequestBody Enroll enrollRequest) {
@@ -137,38 +220,4 @@ public class EnrollController {
 			e.printStackTrace();
 		}
 	}
-
-	@PostMapping("/enroll/resend-email")
-	public ResponseEntity<?> resendEnrollEmail(@RequestBody Map<String, String> request) {
-		String email = request.get("email");
-		List<Enroll> enrollments = repo.findByEmail(email);
-
-		if (enrollments.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for this email.");
-		}
-
-		Enroll latest = enrollments.get(enrollments.size() - 1); // assuming latest is last
-		latest.setResendCount(latest.getResendCount() + 1); // Increment the counter
-
-		repo.save(latest); // Save the updated resend count
-
-		sendEnrollEmail(latest); // Send the email
-
-		return ResponseEntity.ok("Email resent successfully. Check your registered email.");
-	}
-
-	@DeleteMapping("enroll/delete/{id}")
-	public ResponseEntity<?> deleteEnroll(@PathVariable int id) {
-		Enroll enroll = repo.findById(id).get();
-		repo.delete(enroll);
-		return null;
-
-	}
-
-	@GetMapping("/enroll/coursenames")
-	public ResponseEntity<List<String>> getAllCourseNames() {
-		List<String> courseNames = repo.findAllCourseNames();
-		return ResponseEntity.ok(courseNames);
-	}
-
 }

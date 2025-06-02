@@ -234,7 +234,7 @@ public class Userimpl implements UserService {
 		user.setStudentId(generateNextStudentId());
 		user.setMode(registrationRequest.getMode());
 
-		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(), registrationRequest.getUserName());
+		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(), registrationRequest.getFirstName());
 
 		userRepository.save(user);
 

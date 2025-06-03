@@ -284,7 +284,7 @@ public class EmailService {
 
 			String safeTechnologyName = technologyName != null ? technologyName : "Technology";
 
-			ClassPathResource resource = new ClassPathResource("templates/course_enroll_email.html");
+			ClassPathResource resource = new ClassPathResource("templates/course_enroll_email2.html");
 			String htmlContent;
 			try (InputStream inputStream = resource.getInputStream()) {
 				htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);

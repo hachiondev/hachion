@@ -14,10 +14,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#00AEEF',
         color: theme.palette.common.white,
+        padding: '3px 5px',
         borderRight: '1px solid white', // Add vertical lines
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: '3px 4px',
         borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
     },
 }));
@@ -133,7 +135,9 @@ const handleSave = (studentId) => {
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className='course-category'>
-                      <div className='category-header'><p>Batch Tracking</p></div>
+                      <div className='category-header'>
+                        <p style={{ marginBottom: 0 }}>Batch Tracking</p>
+                        </div>
                       <div className='date-schedule'>
                                       Start Date
                                       <DatePicker 
@@ -194,8 +198,8 @@ const handleSave = (studentId) => {
                           onChange={handleChange}
                           >
                           <option value="">Select type</option>
-                          <option value="Completed">Live Class</option>
-                          <option value="In Progress">Live Demo</option>
+                          <option value="Live Class">Live Class</option>
+                          <option value="Live Demo">Live Demo</option>
                           </select>
                             </div>
                           <div className="col">
@@ -248,7 +252,7 @@ const handleSave = (studentId) => {
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align='center'><Checkbox /></StyledTableCell>
+                            <StyledTableCell align='center' style={{ width: '30px' }}><Checkbox /></StyledTableCell>
                             <StyledTableCell align='center'>S.No.</StyledTableCell>
                             <StyledTableCell align='center'>Student ID</StyledTableCell>
                             <StyledTableCell align='center'>Student Name</StyledTableCell>
@@ -288,7 +292,7 @@ const handleSave = (studentId) => {
             outline: 'none',
             width: '100%',
             padding: '3px 5px',
-            background: 'transparent'
+            background: '#b3b3b3'
           }}
           />
         ) : row.start}
@@ -305,7 +309,7 @@ const handleSave = (studentId) => {
           outline: 'none',
           width: '100%',
           padding: '3px 5px',
-          background: 'transparent'
+          background: '#b3b3b3'
         }}
           />
         ) : row.end}
@@ -322,7 +326,7 @@ const handleSave = (studentId) => {
             outline: 'none',
             width: '100%',
             padding: '3px 5px',
-            background: 'transparent'
+            background: '#b3b3b3'
           }}
           />
         ) : row.sessions_number}
@@ -339,7 +343,7 @@ const handleSave = (studentId) => {
             outline: 'none',
             width: '100%',
             padding: '3px 5px',
-            background: 'transparent'
+            background: '#b3b3b3'
           }}
           />
         ) : row.sessions_completed}
@@ -355,7 +359,7 @@ const handleSave = (studentId) => {
             outline: 'none',
             width: '100%',
             padding: '3px 5px',
-            background: 'transparent'
+            background: '#b3b3b3'
           }}
           >
             <option value="">Select Status</option>
@@ -378,7 +382,7 @@ const handleSave = (studentId) => {
             outline: 'none',
             width: '100%',
             padding: '3px 5px',
-            background: 'transparent'
+            background: '#b3b3b3'
           }}
           />
         ) : row.remark}

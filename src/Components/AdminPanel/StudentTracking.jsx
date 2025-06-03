@@ -118,8 +118,8 @@ export default function StudentTracking() {
                           <option value="">Select Status</option>
                           <option value="Completed">Completed</option>
                           <option value="In Progress">In Progress</option>
-                          <option value="Pending">Hold</option>
-                          <option value="Pending">Other</option>
+                          <option value="Hold">Hold</option>
+                          <option value="Other">Other</option>
                           </select>
                         </div>
                        <div className="col">
@@ -241,8 +241,8 @@ export default function StudentTracking() {
                           <option value="">Select Status</option>
                           <option value="Completed">Completed</option>
                           <option value="In Progress">In Progress</option>
-                          <option value="Pending">Hold</option>
-                          <option value="Pending">Other</option>
+                          <option value="Hold">Hold</option>
+                          <option value="Other">Other</option>
                           </select>
                         </div>
                           </div>

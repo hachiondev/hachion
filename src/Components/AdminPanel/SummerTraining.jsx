@@ -17,6 +17,11 @@ import axios from 'axios';
 import { useState,useEffect } from 'react';
 import AdminPagination from './AdminPagination'; 
 
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -37,6 +42,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 
 export default function SummerTraining() {
   const [startDate,setStartDate]=useState([]);
@@ -74,6 +80,7 @@ const filteredTraining = summerTraining.filter((item) => {
                         (!endDate || date <= new Date(endDate));
     return matchesSearch && inDateRange;
   });
+// const filteredTraining = summerTraining;
 
 const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -92,7 +99,21 @@ const [currentPage, setCurrentPage] = useState(1);
           (currentPage - 1) * rowsPerPage,
           currentPage * rowsPerPage
         );
+        console.log("filteredTraining:", filteredTraining);
  
+        useEffect(() => {
+  axios.get("https://api.hachion.co/kids-summer-training")
+    .then((response) => {
+       console.log("API response:", response.data);
+      setSummerTraining(response.data); // Populate data here
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+}, []);
+console.log("summerTraining:", summerTraining);
+console.log("filteredTraining2:", filteredTraining);
+
   return (
     <>   
     <div>
@@ -179,12 +200,15 @@ const [currentPage, setCurrentPage] = useState(1);
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1}</StyledTableCell>
       <StyledTableCell align="center">{row.fullName}</StyledTableCell>
-      <StyledTableCell align="center">{row.emailId}</StyledTableCell>
+      <StyledTableCell align="center">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
-      <StyledTableCell align="center">{row.interested}</StyledTableCell>
-      <StyledTableCell align="center">{row.batch}</StyledTableCell>
-      <StyledTableCell align="center">{row.date}</StyledTableCell>
+      <StyledTableCell align="center">{row.courseInterested}</StyledTableCell>
+      <StyledTableCell align="center">{row.batchTiming}</StyledTableCell>
+      
+      <StyledTableCell align="center">
+  {dayjs(row.date).format('MM-DD-YYYY')}
+</StyledTableCell>
     </StyledTableRow>
  ))
 ) : (

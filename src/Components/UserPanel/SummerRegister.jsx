@@ -3,18 +3,19 @@ import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
 import regkid from '../../Assets/regkid.jpeg';
-
+import axios from 'axios';
 const SummerRegister = () => {
   const [error, setError] = useState('');
   const [messageType, setMessageType] = useState('');
   const [formData, setFormData] = useState({
     fullName: "",
-    emailId: "",
+    email: "",
     mobileNumber: "",
     country: "",
-    course_interest: "",
-    batch: "",
+    courseInterest: "",
+    batchTiming: "",
   });
+  console.log("form data" + formData.getFulName);
 
   const mobileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -102,40 +103,63 @@ const SummerRegister = () => {
       });
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const { fullName, emailId, mobileNumber, country, course_interest, batch } = formData;
+  const { fullName, email, mobileNumber, country, courseInterest, batchTiming } = formData;
 
-    if (!fullName || !emailId || !mobileNumber|| !country|| !course_interest|| !batch) {
-      setError('Please fill all the details to register.');
-      setMessageType('error');
-      return;
-    }
+  if (!fullName || !email || !mobileNumber || !country || !courseInterest || !batchTiming) {
+    setError('Please fill all the details to register.');
+    setMessageType('error');
+    return;
+  }
 
-    const timeZone = formData.timeZone;
-    const timeZoneShort = timeZoneAbbreviationMap[timeZone] || timeZone;
+  const timeZone = formData.timeZone;
+  const timeZoneShort = timeZoneAbbreviationMap[timeZone] || timeZone;
 
-    // Simulate successful submission
-    console.log("Registration Data:", {
-      ...formData,
-      mobileNumber: `${selectedCountry.code} ${mobileNumber}`,
-      submittedAt: new Date().toISOString(),
-      timeZoneShort,
-    });
+  const payload = {
+    fullName,
+    email: email,
+    mobileNumber: `${selectedCountry.code} ${mobileNumber}`, // optional formatting
+    country,
+    courseInterested: courseInterest,
+    batchTiming: batchTiming,
+  };
+console.log("payload: " + JSON.stringify(payload));
+
+  try {
+    const response = await axios.post("https://api.hachion.co/kids-summer-training", payload); // adjust URL if needed
+    console.log("Registration successful:", response.data);
 
     setError('Registration successful!');
     setMessageType('success');
     setFormData({
       fullName: "",
-      emailId: "",
+      email: "",
       mobileNumber: "",
       country: "",
-      course_interest: "",
-      batch: "",
+      courseInterest: "",
+      batchTiming: "",
     });
-  };
+  } catch (error) {
+    console.error("Registration failed:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+    const backendMessage = error.response.data.message;
 
+    if (backendMessage.includes("Email already exists")) {
+      setError("This email is already registered.");
+    } else if (backendMessage.includes("Mobile number already exists")) {
+      setError("This mobile number is already registered.");
+    } else {
+      setError(backendMessage); 
+    }
+  } else {
+    setError("Registration failed. Please try again.");
+  }
+
+  setMessageType("error");
+}
+};
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -167,8 +191,8 @@ const SummerRegister = () => {
                   <label className="form-label">Email ID<span className='star'>*</span></label>
                   <input
                     type="email"
-                    name="emailId"
-                    value={formData.emailId}
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
@@ -221,8 +245,8 @@ const SummerRegister = () => {
                   <label className="form-label">Courses Interested<span className='star'>*</span></label>
                   <input
                     type="text"
-                    name="course_interest"
-                    value={formData.course_interest}
+                    name="courseInterest"
+                    value={formData.courseInterest}
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
@@ -233,17 +257,17 @@ const SummerRegister = () => {
                   <label className="form-label">Batch Timing<span className='star'>*</span></label>
                   <select
                     type="text"
-                    name="batch"
-                    value={formData.batch}
+                    name="batchTiming"
+                    value={formData.batchTiming}
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
                     placeholder="Enter your name"
                   >
-                    <option value="">Select Batch Timing</option>
-                     <option value="">Morning</option>
-                     <option value="">Afternoon</option>
-                     <option value="">Flexible Timing</option>
+                    <option value="">Select Batch Timing </option>
+                     <option value="Morning">Morning</option>
+                     <option value="Afternoon">Afternoon</option>
+                     <option value="Flexible Timing">Flexible Timing</option>
                 </select>
                 </div>
                 

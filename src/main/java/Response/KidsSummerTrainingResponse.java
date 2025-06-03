@@ -1,41 +1,23 @@
-
-package com.hachionUserDashboard.entity;
+package Response;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+public class KidsSummerTrainingResponse {
 
-@Entity
-@Table(name = "kids_summer_training")
-public class KidsSummerTrainingEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long kidsSummerTrainingId;
 
-	@Column(name = "full_name", nullable = false)
 	private String fullName;
 
-	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@Column(name = "mobile_number", nullable = false, unique = true)
 	private String mobileNumber;
 
-	@Column(name = "country", nullable = false)
 	private String country;
 
-	@Column(name = "course_interested", nullable = false)
 	private String courseInterested;
 
-	@Column(name = "batch_timing", nullable = false)
 	private String batchTiming;
 	
-	@Column(name = "date", nullable = false)
 	private LocalDate date;
 
 	public Long getKidsSummerTrainingId() {

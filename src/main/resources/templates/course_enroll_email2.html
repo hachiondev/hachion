@@ -27,7 +27,7 @@
 		/* Header Section */
 		.header {
 			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
-			padding: 40px 30px 80px;
+			padding: 40px 30px 30px;
 			text-align: center;
 			position: relative;
 		}
@@ -71,8 +71,8 @@
 			background: white;
 			border-radius: 12px;
 			padding: 30px;
-			margin: -60px 30px 30px;
-			box-shadow: 0 10px 25px rgba(26, 86, 219, 0.15);
+			margin: -60px 30px 30px !important;
+			box-shadow: 0 10px 25px rgba(26, 86, 219, 0.15) !important;
 			position: relative;
 			z-index: 3;
 			border: 1px solid rgba(26, 86, 219, 0.1);
@@ -91,11 +91,14 @@
 			height: 50px;
 			background: #e6f0ff;
 			border-radius: 12px;
-			display: flex;
 			align-items: center !important;
 			justify-content: center !important;
 			margin-right: 20px;
 			flex-shrink: 0;
+			font-size: 24px;
+			line-height: 50px;
+			text-align: center;
+			display: inline-block;
 		}
 
 		.detail-content h3 {
@@ -295,116 +298,126 @@
 		</div>
 
 		<!-- Session Details -->
-		<div class="session-card">
-			<!-- Date & Time -->
-			<table role="presentation" cellpadding="0" cellspacing="20">
-			  <tr>
-			    <td align="center" valign="top" style="padding: 0;">
-			      <div style="
-			        width: 50px;
-			        height: 50px;
-			        background: #e6f0ff;
-			        border-radius: 12px;
-			        font-size: 20px;
-			        line-height: 50px;
-			        text-align: center;
-			        display: inline-block;
-					margin-right: 20px;
-			      ">
-			        📅
-			      </div>
-			    </td>
-			    <td class="detail-content">
-					<h3>Date & Time</h3>
-					<p> [Date]</p>
-					<p>Duration: 90 minutes</p>
-			    </td>
-			  </tr>
-			</table>
+			<div style="background: white;
+						border-radius: 12px;
+						padding: 15px 30px;
+						margin: 0px 30px 10px;
+						box-shadow: 0 10px 25px rgba(26, 86, 219, 0.15);
+						position: relative;
+						z-index: 3;
+						border: 1px solid rgba(26, 86, 219, 0.1);">
+			  <div class="detail-item">
+			    <div class="detail-icon">📅</div>
+			    <div class="detail-content">
+			      <h3>Date & Time</h3>
+			      <p>[Date]</p>
+			      <p>Duration: 90 minutes</p>
+			    </div>
+			  </div>
 
-
-			<!-- Join Session -->
-			<table role="presentation" cellpadding="0" cellspacing="20">
-						  <tr>
-						    <td align="center" valign="top" style="padding: 0;">
-						      <div style="
-						        width: 50px;
-						        height: 50px;
-						        background: #e6f0ff;
-						        border-radius: 12px;
-						        font-size: 20px;
-						        line-height: 50px;
-						        text-align: center;
-						        display: inline-block;
-								margin-right: 20px;
-						      ">📍</div>
-							</td>
-							<td class="detail-content">
+			  <div class="detail-item">
+			    <div class="detail-icon">📍</div>
+			    <div class="detail-content">
 			      <h3>Join Session</h3>
 			      <p>Google Meet: <a href="[Google Meet Link]" style="color: #1a56db;">Click to Join Session</a></p>
 			      <p>Meeting ID: [Meeting ID] | Passcode: [Passcode]</p>
-			    </td>
-			  </tr>
-			</table>
+			    </div>
+			  </div>
 
-			<!-- Instructor -->
-			<table role="presentation" cellpadding="0" cellspacing="20">
-									  <tr>
-									    <td align="center" valign="top" style="padding: 0;">
-									      <div style="
-									        width: 50px;
-									        height: 50px;
-									        background: #e6f0ff;
-									        border-radius: 12px;
-									        font-size: 20px;
-									        line-height: 50px;
-									        text-align: center;
-									        display: inline-block;
-											margin-right: 20px;
-									      ">👨‍💻</div>
-										</td>
-				  <td class="detail-content">
+			  <div class="detail-item">
+			    <div class="detail-icon">👨‍💻</div>
+			    <div class="detail-content">
 			      <h3>Your Instructor</h3>
 			      <p>[Instructor Name], [Experience] years experience</p>
 			      <p>Ex-[Company] | Certified [Technology] Professional</p>
-			    </td>
-			  </tr>
-			</table>
+			    </div>
+			  </div>
 
-			<a href="[Google Calendar Link]" class="calendar-button">Add to Calendar</a>
-			<p style="text-align: center; color: #4a5568; margin-top: 0;">We recommend joining 5 minutes early</p>
-		</div>
-
-		<!-- Benefits Section -->
-		<div class="benefits-section">
-			<h2 class="section-title">Why Join Hachion Learning Portal?</h2>
-			<div class="benefits-grid">
-				<div class="benefit-card">
-					<h4>Industry-Aligned Curriculum</h4>
-					<p>Courses designed with direct input from tech leaders at Google, Amazon, and Microsoft</p>
-				</div>
-				<div class="benefit-card">
-					<h4>Real Project Experience</h4>
-					<p>Build portfolio-worthy projects using actual industry datasets and scenarios</p>
-				</div>
-				<div class="benefit-card">
-					<h4>Career Acceleration</h4>
-					<p>92% of our students report career advancement within 6 months of completion</p>
-				</div>
-				<div class="benefit-card">
-					<h4>Personalized Learning Path</h4>
-					<p>AI-driven recommendations tailored to your skill level and career goals</p>
-				</div>
-				<div class="benefit-card">
-					<h4>Expert Mentorship</h4>
-					<p>Weekly 1:1 sessions with industry practitioners</p>
-				</div>
-				<div class="benefit-card">
-					<h4>Job Placement Support</h4>
-					<p>Access to our exclusive hiring partner network with 850+ companies</p>
-				</div>
+			  <a href="[Google Calendar Link]" class="calendar-button" style="color: #fff;">Add to Calendar</a>
+			  <p style="text-align: center; color: #4a5568; margin-top: 0;">We recommend joining 5 minutes early</p>
 			</div>
-		</div>
+
+
+			<div style="padding: 0px 20px 20px; background-color: #fff;">
+			  <h2 style="text-align: center; font-size: 28px; color: #1a202c; margin-bottom: 20px;">
+			    Why Join Hachion Learning Portal?
+			    <div style="width: 60px; height: 4px; background-color: #1a56db; margin: 10px auto 0; border-radius: 2px;"></div>
+			  </h2>
+
+			  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 800px; margin: 0 auto; white-space: wrap;">
+			    <!-- Benefit Card 1 -->
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Industry-Aligned Curriculum
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        Courses designed with direct input from tech leaders at Google, Amazon, and Microsoft
+			      </p>
+			    </div>
+
+			    <!-- Benefit Card 2 -->
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Real Project Experience
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        Build portfolio-worthy projects using actual industry datasets and scenarios
+			      </p>
+			    </div>
+				</div>
+
+			    <!-- Benefit Card 3 -->
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Career Acceleration
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        92% of our students report career advancement within 6 months of completion
+			      </p>
+			    </div>
+
+			    <!-- Benefit Card 4 -->
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Personalized Learning Path
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        AI-driven recommendations tailored to your skill level and career goals
+			      </p>
+			    </div>
+				</div>
+
+			    <!-- Benefit Card 5 -->
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Expert Mentorship
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        Weekly 1:1 sessions with industry practitioners
+			      </p>
+			    </div>
+
+			    <!-- Benefit Card 6 -->
+			    <div style="background: rgba(26, 86, 219, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(26, 86, 219, 0.05); width: 250px;">
+			      <h4 style="color: #1a56db; margin: 0 0 10px; font-size: 18px; display: flex; align-items: center;">
+			        <span style="display: inline-block; width: 26px; height: 26px; background: #e6f0ff; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 10px; font-weight: bold;">✓</span>
+			        Job Placement Support
+			      </h4>
+			      <p style="color: #4a5568; margin: 0; line-height: 1.6;">
+			        Access to our exclusive hiring partner network with 850+ partners
+			      </p>
+			    </div>
+				</div>
+			  </div>
+			</div>
 
 		<!-- Footer -->
 		<div class="footer-bar">

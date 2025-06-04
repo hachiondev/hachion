@@ -23,9 +23,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: 1,
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -194,7 +196,7 @@ const Blogs = () => {
           </nav>
           <div className="category">
             <div className="category-header">
-              <p>{formMode === 'Add' ? 'Add Blog' : 'Edit Blog'}</p>
+              <p style={{ marginBottom: 0 }}>{formMode === 'Add' ? 'Add Blog' : 'Edit Blog'}</p>
             </div>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="course-details">
@@ -314,9 +316,9 @@ const Blogs = () => {
       ) : (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="course-category">
-            <p>Blog</p>
+            <h3>Blog</h3>
             <div className="category">
-              <div className="category-header"><p>Blog Details</p></div>
+              <div className="category-header"><p style={{ marginBottom: 0 }}>Blog Details</p></div>
               <div className="date-schedule">
                 Start Date
                 <DatePicker value={startDate} onChange={setStartDate} />

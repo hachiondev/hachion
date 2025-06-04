@@ -43,10 +43,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    padding: '3px 4px',
   },
 }));
 
@@ -324,20 +326,6 @@ export default function Faq() {
       setFilterCourse([]);
     }
   };
-      
-      // useEffect(() => {
-      //   const fetchData = async () => {
-      //     try {
-      //       const response = await axios.get("https://api.hachion.co/faq");
-      //       setAllData(response.data);
-      //       setDisplayedCategories(response.data); // initially display all
-      //     } catch (error) {
-      //       console.error("Error fetching curriculum data", error);
-      //     }
-      //   };
-      
-      //   fetchData();
-      // }, []);
         useEffect(() => {
           const fetchData = async () => {
             try {
@@ -386,18 +374,6 @@ export default function Faq() {
       }
   };
   
-  
-        
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
-        // const handleClickOpen = (row) => {
-        //   console.log(row);
-        //     setEditedRow(row)// Set the selected row data
-        //     setOpen(true); // Open the modal
-        //     console.log("tid",row.faq_id)
-        //   };
         const handleClickOpen = (row) => {
           console.log("Editing row:", row);
           setEditedRow(row); 
@@ -418,76 +394,6 @@ export default function Faq() {
       }));
   };
 
-//     e.preventDefault();
-
-//     const currentDate = new Date().toISOString().split("T")[0];
-//     const dataToSubmit = {
-//       category_name: curriculumData?.category_name,
-//       course_name: curriculumData?.course_name,
-//       curriculum_pdf: curriculumData?.curriculum_pdf,
-//       title: rows.map(row => row.title),
-//       topic: rows.map(row => row.topic),
-//         date: currentDate
-//     };
-
-//     console.log("Data being sent:", dataToSubmit); // Debugging
-
-//     try {
-//         const response = await axios.post("https://api.hachion.co/curriculum/add", dataToSubmit, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data" 
-//             }
-//         });
-
-//         if (response.status === 200) {
-//             alert("Curriculum details added successfully");
-//             setCurriculumData({}); // Reset form
-//             handleReset();
-//         }
-//     } catch (error) {
-//         console.error("Error adding curriculum:", error.message);
-//         alert("Error adding curriculum.");
-//     }
-// };
-
-// const handleSubmit = async (e) => {
-//   e.preventDefault();
-
-//   const currentDate = new Date().toISOString().split("T")[0];
-//   const formData = new FormData();
-  
-//   // Append the fields to formData
-//   formData.append("category_name", curriculumData?.category_name);
-//   formData.append("course_name", curriculumData?.course_name);
-//   formData.append("faq_title", curriculumData?.faq_title);
-//   formData.append("description", curriculumData?.description);
-//   formData.append("date", currentDate);
-
-//   // Append the file if available
-//   if (curriculumData?.faq_pdf) {
-//     console.log(curriculumData?.faq_pdf); 
-//       formData.append("file", curriculumData?.faq_pdf);
-//   }
-
-//   console.log("Data being sent:", formData); // Debugging
-
-//   try {
-//       const response = await axios.post("https://api.hachion.co/faq/add", formData, {
-//           headers: {
-//               "Content-Type": "multipart/form-data"  // Important: this tells axios to send the request as multipart
-//           }
-//       });
-
-//       if (response.status === 200) {
-//           alert("Faq details added successfully");
-//           setCurriculumData({}); // Reset form
-//           handleReset();
-//       }
-//   } catch (error) {
-//       console.error("Error adding faq:", error.message);
-//       alert("Error adding faq.");
-//   }
-// };
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -559,7 +465,7 @@ const handleSubmit = async (e) => {
                   </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Faq</p>
+<p style={{ marginBottom: 0 }}>Add Faq</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -660,7 +566,7 @@ const handleSubmit = async (e) => {
        
         <div className='category'>
           <div className='category-header'>
-            <p>View FAQ's</p>
+            <p style={{ marginBottom: 0 }}>View FAQ's</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -745,52 +651,6 @@ const handleSubmit = async (e) => {
           ))}
         </select>
       </div>
-{/* <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select
-  id="inputState"
-  className="form-select"
-  name="category_name"
-  value={filterData.category_name}
-  onChange={handlefilterChange}
->
-  <option value="" disabled>Select Category</option>
-  {course.map((curr) => (
-    <option key={curr.id} value={curr.name}>{curr.name}</option>
-  ))}
-</select>
-</div>
-<div className="col-md-3">
-<label htmlFor="course" className="form-label">Course Name</label>
-<select
-                  id="course"
-                  className="form-select"
-                  name="course_name"
-                  value={filterData.course_name}
-                  onChange={handlefilterChange}
-                >
-                  <option value="" disabled>
-                    Select Course
-                  </option>
-                  {catChange
-                    ? filterCourse.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))
-                    : courseCategory.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>
-                          {curr.courseName}
-                        </option>
-                      ))}
-</select>
-      </div> */}
-  {/* <div class="mb-3">
-  <label for="formFile" class="form-label">Curriculum PDF</label>
-  <input class="form-control" type="file" id="formFile"
-          name="curriculum_pdf"
-          onChange={handleChange}/>
-</div> */}
  <div style={{marginTop: '50px'}}>
   <button className="filter" onClick={() => {
   setFilterData({ category_name: "", course_name: "" });

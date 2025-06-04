@@ -43,9 +43,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -198,21 +200,7 @@ export default function Review() {
           handleDelete(review_id);
         }
       };
-  
-    //   const handleDateFilter = () => {
-    //     const filtered = review.filter((item) => {
-    //       const videoDate = new Date(item.date); // Parse the date field
-    //       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-    //       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      
-    //       return (
-    //         (!start || videoDate >= start) &&
-    //         (!end || videoDate <= end)
-    //       );
-    //     });
-      
-    //     setFilteredReview(filtered);
-    //   };
+
     const handleSave = async () => {
       try {
         const formData = new FormData();
@@ -302,50 +290,7 @@ export default function Review() {
           [name]: value,
         }));
       };
-    //   const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-    
-    //     const formData = new FormData();
-    //     formData.append("name", reviewData.student_name);
-    //     formData.append("social_id", reviewData.source);
-    //     formData.append("category_name", reviewData.category_name);
-    //     formData.append("course_name", reviewData.course_name);
-    //     formData.append("review", reviewData.comment);
-    //     formData.append("email",reviewData.email||"");
-    //     formData.append("type",reviewData.type||"");
-    //     formData.append("trainer_name",reviewData.trainer_name||"");
-    //     formData.append("rating",reviewData.rating||"");
-    //     formData.append("location",reviewData.location||"");
-       
-    //     formData.append("date", currentDate); // Ensure the date is added
-    
-    //     if (reviewData.image) {
-    //         formData.append("image", reviewData.image); // Append the image
-    //     }
-    //     for (let pair of formData.entries()) {
-    //       console.log(pair[0], pair[1]); // Check key-value pairs
-    //   }
-    //     try {
-    //         const response = await axios.post(
-    //             "https://api.hachion.co/userreview/add",
-    //             formData,
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                 },
-    //             }
-    //         );
-    
-    //         if (response.status === 200) {
-    //             alert("Review added successfully!");
-    //             setReviewData({ student_name: "", source: "", category_name: "", course_name: "", comment: "", image: null }); // Reset form state
-    //         }
-    //     } catch (error) {
-    //         console.error("Error adding review:", error);
-    //         alert("Error adding review.");
-    //     }
-    // };
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       const currentDate = new Date().toISOString().split("T")[0];
@@ -435,7 +380,7 @@ useEffect(() => {
                   </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Review</p>
+<p style={{ marginBottom: 0 }}>Add Review</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -556,7 +501,7 @@ useEffect(() => {
        
         <div className='category'>
           <div className='category-header'>
-            <p>Review</p>
+            <p style={{ marginBottom: 0 }}>Review</p>
           </div>
           <div className='date-schedule'>
             Start Date

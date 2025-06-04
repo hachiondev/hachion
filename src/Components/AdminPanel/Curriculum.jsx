@@ -36,10 +36,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
+    padding: '3px 5px',
     borderRight: '1px solid white', // Add vertical lines
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -395,7 +397,7 @@ const [filterData, setFilterData] = useState({
                   </nav>
     <div className='category'>
     <div className='category-header'>
-    <p>Add Curriculum</p>
+    <p style={{ marginBottom: 0 }}>Add Curriculum</p>
     </div>
     <div className='course-details'>
     <div className='course-row'>
@@ -504,7 +506,7 @@ const [filterData, setFilterData] = useState({
       <div className='course-category'>
         <div className='category'>
           <div className='category-header'>
-            <p>View Curriculum</p>
+            <p style={{ marginBottom: 0 }}>View Curriculum</p>
           </div>
           <div className='date-schedule'>
             Start Date

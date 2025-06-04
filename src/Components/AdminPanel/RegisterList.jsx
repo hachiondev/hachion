@@ -10,7 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -37,15 +38,18 @@ import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 // import { AnalyticsOutlined } from '@mui/icons-material';
+dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -58,7 +62,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 
 export default function RegisterList() {
   const [searchTerm,setSearchTerm]=useState("")
@@ -73,9 +76,10 @@ export default function RegisterList() {
     const [endDate, setEndDate] = useState(null);
     const [successMessage, setSuccessMessage] = useState("");
         const [errorMessage, setErrorMessage] = useState("");
-    const [editedData, setEditedData] = useState({student_ID:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
+        
+    const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [studentData, setStudentData] = useState({
-        student_ID:"",
+        student_Id:"",
         userName:"",
         email:"",
         mobile:"",
@@ -111,7 +115,7 @@ const [currentPage, setCurrentPage] = useState(1);
         );
          const handleReset=()=>{
             setStudentData({
-                student_ID:"",
+                student_Id:"",
         userName:"",
         email:"",
         mobile:"",
@@ -153,9 +157,9 @@ const [currentPage, setCurrentPage] = useState(1);
       setFilteredStudent(registerStudent)
   }, []); // Empty dependency array ensures it runs only once
 
-    const handleDeleteConfirmation = (student_id) => {
+    const handleDeleteConfirmation = (id) => {
         if (window.confirm("Are you sure you want to delete this Student?")) {
-          handleDelete(student_id);
+          handleDelete(id);
         }
       };
   
@@ -176,11 +180,11 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/registerstudent/update/${editedData.student_id}`,editedData
+                `https://api.hachion.co/registerstudent/update/${editedData.student_Id}`,editedData
             );
             setRegisterStudent((prev) =>
                 prev.map(curr =>
-                    curr.student_id === editedData.student_id ? response.data : curr
+                    curr.student_Id === editedData.student_Id ? response.data : curr
                 )
             );
             setMessage("Student details updated successfully!");
@@ -191,13 +195,17 @@ const [currentPage, setCurrentPage] = useState(1);
         }
     };
             
-      const handleDelete = async (student_id) => {
+      const handleDelete = async (id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${student_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`); 
           console.log("Register Student deleted successfully:", response.data); 
+          setSuccessMessage("✅ Student deleted successfully.");
+    setErrorMessage("");
         } catch (error) { 
           console.error("Error deleting Student:", error); 
+           setErrorMessage("❌ Failed to delete student. Please try again.");
+    setSuccessMessage("");
         } }; 
        useEffect(() => {
     const filtered = registerStudent.filter(registerStudent =>
@@ -216,7 +224,6 @@ const [currentPage, setCurrentPage] = useState(1);
     setFilteredStudent(filtered);
 }, [searchTerm, registerStudent]);
 
-        
      const handleClickOpen = (row) => {
       setFormMode("Edit");
       setStudentData(row);
@@ -225,11 +232,11 @@ const [currentPage, setCurrentPage] = useState(1);
     const handleUpdate = async () => {
       try {
         const response = await axios.put(
-          `https://api.hachion.co/registerstudent/update/${studentData.student_id}`,
+          `https://api.hachion.co/registerstudent/update/${studentData.student_Id}`,
           studentData
         );
         setRegisterStudent((prev) =>
-          prev.map((s) => s.student_id === studentData.student_id ? response.data : s)
+          prev.map((s) => s.student_Id === studentData.student_Id ? response.data : s)
         );
         setMessage("Student updated successfully!");
         setShowAddCourse(false);
@@ -289,23 +296,11 @@ const [currentPage, setCurrentPage] = useState(1);
 
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
-    // useEffect(() => {
-    //   const fetchCourse = async () => {
-    //     try {
-    //       const response = await axios.get("https://api.hachion.co/courses/all");
-    //       setCourse(response.data);
-    //     } catch (error) {
-    //       console.error("Error fetching courses:", error.message);
-    //     }
-    //   };
-    //   fetchCourse();
-    // }, []);
 
   return (
     
     <>  
      {showAddCourse ?  (      
-           
        <div className='course-category'>
         <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
@@ -320,7 +315,7 @@ const [currentPage, setCurrentPage] = useState(1);
     
      <div className='category'>
      <div className='category-header'>
-     <p>{formMode === "Edit" ? "Edit Student" : "Add Student"}</p>
+     <p style={{ marginBottom: 0 }}>{formMode === "Edit" ? "Edit Student" : "Add Student"}</p>
      </div>
      <div className="course-row">
        <div class="col">
@@ -447,7 +442,7 @@ const [currentPage, setCurrentPage] = useState(1);
        
         <div className='category'>
           <div className='category-header'>
-            <p>Register List</p>
+            <p style={{ marginBottom: 0 }}>Register List</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -529,13 +524,14 @@ const [currentPage, setCurrentPage] = useState(1);
         <TableBody>
         {displayedCourse.length > 0
     ? displayedCourse.map((row, index) => (
-    <StyledTableRow key={row.student_id}>
+    <StyledTableRow key={row.student_Id}>
       <StyledTableCell align='center'>
         <Checkbox />
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell> {/* S.No. */}
-         <StyledTableCell align="center">{row.date}</StyledTableCell>
+         <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MM-DD-YYYY') : ""}</StyledTableCell>
+
          <StyledTableCell align="center">{row.mode}</StyledTableCell>        
         <StyledTableCell align="center">{row.studentId}</StyledTableCell>
       <StyledTableCell align="center">{row.userName}</StyledTableCell>
@@ -552,7 +548,7 @@ const [currentPage, setCurrentPage] = useState(1);
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.student_id)} />
+        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.id)} />
         </div>
       </StyledTableCell>
     </StyledTableRow>
@@ -567,11 +563,13 @@ const [currentPage, setCurrentPage] = useState(1);
 </TableBody>
     </Table>
     </TableContainer>
+    {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
     <div className='pagination-container'>
                   <AdminPagination
               currentPage={currentPage}
               rowsPerPage={rowsPerPage}
-              totalRows={filteredStudent.length} // Use the full list for pagination
+              totalRows={filteredStudent.length} 
               onPageChange={handlePageChange}
             />
                       </div>

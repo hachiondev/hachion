@@ -30,9 +30,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: 1,
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -343,7 +345,7 @@ const handleAddTrendingCourseClick = () => {
           </nav>
           <div className="category">
             <div className="category-header">
-              <p>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
+              <p style={{ marginBottom: 0 }}>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
             </div>
             {message.text && (
               <div className={`alert alert-${message.type}`}>
@@ -662,7 +664,7 @@ const handleAddTrendingCourseClick = () => {
             <p>{pageTitle}</p>
             <div className="category">
               <div className="category-header">
-                <p>{headerTitle}</p>
+                <p style={{ marginBottom: 0 }}>{headerTitle}</p>
               </div>
               <div className="date-schedule">
                 Start Date

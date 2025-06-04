@@ -40,9 +40,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -280,7 +282,7 @@ export default function DemoVideo() {
                   </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Demo Video</p>
+<p style={{ marginBottom: 0 }}>Add Demo Video</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -359,7 +361,7 @@ export default function DemoVideo() {
        
         <div className='category'>
           <div className='category-header'>
-            <p>Demo Videos</p>
+            <p style={{ marginBottom: 0 }}>Demo Videos</p>
           </div>
           <div className='date-schedule'>
             Start Date

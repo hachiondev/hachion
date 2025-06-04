@@ -38,9 +38,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -186,11 +188,6 @@ export default function Support() {
           );
           setFilteredSupport(filtered);
       }, [searchTerm,filteredSupport]);
-        
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
         const handleClickOpen = (row) => {
             console.log(row);
               setEditedData(row)// Set the selected row data
@@ -228,12 +225,9 @@ export default function Support() {
         }
       };
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
-
     }
- 
 
   return (
-    
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
@@ -250,7 +244,7 @@ export default function Support() {
     </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Support</p>
+<p style={{ marginBottom: 0 }}>Add Support</p>
 </div>
 
 <div className="course-row">
@@ -297,7 +291,7 @@ export default function Support() {
       <h3>Support</h3>
         <div className='category'>
           <div className='category-header'>
-            <p>Support Details</p>
+            <p style={{ marginBottom: 0 }}>Support Details</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -457,46 +451,10 @@ export default function Support() {
     <label className='form-label'>Address</label>
     <input type="text" class="form-control"  aria-label="First name" name='address' value={editedData.address} onChange={handleInputChange}/>
   </div>
-
-
-     
   </DialogContent>
  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
-</Dialog>
-
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Support added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
-   
+</Dialog>   
  </> );
 }

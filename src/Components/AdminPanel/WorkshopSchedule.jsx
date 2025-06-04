@@ -38,9 +38,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -314,10 +316,7 @@ console.log(row);
 const handleClose = () => {
   setOpen(false); // Close the modal
 };
-const handleCloseModal=()=>{
-  setShowAddCourse(false);
- 
-}
+
 const handleSave = async () => {
   try {
     const formDataToSend = new FormData();
@@ -402,7 +401,7 @@ const quillModules = {
             </nav>
       <div className='category'>
       <div className='category-header'>
-      <p>Add Workshop Schedule</p>
+      <p style={{ marginBottom: 0 }}>Add Workshop Schedule</p>
       </div>
       <div className='course-details'>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -644,7 +643,7 @@ const quillModules = {
         <p>Workshop Schedule</p>
         <div className='category'>
           <div className='category-header'>
-            <p>View Workshop Schedule</p>
+            <p style={{ marginBottom: 0 }}>View Workshop Schedule</p>
           </div>
           <div className='date-schedule'>
             Start Date

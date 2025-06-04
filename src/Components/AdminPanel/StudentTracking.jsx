@@ -22,7 +22,7 @@ export default function StudentTracking() {
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className='course-category'>
-                      <div className='category-header'><p>Student Tracking</p></div>
+                      <div className='category-header'><p style={{ marginBottom: 0 }}>Student Tracking</p></div>
                       <div className='course-details'>
                   <div className='course-row'>
                     <div class="col">
@@ -147,7 +147,7 @@ export default function StudentTracking() {
                           </div>
                           </div>
                           </div>
-                    <div className='category-header'><p>Student Details</p></div>
+                    <div className='category-header'><p style={{ marginBottom: 0 }}>Student Details</p></div>
                     <div className='course-details'>
                   <div className='course-row'>
                      <div className="col">

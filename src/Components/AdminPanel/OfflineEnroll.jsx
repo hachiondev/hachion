@@ -258,9 +258,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -440,7 +442,7 @@ const handleFileChange = (e) => {
           </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Enrollment </p>
+<p style={{ marginBottom: 0 }}>Add Enrollment </p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -488,7 +490,7 @@ const handleFileChange = (e) => {
    <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className='course-category'>
         <div className='category'>
-          <div className='category-header'><p>View Offline Enrollment List</p></div>
+          <div className='category-header'><p style={{ marginBottom: 0 }}>View Offline Enrollment List</p></div>
               <div className='date-schedule'>
                 Start Date
                 <DatePicker

@@ -37,9 +37,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: "#00AEEF",
     color: theme.palette.common.white,
     borderRight: "1px solid white", // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: "1px solid #e0e0e0", // Add vertical lines for body rows
   },
 }));
@@ -101,12 +103,6 @@ export default function Other() {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  // const handleFileChange = (e) => {
-  //   setBannerData((prev) => ({ ...prev, banner_image: e.target.files[0] }));
-  // };
-  // const handleImageFileChange = (e) => {
-  //   setBannerData((prev) => ({ ...prev, home_banner_image: e.target.files[0] }));
-  // };
   const handleFileChange = (e, imageType) => {
     setBannerData((prev) => ({
       ...prev,
@@ -166,9 +162,6 @@ export default function Other() {
   const handleSave = async () => {
     try {
       const formDataToSend = new FormData();
-      //  console.log(editedData);
-      // Convert JSON data to string and append it as a Blob
-      // Prepare the JSON data
       const jsonData = {
         status: editedData.status,
         home_status: editedData.home_status,
@@ -315,20 +308,12 @@ export default function Other() {
       typeof bannerData?.home_banner_image
     );
     console.log("Banner Image Value:", bannerData?.home_banner_image);
-
     const formDataToSend = new FormData();
     const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
-    //  console.log(bannerData.path);
-    // Prepare the JSON data
     const jsonData = {
       date: currentDate,
       path: bannerData.path,
     };
-    // console.log(bannerData.path);
-    // console.log(jsonData);
-    // console.log(actionType);
-    // console.log(bannerData.banner_image);
-    // Conditionally append images and JSON fields based on actionType
     if (actionType === "banner" && bannerData.banner_image) {
       formDataToSend.append("banner_image", bannerData.banner_image);
       jsonData.status = "Enabled";
@@ -336,7 +321,6 @@ export default function Other() {
   formDataToSend.append("home_banner_image", bannerData.home_banner_image);
   jsonData.home_status = "Enabled";
 }
-
     // Append JSON data as a Blob
     formDataToSend.append(
       "banner",
@@ -351,14 +335,6 @@ export default function Other() {
       console.log(response.data);
       if (response.status === 201) {
         alert("Banner added successfully!");
-
-        // Ensure response data is structured correctly
-        // const newBanner = response.data;
-        // console.log(newBanner);
-        // setFilteredBanner((prevBanners) => {
-        //   if (!prevBanners) return [newBanner];
-        //   return [...prevBanners, newBanner];
-        // });
         await fetchBanners(); // Refresh banner list from API
         setShowAddCourse(false);
       }
@@ -397,7 +373,7 @@ export default function Other() {
           </nav>
           <div className="category">
             <div className="category-header">
-              <p>Add Banner </p>
+              <p style={{ marginBottom: 0 }}>Add Banner </p>
             </div>
             <form encType="multipart/form-data">
               <div>
@@ -471,7 +447,7 @@ export default function Other() {
             <div className="course-category">
               <div className="category">
                 <div className="category-header">
-                  <p>Banner</p>
+                  <p style={{ marginBottom: 0 }}>Banner</p>
                 </div>
                 <div className="date-schedule">
                   Start Date

@@ -1655,14 +1655,20 @@ margin-bottom: 20px;
         }
 
         .table-container {
-          max-width: auto !important;
-          margin: 5px auto !important;
+          display: block;
+         width: fit-content;
+        min-width: 350px;
+        max-width: 480px;
+        white-space: nowrap;
+        border-collapse: collapse;
+        overflow-x: auto;
       }
   
       .table-cell-left,
       .table-cell-right {
           padding: 6px;
           font-size: 12px !important;
+           white-space: nowrap;
       }
   
       .net-amount {
@@ -1917,7 +1923,8 @@ font-weight: 600;
 }
 
 .table-container {
-  max-width: 500px;
+  width: fit-content;
+  max-width: 50%;
   margin-left: 40px;
   border-collapse: collapse;
 }
@@ -1927,6 +1934,7 @@ font-weight: 600;
   padding: 4px 8px;
   font-size: 16px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .table-container .table-cell-right {
@@ -1934,6 +1942,7 @@ font-weight: 600;
   padding: 6px 10px;
   font-size: 16px ;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .net-amount {

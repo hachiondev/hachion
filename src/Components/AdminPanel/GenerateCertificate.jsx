@@ -24,9 +24,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -72,10 +74,6 @@ export default function CandidateCertificate() {
     setRowsPerPage(rows);
     setCurrentPage(1);
   }, []);
-  // const displayedCertificates = useMemo(() => 
-  //   certificateList.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage), 
-  //   [certificateList, currentPage, rowsPerPage]
-  // );
   const displayedCourse = useMemo(() => filteredCertificate.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -432,7 +430,7 @@ export default function CandidateCertificate() {
           </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Generate Certificate </p>
+<p style={{ marginBottom: 0 }}>Generate Certificate </p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -469,9 +467,8 @@ export default function CandidateCertificate() {
             </option>
           ))}
         </select>
-      </div>
-      
-  <div className="col">
+        </div>
+        <div className="col">
         <label htmlFor="student_name" className="form-label">Student Full Name</label>
         <select
           className="form-select"
@@ -487,22 +484,21 @@ export default function CandidateCertificate() {
             </option>
           ))}
         </select>
+        </div>
+        </div>
+        <div className='course-row'>
+        <div className="col">
+        <label htmlFor="email" className="form-label">Email</label>
+        <input
+          type="text"
+          className="schedule-input"
+          id="email"
+          name="email"
+          value={certificateData.email}
+          onChange={handleChange}
+          
+        />
       </div>
-  
-  </div>
-  <div className='course-row'>
-  <div className="col">
-  <label htmlFor="email" className="form-label">Email</label>
-  <input
-    type="text"
-    className="schedule-input"
-    id="email"
-    name="email"
-    value={certificateData.email}
-    onChange={handleChange}
-     
-  />
-</div>
       <div class="col">
       <label htmlFor="inputState" className="form-label">Status</label>
                 <select
@@ -520,18 +516,15 @@ export default function CandidateCertificate() {
                 </div>
                 <div className="col">
                 <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
-                
-<input
-  type="text"
-  id="inputState"
-  className="form-control"
-  name="completed_date"
-  value={certificateData.completed_date || ''}
-  onChange={handleInputChange}
-  placeholder="dd-mm-yyyy"
-/>
-
-
+                  <input
+                    type="text"
+                    id="inputState"
+                    className="form-control"
+                    name="completed_date"
+                    value={certificateData.completed_date || ''}
+                    onChange={handleInputChange}
+                    placeholder="dd-mm-yyyy"
+                  />
               </div>
         </div>
         <div className="course-row">
@@ -539,16 +532,14 @@ export default function CandidateCertificate() {
         <div class="col">
             <label className="form-label">Certificate ID</label>
             <input
-  type="text"
-  className="schedule-input"
-  id="inputEmail4"
-  name='certificate_id'
-  value={certificateData.certificate_id}  
-  onChange={handleChange}
-  
-/>
-
-            {/* <input type="text" class="schedule-input" id="inputEmail4" name='certificate_id' value={certificateData.certificate_img} onChange={handleChange}/> */}
+              type="text"
+              className="schedule-input"
+              id="inputEmail4"
+              name='certificate_id'
+              value={certificateData.certificate_id}  
+              onChange={handleChange}
+              
+            />
             </div>
             <button
   type="button"
@@ -558,13 +549,6 @@ export default function CandidateCertificate() {
 >
   Generate
 </button>
-        {/* <button
-          type="button"
-          onClick={handleGenerate}
-          className='generate-btn'
-        >
-          Generate
-        </button> */}
         <button 
   type="button"
   onClick={() => {
@@ -617,7 +601,7 @@ export default function CandidateCertificate() {
                    
                     <div className='category'>
                       <div className='category-header'>
-                        <p>Course Certificate</p>
+                        <p style={{ marginBottom: 0 }}>Course Certificate</p>
                       </div>
                       <div className='date-schedule'>
                         Start Date

@@ -43,9 +43,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -196,11 +198,7 @@ export default function Resume() {
           );
           setFilteredResume(filtered);
       }, [searchTerm,filteredResume]);
-        
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
+
         const handleClickOpen = (row) => {
             console.log(row);
               setEditedData(row)// Set the selected row data
@@ -287,7 +285,7 @@ useEffect(() => {
                   </nav>
 <div className='category'>
 <div className='category-header'>
-<p>Add Resume</p>
+<p style={{ marginBottom: 0 }}>Add Resume</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -360,7 +358,7 @@ useEffect(() => {
        
         <div className='category'>
           <div className='category-header'>
-            <p>Resume</p>
+            <p style={{ marginBottom: 0 }}>Resume</p>
           </div>
           <div className='date-schedule'>
             Start Date

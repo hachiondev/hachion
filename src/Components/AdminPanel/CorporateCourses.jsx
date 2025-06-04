@@ -22,9 +22,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   '&.MuiTableCell-body': {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -150,7 +152,7 @@ export default function CorporateCourses() {
                 </ol>
               </nav>
               <div className="category">
-                <div className="category-header"><p>Add Corporate Course</p></div>
+                <div className="category-header"><p style={{ marginBottom: 0 }}>Add Corporate Course</p></div>
                 <div className="course-details">
                   <div className="course-row">
                     <div className="col-md-3">
@@ -187,7 +189,7 @@ export default function CorporateCourses() {
           ) : (
             <>
               <div className="category">
-                <div className="category-header"><p>View Corporate Training Courses</p></div>
+                <div className="category-header"><p style={{ marginBottom: 0 }}>View Corporate Training Courses</p></div>
                 <div className="date-schedule">
                   Start Date
                   <DatePicker value={startDate} onChange={setStartDate} sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />

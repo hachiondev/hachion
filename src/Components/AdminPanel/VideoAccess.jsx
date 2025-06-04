@@ -38,9 +38,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white', // Add vertical lines
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
   },
 }));
@@ -281,10 +283,8 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       console.log("Updated course state:", course); // Logs whenever 'course' state updates
     }, [course]);
-    
 
   return (
-    
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
@@ -301,7 +301,6 @@ const displayedCourse = filteredCourse.slice(
                     </nav>
 <div className='course-details'>
 <div className='course-row'>
-
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>

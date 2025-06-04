@@ -18,9 +18,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -159,7 +161,7 @@ export default function CandidateCertificate() {
             <div className='course-category'>
               <div className='category'>
                 <div className='category-header'>
-                  <p>Candidate Certificate</p>
+                  <p style={{ marginBottom: 0 }}>Candidate Certificate</p>
                 </div>
                 <div className='date-schedule'>
                   Start Date

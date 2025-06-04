@@ -20,9 +20,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -139,7 +141,7 @@ const handleReject = (review_id) => {
       <div className='course-category'>
         <div className='category'>
           <div className='category-header'>
-            <p>View Student Reviews</p>
+            <p style={{ marginBottom: 0 }}>View Student Reviews</p>
           </div>
           <div className='entries'>
             <div className='entries-left'>

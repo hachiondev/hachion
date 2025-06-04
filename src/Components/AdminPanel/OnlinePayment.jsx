@@ -15,9 +15,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         backgroundColor: '#00AEEF',
         color: theme.palette.common.white,
         borderRight: '1px solid white', // Add vertical lines
+        padding: '3px 5px',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: '3px 4px',
         borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
     },
 }));
@@ -58,7 +60,7 @@ export default function OnlinePayment() {
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className='course-category'>
-                      <div className='category-header'><p>View OnlinePayment List</p></div>
+                      <div className='category-header'><p style={{ marginBottom: 0 }}>View OnlinePayment List</p></div>
                       <div className='date-schedule'>
                                   Start Date
                                   <DatePicker 

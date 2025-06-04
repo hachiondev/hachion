@@ -27,9 +27,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: 1,
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));

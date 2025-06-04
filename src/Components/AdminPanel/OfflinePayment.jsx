@@ -24,18 +24,18 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-
 dayjs.extend(customParseFormat);
-
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     borderRight: '1px solid white',
+    padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '3px 4px',
     borderRight: '1px solid #e0e0e0',
   },
 }));
@@ -64,9 +64,7 @@ export default function OfflinePayment() {
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
 const [isSaved, setIsSaved] = useState(false);
 const [invoiceNumber, setInvoiceNumber] = useState("");
-
 const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
-
     const [paymentData, setPaymentData] = useState({
             id:"",
             student_ID: "",
@@ -519,9 +517,6 @@ const handleSave = async (e) => {
   }
 };
 
-
-
-
 const handleSendToEmail = async (e) => {
   e.preventDefault();
 
@@ -802,7 +797,7 @@ const handleSaveAndSendInvoice = async (e) => {
       </nav>
 <div className='category'>
 <div className='category-header'>
-  <p>{formMode === "Edit" ? "Edit Payment" : "Add Payment"}</p>
+  <p style={{ marginBottom: 0 }}>{formMode === "Edit" ? "Edit Payment" : "Add Payment"}</p>
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -840,8 +835,6 @@ const handleSaveAndSendInvoice = async (e) => {
       onChange={(e) => setPaymentData({ ...paymentData, mobile: e.target.value })}
     />
   </div>
-  
-
   </div>
   <div className='course-row'>
   <div className="col">
@@ -868,9 +861,7 @@ const handleSaveAndSendInvoice = async (e) => {
     value={paymentData.course_fee}
     onChange={(e) =>
       setPaymentData({ ...paymentData, course_fee: e.target.value })
-    }
-    
-  />
+    }/>
 </div>
 
     <div class="col">
@@ -1093,7 +1084,7 @@ const handleSaveAndSendInvoice = async (e) => {
        
         <div className='category'>
           <div className='category-header'>
-            <p>View Offline Payment List</p>
+            <p style={{ marginBottom: 0 }}>View Offline Payment List</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -1167,42 +1158,6 @@ const handleSaveAndSendInvoice = async (e) => {
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
-        {/* <TableBody>
-        {displayedCourse.length > 0
-    ? displayedCourse.map((curr, index) => (
-    <StyledTableRow key={curr.id}>
-        <StyledTableCell align='center'>
-            <Checkbox />
-        </StyledTableCell>
-        <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
-          </StyledTableCell>
-        <StyledTableCell align="center">{curr.student_ID}</StyledTableCell>
-        <StyledTableCell align="center">{curr.student_name}</StyledTableCell>
-        <StyledTableCell align="center">{curr.email}</StyledTableCell>
-        <StyledTableCell align="center">{curr.mobile}</StyledTableCell>
-        <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
-        <StyledTableCell align="center">{curr.course_fee}</StyledTableCell>
-        <StyledTableCell align="center">{curr.installments}</StyledTableCell>
-        <StyledTableCell align="center">{curr.balance}</StyledTableCell>
-        <StyledTableCell align="center">{curr.status}</StyledTableCell>
-        <StyledTableCell align="center">{curr.date ? dayjs(curr.date).format('MMM-DD-YYYY') : ''}</StyledTableCell>
-        <StyledTableCell align="center">
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-            <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
-            <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.id)} />
-            </div>
-        </StyledTableCell>
-    </StyledTableRow>
-))
-: (
-  <StyledTableRow>
-    <StyledTableCell colSpan={12} align="center">
-      No data available.
-    </StyledTableCell>
-  </StyledTableRow>
-)}
-
-</TableBody> */}
 <TableBody>
   {displayedCourse.length > 0 ? (
     displayedCourse.map((curr, index) => {

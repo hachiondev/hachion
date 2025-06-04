@@ -40,9 +40,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       backgroundColor: '#00AEEF',
       color: theme.palette.common.white,
       borderRight: '1px solid white',
+      padding: '3px 5px',
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
+      padding: '3px 4px',
       borderRight: '1px solid #e0e0e0',
     },
   }));
@@ -180,7 +182,7 @@ const handleDateFilter = () => {
            
             <div className='category'>
               <div className='category-header'>
-                <p>Student Details</p>
+                <p style={{ marginBottom: 0 }}>Student Details</p>
               </div>
               <div className='date-schedule'>
                 Start Date
@@ -225,10 +227,8 @@ const handleDateFilter = () => {
                       onChange={(e) => setSearchTerm(e.target.value)}/>
                     <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
                   </div>
-                  
                 </div>
               </div>
-    
             </div>
           </div>
         </LocalizationProvider>
@@ -301,7 +301,6 @@ const handleDateFilter = () => {
                   onPageChange={handlePageChange}
                 />
         </div>
-
         {showDemoTable && (
           <div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -318,7 +317,7 @@ const handleDateFilter = () => {
         </nav>    
             <div className='category'>
               <div className='category-header'>
-                <p>View Live Demo</p>
+                <p style={{ marginBottom: 0 }}>View Live Demo</p>
               </div>
               <div className='date-schedule'>
                 Start Date

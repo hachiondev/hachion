@@ -47,6 +47,7 @@
   display: flex;
   align-items: center;
   transition: padding 0.3s ease;
+  font-size: 16px;
 }
 
 .menu-item-user .menu-icon {
@@ -261,7 +262,7 @@ min-width: 1300;
 .resume-table .MuiTableHead-root .MuiTableCell-root {
   background-color: #00AEEF !important;
   color: #fff !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: bold !important;
   padding: 15px !important;
   border-right: 1px solid white !important; /* Vertical line for header cells */
@@ -348,8 +349,8 @@ white-space: nowrap;
   border-radius: 10px;
   border: none;
   box-shadow: 5px 5px 5px #d3d3d3;
-  margin: 20px;
-  font-size: 20px;
+  margin: 10px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -361,7 +362,7 @@ white-space: nowrap;
   border: none;
   box-shadow: 5px 5px 5px #d3d3d3;
   margin: 5px !important;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -502,8 +503,6 @@ padding: 0px;
 
 .menu-item-user {
   padding-left: 1.25vw;
-  height: 4vh;
-  font-size: 20px;
 }
 
 .resume-div {

@@ -77,9 +77,9 @@ const [filterData, setFilterData] = useState({
 });
 
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:""});
+    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:"", assesment_pdf: ""});
     const [rows, setRows] = useState([
-      { id: Date.now(), title: '', topic: '', link: '' }
+      { id: Date.now(), title: '', topic: '', link: '', assesment_pdf: '' }
     ]);
     
     const [curriculumData, setCurriculumData] = useState({
@@ -101,7 +101,7 @@ const [filterData, setFilterData] = useState({
             setRows(updatedRows);
           };
           const addRow = () => {
-            setRows([...rows, { id: Date.now(), title: '', topic: '', link: '' }]);
+            setRows([...rows, { id: Date.now(), title: '', topic: '', link: '', assesment_pdf: '' }]);
           };
           
           const deleteRow = (id) => {
@@ -135,7 +135,9 @@ const [filterData, setFilterData] = useState({
                  curriculum_pdf:"",
                     date:"",
                     title:"",
-                    topic:""
+                    link: "",
+                    topic:"",
+                    assesment_pdf: ""
                  });
          }      
     const handleClose = () => {
@@ -230,6 +232,7 @@ const [filterData, setFilterData] = useState({
             title: editedRow.title,
             topic: editedRow.topic,
             link: editedRow.link,
+            assesment_pdf: editedRow.assesment_pdf,
           };
       
           formData.append("curriculumData", JSON.stringify(curriculumData));
@@ -300,9 +303,6 @@ const [filterData, setFilterData] = useState({
         curriculum_pdf: e.target.files[0], // this must be a File object
       }));
   };   
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);         
-        }
         const handleClickOpen = (row) => {
             setEditedRow(row)
             setOpen(true);             
@@ -336,6 +336,7 @@ const [filterData, setFilterData] = useState({
         title: row.title || "",
         topic: row.topic || "",
         link: row.link || "",
+        assesment_pdf: row.assesment_pdf || "",
         date: currentDate,
       }));
   
@@ -374,7 +375,7 @@ const [filterData, setFilterData] = useState({
       alert("All curriculum entries added successfully.");
       setShowAddCourse(false);
       setCurriculumData({});
-      setRows([{ id: Date.now(), title: "", topic: "", link: "" }]); // Reset to initial row
+      setRows([{ id: Date.now(), title: "", topic: "", link: "", assesment_pdf: "" }]); // Reset to initial row
     } 
     // else {
     //   alert("Some entries failed to upload. Please check the console for errors.");
@@ -445,10 +446,11 @@ const [filterData, setFilterData] = useState({
       <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align='center' sx={{ fontSize: '16px', width: '35%' }}> Title</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Topic</StyledTableCell>
+            <StyledTableCell align='center' sx={{ fontSize: '16px', width: '25%' }}> Title</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px', width: '30%' }}>Topic</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Video Link</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px', width: '180px' }}>Add/Delete Row</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Assesment</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px', width: '120px' }}>Add/Delete Row</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -465,6 +467,7 @@ const [filterData, setFilterData] = useState({
     <StyledTableCell align='center'>
       <ReactQuill
         theme="snow"
+        whiteSpace="wrap"
         modules={quillModules}
         value={row.topic}
         onChange={(value) =>
@@ -482,6 +485,14 @@ const [filterData, setFilterData] = useState({
         name='link'
         value={row.link}
         onChange={(e) => handleRowChange(index, 'link', e.target.value)}
+      />
+    </StyledTableCell>
+    <StyledTableCell align='center'>
+      <input
+        className='table-curriculum'
+        name='assesment_pdf'
+        value={row.assesment_pdf}
+        onChange={(e) => handleRowChange(index, 'assesment_pdf', e.target.value)}
       />
     </StyledTableCell>
     <StyledTableCell align='center'>
@@ -651,6 +662,7 @@ const [filterData, setFilterData] = useState({
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Topic</StyledTableCell>
             <StyledTableCell align="center">Video Link</StyledTableCell>
+            <StyledTableCell align="center">Assesment</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Curriculum pdf</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
@@ -678,6 +690,7 @@ const [filterData, setFilterData] = useState({
     )}
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
+      <StyledTableCell align="left">{course.assesment_pdf}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="left" style={{ width: '100px' }}>
         {course.curriculum_pdf ? (
@@ -804,6 +817,9 @@ const [filterData, setFilterData] = useState({
 
     <label htmlFor="topic">Video Link</label>
     <input id="link" className="form-control" name='link' value={editedRow.link || ""}
+      onChange={handleInputChange}/>
+    <label htmlFor="topic">Assesment</label>
+    <input id="assesment_pdf" className="form-control" name='assesment_pdf' value={editedRow.assesment_pdf || ""}
       onChange={handleInputChange}/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>

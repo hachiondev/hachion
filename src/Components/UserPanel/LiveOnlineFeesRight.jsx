@@ -25,6 +25,7 @@ const countryToCurrencyMap = {
 };
 
 const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
+  
   const { courseName } = useParams();
   const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   const [discountPercentage, setDiscountPercentage] = useState(0);
 
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); 
+  const [messageType, setMessageType] = useState(''); // 'success' or 'error'
 
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [resendExceeded, setResendExceeded] = useState(false);
@@ -207,7 +208,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     let studentId = '';
     let mobile = '';
     try {
-      
+      // Fetch studentId via API
       const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
@@ -221,21 +222,23 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         return;
       }
     } catch (error) {
-  console.error('Error fetching studentId:', error);
-
-  const backendMessage =
-    error.response?.data?.message ||  
-    error.response?.data ||          
-    'Unable to fetch your student ID. Please try again later.'; 
-
-  setMessage(backendMessage);
-  setMessageType('error');
-  return;
-}
+      console.error('Error fetching studentId:', error);
+      setMessage('Unable to fetch your student ID. Please try again later.');
+      setMessageType('error');
+      return;
+    }
 
     if (modeType === 'live' && enrollText === 'Enroll Now') {
       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/enroll/${formattedCourseName}`);
+      
+        navigate(`/enroll/${formattedCourseName}`, {
+    state: {
+      selectedBatchData,
+      enrollText,
+      modeType
+    }
+  });
+      
       return;
     }
 
@@ -281,13 +284,8 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         setShowResend(true);
       } catch (error) {
         console.error('Error enrolling in demo:', error);
-         const backendMessage =
-    error.response?.data?.message || 
-    error.response?.data ||          
-    'Error occurred while enrolling.';
-
-  setMessage(backendMessage);
-  setMessageType('error');
+        setMessage('Error occurred while enrolling.');
+        setMessageType('error');
       }
     }
   };

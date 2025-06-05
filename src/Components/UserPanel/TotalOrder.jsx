@@ -58,7 +58,7 @@ export default function TotalOrder() {
           <TableHead>
             <TableRow>
               <TableCell className="table-cell-left">Course Name</TableCell>
-              <TableCell align="right" className="table-cell-right">
+              <TableCell align="right" className="table-cell-right" style={{whiteSpace: 'wrap'}}>
                 {courseData.courseName}
               </TableCell>
             </TableRow>

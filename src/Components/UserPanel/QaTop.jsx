@@ -186,7 +186,40 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     }
   }; 
 
-  if (loading) return <div>Loading...</div>;
+ if (loading) {
+  return (
+    <div className='qa-automation'>
+      <div className="qa-automation-skeleton"></div>
+    <div className="skeleton-box skeleton-title"></div>
+      <div className='qa-inside'>
+        <div className='qa-left-part'>
+          <div className='skeleton skeleton-title'></div>
+          <div className='qa-automation-left'>
+            <div className='skeleton skeleton-img'></div>
+            <div className='qa-automation-middle'>
+              <div className='skeleton skeleton-text' style={{ width: '80%' }}></div>
+              <div className='skeleton skeleton-text' style={{ width: '60%' }}></div>
+            </div>
+          </div>
+          <div className='skeleton skeleton-text'></div>
+        </div>
+
+        <div className='qa-right'>
+          <div className='skeleton skeleton-img'></div>
+        </div>
+      </div>
+
+      <div className='qa-button-container'>
+        <div className='qa-button'>
+          <div className='skeleton skeleton-button'></div>
+          <div className='skeleton skeleton-button'></div>
+        </div>
+        <div className='skeleton skeleton-button'></div>
+      </div>
+    </div>
+  );
+}
+
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
 

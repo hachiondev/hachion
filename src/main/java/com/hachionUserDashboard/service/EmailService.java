@@ -406,7 +406,7 @@ public class EmailService {
 
 			helper.setTo(toEmail);
 			helper.setCc("hachion.trainings@gmail.com");
-			helper.setSubject("Your Exclusive Demo Session - " + safeTechnologyName);
+			helper.setSubject("Your Exclusive Live Class - " + safeTechnologyName);
 			helper.setText(htmlContent, true);
 
 			helper.addInline("hachion-logo", new ClassPathResource("templates/hachion_whiltecolour.png"));

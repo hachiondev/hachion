@@ -33,8 +33,6 @@ import com.hachionUserDashboard.repository.CourseScheduleRepository;
 import Service.Schedule;
 
 @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
-
 @RestController
 public class ScheduleController {
 
@@ -97,69 +95,11 @@ public class ScheduleController {
 		return coursescheduleList;
 	}
 
-//	@GetMapping("/schedulecourse")
-//	public List<CourseSchedule> getAllCourseSchedule(@RequestParam(defaultValue = "UTC") String timezone,
-//			@RequestParam(defaultValue = "user") String userType) {
-//		List<CourseSchedule> coursescheduleList = repo.findAll();
-//		if ("admin".equalsIgnoreCase(userType)) {
-//			return coursescheduleList;
-//		}
-//
-//		for (CourseSchedule schedule : coursescheduleList) {
-//			try {
-//
-//				String inputDateTimeStr = schedule.getSchedule_date() + " " + schedule.getSchedule_time();
-//
-//				DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
-//				LocalDateTime istDateTime = LocalDateTime.parse(inputDateTimeStr, inputFormatter);
-//
-//				ZonedDateTime istZoned = istDateTime.atZone(ZoneId.of("Asia/Kolkata"));
-//				ZonedDateTime userZoned = istZoned.withZoneSameInstant(ZoneId.of(timezone));
-//
-//				String convertedDate = userZoned.toLocalDate().toString();
-//
-//				String convertedTime = userZoned.toLocalTime()
-//						.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
-//				String timeZoneAbbreviation = userZoned.format(DateTimeFormatter.ofPattern("zzz", Locale.ENGLISH));
-//				String finalTime = convertedTime + " " + timeZoneAbbreviation;
-//
-//				schedule.setSchedule_date(convertedDate);
-//				schedule.setSchedule_time(finalTime);
-//
-//				String weekDay = userZoned.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-//				schedule.setSchedule_week(weekDay);
-//
-//			} catch (DateTimeParseException e) {
-//
-//			}
-//		}
-//
-//		return coursescheduleList;
-//	}
-
-//	    @GetMapping("/trainers/{id}")
-//	    public Trainer getTrainer(@PathVariable int id) {
-//	    Trainer trainer=	repo.findById(id).get()	;
-//		return null;
-//	    	}
-//	@GetMapping("/schedulecourse")
-//	public List<CourseSchedule> getAllCourseSchedule() {
-//		List<CourseSchedule> courseschedule = repo.findAll();
-//		return courseschedule;
-//	}
-
 	@PostMapping("/schedulecourse/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void createCourse(@RequestBody CourseSchedule courseschedule) {
 		repo.save(courseschedule);
 	}
-
-	/*
-	 * @PutMapping("trainer/update/{id}") public Trainer
-	 * updateTrainers(@PathVariable int id) { Trainer trainer=
-	 * repo.findById(id).get(); trainer.setTrainer_name("");
-	 * trainer.setCategory_name(""); repo.save(trainer); return trainer; }
-	 */
 
 	@PutMapping("/schedulecourse/update/{id}")
 	public ResponseEntity<CourseSchedule> updateCourseSchedule(@PathVariable int id,
@@ -205,22 +145,14 @@ public class ScheduleController {
 		this.scheduleservice = scheduleservice;
 	}
 
-	/*
-	 * @DeleteMapping("trainer/delete/{id}") public ResponseEntity<?>
-	 * deleteTrainer(@PathVariable Long id) {
-	 * System.out.println("Received trainerId: " + id); // Log to console return
-	 * ResponseEntity.ok("Trainer deleted successfully"); }
-	 * 
-	 */
+	@GetMapping("/schedulecourse/all")
+	public ResponseEntity<?> getAllCourseNames() {
+		List<String> courseNames = repo.findAllCourseNames();
 
-	 @GetMapping("/schedulecourse/all")
-	    public ResponseEntity<?> getAllCourseNames() {
-	        List<String> courseNames = repo.findAllCourseNames();
+		if (courseNames.isEmpty()) {
+			return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); // No courses available
+		}
 
-	        if (courseNames.isEmpty()) {
-	            return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); // No courses available
-	        }
-
-	        return new ResponseEntity<>(courseNames, HttpStatus.OK); // Return course names only
-	    }
+		return new ResponseEntity<>(courseNames, HttpStatus.OK); // Return course names only
+	}
 }

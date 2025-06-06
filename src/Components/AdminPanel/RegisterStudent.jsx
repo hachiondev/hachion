@@ -40,7 +40,7 @@ export default function RegisterStudent() {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     useEffect(() => {
-        axios.get("https://api.hachion.co/api/v1/user/students")
+        axios.get("http://localhost:8080/api/v1/user/students")
             .then((response) => {
                 setEnrollData(response.data);
             })

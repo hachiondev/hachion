@@ -104,7 +104,7 @@ const [currentPage, setCurrentPage] = useState(1);
         console.log("filteredTraining:", filteredTraining);
  
         useEffect(() => {
-  axios.get("https://api.hachion.co/kids-summer-training")
+  axios.get("http://localhost:8080/kids-summer-training")
     .then((response) => {
        console.log("API response:", response.data);
       setSummerTraining(response.data); // Populate data here

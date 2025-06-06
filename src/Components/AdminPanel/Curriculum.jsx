@@ -31,6 +31,8 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'
+import { FiUpload, FiFileText } from "react-icons/fi";
+import { FaTimesCircle } from 'react-icons/fa';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -77,9 +79,9 @@ const [filterData, setFilterData] = useState({
 });
 
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:"", assesment_pdf: ""});
+    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:"", assessment_pdf: ""});
     const [rows, setRows] = useState([
-      { id: Date.now(), title: '', topic: '', link: '', assesment_pdf: '' }
+      { id: Date.now(), title: '', topic: '', link: '', assessment_pdf: '' }
     ]);
     
     const [curriculumData, setCurriculumData] = useState({
@@ -100,8 +102,18 @@ const [filterData, setFilterData] = useState({
             updatedRows[index][field] = value;
             setRows(updatedRows);
           };
+          const handlePdfUpload = (index, event) => {
+          const file = event.target.files[0];
+          if (file && file.type === 'application/pdf') {
+            const updatedRows = [...rows];
+            updatedRows[index].assessment_pdf = file;
+            setRows(updatedRows);
+          } else {
+            alert('Please upload a valid PDF file.');
+          }
+        };
           const addRow = () => {
-            setRows([...rows, { id: Date.now(), title: '', topic: '', link: '', assesment_pdf: '' }]);
+            setRows([...rows, { id: Date.now(), title: '', topic: '', link: '', assessment_pdf: '' }]);
           };
           
           const deleteRow = (id) => {
@@ -137,7 +149,7 @@ const [filterData, setFilterData] = useState({
                     title:"",
                     link: "",
                     topic:"",
-                    assesment_pdf: ""
+                    assessment_pdf: ""
                  });
          }      
     const handleClose = () => {
@@ -146,7 +158,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("http://localhost:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -157,7 +169,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -188,7 +200,7 @@ const [filterData, setFilterData] = useState({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/curriculum");
+        const response = await axios.get("http://localhost:8080/curriculum");
         setAllData(response.data);
         setFilteredCurriculum(response.data); 
       } catch (error) {
@@ -232,7 +244,7 @@ const [filterData, setFilterData] = useState({
             title: editedRow.title,
             topic: editedRow.topic,
             link: editedRow.link,
-            assesment_pdf: editedRow.assesment_pdf,
+            assessment_pdf: editedRow.assessment_pdf,
           };
       
           formData.append("curriculumData", JSON.stringify(curriculumData));
@@ -243,7 +255,7 @@ const [filterData, setFilterData] = useState({
             formData.append("curriculumPdf", editedRow.curriculum_pdf);
           }      
           const response = await axios.put(
-            `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+            `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
             formData,
             {
               headers: {
@@ -274,7 +286,7 @@ const [filterData, setFilterData] = useState({
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`http://localhost:8080/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -336,7 +348,7 @@ const [filterData, setFilterData] = useState({
         title: row.title || "",
         topic: row.topic || "",
         link: row.link || "",
-        assesment_pdf: row.assesment_pdf || "",
+        assessment_pdf: row.assessment_pdf || "",
         date: currentDate,
       }));
   
@@ -346,7 +358,7 @@ const [filterData, setFilterData] = useState({
       }
   
       try {
-        const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+        const response = await axios.post("http://localhost:8080/curriculum/add", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -375,7 +387,7 @@ const [filterData, setFilterData] = useState({
       alert("All curriculum entries added successfully.");
       setShowAddCourse(false);
       setCurriculumData({});
-      setRows([{ id: Date.now(), title: "", topic: "", link: "", assesment_pdf: "" }]); // Reset to initial row
+      setRows([{ id: Date.now(), title: "", topic: "", link: "", assessment_pdf: "" }]); // Reset to initial row
     } 
     // else {
     //   alert("Some entries failed to upload. Please check the console for errors.");
@@ -449,7 +461,7 @@ const [filterData, setFilterData] = useState({
             <StyledTableCell align='center' sx={{ fontSize: '16px', width: '25%' }}> Title</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px', width: '30%' }}>Topic</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Video Link</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Assesment</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '16px' }}>Assessment PDF</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '16px', width: '120px' }}>Add/Delete Row</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -464,21 +476,27 @@ const [filterData, setFilterData] = useState({
         onChange={(e) => handleRowChange(index, 'title', e.target.value)}
       />
     </StyledTableCell>
-    <StyledTableCell align='center'>
-      <ReactQuill
-        theme="snow"
-        whiteSpace="wrap"
-        modules={quillModules}
-        value={row.topic}
-        onChange={(value) =>
-          setRows((prevRows) =>
-            prevRows.map((r) =>
-              r.id === row.id ? { ...r, topic: value } : r
-            )
+    <StyledTableCell align='center' style={{ maxWidth: 300, overflow: 'hidden' }}>
+  <div style={{ maxWidth: '100%' }}>
+    <ReactQuill
+      theme="snow"
+      modules={quillModules}
+      value={row.topic}
+      onChange={(value) =>
+        setRows((prevRows) =>
+          prevRows.map((r) =>
+            r.id === row.id ? { ...r, topic: value } : r
           )
-        }
-      />
-    </StyledTableCell>
+        )
+      }
+      style={{
+        width: '100%',
+        wordWrap: 'break-word',
+        overflowWrap: 'break-word',
+      }}
+    />
+  </div>
+</StyledTableCell>
     <StyledTableCell align='center'>
       <input
         className='table-curriculum'
@@ -487,14 +505,60 @@ const [filterData, setFilterData] = useState({
         onChange={(e) => handleRowChange(index, 'link', e.target.value)}
       />
     </StyledTableCell>
-    <StyledTableCell align='center'>
-      <input
-        className='table-curriculum'
-        name='assesment_pdf'
-        value={row.assesment_pdf}
-        onChange={(e) => handleRowChange(index, 'assesment_pdf', e.target.value)}
-      />
-    </StyledTableCell>
+      <StyledTableCell align="center">
+    {row.assessment_pdf ? (
+      <div style={{ position: 'relative', display: 'inline-block', maxWidth: 200 }}>
+        <div
+          style={{
+            padding: '6px 12px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: 4,
+            border: '1px solid #ccc',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            cursor: 'pointer',
+          }}
+          onClick={() =>
+            window.open(URL.createObjectURL(row.assessment_pdf), '_blank')
+          }
+        >
+          <FiFileText size={20} />
+          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {row.assessment_pdf.name}
+          </span>
+        </div>
+
+        <FaTimesCircle
+          style={{
+            position: 'absolute',
+            top: -8,
+            right: -8,
+            fontSize: '1rem',
+            color: 'red',
+            cursor: 'pointer',
+            backgroundColor: '#fff',
+            borderRadius: '50%',
+          }}
+          onClick={() => {
+            const updatedRows = [...rows];
+            updatedRows[index].assessment_pdf = null;
+            setRows(updatedRows);
+          }}
+        />
+      </div>
+    ) : (
+      <label style={{ cursor: 'pointer' }}>
+        <FiUpload className="edit" />
+        <input
+          type="file"
+          accept=".pdf"
+          style={{ display: 'none' }}
+          onChange={(e) => handlePdfUpload(index, e)}
+        />
+      </label>
+    )}
+  </StyledTableCell>
     <StyledTableCell align='center'>
       <GoPlus onClick={addRow} style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }} />
       <IoClose onClick={() => deleteRow(row.id)} style={{ fontSize: '2rem', color: 'red' }} />
@@ -602,44 +666,6 @@ const [filterData, setFilterData] = useState({
           ))}
         </select>
       </div>
-{/* <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select
-  id="inputState"
-  className="form-select"
-  name="category_name"
-  value={filterData.category_name}
-  onChange={handlefilterChange}
->
-  <option value="" disabled>Select Category</option>
-  {course.map((curr) => (
-    <option key={curr.id} value={curr.name}>{curr.name}</option>
-  ))}
-</select>
-</div>
-<div className="col-md-3">
-<label htmlFor="course" className="form-label">Course Name</label>
-
-<select
-  id="course"
-  className="form-select"
-  name="course_name"
-  value={filterData.course_name}
-  onChange={handlefilterChange}
-  
->
-  <option value="" disabled>Select Course</option>
-  {courseCategory.map((curr) => (
-    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-  ))}
-</select>
-      </div> */}
-  {/* <div class="mb-3">
-  <label for="formFile" class="form-label">Curriculum PDF</label>
-  <input class="form-control" type="file" id="formFile"
-          name="curriculum_pdf"
-          onChange={handleChange}/>
-</div> */}
 <div style={{marginTop: '50px'}}>
   <button className="filter" onClick={() => {
   setFilterData({ category_name: "", course_name: "" });
@@ -655,17 +681,17 @@ const [filterData, setFilterData] = useState({
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell  align='center' sx={{ width: '100px' }}>
+            <StyledTableCell  align='center' sx={{ width: '50px' }}>
               <Checkbox />
             </StyledTableCell>
-            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
+            <StyledTableCell align='center' sx={{ width: '50px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Topic</StyledTableCell>
             <StyledTableCell align="center">Video Link</StyledTableCell>
-            <StyledTableCell align="center">Assesment</StyledTableCell>
+            <StyledTableCell align="center">Assessment PDF</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center">Curriculum pdf</StyledTableCell>
-            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
+            <StyledTableCell align="center">Curriculum PDF</StyledTableCell>
+            <StyledTableCell align="center" sx={{ width: '100px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -690,7 +716,7 @@ const [filterData, setFilterData] = useState({
     )}
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
-      <StyledTableCell align="left">{course.assesment_pdf}</StyledTableCell>
+      <StyledTableCell align="left">{course.assessment_pdf}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="left" style={{ width: '100px' }}>
         {course.curriculum_pdf ? (
@@ -711,7 +737,11 @@ const [filterData, setFilterData] = useState({
     </StyledTableRow>
   ))
 ) : (
-  <p>No categories available</p>
+  <StyledTableRow>
+        <StyledTableCell colSpan={9} align="center">
+          No data available.
+        </StyledTableCell>
+      </StyledTableRow>
 )}
 </TableBody>
     </Table>
@@ -818,16 +848,13 @@ const [filterData, setFilterData] = useState({
     <label htmlFor="topic">Video Link</label>
     <input id="link" className="form-control" name='link' value={editedRow.link || ""}
       onChange={handleInputChange}/>
-    <label htmlFor="topic">Assesment</label>
-    <input id="assesment_pdf" className="form-control" name='assesment_pdf' value={editedRow.assesment_pdf || ""}
+    <label htmlFor="topic">Assessment PDF</label>
+    <input id="assessment_pdf" className="form-control" name='assessment_pdf' value={editedRow.assessment_pdf || ""}
       onChange={handleInputChange}/>
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>
   </DialogActions>
 </Dialog>
-
-   
-   
  </> );
 }

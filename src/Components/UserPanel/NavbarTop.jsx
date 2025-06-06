@@ -43,8 +43,8 @@ const NavbarTop = () => {
     const fetchCoursesAndBlogs = async () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
-          axios.get('https://api.hachion.co/courses/all'),
-          axios.get('https://api.hachion.co/blog'),
+          axios.get('http://localhost:8080/courses/all'),
+          axios.get('http://localhost:8080/blog'),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -312,8 +312,8 @@ const NavbarTop = () => {
               className="result-image"
               src={
                 item.type === 'course'
-                  ? `https://api.hachion.co/${item.courseImage}`
-                  : `https://api.hachion.co/blogs/${item.blog_image}`
+                  ? `http://localhost:8080/${item.courseImage}`
+                  : `http://localhost:8080/blogs/${item.blog_image}`
               }
               alt={item.type}
             />

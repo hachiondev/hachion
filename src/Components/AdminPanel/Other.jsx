@@ -142,7 +142,7 @@ export default function Other() {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/banner");
+        const response = await axios.get("http://localhost:8080/banner");
         console.log(response.data);
         setBanner(response.data); // Use the curriculum state
         setFilteredBanner(response.data);
@@ -203,7 +203,7 @@ export default function Other() {
 
       // Send the update request
       const response = await axios.put(
-        `https://api.hachion.co/banner/update/${editedData.banner_id}`,
+        `http://localhost:8080/banner/update/${editedData.banner_id}`,
         formDataToSend,
         {
           headers: {
@@ -236,7 +236,7 @@ export default function Other() {
   const handleDelete = async (banner_id) => {
     try {
       const response = await axios.delete(
-        `https://api.hachion.co/banner/delete/${banner_id}`
+        `http://localhost:8080/banner/delete/${banner_id}`
       );
       console.log("Banner deleted successfully:", response.data);
       setFilteredBanner((prev) =>
@@ -269,7 +269,7 @@ export default function Other() {
 
   const fetchBanners = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/banner");
+      const response = await axios.get("http://localhost:8080/banner");
       setFilteredBanner(response.data);
     } catch (error) {
       console.error("Error fetching banners:", error);
@@ -329,7 +329,7 @@ export default function Other() {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/banner/add",
+        "http://localhost:8080/banner/add",
         formDataToSend
       );
       console.log(response.data);
@@ -585,7 +585,7 @@ export default function Other() {
                       <StyledTableCell align="center">
                         {curr.banner_image ? (
                           <img
-                            src={`https://api.hachion.co/${curr.banner_image}`}
+                            src={`http://localhost:8080/${curr.banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />
@@ -601,7 +601,7 @@ export default function Other() {
                       <StyledTableCell align="center">
                         {curr.home_banner_image ? (
                           <img
-                            src={`https://api.hachion.co/${curr.home_banner_image}`}
+                            src={`http://localhost:8080/${curr.home_banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />

@@ -156,7 +156,7 @@ const ContactUs = () => {
     };
   
     try {
-      const response = await axios.post("https://api.hachion.co/haveanyquery/add", requestData, {
+      const response = await axios.post("http://localhost:8080/haveanyquery/add", requestData, {
         headers: { "Content-Type": "application/json" }
       });
   

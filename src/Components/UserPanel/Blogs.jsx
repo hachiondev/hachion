@@ -18,7 +18,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("http://localhost:8080/course-categories/all");
         setCategories(response.data); // assuming the API returns an array of categories
       } catch (error) {
         console.error("Error fetching categories:", error);

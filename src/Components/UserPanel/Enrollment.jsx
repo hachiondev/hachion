@@ -108,7 +108,7 @@
         if (!email) return;
 
         try {
-          const response = await axios.get('https://api.hachion.co/api/v1/user/students');
+          const response = await axios.get('http://localhost:8080/api/v1/user/students');
           const allStudents = response.data;
 
           const matchedStudent = allStudents.find((student) => student.email === email);
@@ -148,7 +148,7 @@
 
     try {
       // Fetch studentId via API
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`http://localhost:8080/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -184,7 +184,7 @@
     };
 
     try {
-      const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+      const response = await axios.post('http://localhost:8080/enroll/add', payload);
 
       if (response.data.status === 201) {
         setSuccessMessage("✅ Registered Successfully.");

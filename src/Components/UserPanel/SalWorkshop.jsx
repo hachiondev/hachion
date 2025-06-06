@@ -108,7 +108,7 @@ const SalWorkshop = () => {
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/workshopschedule');
+        const response = await axios.get('http://localhost:8080/workshopschedule');
         setWorkshops(response.data);
       } catch (error) {
       }
@@ -169,7 +169,7 @@ const SalWorkshop = () => {
     };
 
     try {
-      const response = await axios.post("https://api.hachion.co/workshops", updatedFormData);
+      const response = await axios.post("http://localhost:8080/workshops", updatedFormData);
       setError("Registration for workshop done successfully");
       setMessageType('success');
     } catch (error) {
@@ -206,7 +206,7 @@ const SalWorkshop = () => {
   useEffect(() => {
     const fetchWorkshop = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/workshopschedule');
+        const response = await axios.get('http://localhost:8080/workshopschedule');
         const workshops = response.data;
 
         // Recreate the slug to find the correct workshop
@@ -279,7 +279,7 @@ const SalWorkshop = () => {
         <div className='about-banner'>
             <img
             src={workshop?.banner_image && workshop.banner_image.trim() !== ""
-                  ? `https://api.hachion.co/${workshop.banner_image}` 
+                  ? `http://localhost:8080/${workshop.banner_image}` 
                   : Banner2}
             alt="Workshop Banner"
             onError={handleImageError}

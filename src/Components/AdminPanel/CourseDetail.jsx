@@ -74,7 +74,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("http://localhost:8080/course-categories/all");
         setCourse(response.data); 
       } catch (error) {
       }
@@ -84,7 +84,7 @@ const CourseDetail = ({
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //         try {
-//             const response = await axios.get('https://api.hachion.co/courses/all');
+//             const response = await axios.get('http://localhost:8080/courses/all');
 //             setCategories(response.data); 
 //         } catch (error) {
 //         }
@@ -95,7 +95,7 @@ const CourseDetail = ({
 useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('https://api.hachion.co/courses/all');
+            const response = await axios.get('http://localhost:8080/courses/all');
             setCategories(response.data);
             setFilteredCourses(response.data); 
         } catch (error) {
@@ -186,7 +186,7 @@ const handleSubmit = async (e) => {
   try {
     if (formMode === "Edit") {
       const response = await axios.put(
-        `https://api.hachion.co/courses/update/${formData.id}`,
+        `http://localhost:8080/courses/update/${formData.id}`,
         formNewData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -203,7 +203,7 @@ const handleSubmit = async (e) => {
       }
     } else {
       
-      const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
+      const response = await axios.post("http://localhost:8080/courses/add", formNewData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -223,7 +223,7 @@ const handleSubmit = async (e) => {
 const handleEditClick = async (courseId) => {
   setShowAddCourse(true);
   try {
-    const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+    const response = await fetch(`http://localhost:8080/courses/${courseId}`);
     if (response.ok) {
       const course = await response.json();
       
@@ -304,7 +304,7 @@ const handleDeleteConfirmation = (id) => {
 };
 const handleDelete = async (id) => {
   try {
-    const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
+    const response = await axios.delete(`http://localhost:8080/courses/delete/${id}`);
     
     if (response.status === 200) {
       setSuccessMessage("✅ Course deleted successfully.");
@@ -724,7 +724,7 @@ const handleAddTrendingCourseClick = () => {
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
                           {course.courseImage
-                            ? <img src={`https://api.hachion.co/${course.courseImage}`} alt="Course" width="50" />
+                            ? <img src={`http://localhost:8080/${course.courseImage}`} alt="Course" width="50" />
                             : 'No Image'}
                         </StyledTableCell>
                         <StyledTableCell align="left">{course.courseName}</StyledTableCell>

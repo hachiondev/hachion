@@ -157,7 +157,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("http://localhost:8080/course-categories/all");
           setCourse(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -188,7 +188,7 @@ export default function Faq() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("http://localhost:8080/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -270,7 +270,7 @@ export default function Faq() {
           }
       
           const response = await axios.put(
-            `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
+            `http://localhost:8080/faq/update/${editedRow.faq_id}`,
             formData,
             {
               headers: {
@@ -329,7 +329,7 @@ export default function Faq() {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const response = await axios.get("https://api.hachion.co/faq");
+              const response = await axios.get("http://localhost:8080/faq");
               setAllData(response.data);
               setFilteredCurriculum(response.data); // Used for paginated display
             } catch (error) {
@@ -341,7 +341,7 @@ export default function Faq() {
       const handleDelete = async (faq_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`); 
+          const response = await axios.delete(`http://localhost:8080/faq/delete/${faq_id}`); 
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
@@ -418,7 +418,7 @@ const handleSubmit = async (e) => {
     }
 
     try {
-      const response = await axios.post("https://api.hachion.co/faq/add", formData, {
+      const response = await axios.post("http://localhost:8080/faq/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

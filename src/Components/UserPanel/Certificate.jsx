@@ -26,7 +26,7 @@ export default function Certificate() {
 
       try {
         // Fetch data using studentName in the URL
-        const response = await fetch(`https://api.hachion.co/certificate/byname/${studentName}`);
+        const response = await fetch(`http://localhost:8080/certificate/byname/${studentName}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -71,7 +71,7 @@ export default function Certificate() {
                     <TableCell align="center">{certificate.completionDate}</TableCell>
                     <TableCell align="center">
                     <a
-    href={`https://api.hachion.co/download/filename/${certificate.certificatePath.replace('certificates/', '')}`}
+    href={`http://localhost:8080/download/filename/${certificate.certificatePath.replace('certificates/', '')}`}
     target="_blank"
     rel="noopener noreferrer"
   >

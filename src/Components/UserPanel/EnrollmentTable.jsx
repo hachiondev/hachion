@@ -41,7 +41,7 @@ export default function EnrollmentTable() {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         
         // Match course from URL
         const matchedCourse = response.data.find(

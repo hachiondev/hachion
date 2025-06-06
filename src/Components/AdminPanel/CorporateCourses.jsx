@@ -66,9 +66,9 @@ export default function CorporateCourses() {
   const fetchCourses = async () => {
     try {
       const [catRes, courseRes, corpRes] = await Promise.all([
-        axios.get("https://api.hachion.co/course-categories/all"),
-        axios.get("https://api.hachion.co/courses/all"),
-        axios.get("https://api.hachion.co/corporatecourse")
+        axios.get("http://localhost:8080/course-categories/all"),
+        axios.get("http://localhost:8080/courses/all"),
+        axios.get("http://localhost:8080/corporatecourse")
       ]);
       setCategory(catRes.data);
       setCourse(courseRes.data);
@@ -98,7 +98,7 @@ export default function CorporateCourses() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://api.hachion.co/corporatecourse/add", courseData);
+      const response = await axios.post("http://localhost:8080/corporatecourse/add", courseData);
       if (response.status === 201) {
         alert(response.data);
         fetchCourses();
@@ -110,7 +110,7 @@ export default function CorporateCourses() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/corporatecourse/update/${editedData.corporatecourse_id}`, editedData);
+      const response = await axios.put(`http://localhost:8080/corporatecourse/update/${editedData.corporatecourse_id}`, editedData);
       fetchCourses();
       setMessage("Course updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -121,7 +121,7 @@ export default function CorporateCourses() {
   };
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this Course?")) {
-      await axios.delete(`https://api.hachion.co/corporatecourse/delete/${id}`);
+      await axios.delete(`http://localhost:8080/corporatecourse/delete/${id}`);
       fetchCourses();
     }
   };

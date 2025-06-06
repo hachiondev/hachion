@@ -108,7 +108,7 @@ export default function CandidateCertificate() {
     };
   
     try {
-      const response = await fetch('https://api.hachion.co/certificate/generate', {
+      const response = await fetch('http://localhost:8080/certificate/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export default function CandidateCertificate() {
   const handleSave = useCallback(async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/certificate/${editedData.id}`, editedData
+        `http://localhost:8080/certificate/${editedData.id}`, editedData
       );
       setCertificate((prev) =>
         prev.map(curr =>
@@ -194,7 +194,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCourseNames = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/enroll/coursenames');
+        const response = await fetch('http://localhost:8080/enroll/coursenames');
         const data = await response.json();
         
         const formattedData = data.map((courseName, index) => ({
@@ -214,7 +214,7 @@ export default function CandidateCertificate() {
     if (certificateData.course_name) {
       const fetchStudents = async () => {
         try {
-          const response = await fetch(`https://api.hachion.co/api/v1/user/students/${certificateData.course_name}`);
+          const response = await fetch(`http://localhost:8080/api/v1/user/students/${certificateData.course_name}`);
           const data = await response.json();
           setStudents(data); 
         } catch (error) {
@@ -228,7 +228,7 @@ export default function CandidateCertificate() {
     const fetchByStudentId = async () => {
       if (certificateData.student_id) {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?studentId=${certificateData.student_id}`);
+          const res = await fetch(`http://localhost:8080/api/v1/user/lookup?studentId=${certificateData.student_id}`);
           const data = await res.json();
           setCertificateData((prev) => ({
             ...prev,
@@ -246,7 +246,7 @@ export default function CandidateCertificate() {
     const fetchByUserName = async () => {
       if (certificateData.student_name) {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?userName=${certificateData.student_name}`);
+          const res = await fetch(`http://localhost:8080/api/v1/user/lookup?userName=${certificateData.student_name}`);
           const data = await res.json();
           setCertificateData((prev) => ({
             ...prev,
@@ -265,7 +265,7 @@ export default function CandidateCertificate() {
     const fetchCompletionDate = async () => {
       if (certificateData.course_name && certificateData.student_name) {
         try {
-          const res = await fetch('https://api.hachion.co/api/v1/user/completiondate', {
+          const res = await fetch('http://localhost:8080/api/v1/user/completiondate', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -298,7 +298,7 @@ export default function CandidateCertificate() {
     }
   
     try {
-      const response = await fetch(`https://api.hachion.co/certificate/send-email/${certificateId}`, {
+      const response = await fetch(`http://localhost:8080/certificate/send-email/${certificateId}`, {
         method: 'POST',
       });
   
@@ -315,7 +315,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCertificateData = async () => {
       try {
-        const response = await fetch("https://api.hachion.co/certificate/all");
+        const response = await fetch("http://localhost:8080/certificate/all");
         const data = await response.json();
         setCertificateList(data);
       } catch (error) {
@@ -327,7 +327,7 @@ export default function CandidateCertificate() {
   }, []);
   const handleDelete = async (id) => {
            try { 
-            const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
+            const response = await axios.delete(`http://localhost:8080/certificate/delete/${id}`); 
           } catch (error) { 
           } }; 
        useEffect(() => {
@@ -371,7 +371,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCandidateCertificate = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("http://localhost:8080/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -389,7 +389,7 @@ export default function CandidateCertificate() {
     }
   
     try {
-      const response = await fetch(`https://api.hachion.co/certificate/download/${certificateId}`);
+      const response = await fetch(`http://localhost:8080/certificate/download/${certificateId}`);
   
       if (!response.ok) {
         throw new Error("Failed to download certificate.");
@@ -694,7 +694,7 @@ export default function CandidateCertificate() {
         <StyledTableCell align="center">
   {curr.studentId && curr.courseName && curr.completionDate ? (
     <a
-      href={`https://api.hachion.co/download/filename/${curr.studentId}_${curr.courseName.replaceAll(' ', '_')}_${dayjs(curr.completionDate).format('YYYY_MM_DD')}_Certificate.pdf`}
+      href={`http://localhost:8080/download/filename/${curr.studentId}_${curr.courseName.replaceAll(' ', '_')}_${dayjs(curr.completionDate).format('YYYY_MM_DD')}_Certificate.pdf`}
       download
       target="_blank"
       rel="noopener noreferrer"

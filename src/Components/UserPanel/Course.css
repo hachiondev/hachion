@@ -1612,6 +1612,18 @@ color: #006489;
   cursor: pointer;
   animation: pulse 1.5s infinite;
 }
+.assessment-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.assessment-btn:hover {
+  background-color: #e6e6e6;
+}
 
 .view-div{
   display:flex;

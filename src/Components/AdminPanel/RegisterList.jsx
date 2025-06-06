@@ -147,7 +147,7 @@ const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       const fetchStudent = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/registerstudent');
+              const response = await axios.get('http://localhost:8080/registerstudent');
               setRegisterStudent(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching student list:", error.message);
@@ -180,7 +180,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/registerstudent/update/${editedData.student_Id}`,editedData
+                `http://localhost:8080/registerstudent/update/${editedData.student_Id}`,editedData
             );
             setRegisterStudent((prev) =>
                 prev.map(curr =>
@@ -198,7 +198,7 @@ const [currentPage, setCurrentPage] = useState(1);
       const handleDelete = async (id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`); 
+          const response = await axios.delete(`http://localhost:8080/registerstudent/delete/${id}`); 
           console.log("Register Student deleted successfully:", response.data); 
           setSuccessMessage("✅ Student deleted successfully.");
     setErrorMessage("");
@@ -232,7 +232,7 @@ const [currentPage, setCurrentPage] = useState(1);
     const handleUpdate = async () => {
       try {
         const response = await axios.put(
-          `https://api.hachion.co/registerstudent/update/${studentData.student_Id}`,
+          `http://localhost:8080/registerstudent/update/${studentData.student_Id}`,
           studentData
         );
         setRegisterStudent((prev) =>
@@ -268,7 +268,7 @@ const [currentPage, setCurrentPage] = useState(1);
   console.log("Data being sent:", dataToSubmit);
 
   try {
-    const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
+    const response = await axios.post("http://localhost:8080/registerstudent/add", dataToSubmit);
     if (response.status === 200) {
       setSuccessMessage("✅ Student added successfully.");
       setErrorMessage("");

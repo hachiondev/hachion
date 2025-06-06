@@ -127,7 +127,7 @@ const ContactUs = () => {
     try {
       console.log(requestData);
       const response = await axios.post(
-        "https://api.hachion.co/haveanyquery/add",
+        "http://localhost:8080/haveanyquery/add",
         requestData,
         {
           headers: {

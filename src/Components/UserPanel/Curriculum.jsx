@@ -6,6 +6,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
 import loginPopupImg from '../../Assets/loginpopup.png';
 import logo from '../../Assets/logo.png';
+import { FiFileText } from "react-icons/fi";
 
 const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
@@ -30,7 +31,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('http://localhost:8080/courses/all');
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -57,7 +58,7 @@ const Curriculum = () => {
 
     const fetchCurriculum = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/curriculum');
+        const response = await axios.get('http://localhost:8080/curriculum');
         const filteredCurriculum = response.data.filter(
           (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
         );
@@ -106,7 +107,7 @@ const Curriculum = () => {
 
     const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
-      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `http://localhost:8080/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
@@ -146,6 +147,7 @@ const Curriculum = () => {
                 <div className="curriculum-content" onClick={() => handleToggleExpand(index)}>
                   <p>{item.title}</p>
                   <div className="title-right">
+                    <div className="course-row">
                     {videoLinks.length > 0 &&
                       videoLinks.map((videoLink, i) => {
                         const validUrl = videoLink.startsWith('http')
@@ -156,7 +158,7 @@ const Curriculum = () => {
                             key={i}
                             className="play-btn"
                             onClick={(e) => {
-                              e.stopPropagation(); // prevent expand toggle
+                              e.stopPropagation();
                               window.open(validUrl, '_blank', 'noopener,noreferrer');
                             }}
                           >
@@ -164,6 +166,22 @@ const Curriculum = () => {
                           </button>
                         );
                       })}
+
+                    {item.assessment_pdf && (
+                      <button
+                        className="assessment-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const link = item.assessment_pdf.startsWith('http')
+                            ? item.assessment_pdf
+                            : `https://${item.assessment_pdf}`;
+                          window.open(link, '_blank', 'noopener,noreferrer');
+                        }}
+                      >
+                        <FiFileText size={24} color="#00AEEF" /> Assessment
+                      </button>
+                    )}
+                  </div>
                     <span className="expand-icon">{expandedTopics[index] ? <FaMinus /> : <FaPlus />}</span>
                   </div>
                 </div>

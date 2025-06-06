@@ -14,7 +14,7 @@ const AdminLogin = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/adminlogin', { email, password });
+      const response = await axios.post('http://localhost:8080/api/v1/user/adminlogin', { email, password });
       if (response.status === 200 && response.data.status) {
         localStorage.setItem('isAdminLoggedIn', 'true');
         localStorage.setItem('adminEmail', email);

@@ -20,7 +20,7 @@ export const LiveOnlineFees = () => {
       try {
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        const response = await axios.get(`https://api.hachion.co/schedulecourse?timezone=${userTimezone}`);
+        const response = await axios.get(`http://localhost:8080/schedulecourse?timezone=${userTimezone}`);
         setCourses(response.data);
 
         const filteredData = response.data.filter(

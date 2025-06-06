@@ -42,7 +42,7 @@
 </table>
 
 <script>
-fetch('https://api.hachion.co/schedulecourse')
+fetch('http://localhost:8080/schedulecourse')
   .then(response => response.json())
   .then(data => {
     const tableBody = document.querySelector('#scheduleTable tbody');

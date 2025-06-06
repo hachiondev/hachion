@@ -72,6 +72,11 @@
     
 }
 
+.ql-toolbar.ql-snow {
+  flex-wrap: wrap;
+  display: flex;
+}
+
 .icon-container {
     height: 40px;
     width: 40px;

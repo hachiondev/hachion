@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.repository.EnrollRepository;
+import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.hachionUserDashboard.service.EmailService;
 
 import jakarta.mail.MessagingException;
@@ -104,15 +105,12 @@ public class EnrollController {
 		DateTimeFormatter calendarFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")
 				.withZone(ZoneOffset.UTC);
 
-		
-
 		String calendarLink = "https://www.google.com/calendar/render?action=TEMPLATE" + "&text="
 				+ URLEncoder.encode(requestEnroll.getCourse_name() + " Live Demo", "UTF-8") + "&dates="
 				+ calendarFormatter.format(zonedStart) + "/" + calendarFormatter.format(zonedEnd) + "&details="
 				+ URLEncoder.encode("Join our live demo session with trainer " + requestEnroll.getTrainer()
 						+ "!\n\nMeeting Link: " + requestEnroll.getMeeting_link(), "UTF-8")
 				+ "&location=" + URLEncoder.encode("Online", "UTF-8") + "&sf=true&output=xml";
-		
 
 		if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),

@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,7 @@ public class RegisterStudentController {
 		}
 		student.setAdditional_email(null);
 		student.setAdditional_phone(0);
+		student.setDate(LocalDate.now());
 
 		String tempPassword = "Hach@123";
 		String hashedPassword = passwordEncoder.encode(tempPassword);
@@ -172,12 +174,12 @@ public class RegisterStudentController {
 			return ResponseEntity.ok(registerstudent);
 		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
+	
+	
 
 	@DeleteMapping("registerstudent/delete/{id}")
 	public ResponseEntity<?> deleteRegisterStudent(@PathVariable int id) {
-		RegisterStudent registerstudent = repo.findById(id).get();
-		repo.delete(registerstudent);
-		return null;
-
+		repo.deleteById(id);
+		return ResponseEntity.ok("Student deleted successfully.");
 	}
 }

@@ -22,7 +22,7 @@
 			line-height: 1.6;
 		}
 
-		.email-container {
+		.email-container_live {
 			max-width: 650px;
 			margin: 30px auto;
 			background: #ffffff;
@@ -32,15 +32,15 @@
 		}
 
 		/* Header Section */
-		.header {
+		.header_live {
 			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
-			padding: 50px 40px 80px;
+			padding: 40px 30px 30px;
 			text-align: center;
 			position: relative;
 			overflow: hidden;
 		}
 
-		.header::before {
+		.header_live::before {
 			content: '';
 			position: absolute;
 			top: -50px;
@@ -51,7 +51,7 @@
 			background: rgba(255, 255, 255, 0.1);
 		}
 
-		.header::after {
+		.header_live::after {
 			content: '';
 			position: absolute;
 			bottom: -80px;
@@ -62,12 +62,12 @@
 			background: rgba(255, 255, 255, 0.08);
 		}
 
-		.header-content {
+		.header_live-content {
 			position: relative;
 			z-index: 2;
 		}
 
-		.header h1 {
+		.header_live h1 {
 			color: white;
 			font-size: 42px;
 			font-weight: 700;
@@ -75,7 +75,7 @@
 			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 		}
 
-		.header p {
+		.header_live p {
 			color: #e0f0ff;
 			font-size: 20px;
 			max-width: 500px;
@@ -83,7 +83,7 @@
 			line-height: 1.5;
 		}
 
-		.tech-badge {
+		.tech-badge_live {
 			background: rgba(255, 255, 255, 0.15);
 			backdrop-filter: blur(10px);
 			border-radius: 50px;
@@ -98,10 +98,10 @@
 		}
 
 		/* Enrollment Confirmation */
-		.confirmation-section {
+		.confirmation-section_live {
 			background: white;
 			border-radius: 16px;
-			padding: 50px 40px 40px;
+			padding: 30px;
 			margin: -60px 30px 30px;
 			position: relative;
 			z-index: 3;
@@ -109,38 +109,40 @@
 			border: 1px solid rgba(26, 86, 219, 0.1);
 		}
 
-		.confirmation-icon {
+		.confirmation-icon_live {
 			width: 100px;
 			height: 100px;
 			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%);
 			border-radius: 50%;
-			display: flex;
+			display: inline-block;
 			align-items: center;
 			justify-content: center;
+			line-height: 100px;
+			text-align: center;
 			margin: -85px auto 25px;
 			box-shadow: 0 8px 25px rgba(26, 86, 219, 0.4);
 		}
 
-		.confirmation-icon i {
+		.confirmation-icon_live i {
 			font-size: 48px;
 			color: white;
 		}
 
-		.confirmation-content h2 {
+		.confirmation-content_live h2 {
 			color: #1a3d7c;
 			text-align: center;
 			font-size: 32px;
 			margin-bottom: 20px;
 		}
 
-		.confirmation-content p {
+		.confirmation-content_live p {
 			color: #4a5568;
 			font-size: 18px;
 			text-align: center;
 			margin-bottom: 30px;
 		}
 
-		.highlight-box {
+		.highlight-box_live {
 			background: rgba(26, 86, 219, 0.05);
 			border-radius: 12px;
 			padding: 25px;
@@ -148,7 +150,7 @@
 			margin: 30px 0;
 		}
 
-		.highlight-box h3 {
+		.highlight-box_live h3 {
 			color: #1a56db;
 			margin-bottom: 15px;
 			font-size: 22px;
@@ -156,37 +158,37 @@
 			align-items: center;
 		}
 
-		.highlight-box h3 i {
+		.highlight-box_live h3 i {
 			margin-right: 12px;
 		}
 
-		.highlight-box p {
+		.highlight-box_live p {
 			text-align: left;
 			margin-bottom: 15px;
 		}
 
 		/* Class Details */
-		.class-details {
+		.class-details_live {
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			gap: 25px;
-			margin: 40px 0;
+			margin: 30px 0;
 		}
 
-		.detail-card {
+		.detail-card_live {
 			background: rgba(26, 86, 219, 0.03);
 			border-radius: 12px;
-			padding: 25px;
+			padding: 20px;
 			border: 1px solid rgba(26, 86, 219, 0.05);
 			transition: all 0.3s ease;
 		}
 
-		.detail-card:hover {
+		.detail-card_live:hover {
 			transform: translateY(-5px);
 			box-shadow: 0 10px 25px rgba(26, 86, 219, 0.1);
 		}
 
-		.detail-card h4 {
+		.detail-card_live h4 {
 			color: #1a56db;
 			margin-bottom: 15px;
 			font-size: 20px;
@@ -194,26 +196,28 @@
 			align-items: center;
 		}
 
-		.detail-card h4 i {
-			margin-right: 10px;
+		.detail-card_live h4 i {
+			text-align: center;
+			display: inline-block;
+			margin-right: 15px;
 		}
 
-		.detail-card ul {
-			padding-left: 25px;
+		.detail-card_live ul {
+			padding-left: 20px;
 		}
 
-		.detail-card li {
+		.detail-card_live li {
 			margin-bottom: 12px;
 			color: #4a5568;
 		}
 
 		/* CTA Button */
-		.cta-container {
+		.cta-container_live {
 			text-align: center;
-			margin: 40px 0 30px;
+			margin: 30px 0 20px;
 		}
 
-		.cta-button {
+		.cta-button_live {
 			display: inline-block;
 			background: linear-gradient(135deg, #1a56db 0%, #0e2e6d 100%) !important;
 			color: white !important;
@@ -226,17 +230,17 @@
 			box-shadow: 0 8px 25px rgba(26, 86, 219, 0.35);
 		}
 
-		.cta-button:hover {
+		.cta-button_live:hover {
 			transform: translateY(-3px);
 			box-shadow: 0 12px 30px rgba(26, 86, 219, 0.45);
 		}
 
 		/* Benefits Section */
-		.benefits-section {
+		.live_benefits-section {
 			padding: 0 30px 40px;
 		}
 
-		.section-title {
+		.live_section-title {
 			text-align: center;
 			color: #1a3d7c;
 			font-size: 32px;
@@ -244,7 +248,7 @@
 			position: relative;
 		}
 
-		.section-title:after {
+		.live_section-title:after {
 			content: '';
 			display: block;
 			width: 100px;
@@ -254,27 +258,27 @@
 			margin: 15px auto;
 		}
 
-		.benefits-grid {
+		.live_benefits-grid {
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			gap: 25px;
 		}
 
-		.benefit-card {
+		.live_benefit-card {
 			background: white;
 			border-radius: 12px;
-			padding: 30px;
+			padding: 20px;
 			border: 1px solid rgba(26, 86, 219, 0.1);
 			transition: all 0.3s ease;
 			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 		}
 
-		.benefit-card:hover {
+		.live_benefit-card:hover {
 			transform: translateY(-5px);
 			box-shadow: 0 15px 30px rgba(26, 86, 219, 0.15);
 		}
 
-		.benefit-card h4 {
+		.live_benefit-card h4 {
 			color: #1a56db;
 			margin: 0 0 15px;
 			font-size: 22px;
@@ -282,35 +286,37 @@
 			align-items: center;
 		}
 
-		.benefit-card h4 i {
+		.live_benefit-card h4 i {
 			width: 50px;
 			height: 50px;
 			background: rgba(26, 86, 219, 0.1);
 			border-radius: 12px;
-			display: flex;
+			display: inline-block;
+			line-height: 50px;
 			align-items: center;
 			justify-content: center;
+			text-align: center;
 			margin-right: 15px;
 		}
 
-		.benefit-card p {
+		.live_benefit-card p {
 			color: #4a5568;
 			margin: 0;
 			line-height: 1.7;
 		}
 
 		/* Footer */
-		.footer {
+		.live_footer {
 			background: #0e2e6d;
 			color: #a3b8ff;
 			text-align: center;
-			padding: 50px 30px 40px;
+			padding: 30px 25px 20px;
 			font-size: 16px;
 			position: relative;
 			overflow: hidden;
 		}
 
-		.footer::before {
+		.live_footer::before {
 			content: '';
 			position: absolute;
 			top: -100px;
@@ -321,22 +327,22 @@
 			background: rgba(255, 255, 255, 0.03);
 		}
 
-		.footer-logo {
+		.live_footer-logo {
 			max-width: 150px;
 			margin: 0 auto 25px;
 			display: block;
 		}
 
-		.social-icons {
+		.live_social-icons {
 			margin: 30px 0;
 		}
 
-		.social-icons a {
+		.live_social-icons a {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			width: 50px;
-			height: 50px;
+			width: 40px;
+			height: 40px;
 			background: rgba(255, 255, 255, 0.1);
 			border-radius: 50%;
 			margin: 0 10px;
@@ -346,36 +352,36 @@
 			text-decoration: none;
 		}
 
-		.social-icons a:hover {
+		.live_social-icons a:hover {
 			background: #1a56db;
 			transform: translateY(-5px);
 		}
 
-		.footer-links {
+		.live_footer-links {
 			margin: 25px 0;
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
 		}
 
-		.footer-links a {
+		.live_footer-links a {
 			color: #e0f0ff;
-			margin: 0 15px 15px;
+			margin: 0 10px 10px;
 			text-decoration: none;
 			transition: all 0.3s ease;
 		}
 
-		.footer-links a:hover {
+		.live_footer-links a:hover {
 			color: white;
 			text-decoration: underline;
 		}
 
-		.contact-info {
+		.contact-info_live {
 			margin: 25px 0;
 			line-height: 1.8;
 		}
 
-		.copyright {
+		.copyright_live {
 			margin-top: 30px;
 			padding-top: 25px;
 			border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -383,43 +389,43 @@
 
 		/* Responsive */
 		@media (max-width: 650px) {
-			.email-container {
+			.email-container_live {
 				margin: 0 auto;
 				border-radius: 0;
 			}
 
-			.header {
-				padding: 40px 25px 70px;
+			.header_live {
+				padding: 40px 25px 30px;
 			}
 
-			.header h1 {
+			.header_live h1 {
 				font-size: 32px;
 			}
 
-			.header p {
+			.header_live p {
 				font-size: 18px;
 			}
 
-			.tech-badge {
+			.tech-badge_live {
 				font-size: 20px;
 				padding: 12px 25px;
 			}
 
-			.confirmation-section {
+			.confirmation-section_live {
 				margin: -50px 20px 20px;
-				padding: 40px 25px 30px;
+				padding: 20px 25px 20px;
 			}
 
-			.class-details,
-			.benefits-grid {
+			.class-details_live,
+			.live_benefits-grid {
 				grid-template-columns: 1fr;
 			}
 
-			.section-title {
+			.live_section-title {
 				font-size: 28px;
 			}
 
-			.cta-button {
+			.cta-button_live {
 				padding: 16px 35px;
 				font-size: 18px;
 			}
@@ -428,28 +434,30 @@
 </head>
 
 <body>
-	<div class="email-container">
+	<div class="email-container_live">
 		<!-- Header -->
-		<div class="header">
+		<div class="header_live">
 			<img src="cid:hachion-logo" alt="Hachion Logo" style="display: block; margin: 0 auto;">
-			<div class="header-content">
+			<div class="header_live-content">
 				<h1>Welcome to Your LIVE Class!</h1>
 				<p>Your journey to mastering [Technology Name] begins now</p>
-				<div class="tech-badge">[Technology Name] Professional Program</div>
+				<div class="tech-badge_live">[Technology Name] Professional Program</div>
 			</div>
 		</div>
 
 		<!-- Enrollment Confirmation -->
-		<div class="confirmation-section">
-			<div class="confirmation-icon">
+		<div class="confirmation-section_live">
+			<div style="text-align: center;">
+			<div class="confirmation-icon_live">
 				<i>✓</i>
 			</div>
-			<div class="confirmation-content">
+			</div>
+			<div class="confirmation-content_live">
 				<h2>Enrollment Confirmed!</h2>
 				<p>Hi [Student Name], we're thrilled to have you join our LIVE [Technology Name] class starting on
 					[Start Date].</p>
 
-				<div class="highlight-box">
+				<div class="highlight-box_live">
 					<h3><i>⭐</i> Your Trial Access</h3>
 					<p>To ensure you get the best learning experience, we're giving you access to <strong>3 FREE trial
 							sessions</strong> where you can:</p>
@@ -462,8 +470,9 @@
 			</div>
 
 			<!-- Class Details -->
-			<div class="class-details">
-				<div class="detail-card">
+			<div class="class-details_live">
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+				<div class="detail-card_live">
 					<h4><i>📅</i> Class Schedule</h4>
 					<ul>
 						<li><strong>Start Date:</strong> [Start Date]</li>
@@ -474,7 +483,7 @@
 					</ul>
 				</div>
 
-				<div class="detail-card">
+				<div class="detail-card_live">
 					<h4><i>🔗</i> Access Details</h4>
 					<ul>
 						<li><strong>Platform:</strong> Google Meet</li>
@@ -484,56 +493,63 @@
 						<li><strong>Validity:</strong> Each link valid for 3 days</li>
 					</ul>
 				</div>
+				</div>
 			</div>
 
-			<div class="cta-container">
-				<a href="[Google Meet Link]" class="cta-button" target="_blank" rel="noopener noreferrer">Access Your Classroom Now</a>
+			<div class="cta-container_live">
+				<a href="[Google Meet Link]" class="cta-button_live" target="_blank" rel="noopener noreferrer">Access Your Classroom Now</a>
 				
 				<p style="color: #4a5568; margin-top: 15px;">We recommend joining 10 minutes before session starts</p>
 			</div>
 		</div>
 
 		<!-- Benefits Section -->
-		<div class="benefits-section">
-			<h2 class="section-title">Why Learn With Hachion?</h2>
-			<div class="benefits-grid">
-				<div class="benefit-card">
+		<div class="live_benefits-section">
+			<h2 class="live_section-title">Why Learn With Hachion?</h2>
+			<div class="live_benefits-grid">
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+				<div class="live_benefit-card">
 					<h4><i>👨‍🏫</i> Expert Instructors</h4>
 					<p>Learn from industry veterans with 10+ years experience at top tech companies like Google, Amazon,
 						and Microsoft.</p>
 				</div>
-				<div class="benefit-card">
+				<div class="live_benefit-card">
 					<h4><i>🔄</i> Hands-on Projects</h4>
 					<p>Build real-world applications through our project-based curriculum that simulates actual
 						workplace scenarios.</p>
 				</div>
-				<div class="benefit-card">
+				</div>
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+				<div class="live_benefit-card">
 					<h4><i>📊</i> Progress Tracking</h4>
 					<p>Monitor your skill development with our analytics dashboard showing weekly progress and
 						competency levels.</p>
 				</div>
-				<div class="benefit-card">
+				<div class="live_benefit-card">
 					<h4><i>👥</i> Community Access</h4>
 					<p>Join our exclusive community of 10,000+ learners for networking, collaboration, and peer support.
 					</p>
 				</div>
-				<div class="benefit-card">
+				</div>
+				<div style="display: flex; justify-content: space-around; gap: 20px;">
+				<div class="live_benefit-card">
 					<h4><i>💼</i> Career Support</h4>
 					<p>Get resume reviews, mock interviews, and direct access to our hiring partner network with 850+
 						companies.</p>
 				</div>
-				<div class="benefit-card">
+				<div class="live_benefit-card">
 					<h4><i>🎓</i> Certification</h4>
 					<p>Earn industry-recognized certificates to showcase your skills to employers upon course
 						completion.</p>
+				</div>
 				</div>
 			</div>
 		</div>
 
 		<!-- Footer -->
-		<div class="footer-bar">
+		<div class="live_footer">
 
-			<div class="social-icons" style="text-align: center; margin-top: 20px;">
+			<div class="live_social-icons" style="text-align: center; margin-top: 20px;">
 				<a href="https://www.linkedin.com/company/hachion" target="_blank" style="margin: 0 8px;">
 					<img src="cid:linkedin-icon" alt="LinkedIn" style="width:40px; height:40px;" />
 				</a>
@@ -551,25 +567,24 @@
 				</a>
 			</div>
 
-			<div class="contact-info">
+			<div class="contact-info_live">
 				<p>Hachion Learning Portal · Transform Your Tech Career</p>
-				<p>Email: <a href="mailto:support@hachion.co" style="color: #e0f0ff;">support@hachion.co</a> | Phone: +1
+				<p>Email: <a href="mailto:trainings@hachion.co" style="color: #e0f0ff;">trainings@hachion.co</a> | Phone: +1
 					(800) 123-4567</p>
 				<p>123 Innovation Drive, Tech City, TC 12345</p>
 			</div>
 
-			<div class="footer-links">
-				<a href="#">Student Dashboard</a>
-				<a href="#">Browse Courses</a>
-				<a href="#">Learning Resources</a>
-				<a href="#">Career Support</a>
-				<a href="#">FAQs</a>
+			<div class="live_footer-links">
+				<a href="https://hachion.co">Student Dashboard</a>
+				<a href="https://hachion.co/coursedetails">Browse Courses</a>
+				<a href="https://hachion.co/blogs">Learning Resources</a>
+				<a href="https://hachtechnologies.com/">Career Support</a>
 			</div>
 
-			<div class="copyright">
-				<p>&copy; 2025 Hachion. All rights reserved.</p>
-				<p><a href="#" style="color: #a3b8ff;">Privacy Policy</a> | <a href="#" style="color: #a3b8ff;">Terms of
-						Service</a> | <a href="#" style="color: #a3b8ff;">Unsubscribe</a></p>
+			<div class="copyright_live">
+				<p>Manjeera Majestic Commercial, JNTU Rd, Kukatpally Housing Board Colony, Kukatpally, Hyderabad, Telangana-500072.</p>
+				<p><a href="https://hachion.co/privacy" style="color: #a3b8ff;">Privacy Policy</a> | <a href="https://hachion.co/terms" style="color: #a3b8ff;">Terms of
+						Service</a> | <a href="https://hachion.co/unsubscribe" style="color: #a3b8ff;">Unsubscribe</a></p>
 			</div>
 		</div>
 	</div>

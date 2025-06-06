@@ -121,6 +121,7 @@ package com.hachionUserDashboard.service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -233,8 +234,10 @@ public class Userimpl implements UserService {
 		user.setCountry(registrationRequest.getCountry());
 		user.setStudentId(generateNextStudentId());
 		user.setMode(registrationRequest.getMode());
+		user.setDate(LocalDate.now());
 
-		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(), registrationRequest.getFirstName());
+		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
+				registrationRequest.getFirstName());
 
 		userRepository.save(user);
 
@@ -583,6 +586,10 @@ public class Userimpl implements UserService {
 	}
 
 	public UserProfileResponse getUserProfileByEmail(String email) {
+
+		if (!userRepository.existsByEmail(email)) {
+			throw new RuntimeException("Your not able to enroll for course, please contact our hachion support team");
+		}
 		Optional<RegisterStudent> userOpt = userRepository.findByEmailForProfile(email);
 
 		if (userOpt.isPresent()) {

@@ -409,7 +409,9 @@ public class CurriculumController {
 
 	@PostMapping("curriculum/add")
 	public ResponseEntity<?> addCurriculum(@RequestPart("curriculumData") String curriculumData,
-			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf) {
+			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf,
+			@RequestPart(value = "assessmentPdf", required = false) MultipartFile assessmentPdf) {
+
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());
@@ -437,6 +439,20 @@ public class CurriculumController {
 				curriculum.setCurriculum_pdf("");
 			}
 
+			if (assessmentPdf != null && !assessmentPdf.isEmpty()) {
+				String assessmentFileName = assessmentPdf.getOriginalFilename();
+
+				if (!assessmentFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+							"Invalid Assessment PDF name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
+				}
+
+				// Store inside 'pdfs/assessments' folder
+				String assessmentPath = saveFile(assessmentPdf, "pdfs/assessments");
+				curriculum.setAssessment_pdf(assessmentPath != null ? assessmentPath : "");
+			} else {
+				curriculum.setAssessment_pdf("");
+			}
 			Curriculum saved = repo.save(curriculum);
 			return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 
@@ -450,7 +466,8 @@ public class CurriculumController {
 	@PutMapping(value = "/curriculum/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> updateCurriculum(@PathVariable int id,
 			@RequestPart("curriculumData") String curriculumData,
-			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf) {
+			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf,
+			@RequestPart(value = "assessmentPdf", required = false) MultipartFile assessmentPdf) {
 		try {
 			Optional<Curriculum> optionalCurriculum = repo.findById(id);
 			if (!optionalCurriculum.isPresent()) {
@@ -503,6 +520,28 @@ public class CurriculumController {
 				if (pdfPath != null) {
 					System.out.println("New file saved at: " + uploadDir + pdfPath);
 					existing.setCurriculum_pdf(pdfPath);
+				}
+			}
+
+			if (assessmentPdf != null && !assessmentPdf.isEmpty()) {
+				String assessmentFileName = assessmentPdf.getOriginalFilename();
+
+				if (!assessmentFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+							"Invalid assessment PDF name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
+				}
+
+				String oldAssessmentPath = existing.getAssessment_pdf();
+				if (oldAssessmentPath != null && !oldAssessmentPath.isEmpty()) {
+					File oldFile = new File(uploadDir + oldAssessmentPath);
+					if (oldFile.exists()) {
+						oldFile.delete();
+					}
+				}
+
+				String assessmentPath = saveFile(assessmentPdf, "pdfs/assessments");
+				if (assessmentPath != null) {
+					existing.setAssessment_pdf(assessmentPath);
 				}
 			}
 
@@ -681,20 +720,32 @@ public class CurriculumController {
 		}
 
 		Curriculum curriculum = optionalCurriculum.get();
-
-		String pdfPath = curriculum.getCurriculum_pdf();
-		if (pdfPath != null && !pdfPath.isEmpty()) {
-			File file = new File(uploadDir + pdfPath);
-			if (file.exists()) {
-				boolean deleted = file.delete();
+		String curriculumPdfPath = curriculum.getCurriculum_pdf();
+		if (curriculumPdfPath != null && !curriculumPdfPath.isEmpty()) {
+			File curriculumPdfFile = new File(uploadDir + curriculumPdfPath);
+			if (curriculumPdfFile.exists()) {
+				boolean deleted = curriculumPdfFile.delete();
 				if (!deleted) {
-					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete PDF file.");
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							.body("Failed to delete curriculum PDF file.");
+				}
+			}
+		}
+
+		String assessmentPdfPath = curriculum.getAssessment_pdf();
+		if (assessmentPdfPath != null && !assessmentPdfPath.isEmpty()) {
+			File assessmentPdfFile = new File(uploadDir + assessmentPdfPath);
+			if (assessmentPdfFile.exists()) {
+				boolean deleted = assessmentPdfFile.delete();
+				if (!deleted) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							.body("Failed to delete assessment PDF file.");
 				}
 			}
 		}
 
 		repo.delete(curriculum);
-		return ResponseEntity.ok("Curriculum deleted successfully.");
+		return ResponseEntity.ok("Curriculum and associated PDFs deleted successfully.");
 	}
 
 	@GetMapping("/curriculum/pdfs/{filename}")
@@ -703,6 +754,24 @@ public class CurriculumController {
 
 			Path filePath = Paths.get(uploadDir + "pdfs/" + filename);
 //			Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/curriculum/pdfs/" + filename);
+
+			if (!Files.exists(filePath)) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+			}
+
+			Resource resource = new UrlResource(filePath.toUri());
+
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"").body(resource);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/curriculum/assessments/{filename}")
+	public ResponseEntity<Resource> getAssessmentPdf(@PathVariable String filename) {
+		try {
+			Path filePath = Paths.get(uploadDir + "pdfs/assessments/" + filename);
 
 			if (!Files.exists(filePath)) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

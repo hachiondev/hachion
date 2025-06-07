@@ -76,6 +76,9 @@ public class Course {
 	@Column
 	private Double ctotal;
 
+	@Column
+	private String shortCourse;
+
 	public Double getMamount() {
 		return mamount;
 	}
@@ -483,6 +486,14 @@ public class Course {
 				+ metaTitle + ", metaKeyword=" + metaKeyword + ", metaDescription=" + metaDescription
 				+ ", courseHighlight=" + courseHighlight + ", courseDescription=" + courseDescription + ", date=" + date
 				+ ", courseCategory=" + courseCategory + "]";
+	}
+
+	public String getShortCourse() {
+		return shortCourse;
+	}
+
+	public void setShortCourse(String shortCourse) {
+		this.shortCourse = shortCourse;
 	}
 
 }

@@ -28,6 +28,9 @@ public class Curriculum {
     @Column
     private String curriculum_pdf;
     
+    @Column
+    private String assessment_pdf;
+    
     @Lob
 	@Column(nullable = true, columnDefinition = "LONGTEXT")
     private String title;
@@ -149,6 +152,14 @@ public class Curriculum {
 	public void setCurriculum_pdf(byte[] bytes) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getAssessment_pdf() {
+		return assessment_pdf;
+	}
+
+	public void setAssessment_pdf(String assessment_pdf) {
+		this.assessment_pdf = assessment_pdf;
 	}
     
 }

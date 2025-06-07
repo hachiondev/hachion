@@ -408,4 +408,9 @@ public class CourseController {
 
 		return new ResponseEntity<>(courses, HttpStatus.OK);
 	}
+	  @GetMapping("/coursenames-by-category")
+	    public ResponseEntity<List<String>> getCourseNamesByCategory(@RequestParam String categoryName) {
+	        List<String> courseNames = repo.findCourseNamesByCategory(categoryName);
+	        return ResponseEntity.ok(courseNames);
+	    }
 }

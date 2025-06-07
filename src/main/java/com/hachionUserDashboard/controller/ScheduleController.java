@@ -81,6 +81,7 @@ public class ScheduleController {
 
 				schedule.setSchedule_date(convertedDate);
 				schedule.setSchedule_time(finalTime);
+				
 
 				String weekDay = userZoned.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 				schedule.setSchedule_week(weekDay);
@@ -109,7 +110,6 @@ public class ScheduleController {
 		if (optionalCourseSchedule.isPresent()) {
 			CourseSchedule courseschedule = optionalCourseSchedule.get();
 
-			// Set the new values for the trainer
 			courseschedule.setSchedule_course_name(updatedCourseSchedule.getSchedule_course_name());
 			courseschedule.setSchedule_category_name(updatedCourseSchedule.getSchedule_category_name());
 			courseschedule.setSchedule_duration(updatedCourseSchedule.getSchedule_duration());
@@ -119,12 +119,11 @@ public class ScheduleController {
 			courseschedule.setSchedule_date(updatedCourseSchedule.getSchedule_date());
 			courseschedule.setMeeting_link(updatedCourseSchedule.getMeeting_link());
 
-			// Save the updated trainer to the repository
 			repo.save(courseschedule);
 
-			return ResponseEntity.ok(courseschedule); // Return the updated trainer and 200 OK
+			return ResponseEntity.ok(courseschedule);
 		} else {
-			// Return 404 Not Found if the trainer ID does not exist
+
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
 	}

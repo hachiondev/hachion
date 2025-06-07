@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.CourseSchedule;
+import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
 
 import Service.Schedule;
@@ -39,7 +41,10 @@ public class ScheduleController {
 	private Schedule scheduleservice = null;
 
 	@Autowired
-	CourseScheduleRepository repo;
+	private CourseScheduleRepository repo;
+
+	@Autowired
+	private CourseRepository courseRepository;
 
 	public ScheduleController(Schedule userService) {
 		this.setScheduleservice(userService);
@@ -81,7 +86,6 @@ public class ScheduleController {
 
 				schedule.setSchedule_date(convertedDate);
 				schedule.setSchedule_time(finalTime);
-				
 
 				String weekDay = userZoned.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 				schedule.setSchedule_week(weekDay);
@@ -99,6 +103,40 @@ public class ScheduleController {
 	@PostMapping("/schedulecourse/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void createCourse(@RequestBody CourseSchedule courseschedule) {
+		String prefix = "";
+		if ("Live Demo".equalsIgnoreCase(courseschedule.getSchedule_mode())) {
+			prefix = "LDM-";
+		} else if ("Live Class".equalsIgnoreCase(courseschedule.getSchedule_mode())) {
+			prefix = "LCL-";
+		}
+
+		String shortCourse = "";
+		if (courseschedule.getSchedule_course_name() != null) {
+			String dbShortCourse = courseRepository
+					.findShortCourseByCourseName(courseschedule.getSchedule_course_name());
+			if (dbShortCourse != null) {
+				shortCourse = dbShortCourse.replaceAll("\\s", "").toUpperCase();
+			}
+		}
+
+		String dateFormatted = "";
+		if (courseschedule.getSchedule_date() != null) {
+			try {
+				LocalDate date = LocalDate.parse(courseschedule.getSchedule_date());
+				dateFormatted = date.format(DateTimeFormatter.ofPattern("MMMddyyyy", Locale.ENGLISH)).toUpperCase();
+			} catch (DateTimeParseException e) {
+
+			}
+		}
+
+		String timePart = "";
+		if (courseschedule.getSchedule_time() != null) {
+			timePart = courseschedule.getSchedule_time().replace(":", "").replaceAll("\\s+", "").toUpperCase();
+		}
+
+		String batchId = prefix + shortCourse + dateFormatted + "-" + timePart;
+		courseschedule.setBatchId(batchId);
+
 		repo.save(courseschedule);
 	}
 

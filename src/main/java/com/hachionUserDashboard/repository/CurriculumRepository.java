@@ -15,4 +15,7 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 	@Query(value = "SELECT * FROM curriculum WHERE curriculum_pdf = :curriculumPdf", nativeQuery = true)
 	Optional<Curriculum> findPdfByExactName(@Param("curriculumPdf") String curriculumPdf);
 
+	@Query(value = "SELECT * FROM curriculum WHERE assessment_pdf = :assessmentPdf", nativeQuery = true)
+	Optional<Curriculum> findPdfByAssessmentExactName(@Param("assessmentPdf") String assessmentPdf);
+
 }

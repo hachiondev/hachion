@@ -1,16 +1,10 @@
 package com.hachionUserDashboard.entity;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Locale;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -163,39 +157,39 @@ public class CourseSchedule {
 
 	@Column(name = "batch_id")
 	private String batchId;
-
-	@PrePersist
-	public void generateBatchId() {
-		String prefix = "";
-		if (schedule_mode != null) {
-			if (schedule_mode.equalsIgnoreCase("Live Demo")) {
-				prefix = "LDEMO/";
-			} else if (schedule_mode.equalsIgnoreCase("Live Class")) {
-				prefix = "LCLASS/";
-			}
-		}
-
-		String cat = schedule_category_name != null ? schedule_category_name.replaceAll("\\s", "") : "";
-		String course = schedule_course_name != null ? schedule_course_name.replaceAll("\\s", "") : "";
-
-		String categoryPart = cat.length() >= 2 ? cat.substring(0, 2).toUpperCase() : cat.toUpperCase();
-		String coursePart = course.length() >= 5 ? course.substring(0, 5).toUpperCase() : course.toUpperCase();
-
-		String dateFormatted = "";
-		if (schedule_date != null) {
-			try {
-				LocalDate date = LocalDate.parse(schedule_date);
-				dateFormatted = date.format(DateTimeFormatter.ofPattern("MMMddyyyy", Locale.ENGLISH)).toUpperCase(); // JUN052025
-			} catch (DateTimeParseException e) {
-
-			}
-		}
-
-//		String timePart = schedule_time != null ? schedule_time.toUpperCase() : "";
-		String timePart = schedule_time != null ? schedule_time.replaceAll("\\s", "").toUpperCase() : "";
-
-		this.batchId = prefix + categoryPart + coursePart + dateFormatted + "-" + timePart;
-	}
+//
+//	@PrePersist
+//	public void generateBatchId() {
+//		String prefix = "";
+//		if (schedule_mode != null) {
+//			if (schedule_mode.equalsIgnoreCase("Live Demo")) {
+//				prefix = "LDEMO/";
+//			} else if (schedule_mode.equalsIgnoreCase("Live Class")) {
+//				prefix = "LCLASS/";
+//			}
+//		}
+//
+//		String cat = schedule_category_name != null ? schedule_category_name.replaceAll("\\s", "") : "";
+//		String course = schedule_course_name != null ? schedule_course_name.replaceAll("\\s", "") : "";
+//
+//		String categoryPart = cat.length() >= 2 ? cat.substring(0, 2).toUpperCase() : cat.toUpperCase();
+//		String coursePart = course.length() >= 5 ? course.substring(0, 5).toUpperCase() : course.toUpperCase();
+//
+//		String dateFormatted = "";
+//		if (schedule_date != null) {
+//			try {
+//				LocalDate date = LocalDate.parse(schedule_date);
+//				dateFormatted = date.format(DateTimeFormatter.ofPattern("MMMddyyyy", Locale.ENGLISH)).toUpperCase(); // JUN052025
+//			} catch (DateTimeParseException e) {
+//
+//			}
+//		}
+//
+////		String timePart = schedule_time != null ? schedule_time.toUpperCase() : "";
+//		String timePart = schedule_time != null ? schedule_time.replaceAll("\\s", "").toUpperCase() : "";
+//
+//		this.batchId = prefix + categoryPart + coursePart + dateFormatted + "-" + timePart;
+//	}
 
 	public String getBatchId() {
 		return batchId;

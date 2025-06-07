@@ -1599,6 +1599,7 @@ color: #006489;
   background: none;
   border: none;
   cursor: pointer;
+  text-decoration: underline;
   padding: 3px 0;
   /* animation: pulse 1.5s infinite; */
 }
@@ -1619,6 +1620,7 @@ color: #006489;
   background: none;
   border: none;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .assessment-btn:hover {

@@ -6,7 +6,6 @@ import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
 import loginPopupImg from '../../Assets/loginpopup.png';
 import logo from '../../Assets/logo.png';
-import { FiFileText } from "react-icons/fi";
 
 const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
@@ -31,7 +30,7 @@ const Curriculum = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -58,7 +57,7 @@ const Curriculum = () => {
 
     const fetchCurriculum = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/curriculum');
+        const response = await axios.get('https://api.hachion.co/curriculum');
         const filteredCurriculum = response.data.filter(
           (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
         );
@@ -107,7 +106,7 @@ const Curriculum = () => {
 
     const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
-      const fullPdfUrl = `http://localhost:8080/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
@@ -168,19 +167,19 @@ const Curriculum = () => {
                       })}
 
                     {item.assessment_pdf && (
-                      <button
-                        className="assessment-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const link = item.assessment_pdf.startsWith('http')
-                            ? item.assessment_pdf
-                            : `https://${item.assessment_pdf}`;
-                          window.open(link, '_blank', 'noopener,noreferrer');
-                        }}
-                      >
-                        <FiFileText size={24} color="#00AEEF" /> Assessment
-                      </button>
-                    )}
+  <button
+    className="assessment-btn"
+    onClick={(e) => {
+      e.stopPropagation();
+      const fileName = item.assessment_pdf.split('/').pop(); // get just the filename
+      const link = `https://api.hachion.co/curriculum/assessments/${fileName}`;
+      window.open(link, '_blank', 'noopener,noreferrer');
+    }}
+  >
+    <BsFileEarmarkPdfFill size={24} color="#00AEEF" /> Assessment
+  </button>
+)}
+
                   </div>
                     <span className="expand-icon">{expandedTopics[index] ? <FaMinus /> : <FaPlus />}</span>
                   </div>

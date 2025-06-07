@@ -31,20 +31,21 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'
-import { FiUpload, FiFileText } from "react-icons/fi";
+import { FiUpload } from "react-icons/fi";
 import { FaTimesCircle } from 'react-icons/fa';
+import { BsFileEarmarkPdfFill} from 'react-icons/bs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     padding: '3px 5px',
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white', 
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
   },
 }));
 
@@ -71,8 +72,7 @@ export default function Curriculum() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [displayedCategories, setDisplayedCategories] = useState([]);
-    const [allData, setAllData] = useState([]); // All fetched data
-// Data to be displayed
+    const [allData, setAllData] = useState([]); 
 const [filterData, setFilterData] = useState({
   category_name: "",
   course_name: "",
@@ -153,13 +153,13 @@ const [filterData, setFilterData] = useState({
                  });
          }      
     const handleClose = () => {
-      setOpen(false); // Close the modal
+      setOpen(false); 
     };
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/course-categories/all");
-          setCourse(response.data); // Assuming the data contains an array of trainer objects
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -169,7 +169,7 @@ const [filterData, setFilterData] = useState({
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -200,7 +200,7 @@ const [filterData, setFilterData] = useState({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/curriculum");
+        const response = await axios.get("https://api.hachion.co/curriculum");
         setAllData(response.data);
         setFilteredCurriculum(response.data); 
       } catch (error) {
@@ -235,58 +235,62 @@ const [filterData, setFilterData] = useState({
       
         setFilteredCurriculum(filtered);
       };
+      
       const handleSave = async () => {
-        try {
-          const formData = new FormData();
-          const curriculumData = {
-            category_name: editedRow.category_name,
-            course_name: editedRow.course_name,
-            title: editedRow.title,
-            topic: editedRow.topic,
-            link: editedRow.link,
-            assessment_pdf: editedRow.assessment_pdf,
-          };
-      
-          formData.append("curriculumData", JSON.stringify(curriculumData));
-          if (
-            editedRow.curriculum_pdf &&
-            editedRow.curriculum_pdf instanceof File
-          ) {
-            formData.append("curriculumPdf", editedRow.curriculum_pdf);
-          }      
-          const response = await axios.put(
-            `http://localhost:8080/curriculum/update/${editedRow.curriculum_id}`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data", 
-              },
-              maxBodyLength: Infinity,  
-              maxContentLength: Infinity, 
-              timeout: 60000  
-            });
-      
-          setCurriculum((prev) =>
-            prev.map((curr) =>
-              curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
-            )
-          );
-      
-          setMessage("Curriculum updated successfully!");
-          setTimeout(() => setMessage(""), 5000);
-          setOpen(false);
-        } catch (error) {
-          const backendMessage = error.response?.data?.message || error.response?.data || error.message;
-          console.error("Error updating curriculum:", backendMessage);
-          setMessage(backendMessage);
-          // console.error("Error updating curriculum:", error);
-          // setMessage("Error updating Curriculum.");
-        }
-      };
+  try {
+    const formData = new FormData();
+    const curriculumData = {
+      category_name: editedRow.category_name,
+      course_name: editedRow.course_name,
+      title: editedRow.title,
+      topic: editedRow.topic,
+      link: editedRow.link,
+    
+    };
+
+    formData.append("curriculumData", JSON.stringify(curriculumData));
+
+    if (editedRow.curriculum_pdf && editedRow.curriculum_pdf instanceof File) {
+      formData.append("curriculumPdf", editedRow.curriculum_pdf);
+    }
+
+    if (editedRow.assessment_pdf && editedRow.assessment_pdf instanceof File) {
+      formData.append("assessmentPdf", editedRow.assessment_pdf);
+    }
+
+    const response = await axios.put(
+      `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        timeout: 60000
+      }
+    );
+
+    setCurriculum((prev) =>
+      prev.map((curr) =>
+        curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
+      )
+    );
+
+    setMessage("Curriculum updated successfully!");
+    setTimeout(() => setMessage(""), 5000);
+    setOpen(false);
+  } catch (error) {
+    const backendMessage = error.response?.data?.message || error.response?.data || error.message;
+    console.error("Error updating curriculum:", backendMessage);
+    setMessage(backendMessage);
+  }
+};
+
       const handleDelete = async (curriculum_id) => {
        
          try { 
-          const response = await axios.delete(`http://localhost:8080/curriculum/delete/${curriculum_id}`); 
+          const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`); 
           console.log("Curriculum deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
@@ -304,7 +308,7 @@ const [filterData, setFilterData] = useState({
         if (file) {
             setCurriculumData((prev) => ({
                 ...prev,
-                curriculum_pdf: file, // Store the file object directly
+                curriculum_pdf: file, 
             }));
         }
     };
@@ -312,7 +316,7 @@ const [filterData, setFilterData] = useState({
     const handleEditFileUpload =  (e) => {
       setEditedRow(prev => ({
         ...prev,
-        curriculum_pdf: e.target.files[0], // this must be a File object
+        curriculum_pdf: e.target.files[0], 
       }));
   };   
         const handleClickOpen = (row) => {
@@ -337,49 +341,48 @@ const [filterData, setFilterData] = useState({
     setFilteredCurriculum(filtered);
     setCurrentPage(1); 
   };
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const currentDate = new Date().toISOString().split("T")[0];
-    const uploadPromises = rows.map(async (row) => {
-      const formData = new FormData();
-      formData.append("curriculumData", JSON.stringify({
-        category_name: curriculumData.category_name,
-        course_name: curriculumData.course_name,
-        title: row.title || "",
-        topic: row.topic || "",
-        link: row.link || "",
-        assessment_pdf: row.assessment_pdf || "",
-        date: currentDate,
-      }));
-  
-      // Add the same PDF to each entry
-      if (curriculumData.curriculum_pdf) {
-        formData.append("curriculumPdf", curriculumData.curriculum_pdf);
-      }
-  
-      try {
-        const response = await axios.post("http://localhost:8080/curriculum/add", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-          timeout: 60000,
-        });
-  
-        return response.status === 201;
-      } catch (error) {
-        const backendMessage = error.response?.data?.message || error.response?.data || error.message;
-      
-        console.error("Error adding curriculum:", backendMessage);
-      
-        // Display specific backend message to user
-        alert(`Error uploading file: ${backendMessage}`);
-      
-        return false;
-      }
-    });
-  
+  e.preventDefault();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const uploadPromises = rows.map(async (row) => {
+    const formData = new FormData();
+    formData.append("curriculumData", JSON.stringify({
+      category_name: curriculumData.category_name,
+      course_name: curriculumData.course_name,
+      title: row.title || "",
+      topic: row.topic || "",
+      link: row.link || "",
+      date: currentDate,
+    }));
+
+    if (curriculumData.curriculum_pdf) {
+      formData.append("curriculumPdf", curriculumData.curriculum_pdf);
+    }
+
+    if (row.assessment_pdf && row.assessment_pdf instanceof File) {
+      formData.append("assessmentPdf", row.assessment_pdf);
+    }
+
+    try {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        timeout: 60000,
+      });
+
+      return response.status === 201;
+    } catch (error) {
+      const backendMessage = error.response?.data?.message || error.response?.data || error.message;
+      console.error("Error adding curriculum:", backendMessage);
+      alert(`Error uploading file: ${backendMessage}`);
+      return false;
+    }
+  });
     const results = await Promise.all(uploadPromises);
     const allSuccessful = results.every((status) => status);
   
@@ -389,9 +392,7 @@ const [filterData, setFilterData] = useState({
       setCurriculumData({});
       setRows([{ id: Date.now(), title: "", topic: "", link: "", assessment_pdf: "" }]); // Reset to initial row
     } 
-    // else {
-    //   alert("Some entries failed to upload. Please check the console for errors.");
-    // }
+   
   };
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
@@ -523,7 +524,7 @@ const [filterData, setFilterData] = useState({
             window.open(URL.createObjectURL(row.assessment_pdf), '_blank')
           }
         >
-          <FiFileText size={20} />
+          <BsFileEarmarkPdfFill size={20} className="edit"/>
           <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {row.assessment_pdf.name}
           </span>
@@ -716,7 +717,7 @@ const [filterData, setFilterData] = useState({
     )}
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
-      <StyledTableCell align="left">{course.assessment_pdf}</StyledTableCell>
+      <StyledTableCell align="left"> {course.assessment_pdf ? course.assessment_pdf.split("/").pop() : ""}</StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="left" style={{ width: '100px' }}>
         {course.curriculum_pdf ? (
@@ -820,7 +821,7 @@ const [filterData, setFilterData] = useState({
   onChange={(e) =>
     setEditedRow((prev) => ({
       ...prev,
-      curriculum_pdf: e.target.files[0], // must be a File object
+      curriculum_pdf: e.target.files[0], 
     }))
   }
 />
@@ -848,9 +849,67 @@ const [filterData, setFilterData] = useState({
     <label htmlFor="topic">Video Link</label>
     <input id="link" className="form-control" name='link' value={editedRow.link || ""}
       onChange={handleInputChange}/>
-    <label htmlFor="topic">Assessment PDF</label>
-    <input id="assessment_pdf" className="form-control" name='assessment_pdf' value={editedRow.assessment_pdf || ""}
-      onChange={handleInputChange}/>
+    
+<label htmlFor="assessment_pdf" className="form-label">Assessment PDF :</label>
+
+{editedRow.assessment_pdf ? (
+  <div style={{ position: 'relative', display: 'inline-block', maxWidth: 200, marginTop: 4 }}>
+    <div
+      style={{
+        padding: '6px 12px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: 4,
+        border: '1px solid #ccc',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        cursor: 'default',
+      }}
+    >
+      <BsFileEarmarkPdfFill size={20} className="edit"/>
+      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+  {editedRow.assessment_pdf.name || editedRow.assessment_pdf.split('/').pop()}
+</span>
+
+    </div>
+
+    <FaTimesCircle
+      style={{
+        position: 'absolute',
+        top: -8,
+        right: -8,
+        fontSize: '1rem',
+        color: 'red',
+        cursor: 'pointer',
+        backgroundColor: '#fff',
+        borderRadius: '50%',
+      }}
+      onClick={() =>
+        setEditedRow((prev) => ({
+          ...prev,
+          assessment_pdf: null,
+        }))
+      }
+    />
+  </div>
+) : (
+  <label style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+    <FiUpload size={20} className="edit"/>
+    <span style={{ fontSize: '0.95rem' }}>Upload PDF</span>
+    <input
+      type="file"
+      accept=".pdf"
+      style={{ display: 'none' }}
+      onChange={(e) =>
+        setEditedRow((prev) => ({
+          ...prev,
+          assessment_pdf: e.target.files[0], 
+        }))
+      }
+    />
+  </label>
+)}
+
   </DialogContent>
   <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

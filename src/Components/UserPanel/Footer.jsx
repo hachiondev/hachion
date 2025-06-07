@@ -15,7 +15,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        const response = await fetch('http://localhost:8080/trendingcourse');
+        const response = await fetch('https://api.hachion.co/trendingcourse');
         const data = await response.json();
         // Filter courses with status true
         const activeCourses = data.filter(course => course.status === true);
@@ -93,7 +93,7 @@ const Footer = () => {
   <span>|</span>
   <p className="footer-content" onClick={handleContact}>Contact us</p>
   <span>|</span>
-  <p className="footer-content">Careers</p>
+  <p className="footer-content" onClick={() => window.open("https://hachtechnologies.com/", "_blank")}>Careers</p>
   <span>|</span>
   <p className="footer-content" onClick={handleBlog}>Blog</p>
   <span>|</span>

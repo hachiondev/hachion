@@ -112,7 +112,7 @@ const handleFileChange = (e) => {
   //   useEffect(() => {
   //     const fetchCertificate = async () => {
   //         try {
-  //             const response = await axios.get('http://localhost:8080/certificate');
+  //             const response = await axios.get('https://api.hachion.co/certificate');
   //             setCertificate(response.data);
   //         } catch (error) {
   //         }
@@ -128,7 +128,7 @@ const handleFileChange = (e) => {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `http://localhost:8080/certificate/${editedData.id}`,editedData
+                `https://api.hachion.co/certificate/${editedData.id}`,editedData
             );
             setCertificate((prev) =>
                 prev.map(curr =>
@@ -144,7 +144,7 @@ const handleFileChange = (e) => {
     };
       const handleDelete = async (id) => {
          try { 
-          const response = await axios.delete(`http://localhost:8080/certificate/delete/${id}`); 
+          const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
         } catch (error) { 
         } }; 
       //   useEffect(() => {
@@ -169,7 +169,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCategory = async () => {
           try {
-            const response = await axios.get("http://localhost:8080/course-categories/all");
+            const response = await axios.get("https://api.hachion.co/course-categories/all");
             setCourse(response.data); 
           } catch (error) {
           }
@@ -179,7 +179,7 @@ const handleFileChange = (e) => {
       useEffect(() => {
         const fetchCourseCategory = async () => {
           try {
-            const response = await axios.get("http://localhost:8080/courses/all");
+            const response = await axios.get("https://api.hachion.co/courses/all");
             setCourseCategory(response.data);
           } catch (error) {
           }
@@ -212,7 +212,7 @@ const handleFileChange = (e) => {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:8080/certificate/add", formData, {
+            const response = await axios.post("https://api.hachion.co/certificate/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

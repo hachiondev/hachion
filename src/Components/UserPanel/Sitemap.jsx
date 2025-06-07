@@ -12,7 +12,7 @@ const Sitemap = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [Category, setCategory] = useState([]); // Dynamic Category
   const [courses, setCourses] = useState([]);
-  const API_URL = "http://localhost:8080/course-categories/all";
+  const API_URL = "https://api.hachion.co/course-categories/all";
   const navigate = useNavigate();
   // Scroll to top function
   const scrollToTop = () => {
@@ -44,7 +44,7 @@ const Sitemap = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data); // Set the courses if data is an array
         } else {

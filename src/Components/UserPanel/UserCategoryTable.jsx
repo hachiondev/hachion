@@ -24,7 +24,7 @@ export default function UserCategoryTable() {
 
         if (!email) return;
 
-        const response = await axios.get('http://localhost:8080/enroll');
+        const response = await axios.get('https://api.hachion.co/enroll');
         const allEnrollments = response.data;
 
         const currentDate = new Date().setHours(0, 0, 0, 0);

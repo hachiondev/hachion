@@ -3,8 +3,8 @@ const path = require("path");
 const axios = require("axios");
 
 const baseUrl = "https://hachion.co";
-const coursesApi = "http://localhost:8080/courses/all";
-const workshopsApi = "http://localhost:8080/workshopschedule";
+const coursesApi = "https://api.hachion.co/courses/all";
+const workshopsApi = "https://api.hachion.co/workshopschedule";
 
 // Slug generator — lowercase and replace spaces with hyphens
 const toSlug = str => str.trim().toLowerCase().replace(/\s+/g, "-");

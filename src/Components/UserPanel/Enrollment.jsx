@@ -15,6 +15,19 @@
   import { LoginSchema } from '../Schemas';
   import { useLocation } from 'react-router-dom';
 
+  //
+  import Table from '@mui/material/Table';
+  import TableBody from '@mui/material/TableBody';
+  import TableCell from '@mui/material/TableCell';
+  import TableContainer from '@mui/material/TableContainer';
+  import TableHead from '@mui/material/TableHead';
+  import TableRow from '@mui/material/TableRow';
+  import Paper from '@mui/material/Paper';
+  import Radio from '@mui/material/Radio';
+  import payumoney from '../../Assets/payumoney.png';
+  import './Blogs.css';
+  
+
   const initialValues = {
     name: "",
     email: "",
@@ -26,6 +39,7 @@
     const location = useLocation();
     const { selectedBatchData, enrollText, modeType } = location.state || {};
 
+    
   const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [successMessage, setSuccessMessage] = useState("");
@@ -108,7 +122,7 @@
         if (!email) return;
 
         try {
-          const response = await axios.get('http://localhost:8080/api/v1/user/students');
+          const response = await axios.get('https://api.hachion.co/api/v1/user/students');
           const allStudents = response.data;
 
           const matchedStudent = allStudents.find((student) => student.email === email);
@@ -148,7 +162,7 @@
 
     try {
       // Fetch studentId via API
-      const profileResponse = await axios.get(`http://localhost:8080/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -184,7 +198,7 @@
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/enroll/add', payload);
+      const response = await axios.post('https://api.hachion.co/enroll/add', payload);
 
       if (response.data.status === 201) {
         setSuccessMessage("✅ Registered Successfully.");
@@ -200,6 +214,28 @@
     }
   };
 
+
+  const handlePayment = async () => {
+    try {
+      const amount = 1.00; // 💰 Hardcoded for now
+
+      const response = await axios.post("https://api.hachion.co/create-order", null, {
+        params: { amount: amount }
+      });
+
+      const approvalUrl = response.data;
+
+      if (approvalUrl.startsWith("https://www.sandbox.paypal.com")) {
+        // 🔁 Redirect to PayPal
+        window.location.href = approvalUrl;
+      } else {
+        alert("Unexpected response: " + approvalUrl);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      alert("Failed to start payment. Please try again.");
+    }
+  };
 
     return (
       <>
@@ -323,9 +359,60 @@
               <div className='personal-details-header'>
                   <p>3. Order summary</p>
                   </div>
-                <TotalOrder/>
+<TableContainer component={Paper} className="table-container">
+    <Table aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell className="table-cell-left">Course Name</TableCell>
+          <TableCell align="right" className="table-cell-right">
+            {selectedBatchData?.schedule_course_name || 'N/A'}
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell className="table-cell-left">Course Fee</TableCell>
+          <TableCell align="right" className="table-cell-right">
+            USD {selectedBatchData?.amount || 'N/A'}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="table-cell-left">% Discount</TableCell>
+          <TableCell align="right" className="table-cell-right">
+            {selectedBatchData?.discount || 'N/A'}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="table-cell-left">Total</TableCell>
+          <TableCell align="right" className="table-cell-right">
+            USD {selectedBatchData?.total || 'N/A'}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="table-cell-left">Tax</TableCell>
+          <TableCell align="right" className="table-cell-right">
+            USD {selectedBatchData?.tax || 'N/A'}
+          </TableCell>
+        </TableRow>
+        <TableRow className="net-amount">
+          <TableCell className="net-amount-left">Net Payable amount:</TableCell>
+          <TableCell align="right" className="net-amount-right">
+            USD {selectedBatchData?.total || 0}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+
+
+
+
+
+
+
+                {/* <TotalOrder/> */}
                 <div className="input-row">
-                <button className="payment-btn">Proceed to Pay</button>
+                <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
                 
                 <div className="paylater">
                   {successMessage && (

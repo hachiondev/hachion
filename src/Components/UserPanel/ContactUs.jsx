@@ -156,7 +156,7 @@ const ContactUs = () => {
     };
   
     try {
-      const response = await axios.post("http://localhost:8080/haveanyquery/add", requestData, {
+      const response = await axios.post("https://api.hachion.co/haveanyquery/add", requestData, {
         headers: { "Content-Type": "application/json" }
       });
   
@@ -195,12 +195,12 @@ const ContactUs = () => {
     const officeLocations = [
       {
         name: "New Jersey, USA",
-        address: "HACH Technologies 239 US Highway 22 green Brook Township, New Jersey USA, ZIP 08812.",
+        address: "Hachion 601 Voyage Trce Leander Texas 78641",
         flag: UsaFlag
       },
       {
         name: "Hyderabad, India",
-        address: "HACH Technologies GP Rao Enclaves, 301, 3rd floor Road No 3 KPHB colony, Hyderabad 500072.",
+        address: "Hachion GP Rao Enclaves, 301, 3rd floor Road No 3 KPHB colony, Hyderabad 500072.",
         flag: indiaFlag
       },
       {
@@ -411,7 +411,7 @@ const ContactUs = () => {
                     By clicking on Submit, you acknowledge read our{" "}
                     <span
                       onClick={handlePrivacy}
-                      style={{ textDecoration: "underline", cursor: "pointer" }}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
                     >
                       Privacy Notice
                     </span>

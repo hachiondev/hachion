@@ -63,8 +63,8 @@ const CourseCategory = ({
   const [categories, setCategories] = useState([]);
   const [message,setMessage]=useState("");
   const [open, setOpen] = React.useState(false);
-  const [filteredCategories, setFilteredCategories] = useState(categories);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [showAddCourse,setShowAddCourse]=useState(false);
@@ -93,13 +93,12 @@ const displayedCategories = filteredCategories.slice(
   currentPage * rowsPerPage
 );
 
-
   const API_URL = 'https://api.hachion.co/course-categories/all';
 
   // Fetch Courses on Component Mount
   useEffect(() => {
     fetchCourses();
-  }, [categories]);
+  }, []);
   const handleClose = () => {
     setOpen(false); // Close the modal
   };
@@ -123,36 +122,34 @@ const displayedCategories = filteredCategories.slice(
   const handleClickOpen = (course) => {
     setEditedRow({
       ...course,
-      date: course.date ? dayjs(course.date).format('MM-DD-YYYY') : null, // Convert date to dayjs if it exists
+      date: course.date ? dayjs(course.date).format('MM-DD-YYYY') : null,
     });
     setOpen(true);
   };
   
   const formattedDate = courseData.date ? dayjs(courseData.date).format('MM-DD-YYYY') : null;
+
+  useEffect(() => {
+      const filtered = categories.filter((course) =>
+        course.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCategories(filtered);
+    }, [searchTerm, categories]);
+    const handleDateFilter = () => {
+      const filtered = categories.filter((item) => {
+        const date = new Date(item.date);
+        const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+        const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+        return (!start || date >= start) && (!end || date <= end);
+      });
+      setFilteredCategories(filtered);
+    };
+      const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setFilteredCategories(categories);
+};
   
-  const handleFilter = () => {
-    let filteredData = categories;
-
-    if (startDate) {
-      filteredData = filteredData.filter(category =>
-        new Date(category.date) >= new Date(startDate)
-      );
-    }
-    if (endDate) {
-      filteredData = filteredData.filter(category =>
-        new Date(category.date) <= new Date(endDate)
-      );
-    }
-    if (searchTerm) {
-      filteredData = filteredData.filter(category =>
-        category.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    setFilteredCategories(filteredData);
-  };
-
- 
   const handleSubmit = async () => {
     try {
       const response = await axios.post("https://api.hachion.co/course-categories/add", {
@@ -236,8 +233,8 @@ const displayedCategories = filteredCategories.slice(
                 placeholder="Enter Category name"
                 value={courseData.category_name}
                 onChange={(e) =>
-                  setCourseData({ ...courseData, category_name: e.target.value })
-                }
+                  setCourseData({ ...courseData, category_name: e.target.value })}
+                style={{ width: '350px'}}
               />
             </div>
             <div className="mb-3">
@@ -287,7 +284,8 @@ const displayedCategories = filteredCategories.slice(
               sx={{
                  '& .MuiIconButton-root':{color: '#00aeef'}
               }}/>
-            <button className='filter' onClick={handleFilter}>Filter</button>
+            <button className='filter' onClick={handleDateFilter}>Filter</button>
+            <button className="filter" onClick={handleDateReset}>Reset</button>
           </div>
           <div className='entries'>
           <div className="entries-left">
@@ -305,20 +303,11 @@ const displayedCategories = filteredCategories.slice(
   <p style={{ marginBottom: '0' }}>entries</p>
 </div>
             <div className='entries-right'>
-              <div className="search">
-              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input
-                  className="search-input"
-                  type="search"
-                  placeholder="Enter Courses, Category or Keywords"
-                  aria-label="Search"
-                  value={searchTerm}
-                  
-                />
-                <button className="btn-search" onClick={handleFilter} type="button">
-                  <IoSearch />
-                </button>
-              </div>
+              <div className="entries-right">
+                 <div className="search-div">
+                   <input className="search-input" type="search" placeholder="Enter Category or Keywords" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                   <button className="btn-search"><IoSearch /></button>
+                </div>
               </div>
               <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick}>
                 <FiPlus /> {buttonLabel}

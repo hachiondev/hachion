@@ -5,7 +5,10 @@ import { BsFileEarmarkPdfFill, BsFillPlayCircleFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
 import loginPopupImg from '../../Assets/loginpopup.png';
+import AssessmentImg from '../../Assets/assesspdf.avif';
+import LiveImg from '../../Assets/liveclass.avif';
 import logo from '../../Assets/logo.png';
+import { Assessment } from '@mui/icons-material';
 
 const Curriculum = () => {
   const [showMore, setShowMore] = useState(false);
@@ -16,8 +19,11 @@ const Curriculum = () => {
   const [error, setError] = useState(null);
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const modalRef = useRef(null);
-
+  const [showAssessmentLoginPopup, setShowAssessmentLoginPopup] = useState(false);
+  const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const { courseName } = useParams();
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
 
   useEffect(() => {
     const redirectPath = localStorage.getItem('redirectAfterLogin');
@@ -123,6 +129,41 @@ const Curriculum = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+ const handleDownloadAssessment = async (assessmentPdfPath) => {
+  const token = localStorage.getItem('authToken');
+  const userData = JSON.parse(localStorage.getItem('loginuserData'));
+
+  if (!token || !userData) {
+    setShowAssessmentLoginPopup(true);
+    return;
+  }
+
+  try {
+    const response = await axios.get(`https://api.hachion.co/enroll/check`, {
+      params: {
+        userId: userData.id,
+        courseName: matchedCourseName,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const { isEnrolled, mode } = response.data;
+
+    if (isEnrolled && mode.toLowerCase() === 'live') {
+      const fileName = assessmentPdfPath.split('/').pop();
+      const fileUrl = `https://api.hachion.co/curriculum/assessments/${fileName}`;
+      window.open(fileUrl, '_blank');
+    } else {
+      setShowEnrollPopup(true);
+    }
+  } catch (error) {
+    console.error('Error checking enrollment:', error);
+    setShowEnrollPopup(true);
+  }
+};
+
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
       <div className="curriculum-head">
@@ -158,7 +199,8 @@ const Curriculum = () => {
                             className="play-btn"
                             onClick={(e) => {
                               e.stopPropagation();
-                              window.open(validUrl, '_blank', 'noopener,noreferrer');
+                             setSelectedVideoUrl(validUrl);
+                             setVideoModalVisible(true);
                             }}
                           >
                             <BsFillPlayCircleFill size={24} color="#00AEEF" /> Preview
@@ -167,18 +209,16 @@ const Curriculum = () => {
                       })}
 
                     {item.assessment_pdf && (
-  <button
-    className="assessment-btn"
-    onClick={(e) => {
-      e.stopPropagation();
-      const fileName = item.assessment_pdf.split('/').pop(); // get just the filename
-      const link = `https://api.hachion.co/curriculum/assessments/${fileName}`;
-      window.open(link, '_blank', 'noopener,noreferrer');
-    }}
-  >
-    <BsFileEarmarkPdfFill size={24} color="#00AEEF" /> Assessment
-  </button>
-)}
+                  <button
+                    className="assessment-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadAssessment(item.assessment_pdf);
+                    }}
+                  >
+                    <BsFileEarmarkPdfFill size={24} color="#00AEEF" /> Assessment
+                  </button>
+                )}
 
                   </div>
                     <span className="expand-icon">{expandedTopics[index] ? <FaMinus /> : <FaPlus />}</span>
@@ -205,6 +245,77 @@ const Curriculum = () => {
         </div>
       )}
 
+        {showAssessmentLoginPopup && (
+        <div className="login-modal">
+          <div className="login-modal-content" ref={modalRef}>
+            <button className="close-modal-btn" onClick={() => setShowAssessmentLoginPopup(false)}>×</button>
+            <h2 className="modal-title">Download Assessment</h2>
+            <div className="modal-body-login">
+              <div className="modal-left">
+                <p>Please log in to download the assessment.</p>
+                <button
+                  className="login-btn"
+                  onClick={() => {
+                    localStorage.setItem('redirectAfterLogin', window.location.pathname);
+                    window.location.href = '/login';
+                  }}
+                >
+                  Login
+                </button>
+                <button className="cancel-btn" onClick={() => setShowAssessmentLoginPopup(false)}>Cancel</button>
+              </div>
+              <div className="modal-right">
+                <img src={AssessmentImg} alt="Login Prompt" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {videoModalVisible && selectedVideoUrl && (
+      <div className="video-modal-overlay" onClick={() => setVideoModalVisible(false)}>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+            <iframe
+              src={selectedVideoUrl.replace("watch?v=", "embed/")}
+              title="Video Preview"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            ></iframe>
+          <button className="close-modal" onClick={() => setVideoModalVisible(false)}>✕</button>
+          </div>
+        </div>
+    )}
+
+      {showEnrollPopup && (
+      <div className="login-modal">
+        <div className="login-modal-content" ref={modalRef}>
+          <button className="close-modal-btn" onClick={() => setShowEnrollPopup(false)}>×</button>
+          <h2 className="modal-title">Enrollment Required</h2>
+          <div className="modal-body-login">
+            <div className="modal-right">
+              <img src={LiveImg} alt="Enroll Prompt" />
+            </div>
+            <div className="modal-left">
+              <p>Please enroll in a <strong>LIVE CLASS</strong> to download the Assessment PDF.</p>
+              <button
+                className="login-btn"
+                onClick={() => {
+                  setShowEnrollPopup(false);
+                  window.location.href = '/#upcoming-events';
+                }}
+              >
+                Enroll
+              </button>
+              <button className="cancel-btn" onClick={() => setShowEnrollPopup(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
       {isLoginModalVisible && (
         <div className="login-modal">
           <div className="login-modal-content" ref={modalRef}>
@@ -213,7 +324,7 @@ const Curriculum = () => {
             <h2 className="modal-title">Download Brochure</h2>
             <div className="modal-body-login">
               <div className="modal-left">
-                <h4 style={{ color: '#000' }}>Don’t miss out!</h4>
+                <h4 style={{ color: '#000' }}>Don't miss out!</h4>
                 <br />
                 <p>Just log in to the <span className="web-name">Hachion website</span> to unlock this feature.</p>
                 <button

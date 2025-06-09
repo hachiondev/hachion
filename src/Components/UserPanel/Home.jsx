@@ -12,8 +12,19 @@ import Corporate from './Corporate';
 import StickyBar from './StickyBar';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export const Home = () => {
+   const location = useLocation();
+  useEffect(() => {
+    if (location.hash === '#upcoming-events') {
+      const element = document.getElementById('upcoming-events');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
   return (
     <>
       <Helmet>
@@ -50,7 +61,9 @@ export const Home = () => {
 <NavbarTop/>
 <Banner/>
 <Trending/>
+<div id="upcoming-events">
 <TrainingEvents/>
+</div>
 <Corporate/>
 <Career/>
 <Association/>

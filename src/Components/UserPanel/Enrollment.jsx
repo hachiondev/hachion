@@ -195,6 +195,7 @@
       completion_date: selectedBatchData.schedule_duration || '',
       meeting_link: selectedBatchData.meeting_link || '',
       resendCount: 0,
+      batchId: selectedBatchData.batchId
     };
 
     try {

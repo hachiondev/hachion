@@ -25,7 +25,8 @@ const countryToCurrencyMap = {
 };
 
 const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
-  
+  const batchId = selectedBatchData?.batchId;
+  console.log("Batch ID:", batchId);
   const { courseName } = useParams();
   const navigate = useNavigate();
 
@@ -259,6 +260,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           enroll_date: selectedBatchData.schedule_date,
           week: selectedBatchData.schedule_week,
           time: selectedBatchData.schedule_time,
+          batchId:batchId, 
           amount: 0,
           mode: selectedBatchData.schedule_mode,
           type: 'Free Demo',

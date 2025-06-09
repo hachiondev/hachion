@@ -88,10 +88,10 @@ export default function CorporateCourses() {
   }, [searchTerm, trendingCourse]);
   const handleDateFilter = () => {
     const filtered = trendingCourse.filter((item) => {
-      const videoDate = new Date(item.date);
+      const courseDate = new Date(item.date);
       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      return (!start || videoDate >= start) && (!end || videoDate <= end);
+      return (!start || courseDate >= start) && (!end || courseDate <= end);
     });
     setFilteredCourse(filtered);
   };
@@ -132,6 +132,12 @@ export default function CorporateCourses() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+  const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setFilteredCourse(trendingCourse);
+};
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -196,6 +202,7 @@ export default function CorporateCourses() {
                   End Date
                   <DatePicker value={endDate} onChange={setEndDate} sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
                   <button className="filter" onClick={handleDateFilter}>Filter</button>
+                  <button className="filter" onClick={handleDateReset}>Reset</button>
                 </div>
                 <div className="entries">
                   <div className="entries-left">

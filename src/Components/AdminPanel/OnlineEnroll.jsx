@@ -168,6 +168,7 @@ const handleDateFilter = () => {
             <TableRow>
               <StyledTableCell align='center'><Checkbox /></StyledTableCell>
               <StyledTableCell sx={{ width: 50 }} align='center'>S.No.</StyledTableCell>
+              <StyledTableCell align="center">Batch ID</StyledTableCell>
               <StyledTableCell align="center">Student ID</StyledTableCell>
               <StyledTableCell align="center">Student Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
@@ -192,6 +193,7 @@ const handleDateFilter = () => {
                   <StyledTableCell align="center">
                       {index + 1 + (currentPage - 1) * rowsPerPage}
                     </StyledTableCell>
+                  <StyledTableCell align="left">{row.batchId}</StyledTableCell>
                   <StyledTableCell align="left">{row.studentId}</StyledTableCell>
                   <StyledTableCell align="left">{row.name}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>

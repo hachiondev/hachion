@@ -307,7 +307,11 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       console.log("Updated course state:", course); // Logs whenever 'course' state updates
     }, [course]);
-    
+      const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setFilteredCourse(trendingCourse);
+};
 
   return (
     
@@ -364,7 +368,6 @@ const displayedCourse = filteredCourse.slice(
             <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
           ))}
         </select>
-
 </div>
   </div>
 
@@ -423,7 +426,7 @@ const displayedCourse = filteredCourse.slice(
    }}
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
-           
+           <button className='filter' onClick={handleDateReset} >Reset</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>

@@ -944,7 +944,7 @@ const isFormValid = () => {
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {course.batch_id}
+                        {course.batchId}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {course.schedule_category_name}

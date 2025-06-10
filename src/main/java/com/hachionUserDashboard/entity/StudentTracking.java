@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,10 +28,10 @@ public class StudentTracking {
 	private String mobile;
 
 	@Column(name = "start_date")
-	private String startDate;
+	private LocalDate startDate;
 
 	@Column(name = "completed_date")
-	private String completedDate;
+	private LocalDate completedDate;
 
 	@Column(name = "no.of_sessions")
 	private int numberOfSessions;
@@ -75,19 +77,19 @@ public class StudentTracking {
 		this.mobile = mobile;
 	}
 
-	public String getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getCompletedDate() {
+	public LocalDate getCompletedDate() {
 		return completedDate;
 	}
 
-	public void setCompletedDate(String completedDate) {
+	public void setCompletedDate(LocalDate completedDate) {
 		this.completedDate = completedDate;
 	}
 

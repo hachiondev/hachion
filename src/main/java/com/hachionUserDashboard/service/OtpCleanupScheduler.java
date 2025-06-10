@@ -59,7 +59,7 @@ public class OtpCleanupScheduler {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
 		String formattedNow = now.format(formatter);
 
-		int deletedRows = courseScheduleRepository.deletePastWorkshops(formattedNow);
+		int deletedRows = courseScheduleRepository.disablePastWorkshops(formattedNow);
 		System.out.println(deletedRows + " past workshop records deleted at " + formattedNow);
 	}
 }

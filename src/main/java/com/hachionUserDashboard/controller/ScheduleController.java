@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hachionUserDashboard.dto.BatchScheduleResponse;
 import com.hachionUserDashboard.entity.CourseSchedule;
 import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
@@ -59,7 +60,7 @@ public class ScheduleController {
 	@GetMapping("/schedulecourse")
 	public List<CourseSchedule> getAllCourseSchedule(@RequestParam(defaultValue = "UTC") String timezone,
 			@RequestParam(defaultValue = "user") String userType) {
-		List<CourseSchedule> coursescheduleList = repo.findAll();
+		List<CourseSchedule> coursescheduleList = repo.findAllActiveSchedules();
 
 		if ("admin".equalsIgnoreCase(userType)) {
 			return coursescheduleList;
@@ -187,9 +188,36 @@ public class ScheduleController {
 		List<String> courseNames = repo.findAllCourseNames();
 
 		if (courseNames.isEmpty()) {
-			return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); // No courses available
+			return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); 
 		}
 
-		return new ResponseEntity<>(courseNames, HttpStatus.OK); // Return course names only
+		return new ResponseEntity<>(courseNames, HttpStatus.OK); 
 	}
+
+	@GetMapping("/batchInfo")
+	public ResponseEntity<BatchScheduleResponse> getBatchScheduleInfo(@RequestParam String batchId) {
+		List<Object[]> results = repo.findCountAndScheduleDateListByBatchId(batchId);
+
+		if (results.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Object[] row = results.get(0);
+		Long count = ((Number) row[0]).longValue();
+		LocalDate startDate = LocalDate.parse((String) row[1]);
+
+		LocalDate completionDate;
+		if (batchId.startsWith("LDM")) {
+			completionDate = startDate;
+		} else if (batchId.startsWith("LCL")) {
+			completionDate = startDate.plusDays(2);
+		} else {
+
+			completionDate = startDate;
+		}
+
+		BatchScheduleResponse response = new BatchScheduleResponse(batchId, count, startDate, completionDate);
+		return ResponseEntity.ok(response);
+	}
+
 }

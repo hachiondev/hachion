@@ -41,21 +41,13 @@ public class CourseSchedule {
 	@Column
 	private String meeting_link;
 
-	public CourseSchedule() {
-	}
+	@Column(name = "batch_id")
+	private String batchId;
 
-	public CourseSchedule(String schedule_category_name, String schedule_course_name, String schedule_date,
-			String schedule_week, String schedule_time, String schedule_duration, String schedule_mode,
-			String trainer_name, String meeting_link) {
-		this.schedule_category_name = schedule_category_name;
-		this.schedule_course_name = schedule_course_name;
-		this.schedule_date = schedule_date;
-		this.schedule_week = schedule_week;
-		this.schedule_time = schedule_time;
-		this.schedule_duration = schedule_duration;
-		this.schedule_mode = schedule_mode;
-		this.trainer_name = trainer_name;
-		this.meeting_link = meeting_link;
+	@Column(name = "is_active")
+	private Boolean isActive = true;
+
+	public CourseSchedule() {
 	}
 
 	public String getMeeting_link() {
@@ -146,51 +138,6 @@ public class CourseSchedule {
 		this.created_date = created_date;
 	}
 
-	@Override
-	public String toString() {
-		return "CourseSchedule [course_schedule_id=" + course_schedule_id + ", schedule_category_name="
-				+ schedule_category_name + ", schedule_course_name=" + schedule_course_name + ", schedule_date="
-				+ schedule_date + ", schedule_week=" + schedule_week + ", schedule_time=" + schedule_time
-				+ ", schedule_duration=" + schedule_duration + ", schedule_mode=" + schedule_mode + ", trainer_name="
-				+ trainer_name + ", created_date=" + created_date + ", meeting_link=" + meeting_link + "]";
-	}
-
-	@Column(name = "batch_id")
-	private String batchId;
-//
-//	@PrePersist
-//	public void generateBatchId() {
-//		String prefix = "";
-//		if (schedule_mode != null) {
-//			if (schedule_mode.equalsIgnoreCase("Live Demo")) {
-//				prefix = "LDEMO/";
-//			} else if (schedule_mode.equalsIgnoreCase("Live Class")) {
-//				prefix = "LCLASS/";
-//			}
-//		}
-//
-//		String cat = schedule_category_name != null ? schedule_category_name.replaceAll("\\s", "") : "";
-//		String course = schedule_course_name != null ? schedule_course_name.replaceAll("\\s", "") : "";
-//
-//		String categoryPart = cat.length() >= 2 ? cat.substring(0, 2).toUpperCase() : cat.toUpperCase();
-//		String coursePart = course.length() >= 5 ? course.substring(0, 5).toUpperCase() : course.toUpperCase();
-//
-//		String dateFormatted = "";
-//		if (schedule_date != null) {
-//			try {
-//				LocalDate date = LocalDate.parse(schedule_date);
-//				dateFormatted = date.format(DateTimeFormatter.ofPattern("MMMddyyyy", Locale.ENGLISH)).toUpperCase(); // JUN052025
-//			} catch (DateTimeParseException e) {
-//
-//			}
-//		}
-//
-////		String timePart = schedule_time != null ? schedule_time.toUpperCase() : "";
-//		String timePart = schedule_time != null ? schedule_time.replaceAll("\\s", "").toUpperCase() : "";
-//
-//		this.batchId = prefix + categoryPart + coursePart + dateFormatted + "-" + timePart;
-//	}
-
 	public String getBatchId() {
 		return batchId;
 	}
@@ -198,6 +145,12 @@ public class CourseSchedule {
 	public void setBatchId(String batchId) {
 		this.batchId = batchId;
 	}
-	
 
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 }

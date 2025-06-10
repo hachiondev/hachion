@@ -15,17 +15,18 @@ public class Enroll {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	
 	@Column
 	private String name;
 
 	@Column(name = "student_id")
 	private String studentId;
 
+	@Column(name = "batch_id")
+	private String batchId;
 
 	@Column
 	private String email;
-	
+
 	@Column
 	private String mobile;
 
@@ -192,22 +193,31 @@ public class Enroll {
 		this.studentId = studentId;
 	}
 
-	@Override
-	public String toString() {
-		return "Enroll [id=" + id + ", name=" + name + ", studentId=" + studentId + ", email=" + email + ", mobile="
-				+ mobile + ", course_name=" + course_name + ", enroll_date=" + enroll_date + ", week=" + week
-				+ ", time=" + time + ", amount=" + amount + ", mode=" + mode + ", type=" + type + ", trainer=" + trainer
-				+ ", completion_date=" + completion_date + ", meeting_link=" + meeting_link + ", resendCount="
-				+ resendCount + "]";
+	public String getBatchId() {
+		return batchId;
 	}
 
-	public Enroll(int id, String name, String studentId, String email, String mobile, String course_name,
-			String enroll_date, String week, String time, String amount, String mode, String type, String trainer,
-			String completion_date, String meeting_link, int resendCount) {
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	@Override
+	public String toString() {
+		return "Enroll [id=" + id + ", name=" + name + ", studentId=" + studentId + ", batchId=" + batchId + ", email="
+				+ email + ", mobile=" + mobile + ", course_name=" + course_name + ", enroll_date=" + enroll_date
+				+ ", week=" + week + ", time=" + time + ", amount=" + amount + ", mode=" + mode + ", type=" + type
+				+ ", trainer=" + trainer + ", completion_date=" + completion_date + ", meeting_link=" + meeting_link
+				+ ", resendCount=" + resendCount + "]";
+	}
+
+	public Enroll(int id, String name, String studentId, String batchId, String email, String mobile,
+			String course_name, String enroll_date, String week, String time, String amount, String mode, String type,
+			String trainer, String completion_date, String meeting_link, int resendCount) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.studentId = studentId;
+		this.batchId = batchId;
 		this.email = email;
 		this.mobile = mobile;
 		this.course_name = course_name;

@@ -219,6 +219,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hachionUserDashboard.entity.Course;
+import com.hachionUserDashboard.exception.ResourceNotFoundException;
 import com.hachionUserDashboard.repository.CourseRepository;
 
 @CrossOrigin
@@ -291,20 +292,20 @@ public class CourseController {
 	public ResponseEntity<String> updateCourse(@PathVariable int id, @RequestPart("course") String courseData,
 			@RequestPart(value = "courseImage", required = false) MultipartFile courseImage) {
 		try {
-			// Parse the course data (excluding image)
+			
 			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule()); // Register the module for Java 8 Date/Time types
+			objectMapper.registerModule(new JavaTimeModule()); 
 			Course updatedCourse = objectMapper.readValue(courseData, Course.class);
 
 			return repo.findById(id).map(course -> {
-				// Update fields with the new course data
+				
 				course.setCourseCategory(updatedCourse.getCourseCategory());
 				course.setCourseName(updatedCourse.getCourseName());
+				course.setShortCourse(updatedCourse.getShortCourse());
 				course.setDailySessions(updatedCourse.getDailySessions());
 
 				course.setNumberOfClasses(updatedCourse.getNumberOfClasses());
 				course.setRatingByNumberOfPeople(updatedCourse.getRatingByNumberOfPeople());
-
 				course.setStarRating(updatedCourse.getStarRating());
 				course.setTotalEnrollment(updatedCourse.getTotalEnrollment());
 				course.setYoutubeLink(updatedCourse.getYoutubeLink());
@@ -412,5 +413,13 @@ public class CourseController {
 	    public ResponseEntity<List<String>> getCourseNamesByCategory(@RequestParam String categoryName) {
 	        List<String> courseNames = repo.findCourseNamesByCategory(categoryName);
 	        return ResponseEntity.ok(courseNames);
+	    }
+	  
+	  @GetMapping("/shortCourse")
+	    public ResponseEntity<String> checkShortCourse(@RequestParam String shortCourse) {
+	        if (repo.existsByShortCourse(shortCourse)) {
+	            throw new ResourceNotFoundException("ShortCourse already exists in the system");
+	        }
+	        return ResponseEntity.ok("ShortCourse is available");
 	    }
 }

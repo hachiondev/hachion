@@ -1,5 +1,8 @@
 package com.hachionUserDashboard.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +21,26 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 
 	@Override
 	public StudentTrackingResponse addStudentTracking(StudentTrackingRequest studentTrackingRequest) {
-		StudentTracking studentTracking = new StudentTracking();
+		 DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-		studentTracking.setStudentName(studentTrackingRequest.getStudentName());
-		studentTracking.setStudentEmail(studentTrackingRequest.getStudentEmail());
-		studentTracking.setMobile(studentTrackingRequest.getMobile());
-		studentTracking.setStartDate(studentTrackingRequest.getStartDate());
-		studentTracking.setCompletedDate(studentTrackingRequest.getCompletedDate());
-		studentTracking.setNumberOfSessions(studentTrackingRequest.getNumberOfSessions());
-		studentTracking.setCompletedSessions(studentTrackingRequest.getCompletedSessions());
-		studentTracking.setBatchStatus(studentTrackingRequest.getBatchStatus());
-		studentTracking.setRemarks(studentTrackingRequest.getRemarks());
+		    StudentTracking studentTracking = new StudentTracking();
+		    studentTracking.setStudentName(studentTrackingRequest.getStudentName());
+		    studentTracking.setStudentEmail(studentTrackingRequest.getStudentEmail());
+		    studentTracking.setMobile(studentTrackingRequest.getMobile());
+
+		    // Convert dd-MM-yyyy to LocalDate
+		    if (studentTrackingRequest.getStartDate() != null) {
+		        studentTracking.setStartDate(LocalDate.parse(studentTrackingRequest.getStartDate(), inputFormatter));
+		    }
+
+		    if (studentTrackingRequest.getCompletedDate() != null) {
+		        studentTracking.setCompletedDate(LocalDate.parse(studentTrackingRequest.getCompletedDate(), inputFormatter));
+		    }
+
+		    studentTracking.setNumberOfSessions(studentTrackingRequest.getNumberOfSessions());
+		    studentTracking.setCompletedSessions(studentTrackingRequest.getCompletedSessions());
+		    studentTracking.setBatchStatus(studentTrackingRequest.getBatchStatus());
+		    studentTracking.setRemarks(studentTrackingRequest.getRemarks());
 
 		StudentTracking saved = studentTrackingRepository.save(studentTracking);
 

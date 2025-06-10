@@ -70,7 +70,7 @@ export default function OnlineEnroll() {
 const searchedData = filteredData.filter((item) => {
   return (
     searchTerm === '' ||
-    [item.studentId, item.name, item.email, item.mobile, item.completion_date, item.course_name, item.mode]
+    [item.batchId, item.studentId, item.name, item.email, item.mobile, item.enroll_date, item.completion_date, item.course_name, item.mode]
       .map(field => (field || '').toLowerCase())
       .some(field => field.includes(searchTerm.toLowerCase()))
   );
@@ -78,15 +78,20 @@ const searchedData = filteredData.filter((item) => {
 
 const handleDateFilter = () => {
   const filtered = enrollData.filter((item) => {
-    const date = new Date(item.date || item.enroll_date);
+    const enrollDate = new Date(item.date || item.enroll_date);
     const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
     const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
     return (
-      (!start || date >= start) &&
-      (!end || date <= end)
+      (!start || enrollDate >= start) &&
+      (!end || enrollDate <= end)
     );
   });
   setFilteredData(filtered);
+};
+  const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setFilteredData(enrollData);
 };
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -129,8 +134,9 @@ const handleDateFilter = () => {
                   }}
                 />
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
+              <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
-              <div className='entries'>
+              <div style={{ display: 'flex', flexDirection: 'row', justifyContent:'left', padding:'1.5vh', gap: '30' }}>
                 <div className='entries-left'>
                   <p style={{ marginBottom: '0' }}>Show</p>
                   <div className="btn-group">
@@ -145,7 +151,7 @@ const handleDateFilter = () => {
                   </div>
                   <p style={{ marginBottom: '0' }}>entries</p>
                 </div>
-                <div className='entries-right'>
+                <div style={{ display: 'flex', justifyContent:'center', gap: '2vh' }}>
                   <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                     <input
                       className="search-input"

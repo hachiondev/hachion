@@ -404,7 +404,7 @@ export default function Other() {
                 <div className="course-details">
                   <div className="col">
                     <label className="form-label">
-                      Home Banner Image (width=1440px, height=420px)
+                      Home Banner Image (width=1440px, height=450px)
                     </label>
                     <input
                       type="file"

@@ -413,6 +413,80 @@
         background-color: #FFE69D;
         margin-bottom: 50px;
       }
+        .studentform{
+        background-color: #D8F3FE;
+        margin-bottom: 50px;
+        padding: 20px 0;
+        width: 100%;
+      }
+      .student-img{
+    aspect-ratio: 1/1;
+    width: 480px;
+    border-radius: 20px;
+  }
+  .student-reg-form{
+    max-width: 450px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 5px 5px 10px #d3d3d3;
+    margin-top: 10px;
+  }
+    #studentreg{
+      width: 400px ;
+      height: 40px ;
+      border-radius: 5px;
+      padding: 5px;
+      border: 1px solid #b3b3b3;
+      outline: none;
+    }
+        .student-register-button {
+        width: 400px;
+        height: 40px;
+        background-color: #00AEEF;
+        color: white;
+        font-weight: bold;
+        font-size: 20;
+        margin: 2px;
+        border: 0px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    .student-register-button:hover{
+      background-color: #006489;
+    }
+    .vertical-sticky-bar {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px;
+}
+
+.sticky-link {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 8px 0 0 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s;
+  border: 1px solid #ffffff;
+}
+
+.sticky-link:hover {
+  background-color: #0056b3;
+}
 
       .register-button {
         width: 520px;
@@ -637,7 +711,7 @@
       }
     }
     
-    @media  (min-width:480px) and (max-width: 1024px){
+    @media  (min-width:481px) and (max-width: 1024px){
       .about-us-content{
         width: 100%;
         margin-left: 0px;
@@ -714,6 +788,17 @@
     .reg-form{
     max-width: 400px;
   }
+    .student-img{
+    aspect-ratio: 1/1;
+    max-width: 450px;
+  }
+    .student-reg-form{
+    max-width: 450px;
+  }
+      #studentreg.form-control-student{
+      width: 400px ;
+      height: 40px ;
+    }
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -885,6 +970,26 @@
           background-color: #FFE69D;
           margin-bottom: 30px;
         }
+        .studentform{
+        margin-bottom: 30px;
+      }
+       .student-img{
+        display: none;
+      }
+      .student-reg-form{
+        max-width: 350px;
+      }
+      #studentreg.form-control-student{
+      width: 300px ;
+      height: 30px ;
+    }
+      .student-register-button {
+        width: 300px;
+        height: 30px;
+        font-size: 16;
+        margin: 5px 5%;
+        margin-top: 20px;
+    }
 
         .register-button {
           width: 320px;
@@ -1247,7 +1352,6 @@ width: 2vw;
   width: 100px;
 }
 .contact-us-right{
-
 width: 668px;
 background-color: #ffffff;
 margin-top: 4vh;
@@ -1752,10 +1856,9 @@ flex-direction: column;
 }
 
 }
-@media (min-width: 1024px) and (max-width: 1366px) {
+@media (min-width: 1025px) and (max-width: 1366px) {
 .contact-us{
 margin-left: 10px !important;
-
 }
 .contact-us-div{
 width: 300px;
@@ -1764,6 +1867,13 @@ padding: 5px;
 .contact-us-left{
 margin-left: 0px;
 }
+  .student-img{
+    aspect-ratio: 1/1;
+    width: 490px;
+  }
+  .student-reg-form{
+    max-width: 450px;
+  }
 }
 
 .enrollment{

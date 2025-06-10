@@ -534,8 +534,8 @@ const [currentPage, setCurrentPage] = useState(1);
 
          <StyledTableCell align="center">{row.mode}</StyledTableCell>        
         <StyledTableCell align="center">{row.studentId}</StyledTableCell>
-      <StyledTableCell align="center">{row.userName}</StyledTableCell>
-      <StyledTableCell align="center">{row.email}</StyledTableCell>
+      <StyledTableCell align="left">{row.userName}</StyledTableCell>
+      <StyledTableCell align="left">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
         <StyledTableCell align="center">{row.location}</StyledTableCell>

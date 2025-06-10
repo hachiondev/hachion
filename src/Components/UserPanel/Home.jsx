@@ -10,6 +10,7 @@ import Learners from './Learners';
 import Footer from './Footer';
 import Corporate from './Corporate';
 import StickyBar from './StickyBar';
+import StickyButton from './StickyButton';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
 import { useEffect } from 'react';
@@ -68,7 +69,7 @@ export const Home = () => {
 <Career/>
 <Association/>
 <Learners page="home"/>
-
+{/* <StickyButton/> */}
 <Footer/>
 </div>
 <StickyBar/>

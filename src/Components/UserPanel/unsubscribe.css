@@ -3,19 +3,19 @@
   padding: 2vh;
   margin-bottom: 0;
 }
-.contact-us {
+.unsub-us {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   margin-left: 8vw;
 }
 
-.contact-info {
+.unsub-info {
   font-size: 1.2rem;
   font-weight: 400;
   align-items: center;
 }
-.contact-block {
+.unsub-block {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -23,14 +23,14 @@
   gap: 1vw;
   padding-top: 2vh;
 }
-.contact-us-icon {
+.unsub-us-icon {
   padding-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   gap: 4vh;
 }
-.contact-us-icon img {
+.unsub-us-icon img {
   width: 2vw;
 }
 
@@ -38,7 +38,7 @@
   height: 100px;
   width: 100px;
 }
-.contact-us-right {
+.unsub-us-right {
   max-width: 90%;
   background-color: #ffffff;
   margin-top: 4vh;
@@ -46,17 +46,17 @@
   border: 1px solid #b3b3b3;
   box-shadow: 5px 5px 10px #d3d3d3;
 }
-.contact-form {
+.unsub-form {
   margin-left: 40px;
   padding: 10px;
 }
-.contact-us-bottom-div {
+.unsub-us-bottom-div {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.contact-us-right-header {
+.unsub-us-right-header {
   border-radius: 2vh 2vh 0 0;
   background: linear-gradient(90deg, #006489 0%, #00aeef 49.5%, #006489 100%);
   color: white;
@@ -81,22 +81,22 @@
 }
 
 @media (min-width: 350px) and (max-width: 480px) {
-  .contact-us-div {
+  .unsub-us-div {
     width: 340px;
     height: 180px;
   }
 
-  .contact-us-div h3 {
+  .unsub-us-div h3 {
     font-size: 16px;
     font-weight: 600;
   }
 
-  .contact-us-div p {
+  .unsub-us-div p {
     font-size: 12px;
     margin-bottom: 10px;
   }
 
-  .contact-us-box {
+  .unsub-us-box {
     display: flex;
     flex-direction: row;
     padding: 5px;
@@ -105,7 +105,7 @@
     align-items: center;
   }
 
-  .contact-us {
+  .unsub-us {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -114,14 +114,14 @@
     gap: 10px;
   }
 
-  .contact-info {
+  .unsub-info {
     font-size: 14px;
     font-weight: 400;
     align-items: center;
     margin-bottom: 0;
     padding: 5px;
   }
-  .contact-block {
+  .unsub-block {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -130,14 +130,14 @@
     padding-top: 20px;
     padding-left: 20%;
   }
-  .contact-us-icon {
+  .unsub-us-icon {
     padding-top: 10px;
     /* justify-content: space-evenly; */
     display: flex;
     align-items: center;
     gap: 5px;
   }
-  .contact-us-icon img {
+  .unsub-us-icon img {
     width: 30px;
     margin: 5px;
   }
@@ -146,7 +146,7 @@
     height: 100px;
     width: 100px;
   }
-  .contact-us-right {
+  .unsub-us-right {
     width: 340px;
     background-color: #ffffff;
     margin-top: 10px;
@@ -154,18 +154,18 @@
     border: 1px solid #b3b3b3;
     box-shadow: 5px 5px 10px #d3d3d3;
   }
-  .contact-form {
+  .unsub-form {
     margin-left: 5px;
     padding: 10px;
   }
-  .contact-us-bottom-div {
+  .unsub-us-bottom-div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
   }
-  .contact-us-right-header {
+  .unsub-us-right-header {
     display: flex;
     border-radius: 10px 10px 0 0;
     background: linear-gradient(90deg, #006489 0%, #00aeef 49.5%, #006489 100%);
@@ -178,11 +178,11 @@
     align-items: center;
   }
 
-  .contact-us-right-header p {
+  .unsub-us-right-header p {
     margin-bottom: 0;
   }
 
-  #contact1.form-control-contact {
+  #unsub1.form-control-unsub {
     max-width: 100%;
     width: 80vw; /* 80% of the screen width */
 
@@ -221,7 +221,7 @@
     font-size: 12px;
     margin-bottom: 10px;
   }
-  #contact3.form-control-contact {
+  #unsub3.form-control-unsub {
     max-width: 100%;
     width: 80vw; /* 80% of the screen width */
 
@@ -269,23 +269,23 @@
 }
 
 @media (min-width: 481px) and (max-width: 1024px) {
-  .contact-us {
+  .unsub-us {
     margin-left: 0px !important;
   }
-  .contact-us-div {
+  .unsub-us-div {
     width: 30vw;
     padding: 10px;
   }
 
-  .contact-us-bottom-div {
+  .unsub-us-bottom-div {
     flex-direction: column;
   }
 }
 @media (min-width: 1024px) and (max-width: 1366px) {
-  .contact-us {
+  .unsub-us {
     margin-left: 10px !important;
   }
-  .contact-us-div {
+  .unsub-us-div {
     width: 300px;
     padding: 5px;
   }
@@ -322,7 +322,7 @@
 .custom-width .dropdown-menu {
   min-width: 100px; /* Adjust dropdown menu width if necessary */
 }
-#contact1 {
+#unsub1 {
   width: 90%;
   max-width: 550px;
   height: 50px;
@@ -358,7 +358,7 @@
   margin-top: 10px;
 }
 
-#contact3 {
+#unsub3 {
   width: 550px;
   height: 100px;
   outline: none;

@@ -331,6 +331,32 @@ const handleAddTrendingCourseClick = () => {
   setShowAddCourse(true); 
   handleReset(); 
 };
+const [shortCourseError, setShortCourseError] = useState("");
+
+const handleShortCourseBlur = async () => {
+  const shortCourseValue = formData.shortCourse;
+
+  if (!shortCourseValue) return;
+
+  try {
+    await axios.get(`https://api.hachion.co/courses/shortCourse`, {
+      params: { shortCourse: shortCourseValue },
+    });
+
+    setShortCourseError("");
+  } catch (error) {
+    if (
+    error.response &&
+    error.response.data &&
+    error.response.data.message === "ShortCourse already exists in the system"
+  ) {
+      setShortCourseError("❌ ShortCourse already exists");
+    } else {
+      setShortCourseError("❌ Unable to verify ShortCourse");
+    }
+  }
+};
+
   return (
     <>
       {showAddCourse ? (
@@ -375,11 +401,25 @@ const handleAddTrendingCourseClick = () => {
                     <input type="text" name="courseName" className="form-control" placeholder="Enter Course Name"
                       value={formData.courseName} onChange={handleInputChange} required />
                   </div>
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <label className="form-label">Short Course Name</label>
                     <input type="text" name="shortCourse" className="form-control" placeholder="Enter Short Course Name"
                       value={formData.shortCourse} onChange={handleInputChange} required />
-                  </div>
+                  </div> */}
+                  <div className="col-md-4">
+  <label className="form-label">Short Course Name</label>
+  <input
+    type="text"
+    name="shortCourse"
+    className="form-control"
+    placeholder="Enter Short Course Name"
+    value={formData.shortCourse}
+    onChange={handleInputChange}
+    onBlur={handleShortCourseBlur}  // ✅ Added this line
+    required
+  />
+  {shortCourseError && <div style={{ color: "red" }}>{shortCourseError}</div>}  {/* ✅ Optional error display */}
+</div>
                   </div>
                   <div className="course-row">
                   <div className="col-md-4">

@@ -35,7 +35,7 @@ const initialValues = {
   country: "",
 };
 
-const ContactUs = () => {
+const Unsubscribe = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
@@ -214,13 +214,13 @@ const ContactUs = () => {
       <Topbar />
       <NavbarTop />
       <div className="unsubscribe-container">
-        <div className="contact-us-bottom-div">
-          <div className="contact-us-right">
-            <div className="contact-us-right-header">
+        <div className="unsub-us-bottom-div">
+          <div className="unsub-us-right">
+            <div className="unsub-us-right-header">
               <p>Unsubscribe</p>
             </div>
             <form
-              className="needs-validation contact-form"
+              className="needs-validation unsub-form"
               enctype="multipart/form-data"
               novalidate
             >
@@ -233,8 +233,8 @@ const ContactUs = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control-contact"
-                  id="contact1"
+                  className="form-control-unsub"
+                  id="unsub1"
                   placeholder="Enter your full name"
                   name="name"
                   value={values.name}
@@ -250,8 +250,8 @@ const ContactUs = () => {
                 </label>
                 <input
                   type="email"
-                  className="form-control-contact"
-                  id="contact1"
+                  className="form-control-unsub"
+                  id="unsub1"
                   placeholder="Enter your emailid"
                   name="email"
                   value={values.email}
@@ -283,8 +283,8 @@ const ContactUs = () => {
                   <input
                     type="tel"
                     ref={mobileInputRef}
-                    className="form-control-contact"
-                    id="contact1"
+                    className="form-control-unsub"
+                    id="unsub1"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     aria-label="Text input with segmented dropdown button"
@@ -370,7 +370,7 @@ const ContactUs = () => {
                         className="success-gif"
                       />
                       <p className="modal-para">
-                        Thank you! Our Team will contact you soon
+                        Our Team will review soon
                       </p>
                     </div>
                   </div>
@@ -386,4 +386,4 @@ const ContactUs = () => {
   );
 };
 
-export default ContactUs;
+export default Unsubscribe;

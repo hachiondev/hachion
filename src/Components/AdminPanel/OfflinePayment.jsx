@@ -379,7 +379,7 @@ useEffect(() => {
     
       if (name === 'installments') {
         if (count > 4) {
-          setErrorMessage("❌ Maximum 4 installments are allowed.");
+          setErrorMessage("❌ Maximum 4 instalments are allowed.");
           setSuccessMessage("");
           updatedData.installments = "4"; 
           setPaymentData(updatedData);
@@ -873,11 +873,11 @@ const handleSaveAndSendInvoice = async (e) => {
     <input type="text" class="schedule-input" id="inputEmail4" name='discount' value={paymentData.discount} onChange={handleChange}/>
   </div>
   <div class="col">
-    <label for="inputEmail4" class="form-label">No. of Installments</label>
+    <label for="inputEmail4" class="form-label">No. of Instalments</label>
     <input type="text" class="schedule-input" id="inputEmail4" name='installments' value={paymentData.installments} onChange={handleChange}/>
   </div>
   <div class="col">
-    <label for="inputEmail4" class="form-label">No. of Days</label>
+    <label for="inputEmail4" class="form-label">Instalment Days</label>
     <input type="text" class="schedule-input" id="inputEmail4" name='days' value={paymentData.days} onChange={handleChange}/>
   </div>
 </div>
@@ -893,7 +893,7 @@ const handleSaveAndSendInvoice = async (e) => {
             <StyledTableCell align='center' sx={{ fontSize: '14px' }}> Pay Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Due Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '14px' }}> Payment Method</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Installment</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Instalment</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Actual Pay</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Received Pay</StyledTableCell>
             <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Proof</StyledTableCell>
@@ -1151,7 +1151,7 @@ const handleSaveAndSendInvoice = async (e) => {
             <StyledTableCell align="center">Mobile</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Course Fee</StyledTableCell>
-            <StyledTableCell align="center">No. of Installments</StyledTableCell>
+            <StyledTableCell align="center">No. of Instalments</StyledTableCell>
             <StyledTableCell align="center">Balance Fee</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
             <StyledTableCell align="center">Created Date </StyledTableCell>

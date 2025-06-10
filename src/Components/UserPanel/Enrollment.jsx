@@ -5,7 +5,7 @@
   import './Blogs.css';
   import EnrollmentTable from './EnrollmentTable';
   import TextField from '@mui/material/TextField';
-  import TotalOrder from './TotalOrder';
+  // import TotalOrder from './TotalOrder';
   import StickyBar from './StickyBar';
   import Footer from './Footer'
   import { AiFillCaretDown } from 'react-icons/ai';
@@ -15,18 +15,15 @@
   import { LoginSchema } from '../Schemas';
   import { useLocation } from 'react-router-dom';
 
-  //
-  import Table from '@mui/material/Table';
-  import TableBody from '@mui/material/TableBody';
-  import TableCell from '@mui/material/TableCell';
-  import TableContainer from '@mui/material/TableContainer';
-  import TableHead from '@mui/material/TableHead';
-  import TableRow from '@mui/material/TableRow';
-  import Paper from '@mui/material/Paper';
-  import Radio from '@mui/material/Radio';
-  import payumoney from '../../Assets/payumoney.png';
-  import './Blogs.css';
-  
+  //totalorder imports
+  import { useParams } from 'react-router-dom';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
   const initialValues = {
     name: "",
@@ -39,7 +36,6 @@
     const location = useLocation();
     const { selectedBatchData, enrollText, modeType } = location.state || {};
 
-    
   const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [successMessage, setSuccessMessage] = useState("");
@@ -49,6 +45,11 @@
     const [mobileNumber, setMobileNumber] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
     const mobileInputRef = useRef(null);
+    const { courseName } = useParams(); // For dynamic route param
+const [courseData, setCourseData] = useState(null);
+const [loading, setLoading] = useState(true);
+const [selectedValue, setSelectedValue] = useState('a');
+
     const [selectedCountry, setSelectedCountry] = useState({
           code: '+1',
           flag: 'US',
@@ -114,6 +115,35 @@
     const closeMenu = () => {
       setAnchorEl(null);
     };
+
+    useEffect(() => {
+  const fetchCourseData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('https://api.hachion.co/courses/all');
+
+      const matchedCourse = response.data.find(
+        (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName?.toLowerCase().replace(/\s+/g, '-')
+      );
+
+      if (matchedCourse) {
+        setCourseData(matchedCourse);
+      } else {
+        console.error("Course not found.");
+      }
+    } catch (error) {
+      console.error('Error fetching course data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCourseData();
+}, [courseName]);
+
+const handleRadioChange = (event) => {
+  setSelectedValue(event.target.value);
+};
     useEffect(() => {
       const fetchStudentDetails = async () => {
         const user = JSON.parse(localStorage.getItem('loginuserData'));
@@ -215,28 +245,27 @@
     }
   };
 
-
   const handlePayment = async () => {
-    try {
-      const amount = 1.00; // 💰 Hardcoded for now
-
-      const response = await axios.post("https://api.hachion.co/create-order", null, {
-        params: { amount: amount }
-      });
-
-      const approvalUrl = response.data;
-
-      if (approvalUrl.startsWith("https://www.sandbox.paypal.com")) {
-        // 🔁 Redirect to PayPal
-        window.location.href = approvalUrl;
-      } else {
-        alert("Unexpected response: " + approvalUrl);
+      try {
+        const amount = courseData.total || "N/A"; // 💰 Hardcoded for now
+  
+        const response = await axios.post("https://api.hachion.co/create-order", null, {
+          params: { amount: amount }
+        });
+  
+        const approvalUrl = response.data;
+  
+        if (approvalUrl.startsWith("https://www.sandbox.paypal.com")) {
+          // 🔁 Redirect to PayPal
+          window.location.href = approvalUrl;
+        } else {
+          alert("Unexpected response: " + approvalUrl);
+        }
+      } catch (error) {
+        console.error("Error creating order:", error);
+        alert("Failed to start payment. Please try again.");
       }
-    } catch (error) {
-      console.error("Error creating order:", error);
-      alert("Failed to start payment. Please try again.");
-    }
-  };
+    };
 
     return (
       <>
@@ -360,59 +389,47 @@
               <div className='personal-details-header'>
                   <p>3. Order summary</p>
                   </div>
-<TableContainer component={Paper} className="table-container">
+                {/* <TotalOrder/> */}
+                {loading ? (
+  <div>Loading...</div>
+) : courseData ? (
+  <TableContainer component={Paper} className="table-container">
     <Table aria-label="simple table">
       <TableHead>
         <TableRow>
           <TableCell className="table-cell-left">Course Name</TableCell>
-          <TableCell align="right" className="table-cell-right">
-            {selectedBatchData?.schedule_course_name || 'N/A'}
-          </TableCell>
+          <TableCell align="right" className="table-cell-right">{courseData.courseName}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         <TableRow>
           <TableCell className="table-cell-left">Course Fee</TableCell>
-          <TableCell align="right" className="table-cell-right">
-            USD {selectedBatchData?.amount || 'N/A'}
-          </TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.amount != null ? courseData.amount : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">% Discount</TableCell>
-          <TableCell align="right" className="table-cell-right">
-            {selectedBatchData?.discount || 'N/A'}
-          </TableCell>
+          <TableCell align="right" className="table-cell-right">{courseData.discount !=null ? courseData.discount : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Total</TableCell>
-          <TableCell align="right" className="table-cell-right">
-            USD {selectedBatchData?.total || 'N/A'}
-          </TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.total !=null ? courseData.total : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Tax</TableCell>
-          <TableCell align="right" className="table-cell-right">
-            USD {selectedBatchData?.tax || 'N/A'}
-          </TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.tax !=null ? courseData.tax : 0}</TableCell>
         </TableRow>
         <TableRow className="net-amount">
           <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-          <TableCell align="right" className="net-amount-right">
-            USD {selectedBatchData?.total || 0}
-          </TableCell>
+          <TableCell align="right" className="net-amount-right">USD {courseData.total || 0}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
   </TableContainer>
-
-
-
-
-
-
-
-                {/* <TotalOrder/> */}
+) : (
+  <div>No matching course found.</div>
+)}
                 <div className="input-row">
+                {/* <button className="payment-btn">Proceed to Pay</button> */}
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
                 
                 <div className="paylater">

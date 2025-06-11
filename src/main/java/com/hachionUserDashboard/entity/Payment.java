@@ -60,6 +60,9 @@ public class Payment {
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
 	
+	@Column(name = "status")
+	private String status;
+	
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentInstallment> installments = new ArrayList<>();
 
@@ -182,5 +185,14 @@ public class Payment {
 	public void setInvoiceNumber(String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 
 }

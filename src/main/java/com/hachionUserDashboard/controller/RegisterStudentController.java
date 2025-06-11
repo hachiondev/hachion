@@ -23,8 +23,6 @@ import com.hachionUserDashboard.service.EmailService;
 import jakarta.mail.MessagingException;
 
 @CrossOrigin
-//@CrossOrigin(origins ="http://localhost:3000")
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RestController
 public class RegisterStudentController {
 
@@ -44,42 +42,8 @@ public class RegisterStudentController {
 
 	@GetMapping("/registerstudent")
 	public List<RegisterStudent> getAllRegisterStudent() {
-		return repo.findAll();
+		return repo.findAllOrderByDateDescNative();
 	}
-
-//	@PostMapping("registerstudent/add")
-//	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) {
-//
-//		if (student.getEmail() == null || student.getEmail().isBlank()) {
-//			throw new IllegalArgumentException("Email is required");
-//		}
-//		if (student.getMobile() == null || student.getMobile().isBlank()) {
-//			throw new IllegalArgumentException("Mobile number is required");
-//		}
-//
-//		if (repo.existsByEmail(student.getEmail())) {
-//			throw new RuntimeException("Email already exists in the system");
-//		}
-//		if (repo.existsByMobile(student.getMobile())) {
-//			throw new RuntimeException("Mobile number already exists in the system");
-//		}
-//
-//		student.setAdditional_email(null);
-//		student.setAdditional_phone(0);
-//
-//		String tempPassword = "Hach@123";
-//		String hashedPassword = passwordEncoder.encode(tempPassword);
-//		student.setPassword(hashedPassword);
-//
-//		String fullName = student.getUserName();
-//		student.setStudentId(generateNextStudentId());
-//
-//		emailService.sendWelcomeEmail(student.getEmail(), tempPassword, fullName);
-//
-//		repo.save(student);
-//		System.out.println("Add data: " + student);
-//		return ResponseEntity.ok("Student added successfully");
-//	}
 
 	@PostMapping("registerstudent/add")
 	public ResponseEntity<String> addStudent(@RequestBody RegisterStudent student) throws MessagingException {
@@ -132,30 +96,6 @@ public class RegisterStudentController {
 		return prefix + String.format("%03d", nextNumber);
 	}
 
-//    @PutMapping("/registerstudent/update/{id}")
-//    public ResponseEntity<String> editStudent(
-//        @PathVariable int id, 
-//        @RequestBody RegisterStudent updatedStudent
-//    ) {
-//        Optional<RegisterStudent> optionalStudent = repo.findById(id);
-//        if (optionalStudent.isPresent()) {
-//            RegisterStudent existingStudent = optionalStudent.get();
-//            existingStudent.setAdditional_email(updatedStudent.getAdditional_email());
-//            existingStudent.setAdditional_phone(updatedStudent.getAdditional_phone());
-//            existingStudent.setPassword(updatedStudent.getPassword());
-//           repo.save(existingStudent);
-//            return ResponseEntity.ok("Student updated successfully");
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
-//        }
-//    }
-
-//    @PostMapping("/registerstudent/add")
-//    @ResponseStatus(code = HttpStatus.CREATED)
-//    public void createRegisterStudent(@RequestBody RegisterStudent registerstudent) {
-//        repo.save(registerstudent);
-//    }
-//
 	@PutMapping("/registerstudent/update/{id}")
 	public ResponseEntity<RegisterStudent> updateRegisterStudent(@PathVariable int id,
 			@RequestBody RegisterStudent updatedRegisterStudent) {
@@ -174,8 +114,6 @@ public class RegisterStudentController {
 			return ResponseEntity.ok(registerstudent);
 		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-	
-	
 
 	@DeleteMapping("registerstudent/delete/{id}")
 	public ResponseEntity<?> deleteRegisterStudent(@PathVariable int id) {

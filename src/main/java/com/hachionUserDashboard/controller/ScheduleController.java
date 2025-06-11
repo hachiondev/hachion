@@ -188,10 +188,10 @@ public class ScheduleController {
 		List<String> courseNames = repo.findAllCourseNames();
 
 		if (courseNames.isEmpty()) {
-			return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT); 
+			return new ResponseEntity<>("No courses available", HttpStatus.NO_CONTENT);
 		}
 
-		return new ResponseEntity<>(courseNames, HttpStatus.OK); 
+		return new ResponseEntity<>(courseNames, HttpStatus.OK);
 	}
 
 	@GetMapping("/batchInfo")
@@ -207,12 +207,20 @@ public class ScheduleController {
 		LocalDate startDate = LocalDate.parse((String) row[1]);
 
 		LocalDate completionDate;
+
 		if (batchId.startsWith("LDM")) {
 			completionDate = startDate;
 		} else if (batchId.startsWith("LCL")) {
-			completionDate = startDate.plusDays(2);
+			
+			String numberOfClassesStr = repo.findNumberOfClassesByBatchId(batchId);
+			int numberOfClasses = 0;
+			try {
+				numberOfClasses = Integer.parseInt(numberOfClassesStr);
+			} catch (NumberFormatException e) {
+				numberOfClasses = 0;
+			}
+			completionDate = startDate.plusDays(numberOfClasses);
 		} else {
-
 			completionDate = startDate;
 		}
 

@@ -78,6 +78,7 @@ const Learners = ({ page }) => {
           indicators={false}
           controls={false}
           interval={null}
+          slide={true}
         >
           {groupedReviews.map((group, index) => (
             <Carousel.Item key={index}>
@@ -143,6 +144,7 @@ const Learners = ({ page }) => {
               prevIcon={<FaAngleLeft className="custom-prev-icon" />}
               nextIcon={<FaAngleRight className="custom-next-icon" />}
               interval={null}
+               slide={true}
             >
               {reviews.map((review, index) => (
                 <Carousel.Item key={index}>

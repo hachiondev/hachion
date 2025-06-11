@@ -2,7 +2,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { useState, useEffect } from 'react';
 import './Admin.css';
-// import React, {  } from 'react';
 import axios from 'axios';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -14,6 +13,8 @@ export default function StudentTracking() {
      const [studentData, setStudentData] = useState({
         student_id: "", name:"", mobile:"", email: "", category_name:"", course_name: "", status: "", batch_id: "", student_number: "", start_date: "", completed_date: "",number_of_sessions: "",completed_sessions: "", remarks: "",
       });
+      const [successMessage, setSuccessMessage] = useState("");
+        const [errorMessage, setErrorMessage] = useState("");
       const [batchOptions, setBatchOptions] = useState([]);
  const [categoryOptions, setCategoryOptions] = useState([]);
       const handleChange = (e) => {
@@ -37,30 +38,7 @@ export default function StudentTracking() {
     fetchStudentIds();
   }, [studentData.course_name]);
 
-  // useEffect(() => {
-  //   const fetchEmail = async () => {
-  //     if (!studentData.student_id) {
-  //       setStudentData(prev => ({ ...prev, email: "" }));
-  //       return;
-  //     }
-
-  //     try {
-        
-  //       const response = await axios.get(`https://api.hachion.co/studentsTracking/gettingEmail?studentId=${studentData.student_id}`);
-        
-  //       const emailFromApi = response.data.length > 0 ? response.data[0].email : "";
-  //       setStudentData(prev => ({
-  //         ...prev,
-  //         email: emailFromApi || ""  
-  //       }));
-  //     } catch (error) {
-  //       console.error("Failed to fetch email:", error);
-  //       setStudentData(prev => ({ ...prev, email: "" }));
-  //     }
-  //   };
-
-  //   fetchEmail();
-  // }, [studentData.student_id]);
+  
   useEffect(() => {
   const fetchEmail = async () => {
     if (!studentData.student_id) {
@@ -91,14 +69,10 @@ export default function StudentTracking() {
 
    useEffect(() => {
   const fetchBatchIds = async () => {
-    const { student_id, email } = studentData;
-    // if (!student_id && !email) {
-    //   setBatchOptions([]);
-    //   setStudentData(prev => ({ ...prev, batch_id: "" }));
-    //   return;
-    // }
+    const { student_id, email, course_name } = studentData;
+    
 
-    if (!student_id) {
+    if (!student_id && !course_name) {
   setBatchOptions([]);
   setStudentData(prev => ({ ...prev, batch_id: "" }));
   return;
@@ -107,6 +81,7 @@ export default function StudentTracking() {
       const params = new URLSearchParams();
       if (student_id) params.append("studentId", student_id);
       if (email) params.append("email", email);
+      if (course_name) params.append("courseName", course_name);
 
       const response = await axios.get(`https://api.hachion.co/studentsTracking/batches?${params.toString()}`);
       const validBatchIds = (response.data || []).filter(id => id !== null);
@@ -139,7 +114,8 @@ useEffect(() => {
         ...prev,
         student_number: data.count,
         start_date: data.startDate,
-        completed_date: data.completionDate
+        completed_date: data.completionDate,
+        number_of_sessions : data.numberOfClasses
       }));
     } catch (error) {
       console.error('Error fetching batch info:', error);
@@ -167,12 +143,14 @@ const handleUpdate = async () => {
     };
 
     const response = await axios.post("https://api.hachion.co/studentsTracking/add", payload);
-    console.log("Update successful:", response.data);
-    alert("Student tracking updated successfully!");
+    
+
+    setSuccessMessage("✅ Student tracking updated successfully.");
+  setErrorMessage("");
 
   } catch (error) {
-    console.error("Error updating student tracking:", error);
-    alert("Failed to update student tracking.");
+    setErrorMessage("❌ Failed to update student tracking.");
+  setSuccessMessage(""); 
   }
 };
    useEffect(() => {
@@ -207,19 +185,7 @@ useEffect(() => {
                       <div className='category-header'><p style={{ marginBottom: 0 }}>Student Tracking</p></div>
                       <div className='course-details'>
                   <div className='course-row'>
-                    {/* <div class="col">
-                        <label for="inputState" class="form-label">Category Name</label>
-                        <select id="inputState" class="form-select" name='category_name' value={studentData.category_name} onChange={handleChange}>
-                        <option value="" disabled>
-                            Select Category
-                            </option>
-                            {filterCourse.map((curr) => (
-                            <option key={curr.id} value={curr.name}>
-                                {curr.name}
-                            </option>
-                            ))}
-                        </select>
-                    </div> */}
+                    
                     <div className="col">
   <label htmlFor="inputState" className="form-label">Category Name</label>
   <select
@@ -424,9 +390,9 @@ useEffect(() => {
                     <input
                       type="text"
                       className="schedule-input"
-                      id="sessions"
-                      name="sessions"
-                      value={studentData.sessions}
+                      id="number_of_sessions"
+                      name="number_of_sessions"
+                      value={studentData.number_of_sessions}
                       onChange={handleChange}
                     />
                   </div>
@@ -469,7 +435,14 @@ useEffect(() => {
                       onChange={handleChange}
                     />
                   </div>
+                  {successMessage && (
+      <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>
+    )}
+    {errorMessage && (
+      <p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>
+    )}
                   <div style={{display: 'flex',justifyContent: 'center'}}>
+                   
                    <button className='submit-btn' onClick={handleUpdate}>Update</button>
 
                    </div>

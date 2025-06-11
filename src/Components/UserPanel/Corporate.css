@@ -569,6 +569,20 @@ position: relative;
 .carousel-indicators .active {
   background-color: #00AAEF !important;
 }
+.carousel-inner {
+  transition: transform 0.6s ease-in-out !important;
+}
+
+.carousel-item {
+  transition: opacity 0.6s ease-in-out !important;
+}
+.carousel-inner {
+  will-change: transform;
+}
+
+.carousel-item {
+  will-change: opacity;
+}
 
  .learner-card-item {
   display: flex;

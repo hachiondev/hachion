@@ -1168,6 +1168,9 @@ font-weight: 400;
 font-size: 14px;
 cursor: pointer;
 }
+p.footer-content, p.footer-term , p.footer-copyright{
+margin-bottom: 0;
+}
 
 .footer-content:hover {
   color: #00AEEF;
@@ -1190,7 +1193,7 @@ cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 16px;
+    margin-bottom: 3px;
   }
 
   .term {

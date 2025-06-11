@@ -304,6 +304,7 @@ useEffect(() => {
         date: item.installments?.[0]?.payDate || "", 
         rawInstallments: item.installments, 
         invoiceNumber: item.invoiceNumber,
+        status : item.status
         
       }));
       setOfflinePayment(normalizedData);
@@ -397,19 +398,20 @@ useEffect(() => {
           installments: `${i + 1}`,
         };
     
-        if (formMode === "Add") {
-          updatedRows[i] = {
-            ...updatedRows[i],
-            ...baseRow,
-            actual_pay: i < count ? perInstallment : '',  // reset actual_pay if beyond count
-          };
-        } else {
-          updatedRows[i] = {
-            ...updatedRows[i],
-            ...baseRow,
-            actual_pay: i < count ? (updatedRows[i]?.actual_pay ?? '') : '', // keep existing or empty if beyond count
-          };
-        }
+       if (formMode === "Add") {
+  updatedRows[i] = {
+    ...updatedRows[i],
+    ...baseRow,
+    actual_pay: i < count ? perInstallment : '',  
+  };
+} else {
+  // For update: keep actual_pay exactly as-is, no changes
+  updatedRows[i] = {
+    ...updatedRows[i],
+    ...baseRow,
+    actual_pay: updatedRows[i]?.actual_pay ?? '',  // do not modify
+  };
+}
       }
     
       Rows(updatedRows);

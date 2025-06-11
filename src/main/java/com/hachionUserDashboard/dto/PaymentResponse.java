@@ -18,6 +18,7 @@ public class PaymentResponse {
     private Double totalAmount;
     private Double balancePay;
     private String invoiceNumber;
+    private String status;
 
     private List<PaymentInstallmentResponse> paymentInstallmentsResponse;
 
@@ -139,6 +140,14 @@ public class PaymentResponse {
 
 	public void setInvoiceNumber(String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
     

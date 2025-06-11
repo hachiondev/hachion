@@ -195,11 +195,11 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/batchInfo")
-	public ResponseEntity<BatchScheduleResponse> getBatchScheduleInfo(@RequestParam String batchId) {
+	public ResponseEntity<?> getBatchScheduleInfo(@RequestParam String batchId) {
 		List<Object[]> results = repo.findCountAndScheduleDateListByBatchId(batchId);
 
 		if (results.isEmpty()) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.badRequest().body("Invalid batchId. Please provide a valid one.");
 		}
 
 		Object[] row = results.get(0);
@@ -207,24 +207,32 @@ public class ScheduleController {
 		LocalDate startDate = LocalDate.parse((String) row[1]);
 
 		LocalDate completionDate;
+		String numberOfClassesStr = "0";
 
 		if (batchId.startsWith("LDM")) {
 			completionDate = startDate;
+
 		} else if (batchId.startsWith("LCL")) {
-			
-			String numberOfClassesStr = repo.findNumberOfClassesByBatchId(batchId);
-			int numberOfClasses = 0;
-			try {
-				numberOfClasses = Integer.parseInt(numberOfClassesStr);
-			} catch (NumberFormatException e) {
-				numberOfClasses = 0;
+			String exactBatchId = repo.findExactBatchId(batchId);
+			if (exactBatchId != null && exactBatchId.equals(batchId)) {
+				numberOfClassesStr = repo.findNumberOfClassesByBatchId(batchId);
+				int numberOfClasses;
+				try {
+					numberOfClasses = Integer.parseInt(numberOfClassesStr);
+				} catch (NumberFormatException e) {
+					numberOfClasses = 0;
+				}
+				completionDate = startDate.plusDays(numberOfClasses);
+			} else {
+				completionDate = startDate;
 			}
-			completionDate = startDate.plusDays(numberOfClasses);
+
 		} else {
 			completionDate = startDate;
 		}
 
-		BatchScheduleResponse response = new BatchScheduleResponse(batchId, count, startDate, completionDate);
+		BatchScheduleResponse response = new BatchScheduleResponse(batchId, count, startDate, completionDate,
+				numberOfClassesStr);
 		return ResponseEntity.ok(response);
 	}
 

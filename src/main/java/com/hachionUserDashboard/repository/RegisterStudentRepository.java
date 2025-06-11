@@ -57,4 +57,9 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 	String findCompletionDateByCourseAndUser(@Param("courseName") String courseName,
 			@Param("userName") String userName);
 
+	@Query(value = "SELECT * FROM registerstudent ORDER BY date DESC", nativeQuery = true)
+	List<RegisterStudent> findAllOrderByDateDescNative();
+
+	
 }
+

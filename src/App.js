@@ -114,7 +114,7 @@ function AppRoutes() {
       <Route path='/privacy' element={<Privacy/>}/>
       <Route path="/unsubscribe" element={<Unsubscribe />} />
       <Route path="/sitemap" element={<Sitemap />} />
-      <Route path="/kids_summer_training" element={<KidsSummer />} />
+      <Route path="/summer-tech-bootcamp-for-teens" element={<KidsSummer />} />
       <Route path="/lead-form" element={<LeadForm />} />
       </Routes>
     </>

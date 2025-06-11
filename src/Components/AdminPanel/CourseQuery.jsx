@@ -7,7 +7,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -157,9 +156,6 @@ const handleDateFilter = () => {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell sx={{ width: '30px' }} align="center">
-                  <Checkbox />
-                </StyledTableCell>
                 <StyledTableCell align="center">S.No.</StyledTableCell>
                 <StyledTableCell align="center">Full Name</StyledTableCell>
                 <StyledTableCell align="center">Email</StyledTableCell>
@@ -173,9 +169,6 @@ const handleDateFilter = () => {
               {displayedCategories.length > 0 ? (
                 displayedCategories.map((row, index) => (
                   <StyledTableRow key={row.id}>
-                    <StyledTableCell>
-                      <Checkbox />
-                    </StyledTableCell>
                     <StyledTableCell align="center">
                       {index + 1 + (currentPage - 1) * rowsPerPage}
                     </StyledTableCell>
@@ -189,7 +182,7 @@ const handleDateFilter = () => {
                 ))
               ) : (
                 <StyledTableRow>
-                  <StyledTableCell colSpan={8} align="center">
+                  <StyledTableCell colSpan={7} align="center">
                     No Data Available
                   </StyledTableCell>
                 </StyledTableRow>

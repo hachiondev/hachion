@@ -53,6 +53,7 @@ const CourseDetail = ({
 }) => {
   const [formMode, setFormMode] = useState('Add'); 
   const [course,setCourse]=useState([]);
+  const [allCourses,setAllCourses]=useState([]);
   const [error,setError]=useState([]);
   const [searchTerm,setSearchTerm]=useState("");
   const[courses,setCourses]=useState([]);
@@ -83,29 +84,57 @@ const CourseDetail = ({
     };
     fetchCategory();
   }, []);
-//   useEffect(() => {
-//     const fetchCourses = async () => {
-//         try {
-//             const response = await axios.get('https://api.hachion.co/courses/all');
-//             setCategories(response.data); 
-//         } catch (error) {
-//         }
-//     };
-//     fetchCourses();
-//     setFilteredCourses(categories)
-// }, [categories]);
 useEffect(() => {
     const fetchCourses = async () => {
         try {
             const response = await axios.get('https://api.hachion.co/courses/all');
             setCategories(response.data);
-            setFilteredCourses(response.data); 
+            setFilteredCourses(response.data);
+            setAllCourses(response.data); 
         } catch (error) {
             console.error(error);
         }
     };
     fetchCourses();
 }, []);
+   useEffect(() => {
+  if (!startDate && !endDate) {
+    const filtered = allCourses.filter((item) =>
+      item.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.shortCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.date?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCourses(filtered);
+  }
+}, [searchTerm, allCourses, startDate, endDate]);
+
+  const handleDateFilter = () => {
+  const filtered = allCourses.filter((item) => {
+    const courseDate = new Date(item.date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    const matchSearch =
+      item.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.shortCourse.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.date.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const inRange =
+      (!start || courseDate >= start) &&
+      (!end || courseDate <= end);
+
+    return matchSearch && inRange;
+  });
+
+  setFilteredCourses(filtered);
+};
+
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+     setSearchTerm('');
+    setFilteredCourses(allCourses);
+  };
 
 const handleInputChange = (e, quillField = null, quillValue = null) => {
   setFormData((prevData) => {
@@ -401,11 +430,6 @@ const handleShortCourseBlur = async () => {
                     <input type="text" name="courseName" className="form-control" placeholder="Enter Course Name"
                       value={formData.courseName} onChange={handleInputChange} required />
                   </div>
-                  {/* <div className="col-md-4">
-                    <label className="form-label">Short Course Name</label>
-                    <input type="text" name="shortCourse" className="form-control" placeholder="Enter Short Course Name"
-                      value={formData.shortCourse} onChange={handleInputChange} required />
-                  </div> */}
                   <div className="col-md-4">
   <label className="form-label">Short Course Name</label>
   <input
@@ -415,7 +439,7 @@ const handleShortCourseBlur = async () => {
     placeholder="Enter Short Course Name"
     value={formData.shortCourse}
     onChange={handleInputChange}
-    onBlur={handleShortCourseBlur}  // ✅ Added this line
+    onBlur={handleShortCourseBlur} 
     required
   />
   {shortCourseError && <div style={{ color: "red" }}>{shortCourseError}</div>}  {/* ✅ Optional error display */}
@@ -723,7 +747,8 @@ const handleShortCourseBlur = async () => {
                 End Date
                 <DatePicker value={endDate} onChange={setEndDate}
                   sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
-                <button className="filter">Filter</button>
+                <button className="filter" onClick={handleDateFilter}>Filter</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
               <div className="entries">
                 <div className="entries-left">

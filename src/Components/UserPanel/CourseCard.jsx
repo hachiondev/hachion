@@ -29,7 +29,7 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
 
   // Function to navigate to course details
   const handleNavigation = () => {
-    navigate(`/Coursedetails/${formattedName}`);
+    navigate(`/coursedetails/${formattedName}`);
   };
 
   // Render star ratings
@@ -56,7 +56,7 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
 
       <div className="card-course-details">
         <h5 className="course-name">{heading}</h5>
-        <div className="course-name">
+        <div>
           <h6 className="course-month">
             <RxCalendar /> {month} Days
           </h6>

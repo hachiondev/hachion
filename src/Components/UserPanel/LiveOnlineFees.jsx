@@ -119,6 +119,7 @@ export const LiveOnlineFees = () => {
           modeType={modeType} 
           selectedBatchData={filteredCourses.find(batch => batch.course_schedule_id === selectedBatch)}
           courseName={courseName}
+           selectedBatch={selectedBatch}
         />
       </div>
     </>

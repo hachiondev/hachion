@@ -753,6 +753,14 @@ font-weight: 600;
 color: black; 
 margin: 1vh 0;
 text-align: center;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis;
+line-height: 1.5;
+height: 3em;
+
 }
 
 .date-time-container {
@@ -2583,8 +2591,8 @@ border-radius: 5px;
   font-size: 14px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* Limits the text to 2 lines */
-  overflow: hidden; /* Hides overflowing text */
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.5;
   max-height: 3em;

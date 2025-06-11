@@ -52,7 +52,7 @@ const Footer = () => {
     navigate('/workshop')
   }
    const handleKidsSummer=()=>{
-    navigate('/kids_summer_training')
+    navigate('/summer-tech-bootcamp-for-teens')
   }
   const handleSitemap = () => {
     navigate("/sitemap");

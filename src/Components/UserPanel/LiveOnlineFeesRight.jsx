@@ -191,6 +191,12 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   const handleEnroll = async () => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
+ if (!selectedBatchData) {
+    setMessage('⚠️ Please select a batch before enrolling.');
+    setMessageType('error');
+    return;
+  }
+
     if (!user || !user.email) {
       const currentPath = window.location.pathname + window.location.search;
       localStorage.setItem('redirectAfterLogin', currentPath);

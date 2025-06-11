@@ -19,6 +19,7 @@ const LeadForm = () => {
     country: "",
     courseInterest: "",
     batchTiming: "",
+    marketerId: ""
   });
   console.log("form data" + formData.getFulName);
 
@@ -111,9 +112,9 @@ const LeadForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { fullName, email, mobileNumber, country, courseInterest, batchTiming } = formData;
+    const { fullName, email, mobileNumber, country, courseInterest, batchTiming, marketerId } = formData;
 
-    if (!fullName || !email || !mobileNumber || !country || !courseInterest || !batchTiming) {
+    if (!fullName || !email || !mobileNumber || !country || !courseInterest || !batchTiming|| !marketerId) {
       setError('Please fill all the details to register.');
       setMessageType('error');
       return;
@@ -125,7 +126,8 @@ const LeadForm = () => {
       mobileNumber: `${selectedCountry.code} ${mobileNumber}`,
       country,
       courseInterest,
-      batchTiming
+      batchTiming,
+      marketerId
     });
 
     setError('Registration successful!');
@@ -137,8 +139,18 @@ const LeadForm = () => {
       country: "",
       courseInterest: "",
       batchTiming: "",
+      marketerId: "",
     });
   };
+  
+  useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const marketerId = urlParams.get('ref');
+
+  if (marketerId) {
+    setFormData((prev) => ({ ...prev, marketerId }));
+  }
+}, []);
   
   return (
     <>
@@ -230,6 +242,14 @@ const LeadForm = () => {
                     placeholder="Enter Courses Interested"
                   />
                 </div>
+                  <input
+                    type="hidden"
+                    name="marketerId"
+                    value={formData.marketerId}
+                    onChange={handleChange}
+                    className="form-control-student"
+                    id="studentreg"
+                  />
 
                 {error && (
                   <div

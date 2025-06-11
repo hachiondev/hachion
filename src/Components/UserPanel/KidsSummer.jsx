@@ -21,6 +21,7 @@ import SummerRegister from './SummerRegister';
 import { ImLocation2 } from "react-icons/im";
 import { IoCalendarNumberSharp } from "react-icons/io5";
 import { MdAccessTime } from "react-icons/md";
+import { Helmet } from 'react-helmet-async';
 
 const KidsSummer = () => {
       const footerRef = useRef(null);
@@ -48,6 +49,48 @@ const KidsSummer = () => {
         }, []);
   return (
     <div>
+      <Helmet>
+                <title>STEM Summer Tech Bootcamp: Hands-On Python, Coding & More</title>
+                <meta name="description" content=" Join our Summer Tech Bootcamp! Kids and teens learn Python, Java, robotics, and AI through fun projects. 1:1 mentoring, certificates & flexible schedules." />
+                <meta name="keywords" content="a. Focus Keyphrase: summer tech bootcamp for teens
+                                              b. Secondary Keywords:
+                                                1.Python summer camp for high school students
+                                                2.Learn Python for teens online
+                                                3.Java programming summer classes
+                                                4.Core Java course for middle school
+                                                5.Web design bootcamp for teens
+                                                6.HTML CSS summer program
+                                                7.Social media marketing for students
+                                                8.Teen digital marketing course
+                                              c. Other Critical Keywords:
+                                                1.STEM summer camps near me
+                                                2.Best tech courses for 6th to 12th graders
+                                                3.Online coding classes with certificate
+                                                4.Project-based tech camp 2025" />
+                <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
+                <meta property="og:description" content="Learn online with the best courses at Hachion." />
+                <meta property="og:image" content="/Hachion-logo.png" />
+                <link rel="canonical" href=" https://hachion.co/summer-tech-bootcamp-for-teens" />
+                <script type="application/ld+json">
+                  {`
+                    {
+                      "@context": "https://schema.org",
+                      "@type": "Organization",
+                      "name": "Hachion",
+                      "url": "https://www.hachion.co",
+                      "logo": "https://www.hachion.co/Hachion-logo.png",
+                      "sameAs": [
+                      "https://www.facebook.com/hachion.co",
+                      "https://x.com/hachion_co",
+                      "https://www.linkedin.com/company/hachion",
+                      "https://www.instagram.com/hachion_trainings",
+                      "https://www.quora.com/profile/Hachion-4",
+                      "https://www.youtube.com/@hachion"
+                    ]
+                    }
+                  `}
+                </script>
+              </Helmet>
       <Topbar />
             <NavbarTop />
             <div className='blogs-header'>

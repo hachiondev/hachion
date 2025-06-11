@@ -7,7 +7,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -180,9 +179,6 @@ console.log("filteredTraining2:", filteredTraining);
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell sx={{ width: '50px' }} align='center'>
-              <Checkbox />
-            </StyledTableCell>
             <StyledTableCell align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Full Name</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
@@ -197,9 +193,6 @@ console.log("filteredTraining2:", filteredTraining);
         {displayedCategories.length > 0 ? (
   displayedCategories.map((row, index) => (
     <StyledTableRow key={row.batch_id}>
-      <StyledTableCell>
-        <Checkbox />
-      </StyledTableCell>
       <StyledTableCell align="center">{index + 1}</StyledTableCell>
       <StyledTableCell align="center">{row.fullName}</StyledTableCell>
       <StyledTableCell align="center">{row.email}</StyledTableCell>

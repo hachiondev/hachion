@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
@@ -136,7 +136,6 @@ const handleDateFilter = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell sx={{ width: '30px' }} align='center'><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">S.No.</StyledTableCell>
               <StyledTableCell align="center">Full Name</StyledTableCell>
               <StyledTableCell align="center">Company Name</StyledTableCell>
@@ -153,7 +152,6 @@ const handleDateFilter = () => {
             {displayedData.length > 0 ? (
               displayedData.map((row, index) => (
                 <StyledTableRow key={row.batch_id || index}>
-                  <StyledTableCell><Checkbox /></StyledTableCell>
                   <StyledTableCell align="center">{index + 1}</StyledTableCell>
                   <StyledTableCell align="center">{row.fullName}</StyledTableCell>
                   <StyledTableCell align="center">{row.companyName}</StyledTableCell>
@@ -168,7 +166,7 @@ const handleDateFilter = () => {
               ))
             ) : (
               <StyledTableRow>
-                <StyledTableCell colSpan={10} align="center">No data available</StyledTableCell>
+                <StyledTableCell colSpan={9} align="center">No data available</StyledTableCell>
               </StyledTableRow>
             )}
           </TableBody>

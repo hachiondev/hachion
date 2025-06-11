@@ -146,9 +146,6 @@ const handleDelete = async (batch_id) => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>
-              <Checkbox />
-            </StyledTableCell>
             <StyledTableCell align='center'>S.No.</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align='center'>Mobile</StyledTableCell>
@@ -163,9 +160,6 @@ const handleDelete = async (batch_id) => {
         <TableBody>
   {requestBatch.map((row, index) => (
     <StyledTableRow key={row.batch_id}>
-      <StyledTableCell>
-        <Checkbox />
-      </StyledTableCell>
       <StyledTableCell align="center">{index + 1}</StyledTableCell> {/* S.No. */}
       <StyledTableCell align="center">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>

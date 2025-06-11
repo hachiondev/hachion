@@ -62,4 +62,7 @@ public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, 
 	@Query("SELECT COUNT(s), s.schedule_date FROM CourseSchedule s WHERE s.batchId = :batchId GROUP BY s.schedule_date")
 	List<Object[]> findCountAndScheduleDateListByBatchId(@Param("batchId") String batchId);
 
+	
+	@Query("SELECT c.numberOfClasses FROM Course c JOIN Schedule s ON c.courseId = s.courseId WHERE s.courseScheduleId = :batchId")
+	String findNumberOfClassesByBatchId(@Param("batchId") String batchId);
 }

@@ -364,13 +364,6 @@ public class CourseController {
 		}
 	}
 
-//	@DeleteMapping("/delete/{id}")
-//	public ResponseEntity<?> deleteCourse(@PathVariable int id) {
-//		Course course = repo.findById(id).get();
-//		repo.delete(course);
-//		return null;
-//
-//	}
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteCourse(@PathVariable int id) {
 		try {

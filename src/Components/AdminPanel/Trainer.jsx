@@ -35,13 +35,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white', 
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
   },
 }));
 
@@ -73,9 +73,13 @@ const[message,setMessage]=useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+   const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   const [editedRow, setEditedRow] = useState({ trainer_name: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
   const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
   const currentDate = new Date().toISOString().split('T')[0];
+  const [categories, setCategories] = useState([]);
+const [courseNames, setCourseNames] = useState([]);
   const [trainerData, setTrainerData] = useState({
   id:"",
       trainer_name: "",
@@ -89,7 +93,7 @@ const[message,setMessage]=useState(false);
     
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 10; // Show 10 rows per page
+    const rowsPerPage = 10; 
   
     
   const handleReset = () => {
@@ -104,35 +108,48 @@ const[message,setMessage]=useState(false);
       date:""
     });
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents the default form submission
-    const currentDate = new Date().toISOString().split("T")[0];
-    if (!trainerData.trainer_name || !trainerData.course_name || !trainerData.category_name) {
-      alert("Please fill in all required fields.");
-      return;
-    }
   
-    try {
-      
-      const response = await axios.post("https://api.hachion.co/trainer/add", trainerData
-      );
-      
-      if (response.status === 200) {
-        alert("Trainer added successfully");
-        
-        // Add the new trainer to the current list of trainers in the UI
-        setTrainers((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
-        handleReset();
-        setTimeout(() => {
-          
-           }, 5000); 
-        };
-      
-    } catch (error) {
-      console.error("Error adding trainer:", error.message);
-      alert("There was an error adding the trainer.");
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  if (!trainerData.trainer_name || !trainerData.course_name || !trainerData.category_name) {
+    setErrorMessage("⚠️ Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    const response = await axios.post("https://api.hachion.co/trainer/add", trainerData);
+
+   if (response.status >= 200 && response.status < 300) {
+  setSuccessMessage("✅ Trainer added successfully.");
+  console.log("✅ Message set: Trainer added successfully.");
+  setErrorMessage("");
+  setTrainers((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
+  handleReset();
+}
+  } catch (error) {
+    console.error("Error adding trainer:", error);
+
+    if (
+      error.response &&
+      error.response.status === 409 &&
+      error.response.data === "Trainer with the same name, category, and course already exists."
+    ) {
+      setErrorMessage("❌ A trainer with the same name already exists for this category and course.");
+    } else {
+      setErrorMessage("❌ Something went wrong while adding the trainer. Please try again.");
     }
-  };
+
+    setSuccessMessage(""); 
+  }
+};
+
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -146,18 +163,6 @@ const[message,setMessage]=useState(false);
     setTrainers(filtered);
   };
   
-  useEffect(() => {
-    const fetchTrainer = async () => {
-      try {
-        const response = await axios.get('https://api.hachion.co/trainers');
-        setTrainers(response.data);
-        setFilteredTrainers(response.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
-    };
-    fetchTrainer();
-  }, []);
 useEffect(() => {
   const filtered = trainers.filter((trainer) =>
     trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -165,13 +170,13 @@ useEffect(() => {
     trainer.summary.toLowerCase().includes(searchTerm.toLowerCase())
   );
   setFilteredTrainers(filtered)
-  setTrainers(filtered);
+  // setTrainers(filtered);
 }, [searchTerm,filteredTrainers]);
 const startIndex = (currentPage -1) * rowsPerPage;
 const paginatedData = filteredTrainers.slice(startIndex, startIndex + rowsPerPage);
 const pageCount = Math.ceil(filteredTrainers.length / rowsPerPage);
 
-// Handle page change
+
 const handlePageChange = (event, page) => {
   setTrainers(paginatedData);
   setCurrentPage(page);
@@ -186,18 +191,33 @@ useEffect(() => {
   const fetchCategory = async () => {
     try {
       const response = await axios.get("https://api.hachion.co/course-categories/all");
-      setCourse(response.data); // Assuming the data contains an array of trainer objects
+      setCourse(response.data); 
     } catch (error) {
       console.error("Error fetching categories:", error.message);
     }
   };
   fetchCategory();
 }, []);
+
+ useEffect(() => {
+    if (editedRow.category_name) {
+      axios.get(`https://api.hachion.co/courses/coursenames-by-category`, {
+        params: { categoryName: editedRow.category_name }
+      })
+      .then(response => setCourseNames(response.data))
+      .catch(error => {
+        console.error("Error fetching course names:", error);
+        setCourseNames([]);
+      });
+    } else {
+      setCourseNames([]); 
+    }
+  }, [editedRow.category_name]);
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
       const response = await axios.get("https://api.hachion.co/courses/all");
-      setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+      setCourseCategory(response.data); 
     } catch (error) {
       console.error("Error fetching categories:", error.message);
     }
@@ -211,33 +231,38 @@ useEffect(() => {
     );
     setFilterCourse(filtered);
   } else {
-    setFilterCourse([]); // Reset when no category is selected
+    setFilterCourse([]); 
   }
 }, [trainerData.category_name, courseCategory]);
 const handleDelete = async (trainer_id) => {
- 
-   try { 
-    const response = await axios.delete(`https://api.hachion.co/trainer/delete/${trainer_id}`); 
-    console.log("Trainer deleted successfully:", response.data); 
-  } catch (error) { 
-    console.error("Error deleting Trainer:", error); 
-  } }; 
+  try {
+    const response = await axios.delete(`https://api.hachion.co/trainer/delete/${trainer_id}`);
 
+    if (response.status === 200) {
+      setSuccessMessage("✅ Trainer deleted successfully.");
+      setErrorMessage("");
 
+      
+      setTrainers((prev) => prev.filter((trainer) => trainer.trainer_id !== trainer_id));
+    }
+  } catch (error) {
+    console.error("Error deleting Trainer:", error);
+    setErrorMessage("❌ Failed to delete trainer. Please try again.");
+    setSuccessMessage("");
+  }
+};
   const handleAddTrendingCourseClick = () => setShowAddCourse(true);
-
-
-
 const handleClickOpen = (row) => {
-
+console.log("Edit row data:", row); 
   setSelectedRow(row); 
-  setEditedRow(row)// Set the selected row data
-  setOpen(true); // Open the modal
+  
+  setEditedRow(row)
+  setOpen(true); 
   console.log("tid",row.trainer_id)
 };
 
 const handleClose = () => {
-  setOpen(false); // Close the modal
+  setOpen(false); 
 };
 const handleCloseModal=()=>{
   setShowAddCourse(false);
@@ -251,20 +276,20 @@ const handleSave = async () => {
       editedRow
     );
 
-    // Update only the edited row in the trainers state
+    
     setTrainers((prevTrainers) =>
       prevTrainers.map((trainer) =>
         trainer.trainer_id === selectedRow.trainer_id ? response.data : trainer
       )
     );
-    setMessage(true); // Show the success message
+    setMessage(true); 
 
-    // Hide the message after 5 seconds
+   
     setTimeout(() => {
       setMessage(false);
     }, 5000);
 
-    setOpen(false); // Close the dialog
+    setOpen(false); 
   } catch (error) {
     console.error("Error updating trainer:", error);
   }
@@ -285,6 +310,29 @@ const handleChange = (e) => {
     [name]: value,
   }));
 };
+
+ useEffect(() => {
+    fetchTrainers();
+  }, []);
+
+  const fetchTrainers = async () => {
+    try {
+      const response = await axios.get('https://api.hachion.co/trainers');
+      setTrainers(response.data);
+    } catch (error) {
+      console.error('Error fetching trainers:', error);
+    }
+  };
+
+   useEffect(() => {
+    axios.get("https://api.hachion.co/course-categories/all")
+      .then(response => {
+        setCategories(response.data); 
+      })
+      .catch(error => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
 // const handleCourseChange = (event) => setCourse(event.target.value);
   return (
     
@@ -299,7 +347,7 @@ const handleChange = (e) => {
   <div class="col">
   
     <label className='form-label'>Trainer</label>
-    <input type="text" class="form-select" placeholder="Trainer name" aria-label="First name" 
+    <input type="text" class="form-control" placeholder="Enter Trainer name" aria-label="First name" 
     name="trainer_name"
     value={trainerData.trainer_name}
     onChange={handleChange}/>
@@ -373,7 +421,12 @@ const handleChange = (e) => {
     onChange={handleChange}/>
   </div>
   </div>
+   {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+ 
+
   <div style={{display:'flex',flexDirection:'row'}}> 
+    
   <button className='submit-btn'  data-bs-toggle='modal'
                   data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
@@ -466,7 +519,14 @@ const handleChange = (e) => {
         </TableBody>
       </Table>
     </TableContainer>
-    {message? (<p>Table updated succesfully</p>):<p></p>}
+    {successMessage && (
+    <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>
+  )}
+  {errorMessage && (
+    <p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>
+  )}
+    {message && <p style={{ color: 'green' }}>Table updated successfully</p>}
+
     <div className='pagination'>
         <Pagination
           count={pageCount}
@@ -490,14 +550,14 @@ const handleChange = (e) => {
         <label className='form-label'>Trainer</label>
         <input
           type="text"
-          className="form-select"
+          className="form-control"
           placeholder="Trainer name"
           name="trainer_name"
           value={editedRow.trainer_name || ""}
           onChange={handleInputChange}
         />
       </div>
-      <div className="col">
+      {/* <div className="col">
         <label htmlFor="inputState" className="form-label">Category Name</label>
         <select
           id="inputState"
@@ -512,8 +572,25 @@ const handleChange = (e) => {
           <option>Business Intelligence</option>
           <option>Data Science</option>
         </select>
-      </div>
+      </div> */}
       <div className="col">
+      <label htmlFor="inputState" className="form-label">Category Name</label>
+      <select
+        id="inputState"
+        className="form-select"
+        name="category_name"
+        value={editedRow.category_name || ""}
+        onChange={handleInputChange}
+      >
+        <option value="">Select Category</option>
+        {categories.map((category) => (
+          <option key={category.id} value={category.name}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+    </div>
+      {/* <div className="col">
         <label htmlFor="inputState" className="form-label">Course Name</label>
         <select
           id="inputState"
@@ -527,6 +604,24 @@ const handleChange = (e) => {
           <option>Load Runner</option>
           <option>QA Automation Testing</option>
           <option>Mobile App Testing</option>
+        </select>
+      </div> */}
+       <div className="col">
+        <label htmlFor="courseSelect" className="form-label">Course Name</label>
+        <select
+          id="courseSelect"
+          className="form-select"
+          name="course_name"
+          value={editedRow.course_name || ""}
+          onChange={handleInputChange}
+          disabled={!editedRow.category_name} 
+        >
+          <option value="">Select Course</option>
+          {courseNames.map((course, index) => (
+            <option key={index} value={course}>
+              {course}
+            </option>
+          ))}
         </select>
       </div>
     </div>

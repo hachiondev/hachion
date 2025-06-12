@@ -27,7 +27,7 @@ export default function StudentTracking() {
    useEffect(() => {
     const fetchStudentIds = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/studentsTracking?courseName=${encodeURIComponent(studentData.course_name)}`);
+        const response = await axios.get(`https://api.hachion.co/studentsTracking/gettingStudentId?courseName=${encodeURIComponent(studentData.course_name)}`);
         const ids = response.data.map(id => ({ studentId: id }));
         setTracking(ids);
       } catch (error) {
@@ -107,7 +107,7 @@ export default function StudentTracking() {
 useEffect(() => {
   const fetchBatchInfo = async () => {
     try {
-      const res = await axios.get(`https://api.hachion.co/batchInfo?batchId=${encodeURIComponent(studentData.batch_id)}`);
+      const res = await axios.get(`https://api.hachion.co/studentsTracking/batchInfo?batchId=${encodeURIComponent(studentData.batch_id)}`);
       const data = res.data;
 
       setStudentData(prev => ({
@@ -131,13 +131,15 @@ useEffect(() => {
 const handleUpdate = async () => {
   try {
     const payload = {
-      studentName: studentData.student_name,
+      studentName: studentData.name,
+      studentId: studentData.student_id,
+      courseName: studentData.course_name,
       studentEmail: studentData.email,
-      mobile: studentData.student_number,
+      mobile: studentData.mobile,
  startDate: dayjs(studentData.start_date).format("DD-MM-YYYY"),
       completedDate: dayjs(studentData.completed_date).format("DD-MM-YYYY"),
-           numberOfSessions: studentData.number_of_sessions, // add this to your state if needed
-      completedSessions: studentData.completed_sessions, // add this too
+           numberOfSessions: studentData.number_of_sessions, 
+      completedSessions: studentData.completed_sessions, 
       batchStatus: studentData.status,
       remarks: studentData.remarks || ""
     };
@@ -401,9 +403,9 @@ useEffect(() => {
                     <input
                       type="text"
                       className="schedule-input"
-                      id="sessions_completed"
-                      name="sessions_completed"
-                      value={studentData.sessions_completed}
+                      id="completed_sessions"
+                      name="completed_sessions"
+                      value={studentData.completed_sessions}
                       onChange={handleChange}
                     />
                   </div>

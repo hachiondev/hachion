@@ -247,7 +247,8 @@ const handleRadioChange = (event) => {
 
   const handlePayment = async () => {
       try {
-        const amount = courseData.total || "N/A"; // 💰 Hardcoded for now
+        // const amount = courseData.total || "N/A";
+        const amount = 1.00;
   
         const response = await axios.post("https://api.hachion.co/create-order", null, {
           params: { amount: amount }

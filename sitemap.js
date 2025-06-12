@@ -23,7 +23,7 @@ const staticRoutes = [
   "/haveanyquery", "/workshop", "/blogs",
   "/aboutus", "/contactus", "/userdashboard", "/review",
   "/addtrending", "/courseschedule", "/corporatecourses",
-   "/terms", "/privacy", "/kids_summer_training"
+   "/terms", "/privacy", "/summer-tech-bootcamp-for-teens"
 ];
 
 const generateSitemap = async () => {

@@ -7,8 +7,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.Enroll;
@@ -269,34 +266,34 @@ String technologyName = latest.getCourse_name();
 		}
 	}
 	
-	 @GetMapping("/studentsTracking")
-	    public ResponseEntity<List<String>> getStudentIdsByCourseName(@RequestParam String courseName) {
-	        List<String> studentIds = repo.findStudentIdsByCourseName(courseName);
-	        return ResponseEntity.ok(studentIds);
-	    }
+//	 @GetMapping("/studentsTracking")
+//	    public ResponseEntity<List<String>> getStudentIdsByCourseName(@RequestParam String courseName) {
+//	        List<String> studentIds = repo.findStudentIdsByCourseName(courseName);
+//	        return ResponseEntity.ok(studentIds);
+//	    }
 	 
-	   @GetMapping("/studentsTracking/gettingEmail")
-	    public ResponseEntity<List<Map<String, Object>>> getStudentCourseInfo(
-	            @RequestParam(required = false) String studentId,
-	            @RequestParam(required = false) String email,
-	            @RequestParam(required = false) String mobile) {
-
-	        List<Object[]> results = repo.findStudentCourseInfo(studentId, email, mobile);
-
-	        List<Map<String, Object>> response = new ArrayList<>();
-
-	        for (Object[] row : results) {
-	            Map<String, Object> studentMap = new HashMap<>();
-	            studentMap.put("studentId", row[0]);
-	            studentMap.put("name", row[1]);
-	            studentMap.put("email", row[2]);
-	            studentMap.put("mobile", row[3]);
-	            studentMap.put("courseName", row[4]);
-	            response.add(studentMap);
-	        }
-
-	        return ResponseEntity.ok(response);
-	    }
+//	   @GetMapping("/studentsTracking/gettingEmail")
+//	    public ResponseEntity<List<Map<String, Object>>> getStudentCourseInfo(
+//	            @RequestParam(required = false) String studentId,
+//	            @RequestParam(required = false) String email,
+//	            @RequestParam(required = false) String mobile) {
+//
+//	        List<Object[]> results = repo.findStudentCourseInfo(studentId, email, mobile);
+//
+//	        List<Map<String, Object>> response = new ArrayList<>();
+//
+//	        for (Object[] row : results) {
+//	            Map<String, Object> studentMap = new HashMap<>();
+//	            studentMap.put("studentId", row[0]);
+//	            studentMap.put("name", row[1]);
+//	            studentMap.put("email", row[2]);
+//	            studentMap.put("mobile", row[3]);
+//	            studentMap.put("courseName", row[4]);
+//	            response.add(studentMap);
+//	        }
+//
+//	        return ResponseEntity.ok(response);
+//	    }
 //	   @GetMapping("/studentsTracking/batches")
 //	    public ResponseEntity<List<String>> getBatchIdsByStudentIdAndEmail(
 //	            @RequestParam(required = false) String studentId,
@@ -305,13 +302,13 @@ String technologyName = latest.getCourse_name();
 //	        List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email);
 //	        return ResponseEntity.ok(batchIds);
 //	    }
-	   @GetMapping("/studentsTracking/batches")
-	   public ResponseEntity<List<String>> getBatchIdsByFilters(
-	           @RequestParam(required = false) String studentId,
-	           @RequestParam(required = false) String email,
-	           @RequestParam(required = false) String courseName) {
-
-	       List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email, courseName);
-	       return ResponseEntity.ok(batchIds);
-	   }
+//	   @GetMapping("/studentsTracking/batches")
+//	   public ResponseEntity<List<String>> getBatchIdsByFilters(
+//	           @RequestParam(required = false) String studentId,
+//	           @RequestParam(required = false) String email,
+//	           @RequestParam(required = false) String courseName) {
+//
+//	       List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email, courseName);
+//	       return ResponseEntity.ok(batchIds);
+//	   }
 }

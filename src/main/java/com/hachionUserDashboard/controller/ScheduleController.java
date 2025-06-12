@@ -157,6 +157,7 @@ public class ScheduleController {
 			courseschedule.setSchedule_week(updatedCourseSchedule.getSchedule_week());
 			courseschedule.setSchedule_date(updatedCourseSchedule.getSchedule_date());
 			courseschedule.setMeeting_link(updatedCourseSchedule.getMeeting_link());
+			courseschedule.setTrainer_name(updatedCourseSchedule.getTrainer_name());
 
 			repo.save(courseschedule);
 
@@ -194,46 +195,46 @@ public class ScheduleController {
 		return new ResponseEntity<>(courseNames, HttpStatus.OK);
 	}
 
-	@GetMapping("/batchInfo")
-	public ResponseEntity<?> getBatchScheduleInfo(@RequestParam String batchId) {
-		List<Object[]> results = repo.findCountAndScheduleDateListByBatchId(batchId);
-
-		if (results.isEmpty()) {
-			return ResponseEntity.badRequest().body("Invalid batchId. Please provide a valid one.");
-		}
-
-		Object[] row = results.get(0);
-		Long count = ((Number) row[0]).longValue();
-		LocalDate startDate = LocalDate.parse((String) row[1]);
-
-		LocalDate completionDate;
-		String numberOfClassesStr = "0";
-
-		if (batchId.startsWith("LDM")) {
-			completionDate = startDate;
-
-		} else if (batchId.startsWith("LCL")) {
-			String exactBatchId = repo.findExactBatchId(batchId);
-			if (exactBatchId != null && exactBatchId.equals(batchId)) {
-				numberOfClassesStr = repo.findNumberOfClassesByBatchId(batchId);
-				int numberOfClasses;
-				try {
-					numberOfClasses = Integer.parseInt(numberOfClassesStr);
-				} catch (NumberFormatException e) {
-					numberOfClasses = 0;
-				}
-				completionDate = startDate.plusDays(numberOfClasses);
-			} else {
-				completionDate = startDate;
-			}
-
-		} else {
-			completionDate = startDate;
-		}
-
-		BatchScheduleResponse response = new BatchScheduleResponse(batchId, count, startDate, completionDate,
-				numberOfClassesStr);
-		return ResponseEntity.ok(response);
-	}
+//	@GetMapping("/batchInfo")
+//	public ResponseEntity<?> getBatchScheduleInfo(@RequestParam String batchId) {
+//		List<Object[]> results = repo.findCountAndScheduleDateListByBatchId(batchId);
+//
+//		if (results.isEmpty()) {
+//			return ResponseEntity.badRequest().body("Invalid batchId. Please provide a valid one.");
+//		}
+//
+//		Object[] row = results.get(0);
+//		Long count = ((Number) row[0]).longValue();
+//		LocalDate startDate = LocalDate.parse((String) row[1]);
+//
+//		LocalDate completionDate;
+//		String numberOfClassesStr = "0";
+//
+//		if (batchId.startsWith("LDM")) {
+//			completionDate = startDate;
+//
+//		} else if (batchId.startsWith("LCL")) {
+//			String exactBatchId = repo.findExactBatchId(batchId);
+//			if (exactBatchId != null && exactBatchId.equals(batchId)) {
+//				numberOfClassesStr = repo.findNumberOfClassesByBatchId(batchId);
+//				int numberOfClasses;
+//				try {
+//					numberOfClasses = Integer.parseInt(numberOfClassesStr);
+//				} catch (NumberFormatException e) {
+//					numberOfClasses = 0;
+//				}
+//				completionDate = startDate.plusDays(numberOfClasses);
+//			} else {
+//				completionDate = startDate;
+//			}
+//
+//		} else {
+//			completionDate = startDate;
+//		}
+//
+//		BatchScheduleResponse response = new BatchScheduleResponse(batchId, count, startDate, completionDate,
+//				numberOfClassesStr);
+//		return ResponseEntity.ok(response);
+//	}
 
 }

@@ -17,12 +17,14 @@ import CourseCategory from './CourseCategory';
 import CorporateCourses from './CorporateCourses';
 import Payments from './Payments';
 import Tracking from './Tracking';
+import AdminSummerEvents from './AdminSummerEvents';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
   'Course': <Course />,
   'Corporate Training': <CorporateCourses />,
   'Trending Courses': <TrendingCourseTable />,
+  'Kids Summer Courses': <AdminSummerEvents />,
   'Trainer': <Trainer />,
   'Certificates': <Certificate />,
   'Enrollments': <Enroll />,
@@ -36,12 +38,20 @@ const componentMap = {
   'Other': <Other />,
 };
 const AdminDashboardView = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Dashboard');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return localStorage.getItem('selectedCategory') || 'Dashboard';
+  });
+
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
+    localStorage.setItem('selectedCategory', category);
+  };
+
   return (
     <React.Fragment>
       <AdminNavbar />
       <div className="admin-layout">
-        <AdminSidebar onSelectCategory={setSelectedCategory} />
+        <AdminSidebar onSelectCategory={handleSelectCategory} />
         <div className='admin-right'>
           {componentMap[selectedCategory] || <AdminDashboard />}
         </div>
@@ -49,4 +59,5 @@ const AdminDashboardView = () => {
     </React.Fragment>
   );
 };
+
 export default AdminDashboardView;

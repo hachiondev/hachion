@@ -12,12 +12,14 @@ import { IoNewspaperOutline} from 'react-icons/io5';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { PiStudentFill } from "react-icons/pi";
+import { FaChildren } from "react-icons/fa6";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
   { title: 'Course Category', icon: <TbCategoryPlus /> },
   { title: 'Course', icon: <FaBook /> },
   { title: 'Corporate Training', icon: <MdCorporateFare /> },
+  { title: 'Kids Summer Courses', icon: <FaChildren /> },
   { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
   { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },

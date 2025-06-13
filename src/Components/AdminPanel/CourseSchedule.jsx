@@ -184,16 +184,64 @@ export default function CourseSchedule() {
       setFilterCourse([]);
     }
   }, [courseData.schedule_category_name, courseCategory]);
-  useEffect(() => {
-    const fetchTrainer = async () => {
-      try {
-        const response = await axios.get("https://api.hachion.co/trainers");
-        setTrainer(response.data);
-      } catch (error) {
-      }
-    };
-    fetchTrainer();
-  }, []);
+  // useEffect(() => {
+  //   const fetchTrainer = async () => {
+  //     try {
+  //       const response = await axios.get("https://api.hachion.co/trainers");
+  //       setTrainer(response.data);
+  //     } catch (error) {
+  //     }
+  //   };
+  //   fetchTrainer();
+  // }, []);
+//   useEffect(() => {
+//   const fetchTrainerNames = async () => {
+//     if (courseData.schedule_category_name && courseData.schedule_course_name) {
+//       try {
+//         const response = await axios.get("https://api.hachion.co/trainernames", {
+//           params: {
+//             categoryName: courseData.schedule_category_name,
+//             courseName: courseData.schedule_course_name
+//           }
+//         });
+//         setTrainer(response.data); // assuming setTrainer is your useState setter
+//       } catch (error) {
+//         console.error("Error fetching trainer names:", error);
+//         setTrainer([]); // fallback in case of error
+//       }
+//     } else {
+//       setTrainer([]); // reset if selection is cleared
+//     }
+//   };
+
+//   fetchTrainerNames();
+// }, [courseData.schedule_category_name, courseData.schedule_course_name]);
+
+useEffect(() => {
+  const fetchTrainerNames = async (categoryName, courseName) => {
+    try {
+      const response = await axios.get("https://api.hachion.co/trainernames", {
+        params: { categoryName, courseName }
+      });
+      setTrainer(response.data); // shared trainer list
+    } catch (error) {
+      console.error("Error fetching trainer names:", error);
+      setTrainer([]);
+    }
+  };
+
+  if (courseData.schedule_category_name && courseData.schedule_course_name) {
+    fetchTrainerNames(courseData.schedule_category_name, courseData.schedule_course_name);
+   } else if (editedRow?.schedule_category_name && editedRow?.schedule_course_name) {
+    fetchTrainerNames(editedRow.schedule_category_name, editedRow.schedule_course_name);
+  }
+}, [
+  courseData.schedule_category_name,
+  courseData.schedule_course_name,
+  editedRow.schedule_category_name,
+  editedRow.schedule_course_name
+]);
+
   const handleTimeChange = (index, newValue) => {
     const updatedRows = [...rows];
     updatedRows[index] = {
@@ -326,7 +374,7 @@ const handleSubmit = async () => {
   }
 };
 const isFormValid = () => {
-  if (!courseData.schedule_category_name || !courseData.schedule_course_name) {
+  if (!courseData.schedule_category_name || !courseData.schedule_course_name || !courseData.trainer_name) {
     return false;
   }
 
@@ -577,27 +625,51 @@ const isFormValid = () => {
                       ))}
                     </select>
                   </div>
-                  <div className="col-md-3">
-                    <label htmlFor="inputState" className="form-label">
-                      Trainer Name (Not Mandatory)
-                    </label>
-                    <select
-                      id="inputState"
-                      className="form-select"
-                      name="trainer_name"
-                      value={courseData.trainer_name}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select Trainer
-                      </option>
-                      {trainer.map((curr) => (
-                        <option key={curr.id} value={curr.trainer_name}>
-                          {curr.trainer_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {/* <div className="col-md-3">
+  <label htmlFor="inputState" className="form-label">
+    Trainer Name
+  </label>
+  <select
+    id="inputState"
+    className="form-select"
+    name="trainer_name"
+    value={courseData.trainer_name}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      Select Trainer
+    </option>
+    {trainer.map((curr, index) => (
+      <option key={index} value={curr}>
+        {curr}
+      </option>
+    ))}
+  </select>
+</div> */}
+
+<div className="col-md-3">
+  <label htmlFor="inputState" className="form-label">
+    Trainer Name
+  </label>
+  <select
+    id="inputState"
+    className="form-select"
+    name="trainer_name"
+    value={courseData.trainer_name}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      Select Trainer
+    </option>
+    {trainer.map((curr, index) => (
+      <option key={index} value={curr}>
+        {curr}
+      </option>
+    ))}
+  </select>
+</div>
+
+
                 </div>
                 <TableContainer component={Paper}>
                   <Table
@@ -1090,7 +1162,7 @@ const isFormValid = () => {
               </div>
             </div>
             <div className="course-row">
-              <div className="col">
+              {/* <div className="col">
                 <label className="form-label">Trainer</label>
                 <input
                   type="text"
@@ -1100,7 +1172,24 @@ const isFormValid = () => {
                   value={editedRow.trainer_name || ""}
                   onChange={handleInputChange}
                 />
-              </div>
+              </div> */}
+              <div className="col">
+  <label className="form-label">Trainer</label>
+  <select
+    className="form-select"
+    name="trainer_name"
+    value={editedRow.trainer_name || ""}
+    onChange={handleInputChange}
+  >
+    <option value="" disabled>Select Trainer</option>
+    {trainer.map((curr, index) => (
+      <option key={index} value={curr}>
+        {curr}
+      </option>
+    ))}
+  </select>
+</div>
+
               <div className="col">
                 <label className="form-label">Date</label>
                 <DatePicker

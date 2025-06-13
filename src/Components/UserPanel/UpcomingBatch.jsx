@@ -4,6 +4,7 @@ import './Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
 import CorporateFees from './CorporateFees';
+// import CrashCourseFee from './CrashCourseFee';
 import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
 import RequestBatch from './RequestBatch'; // Import the RequestBatch component
@@ -35,7 +36,6 @@ useEffect(() => {
 
     fetchCourse();
   }, [courseName]);
-
   
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -43,6 +43,8 @@ useEffect(() => {
     switch (activeComponent) {
       case 'LiveOnlineFees':
         return <LiveOnlineFees />;
+      // case 'CrashCourseFee':
+      //   return <CrashCourseFee />;
       case 'CorporateFees':
         return <CorporateFees />;
       case 'MentoringModeFees':
@@ -66,25 +68,31 @@ useEffect(() => {
         <h1 className='qa-heading'>Upcoming Batches for {course.courseName}</h1>
         <div className='batch-type'>
           <p 
-            className='batch-type-content' 
+            className={`batch-type-content ${activeComponent === 'LiveOnlineFees' ? 'active' : ''}`} 
             onClick={() => setActiveComponent('LiveOnlineFees')}
           >
-            Live online training
+            Live training
           </p>
+          {/* <p 
+            className={`batch-type-content ${activeComponent === 'CrashCourseFee' ? 'active' : ''}`} 
+            onClick={() => setActiveComponent('CrashCourseFees')}
+          >
+            Crash Course
+          </p> */}
           <p 
-            className='batch-type-content' 
+            className={`batch-type-content ${activeComponent === 'MentoringModeFees' ? 'active' : ''}`} 
             onClick={() => setActiveComponent('MentoringModeFees')}
           >
             Mentoring mode
           </p>
           <p 
-            className='batch-type-content' 
+            className={`batch-type-content ${activeComponent === 'SelfPlacedFees' ? 'active' : ''}`} 
             onClick={() => setActiveComponent('SelfPlacedFees')}
           >
             Self-paced Learning
           </p>
           <p 
-            className='batch-type-content' 
+            className={`batch-type-content ${activeComponent === 'CorporateFees' ? 'active' : ''}`} 
             onClick={() => setActiveComponent('CorporateFees')}
           >
             Corporate Training

@@ -539,7 +539,7 @@ const handleShortCourseBlur = async () => {
                     { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
                     { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
                     { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
-                    { label: "Corporate Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
+                    { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
                   ].map((mode, index) => (
                     <div className="course-mode" key={index}>
                       <div className="form-check">

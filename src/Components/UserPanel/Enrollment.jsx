@@ -5,7 +5,7 @@
   import './Blogs.css';
   import EnrollmentTable from './EnrollmentTable';
   import TextField from '@mui/material/TextField';
-  // import TotalOrder from './TotalOrder';
+  
   import StickyBar from './StickyBar';
   import Footer from './Footer'
   import { AiFillCaretDown } from 'react-icons/ai';
@@ -15,7 +15,7 @@
   import { LoginSchema } from '../Schemas';
   import { useLocation } from 'react-router-dom';
 
-  //totalorder imports
+  
   import { useParams } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -45,7 +45,7 @@ import Paper from '@mui/material/Paper';
     const [mobileNumber, setMobileNumber] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
     const mobileInputRef = useRef(null);
-    const { courseName } = useParams(); // For dynamic route param
+    const { courseName } = useParams(); 
 const [courseData, setCourseData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [selectedValue, setSelectedValue] = useState('a');
@@ -62,6 +62,54 @@ const [selectedValue, setSelectedValue] = useState('a');
         console.log(values);
       }
     });
+
+ useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get("status");
+    const orderId = urlParams.get("token"); 
+
+      if (status === "success" && orderId) {
+    handleCaptureOrder(orderId);
+  } else if (status === "cancel") {
+    setErrorMessage("❌ Payment was cancelled.");
+    setSuccessMessage("");
+  }
+}, []);
+  
+  const handleCaptureOrder = async (orderId) => {
+    const studentId = localStorage.getItem("studentId");
+    const courseName = localStorage.getItem("courseName");
+    const batchId = localStorage.getItem("batchId");
+
+    if (!studentId || !courseName || !batchId) {
+      alert("Missing payment info. Please try again.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("https://api.hachion.co/capture-order", null, {
+        params: {
+          orderId,
+          studentId,
+          courseName,
+          batchId,
+        },
+      });
+
+      console.log("Capture Order Response:", response.data);
+      
+      localStorage.removeItem("studentId");
+      localStorage.removeItem("courseName");
+      localStorage.removeItem("batchId");
+
+      setSuccessMessage("✅ Payment successful! You are now enrolled.");
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error capturing order:", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to complete payment.");
+    }
+  };
 
     const countries = [
       { name: 'India', code: '+91', flag: 'IN' },
@@ -180,7 +228,7 @@ const handleRadioChange = (event) => {
     }
 
     setShowRegisterPrompt(false);
-    setSuccessMessage("");  // Clear previous messages
+    setSuccessMessage("");  
     setErrorMessage("");
 
     const userEmail = user.email;
@@ -191,7 +239,7 @@ const handleRadioChange = (event) => {
     let mobile = '';
 
     try {
-      // Fetch studentId via API
+      
       const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
@@ -235,7 +283,7 @@ const handleRadioChange = (event) => {
         setSuccessMessage("✅ Registered Successfully.");
         setErrorMessage("");
       } else {
-        setSuccessMessage("✅ Registered Successfully.");  // or you can treat it as error if you want
+        setSuccessMessage("✅ Registered Successfully.");  
         setErrorMessage("");
       }
     } catch (error) {
@@ -245,29 +293,164 @@ const handleRadioChange = (event) => {
     }
   };
 
-  const handlePayment = async () => {
-      try {
-        // const amount = courseData.total || "N/A";
-        const amount = 1.00;
+  // const handlePayment = async () => {
+  //     try {
+  //       // const amount = courseData.total || "N/A";
+  //       const amount = 1.00;
   
-        const response = await axios.post("https://api.hachion.co/create-order", null, {
-          params: { amount: amount }
-        });
+  //       const response = await axios.post("https://api.hachion.co/create-order", null, {
+  //         params: { amount: amount }
+  //       });
   
-        const approvalUrl = response.data;
+  //       const approvalUrl = response.data;
   
-        if (approvalUrl.startsWith("https://www.sandbox.paypal.com")) {
-          // 🔁 Redirect to PayPal
-          window.location.href = approvalUrl;
-        } else {
-          alert("Unexpected response: " + approvalUrl);
-        }
-      } catch (error) {
-        console.error("Error creating order:", error);
-        alert("Failed to start payment. Please try again.");
-      }
-    };
+  //        if (approvalUrl.startsWith("https://www.paypal.com")) {
+          
+  //         window.location.href = approvalUrl;
+  //       } else {
+  //         alert("Unexpected response: " + approvalUrl);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error creating order:", error);
+  //       alert("Failed to start payment. Please try again.");
+  //     }
+  //   };
+// const handlePayment = async () => {
+//   try {
+//     const amount = 1.00;
 
+//     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+
+//     if (!user || !user.email) {
+//       alert("Please log in before making payment.");
+//       return;
+//     }
+
+//     const userEmail = user.email;
+
+//     const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
+//       params: { email: userEmail }
+//     });
+
+//     const studentId = profileResponse.data?.studentId;
+//     const batchId = selectedBatchData?.batchId;
+//     const courseName = selectedBatchData?.schedule_course_name;
+
+//     if (!studentId || !batchId || !courseName) {
+//       alert("Missing required details to proceed with payment.");
+//       return;
+//     }
+
+//     // Store temporarily in localStorage
+//     localStorage.setItem("studentId", studentId);
+//     localStorage.setItem("courseName", courseName);
+//     localStorage.setItem("batchId", batchId);
+
+//     const response = await axios.post("https://api.hachion.co/create-order", null, {
+//       params: { amount }
+//     });
+
+//     const approvalUrl = response.data;
+
+//     if (approvalUrl.startsWith("https://www.paypal.com")) {
+//       window.location.href = approvalUrl;
+//     } else {
+//       alert("Unexpected response: " + approvalUrl);
+//     }
+//   } catch (error) {
+//     console.error("Error creating order:", error);
+//     alert("Failed to start payment.");
+//   }
+// };
+// const handleCaptureOrder = async () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const orderId = urlParams.get("token");
+
+//   const studentId = localStorage.getItem("studentId");
+//   const courseName = localStorage.getItem("courseName");
+//   const batchId = localStorage.getItem("batchId");
+
+//   if (!orderId || !studentId || !courseName || !batchId) {
+//     alert("Missing required details to capture order.");
+//     return;
+//   }
+
+//   try {
+//     const response = await axios.post("https://api.hachion.co/capture-order", null, {
+//       params: {
+//         orderId,
+//         studentId,
+//         courseName,
+//         batchId
+//       }
+//     });
+
+//     alert(response.data); // Show success or failure message
+
+//     // Clear localStorage
+//     localStorage.removeItem("studentId");
+//     localStorage.removeItem("courseName");
+//     localStorage.removeItem("batchId");
+//   } catch (error) {
+//     console.error("Capture error:", error);
+//     alert("Failed to capture order.");
+//   }
+// };
+
+const handlePayment = async () => {
+  try {
+    const amount = 1.00;
+
+    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+    if (!user || !user.email) {
+      alert("Please log in before making payment.");
+      return;
+    }
+
+    const userEmail = user.email;
+
+    const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
+      params: { email: userEmail }
+    });
+
+    const studentId = profileResponse.data?.studentId;
+    const batchId = selectedBatchData?.batchId;
+    const courseName = selectedBatchData?.schedule_course_name;
+
+    if (!studentId || !batchId || !courseName) {
+      alert("Missing required details to proceed with payment.");
+      return;
+    }
+
+    
+    localStorage.setItem("studentId", studentId);
+    localStorage.setItem("courseName", courseName);
+    localStorage.setItem("batchId", batchId);
+
+  
+    const slug = courseName.toLowerCase().replace(/\s+/g, '-');
+    // const returnUrl = `http://localhost:3000/enroll/${slug}`;
+    const returnUrl = `https://hachion.co/enroll/${slug}`;
+console.log("return url :" +returnUrl);
+
+    const response = await axios.post("https://api.hachion.co/create-order", null, {
+      params: {
+        amount,
+        returnUrl
+      }
+    });
+
+    const approvalUrl = response.data;
+    if (approvalUrl.startsWith("https://www.paypal.com")) {
+      window.location.href = approvalUrl;
+    } else {
+      alert("Unexpected response: " + approvalUrl);
+    }
+  } catch (error) {
+    console.error("Error creating order:", error);
+    alert("Failed to start payment.");
+  }
+};
     return (
       <>
       <Topbar/>
@@ -290,7 +473,7 @@ const handleRadioChange = (event) => {
             <input
               type="text"
               className="form-control"
-              // id="enroll1"
+              
               placeholder='Enter your full name'
               value={studentData?.userName || ''}
               readOnly
@@ -304,7 +487,7 @@ const handleRadioChange = (event) => {
             <input
               type="email"
               className="form-control"
-              // id="enroll1"
+              
               placeholder='abc@gmail.com'
               value={studentData?.email || ''}
               readOnly
@@ -337,7 +520,7 @@ const handleRadioChange = (event) => {
                 type='tel'
                 className="form-control"
                 ref={mobileInputRef}
-                // id='enroll1'
+                
                 placeholder='Enter your mobile number'
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
@@ -352,7 +535,7 @@ const handleRadioChange = (event) => {
             <input
               type="text"
               className="form-control"
-              // id="enroll1"
+              
               placeholder='Enter your country'
               value={studentData?.country || ''}
               readOnly
@@ -430,16 +613,14 @@ const handleRadioChange = (event) => {
   <div>No matching course found.</div>
 )}
                 <div className="input-row">
-                {/* <button className="payment-btn">Proceed to Pay</button> */}
+                
+                 {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
                 
                 <div className="paylater">
-                  {successMessage && (
-      <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>
-    )}
-    {errorMessage && (
-      <p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>
-    )}
+                  {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
                 <button className="payment-btn" onClick={saveEnrollment}>Enroll Now, Pay Later</button>
                 <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
                 </div>

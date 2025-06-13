@@ -233,7 +233,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     return stars;
   };
 
-  const convertedTotalFee = (course.total * exchangeRate).toFixed(2);
+  const convertedTotalFee = ((course.stotal > 0 ? course.stotal : course.total) * exchangeRate).toFixed(2);
   const convertedOriginalFee = (course.amount * exchangeRate).toFixed(2);
 
   return (
@@ -250,10 +250,10 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
               <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
               <div className='qa-automation-middle'>
                 <p className='fee'>
-              Fee: <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
-              {course.total !== course.amount && (
+              Fee:<span className='schedule-span'>Starts from </span> <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
+              {/* {course.total !== course.amount && (
               <span className='strike-price'>{currency} {Math.round(convertedOriginalFee)}/-</span>
-                          )}
+                          )} */}
             </p>
                 <h6 className='sidebar-course-review'>
                   Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
@@ -295,7 +295,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         <div className='qa-button-container'>
           <div className='qa-button'>
           <p className='mob-cert'>{course.totalEnrollment}+ Certified Students</p>
-            <button className='enroll-now' onClick={onEnrollButtonClick}>Enroll Now</button>
+            <button className='enroll-now' onClick={onEnrollButtonClick}>Try Free session</button>
             <button className="download" onClick={downloadPdf}>Download Brochure</button>
           </div>
           <button className='video-btn' onClick={onVideoButtonClick}>

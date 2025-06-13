@@ -59,8 +59,13 @@ export const LiveOnlineFees = () => {
         setModeType('self');
         setEnrollText('Enroll Now');
         break;
-      case "Corporate Training":
+      case "Crash Course":
         calculatedFee = batchData.ctotal;
+        setModeType('crash');
+        setEnrollText('Enroll Now');
+        break;
+      case "Corporate Training":
+        // calculatedFee = batchData.ctotal;
         setModeType('corporate');
         setEnrollText('Enroll Now');
         break;

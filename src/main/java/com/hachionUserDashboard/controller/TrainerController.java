@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hachionUserDashboard.entity.Trainer;
 import com.hachionUserDashboard.repository.TrainerRepository;
@@ -54,12 +55,28 @@ public class TrainerController {
 		return trainers;
 	}
 
-	@PostMapping("/trainer/add")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void createTrainer(@RequestBody Trainer trainer) {
-		repo.save(trainer);
-	}
+//	@PostMapping("/trainer/add")
+//	@ResponseStatus(code = HttpStatus.CREATED)
+//	public void createTrainer(@RequestBody Trainer trainer) {
+//		repo.save(trainer);
+//	}
 
+	@PostMapping("/trainer/add")
+	public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
+	    boolean exists = repo.existsByNameAndCategoryAndCourse(
+	        trainer.getTrainer_name(),
+	        trainer.getCategory_name(),
+	        trainer.getCourse_name()
+	    );
+
+	    if (exists) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT)
+	                .body("Trainer with the same name, category, and course already exists.");
+	    }
+
+	    Trainer savedTrainer = repo.save(trainer);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(savedTrainer);
+	}
 	/*
 	 * @PutMapping("trainer/update/{id}") public Trainer
 	 * updateTrainers(@PathVariable int id) { Trainer trainer=
@@ -77,6 +94,7 @@ public class TrainerController {
 			// Set the new values for the trainer
 			trainer.setTrainer_name(updatedTrainer.getTrainer_name());
 			trainer.setCategory_name(updatedTrainer.getCategory_name());
+			trainer.setCourse_name(updatedTrainer.getCourse_name());
 			trainer.setSummary(updatedTrainer.getSummary());
 			trainer.setDemo_link_1(updatedTrainer.getDemo_link_1());
 			trainer.setDemo_link_2(updatedTrainer.getDemo_link_2());

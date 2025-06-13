@@ -36,8 +36,11 @@ public class PaymentTransaction {
 	@Column(name = "student_id")
 	private Long studentId;
 
-	@Column(name = "course_id")
-	private Long courseId;
+	@Column(name = "course_name")
+	private String courseName;
+
+	@Column(name = "batch_id")
+	private String batchId;
 
 	@Column(name = "payer_email")
 	private String payerEmail;
@@ -104,13 +107,7 @@ public class PaymentTransaction {
 		this.studentId = studentId;
 	}
 
-	public Long getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(Long courseId) {
-		this.courseId = courseId;
-	}
+	
 
 	public String getPayerEmail() {
 		return payerEmail;
@@ -134,6 +131,22 @@ public class PaymentTransaction {
 
 	public void setRawResponseJson(String rawResponseJson) {
 		this.rawResponseJson = rawResponseJson;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 
 }

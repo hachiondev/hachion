@@ -7,9 +7,13 @@ public class StudentTrackingRequest {
 
 	private Long studentTrackingId;
 
+	private String studentId;
+
 	private String studentName;
 
 	private String studentEmail;
+	
+	private String courseName;
 
 	private String mobile;
 
@@ -103,6 +107,22 @@ public class StudentTrackingRequest {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
 }

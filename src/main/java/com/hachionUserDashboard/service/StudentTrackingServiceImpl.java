@@ -113,7 +113,9 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 		studentTracking.setStudentName(studentTrackingRequest.getStudentName());
 		studentTracking.setStudentEmail(studentTrackingRequest.getStudentEmail());
 		studentTracking.setMobile(studentTrackingRequest.getMobile());
-
+		studentTracking.setStudentId(studentTrackingRequest.getStudentId());
+		studentTracking.setCourseName(studentTrackingRequest.getCourseName());
+		
 		if (studentTrackingRequest.getStartDate() != null) {
 			studentTracking.setStartDate(LocalDate.parse(studentTrackingRequest.getStartDate(), inputFormatter));
 		}
@@ -138,6 +140,8 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 	private StudentTrackingResponse createResponseForStudentTracking(StudentTracking saved) {
 		StudentTrackingResponse response = new StudentTrackingResponse();
 		response.setStudentTrackingId(saved.getStudentTrackingId());
+		response.setStudentId(saved.getStudentId());
+		response.setCourseName(saved.getCourseName());
 		response.setStudentName(saved.getStudentName());
 		response.setStudentEmail(saved.getStudentEmail());
 		response.setMobile(saved.getMobile());

@@ -18,11 +18,19 @@ public class StudentTracking {
 	@Column(name = "student_Tracking_id")
 	private Long studentTrackingId;
 
+	
+	@Column(name = "student_id", nullable = true)
+	private String studentId;
+	
+	
 	@Column(name = "student_name")
 	private String studentName;
 
 	@Column(name = "student_email")
 	private String studentEmail;
+	
+	@Column(name="course_name")
+	private String courseName;
 
 	@Column(name = "mobile")
 	private String mobile;
@@ -123,6 +131,22 @@ public class StudentTracking {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
 }

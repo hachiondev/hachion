@@ -2,7 +2,7 @@ package Service;
 
 public interface PayPalServiceInterface {
 
-	public String createOrder(Double amount);
+	public String createOrder(Double amount, String returnUrl);
 
-	public String captureOrder(String orderId, Long studentId, Long courseId);
+	public String captureOrder(String orderId, Long studentId, String courseName, String batchId);
 }

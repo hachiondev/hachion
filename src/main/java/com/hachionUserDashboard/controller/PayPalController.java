@@ -14,13 +14,13 @@ public class PayPalController {
 	private PayPalServiceInterface payPalService;
 
 	@PostMapping("/create-order")
-	public String createOrder(@RequestParam Double amount) {
-		return payPalService.createOrder(amount);
+	public String createOrder(@RequestParam Double amount, String returnUrl) {
+		return payPalService.createOrder(amount, returnUrl);
 	}
 
 	@PostMapping("/capture-order")
 	public String captureOrder(@RequestParam String orderId, @RequestParam Long studentId,
-			@RequestParam Long courseId) {
-		return payPalService.captureOrder(orderId, studentId, courseId);
+			@RequestParam String courseName, @RequestParam String batchId) {
+		return payPalService.captureOrder(orderId, studentId, courseName, batchId);
 	}
 }

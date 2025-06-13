@@ -8,38 +8,32 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 public class StudentTrackingResponse {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long studentTrackingId;
 
-	
+	private String studentId;
+
 	private String studentName;
 
-	
 	private String studentEmail;
 
-	
+	private String courseName;
+
 	private String mobile;
 
-	
 	private LocalDate startDate;
 
-	
 	private LocalDate completedDate;
 
-	
 	private int numberOfSessions;
 
-	
 	private int completedSessions;
 
-	
 	private String batchStatus;
 
-	
 	private String remarks;
 
 	public Long getStudentTrackingId() {
@@ -73,8 +67,6 @@ public class StudentTrackingResponse {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-	
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -122,6 +114,22 @@ public class StudentTrackingResponse {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
 }

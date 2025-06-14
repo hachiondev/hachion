@@ -89,7 +89,7 @@ const handleDelete = async (batch_id) => {
 });
 const handleDateFilter = () => {
   const filtered = requestBatch.filter((item) => {
-    const date = new Date(item.date || item.date);
+    const date = new Date(item.date || item.schedule_date);
     const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
     const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
     return (

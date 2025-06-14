@@ -89,7 +89,7 @@ const handleDelete = async (batch_id) => {
 });
 const handleDateFilter = () => {
   const filtered = requestBatch.filter((item) => {
-    const date = new Date(item.date || item.enroll_date);
+    const date = new Date(item.date || item.date);
     const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
     const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
     return (
@@ -187,6 +187,7 @@ const handleDateFilter = () => {
             <StyledTableCell align="center">Schedule Date</StyledTableCell>
             <StyledTableCell align="center">Time</StyledTableCell>
             <StyledTableCell align="center">Mode</StyledTableCell>
+            <StyledTableCell align="center">Date</StyledTableCell>
             {/* <StyledTableCell align="center">Action</StyledTableCell> */}
           </TableRow>
         </TableHead>
@@ -202,7 +203,7 @@ const handleDateFilter = () => {
       <StyledTableCell align="center">{row.schedule_date ? dayjs(row.schedule_date).format('MM-DD-YYYY') : ''}</StyledTableCell>
       <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
       <StyledTableCell align="center">{row.mode}</StyledTableCell>
-   
+      <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MM-DD-YYYY') : ''}</StyledTableCell>
       {/* <StyledTableCell align="center">
        
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.batch_id)} />

@@ -19,7 +19,7 @@ public class PayPalController {
 	}
 
 	@PostMapping("/capture-order")
-	public String captureOrder(@RequestParam String orderId, @RequestParam Long studentId,
+	public String captureOrder(@RequestParam String orderId, @RequestParam String studentId,
 			@RequestParam String courseName, @RequestParam String batchId) {
 		return payPalService.captureOrder(orderId, studentId, courseName, batchId);
 	}

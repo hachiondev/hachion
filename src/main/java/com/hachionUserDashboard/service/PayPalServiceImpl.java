@@ -29,6 +29,9 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 	private static final String CLIENT_ID = "AaK7ksplllFkZvdZ7WEvQzDbbkCgfnyGVfqv_Lui0vJwwyERgc5j4QT7Zfw7WhaA-qoTe0e-veWNAPBu";
 	private static final String CLIENT_SECRET = "EKMGEuKdkaB8blsWZi9f9oRYQk8KY_0TNZ_8MMeOW_sun16sjbzSEy6bHFc9xaF3SPBH3IsMPBjCHEWW";
 
+//	private static final String CLIENT_ID = "AQq7I-l3gwXqnQXC22e4l73Jj_opy1L9_Y9tD2ZEg5UDbODXM8HFtYiYGMANEKKNHL_kFq6dHzrpjkxE";
+//	private static final String CLIENT_SECRET = "EKMLwlZIVTF41YOKkU4pNA3B6WeKfbeXswiUgyG6SsrmQfXAgGXZaaTNcvLmjvB31UZYcArv_lH9epvw";
+
 	private final PayPalHttpClient client;
 
 	@Autowired
@@ -38,30 +41,6 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 		PayPalEnvironment environment = new PayPalEnvironment.Live(CLIENT_ID, CLIENT_SECRET);
 		this.client = new PayPalHttpClient(environment);
 	}
-
-//	@Override
-//	public String createOrder(Double amount) {
-//		OrderRequest orderRequest = new OrderRequest();
-//		orderRequest.checkoutPaymentIntent("CAPTURE");
-//
-//		PurchaseUnitRequest unitRequest = new PurchaseUnitRequest().amountWithBreakdown(
-//				new AmountWithBreakdown().currencyCode("USD").value(String.format("%.2f", amount)));
-//		orderRequest.purchaseUnits(List.of(unitRequest));
-//
-//		orderRequest.applicationContext(new ApplicationContext().returnUrl("https://hachion.co/success")
-//				.cancelUrl("https://hachion.co/cancel"));
-//
-//		OrdersCreateRequest request = new OrdersCreateRequest().requestBody(orderRequest);
-//
-//		try {
-//			Order order = client.execute(request).result();
-//			return order.links().stream().filter(link -> "approve".equals(link.rel())).findFirst()
-//					.map(LinkDescription::href).orElse("No approval link found.");
-//		} catch (IOException e) {
-//			return "Error creating PayPal order: " + e.getMessage();
-//		}
-//	}
-
 	
 	@Override
 	public String createOrder(Double amount, String returnUrl) {
@@ -102,7 +81,7 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 
 
 	@Override
-	public String captureOrder(String orderId, Long studentId, String courseName, String batchId) {
+	public String captureOrder(String orderId, String studentId, String courseName, String batchId) {
 
 		OrdersCaptureRequest request = new OrdersCaptureRequest(orderId);
 

@@ -36,6 +36,12 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 		    @Param("email") String email,
 		    @Param("courseName") String courseName
 		);
+	
+//	@Query(value = "SELECT mode FROM enroll WHERE student_id = :studentId AND LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName)) AND LOWER(mode) = 'Live Class' LIMIT 1", nativeQuery = true)
+//	String findLiveClassEnrollmentMode(@Param("studentId") String studentId, @Param("courseName") String courseName);
+	
+	  @Query(value = "SELECT COUNT(*) FROM enroll WHERE student_id = :studentId AND LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName)) AND LOWER(mode) = 'Live Class'", nativeQuery = true)
+	    int countLiveClassEnrollment(@Param("studentId") String studentId, @Param("courseName") String courseName);
 
 
 }

@@ -34,7 +34,7 @@ public class PaymentTransaction {
 	private String currency;
 
 	@Column(name = "student_id")
-	private Long studentId;
+	private String studentId;
 
 	@Column(name = "course_name")
 	private String courseName;
@@ -99,15 +99,16 @@ public class PaymentTransaction {
 		this.currency = currency;
 	}
 
-	public Long getStudentId() {
+	
+	
+
+	public String getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(Long studentId) {
+	public void setStudentId(String studentId) {
 		this.studentId = studentId;
 	}
-
-	
 
 	public String getPayerEmail() {
 		return payerEmail;

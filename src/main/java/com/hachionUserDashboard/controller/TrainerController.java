@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -63,19 +64,16 @@ public class TrainerController {
 
 	@PostMapping("/trainer/add")
 	public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
-	    boolean exists = repo.existsByNameAndCategoryAndCourse(
-	        trainer.getTrainer_name(),
-	        trainer.getCategory_name(),
-	        trainer.getCourse_name()
-	    );
+		boolean exists = repo.existsByNameAndCategoryAndCourse(trainer.getTrainer_name(), trainer.getCategory_name(),
+				trainer.getCourse_name());
 
-	    if (exists) {
-	        return ResponseEntity.status(HttpStatus.CONFLICT)
-	                .body("Trainer with the same name, category, and course already exists.");
-	    }
+		if (exists) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("Trainer with the same name, category, and course already exists.");
+		}
 
-	    Trainer savedTrainer = repo.save(trainer);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(savedTrainer);
+		Trainer savedTrainer = repo.save(trainer);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedTrainer);
 	}
 	/*
 	 * @PutMapping("trainer/update/{id}") public Trainer
@@ -116,6 +114,14 @@ public class TrainerController {
 		repo.delete(trainer);
 		return null;
 
+	}
+
+	@GetMapping("/trainernames")
+	public ResponseEntity<List<String>> getTrainerNames(@RequestParam String categoryName,
+			@RequestParam String courseName) {
+
+		List<String> trainerNames = repo.gettingTrainerNames(categoryName, courseName);
+		return ResponseEntity.ok(trainerNames);
 	}
 
 	/*

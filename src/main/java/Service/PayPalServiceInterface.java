@@ -4,5 +4,5 @@ public interface PayPalServiceInterface {
 
 	public String createOrder(Double amount, String returnUrl);
 
-	public String captureOrder(String orderId, Long studentId, String courseName, String batchId);
+	public String captureOrder(String orderId, String studentId, String courseName, String batchId);
 }

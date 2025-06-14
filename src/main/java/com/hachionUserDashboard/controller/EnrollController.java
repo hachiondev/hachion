@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.Enroll;
@@ -45,7 +47,7 @@ public class EnrollController {
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private TrainerRepository trainerRepository;
 
@@ -100,10 +102,13 @@ public class EnrollController {
 		String weekDays = weekDaysBuilder.toString();
 		// ending point
 
+//		String trainerExperience = trainerRepository.findSummaryByTrainerName(requestEnroll.getTrainer());
 		
-		String trainerExperience = trainerRepository.findSummaryByTrainerName(requestEnroll.getTrainer());
-		
-		
+		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(
+			    requestEnroll.getTrainer(),
+			    requestEnroll.getCourse_name()
+			);
+
 		String dateTimeStr = requestEnroll.getEnroll_date() + " " + requestEnroll.getTime();
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a z", Locale.ENGLISH);
 		ZonedDateTime zonedStart = ZonedDateTime.parse(dateTimeStr, inputFormatter);
@@ -120,19 +125,15 @@ public class EnrollController {
 						+ "!\n\nMeeting Link: " + requestEnroll.getMeeting_link(), "UTF-8")
 				+ "&location=" + URLEncoder.encode("Online", "UTF-8") + "&sf=true&output=xml";
 
-		
 		String technologyName = requestEnroll.getCourse_name();
 
-		
-		String technologySlug = technologyName.toLowerCase()
-		    .replaceAll("\\s+", "-")            
-		    .replaceAll("[^a-z0-9\\-]", "");   
-		
-		
+		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
+
 		if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
 					dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
-					requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink, technologySlug);
+					requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink,
+					technologySlug);
 		}
 		if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
@@ -171,13 +172,10 @@ public class EnrollController {
 		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time + " " + " ()";
 		latest.setWeek(dayOfWeek);
 
-String technologyName = latest.getCourse_name();
+		String technologyName = latest.getCourse_name();
 
-		
-		String technologySlug = technologyName.toLowerCase()
-		    .replaceAll("\\s+", "-")            
-		    .replaceAll("[^a-z0-9\\-]", "");  
-		
+		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
+
 		emailService.sendEmailForEnrollForLiveDemo(latest.getEmail(), latest.getCourse_name(), dayOfWeek,
 				formattedDateTime, time, null, latest.getMeeting_link(), null, null, latest.getTrainer(), null, null,
 				null, null, null, null, null, null, technologySlug);
@@ -265,13 +263,13 @@ String technologyName = latest.getCourse_name();
 			e.printStackTrace();
 		}
 	}
-	
+
 //	 @GetMapping("/studentsTracking")
 //	    public ResponseEntity<List<String>> getStudentIdsByCourseName(@RequestParam String courseName) {
 //	        List<String> studentIds = repo.findStudentIdsByCourseName(courseName);
 //	        return ResponseEntity.ok(studentIds);
 //	    }
-	 
+
 //	   @GetMapping("/studentsTracking/gettingEmail")
 //	    public ResponseEntity<List<Map<String, Object>>> getStudentCourseInfo(
 //	            @RequestParam(required = false) String studentId,
@@ -311,4 +309,17 @@ String technologyName = latest.getCourse_name();
 //	       List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email, courseName);
 //	       return ResponseEntity.ok(batchIds);
 //	   }
+
+	@GetMapping("/enroll/check")
+	public Map<String, Object> checkLiveClassEnrollment(@RequestParam String studentId,
+			@RequestParam String courseName) {
+
+		int count = repo.countLiveClassEnrollment(studentId, courseName);
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("isEnrolled", count > 0);
+
+		return response;
+	}
+
 }

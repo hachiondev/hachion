@@ -7,16 +7,30 @@ import CorporateFees from './CorporateFees';
 // import CrashCourseFee from './CrashCourseFee';
 import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
-import RequestBatch from './RequestBatch'; // Import the RequestBatch component
+import RequestBatch from './RequestBatch';
 import axios from 'axios';
+import loginPopupImg from '../../Assets/loginpopup.png';
 
 const UpcomingBatch = () => {
   const [activeComponent, setActiveComponent] = useState('LiveOnlineFees');
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal visibility
-const {courseName}= useParams();
+  const {courseName}= useParams();
   const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
-    const [course, setCourse] = useState(null);
+  const [error, setError] = useState(null);
+  const [course, setCourse] = useState(null);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+  const handleRequestBatchClick = () => {
+    const user = JSON.parse(localStorage.getItem('loginuserData'));
+    if (user) {
+      setIsModalOpen(true);
+    } else {
+      setIsLoginModalVisible(true);
+    }
+  };
+
+  const hideLoginModal = () => {
+    setIsLoginModalVisible(false);
+  };
 
 useEffect(() => {
     const fetchCourse = async () => {
@@ -104,21 +118,48 @@ useEffect(() => {
           {renderComponent()}
 
           {/* Request Batch link, only visible for LiveOnlineFees */}
-          {activeComponent === 'LiveOnlineFees' && (
+          {/* {activeComponent === 'LiveOnlineFees' && ( */}
             <p className='schedule'>
               <img src={calendar} alt='calendar' />
               Schedule your way? 
               <span 
                 className='schedule-span' 
-                onClick={() => setIsModalOpen(true)} 
+                onClick={handleRequestBatchClick}
                 style={{ cursor: 'pointer', color: 'blue' }}
               >
                 Request Batch
               </span>
             </p>
-          )}
+          {/* )} */}
         </div>
       </div>
+
+      {isLoginModalVisible && (
+      <div className="login-modal">
+        <div className="login-modal-content">
+          <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
+          <h2 className="modal-title">Login Required</h2>
+          <div className="modal-body-login">
+            <div className="modal-left">
+              <p>Log in to the <span className="web-name">Hachion website</span> to request a custom batch.</p>
+              <button
+                className="login-btn"
+                onClick={() => {
+                  localStorage.setItem('redirectAfterLogin', window.location.pathname);
+                  window.location.href = '/login';
+                }}
+              >
+                Login
+              </button>
+              <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
+            </div>
+            <div className="modal-right">
+              <img src={loginPopupImg} alt="Login Prompt" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
 
       {isModalOpen && (
         <div className="modal-request">

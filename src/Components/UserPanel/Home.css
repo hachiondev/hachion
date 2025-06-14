@@ -1427,6 +1427,24 @@ gap:1vh;
   .topbar {
   height: 80px;
 }
+.card-image {
+display: block;
+width: 100%;
+height: 120px;
+}
+  .card-icon {
+    height: 70px;
+    width: auto;
+    top: 20%;
+    left: 50%;
+}
+.card-header{
+font-size: 12px;
+left: 47%;
+top: 0;
+margin-top: 10px;
+padding:3px 5px !important;
+}
   .career-div {
       width: 80%; 
       margin-left: auto;
@@ -2531,7 +2549,7 @@ border-radius: 5px;
 
 .card{
   max-Width: 380px;
-  height: 125px;
+  height: 140px;
   background-color: white;
   border-radius: 10px;
   }
@@ -2581,13 +2599,13 @@ border-radius: 5px;
 
 .card-image{
   width: 150px;
-  height: 125px;
+  height: 140px;
   }
 
 .card-course-details{
-  padding: 20px;
+  padding: 15px;
   width: 100%;
-  height: 125px;
+  height: 140px;
   }
 
 .course-name{

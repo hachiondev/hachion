@@ -122,6 +122,20 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
       <form className="request-form">
         <AiOutlineCloseCircle onClick={closeModal} className="button-close" />
 
+         <div className='form-group col-10' style={{ position: 'relative' }}>
+            <label for="inputState" className='form-label'>
+              Mode of Trainings
+            </label>
+            <select id='query1' class="form-select mode" value={mode}
+            onChange={(e) => setMode(e.target.value)}>
+            <option selected>Select Mode</option>
+            <option>Live Class</option>
+            <option>Live Demo</option>
+            <option>Mentor Training</option>
+            <option>Self-Paced</option>
+            <option>Corporate Training</option>
+          </select>
+          </div>
         <div className="form-group col-10">
           <label htmlFor="inputDate" className="form-label">
             Preferred batch start date
@@ -159,18 +173,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
             id="query1"
           />
         </div>
-        <div className='form-group col-10' style={{ position: 'relative' }}>
-            <label for="inputState" className='form-label'>
-              Mode
-            </label>
-            <select id='query1' class="form-select mode" value={mode}
-            onChange={(e) => setMode(e.target.value)}>
-            <option selected>Select mode</option>
-            <option>Live Demo</option>
-            <option>Live Class</option>
-          </select>
-          </div>
-        <div className="form-group col-10">
+        {/* <div className="form-group col-10">
           <label htmlFor="inputEmail" className="form-label">
             Email ID
           </label>
@@ -220,7 +223,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
               placeholder="Enter your mobile number"
             />
           </div>
-        </div>
+        </div> */}
 
         {error && <div className="error-message">{error}</div>}
 

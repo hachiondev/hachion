@@ -129,19 +129,38 @@ const Curriculum = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
- const handleDownloadAssessment = async (assessmentPdfPath) => {
-  const token = localStorage.getItem('authToken');
-  const userData = JSON.parse(localStorage.getItem('loginuserData'));
 
-  if (!token || !userData) {
+const handleDownloadAssessment = async (assessmentPdfPath) => {
+  const token = localStorage.getItem('authToken');
+  const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+
+  if (!user || !user.email) {
+    const currentPath = window.location.pathname + window.location.search;
+    localStorage.setItem('redirectAfterLogin', currentPath);
     setShowAssessmentLoginPopup(true);
     return;
   }
 
+  const userEmail = user.email;
+  let studentId = '';
+
   try {
-    const response = await axios.get(`https://api.hachion.co/enroll/check`, {
+  
+    const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      params: { email: userEmail },
+    });
+
+    if (profileResponse.data && profileResponse.data.studentId) {
+      studentId = profileResponse.data.studentId;
+    } else {
+      setShowEnrollPopup(true);
+      return;
+    }
+
+  
+    const enrollmentResponse = await axios.get(`https://api.hachion.co/enroll/check`, {
       params: {
-        userId: userData.id,
+        studentId: studentId,
         courseName: matchedCourseName,
       },
       headers: {
@@ -149,9 +168,9 @@ const Curriculum = () => {
       },
     });
 
-    const { isEnrolled, mode } = response.data;
+    const { isEnrolled } = enrollmentResponse.data;
 
-    if (isEnrolled && mode.toLowerCase() === 'live') {
+    if (isEnrolled) {
       const fileName = assessmentPdfPath.split('/').pop();
       const fileUrl = `https://api.hachion.co/curriculum/assessments/${fileName}`;
       window.open(fileUrl, '_blank');
@@ -159,7 +178,7 @@ const Curriculum = () => {
       setShowEnrollPopup(true);
     }
   } catch (error) {
-    console.error('Error checking enrollment:', error);
+    console.error('Error during assessment download flow:', error);
     setShowEnrollPopup(true);
   }
 };
@@ -176,7 +195,7 @@ const Curriculum = () => {
       <div className="curriculum-topic">
         {curriculum.length > 0 ? (
           curriculum.slice(0, showMore ? curriculum.length : 5).map((item, index) => {
-            if (!item.title || !item.topic) return null; // Skip if title or topic is missing
+            if (!item.title || !item.topic) return null; 
           
             const videoLinks = item.link
               ? item.link.split('\n').map(link => link.trim()).filter(link => link)

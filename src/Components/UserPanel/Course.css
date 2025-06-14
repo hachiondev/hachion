@@ -441,6 +441,7 @@ font-weight: 500;
 
 .amount{
 font-size: 24px;
+margin-left: 5px;
 font-weight: 600;
 background: linear-gradient( #00AEEF,#006489);
 -webkit-background-clip: text;
@@ -1324,13 +1325,13 @@ white-space: nowrap;
 }
 
 .schedule-span{
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 cursor:pointer;
-margin-left: 15px;
+margin-left: 10px;
 }
 
 .qa-course{
@@ -2473,6 +2474,23 @@ font-size: 10px;
 .qa-video-image {
   width: 100%;
   display: block;
+}
+.qa-automation-skeleton {
+  width: 80%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  margin: 10px auto 20px auto;
+  padding: 10px;
+}
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+.skeleton-img {
+  height: 140px;
+  width: 200px;
 }
 
 .play-btn-overlay {

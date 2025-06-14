@@ -293,110 +293,6 @@ const handleRadioChange = (event) => {
     }
   };
 
-  // const handlePayment = async () => {
-  //     try {
-  //       // const amount = courseData.total || "N/A";
-  //       const amount = 1.00;
-  
-  //       const response = await axios.post("https://api.hachion.co/create-order", null, {
-  //         params: { amount: amount }
-  //       });
-  
-  //       const approvalUrl = response.data;
-  
-  //        if (approvalUrl.startsWith("https://www.paypal.com")) {
-          
-  //         window.location.href = approvalUrl;
-  //       } else {
-  //         alert("Unexpected response: " + approvalUrl);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error creating order:", error);
-  //       alert("Failed to start payment. Please try again.");
-  //     }
-  //   };
-// const handlePayment = async () => {
-//   try {
-//     const amount = 1.00;
-
-//     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
-
-//     if (!user || !user.email) {
-//       alert("Please log in before making payment.");
-//       return;
-//     }
-
-//     const userEmail = user.email;
-
-//     const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
-//       params: { email: userEmail }
-//     });
-
-//     const studentId = profileResponse.data?.studentId;
-//     const batchId = selectedBatchData?.batchId;
-//     const courseName = selectedBatchData?.schedule_course_name;
-
-//     if (!studentId || !batchId || !courseName) {
-//       alert("Missing required details to proceed with payment.");
-//       return;
-//     }
-
-//     // Store temporarily in localStorage
-//     localStorage.setItem("studentId", studentId);
-//     localStorage.setItem("courseName", courseName);
-//     localStorage.setItem("batchId", batchId);
-
-//     const response = await axios.post("https://api.hachion.co/create-order", null, {
-//       params: { amount }
-//     });
-
-//     const approvalUrl = response.data;
-
-//     if (approvalUrl.startsWith("https://www.paypal.com")) {
-//       window.location.href = approvalUrl;
-//     } else {
-//       alert("Unexpected response: " + approvalUrl);
-//     }
-//   } catch (error) {
-//     console.error("Error creating order:", error);
-//     alert("Failed to start payment.");
-//   }
-// };
-// const handleCaptureOrder = async () => {
-//   const urlParams = new URLSearchParams(window.location.search);
-//   const orderId = urlParams.get("token");
-
-//   const studentId = localStorage.getItem("studentId");
-//   const courseName = localStorage.getItem("courseName");
-//   const batchId = localStorage.getItem("batchId");
-
-//   if (!orderId || !studentId || !courseName || !batchId) {
-//     alert("Missing required details to capture order.");
-//     return;
-//   }
-
-//   try {
-//     const response = await axios.post("https://api.hachion.co/capture-order", null, {
-//       params: {
-//         orderId,
-//         studentId,
-//         courseName,
-//         batchId
-//       }
-//     });
-
-//     alert(response.data); // Show success or failure message
-
-//     // Clear localStorage
-//     localStorage.removeItem("studentId");
-//     localStorage.removeItem("courseName");
-//     localStorage.removeItem("batchId");
-//   } catch (error) {
-//     console.error("Capture error:", error);
-//     alert("Failed to capture order.");
-//   }
-// };
-
 const handlePayment = async () => {
   try {
     const amount = 1.00;
@@ -613,11 +509,11 @@ console.log("return url :" +returnUrl);
   <div>No matching course found.</div>
 )}
                 <div className="input-row">
-                
-                 {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+                <div>
+                  {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
     {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
-                
+                </div>
                 <div className="paylater">
                   {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
     {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}

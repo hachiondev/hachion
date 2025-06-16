@@ -37,11 +37,16 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 		    @Param("courseName") String courseName
 		);
 	
-//	@Query(value = "SELECT mode FROM enroll WHERE student_id = :studentId AND LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName)) AND LOWER(mode) = 'Live Class' LIMIT 1", nativeQuery = true)
-//	String findLiveClassEnrollmentMode(@Param("studentId") String studentId, @Param("courseName") String courseName);
-	
-	  @Query(value = "SELECT COUNT(*) FROM enroll WHERE student_id = :studentId AND LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName)) AND LOWER(mode) = 'Live Class'", nativeQuery = true)
-	    int countLiveClassEnrollment(@Param("studentId") String studentId, @Param("courseName") String courseName);
 
+	@Query(value = "SELECT COUNT(*) FROM enroll WHERE student_id = :studentId AND LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName)) AND LOWER(mode) = 'live class' AND batch_id = :batchId", nativeQuery = true)
+	int countLiveClassEnrollment(
+	    @Param("studentId") String studentId,
+	    @Param("courseName") String courseName,
+	    @Param("batchId") String batchId
+	);
+	@Query(value = "SELECT COUNT(*) FROM enroll WHERE student_id = :studentId AND course_name = :courseName AND batch_id = :batchId AND mode = 'Live Class'", nativeQuery = true)
+	int countByStudentCourseBatchAndModeLiveClass(@Param("studentId") String studentId,
+	                                              @Param("courseName") String courseName,
+	                                              @Param("batchId") String batchId);
 
 }

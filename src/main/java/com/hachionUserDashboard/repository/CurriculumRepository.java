@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,8 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 
 	@Query(value = "SELECT * FROM curriculum WHERE assessment_pdf = :assessmentPdf", nativeQuery = true)
 	Optional<Curriculum> findPdfByAssessmentExactName(@Param("assessmentPdf") String assessmentPdf);
+
+	@Query(value = "SELECT assessment_pdf FROM curriculum WHERE course_name = :courseName ORDER BY curriculum_id ASC", nativeQuery = true)
+	List<String> findAssessmentFileNamesByCourseName(@Param("courseName") String courseName);
 
 }

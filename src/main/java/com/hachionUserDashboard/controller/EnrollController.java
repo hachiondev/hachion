@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -29,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.Enroll;
+import com.hachionUserDashboard.repository.CourseScheduleRepository;
+import com.hachionUserDashboard.repository.CurriculumRepository;
 import com.hachionUserDashboard.repository.EnrollRepository;
+import com.hachionUserDashboard.repository.PaymentTransactionRepository;
 import com.hachionUserDashboard.repository.TrainerRepository;
 import com.hachionUserDashboard.service.EmailService;
 
@@ -51,6 +55,15 @@ public class EnrollController {
 	@Autowired
 	private TrainerRepository trainerRepository;
 
+	@Autowired
+	private CourseScheduleRepository scheduleRepository;
+
+	@Autowired
+	private CurriculumRepository curriculumRepository;
+
+	@Autowired
+	private PaymentTransactionRepository paymentTransactionRepository;
+
 	@GetMapping("/enroll/{id}")
 	public ResponseEntity<Enroll> getEnroll(@PathVariable Integer id) {
 		return repo.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -64,7 +77,18 @@ public class EnrollController {
 	@PostMapping("/enroll/add")
 	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll)
 			throws MessagingException, UnsupportedEncodingException {
+		
+		 int existingCount = repo.countByStudentCourseBatchAndModeLiveClass(
+		            requestEnroll.getStudentId(),
+		            requestEnroll.getCourse_name(),
+		            requestEnroll.getBatchId());
 
+		    if (existingCount > 0) {
+		        return ResponseEntity.status(HttpStatus.CONFLICT)
+		                .body("This enrollment record already exists for Live Class in the database.");
+		    }
+		
+		
 		Enroll enroll = new Enroll();
 		enroll.setStudentId(requestEnroll.getStudentId());
 		enroll.setName(requestEnroll.getName());
@@ -103,11 +127,9 @@ public class EnrollController {
 		// ending point
 
 //		String trainerExperience = trainerRepository.findSummaryByTrainerName(requestEnroll.getTrainer());
-		
-		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(
-			    requestEnroll.getTrainer(),
-			    requestEnroll.getCourse_name()
-			);
+
+		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(requestEnroll.getTrainer(),
+				requestEnroll.getCourse_name());
 
 		String dateTimeStr = requestEnroll.getEnroll_date() + " " + requestEnroll.getTime();
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a z", Locale.ENGLISH);
@@ -138,8 +160,8 @@ public class EnrollController {
 		if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
 			emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
 					requestEnroll.getCourse_name(), weekDays, formattedDate, time, null,
-					requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), trainerExperience, null, null, null,
-					null, null, null, null, technologySlug);
+					requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), trainerExperience, null,
+					null, null, null, null, null, null, technologySlug);
 		}
 
 		repo.save(enroll);
@@ -264,62 +286,119 @@ public class EnrollController {
 		}
 	}
 
-//	 @GetMapping("/studentsTracking")
-//	    public ResponseEntity<List<String>> getStudentIdsByCourseName(@RequestParam String courseName) {
-//	        List<String> studentIds = repo.findStudentIdsByCourseName(courseName);
-//	        return ResponseEntity.ok(studentIds);
-//	    }
+//	@GetMapping("/enroll/check")
+//	public Map<String, Object> checkLiveClassEnrollment(@RequestParam String studentId,
+//			@RequestParam String courseName) {
+//
+//		int count = repo.countLiveClassEnrollment(studentId, courseName);
+//
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("isEnrolled", count > 0);
+//
+//		return response;
+//	}
 
-//	   @GetMapping("/studentsTracking/gettingEmail")
-//	    public ResponseEntity<List<Map<String, Object>>> getStudentCourseInfo(
-//	            @RequestParam(required = false) String studentId,
-//	            @RequestParam(required = false) String email,
-//	            @RequestParam(required = false) String mobile) {
+//	@GetMapping("/enroll/check")
+//	public Map<String, Object> checkLiveClassEnrollment(
+//	        @RequestParam String studentId,
+//	        @RequestParam String courseName,
+//	        @RequestParam String batchId) {
 //
-//	        List<Object[]> results = repo.findStudentCourseInfo(studentId, email, mobile);
+//	    int count = repo.countLiveClassEnrollment(studentId, courseName, batchId);
 //
-//	        List<Map<String, Object>> response = new ArrayList<>();
+//	    Map<String, Object> response = new HashMap<>();
+//	    response.put("isEnrolled", count > 0);
 //
-//	        for (Object[] row : results) {
-//	            Map<String, Object> studentMap = new HashMap<>();
-//	            studentMap.put("studentId", row[0]);
-//	            studentMap.put("name", row[1]);
-//	            studentMap.put("email", row[2]);
-//	            studentMap.put("mobile", row[3]);
-//	            studentMap.put("courseName", row[4]);
-//	            response.add(studentMap);
-//	        }
-//
-//	        return ResponseEntity.ok(response);
-//	    }
-//	   @GetMapping("/studentsTracking/batches")
-//	    public ResponseEntity<List<String>> getBatchIdsByStudentIdAndEmail(
-//	            @RequestParam(required = false) String studentId,
-//	            @RequestParam(required = false) String email) {
-//
-//	        List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email);
-//	        return ResponseEntity.ok(batchIds);
-//	    }
-//	   @GetMapping("/studentsTracking/batches")
-//	   public ResponseEntity<List<String>> getBatchIdsByFilters(
-//	           @RequestParam(required = false) String studentId,
-//	           @RequestParam(required = false) String email,
-//	           @RequestParam(required = false) String courseName) {
-//
-//	       List<String> batchIds = repo.findBatchIdsByStudentIdAndEmail(studentId, email, courseName);
-//	       return ResponseEntity.ok(batchIds);
-//	   }
+//	    return response;
+//	}
 
+//	@GetMapping("/enroll/check")
+//	public ResponseEntity<?> checkLiveClassEnrollment(
+//	        @RequestParam String studentId,
+//	        @RequestParam String courseName,
+//	        @RequestParam String batchId) {
+//
+//	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+//
+//	    if (isActive == null) {
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//	                .body(Map.of("error", "Batch ID not found"));
+//	    }
+//
+//	    if (!isActive) {
+//	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//	                .body(Map.of("error", "This batch is no longer active"));
+//	    }
+//
+//	    int count = repo.countLiveClassEnrollment(studentId, courseName, batchId);
+//
+//	    Map<String, Object> response = new HashMap<>();
+//	    response.put("isEnrolled", count > 0);
+//
+//	    return ResponseEntity.ok(response);
+//	}
+
+//	@GetMapping("/enroll/check")
+//	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
+//			@RequestParam String batchId, @RequestParam String assessmentFileName) {
+//
+//		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+//		if (isActive == null) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
+//		}
+//		if (!isActive) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(Map.of("error", "This batch is no longer active"));
+//		}
+//		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+//		List<String> fileNamesOnly = assessmentFiles.stream()
+//			    .map(path -> path.substring(path.lastIndexOf("/") + 1))
+//			    .collect(Collectors.toList());
+//		
+//		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+//
+//		if (assessmentIndex >= 3) {
+//			boolean hasPaid = paymentTransactionRepository.hasPaidForCourse(studentId, courseName, batchId);
+//			if (!hasPaid) {
+//				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//						.body(Map.of("error", "You must pay to access this assessment."));
+//			}
+//		}
+//		return ResponseEntity.ok(Map.of("canDownload", true));
+//	}
 	@GetMapping("/enroll/check")
-	public Map<String, Object> checkLiveClassEnrollment(@RequestParam String studentId,
-			@RequestParam String courseName) {
+	public ResponseEntity<?> checkLiveClassEnrollment(
+	        @RequestParam String studentId,
+	        @RequestParam String courseName,
+	        @RequestParam String batchId,
+	        @RequestParam String assessmentFileName) {
 
-		int count = repo.countLiveClassEnrollment(studentId, courseName);
+	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+	    if (isActive == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("error", "Batch ID not found"));
+	    }
+	    if (!isActive) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("error", "This batch is no longer active"));
+	    }
 
-		Map<String, Object> response = new HashMap<>();
-		response.put("isEnrolled", count > 0);
+	    List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+	    List<String> fileNamesOnly = assessmentFiles.stream()
+	            .map(path -> path.substring(path.lastIndexOf("/") + 1))
+	            .collect(Collectors.toList());
 
-		return response;
+	    int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+
+	    if (assessmentIndex >= 3) {
+	        Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+	        if (amount == null || amount <= 0) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+	                    .body(Map.of("error", "You must pay to access this assessment."));
+	        }
+	    }
+
+	    return ResponseEntity.ok(Map.of("canDownload", true));
 	}
 
 }

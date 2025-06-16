@@ -1,6 +1,5 @@
 package com.hachionUserDashboard.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -69,5 +68,6 @@ public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, 
 	@Query(value = "SELECT batch_id FROM schedule WHERE batch_id = :batchId", nativeQuery = true)
 	String findExactBatchId(@Param("batchId") String batchId);
 
-
+	@Query(value = "SELECT is_active FROM schedule WHERE batch_id = :batchId LIMIT 1", nativeQuery = true)
+	Boolean findIsActiveByBatchId(@Param("batchId") String batchId);
 }

@@ -12,30 +12,35 @@ import image8 from '../../Assets/oui_documents.png';
 
 
 const CorporateMode = () => {
-  const anotherDescription = "Corporate Training refers to a tailored learning approach designed specifically for organizations and businesses. This mode of training is customized to meet the unique needs and goals of company, focussing on equipping employees with the skills and knowledge necessary to excel in their roles and contribute to the organizations success";
-  const anotherTargetAudience ="Corporate Employees, Team Members, New Hires, Leadership Terms, Cross-Functional Teams, Skill Enhancement Candidates, Compliance Training Participants";
-  
-  const anotherFeatures = [
+  const corporateDescription = "Corporate Training refers to a tailored learning approach designed specifically for organizations and businesses. This mode of training is customized to meet the unique needs and goals of company, focussing on equipping employees with the skills and knowledge necessary to excel in their roles and contribute to the organizations success";
+  const corporateIdeal =[
     [
-      { icon: image1, content: 'Customized Curriculum' },
-      { icon: image2, content: 'Expert Instructors' },
-      { icon: image3, content: 'Real-World Scenarios' },
-      { icon: image4, content: 'Hands-On Training' },
-      { icon: image5, content: 'Peer Learning and Networking' }
+      { point: 'Corporate Employees, Team Members, New Hires,' },
+      { point: 'Leadership Terms, Cross-Functional Teams' },
+      { point: 'Skill Enhancement Candidates, Compliance Training Participants' },]
+  ];
+  
+  const corporateFeatures = [
+    [
+      { content: 'Customized Curriculum' },
+      { content: 'Expert Instructors' },
+      { content: 'Real-World Scenarios' },
+      { content: 'Hands-On Training' },
+      { content: 'Peer Learning and Networking' }
      
     ],
-    [ { icon: image6, content: 'Assesment and Feedback' },
-        { icon: image7, content: 'Certification and Ongoing Support' },
-        { icon: image8, content: 'Resource Materials and Post-Training Resources' }]
+    [ { content: 'Assesment and Feedback' },
+        { content: 'Certification and Ongoing Support' },
+        { content: 'Resource Materials and Post-Training Resources' }]
    
   ];
 
   return (
     <div>
       <LiveOnlineTraining 
-        description={anotherDescription} 
-        targetAudience={anotherTargetAudience} 
-        features={anotherFeatures} 
+        description={corporateDescription} 
+        targetAudience={corporateIdeal} 
+        features={corporateFeatures} 
       />
     </div>
   );

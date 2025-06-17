@@ -9,29 +9,33 @@ import image1 from '../../Assets/ri_video-download-line.png';
 import image7 from '../../Assets/mdi_whatsapp.png';
 
 const MentoringMode = () => {
-  const anotherDescription = "Mentor Mode Training refers to a personalized, guided learning approach where students receive one-on-one or small group instruction from a mentor. This method is highly effective for students who need tailored support, ongoing feedback and deeper engagement with the subject matter.";
-  const anotherTargetAudience = "Career Transitioners, Struggling students, Advances Learners, Specialized Skill Seekers, Working Professionals, Project-Based Learners, Self-Placed Learners.";
-  
-  const anotherFeatures = [
+  const mentorDescription = "Mentor Mode Training refers to a personalized, guided learning approach where students receive one-on-one or small group instruction from a mentor. This method is highly effective for students who need tailored support, ongoing feedback and deeper engagement with the subject matter.";
+  const mentorIdeal = [
     [
-      { icon: image1, content: 'Downloadable recorder videos after every session' },
-      { icon: image2, content: 'Downloadable interview questions and documents' },
-      { icon: image3, content: 'Course materials and White papers(optional)' },
-      { icon: image4, content: 'Downloadable sample resumes' },
-      { icon: image5, content: 'Weekely doubt clarification sessions' },
-     
+      { point: 'Career changers and professionals with tight schedules' },
+      { point: 'Learners needing customized feedback and flexible timing ' },
+      { point: 'Self-paced learners who still want live guidance' },
     ],
-    [ { icon: image6, content: 'Trainer support via email and Whatsapp' },
-        { icon: image7, content: 'Whatsapp group with 24*7 support team' }]
-   
+  ];
+  
+  const mentorFeatures = [
+    [
+      { content: 'Downloadable recorded videos' },
+      { content: 'Weekly mentor Q&A/doubt clarification sessions' },
+      { content: 'Downloadable interview prep materials' },
+      { content: 'Course materials & optional white papers' },
+      { content: 'Role-specific sample resumes' },
+      { content: 'Trainer support via email and WhatsApp' },
+      { content: '24/7 support group access' },
+    ],
   ];
 
   return (
     <div>
       <LiveOnlineTraining 
-        description={anotherDescription} 
-        targetAudience={anotherTargetAudience} 
-        features={anotherFeatures} 
+        description={mentorDescription} 
+        targetAudience={mentorIdeal} 
+        features={mentorFeatures} 
       />
     </div>
   );

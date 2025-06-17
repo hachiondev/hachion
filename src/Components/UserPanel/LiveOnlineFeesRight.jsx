@@ -101,15 +101,15 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           if (modeType === 'live') {
             selectedFeeAmount = parseFloat(matchedCourse.total) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.amount) || 0;
-          } else if (modeType === 'mentoring') {
+          } else if (modeType === 'crash') {
+            selectedFeeAmount = parseFloat(matchedCourse.ctotal) || 0;
+            selectedOriginalAmount = parseFloat(matchedCourse.camount) || 0;
+          }else if (modeType === 'mentoring') {
             selectedFeeAmount = parseFloat(matchedCourse.mtotal) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.mamount) || 0;
           } else if (modeType === 'self') {
             selectedFeeAmount = parseFloat(matchedCourse.stotal) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.samount) || 0;
-          }else if (modeType === 'crash') {
-            selectedFeeAmount = parseFloat(matchedCourse.ctotal) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.camount) || 0;
           } else if (modeType === 'corporate') {
             setFee('Not Available');
             return;

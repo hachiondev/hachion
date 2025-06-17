@@ -149,6 +149,7 @@ const [currentPage, setCurrentPage] = useState(1);
           try {
               const response = await axios.get('https://api.hachion.co/registerstudent');
               setRegisterStudent(response.data); // Use the curriculum state
+              setFilteredStudent(response.data);
           } catch (error) {
               console.error("Error fetching student list:", error.message);
           }
@@ -157,11 +158,7 @@ const [currentPage, setCurrentPage] = useState(1);
       setFilteredStudent(registerStudent)
   }, []); // Empty dependency array ensures it runs only once
 
-    const handleDeleteConfirmation = (id) => {
-        if (window.confirm("Are you sure you want to delete this Student?")) {
-          handleDelete(id);
-        }
-      };
+    
   
       const handleDateFilter = () => {
         const filtered = registerStudent.filter((item) => {
@@ -194,12 +191,19 @@ const [currentPage, setCurrentPage] = useState(1);
             setMessage("Error updating student details.");
         }
     };
-            
+           
+    const handleDeleteConfirmation = (id) => {
+        if (window.confirm("Are you sure you want to delete this Student?")) {
+          handleDelete(id);
+        }
+      };
       const handleDelete = async (id) => {
        
          try { 
           const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`); 
           console.log("Register Student deleted successfully:", response.data); 
+          setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
+setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
           setSuccessMessage("✅ Student deleted successfully.");
     setErrorMessage("");
         } catch (error) { 

@@ -120,7 +120,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
     <div className="request-batch">
       <div className="request-header">Let us know your preferred start date</div>
       <form className="request-form">
-        <AiOutlineCloseCircle onClick={closeModal} className="button-close" />
+        <AiOutlineCloseCircle onClick={closeModal} className="request-close" />
 
          <div className='form-group col-10' style={{ position: 'relative' }}>
             <label for="inputState" className='form-label'>
@@ -131,6 +131,7 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
             <option selected>Select Mode</option>
             <option>Live Class</option>
             <option>Live Demo</option>
+            <option>Crash Course</option>
             <option>Mentor Training</option>
             <option>Self-Paced</option>
             <option>Corporate Training</option>

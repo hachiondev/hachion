@@ -250,7 +250,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
               <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
               <div className='qa-automation-middle'>
                 <p className='fee'>
-              Fee:<span className='schedule-span'>Starts from </span> <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
+              Fee:<span className='start-span'>Starts from </span> <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
               {/* {course.total !== course.amount && (
               <span className='strike-price'>{currency} {Math.round(convertedOriginalFee)}/-</span>
                           )} */}

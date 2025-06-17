@@ -9,27 +9,32 @@ import image1 from '../../Assets/ri_video-download-line.png';
 import image6 from '../../Assets/mdi_whatsapp.png';
 
 const SelfPaced = () => {
-  const anotherDescription = "Self-Paced Training is a flexible learning approach where students can access course matrials and complete assignments at their own place. This mode allows learners to study according to their own schedule,without the constraints of fixed class times or deadlines";
-  const anotherTargetAudience ="Busy professionals, Independent Learners, Variable availability Learners, Self-Disciplined Learners, Review-Oriented Learners, Introverted Learners, Long-Term Learners";
-  
-  const anotherFeatures = [
+  const selfDescription = "Complete control over your learning schedule. Access all training videos, materials, and projects anytime, anywhere. No live classes or mentor sessions—ideal for independent learners.";
+  const selfIdeal =[
     [
-      { icon: image1, content: 'Downloadable recorder videos after every session' },
-      { icon: image2, content: 'Downloadable interview questions and documents' },
-      { icon: image3, content: 'Course materials and White papers(optional)' },
-      { icon: image4, content: 'Downloadable sample resumes' },
-      { icon: image5, content: 'Trainer support via email and whatsapp' },
-    
-    ],[  { icon: image6, content: 'Whatsapp group with 24*7 support team' }]
-   
+      { point: 'Self-motivated learners ' },
+      { point: 'Professionals with unpredictable schedules ' },
+      { point: 'Cost-conscious learners seeking flexibility ' },
+    ],
+  ];
+  
+  const selfFeatures = [
+    [
+      { content: 'Full access to all training videos' },
+      { content: 'Downloadable course documents and resources' },
+      { content: 'Assignments and quizzes for practice' },
+      { content: 'Lifetime access to LMS' },
+      { content: 'Certification upon completion' },
+      { content: 'Optional upgrade to mentor support if needed' },
+    ],
   ];
 
   return (
     <div>
       <LiveOnlineTraining 
-        description={anotherDescription} 
-        targetAudience={anotherTargetAudience} 
-        features={anotherFeatures} 
+        description={selfDescription} 
+        targetAudience={selfIdeal} 
+        features={selfFeatures} 
       />
     </div>
   );

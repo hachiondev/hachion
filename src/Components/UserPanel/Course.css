@@ -665,8 +665,8 @@ border-radius: 10px;
   font-weight: 700;
   white-space: wrap;
   font-size: 18px;
-  margin-left: 30px;
-  padding-left: 20px;
+  margin-left: 40px;
+  padding-left: 30px;
 }
 
 .qa-video-container {
@@ -793,7 +793,7 @@ position: relative;
   padding: 20px;
 }
 
-.button-close {
+.button-close, .request-close {
 position: absolute;
 top: 10px;
 right: 10px;
@@ -1023,6 +1023,16 @@ right: -4px;
 bottom: -4px;
 height: 4px;
 background-color: white;
+}
+.fee-amount {
+  display: block;
+  font-size: 16px;
+  background-color: #00AAEF;
+  border: 1px solid #ffffff;
+  padding: 2px 4px;
+  color: #ffffff;
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
 .batch-type-content {
@@ -1331,6 +1341,14 @@ white-space: nowrap;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 cursor:pointer;
+margin-left: 10px;
+}
+.start-span{
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient( #00AEEF,#006489);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 margin-left: 10px;
 }
 
@@ -1653,11 +1671,11 @@ color: #006489;
 
 .live-mode{
   padding-top: 2vh;
-  padding-left: 7vh;
+  padding-left: 5vh;
   font-size: 14px;
   font-weight: 400;
   color:black;
-  padding-right: 4vh;
+  padding-right: 5vh;
 }
 
 .feature-icons{
@@ -1669,9 +1687,33 @@ gap: 2vh;
 .live-head{
 font-size:14px;
 font-weight:600;
-padding-left: 7vh;
-padding-right: 4vh;
+padding-left: 6vh;
 margin-bottom: 0;
+}
+.live-sections-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.live-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.live-list {
+  list-style-type: disc;
+  padding-left: 8vh;
+}
+
+.feature-item {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 12px;
 }
 
 .feature-content{
@@ -2027,9 +2069,33 @@ border:2px solid white;
     right: 14px;
     font-size: 24px;
   }
+  .live-mode{
+  padding-top: 1.5vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+}
+
+.live-head{
+padding-left: 2vh;
+}
+.live-list {
+  padding-left: 3vh;
+}
 }
   
 @media screen and (max-width: 1024px){
+    .live-mode{
+  padding-top: 1.5vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+}
+
+.live-head{
+padding-left: 2vh;
+}
+.live-list {
+  padding-left: 3vh;
+}
   .contact-info{
      gap: 10px;
   }
@@ -2906,6 +2972,10 @@ max-height: 3em;
   width: 100%;
   margin-left: 0px;
 }
+.fee-amount {
+  display: block;
+  font-size: 14px;
+}
 
 .batch-type-content {
   padding: 0px;
@@ -3025,7 +3095,7 @@ max-height: 3em;
   margin-bottom: 10px;
 }
 
-.schedule-span{
+.schedule-span, .start-span{
   font-size: 12px;
   margin-left: 5px;
 }
@@ -3147,6 +3217,14 @@ max-height: 3em;
     padding: 0 10px;
     margin-bottom: 0px;
     }
+    .live-list {
+    padding-left: 20px;
+  }
+    .live-sections-wrapper {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
     
     .live-mode-feature{
     display: flex;
@@ -3266,7 +3344,7 @@ max-height: 3em;
   background-color: #00AEEF; /* Keep the existing background color */
 }
 
-.button-close {
+.button-close, .request-close {
   font-size: 16px !important; /* Reduce close button size for mobile */
 }
 

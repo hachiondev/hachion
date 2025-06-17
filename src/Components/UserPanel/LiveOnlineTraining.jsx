@@ -6,21 +6,25 @@ const LiveOnlineTraining = ({ description, targetAudience, features }) => {
     <>
       <div>
         <p className='live-mode'>{description}</p>
-        <p className='live-head'>Target Audience:</p>
-        <p className='live-mode'>{targetAudience}</p>
-        <p className='live-head'>Features :</p>
-        <div className='live-mode-feature'>
-          {features.map((featureGroup, index) => (
-            <div className='mode-feature' key={index}>
-              {featureGroup.map((feature, i) => (
-                <div className='feature-icons' key={i}>
-                  <img src={feature.icon} alt='mode-of training' className='features-icon'/>
-                  <p className='feature-content'>{feature.content}</p>
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className='live-sections-wrapper'>
+        <div className='live-section'>
+          <p className='live-head'>Ideal For:</p>
+          <ul className='live-list'>
+            {targetAudience.flat().map((item, i) => (
+              <li key={i} className='feature-item'>{item.point}</li>
+            ))}
+          </ul>
         </div>
+
+        <div className='live-section'>
+          <p className='live-head'>Key Features:</p>
+          <ul className='live-list'>
+            {features.flat().map((item, i) => (
+              <li key={i} className='feature-item'>{item.content}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import CorporateMode from './CorporateMode';
 import MentoringMode from './MentoringMode';
 import SelfPlaced from './SelfPlaced';
 import './Course.css';
+import CrashCourse from './CrashCourse';
 
 const ModeOfTraining = () => {
   const [selectedMode, setSelectedMode] = useState('LiveOnlineTraining'); // Default selected mode
@@ -12,12 +13,14 @@ const ModeOfTraining = () => {
     switch (selectedMode) {
       case 'LiveOnlineTraining':
         return <LiveOnlineTrainingMain />;
-      case 'CorporateMode':
-        return <CorporateMode />;
+      case 'CrashCourse':
+        return <CrashCourse />;
       case 'MentoringMode':
         return <MentoringMode />;
       case 'SelfPlaced':
         return <SelfPlaced />;
+      case 'CorporateMode':
+        return <CorporateMode />;
       default:
         return <LiveOnlineTrainingMain />;
     }
@@ -34,10 +37,10 @@ const ModeOfTraining = () => {
           Live Online Training
         </p>
         <p
-          className={`batch-type-content ${selectedMode === 'CorporateMode' ? 'active' : ''}`}
-          onClick={() => setSelectedMode('CorporateMode')}
+          className={`batch-type-content ${selectedMode === 'CrashCourse' ? 'active' : ''}`}
+          onClick={() => setSelectedMode('CrashCourse')}
         >
-          Corporate Training
+          Crash Course(Fast Track)
         </p>
         <p
           className={`batch-type-content ${selectedMode === 'MentoringMode' ? 'active' : ''}`}
@@ -50,6 +53,12 @@ const ModeOfTraining = () => {
           onClick={() => setSelectedMode('SelfPlaced')}
         >
           Self-Paced Learning
+        </p>
+        <p
+          className={`batch-type-content ${selectedMode === 'CorporateMode' ? 'active' : ''}`}
+          onClick={() => setSelectedMode('CorporateMode')}
+        >
+          Corporate Training
         </p>
       </div>
       <div className='mode-of-training-content'>

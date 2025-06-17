@@ -46,6 +46,7 @@ export default function OnlineEnroll() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [message, setMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     axios.get("https://api.hachion.co/enroll")
@@ -58,14 +59,32 @@ export default function OnlineEnroll() {
       });
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
-      setEnrollData(enrollData.filter((item) => item.id !== id));
-    } catch (error) {
-      console.error("Error deleting entry:", error);
-    }
-  };
+  const handleDeleteConfirmation = (id) => {
+  const confirmed = window.confirm("Are you sure you want to delete this enrollment?");
+  if (confirmed) {
+    handleDelete(id);
+  }
+};
+
+const handleDelete = async (id) => {
+  try {
+    await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+    setEnrollData((prev) => prev.filter((item) => item.id !== id));
+     setFilteredData((prev) => prev.filter((item) => item.id !== id));
+    setSuccessMessage("✅ Enrollment deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting entry:", error);
+  }
+};
+
+  // const handleDelete = async (id) => {
+  //   try {
+  //     await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+  //     setEnrollData(enrollData.filter((item) => item.id !== id));
+  //   } catch (error) {
+  //     console.error("Error deleting entry:", error);
+  //   }
+  // };
 
 const searchedData = filteredData.filter((item) => {
   return (
@@ -216,7 +235,7 @@ const handleDateFilter = () => {
                   <StyledTableCell align="center">
                     <RiDeleteBin6Line
                       className="delete"
-                      onClick={() => handleDelete(row.id)}
+                      onClick={() => handleDeleteConfirmation(row.id)}
                       style={{ cursor: "pointer", color: "red" }}
                     />
                   </StyledTableCell>
@@ -230,7 +249,7 @@ const handleDateFilter = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
+{successMessage && <div style={{ color: "green" }}>{successMessage}</div>}
       <div className='pagination-container'>
         <AdminPagination
           currentPage={currentPage}

@@ -9,8 +9,12 @@ import AssessmentImg from '../../Assets/assesspdf.avif';
 import LiveImg from '../../Assets/liveclass.avif';
 import logo from '../../Assets/logo.png';
 import { Assessment } from '@mui/icons-material';
+import { useContext } from 'react';
+import { BatchContext } from './BatchContext';
 
 const Curriculum = () => {
+
+   const selectedBatch = useContext(BatchContext);
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [curriculum, setCurriculum] = useState([]);
@@ -22,6 +26,8 @@ const Curriculum = () => {
   const [showAssessmentLoginPopup, setShowAssessmentLoginPopup] = useState(false);
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const { courseName } = useParams();
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
 
@@ -129,12 +135,17 @@ const Curriculum = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-
 const handleDownloadAssessment = async (assessmentPdfPath) => {
+  
+  setSuccessMessage('');
+  setErrorMessage('');
+
   const token = localStorage.getItem('authToken');
   const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
   if (!user || !user.email) {
+    
+    setErrorMessage("⚠️ Please log in to download assessments.");
     const currentPath = window.location.pathname + window.location.search;
     localStorage.setItem('redirectAfterLogin', currentPath);
     setShowAssessmentLoginPopup(true);
@@ -145,41 +156,56 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
   let studentId = '';
 
   try {
-  
+    
     const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
       params: { email: userEmail },
     });
 
     if (profileResponse.data && profileResponse.data.studentId) {
       studentId = profileResponse.data.studentId;
+      
     } else {
+      
+      setErrorMessage("⚠️ You must enroll before accessing assessments.");
       setShowEnrollPopup(true);
       return;
     }
 
-  
+    const batchId = localStorage.getItem('selectedBatchId');
+    const assessmentFileName = assessmentPdfPath.split('/').pop();
     const enrollmentResponse = await axios.get(`https://api.hachion.co/enroll/check`, {
       params: {
-        studentId: studentId,
+        studentId,
         courseName: matchedCourseName,
+        batchId,
+        assessmentFileName
       },
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const { isEnrolled } = enrollmentResponse.data;
-
-    if (isEnrolled) {
-      const fileName = assessmentPdfPath.split('/').pop();
-      const fileUrl = `https://api.hachion.co/curriculum/assessments/${fileName}`;
+    const { canDownload } = enrollmentResponse.data;
+    
+    if (canDownload) {
+      const fileUrl = `https://api.hachion.co/curriculum/assessments/${assessmentFileName}`;
+      
       window.open(fileUrl, '_blank');
-    } else {
-      setShowEnrollPopup(true);
     }
   } catch (error) {
-    console.error('Error during assessment download flow:', error);
-    setShowEnrollPopup(true);
+    
+    const errorMsg = error.response?.data?.error || 'Something went wrong';
+    
+    if (errorMsg.includes('no longer active')) {
+      setErrorMessage('❌ This batch is no longer active.');
+    } else if (errorMsg.includes('pay')) {
+      setErrorMessage('❌ You must pay to access this assessment.');
+    } else if (errorMsg.includes('Batch ID not found')) {
+      setErrorMessage('⚠️ Invalid batch selected.');
+    } else {
+      setErrorMessage("❌ Something went wrong while downloading.");
+      setShowEnrollPopup(true);
+    }
   }
 };
 
@@ -255,7 +281,8 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
           <p>No Curriculum available for this course.</p>
         )}
       </div>
-
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
       {curriculum.length > 5 && (
         <div className="view-div">
           <button className="view-more-btn" onClick={handleViewMore}>

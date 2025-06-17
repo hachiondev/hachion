@@ -49,6 +49,7 @@ import Paper from '@mui/material/Paper';
 const [courseData, setCourseData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [selectedValue, setSelectedValue] = useState('a');
+const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
 
     const [selectedCountry, setSelectedCountry] = useState({
           code: '+1',
@@ -93,6 +94,7 @@ const [selectedValue, setSelectedValue] = useState('a');
           studentId,
           courseName,
           batchId,
+          discount: selectedBatchData.discount
         },
       });
 
@@ -136,7 +138,7 @@ const [selectedValue, setSelectedValue] = useState('a');
     
         
         useEffect(() => {
-          fetch("https://ipwho.is/")
+          fetch("https://api.hachion.co/ipwho.is/")
             .then((res) => res.json())
             .then((data) => {
               const userCountryCode = data?.country_code;
@@ -287,10 +289,19 @@ const handleRadioChange = (event) => {
         setErrorMessage("");
       }
     } catch (error) {
-      console.error('Error during enrollment:', error);
-      setSuccessMessage("");
-      setErrorMessage("❌ Something went wrong during registration. Please try again.");
-    }
+  console.error('Error during enrollment:', error);
+
+  const errorMessage = error?.response?.data;
+
+  if (errorMessage === "This enrollment record already exists for Live Class in the database.") {
+    setErrorMessage("❌ You are already enrolled in this Live Class.");
+    setIsEnrollDisabled(true); 
+  } else {
+    setErrorMessage("❌ Something went wrong during registration. Please try again.");
+  }
+
+  setSuccessMessage("");
+}
   };
 
 const handlePayment = async () => {
@@ -325,7 +336,6 @@ const handlePayment = async () => {
 
   
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
-    // const returnUrl = `http://localhost:3000/enroll/${slug}`;
     const returnUrl = `https://hachion.co/enroll/${slug}`;
 console.log("return url :" +returnUrl);
 
@@ -336,7 +346,7 @@ console.log("return url :" +returnUrl);
       }
     });
 
-    const approvalUrl = response.data;
+     const approvalUrl = response.data;
     if (approvalUrl.startsWith("https://www.paypal.com")) {
       window.location.href = approvalUrl;
     } else {
@@ -517,7 +527,25 @@ console.log("return url :" +returnUrl);
                 <div className="paylater">
                   {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
     {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
-                <button className="payment-btn" onClick={saveEnrollment}>Enroll Now, Pay Later</button>
+                
+<button
+  onClick={saveEnrollment}
+  disabled={isEnrollDisabled}
+  style={{
+    backgroundColor: isEnrollDisabled ? '#ccc' : '#007bff',
+    color: isEnrollDisabled ? '#666' : '#fff',
+    cursor: isEnrollDisabled ? 'not-allowed' : 'pointer',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '5px',
+    fontWeight: 'bold',
+    opacity: isEnrollDisabled ? 0.6 : 1,
+    transition: '0.3s ease'
+  }}
+>
+  Enroll Now, Pay Later
+</button>
+
                 <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
                 </div>
                 </div>

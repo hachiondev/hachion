@@ -49,6 +49,11 @@ export const LiveOnlineFees = () => {
         setModeType('live');
         setEnrollText('Enroll Free Demo');
         break;
+      case "Crash Course":
+        calculatedFee = batchData.ctotal;
+        setModeType('crash');
+        setEnrollText('Enroll Now');
+        break;
       case "Mentoring Mode":
         calculatedFee = batchData.mtotal;
         setModeType('mentoring');
@@ -57,11 +62,6 @@ export const LiveOnlineFees = () => {
       case "Self-Paced":
         calculatedFee = batchData.stotal;
         setModeType('self');
-        setEnrollText('Enroll Now');
-        break;
-      case "Crash Course":
-        calculatedFee = batchData.ctotal;
-        setModeType('crash');
         setEnrollText('Enroll Now');
         break;
       case "Corporate Training":

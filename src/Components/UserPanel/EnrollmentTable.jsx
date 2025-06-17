@@ -76,7 +76,7 @@ export default function EnrollmentTable() {
             <StyledTableCell align="center">Fee</StyledTableCell>
             <StyledTableCell align="center">% Discount</StyledTableCell>
             <StyledTableCell align="center">Total</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            {/* <StyledTableCell align="center">Action</StyledTableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -88,9 +88,9 @@ export default function EnrollmentTable() {
             <StyledTableCell align="center">USD {courseData.amount}</StyledTableCell>
             <StyledTableCell align="center">{courseData.discount || "0"}</StyledTableCell>
             <StyledTableCell align="center">USD {courseData.total}</StyledTableCell>
-            <StyledTableCell align="center">
+            {/* <StyledTableCell align="center">
               <RiDeleteBinLine style={{ color: 'red', cursor: 'pointer' }} />
-            </StyledTableCell>
+            </StyledTableCell> */}
           </StyledTableRow>
         </TableBody>
       </Table>

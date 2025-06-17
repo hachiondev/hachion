@@ -73,6 +73,8 @@ export default function Curriculum() {
     const [startDate, setStartDate] = useState(null);
     const [displayedCategories, setDisplayedCategories] = useState([]);
     const [allData, setAllData] = useState([]); 
+    const [successMessage, setSuccessMessage] = useState("");
+      const [errorMessage, setErrorMessage] = useState("");
 const [filterData, setFilterData] = useState({
   category_name: "",
   course_name: "",
@@ -223,7 +225,7 @@ const [filterData, setFilterData] = useState({
       };
       const handleDateFilter = () => {
         const filtered = curriculum.filter((item) => {
-          const curriculumDate = new Date(item.date); // Parse the date field
+          const curriculumDate = new Date(item.date); 
           const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
           const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       
@@ -342,11 +344,14 @@ const [filterData, setFilterData] = useState({
     setCurrentPage(1); 
   };
   
+  
   const handleSubmit = async (e) => {
   e.preventDefault();
   const currentDate = new Date().toISOString().split("T")[0];
 
-  const uploadPromises = rows.map(async (row) => {
+  let allSuccessful = true;
+
+  for (const row of rows) {
     const formData = new FormData();
     formData.append("curriculumData", JSON.stringify({
       category_name: curriculumData.category_name,
@@ -375,25 +380,33 @@ const [filterData, setFilterData] = useState({
         timeout: 60000,
       });
 
-      return response.status === 201;
+      if (response.status !== 201) {
+        allSuccessful = false;
+        setSuccessMessage("");
+        setErrorMessage("❌ Failed to add curriculum entry.");
+        break;
+      }
     } catch (error) {
       const backendMessage = error.response?.data?.message || error.response?.data || error.message;
       console.error("Error adding curriculum:", backendMessage);
-      alert(`Error uploading file: ${backendMessage}`);
-      return false;
+      // alert(`Error uploading file: ${backendMessage}`);
+      allSuccessful = false;
+       setSuccessMessage("");
+      setErrorMessage("❌ Error uploading file: " + backendMessage);
+      break;
     }
-  });
-    const results = await Promise.all(uploadPromises);
-    const allSuccessful = results.every((status) => status);
-  
-    if (allSuccessful) {
-      alert("All curriculum entries added successfully.");
-      setShowAddCourse(false);
-      setCurriculumData({});
-      setRows([{ id: Date.now(), title: "", topic: "", link: "", assessment_pdf: "" }]); // Reset to initial row
-    } 
-   
-  };
+  }
+
+  if (allSuccessful) {
+    // alert("All curriculum entries added successfully.");
+     setSuccessMessage("✅ All curriculum entries added successfully.");
+    setErrorMessage("");
+    setShowAddCourse(false);
+    setCurriculumData({});
+    setRows([{ id: Date.now(), title: "", topic: "", link: "", assessment_pdf: "" }]);
+  }
+};
+
     const handleAddTrendingCourseClick = () => setShowAddCourse(true);
   return (
     
@@ -715,6 +728,7 @@ const [filterData, setFilterData] = useState({
     ) : (
         <p>No topics available</p>
     )}
+    
 </StyledTableCell>
       <StyledTableCell align="left">{course.link}</StyledTableCell>
       <StyledTableCell align="left"> {course.assessment_pdf ? course.assessment_pdf.split("/").pop() : ""}</StyledTableCell>
@@ -746,13 +760,16 @@ const [filterData, setFilterData] = useState({
 )}
 </TableBody>
     </Table>
+    
     </TableContainer>):(<p>Please select category and courses to display data</p>)}
+    {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
    { (filterData.category_name || filterData.course_name) ?
     (<div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
       rowsPerPage={rowsPerPage}
-      totalRows={filteredCurriculum.length} // Use the full list for pagination
+      totalRows={filteredCurriculum.length} 
       onPageChange={handlePageChange}
     />
               </div>):(<p></p>)}

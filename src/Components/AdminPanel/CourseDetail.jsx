@@ -345,6 +345,9 @@ const handleDelete = async (id) => {
       setErrorMessage("");
 
       setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
+       setCategories((prev) => prev.filter((course) => course.id !== id));
+      setFilteredCourses((prev) => prev.filter((course) => course.id !== id));
+      setAllCourses((prev) => prev.filter((course) => course.id !== id));
     } else {
       setSuccessMessage("");
       setErrorMessage("❌ Failed to delete the course.");

@@ -30,6 +30,9 @@ public class PaymentTransaction {
 	@Column(name = "amount")
 	private Double amount;
 
+	@Column(name = "discount")
+	private Double discount;
+
 	@Column(name = "currency")
 	private String currency;
 
@@ -99,9 +102,6 @@ public class PaymentTransaction {
 		this.currency = currency;
 	}
 
-	
-	
-
 	public String getStudentId() {
 		return studentId;
 	}
@@ -148,6 +148,14 @@ public class PaymentTransaction {
 
 	public void setBatchId(String batchId) {
 		this.batchId = batchId;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 
 }

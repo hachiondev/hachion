@@ -35,6 +35,10 @@ public interface PaymentService {
 	
 	public void sendReminderEmail(PaymentRequest paymentRequest);
 
+	
+
+	String generateInvoiceForPaypal(PaymentRequest paymentRequest, Model model);
+
 //	public String generateInvoiceBeforePayment(PaymentRequest paymentRequest, Model model)
 
 }

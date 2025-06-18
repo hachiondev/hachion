@@ -242,9 +242,15 @@ public class Userimpl implements UserService {
 		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
 				registrationRequest.getFirstName());
 
-		userRepository.save(user);
+		RegisterStudent save = userRepository.save(user);
+		
+		System.out.println("🔍 Debug values:");
+		System.out.println("FirstName: " + registrationRequest.getFirstName());
+		System.out.println("LastName: " + registrationRequest.getLastName());
+		System.out.println("Mobile: " + registrationRequest.getMobile());
+		System.out.println("Country: " + registrationRequest.getCountry());
 
-		webhookSenderService.sendRegistrationDetails(user);
+		webhookSenderService.sendRegistrationDetails(save);
 
 		return "Password and user details updated successfully.";
 	}
@@ -364,7 +370,7 @@ public class Userimpl implements UserService {
 		String msg1 = "";
 		RegisterStudent user1 = userRepository.findByEmail(loginRequest.getEmail());
 
-		if (user1 != null) { // Check if email exists
+		if (user1 != null) { 
 			String password = loginRequest.getPassword();
 			String encodedPassword = user1.getPassword();
 			String name = user1.getUserName();

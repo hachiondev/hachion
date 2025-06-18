@@ -1,8 +1,5 @@
 package com.hachionUserDashboard.dto;
 
-import jakarta.persistence.Table;
-
-@Table(name = "student_tracking")
 public class StudentTrackingRequest {
 
 	private Long studentTrackingId;
@@ -13,7 +10,14 @@ public class StudentTrackingRequest {
 
 	private String studentEmail;
 	
+	private String courseCategory;
+	
 	private String courseName;
+
+	private String batchType;
+	
+	
+	private String batchId;
 
 	private String mobile;
 
@@ -123,6 +127,30 @@ public class StudentTrackingRequest {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public String getCourseCategory() {
+		return courseCategory;
+	}
+
+	public void setCourseCategory(String courseCategory) {
+		this.courseCategory = courseCategory;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	public String getBatchType() {
+		return batchType;
+	}
+
+	public void setBatchType(String batchType) {
+		this.batchType = batchType;
 	}
 
 }

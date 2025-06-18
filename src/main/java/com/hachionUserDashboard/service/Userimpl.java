@@ -165,6 +165,9 @@ public class Userimpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private WebhookSenderService webhookSenderService;
+
 	@Override
 	public String sendOtp(String email) {
 
@@ -240,6 +243,8 @@ public class Userimpl implements UserService {
 				registrationRequest.getFirstName());
 
 		userRepository.save(user);
+
+		webhookSenderService.sendRegistrationDetails(user);
 
 		return "Password and user details updated successfully.";
 	}

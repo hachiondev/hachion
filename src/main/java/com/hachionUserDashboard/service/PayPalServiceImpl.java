@@ -3,6 +3,7 @@ package com.hachionUserDashboard.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hachionUserDashboard.dto.PaymentInstallmentRequest;
 import com.hachionUserDashboard.dto.PaymentRequest;
 import com.hachionUserDashboard.entity.PaymentTransaction;
+import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.PaymentTransactionRepository;
+import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.paypal.core.PayPalEnvironment;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.orders.AmountWithBreakdown;
@@ -43,6 +46,9 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 
 	@Autowired
 	private PaymentService paymentService;
+
+	@Autowired
+	private RegisterStudentRepository registerStudentRepository;
 
 	public PayPalServiceImpl() {
 		PayPalEnvironment environment = new PayPalEnvironment.Live(CLIENT_ID, CLIENT_SECRET);
@@ -136,6 +142,10 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 			String currency = order.purchaseUnits().get(0).payments().captures().get(0).amount().currencyCode();
 			String payerEmail = order.payer().email();
 
+			Optional<RegisterStudent> student = registerStudentRepository.findByStudentId(studentId);
+			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
+			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
+			
 			String rawJson = new ObjectMapper().writeValueAsString(order);
 
 			PaymentTransaction tx = new PaymentTransaction();
@@ -145,22 +155,29 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 			tx.setAmount(amount);
 			tx.setDiscount(discount);
 			tx.setCurrency(currency);
-			tx.setPayerEmail(payerEmail);
+			tx.setPayerEmail(studentEmail);
 			tx.setStudentId(studentId);
 			tx.setCourseName(courseName);
 			tx.setBatchId(batchId);
 			tx.setPaymentDate(LocalDateTime.now());
 			tx.setRawResponseJson(rawJson);
 
-			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx);
-			System.out.println("📧 Sending invoice email to: " + paymentRequest.getEmail());
+//			Optional<User> student = registerStudentRepository.findByStudentId(studentId);
+//			String studentEmail = student.map(User::getEmail).orElse(payerEmail);
+//			String studentName = student.map(User::getFullName).orElse("Student"); 
+
 			
+
+			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
+
+			System.out.println("📧 Sending invoice email to: " + paymentRequest.getEmail());
+
 			try {
-				  paymentService.generateInvoiceForPaypal(paymentRequest, new ExtendedModelMap());
-				  System.out.println("📧 Sending invoice email to: " + paymentRequest.getEmail());
-				} catch (Exception ex) {
-				  System.err.println("⚠️ Failed to send invoice email: " + ex.getMessage());
-				}
+				paymentService.generateInvoiceForPaypal(paymentRequest, new ExtendedModelMap());
+				System.out.println("📧 Sending invoice email to: " + paymentRequest.getEmail());
+			} catch (Exception ex) {
+				System.err.println("⚠️ Failed to send invoice email: " + ex.getMessage());
+			}
 
 //			paymentService.generateInvoiceForPaypal(paymentRequest, new ExtendedModelMap());
 			paymentTransactionRepository.save(tx);
@@ -173,10 +190,11 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 		}
 	}
 
-	private PaymentRequest convertTransactionToPaymentRequest(PaymentTransaction tx) {
+	private PaymentRequest convertTransactionToPaymentRequest(PaymentTransaction tx, String studentName,
+			String studentEmail) {
 		PaymentRequest pr = new PaymentRequest();
-		pr.setStudentName("Student"); // You can look up by studentId if needed
-		pr.setEmail(tx.getPayerEmail());
+		pr.setStudentName(studentName); // You can look up by studentId if needed
+		pr.setEmail(studentEmail);
 //	    pr.setMobile("N/A"); // Lookup from DB if available
 		pr.setCourseName(tx.getCourseName());
 		pr.setCourseFee(tx.getAmount()); // Original fee if known
@@ -186,9 +204,7 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 		pr.setBalancePay(tx.getAmount());
 		pr.setInvoiceNumber("INV-" + tx.getTransactionId().substring(0, 8));
 		pr.setStatus("PAID");
-		pr.setDiscount(
-			    tx.getDiscount() != null ? tx.getDiscount().intValue() : 0
-			);
+		pr.setDiscount(tx.getDiscount() != null ? tx.getDiscount().intValue() : 0);
 
 		PaymentInstallmentRequest installment = new PaymentInstallmentRequest();
 		installment.setPayDate(tx.getPaymentDate().toLocalDate());

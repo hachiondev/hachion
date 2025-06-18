@@ -60,6 +60,8 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 	@Query(value = "SELECT * FROM registerstudent ORDER BY date DESC", nativeQuery = true)
 	List<RegisterStudent> findAllOrderByDateDescNative();
 
+	@Query(value = "SELECT * FROM registerstudent WHERE student_id = :studentId", nativeQuery = true)
+	Optional<RegisterStudent> findByStudentId(@Param("studentId") String studentId);
 	
 }
 

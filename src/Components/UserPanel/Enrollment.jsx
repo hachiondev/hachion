@@ -86,6 +86,9 @@ const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
       alert("Missing payment info. Please try again.");
       return;
     }
+const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
+  const discount = batchData.discount ?? 0;
+console.log("➡️ discount from localStorage:", discount);
 
     try {
       const response = await axios.post("https://api.hachion.co/capture-order", null, {
@@ -94,7 +97,8 @@ const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
           studentId,
           courseName,
           batchId,
-          discount: selectedBatchData.discount
+          discount: discount
+          
         },
       });
 
@@ -103,6 +107,8 @@ const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
       localStorage.removeItem("studentId");
       localStorage.removeItem("courseName");
       localStorage.removeItem("batchId");
+ localStorage.removeItem("selectedBatchData");
+
 
       setSuccessMessage("✅ Payment successful! You are now enrolled.");
       setErrorMessage("");
@@ -323,6 +329,7 @@ const handlePayment = async () => {
     const studentId = profileResponse.data?.studentId;
     const batchId = selectedBatchData?.batchId;
     const courseName = selectedBatchData?.schedule_course_name;
+console.log("📦 discount from courseData:", courseData?.discount);
 
     if (!studentId || !batchId || !courseName) {
       alert("Missing required details to proceed with payment.");
@@ -333,9 +340,13 @@ const handlePayment = async () => {
     localStorage.setItem("studentId", studentId);
     localStorage.setItem("courseName", courseName);
     localStorage.setItem("batchId", batchId);
+localStorage.setItem("selectedBatchData", JSON.stringify({
+  ...selectedBatchData,
+  discount: courseData?.discount ?? 0 
+}));
 
-  
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
+    // const returnUrl = `http://localhost:3000/enroll/${slug}`;
     const returnUrl = `https://hachion.co/enroll/${slug}`;
 console.log("return url :" +returnUrl);
 

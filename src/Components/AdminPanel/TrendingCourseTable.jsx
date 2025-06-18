@@ -78,7 +78,7 @@ export default function TrendingCourseTable() {
             date:currentDate,
             status:false
          });
-const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
    const [status, setStatus] = useState(false);
    
@@ -232,10 +232,6 @@ const displayedCourse = filteredCourse.slice(
           setFilteredCourse(filtered);
       }, [searchTerm,filteredCourse]);
         
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
         const handleClickOpen = (row) => {
             console.log(row);
               setEditedData(row)// Set the selected row data

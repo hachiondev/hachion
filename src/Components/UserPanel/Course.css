@@ -949,6 +949,9 @@ scroll-behavior: smooth;
     opacity: 1;
   }
 }
+[id] {
+  scroll-margin-top: 100px;
+}
 
 .upcoming-header-content {
 font-size: 16px;
@@ -977,6 +980,16 @@ right: -4px;
 bottom: -16px;
 height: 4px;
 background-color: white;
+}
+
+.upcoming-link.active::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: -16px;
+  height: 4px;
+  background-color: white;
 }
 
 .upcoming-batch { 
@@ -3337,15 +3350,15 @@ max-height: 3em;
 }
 
 .btn-submit {
-  width: 320px; /* Set button width to 330px */
-  height: 50px; /* Set button height to 40px */
-  margin: 10px; /* Center button */
+  width: 320px; 
+  height: 50px; 
+  margin: 10px; 
   margin-left: 5px !important;
-  background-color: #00AEEF; /* Keep the existing background color */
+  background-color: #00AEEF; 
 }
 
 .button-close, .request-close {
-  font-size: 16px !important; /* Reduce close button size for mobile */
+  font-size: 16px !important;
 }
 
 .btn-close {

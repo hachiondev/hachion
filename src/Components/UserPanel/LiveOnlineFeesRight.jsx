@@ -227,13 +227,15 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         studentId = profileResponse.data.studentId;
         mobile = profileResponse.data.mobile || '';
       } else {
-        setMessage('Unable to find your student ID.');
+        // setMessage('Unable to find your student ID.');
+        setMessage('Your account is not exist please contact our hachion support team.');
         setMessageType('error');
         return;
       }
     } catch (error) {
       console.error('Error fetching studentId:', error);
-      setMessage('Unable to fetch your student ID. Please try again later.');
+      // setMessage('Unable to fetch your student ID. Please try again later.');
+      setMessage('Your account is not exist please contact our hachion support team.');
       setMessageType('error');
       return;
     }

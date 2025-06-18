@@ -171,6 +171,10 @@ const QaAutomation = () => {
           <UpcomingBatch />
         </div>
 
+        <div id="mode-of-training">
+          <ModeOfTraining />
+        </div>
+
         <div id="corporate">
           <Corporate />
         </div>
@@ -181,10 +185,6 @@ const QaAutomation = () => {
 
         <div id="curriculum" ref={curriculumRef}>
           <CurriculumMain />
-        </div>
-
-        <div id="mode-of-training">
-          <ModeOfTraining />
         </div>
 
         <div id="career-support">

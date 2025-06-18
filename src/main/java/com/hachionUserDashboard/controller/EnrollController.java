@@ -36,6 +36,7 @@ import com.hachionUserDashboard.repository.EnrollRepository;
 import com.hachionUserDashboard.repository.PaymentTransactionRepository;
 import com.hachionUserDashboard.repository.TrainerRepository;
 import com.hachionUserDashboard.service.EmailService;
+import com.hachionUserDashboard.service.WebhookSenderService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -62,6 +63,9 @@ public class EnrollController {
 	private CurriculumRepository curriculumRepository;
 
 	@Autowired
+	private WebhookSenderService webhookSenderService;
+
+	@Autowired
 	private PaymentTransactionRepository paymentTransactionRepository;
 
 	@GetMapping("/enroll/{id}")
@@ -77,18 +81,15 @@ public class EnrollController {
 	@PostMapping("/enroll/add")
 	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll)
 			throws MessagingException, UnsupportedEncodingException {
-		
-		 int existingCount = repo.countByStudentCourseBatchAndModeLiveClass(
-		            requestEnroll.getStudentId(),
-		            requestEnroll.getCourse_name(),
-		            requestEnroll.getBatchId());
 
-		    if (existingCount > 0) {
-		        return ResponseEntity.status(HttpStatus.CONFLICT)
-		                .body("This enrollment record already exists for Live Class in the database.");
-		    }
-		
-		
+		int existingCount = repo.countByStudentCourseBatchAndModeLiveClass(requestEnroll.getStudentId(),
+				requestEnroll.getCourse_name(), requestEnroll.getBatchId());
+
+		if (existingCount > 0) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("This enrollment record already exists for Live Class in the database.");
+		}
+
 		Enroll enroll = new Enroll();
 		enroll.setStudentId(requestEnroll.getStudentId());
 		enroll.setName(requestEnroll.getName());
@@ -164,7 +165,8 @@ public class EnrollController {
 					null, null, null, null, null, null, technologySlug);
 		}
 
-		repo.save(enroll);
+		Enroll save = repo.save(enroll);
+		webhookSenderService.sendEnrollmentDetails(save);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}
@@ -367,38 +369,33 @@ public class EnrollController {
 //		return ResponseEntity.ok(Map.of("canDownload", true));
 //	}
 	@GetMapping("/enroll/check")
-	public ResponseEntity<?> checkLiveClassEnrollment(
-	        @RequestParam String studentId,
-	        @RequestParam String courseName,
-	        @RequestParam String batchId,
-	        @RequestParam String assessmentFileName) {
+	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
+			@RequestParam String batchId, @RequestParam String assessmentFileName) {
 
-	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
-	    if (isActive == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body(Map.of("error", "Batch ID not found"));
-	    }
-	    if (!isActive) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body(Map.of("error", "This batch is no longer active"));
-	    }
+		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+		if (isActive == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
+		}
+		if (!isActive) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Map.of("error", "This batch is no longer active"));
+		}
 
-	    List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
-	    List<String> fileNamesOnly = assessmentFiles.stream()
-	            .map(path -> path.substring(path.lastIndexOf("/") + 1))
-	            .collect(Collectors.toList());
+		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+		List<String> fileNamesOnly = assessmentFiles.stream().map(path -> path.substring(path.lastIndexOf("/") + 1))
+				.collect(Collectors.toList());
 
-	    int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
 
-	    if (assessmentIndex >= 3) {
-	        Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
-	        if (amount == null || amount <= 0) {
-	            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-	                    .body(Map.of("error", "You must pay to access this assessment."));
-	        }
-	    }
+		if (assessmentIndex >= 3) {
+			Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+			if (amount == null || amount <= 0) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(Map.of("error", "You must pay to access this assessment."));
+			}
+		}
 
-	    return ResponseEntity.ok(Map.of("canDownload", true));
+		return ResponseEntity.ok(Map.of("canDownload", true));
 	}
 
 }

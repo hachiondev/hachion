@@ -2,16 +2,9 @@ package com.hachionUserDashboard.dto;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 public class StudentTrackingResponse {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long studentTrackingId;
 
 	private String studentId;
@@ -19,8 +12,16 @@ public class StudentTrackingResponse {
 	private String studentName;
 
 	private String studentEmail;
+	
+	private String courseCategory;
 
 	private String courseName;
+	
+
+	private String batchType;
+	
+	
+	private String batchId;
 
 	private String mobile;
 
@@ -130,6 +131,30 @@ public class StudentTrackingResponse {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public String getCourseCategory() {
+		return courseCategory;
+	}
+
+	public void setCourseCategory(String courseCategory) {
+		this.courseCategory = courseCategory;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	public String getBatchType() {
+		return batchType;
+	}
+
+	public void setBatchType(String batchType) {
+		this.batchType = batchType;
 	}
 
 }

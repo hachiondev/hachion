@@ -29,9 +29,20 @@ public class StudentTracking {
 	@Column(name = "student_email")
 	private String studentEmail;
 	
+	@Column(name = "course_category")
+	private String courseCategory;
+
+	
 	@Column(name="course_name")
 	private String courseName;
-
+	
+	@Column(name="batch_type")
+	private String batchType;
+	
+	
+	@Column(name = "batch_id")
+	private String batchId;
+	
 	@Column(name = "mobile")
 	private String mobile;
 
@@ -147,6 +158,30 @@ public class StudentTracking {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public String getCourseCategory() {
+		return courseCategory;
+	}
+
+	public void setCourseCategory(String courseCategory) {
+		this.courseCategory = courseCategory;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	public String getBatchType() {
+		return batchType;
+	}
+
+	public void setBatchType(String batchType) {
+		this.batchType = batchType;
 	}
 
 }

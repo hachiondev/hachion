@@ -115,7 +115,17 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 		studentTracking.setMobile(studentTrackingRequest.getMobile());
 		studentTracking.setStudentId(studentTrackingRequest.getStudentId());
 		studentTracking.setCourseName(studentTrackingRequest.getCourseName());
-		
+		studentTracking.setCourseCategory(studentTrackingRequest.getCourseCategory());
+		studentTracking.setBatchId(studentTrackingRequest.getBatchId());
+
+		if (studentTracking.getBatchId() != null) {
+			if (studentTracking.getBatchId().startsWith("LCL")) {
+				studentTracking.setBatchType("Live Class");
+			} else if (studentTracking.getBatchId().startsWith("LDM")) {
+				studentTracking.setBatchType("Live Demo");
+			}
+		}
+
 		if (studentTrackingRequest.getStartDate() != null) {
 			studentTracking.setStartDate(LocalDate.parse(studentTrackingRequest.getStartDate(), inputFormatter));
 		}
@@ -151,14 +161,16 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 		response.setCompletedSessions(saved.getCompletedSessions());
 		response.setBatchStatus(saved.getBatchStatus());
 		response.setRemarks(saved.getRemarks());
+		response.setCourseCategory(saved.getCourseCategory());
+		response.setBatchId(saved.getBatchId());
+		response.setBatchType(saved.getBatchType());
 		return response;
 	}
 
 	@Override
 	public List<StudentTrackingResponse> listOfStudentTrackingDetails() {
-		List<StudentTracking> listofStudentTrackingDetails = Optional
-			.ofNullable(studentTrackingRepository.findAll())
-			.orElse(Collections.emptyList());
+		List<StudentTracking> listofStudentTrackingDetails = Optional.ofNullable(studentTrackingRepository.findAll())
+				.orElse(Collections.emptyList());
 
 		List<StudentTrackingResponse> studentTrackingResponses = new ArrayList<>();
 

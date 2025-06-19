@@ -7,7 +7,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -288,86 +287,6 @@ public class EnrollController {
 		}
 	}
 
-//	@GetMapping("/enroll/check")
-//	public Map<String, Object> checkLiveClassEnrollment(@RequestParam String studentId,
-//			@RequestParam String courseName) {
-//
-//		int count = repo.countLiveClassEnrollment(studentId, courseName);
-//
-//		Map<String, Object> response = new HashMap<>();
-//		response.put("isEnrolled", count > 0);
-//
-//		return response;
-//	}
-
-//	@GetMapping("/enroll/check")
-//	public Map<String, Object> checkLiveClassEnrollment(
-//	        @RequestParam String studentId,
-//	        @RequestParam String courseName,
-//	        @RequestParam String batchId) {
-//
-//	    int count = repo.countLiveClassEnrollment(studentId, courseName, batchId);
-//
-//	    Map<String, Object> response = new HashMap<>();
-//	    response.put("isEnrolled", count > 0);
-//
-//	    return response;
-//	}
-
-//	@GetMapping("/enroll/check")
-//	public ResponseEntity<?> checkLiveClassEnrollment(
-//	        @RequestParam String studentId,
-//	        @RequestParam String courseName,
-//	        @RequestParam String batchId) {
-//
-//	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
-//
-//	    if (isActive == null) {
-//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//	                .body(Map.of("error", "Batch ID not found"));
-//	    }
-//
-//	    if (!isActive) {
-//	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//	                .body(Map.of("error", "This batch is no longer active"));
-//	    }
-//
-//	    int count = repo.countLiveClassEnrollment(studentId, courseName, batchId);
-//
-//	    Map<String, Object> response = new HashMap<>();
-//	    response.put("isEnrolled", count > 0);
-//
-//	    return ResponseEntity.ok(response);
-//	}
-
-//	@GetMapping("/enroll/check")
-//	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
-//			@RequestParam String batchId, @RequestParam String assessmentFileName) {
-//
-//		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
-//		if (isActive == null) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
-//		}
-//		if (!isActive) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//					.body(Map.of("error", "This batch is no longer active"));
-//		}
-//		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
-//		List<String> fileNamesOnly = assessmentFiles.stream()
-//			    .map(path -> path.substring(path.lastIndexOf("/") + 1))
-//			    .collect(Collectors.toList());
-//		
-//		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
-//
-//		if (assessmentIndex >= 3) {
-//			boolean hasPaid = paymentTransactionRepository.hasPaidForCourse(studentId, courseName, batchId);
-//			if (!hasPaid) {
-//				return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//						.body(Map.of("error", "You must pay to access this assessment."));
-//			}
-//		}
-//		return ResponseEntity.ok(Map.of("canDownload", true));
-//	}
 	@GetMapping("/enroll/check")
 	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
 			@RequestParam String batchId, @RequestParam String assessmentFileName) {

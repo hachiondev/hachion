@@ -181,5 +181,9 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 
 		return studentTrackingResponses;
 	}
+	  @Override
+	    public List<String> getBatchIdsByStudentFilters(String categoryName, String courseName, String batchType) {
+	        return studentTrackingRepository.findBatchIdsByFilters(categoryName, courseName, batchType);
+	    }
 
 }

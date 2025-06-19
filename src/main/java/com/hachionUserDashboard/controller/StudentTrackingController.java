@@ -1,11 +1,9 @@
 package com.hachionUserDashboard.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -117,5 +115,14 @@ public class StudentTrackingController {
 	        );
 
 	        return ResponseEntity.ok(result);
+	    }
+	  @GetMapping("/batch-ids")
+	    public ResponseEntity<List<String>> getBatchIdsByStudentFilters(
+	            @RequestParam String categoryName,
+	            @RequestParam String courseName,
+	            @RequestParam String batchType) {
+
+	        List<String> batchIds = studentTrackingService.getBatchIdsByStudentFilters(categoryName, courseName, batchType);
+	        return ResponseEntity.ok(batchIds);
 	    }
 }

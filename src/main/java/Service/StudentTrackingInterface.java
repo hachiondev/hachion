@@ -21,4 +21,6 @@ public interface StudentTrackingInterface {
 	public StudentTrackingResponse addStudentTracking(StudentTrackingRequest studentTrackingRequest);
 
 	public List<StudentTrackingResponse> listOfStudentTrackingDetails();
+
+	List<String> getBatchIdsByStudentFilters(String categoryName, String courseName, String batchType);
 }

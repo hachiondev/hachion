@@ -266,35 +266,38 @@ const handleRadioChange = (event) => {
     }
 
     const payload = {
-      name: userName,
-      studentId: studentId,
-      email: user.email,
-      mobile: mobile || '',
-      course_name: selectedBatchData.schedule_course_name,
-      enroll_date: selectedBatchData.schedule_date,
-      week: selectedBatchData.schedule_week,
-      time: selectedBatchData.schedule_time,
-      amount: 0,
-      mode: selectedBatchData.schedule_mode,
-      type: 'Live Class',
-      trainer: selectedBatchData.trainer_name,
-      completion_date: selectedBatchData.schedule_duration || '',
-      meeting_link: selectedBatchData.meeting_link || '',
-      resendCount: 0,
-      batchId: selectedBatchData.batchId
-    };
+  name: userName,
+  studentId: studentId,
+  email: user.email,
+  mobile: mobile || '',
+  course_name: selectedBatchData.schedule_course_name,
+  enroll_date: selectedBatchData.schedule_date,
+  week: selectedBatchData.schedule_week,
+  time: selectedBatchData.schedule_time,
+  amount: 0,
+  mode: selectedBatchData.schedule_mode,
+  type: 'Live Class',
+  trainer: selectedBatchData.trainer_name,
+  completion_date: selectedBatchData.schedule_duration || '',
+  meeting_link: selectedBatchData.meeting_link || '',
+  resendCount: 0,
+  batchId: selectedBatchData.batchId
+};
 
-    try {
-      const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+try {
+  const response = await axios.post('https://api.hachion.co/enroll/add', payload);
 
-      if (response.data.status === 201) {
-        setSuccessMessage("✅ Registered Successfully.");
-        setErrorMessage("");
-      } else {
-        setSuccessMessage("✅ Registered Successfully.");  
-        setErrorMessage("");
-      }
-    } catch (error) {
+ 
+  if (response.status >= 200 && response.status < 300) {
+    setSuccessMessage("✅ Registered Successfully.");
+    setErrorMessage("");
+    localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
+    console.log("📝 Stored batchId in localStorage:", selectedBatchData.batchId);
+  } else {
+    setErrorMessage("❌ Something went wrong during registration. Please try again.");
+    setSuccessMessage("");
+  }
+} catch (error) {
   console.error('Error during enrollment:', error);
 
   const errorMessage = error?.response?.data;

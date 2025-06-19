@@ -12,9 +12,13 @@ import { Assessment } from '@mui/icons-material';
 import { useContext } from 'react';
 import { BatchContext } from './BatchContext';
 
+
+
 const Curriculum = () => {
 
    const selectedBatch = useContext(BatchContext);
+  
+
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [curriculum, setCurriculum] = useState([]);
@@ -26,10 +30,11 @@ const Curriculum = () => {
   const [showAssessmentLoginPopup, setShowAssessmentLoginPopup] = useState(false);
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const { courseName } = useParams();
-  const [successMessage, setSuccessMessage] = useState("");
+const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
+const [showPaymentPopup, setShowPaymentPopup] = useState(false);
 
   useEffect(() => {
     const redirectPath = localStorage.getItem('redirectAfterLogin');
@@ -156,7 +161,6 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
   let studentId = '';
 
   try {
-    
     const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
       params: { email: userEmail },
     });
@@ -173,6 +177,8 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
 
     const batchId = localStorage.getItem('selectedBatchId');
     const assessmentFileName = assessmentPdfPath.split('/').pop();
+
+    
     const enrollmentResponse = await axios.get(`https://api.hachion.co/enroll/check`, {
       params: {
         studentId,
@@ -187,6 +193,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
 
     const { canDownload } = enrollmentResponse.data;
     
+
     if (canDownload) {
       const fileUrl = `https://api.hachion.co/curriculum/assessments/${assessmentFileName}`;
       
@@ -194,20 +201,27 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
     }
   } catch (error) {
     
+
     const errorMsg = error.response?.data?.error || 'Something went wrong';
     
+
     if (errorMsg.includes('no longer active')) {
       setErrorMessage('❌ This batch is no longer active.');
     } else if (errorMsg.includes('pay')) {
+      
       setErrorMessage('❌ You must pay to access this assessment.');
+      setShowPaymentPopup(true);
     } else if (errorMsg.includes('Batch ID not found')) {
       setErrorMessage('⚠️ Invalid batch selected.');
+      setShowEnrollPopup(true);
     } else {
       setErrorMessage("❌ Something went wrong while downloading.");
+      
       setShowEnrollPopup(true);
     }
   }
 };
+
 
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
@@ -233,36 +247,42 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
                   <p>{item.title}</p>
                   <div className="title-right">
                     <div className="course-row">
-                    {videoLinks.length > 0 &&
-                      videoLinks.map((videoLink, i) => {
-                        const validUrl = videoLink.startsWith('http')
-                          ? videoLink
-                          : `https://${videoLink}`;
-                        return (
-                          <button
-                            key={i}
-                            className="play-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                             setSelectedVideoUrl(validUrl);
-                             setVideoModalVisible(true);
-                            }}
-                          >
-                            <BsFillPlayCircleFill size={24} color="#00AEEF" /> Preview
-                          </button>
-                        );
-                      })}
-
-                    {item.assessment_pdf && (
-                  <button
-                    className="assessment-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDownloadAssessment(item.assessment_pdf);
-                    }}
-                  >
-                    <BsFileEarmarkPdfFill size={24} color="#00AEEF" /> Assessment
-                  </button>
+                    {videoModalVisible && selectedVideoUrl && (
+                  <div className="video-modal-overlay" onClick={() => setVideoModalVisible(false)}>
+                    <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+                      {selectedVideoUrl.includes("youtube.com") || selectedVideoUrl.includes("youtu.be") ? (
+                        <iframe
+                          src={
+                            selectedVideoUrl.includes("watch?v=")
+                              ? selectedVideoUrl.replace("watch?v=", "embed/")
+                              : selectedVideoUrl.replace("youtu.be/", "www.youtube.com/embed/")
+                          }
+                          title="Video Preview"
+                          width="100%"
+                          height="100%"
+                          frameBorder="0"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        ></iframe>
+                      ) : selectedVideoUrl.includes("vimeo.com") ? (
+                        <iframe
+                          src={selectedVideoUrl.replace("vimeo.com", "player.vimeo.com/video")}
+                          title="Vimeo Preview"
+                          width="100%"
+                          height="100%"
+                          frameBorder="0"
+                          allow="autoplay; fullscreen"
+                          allowFullScreen
+                        ></iframe>
+                      ) : (
+                        <video width="100%" height="100%" controls autoPlay>
+                          <source src={selectedVideoUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                      <button className="close-modal" onClick={() => setVideoModalVisible(false)}>✕</button>
+                    </div>
+                  </div>
                 )}
 
                   </div>
@@ -318,7 +338,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
         </div>
       )}
 
-      {videoModalVisible && selectedVideoUrl && (
+       {videoModalVisible && selectedVideoUrl && (
       <div className="video-modal-overlay" onClick={() => setVideoModalVisible(false)}>
           <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
             <iframe

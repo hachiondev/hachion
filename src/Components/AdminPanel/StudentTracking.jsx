@@ -86,14 +86,6 @@ export default function StudentTracking() {
       const response = await axios.get(`https://api.hachion.co/studentsTracking/batches?${params.toString()}`);
       const validBatchIds = (response.data || []).filter(id => id !== null);
       setBatchOptions(validBatchIds);
-
-      // Optionally preselect first batch
-      // if (validBatchIds.length > 0) {
-      //   setStudentData(prev => ({ ...prev, batch_id: validBatchIds[0] }));
-      // } else {
-      //   setStudentData(prev => ({ ...prev, batch_id: "" }));
-      // }
-
     } catch (error) {
       console.error("Error fetching batch IDs:", error);
       setBatchOptions([]);
@@ -133,7 +125,9 @@ const handleUpdate = async () => {
     const payload = {
       studentName: studentData.name,
       studentId: studentData.student_id,
+      courseCategory: studentData.category_name,
       courseName: studentData.course_name,
+      batchId: studentData.batch_id,
       studentEmail: studentData.email,
       mobile: studentData.mobile,
  startDate: dayjs(studentData.start_date).format("DD-MM-YYYY"),

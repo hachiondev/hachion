@@ -58,7 +58,8 @@ const [filterCourse, setFilterCourse] = useState([
   { id: 2, name: "Backend", courseName: "Node JS" }
 ]);
 const [allStudents, setAllStudents] = useState([]); 
-
+ const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 const [editRowId, setEditRowId] = useState(null);
 const [editableRow, setEditableRow] = useState({});
  const [filterCategory, setFilterCategory] = useState([]);
@@ -108,9 +109,13 @@ const [filteredStudents, setFilteredStudents] = useState([]);
 }, [studentData.category_name]);
 
 
+// const handleEditClick = (row) => {
+//   setEditRowId(row.student_id);
+//   setEditableRow({ ...row }); 
+// };
 const handleEditClick = (row) => {
-  setEditRowId(row.student_id);
-  setEditableRow({ ...row }); 
+  setEditRowId(`${row.student_id}-${row.batch_id}`);
+  setEditableRow({ ...row, batch_id: row.batch_id });
 };
 
 const handleInputChange = (e, field) => {
@@ -185,18 +190,55 @@ const payload = {
     console.error('Error filtering students:', error);
   }
 };
+ 
+const handleSave = async (studentId) => {
+  try {
+    const {
+      batch_id,
+      start,
+      end,
+      sessions_number,
+      sessions_completed,
+      status,
+      remark
+    } = editableRow;
 
-
-const handleSave = (studentId) => {
-  setBatchTracking((prev) =>
-    prev.map((item) =>
-      item.student_id === studentId ? { ...editableRow } : item
-    )
-  );
-  setEditRowId(null);
-  setEditableRow({});
+    await axios.put(`https://api.hachion.co/studentsTracking/update-fields`, null, {
+      params: {
+        studentId: studentId,
+        batchId: batch_id,
+        startDate: start,
+        completedDate: end,
+        numberOfSessions: sessions_number,
+        completedSessions: sessions_completed,
+        batchStatus: status,
+        remarks: remark
+      }
+    });
+    setBatchTracking((prev) =>
+      prev.map((item) =>
+        item.student_id === studentId ? { ...item, ...editableRow } : item
+      )
+    );
+setFilteredData((prev) =>
+  prev.map((item) =>
+    item.student_id === studentId && item.batch_id === editableRow.batch_id
+      ? { ...item, ...editableRow }
+      : item
+  )
+);
+    setEditRowId(null);
+    setEditableRow({});
+    // alert("Update successful!");
+    setSuccessMessage("✅ Student tracking updated successfully.");
+    setErrorMessage("");
+  } catch (error) {
+    // console.error("Error updating student tracking:", error);
+    // alert("Update failed.");
+    setSuccessMessage("");
+    setErrorMessage("❌ Failed to update student tracking.");
+  }
 };
-      
       const displayedData = filteredData.slice(
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
@@ -404,12 +446,13 @@ const handleEndDateChange = (date) => {
                     </TableHead>
                     <TableBody>
   {displayedData.map((row, index) => {
-    console.log('Rendering Row:', row); 
+    
 
-    const isEditing = editRowId === row.student_id;
+    // const isEditing = editRowId === row.student_id;
+    const isEditing = editRowId === `${row.student_id}-${row.batch_id}`;
 
   return (
-    <StyledTableRow key={row.batch_id || index}>
+    <StyledTableRow key={`${row.student_id}-${row.batch_id}`}>
       <StyledTableCell><Checkbox /></StyledTableCell>
       <StyledTableCell>{index + 1}</StyledTableCell>
       <StyledTableCell align="left">{row.student_id}</StyledTableCell>
@@ -433,7 +476,7 @@ const handleEndDateChange = (date) => {
             background: '#b3b3b3'
           }}
           />
-        ) : row.start}
+        ) : dayjs(row.start).format('DD-MM-YYYY')}
       </StyledTableCell>
 
       <StyledTableCell align="left">
@@ -450,7 +493,7 @@ const handleEndDateChange = (date) => {
           background: '#b3b3b3'
         }}
           />
-        ) : row.end}
+        ) : dayjs(row.end).format('DD-MM-YYYY')}
       </StyledTableCell>
 
       <StyledTableCell align="center">
@@ -528,7 +571,8 @@ const handleEndDateChange = (date) => {
 
       <StyledTableCell align="center">
         {isEditing ? (
-          <button className="update-row" onClick={() => handleSave(row.student_id)}>Update</button>
+          <button className="update-row" onClick={() => handleSave(row.student_id, row.batch_id)}>Update</button>
+
         ) : (
           <button className="update-row" onClick={() => handleEditClick(row)}>Edit</button>
         )}
@@ -539,7 +583,8 @@ const handleEndDateChange = (date) => {
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
-                            
+                            {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
                                   <div className='pagination-container'>
                                     <AdminPagination
                                       currentPage={currentPage}

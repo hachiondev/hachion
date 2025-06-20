@@ -69,7 +69,7 @@ const CourseDetail = ({
   const [characterCount, setCharacterCount] = useState(0);
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   console.log(formData);
@@ -150,7 +150,7 @@ const handleCalculate = (e) => {
   e.preventDefault();
   setFormData((prevData) => {
     const updatedData = { ...prevData };
-    const modes = ["", "m", "s", "c"];
+    const modes = ["", "m", "s", "sq", "c"];
     modes.forEach((mode) => {
       const amountKey = `${mode}amount`;
       const discountKey = `${mode}discount`;
@@ -198,6 +198,7 @@ const handleSubmit = async (e) => {
     amount: formData.amount,discount: formData.discount,total: formData.total,
     mamount: formData.mamount,mdiscount: formData.mdiscount,mtotal: formData.mtotal,
     samount: formData.samount,sdiscount: formData.sdiscount,stotal: formData.stotal,
+    sqamount: formData.sqamount,sqdiscount: formData.sqdiscount,sqtotal: formData.sqtotal,
     camount: formData.camount,cdiscount: formData.cdiscount,ctotal: formData.ctotal,
     mentoring1: formData.mentoring1,
     mentoring2: formData.mentoring2,
@@ -280,6 +281,7 @@ const handleEditClick = async (courseId) => {
         amount:course.amount,discount:course.discount,total:course.total,
         mamount:course.mamount,mdiscount:course.mdiscount,mtotal:course.mtotal,
         samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
+        sqamount:course.sqamount,sqdiscount:course.sqdiscount,sqtotal:course.sqtotal,
         camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
         mentoring1:course.mentoring1,
         mentoring2:course.mentoring2,
@@ -540,9 +542,10 @@ const handleShortCourseBlur = async () => {
                 <div className="course-row">
                   {[
                     { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
-                    { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
-                    { label: "Self Placed Training", amount: "samount", discount: "sdiscount", total: "stotal" },
                     { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
+                    { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+                    { label: "Self Paced with Q&A", amount: "sqamount", discount: "sqdiscount", total: "sqtotal" },
+                    { label: "Self Paced Training", amount: "samount", discount: "sdiscount", total: "stotal" },
                   ].map((mode, index) => (
                     <div className="course-mode" key={index}>
                       <div className="form-check">

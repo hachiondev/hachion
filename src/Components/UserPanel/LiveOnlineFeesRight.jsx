@@ -110,7 +110,9 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           } else if (modeType === 'self') {
             selectedFeeAmount = parseFloat(matchedCourse.stotal) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.samount) || 0;
-          } else if (modeType === 'corporate') {
+          } else if (modeType === 'selfqa') {
+            selectedFeeAmount = parseFloat(matchedCourse.sqtotal) || 0;
+            selectedOriginalAmount = parseFloat(matchedCourse.sqamount) || 0;
             setFee('Not Available');
             return;
           }
@@ -190,11 +192,15 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       setMessageType('error');
     }
   };
+  const isEnrollDisabled = fee === 'Not Available' || fee === 'Error Loading Fee';
 
   const handleEnroll = async () => {
+    if (isEnrollDisabled && enrollText !== 'Enroll Free Demo') {
+    return; // Don't proceed if fee is not available and not a demo
+  }
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
- if (!selectedBatchData) {
+ if (modeType === 'live' && !selectedBatchData) {
     setMessage('⚠️ Please select a batch before enrolling.');
     setMessageType('error');
     return;
@@ -240,7 +246,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       return;
     }
 
-    if (modeType === 'live' && enrollText === 'Enroll Now') {
+    if ( enrollText === 'Enroll Now') {
       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
       
         navigate(`/enroll/${formattedCourseName}`, {
@@ -305,7 +311,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
 
   return (
     <div className="right">
-      {modeType === 'corporate' ? (
+      {/* {modeType === 'corporate' ? (
         <>
           <p className="free">Talk to our Advisor</p>
           <button
@@ -315,7 +321,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
             Contact Us
           </button>
         </>
-      ) : (
+      ) : ( */}
         <>
           <p className="batch-date-fee">Fee:</p>
           <p className="free">
@@ -326,9 +332,9 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
               : fee}
           </p>
         </>
-      )}
+      {/* )} */}
 
-      {discount > 0 && parseFloat(fee) > 0 && enrollText !== 'Enroll Free Demo' && modeType !== 'corporate' && (
+      {discount > 0 && parseFloat(fee) > 0 && enrollText !== 'Enroll Free Demo' && (
         <p className="discount">
           Flash Sale! Get{' '}
           <span className="discount-percent">{discountPercentage}% OFF</span> & Save {currency}{' '}
@@ -367,7 +373,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       {modeType !== 'corporate' && (
         <button
           onClick={handleEnroll}
-          disabled={isEnrolled}
+          disabled={isEnrollDisabled || isEnrolled}
           className={`fee-enroll-now ${isEnrolled ? 'enrolled' : ''} text-white`}
         >
           {isEnrolled ? 'Enrolled' : enrollText}

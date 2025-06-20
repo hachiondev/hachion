@@ -371,6 +371,9 @@ console.log("return url :" +returnUrl);
     alert("Failed to start payment.");
   }
 };
+const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
+const isDisallowedMode = disallowedModes.includes(modeType);
+
     return (
       <>
       <Topbar/>
@@ -508,7 +511,7 @@ console.log("return url :" +returnUrl);
       <TableBody>
         <TableRow>
           <TableCell className="table-cell-left">Course Fee</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.amount != null ? courseData.amount : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.amount != null ? courseData.amount : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">% Discount</TableCell>
@@ -516,15 +519,15 @@ console.log("return url :" +returnUrl);
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Total</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.total !=null ? courseData.total : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.total !=null ? courseData.total : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Tax</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.tax !=null ? courseData.tax : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.tax !=null ? courseData.tax : 0}</TableCell>
         </TableRow>
         <TableRow className="net-amount">
           <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-          <TableCell align="right" className="net-amount-right">USD {courseData.total || 0}</TableCell>
+          <TableCell align="right" className="net-amount-right">USD {Math.round(courseData.total || 0)}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -544,18 +547,8 @@ console.log("return url :" +returnUrl);
                 
 <button
   onClick={saveEnrollment}
-  disabled={isEnrollDisabled}
-  style={{
-    backgroundColor: isEnrollDisabled ? '#ccc' : '#007bff',
-    color: isEnrollDisabled ? '#666' : '#fff',
-    cursor: isEnrollDisabled ? 'not-allowed' : 'pointer',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '5px',
-    fontWeight: 'bold',
-    opacity: isEnrollDisabled ? 0.6 : 1,
-    transition: '0.3s ease'
-  }}
+  disabled={isEnrollDisabled || isDisallowedMode}
+ className={`enroll-now-btn ${(isEnrollDisabled || isDisallowedMode) ? 'disabled' : ''}`}
 >
   Enroll Now, Pay Later
 </button>

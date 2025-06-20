@@ -2097,6 +2097,31 @@ font-weight: 600;
 .note{
   color: #FF0000;
 }
+.enroll-now-btn {
+  background-color: #00aeef;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  opacity: 1;
+  transition: 0.3s ease;
+}
+
+.enroll-now-btn.disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.fee-enroll-now:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  color: #666;
+}
+
 .custom-width .btn, 
 .custom-width .form-control {
     width: 60px !important; /* Adjust width as needed */

@@ -3,10 +3,11 @@ import calendar from '../../Assets/calendar.png';
 import './Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
-import CorporateFees from './CorporateFees';
+// import CorporateFees from './CorporateFees';
 import CrashCourseFee from './CrashCourseFee';
 import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
+import SelfPacedQAFees from './SelfPacedQAFees';
 import RequestBatch from './RequestBatch';
 import axios from 'axios';
 import loginPopupImg from '../../Assets/loginpopup.png';
@@ -23,8 +24,9 @@ const UpcomingBatch = () => {
     live: null,
     mentoring: null,
     self: null,
+    selfqa: null,
     crash: null,
-    corporate: 'Contact Us',
+    // corporate: 'Contact Us',
   });
 
   const handleRequestBatchClick = () => {
@@ -75,7 +77,8 @@ const UpcomingBatch = () => {
             mentoring: getFee(courseData.mtotal),
             self: getFee(courseData.stotal),
             crash: getFee(courseData.ctotal),
-            corporate: 'Contact Us',
+            selfqa: getFee(courseData.sqtotal),
+            // corporate: 'Contact Us',
           });
         }
       } catch (err) {
@@ -96,7 +99,8 @@ const UpcomingBatch = () => {
       case 'LiveOnlineFees': return <LiveOnlineFees course={course} />;
       case 'MentoringModeFees': return <MentoringModeFees course={course} />;
       case 'SelfPlacedFees': return <SelfPlacedFees course={course} />;
-      case 'CorporateFees': return <CorporateFees course={course} />;
+      case 'SelfPacedQAFees': return <SelfPacedQAFees course={course} />;
+      // case 'CorporateFees': return <CorporateFees course={course} />;
       case 'CrashCourseFee': return <CrashCourseFee course={course} />;
       default: return <LiveOnlineFees course={course} />;
     }
@@ -141,6 +145,17 @@ const UpcomingBatch = () => {
           </p>
 
           <p
+            className={`batch-type-content ${activeComponent === 'SelfPacedQAFees' ? 'active' : ''}`}
+            onClick={() => setActiveComponent('SelfPacedQAFees')}
+          >
+            Self-paced with Q&A
+            <br />
+            <span className="fee-amount">
+            {fees.selfqa ? `${currency} ${fees.selfqa}` : 'Loading...'}
+          </span>
+          </p>
+
+          <p
             className={`batch-type-content ${activeComponent === 'SelfPlacedFees' ? 'active' : ''}`}
             onClick={() => setActiveComponent('SelfPlacedFees')}
           >
@@ -151,12 +166,12 @@ const UpcomingBatch = () => {
           </span>
           </p>
 
-          <p
+          {/* <p
             className={`batch-type-content ${activeComponent === 'CorporateFees' ? 'active' : ''}`}
             onClick={() => setActiveComponent('CorporateFees')}
           >
             Corporate Training
-          </p>
+          </p> */}
         </div>
 
         <div className='batch-content-background'>

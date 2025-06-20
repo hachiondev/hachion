@@ -1,12 +1,16 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,26 +107,37 @@ public class StudentTrackingController {
 //
 //	    return ResponseEntity.ok(students);
 //	}
-	  @PostMapping("/filter")
-	    public ResponseEntity<List<StudentTracking>> filterStudents(@RequestBody StudentTrackingFilterRequest request) {
-	        List<StudentTracking> result = studentTrackingRepository.filterStudentsNative(
-	                request.getCourseCategory(),
-	                request.getCourseName(),
-	                request.getBatchId(),
-	                request.getBatchType(),
-	                request.getStartDate(),
-	                request.getEndDate()
-	        );
+	@PostMapping("/filter")
+	public ResponseEntity<List<StudentTracking>> filterStudents(@RequestBody StudentTrackingFilterRequest request) {
+		List<StudentTracking> result = studentTrackingRepository.filterStudentsNative(request.getCourseCategory(),
+				request.getCourseName(), request.getBatchId(), request.getBatchType(), request.getStartDate(),
+				request.getEndDate());
 
-	        return ResponseEntity.ok(result);
-	    }
-	  @GetMapping("/batch-ids")
-	    public ResponseEntity<List<String>> getBatchIdsByStudentFilters(
-	            @RequestParam String categoryName,
-	            @RequestParam String courseName,
-	            @RequestParam String batchType) {
+		return ResponseEntity.ok(result);
+	}
 
-	        List<String> batchIds = studentTrackingService.getBatchIdsByStudentFilters(categoryName, courseName, batchType);
-	        return ResponseEntity.ok(batchIds);
-	    }
+	@GetMapping("/batch-ids")
+	public ResponseEntity<List<String>> getBatchIdsByStudentFilters(@RequestParam String categoryName,
+			@RequestParam String courseName, @RequestParam String batchType) {
+
+		List<String> batchIds = studentTrackingService.getBatchIdsByStudentFilters(categoryName, courseName, batchType);
+		return ResponseEntity.ok(batchIds);
+	}
+
+	@PutMapping("/update-fields")
+	public ResponseEntity<String> updateTrackingFields(@RequestParam String studentId, @RequestParam String batchId,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate completedDate,
+			@RequestParam int numberOfSessions, @RequestParam int completedSessions, @RequestParam String batchStatus,
+			@RequestParam String remarks) {
+
+		boolean updated = studentTrackingService.updateTrackingFields(studentId, batchId, startDate, completedDate,
+				numberOfSessions, completedSessions, batchStatus, remarks);
+
+		if (updated) {
+			return ResponseEntity.ok("Student tracking updated successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Update failed. Record not found.");
+		}
+	}
 }

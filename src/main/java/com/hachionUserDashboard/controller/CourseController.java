@@ -325,8 +325,11 @@ public class CourseController {
 				course.setMdiscount(updatedCourse.getMdiscount());
 				course.setMtotal(updatedCourse.getMtotal());
 				course.setSamount(updatedCourse.getStotal());
+				course.setSqamount(updatedCourse.getSqamount());
 				course.setSdiscount(updatedCourse.getSdiscount());
+				course.setSqdiscount(updatedCourse.getSqdiscount());
 				course.setStotal(updatedCourse.getStotal());
+				course.setSqtotal(updatedCourse.getSqtotal());
 				course.setMentoring1(updatedCourse.getMentoring1());
 				course.setMentoring2(updatedCourse.getMentoring2());
 				course.setSelf1(updatedCourse.getSelf1());

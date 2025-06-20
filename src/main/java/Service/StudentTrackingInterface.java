@@ -1,5 +1,6 @@
 package Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,4 +24,7 @@ public interface StudentTrackingInterface {
 	public List<StudentTrackingResponse> listOfStudentTrackingDetails();
 
 	List<String> getBatchIdsByStudentFilters(String categoryName, String courseName, String batchType);
+
+	public boolean updateTrackingFields(String studentId, String batchId, LocalDate startDate, LocalDate completedDate,
+			int numberOfSessions, int completedSessions, String batchStatus, String remarks);
 }

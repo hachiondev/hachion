@@ -65,10 +65,22 @@ public class Course {
 	private Double mtotal;
 	@Column
 	private Double samount;
+
+	@Column
+	private Double sqamount;
+
 	@Column
 	private Double sdiscount;
+
+	@Column
+	private Double sqdiscount;
+
 	@Column
 	private Double stotal;
+
+	@Column
+	private Double sqtotal;
+
 	@Column
 	private Double camount;
 	@Column
@@ -421,72 +433,29 @@ public class Course {
 		this.courseCategory = courseCategory;
 	}
 
-//	public Course(int id, String courseName, String courseImage, String youtubeLink, String numberOfClasses,
-//			String dailySessions, int starRating, int ratingByNumberOfPeople, int totalEnrollment,
-//			String keyHighlights1, String keyHighlights2, String keyHighlights3, String keyHighlights4,
-//			String keyHighlights5, String keyHighlights6, Double amount, Double discount, Double total, Double mamount,
-//			Double mdiscount, Double mtotal, Double samount, Double sdiscount, Double stotal, Double camount,
-//			Double cdiscount, Double ctotal, String mentoring1, String mentoring2, String self1, String self2,
-//			String metaTitle, String metaKeyword, String metaDescription, String courseHighlight,
-//			String courseDescription, LocalDate date, String courseCategory) {
-//		super();
-//		this.id = id;
-//		this.courseName = courseName;
-//		this.courseImage = courseImage;
-//		this.youtubeLink = youtubeLink;
-//		this.numberOfClasses = numberOfClasses;
-//		this.dailySessions = dailySessions;
-//
-//		this.starRating = starRating;
-//		this.ratingByNumberOfPeople = ratingByNumberOfPeople;
-//		this.totalEnrollment = totalEnrollment;
-//		this.keyHighlights1 = keyHighlights1;
-//		this.keyHighlights2 = keyHighlights2;
-//		this.keyHighlights3 = keyHighlights3;
-//		this.keyHighlights4 = keyHighlights4;
-//		this.keyHighlights5 = keyHighlights5;
-//		this.keyHighlights6 = keyHighlights6;
-//		this.amount = amount;
-//		this.discount = discount;
-//		this.total = total;
-//		this.mamount = mamount;
-//		this.mdiscount = mdiscount;
-//		this.mtotal = mtotal;
-//		this.samount = samount;
-//		this.sdiscount = sdiscount;
-//		this.stotal = stotal;
-//		this.camount = camount;
-//		this.cdiscount = cdiscount;
-//		this.ctotal = ctotal;
-//		this.mentoring1 = mentoring1;
-//		this.mentoring2 = mentoring2;
-//		this.self1 = self1;
-//		this.self2 = self2;
-//		this.metaTitle = metaTitle;
-//		this.metaKeyword = metaKeyword;
-//		this.metaDescription = metaDescription;
-//		this.courseHighlight = courseHighlight;
-//		this.courseDescription = courseDescription;
-//		this.date = date;
-//		this.courseCategory = courseCategory;
-//	}
+	public Double getSqamount() {
+		return sqamount;
+	}
 
-//	@Override
-//	public String toString() {
-//		return "Course [id=" + id + ", courseName=" + courseName + ", courseImage=" + courseImage + ", youtubeLink="
-//				+ youtubeLink + ", numberOfClasses=" + numberOfClasses + ", dailySessions=" + dailySessions
-//				+ ", starRating=" + starRating + ", ratingByNumberOfPeople=" + ratingByNumberOfPeople
-//				+ ", totalEnrollment=" + totalEnrollment + ", keyHighlights1=" + keyHighlights1 + ", keyHighlights2="
-//				+ keyHighlights2 + ", keyHighlights3=" + keyHighlights3 + ", keyHighlights4=" + keyHighlights4
-//				+ ", keyHighlights5=" + keyHighlights5 + ", keyHighlights6=" + keyHighlights6 + ", amount=" + amount
-//				+ ", discount=" + discount + ", total=" + total + ", mamount=" + mamount + ", mdiscount=" + mdiscount
-//				+ ", mtotal=" + mtotal + ", samount=" + samount + ", sdiscount=" + sdiscount + ", stotal=" + stotal
-//				+ ", camount=" + camount + ", cdiscount=" + cdiscount + ", ctotal=" + ctotal + ", mentoring1="
-//				+ mentoring1 + ", mentoring2=" + mentoring2 + ", self1=" + self1 + ", self2=" + self2 + ", metaTitle="
-//				+ metaTitle + ", metaKeyword=" + metaKeyword + ", metaDescription=" + metaDescription
-//				+ ", courseHighlight=" + courseHighlight + ", courseDescription=" + courseDescription + ", date=" + date
-//				+ ", courseCategory=" + courseCategory + "]";
-//	}
+	public void setSqamount(Double sqamount) {
+		this.sqamount = sqamount;
+	}
+
+	public Double getSqdiscount() {
+		return sqdiscount;
+	}
+
+	public void setSqdiscount(Double sqdiscount) {
+		this.sqdiscount = sqdiscount;
+	}
+
+	public Double getSqtotal() {
+		return sqtotal;
+	}
+
+	public void setSqtotal(Double sqtotal) {
+		this.sqtotal = sqtotal;
+	}
 
 	public String getShortCourse() {
 		return shortCourse;
@@ -494,74 +463,6 @@ public class Course {
 
 	public void setShortCourse(String shortCourse) {
 		this.shortCourse = shortCourse;
-	}
-
-	public Course(int id, String courseName, String courseImage, String youtubeLink, String numberOfClasses,
-			String dailySessions, int starRating, int ratingByNumberOfPeople, int totalEnrollment,
-			String keyHighlights1, String keyHighlights2, String keyHighlights3, String keyHighlights4,
-			String keyHighlights5, String keyHighlights6, Double amount, Double discount, Double total, Double mamount,
-			Double mdiscount, Double mtotal, Double samount, Double sdiscount, Double stotal, Double camount,
-			Double cdiscount, Double ctotal, String shortCourse, String mentoring1, String mentoring2, String self1,
-			String self2, String metaTitle, String metaKeyword, String metaDescription, String courseHighlight,
-			String courseDescription, LocalDate date, String courseCategory) {
-		super();
-		this.id = id;
-		this.courseName = courseName;
-		this.courseImage = courseImage;
-		this.youtubeLink = youtubeLink;
-		this.numberOfClasses = numberOfClasses;
-		this.dailySessions = dailySessions;
-		this.starRating = starRating;
-		this.ratingByNumberOfPeople = ratingByNumberOfPeople;
-		this.totalEnrollment = totalEnrollment;
-		this.keyHighlights1 = keyHighlights1;
-		this.keyHighlights2 = keyHighlights2;
-		this.keyHighlights3 = keyHighlights3;
-		this.keyHighlights4 = keyHighlights4;
-		this.keyHighlights5 = keyHighlights5;
-		this.keyHighlights6 = keyHighlights6;
-		this.amount = amount;
-		this.discount = discount;
-		this.total = total;
-		this.mamount = mamount;
-		this.mdiscount = mdiscount;
-		this.mtotal = mtotal;
-		this.samount = samount;
-		this.sdiscount = sdiscount;
-		this.stotal = stotal;
-		this.camount = camount;
-		this.cdiscount = cdiscount;
-		this.ctotal = ctotal;
-		this.shortCourse = shortCourse;
-		this.mentoring1 = mentoring1;
-		this.mentoring2 = mentoring2;
-		this.self1 = self1;
-		this.self2 = self2;
-		this.metaTitle = metaTitle;
-		this.metaKeyword = metaKeyword;
-		this.metaDescription = metaDescription;
-		this.courseHighlight = courseHighlight;
-		this.courseDescription = courseDescription;
-		this.date = date;
-		this.courseCategory = courseCategory;
-	}
-
-	@Override
-	public String toString() {
-		return "Course [id=" + id + ", courseName=" + courseName + ", courseImage=" + courseImage + ", youtubeLink="
-				+ youtubeLink + ", numberOfClasses=" + numberOfClasses + ", dailySessions=" + dailySessions
-				+ ", starRating=" + starRating + ", ratingByNumberOfPeople=" + ratingByNumberOfPeople
-				+ ", totalEnrollment=" + totalEnrollment + ", keyHighlights1=" + keyHighlights1 + ", keyHighlights2="
-				+ keyHighlights2 + ", keyHighlights3=" + keyHighlights3 + ", keyHighlights4=" + keyHighlights4
-				+ ", keyHighlights5=" + keyHighlights5 + ", keyHighlights6=" + keyHighlights6 + ", amount=" + amount
-				+ ", discount=" + discount + ", total=" + total + ", mamount=" + mamount + ", mdiscount=" + mdiscount
-				+ ", mtotal=" + mtotal + ", samount=" + samount + ", sdiscount=" + sdiscount + ", stotal=" + stotal
-				+ ", camount=" + camount + ", cdiscount=" + cdiscount + ", ctotal=" + ctotal + ", shortCourse="
-				+ shortCourse + ", mentoring1=" + mentoring1 + ", mentoring2=" + mentoring2 + ", self1=" + self1
-				+ ", self2=" + self2 + ", metaTitle=" + metaTitle + ", metaKeyword=" + metaKeyword
-				+ ", metaDescription=" + metaDescription + ", courseHighlight=" + courseHighlight
-				+ ", courseDescription=" + courseDescription + ", date=" + date + ", courseCategory=" + courseCategory
-				+ "]";
 	}
 
 }

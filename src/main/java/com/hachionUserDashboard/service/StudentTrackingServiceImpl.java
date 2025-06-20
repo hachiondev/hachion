@@ -181,9 +181,17 @@ public class StudentTrackingServiceImpl implements StudentTrackingInterface {
 
 		return studentTrackingResponses;
 	}
-	  @Override
-	    public List<String> getBatchIdsByStudentFilters(String categoryName, String courseName, String batchType) {
-	        return studentTrackingRepository.findBatchIdsByFilters(categoryName, courseName, batchType);
-	    }
 
+	@Override
+	public List<String> getBatchIdsByStudentFilters(String categoryName, String courseName, String batchType) {
+		return studentTrackingRepository.findBatchIdsByFilters(categoryName, courseName, batchType);
+	}
+
+	@Override
+	public boolean updateTrackingFields(String studentId, String batchId, LocalDate startDate, LocalDate completedDate,
+			int numberOfSessions, int completedSessions, String batchStatus, String remarks) {
+
+		return studentTrackingRepository.updateTrackingFields(startDate, completedDate, numberOfSessions, completedSessions,
+				batchStatus, remarks, studentId, batchId) > 0;
+	}
 }

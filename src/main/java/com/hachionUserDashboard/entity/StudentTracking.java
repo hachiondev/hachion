@@ -52,7 +52,7 @@ public class StudentTracking {
 	@Column(name = "completed_date")
 	private LocalDate completedDate;
 
-	@Column(name = "no.of_sessions")
+	@Column(name = "no_of_sessions")
 	private int numberOfSessions;
 
 	@Column(name = "completed_sessions")

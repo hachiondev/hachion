@@ -33,7 +33,7 @@ public interface StudentTrackingRepository extends JpaRepository<StudentTracking
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE student_tracking SET start_date = :startDate, completed_date = :completedDate, "
-			+ "number_of_sessions = :numberOfSessions, completed_sessions = :completedSessions, "
+			+ "no_of_sessions = :numberOfSessions, completed_sessions = :completedSessions, "
 			+ "batch_status = :batchStatus, remarks = :remarks "
 			+ "WHERE student_id = :studentId AND batch_id = :batchId", nativeQuery = true)
 	int updateTrackingFields(@Param("startDate") LocalDate startDate, @Param("completedDate") LocalDate completedDate,

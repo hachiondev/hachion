@@ -118,7 +118,6 @@ width: 100px;
   }
 
 .association-head{
-  font-size: 1.9rem;
   font-weight: 700;
   margin: 30px 0;
   letter-spacing: 2%;
@@ -1217,7 +1216,6 @@ padding: 20px;
     margin-right: 5%;
     }
     .association-head{
-        font-size: 28px;
         /* margin-left: 10px; */
         margin-left: 5%;
         margin-right: 5%;
@@ -1236,7 +1234,6 @@ padding: 20px;
   margin-bottom: 20px;
   }
   .association-head{
-      font-size: 28px;
       /* margin-left: 10px; */
       margin-left: 5%;
       margin-right: 5%;
@@ -1770,7 +1767,6 @@ padding: 20px;
   }
   
     .association-head {
-      font-size: 16px;
       text-align: left;
       /* margin-bottom: 5px; */
       padding-top: 5px;

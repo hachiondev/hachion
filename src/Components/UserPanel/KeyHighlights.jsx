@@ -43,7 +43,7 @@ const KeyHighlights = () => {
   return (
     <>
    <div className='key-highlights'>
-   <p className='amount'>Key Highlights</p>
+   <h2 className='qa-heading '>Key Highlights</h2>
    <div className='key-highlights-header'>
     <div className='key-highlights-content'>
         <img src={LiveOnline} alt='teaching-online' className='key-icons'/>

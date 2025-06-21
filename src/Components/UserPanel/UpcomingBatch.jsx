@@ -109,7 +109,7 @@ const UpcomingBatch = () => {
   return (
     <>
       <div className='upcoming-batch'>
-        <h1 className='qa-heading'>Upcoming Batches for {course.courseName}</h1>
+        <h2 className='qa-heading'>Upcoming Batches for {course.courseName}</h2>
         <div className='batch-type'>
           <p
             className={`batch-type-content ${activeComponent === 'LiveOnlineFees' ? 'active' : ''}`}

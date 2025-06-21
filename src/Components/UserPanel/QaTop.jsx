@@ -242,8 +242,8 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         <div className='qa-inside'>
           <div className='qa-left-part'>
             <div className='top-course-data-mob'>
-              <h3 className='top-course-name'>{course?.courseName}</h3>
-              <h4 className='top-course-name-mob'>{course?.courseName}</h4>
+              <h1 className='top-course-name'>{course?.courseName}</h1>
+              <h1 className='top-course-name-mob'>{course?.courseName}</h1>
               {/* <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p> */}
             </div>
             <div className='qa-automation-left'>

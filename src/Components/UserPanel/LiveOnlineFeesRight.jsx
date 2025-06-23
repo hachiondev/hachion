@@ -308,6 +308,19 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       }
     }
   };
+  const [notificationPrefs, setNotificationPrefs] = useState({
+  email: true,
+  whatsapp: false,
+  text: false,
+});
+const handleCheckboxChange = (e) => {
+  const { name, checked } = e.target;
+  setNotificationPrefs((prev) => ({
+    ...prev,
+    [name]: checked,
+  }));
+};
+
 
   return (
     <div className="right">
@@ -379,6 +392,38 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           {isEnrolled ? 'Enrolled' : enrollText}
         </button>
       )}
+      <p className="resend">
+        Select how you'd like to receive your enrollment details
+        </p>
+      <div className="notification-options">
+      <label>
+        <input
+          type="checkbox"
+          name="email"
+          checked={notificationPrefs.email}
+          onChange={handleCheckboxChange}
+        />{' '}
+        Email
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="whatsapp"
+          checked={notificationPrefs.whatsapp}
+          onChange={handleCheckboxChange}
+        />{' '}
+        WhatsApp
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="text"
+          checked={notificationPrefs.text}
+          onChange={handleCheckboxChange}
+        />{' '}
+        Text Message
+      </label>
+    </div>
 
       {showResend && isEnrolled && !resendExceeded && (
         <p className="resend">

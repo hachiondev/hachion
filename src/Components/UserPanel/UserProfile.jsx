@@ -61,9 +61,9 @@ const togglePasswordVisibility = (field) => {
     [field]: !prev[field]
   }));
 };
-  const [isUpdating, setIsUpdating] = useState(false);  // Added for loading state
-const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
-  
+  const [isUpdating, setIsUpdating] = useState(false);  
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
@@ -130,9 +130,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
         setName(data.name);
         setEmail(data.email);
         setMobileNumber(data.mobile);
-        // setLocation(countries.name);
-        // setSelectedCountry({ code: data.countryCode, flag: data.countryFlag });
-        // setProfileImage(data.profileImageUrl || null);
+        
       })
       .catch((error) => {
         console.error('Failed to fetch user profile', error);
@@ -147,35 +145,39 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   
   const handleResetPassword = (e) => {
     e.preventDefault();
+     setSuccessMessage('');
+  setErrorMessage('');
     const email = document.getElementById('inputEmail')?.value;
     if (!email) {
-      alert("User email not found.");
+      
+     setErrorMessage("❌ User email not found.");
       return;
     }
-    
     if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("New password and confirm password do not match.");
+      
+      setErrorMessage("❌ New password and confirm password do not match.");
       return;
     }
-  
     setIsUpdating(true); 
-  
     axios.post('https://api.hachion.co/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,
-      confirmPassword: passwords.confirmPassword
+      confirmPassword: passwords.confirmPassword,
+      userName: name
     })
     .then(response => {
-      setIsUpdating(false);  
-      setPasswordUpdateMessage('Password updated successfully.');  
-      alert(response.data);  
+      setIsUpdating(false);   
+      setSuccessMessage("✅ Password updated successfully."); 
+       const storedUser = JSON.parse(localStorage.getItem('loginuserData'));
+  const updatedUser = { ...storedUser, name }; // updated name
+  localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
     })
     .catch(error => {
       setIsUpdating(false);  
-      setPasswordUpdateMessage('Failed to reset password.');  
-      console.error("Reset password error:", error);
-      alert("Failed to reset password");
+       setErrorMessage("❌ Failed to reset password.");
+    console.error("Reset password error:", error);
+      
     });
   };
   const openMenu = (event) => {
@@ -248,6 +250,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
             <div className="col-md-5">
               <label htmlFor="inputEmail" className="form-label">Email</label>
               <input
+               id="inputEmail"
                 type="email"
                 className="form-control"
                 placeholder="Enter your email"
@@ -279,7 +282,7 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
                   type="tel"
                   className="form-control"
                   ref={mobileInputRef}
-                  // id='enroll2'
+                  
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
@@ -341,7 +344,9 @@ const [passwordUpdateMessage, setPasswordUpdateMessage] = useState('');
   </div>
 </div>
 </div>
-{passwordUpdateMessage && <div className="message">{passwordUpdateMessage}</div>}
+
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
 
     <div className="center">
     <button className='update-btn' onClick={handleResetPassword}>Update</button>

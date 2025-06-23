@@ -273,11 +273,31 @@ const [filterData, setFilterData] = useState({
       }
     );
 
-    setCurriculum((prev) =>
-      prev.map((curr) =>
-        curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
+     setAllData((prev) =>
+      prev.map((item) =>
+        item.curriculum_id === editedRow.curriculum_id ? response.data : item
       )
     );
+
+    // ✅ Reapply current filter
+    const currentCategory = editedRow.category_name;
+    const currentCourse = editedRow.course_name;
+
+    setFilteredCurriculum((prev) =>
+      prev.map((item) =>
+        item.curriculum_id === editedRow.curriculum_id ? response.data : item
+      ).filter(
+        (item) =>
+          item.category_name === currentCategory &&
+          item.course_name === currentCourse
+      )
+    );
+
+    // setCurriculum((prev) =>
+    //   prev.map((curr) =>
+    //     curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
+    //   )
+    // );
 
     setMessage("Curriculum updated successfully!");
     setTimeout(() => setMessage(""), 5000);

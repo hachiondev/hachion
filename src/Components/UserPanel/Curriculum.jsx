@@ -141,15 +141,18 @@ const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   }, []);
 
 const handleDownloadAssessment = async (assessmentPdfPath) => {
-  
   setSuccessMessage('');
   setErrorMessage('');
 
+  
   const token = localStorage.getItem('authToken');
   const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
+  console.log("🔑 Token:", token);
+  console.log("👤 User:", user);
+
   if (!user || !user.email) {
-    
+    console.warn("⚠️ User not logged in or missing email.");
     setErrorMessage("⚠️ Please log in to download assessments.");
     const currentPath = window.location.pathname + window.location.search;
     localStorage.setItem('redirectAfterLogin', currentPath);
@@ -161,24 +164,49 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
   let studentId = '';
 
   try {
+    console.log("📡 Fetching student profile for email:", userEmail);
+
     const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
       params: { email: userEmail },
     });
 
+    console.log("✅ Profile response:", profileResponse.data);
+
     if (profileResponse.data && profileResponse.data.studentId) {
       studentId = profileResponse.data.studentId;
-      
+      console.log("🎓 studentId:", studentId);
     } else {
-      
+      console.warn("❌ studentId not found in profile.");
       setErrorMessage("⚠️ You must enroll before accessing assessments.");
       setShowEnrollPopup(true);
       return;
     }
 
-    const batchId = localStorage.getItem('selectedBatchId');
+    const allBatchDataRaw = localStorage.getItem('allEnrolledBatches');
+    console.log("📦 Raw allEnrolledBatches:", allBatchDataRaw);
+
+    const allBatchData = JSON.parse(allBatchDataRaw || '{}');
+    const batchData = allBatchData[matchedCourseName];
+
+    console.log("📘 matchedCourseName:", matchedCourseName);
+    console.log("📦 Retrieved batchData:", batchData);
+
+    if (!batchData) {
+      console.warn("❌ No batch data found for course:", matchedCourseName);
+      setErrorMessage("⚠️ You are not enrolled in this course yet.");
+      setShowEnrollPopup(true);
+      return;
+    }
+
+    const batchId = batchData.batchId;
     const assessmentFileName = assessmentPdfPath.split('/').pop();
 
+    console.log("📁 batchId:", batchId);
+    console.log("📎 assessmentFileName:", assessmentFileName);
+
     
+    console.log("📡 Checking eligibility via /enroll/check...");
+
     const enrollmentResponse = await axios.get(`https://api.hachion.co/enroll/check`, {
       params: {
         studentId,
@@ -191,36 +219,39 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
       },
     });
 
+    console.log("✅ Enrollment check response:", enrollmentResponse.data);
+
     const { canDownload } = enrollmentResponse.data;
-    
 
     if (canDownload) {
       const fileUrl = `https://api.hachion.co/curriculum/assessments/${assessmentFileName}`;
-      
+      console.log("📥 Downloading file from:", fileUrl);
       window.open(fileUrl, '_blank');
+    } else {
+      console.warn("🚫 Download not allowed (canDownload=false).");
+      setErrorMessage("❌ You are not authorized to download this assessment.");
     }
   } catch (error) {
-    
+    console.error("❌ Error during assessment download:", error);
 
     const errorMsg = error.response?.data?.error || 'Something went wrong';
-    
+    console.error("🧨 Server Error Message:", errorMsg);
 
     if (errorMsg.includes('no longer active')) {
       setErrorMessage('❌ This batch is no longer active.');
+      setShowEnrollPopup(true);
     } else if (errorMsg.includes('pay')) {
-      
       setErrorMessage('❌ You must pay to access this assessment.');
-      setShowPaymentPopup(true);
     } else if (errorMsg.includes('Batch ID not found')) {
       setErrorMessage('⚠️ Invalid batch selected.');
       setShowEnrollPopup(true);
     } else {
       setErrorMessage("❌ Something went wrong while downloading.");
-      
       setShowEnrollPopup(true);
     }
   }
 };
+
 
 
   return (

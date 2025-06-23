@@ -5,9 +5,11 @@ import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import calendar from '../../Assets/calendar.png'; // Black calendar icon
+import calendar from '../../Assets/calendar.png'; 
+import { useParams } from "react-router-dom";
 
-const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
+const RequestBatch = ({ closeModal }) => {
+  const { courseName } = useParams();
   const [startDate, setStartDate] = useState(null);
   const [time, setTime] = useState('');
   const timeInputRef = useRef(null);
@@ -20,7 +22,16 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
   const [selectedCountry, setSelectedCountry] = useState({ code: '+91', flag: 'IN', name: 'India' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
+  const formattedCourseName = courseName
+    ?.replace(/-/g, ' ').split(' ') .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');  
+
+     const userData = JSON.parse(localStorage.getItem('loginuserData')) || {};
+
+const userName = userData.name || '';
+const userEmail = userData.email || '';
   const countries = [
     { name: 'India', code: '+91', flag: 'IN' },
     { name: 'United States', code: '+1', flag: 'US' },
@@ -74,22 +85,45 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+  if (!userEmail) return;
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+      const data = await response.json();
+
+      if (data && data.mobile) {
+        setMobile(data.mobile); 
+      } else {
+        console.warn("❌ Mobile number not found in profile response.");
+      }
+    } catch (err) {
+      console.error("Error fetching profile data:", err);
+    }
+  };
+
+  fetchUserProfile();
+}, [userEmail]);
+
+
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
   
-    // Retrieve the userName from localStorage
-    const userName = JSON.parse(localStorage.getItem('loginuserData'))?.name || '';
-  
+setSuccessMessage('');
+  setErrorMessage('');
+
     const payload = {
       schedule_date: startDate,
       time_zone: time,
-      email,
+      email: userEmail,
       mobile,
       mode,
       country: selectedCountry.name,
-      courseName, // Automatically set from the component prop
-      userName // Add userName from localStorage
+      courseName: formattedCourseName,
+      userName: userName,
+
     };
   
     try {
@@ -100,16 +134,17 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
         },
         body: JSON.stringify(payload),
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to add the request.');
-      }
-  
-      alert('Request submitted successfully!');
-      closeModal(); // Close the modal on successful submission
+       if (!response.ok) {
+      throw new Error('Failed to add the request.');
+    }
+
+    setSuccessMessage('✅ Request submitted successfully!');
+    setTimeout(() => {
+      closeModal();
+    }, 3000);
     } catch (err) {
       console.error(err);
-      setError('Error submitting request. Please try again.');
+      setErrorMessage('❌ Error submitting request. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -174,60 +209,9 @@ const RequestBatch = ({ closeModal, courseName = 'Qa Automation' }) => {
             id="query1"
           />
         </div>
-        {/* <div className="form-group col-10">
-          <label htmlFor="inputEmail" className="form-label">
-            Email ID
-          </label>
-          <input
-            id="query1"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control-query"
-            placeholder="abc@gmail.com"
-          />
-        </div>
-
-        <label className="form-label">Mobile Number</label>
-        <div className="input-group mb-3 custom-width">
-          <div className="input-group">
-            <Button
-              variant="outlined"
-              onClick={openMenu}
-              className="country-code-dropdown"
-              endIcon={<AiFillCaretDown />}
-            >
-              <Flag code={selectedCountry.flag} className="country-flag" />
-              {selectedCountry.code}
-            </Button>
-
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-              {countries.map((country) => (
-                <MenuItem
-                  key={country.code}
-                  onClick={() => handleCountrySelect(country)}
-                >
-                  <Flag code={country.flag} className="country-flag" />
-                  {country.name} ({country.code})
-                </MenuItem>
-              ))}
-            </Menu>
-
-            <input
-              type="tel"
-              className="mobile-number"
-              ref={mobileInputRef}
-              aria-label="Text input with segmented dropdown button"
-              id="query2"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              placeholder="Enter your mobile number"
-            />
-          </div>
-        </div> */}
-
-        {error && <div className="error-message">{error}</div>}
-
+               {/* {error && <div className="error-message">{error}</div>} */}
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
         <button
           className="btn btn-primary btn-submit"
           type="button"

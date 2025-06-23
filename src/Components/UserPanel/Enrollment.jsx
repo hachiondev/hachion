@@ -291,8 +291,12 @@ try {
   if (response.status >= 200 && response.status < 300) {
     setSuccessMessage("✅ Registered Successfully.");
     setErrorMessage("");
-    localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
-    console.log("📝 Stored batchId in localStorage:", selectedBatchData.batchId);
+  
+    const allBatchData = JSON.parse(localStorage.getItem('allEnrolledBatches')) || {};
+allBatchData[selectedBatchData.schedule_course_name] = selectedBatchData;
+localStorage.setItem('allEnrolledBatches', JSON.stringify(allBatchData));
+
+localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
   } else {
     setErrorMessage("❌ Something went wrong during registration. Please try again.");
     setSuccessMessage("");
@@ -371,9 +375,6 @@ console.log("return url :" +returnUrl);
     alert("Failed to start payment.");
   }
 };
-const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
-const isDisallowedMode = disallowedModes.includes(modeType);
-
     return (
       <>
       <Topbar/>
@@ -511,7 +512,7 @@ const isDisallowedMode = disallowedModes.includes(modeType);
       <TableBody>
         <TableRow>
           <TableCell className="table-cell-left">Course Fee</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.amount != null ? courseData.amount : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.amount != null ? courseData.amount : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">% Discount</TableCell>
@@ -519,15 +520,15 @@ const isDisallowedMode = disallowedModes.includes(modeType);
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Total</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.total !=null ? courseData.total : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.total !=null ? courseData.total : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Tax</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.tax !=null ? courseData.tax : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right">USD {courseData.tax !=null ? courseData.tax : 0}</TableCell>
         </TableRow>
         <TableRow className="net-amount">
           <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-          <TableCell align="right" className="net-amount-right">USD {Math.round(courseData.total || 0)}</TableCell>
+          <TableCell align="right" className="net-amount-right">USD {courseData.total || 0}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -547,8 +548,18 @@ const isDisallowedMode = disallowedModes.includes(modeType);
                 
 <button
   onClick={saveEnrollment}
-  disabled={isEnrollDisabled || isDisallowedMode}
- className={`enroll-now-btn ${(isEnrollDisabled || isDisallowedMode) ? 'disabled' : ''}`}
+  disabled={isEnrollDisabled}
+  style={{
+    backgroundColor: isEnrollDisabled ? '#ccc' : '#007bff',
+    color: isEnrollDisabled ? '#666' : '#fff',
+    cursor: isEnrollDisabled ? 'not-allowed' : 'pointer',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '5px',
+    fontWeight: 'bold',
+    opacity: isEnrollDisabled ? 0.6 : 1,
+    transition: '0.3s ease'
+  }}
 >
   Enroll Now, Pay Later
 </button>

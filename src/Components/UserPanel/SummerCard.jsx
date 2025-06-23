@@ -3,7 +3,7 @@ import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import kidbackground from '../../Assets/kid-background.jpeg';
+import kidbackground from '../../Assets/kidbanner2.png';
 import './Home.css';
 
 const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {

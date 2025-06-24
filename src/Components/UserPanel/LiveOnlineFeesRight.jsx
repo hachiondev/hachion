@@ -256,6 +256,9 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       modeType
     }
   });
+  setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
       
       return;
     }
@@ -285,6 +288,10 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           completion_date: selectedBatchData.schedule_duration || '',
           meeting_link: selectedBatchData.meeting_link || '',
           resendCount: 0,
+ sendEmail: notificationPrefs.email,
+  sendWhatsApp: notificationPrefs.whatsapp,
+  sendText: notificationPrefs.text,
+          
         };
 
         const response = await axios.post('https://api.hachion.co/enroll/add', payload);

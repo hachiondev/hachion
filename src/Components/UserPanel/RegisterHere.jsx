@@ -104,7 +104,11 @@ const handleClick = async () => {
 
     setIsLoading(true);
 
-    const data = { firstName, lastName, email, mobile, country: selectedCountry.name };
+const sanitizedMobile = mobile.trim().replace(/^(\+)?/, '');
+const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`; // e.g., "+91 8106447416"
+
+
+    const data = { firstName, lastName, email, mobile:fullMobileNumber, country: selectedCountry.name };
 
     try {
       const response = await fetch(

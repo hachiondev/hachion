@@ -5,7 +5,6 @@
   import './Blogs.css';
   import EnrollmentTable from './EnrollmentTable';
   import TextField from '@mui/material/TextField';
-  
   import StickyBar from './StickyBar';
   import Footer from './Footer'
   import { AiFillCaretDown } from 'react-icons/ai';
@@ -14,7 +13,8 @@
   import { useFormik } from 'formik';
   import { LoginSchema } from '../Schemas';
   import { useLocation } from 'react-router-dom';
-
+  import { MdKeyboardArrowRight } from 'react-icons/md';
+  import { Link } from 'react-router-dom';
   
   import { useParams } from 'react-router-dom';
 import Table from '@mui/material/Table';
@@ -375,10 +375,29 @@ console.log("return url :" +returnUrl);
     alert("Failed to start payment.");
   }
 };
+const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
+const isDisallowedMode = disallowedModes.includes(modeType);
     return (
       <>
       <Topbar/>
       <NavbarTop/>
+              <div className='blogs-header'>
+                <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+        <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+      </li>
+      <li className="breadcrumb-item">
+        <Link to="/coursedetails">
+          {courseData?.courseCategory}
+        </Link> <MdKeyboardArrowRight />
+      </li>
+      <li className="breadcrumb-item active" aria-current="page">
+       Enroll {courseData?.courseName} 
+      </li>
+                </ol>
+              </nav>
+              </div>
       <div className='enrollment'>
           <p>Enrollment Details</p>
       </div>
@@ -548,18 +567,8 @@ console.log("return url :" +returnUrl);
                 
 <button
   onClick={saveEnrollment}
-  disabled={isEnrollDisabled}
-  style={{
-    backgroundColor: isEnrollDisabled ? '#ccc' : '#007bff',
-    color: isEnrollDisabled ? '#666' : '#fff',
-    cursor: isEnrollDisabled ? 'not-allowed' : 'pointer',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '5px',
-    fontWeight: 'bold',
-    opacity: isEnrollDisabled ? 0.6 : 1,
-    transition: '0.3s ease'
-  }}
+  disabled={isEnrollDisabled || isDisallowedMode}
+ className={`enroll-now-btn ${(isEnrollDisabled || isDisallowedMode) ? 'disabled' : ''}`}
 >
   Enroll Now, Pay Later
 </button>

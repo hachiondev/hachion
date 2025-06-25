@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.RequestBatch;
 import com.hachionUserDashboard.repository.RequestBatchRepository;
+import com.hachionUserDashboard.service.WebhookSenderService;
 
 
 @CrossOrigin
@@ -28,6 +30,9 @@ public class RequestBatchController {
     private RequestBatchRepository repo;
     @Autowired
 	public JavaMailSender javaMailSender;
+    
+    @Autowired
+    private WebhookSenderService webhookSenderService;
 	
 
     @GetMapping("/requestbatch/{id}")
@@ -52,12 +57,15 @@ public class RequestBatchController {
         requestBatch.setMobile(requestBatchRequest.getMobile());
         requestBatch.setMode(requestBatchRequest.getMode());
         requestBatch.setCountry(requestBatchRequest.getCountry());
-        requestBatch.setCourse_name(requestBatchRequest.getCourse_name());
-        requestBatch.setUserName(requestBatchRequest.getUserName()); // Save the userName
+        requestBatch.setCourseName(requestBatchRequest.getCourseName());
+        requestBatch.setUserName(requestBatchRequest.getUserName());
+        requestBatch.setDate(LocalDate.now());
 
-        // Save requestBatch to the database
-        repo.save(requestBatch);
+    
         sendRequestEmail(requestBatch);
+        repo.save(requestBatch);
+        webhookSenderService.sendRequestBatchDetails(requestBatch);
+        
         return ResponseEntity.ok("Request batch added successfully");
     }
 

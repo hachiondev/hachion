@@ -1,121 +1,3 @@
-//
-//package com.hachionUserDashboard.service;
-//
-//import com.hachionUserDashboard.dto.LoginRequest;
-//import com.hachionUserDashboard.dto.UserRegistrationRequest;
-//import com.hachionUserDashboard.entity.RegisterUser;
-//import com.hachionUserDashboard.entity.User;
-//import com.hachionUserDashboard.repository.RegisterUserRepository;
-//import com.hachionUserDashboard.repository.UserRepository;
-//import com.hachionUserDashboard.util.JwtUtil;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.Optional;
-//
-//@Service
-//public class UserService {
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//    
-//    public Optional<User> findByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
-//
-//    public void saveUser(User user) {
-//        userRepository.save(user);
-//    }
-//
-//    @Autowired
-//    private RegisterUserRepository registerUserRepository;
-//
-//    @Autowired
-//    private OtpService otpService;
-//
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
-//    public void registerUserWithOTP(UserRegistrationRequest request) {
-//        RegisterUser registerUser = new RegisterUser();
-//        registerUser.setEmail(request.getEmail());
-//        registerUser.setName(request.getName());
-//        registerUser.setVerified(false);  // Set verified as false until OTP verification
-//
-//        try {
-//            registerUserRepository.save(registerUser);
-//            System.out.println("RegisterUser saved: " + registerUser);
-//        } catch (Exception e) {
-//            System.err.println("Error saving RegisterUser: " + e.getMessage());
-//        }
-//
-//        // Send OTP
-//        otpService.generateOtp(request.getEmail());
-//    }
-//
-//
-//    // Verify OTP and complete registration
-//    public void verifyOtpAndCompleteRegistration(String email, String otp, String password) {
-//        if (otpService.validateOtp(email, otp)) {
-//            // Retrieve the user from the RegisterUser table
-//            Optional<RegisterUser> optionalRegisterUser = registerUserRepository.findByEmail(email);
-//            if (optionalRegisterUser.isPresent()) {
-//                RegisterUser registerUser = optionalRegisterUser.get();
-//
-//                // Transfer to User table (finalize registration)
-//                User user = new User();
-//                user.setUserName(registerUser.getName());
-//                user.setEmail(registerUser.getEmail());
-//                user.setPassword(passwordEncoder.encode(password));  // Encrypt the password
-//
-//                // Save in the User table
-//                userRepository.save(user);
-//
-//                // Mark user as verified
-//                registerUser.setVerified(true);
-//                registerUserRepository.save(registerUser);
-//            } else {
-//                throw new RuntimeException("User not found for email: " + email);
-//            }
-//        } else {
-//            throw new RuntimeException("Invalid OTP");
-//        }
-//    }
-//
-//    // Social login registration
-//    public void registerSocialUser(UserRegistrationRequest request) {
-//        RegisterUser registerUser = new RegisterUser();
-//        registerUser.setEmail(request.getEmail());
-//        registerUser.setName(request.getName());
-//        registerUser.setSocialId(request.getSocialId());
-//        registerUser.setVerified(true);  // No OTP required for social login
-//        registerUserRepository.save(registerUser);
-//    }
-//
-//    // Login method with JWT token generation
-//    public String loginUser(LoginRequest loginRequest) {
-//        // Retrieve user from the User table by email (or username)
-//        Optional<User> optionalUser = userRepository.findByEmail(loginRequest.getEmail());
-//
-//        if (optionalUser.isPresent()) {
-//            User user = optionalUser.get();
-//
-//            // Validate the password
-//            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-//                // Generate JWT token
-//                return jwtUtil.generateToken(user.getUserName());
-//            } else {
-//                throw new RuntimeException("Invalid credentials");
-//            }
-//        } else {
-//            throw new RuntimeException("User not found");
-//        }
-//    }
-//}
 
 package com.hachionUserDashboard.service;
 
@@ -243,7 +125,7 @@ public class Userimpl implements UserService {
 				registrationRequest.getFirstName());
 
 		RegisterStudent save = userRepository.save(user);
-		
+
 		System.out.println("🔍 Debug values:");
 		System.out.println("FirstName: " + registrationRequest.getFirstName());
 		System.out.println("LastName: " + registrationRequest.getLastName());
@@ -370,7 +252,7 @@ public class Userimpl implements UserService {
 		String msg1 = "";
 		RegisterStudent user1 = userRepository.findByEmail(loginRequest.getEmail());
 
-		if (user1 != null) { 
+		if (user1 != null) {
 			String password = loginRequest.getPassword();
 			String encodedPassword = user1.getPassword();
 			String name = user1.getUserName();

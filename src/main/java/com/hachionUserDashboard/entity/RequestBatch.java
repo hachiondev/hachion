@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,129 +13,117 @@ import jakarta.persistence.Table;
 @Table(name = "requestbatch")
 public class RequestBatch {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int batch_id;
-    
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int batch_id;
+
 	@Column
-    private String email;
-	
+	private String email;
+
 	@Column
-    private String mobile;
-	
+	private String mobile;
+
 	@Column
-    private String userName;
-	
+	private String userName;
+
 	@Column
-    private String country;
-	
+	private String country;
+
 	@Column
-    private String course_name;
-	
+	private String courseName;
+
 	@Column
-    private String schedule_date;
-	
+	private String schedule_date;
+
 	@Column
-    private String time_zone;
-	
+	private String time_zone;
+
 	@Column
-    private String mode;
-	
-public  RequestBatch() {
-	
-}
+	private String mode;
 
-public int getBatch_id() {
-	return batch_id;
-}
+	private LocalDate date;
 
-public void setBatch_id(int batch_id) {
-	this.batch_id = batch_id;
-}
+	public RequestBatch() {
 
-public String getEmail() {
-	return email;
-}
+	}
 
-public void setEmail(String email) {
-	this.email = email;
-}
+	public int getBatch_id() {
+		return batch_id;
+	}
 
-public String getMobile() {
-	return mobile;
-}
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
+	}
 
-public void setMobile(String mobile) {
-	this.mobile = mobile;
-}
+	public String getEmail() {
+		return email;
+	}
 
-public String getCountry() {
-	return country;
-}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-public void setCountry(String country) {
-	this.country = country;
-}
+	public String getMobile() {
+		return mobile;
+	}
 
-public String getCourse_name() {
-	return course_name;
-}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
-public void setCourse_name(String course_name) {
-	this.course_name = course_name;
-}
+	public String getCountry() {
+		return country;
+	}
 
-public String getSchedule_date() {
-	return schedule_date;
-}
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-public void setSchedule_date(String schedule_date) {
-	this.schedule_date = schedule_date;
-}
+	public String getSchedule_date() {
+		return schedule_date;
+	}
 
-public String getTime_zone() {
-	return time_zone;
-}
+	public void setSchedule_date(String schedule_date) {
+		this.schedule_date = schedule_date;
+	}
 
-public void setTime_zone(String time_zone) {
-	this.time_zone = time_zone;
-}
+	public String getTime_zone() {
+		return time_zone;
+	}
 
-public String getMode() {
-	return mode;
-}
+	public void setTime_zone(String time_zone) {
+		this.time_zone = time_zone;
+	}
 
-public void setMode(String mode) {
-	this.mode = mode;
-}
+	public String getMode() {
+		return mode;
+	}
 
-public String getUserName() {
-	return userName;
-}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 
-public void setUserName(String userName) {
-	this.userName = userName;
-}
+	public String getUserName() {
+		return userName;
+	}
 
-public RequestBatch(int batch_id, String email, String mobile, String userName, String country, String course_name,
-		String schedule_date, String time_zone, String mode) {
-	super();
-	this.batch_id = batch_id;
-	this.email = email;
-	this.mobile = mobile;
-	this.userName = userName;
-	this.country = country;
-	this.course_name = course_name;
-	this.schedule_date = schedule_date;
-	this.time_zone = time_zone;
-	this.mode = mode;
-}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-@Override
-public String toString() {
-	return "RequestBatch [batch_id=" + batch_id + ", email=" + email + ", mobile=" + mobile + ", userName=" + userName
-			+ ", country=" + country + ", course_name=" + course_name + ", schedule_date=" + schedule_date
-			+ ", time_zone=" + time_zone + ", mode=" + mode + "]";
-}
+	public String getCourseName() {
+		return courseName;
+	}
 
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
 }

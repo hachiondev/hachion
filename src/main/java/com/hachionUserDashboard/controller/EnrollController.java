@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hachionUserDashboard.dto.EnrollRequest;
 import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
 import com.hachionUserDashboard.repository.CurriculumRepository;
@@ -36,6 +37,7 @@ import com.hachionUserDashboard.repository.PaymentTransactionRepository;
 import com.hachionUserDashboard.repository.TrainerRepository;
 import com.hachionUserDashboard.service.EmailService;
 import com.hachionUserDashboard.service.WebhookSenderService;
+import com.hachionUserDashboard.service.WhatsAppService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -64,6 +66,10 @@ public class EnrollController {
 	@Autowired
 	private WebhookSenderService webhookSenderService;
 
+
+	@Autowired
+	private WhatsAppService whatsAppService;
+
 	@Autowired
 	private PaymentTransactionRepository paymentTransactionRepository;
 
@@ -78,7 +84,7 @@ public class EnrollController {
 	}
 
 	@PostMapping("/enroll/add")
-	public ResponseEntity<?> addEnroll(@RequestBody Enroll requestEnroll)
+	public ResponseEntity<?> addEnroll(@RequestBody EnrollRequest requestEnroll)
 			throws MessagingException, UnsupportedEncodingException {
 
 		int existingCount = repo.countByStudentCourseBatchAndModeLiveClass(requestEnroll.getStudentId(),
@@ -103,6 +109,7 @@ public class EnrollController {
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
 		enroll.setBatchId(requestEnroll.getBatchId());
 
+		System.out.println("valid mobile format: " + enroll.getMobile());
 		LocalDate date = LocalDate.parse(requestEnroll.getEnroll_date());
 		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"));
@@ -125,8 +132,6 @@ public class EnrollController {
 		}
 		String weekDays = weekDaysBuilder.toString();
 		// ending point
-
-//		String trainerExperience = trainerRepository.findSummaryByTrainerName(requestEnroll.getTrainer());
 
 		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(requestEnroll.getTrainer(),
 				requestEnroll.getCourse_name());
@@ -151,21 +156,27 @@ public class EnrollController {
 
 		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
 
-		if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
-			emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
-					dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
-					requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink,
-					technologySlug);
-		}
-		if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
-			emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
-					requestEnroll.getCourse_name(), weekDays, formattedDate, time, null,
-					requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), trainerExperience, null,
-					null, null, null, null, null, null, technologySlug);
+		Enroll save = repo.save(enroll);
+
+		if (requestEnroll.isSendEmail()) {
+			if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
+				emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
+						dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
+						requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink,
+						technologySlug);
+			}
+			if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
+				emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
+						requestEnroll.getCourse_name(), weekDays, formattedDate, time, null,
+						requestEnroll.getMeeting_link(), null, null, requestEnroll.getTrainer(), trainerExperience,
+						null, null, null, null, null, null, null, technologySlug);
+			}
 		}
 
-		Enroll save = repo.save(enroll);
-		webhookSenderService.sendEnrollmentDetails(save);
+		if (requestEnroll.isSendWhatsApp()) {
+			whatsAppService.sendEnrollmentDetails(enroll);
+		}
+		webhookSenderService.sendEnrollmentDetails(requestEnroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}
@@ -270,7 +281,6 @@ public class EnrollController {
 			helper.addInline("logoImage", logoImage);
 			javaMailSender.send(message);
 
-			// Support team email remains the same
 			SimpleMailMessage supportMail = new SimpleMailMessage();
 			supportMail.setTo("trainings@hachion.co");
 			supportMail.setSubject("New Enrollment Notification");
@@ -287,9 +297,47 @@ public class EnrollController {
 		}
 	}
 
+//	@GetMapping("/enroll/check")
+//	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
+//			@RequestParam String batchId, @RequestParam String assessmentFileName) {
+//
+//		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+//		if (isActive == null) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
+//		}
+//		if (!isActive) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(Map.of("error", "This batch is no longer active"));
+//		}
+//
+//		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+//		List<String> fileNamesOnly = assessmentFiles.stream().map(path -> path.substring(path.lastIndexOf("/") + 1))
+//				.collect(Collectors.toList());
+//
+//		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+//
+//		System.out.println("Raw assessment files: " + assessmentFiles);
+//
+//		if (assessmentIndex >= 3) {
+//			Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+//			if (amount == null || amount <= 0) {
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//						.body(Map.of("error", "You must pay to access this assessment."));
+//			}
+//		}
+//
+//		return ResponseEntity.ok(Map.of("canDownload", true));
+//	}
+
 	@GetMapping("/enroll/check")
 	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
 			@RequestParam String batchId, @RequestParam String assessmentFileName) {
+
+		Long enrollmentCount = repo.countEnrollments(studentId, courseName, batchId);
+		if (enrollmentCount == null || enrollmentCount == 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Map.of("error", "You must enroll before accessing assessments."));
+		}
 
 		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
 		if (isActive == null) {
@@ -305,11 +353,13 @@ public class EnrollController {
 				.collect(Collectors.toList());
 
 		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+		System.out.println("Raw assessment files: " + assessmentFiles);
 
 		if (assessmentIndex >= 3) {
-			Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
-			if (amount == null || amount <= 0) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+
+			Double amountPaid = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+			if (amountPaid == null || amountPaid <= 0) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body(Map.of("error", "You must pay to access this assessment."));
 			}
 		}

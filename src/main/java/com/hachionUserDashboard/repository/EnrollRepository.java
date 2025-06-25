@@ -48,5 +48,9 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 	int countByStudentCourseBatchAndModeLiveClass(@Param("studentId") String studentId,
 	                                              @Param("courseName") String courseName,
 	                                              @Param("batchId") String batchId);
+	@Query(value = "SELECT COUNT(*) FROM enroll WHERE student_id = :studentId AND course_name = :courseName AND batch_id = :batchId", nativeQuery = true)
+	Long countEnrollments(@Param("studentId") String studentId,
+	                      @Param("courseName") String courseName,
+	                      @Param("batchId") String batchId);
 
 }

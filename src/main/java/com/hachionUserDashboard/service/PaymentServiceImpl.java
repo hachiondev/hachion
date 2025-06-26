@@ -463,10 +463,12 @@ public class PaymentServiceImpl implements PaymentService {
 
 			receivedPayAmount = selectedInstallment.getReceivedPay();
 			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
+			
 
 		}
+		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
 
-		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getTotalAmount()));
+		
 
 		String status = paymentRequest.getStatus();
 		if (receivedPayAmount > 0.0) {
@@ -532,11 +534,11 @@ public class PaymentServiceImpl implements PaymentService {
 				+ "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png' "
 				+ "alt='PayPal' style='height:40px; width:auto;'/>" + "</p>"
 
-				+ "<p>Reminder: HACH Technologies LLC sent you an invoice.</p>" + "<p><b>Amount due:</b> $"
-				+ String.format("%.2f", balancePay) + " USD</p>" + "<p>Due on receipt</p>"
+				+ "<p>Reminder: HACHION sent you an invoice.</p>" + "<p><b>Amount due:</b> $"
+				+ String.format("%.2f", balancePay) + " USD</p>" + "<p>Due Date: Immediate</p>"
 
 				+ "<div style='background-color:#fff;padding:20px;border-radius:10px;margin:30px 0;color:#000;'>"
-				+ "<p style='font-size:20px; font-weight:bold; margin: 0;'>HACH Technologies LLC</p>"
+				+ "<p style='font-size:20px; font-weight:bold; margin: 0;'>HACHION</p>"
 				+ "<p style='margin: 8px 0; font-size:12px;'>"
 				+ "<img src='https://cdn-icons-png.flaticon.com/512/561/561127.png' width='16' style='vertical-align:middle;margin-right:6px;'/>"
 				+ "<a href='mailto:trainings@hachion.co' style='color:#001f7f;text-decoration:none;font-size:12px;'>trainings@hachion.co</a></p>"
@@ -546,7 +548,7 @@ public class PaymentServiceImpl implements PaymentService {
 				+ "<div style='background-color:#fff;padding:20px;border-radius:10px;margin:30px 0;color:#000;'>"
 				+ "<p style='font-size:20px; font-weight:bold; margin-bottom:20px;'>Invoice details</p>"
 				+ "<p><b>Amount requested</b><br/><span style='font-weight:bold;'>$"
-				+ String.format("%.2f", totalAmount) + " USD</span></p>" + "<p><b>Invoice number</b><br/>"
+				+ String.format("%.2f", balancePay) + " USD</span></p>" + "<p><b>Invoice number</b><br/>"
 				+ invoiceNumber + "</p>" + "</div>"
 
 				+ "<div style='text-align:center; margin: 40px 0;'>" + "<a href='https://yourdomain.com/invoice/"

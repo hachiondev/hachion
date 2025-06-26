@@ -31,7 +31,7 @@ public class Payment {
 	private String email;
 
 	@Column(name = "mobile")
-	private Long mobile;
+	private String mobile;
 
 	@Column(name = "course_name")
 	private String courseName;
@@ -98,11 +98,11 @@ public class Payment {
 		this.email = email;
 	}
 
-	public Long getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Long mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 

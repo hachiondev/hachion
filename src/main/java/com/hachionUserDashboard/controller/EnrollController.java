@@ -66,7 +66,6 @@ public class EnrollController {
 	@Autowired
 	private WebhookSenderService webhookSenderService;
 
-
 	@Autowired
 	private WhatsAppService whatsAppService;
 
@@ -174,9 +173,17 @@ public class EnrollController {
 		}
 
 		if (requestEnroll.isSendWhatsApp()) {
-			whatsAppService.sendEnrollmentDetails(enroll);
+			whatsAppService.sendEnrollmentDetails(requestEnroll);
 		}
-		webhookSenderService.sendEnrollmentDetails(requestEnroll);
+		if (requestEnroll.isSendText()) {
+			whatsAppService.sendEnrollmentSms(requestEnroll);
+		}
+
+		System.out.println("Mode Value: " + requestEnroll.getMode());
+		System.out.println("Send Email: " + requestEnroll.isSendEmail());
+		System.out.println("Send WhatsApp: " + requestEnroll.isSendWhatsApp());
+
+//		webhookSenderService.sendEnrollmentDetails(requestEnroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}

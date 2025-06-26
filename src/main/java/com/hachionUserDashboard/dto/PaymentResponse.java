@@ -8,7 +8,7 @@ public class PaymentResponse {
     private String studentId;
     private String studentName;
     private String email;
-    private Long mobile;
+    private String mobile;
     private String courseName;
     private Double courseFee;
     private Integer tax;
@@ -54,11 +54,11 @@ public class PaymentResponse {
 		this.email = email;
 	}
 
-	public Long getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Long mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 

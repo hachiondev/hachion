@@ -34,7 +34,11 @@ import Paper from '@mui/material/Paper';
 
   const Enrollment = () => {
     const location = useLocation();
-    const { selectedBatchData, enrollText, modeType } = location.state || {};
+    const { selectedBatchData, enrollText, modeType,  sendEmail,
+  sendWhatsApp,
+  sendText } = location.state || {};
+  console.log("SelectedBatch from live online: " + JSON.stringify(selectedBatchData));
+console.log("Mode from live online: " + JSON.stringify(modeType));
 
   const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
@@ -56,6 +60,7 @@ const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
           flag: 'US',
           name: 'United States',
         });
+
     const { values, errors, handleBlur, touched, handleChange, handleSubmit } = useFormik({
       initialValues: initialValues,
       validationSchema: LoginSchema,
@@ -102,7 +107,7 @@ console.log("➡️ discount from localStorage:", discount);
         },
       });
 
-      console.log("Capture Order Response:", response.data);
+      
       
       localStorage.removeItem("studentId");
       localStorage.removeItem("courseName");
@@ -144,7 +149,7 @@ console.log("➡️ discount from localStorage:", discount);
     
         
         useEffect(() => {
-          fetch("https://api.hachion.co/ipwho.is/")
+          fetch("https://ipwho.is/")
             .then((res) => res.json())
             .then((data) => {
               const userCountryCode = data?.country_code;
@@ -163,6 +168,21 @@ console.log("➡️ discount from localStorage:", discount);
       closeMenu();
       mobileInputRef.current?.focus();
     };
+
+    useEffect(() => {
+  if (mobileNumber) {
+    const dialCodeMatch = countries.find((c) =>
+      mobileNumber.replace(/\s+/g, '').startsWith(c.code)
+    );
+    if (dialCodeMatch) {
+      setStudentData((prev) => ({
+        ...prev,
+        country: dialCodeMatch.name,
+      }));
+    }
+  }
+}, [mobileNumber]);
+
 
     const openMenu = (event) => {
       setAnchorEl(event.currentTarget);
@@ -281,8 +301,13 @@ const handleRadioChange = (event) => {
   completion_date: selectedBatchData.schedule_duration || '',
   meeting_link: selectedBatchData.meeting_link || '',
   resendCount: 0,
-  batchId: selectedBatchData.batchId
+  batchId: selectedBatchData.batchId,
+  sendEmail,
+  sendWhatsApp,
+  sendText
 };
+
+
 
 try {
   const response = await axios.post('https://api.hachion.co/enroll/add', payload);
@@ -336,7 +361,7 @@ const handlePayment = async () => {
     const studentId = profileResponse.data?.studentId;
     const batchId = selectedBatchData?.batchId;
     const courseName = selectedBatchData?.schedule_course_name;
-console.log("📦 discount from courseData:", courseData?.discount);
+
 
     if (!studentId || !batchId || !courseName) {
       alert("Missing required details to proceed with payment.");
@@ -355,7 +380,7 @@ localStorage.setItem("selectedBatchData", JSON.stringify({
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
     // const returnUrl = `http://localhost:3000/enroll/${slug}`;
     const returnUrl = `https://hachion.co/enroll/${slug}`;
-console.log("return url :" +returnUrl);
+
 
     const response = await axios.post("https://api.hachion.co/create-order", null, {
       params: {
@@ -377,6 +402,7 @@ console.log("return url :" +returnUrl);
 };
 const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const isDisallowedMode = disallowedModes.includes(modeType);
+const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
     return (
       <>
       <Topbar/>
@@ -391,6 +417,11 @@ const isDisallowedMode = disallowedModes.includes(modeType);
         <Link to="/coursedetails">
           {courseData?.courseCategory}
         </Link> <MdKeyboardArrowRight />
+      </li>
+      <li className="breadcrumb-item">
+         <Link to={`/coursedetails/${courseSlug}`}>
+  {courseData?.courseName}
+</Link> <MdKeyboardArrowRight />
       </li>
       <li className="breadcrumb-item active" aria-current="page">
        Enroll {courseData?.courseName} 
@@ -440,51 +471,32 @@ const isDisallowedMode = disallowedModes.includes(modeType);
 
         <div className='input-row'>
           <div className="col-md-5">
-            <label className='form-label'>Mobile Number</label>
-            <div className="input-wrapper" style={{ position: 'relative' }}>
-          <button
-                variant="text"
-                onClick={openMenu}
-                className='mobile-button'
-              >
-                <Flag code={selectedCountry.flag} className="country-flag me-1" />
-                <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
-                <AiFillCaretDown />
-              </button>
-              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                {countries.map((country) => (
-                  <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-                    <Flag code={country.flag} className="country-flag me-2" />
-                    {country.name} ({country.code})
-                  </MenuItem>
-                ))}
-              </Menu>
-              <input
-                type='tel'
-                className="form-control"
-                ref={mobileInputRef}
-                
-                placeholder='Enter your mobile number'
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
-              style={{paddingLeft: '100px' }}/>
-            </div>
-          </div>
-
-          <div className="col-md-5">
-            <label htmlFor="inputCity" className="form-label">
-              Country<span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              
-              placeholder='Enter your country'
-              value={studentData?.country || ''}
-              readOnly
-              required
-            />
-          </div>
+  <label className="form-label">Mobile Number</label>
+  <div className="input-wrapper">
+    <input
+      type="tel"
+      className="form-control"
+      ref={mobileInputRef}
+      placeholder="Enter your mobile number"
+      value={mobileNumber}
+      onChange={(e) => setMobileNumber(e.target.value)}
+      readOnly
+    />
+  </div>
+</div>
+          <div className="col-md-5"> 
+  <label htmlFor="inputCity" className="form-label">
+    Country<span className="required">*</span>
+  </label>
+  <input
+    type="text"
+    className="form-control"
+    placeholder="Enter your country"
+    value={studentData?.country || ''}
+    readOnly
+    required
+  />
+</div>
         </div>
       </form>
     
@@ -528,10 +540,10 @@ const isDisallowedMode = disallowedModes.includes(modeType);
           <TableCell align="right" className="table-cell-right">{courseData.courseName}</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
+      {/* <TableBody>
         <TableRow>
           <TableCell className="table-cell-left">Course Fee</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.amount != null ? courseData.amount : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.amount != null ? courseData.amount : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">% Discount</TableCell>
@@ -539,17 +551,81 @@ const isDisallowedMode = disallowedModes.includes(modeType);
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Total</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.total !=null ? courseData.total : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.total !=null ? courseData.total : 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="table-cell-left">Tax</TableCell>
-          <TableCell align="right" className="table-cell-right">USD {courseData.tax !=null ? courseData.tax : 0}</TableCell>
+          <TableCell align="right" className="table-cell-right"> {courseData.tax !=null ? courseData.tax : 0}</TableCell>
         </TableRow>
         <TableRow className="net-amount">
           <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-          <TableCell align="right" className="net-amount-right">USD {courseData.total || 0}</TableCell>
+            <TableCell align="right" className="net-amount-right">  USD {Math.round(courseData.total || 0)}  </TableCell>
         </TableRow>
-      </TableBody>
+      </TableBody> */}
+      <TableBody>
+  <TableRow>
+    <TableCell className="table-cell-left">Course Fee</TableCell>
+    <TableCell align="right" className="table-cell-right">
+      {
+        modeType === 'mentoring' ? courseData.mamount :
+        modeType === 'self' ? courseData.samount :
+        modeType === 'selfqa' ? courseData.sqamount :
+        modeType === 'crash' ? courseData.camount :
+        courseData.amount || 0
+      }
+    </TableCell>
+  </TableRow>
+
+  <TableRow>
+    <TableCell className="table-cell-left">% Discount</TableCell>
+    <TableCell align="right" className="table-cell-right">
+      {
+        modeType === 'mentoring' ? courseData.mdiscount :
+        modeType === 'self' ? courseData.sdiscount :
+        modeType === 'selfqa' ? courseData.sqdiscount :
+        modeType === 'crash' ? courseData.cdiscount :
+        courseData.discount || 0
+      }
+    </TableCell>
+  </TableRow>
+
+  <TableRow>
+    <TableCell className="table-cell-left">Total</TableCell>
+    <TableCell align="right" className="table-cell-right">
+      {
+        modeType === 'mentoring' ? courseData.mtotal :
+        modeType === 'self' ? courseData.stotal :
+        modeType === 'selfqa' ? courseData.sqtotal :
+        modeType === 'crash' ? courseData.ctotal :
+        courseData.total || 0
+      }
+    </TableCell>
+  </TableRow>
+
+  <TableRow>
+    <TableCell className="table-cell-left">Tax</TableCell>
+    <TableCell align="right" className="table-cell-right">
+      {/* If you plan to include specific tax fields like mtax/stax in future, update here */}
+      {courseData.tax || 0}
+    </TableCell>
+  </TableRow>
+
+  <TableRow className="net-amount">
+    <TableCell className="net-amount-left">Net Payable amount:</TableCell>
+    <TableCell align="right" className="net-amount-right">
+      USD {
+        Math.round(
+          modeType === 'mentoring' ? courseData.mtotal :
+          modeType === 'self' ? courseData.stotal :
+          modeType === 'selfqa' ? courseData.sqtotal :
+          modeType === 'crash' ? courseData.ctotal :
+          courseData.total || 0
+        )
+      }
+    </TableCell>
+  </TableRow>
+</TableBody>
+
     </Table>
   </TableContainer>
 ) : (

@@ -623,8 +623,7 @@ margin-top: 3vh;
 
 .training-events-head-upcoming{
 margin-top: 30px;
-margin-left: 40%;
-justify-content: space-between;
+justify-content: center;
 display: flex;
 padding-top: 20px;
 margin-bottom: 30px;
@@ -669,7 +668,7 @@ position: absolute;
 top: 5vh;
 left: 50%;
 transform: translateX(-50%);
-height: 9vh;
+height: 70px;
 z-index: 1;
 transition: all 0.3s ease;
 }
@@ -935,7 +934,7 @@ color: white !important;
 color: white !important;
 }
 .card:hover .card-icon{
-height: 10vh;
+height: 80px;
 }
 .card:hover .enroll-btn{
 background-color: white;
@@ -1666,8 +1665,9 @@ height: 80px;
   }
 
   .card-icon {
-    height: 100px;
+    height: 70px;
     width: auto;
+    top: 30px;
 }
   
   .card {

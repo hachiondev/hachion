@@ -26,7 +26,7 @@ const countryToCurrencyMap = {
 
 const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   const batchId = selectedBatchData?.batchId;
-  console.log("Batch ID:", batchId);
+  
   const { courseName } = useParams();
   const navigate = useNavigate();
 
@@ -113,8 +113,8 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           } else if (modeType === 'selfqa') {
             selectedFeeAmount = parseFloat(matchedCourse.sqtotal) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.sqamount) || 0;
-            setFee('Not Available');
-            return;
+            // setFee('Not Available');
+            // return;
           }
 
           setFee(selectedFeeAmount * rate || 'Not Available');
@@ -253,7 +253,10 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     state: {
       selectedBatchData,
       enrollText,
-      modeType
+      modeType,
+      sendEmail: notificationPrefs.email,
+    sendWhatsApp: notificationPrefs.whatsapp,
+    sendText: notificationPrefs.text
     }
   });
   setTimeout(() => {
@@ -399,10 +402,46 @@ const handleCheckboxChange = (e) => {
           {isEnrolled ? 'Enrolled' : enrollText}
         </button>
       )}
-      <p className="resend">
+      {/* <p className="resend">
         Select how you'd like to receive your enrollment details
         </p>
-      <div className="notification-options">
+{!(isEnrolled && showResend) && (
+  <div className="notification-options">
+    <label>
+      <input
+        type="checkbox"
+        name="email"
+        checked={notificationPrefs.email}
+        onChange={handleCheckboxChange}
+      />{' '}
+      Email
+    </label>
+    <label>
+      <input
+        type="checkbox"
+        name="whatsapp"
+        checked={notificationPrefs.whatsapp}
+        onChange={handleCheckboxChange}
+      />{' '}
+      WhatsApp
+    </label>
+    <label>
+      <input
+        type="checkbox"
+        name="text"
+        checked={notificationPrefs.text}
+        onChange={handleCheckboxChange}
+      />{' '}
+      Text Message
+    </label>
+  </div>
+)} */}
+{!(isEnrolled && showResend) && (
+  <>
+    <p className="resend">
+      Select how you'd like to receive your enrollment details
+    </p>
+    <div className="notification-options">
       <label>
         <input
           type="checkbox"
@@ -431,7 +470,8 @@ const handleCheckboxChange = (e) => {
         Text Message
       </label>
     </div>
-
+  </>
+)}
       {showResend && isEnrolled && !resendExceeded && (
         <p className="resend">
           Didn’t receive the email?{' '}

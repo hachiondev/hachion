@@ -944,6 +944,8 @@ const handleSaveAndSendInvoice = async (e) => {
                   <option value='Bank payment'>Bank payment</option>
                   <option value='paypal'>PayPal</option>
                   <option value='venmo'>Venmo</option>
+                  <option value='zelle'>Zelle</option>
+                  <option value='other'>Other</option>
                 </select>
               </StyledTableCell>
               <StyledTableCell align='center'>

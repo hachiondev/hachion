@@ -153,24 +153,24 @@ const NavbarTop = () => {
  
   
    useEffect(() => {
-    console.log("Checking localStorage for user data...");
+    
     const storedUserData = localStorage.getItem('loginuserData');
     if (storedUserData) {
       const parsedData = JSON.parse(storedUserData);
       setUserData(parsedData);
       setIsLoggedIn(true);
-      console.log("User data found:", parsedData);
+      
     } else {
-      console.log("No user data found. User is not logged in.");
+      
     }
   }, []);
 
   const handleLogout = () => {
-    console.log("Logging out user...");
+    
     localStorage.removeItem('loginuserData'); 
     setIsLoggedIn(false);
     setUserData(null);
-    console.log("User logged out successfully.");
+    
   };
 
   const toggleDrawer = () => {
@@ -193,7 +193,7 @@ const NavbarTop = () => {
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       setSearchVisible(!isMobile);
       setMobileSearchOpen(false);
-      console.log(`Window resized. Mobile view: ${isMobile}`);
+      
     };
 
     window.addEventListener('resize', handleResize);
@@ -207,7 +207,7 @@ const NavbarTop = () => {
     const handleOutsideClick = (event) => {
       if (drawerRef.current && !drawerRef.current.contains(event.target)) {
         setDrawerOpen(false);
-        console.log("Clicked outside drawer. Closing drawer.");
+        
       }
     };
 

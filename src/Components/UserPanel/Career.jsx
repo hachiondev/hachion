@@ -40,7 +40,7 @@ const Career = () => {
           <div key={index} className='online-training-div'>
             <img className='career-img' src={item.img} alt={`career-img-${index + 1}`} />
             <h3 className='Live-online'>{item.title}</h3>
-            <p className='training-content'>{item.content}</p>
+            <h4 className='training-content'>{item.content}</h4>
           </div>
         ))}
       </div>

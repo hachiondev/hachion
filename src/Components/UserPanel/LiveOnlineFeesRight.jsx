@@ -113,8 +113,6 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
           } else if (modeType === 'selfqa') {
             selectedFeeAmount = parseFloat(matchedCourse.sqtotal) || 0;
             selectedOriginalAmount = parseFloat(matchedCourse.sqamount) || 0;
-            // setFee('Not Available');
-            // return;
           }
 
           setFee(selectedFeeAmount * rate || 'Not Available');

@@ -69,7 +69,7 @@ const CourseDetail = ({
   const [characterCount, setCharacterCount] = useState(0);
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',mentoring1:'',mentoring2:'',self1:'',
+    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',iamount:'',idiscount:'',itotal:'',isamount:'',isdiscount:'',istotal:'',isqamount:'',isqdiscount:'',isqtotal:'',icamount:'',icdiscount:'',ictotal:'',imamount:'',imdiscount:'',imtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   console.log(formData);
@@ -172,6 +172,38 @@ const handleCalculate = (e) => {
     return updatedData;
   });
 };
+const handleCalculateIndia = (e) => {
+  e.preventDefault();
+  setFormData((prevData) => {
+    const updatedData = { ...prevData };
+    const modes = ['i', 'im', 'is', 'isq', 'ic'];
+
+    modes.forEach((mode) => {
+      const amountKey = `${mode}amount`;
+      const discountKey = `${mode}discount`;
+      const totalKey = `${mode}total`;
+
+      const amount = parseFloat(updatedData[amountKey]);
+      const discount = parseFloat(updatedData[discountKey]);
+      const total = parseFloat(updatedData[totalKey]);
+
+      const hasAmount = !isNaN(amount);
+      const hasDiscount = !isNaN(discount);
+      const hasTotal = !isNaN(total);
+
+      if (hasAmount && hasDiscount && !hasTotal) {
+        updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
+      } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
+        updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
+      } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
+        updatedData[amountKey] = Math.round(total / (1 - discount / 100));
+      }
+    });
+
+    return updatedData;
+  });
+};
+
 const handleFileChange = (event) => {
   const file = event.target.files[0];
   setFormData({ ...formData, courseImage: file });
@@ -200,6 +232,11 @@ const handleSubmit = async (e) => {
     samount: formData.samount,sdiscount: formData.sdiscount,stotal: formData.stotal,
     sqamount: formData.sqamount,sqdiscount: formData.sqdiscount,sqtotal: formData.sqtotal,
     camount: formData.camount,cdiscount: formData.cdiscount,ctotal: formData.ctotal,
+    iamount: formData.iamount,idiscount: formData.idiscount,itotal: formData.itotal,
+    imamount: formData.imamount,imdiscount: formData.imdiscount,imtotal: formData.imtotal,
+    isamount: formData.isamount,isdiscount: formData.isdiscount,istotal: formData.istotal,
+    isqamount: formData.isqamount,isqdiscount: formData.isqdiscount,isqtotal: formData.isqtotal,
+    icamount: formData.icamount,icdiscount: formData.icdiscount,ictotal: formData.ictotal,
     mentoring1: formData.mentoring1,
     mentoring2: formData.mentoring2,
     self1: formData.self1,
@@ -283,6 +320,11 @@ const handleEditClick = async (courseId) => {
         samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
         sqamount:course.sqamount,sqdiscount:course.sqdiscount,sqtotal:course.sqtotal,
         camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
+        iamount:course.iamount,idiscount:course.idiscount,itotal:course.itotal,
+        imamount:course.imamount,imdiscount:course.imdiscount,imtotal:course.imtotal,
+        isamount:course.isamount,isdiscount:course.isdiscount,istotal:course.istotal,
+        isqamount:course.isqamount,isqdiscount:course.isqdiscount,isqtotal:course.isqtotal,
+        icamount:course.icamount,icdiscount:course.icdiscount,ictotal:course.ictotal,
         mentoring1:course.mentoring1,
         mentoring2:course.mentoring2,
         self1:course.self1,
@@ -538,7 +580,7 @@ const handleShortCourseBlur = async () => {
                 </div>
                 </div>
                 </div> 
-                <h3>Mode Of Training</h3>
+                <h3 style={{marginTop: 20}}>Mode Of Training Fee(USD)</h3>
                 <div className="course-row">
                   {[
                     { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
@@ -555,7 +597,7 @@ const handleShortCourseBlur = async () => {
                         </label>
                       </div>
                       <div className="col-md-3">
-                        <label className="form-label">Amount (USD)</label>
+                        <label className="form-label">Amount</label>
                         <input
                           type="number"
                           className="form-control-mode"
@@ -575,7 +617,7 @@ const handleShortCourseBlur = async () => {
                         />
                       </div>
                       <div className="col-md-3">
-                        <label className="form-label">Total (USD)</label>
+                        <label className="form-label">Total</label>
                         <input
                           type="number"
                           className="form-control-mode"
@@ -585,6 +627,59 @@ const handleShortCourseBlur = async () => {
                         />
                       </div>
                       <button className='filter' onClick={handleCalculate}>
+                        Calculate
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <h3 style={{marginTop: 20}}>Mode Of Training Fee(INR)</h3>
+                <div className="course-row">
+                  {[
+                    { label: "Live Training", prefix: "i" },
+                    { label: "Crash Course Training", prefix: "ic" },
+                    { label: "Mentoring Mode", prefix: "im" },
+                    { label: "Self Paced with Q&A", prefix: "isq" },
+                    { label: "Self Paced Training", prefix: "is" },
+                  ].map((mode, index) => (
+                    <div className="course-mode" key={index}>
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" id={`inrCheck${index}`} />
+                        <label className="form-check-label" htmlFor={`inrCheck${index}`}>
+                          {mode.label}
+                        </label>
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label">Amount</label>
+                        <input
+                          type="number"
+                          className="form-control-mode"
+                          name={`${mode.prefix}amount`}
+                          value={formData[`${mode.prefix}amount`] || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label">Discount %</label>
+                        <input
+                          type="number"
+                          className="form-control-mode"
+                          name={`${mode.prefix}discount`}
+                          value={formData[`${mode.prefix}discount`] || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label">Total</label>
+                        <input
+                          type="number"
+                          className="form-control-mode"
+                          name={`${mode.prefix}total`}
+                          value={formData[`${mode.prefix}total`] || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <button className="filter" onClick={handleCalculateIndia}>
                         Calculate
                       </button>
                     </div>

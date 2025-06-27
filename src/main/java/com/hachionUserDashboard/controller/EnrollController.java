@@ -155,6 +155,10 @@ public class EnrollController {
 
 		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
 
+//		if (requestEnroll.isSendWhatsApp()) {
+//			whatsAppService.sendLiveClassDemoEnrollmentDetails(requestEnroll);
+//		}
+
 		Enroll save = repo.save(enroll);
 
 		if (requestEnroll.isSendEmail()) {
@@ -173,11 +177,15 @@ public class EnrollController {
 		}
 
 		if (requestEnroll.isSendWhatsApp()) {
-			whatsAppService.sendEnrollmentDetails(requestEnroll);
+			if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
+				whatsAppService.sendLiveClassDemoEnrollmentDetails(requestEnroll);
+			} else if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
+				whatsAppService.sendLiveDemoEnrollmentDetails(requestEnroll);
+			}
 		}
-		if (requestEnroll.isSendText()) {
-			whatsAppService.sendEnrollmentSms(requestEnroll);
-		}
+//		if (requestEnroll.isSendText()) {
+//			whatsAppService.sendEnrollmentSms(requestEnroll);
+//		}
 
 		System.out.println("Mode Value: " + requestEnroll.getMode());
 		System.out.println("Send Email: " + requestEnroll.isSendEmail());

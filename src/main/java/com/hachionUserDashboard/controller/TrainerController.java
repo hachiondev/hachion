@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.hachionUserDashboard.entity.Trainer;
 import com.hachionUserDashboard.repository.TrainerRepository;
@@ -97,13 +96,13 @@ public class TrainerController {
 			trainer.setDemo_link_1(updatedTrainer.getDemo_link_1());
 			trainer.setDemo_link_2(updatedTrainer.getDemo_link_2());
 			trainer.setDemo_link_3(updatedTrainer.getDemo_link_3());
+			trainer.setDate(LocalDate.now());
 
-			// Save the updated trainer to the repository
 			repo.save(trainer);
 
-			return ResponseEntity.ok(trainer); // Return the updated trainer and 200 OK
+			return ResponseEntity.ok(trainer);
 		} else {
-			// Return 404 Not Found if the trainer ID does not exist
+
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
 	}

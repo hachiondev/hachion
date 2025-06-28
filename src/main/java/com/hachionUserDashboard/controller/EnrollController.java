@@ -191,7 +191,7 @@ public class EnrollController {
 		System.out.println("Send Email: " + requestEnroll.isSendEmail());
 		System.out.println("Send WhatsApp: " + requestEnroll.isSendWhatsApp());
 
-//		webhookSenderService.sendEnrollmentDetails(requestEnroll);
+		webhookSenderService.sendEnrollmentDetails(requestEnroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}

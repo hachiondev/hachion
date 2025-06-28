@@ -92,8 +92,16 @@ public class ScheduleController {
 				schedule.setSchedule_week(weekDay);
 
 			} catch (DateTimeParseException e) {
-
+			
+			    System.out.println("❌ Failed to parse schedule datetime:");
+			    System.out.println("   ➤ Schedule ID      : " + schedule.getCourse_schedule_id());
+			    System.out.println("   ➤ course name : " + schedule.getSchedule_course_name());
+			    System.out.println("   ➤ category name : " + schedule.getSchedule_category_name());
+			    System.out.println("   ➤ Schedule Date    : " + schedule.getSchedule_date());
+			    System.out.println("   ➤ Schedule Time    : " + schedule.getSchedule_time());
+			    System.out.println("   ➤ Error Message    : " + e.getMessage());
 			}
+			
 		}
 
 		coursescheduleList.sort(Comparator.comparing(scheduleToDateTimeMap::get));

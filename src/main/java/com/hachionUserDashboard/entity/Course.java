@@ -51,33 +51,32 @@ public class Course {
 	private String keyHighlights5;
 	@Column
 	private String keyHighlights6;
+
 	@Column
 	private Double amount;
 	@Column
 	private Double discount;
 	@Column
 	private Double total;
+
 	@Column
 	private Double mamount;
 	@Column
 	private Double mdiscount;
 	@Column
 	private Double mtotal;
+
 	@Column
 	private Double samount;
-
-	@Column
-	private Double sqamount;
-
 	@Column
 	private Double sdiscount;
-
-	@Column
-	private Double sqdiscount;
-
 	@Column
 	private Double stotal;
 
+	@Column
+	private Double sqamount;
+	@Column
+	private Double sqdiscount;
 	@Column
 	private Double sqtotal;
 
@@ -87,6 +86,43 @@ public class Course {
 	private Double cdiscount;
 	@Column
 	private Double ctotal;
+
+	// new columns for india location
+
+	@Column
+	private Double iamount;
+	@Column
+	private Double idiscount;
+	@Column
+	private Double itotal;
+
+	@Column
+	private Double imamount;
+	@Column
+	private Double imdiscount;
+	@Column
+	private Double imtotal;
+
+	@Column
+	private Double isamount;
+	@Column
+	private Double isdiscount;
+	@Column
+	private Double istotal;
+
+	@Column
+	private Double isqamount;
+	@Column
+	private Double isqdiscount;
+	@Column
+	private Double isqtotal;
+
+	@Column
+	private Double icamount;
+	@Column
+	private Double icdiscount;
+	@Column
+	private Double ictotal;
 
 	@Column
 	private String shortCourse;
@@ -463,6 +499,126 @@ public class Course {
 
 	public void setShortCourse(String shortCourse) {
 		this.shortCourse = shortCourse;
+	}
+
+	public Double getIamount() {
+		return iamount;
+	}
+
+	public void setIamount(Double iamount) {
+		this.iamount = iamount;
+	}
+
+	public Double getIdiscount() {
+		return idiscount;
+	}
+
+	public void setIdiscount(Double idiscount) {
+		this.idiscount = idiscount;
+	}
+
+	public Double getItotal() {
+		return itotal;
+	}
+
+	public void setItotal(Double itotal) {
+		this.itotal = itotal;
+	}
+
+	public Double getImamount() {
+		return imamount;
+	}
+
+	public void setImamount(Double imamount) {
+		this.imamount = imamount;
+	}
+
+	public Double getImdiscount() {
+		return imdiscount;
+	}
+
+	public void setImdiscount(Double imdiscount) {
+		this.imdiscount = imdiscount;
+	}
+
+	public Double getImtotal() {
+		return imtotal;
+	}
+
+	public void setImtotal(Double imtotal) {
+		this.imtotal = imtotal;
+	}
+
+	public Double getIsamount() {
+		return isamount;
+	}
+
+	public void setIsamount(Double isamount) {
+		this.isamount = isamount;
+	}
+
+	public Double getIsdiscount() {
+		return isdiscount;
+	}
+
+	public void setIsdiscount(Double isdiscount) {
+		this.isdiscount = isdiscount;
+	}
+
+	public Double getIstotal() {
+		return istotal;
+	}
+
+	public void setIstotal(Double istotal) {
+		this.istotal = istotal;
+	}
+
+	public Double getIsqamount() {
+		return isqamount;
+	}
+
+	public void setIsqamount(Double isqamount) {
+		this.isqamount = isqamount;
+	}
+
+	public Double getIsqdiscount() {
+		return isqdiscount;
+	}
+
+	public void setIsqdiscount(Double isqdiscount) {
+		this.isqdiscount = isqdiscount;
+	}
+
+	public Double getIsqtotal() {
+		return isqtotal;
+	}
+
+	public void setIsqtotal(Double isqtotal) {
+		this.isqtotal = isqtotal;
+	}
+
+	public Double getIcamount() {
+		return icamount;
+	}
+
+	public void setIcamount(Double icamount) {
+		this.icamount = icamount;
+	}
+
+	public Double getIcdiscount() {
+		return icdiscount;
+	}
+
+	public void setIcdiscount(Double icdiscount) {
+		this.icdiscount = icdiscount;
+	}
+
+	public Double getIctotal() {
+		return ictotal;
+	}
+
+	public void setIctotal(Double ictotal) {
+		this.ictotal = ictotal;
 	}
 
 }

@@ -20,6 +20,7 @@ import QaAutomationFaq from './QaAutomationFaq';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { FaArrowUp } from 'react-icons/fa';
 const QaAutomation = () => {
   const curriculumRef = useRef(null);
   const location = useLocation();
@@ -32,7 +33,39 @@ const QaAutomation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const upcomingBatchRef = useRef(null);
-  
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+    useEffect(() => {
+      if (location.hash === '#upcoming-events') {
+        const element = document.getElementById('upcoming-events');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }, [location]);
+    
+          useEffect(() => {
+            console.log("Privacy component mounted. Scrolling to top...");
+            window.scrollTo(0, 0);
+          }, []);
+        
+          useEffect(() => {
+            const handleScroll = () => {
+              if (window.scrollY > 300) {
+                setShowScrollButton(true);
+              } else {
+                setShowScrollButton(false);
+              }
+            };
+        
+            window.addEventListener("scroll", handleScroll);
+            return () => window.removeEventListener("scroll", handleScroll);
+          }, []);
+        const scrollToTop = () => {
+        console.log("Scroll to top clicked!");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -204,6 +237,11 @@ const QaAutomation = () => {
         <div ref={footerRef}>
           <Footer />
         </div>
+        {showScrollButton && (
+                      <button className="scroll-to-top" onClick={scrollToTop}>
+                        <FaArrowUp />
+                      </button>
+                    )}
         <StickyBar />
       </div>
     </>

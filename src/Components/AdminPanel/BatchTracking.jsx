@@ -220,6 +220,7 @@ const handleSave = async (studentId) => {
         item.student_id === studentId ? { ...item, ...editableRow } : item
       )
     );
+
 setFilteredData((prev) =>
   prev.map((item) =>
     item.student_id === studentId && item.batch_id === editableRow.batch_id

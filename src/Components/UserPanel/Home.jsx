@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect , useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Banner from './Banner';
@@ -13,10 +13,11 @@ import Corporate from './Corporate';
 import StickyBar from './StickyBar';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
-import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { FaArrowUp } from 'react-icons/fa';
 
 export const Home = () => {
+  const [showScrollButton, setShowScrollButton] = useState(false);
    const location = useLocation();
   useEffect(() => {
     if (location.hash === '#upcoming-events') {
@@ -26,6 +27,28 @@ export const Home = () => {
       }
     }
   }, [location]);
+  
+        useEffect(() => {
+          console.log("Privacy component mounted. Scrolling to top...");
+          window.scrollTo(0, 0);
+        }, []);
+      
+        useEffect(() => {
+          const handleScroll = () => {
+            if (window.scrollY > 300) {
+              setShowScrollButton(true);
+            } else {
+              setShowScrollButton(false);
+            }
+          };
+      
+          window.addEventListener("scroll", handleScroll);
+          return () => window.removeEventListener("scroll", handleScroll);
+        }, []);
+      const scrollToTop = () => {
+      console.log("Scroll to top clicked!");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
   return (
     <>
       <Helmet>
@@ -71,6 +94,11 @@ export const Home = () => {
 <Association/>
 <Learners page="home"/>
 <Footer/>
+{showScrollButton && (
+              <button className="scroll-to-top" onClick={scrollToTop}>
+                <FaArrowUp />
+              </button>
+            )}
 </div>
 <StickyBar/>
 

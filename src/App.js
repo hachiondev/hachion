@@ -40,6 +40,7 @@ import Unsubscribe from "./Components/UserPanel/Unsubscribe";
 import Sitemap from "./Components/UserPanel/Sitemap";
 import KidsSummer from "./Components/UserPanel/KidsSummer";
 import LeadForm from "./Components/UserPanel/LeadForm";
+import HirefromUs from './Components/UserPanel/HirefromUs';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ function AppRoutes() {
       <Route path='/coursedetails' element={<Course/>}/>
       <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
+      <Route path='/hire-from-us' element={<HirefromUs/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>

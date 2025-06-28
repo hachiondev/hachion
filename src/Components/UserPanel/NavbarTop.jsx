@@ -12,6 +12,7 @@ import { IoLogOut } from 'react-icons/io5';
 import './Home.css';
 import axios from 'axios';
 import Fuse from 'fuse.js';
+import { useLocation } from 'react-router-dom';
 
 
 const NavbarTop = () => {
@@ -28,7 +29,7 @@ const NavbarTop = () => {
    const [searchResults, setSearchResults] = useState([]);
    const [blogs, setBlogs] = useState([]);
    const [selectedItem, setSelectedItem] = useState(null);
-
+   const location = useLocation();
 
  
    // Helper function to format course name for the URL
@@ -367,7 +368,7 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                       Courses
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/coursedetails')}>Hire from Us</div>
+                    <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div>
 
                     <button className="drawer-button" onClick={() => handleLogout()}>
                       <IoLogOut /> Logout
@@ -383,7 +384,7 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                   Courses
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/coursedetails')}>Hire from Us</div>
+                <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div>
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
@@ -398,26 +399,25 @@ const NavbarTop = () => {
 
         <div className="navbar-nav">
           <button
-            className={`nav-item ${activeLink === 'corporate' ? 'active' : ''}`}
-            onClick={() => handleNavClick('corporate')}
+            className={`nav-item ${location.pathname === '/corporate' ? 'active' : ''}`}
           >
             <Link to="/corporate" className="nav-item-link">
               Corporate Training
             </Link>
           </button>
+
           <button
-            className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
-            onClick={() => handleNavClick('CourseDetails')}
+            className={`nav-item ${location.pathname === '/coursedetails' ? 'active' : ''}`}
           >
             <Link to="/coursedetails" className="nav-item-link">
               Courses
             </Link>
           </button>
+
           <button
-            className={`nav-item ${activeLink === 'CourseDetails' ? 'active' : ''}`}
-            onClick={() => handleNavClick('CourseDetails')}
+            className={`nav-item ${location.pathname === '/hire-from-us' ? 'active' : ''}`}
           >
-            <Link to="/coursedetails" className="nav-item-link">
+            <Link to="/hire-from-us" className="nav-item-link">
               Hire from Us
             </Link>
           </button>

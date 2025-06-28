@@ -10,6 +10,7 @@ import Flag from 'react-world-flags';
 import axios from 'axios';
 import './Dashboard.css';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -85,7 +86,7 @@ const togglePasswordVisibility = (field) => {
     { name: 'South Africa', code: '+27', flag: 'ZA' },
     { name: 'Netherlands', code: '+31', flag: 'NL' }
   ];
-
+const navigate = useNavigate();
   const defaultCountry = countries.find((c) => c.flag === "US");
   
     
@@ -121,7 +122,8 @@ const togglePasswordVisibility = (field) => {
       const parsedEmail = parsedUser.email;
       console.log("Parsed email:", parsedEmail);
   
-      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+
+      axios.get(`http://localhost:8081/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -159,7 +161,7 @@ const togglePasswordVisibility = (field) => {
       return;
     }
     setIsUpdating(true); 
-    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
+    axios.post('http://localhost:8081/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,
@@ -168,10 +170,15 @@ const togglePasswordVisibility = (field) => {
     })
     .then(response => {
       setIsUpdating(false);   
-      setSuccessMessage("✅ Password updated successfully."); 
+      setSuccessMessage("✅ Details updated successfully."); 
        const storedUser = JSON.parse(localStorage.getItem('loginuserData'));
-  const updatedUser = { ...storedUser, name }; // updated name
+  const updatedUser = { ...storedUser, name }; 
   localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
+   setTimeout(() => {
+    localStorage.removeItem('authToken');       
+    localStorage.removeItem('loginuserData');   
+    navigate('/login');
+  }, 3000);
     })
     .catch(error => {
       setIsUpdating(false);  

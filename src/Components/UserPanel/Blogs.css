@@ -457,36 +457,6 @@
     .student-register-button:hover{
       background-color: #006489;
     }
-    .vertical-sticky-bar {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 5px;
-}
-
-.sticky-link {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 12px;
-  border-radius: 8px 0 0 8px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.3s;
-  border: 1px solid #ffffff;
-}
-
-.sticky-link:hover {
-  background-color: #0056b3;
-}
 
       .register-button {
         width: 520px;
@@ -684,6 +654,58 @@
   padding-right: 20px;
   color: #ffffff;
 }
+.hirebackground{
+          background-color: #FFFFFF;
+          margin-bottom: 30px;
+        }
+.hire-content{
+       display: flex;
+       justify-content: left;
+       flex-direction: column;
+       align-items: flex-start;
+      }
+
+  .hire-title{
+    color: #000;
+    font-weight: 700;
+    text-align: left;
+    padding: 20px;
+    flex-wrap: wrap;
+      }
+      .hire-title-span{
+    color: #00AEEF;
+    font-weight: 700;
+      }
+      .hire-title-text{
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 20px;
+      }
+      .post-job-button{
+        background-color: #00AEEF;
+        color: #ffffff;
+        font-size: large;
+        font-weight: 600;
+        padding: 5px 40px;
+        border-radius: 5px;
+        border: none;
+        margin: 20px 20px 5px;
+      }
+
+   .hire-banner-img{
+        width: 500px;
+        aspect-ratio: 1/1;
+          }
+
+   .hire-banner{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 5%;
+        align-items: center;
+      }
 
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
@@ -799,6 +821,13 @@
       width: 400px ;
       height: 40px ;
     }
+       .hire-banner{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -1287,6 +1316,18 @@
   margin-bottom: 10px !important;
   padding: 5px;
  }
+    .hire-banner{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        align-items: center;
+        padding: 5px;
+      }
+      .hire-banner-img{
+        max-width: 450px;
+        width: 100%;
+      }
     }
 .contact-us-div{
 background-color: #ffffff;

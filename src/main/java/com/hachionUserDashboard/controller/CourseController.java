@@ -292,13 +292,13 @@ public class CourseController {
 	public ResponseEntity<String> updateCourse(@PathVariable int id, @RequestPart("course") String courseData,
 			@RequestPart(value = "courseImage", required = false) MultipartFile courseImage) {
 		try {
-			
+
 			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule()); 
+			objectMapper.registerModule(new JavaTimeModule());
 			Course updatedCourse = objectMapper.readValue(courseData, Course.class);
 
 			return repo.findById(id).map(course -> {
-				
+
 				course.setCourseCategory(updatedCourse.getCourseCategory());
 				course.setCourseName(updatedCourse.getCourseName());
 				course.setShortCourse(updatedCourse.getShortCourse());
@@ -315,21 +315,48 @@ public class CourseController {
 				course.setKeyHighlights4(updatedCourse.getKeyHighlights4());
 				course.setKeyHighlights5(updatedCourse.getKeyHighlights5());
 				course.setKeyHighlights6(updatedCourse.getKeyHighlights6());
+
 				course.setAmount(updatedCourse.getAmount());
 				course.setDiscount(updatedCourse.getDiscount());
 				course.setTotal(updatedCourse.getTotal());
+
 				course.setCamount(updatedCourse.getCamount());
 				course.setCdiscount(updatedCourse.getCdiscount());
 				course.setCtotal(updatedCourse.getCtotal());
+
 				course.setMamount(updatedCourse.getMamount());
 				course.setMdiscount(updatedCourse.getMdiscount());
 				course.setMtotal(updatedCourse.getMtotal());
+
 				course.setSamount(updatedCourse.getStotal());
-				course.setSqamount(updatedCourse.getSqamount());
 				course.setSdiscount(updatedCourse.getSdiscount());
-				course.setSqdiscount(updatedCourse.getSqdiscount());
 				course.setStotal(updatedCourse.getStotal());
+
+				course.setSqamount(updatedCourse.getSqamount());
+				course.setSqdiscount(updatedCourse.getSqdiscount());
 				course.setSqtotal(updatedCourse.getSqtotal());
+
+//new columns for india location 
+				course.setIamount(updatedCourse.getIamount());
+				course.setIdiscount(updatedCourse.getIdiscount());
+				course.setItotal(updatedCourse.getItotal());
+
+				course.setIcamount(updatedCourse.getIcamount());
+				course.setIcdiscount(updatedCourse.getIcdiscount());
+				course.setIctotal(updatedCourse.getIctotal());
+
+				course.setImamount(updatedCourse.getImamount());
+				course.setImdiscount(updatedCourse.getImdiscount());
+				course.setImtotal(updatedCourse.getImtotal());
+
+				course.setIsamount(updatedCourse.getIstotal());
+				course.setIsdiscount(updatedCourse.getIsdiscount());
+				course.setIstotal(updatedCourse.getIstotal());
+
+				course.setIsqamount(updatedCourse.getIsqamount());
+				course.setIsqdiscount(updatedCourse.getIsqdiscount());
+				course.setIsqtotal(updatedCourse.getIsqtotal());
+
 				course.setMentoring1(updatedCourse.getMentoring1());
 				course.setMentoring2(updatedCourse.getMentoring2());
 				course.setSelf1(updatedCourse.getSelf1());
@@ -405,17 +432,18 @@ public class CourseController {
 
 		return new ResponseEntity<>(courses, HttpStatus.OK);
 	}
-	  @GetMapping("/coursenames-by-category")
-	    public ResponseEntity<List<String>> getCourseNamesByCategory(@RequestParam String categoryName) {
-	        List<String> courseNames = repo.findCourseNamesByCategory(categoryName);
-	        return ResponseEntity.ok(courseNames);
-	    }
-	  
-	  @GetMapping("/shortCourse")
-	    public ResponseEntity<String> checkShortCourse(@RequestParam String shortCourse) {
-	        if (repo.existsByShortCourse(shortCourse)) {
-	            throw new ResourceNotFoundException("ShortCourse already exists in the system");
-	        }
-	        return ResponseEntity.ok("ShortCourse is available");
-	    }
+
+	@GetMapping("/coursenames-by-category")
+	public ResponseEntity<List<String>> getCourseNamesByCategory(@RequestParam String categoryName) {
+		List<String> courseNames = repo.findCourseNamesByCategory(categoryName);
+		return ResponseEntity.ok(courseNames);
+	}
+
+	@GetMapping("/shortCourse")
+	public ResponseEntity<String> checkShortCourse(@RequestParam String shortCourse) {
+		if (repo.existsByShortCourse(shortCourse)) {
+			throw new ResourceNotFoundException("ShortCourse already exists in the system");
+		}
+		return ResponseEntity.ok("ShortCourse is available");
+	}
 }

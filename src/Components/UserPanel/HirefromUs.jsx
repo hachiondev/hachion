@@ -1,14 +1,20 @@
-import React, { useEffect , useState } from 'react';
+import React, { useEffect , useState, useRef } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
+import PostJob from './PostJob';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
 import banner from '../../Assets/hirebanner.png';
+import whyhachion from '../../Assets/whyhire.png';
+import collabration from '../../Assets/hirecollab.png';
+import companies from '../../Assets/itlogos.png';
 import Typewriter from 'typewriter-effect';
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 const HirefromUs = () => {
     const [showScrollButton, setShowScrollButton] = useState(false);
+    const postJobRef = useRef(null);
       useEffect(() => {
         console.log("Privacy component mounted. Scrolling to top...");
         window.scrollTo(0, 0);
@@ -55,13 +61,34 @@ const HirefromUs = () => {
                 />
                 </h1>
                 <p className='hire-title-text'>Hachion helps you hire skilled talent faster and more affordably.</p>
-                <button className='post-job-button'>Post Job</button>
+                <button className='post-job-button' onClick={() => postJobRef.current?.scrollIntoView({ behavior: 'smooth' })}>Post Job</button>
                 </div>
                 <img className='hire-banner-img' src={banner} alt='Hire banner' />
                 <div>
               </div>
               </div>
               </div>
+
+            <h2 className='hire-sub-title'>Why Hire from Hachion?</h2>
+            <div className='hire-part'>
+            <ol className='points'>
+          <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>Zero-Cost Hiring: </strong>Hire pre-trained professionals without bearing any recruitment fees.</div></li>
+          <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>Pre-Vetted, Job-Ready Talent: </strong>Candidates come equipped with practical, real-world project experience.</div></li>
+          <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>Dedicated Hiring Support: </strong>From candidate sourcing to seamless onboarding, Hachion provides hands-on guidance throughout the process.</div></li>
+          <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>Wide Tech Coverage: </strong>Access professionals skilled in 150+ in-demand domains like DevOps, Cloud, Data Science, QA, and more.</div></li>
+          <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>All-Year Talent Availability: </strong>A consistent pipeline of qualified candidates ready when you are.</div></li>
+          </ol>
+          <img className='hire-img' src={whyhachion} alt='Why hire from Hachion' />
+          </div>
+
+          <h2 className='hire-sub-title'>Top IT firms collaborate with Hachion</h2>
+            <div className='hire-part'>
+          <img className='hire-collab' src={collabration} alt='Collabration' />  
+          <img className='hire-logo' src={companies} alt='IT Logos' />
+          </div>
+          <div ref={postJobRef} style={{marginTop: 20}}>
+          <PostJob />
+        </div>
       <Footer/>
       {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>

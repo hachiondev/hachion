@@ -456,31 +456,63 @@ const isFormValid = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  // const handleSave = async () => {
+  //   try {
+  //     const updatedEditedRow = {
+  //       ...editedRow,
+  //       schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
+  //     };
+  //     const response = await axios.put(
+  //       `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+  //       updatedEditedRow
+  //     );
+  //     setCourses((prevCourses) =>
+  //       prevCourses.map((course) =>
+  //         course.course_schedule_id === selectedRow.course_schedule_id
+  //           ? response.data
+  //           : course
+  //       )
+  //     );
+  //     setMessage(true);
+  //     setTimeout(() => {
+  //       setMessage(false);
+  //     }, 5000);
+  //     setOpen(false);
+  //   } catch (error) {
+  //   console.error("❌ Error while saving schedule:", error);
+  //   }
+
+  // };
   const handleSave = async () => {
-    try {
-      const updatedEditedRow = {
-        ...editedRow,
-        schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
-      };
-      const response = await axios.put(
-        `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
-        editedRow
-      );
-      setCourses((prevCourses) =>
-        prevCourses.map((course) =>
-          course.course_schedule_id === selectedRow.course_schedule_id
-            ? response.data
-            : course
-        )
-      );
-      setMessage(true);
-      setTimeout(() => {
-        setMessage(false);
-      }, 5000);
-      setOpen(false);
-    } catch (error) {
-    }
-  };
+  try {
+        const formattedDateForBackend = dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD");
+
+    const updatedEditedRow = {
+      ...editedRow,
+      schedule_date: formattedDateForBackend,
+    };
+const response = await axios.put(
+      `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      editedRow
+    );
+
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.course_schedule_id === selectedRow.course_schedule_id
+          ? response.data
+          : course
+      )
+    );
+    setMessage(true);
+    setTimeout(() => {
+      setMessage(false);
+    }, 5000);
+    setOpen(false);
+  } catch (error) {
+    console.error("❌ Error while saving schedule:", error);
+  }
+};
+
   const handleEditDateChange = (newValue) => {
     const parsedDate = dayjs(newValue);
     if (!parsedDate.isValid()) return;

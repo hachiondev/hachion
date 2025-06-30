@@ -231,6 +231,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
       console.warn("🚫 Download not allowed (canDownload=false).");
       setErrorMessage("❌ You are not authorized to download this assessment.");
     }
+    
   } catch (error) {
     console.error("❌ Error during assessment download:", error);
 
@@ -252,16 +253,17 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
   }
 };
 
-
-
   return (
     <div className={`curriculum ${showMore ? 'curriculum-expanded' : ''}`}>
-      <div className="curriculum-head">
-        <h2 className="qa-heading">{matchedCourseName} Curriculum</h2>
-        <button className="btn-curriculum" onClick={downloadPdf}>
-          <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download Brochure
-        </button>
-      </div>
+      <div style={{ color: 'red', fontWeight: 'bold', marginBottom: '8px' }}>
+      📌 Please close the previously opened assessment tab before opening a new one.
+    </div>
+    <div className="curriculum-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <h2 className="qa-heading" style={{ margin: 0 }}>{matchedCourseName} Curriculum</h2>
+      <button className="btn-curriculum" onClick={downloadPdf}>
+        <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download Brochure
+      </button>
+    </div>
 
       <div className="curriculum-topic">
         {curriculum.length > 0 ? (

@@ -706,6 +706,60 @@
         padding-left: 5%;
         align-items: center;
       }
+      .hire-part{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px;
+    width: 80%;
+    margin: 20px 10%;
+    gap: 20;
+  }
+    .hire-points{
+    display: flex;
+    justify-content: left;
+    padding: 10px;
+    text-align: left;
+    align-items: top;
+  }
+    .hire-sub-title{
+    background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    text-align: center;
+    padding: 20px;
+    flex-wrap: wrap;
+      }
+     .hire-img{
+    max-width: 500px;
+    aspect-ratio: 5/4;
+      }
+    .hire-collab{
+    max-width: 40%;
+    aspect-ratio: 5/4;
+      }
+    .hire-logo{
+    max-width: 50%;
+    aspect-ratio: 3/2;
+      }
+      .points{
+      display: flex;
+      flex-wrap: wrap;
+      width: 40%;
+      text-align: left;
+      }
+      .hire-form{
+      padding: 40px;
+      }
+      .hire-row{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      }
 
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
@@ -733,7 +787,7 @@
       }
     }
     
-    @media  (min-width:481px) and (max-width: 1024px){
+    @media  (min-width:769px) and (max-width: 1024px){
       .about-us-content{
         width: 100%;
         margin-left: 0px;
@@ -827,6 +881,23 @@
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
+      }
+    .hire-part{
+    display: flex;
+    width: 80%;
+    margin: 10px 8%;
+  }
+    .hire-img{
+    max-width: 400px;
+    aspect-ratio: 5/4;
+      }
+      .points{
+      width: 40%;
+      }
+    }
+    @media (max-width: 768px) {
+      .points{
+      width: 80%;
       }
     }
       @media (min-width:350px) and (max-width:480px){
@@ -1324,9 +1395,27 @@
         align-items: center;
         padding: 5px;
       }
-      .hire-banner-img{
+      .hire-banner-img, .hire-img, .hire-collab, .hire-logo{
         max-width: 450px;
         width: 100%;
+      }
+    .hire-part{
+    display: flex;
+    width: 95%;
+    margin: 10px 2%;
+    gap: 10px;
+  }
+      .points{
+      width: 90%;
+      }
+        .post-job-button{
+        padding: 5px 40px;
+        width: 90%;
+        margin: 10px 20px 5px;
+      }
+      .hire-row{
+      flex-direction: column;
+      gap: 0;
       }
     }
 .contact-us-div{

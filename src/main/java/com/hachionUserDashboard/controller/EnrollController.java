@@ -108,7 +108,6 @@ public class EnrollController {
 		enroll.setMeeting_link(requestEnroll.getMeeting_link());
 		enroll.setBatchId(requestEnroll.getBatchId());
 
-		System.out.println("valid mobile format: " + enroll.getMobile());
 		LocalDate date = LocalDate.parse(requestEnroll.getEnroll_date());
 		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"));
@@ -118,7 +117,7 @@ public class EnrollController {
 		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time;
 		enroll.setWeek(dayOfWeek);
 
-		// live class purpose added this logic starting point
+		
 		StringBuilder weekDaysBuilder = new StringBuilder();
 
 		for (int i = 0; i < 3; i++) {
@@ -130,7 +129,7 @@ public class EnrollController {
 			}
 		}
 		String weekDays = weekDaysBuilder.toString();
-		// ending point
+		
 
 		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(requestEnroll.getTrainer(),
 				requestEnroll.getCourse_name());
@@ -155,10 +154,7 @@ public class EnrollController {
 
 		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
 
-//		if (requestEnroll.isSendWhatsApp()) {
-//			whatsAppService.sendLiveClassDemoEnrollmentDetails(requestEnroll);
-//		}
-
+		
 		Enroll save = repo.save(enroll);
 
 		if (requestEnroll.isSendEmail()) {
@@ -183,13 +179,9 @@ public class EnrollController {
 				whatsAppService.sendLiveDemoEnrollmentDetails(requestEnroll);
 			}
 		}
-//		if (requestEnroll.isSendText()) {
-//			whatsAppService.sendEnrollmentSms(requestEnroll);
-//		}
-
-		System.out.println("Mode Value: " + requestEnroll.getMode());
-		System.out.println("Send Email: " + requestEnroll.isSendEmail());
-		System.out.println("Send WhatsApp: " + requestEnroll.isSendWhatsApp());
+		if (requestEnroll.isSendText()) {
+			whatsAppService.sendEnrollmentSms(requestEnroll);
+		}
 
 		webhookSenderService.sendEnrollmentDetails(requestEnroll);
 
@@ -205,12 +197,10 @@ public class EnrollController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for this email.");
 		}
 
-		Enroll latest = enrollments.get(enrollments.size() - 1); // assuming latest is last
-		latest.setResendCount(latest.getResendCount() + 1); // Increment the counter
+		Enroll latest = enrollments.get(enrollments.size() - 1); 
+		latest.setResendCount(latest.getResendCount() + 1); 
 
-		repo.save(latest); // Save the updated resend count
-
-//		sendEnrollEmail(latest); // Send the email
+		repo.save(latest); 
 
 		LocalDate date = LocalDate.parse(latest.getEnroll_date());
 		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
@@ -312,38 +302,6 @@ public class EnrollController {
 		}
 	}
 
-//	@GetMapping("/enroll/check")
-//	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
-//			@RequestParam String batchId, @RequestParam String assessmentFileName) {
-//
-//		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
-//		if (isActive == null) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
-//		}
-//		if (!isActive) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//					.body(Map.of("error", "This batch is no longer active"));
-//		}
-//
-//		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
-//		List<String> fileNamesOnly = assessmentFiles.stream().map(path -> path.substring(path.lastIndexOf("/") + 1))
-//				.collect(Collectors.toList());
-//
-//		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
-//
-//		System.out.println("Raw assessment files: " + assessmentFiles);
-//
-//		if (assessmentIndex >= 3) {
-//			Double amount = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
-//			if (amount == null || amount <= 0) {
-//				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//						.body(Map.of("error", "You must pay to access this assessment."));
-//			}
-//		}
-//
-//		return ResponseEntity.ok(Map.of("canDownload", true));
-//	}
-
 	@GetMapping("/enroll/check")
 	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
 			@RequestParam String batchId, @RequestParam String assessmentFileName) {
@@ -368,7 +326,6 @@ public class EnrollController {
 				.collect(Collectors.toList());
 
 		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
-		System.out.println("Raw assessment files: " + assessmentFiles);
 
 		if (assessmentIndex >= 3) {
 

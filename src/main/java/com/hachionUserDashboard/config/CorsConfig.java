@@ -14,7 +14,7 @@ public class CorsConfig {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
 	            registry.addMapping("/**")
-	                    .allowedOrigins("https://hachion.co", "https://www.hachion.co","https://test.hachion.co","http://localhost:3000", "http://localhost:3001")
+	                    .allowedOrigins("https://hachion.co", "https://www.hachion.co","https://test.hachion.co","http://localhost:3000", "http://localhost:3001", "http://localhost:8081")
 	                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 	                    .allowedHeaders("*")
 	                    .exposedHeaders("Certificate-Id")

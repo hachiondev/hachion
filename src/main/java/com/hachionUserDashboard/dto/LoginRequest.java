@@ -55,12 +55,14 @@
 //    }
 //}
 package com.hachionUserDashboard.dto;
-public class LoginRequest{
+
+public class LoginRequest {
 	private String email;
 	private String password;
-	
+	private String captchaToken;
+
 	public LoginRequest() {
-		
+
 	}
 
 	public LoginRequest(String email, String password) {
@@ -90,7 +92,12 @@ public class LoginRequest{
 		return "LoginRequest [email=" + email + ", password=" + password + "]";
 	}
 
-	
+	public String getCaptchaToken() {
+		return captchaToken;
+	}
 
+	public void setCaptchaToken(String captchaToken) {
+		this.captchaToken = captchaToken;
+	}
 
 }

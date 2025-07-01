@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,14 +11,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "unsubscribe")
-public class UnscubscribeEntity {
+public class UnsubscribeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "unsubscribe_id")
 	private Long unsubscribeId;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = true)
@@ -24,6 +26,12 @@ public class UnscubscribeEntity {
 
 	@Column(name = "user_name")
 	private String userName;
+
+	@Column(name = "date", nullable = false)
+	private LocalDate date;
+
+	@Column(nullable = true)
+	private String country;
 
 	public Long getUnsubscribeId() {
 		return unsubscribeId;
@@ -55,6 +63,22 @@ public class UnscubscribeEntity {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 }

@@ -62,6 +62,11 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 
 	@Query(value = "SELECT * FROM registerstudent WHERE student_id = :studentId", nativeQuery = true)
 	Optional<RegisterStudent> findByStudentId(@Param("studentId") String studentId);
+
 	
+	@Modifying
+    @Transactional
+    @Query(value = "DELETE FROM registerstudent WHERE email = :email", nativeQuery = true)
+    void deleteByEmailNative(@Param("email") String email);
 }
 

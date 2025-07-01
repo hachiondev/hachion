@@ -124,6 +124,11 @@ const Terms = () => {
             Any issues, please contact us at trainings@hachion.co or through our website. Use of Hachion's services implies acceptance of the terms and conditions detailed herein. Thanks for considering Hachion for all your online learning needs.
             </p>
 
+            <p className='about-us-left-content'>
+            <p className='title'>Disclaimer</p>
+              By providing your phone number, you agree to receive a text message from Hachion. Message and Data rates may apply, Message frequency varies. To stop receiving messages, you can opt out by Unsubscribe from Hachion. For more information, contact us.
+            </p>
+
           </div>
          
         </div>

@@ -93,12 +93,12 @@ const Footer = () => {
   <span>|</span>
   <p className="footer-content" onClick={handleContact}>Contact us</p>
   <span>|</span>
-  <p className="footer-content" onClick={() => window.open("https://hachtechnologies.com/", "_blank")}>Careers</p>
-  <span>|</span>
+  {/* <p className="footer-content" onClick={() => window.open("https://hachtechnologies.com/", "_blank")}>Careers</p>
+  <span>|</span> */}
   <p className="footer-content" onClick={handleBlog}>Blog</p>
   <span>|</span>
-  <p className="footer-content">Internship</p>
-  <span>|</span>
+  {/* <p className="footer-content">Internship</p>
+  <span>|</span> */}
   <p className="footer-content" onClick={handleSitemap}>Sitemap</p>
   <span>|</span>
   <p className="footer-content" onClick={handleWorkshop}>Workshop</p>

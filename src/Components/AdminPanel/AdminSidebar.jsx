@@ -13,6 +13,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { PiStudentFill } from "react-icons/pi";
 import { FaChildren } from "react-icons/fa6";
+import { FaBriefcase } from "react-icons/fa6";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -24,6 +25,7 @@ const menuItems = [
   { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },
   { title: 'Trainer', icon: <LiaChalkboardTeacherSolid /> },
+  { title: 'Jobs', icon: <FaBriefcase /> },
   {
     title: 'Student Admin',
     icon: <PiStudentFill />,

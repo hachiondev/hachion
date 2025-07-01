@@ -368,7 +368,7 @@ const NavbarTop = () => {
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                       Courses
                     </div>
-                    <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div>
+                    {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
                     <button className="drawer-button" onClick={() => handleLogout()}>
                       <IoLogOut /> Logout
@@ -384,7 +384,7 @@ const NavbarTop = () => {
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                   Courses
                 </div>
-                <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div>
+                {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
@@ -414,13 +414,13 @@ const NavbarTop = () => {
             </Link>
           </button>
 
-          <button
+          {/* <button
             className={`nav-item ${location.pathname === '/hire-from-us' ? 'active' : ''}`}
           >
             <Link to="/hire-from-us" className="nav-item-link">
               Hire from Us
             </Link>
-          </button>
+          </button> */}
         </div>
       </div>
     </nav>

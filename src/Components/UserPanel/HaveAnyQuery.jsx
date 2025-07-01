@@ -8,6 +8,7 @@ import { RiCloseCircleLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const initialValues = {
   name: "",
   email: "",
@@ -17,18 +18,19 @@ const initialValues = {
 };
 
 const HaveAnyQuery = ({ closeModal }) => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
+  const [isChecked, setIsChecked] = useState(false);
+  const [error, setError] = useState("");
   //const currentDate = new Date().toISOString().split("T")[0];
   const [selectedCountry, setSelectedCountry] = useState({
     code: "+1",
     flag: "US",
     name: "United States",
   });
-
-  
   
   const countries = [
     { name: "India", code: "+91", flag: "IN" },
@@ -67,9 +69,24 @@ const HaveAnyQuery = ({ closeModal }) => {
           // fallback already set as default
         });
     }, []);
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handlePrivacy = () => {
+    navigate("/privacy");
+  };
+  const handleTerms = () => {
+    navigate("/terms");
+  };
 
   const handleContact = async (e) => {
     e.preventDefault();
+    if (!isChecked) {
+      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+      return;
+    }
+    setError("");
     const currentDate = new Date().toISOString().split("T")[0];
 
     const requestData = {
@@ -234,6 +251,31 @@ const HaveAnyQuery = ({ closeModal }) => {
             >
               Contact Us
             </button>
+            {error && <p className="error-message">{error}</p>}
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked"
+                    onChange={handleCheckboxChange}
+                  />
+                  <label class="form-check-label" for="flexCheckChecked">
+                    By clicking on Submit, you acknowledge read our{" "}
+                    <span
+                      onClick={handlePrivacy}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
+                    >
+                      Privacy Notice
+                    </span> and 
+                    <span
+                      onClick={handleTerms}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF", paddingLeft: 5 }}
+                    >
+                      Terms & Conditions
+                    </span>
+                  </label>
+                </div>
           </form>
           {showModal && (
             <div

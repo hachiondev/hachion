@@ -197,9 +197,10 @@ console.log("payload: " + JSON.stringify(payload));
     
     <div className='studentform'>
         <h2 className='hire-sub-title'>Post Job</h2>
-        <form onSubmit={handleSubmit} className='hire-form'>
+        <div className='d-flex justify-content-center'>
+        <form onSubmit={handleSubmit}>
                 <div className='hire-row'>
-                <div className="col-md-5">
+                <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">First Name<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -212,7 +213,7 @@ console.log("payload: " + JSON.stringify(payload));
                   />
                 </div>
 
-                <div className="col-md-5">
+                <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Last Name<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -227,7 +228,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
 
                 <div className='hire-row'>
-                <div className="col-md-5">
+                <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Email ID<span className='star'>*</span></label>
                   <input
                     type="email"
@@ -240,7 +241,7 @@ console.log("payload: " + JSON.stringify(payload));
                   />
                 </div>
 
-                <div className="col-md-5">
+                <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Mobile Number <span className="star">*</span></label>
                   <div className="input-wrapper" style={{ position: 'relative' }}>
                     <button type="button" onClick={openMenu} className='mobile-button'>
@@ -271,7 +272,7 @@ console.log("payload: " + JSON.stringify(payload));
                   </div>
                   </div>
                   <div className='hire-row'>
-                  <div className="col-md-5">
+                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Company Name<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -283,7 +284,7 @@ console.log("payload: " + JSON.stringify(payload));
                     placeholder="Enter company name"
                   />
                 </div>
-                 <div className="col-md-5">
+                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Company URL<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -297,7 +298,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 </div>
                 <div className='hire-row'>
-                  <div className="col-md-5">
+                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Job Title<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -309,7 +310,7 @@ console.log("payload: " + JSON.stringify(payload));
                     placeholder="Enter job title"
                   />
                 </div>
-                 <div className="col-md-5">
+                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Vacancies<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -323,7 +324,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 </div>
                 <div className='hire-row'>
-                  <div className="col-md-5">
+                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Experiance<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -335,7 +336,7 @@ console.log("payload: " + JSON.stringify(payload));
                     placeholder="Enter no. of years"
                   />
                 </div>
-                 <div className="col-md-5">
+                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Salary Range<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -349,7 +350,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 </div>
                 <div className='hire-row'>
-                 <div className="col-md-5">
+                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Location<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -361,7 +362,7 @@ console.log("payload: " + JSON.stringify(payload));
                     placeholder="Enter location"
                   />
                 </div>
-                  <div className="col-md-5">
+                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Notice Period<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -375,7 +376,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 </div>
                 <div className='hire-row'>
-                 <div className="col-md-5">
+                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Type of Employment<span className='star'>*</span></label>
                   <select
                     type="text"
@@ -392,7 +393,7 @@ console.log("payload: " + JSON.stringify(payload));
                      <option value="Contract">Contract</option>
                 </select>
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Job Type<span className='star'>*</span></label>
                   <select
                     type="text"
@@ -411,29 +412,29 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 </div>
                 <div className="center-wrapper">
-                <div className="col-11">
+                <div className="col-md-11 d-flex flex-column">
                   <label htmlFor="Textarea" className="form-label">Description<span className='star'>*</span></label>
                   <textarea
                     type="text"
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    className="form-control-advisor"
-                    id="advisor3"
+                    className="form-control-hire"
+                    id="hire"
                     placeholder="Enter job description"
                   />
                 </div>
                 </div>
                 <div className="center-wrapper">
-                <div className="col-11">
+                <div className="col-md-11 d-flex flex-column">
                   <label htmlFor="Textarea" className="form-label">Requirements / Qualifications<span className='star'>*</span></label>
                   <textarea
                     type="text"
                     name="qualification"
                     value={formData.qualification}
                     onChange={handleChange}
-                    className="form-control-advisor"
-                    id="advisor3"
+                    className="form-control-hire"
+                    id="hire"
                     placeholder="Enter job Requirements / Qualifications"
                   />
                 </div>
@@ -456,6 +457,7 @@ console.log("payload: " + JSON.stringify(payload));
                 </button>
                 </div>
         </form>
+      </div>
       </div>
   );
 };

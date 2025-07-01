@@ -18,6 +18,7 @@ import CorporateCourses from './CorporateCourses';
 import Payments from './Payments';
 import Tracking from './Tracking';
 import AdminSummerEvents from './AdminSummerEvents';
+import Jobs from './Jobs';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -26,6 +27,7 @@ const componentMap = {
   'Trending Courses': <TrendingCourseTable />,
   'Kids Summer Courses': <AdminSummerEvents />,
   'Trainer': <Trainer />,
+  'Jobs': <Jobs />,
   'Certificates': <Certificate />,
   'Enrollments': <Enroll />,
   'Payments': <Payments />,

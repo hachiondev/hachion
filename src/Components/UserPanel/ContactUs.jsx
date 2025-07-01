@@ -140,7 +140,7 @@ const ContactUs = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!isChecked) {
-      setError("Please select the checkbox to acknowledge the Privacy Notice.");
+      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
       return;
     }
     setError("");
@@ -170,9 +170,11 @@ const ContactUs = () => {
     }
   };
   
-
   const handlePrivacy = () => {
     navigate("/privacy");
+  };
+  const handleTerms = () => {
+    navigate("/terms");
   };
 
   const formik = useFormik({
@@ -414,6 +416,12 @@ const ContactUs = () => {
                       style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
                     >
                       Privacy Notice
+                    </span> and 
+                    <span
+                      onClick={handleTerms}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF", paddingLeft: 5 }}
+                    >
+                      Terms & Conditions
                     </span>
                   </label>
                 </div>

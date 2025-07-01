@@ -30,6 +30,7 @@ const initialValues = {
   name: "",
   email: "",
   number: "",
+  reason: "",
   comment: "",
   date: "",
   country: "",
@@ -49,8 +50,7 @@ const Unsubscribe = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
-    window.scrollTo(0, 0); // This will scroll to the top of the page
-    console.log("Page loaded and scrolled to top");
+    window.scrollTo(0, 0); 
   }, []);
 
   const countries = [
@@ -92,19 +92,19 @@ const Unsubscribe = () => {
   }, []);
 
   const handleCountrySelect = (country) => {
-    console.log("Country selected:", country.name, country.code);
+    
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
 
   const openMenu = (event) => {
-    console.log("Opening country select menu");
+    
     setAnchorEl(event.currentTarget);
   };
 
   const closeMenu = () => {
-    console.log("Closing country select menu");
+    
     setAnchorEl(null);
   };
 
@@ -112,63 +112,127 @@ const Unsubscribe = () => {
     setIsChecked(e.target.checked);
   };
 
-  const handleContact = async (e) => {
-    e.preventDefault();
-    const currentDate = new Date().toISOString().split("T")[0];
-    const requestData = {
-      name: values.name,
-      email: values.email,
-      mobile: mobileNumber,
-      comment: values.comment,
-      date: currentDate,
-      country: selectedCountry.name,
-    };
+const matchedCountry = countries.find((c) =>
+  mobileNumber.startsWith(c.code)
+);
 
+  useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+  const userEmail = userData.email || "";
+
+  
+
+ if (!userEmail) {
+    console.warn("🔒 No logged-in user found. Redirecting to /login...");
+     window.confirm("Please login before unsubscribe from hachion");
+    navigate("/login");
+    return;
+  }
+
+  
+  values.email = userEmail;
+  
+
+  
+  const fetchUserProfile = async () => {
     try {
-      console.log(requestData);
-      const response = await axios.post(
-        "https://api.hachion.co/haveanyquery/add",
-        requestData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      
+
+      const response = await fetch(
+        `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
       );
 
-      if (response.status === 200) {
-        setShowModal(true);
-        values.name = "";
-        values.email = "";
-        values.comment = "";
-        setMobileNumber("");
+      if (!response.ok) {
+        throw new Error("❌ Failed to fetch profile data");
       }
+
+      const data = await response.json();
+      
+
+      if (data.name) {
+        values.name = data.name;
+        
+      } else {
+        console.warn("⚠️ Name not found in response.");
+      }
+
+      
+      if (data.mobile) {
+        setMobileNumber(data.mobile);
+        
+      } else {
+        console.warn("⚠️ Mobile number not found.");
+      }
+
+      if (data.country) {
+        values.country = data.country;
+        
+      }
+
     } catch (error) {
-      console.error("Error submitting query:", error);
+      console.error("❌ Error fetching profile:", error);
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!isChecked) {
-      setError("Please select at least one option to unsubscribe.");
-    } else {
-      setError("");
-      // Handle form submission here
-      console.log("Form submitted");
-    }
+  fetchUserProfile();
+}, []);
 
-    const form = e.target.closest("form");
+  const handleFormSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!form.checkValidity()) {
-      e.stopPropagation();
-      form.classList.add("was-validated"); // Triggers Bootstrap validation styles
-    } else {
-      alert("Form submitted successfully!");
-    }
-
-    //handleContact(e);
+  if (!isChecked) {
+    setError("Please select at least one option to unsubscribe.");
+    return;
+  } else {
+    setError("");
+  }
+  const form = e.target.closest("form");
+  if (!form.checkValidity()) {
+    e.stopPropagation();
+    form.classList.add("was-validated");
+    return;
+  }  
+  const requestBody = {
+    userName: values.name,
+    email: values.email,
+    mobile: mobileNumber,
+    country: matchedCountry ? matchedCountry.name : "United States"
   };
+  try {
+    const response = await fetch("https://api.hachion.co/unsubscribe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      
+      setShowModal(true);
+      values.name = "";
+      values.email = "";
+      values.comment = "";
+      setMobileNumber("");
+      setIsChecked(false);
+      form.classList.remove("was-validated");
+        setTimeout(() => {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("loginuserData");
+        navigate("/");
+      }, 3000);
+    } else {
+      const errorData = await response.json();
+      console.error("Unsubscribe failed:", errorData);
+      setError("Something went wrong. Please try again.");
+    }
+  } catch (err) {
+    console.error("Network error:", err);
+    setError("Unable to connect to the server.");
+  }
+};
+
 
   const handlePrivacy = () => {
     navigate("/privacy");
@@ -179,7 +243,7 @@ const Unsubscribe = () => {
       initialValues: initialValues,
       validationSchema: LoginSchema,
       onSubmit: (values) => {
-        console.log(values);
+        
       },
     });
   const [whatsappNumber, setWhatsappNumber] = useState("+1 (732) 485-2499");
@@ -192,7 +256,7 @@ const Unsubscribe = () => {
         if (!res.ok) throw new Error("Failed to fetch location data");
 
         const data = await res.json();
-        console.log("🌎 Detected country:", data.country_code);
+        
 
         if (data.country_code === "IN") {
           setWhatsappNumber("+91-949-032-3388");
@@ -263,7 +327,7 @@ const Unsubscribe = () => {
               </div>
               <label className="form-label">Mobile Number</label>
                 <div className="input-wrapper" style={{ position: 'relative' }}>
-                  <button
+                  {/* <button
                         variant="text"
                         onClick={openMenu}
                         className='mobile-button'
@@ -279,7 +343,7 @@ const Unsubscribe = () => {
                             {country.name} ({country.code})
                           </MenuItem>
                         ))}
-                      </Menu>
+                      </Menu> */}
                   <input
                     type="tel"
                     ref={mobileInputRef}
@@ -289,26 +353,17 @@ const Unsubscribe = () => {
                     onChange={(e) => setMobileNumber(e.target.value)}
                     aria-label="Text input with segmented dropdown button"
                     placeholder="Enter your mobile number"
-                    style={{ paddingLeft: '100px' }}
+                    style={{
+                      paddingLeft: '12px', 
+                      textAlign: 'left'
+                    }}
                   />
                 </div>
-              <label htmlFor="inputEmail" className="form-label">
-                Unsubscribe From
+              <label htmlFor="inputEmail" className="form-label" style={{marginTop: 10}}>
+                Reason :
               </label>
               {error && <p className="error-message">{error}</p>}
               <div className="input-group-checkbox">
-                <div class="form-check pe-4">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="chkpromotional"
-                    onChange={handleCheckboxChange}
-                  />
-                  <label class="form-check-label" for="chkpromotional">
-                    Promotional mails &amp; Messages
-                  </label>
-                </div>
                 <div class="form-check pe-4">
                   <input
                     class="form-check-input"
@@ -333,6 +388,32 @@ const Unsubscribe = () => {
                     Mails and Messages
                   </label>
                 </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="chkpromotional"
+                    onChange={handleCheckboxChange}
+                  />
+                  <label class="form-check-label" for="chkpromotional">
+                    Promotional mails &amp; Messages
+                  </label>
+                </div>
+              </div>
+               <div class="mb-3 d-flex flex-column">
+                <label for="exampleFormControlTextarea1" class="form-label">
+                  Comments
+                </label>
+                <textarea
+                  class="form-control-unsub"
+                  id="unsub3"
+                  rows="3"
+                  name="comment"
+                  value={values.comment}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
               </div>
               <div class="mb-3">
                 <button
@@ -370,7 +451,7 @@ const Unsubscribe = () => {
                         className="success-gif"
                       />
                       <p className="modal-para">
-                        Our Team will review soon
+                        You have successfully unsubscribed from Hachion
                       </p>
                     </div>
                   </div>

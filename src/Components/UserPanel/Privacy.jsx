@@ -114,6 +114,12 @@ const Privacy = () => {
     target="_blank" 
     rel="noopener noreferrer">trainings@hachion.co</a></li>
             </p>
+            <p className='about-us-left-content'>
+            <p className='title'>Disclaimer</p>
+              Mobile information will not be shared with third parties/affiliates marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
+              <br/>
+              If you wish to be removed from receiving future communications, you can opt out by Unsubscribe from Hachion.
+            </p>
             <p className='about-us-left-content' style={{fontWeight: '600', paddingBottom: '50px', textAlign: 'center'}}>
             Thanks for choosing Hachion as your learning buddy. We are here to empower your education journey!
             </p>

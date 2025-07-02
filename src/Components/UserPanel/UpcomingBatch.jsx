@@ -3,7 +3,6 @@ import calendar from '../../Assets/calendar.png';
 import './Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
-// import CorporateFees from './CorporateFees';
 import CrashCourseFee from './CrashCourseFee';
 import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
@@ -21,12 +20,11 @@ const UpcomingBatch = () => {
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [currency, setCurrency] = useState('USD');
   const [fees, setFees] = useState({
-    live: null,
-    mentoring: null,
-    self: null,
-    selfqa: null,
-    crash: null,
-    // corporate: 'Contact Us',
+    live: 0,
+    mentoring: 0,
+    self: 0,
+    selfqa: 0,
+    crash: 0,
   });
 
   const handleRequestBatchClick = () => {
@@ -46,43 +44,69 @@ const UpcomingBatch = () => {
       try {
         setLoading(true);
 
-        // Get user location and preferred currency
         const geoRes = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
         const country = geoRes.data.country || 'US';
+
         const currencyMap = {
           IN: 'INR', US: 'USD', GB: 'GBP', EU: 'EUR', AE: 'AED',
           AU: 'AUD', CA: 'CAD', JP: 'JPY', CN: 'CNY', TH: 'THB',
-          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR',
+          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR', NL: 'EUR',
         };
         const userCurrency = currencyMap[country] || 'USD';
         setCurrency(userCurrency);
 
-        // Get conversion rate
-        const exRes = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
-        const rate = exRes.data.rates[userCurrency] || 1;
-
-        // Fetch course data
         const courseRes = await axios.get('https://api.hachion.co/courses/all');
         const courseData = courseRes.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
         setCourse(courseData);
 
-        if (courseData) {
-          const getFee = (amount) =>
-            amount ? Math.round(parseFloat(amount) * rate) : 'N/A';
+        if (!courseData) return;
 
-          setFees({
-            live: getFee(courseData.total),
-            mentoring: getFee(courseData.mtotal),
-            self: getFee(courseData.stotal),
-            crash: getFee(courseData.ctotal),
-            selfqa: getFee(courseData.sqtotal),
-            // corporate: 'Contact Us',
-          });
+        const parseOrZero = (val) => {
+          const parsed = parseFloat(val);
+          return isNaN(parsed) || parsed <= 0 ? 0 : Math.round(parsed);
+        };
+
+        let updatedFees = {};
+
+        if (userCurrency === 'INR') {
+          updatedFees = {
+            live: parseOrZero(courseData.itotal),
+            mentoring: parseOrZero(courseData.imtotal),
+            self: parseOrZero(courseData.istotal),
+            crash: parseOrZero(courseData.ictotal),
+            selfqa: parseOrZero(courseData.isqtotal),
+          };
+        } else if (userCurrency === 'USD') {
+          updatedFees = {
+            live: parseOrZero(courseData.total),
+            mentoring: parseOrZero(courseData.mtotal),
+            self: parseOrZero(courseData.stotal),
+            crash: parseOrZero(courseData.ctotal),
+            selfqa: parseOrZero(courseData.sqtotal),
+          };
+        } else {
+          const exRes = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+          const rate = exRes.data.rates[userCurrency] || 1;
+
+          const convertOrZero = (val) => {
+            const parsed = parseFloat(val);
+            return isNaN(parsed) || parsed <= 0 ? 0 : Math.round(parsed * rate);
+          };
+
+          updatedFees = {
+            live: convertOrZero(courseData.total),
+            mentoring: convertOrZero(courseData.mtotal),
+            self: convertOrZero(courseData.stotal),
+            crash: convertOrZero(courseData.ctotal),
+            selfqa: convertOrZero(courseData.sqtotal),
+          };
         }
+
+        setFees(updatedFees);
       } catch (err) {
-        console.error('Error fetching data:', err);
+        console.error('Error fetching course or location data:', err);
       } finally {
         setLoading(false);
       }
@@ -100,7 +124,6 @@ const UpcomingBatch = () => {
       case 'MentoringModeFees': return <MentoringModeFees course={course} />;
       case 'SelfPlacedFees': return <SelfPlacedFees course={course} />;
       case 'SelfPacedQAFees': return <SelfPacedQAFees course={course} />;
-      // case 'CorporateFees': return <CorporateFees course={course} />;
       case 'CrashCourseFee': return <CrashCourseFee course={course} />;
       default: return <LiveOnlineFees course={course} />;
     }
@@ -111,86 +134,38 @@ const UpcomingBatch = () => {
       <div className='upcoming-batch'>
         <h2 className='qa-heading'>Upcoming Batches for {course.courseName}</h2>
         <div className='batch-type'>
-          <p
-            className={`batch-type-content ${activeComponent === 'LiveOnlineFees' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('LiveOnlineFees')}
-          >
-            Live training
-            <br />
-            <span className="fee-amount">
-            {fees.live ? `${currency} ${fees.live}` : 'Loading...'}
-          </span>
-          </p>
-
-          <p
-            className={`batch-type-content ${activeComponent === 'CrashCourseFee' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('CrashCourseFee')}
-          >
-            Crash Course (Fast Track)
-            <br />
-            <span className="fee-amount">
-            {fees.crash ? `${currency} ${fees.crash}` : 'Loading...'}
-          </span>
-          </p>
-
-          <p
-            className={`batch-type-content ${activeComponent === 'MentoringModeFees' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('MentoringModeFees')}
-          >
-            Mentoring mode
-            <br />
-            <span className="fee-amount">
-            {fees.mentoring ? `${currency} ${fees.mentoring}` : 'Loading...'}
-          </span>
-          </p>
-
-          <p
-            className={`batch-type-content ${activeComponent === 'SelfPacedQAFees' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('SelfPacedQAFees')}
-          >
-            Self-paced with Q&A
-            <br />
-            <span className="fee-amount">
-            {fees.selfqa ? `${currency} ${fees.selfqa}` : 'Loading...'}
-          </span>
-          </p>
-
-          <p
-            className={`batch-type-content ${activeComponent === 'SelfPlacedFees' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('SelfPlacedFees')}
-          >
-            Self-paced Learning
-            <br />
-            <span className="fee-amount">
-            {fees.self ? `${currency} ${fees.self}` : 'Loading...'}
-          </span>
-          </p>
-
-          {/* <p
-            className={`batch-type-content ${activeComponent === 'CorporateFees' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('CorporateFees')}
-          >
-            Corporate Training
-          </p> */}
+          {[
+            { key: 'LiveOnlineFees', label: 'Live training', fee: fees.live },
+            { key: 'CrashCourseFee', label: 'Crash Course (Fast Track)', fee: fees.crash },
+            { key: 'MentoringModeFees', label: 'Mentoring mode', fee: fees.mentoring },
+            { key: 'SelfPacedQAFees', label: 'Self-paced with Q&A', fee: fees.selfqa },
+            { key: 'SelfPlacedFees', label: 'Self-paced Learning', fee: fees.self }
+          ].map(({ key, label, fee }) => (
+            <p
+              key={key}
+              className={`batch-type-content ${activeComponent === key ? 'active' : ''}`}
+              onClick={() => setActiveComponent(key)}
+            >
+              {label}
+              <br />
+              <span className="fee-amount">{`${currency} ${fee}`}</span>
+            </p>
+          ))}
         </div>
 
         <div className='batch-content-background'>
           {renderComponent()}
-
-          {/* Optional: Show request batch on specific tabs */}
-          {/* {activeComponent === 'LiveOnlineFees' && ( */}
-            <p className='schedule'>
-              <img src={calendar} alt='calendar' />
-              Schedule your way?{' '}
-              <span
-                className='schedule-span'
-                onClick={handleRequestBatchClick}
-                style={{ cursor: 'pointer', color: 'blue' }}
-              >
-                Request Batch
-              </span>
-            </p>
-          {/* )} */}
+          <p className='schedule'>
+            <img src={calendar} alt='calendar' />
+            Schedule your way?{' '}
+            <span
+              className='schedule-span'
+              onClick={handleRequestBatchClick}
+              style={{ cursor: 'pointer', color: 'blue' }}
+            >
+              Request Batch
+            </span>
+          </p>
         </div>
       </div>
 
@@ -224,12 +199,10 @@ const UpcomingBatch = () => {
         </div>
       )}
 
+      {/* Batch Request Modal */}
       {isModalOpen && (
         <div className='modal-request'>
           <div className='modal-request-content'>
-            {/* <button className='request-close' onClick={handleCloseModal}>
-              ×
-            </button> */}
             <RequestBatch closeModal={handleCloseModal} />
           </div>
         </div>

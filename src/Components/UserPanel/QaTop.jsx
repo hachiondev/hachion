@@ -31,7 +31,6 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
       try {
         const geoResponse = await axios.get('https://ipinfo.io?token=9da91c409ab4b2');
         console.log('Geolocation Data:', geoResponse.data);
-  
         const currencyMap = {
          'IN': 'INR',
           'US': 'USD',
@@ -60,7 +59,7 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
         console.log('Detected Currency:', userCurrency);
         setCurrency(userCurrency);
   
-        // Fetch Exchange Rate
+    
         const cachedRates = localStorage.getItem('exchangeRates');
         if (cachedRates) {
           const rates = JSON.parse(cachedRates);
@@ -79,24 +78,20 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   
       } catch (error) {
         console.error('Error fetching geolocation or exchange rate data:', error);
-        setCurrency('USD'); // Fallback to USD if data fails
+        setCurrency('USD'); 
       }
     };
-  
+
     fetchGeolocationData();
   }, []);
 
-  // Show login modal
   const showLoginModal = () => {
     setIsLoginModalVisible(true);
   };
 
-  // Hide login modal
   const hideLoginModal = () => {
     setIsLoginModalVisible(false);
   };
-
-  // Fetch course & curriculum
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -121,7 +116,6 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             const fullPdfUrl = `https://api.hachion.co/curriculum/${matchedCurriculum.curriculum_pdf}`;
             setPdfUrl(fullPdfUrl);
           }
-
           setCourse(matchedCourse);
         } else {
           setError('Course not found.');
@@ -155,24 +149,20 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
   
       fetchCurriculum();
     }, [matchedCourseName]);
-
-  // Download Curriculum
   const downloadPdf = () => {
     const token = localStorage.getItem('authToken');
 
     if (!token) {
       showLoginModal();
-      return; // Prevent proceeding to download
+      return; 
     }
-  
-    if (!curriculum || curriculum.length === 0) {
+      if (!curriculum || curriculum.length === 0) {
       alert('No curriculum found for this course.');
       return;
     }
-
     const userData = JSON.parse(localStorage.getItem('loginuserData'));
     if (!userData) {
-      showLoginModal(); // Show login modal if user not logged in
+      showLoginModal(); 
       return;
     }
   
@@ -203,12 +193,10 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
           </div>
           <div className='skeleton skeleton-text'></div>
         </div>
-
         <div className='qa-right'>
           <div className='skeleton skeleton-img'></div>
         </div>
       </div>
-
       <div className='qa-button-container'>
         <div className='qa-button'>
           <div className='skeleton skeleton-button'></div>
@@ -219,10 +207,8 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     </div>
   );
 }
-
   if (error) return <div>Error: {error}</div>;
   if (!course) return <div>Course details not available</div>;
-
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -233,8 +219,36 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     return stars;
   };
 
-  const convertedTotalFee = ((course.stotal > 0 ? course.stotal : course.total) * exchangeRate).toFixed(2);
-  const convertedOriginalFee = (course.amount * exchangeRate).toFixed(2);
+let convertedTotalFee, convertedOriginalFee;
+
+if (currency === 'INR') {
+  
+  const inrFees = [
+    course.itotal,
+    course.ictotal,
+    course.imtotal,
+    course.isqtotal,
+    course.istotal
+  ].filter(fee => fee != null && fee > 0); // exclude null/undefined/0
+
+  convertedTotalFee = inrFees.length > 0 ? Math.min(...inrFees) : 0;
+  convertedOriginalFee = course.iamount ?? 0;
+
+} else {
+ 
+  const usdFees = [
+    course.total,
+    course.ctotal,
+    course.mtotal,
+    course.sqtotal,
+    course.stotal
+  ].filter(fee => fee != null && fee > 0); 
+
+  const convertedFees = usdFees.map(fee => fee * exchangeRate);
+  convertedTotalFee = convertedFees.length > 0 ? Math.min(...convertedFees).toFixed(2) : '0.00';
+  convertedOriginalFee = (course.amount != null ? course.amount * exchangeRate : 0).toFixed(2);
+}
+
 
   return (
     <>
@@ -244,16 +258,14 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             <div className='top-course-data-mob'>
               <h1 className='top-course-name'>{course?.courseName}</h1>
               <h1 className='top-course-name-mob'>{course?.courseName}</h1>
-              {/* <p className='mob-cert'>Certified-students: {course.totalEnrollment}</p> */}
+              
             </div>
             <div className='qa-automation-left'>
               <img src={`https://api.hachion.co/${course.courseImage}`} alt='qa-image' />
               <div className='qa-automation-middle'>
                 <p className='fee'>
               Fee:<span className='start-span'>Starts from </span> <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
-              {/* {course.total !== course.amount && (
-              <span className='strike-price'>{currency} {Math.round(convertedOriginalFee)}/-</span>
-                          )} */}
+             
             </p>
                 <h6 className='sidebar-course-review'>
                   Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
@@ -263,8 +275,9 @@ const QaTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
             <div
                 className='qa-content'
                 dangerouslySetInnerHTML={{
-                  __html: truncate(course.courseHighlight, 360, { ellipsis: '...' })
-                }}
+  __html: truncate(course.courseHighlight || '', 360, { ellipsis: '...' })
+}}
+
               />
             <p className='cert'>{course.totalEnrollment}+ Certified Students</p>
           </div>

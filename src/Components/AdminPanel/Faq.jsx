@@ -234,18 +234,30 @@ export default function Faq() {
 
       const handleDateFilter = () => {
         const filtered = curriculum.filter((item) => {
-          const curriculumDate = new Date(item.date); // Parse the date field
+          const curriculumDate = new Date(item.date); 
           const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
           const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       
-          return (
-            (!start || curriculumDate >= start) &&
-            (!end || curriculumDate <= end)
-          );
-        });
+      const matchSearch =
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.assessment_pdf.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.date.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const inRange =
+      (!start || curriculumDate >= start) &&
+      (!end || curriculumDate <= end);
+
+    return matchSearch && inRange;
+  });
       
-        setFilteredCurriculum(filtered);
+      setFilteredCurriculum(filtered);
       };
+    const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+     setSearchTerm('');
+    setFilteredCurriculum(curriculum);
+  };
       const handleSave = async () => {
         try {
           const formData = new FormData();
@@ -345,15 +357,36 @@ export default function Faq() {
           console.log("FAQ deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Faq:", error); 
-        } }; 
-        useEffect(() => {
-          const filtered = curriculum.filter(curriculum =>
-              (curriculum.course_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-              (curriculum.faq_title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-              (curriculum.description?.toLowerCase() || "").includes(searchTerm.toLowerCase())
-          );
-          setFilteredCurriculum(filtered);
-      }, [searchTerm, curriculum]);      
+        } };
+      useEffect(() => {
+        const filtered = allData.filter((item) => {
+          const curriculumDate = new Date(item.date);
+          const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+          const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      
+          const inDateRange =
+            (!start || curriculumDate >= start) &&
+            (!end || curriculumDate <= end);
+      
+          const matchesSearch =
+            (item.faq_title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (item.description || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (item.faq_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (item.date || "").toLowerCase().includes(searchTerm.toLowerCase());
+      
+          const matchesCategory =
+            !filterData.category_name || item.category_name === filterData.category_name;
+      
+          const matchesCourse =
+            !filterData.course_name || item.course_name === filterData.course_name;
+      
+          return inDateRange && matchesSearch && matchesCategory && matchesCourse;
+        });
+      
+        setFilteredCurriculum(filtered);
+        setCurrentPage(1);
+      }, [allData, searchTerm, startDate, endDate, filterData]);
+
       const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -586,7 +619,8 @@ const handleSubmit = async (e) => {
       '& .MuiIconButton-root':{color: '#00aeef'}
     }}
   />
-            <button className='filter' onClick={handleDateFilter} >Filter</button>
+      <button className="filter" onClick={handleDateFilter}>Filter</button>
+      <button className="filter" onClick={handleDateReset}>Reset</button>
            
           </div>
           <div className='entries'>
@@ -672,7 +706,7 @@ const handleSubmit = async (e) => {
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
             <StyledTableCell align="center">Description</StyledTableCell>
-            {/* <StyledTableCell align="center">faq pdf</StyledTableCell> */}
+            <StyledTableCell align="center">FAQ pdf</StyledTableCell>
             <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
@@ -695,7 +729,13 @@ const handleSubmit = async (e) => {
     dangerouslySetInnerHTML={{ __html: course.description || 'No topics available' }} 
   />
 </StyledTableCell>
-{/* <StyledTableCell align="center">{course.faq_pdf}</StyledTableCell> */}
+<StyledTableCell align="left" style={{ width: '100px' }}>
+        {course.faq_pdf ? (
+          course.faq_pdf.split('/').pop()
+        ) : (
+          'No PDF'
+        )}
+      </StyledTableCell>
       <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

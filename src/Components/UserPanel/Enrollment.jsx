@@ -54,7 +54,8 @@ const [courseData, setCourseData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [selectedValue, setSelectedValue] = useState('a');
 const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
-
+const [currency, setCurrency] = useState('USD');
+const [exchangeRate, setExchangeRate] = useState(1);
     const [selectedCountry, setSelectedCountry] = useState({
           code: '+1',
           flag: 'US',
@@ -95,6 +96,7 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   const discount = batchData.discount ?? 0;
 console.log("➡️ discount from localStorage:", discount);
 
+
     try {
       const response = await axios.post("https://api.hachion.co/capture-order", null, {
         params: {
@@ -124,6 +126,7 @@ console.log("➡️ discount from localStorage:", discount);
     }
   };
 
+  
     const countries = [
       { name: 'India', code: '+91', flag: 'IN' },
       { name: 'United States', code: '+1', flag: 'US' },
@@ -191,6 +194,66 @@ console.log("➡️ discount from localStorage:", discount);
     const closeMenu = () => {
       setAnchorEl(null);
     };
+
+
+useEffect(() => {
+  const detectCurrency = async () => {
+    try {
+        const res = await axios.get('https://ipinfo.io?token=9da91c409ab4b2');
+        const country = res.data.country || 'US';
+        const currencyMap = {
+          IN: 'INR', US: 'USD', GB: 'GBP', EU: 'EUR', AE: 'AED',
+          AU: 'AUD', CA: 'CAD', JP: 'JPY', CN: 'CNY', TH: 'THB',
+          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR', NL: 'EUR',RO: 'RON'
+        };
+
+        const userCurrency = currencyMap[country] || 'USD';
+        setCurrency(userCurrency);
+
+        if (userCurrency !== 'USD' && userCurrency !== 'INR') {
+          const rateRes = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+          const rate = rateRes.data.rates[userCurrency] || 1;
+          setExchangeRate(rate);
+        }
+      } catch (err) {
+        console.warn('Geolocation or exchange rate fetch failed. Using USD.');
+        setCurrency('USD');
+        setExchangeRate(1);
+      }
+    };
+
+  detectCurrency();
+}, []);
+
+const getField = (baseField) => {
+  const prefixMap = {
+    mentoring: 'm',
+    self: 's',
+    selfqa: 'sq',
+    crash: 'c',
+    live: '',
+  };
+  const prefix = prefixMap[modeType || 'live'] || '';
+  const keyINR = `i${prefix}${baseField}`;
+  const keyUSD = `${prefix}${baseField}`;
+
+  
+  if (baseField === 'discount') {
+    if (currency === 'INR') {
+      return courseData?.[keyINR] ?? 0;
+    } else {
+      return courseData?.[keyUSD] ?? 0;
+    }
+  }
+  if (currency === 'INR') {
+    return courseData?.[keyINR] ?? 0;
+  } else if (currency === 'USD') {
+    return courseData?.[keyUSD] ?? 0;
+  } else {
+    const usdValue = courseData?.[keyUSD] ?? 0;
+    return (usdValue * exchangeRate).toFixed(2);
+  }
+};
 
     useEffect(() => {
   const fetchCourseData = async () => {
@@ -528,7 +591,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
               <div className='personal-details-header'>
                   <p>3. Order summary</p>
                   </div>
-                {/* <TotalOrder/> */}
                 {loading ? (
   <div>Loading...</div>
 ) : courseData ? (
@@ -540,90 +602,40 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
           <TableCell align="right" className="table-cell-right">{courseData.courseName}</TableCell>
         </TableRow>
       </TableHead>
-      {/* <TableBody>
-        <TableRow>
-          <TableCell className="table-cell-left">Course Fee</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.amount != null ? courseData.amount : 0}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="table-cell-left">% Discount</TableCell>
-          <TableCell align="right" className="table-cell-right">{courseData.discount !=null ? courseData.discount : 0}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="table-cell-left">Total</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.total !=null ? courseData.total : 0}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="table-cell-left">Tax</TableCell>
-          <TableCell align="right" className="table-cell-right"> {courseData.tax !=null ? courseData.tax : 0}</TableCell>
-        </TableRow>
-        <TableRow className="net-amount">
-          <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-            <TableCell align="right" className="net-amount-right">  USD {Math.round(courseData.total || 0)}  </TableCell>
-        </TableRow>
-      </TableBody> */}
       <TableBody>
   <TableRow>
-    <TableCell className="table-cell-left">Course Fee</TableCell>
-    <TableCell align="right" className="table-cell-right">
-      {
-        modeType === 'mentoring' ? courseData.mamount :
-        modeType === 'self' ? courseData.samount :
-        modeType === 'selfqa' ? courseData.sqamount :
-        modeType === 'crash' ? courseData.camount :
-        courseData.amount || 0
-      }
-    </TableCell>
-  </TableRow>
+  <TableCell className="table-cell-left">Course Fee</TableCell>
+  <TableCell align="right" className="table-cell-right">
+     {Math.round(getField('amount'))}
+  </TableCell>
+</TableRow>
 
-  <TableRow>
-    <TableCell className="table-cell-left">% Discount</TableCell>
-    <TableCell align="right" className="table-cell-right">
-      {
-        modeType === 'mentoring' ? courseData.mdiscount :
-        modeType === 'self' ? courseData.sdiscount :
-        modeType === 'selfqa' ? courseData.sqdiscount :
-        modeType === 'crash' ? courseData.cdiscount :
-        courseData.discount || 0
-      }
-    </TableCell>
-  </TableRow>
+<TableRow>
+  <TableCell className="table-cell-left">% Discount</TableCell>
+  <TableCell align="right" className="table-cell-right">
+    {getField('discount')}
+  </TableCell>
+</TableRow>
 
-  <TableRow>
-    <TableCell className="table-cell-left">Total</TableCell>
-    <TableCell align="right" className="table-cell-right">
-      {
-        modeType === 'mentoring' ? courseData.mtotal :
-        modeType === 'self' ? courseData.stotal :
-        modeType === 'selfqa' ? courseData.sqtotal :
-        modeType === 'crash' ? courseData.ctotal :
-        courseData.total || 0
-      }
-    </TableCell>
-  </TableRow>
+<TableRow>
+  <TableCell className="table-cell-left">Total</TableCell>
+  <TableCell align="right" className="table-cell-right">
+     {Math.round(getField('total'))}
+  </TableCell>
+</TableRow>
 
-  <TableRow>
-    <TableCell className="table-cell-left">Tax</TableCell>
-    <TableCell align="right" className="table-cell-right">
-      {/* If you plan to include specific tax fields like mtax/stax in future, update here */}
-      {courseData.tax || 0}
-    </TableCell>
-  </TableRow>
-
+<TableRow>
+  <TableCell className="table-cell-left">Tax</TableCell>
+  <TableCell align="right" className="table-cell-right">
+    {Math.floor(getField('tax'))}
+  </TableCell>
+</TableRow>
   <TableRow className="net-amount">
-    <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-    <TableCell align="right" className="net-amount-right">
-      USD {
-        Math.round(
-          modeType === 'mentoring' ? courseData.mtotal :
-          modeType === 'self' ? courseData.stotal :
-          modeType === 'selfqa' ? courseData.sqtotal :
-          modeType === 'crash' ? courseData.ctotal :
-          courseData.total || 0
-        )
-      }
-    </TableCell>
-  </TableRow>
+  <TableCell className="net-amount-left">Net Payable amount:</TableCell>
+  <TableCell align="right" className="net-amount-right">
+    {currency} {Math.round(getField('total'))}
+  </TableCell>
+</TableRow>
 </TableBody>
 
     </Table>

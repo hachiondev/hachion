@@ -38,59 +38,84 @@ export default function EnrollmentTable() {
 
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
 
-  console.log("✅ courseName from URL:", courseName);
-  console.log("✅ modeType from location.state:", modeType);
-  console.log("✅ Full location.state object:", location.state);
+  
 
   useEffect(() => {
-  const fetchCourseData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('https://api.hachion.co/courses/all');
-      console.log("📦 All courses from backend:", response.data);
-
-      const matchedCourse = response.data.find((c) => {
-        const courseSlug = c.courseName?.toLowerCase().replace(/\s+/g, '-');
-        const paramSlug = courseName.toLowerCase().replace(/\s+/g, '-');
-        const match = courseSlug === paramSlug;
-
-        console.log(`🔍 Trying match:
-  - courseName: "${c.courseName}" → slug: "${courseSlug}"
-  - Match with paramSlug: "${paramSlug}"
-  - Match Result: ${match}
-  `);
-
-        return match;
-      });
-
-      if (matchedCourse) {
-        console.log("✅ Matched Course:", matchedCourse);
-        setCourseData(matchedCourse);
-      } else {
-        console.warn("❌ No course matched the courseName.");
+    const fetchCourseData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://api.hachion.co/courses/all');
+        const matchedCourse = response.data.find(
+          (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName?.toLowerCase().replace(/\s+/g, '-')
+        );
+        setCourseData(matchedCourse || null);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('🔥 Error fetching course data:', error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchCourseData();
+  }, [courseName]);
+
+  useEffect(() => {
+    const fetchCurrency = async () => {
+      try {
+        const res = await axios.get('https://ipinfo.io?token=9da91c409ab4b2');
+        const country = res.data.country || 'US';
+
+        const currencyMap = {
+          IN: 'INR', US: 'USD', GB: 'GBP', EU: 'EUR', AE: 'AED',
+          AU: 'AUD', CA: 'CAD', JP: 'JPY', CN: 'CNY', TH: 'THB',
+          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR', NL: 'EUR',RO: 'RON'
+        };
+
+        const userCurrency = currencyMap[country] || 'USD';
+        setCurrency(userCurrency);
+
+        if (userCurrency !== 'USD' && userCurrency !== 'INR') {
+          const rateRes = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+          const rate = rateRes.data.rates[userCurrency] || 1;
+          setExchangeRate(rate);
+        }
+      } catch (err) {
+        console.warn('Geolocation or exchange rate fetch failed. Using USD.');
+        setCurrency('USD');
+        setExchangeRate(1);
+      }
+    };
+
+    fetchCurrency();
+  }, []);
+
+
+  const getField = (baseField) => {
+    const prefixMap = {
+      mentoring: 'm',
+      self: 's',
+      selfqa: 'sq',
+      crash: 'c',
+      live: '',
+    };
+    const prefix = prefixMap[modeType] || '';
+    const key = currency === 'INR' ? `i${prefix}${baseField}` : `${prefix}${baseField}`;
+    return courseData?.[key] ?? 0;
   };
-
-  fetchCourseData();
-}, [courseName]);
-
 
   if (loading) return <div>Loading...</div>;
   if (!courseData) return <div>No matching course found.</div>;
 
-const modeTypeLabels = {
-  live: "Live Training",
-  crash: "Crash Course (Fast Track)",
-  mentoring: "Mentoring Mode",
-  selfqa: "Self-paced with Q&A",
-  self: "Self-paced Learning",
-};
+  const modeTypeLabels = {
+    live: "Live Training",
+    crash: "Crash Course (Fast Track)",
+    mentoring: "Mentoring Mode",
+    selfqa: "Self-paced with Q&A",
+    self: "Self-paced Learning",
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -111,43 +136,10 @@ const modeTypeLabels = {
               {courseData.courseName}
             </StyledTableCell>
             <StyledTableCell align="center">{courseData.batch || "N/A"}</StyledTableCell>
-   <StyledTableCell align="center">{modeTypeLabels[modeType] || 'N/A'}</StyledTableCell>
-            {/* Fee */}
-            <StyledTableCell align="center">
-              USD {
-                parseFloat(
-                  modeType === 'mentoring' ? courseData.mamount :
-                  modeType === 'self' ? courseData.samount :
-                  modeType === 'selfqa' ? courseData.sqamount :
-                  modeType === 'crash' ? courseData.camount :
-                  courseData.amount || 0
-                ).toFixed(2)
-              }
-            </StyledTableCell>
-
-            {/* Discount */}
-            <StyledTableCell align="center">
-              {
-                modeType === 'mentoring' ? courseData.mdiscount :
-                modeType === 'self' ? courseData.sdiscount :
-                modeType === 'selfqa' ? courseData.sqdiscount :
-                modeType === 'crash' ? courseData.cdiscount :
-                courseData.discount || 0
-              }
-            </StyledTableCell>
-
-            {/* Total */}
-            <StyledTableCell align="center">
-              USD {
-                parseFloat(
-                  modeType === 'mentoring' ? courseData.mtotal :
-                  modeType === 'self' ? courseData.stotal :
-                  modeType === 'selfqa' ? courseData.sqtotal :
-                  modeType === 'crash' ? courseData.ctotal :
-                  courseData.total || 0
-                ).toFixed(2)
-              }
-            </StyledTableCell>
+            <StyledTableCell align="center">{modeTypeLabels[modeType] || 'N/A'}</StyledTableCell>
+            <StyledTableCell align="center">{Math.round(getField('amount') * exchangeRate)}</StyledTableCell>
+            <StyledTableCell align="center">{getField('discount')}</StyledTableCell>
+            <StyledTableCell align="center">{currency} {Math.round(getField('total') * exchangeRate)}</StyledTableCell>
           </StyledTableRow>
         </TableBody>
       </Table>

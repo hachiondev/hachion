@@ -229,14 +229,27 @@ const [filterData, setFilterData] = useState({
           const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
           const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       
-          return (
-            (!start || curriculumDate >= start) &&
-            (!end || curriculumDate <= end)
-          );
-        });
+      const matchSearch =
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.assessment_pdf.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.date.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const inRange =
+      (!start || curriculumDate >= start) &&
+      (!end || curriculumDate <= end);
+
+    return matchSearch && inRange;
+  });
       
         setFilteredCurriculum(filtered);
       };
+  
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+     setSearchTerm('');
+    setFilteredCurriculum(curriculum);
+  };
       
       const handleSave = async () => {
   try {
@@ -317,14 +330,36 @@ const [filterData, setFilterData] = useState({
         } catch (error) { 
           console.error("Error deleting Curriculum:", error); 
         } }; 
-        useEffect(() => {
-          const filtered = curriculum.filter(curriculum =>
-              (curriculum.course_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-              (curriculum.title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-              (curriculum.topic?.toLowerCase() || "").includes(searchTerm.toLowerCase())
-          );
-          setFilteredCurriculum(filtered);
-      }, [searchTerm, curriculum]);      
+    useEffect(() => {
+  const filtered = allData.filter((item) => {
+    const curriculumDate = new Date(item.date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    const inDateRange =
+      (!start || curriculumDate >= start) &&
+      (!end || curriculumDate <= end);
+
+    const matchesSearch =
+      (item.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.topic || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.link || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.assessment_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.curriculum_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.date || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      !filterData.category_name || item.category_name === filterData.category_name;
+
+    const matchesCourse =
+      !filterData.course_name || item.course_name === filterData.course_name;
+
+    return inDateRange && matchesSearch && matchesCategory && matchesCourse;
+  });
+
+  setFilteredCurriculum(filtered);
+  setCurrentPage(1);
+}, [allData, searchTerm, startDate, endDate, filterData]);
       const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -635,9 +670,9 @@ const [filterData, setFilterData] = useState({
       '& .MuiIconButton-root':{color: '#00aeef'}
     }}
   />
-            <button className='filter' onClick={handleDateFilter} >Filter</button>
-           
-          </div>
+            <button className="filter" onClick={handleDateFilter}>Filter</button>
+            <button className="filter" onClick={handleDateReset}>Reset</button>
+              </div>
           <div className='entries'>
             <div className='entries-left'>
             <p style={{ marginBottom: '0' }}>Show</p>

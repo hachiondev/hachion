@@ -13,6 +13,7 @@ import { FaCheckCircle } from 'react-icons/fa';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
+import dayjs from 'dayjs';
 import './Admin.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -92,7 +93,7 @@ export default function StudentReview() {
         if (!reviewToUpdate) return;
 
         // Create a new object with type changed to true
-        const updatedReview = { ...reviewToUpdate, type: true };
+        const updatedReview = { ...reviewToUpdate, type: true, status: 'approved' };
 
         // Create FormData for API request (since the API expects multipart/form-data)
         const formData = new FormData();
@@ -127,14 +128,31 @@ export default function StudentReview() {
 //     setFilteredReview(updatedReviews);
 // };
 
-const handleReject = (review_id) => {
-    const updatedReviews = review.map((item) =>
-      item.review_id === review_id 
-        ? { ...item, status: 'rejected' }  // No change to type in rejection
-        : item
-    );
-    setReview(updatedReviews);
-    setFilteredReview(updatedReviews.filter((item) => item.review_id !== review_id));
+const handleReject = async (review_id) => {
+  try {
+    const reviewToUpdate = review.find((item) => item.review_id === review_id);
+    if (!reviewToUpdate) return;
+
+    const updatedReview = { ...reviewToUpdate, status: 'rejected' };
+
+    const formData = new FormData();
+    formData.append("review", JSON.stringify(updatedReview));
+
+    const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+
+    if (response.status === 200) {
+      const updatedReviews = review.map((item) =>
+        item.review_id === review_id ? updatedReview : item
+      );
+      setReview(updatedReviews);
+      setFilteredReview(updatedReviews);
+      console.log("Review rejected and updated in backend successfully!");
+    }
+  } catch (error) {
+    console.error("Error rejecting review:", error.message);
+  }
 };
   return (
     <>
@@ -181,6 +199,7 @@ const handleReject = (review_id) => {
               <StyledTableCell align="center">Source</StyledTableCell>
               <StyledTableCell align="center">Technology</StyledTableCell>
               <StyledTableCell align="center">Comment</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
               <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -199,6 +218,9 @@ const handleReject = (review_id) => {
                   <StyledTableCell align="left" style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>
                     {review.review}
                   </StyledTableCell>
+                  <StyledTableCell align="left">{review.date
+                                                 ? dayjs(review.date).format("MM-DD-YYYY")
+                                                 : "N/A"}</StyledTableCell>
                   <StyledTableCell align="center">
                   <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   {review.status === 'approved' ? (

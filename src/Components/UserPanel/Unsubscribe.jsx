@@ -1,22 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
-import { AiFillCaretDown } from "react-icons/ai";
-import { Menu, MenuItem, Button } from "@mui/material";
-import Flag from "react-world-flags";
-import contactUsBanner from "../../Assets/contactus.png";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import UsaFlag from "../../Assets/usflag.jpg";
 import "./unsubscribe.css";
-import indiaFlag from "../../Assets/india.jpg";
-import dubaiFlag from "../../Assets/dubai.jpg";
-import whatsappIcon from "../../Assets/logos_whatsapp-icon.png";
-import mailIcon from "../../Assets/uiw_mail.png";
-import facebookIcon from "../../Assets/facebook_symbol.svg.png";
-import twitter from "../../Assets/twitter.png";
-import linkedin from "../../Assets/linkedin.png";
-import instagram from "../../Assets/instagram.png";
-import quora from "../../Assets/Component 141.png";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +10,7 @@ import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
 import success from "../../Assets/success.gif";
 import axios from "axios";
+import { GoHeartFill } from "react-icons/go";
 
 const initialValues = {
   name: "",
@@ -52,6 +38,7 @@ const Unsubscribe = () => {
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
+const [selectedReasons, setSelectedReasons] = useState([]);
 
   const countries = [
     { name: "India", code: "+91", flag: "IN" },
@@ -109,8 +96,18 @@ const Unsubscribe = () => {
   };
 
   const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
-  };
+  const label = e.target.nextSibling.textContent.trim(); // Gets the checkbox label
+  const isCurrentlyChecked = e.target.checked;
+
+  setSelectedReasons((prev) => {
+    const updated = isCurrentlyChecked
+      ? [...prev, label]
+      : prev.filter((reason) => reason !== label);
+    setIsChecked(updated.length > 0);
+    return updated;
+  });
+};
+
 
 const matchedCountry = countries.find((c) =>
   mobileNumber.startsWith(c.code)
@@ -131,13 +128,9 @@ const matchedCountry = countries.find((c) =>
 
   
   values.email = userEmail;
-  
-
-  
+ 
   const fetchUserProfile = async () => {
     try {
-      
-
       const response = await fetch(
         `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
       );
@@ -145,30 +138,21 @@ const matchedCountry = countries.find((c) =>
       if (!response.ok) {
         throw new Error("❌ Failed to fetch profile data");
       }
-
       const data = await response.json();
-      
-
       if (data.name) {
         values.name = data.name;
-        
       } else {
         console.warn("⚠️ Name not found in response.");
       }
-
-      
+     
       if (data.mobile) {
         setMobileNumber(data.mobile);
-        
       } else {
         console.warn("⚠️ Mobile number not found.");
       }
-
       if (data.country) {
         values.country = data.country;
-        
       }
-
     } catch (error) {
       console.error("❌ Error fetching profile:", error);
     }
@@ -196,6 +180,8 @@ const matchedCountry = countries.find((c) =>
     userName: values.name,
     email: values.email,
     mobile: mobileNumber,
+    reason: selectedReasons.join(", "),
+    comments: values.comment,
     country: matchedCountry ? matchedCountry.name : "United States"
   };
   try {
@@ -206,7 +192,6 @@ const matchedCountry = countries.find((c) =>
       },
       body: JSON.stringify(requestBody)
     });
-
     if (response.ok) {
       const data = await response.json();
       
@@ -232,33 +217,25 @@ const matchedCountry = countries.find((c) =>
     setError("Unable to connect to the server.");
   }
 };
-
-
   const handlePrivacy = () => {
     navigate("/privacy");
   };
-
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
     useFormik({
       initialValues: initialValues,
       validationSchema: LoginSchema,
-      onSubmit: (values) => {
-        
+      onSubmit: (values) => { 
       },
     });
   const [whatsappNumber, setWhatsappNumber] = useState("+1 (732) 485-2499");
   const [whatsappLink, setWhatsappLink] = useState("https://wa.me/17324852499");
-
   useEffect(() => {
     const detectUserCountry = async () => {
       try {
         const res = await fetch("https://ipwho.is/");
         if (!res.ok) throw new Error("Failed to fetch location data");
-
         const data = await res.json();
-        
-
-        if (data.country_code === "IN") {
+                if (data.country_code === "IN") {
           setWhatsappNumber("+91-949-032-3388");
           setWhatsappLink("https://wa.me/919490323388");
         } else {
@@ -279,6 +256,29 @@ const matchedCountry = countries.find((c) =>
       <NavbarTop />
       <div className="unsubscribe-container">
         <div className="unsub-us-bottom-div">
+          <div>
+      <div className="unsubscribe-info">
+            <h2 className="unsubscribe-heading">We're sorry to see you go!</h2>
+            <p className="unsubscribe-message">
+              You've successfully landed on the Hachion Unsubscribe page.
+              <br />
+              If you no longer wish to receive communications from us, please fill out the form below.
+            </p>
+
+            <p className="unsubscribe-feedback-text">
+              Your feedback is valuable. If there's something we could improve,
+              let us know in the comments.
+            </p>
+          </div>
+          <div className="unsubscribe-info">
+            <h2 className="unsubscribe-heading">Need help?</h2>
+            <p className="unsubscribe-message">
+              If you unsubscribed by mistake or have any questions, feel free to Contact Us.
+              <br />
+              Thanks for being part of the Hachion community <span style={{color: '#00AEEF'}}>< GoHeartFill /></span>
+            </p>
+          </div>
+          </div>
           <div className="unsub-us-right">
             <div className="unsub-us-right-header">
               <p>Unsubscribe</p>
@@ -327,23 +327,6 @@ const matchedCountry = countries.find((c) =>
               </div>
               <label className="form-label">Mobile Number</label>
                 <div className="input-wrapper" style={{ position: 'relative' }}>
-                  {/* <button
-                        variant="text"
-                        onClick={openMenu}
-                        className='mobile-button'
-                      >
-                        <Flag code={selectedCountry.flag} className="country-flag me-1" />
-                        <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
-                        <AiFillCaretDown />
-                      </button>
-                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                        {countries.map((country) => (
-                          <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-                            <Flag code={country.flag} className="country-flag me-2" />
-                            {country.name} ({country.code})
-                          </MenuItem>
-                        ))}
-                      </Menu> */}
                   <input
                     type="tel"
                     ref={mobileInputRef}

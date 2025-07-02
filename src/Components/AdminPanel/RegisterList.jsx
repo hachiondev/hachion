@@ -75,7 +75,7 @@ export default function RegisterList() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [successMessage, setSuccessMessage] = useState("");
-        const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
         
     const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [studentData, setStudentData] = useState({
@@ -162,18 +162,39 @@ const [currentPage, setCurrentPage] = useState(1);
   
       const handleDateFilter = () => {
         const filtered = registerStudent.filter((item) => {
-          const Date = new Date(item.date); // Parse the date field
+          const regDate = new Date(item.date);
           const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
           const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      
-          return (
-            (!start || Date >= start) &&
-            (!end || Date <= end)
-          );
-        });
-      
-        setFilteredStudent(filtered);
+
+      const matchSearch =
+      (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    const inRange =
+      (!start || regDate >= start) &&
+      (!end || regDate <= end)
+
+    return matchSearch && inRange;
+  });
+      setFilteredStudent(filtered);
+      setCurrentPage(1);
       };
+    const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+     setSearchTerm('');
+    setFilteredStudent(registerStudent);
+    setCurrentPage(1);
+  };
       const handleSave = async () => {
         try {
             const response = await axios.put(
@@ -467,7 +488,7 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
    }}
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
-           
+           <button className="filter" onClick={handleDateReset}>Reset</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>
@@ -547,8 +568,8 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
         <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
         <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
         <StyledTableCell align="center">{row.source}</StyledTableCell>
-        <StyledTableCell align="center">{row.remarks}</StyledTableCell>
-        <StyledTableCell align="center">{row.comments}</StyledTableCell> 
+        <StyledTableCell align="left">{row.remarks}</StyledTableCell>
+        <StyledTableCell align="left">{row.comments}</StyledTableCell> 
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

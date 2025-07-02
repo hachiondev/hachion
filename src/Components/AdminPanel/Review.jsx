@@ -143,6 +143,61 @@ export default function Review() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+const handleDateFilter = () => {
+  const filtered = review.filter((item) => {
+    const itemDate = new Date(item.date || item.schedule_date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    const inDateRange =
+      (!start || itemDate >= start) &&
+      (!end || itemDate <= end);
+
+    const matchesSearch =
+      (item.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.social_id || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.review || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    return inDateRange && matchesSearch;
+  });
+
+  setFilteredReview(filtered);
+  setCurrentPage(1);
+};
+const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setSearchTerm('');
+  setFilteredReview(review);
+  setCurrentPage(1);
+};
+useEffect(() => {
+  const filtered = review.filter((item) => {
+    const rawDate = item.date || item.schedule_date;
+    const itemDate = rawDate ? new Date(rawDate) : null;
+
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    const inDateRange =
+      (!start || (itemDate && itemDate >= start)) &&
+      (!end || (itemDate && itemDate <= end));
+
+    const matchesSearch =
+      (item.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.student_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.social_id || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.category_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.review || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    return inDateRange && matchesSearch;
+  });
+
+  setFilteredReview(filtered);
+  setCurrentPage(1);
+}, [searchTerm, startDate, endDate, review]);
 
          const handleReset=()=>{
             setReviewData({
@@ -172,7 +227,7 @@ export default function Review() {
       const fetchCourseCategory = async () => {
         try {
           const response = await axios.get("https://api.hachion.co/courses/all");
-          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+          setCourseCategory(response.data);
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -260,27 +315,12 @@ export default function Review() {
         } catch (error) { 
           console.error("Error deleting Review:", error); 
         } }; 
-        useEffect(() => {
-          const filtered = review.filter(review =>
-              review.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              review.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              review.student_name.toLowerCase().includes(searchTerm.toLowerCase()) 
-            
-          );
-          setFilteredReview(filtered);
-      }, [searchTerm,filteredReview]);
         
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
         const handleClickOpen = (row) => {
-          
             setSelectedRow(row); 
             setEditedData(row)
             console.log("ROW",editedData);// Set the selected row data
             setOpen(true); // Open the modal
-        
           };
     
     const handleChange = (e) => {
@@ -521,8 +561,8 @@ useEffect(() => {
       '& .MuiIconButton-root':{color: '#00aeef'}
    }}
   />
-            <button className='filter' >Filter</button>
-           
+           <button className="filter" onClick={handleDateFilter}>Filter</button>
+           <button className="filter" onClick={handleDateReset}>Reset</button>           
           </div>
           <div className='entries'>
             <div className='entries-left'>
@@ -541,7 +581,7 @@ useEffect(() => {
 </div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                <input className="search-input" type="search" placeholder="Enter Name, Technology or Keywords" aria-label="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
@@ -568,6 +608,7 @@ useEffect(() => {
             <StyledTableCell align="center">Source</StyledTableCell>
             <StyledTableCell align="center">Technology</StyledTableCell>
             <StyledTableCell align="center">Comment </StyledTableCell>
+            <StyledTableCell align="center">Date </StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -587,7 +628,9 @@ useEffect(() => {
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
       <StyledTableCell align="left"
       style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{curr.review}</StyledTableCell>
-     
+     <StyledTableCell align="center">{curr.date
+                               ? dayjs(curr.date).format("MM-DD-YYYY")
+                               : "N/A"}</StyledTableCell>
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />

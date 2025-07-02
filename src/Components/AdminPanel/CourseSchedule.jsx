@@ -78,6 +78,7 @@ export default function CourseSchedule() {
     meeting: "",
   });
   const [selectedRow, setSelectedRow] = useState({
+    batchId: "",
     schedule_category_name: "",
     schedule_course_name: "",
     trainer_name: "",
@@ -92,6 +93,7 @@ export default function CourseSchedule() {
   const currentDate = new Date().toISOString().split("T")[0];
   const [courseData, setCourseData] = useState({
     course_schedule_id: "",
+    batchId: "",
     schedule_category_name: "",
     schedule_course_name: "",
     trainer_name: "",
@@ -115,6 +117,7 @@ export default function CourseSchedule() {
   const [rows, setRows] = useState([
     {
       id: "",
+      batchId: "",
     schedule_date: null,
     schedule_frequency: "",
     schedule_week: "",
@@ -131,7 +134,7 @@ export default function CourseSchedule() {
     setRows(updatedRows);
   };
   const addRow = () => {
-    setRows([...rows, { id: Date.now(),  schedule_date: "",  schedule_frequency: "", schedule_week: '',
+    setRows([...rows, { id: Date.now(), batchId: "", schedule_date: "",  schedule_frequency: "", schedule_week: '',
       schedule_time:"",schedule_duration:"",schedule_mode:"",pattern:"",meeting:""
      }]);
   };
@@ -327,6 +330,7 @@ const handleSubmit = async () => {
 
   const uploadPromises = rows.map(async (row) => {
     const formattedCourseData = {
+      batchId: courseData.batchId,
       course_schedule_id: courseData.course_schedule_id,
       schedule_category_name: courseData.schedule_category_name,
       schedule_course_name: courseData.schedule_course_name,
@@ -393,15 +397,38 @@ const isFormValid = () => {
 
   return true;
 };
+
   const handleDateFilter = () => {
-    const filtered = courses.filter((course) => {
-      const courseDate = new Date(course.schedule_date);
-      return (
-        (!startDate || courseDate >= new Date(startDate)) &&
-        (!endDate || courseDate <= new Date(endDate))
-      );
-    });
-    setFilteredCourses(filtered);
+  const filtered = courses.filter((item) => {
+    const courseDate = new Date(item.schedule_date);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+    const matchSearch =
+      (item.schedule_course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.schedule_category_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.schedule_mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.meeting || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.schedule_frequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.schedule_date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.batchId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.trainer_name || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    const inRange =
+      (!start || courseDate >= start) &&
+      (!end || courseDate <= end);
+
+    return matchSearch && inRange;
+  });
+
+  setFilteredCourses(filtered);
+};
+
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+     setSearchTerm('');
+    setFilteredCourses(courses);
   };
   useEffect(() => {
     const fetchCourse = async () => {
@@ -417,18 +444,18 @@ const isFormValid = () => {
     fetchCourse();
   }, []);
   useEffect(() => {
-    const filtered = courses.filter(
-      (course) =>
-        course.schedule_course_name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        course.schedule_category_name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        course.trainer_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCourses(filtered);
-  }, [searchTerm, courses]);
+  const filtered = courses.filter((course) =>
+    (course.schedule_course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.schedule_category_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.schedule_mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.meeting || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.schedule_frequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.schedule_date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.batchId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.trainer_name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setFilteredCourses(filtered);
+}, [searchTerm, courses]);
   const handleDeleteConfirmation = (course_schedule_id) => {
     if (window.confirm("Are you sure you want to delete this course?")) {
       handleDelete(course_schedule_id);
@@ -920,7 +947,7 @@ const response = await axios.put(
                   Start Date
                   <DatePicker
                     value={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={setStartDate}
                     isClearable
                     sx={{
                       "& .MuiIconButton-root": { color: "#00aeef" },
@@ -929,15 +956,14 @@ const response = await axios.put(
                   End Date
                   <DatePicker
                     value={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    onChange={setEndDate}
                     isClearable
                     sx={{
                       "& .MuiIconButton-root": { color: "#00aeef" },
                     }}
                   />
-                  <button className="filter" onClick={handleDateFilter}>
-                    Filter
-                  </button>
+                 <button className="filter" onClick={handleDateFilter}>Filter</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
                 </div>
                 <div className="entries">
                   <div className="entries-left">

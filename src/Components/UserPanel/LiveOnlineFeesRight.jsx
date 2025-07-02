@@ -37,8 +37,7 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   const [discountPercentage, setDiscountPercentage] = useState(0);
 
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' or 'error'
-
+  const [messageType, setMessageType] = useState(''); 
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [resendExceeded, setResendExceeded] = useState(false);
   const [showResend, setShowResend] = useState(false);
@@ -76,17 +75,20 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
   useEffect(() => {
     const fetchGeolocationAndCourseData = async () => {
       try {
-        const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
-        const countryCode = geoResponse.data.country || 'US';
-        const userCurrency = countryToCurrencyMap[countryCode] || 'USD';
-        setCurrency(userCurrency);
+       
+const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+const countryCode = geoResponse.data.country || 'US';
+const userCurrency = countryToCurrencyMap[countryCode] || 'USD';
+setCurrency(userCurrency);
 
-        localStorage.removeItem('exchangeRates');
-        const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-        const rates = exchangeResponse.data.rates;
-        localStorage.setItem('exchangeRates', JSON.stringify(rates));
-        const rate = rates[userCurrency] || 1;
-        setExchangeRate(rate);
+let rate = 1;
+if (userCurrency !== 'INR' && userCurrency !== 'USD') {
+  const exchangeResponse = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+  const rates = exchangeResponse.data.rates;
+  rate = rates[userCurrency] || 1;
+  localStorage.setItem('exchangeRates', JSON.stringify(rates));
+}
+setExchangeRate(rate);
 
         const response = await axios.get('https://api.hachion.co/courses/all');
         const courses = response.data;
@@ -95,43 +97,47 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         );
 
         if (matchedCourse) {
-          let selectedFeeAmount = 0;
-          let selectedOriginalAmount = 0;
+  let selectedFeeAmount = 0;
+  let selectedOriginalAmount = 0;
 
-          if (modeType === 'live') {
-            selectedFeeAmount = parseFloat(matchedCourse.total) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.amount) || 0;
-          } else if (modeType === 'crash') {
-            selectedFeeAmount = parseFloat(matchedCourse.ctotal) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.camount) || 0;
-          }else if (modeType === 'mentoring') {
-            selectedFeeAmount = parseFloat(matchedCourse.mtotal) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.mamount) || 0;
-          } else if (modeType === 'self') {
-            selectedFeeAmount = parseFloat(matchedCourse.stotal) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.samount) || 0;
-          } else if (modeType === 'selfqa') {
-            selectedFeeAmount = parseFloat(matchedCourse.sqtotal) || 0;
-            selectedOriginalAmount = parseFloat(matchedCourse.sqamount) || 0;
-          }
+  const isINR = userCurrency === 'INR';
+  const isUSD = userCurrency === 'USD';
 
-          setFee(selectedFeeAmount * rate || 'Not Available');
+  if (modeType === 'live') {
+    selectedFeeAmount = parseFloat(isINR ? matchedCourse.itotal : matchedCourse.total) || 0;
+    selectedOriginalAmount = parseFloat(isINR ? matchedCourse.iamount : matchedCourse.amount) || 0;
+  } else if (modeType === 'crash') {
+    selectedFeeAmount = parseFloat(isINR ? matchedCourse.ictotal : matchedCourse.ctotal) || 0;
+    selectedOriginalAmount = parseFloat(isINR ? matchedCourse.icamount : matchedCourse.camount) || 0;
+  } else if (modeType === 'mentoring') {
+    selectedFeeAmount = parseFloat(isINR ? matchedCourse.imtotal : matchedCourse.mtotal) || 0;
+    selectedOriginalAmount = parseFloat(isINR ? matchedCourse.imamount : matchedCourse.mamount) || 0;
+  } else if (modeType === 'self') {
+    selectedFeeAmount = parseFloat(isINR ? matchedCourse.istotal : matchedCourse.stotal) || 0;
+    selectedOriginalAmount = parseFloat(isINR ? matchedCourse.isamount : matchedCourse.samount) || 0;
+  } else if (modeType === 'selfqa') {
+    selectedFeeAmount = parseFloat(isINR ? matchedCourse.isqtotal : matchedCourse.sqtotal) || 0;
+    selectedOriginalAmount = parseFloat(isINR ? matchedCourse.isqamount : matchedCourse.sqamount) || 0;
+  }
+  const finalFee = (isINR || isUSD)
+    ? selectedFeeAmount
+    : selectedFeeAmount * rate;
 
-          if (
-            selectedOriginalAmount &&
-            selectedFeeAmount !== 0 &&
-            selectedOriginalAmount > selectedFeeAmount
-          ) {
-            const calculatedDiscount = selectedOriginalAmount - selectedFeeAmount;
-            const calculatedDiscountPercentage = Math.round(
-              (calculatedDiscount / selectedOriginalAmount) * 100
-            );
-            setDiscount(calculatedDiscount * rate);
-            setDiscountPercentage(calculatedDiscountPercentage);
-          } else {
-            setDiscount(0);
-            setDiscountPercentage(0);
-          }
+  const finalOriginal = (isINR || isUSD)
+    ? selectedOriginalAmount
+    : selectedOriginalAmount * rate;
+
+  setFee(finalFee || 'Not Available');
+
+  if (finalOriginal && finalFee !== 0 && finalOriginal > finalFee) {
+    const calculatedDiscount = finalOriginal - finalFee;
+    const calculatedDiscountPercentage = Math.round((calculatedDiscount / finalOriginal) * 100);
+    setDiscount(calculatedDiscount);
+    setDiscountPercentage(calculatedDiscountPercentage);
+  } else {
+    setDiscount(0);
+    setDiscountPercentage(0);
+  }
         } else {
           setFee('Not Available');
         }
@@ -191,10 +197,9 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     }
   };
   const isEnrollDisabled = fee === 'Not Available' || fee === 'Error Loading Fee';
-
   const handleEnroll = async () => {
     if (isEnrollDisabled && enrollText !== 'Enroll Free Demo') {
-    return; // Don't proceed if fee is not available and not a demo
+    return; 
   }
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
@@ -222,7 +227,6 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
     let studentId = '';
     let mobile = '';
     try {
-      // Fetch studentId via API
       const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
@@ -231,22 +235,18 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
         studentId = profileResponse.data.studentId;
         mobile = profileResponse.data.mobile || '';
       } else {
-        // setMessage('Unable to find your student ID.');
         setMessage('Your account is not exist please contact our hachion support team.');
         setMessageType('error');
         return;
       }
     } catch (error) {
       console.error('Error fetching studentId:', error);
-      // setMessage('Unable to fetch your student ID. Please try again later.');
       setMessage('Your account is not exist please contact our hachion support team.');
       setMessageType('error');
       return;
     }
-
     if ( enrollText === 'Enroll Now') {
       const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
-      
         navigate(`/enroll/${formattedCourseName}`, {
     state: {
       selectedBatchData,
@@ -263,7 +263,6 @@ const LiveOnlineFeesRight = ({ enrollText, modeType, selectedBatchData }) => {
       
       return;
     }
-
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
       try {
         if (!selectedBatchData) {
@@ -332,17 +331,6 @@ const handleCheckboxChange = (e) => {
 
   return (
     <div className="right">
-      {/* {modeType === 'corporate' ? (
-        <>
-          <p className="free">Talk to our Advisor</p>
-          <button
-            onClick={() => navigate('/corporate', { state: { scrollToAdvisor: true } })}
-            className="fee-enroll-now text-white"
-          >
-            Contact Us
-          </button>
-        </>
-      ) : ( */}
         <>
           <p className="batch-date-fee">Fee:</p>
           <p className="free">
@@ -400,40 +388,7 @@ const handleCheckboxChange = (e) => {
           {isEnrolled ? 'Enrolled' : enrollText}
         </button>
       )}
-      {/* <p className="resend">
-        Select how you'd like to receive your enrollment details
-        </p>
-{!(isEnrolled && showResend) && (
-  <div className="notification-options">
-    <label>
-      <input
-        type="checkbox"
-        name="email"
-        checked={notificationPrefs.email}
-        onChange={handleCheckboxChange}
-      />{' '}
-      Email
-    </label>
-    <label>
-      <input
-        type="checkbox"
-        name="whatsapp"
-        checked={notificationPrefs.whatsapp}
-        onChange={handleCheckboxChange}
-      />{' '}
-      WhatsApp
-    </label>
-    <label>
-      <input
-        type="checkbox"
-        name="text"
-        checked={notificationPrefs.text}
-        onChange={handleCheckboxChange}
-      />{' '}
-      Text Message
-    </label>
-  </div>
-)} */}
+     
 {!(isEnrolled && showResend) && (
   <>
     <p className="resend">
@@ -478,7 +433,6 @@ const handleCheckboxChange = (e) => {
           </span>
         </p>
       )}
-
       {showResend && isEnrolled && resendExceeded && (
         <p className="attempt">
           Maximum attempts exceeded. Please reach out to the support team to get the schedule.

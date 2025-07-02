@@ -32,10 +32,11 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 		unsubscribeEntity.setMobile(unsubscribeRequest.getMobile());
 		unsubscribeEntity.setCountry(unsubscribeRequest.getCountry());
 		unsubscribeEntity.setDate(LocalDate.now());
-
-		UnsubscribeEntity unsubscribeEntityResponse = unsubscribeRepository.save(unsubscribeEntity);
+		unsubscribeEntity.setReason(unsubscribeRequest.getReason());
+		unsubscribeEntity.setComments(unsubscribeRequest.getComments());
 
 		registerStudentRepository.deleteByEmailNative(unsubscribeRequest.getEmail());
+		UnsubscribeEntity unsubscribeEntityResponse = unsubscribeRepository.save(unsubscribeEntity);
 
 		UnsubscribeResponse unsubscribeResponse = createUnsubscribeEntityResponse(unsubscribeEntityResponse);
 		return unsubscribeResponse;
@@ -70,6 +71,8 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 		unsubscribeResponse.setMobile(unsubscribeEntityResponse.getMobile());
 		unsubscribeResponse.setCountry(unsubscribeEntityResponse.getCountry());
 		unsubscribeResponse.setDate(unsubscribeEntityResponse.getDate());
+		unsubscribeResponse.setReason(unsubscribeEntityResponse.getReason());
+		unsubscribeResponse.setComments(unsubscribeEntityResponse.getComments());
 		return unsubscribeResponse;
 	}
 

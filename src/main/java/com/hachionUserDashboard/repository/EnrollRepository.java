@@ -52,5 +52,7 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 	Long countEnrollments(@Param("studentId") String studentId,
 	                      @Param("courseName") String courseName,
 	                      @Param("batchId") String batchId);
-
+	
+	  @Query(value = "SELECT * FROM enroll ORDER BY enroll_date DESC", nativeQuery = true)
+	    List<Enroll> findAllByOrderByEnrollDateDesc();
 }

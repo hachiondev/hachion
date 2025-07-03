@@ -44,13 +44,12 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 
 	@Override
 	public List<UnsubscribeResponse> getAllUnsubscribeDetails() {
-		List<UnsubscribeEntity> listOfUnsubscribeEntities = unsubscribeRepository.findAll();
+		List<UnsubscribeEntity> listOfUnsubscribeEntities = unsubscribeRepository.findAllByOrderByDateDesc();
 
 		List<UnsubscribeResponse> listOfUnsubscribeResponses = new ArrayList<>();
 
 		for (UnsubscribeEntity unsubscribeEntity : listOfUnsubscribeEntities) {
 			UnsubscribeResponse unsubscribeEntityResponse = createUnsubscribeEntityResponse(unsubscribeEntity);
-
 			listOfUnsubscribeResponses.add(unsubscribeEntityResponse);
 		}
 

@@ -79,7 +79,7 @@ public class EnrollController {
 
 	@GetMapping("/enroll")
 	public List<Enroll> getAllEnroll() {
-		return repo.findAll();
+		return repo.findAllByOrderByEnrollDateDesc();
 	}
 
 	@PostMapping("/enroll/add")
@@ -117,7 +117,6 @@ public class EnrollController {
 		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time;
 		enroll.setWeek(dayOfWeek);
 
-		
 		StringBuilder weekDaysBuilder = new StringBuilder();
 
 		for (int i = 0; i < 3; i++) {
@@ -129,7 +128,6 @@ public class EnrollController {
 			}
 		}
 		String weekDays = weekDaysBuilder.toString();
-		
 
 		String trainerExperience = trainerRepository.findSummaryByTrainerNameAndCourse(requestEnroll.getTrainer(),
 				requestEnroll.getCourse_name());
@@ -154,7 +152,6 @@ public class EnrollController {
 
 		String technologySlug = technologyName.toLowerCase().replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
 
-		
 		Enroll save = repo.save(enroll);
 
 		if (requestEnroll.isSendEmail()) {
@@ -197,10 +194,10 @@ public class EnrollController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for this email.");
 		}
 
-		Enroll latest = enrollments.get(enrollments.size() - 1); 
-		latest.setResendCount(latest.getResendCount() + 1); 
+		Enroll latest = enrollments.get(enrollments.size() - 1);
+		latest.setResendCount(latest.getResendCount() + 1);
 
-		repo.save(latest); 
+		repo.save(latest);
 
 		LocalDate date = LocalDate.parse(latest.getEnroll_date());
 		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);

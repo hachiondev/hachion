@@ -520,7 +520,7 @@ public class PaymentServiceImpl implements PaymentService {
 		double balancePay = paymentRequest.getBalancePay(); 
 		double totalAmount = paymentRequest.getTotalAmount();
 
-		String subject = "Reminder from HACH Technologies LLC (" + invoiceNumber + ")";
+		String subject = "Reminder from HACHION (" + invoiceNumber + ")";
 
 		String body = "<html><body style='font-family:Arial,sans-serif; color:#000;!important'>"
 
@@ -551,10 +551,12 @@ public class PaymentServiceImpl implements PaymentService {
 				+ String.format("%.2f", balancePay) + " USD</span></p>" + "<p><b>Invoice number</b><br/>"
 				+ invoiceNumber + "</p>" + "</div>"
 
-				+ "<div style='text-align:center; margin: 40px 0;'>" + "<a href='https://yourdomain.com/invoice/"
-				+ invoiceNumber + "' " + "style='background-color:#000;color:#fff;padding:14px 32px;"
-				+ "text-decoration:none;border-radius:50px;font-weight:bold;font-size:18px;display:inline-block;'>"
-				+ "View and Pay Invoice</a>" + "</div>"
++"<div style='text-align:center; margin: 40px 0;'>"
++ "<div style='background-color:#000; color:#fff; padding:14px 32px; "
++ "border-radius:12px; display:inline-block; font-size:18px; font-weight:bold;'>"
++ "View and Pay Invoice"
++ "</div>"
++ "</div>"
 
 				+ "<p style='font-size:24px; font-weight:bold; margin-top:40px;'>Don't recognize this invoice?</p>"
 				+ "<p style='font-size:12px; font-weight:bold; color:#007bff;'>Report this invoice</p>"

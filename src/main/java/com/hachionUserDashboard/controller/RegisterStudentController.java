@@ -72,7 +72,7 @@ public class RegisterStudentController {
 		String fullName = student.getUserName();
 		student.setStudentId(generateNextStudentId());
 
-//		emailService.sendEmailForRegisterOfflineStudent(student.getEmail(), tempPassword, fullName);
+		emailService.sendEmailForRegisterOfflineStudent(student.getEmail(), tempPassword, fullName);
 
 		repo.save(student);
 		return ResponseEntity.ok("Student added successfully");

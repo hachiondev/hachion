@@ -24,6 +24,9 @@ public class UserReview {
 	    @Column
 	    private String email;
 	    
+	    @Column
+	    private String status;
+	    
 	    @Lob
 	    private String user_image; 
 	    
@@ -193,6 +196,14 @@ public class UserReview {
 					+ user_image + ", type=" + type + ", course_name=" + course_name + ", trainer_name=" + trainer_name
 					+ ", social_id=" + social_id + ", rating=" + rating + ", review=" + review + ", location="
 					+ location + ", date=" + date + ", display=" + display + "]";
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
 		}
 	    
 }

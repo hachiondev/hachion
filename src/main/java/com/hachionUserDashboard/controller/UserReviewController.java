@@ -124,7 +124,7 @@ public class UserReviewController {
 				userReview.setReview(updatedUserReview.getReview());
 				userReview.setType(updatedUserReview.isType());
 				userReview.setDisplay(updatedUserReview.getDisplay());
-
+				userReview.setStatus(updatedUserReview.getStatus());
 				// Check if a new image is uploaded
 				if (user_image != null && !user_image.isEmpty()) {
 					try {

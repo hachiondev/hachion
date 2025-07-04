@@ -410,6 +410,106 @@ public class PaymentServiceImpl implements PaymentService {
 		return response;
 	}
 
+//	@Override
+//	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
+//		Context context = new Context();
+//		context.setVariable("studentName", paymentRequest.getStudentName());
+//		context.setVariable("studentEmail", paymentRequest.getEmail());
+//		context.setVariable("studentPhone", paymentRequest.getMobile());
+//		context.setVariable("courseName", paymentRequest.getCourseName());
+//		context.setVariable("coursePrice", String.format("%.2f", paymentRequest.getCourseFee()));
+//		context.setVariable("discount", paymentRequest.getDiscount() + ".00");
+//		context.setVariable("tax", paymentRequest.getTax() + ".00");
+//		context.setVariable("totalAmount", String.format("%.2f", paymentRequest.getTotalAmount()));
+//
+//		SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
+//		String formattedDate = sdf.format(new Date());
+//		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
+//
+//		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
+//
+//		PaymentInstallmentRequest selectedInstallment = null;
+//
+//		double receivedPayAmount = 0.0;
+//
+//		if (installments != null && !installments.isEmpty()) {
+//			Long selectedId = paymentRequest.getSelectedInstallmentId();
+//			if (selectedId != null) {
+//				for (PaymentInstallmentRequest inst : installments) {
+//					if (selectedId.equals(inst.getInstallmentId())) {
+//						selectedInstallment = inst;
+//						break;
+//					}
+//				}
+//			}
+//			if (selectedInstallment == null) {
+//				selectedInstallment = installments.get(0);
+//			}
+//
+//			LocalDate payDate = selectedInstallment.getPayDate();
+//			LocalDate dueDate = selectedInstallment.getDueDate();
+//
+//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+//
+//			String formattedPayDate = payDate.format(formatter);
+//			String formattedDueDate = dueDate.format(formatter);
+//
+//			context.setVariable("invoiceDate", formattedPayDate);
+//			context.setVariable("dueDate", formattedDueDate);
+////			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
+//			receivedPayAmount = selectedInstallment.getReceivedPay();
+//
+//			receivedPayAmount = selectedInstallment.getReceivedPay();
+//			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
+//
+//		}
+//		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
+//
+//		String status = paymentRequest.getStatus();
+//		if (receivedPayAmount > 0.0) {
+//			if (status == null || status.trim().isEmpty()) {
+//				status = "PARTIALLY PAID";
+//			}
+//			context.setVariable("status", status.trim());
+//		} else {
+//			context.setVariable("status", null); // hide status if no payment
+//		}
+//
+//		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
+//		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/")); // ensure proper file URL
+//
+//		String renderedHtml = templateEngine.process("invoice_template", context);
+//
+//		File directory = new File(invoiceDirectoryPath);
+//		if (!directory.exists()) {
+//			directory.mkdirs();
+//		}
+//
+//		String safeFileName = paymentRequest.getStudentName().replaceAll("\\s+", "_") + "_"
+//				+ paymentRequest.getCourseName().replaceAll("\\s+", "_");
+//
+//		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
+//
+//		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
+//			PdfRendererBuilder builder = new PdfRendererBuilder();
+//			builder.useFastMode();
+//
+//			String baseUri = new File("/home/ec2-user/uploads").toURI().toString();
+//			builder.withHtmlContent(renderedHtml, baseUri);
+//			builder.toStream(os);
+//			builder.run();
+//
+////			emailService.sendInvoiceEmail2(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+//					paymentRequest.getCourseName(), paymentRequest.getCourseFee(), pdfFilePath);
+//		} catch (Exception e) {
+//
+//		}
+//
+//		model.addAttribute("studentName", paymentRequest.getStudentName());
+//		return "invoice_template";
+//	}
+
 	@Override
 	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
 		Context context = new Context();
@@ -427,9 +527,7 @@ public class PaymentServiceImpl implements PaymentService {
 		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
 
 		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
-
 		PaymentInstallmentRequest selectedInstallment = null;
-
 		double receivedPayAmount = 0.0;
 
 		if (installments != null && !installments.isEmpty()) {
@@ -450,33 +548,35 @@ public class PaymentServiceImpl implements PaymentService {
 			LocalDate dueDate = selectedInstallment.getDueDate();
 
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-
-			String formattedPayDate = payDate.format(formatter);
-			String formattedDueDate = dueDate.format(formatter);
-
-			context.setVariable("invoiceDate", formattedPayDate);
-			context.setVariable("dueDate", formattedDueDate);
-//			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
-			receivedPayAmount = selectedInstallment.getReceivedPay();
+			context.setVariable("invoiceDate", payDate.format(formatter));
+			context.setVariable("dueDate", dueDate.format(formatter));
 
 			receivedPayAmount = selectedInstallment.getReceivedPay();
 			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
-
 		}
+
 		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
 
 		String status = paymentRequest.getStatus();
+		String emailStatus = status;
+
 		if (receivedPayAmount > 0.0) {
 			if (status == null || status.trim().isEmpty()) {
 				status = "PARTIALLY PAID";
 			}
+
 			context.setVariable("status", status.trim());
+
+			emailStatus = status.trim();
 		} else {
-			context.setVariable("status", null); // hide status if no payment
+
+			context.setVariable("status", null);
+
+			emailStatus = "NOT PAID";
 		}
 
 		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
-		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/")); // ensure proper file URL
+		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/"));
 
 		String renderedHtml = templateEngine.process("invoice_template", context);
 
@@ -493,17 +593,42 @@ public class PaymentServiceImpl implements PaymentService {
 		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
 			PdfRendererBuilder builder = new PdfRendererBuilder();
 			builder.useFastMode();
-
 			String baseUri = new File("/home/ec2-user/uploads").toURI().toString();
 			builder.withHtmlContent(renderedHtml, baseUri);
 			builder.toStream(os);
 			builder.run();
-
-//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
-			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
-					paymentRequest.getCourseName(), paymentRequest.getCourseFee(), pdfFilePath);
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+		File pdfFile = new File(pdfFilePath);
+		System.out.println("Received Pay Amount: " + receivedPayAmount);
+		System.out.println("Status from paymentRequest: " + status);
+		if (pdfFile.exists()) {
+			try {
+				if ("PARTIALLY PAID".equalsIgnoreCase(emailStatus)) {
+					double amountPaid = paymentRequest.getTotalAmount() - paymentRequest.getBalancePay();
+
+					emailService.sendInvoiceEmailForParitialPaid(paymentRequest.getEmail(),
+							paymentRequest.getStudentName(), paymentRequest.getCourseName(), amountPaid, pdfFilePath);
+
+				} else if ("PAID".equalsIgnoreCase(emailStatus)) {
+					emailService.sendInvoiceEmailForPaid(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+							paymentRequest.getCourseName(), paymentRequest.getTotalAmount(), pdfFilePath);
+
+				} else if ("NOT PAID".equalsIgnoreCase(emailStatus)) {
+					emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+							paymentRequest.getCourseName(), paymentRequest.getBalancePay(), pdfFilePath);
+
+				} else {
+					
+					System.out.println("No email sent for status: " + status);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("PDF file was not created. Email not sent.");
 		}
 
 		model.addAttribute("studentName", paymentRequest.getStudentName());
@@ -662,7 +787,7 @@ public class PaymentServiceImpl implements PaymentService {
 			}
 			context.setVariable("status", status.trim());
 		} else {
-			context.setVariable("status", null); // hide status if no payment
+			context.setVariable("status", null); 
 		}
 
 		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
@@ -690,8 +815,7 @@ public class PaymentServiceImpl implements PaymentService {
 			builder.run();
 
 //			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
-		
-		
+
 		} catch (Exception e) {
 
 		}

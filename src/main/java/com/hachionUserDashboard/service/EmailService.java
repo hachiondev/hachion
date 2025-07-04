@@ -13,6 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.hachionUserDashboard.dto.PaymentRequest;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -46,7 +48,7 @@ public class EmailService {
 		mailSender.send(message);
 	}
 
-	public void sendInvoiceEmail(String toEmail, String studentName, String invoicePath) {
+	public void sendInvoiceEmail2(String toEmail, String studentName, String invoicePath) {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -66,22 +68,112 @@ public class EmailService {
 			throw new RuntimeException("Email sending failed", e);
 		}
 	}
+	
+	public void sendInvoiceEmail(String toEmail, String studentName, String courseName, double courseFee, String invoicePath) {
+	    try {
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-	public void sendEmailForReminder(String to, String subject, String htmlContent) {
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+	        helper.setTo(toEmail);
+	        helper.setSubject("🎓 Hachion – Enrollment Confirmation & Invoice for " + courseName);
+	        helper.setCc("hachion.trainings@gmail.com");
 
-			helper.setTo(to);
-			helper.setSubject(subject);
-			helper.setText(htmlContent, true);
-			helper.setFrom("hachion.trainings@gmail.com");
+	        String emailBody = String.format(
+	            "<div style='font-family:Arial, sans-serif; font-size:14px; color:#333;'>"
+	                + "<p>Dear %s,</p>"
+	                + "<p>Thank you for enrolling in the <strong>%s</strong> with Hachion.<br>"
+	                + "We are pleased to confirm your registration. Please find your invoice attached to this email for your records.</p>"
+	                + "<p><strong>💳 Payment Summary</strong><br>"
+	                + "Course Fee: %.2f USD/INR<br>"
+	                + "Payment Method: Zelle (default)<br>"
+	                + "Recipient Email: trainings@hachion.co<br>"
+	                + "Recipient Name: HACH TECHNOLOGIES LLC</p>"
+	                + "<p>Should you have any questions or need further assistance, feel free to reach out. We’re excited to support you on your learning journey and wish you success in the upcoming training.</p>"
+	                + "<p>Warm regards,<br><br>"
+	                + "<strong>Team Hachion</strong><br>"
+	                + "🌐 <a href='https://www.hachion.co'>www.hachion.co</a><br>"
+	                + "📞 +1 (732) 485-2499<br>"
+	                + "📧 trainings@hachion.co</p>"
+	                + "</div>",
+	            courseName, studentName, courseName, courseFee
+	        );
 
-			mailSender.send(message);
-		} catch (MessagingException e) {
-			throw new RuntimeException("Failed to send email", e);
-		}
+	        helper.setText(emailBody, true); // 'true' enables HTML
+
+	        FileSystemResource file = new FileSystemResource(new File(invoicePath));
+	        helper.addAttachment("Invoice.pdf", file);
+
+	        mailSender.send(message);
+	    } catch (MessagingException e) {
+	        System.err.println("Failed to send email: " + e.getMessage());
+	        throw new RuntimeException("Email sending failed", e);
+	    }
 	}
+
+
+//	public void sendEmailForReminder(String to, String subject, String htmlContent) {
+//		try {
+//			MimeMessage message = mailSender.createMimeMessage();
+//			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//
+//			helper.setTo(to);
+//			helper.setSubject(subject);
+//			helper.setText(htmlContent, true);
+//			helper.setFrom("hachion.trainings@gmail.com");
+//
+//			mailSender.send(message);
+//		} catch (MessagingException e) {
+//			throw new RuntimeException("Failed to send email", e);
+//		}
+//	}
+	public void sendEmailForReminder(PaymentRequest paymentRequest) {
+	    try {
+	        String to = paymentRequest.getEmail();
+	        String courseName = paymentRequest.getCourseName();
+	        double courseFee = paymentRequest.getBalancePay();
+
+	        String fullName = paymentRequest.getStudentName();
+	        String studentFirstName = fullName != null && fullName.contains(" ")
+	                ? fullName.split(" ")[0]
+	                : fullName;
+
+	        String subject = "⏳ Friendly Reminder – Complete Payment to Confirm Your Enrollment for " + courseName;
+
+	        String htmlContent = String.format(
+	            "<div style='font-family:Arial, sans-serif; font-size:14px; color:#333;'>"
+	            		+ "<p>Dear <strong>%s</strong>,</p>"
+	                + "<p>We hope you're doing well!</p>"
+	                + "<p>This is a gentle reminder to complete your payment for the <strong>%s</strong> to secure your spot in the upcoming training.</p>"
+	                + "<p><strong>💳 Course Fee & Payment Instructions</strong><br>"
+	                + "Course Fee: <strong>%.2f USD/INR</strong><br>"
+	                + "Payment Method: <strong>Zelle</strong><br>"
+	                + "Recipient Email: <strong>trainings@hachion.co</strong><br>"
+	                + "Recipient Name: <strong>HACH TECHNOLOGIES LLC</strong></p>"
+	                + "<p>Once the payment is completed, you will receive a confirmation email along with your invoice and access details for the session.</p>"
+	                + "<p>If you have any questions or need additional assistance, feel free to reach out to us.</p>"
+	                + "<p>We look forward to having you in the batch and supporting your <strong>%s</strong> journey!</p>"
+	                + "<br><p>Warm regards,<br><strong>Team Hachion</strong><br>"
+	                + "🌐 <a href='https://www.hachion.co'>www.hachion.co</a><br>"
+	                + "📞 +1 (732) 485-2499<br>"
+	                + "📧 trainings@hachion.co</p>"
+	                + "</div>",
+	            studentFirstName, courseName, courseFee, courseName
+	        );
+
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	        helper.setTo(to);
+	        helper.setSubject(subject);
+	        helper.setText(htmlContent, true); // true = HTML
+	        helper.setFrom("hachion.trainings@gmail.com");
+
+	        mailSender.send(message);
+	    } catch (MessagingException e) {
+	        throw new RuntimeException("Failed to send reminder email", e);
+	    }
+	}
+
 
 	public void sendEmailForRegisterOfflineStudent(String toEmail, String tempPassword, String studentFullName)
 			throws MessagingException {

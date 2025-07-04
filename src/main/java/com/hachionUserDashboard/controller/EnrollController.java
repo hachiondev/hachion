@@ -173,7 +173,7 @@ public class EnrollController {
 			if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
 				whatsAppService.sendLiveClassDemoEnrollmentDetails(requestEnroll);
 			} else if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
-				whatsAppService.sendLiveDemoEnrollmentDetails(requestEnroll);
+				whatsAppService.sendLiveClassDemoEnrollmentDetails(requestEnroll);
 			}
 		}
 		if (requestEnroll.isSendText()) {

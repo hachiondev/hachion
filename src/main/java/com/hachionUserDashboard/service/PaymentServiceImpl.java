@@ -84,11 +84,11 @@ public class PaymentServiceImpl implements PaymentService {
 		payment.setTotalAmount(paymentRequest.getTotalAmount());
 		payment.setBalancePay(paymentRequest.getBalancePay());
 		if (Double.compare(paymentRequest.getTotalAmount(), paymentRequest.getBalancePay()) == 0) {
-		    payment.setStatus("Not Paid");
+			payment.setStatus("Not Paid");
 		} else if (Double.compare(paymentRequest.getBalancePay(), 0.0) == 0) {
-		    payment.setStatus("Paid");
+			payment.setStatus("Paid");
 		} else {
-		    payment.setStatus("Partially Paid");
+			payment.setStatus("Partially Paid");
 		}
 
 		List<PaymentInstallment> installmentEntities = new ArrayList<>();
@@ -108,8 +108,6 @@ public class PaymentServiceImpl implements PaymentService {
 			installment.setActualPay(instReq.getActualPay());
 			installment.setReceivedPay(instReq.getReceivedPay());
 			installment.setPaymentMethod(instReq.getPaymentMethod());
-			
-			
 
 			if (files != null && files.size() > i && !files.get(i).isEmpty()) {
 				MultipartFile file = files.get(i);
@@ -216,13 +214,13 @@ public class PaymentServiceImpl implements PaymentService {
 			payment.setBalancePay(paymentRequest.getBalancePay());
 
 		if (Double.compare(paymentRequest.getTotalAmount(), paymentRequest.getBalancePay()) == 0) {
-		    payment.setStatus("Not Paid");
+			payment.setStatus("Not Paid");
 		} else if (Double.compare(paymentRequest.getBalancePay(), 0.0) == 0) {
-		    payment.setStatus("Paid");
+			payment.setStatus("Paid");
 		} else {
-		    payment.setStatus("Partially Paid");
+			payment.setStatus("Partially Paid");
 		}
-		
+
 		if (paymentRequest.getInstallments() != null && !paymentRequest.getInstallments().isEmpty()) {
 			List<PaymentInstallment> existingInstallments = payment.getInstallments();
 
@@ -463,12 +461,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 			receivedPayAmount = selectedInstallment.getReceivedPay();
 			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
-			
 
 		}
 		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
-
-		
 
 		String status = paymentRequest.getStatus();
 		if (receivedPayAmount > 0.0) {
@@ -504,7 +499,9 @@ public class PaymentServiceImpl implements PaymentService {
 			builder.toStream(os);
 			builder.run();
 
-			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+					paymentRequest.getCourseName(), paymentRequest.getCourseFee(), pdfFilePath);
 		} catch (Exception e) {
 
 		}
@@ -515,9 +512,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public void sendReminderEmail(PaymentRequest paymentRequest) {
-		String to = paymentRequest.getEmail(); 
-		String invoiceNumber = paymentRequest.getInvoiceNumber(); 
-		double balancePay = paymentRequest.getBalancePay(); 
+		String to = paymentRequest.getEmail();
+		String invoiceNumber = paymentRequest.getInvoiceNumber();
+		double balancePay = paymentRequest.getBalancePay();
 		double totalAmount = paymentRequest.getTotalAmount();
 
 		String subject = "Reminder from HACHION (" + invoiceNumber + ")";
@@ -547,16 +544,13 @@ public class PaymentServiceImpl implements PaymentService {
 
 				+ "<div style='background-color:#fff;padding:20px;border-radius:10px;margin:30px 0;color:#000;'>"
 				+ "<p style='font-size:20px; font-weight:bold; margin-bottom:20px;'>Invoice details</p>"
-				+ "<p><b>Amount requested</b><br/><span style='font-weight:bold;'>$"
-				+ String.format("%.2f", balancePay) + " USD</span></p>" + "<p><b>Invoice number</b><br/>"
-				+ invoiceNumber + "</p>" + "</div>"
+				+ "<p><b>Amount requested</b><br/><span style='font-weight:bold;'>$" + String.format("%.2f", balancePay)
+				+ " USD</span></p>" + "<p><b>Invoice number</b><br/>" + invoiceNumber + "</p>" + "</div>"
 
-+"<div style='text-align:center; margin: 40px 0;'>"
-+ "<div style='background-color:#000; color:#fff; padding:14px 32px; "
-+ "border-radius:12px; display:inline-block; font-size:18px; font-weight:bold;'>"
-+ "View and Pay Invoice"
-+ "</div>"
-+ "</div>"
+				+ "<div style='text-align:center; margin: 40px 0;'>"
+				+ "<div style='background-color:#000; color:#fff; padding:14px 32px; "
+				+ "border-radius:12px; display:inline-block; font-size:18px; font-weight:bold;'>"
+				+ "View and Pay Invoice" + "</div>" + "</div>"
 
 				+ "<p style='font-size:24px; font-weight:bold; margin-top:40px;'>Don't recognize this invoice?</p>"
 				+ "<p style='font-size:12px; font-weight:bold; color:#007bff;'>Report this invoice</p>"
@@ -600,9 +594,10 @@ public class PaymentServiceImpl implements PaymentService {
 
 				+ "</div></body></html>";
 
-		emailService.sendEmailForReminder(to, subject, body);
+//		emailService.sendEmailForReminder(to, subject, body);
+		emailService.sendEmailForReminder(paymentRequest);
 	}
-	
+
 	@Override
 	public String generateInvoiceForPaypal(PaymentRequest paymentRequest, Model model) {
 		Context context = new Context();
@@ -694,7 +689,9 @@ public class PaymentServiceImpl implements PaymentService {
 			builder.toStream(os);
 			builder.run();
 
-			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
+		
+		
 		} catch (Exception e) {
 
 		}
@@ -702,6 +699,5 @@ public class PaymentServiceImpl implements PaymentService {
 		model.addAttribute("studentName", paymentRequest.getStudentName());
 		return "invoice_template";
 	}
-
 
 }

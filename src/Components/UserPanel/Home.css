@@ -1101,6 +1101,7 @@ transition: transform 0.3s ease;
 font-weight: 700;
 font-size: 1.25rem;
 padding-top: 1.5vh;
+text-align: center;
 }
 .training-content{
 font-weight:400;

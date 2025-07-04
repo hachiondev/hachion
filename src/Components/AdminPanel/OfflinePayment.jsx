@@ -65,6 +65,7 @@ export default function OfflinePayment() {
 const [isSaved, setIsSaved] = useState(false);
 const [invoiceNumber, setInvoiceNumber] = useState("");
 const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
+const [isSaveDisabled, setIsSaveDisabled] = useState(true);
     const [paymentData, setPaymentData] = useState({
             id:"",
             student_ID: "",
@@ -111,6 +112,29 @@ const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null)
   updatedRows[index].proof_image = file;
   Rows(updatedRows);
 };
+useEffect(() => {
+  const requiredFieldsFilled =
+    paymentData.student_ID?.trim() &&
+    paymentData.student_name?.trim() &&
+    paymentData.email?.trim() &&
+    paymentData.mobile?.trim() &&
+    paymentData.course_name?.trim() &&
+    !isNaN(parseFloat(paymentData.course_fee)) &&
+    !isNaN(parseFloat(paymentData.tax)) &&
+    !isNaN(parseFloat(paymentData.discount)) &&
+    !isNaN(parseInt(paymentData.installments)) &&
+    !isNaN(parseInt(paymentData.days)) &&
+    !isNaN(parseFloat(paymentData.total)) &&
+    !isNaN(parseFloat(paymentData.balance));
+
+  setIsSaveDisabled(!requiredFieldsFilled);
+}, [paymentData]);
+
+const isSendInvoiceDisabled = isSaveDisabled || rows.some(row => {
+  const val = parseFloat(row.received_pay);
+  return !isNaN(val) && val > 0;
+});
+
 useEffect(() => {
     if (rows.length === 0) {
       const today = dayjs();
@@ -357,7 +381,7 @@ useEffect(() => {
   const courseFee = parseFloat(updatedData.course_fee) || 0;
   const tax = parseFloat(updatedData.tax) || 0;
   const discount = parseFloat(updatedData.discount) || 0;
-  const count = parseInt(updatedData.installments) || 0;  // user input installments
+  const count = parseInt(updatedData.installments) || 0;  
   const dayGap = parseInt(updatedData.days) || 0;
 
   const actualTotalFee = Math.round(courseFee + tax - discount);
@@ -405,11 +429,11 @@ useEffect(() => {
     actual_pay: i < count ? perInstallment : '',  
   };
 } else {
-  // For update: keep actual_pay exactly as-is, no changes
+  
   updatedRows[i] = {
     ...updatedRows[i],
     ...baseRow,
-    actual_pay: updatedRows[i]?.actual_pay ?? '',  // do not modify
+    actual_pay: updatedRows[i]?.actual_pay ?? '',  
   };
 }
       }
@@ -518,6 +542,22 @@ const handleSave = async (e) => {
     setErrorMessage("❌ Error adding payment. Please try again.");
   }
 };
+ const handleDateFilter = () => {
+    const filtered = offlinePayment.filter((item) => {
+      const itemDate = dayjs(item.date);
+      return (
+        (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+        (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+      );
+    });
+    setPaymentData(filtered);
+  };
+
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setPaymentData(offlinePayment);
+  };
 
 const handleSendToEmail = async (e) => {
   e.preventDefault();
@@ -658,7 +698,10 @@ const handleSendReminder = async () => {
       return;
     }
     const reminderPayload = {
+
       email: paymentData.email,
+      studentName: paymentData.student_name,
+courseName: paymentData.course_name,
       invoiceNumber: invoiceNumber,
       balancePay: parseFloat(paymentData.balance),
       totalAmount: parseFloat(paymentData.total),
@@ -726,7 +769,7 @@ const handleSaveAndSendInvoice = async (e) => {
   });
 
   try {
-    // Step 1: Save payment
+    
     const saveResponse = await axios.post("https://api.hachion.co/payments", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -739,7 +782,7 @@ const handleSaveAndSendInvoice = async (e) => {
       setInvoiceNumber(invoiceNumber);
       setIsSaved(true);
 
-      // Step 2: Send invoice
+      
       const selectedInstallmentId = lastModifiedInstallmentId || rows[0]?.installmentId;
       const totalReceivedPay = rows.reduce((sum, row) => {
         const received = parseFloat(row.received_pay);
@@ -883,11 +926,69 @@ const handleSaveAndSendInvoice = async (e) => {
     <input type="text" class="schedule-input" id="inputEmail4" name='days' value={paymentData.days} onChange={handleChange}/>
   </div>
 </div>
-<div className='course-row' style={{ marginTop: 5 }}>
-<button className='filter' onClick={handleSendReminder}>Send Reminder</button>
+{/* <div className='course-row' style={{ marginTop: 5 }}>
+<button className='filter' onClick={handleSendReminder} disabled={isSaveDisabled}>Send Reminder</button>
 
-<button className='filter' onClick={handleSaveAndSendInvoice}>Send Invoice</button>
+<button className='filter' onClick={handleSaveAndSendInvoice} disabled={isSaveDisabled}>Send Invoice</button>
+</div> */}
+
+<div className='course-row' style={{ marginTop: 5 }}>
+  <button
+    className='filter'
+    onClick={handleSendReminder}
+    disabled={isSaveDisabled}
+    style={{
+      backgroundColor: isSaveDisabled ? "#ccc" : "#007bff", 
+      color: isSaveDisabled ? "#666" : "#fff",             
+      opacity: isSaveDisabled ? 1 : 1,
+      cursor: isSaveDisabled ? "not-allowed" : "pointer",
+      pointerEvents: isSaveDisabled ? "none" : "auto",
+      border: "none",
+      padding: "8px 16px",
+      borderRadius: "5px",
+      marginRight: "10px",
+    }}
+  >
+    Send Reminder
+  </button>
+
+  {/* <button
+    className='filter'
+    onClick={handleSaveAndSendInvoice}
+    disabled={isSaveDisabled}
+    style={{
+      backgroundColor: isSaveDisabled ? "#ccc" : "#007bff",
+      color: isSaveDisabled ? "#666" : "#fff",
+      opacity: isSaveDisabled ? 1 : 1,
+      cursor: isSaveDisabled ? "not-allowed" : "pointer",
+      pointerEvents: isSaveDisabled ? "none" : "auto",
+      border: "none",
+      padding: "8px 16px",
+      borderRadius: "5px",
+    }}
+  >
+    Send Invoice
+  </button> */}
+
+  <button
+  className='filter'
+  onClick={handleSaveAndSendInvoice}
+  disabled={isSendInvoiceDisabled}
+  style={{
+    backgroundColor: isSendInvoiceDisabled ? "#ccc" : "#007bff",
+    color: isSendInvoiceDisabled ? "#666" : "#fff",
+    opacity: 1,
+    cursor: isSendInvoiceDisabled ? "not-allowed" : "pointer",
+    pointerEvents: isSendInvoiceDisabled ? "none" : "auto",
+    border: "none",
+    padding: "8px 16px",
+    borderRadius: "5px",
+  }}
+>
+  Send Invoice
+</button>
 </div>
+
  <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650, marginTop: 2 }} aria-label="customized table">
         <TableHead>
@@ -1052,7 +1153,7 @@ const handleSaveAndSendInvoice = async (e) => {
   <div className='course-row'>
   {formMode === "Add" ? (
   <>   
-    <button className='submit-btn' onClick={handleSave}>Save</button>
+    <button className='submit-btn' onClick={handleSave} disabled={isSaveDisabled}>Save</button>
     
   <button
   className='submit-btn'
@@ -1108,7 +1209,8 @@ const handleSaveAndSendInvoice = async (e) => {
       '& .MuiIconButton-root':{color: '#00aeef'}
    }}
   />
-            <button className='filter' >Filter</button>
+          <button className='filter' onClick={handleDateFilter}>Filter</button>
+          <button className="filter" onClick={handleDateReset}>Reset</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>

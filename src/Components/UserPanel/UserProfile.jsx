@@ -123,7 +123,7 @@ const navigate = useNavigate();
       console.log("Parsed email:", parsedEmail);
   
 
-      axios.get(`http://localhost:8081/api/v1/user/myprofile`, {
+      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -161,7 +161,7 @@ const navigate = useNavigate();
       return;
     }
     setIsUpdating(true); 
-    axios.post('http://localhost:8081/api/v1/user/reset-password', {
+    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
       email,
       password: passwords.oldPassword,
       newPassword: passwords.newPassword,
@@ -267,40 +267,20 @@ const navigate = useNavigate();
             </div>
             <div className="col-md-5">
               <label className="form-label">Mobile Number</label>
-              <div className="input-wrapper" style={{ position: 'relative' }}>
-    <button
-      variant="text"
-      onClick={openMenu}
-      className='mobile-button'
-    >
-      <Flag code={selectedCountry.flag} className="country-flag me-1" />
-      <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
-      <AiFillCaretDown />
-    </button>
-    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-      {countries.map((country) => (
-        <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-          <Flag code={country.flag} className="country-flag me-2" />
-          {country.name} ({country.code})
-        </MenuItem>
-      ))}
-    </Menu>
+              <div className="input-wrapper" >
+        
                 <input
                   type="tel"
                   className="form-control"
                   ref={mobileInputRef}
-                  
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                style={{paddingLeft: '100px',}}/>
+                readOnly/>
               </div>
             </div>
             </div>
-          {/* <div className="center">
-            <button className='update-btn'>Update</button>
-          </div> */}
-
+          
           <div className="password-title">Reset Password</div>
           <div className="input-row">
 <div className="me-3 password-input-wrapper">

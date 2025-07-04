@@ -137,6 +137,51 @@ const ContactUs = () => {
     setIsChecked(e.target.checked);
   };
 
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+    const userEmail = userData.email || "";
+  
+   if (!userEmail) {
+      console.warn("🔒 No logged-in user found. Redirecting to /login...");
+       window.confirm("Please login before unsubscribe from hachion");
+      navigate("/login");
+      return;
+    }
+  
+    values.email = userEmail;
+   
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(
+          `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
+        );
+  
+        if (!response.ok) {
+          throw new Error("❌ Failed to fetch profile data");
+        }
+        const data = await response.json();
+        if (data.name) {
+          values.name = data.name;
+        } else {
+          console.warn("⚠️ Name not found in response.");
+        }
+       
+        if (data.mobile) {
+          setMobileNumber(data.mobile);
+        } else {
+          console.warn("⚠️ Mobile number not found.");
+        }
+        if (data.country) {
+          values.country = data.country;
+        }
+      } catch (error) {
+        console.error("❌ Error fetching profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!isChecked) {
@@ -346,23 +391,7 @@ const ContactUs = () => {
               </div>
               <label className="form-label">Mobile Number</label>
               <div className="input-wrapper" style={{ position: 'relative' }}>
-                  <button
-                    variant="text"
-                    onClick={openMenu}
-                    className='mobile-button'
-                  >
-                    <Flag code={selectedCountry.flag} className="country-flag me-1" />
-                    <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
-                    <AiFillCaretDown />
-                  </button>
-                  <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                    {countries.map((country) => (
-                      <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-                        <Flag code={country.flag} className="country-flag me-2" />
-                        {country.name} ({country.code})
-                      </MenuItem>
-                    ))}
-                  </Menu>
+                 
                         <input
                         type="tel"
                         className="form-control-contact"
@@ -372,9 +401,7 @@ const ContactUs = () => {
                         onChange={(e) => setMobileNumber(e.target.value)}
                         aria-label="Text input with segmented dropdown button"
                         placeholder="Enter your mobile number"
-                          style={{
-                        paddingLeft: '100px',
-                      }}
+                         
                         />
                       </div>
               <div class="mb-3">

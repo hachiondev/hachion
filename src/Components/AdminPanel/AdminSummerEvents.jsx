@@ -176,6 +176,11 @@ const displayedCourse = filteredCourse.slice(
       
         setFilteredCourse(filtered);
       };
+    const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredCourse(summerCourse);
+  };
       const handleSave = async () => {
         try {
             const response = await axios.put(
@@ -210,10 +215,6 @@ const displayedCourse = filteredCourse.slice(
           setFilteredCourse(filtered);
       }, [searchTerm,filteredCourse]);
         
-        const handleCloseModal=()=>{
-          setShowAddCourse(false);
-         
-        }
         const handleClickOpen = (row) => {
             console.log(row);
               setEditedData(row)// Set the selected row data
@@ -284,11 +285,6 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       console.log("Updated course state:", course); // Logs whenever 'course' state updates
     }, [course]);
-      const handleDateReset = () => {
-  setStartDate(null);
-  setEndDate(null);
-  setFilteredCourse(summerCourse);
-};
 
   return (
     

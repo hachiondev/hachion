@@ -87,6 +87,11 @@ const filteredWorkshop = joinedWorkshop.filter((item) => {
 
   setJoinedWorkshop(filtered);
 };
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setJoinedWorkshop(joinedWorkshop);
+  };
 
 const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -136,7 +141,7 @@ const [currentPage, setCurrentPage] = useState(1);
               }}
             />
                       <button className='filter' onClick={handleDateFilter} >Filter</button>
-                     
+                     <button className="filter" onClick={handleDateReset}>Reset</button>
                     </div>
                     <div className='entries'>
                       <div className='entries-left'>

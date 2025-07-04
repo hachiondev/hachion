@@ -55,17 +55,17 @@ const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
       </div>
 
       <div className="card-course-details">
-        <h5 className="course-name">{heading}</h5>
+        <h4 className="course-name">{heading}</h4>
         <div>
-          <h6 className="course-month">
+          <p className="course-month">
             <RxCalendar /> {month} Days
-          </h6>
+          </p>
     
         </div>
 
-        <h6 className="course-review">
+        <p className="course-review">
           Rating: {renderStars(Rating)} ({RatingByPeople})
-        </h6>
+        </p>
 
         <div className="new-batch">
           <p className="new-batch-para">

@@ -258,23 +258,26 @@ const matchedCountry = countries.find((c) =>
         <div className="unsub-us-bottom-div">
           <div>
       <div className="unsubscribe-info">
-            <h2 className="unsubscribe-heading">We're sorry to see you go!</h2>
+            <h2 className="unsubscribe-heading">We're sorry to see you go</h2>
             <p className="unsubscribe-message">
-              You've successfully landed on the Hachion Unsubscribe page.
+              Please let us know the reason for your decision.
               <br />
-              If you no longer wish to receive communications from us, please fill out the form below.
+              If you no longer wish to receive communications from us, kindly fill out the form below.
             </p>
 
             <p className="unsubscribe-feedback-text">
-              Your feedback is valuable. If there's something we could improve,
-              let us know in the comments.
+              Your feedback matters to us. If there's anything we could do better, please share your thoughts in the comments.
             </p>
           </div>
           <div className="unsubscribe-info">
             <h2 className="unsubscribe-heading">Need help?</h2>
             <p className="unsubscribe-message">
-              If you unsubscribed by mistake or have any questions, feel free to Contact Us.
-              <br />
+              If you unsubscribed by mistake or need assistance, feel free to contact our support team at  
+            <a
+            href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+            target="_blank"
+            rel="noopener noreferrer" style={{ color: '#00AEEF', marginLeft: '5px' }}>trainings@hachion.co</a>.
+            <br />
               Thanks for being part of the Hachion community <span style={{color: '#00AEEF'}}>< GoHeartFill /></span>
             </p>
           </div>
@@ -305,6 +308,7 @@ const matchedCountry = countries.find((c) =>
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required
+                  readOnly
                 />
                 <div class="invalid-feedback">PLease Enter Your Full Name.</div>
               </div>
@@ -322,6 +326,7 @@ const matchedCountry = countries.find((c) =>
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required
+                  readOnly
                 />
                 <div class="invalid-feedback">PLease Enter Your Email ID.</div>
               </div>
@@ -340,6 +345,7 @@ const matchedCountry = countries.find((c) =>
                       paddingLeft: '12px', 
                       textAlign: 'left'
                     }}
+                    readOnly
                   />
                 </div>
               <label htmlFor="inputEmail" className="form-label" style={{marginTop: 10}}>

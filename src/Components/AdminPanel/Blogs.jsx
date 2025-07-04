@@ -15,6 +15,10 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import AdminPagination from './AdminPagination';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -51,16 +55,21 @@ const Blogs = () => {
   const [endDate, setEndDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [allBlogs, setAllBlogs] = useState([]);
+
   useEffect(() => {
     axios.get("https://api.hachion.co/course-categories/all")
       .then(res => setCategories(res.data))
       .catch(console.error);
   }, []);
   useEffect(() => {
-    axios.get("https://api.hachion.co/blog")
-      .then(res => setBlogs(res.data))
-      .catch(console.error);
-  }, []);
+  axios.get("https://api.hachion.co/blog")
+    .then(res => {
+      setAllBlogs(res.data);
+      setBlogs(res.data);
+    })
+    .catch(console.error);
+}, []);
   useEffect(() => {
     const filtered = blogs.filter(blog =>
       blog.category_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -177,6 +186,22 @@ const Blogs = () => {
     setShowForm(true);
     handleReset();
   };
+   const handleDateFilter = () => {
+      const filtered = allBlogs.filter((item) => {
+        const itemDate = dayjs(item.date);
+        return (
+          (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+          (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+        );
+      });
+      setBlogs(filtered);
+    };
+  
+    const handleDateReset = () => {
+      setStartDate(null);
+      setEndDate(null);
+      setBlogs(allBlogs);
+    };
   return (
     <>
       {showForm ? (
@@ -324,7 +349,8 @@ const Blogs = () => {
                 <DatePicker value={startDate} onChange={setStartDate} />
                 End Date
                 <DatePicker value={endDate} onChange={setEndDate} />
-                <button className="filter">Filter</button>
+                <button className='filter' onClick={handleDateFilter}>Filter</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
               <div className="entries">
                 <div className="entries-left">
@@ -405,7 +431,7 @@ const Blogs = () => {
                           dangerouslySetInnerHTML={{ __html: blog.description }}
                         />
                       </StyledTableCell>
-                      <StyledTableCell align="center">{blog.date}</StyledTableCell>
+                      <StyledTableCell align="center">{dayjs(blog.date).format('MM-DD-YYYY')}</StyledTableCell>
                       <StyledTableCell align="center">
                         <FaEdit className="edit" onClick={() => handleEdit(blog.id)} />
                         <RiDeleteBin6Line className="delete" onClick={() => handleDelete(blog.id)} />

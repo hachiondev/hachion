@@ -771,6 +771,37 @@
       border: 1px solid #b3b3b3;
       padding: 5px;
     }
+    .aboutlead-img{
+      max-width: 50%;
+      aspect-ratio: 5/3;
+    }
+    .about-lead-text{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    text-align: justify;
+    word-spacing: 5px;
+    max-width: 50%;
+    }
+    .lead-benefits {
+    background-color: #ffffff;
+    border-radius: 10px;
+    max-width: 22%;
+    box-shadow: 5px 5px 5px #d3d3d3;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+    padding: 1vh;
+    }
+    .lead-icons {
+  font-size: 50px;
+  color: #006489;
+  }
 
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
@@ -1435,6 +1466,24 @@
       border-color: #b3b3b3;
       margin: 5px;
   }
+      .aboutlead-img{
+      max-width: 90%;
+      aspect-ratio: 5/3;
+    }
+    .about-lead-text{
+    font-size: 12px;
+    line-height: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    max-width: 90%;
+    }
+    .lead-benefits {
+    max-width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    }
     }
 .contact-us-div{
 background-color: #ffffff;
@@ -2022,6 +2071,13 @@ margin-left: 0px;
   .student-reg-form{
     max-width: 450px;
   }
+      .aboutlead-img{
+      max-width: 100%;
+      aspect-ratio: 5/3;
+    }
+    .about-lead-text{
+    max-width: 100%;
+    }
 }
 
 .enrollment{

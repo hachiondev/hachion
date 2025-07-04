@@ -1050,7 +1050,7 @@ position: relative;
 
 .batch-type p:hover::after{
 content: '';
-font-weight: 600 important;
+font-weight: 600 !important;
 position: absolute;
 left: -4px;
 right: -4px;
@@ -1059,13 +1059,13 @@ height: 4px;
 background-color: white;
 }
 .fee-amount {
-  display: block;
+  /* display: block; */
   font-size: 16px;
-  background-color: #00AAEF;
-  border: 1px solid #ffffff;
-  padding: 2px 4px;
+  background-color: #FF5C01;
+  /* border: 1px solid #ffffff; */
+  padding: 3px 8px;
   color: #ffffff;
-  border-radius: 5px;
+  border-radius: 20px;
   white-space: nowrap;
 }
 
@@ -1088,7 +1088,9 @@ transition: width 0.3s ease-in-out;
 
 .batch-type-content:hover {
 color: white;
+background-color: #00AAEF;
 transition: background-color 0.3s ease;
+border-radius: 5px;
 }
 
 .batch-type-content.active:hover::after {
@@ -3073,7 +3075,7 @@ max-height: 3em;
 }
 
 .fee-amount {
-  display: block;
+  /* display: block; */
   font-size: 14px;
 }
 

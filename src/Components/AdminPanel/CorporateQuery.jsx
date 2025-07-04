@@ -69,6 +69,11 @@ const handleDateFilter = () => {
   });
   setFilteredData(filtered);
 };
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredData(queries);
+  };
   const displayedData = searchedData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -98,6 +103,7 @@ const handleDateFilter = () => {
                   }}
                 />
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
           <div className='entries'>
             <div className='entries-left'>

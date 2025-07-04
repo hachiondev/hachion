@@ -7,9 +7,13 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { IoSearch } from "react-icons/io5";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#00AEEF',
@@ -38,6 +42,7 @@ export default function OnlinePayment() {
     const [endDate, setEndDate] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [filteredRows, setFilteredRows] = useState([]);
     const filteredData = onlinePayment.filter((item) => {
         const date = new Date(item.date || item.payment_date);
         const matchesSearch =
@@ -55,6 +60,25 @@ export default function OnlinePayment() {
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
       );
+       const handleDateFilter = () => {
+          const filtered = onlinePayment.filter((item) => {
+            const itemDate = dayjs(item.date);
+            return (
+              (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+              (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+            );
+          });
+          setFilteredRows(filtered);
+        };
+      
+        const handleDateReset = () => {
+          setStartDate(null);
+          setEndDate(null);
+          setFilteredRows(onlinePayment);
+        };
+        useEffect(() => {
+        setFilteredRows(onlinePayment);
+      }, [onlinePayment]);
 
     return (
         <>
@@ -79,7 +103,8 @@ export default function OnlinePayment() {
                             '& .MuiIconButton-root':{color: '#00aeef'}
                         }}
                         />
-                                  <button className='filter' >Filter</button>
+                      <button className='filter' onClick={handleDateFilter}>Filter</button>
+                      <button className="filter" onClick={handleDateReset}>Reset</button>
                                 </div>
                       <div className='entries'>
                         <div className='entries-left'>

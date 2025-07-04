@@ -88,6 +88,21 @@ export default function AdminUnsubscribe() {
     return matchesSearch && inDateRange;
   });
 
+  useEffect(() => {
+  const fetchUnsubscribeList = async () => {
+    try {
+      const response = await fetch("https://api.hachion.co/unsubscribe");
+      const data = await response.json();
+      setUnsubscribe(data);
+      setList(data); 
+    } catch (error) {
+      console.error("Error fetching unsubscribe data:", error);
+    }
+  };
+
+  fetchUnsubscribeList();
+}, []);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);

@@ -413,7 +413,7 @@ const handleCheckboxChange = (e) => {
         />{' '}
         WhatsApp
       </label>
-      <label>
+      {/* <label>
         <input
           type="checkbox"
           name="text"
@@ -421,7 +421,7 @@ const handleCheckboxChange = (e) => {
           onChange={handleCheckboxChange}
         />{' '}
         Text Message
-      </label>
+      </label> */}
     </div>
   </>
 )}

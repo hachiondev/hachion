@@ -154,6 +154,11 @@ export default function Support() {
       
         setFilteredSupport(filtered);
       };
+    const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredSupport(support);
+  };
       const handleSave = async () => {
         try {
             const response = await axios.put(
@@ -312,7 +317,7 @@ export default function Support() {
    }}
   />
             <button className='filter' onClick={handleDateFilter} >Filter</button>
-           
+           <button className="filter" onClick={handleDateReset}>Reset</button>
           </div>
           <div className='entries'>
             <div className='entries-left'>

@@ -76,6 +76,11 @@ const handleDateFilter = () => {
   });
   setFilteredData(filtered);
 };
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredData(courseQuery);
+  };
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handlePageChange = (page) => {
@@ -119,6 +124,7 @@ const handleDateFilter = () => {
                   }}
                 />
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
               <div className='entries'>
                 <div className='entries-left'>

@@ -318,6 +318,7 @@ export default function CandidateCertificate() {
         const response = await fetch("https://api.hachion.co/certificate/all");
         const data = await response.json();
         setCertificateList(data);
+        setFilteredCertificate(data);
       } catch (error) {
         console.error("Error fetching certificate data:", error);
       }
@@ -330,10 +331,9 @@ export default function CandidateCertificate() {
             const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
           } catch (error) { 
           } }; 
-       useEffect(() => {
+const handleDateFilter = () => {
   const filtered = certificate.filter((item) => {
-    const date = new Date(item.completed_date);
-    const term = searchTerm.toLowerCase();
+    const itemDate = dayjs(item.completed_date, 'DD-MM-YYYY'); // make sure completed_date format is consistent
 
     const matchesSearch =
       searchTerm === '' ||
@@ -344,20 +344,28 @@ export default function CandidateCertificate() {
         item.course_name,
         item.status,
         item.certificate_id,
-        item.completed_date
+        item.completed_date,
       ]
         .map(field => String(field || '').toLowerCase())
-        .some(field => field.includes(term));
+        .some(field => field.includes(searchTerm.toLowerCase()));
 
     const inDateRange =
-      (!startDate || date >= new Date(startDate)) &&
-      (!endDate || date <= new Date(new Date(endDate).setHours(23, 59, 59, 999)));
+      (!startDate || itemDate.isSameOrAfter(startDate, 'month')) &&
+      (!endDate || itemDate.isSameOrBefore(endDate, 'month'));
 
     return matchesSearch && inDateRange;
   });
 
   setFilteredCertificate(filtered);
-}, [searchTerm, startDate, endDate, certificate]);
+  setCurrentPage(1);
+};
+const handleDateReset = () => {
+  setStartDate(null);
+  setEndDate(null);
+  setSearchTerm('');
+  setFilteredCertificate(certificate);
+  setCurrentPage(1);
+};
 
   const handleDeleteConfirmation = (id) => {
     if (window.confirm("Are you sure you want to delete this certificate")) {
@@ -626,7 +634,8 @@ export default function CandidateCertificate() {
                             '& .MuiIconButton-root': { color: '#00aeef' }
                           }}
                         />
-                        <button className='filter' >Filter</button>
+                        <button className='filter' onClick={handleDateFilter}>Filter</button>
+                        <button className="filter" onClick={handleDateReset}>Reset</button>
                       </div>
                       <div className='entries'>
                         <div className='entries-left'>
@@ -704,7 +713,7 @@ export default function CandidateCertificate() {
   ) : 'Not Available'}
 </StyledTableCell>
         <StyledTableCell align="center">{curr.certificateId}</StyledTableCell>
-        <StyledTableCell align="center">{dayjs(curr.completionDate).format("DD-MM-YYYY")}</StyledTableCell>
+        <StyledTableCell align="center">{dayjs(curr.completionDate).format("MM-DD-YYYY")}</StyledTableCell>
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                         <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />

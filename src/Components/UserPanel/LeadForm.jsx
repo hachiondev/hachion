@@ -8,9 +8,15 @@ import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
+import registerbanner from '../../Assets/register.png';
+import aboutHachion from '../../Assets/aboutlead.png';
+import Benefits from './LeadBenefits';
+import { useNavigate } from "react-router-dom";
 
 const LeadForm = () => {
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [formData, setFormData] = useState({
     fullName: "",
@@ -109,8 +115,13 @@ const LeadForm = () => {
       });
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
+    if (!isChecked) {
+      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+      return;
+    }
+    setError("")
 
     const { fullName, email, mobileNumber, country, courseInterest, batchTiming, marketerId } = formData;
 
@@ -151,12 +162,21 @@ const LeadForm = () => {
     setFormData((prev) => ({ ...prev, marketerId }));
   }
 }, []);
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handlePrivacy = () => {
+    navigate("/privacy");
+  };
+  const handleTerms = () => {
+    navigate("/terms");
+  };
   
   return (
     <>
       <Topbar />
       <NavbarTop />
-      <div className="contact-us-all">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -168,6 +188,17 @@ const LeadForm = () => {
           </ol>
         </nav>
         <div >
+          <img className='banner-img' src={registerbanner} alt='Lead Form Banner' />
+          <div className="contact-us-all">
+          <h2 className='summer-title'>About Hachion</h2>
+              <div className='summer-part'>
+              <p className='about-lead-text'>
+            Hachion is a leading eLearning platform dedicated to transforming tech education by delivering industry-relevant, expert-designed courses. We specialize in cutting-edge programs like Full Stack Development, Data Science, DevOps, Cloud Computing, Cyber Security and more, ensuring learners acquire the most sought-after skills in today's job market. With a focus on mentor-led training, hands-on projects, and real-world case studies, we bridge the gap between academic knowledge and workplace demands. Our mission is to empower professionals and graduates with practical expertise, career guidance, and lifelong learning opportunities, helping them thrive in the fast-evolving tech landscape. At Hachion, we don't just teach—we prepare you for success.
+            </p>
+            <img className='aboutlead-img' src={aboutHachion} alt='About Hachion' />
+            </div>
+            <Benefits />
+            </div>
           <div className='studentform'>
         <h2 className='summer-title'>Student Registration Form</h2>
         <form onSubmit={handleSubmit}>
@@ -266,11 +297,34 @@ const LeadForm = () => {
                 <button type="submit" className="student-register-button">
                   Register
                 </button>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked"
+                    onChange={handleCheckboxChange}
+                  />
+                  <label class="form-check-label" for="flexCheckChecked">
+                    By clicking on Submit, you acknowledge read our{" "}
+                    <span
+                      onClick={handlePrivacy}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
+                    >
+                      Privacy Notice
+                    </span> and 
+                    <span
+                      onClick={handleTerms}
+                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF", paddingLeft: 5 }}
+                    >
+                      Terms & Conditions
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
         </form>
-      </div>
       </div>
       </div>
       <Footer />

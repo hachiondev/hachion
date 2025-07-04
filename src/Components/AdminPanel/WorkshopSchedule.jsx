@@ -928,6 +928,37 @@ const quillModules = {
               onChange={(value) => setEditedRow((prevData)=> ({ ...prevData, details: value }))}
               modules={quillModules}
             />
+        <label className="form-label d-block">Meta Title</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta title"
+          name="meta_title"
+          value={editedRow.meta_title}
+          onChange={handleInputChange}
+        />
+      
+      
+        <label className="form-label d-block">Meta keywords</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta keywords"
+          name="meta_keyword"
+          value={editedRow.meta_keyword}
+          onChange={handleInputChange}
+        />
+     
+      
+        <label className="form-label d-block">Meta Description</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter meta description"
+          name="meta_description"
+          value={editedRow.meta_description}
+          onChange={handleInputChange}
+        />
 
       </LocalizationProvider>
     

@@ -13,6 +13,8 @@ const PostJob = () => {
     mobileNumber: "",
     company: "",
     companyUrl: "",
+    companyLogo: "",
+    workDays: "",
     jobTitle: "",
     vacancies: "",
     exp: "",
@@ -76,9 +78,14 @@ const PostJob = () => {
     "Africa/Johannesburg": "SAST"
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const handleChange = (e) => {
+  const { name, type, value, files } = e.target;
+
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: type === 'file' ? files[0] : value,
+  }));
+};
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -115,9 +122,9 @@ const PostJob = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const { firstName, lastName, email, mobileNumber, company, companyUrl, jobTitle, vacancies, exp, noticePeriod, salary, location, empType, jobType, description, qualification } = formData;
+  const { firstName, lastName, email, mobileNumber, company, companyUrl, companyLogo, workDays, jobTitle, vacancies, exp, noticePeriod, salary, location, empType, jobType, description, qualification } = formData;
 
-  if (!firstName || !lastName || !email || !mobileNumber || !company || !companyUrl || !jobTitle || !vacancies || !exp || !noticePeriod || !salary || !location || !empType || !jobType || !description || !qualification) {
+  if (!firstName || !lastName || !email || !mobileNumber || !company || !companyUrl || !companyLogo || !workDays || !jobTitle || !vacancies || !exp || !noticePeriod || !salary || !location || !empType || !jobType || !description || !qualification) {
     setError('Please fill all the details to Post Job.');
     setMessageType('error');
     return;
@@ -130,9 +137,11 @@ const PostJob = () => {
     firstName,
     lastName,
     email: email,
-    mobileNumber: `${selectedCountry.code} ${mobileNumber}`, // optional formatting
+    mobileNumber: `${selectedCountry.code} ${mobileNumber}`,
     company,
     companyUrl,
+    companyLogo,
+    workDays,
     jobTitle,
     vacancies,
     exp,
@@ -159,6 +168,8 @@ console.log("payload: " + JSON.stringify(payload));
     mobileNumber: "",
     company: "",
     companyUrl: "",
+    companyLogo: "",
+    workDays: "",
     jobTitle: "",
     vacancies: "",
     exp: "",
@@ -299,6 +310,37 @@ console.log("payload: " + JSON.stringify(payload));
                 </div>
                 <div className='hire-row'>
                   <div className="col-md-5 d-flex flex-column">
+                  <label className="form-label">Company Logo<span className='star'>*</span></label>
+                  <input
+                    type="file"
+                    name="companyLogo"
+                    onChange={handleChange}
+                    className="form-control-registration"
+                    id="registration"
+                    placeholder="Upload company logo"
+                    accept="image/*"
+                    style={{ backgroundColor: 'white' }}
+                  />
+                </div>
+                 <div className="col-md-5 d-flex flex-column">
+                  <label className="form-label">Working Days<span className='star'>*</span></label>
+                  <select
+                    type="text"
+                    name="workDays"
+                    value={formData.workDays}
+                    onChange={handleChange}
+                    className="form-control-registration"
+                    id="registration"
+                  >
+                    <option value="">Select working days </option>
+                     <option value="Mon-Fri">Mon - Fri</option>
+                     <option value="Mon-Sat">Mon - Sat</option>
+                     <option value="Mon-Sun">Mon - Sun</option>
+                </select>
+                </div>
+                </div>
+                <div className='hire-row'>
+                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Job Title<span className='star'>*</span></label>
                   <input
                     type="text"
@@ -385,9 +427,8 @@ console.log("payload: " + JSON.stringify(payload));
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
-                    placeholder="Select type of employment"
                   >
-                    <option value="">Select </option>
+                    <option value="">Select type of employment </option>
                      <option value="Full-Time">Full-Time</option>
                      <option value="Part-Time">Part-Time</option>
                      <option value="Contract">Contract</option>
@@ -402,9 +443,8 @@ console.log("payload: " + JSON.stringify(payload));
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
-                    placeholder="Select job type"
                   >
-                    <option value="">Select </option>
+                    <option value="">Select job type </option>
                      <option value="Onsite">Onsite</option>
                      <option value="Hybrid">Hybrid</option>
                      <option value="Remote">Remote</option>

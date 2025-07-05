@@ -110,7 +110,7 @@ const Footer = () => {
       <hr  size='2' />
       <div className='footer-bottom'>
       <div className='footer-p'>
-      <p className='footer-copyright'>© Hachion 2024. All Rights Reserved.</p>
+      <p className='footer-copyright'>© Hachion 2025. All Rights Reserved.</p>
       <div className='term'>
       <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
       <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>

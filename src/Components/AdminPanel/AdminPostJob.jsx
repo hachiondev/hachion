@@ -160,10 +160,12 @@ export default function AdminPostJob() {
                             <StyledTableCell align="center">Full Name</StyledTableCell>
                             <StyledTableCell align="center">Email</StyledTableCell>
                             <StyledTableCell align="center">Mobile</StyledTableCell>
+                            <StyledTableCell align="center">Company Logo</StyledTableCell>
                             <StyledTableCell align="center">Company Name</StyledTableCell>
                             <StyledTableCell align="center">Company URL</StyledTableCell>
                             <StyledTableCell align="center">Job Title</StyledTableCell>
                             <StyledTableCell align="center">Vacancies</StyledTableCell>
+                            <StyledTableCell align="center">Working Days</StyledTableCell>
                             <StyledTableCell align="center">Experiance</StyledTableCell>
                             <StyledTableCell align="center">Salary</StyledTableCell>
                             <StyledTableCell align="center">Location</StyledTableCell>
@@ -185,10 +187,15 @@ export default function AdminPostJob() {
                             <StyledTableCell align="left">{row.name}</StyledTableCell>
                             <StyledTableCell align="left">{row.email}</StyledTableCell>
                             <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
+                            <StyledTableCell align="left">{row.companyLogo
+                            ? <img src={`https://api.hachion.co/${row.companyLogo}`} alt="logo" width="50" />
+                            : 'No Image'}
+                            </StyledTableCell>
                             <StyledTableCell align="left">{row.company}</StyledTableCell>
                             <StyledTableCell align="left">{row.companyUrl}</StyledTableCell>
                             <StyledTableCell align="left">{row.jobTitle}</StyledTableCell>
                             <StyledTableCell align="center">{row.vacancies}</StyledTableCell>
+                            <StyledTableCell align="left">{row.workDays}</StyledTableCell>
                             <StyledTableCell align="center">{row.exp}</StyledTableCell>
                             <StyledTableCell align="center">{row.salary}</StyledTableCell>
                             <StyledTableCell align="center">{row.location}</StyledTableCell>
@@ -220,7 +227,7 @@ export default function AdminPostJob() {
                                           ))
                                         ) : (
                                           <StyledTableRow>
-                                            <StyledTableCell colSpan={19} align="center">No data available</StyledTableCell>
+                                            <StyledTableCell colSpan={21} align="center">No data available</StyledTableCell>
                                           </StyledTableRow>
                                         )}
                                       </TableBody>

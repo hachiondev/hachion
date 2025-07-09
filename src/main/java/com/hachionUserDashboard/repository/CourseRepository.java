@@ -26,4 +26,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
 	@Query("SELECT COUNT(c) > 0 FROM Course c WHERE c.shortCourse = :shortCourse")
 	boolean existsByShortCourse(@Param("shortCourse") String shortCourse);
+
+
+	  @Query(value = "SELECT course_name FROM course", nativeQuery = true)
+	    List<String> findAllCourseNames();
 }

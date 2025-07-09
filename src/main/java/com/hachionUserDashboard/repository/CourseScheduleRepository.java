@@ -1,6 +1,7 @@
 package com.hachionUserDashboard.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -70,4 +71,19 @@ public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, 
 
 	@Query(value = "SELECT is_active FROM schedule WHERE batch_id = :batchId LIMIT 1", nativeQuery = true)
 	Boolean findIsActiveByBatchId(@Param("batchId") String batchId);
+	
+	 @Query(value = "SELECT * FROM schedule " +
+             "WHERE LOWER(schedule_course_name) = LOWER(:courseName) " +
+             "AND is_active = true " +
+             "ORDER BY course_schedule_id DESC " +
+             "LIMIT 1", nativeQuery = true)
+	Optional<CourseSchedule> findTopActiveScheduleByCourseName(@Param("courseName") String courseName);
+	 
+	 @Query(value = "SELECT * FROM schedule WHERE is_active = true ORDER BY schedule_date ASC", nativeQuery = true)
+	 List<CourseSchedule> findAllByIsActiveTrue();
+	 
+	 @Query(value = "SELECT * FROM schedule WHERE is_active = true AND schedule_mode = :mode", nativeQuery = true)
+	 List<CourseSchedule> findAllByScheduleMode(@Param("mode") String mode);
+
+
 }

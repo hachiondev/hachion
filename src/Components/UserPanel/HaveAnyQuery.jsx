@@ -17,6 +17,7 @@ const initialValues = {
   date: "",
 };
 
+
 const HaveAnyQuery = ({ closeModal }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -31,6 +32,8 @@ const HaveAnyQuery = ({ closeModal }) => {
     flag: "US",
     name: "United States",
   });
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   
   const countries = [
     { name: "India", code: "+91", flag: "IN" },
@@ -55,20 +58,22 @@ const HaveAnyQuery = ({ closeModal }) => {
 
   const defaultCountry = countries.find((c) => c.flag === "US");
   
-  useEffect(() => {
+  
+    useEffect(() => {
       fetch("https://ipwho.is/")
         .then((res) => res.json())
         .then((data) => {
           const userCountryCode = data?.country_code;
-          const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+          const matchedCountry = countries.find(
+            (c) => c.flag === userCountryCode
+          );
           if (matchedCountry) {
             setSelectedCountry(matchedCountry);
           }
         })
-        .catch(() => {
-          // fallback already set as default
-        });
+        .catch(() => {});
     }, []);
+  
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
@@ -79,7 +84,54 @@ const HaveAnyQuery = ({ closeModal }) => {
   const handleTerms = () => {
     navigate("/terms");
   };
+  const matchedCountry = countries.find((c) =>
+  mobileNumber.startsWith(c.code)
+);
 
+useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+    const userEmail = userData.email || "";
+  
+   if (!userEmail) {
+      console.warn("🔒 No logged-in user found. Redirecting to /login...");
+       window.confirm("Please login before unsubscribe from hachion");
+      navigate("/login");
+      return;
+    }
+  
+    values.email = userEmail;
+   
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(
+          `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
+        );
+  
+        if (!response.ok) {
+          throw new Error("❌ Failed to fetch profile data");
+        }
+        const data = await response.json();
+        if (data.name) {
+          values.name = data.name;
+        } else {
+          console.warn("⚠️ Name not found in response.");
+        }
+       
+        if (data.mobile) {
+          setMobileNumber(data.mobile);
+        } else {
+          console.warn("⚠️ Mobile number not found.");
+        }
+        if (data.country) {
+          values.country = data.country;
+        }
+      } catch (error) {
+        console.error("❌ Error fetching profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
   const handleContact = async (e) => {
     e.preventDefault();
     if (!isChecked) {
@@ -95,7 +147,7 @@ const HaveAnyQuery = ({ closeModal }) => {
       mobile: mobileNumber,
       comment: values.comment,
       date: currentDate,
-      country: selectedCountry.name,
+      country: matchedCountry ? matchedCountry.name : "United States"
     };
 
     try {
@@ -111,8 +163,12 @@ const HaveAnyQuery = ({ closeModal }) => {
 
       if (response.status === 200) {
         setShowModal(true);
+        setSuccessMessage("✅ Your query has been submitted successfully. Our team will get back to you shortly.");
+  setErrorMessage("");
       }
     } catch (error) {
+      setErrorMessage("❌ Failed to submit your query. Please try again later.");
+    setSuccessMessage("");
       console.error("Error submitting query:", error);
     }
   };
@@ -149,7 +205,7 @@ const HaveAnyQuery = ({ closeModal }) => {
           <form className="query-form" onSubmit={handleSubmit}>
             <div className="form-group col-10">
               <label htmlFor="inputName" className="form-label">
-                Full Name*
+                Full Name<span className="required">*</span>
               </label>
               <input
                 type="text"
@@ -168,7 +224,7 @@ const HaveAnyQuery = ({ closeModal }) => {
 
             <div className="form-group col-10">
               <label htmlFor="inputEmail" className="form-label">
-                Email ID
+                Email ID<span className="required">*</span>
               </label>
               <input
                 type="email"
@@ -185,27 +241,11 @@ const HaveAnyQuery = ({ closeModal }) => {
               <p className="form-error">{errors.email}</p>
             ) : null}
 
-            <label className="form-label">Mobile Number</label>
+            <label className="form-label">Mobile Number<span className="required">*</span></label>
             <div class="input-group mb-3 custom-width">
               <div className="input-wrapper" style={{ position: 'relative' }}>
                   {/* Country code dropdown button (inside input field) */}
-                  <button
-                    variant="text"
-                    onClick={openMenu}
-                    className='mobile-button'
-                  >
-                    <Flag code={selectedCountry.flag} className="country-flag me-1" />
-                    <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
-                    <AiFillCaretDown />
-                  </button>
-                  <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                    {countries.map((country) => (
-                      <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-                        <Flag code={country.flag} className="country-flag me-2" />
-                        {country.name} ({country.code})
-                      </MenuItem>
-                    ))}
-                  </Menu>
+                 
                   <input
                   type="tel"
                   className="form-control-query"
@@ -215,9 +255,9 @@ const HaveAnyQuery = ({ closeModal }) => {
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
                   placeholder="Enter your mobile number"
-                          style={{
-                        paddingLeft: '100px',
-                      }}
+                      //     style={{
+                      //   paddingLeft: '100px',
+                      // }}
                         />
                       </div>
                     </div>
@@ -229,7 +269,7 @@ const HaveAnyQuery = ({ closeModal }) => {
                 htmlFor="exampleFormControlTextarea1"
                 className="form-label"
               >
-                Comments
+                Comments<span className="required">*</span>
               </label>
               <textarea
                 className="form-control-query"
@@ -240,10 +280,13 @@ const HaveAnyQuery = ({ closeModal }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               ></textarea>
+              {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             </div>
             {errors.comment && touched.comment ? (
               <p className="form-error">{errors.comment}</p>
             ) : null}
+            
             <button
               className="btn btn-primary btn-submit"
               type="submit"
@@ -261,7 +304,7 @@ const HaveAnyQuery = ({ closeModal }) => {
                     onChange={handleCheckboxChange}
                   />
                   <label class="form-check-label" for="flexCheckChecked">
-                    By clicking on Submit, you acknowledge read our{" "}
+                    By clicking on Contact Us, you acknowledge read our{" "}
                     <span
                       onClick={handlePrivacy}
                       style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}

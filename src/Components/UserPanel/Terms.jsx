@@ -119,12 +119,14 @@ const Terms = () => {
             These terms and conditions are governed by the laws of the jurisdiction in which Hachion is based. Any disputes that may arise between Hachion and its users will be resolved in the courts of that jurisdiction. You agree to submit to the exclusive jurisdiction of these courts by using our services and acknowledge that they have the authority to hear and adjudicate any claims or disputes that may arise from these terms. This ensures that all parties are subject to consistent legal standards and facilitates fair and efficient resolution of conflicts.
             </p>
 
-            <p className='about-us-left-content' style={{paddingBottom: '50px'}}>
+            <p className='about-us-left-content'>
             <p className='title'>10. Contact Information</p>
-            Any issues, please contact us at trainings@hachion.co or through our website. Use of Hachion's services implies acceptance of the terms and conditions detailed herein. Thanks for considering Hachion for all your online learning needs.
+            Any issues, please contact us at <a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+    target="_blank" 
+    rel="noopener noreferrer">trainings@hachion.co</a> or through our website. Use of Hachion's services implies acceptance of the terms and conditions detailed herein. Thanks for considering Hachion for all your online learning needs.
             </p>
 
-            <p className='about-us-left-content'>
+            <p className='about-us-left-content' style={{paddingBottom: '50px'}}>
             <p className='title'>Disclaimer</p>
               By providing your phone number, you agree to receive a text message from Hachion. Message and Data rates may apply, Message frequency varies. To stop receiving messages, you can opt out by Unsubscribe from Hachion. For more information, contact us.
             </p>

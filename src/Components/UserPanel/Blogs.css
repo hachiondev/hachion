@@ -802,6 +802,227 @@
   font-size: 50px;
   color: #006489;
   }
+    .career-job-text{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+    padding-top: 5px;
+    text-align: center;
+    word-spacing: 5px;
+    }
+    .career-span{
+      color: #00AEEF;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .career-banner-img{
+    width: 100%;
+    aspect-ratio: 24/7;
+    }
+    .search-div-career {
+    height: 50px;
+    max-width: 1000px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px #BABABA;
+    display: flex;
+    background-color: white;
+    overflow: hidden;
+}
+.search-input-career {
+flex: 1;
+padding-left: 1vw;
+border-radius: 10px 0px 0px 10px;
+border: 1px solid rgba(186, 186, 186, 1);
+outline: none;
+background-color: white;
+}
+.Job-card {
+  width: 100%;
+  aspect-ratio: 5/4;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin: 5px;
+  padding: 15px;
+}
+
+.Job-card img {
+  height: 70px;
+  max-width: 100px;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s;
+  object-fit: fill;
+}
+
+.Job-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: large;
+  font-weight: 600;
+  text-align: left;
+  color: #000;
+  margin-bottom: 0;
+}
+.Job-card-sub {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: medium;
+  font-weight: 500;
+  text-align: left;
+  color: #000;
+  margin-bottom: 0;
+}
+  .Job-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+    .Job-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+  }
+     .Job-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .Job-icon-text{
+    display: flex;
+    color: #484848;
+    font-size: small;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+   .Job-icon{
+    padding-right: 10px;
+  }
+  .job-part {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 5px;
+    width: 80%;
+    margin: 20px 10%;
+}
+.Details-card {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 5px;
+  padding: 15px;
+}
+
+.Details-card img {
+  height: 100px;
+  max-width: 180px;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s;
+  object-fit: fill;
+}
+
+.Details-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: x-large;
+  font-weight: 600;
+  text-align: left;
+  color: #000;
+  margin-bottom: 0;
+}
+.Details-card-sub {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: large;
+  font-weight: 600;
+  text-align: left;
+  color: #484848;
+  margin-bottom: 0;
+}
+  .Details-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+  }
+
+  .Details-icon-text{
+    display: flex;
+    color: #484848;
+    font-size: medium;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+   .Details-icon{
+    padding-right: 10px;
+  }
+  .Details-part {
+    display: flex;
+    padding: 5px;
+    width: 50%;
+    max-width: 60%;
+    margin: 0 10px;
+}
+    .Details-column{
+    width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:first baseline;
+  align-items: center;
+  gap: 20px;
+  }
+  .career-part{
+    display: flex;
+    justify-content: space-around;
+    align-items: top;
+    flex-wrap: wrap;
+    padding: 5px;
+    width: 80%;
+    margin: 20px 10%;
+    gap: 20;
+  }
+.Title-and-Details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+.Details-right {
+  width: 100%;
+  margin-top: 10px;
+}
+.Details-card-text{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+    padding-top: 5px;
+    text-align: left;
+    word-spacing: 5px;
+}
+
+
 
       @media  (min-width:1025px) and (max-width: 1366px){
         .about-us-content{
@@ -924,7 +1145,7 @@
         align-items: center;
         flex-wrap: wrap;
       }
-    .hire-part{
+    .hire-part, .career-part{
     display: flex;
     width: 80%;
     margin: 10px 8%;
@@ -941,6 +1162,24 @@
       .points{
       width: 80%;
       }
+      .job-part {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+      .Job-row{
+    width: 100%;
+  }
+    .Details-part {
+    max-width: 100%;
+    width: 100%;
+}
+.Details-card img {
+  height: 80px;
+  max-width: 150px;
+  padding: 10px;
+}
+  .Details-title{
+    gap: 30px;
+  }
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -1441,7 +1680,7 @@
         max-width: 450px;
         width: 100%;
       }
-    .hire-part{
+    .hire-part, .career-part{
     display: flex;
     width: 95%;
     margin: 10px 2%;
@@ -1470,7 +1709,7 @@
       max-width: 90%;
       aspect-ratio: 5/3;
     }
-    .about-lead-text{
+    .about-lead-text, .career-job-text{
     font-size: 12px;
     line-height: 20px;
     padding-left: 5px;
@@ -1484,6 +1723,35 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     }
+    .job-part {
+    grid-template-columns: repeat(1, 1fr);
+  }
+    .Details-part {
+    max-width: 100%;
+    width: 100%;
+}
+.Details-card img {
+  height: 70px;
+  max-width: 120px;
+  padding: 5px;
+}
+  .Details-title{
+    gap: 20px;
+  }
+  .Job-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .Job-column {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .Job-icon-text {
+    font-size: medium;
+    width: 100%;
+  }
     }
 .contact-us-div{
 background-color: #ffffff;
@@ -2075,9 +2343,12 @@ margin-left: 0px;
       max-width: 100%;
       aspect-ratio: 5/3;
     }
-    .about-lead-text{
+    .about-lead-text, .career-job-text{
     max-width: 100%;
     }
+    .search-input-career {
+  max-width: 1000px;
+  }
 }
 
 .enrollment{

@@ -361,7 +361,7 @@ const ContactUs = () => {
             <form className="contact-form">
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name
+                  Full Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
@@ -376,7 +376,7 @@ const ContactUs = () => {
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Email Id
+                  Email Id<span className="required">*</span>
                 </label>
                 <input
                   type="email"
@@ -389,7 +389,7 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
-              <label className="form-label">Mobile Number</label>
+              <label className="form-label">Mobile Number<span className="required">*</span></label>
               <div className="input-wrapper" style={{ position: 'relative' }}>
                  
                         <input
@@ -406,7 +406,7 @@ const ContactUs = () => {
                       </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">
-                  Comments
+                  Comments<span className="required">*</span>
                 </label>
                 <textarea
                   class="form-control-contact"

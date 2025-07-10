@@ -296,7 +296,7 @@ const matchedCountry = countries.find((c) =>
               </div>
               <div class="mb-3 has-validation">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name*
+                  Full Name<span className="required">*</span>
                 </label>
                 <input
                   type="text"
@@ -314,7 +314,7 @@ const matchedCountry = countries.find((c) =>
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Email Id
+                  Email Id<span className="required">*</span>
                 </label>
                 <input
                   type="email"
@@ -330,7 +330,7 @@ const matchedCountry = countries.find((c) =>
                 />
                 <div class="invalid-feedback">PLease Enter Your Email ID.</div>
               </div>
-              <label className="form-label">Mobile Number</label>
+              <label className="form-label">Mobile Number<span className="required">*</span></label>
                 <div className="input-wrapper" style={{ position: 'relative' }}>
                   <input
                     type="tel"
@@ -349,7 +349,7 @@ const matchedCountry = countries.find((c) =>
                   />
                 </div>
               <label htmlFor="inputEmail" className="form-label" style={{marginTop: 10}}>
-                Reason :
+                Reason<span className="required">*</span> :
               </label>
               {error && <p className="error-message">{error}</p>}
               <div className="input-group-checkbox">
@@ -392,7 +392,7 @@ const matchedCountry = countries.find((c) =>
               </div>
                <div class="mb-3 d-flex flex-column">
                 <label for="exampleFormControlTextarea1" class="form-label">
-                  Comments
+                  Comments<span className="required">*</span>
                 </label>
                 <textarea
                   class="form-control-unsub"

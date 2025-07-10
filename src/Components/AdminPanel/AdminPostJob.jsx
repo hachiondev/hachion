@@ -63,7 +63,7 @@ export default function AdminPostJob() {
    const searchedData = filteredData.filter((item) => {
   return (
     searchTerm === '' ||
-          [item.name, item.email, item.mobileNumber, item.jobTitle, item.salary, item.company, item.companyUrl, item.date]
+          [item.jobId, item.name, item.email, item.mobileNumber, item.jobTitle, item.salary, item.company, item.companyUrl, item.date]
             .map(field => (field || '').toLowerCase())
             .some(field => field.includes(searchTerm.toLowerCase()))
   );

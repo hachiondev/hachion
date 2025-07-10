@@ -264,7 +264,7 @@ useEffect(() => {
                 }}
                 onBlur={handleBlur}
                 />
-              <p style={{ color: "#6A6A6A", fontSize: "medium" }}>(.pdf, .txt, .doc, .docx, .rtf)</p>
+              <p className="example">(.pdf, .txt, .doc, .docx, .rtf)</p>
               </div>
               {successMessage && (
             <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>

@@ -10,7 +10,10 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 const ApplyHiring = () => {
     const [showScrollButton, setShowScrollButton] = useState(false);
-    
+    const [jobTitle, setJobTitle] = useState('');
+    const [jobType, setJobType] = useState('');
+    const [location, setLocation] = useState('');
+    const [experience, setExperience] = useState('');
       useEffect(() => {
         const handleScroll = () => {
           if (window.scrollY > 300) {
@@ -26,6 +29,12 @@ const ApplyHiring = () => {
     const scrollToTop = () => {
     console.log("Scroll to top clicked!");
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  const resetFilters = () => {
+    setJobTitle('');
+    setJobType('');
+    setLocation('');
+    setExperience('');
   };
   return (
     <div>
@@ -71,7 +80,47 @@ const ApplyHiring = () => {
                         </button>
                       </div>
                       </div>
-                <JobsDisplay/>
+            <div className="filter-container">
+          <div className="filter-section">
+
+            <select value={jobTitle} onChange={(e) => setJobTitle(e.target.value)}>
+              <option value="">Select Job Title</option>
+              <option value="SEO Executive">SEO Executive</option>
+              <option value="Beanch Sale">Beanch Sale</option>
+              <option value="Developer">Developer</option>
+            </select>
+
+            <select value={jobType} onChange={(e) => setJobType(e.target.value)}>
+              <option value="">Select Job Type</option>
+              <option value="Onsite">Onsite</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+
+            <select value={location} onChange={(e) => setLocation(e.target.value)}>
+            <option value="">Select Location</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Chennai">Chennai</option>
+            <option value="India">India</option>
+          </select>
+
+            <select value={experience} onChange={(e) => setExperience(e.target.value)}>
+              <option value="">Experience Level</option>
+              <option value="0-1 Years">0-1 Years</option>
+              <option value="2-4 Years">2-4 Years</option>
+              <option value="5+ Years">5+ Years</option>
+            </select>
+
+            <button className="view-all" onClick={resetFilters}>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <JobsDisplay
+          filters={{ jobTitle, jobType, location, experience }}
+        />
       <Footer/>
       {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>

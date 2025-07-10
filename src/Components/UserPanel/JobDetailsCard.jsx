@@ -8,8 +8,7 @@ import { FaCalendar } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaDollarSign } from "react-icons/fa";
 import { FaCalendarWeek } from "react-icons/fa";
-import { Work } from '@mui/icons-material';
-const JobDetailsCard = ({ JobTitle, CompanyName, image, Exp, Location, Time, Type, Post, Vacancy, Work, Salary, Notice, Description, Qualification }) => {
+const JobDetailsCard = ({ jobTitle, companyName, image, exp, location, time, type, post, vacancy, work, salary, notice, description, qualification }) => {
 
   return (
     <div className='Details-column'>
@@ -18,24 +17,24 @@ const JobDetailsCard = ({ JobTitle, CompanyName, image, Exp, Location, Time, Typ
   <img src={image} alt='course-img'/>
   <div className='Title-and-Details'>
     <div>
-      <p className='Details-card-content'>{JobTitle}</p>
-      <p className='Details-card-sub'>{CompanyName}</p>
-      <p className='Details-icon-text'><span className='Details-icon'><FaCalendar /></span> Posted : {Post}</p>
+      <p className='Details-card-content'>{jobTitle}</p>
+      <p className='Details-card-sub'>{companyName}</p>
+      <p className='Details-icon-text'><span className='Details-icon'><FaCalendar /></span> Posted : {post}</p>
     </div>
 
     <div className='Details-right'>
       <div className='Job-row'>
         <div className='Job-column'>
-          <p className='Details-icon-text'><span className='Details-icon'><TbBriefcaseFilled /></span> Exp : {Exp}</p>
-          <p className='Details-icon-text'><span className='Details-icon'><FaDollarSign /></span> Salary : {Salary}</p>
-          <p className='Details-icon-text'><span className='Details-icon'><MdLocationOn /></span> {Location}</p>
-          <p className='Details-icon-text'><span className='Details-icon'><FaCalendarWeek  /></span> Work : {Work}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><TbBriefcaseFilled /></span> Exp : {exp}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><FaDollarSign /></span> Salary : {salary}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><MdLocationOn /></span> {location}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><FaCalendarWeek  /></span> Work : {work}</p>
         </div>
         <div className='Job-column'>
-          <p className='Details-icon-text'><span className='Details-icon'><MdAccessTimeFilled /></span> {Time}</p>
-          <p className='Details-icon-text'><span className='Details-icon'><MdAccessTimeFilled /></span> Notice Period : {Notice} Days</p>
-          <p className='Details-icon-text'><span className='Details-icon'><PiMapPinSimpleAreaFill /></span> {Type}</p>
-          <p className='Details-icon-text'><span className='Details-icon'><BsFillPeopleFill /></span> Vacancies : {Vacancy}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><MdAccessTimeFilled /></span> {time}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><MdAccessTimeFilled /></span> Notice Period : {notice} Days</p>
+          <p className='Details-icon-text'><span className='Details-icon'><PiMapPinSimpleAreaFill /></span> {type}</p>
+          <p className='Details-icon-text'><span className='Details-icon'><BsFillPeopleFill /></span> Vacancies : {vacancy}</p>
         </div>
       </div>
     </div>
@@ -45,9 +44,9 @@ const JobDetailsCard = ({ JobTitle, CompanyName, image, Exp, Location, Time, Typ
     
     <div className='Details-card'>
       <p className='Job-card-content'>Job Description :</p>
-      <p className='Details-card-text'>{Description}</p>
+      <p className='Details-card-text'>{description}</p>
       <p className='Job-card-content'>Requirement / Qualification :</p>
-      <p className='Details-card-text'>{Qualification}</p>
+      <p className='Details-card-text'>{qualification}</p>
     </div>
 
     </div>

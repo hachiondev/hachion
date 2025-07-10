@@ -368,15 +368,19 @@ console.log("payload: " + JSON.stringify(payload));
                 <div className='hire-row'>
                   <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Experiance<span className='star'>*</span></label>
-                  <input
+                  <select
                     type="text"
                     name="exp"
                     value={formData.exp}
                     onChange={handleChange}
                     className="form-control-registration"
                     id="registration"
-                    placeholder="Enter no. of years"
-                  />
+                  >
+                    <option value="">Select Experiance </option>
+                    <option value="0-1 Years">0-1 Years</option>
+                    <option value="2-4 Years">2-4 Years</option>
+                    <option value="5+ Years">5+ Years</option>
+                </select>
                 </div>
                  <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Salary Range<span className='star'>*</span></label>

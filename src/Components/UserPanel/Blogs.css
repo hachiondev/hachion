@@ -440,6 +440,8 @@
       padding: 5px;
       border: 1px solid #b3b3b3;
       outline: none;
+      font-size: 16px;
+      margin: 2px;
     }
         .student-register-button {
         width: 400px;
@@ -456,6 +458,11 @@
 
     .student-register-button:hover{
       background-color: #006489;
+    }
+    .example{
+      color: #6a6a6a;
+      font-size: small;
+      margin: 2px;
     }
 
       .register-button {
@@ -572,7 +579,7 @@
     max-width: 500px;
   }
   #registration{
-  width: 500px ;
+  width: 450px ;
   height: 50px ;
   border-radius: 5px;
   padding: 5px;
@@ -839,6 +846,8 @@ background-color: white;
 }
 .Job-card {
   width: 100%;
+  min-width: 280px;
+  max-width: 350px;
   aspect-ratio: 5/4;
   border-radius: 10px;
   background-color: #fff;
@@ -970,7 +979,7 @@ background-color: white;
   .Details-icon-text{
     display: flex;
     color: #484848;
-    font-size: medium;
+    font-size: small;
     align-items: center;
     flex-wrap: nowrap;
   }
@@ -1137,6 +1146,7 @@ background-color: white;
       #studentreg.form-control-student{
       width: 400px ;
       height: 40px ;
+      font-size: 14px;
     }
        .hire-banner{
         display: flex;
@@ -1157,6 +1167,9 @@ background-color: white;
       .points{
       width: 40%;
       }
+      .Job-card {
+    width: 45%;
+  }
     }
     @media (max-width: 768px) {
       .points{
@@ -1164,6 +1177,9 @@ background-color: white;
       }
       .job-part {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  .Job-card {
+    width: 50%;
   }
       .Job-row{
     width: 100%;
@@ -1180,6 +1196,9 @@ background-color: white;
   .Details-title{
     gap: 30px;
   }
+  .Details-card-text{
+    font-size: 14px;
+}
     }
       @media (min-width:350px) and (max-width:480px){
         .about-us{
@@ -1363,13 +1382,18 @@ background-color: white;
       #studentreg.form-control-student{
       width: 300px ;
       height: 30px ;
+      font-size: 10px;
+      margin: 5px 5%;
     }
       .student-register-button {
         width: 300px;
         height: 30px;
-        font-size: 16;
+        font-size: 16px;
         margin: 5px 5%;
-        margin-top: 20px;
+        margin-top: 15px;
+    }
+      .example{
+      margin: 1px 5%;
     }
 
         .register-button {
@@ -1667,6 +1691,7 @@ background-color: white;
   height: 35px;
   margin-bottom: 10px !important;
   padding: 5px;
+  font-size: 12px;
  }
     .hire-banner{
         display: flex;
@@ -1703,7 +1728,7 @@ background-color: white;
       width: 320px;
       font-size: 12px;
       border-color: #b3b3b3;
-      margin: 5px;
+      margin: 5px 5%;
   }
       .aboutlead-img{
       max-width: 90%;
@@ -1723,6 +1748,9 @@ background-color: white;
     flex-wrap: wrap;
     justify-content: space-evenly;
     }
+    .Job-card {
+    width: 100%; 
+  }
     .job-part {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -1738,6 +1766,9 @@ background-color: white;
   .Details-title{
     gap: 20px;
   }
+  .Details-card-text{
+    font-size: 12px;
+}
   .Job-row {
     flex-direction: column;
     width: 100%;

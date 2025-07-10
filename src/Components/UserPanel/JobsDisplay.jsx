@@ -3,61 +3,77 @@ import './Blogs.css';
 import JobCard from './JobCard';
 import HachionLogo from '../../Assets/HachionLogo.png';
 
-const JobsDisplay = () => {
+const JobsDisplay = ({ filters }) => {
+  const { jobTitle, jobType, experience, location } = filters;
   const [jobCards] = useState([
     {
-      JobTitle: 'SEO Executive',
-      CompanyName: 'Hachion',
+      id: 1,
+      jobTitle: 'SEO Executive',
+      companyName: 'Hachion',
       image: HachionLogo,
-      Exp: '2-3 Years',
-      Location: 'India',
-      Time: 'Full-Time',
-      Type: 'Remote',
-      Post: '07-08-2025',
-      Vacancy: '2'
+      exp: '5+ Years',
+      location: 'India',
+      time: 'Full-Time',
+      type: 'Remote',
+      post: '07-08-2025',
+      vacancy: '2'
     },
     {
-      JobTitle: 'Beanch Sale',
-      CompanyName: 'Hachion',
+      id: 2,
+      jobTitle: 'Beanch Sale',
+      companyName: 'Hachion',
       image: HachionLogo,
-      Exp: '2-3 Years',
-      Location: 'India',
-      Time: 'Full-Time',
-      Type: 'Remote',
-      Post: '07-08-2025',
-      Vacancy: '1'
+      exp: '0-1 Years',
+      location: 'India',
+      time: 'Full-Time',
+      type: 'Hybrid',
+      post: '07-08-2025',
+      vacancy: '1'
     },
     {
-      JobTitle: 'Developer',
-      CompanyName: 'Hachion',
+      id: 3,
+      jobTitle: 'Developer',
+      companyName: 'Hachion',
       image: HachionLogo,
-      Exp: '2-3 Years',
-      Location: 'India',
-      Time: 'Full-Time',
-      Type: 'Remote',
-      Post: '07-08-2025',
-      Vacancy: '1'
+      exp: '2-4 Years',
+      location: 'India',
+      time: 'Full-Time',
+      type: 'Onsite',
+      post: '07-08-2025',
+      vacancy: '1'
     },
   ]);
+  const filteredJobs = jobCards.filter((job) => {
+    const matchTitle = jobTitle ? job.jobTitle.toLowerCase().includes(jobTitle.toLowerCase()) : true;
+    const matchType = jobType ? job.type.toLowerCase() === jobType.toLowerCase() : true;
+    const matchExperience = experience ? job.exp === experience : true;
+    const matchLocation = location ? job.location.toLowerCase() === location.toLowerCase() : true;
+
+    return matchTitle && matchType && matchExperience && matchLocation;
+  });
 
   return (
     <div>
       <div className='job-part'>
-        {jobCards.map((course, index) => (
+        {filteredJobs.length ? (
+        filteredJobs.map((job) => (
           <JobCard
-            key={course.JobTitle + index}
-            JobTitle={course.JobTitle}
-            CompanyName={course.CompanyName}
-            image={course.image}
-            Exp={course.Exp}
-            Location={course.Location}
-            Time={course.Time}
-            Type={course.Type}
-            Post={course.Post}
-            Vacancy={course.Vacancy}
+            key={job.id} job={job}
+            jobTitle={job.jobTitle}
+            companyName={job.companyName}
+            image={job.image}
+            exp={job.exp}
+            location={job.location}
+            time={job.time}
+            type={job.type}
+            post={job.post}
+            vacancy={job.vacancy}
           />
-        ))}
-      </div>
+        ))
+      ) : (
+        <p>No jobs match the selected filters.</p>
+      )}
+    </div>
     </div>
   );
 };

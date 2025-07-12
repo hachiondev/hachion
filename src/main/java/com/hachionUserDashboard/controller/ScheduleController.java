@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hachionUserDashboard.dto.BatchScheduleResponse;
 import com.hachionUserDashboard.entity.CourseSchedule;
 import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.CourseScheduleRepository;

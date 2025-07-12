@@ -84,6 +84,10 @@ public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, 
 	 
 	 @Query(value = "SELECT * FROM schedule WHERE is_active = true AND schedule_mode = :mode", nativeQuery = true)
 	 List<CourseSchedule> findAllByScheduleMode(@Param("mode") String mode);
+	 
+	 @Query(value = "SELECT * FROM schedule WHERE LOWER(schedule_course_name) = LOWER(:courseName) AND LOWER(schedule_mode) = LOWER(:scheduleMode) AND is_active = true", nativeQuery = true)
+	 List<CourseSchedule> findByCourseNameAndMode(@Param("courseName") String courseName, @Param("scheduleMode") String scheduleMode);
+
 
 
 }

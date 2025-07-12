@@ -1,78 +1,4 @@
-//package com.hachionUserDashboard.service;
-//
-//
-//import java.util.Random;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.mail.SimpleMailMessage;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.stereotype.Service;
-//
-//import com.hachionUserDashboard.entity.Admin;
-//import com.hachionUserDashboard.repository.AdminRepository;
-//
-//
-//@Service
-//public class AdminService {
-//
-//    @Autowired
-//    private AdminRepository adminRepository;
-//
-//    @Autowired
-//    private JavaMailSender mailSender;
-//
-//    @Value("${spring.mail.username}")
-//    private String fromEmail;
-//
-//    public Admin saveAdmin(Admin admin) {
-//        return adminRepository.save(admin);
-//    }
-//
-//    public Admin getAdminEmail(String email) {
-//        return adminRepository.findByEmail(email);
-//    }
-//
-//    public boolean resetPassword(String email) {
-//        Admin admin = adminRepository.findByEmail(email);
-//        if (admin == null) {
-//            return false;
-//        }
-//
-//        // Generate a random new password
-//        String newPassword = generateRandomPassword();
-//        admin.setPassword(newPassword);
-//        adminRepository.save(admin);
-//
-//        // Send the new password to the user's email
-//        sendPasswordResetEmail(email, newPassword);
-//        return true;
-//    }
-//
-//    private String generateRandomPassword() {
-//        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//        StringBuilder password = new StringBuilder();
-//        Random random = new Random();
-//
-//        for (int i = 0; i < 8; i++) {
-//            password.append(characters.charAt(random.nextInt(characters.length())));
-//        }
-//        return password.toString();
-//    }
-//
-//    private void sendPasswordResetEmail(String toEmail, String newPassword) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom(fromEmail);
-//        message.setTo(toEmail);
-//        message.setSubject("Your New Password");
-//        message.setText("Your new password is: " + newPassword + "\nPlease login and change it as soon as possible.");
-//        mailSender.send(message);
-//    }
-//}
 package com.hachionUserDashboard.service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,12 +6,10 @@ import org.springframework.stereotype.Service;
 
 import com.hachionUserDashboard.dto.AdminDTO;
 import com.hachionUserDashboard.dto.LoginAdminDTO;
-import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.Admin;
 import com.hachionUserDashboard.repository.AdminRepository;
 
 import Response.LoginMessage;
-import Response.LoginResponse;
 import Service.AdminService;
 
 

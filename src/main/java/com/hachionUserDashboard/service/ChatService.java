@@ -1,8 +1,10 @@
 package com.hachionUserDashboard.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,12 @@ public class ChatService {
 	private static final List<String> scheduleKeywords = List.of("schedule", "date", "time", "timing", "start",
 			"batch");
 
-	private static final List<String> demoKeywords = List.of("demo", "live", "session", "webinar", "free", "trial","upcoming",
-			"preview");
+	private static final List<String> demoKeywords = List.of("demo", "live", "session", "webinar", "free", "trial",
+			"upcoming", "preview");
 
-	private static final List<String> demoIntentPhrases = List.of("live demo", "live", "demo", "demo class", "demo session",
-			"upcoming demo", "free class", "trial class", "demo schedule", "demo timings", "live training",
-			"webinar schedule", "upcoming", "attend demo");
+	private static final List<String> demoIntentPhrases = List.of("live demo", "live", "demo", "demo class",
+			"demo session", "upcoming demo", "free class", "trial class", "demo schedule", "demo timings",
+			"live training", "webinar schedule", "upcoming", "attend demo");
 
 	public String getChatResponse(String userMessage) {
 		if (userMessage == null || userMessage.trim().isEmpty()) {
@@ -41,75 +43,115 @@ public class ChatService {
 
 		String cleaned = userMessage.trim().toLowerCase();
 
-		boolean isDemoQuery = Stream
-				  .concat(demoKeywords.stream(), demoIntentPhrases.stream())
-				  .anyMatch(cleaned::contains) && !cleaned.contains("live class");
+		List<String> greetings = List.of("hi", "hello", "hey", "hai", "good morning", "good evening", "good afternoon");
+		List<String> userMatchingWords = Arrays.asList(cleaned.split("\\s+"));
 
-				// Detect live class queries
-				boolean isLiveClassQuery = cleaned.contains("live class") || cleaned.contains("live classes");
-
-				// 🔹 Live Demo Response
-				if (isDemoQuery) {
-				    List<CourseSchedule> demoSchedules = scheduleRepository.findAllByScheduleMode("live demo");
-				    if (demoSchedules.isEmpty()) {
-				        return "⚠️ No upcoming live demo sessions are currently scheduled.";
-				    }
-
-				    StringBuilder sb = new StringBuilder("🎓 *Upcoming Live Demo Sessions:*\n");
-				    for (CourseSchedule cs : demoSchedules) {
-				        sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
-				        .append(cs.getSchedule_date()).append(" (")
-				        .append(cs.getSchedule_week()).append("), ")
-				        .append(cs.getSchedule_time()).append("\n");
-				    }
-				    return sb.toString().trim();
-				}
-
-				// 🔵 Live Class Response
-				if (isLiveClassQuery) {
-				    List<CourseSchedule> classSchedules = scheduleRepository.findAllByScheduleMode("live class");
-				    if (classSchedules.isEmpty()) {
-				        return "⚠️ No live classes are currently available.";
-				    }
-
-				    StringBuilder sb = new StringBuilder("📚 *Currently Running Live Classes:*\n");
-				    for (CourseSchedule cs : classSchedules) {
-				        sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
-				        .append(cs.getSchedule_date()).append(" (")
-				        .append(cs.getSchedule_week()).append("), ")
-				        .append(cs.getSchedule_time()).append("\n");
-				    }
-				    return sb.toString().trim();
-				}
-		boolean isScheduleQuery = scheduleKeywords.stream().anyMatch(cleaned::contains);
-
-		if (isScheduleQuery) {
-			// ✅ Load courses dynamically here
-			List<String> knownCourses = courseRepository.findAllCourseNames();
-
-			for (String course : knownCourses) {
-				if (cleaned.contains(course.toLowerCase())) {
-					System.out.println("👉 Schedule-related query detected for course: " + course);
-
-					Optional<CourseSchedule> optionalSchedule = scheduleRepository
-							.findTopActiveScheduleByCourseName(course);
-
-					if (optionalSchedule.isPresent()) {
-						System.out.println("✅ Response source: DATABASE (CourseSchedule)");
-						CourseSchedule cs = optionalSchedule.get();
-						return String.format(
-								"📚 The %s course is scheduled on %s (%s) at %s.\nDuration: %s\nTrainer: %s\nMode: %s",
-								capitalize(course), cs.getSchedule_date(), cs.getSchedule_week(), cs.getSchedule_time(),
-								cs.getSchedule_duration(), cs.getTrainer_name(), cs.getSchedule_mode());
-					} else {
-						System.out.println("❌ No active schedule found in DB for course: " + course);
-						return "⚠️ Currently, there is no active schedule available for " + capitalize(course) + ".";
-					}
-				}
-			}
+		if (userMatchingWords.stream().anyMatch(greetings::contains)) {
+			return "👋 Hi! I’m Hachion Bot. How can I help you today?";
 		}
 
-		// Fallback to FAQ
+		boolean isDemoQuery = Stream.concat(demoKeywords.stream(), demoIntentPhrases.stream())
+				.anyMatch(cleaned::contains) && !cleaned.contains("live class");
+
+		boolean isLiveClassQuery = cleaned.contains("live class") || cleaned.contains("live classes");
+
+		if (isDemoQuery) {
+			List<CourseSchedule> demoSchedules = scheduleRepository.findAllByScheduleMode("live demo");
+			if (demoSchedules.isEmpty()) {
+				return "⚠️ No upcoming live demo sessions are currently scheduled.";
+			}
+			StringBuilder sb = new StringBuilder("🎓 *Upcoming Live Demo Sessions:*\n");
+			for (CourseSchedule cs : demoSchedules) {
+				sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
+						.append(cs.getSchedule_date()).append(" (").append(cs.getSchedule_week()).append("), ")
+						.append(cs.getSchedule_time()).append("\n");
+			}
+			return sb.toString().trim();
+		}
+
+		if (isLiveClassQuery) {
+			List<CourseSchedule> classSchedules = scheduleRepository.findAllByScheduleMode("live class");
+			if (classSchedules.isEmpty()) {
+				return "⚠️ No live classes are currently available.";
+			}
+			StringBuilder sb = new StringBuilder("📚 *Currently Running Live Classes:*\n");
+			for (CourseSchedule cs : classSchedules) {
+				sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
+						.append(cs.getSchedule_date()).append(" (").append(cs.getSchedule_week()).append("), ")
+						.append(cs.getSchedule_time()).append("\n");
+			}
+			return sb.toString().trim();
+		}
+
+		boolean isScheduleQuery = scheduleKeywords.stream().anyMatch(cleaned::contains);
+		if (cleaned.contains("any class") || cleaned.contains("any classes") || cleaned.contains("scheduled now")
+				|| cleaned.contains("currently running") || cleaned.contains("ongoing classes")
+				|| cleaned.contains("happening now") || cleaned.contains("any sessions")) {
+
+			List<CourseSchedule> demoSchedules = scheduleRepository.findAllByScheduleMode("live demo");
+			List<CourseSchedule> classSchedules = scheduleRepository.findAllByScheduleMode("live class");
+
+			if (demoSchedules.isEmpty() && classSchedules.isEmpty()) {
+				return "⚠️ Currently, there are no live sessions or demo classes scheduled.";
+			}
+
+			StringBuilder sb = new StringBuilder("🟢 *Currently Scheduled Sessions:*\n");
+
+			if (!classSchedules.isEmpty()) {
+				sb.append("\n📚 *Live Classes:*\n");
+				for (CourseSchedule cs : classSchedules) {
+					sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
+							.append(cs.getSchedule_date()).append(" (").append(cs.getSchedule_week()).append("), ")
+							.append(cs.getSchedule_time()).append("\n");
+				}
+			}
+
+			if (!demoSchedules.isEmpty()) {
+				sb.append("\n🎓 *Live Demo Sessions:*\n");
+				for (CourseSchedule cs : demoSchedules) {
+					sb.append("🔹 *").append(capitalize(cs.getSchedule_course_name())).append("* – ")
+							.append(cs.getSchedule_date()).append(" (").append(cs.getSchedule_week()).append("), ")
+							.append(cs.getSchedule_time()).append("\n");
+				}
+			}
+			return sb.toString().trim();
+		}
+
+		List<String> knownCourses = courseRepository.findAllCourseNames();
+		Set<String> inputWords = new HashSet<>(Arrays.asList(cleaned.split("\\s+")));
+
+		for (String course : knownCourses) {
+			String normalizedCourse = course.trim().toLowerCase();
+			List<String> courseWords = Arrays.asList(normalizedCourse.split("\\s+"));
+
+			boolean allWordsPresent = courseWords.stream().allMatch(inputWords::contains);
+			if (allWordsPresent) {
+				System.out.println("👉 Course-related query detected for: " + course);
+				String courseSlug = normalizedCourse.replaceAll("\\s+", "-");
+				String courseLink = "http://localhost:3000/coursedetails/" + courseSlug;
+				return "🔗 This is the course navigation link. Please click below to view more: \n👉 " + courseLink;
+			}
+		}
+		if (userMatchingWords.stream()
+				.anyMatch(word -> word.equals("details") || word.equals("information") || word.equals("course"))) {
+			return "❌ Sorry, the course you're looking for is not available right now. \n✍️ We’ve noted your interest and will update you once it's available.";
+		}
+
+		if (cleaned.contains("how many courses") || cleaned.contains("available courses")
+				|| cleaned.contains("list of courses") || cleaned.contains("what courses")
+				|| cleaned.contains("courses you offer") || cleaned.contains("courses available")) {
+
+			if (knownCourses.isEmpty()) {
+				return "⚠️ Currently, there are no courses available in our catalog.";
+			}
+
+			StringBuilder sb = new StringBuilder("🎓 *Available Courses at Hachion:*\n");
+			for (String course : knownCourses) {
+				sb.append("🔹 ").append(capitalize(course)).append("\n");
+			}
+			return sb.toString().trim();
+		}
+
 		String bestMatch = null;
 		int maxMatchCount = 0;
 		String[] userWords = cleaned.replaceAll("[^a-z0-9 ]", "").split("\\s+");
@@ -127,7 +169,6 @@ public class ChatService {
 					}
 				}
 			}
-
 			if (matchCount > maxMatchCount) {
 				maxMatchCount = matchCount;
 				bestMatch = question;
@@ -140,7 +181,9 @@ public class ChatService {
 		}
 
 		System.out.println("❌ No match found. Showing fallback support message.");
-		return "🤖 Please contact our Hachion support team at trainings@hachion.co.";
+		return "🤖 I'm here to help, but I couldn't find an exact answer to your question.\n"
+				+ "📩 For further assistance, feel free to contact our support team at *trainings@hachion.co*.\n"
+				+ "💡 You can also try asking about course schedules, live demos, or available courses.";
 	}
 
 	private String capitalize(String word) {

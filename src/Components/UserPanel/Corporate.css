@@ -656,7 +656,7 @@ padding: 20px;
 }
 .blog-banner {
   height: 220px;
-  width: 100vw;
+  width: 100%;
   background-image: url('../../Assets/blogbanner.png');
   background-repeat: no-repeat;
   background-size: cover; 
@@ -703,13 +703,7 @@ padding: 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  /* display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 1vw;  */
-  padding: 2vh;
-  /* width: 90%;
-  margin-left: 5%;
-  margin-right: 5%; */
+  padding: 1.5vh;
   padding-top: 0;
 }
 .mobile-filter-toggle {
@@ -722,6 +716,8 @@ padding: 20px;
   align-items: flex-start;
   gap: 10px;
   padding: 10px;
+  width: 80%;
+  margin: 1px 10%;
 }
 
 .filter-workshop {
@@ -857,13 +853,13 @@ padding: 20px;
 .recent-card-image {
   flex: 1;
   width: 100%;
-  object-fit: cover;
+  object-fit: fill;
 }
 .workshop-card-image {
   flex: 1;
-  width: 100%;
-  aspect-ratio: 330 / 108;
-  object-fit: cover;
+  /* width: 100%; */
+  /* aspect-ratio: 9 / 5; */
+  object-fit:fill;
 }
 
 .content-block {
@@ -932,8 +928,8 @@ padding: 20px;
 .main-card-image {
   flex: 1;
   width: 100%;
-  aspect-ratio: 330/135;
-  object-fit: cover;
+  /* aspect-ratio: 330/135; */
+  object-fit: fill;
 }
 
 .main-content-block {
@@ -942,7 +938,7 @@ padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2vh;
+  padding: 1vh;
 }
 
 .main-content, .workshop-title {
@@ -1576,6 +1572,8 @@ padding: 20px;
 
   .workshop-page {
     flex-direction: column;
+    width: 90%;
+    margin: 0 5%;
   }
 .main-work-card {
     width: 100%;

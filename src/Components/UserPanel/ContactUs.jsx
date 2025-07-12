@@ -141,12 +141,12 @@ const ContactUs = () => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = userData.email || "";
   
-   if (!userEmail) {
-      console.warn("🔒 No logged-in user found. Redirecting to /login...");
-       window.confirm("Please login before unsubscribe from hachion");
-      navigate("/login");
-      return;
-    }
+  //  if (!userEmail) {
+  //     console.warn("🔒 No logged-in user found. Redirecting to /login...");
+  //      window.confirm("Please login before unsubscribe from hachion");
+  //     navigate("/login");
+  //     return;
+  //   }
   
     values.email = userEmail;
    
@@ -264,6 +264,7 @@ const ContactUs = () => {
         <img src={contactUsBanner} alt="contact-us-banner" />
       </div>
       <div className="contact-us-all">
+        <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -274,6 +275,7 @@ const ContactUs = () => {
             </li>
           </ol>
         </nav>
+        </div>
         <h1 className="about-us-heading">Office Location</h1>
 
         <div className="contact-us">
@@ -361,7 +363,7 @@ const ContactUs = () => {
             <form className="contact-form">
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name<span className="required">*</span>
+                  Full Name
                 </label>
                 <input
                   type="text"
@@ -376,7 +378,7 @@ const ContactUs = () => {
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Email Id<span className="required">*</span>
+                  Email Id
                 </label>
                 <input
                   type="email"
@@ -389,7 +391,7 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
-              <label className="form-label">Mobile Number<span className="required">*</span></label>
+              <label className="form-label">Mobile Number</label>
               <div className="input-wrapper" style={{ position: 'relative' }}>
                  
                         <input
@@ -406,7 +408,7 @@ const ContactUs = () => {
                       </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">
-                  Comments<span className="required">*</span>
+                  Comments
                 </label>
                 <textarea
                   class="form-control-contact"

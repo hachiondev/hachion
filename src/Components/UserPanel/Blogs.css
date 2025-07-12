@@ -94,11 +94,19 @@
 .topics{
   padding-left: 4vh;
   margin-top: 2vh;
-
+}
+.topics img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
 }
 .topics h2{
   color: #006489;
 }
+ .topics p, .topics li{
+  text-align: justify;
+  }
 .topic-content{
   font-size: 16px;
   font-weight: 400;
@@ -1551,7 +1559,7 @@ background-color: white;
      }
      .salesforce-middle h1{
        font-weight: 700;
-       font-size: 16px;
+       font-size: 24px;
        background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
        -webkit-text-fill-color: transparent;
        -webkit-background-clip: text;
@@ -1592,16 +1600,15 @@ background-color: white;
        padding-left: 0px;
      }
  
-     .topics p{
-       font-size: 10px;
+     .topics p, .topics li{
+       font-size: 12px;
        margin-bottom: 5px;
      }
      .topics h2{
-       font-size: 16px;
-       color: #006489;
+       font-size: 20px;
      }
      .topic-content{
-       font-size: 10px;
+       font-size: 12px;
        font-weight: 400;
        padding: 5px;
      }

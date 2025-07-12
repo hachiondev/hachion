@@ -35,6 +35,7 @@ const Footer = () => {
 
   const handleBlog=()=>{
   navigate('/blogs')
+  window.scrollTo(0, 0);
   }
   const handleAbout=()=>{
     navigate('/aboutus')
@@ -50,12 +51,14 @@ const Footer = () => {
   }
   const handleWorkshop=()=>{
     navigate('/workshop')
+    window.scrollTo(0, 0);
   }
    const handleKidsSummer=()=>{
     navigate('/summer-tech-bootcamp-for-teens')
   }
   const handleSitemap = () => {
-    navigate("/sitemap");
+    navigate("/sitemap")
+    window.scrollTo(0, 0);;
   };
   const handleUnsubscribe = () => {
     navigate("/unsubscribe");

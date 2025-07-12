@@ -39,6 +39,7 @@ const Terms = () => {
       <Topbar />
       <NavbarTop />
       <div className='about-us'>
+      <div className='blogs-header'>
       <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -48,6 +49,7 @@ const Terms = () => {
             </li>
           </ol>
         </nav>
+        </div>
         <div className='about-us-content' style={{color: '#6a6a6a'}}>
           <h1 className='about-us-heading'>Terms and Conditions for Hachion</h1>
 

@@ -73,6 +73,7 @@ const Sitemap = () => {
       <Topbar />
       <NavbarTop />
       <div className="about-us">
+        <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -83,6 +84,7 @@ const Sitemap = () => {
             </li>
           </ol>
         </nav>
+        </div>
         <div className="about-us-content" style={{ color: "#6a6a6a" }}>
           <h1 className="about-us-heading">Hachion Sitemap</h1>
           <div className="about-us-left-content">

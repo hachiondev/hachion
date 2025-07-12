@@ -846,5 +846,71 @@ width: 150px;
 }
 
 .bullet-list li {
-  margin-bottom: 5px; /* Optional spacing between list items */
+  margin-bottom: 5px;
+}
+.ql-editor h1 {
+  font-size: 2.25rem; /* ~36px */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.ql-editor h2 {
+  font-size: 1.75rem; /* ~28px */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.ql-editor h3 {
+  font-size: 1.5rem; /* ~24px */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.ql-editor p {
+  font-size: 1rem; /* ~16px */
+  line-height: 1.6;
+}
+
+.ql-editor li {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ql-editor h1 {
+    font-size: 1.75rem; /* ~28px */
+  }
+
+  .ql-editor h2 {
+    font-size: 1.5rem; /* ~24px */
+  }
+
+  .ql-editor h3 {
+    font-size: 1.25rem; /* ~20px */
+  }
+
+  .ql-editor p,
+  .ql-editor li {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ql-editor h1 {
+    font-size: 1.5rem; /* ~24px */
+  }
+
+  .ql-editor h2 {
+    font-size: 1.25rem; /* ~20px */
+  }
+
+  .ql-editor h3 {
+    font-size: 1.1rem; /* ~18px */
+  }
+
+  .ql-editor p,
+  .ql-editor li {
+    font-size: 0.9rem;
+  }
 }

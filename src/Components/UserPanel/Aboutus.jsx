@@ -21,9 +21,8 @@ import handsOnLearning from '../../Assets/handsonLearning.png';
 import onlineTeaching from '../../Assets/onlineTeaching.png';
 
 const Aboutus = () => {
-  // Scroll to top when component is mounted
   useEffect(() => {
-    window.scrollTo(0, 0);  // This will scroll to the top of the page
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -34,6 +33,7 @@ const Aboutus = () => {
         <img src={aboutUsBanner} alt='about-us' />
       </div>
       <div className='about-us'>
+      <div className='blogs-header'>
       <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -43,6 +43,7 @@ const Aboutus = () => {
             </li>
           </ol>
         </nav>
+        </div>
         <div className='about-us-content'>
           <h1 className='about-us-heading'>About Hachion</h1>
           <div className='about-us-top'>

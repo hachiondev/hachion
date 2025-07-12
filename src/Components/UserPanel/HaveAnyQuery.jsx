@@ -92,12 +92,12 @@ useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = userData.email || "";
   
-   if (!userEmail) {
-      console.warn("🔒 No logged-in user found. Redirecting to /login...");
-       window.confirm("Please login before unsubscribe from hachion");
-      navigate("/login");
-      return;
-    }
+  //  if (!userEmail) {
+  //     console.warn("🔒 No logged-in user found. Redirecting to /login...");
+  //      window.confirm("Please login before unsubscribe from hachion");
+  //     navigate("/login");
+  //     return;
+  //   }
   
     values.email = userEmail;
    
@@ -205,7 +205,7 @@ useEffect(() => {
           <form className="query-form" onSubmit={handleSubmit}>
             <div className="form-group col-10">
               <label htmlFor="inputName" className="form-label">
-                Full Name<span className="required">*</span>
+                Full Name*
               </label>
               <input
                 type="text"
@@ -224,7 +224,7 @@ useEffect(() => {
 
             <div className="form-group col-10">
               <label htmlFor="inputEmail" className="form-label">
-                Email ID<span className="required">*</span>
+                Email ID
               </label>
               <input
                 type="email"
@@ -241,7 +241,7 @@ useEffect(() => {
               <p className="form-error">{errors.email}</p>
             ) : null}
 
-            <label className="form-label">Mobile Number<span className="required">*</span></label>
+            <label className="form-label">Mobile Number</label>
             <div class="input-group mb-3 custom-width">
               <div className="input-wrapper" style={{ position: 'relative' }}>
                   {/* Country code dropdown button (inside input field) */}
@@ -269,7 +269,7 @@ useEffect(() => {
                 htmlFor="exampleFormControlTextarea1"
                 className="form-label"
               >
-                Comments<span className="required">*</span>
+                Comments
               </label>
               <textarea
                 className="form-control-query"
@@ -304,7 +304,7 @@ useEffect(() => {
                     onChange={handleCheckboxChange}
                   />
                   <label class="form-check-label" for="flexCheckChecked">
-                    By clicking on Contact Us, you acknowledge read our{" "}
+                    By clicking on Submit, you acknowledge read our{" "}
                     <span
                       onClick={handlePrivacy}
                       style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}

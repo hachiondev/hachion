@@ -106,9 +106,6 @@
   height: 50px;
   padding: 5px;
 }
-.form-check {
-  margin-bottom: 2vh;
-}
 
 @media (min-width: 350px) and (max-width: 480px) {
   .unsub-us-div {
@@ -273,6 +270,9 @@
     /* margin-left: 5px !important; */
   }
   .form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 10px;
   }
 
@@ -281,7 +281,7 @@
   }
 
   .form-check-label {
-    font-size: 10px !important;
+    font-size: 12px !important;
     padding-top: 0;
     margin-top: 0;
   }

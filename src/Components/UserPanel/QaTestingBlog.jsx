@@ -582,9 +582,9 @@ const QaTestingBlog = () => {
 
         <div className="salesforce-blog-right">
           <div className="salesforce-right">
-            <button className="btn-curriculum" onClick={handleDownload}>
+            {/* <button className="btn-curriculum" onClick={handleDownload}>
               <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download
-            </button>
+            </button> */}
             <div className="salesforce-right-icon">
               <p>Share :</p>
               <img

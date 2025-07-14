@@ -274,7 +274,7 @@ const Blogs = () => {
                     onChange={handleFileChange}
                   />
                 </div>
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="form-label">Blog PDF</label>
                   <input
                     type="file"
@@ -283,7 +283,7 @@ const Blogs = () => {
                     className="form-control"
                     onChange={handleFileChange}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="mb-3">
                 <label className="form-label">Description</label>

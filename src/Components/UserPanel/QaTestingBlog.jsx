@@ -416,7 +416,9 @@ import { BsFileEarmarkPdfFill } from "react-icons/bs";
 import "./Blogs.css";
 import facebook from "../../Assets/facebook.png";
 import twitter from "../../Assets/twitter.png";
-import linkedin from "../../Assets/linkedin.png";
+import linkedin from "../../Assets/linkedin (1).png";
+import whatsapp from "../../Assets/logos_whatsapp-icon.png";
+import email from "../../Assets/Group 39487.png";
 import { FaUserTie } from "react-icons/fa6";
 import RecentEntries from "./RecentEntries";
 import Footer from "./Footer";
@@ -481,6 +483,20 @@ const QaTestingBlog = () => {
     const twitterShareUrl = `https://twitter.com/intent/tweet?url=${blogUrl}`;
     window.open(twitterShareUrl, "_blank");
   };
+
+  const shareOnWhatsapp = () => {
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(blogUrl)}`;
+  window.open(whatsappShareUrl, "_blank");
+};
+
+const shareOnEmail = () => {
+  const rawBlogUrl = window.location.href;
+  const emailSubject = "Check out this blog!";
+  const emailBody = `I thought you might like this blog: ${rawBlogUrl}`;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+  window.open(gmailUrl, "_blank");
+};
 
   useEffect(() => {
   if (selectedBlog?.description) {
@@ -604,6 +620,18 @@ const QaTestingBlog = () => {
                 alt="linkedin"
                 style={{ cursor: "pointer" }}
                 onClick={shareOnLinkedIn}
+              />
+              <img
+                src={whatsapp}
+                alt="WhatsApp"
+                style={{ cursor: "pointer" }}
+                onClick={shareOnWhatsapp}
+              />
+              <img
+                src={email}
+                alt="Email"
+                style={{ cursor: "pointer" }}
+                onClick={shareOnEmail}
               />
             </div>
           </div>

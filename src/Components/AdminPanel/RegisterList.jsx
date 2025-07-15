@@ -321,6 +321,35 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
 
     const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
     }
+    const isFormValid = () => {
+  const {
+    userName,
+    email,
+    mobile,
+    country,
+    location,
+    visa_status,
+    time_zone,
+    analyst_name,
+    source,
+    remarks,
+    comments,
+  } = studentData;
+
+  return (
+    userName.trim() &&
+    email.trim() &&
+    mobile.trim() &&
+    country.trim() &&
+    location.trim() &&
+    visa_status !== "Select Visa Status" &&
+    time_zone.trim() &&
+    analyst_name.trim() &&
+    source !== "Select" &&
+    remarks.trim().length >= 15 &&
+    comments.trim()
+  );
+};
 
   return (
     
@@ -385,6 +414,7 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
            <option>GC</option>
            <option>EAD</option>
            <option>F1</option>
+           <option>Not Sure</option>
          </select>
        </div>
        </div>
@@ -431,6 +461,11 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
        name='remarks' value={studentData.remarks} onChange={handleChange}></textarea>
      </div>
+     {studentData.remarks.trim().length > 0 && studentData.remarks.trim().length < 15 && (
+    <p style={{ color: "red", fontSize: "0.9rem" }}>
+      Remarks must be at least 15 characters.
+    </p>
+  )}
      <div class="mb-3">
        <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -451,11 +486,14 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
         <div className="course-row">
         {formMode === "Edit" ? (
-          <button className='submit-btn' onClick={handleUpdate}>Update</button>
-        ) : (
-          <button className='submit-btn' onClick={handleSubmit}>Submit</button>
-        )}
-        <button className='reset-btn' onClick={handleReset}>Reset</button>
+        <button className='submit-btn' onClick={handleUpdate}>
+          Update
+        </button>
+      ) : (
+        <button className='submit-btn' onClick={handleSubmit} disabled={!isFormValid()}>
+          Submit
+        </button>
+      )}
       </div>
      </div>
         

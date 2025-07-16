@@ -10,6 +10,8 @@ import com.hachionUserDashboard.entity.RequestBatch;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class WebhookSenderService {
@@ -110,4 +112,23 @@ public class WebhookSenderService {
 			System.err.println("❌ Failed to send request batch webhook: " + e.getMessage());
 		}
 	}
+	
+	private static final String WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAQA6ewjlUA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=6Ky6FWJuoONB7vBZuwXqNsAb9uaT_Lkcegj5cF25_2c";
+
+    public void sendToWorkspace(String userMessage, String botResponse) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("question", userMessage);
+        payload.put("response", botResponse);
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(payload, headers);
+        try {
+            restTemplate.postForObject(WEBHOOK_URL, entity, String.class);
+        } catch (Exception e) {
+            System.err.println("🚨 Failed to send message to webhook: " + e.getMessage());
+        }
+    }
 }

@@ -23,6 +23,9 @@ public class ChatService {
 
 	@Autowired
 	private CourseRepository courseRepository;
+	
+	@Autowired
+	private WebhookSenderService webhookSenderService;
 
 	private static final Map<String, String> faqMap = FaqLoader.loadFaq("faq.txt");
 
@@ -134,7 +137,9 @@ public class ChatService {
 		}
 		if (userMatchingWords.stream()
 				.anyMatch(word -> word.equals("details") || word.equals("information") || word.equals("course"))) {
-			return "❌ Sorry, the course you're looking for is not available right now. \n✍️ We’ve noted your interest and will update you once it's available.";
+			String sorryResponse = "❌ Sorry, the course you're looking for is not available right now. \n✍️ We’ve noted your interest and will update you once it's available.";
+			webhookSenderService.sendToWorkspace(userMessage, sorryResponse);
+			return sorryResponse;
 		}
 
 		if (cleaned.contains("how many courses") || cleaned.contains("available courses")

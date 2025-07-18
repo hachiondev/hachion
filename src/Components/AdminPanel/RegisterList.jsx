@@ -37,20 +37,23 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
-// import { AnalyticsOutlined } from '@mui/icons-material';
+import { AiFillCaretDown } from 'react-icons/ai';
+import { Menu, MenuItem } from '@mui/material';
+import Flag from 'react-world-flags';
+import Select from 'react-select';
 dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white', 
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
   },
 }));
 
@@ -78,6 +81,13 @@ export default function RegisterList() {
     const [errorMessage, setErrorMessage] = useState("");
         
     const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
+    const [mobileError, setMobileError] = useState("");
+const [anchorElCountry, setAnchorElCountry] = useState(null);
+const [selectedCountry, setSelectedCountry] = useState({
+  name: '',
+  code: '',
+  flag: ''
+});
     const [studentData, setStudentData] = useState({
         student_Id:"",
         userName:"",
@@ -95,6 +105,8 @@ export default function RegisterList() {
             mode:"Offline",
          });
         
+         const [countries, setCountries] = useState([]);
+
 const [currentPage, setCurrentPage] = useState(1);
             const [rowsPerPage, setRowsPerPage] = useState(10);
             
@@ -102,11 +114,11 @@ const [currentPage, setCurrentPage] = useState(1);
              setCurrentPage(page);
              window.scrollTo(0, window.scrollY);
            };
-           // Inside your CourseCategory component
+           
          
          const handleRowsPerPageChange = (rows) => {
            setRowsPerPage(rows);
-           setCurrentPage(1); // Reset to the first page whenever rows per page changes
+           setCurrentPage(1); 
          };
 
          const displayedCourse = filteredStudent.slice(
@@ -141,14 +153,48 @@ const [currentPage, setCurrentPage] = useState(1);
           };
    
     const handleClose = () => {
-      setOpen(false); // Close the modal
+      setOpen(false); 
     };
 
+    useEffect(() => {
+      fetch("https://restcountries.com/v3.1/all?fields=name,idd,cca2")
+        .then(res => res.json())
+        .then(data => {
+          const formattedCountries = data
+            .filter(c => c.idd?.root) 
+            .map(c => {
+              const code = c.idd.root + (c.idd.suffixes?.[0] || "");
+              return {
+                name: c.name.common,
+                code,
+                flag: c.cca2 
+              };
+            })
+            .sort((a, b) => a.name.localeCompare(b.name)); 
+    
+          setCountries(formattedCountries);
+        })
+        .catch(err => {
+          console.error("Failed to load countries:", err);
+        });
+    }, []);
+
+    const handleCountrySelect = (country) => {
+  setSelectedCountry(country);
+
+  const currentMobile = studentData.mobile || "";
+  const numberPart = currentMobile.includes(" ") ? currentMobile.split(" ")[1] : currentMobile;
+
+  setStudentData(prev => ({
+    ...prev,
+    mobile: numberPart.trim(), 
+  }));
+};
     useEffect(() => {
       const fetchStudent = async () => {
           try {
               const response = await axios.get('https://api.hachion.co/registerstudent');
-              setRegisterStudent(response.data); // Use the curriculum state
+              setRegisterStudent(response.data); 
               setFilteredStudent(response.data);
           } catch (error) {
               console.error("Error fetching student list:", error.message);
@@ -156,7 +202,7 @@ const [currentPage, setCurrentPage] = useState(1);
       };
       fetchStudent();
       setFilteredStudent(registerStudent)
-  }, []); // Empty dependency array ensures it runs only once
+  }, []); 
 
     
   
@@ -249,19 +295,42 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
     setFilteredStudent(filtered);
 }, [searchTerm, registerStudent]);
 
-     const handleClickOpen = (row) => {
-      setFormMode("Edit");
-      setStudentData(row);
-      setShowAddCourse(true);
-    };
+    const handleClickOpen = (row) => {
+  setFormMode("Edit");
+
+
+  const [codePart, ...numberParts] = (row.mobile || "").split(" ");
+  const numberPart = numberParts.join(" ");
+
+  const matchedCountry = countries.find(c => c.code === codePart);
+  if (matchedCountry) {
+    setSelectedCountry(matchedCountry);
+  }
+
+  setStudentData({
+    ...row,
+    mobile: numberPart, 
+  });
+
+  setShowAddCourse(true);
+};
     const handleUpdate = async () => {
-      try {
-        const response = await axios.put(
-          `https://api.hachion.co/registerstudent/update/${studentData.student_Id}`,
-          studentData
-        );
+     
+       try {
+    const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
+
+    const updatedData = {
+      ...studentData,
+      mobile: finalMobile,
+    };
+
+    const response = await axios.put(
+      `https://api.hachion.co/registerstudent/update/${studentData.id}`,
+      updatedData
+    );
+
         setRegisterStudent((prev) =>
-          prev.map((s) => s.student_Id === studentData.student_Id ? response.data : s)
+          prev.map((s) => s.id === studentData.id ? response.data : s)
         );
         setMessage("Student updated successfully!");
         setShowAddCourse(false);
@@ -281,15 +350,36 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
           [name]: value,
         }));
       };
+
+const handleMobileBlur = () => {
+  const mobile = studentData.mobile?.trim();
+
+  if (!mobile || mobile.length !== 10) {
+    setMobileError("❌ Mobile number must be exactly 10 digits.");
+  } else {
+    setMobileError("");
+  }
+};
       const handleSubmit = async (e) => {
   e.preventDefault();
+const mobileNumber = studentData.mobile?.trim();
+  const countryCode = selectedCountry.code?.trim() || "";
 
+  
+  if (!mobileNumber || mobileNumber.length !== 10) {
+    setErrorMessage("❌ Mobile number must be exactly 10 digits.");
+    setSuccessMessage("");
+    return;
+  }
+
+  const finalMobile = `${countryCode} ${mobileNumber}`;
   const currentDate = new Date().toISOString().split("T")[0];
+
   const dataToSubmit = {
     ...studentData,
+    mobile: finalMobile, 
     date: currentDate,
   };
-
   console.log("Data being sent:", dataToSubmit);
 
   try {
@@ -386,27 +476,124 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
          onChange={handleChange}/>
        </div>
        <div class="col">
-         <label for="inputPassword4" class="form-label">Mobile</label>
-         <input type="number" class="schedule-input" id="inputPassword4" placeholder='Enter mobile number'
-          name="mobile"
-          value={studentData.mobile}
-          onChange={handleChange}/>
-       </div>
-       </div>
-       <div className="course-row">
-       <div class="col">
-         <label for="inputEmail4" class="form-label">Country</label>
-         <input type="text" class="schedule-input" id="inputEmail4"  name="country"
-         value={studentData.country}
-         onChange={handleChange}/>
-       </div>
-       <div class="col">
          <label for="inputPassword4" class="form-label">Location</label>
          <input type="text" class="schedule-input" id="inputPassword4"  name="location"
          value={studentData.location}
          onChange={handleChange}/>
        </div>
+       </div>
+       <div className="course-row">
+       
+      <div className="col">
+        <label className="form-label">Country <span className="star">*</span></label>
+        <Select 
+          options={countries.map((country) => ({
+            value: country.name,
+            label: (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Flag code={country.flag} style={{ width: '20px', marginRight: '10px' }} />
+                {country.name} ({country.code})
+              </div>
+            ),
+            flag: country.flag,
+            code: country.code
+          }))}
+          onChange={(selected) => {
+            setSelectedCountry(selected);
+            setStudentData((prev) => ({
+              ...prev,
+              country: selected.value
+            }));
+          }}
+          value={
+            selectedCountry.value
+              ? {
+                  value: selectedCountry.value,
+                  label: (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Flag code={selectedCountry.flag} style={{ width: '20px', marginRight: '10px' }} />
+                      {selectedCountry.value} ({selectedCountry.code})
+                    </div>
+                  )
+                }
+              : null
+          }
+        styles={{
+            control: (base) => ({
+              ...base,
+              minHeight: '50px',
+              height: '50px',
+            }),
+            valueContainer: (base) => ({
+              ...base,
+              height: '50px',
+              padding: '0 8px',
+            }),
+            indicatorsContainer: (base) => ({
+              ...base,
+              height: '50px',
+            }),
+          }}
+        />
+      </div>
+        <div className="col">
+        <label className="form-label">Mobile <span className="star">*</span></label>
+        <div style={{ position: 'relative' }}>
+          {/* Country code prefix */}
+          <span
+            style={{
+              position: 'absolute',
+              left: '12px',
+              top: '0',
+              bottom: '0',
+              display: 'flex',
+              alignItems: 'center',
+              fontSize: '16px',
+              fontFamily: 'inherit',
+              color: '#212529',
+              height: '50px',
+              pointerEvents: 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {selectedCountry.code}
+          </span>
+
+          {/* Input box for mobile */}
+          <input
+            type="text"
+            className="schedule-input"
+            placeholder="Enter mobile number"
+            name="mobile"
+            value={studentData.mobile}
+            onChange={handleChange}
+            onBlur={handleMobileBlur}
+            style={{
+              paddingLeft: selectedCountry.code ? `${selectedCountry.code.length * 10 + 20}px` : '10px',
+              // height: '38px',
+              fontSize: '16px',
+              fontFamily: 'inherit',
+            }}
+          />
+
+          {mobileError && (
+            <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>{mobileError}</small>
+          )}
+        </div>
+      </div>
        <div class="col">
+         <label for="inputState" class="form-label">Time Zone</label>
+         <input type="text" class="schedule-input"
+         name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
+       </div>
+       </div>
+       <div className="course-row">
+         <div class="col">
+         <label for="inputState" class="form-label">Entered by</label>
+         <input type="text" class="schedule-input"
+         name="analyst_name" value={studentData.analyst_name} onChange={handleChange}/>
+       </div>
+        <div class="col">
          <label for="inputState" class="form-label">Visa Status</label>
          <select id="inputState" class="form-select" name="visa_status" value={studentData.visa_status} onChange={handleChange}>
            <option selected>Select Visa Status</option>
@@ -416,18 +603,6 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
            <option>F1</option>
            <option>Not Sure</option>
          </select>
-       </div>
-       </div>
-       <div className="course-row">
-       <div class="col">
-         <label for="inputState" class="form-label">Time Zone</label>
-         <input type="text" class="schedule-input"
-         name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
-       </div>
-       <div class="col">
-         <label for="inputState" class="form-label">Entered by</label>
-         <input type="text" class="schedule-input"
-         name="analyst_name" value={studentData.analyst_name} onChange={handleChange}/>
        </div>
        <div class="col">
          <label for="inputState" class="form-label">Source of Enquiry</label>
@@ -606,8 +781,8 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
         <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
         <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
         <StyledTableCell align="center">{row.source}</StyledTableCell>
-        <StyledTableCell align="left">{row.remarks}</StyledTableCell>
-        <StyledTableCell align="left">{row.comments}</StyledTableCell> 
+        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell>
+        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell> 
       <StyledTableCell align="center">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
         <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

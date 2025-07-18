@@ -41,6 +41,7 @@ const ApplyHiring = () => {
       <div className='home-background'>
       <Topbar/>
       <NavbarTop/>
+      <div className='blogs-header'>
       <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
@@ -51,6 +52,7 @@ const ApplyHiring = () => {
                   </li>
                 </ol>
               </nav>
+              </div>
               <div >
                 <img className='career-banner-img' src={careerjob} alt='Career Banner' />
 

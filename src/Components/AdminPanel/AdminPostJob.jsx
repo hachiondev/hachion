@@ -60,6 +60,9 @@ export default function AdminPostJob() {
     //     return matchesSearch && inDateRange;
     //   });
 
+// [item.jobId, `${item.firstName} ${item.lastName}`, item.email, item.mobileNumber, item.jobTitle, item.salary, item.company, item.companyUrl, item.date]
+
+
    const searchedData = filteredData.filter((item) => {
   return (
     searchTerm === '' ||
@@ -90,6 +93,43 @@ export default function AdminPostJob() {
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
       );
+
+      useEffect(() => {
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get("https://api.hachion.co/hire-from-us");
+      const data = response.data || [];
+      console.log("Fetched job data:", data);
+      setJobData(data);
+      setFilteredData(data);
+    } catch (error) {
+      console.error("Error fetching job data:", error);
+    }
+  };
+
+  fetchJobs();
+}, []);
+const updateStatus = async (jobId, newStatus) => {
+  const selectedJob = jobData.find(job => job.jobId === jobId);
+  if (!selectedJob) return;
+
+  const payload = {
+    ...selectedJob,
+    status: newStatus
+  };
+
+  try {
+    await axios.put("https://api.hachion.co/hire-from-us", payload);
+    const updatedJobs = jobData.map(job =>
+      job.jobId === jobId ? { ...job, status: newStatus } : job
+    );
+    setJobData(updatedJobs);
+    setFilteredData(updatedJobs);
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
+};
+
 
     return (
         <>
@@ -184,11 +224,13 @@ export default function AdminPostJob() {
                 <StyledTableRow key={row.batch_id || index}>
                             <StyledTableCell align="center">{index + 1}</StyledTableCell>
                             <StyledTableCell align="center">{row.jobId}</StyledTableCell>
-                            <StyledTableCell align="left">{row.name}</StyledTableCell>
+                            
+                            <StyledTableCell align="left">{row.firstName} {row.lastName}</StyledTableCell>
+
                             <StyledTableCell align="left">{row.email}</StyledTableCell>
                             <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
-                            <StyledTableCell align="left">{row.companyLogo
-                            ? <img src={`https://api.hachion.co/${row.companyLogo}`} alt="logo" width="50" />
+                            <StyledTableCell align="center">{row.companyLogo
+                            ? <img src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" />
                             : 'No Image'}
                             </StyledTableCell>
                             <StyledTableCell align="left">{row.company}</StyledTableCell>
@@ -196,33 +238,38 @@ export default function AdminPostJob() {
                             <StyledTableCell align="left">{row.jobTitle}</StyledTableCell>
                             <StyledTableCell align="center">{row.vacancies}</StyledTableCell>
                             <StyledTableCell align="left">{row.workDays}</StyledTableCell>
-                            <StyledTableCell align="center">{row.exp}</StyledTableCell>
+                            <StyledTableCell align="center">{row.experience}</StyledTableCell>
                             <StyledTableCell align="center">{row.salary}</StyledTableCell>
                             <StyledTableCell align="center">{row.location}</StyledTableCell>
                             <StyledTableCell align="center">{row.noticePeriod}</StyledTableCell>
-                            <StyledTableCell align="left">{row.empType}</StyledTableCell>
+                            <StyledTableCell align="left">{row.employmentType}</StyledTableCell>
                             <StyledTableCell align="left">{row.jobType}</StyledTableCell>
                             <StyledTableCell align="left">{row.description}</StyledTableCell>
                             <StyledTableCell align="left">{row.qualification}</StyledTableCell>
-                            <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
+                            <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY')}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                  {jobData.status === 'approved' ? (
-                      <span className="approved">Approved</span>
-                    ) : jobData.status === 'rejected' ? (
-                      <span className="rejected">Rejected</span>
-                    ) : (
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                        <FaCheckCircle
-                          className="approve"
-                        />
-                        <RiCloseCircleLine
-                          className="reject"
-                        />
-                      </div>
-                    )}
-                  </div>
-                  </StyledTableCell>
+  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+    {row.status === 'approved' ? (
+      <span className="approved">Approved</span>
+    ) : row.status === 'rejected' ? (
+      <span className="rejected">Rejected</span>
+    ) : (
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <FaCheckCircle
+          className="approve"
+          style={{ cursor: 'pointer', color: 'green' }}
+          onClick={() => updateStatus(row.jobId, 'approved')}
+        />
+        <RiCloseCircleLine
+          className="reject"
+          style={{ cursor: 'pointer', color: 'red' }}
+          onClick={() => updateStatus(row.jobId, 'rejected')}
+        />
+      </div>
+    )}
+  </div>
+</StyledTableCell>
+
                             </StyledTableRow>
                                           ))
                                         ) : (

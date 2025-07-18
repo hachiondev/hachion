@@ -26,7 +26,7 @@ const PostJob = () => {
     description: "",
     qualification: "",
   });
-  console.log("form data" + formData.getFulName);
+  
 
   const mobileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -36,26 +36,53 @@ const PostJob = () => {
     name: 'United States',
   });
 
-  const countries = [
-    { name: 'India', code: '+91', flag: 'IN' },
-    { name: 'United States', code: '+1', flag: 'US' },
-    { name: 'United Kingdom', code: '+44', flag: 'GB' },
-    { name: 'Thailand', code: '+66', flag: 'TH' },
-    { name: 'Canada', code: '+1', flag: 'CA' },
-    { name: 'Australia', code: '+61', flag: 'AU' },
-    { name: 'Germany', code: '+49', flag: 'DE' },
-    { name: 'France', code: '+33', flag: 'FR' },
-    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
-    { name: 'Qatar', code: '+974', flag: 'QA' },
-    { name: 'Japan', code: '+81', flag: 'JP' },
-    { name: 'China', code: '+86', flag: 'CN' },
-    { name: 'Russia', code: '+7', flag: 'RU' },
-    { name: 'South Korea', code: '+82', flag: 'KR' },
-    { name: 'Brazil', code: '+55', flag: 'BR' },
-    { name: 'Mexico', code: '+52', flag: 'MX' },
-    { name: 'South Africa', code: '+27', flag: 'ZA' },
-    { name: 'Netherlands', code: '+31', flag: 'NL' }
-  ];
+  // const countries = [
+  //   { name: 'India', code: '+91', flag: 'IN' },
+  //   { name: 'United States', code: '+1', flag: 'US' },
+  //   { name: 'United Kingdom', code: '+44', flag: 'GB' },
+  //   { name: 'Thailand', code: '+66', flag: 'TH' },
+  //   { name: 'Canada', code: '+1', flag: 'CA' },
+  //   { name: 'Australia', code: '+61', flag: 'AU' },
+  //   { name: 'Germany', code: '+49', flag: 'DE' },
+  //   { name: 'France', code: '+33', flag: 'FR' },
+  //   { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
+  //   { name: 'Qatar', code: '+974', flag: 'QA' },
+  //   { name: 'Japan', code: '+81', flag: 'JP' },
+  //   { name: 'China', code: '+86', flag: 'CN' },
+  //   { name: 'Russia', code: '+7', flag: 'RU' },
+  //   { name: 'South Korea', code: '+82', flag: 'KR' },
+  //   { name: 'Brazil', code: '+55', flag: 'BR' },
+  //   { name: 'Mexico', code: '+52', flag: 'MX' },
+  //   { name: 'South Africa', code: '+27', flag: 'ZA' },
+  //   { name: 'Netherlands', code: '+31', flag: 'NL' }
+  // ];
+
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+  fetch("https://restcountries.com/v3.1/all?fields=name,idd,cca2")
+    .then(res => res.json())
+    .then(data => {
+      const formattedCountries = data
+        .filter(c => c.idd?.root) 
+        .map(c => {
+          const code = c.idd.root;
+          return {
+            name: c.name.common,
+            code,
+            flag: c.cca2 
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name)); 
+
+      setCountries(formattedCountries);
+    })
+    .catch(err => {
+      console.error("Failed to load countries:", err);
+    });
+}, []);
+
+
 
   const timeZoneAbbreviationMap = {
     "Europe/Amsterdam": "CEST",
@@ -97,34 +124,46 @@ const handleChange = (e) => {
   const closeMenu = () => setAnchorEl(null);
 
   useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const timeZone = data?.timezone?.id || "America/New_York";
-        const userCountryCode = data?.country_code || "US";
+  if (countries.length === 0) return;
 
-        window.userTimeZoneFromIP = timeZone;
-        setFormData(prev => ({ ...prev, timeZone }));
+  fetch("https://ipwho.is/")
+    .then((res) => res.json())
+    .then((data) => {
+      const timeZone = data?.timezone?.id || "America/New_York";
+      const userCountryCode = data?.country_code || "US";
 
-        const matchedCountry = countries.find(
-          (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
-        );
+      window.userTimeZoneFromIP = timeZone;
+      setFormData(prev => ({ ...prev, timeZone }));
 
-        setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
-      })
-      .catch(() => {
-        window.userTimeZoneFromIP = "America/New_York";
-        setFormData(prev => ({ ...prev, timeZone: "America/New_York" }));
-        setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
-      });
-  }, []);
+      const matchedCountry = countries.find(
+        (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
+      );
 
-  const handleSubmit = async (e) => {
+      setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
+    })
+    .catch(() => {
+      window.userTimeZoneFromIP = "America/New_York";
+      setFormData(prev => ({ ...prev, timeZone: "America/New_York" }));
+      setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
+    });
+}, [countries]);
+
+
+const handleSubmit = async (e) => {
   e.preventDefault();
+    const {
+    firstName, lastName, email, mobileNumber, company, companyUrl, companyLogo,
+    workDays, jobTitle, vacancies, exp, noticePeriod, salary,
+    location, empType, jobType, description, qualification
+  } = formData;
 
-  const { firstName, lastName, email, mobileNumber, company, companyUrl, companyLogo, workDays, jobTitle, vacancies, exp, noticePeriod, salary, location, empType, jobType, description, qualification } = formData;
-
-  if (!firstName || !lastName || !email || !mobileNumber || !company || !companyUrl || !companyLogo || !workDays || !jobTitle || !vacancies || !exp || !noticePeriod || !salary || !location || !empType || !jobType || !description || !qualification) {
+  
+  if (
+    !firstName || !lastName || !email || !mobileNumber || !company || !companyUrl || !companyLogo ||
+    !workDays || !jobTitle || !vacancies || !exp || !noticePeriod || !salary ||
+    !location || !empType || !jobType || !description || !qualification
+  ) {
+    
     setError('Please fill all the details to Post Job.');
     setMessageType('error');
     return;
@@ -132,74 +171,92 @@ const handleChange = (e) => {
 
   const timeZone = formData.timeZone;
   const timeZoneShort = timeZoneAbbreviationMap[timeZone] || timeZone;
-
   const payload = {
     firstName,
     lastName,
-    email: email,
+    email,
     mobileNumber: `${selectedCountry.code} ${mobileNumber}`,
     company,
     companyUrl,
-    companyLogo,
+    companyLogo: "", 
     workDays,
     jobTitle,
     vacancies,
-    exp,
+    experience: exp,
     salary,
     location,
     noticePeriod,
-    empType,
+    employmentType: empType,
     jobType,
     description,
     qualification,
   };
-console.log("payload: " + JSON.stringify(payload));
 
+  
+
+  const finalFormData = new FormData();
+  finalFormData.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+  finalFormData.append("companyLogo", companyLogo);
+
+  for (let pair of finalFormData.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
+  }
   try {
-    const response = await axios.post("https://api.hachion.co/kids-summer-training", payload); // adjust URL if needed
-    console.log("Job posted successful:", response.data);
+    const response = await axios.post("https://api.hachion.co/hire-from-us", finalFormData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
+    
     setError('Job posted successful!');
     setMessageType('success');
+
+    
     setFormData({
-    firstName: "",
-    lastName: "",
-    email: "",
-    mobileNumber: "",
-    company: "",
-    companyUrl: "",
-    companyLogo: "",
-    workDays: "",
-    jobTitle: "",
-    vacancies: "",
-    exp: "",
-    salary: "",
-    location: "",
-    noticePeriod: "",
-    empType: "",
-    jobType: "",
-    description: "",
-    qualification: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      mobileNumber: "",
+      company: "",
+      companyUrl: "",
+      companyLogo: "",
+      workDays: "",
+      jobTitle: "",
+      vacancies: "",
+      exp: "",
+      salary: "",
+      location: "",
+      noticePeriod: "",
+      empType: "",
+      jobType: "",
+      description: "",
+      qualification: "",
     });
+
+    
   } catch (error) {
-    console.error("Posting job failed:", error);
-      if (error.response && error.response.data && error.response.data.message) {
-    const backendMessage = error.response.data.message;
+   
 
-    if (backendMessage.includes("Email already exists")) {
-      setError("This email is already registered.");
-    } else if (backendMessage.includes("Mobile number already exists")) {
-      setError("This mobile number is already registered.");
+    if (error.response && error.response.data && error.response.data.message) {
+      const backendMessage = error.response.data.message;
+      
+
+      if (backendMessage.includes("Email already exists")) {
+        setError("This email is already registered.");
+      } else if (backendMessage.includes("Mobile number already exists")) {
+        setError("This mobile number is already registered.");
+      } else {
+        setError(backendMessage);
+      }
     } else {
-      setError(backendMessage); 
+      setError("Posting Job failed. Please try again.");
     }
-  } else {
-    setError("Posting Job failed. Please try again.");
-  }
 
-  setMessageType("error");
-}
+    setMessageType("error");
+  }
 };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

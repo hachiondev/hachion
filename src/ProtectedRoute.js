@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true"; // Check if admin is logged in
+  const isLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true"; // ✅ Use sessionStorage
 
   return isLoggedIn ? <Outlet /> : <Navigate to="/adminlogin" replace />;
 };

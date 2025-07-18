@@ -7,6 +7,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { IoSearch } from "react-icons/io5";
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
@@ -150,6 +151,7 @@ export default function AdminApplyJobs() {
                             <StyledTableCell align="center">Company Logo</StyledTableCell>
                             <StyledTableCell align="center">Company Name</StyledTableCell>
                             <StyledTableCell align="center">Job Title</StyledTableCell>
+                            <StyledTableCell align="center">Resume</StyledTableCell>
                             <StyledTableCell align="center">Date</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
@@ -169,25 +171,22 @@ export default function AdminApplyJobs() {
                             </StyledTableCell>
                             <StyledTableCell align="left">{row.company}</StyledTableCell>
                             <StyledTableCell align="left">{row.jobTitle}</StyledTableCell>
+                            <StyledTableCell align="left" style={{ width: '100px' }}>
+                              {row.resume ? (
+                                <a 
+                                  href={row.resume} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                >
+                                  View Resume
+                                </a>
+                              ) : (
+                                'No Resume'
+                              )}
+                            </StyledTableCell>
                             <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
-                <StyledTableCell align="center">
-                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                  {jobData.status === 'approved' ? (
-                      <span className="approved">Approved</span>
-                    ) : jobData.status === 'rejected' ? (
-                      <span className="rejected">Rejected</span>
-                    ) : (
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                        <FaCheckCircle
-                          className="approve"
-                        />
-                        <RiCloseCircleLine
-                          className="reject"
-                        />
-                      </div>
-                    )}
-                  </div>
-                  </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <RiDeleteBin6Line className="delete"/> </StyledTableCell>
                             </StyledTableRow>
                                           ))
                                         ) : (

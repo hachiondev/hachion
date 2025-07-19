@@ -465,10 +465,13 @@ background-color: #EA4335;
   background-color: #006489;
   }
 
-  .banner-img{
-    width: 100%;
-    aspect-ratio: 16/5;
-    }
+ .banner-img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 5;
+  object-fit: cover;
+  display: block;
+}
   .popup-overlay {
   position: fixed;
   top: 0;

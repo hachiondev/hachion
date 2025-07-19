@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { FaCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import imageUrl from '../../Assets/course_card2.png';
+import imageUrl from '../../Assets/course_card2.webp';
 
 const TrainingCard = ({ mode, heading, date, time, duration, image, scheduleCount }) => {
   const navigate = useNavigate();
@@ -33,12 +33,12 @@ const TrainingCard = ({ mode, heading, date, time, duration, image, scheduleCoun
       onKeyDown={(e) => e.key === 'Enter' && isMobile && navigateToCourse()}
     >
       <div className="card-header-div">
-        <img src={imageUrl} alt="Card" className="card-image" />
+        <img src={imageUrl} alt="Card" className="card-image" loading="lazy"/>
         <div className="card-header">
           <FaCircle className="card-header-icon" />
           {mode}
         </div>
-        {image && <img src={image} alt="card-img" className="card-icon" />}
+        {image && <img src={image} alt="card-img" className="card-icon" loading="lazy"/>}
       </div>
 
       <div className="card-course-details">

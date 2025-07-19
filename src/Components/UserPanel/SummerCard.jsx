@@ -3,7 +3,7 @@ import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import kidbackground from '../../Assets/kidbanner2.png';
+import kidbackground from '../../Assets/kidbanner2.webp';
 import './Home.css';
 
 const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {
@@ -50,8 +50,8 @@ const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
       onClick={isMobile ? handleNavigation : undefined} // Click only on mobile
     >
       <div className="card-header-div">
-        <img src={kidbackground} alt="Kid Card" className="card-image" />
-        <img src={image} alt="card-img" className="card-icon" />
+        <img src={kidbackground} alt="Kid Card" className="card-image" loading="lazy"/>
+        <img src={image} alt="card-img" className="card-icon" loading="lazy"/>
       </div>
 
       <div className="card-course-details">

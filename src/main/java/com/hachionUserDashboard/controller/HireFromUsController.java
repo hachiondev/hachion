@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +58,11 @@ public class HireFromUsController {
 		List<HireFromUsResponse> responseList = hireFromUsService.getAllHireFromUs();
 		return ResponseEntity.ok(responseList);
 	}
+	 @PutMapping
+	    public ResponseEntity<HireFromUsResponse> updateHireFromUs(@RequestBody HireFromUsRequest hireFromUsRequest) {
+	        HireFromUsResponse response = hireFromUsService.updateHireFromUs(hireFromUsRequest);
+	        return ResponseEntity.ok(response);
+	    }
 	
 	  @GetMapping("/{filename:.+}")
 	    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
@@ -97,5 +104,10 @@ public class HireFromUsController {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to save file: " + e.getMessage(), e);
 		}
+	}
+	@GetMapping("/getApprovedJobs")
+	public ResponseEntity<List<HireFromUsResponse>> getApprovedJobs() {
+	    List<HireFromUsResponse> response = hireFromUsService.getAllApprovedJobs();
+	    return ResponseEntity.ok(response);
 	}
 }

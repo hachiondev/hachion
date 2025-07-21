@@ -14,4 +14,6 @@ public interface HireFromUsService {
 	public List<HireFromUsResponse> getAllHireFromUs();
 
 	public void deleteHireFromUs();
+	
+	public List<HireFromUsResponse> getAllApprovedJobs();
 }

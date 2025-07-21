@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class HireFromUsServiceImpl implements HireFromUsService {
 		hireFromUs.setDescription(hireFromUsRequest.getDescription());
 		hireFromUs.setQualification(hireFromUsRequest.getQualification());
 		hireFromUs.setDate(LocalDate.now());
+		hireFromUs.setStatus(hireFromUsRequest.getStatus());
 		String jobId = generateJobId();
 		hireFromUs.setJobId(jobId);
 
@@ -56,9 +59,41 @@ public class HireFromUsServiceImpl implements HireFromUsService {
 
 	@Override
 	public HireFromUsResponse updateHireFromUs(HireFromUsRequest hireFromUsRequest) {
-		// TODO Auto-generated method stub
-		return null;
+	    Optional<HireFromUs> optionalHire = hireFromUsRepository.findById(hireFromUsRequest.getHireFromUsId());
+
+	    if (!optionalHire.isPresent()) {
+	        throw new RuntimeException("HireFromUs record not found with ID: " + hireFromUsRequest.getHireFromUsId());
+	    }
+
+	    HireFromUs hireFromUs = optionalHire.get();
+
+	    // Update fields
+	    hireFromUs.setFirstName(hireFromUsRequest.getFirstName());
+	    hireFromUs.setLastName(hireFromUsRequest.getLastName());
+	    hireFromUs.setEmail(hireFromUsRequest.getEmail());
+	    hireFromUs.setMobileNumber(hireFromUsRequest.getMobileNumber());
+	    hireFromUs.setCompany(hireFromUsRequest.getCompany());
+	    hireFromUs.setCompanyUrl(hireFromUsRequest.getCompanyUrl());
+	    hireFromUs.setCompanyLogo(hireFromUsRequest.getCompanyLogo());
+	    hireFromUs.setWorkDays(hireFromUsRequest.getWorkDays());
+	    hireFromUs.setJobTitle(hireFromUsRequest.getJobTitle());
+	    hireFromUs.setVacancies(hireFromUsRequest.getVacancies());
+	    hireFromUs.setExperience(hireFromUsRequest.getExperience());
+	    hireFromUs.setSalary(hireFromUsRequest.getSalary());
+	    hireFromUs.setLocation(hireFromUsRequest.getLocation());
+	    hireFromUs.setNoticePeriod(hireFromUsRequest.getNoticePeriod());
+	    hireFromUs.setEmploymentType(hireFromUsRequest.getEmploymentType());
+	    hireFromUs.setJobType(hireFromUsRequest.getJobType());
+	    hireFromUs.setDescription(hireFromUsRequest.getDescription());
+	    hireFromUs.setQualification(hireFromUsRequest.getQualification());
+	    hireFromUs.setStatus(hireFromUsRequest.getStatus());
+
+	   
+	    HireFromUs updated = hireFromUsRepository.save(hireFromUs);
+
+	    return createHireFromUsResponse(updated);
 	}
+
 
 	@Override
 	public List<HireFromUsResponse> getAllHireFromUs() {
@@ -103,6 +138,7 @@ public class HireFromUsServiceImpl implements HireFromUsService {
 		response.setQualification(saved.getQualification());
 		response.setDate(saved.getDate());
 		response.setJobId(saved.getJobId());
+		response.setStatus(saved.getStatus());
 		return response;
 	}
 
@@ -121,6 +157,14 @@ public class HireFromUsServiceImpl implements HireFromUsService {
 		}
 
 		return "H" + nextNumber;
+	}
+	
+	public List<HireFromUsResponse> getAllApprovedJobs() {
+	    List<HireFromUs> approvedJobs = hireFromUsRepository.findAllByStatus("approved");
+
+	    return approvedJobs.stream()
+	            .map(this::createHireFromUsResponse)
+	            .collect(Collectors.toList());
 	}
 
 }

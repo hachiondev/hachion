@@ -39,6 +39,8 @@ public class HireFromUsRequest {
 	private String description;
 
 	private String qualification;
+	
+	private String status;
 
 	public Long getHireFromUsId() {
 		return hireFromUsId;
@@ -190,6 +192,14 @@ public class HireFromUsRequest {
 
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

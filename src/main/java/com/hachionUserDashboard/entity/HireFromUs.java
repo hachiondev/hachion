@@ -71,12 +71,15 @@ public class HireFromUs {
 
 	@Column(name = "qualification")
 	private String qualification;
-	
+
 	@Column(name = "date")
 	private LocalDate date;
-	
+
 	@Column(name = "job_id", unique = true)
 	private String jobId;
+
+	@Column
+	private String status;
 
 	public Long getHireFromUsId() {
 		return hireFromUsId;
@@ -244,6 +247,14 @@ public class HireFromUs {
 
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.hachionUserDashboard.controller;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +66,7 @@ public class UserController {
 	public ResponseEntity<?> updatePassword(@RequestBody UserRegistrationRequest registrationRequest)
 			throws MessagingException {
 
-		String response = userService.updatePassword(registrationRequest);
+		userService.updatePassword(registrationRequest);
 
 		return ResponseEntity.ok("Password updated successfully");
 	}
@@ -125,14 +124,7 @@ public class UserController {
 		return "Successfully Login";
 	}
 
-	@RestController
-	public class HomeController {
-		@GetMapping("/index")
-		public Map<String, String> index() {
-			return Collections.singletonMap("message", "Hello, World!");
-		}
-	}
-
+	
 	@GetMapping("/students/{courseName}")
 	public ResponseEntity<List<StudentInfoResponse>> getStudentsByCourse(@PathVariable String courseName) {
 		List<StudentInfoResponse> students = userService.getStudentsByCourse(courseName);

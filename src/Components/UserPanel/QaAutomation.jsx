@@ -13,7 +13,9 @@ import Corporate from './Corporate';
 import Qacourse from './Qacourse';
 import ModeOfTraining from './ModeOfTraining';
 import CareerSupport from './CareerSupport';
+import CourseCertificate from './CourseCertificate';
 import Learners from './Learners';
+import TrainerProfile from './TrainerProfile';
 import StickyBar from './StickyBar';
 import CurriculumMain from './CurriculumMain';
 import QaAutomationFaq from './QaAutomationFaq';
@@ -224,6 +226,10 @@ const QaAutomation = () => {
           <CareerSupport />
         </div>
 
+        <div id="course-certificate">
+          <CourseCertificate />
+        </div>
+
         <div id="learners">
         <Learners page="course" />
 
@@ -231,6 +237,10 @@ const QaAutomation = () => {
 
         <div id="qa-faq">
           <QaAutomationFaq />
+        </div>
+
+         <div id="trainer-profile">
+          <TrainerProfile />
         </div>
         </div>
         {/* Footer section to stop the sticky behavior */}

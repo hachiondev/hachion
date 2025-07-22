@@ -167,7 +167,7 @@ setSuccessMessage('');
             <option>Live Class</option>
             <option>Live Demo</option>
             <option>Crash Course</option>
-            <option>Mentor Training</option>
+            {/* <option>Mentor Training</option> */}
             <option>Self-Paced</option>
             <option>Corporate Training</option>
           </select>

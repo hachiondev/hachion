@@ -8,8 +8,10 @@ const sections = [
   { id: 'corporate', label: 'About Course' },
   { id: 'curriculum', label: 'Curriculum' },
   { id: 'career-support', label: 'Career Support' },
+  { id: 'course-certificate', label: 'Certification' },
   { id: 'learners', label: 'Reviews' },
   { id: 'qa-faq', label: "FAQ's" },
+  { id: 'trainer-profile', label: "Trainer Profile" },
 ];
 
 const UpcomingHeader = () => {

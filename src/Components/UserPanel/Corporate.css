@@ -398,11 +398,15 @@ position: relative;
      /* margin-left: 20px;
      margin-top: -2vh; */
  }
+ .trainer-card{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+ }
 
- .learner-top{
+ .learner-top, .trainer-top{
      display: flex;
      flex-direction: column;
-
  }
  .name{
      font-weight:600;
@@ -410,6 +414,7 @@ position: relative;
      padding-bottom: 0vh;
      padding-top: 2vh;
      margin-bottom: 2px;
+     text-align: center;
  }
  .learner-name{
     display: flex;
@@ -451,6 +456,7 @@ position: relative;
      display: flex;
      justify-content: center;
      margin-bottom: 2px;
+     text-align: center;
  }
  .job-location{
      font-weight: 400;
@@ -465,6 +471,14 @@ position: relative;
   justify-content: center;
   padding-top: 20px;
   padding-bottom: 10px;
+}
+ .trainer-description-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  width: 90%;
 }
 
  .learner-description{
@@ -599,6 +613,11 @@ padding: 20px;
 .popup-content {
   text-align: center;
 }
+.trainer-popup-content {
+   display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 
 .profile-image-large {
   width: 70px;
@@ -606,12 +625,17 @@ padding: 20px;
   margin: 10px auto;
 }
 
-.top{
+/* .top{
   display: flex;
   justify-content: space-between;
   background-color: #dfdfdf;
+} */
+.top{
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #006489, #00aeef, #006489);
+  color: #ffffff;
 }
-
 .close-button {
   display: flex;
   justify-items: flex-end;
@@ -1888,7 +1912,6 @@ padding: 20px;
     .learner-description-bottom {
       display: flex;
       justify-content: center;
-   
     }
   
     .learner-description {

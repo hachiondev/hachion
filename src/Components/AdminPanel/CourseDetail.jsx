@@ -585,7 +585,7 @@ const handleShortCourseBlur = async () => {
                   {[
                     { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
                     { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
-                    { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+                    // { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
                     { label: "Self Paced with Q&A", amount: "sqamount", discount: "sqdiscount", total: "sqtotal" },
                     { label: "Self Paced Training", amount: "samount", discount: "sdiscount", total: "stotal" },
                   ].map((mode, index) => (
@@ -638,7 +638,7 @@ const handleShortCourseBlur = async () => {
                   {[
                     { label: "Live Training", prefix: "i" },
                     { label: "Crash Course Training", prefix: "ic" },
-                    { label: "Mentoring Mode", prefix: "im" },
+                    // { label: "Mentoring Mode", prefix: "im" },
                     { label: "Self Paced with Q&A", prefix: "isq" },
                     { label: "Self Paced Training", prefix: "is" },
                   ].map((mode, index) => (

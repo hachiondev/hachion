@@ -116,17 +116,16 @@
 .btn-logout {
     background-color: transparent;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 600;
     border: none;
     cursor: pointer;
     display:flex;
     flex-direction:row;
     justify-content: space-between;
-    height:8vh !important;
-    /* width:10vw; */
+    height:5vh !important;
     padding: auto;
-    padding-top: 3vh !important;
+    padding-top: 1.5vh !important;
 
 }
 

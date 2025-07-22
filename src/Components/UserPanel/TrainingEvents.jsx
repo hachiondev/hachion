@@ -170,13 +170,13 @@ const TrainingEvents = () => {
 
       <div className="filter-container">
         <div className="filter-section">
-          <select value={modeFilter} onChange={handleModeChange}>
+          <select value={modeFilter} onChange={handleModeChange} aria-label="Filter by Mode">
             <option value="">All Modes</option>
             <option value="Live Class">Live Class</option>
             <option value="Live Demo">Live Demo</option>
           </select>
 
-          <select value={timeFilter} onChange={handleTimeChange}>
+          <select value={timeFilter} onChange={handleTimeChange} aria-label="Filter by Time">
             <option value="">Any Time</option>
             <option value="new">Newly Added</option>
             <option value="today">Today</option>

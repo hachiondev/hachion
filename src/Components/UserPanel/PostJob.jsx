@@ -3,6 +3,7 @@ import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
 import axios from 'axios';
+import { countries, getDefaultCountry } from './countryUtils';
 const PostJob = () => {
   const [error, setError] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -30,58 +31,9 @@ const PostJob = () => {
 
   const mobileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedCountry, setSelectedCountry] = useState({
-    code: '+1',
-    flag: 'US',
-    name: 'United States',
-  });
 
-  // const countries = [
-  //   { name: 'India', code: '+91', flag: 'IN' },
-  //   { name: 'United States', code: '+1', flag: 'US' },
-  //   { name: 'United Kingdom', code: '+44', flag: 'GB' },
-  //   { name: 'Thailand', code: '+66', flag: 'TH' },
-  //   { name: 'Canada', code: '+1', flag: 'CA' },
-  //   { name: 'Australia', code: '+61', flag: 'AU' },
-  //   { name: 'Germany', code: '+49', flag: 'DE' },
-  //   { name: 'France', code: '+33', flag: 'FR' },
-  //   { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
-  //   { name: 'Qatar', code: '+974', flag: 'QA' },
-  //   { name: 'Japan', code: '+81', flag: 'JP' },
-  //   { name: 'China', code: '+86', flag: 'CN' },
-  //   { name: 'Russia', code: '+7', flag: 'RU' },
-  //   { name: 'South Korea', code: '+82', flag: 'KR' },
-  //   { name: 'Brazil', code: '+55', flag: 'BR' },
-  //   { name: 'Mexico', code: '+52', flag: 'MX' },
-  //   { name: 'South Africa', code: '+27', flag: 'ZA' },
-  //   { name: 'Netherlands', code: '+31', flag: 'NL' }
-  // ];
 
-  const [countries, setCountries] = useState([]);
-
-  useEffect(() => {
-  fetch("https://restcountries.com/v3.1/all?fields=name,idd,cca2")
-    .then(res => res.json())
-    .then(data => {
-      const formattedCountries = data
-        .filter(c => c.idd?.root) 
-        .map(c => {
-          const code = c.idd.root;
-          return {
-            name: c.name.common,
-            code,
-            flag: c.cca2 
-          };
-        })
-        .sort((a, b) => a.name.localeCompare(b.name)); 
-
-      setCountries(formattedCountries);
-    })
-    .catch(err => {
-      console.error("Failed to load countries:", err);
-    });
-}, []);
-
+const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
 
   const timeZoneAbbreviationMap = {
@@ -312,9 +264,20 @@ const handleSubmit = async (e) => {
                 <div className="col-md-5 d-flex flex-column">
                   <label className="form-label">Mobile Number <span className="star">*</span></label>
                   <div className="input-wrapper" style={{ position: 'relative' }}>
-                    <button type="button" onClick={openMenu} className='mobile-button'>
+                    {/* <button type="button" onClick={openMenu} className='mobile-button'>
                       <Flag code={selectedCountry.flag} className="country-flag me-1" />
                       <span style={{ marginRight: '5px' }}>{selectedCountry.code}</span>
+                      <AiFillCaretDown />
+                    </button> */}
+                     <button
+                      variant="text"
+                      onClick={openMenu}
+                      className='mobile-button'
+                    >
+                      <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                      <span style={{ marginRight: '5px', fontWeight: 'bold' }}>
+                        {selectedCountry.flag} ({selectedCountry.code})
+                      </span>
                       <AiFillCaretDown />
                     </button>
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
@@ -334,7 +297,7 @@ const handleSubmit = async (e) => {
                       value={formData.mobileNumber}
                       onChange={handleChange}
                       placeholder="Enter your mobile number"
-                      style={{ paddingLeft: '100px' }}
+                      style={{ paddingLeft: '130px' }}
                     />
                   </div>
                   </div>

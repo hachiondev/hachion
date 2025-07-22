@@ -33,10 +33,19 @@ const JobsDisplay = ({ filters }) => {
       : HachionLogo,
             exp: job.experience,
             location: job.location,
+            
             time: job.employmentType,
             type: job.jobType,
             post: postedLabel, 
-            vacancy: job.vacancies
+            vacancy: job.vacancies,
+             salary: job.salary || 'Not Disclosed',
+  noticePeriod: job.noticePeriod || 'Not Mentioned',
+  
+  workDays: job.workDays || 'Not Mentioned',
+  description: job.description,
+  qualification: job.qualification,
+  jobId: job.jobId
+  
           };
         });
 
@@ -73,6 +82,12 @@ const JobsDisplay = ({ filters }) => {
               type={job.type}
               post={job.post}
               vacancy={job.vacancy}
+               jobId={job.jobId}
+               salary={job.salary}
+  noticePeriod={job.noticePeriod}
+  workDays={job.workDays}
+  description={job.description}
+  qualification={job.qualification}
             />
           ))
         ) : (

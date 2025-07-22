@@ -4,7 +4,7 @@ import './Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
 import CrashCourseFee from './CrashCourseFee';
-import MentoringModeFees from './MentoringModeFees';
+// import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
 import SelfPacedQAFees from './SelfPacedQAFees';
 import RequestBatch from './RequestBatch';
@@ -121,7 +121,7 @@ const UpcomingBatch = () => {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'LiveOnlineFees': return <LiveOnlineFees course={course} />;
-      case 'MentoringModeFees': return <MentoringModeFees course={course} />;
+      // case 'MentoringModeFees': return <MentoringModeFees course={course} />;
       case 'SelfPlacedFees': return <SelfPlacedFees course={course} />;
       case 'SelfPacedQAFees': return <SelfPacedQAFees course={course} />;
       case 'CrashCourseFee': return <CrashCourseFee course={course} />;
@@ -137,7 +137,7 @@ const UpcomingBatch = () => {
           {[
             { key: 'LiveOnlineFees', label: 'Live training', fee: fees.live },
             { key: 'CrashCourseFee', label: 'Crash Course (Fast Track)', fee: fees.crash },
-            { key: 'MentoringModeFees', label: 'Mentoring mode', fee: fees.mentoring },
+            // { key: 'MentoringModeFees', label: 'Mentoring mode', fee: fees.mentoring },
             { key: 'SelfPacedQAFees', label: 'Self-paced with Q&A', fee: fees.selfqa },
             { key: 'SelfPlacedFees', label: 'Self-paced Learning', fee: fees.self }
           ].map(({ key, label, fee }) => (

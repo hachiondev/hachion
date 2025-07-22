@@ -54,8 +54,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, trainer_name, course_name,demo1, demo2,demo3,summary,date,Action) {
-  return { S_No, trainer_name,course_name,demo1,demo2,demo3,summary,date,Action};
+function createData(S_No, profileImage, trainer_name, course_name,demo1, demo2,demo3,summary,date,Action) {
+  return { S_No, profileImage, trainer_name,course_name,demo1,demo2,demo3,summary,date,Action};
 }
 
 
@@ -75,7 +75,7 @@ const[message,setMessage]=useState(false);
   const [endDate, setEndDate] = useState(null);
    const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-  const [editedRow, setEditedRow] = useState({ trainer_name: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
+  const [editedRow, setEditedRow] = useState({ profileImage: '', trainer_name: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
   const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
   const currentDate = new Date().toISOString().split('T')[0];
   const [categories, setCategories] = useState([]);
@@ -85,6 +85,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   const [trainerData, setTrainerData] = useState({
   id:"",
       trainer_name: "",
+      profileImage: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -98,6 +99,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   const handleReset = () => {
     setTrainerData({
       trainer_name: "",
+      profileImage: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -311,6 +313,15 @@ const handleChange = (e) => {
     [name]: value,
   }));
 };
+const handleFileChange = (e) => {
+const file = e.target.files[0];
+if (file) {
+setTrainerData((prevData) => ({
+...prevData,
+image: file,
+ }));
+ }
+ };
 
  useEffect(() => {
     fetchTrainers();
@@ -357,7 +368,6 @@ const handleChange = (e) => {
 </div>
 <div className='course-details'>
 <div className='course-row'>
-
   <div class="col-md-3">
     <label className='form-label'>Trainer</label>
     <input type="text" class="form-control" placeholder="Enter Trainer name" aria-label="First name" 
@@ -365,6 +375,18 @@ const handleChange = (e) => {
     value={trainerData.trainer_name}
     onChange={handleChange}/>
   </div>
+  <div className="col-md-3">
+                <label className="form-label">Trainer Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="profileImage"
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
+              </div>
+  <div className='course-row'>
   <div class="col-md-3">
     <label for="inputState" class="form-label">Category Name</label>
     <select id="inputState" class="form-select" name='category_name' value={trainerData.category_name} onChange={handleChange}>
@@ -402,32 +424,26 @@ const handleChange = (e) => {
   value={trainerData.summary}
   onChange={handleChange}></textarea>
 </div>
-<div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Demo Link 1</label>
-  </div>
-  <div class="col-auto">
+<div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 1</label>
     <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
        name="demo_link_1"
        value={trainerData.demo_link_1}
        onChange={handleChange}/>
   </div>
   </div>
-  <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label"   >Demo Link 2</label>
-  </div>
-  <div class="col-auto">
+  <div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 2 (Optional)</label>
     <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"  name="demo_link_2"
                   value={trainerData.demo_link_2}
                   onChange={handleChange}/>
   </div>
   </div>
-  <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Demo Link 3</label>
-  </div>
-  <div class="col-auto">
+  <div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 3 (Optional)</label>
     <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
     name="demo_link_3"
     value={trainerData.demo_link_3}
@@ -512,6 +528,7 @@ const handleChange = (e) => {
               <Checkbox />
             </StyledTableCell>
             <StyledTableCell sx={{ width: 60 }}>S.No.</StyledTableCell>
+            <StyledTableCell align="center">Trainer Image</StyledTableCell>
             <StyledTableCell align="center">Trainer Name</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Demo 1</StyledTableCell>
@@ -528,6 +545,9 @@ const handleChange = (e) => {
             <StyledTableRow key={row.id}>
               <StyledTableCell align="center"><Checkbox /></StyledTableCell>
               <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+              <StyledTableCell align="center">
+              {row.profileImagee ? <img src={row.profileImage} alt="User" width="50" height="50" /> : 'No Image'}
+              </StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
               <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell align="left">{row.demo_link_1}</StyledTableCell>
@@ -596,6 +616,16 @@ const handleChange = (e) => {
           onChange={handleInputChange}
         />
       </div>
+        <div className="col">
+                <label className="form-label">Trainer Image</label>
+                <input
+                  type="file"
+                  className="schedule-input"
+                  name="profileImage"
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
       <div className="col">
       <label htmlFor="inputState" className="form-label">Category Name</label>
       <select
@@ -643,6 +673,32 @@ const handleChange = (e) => {
         onChange={handleInputChange}
       />
     </div>
+    <div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 1</label>
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+       name="demo_link_1"
+       value={editedRow.demo_link_1||""}
+       onChange={handleInputChange}/>
+  </div>
+  </div>
+  <div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 2 (Optional)</label>
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"  name="demo_link_2"
+    value={editedRow.demo_link_2||""}
+     onChange={handleInputChange}/>
+  </div>
+  </div>
+  <div class="row align-items-center">
+  <div class="col-md-3">
+    <label for="inputPassword6" class="form-label">Demo Link 3 (Optional)</label>
+    <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+    name="demo_link_3"
+    value={editedRow.demo_link_3||""}
+    onChange={handleInputChange}/>
+  </div>
+  </div>
   </DialogContent>
  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
     <Button onClick={handleSave} className="update-btn">Update</Button>

@@ -139,7 +139,7 @@ const SummerEvents = () => {
       {/* Mobile Dropdown */}
       {topCount === 0 && (
         <div className="course-title-container">
-          <h4 className="course-title">{activeCategory}</h4>
+          <h3 className="course-title">{activeCategory}</h3>
           <div className="mobile-dropdown-container">
             <RiMenuUnfold3Line className="course-menu-icon" onClick={handleDropdownClick} />
             {dropdownVisible && (

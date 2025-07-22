@@ -246,8 +246,8 @@ const NavbarTop = () => {
                 aria-label="Search"
               />
               <button className="btn-search-home"  onClick={handleSearchSubmit}
-  disabled={!searchQuery.trim()}>
-                <IoSearch style={{ fontSize: '1.8rem' }} />
+                disabled={!searchQuery.trim()} aria-label="Search" title="Search">
+                <IoSearch style={{ fontSize: '1.8rem' }} aria-hidden="true"/>
               </button>
             </div>
           ) : isMobileSearchOpen ? (
@@ -262,12 +262,15 @@ const NavbarTop = () => {
                 onKeyDown={(e) => { if (e.key === 'Enter') handleSearchSubmit(); }}
               />
               <button className="btn-search-mobile" onClick={handleSearchSubmit}
-  disabled={!searchQuery.trim()}>
-                <IoSearch className="search-icon"  />
+              disabled={!searchQuery.trim()} aria-label="Search"
+                title="Search">
+                <IoSearch className="search-icon"  aria-hidden="true"/>
               </button>
               <button
                 className="btn-cancel-mobile"
                 onClick={() => setMobileSearchOpen(false)}
+                aria-label="Cancel Search"
+                title="Cancel Search"
               >
                 <MdCancel />
               </button>
@@ -366,7 +369,7 @@ const NavbarTop = () => {
                       Corporate Training
                     </div>
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                      Courses
+                      All Courses
                     </div>
                     {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -382,7 +385,7 @@ const NavbarTop = () => {
                   Corporate Training
                 </div>
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                  Courses
+                  All Courses
                 </div>
                 {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -410,7 +413,7 @@ const NavbarTop = () => {
             className={`nav-item ${location.pathname === '/coursedetails' ? 'active' : ''}`}
           >
             <Link to="/coursedetails" className="nav-item-link">
-              Courses
+              All Courses
             </Link>
           </button>
 

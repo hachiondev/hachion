@@ -55,7 +55,7 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
       </div>
 
       <div className="card-course-details">
-        <h4 className="course-name">{heading}</h4>
+        <h3 className="course-name">{heading}</h3>
         <div>
           <p className="course-month">
             <RxCalendar /> {month} Days

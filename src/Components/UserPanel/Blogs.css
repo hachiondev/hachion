@@ -835,7 +835,7 @@
     aspect-ratio: 24/7;
     }
     .search-div-career {
-    height: 50px;
+    height: 40px;
     max-width: 1000px;
     width: 100%;
     border-radius: 10px;
@@ -929,7 +929,7 @@ background-color: white;
   }
   .job-part {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     flex-wrap: wrap;
     gap: 20px;
     padding: 5px;

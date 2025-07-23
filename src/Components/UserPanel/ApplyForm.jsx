@@ -33,6 +33,8 @@ const ApplyForm = ({ closeModal = () => {} }) => {
   const { state } = useLocation();
   const { jobId, jobTitle, companyName, image } = state || {};
 
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = userData.email || "";
@@ -42,9 +44,18 @@ const ApplyForm = ({ closeModal = () => {} }) => {
       navigate("/login");
       return;
     }
+    if (userEmail && jobId) {
+  fetch(`https://api.hachion.co/apply-job/check?jobId=${jobId}&email=${userEmail}`)
+    .then(res => res.json())
+    .then((isApplied) => {
+      setAlreadyApplied(isApplied);
+    })
+    .catch(err => {
+      console.error("Error checking job application status:", err);
+    });
+}
 
     values.email = userEmail;
-
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
@@ -110,6 +121,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           resumeInputRef.current.value = null;
         }
         setIsChecked(false);
+        setAlreadyApplied(true);
       }
     } catch (error) {
       setErrorMessage("❌ Failed to submit your application. Please try again later.");
@@ -135,7 +147,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
   return (
     <div className='student-reg-form'>
       <form onSubmit={handleSubmit}>
-        {/* Name */}
+        
         <div className="form-group col-10">
           <label htmlFor="inputName" className="form-label">
             Full Name<span className="required">*</span>
@@ -153,7 +165,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           {errors.name && touched.name && <p className="form-error">{errors.name}</p>}
         </div>
 
-        {/* Email */}
+        
         <div className="form-group col-10">
           <label htmlFor="inputEmail" className="form-label">
             Email ID<span className="required">*</span>
@@ -171,7 +183,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           {errors.email && touched.email && <p className="form-error">{errors.email}</p>}
         </div>
 
-        {/* Mobile */}
+        
         <label className="form-label">Mobile Number<span className="required">*</span></label>
         <div className="input-group mb-3 custom-width">
           <input
@@ -185,7 +197,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           />
         </div>
 
-        {/* Resume */}
+        
         <div className="form-group col-10">
           <label htmlFor="resume" className="form-label">
             Upload Resume<span className="required">*</span>
@@ -204,21 +216,35 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           {errors.resume && touched.resume && <p className="form-error">{errors.resume}</p>}
         </div>
 
-        {/* Status Messages */}
         {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
         {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-
-        {/* Apply Button */}
-        <button
+        {/* <button
           className="student-register-button"
           type="submit"
           onClick={handleContact}
         >
           Apply Now
-        </button>
+        </button> */}
+        {alreadyApplied ? (
+  <button
+    className="student-register-button applied"
+    type="button"
+    disabled
+    style={{ backgroundColor: "#4BB543", color: "white", cursor: "default" }}
+  >
+    ✅ Applied
+  </button>
+) : (
+  <button
+    className="student-register-button"
+    type="submit"
+    onClick={handleContact}
+  >
+    Apply Now
+  </button>
+)}
         {error && <p className="error-message">{error}</p>}
 
-        {/* Checkbox */}
         <div className="form-check">
           <input
             className="form-check-input"
@@ -228,8 +254,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
             onChange={(e) => {
   setIsChecked(e.target.checked);
   setSuccessMessage(""); 
-}}
-            
+}} 
           />
           <label className="form-check-label" htmlFor="flexCheckChecked">
             By clicking on Apply Now, you acknowledge read our{" "}
@@ -243,7 +268,6 @@ const ApplyForm = ({ closeModal = () => {} }) => {
         </div>
       </form>
 
-      {/* Success Modal */}
       {showModal && (
   <div className="modal" style={{ display: "block" }} onClick={() => { setShowModal(false); closeModal(false); }}>
     <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
@@ -254,6 +278,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
           onClick={() => {
             setShowModal(false);
             setSuccessMessage(""); 
+            closeModal(false);
           }}
         >
           <RiCloseCircleLine />
@@ -266,9 +291,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
     </div>
   </div>
 )}
-
     </div>
   );
 };
-
 export default ApplyForm;

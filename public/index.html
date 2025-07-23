@@ -5,29 +5,51 @@
     <link rel="icon" href="/Hachion-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    
     <title>Hachion: Your Learning Partner</title>
-    
+
+    <!-- iOS icon -->
     <link rel="apple-touch-icon" href="/Hachion-logo.png" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Preconnects for faster LCP -->
+    <link rel="preconnect" href="https://cdn.botpress.cloud" />
+    <link rel="preconnect" href="https://webchat.botpress.cloud" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <script defer src="/static/js/bundle.js"></script>
-    
+    <!-- Bootstrap CSS -->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+      rel="stylesheet" 
+      integrity="sha384-NZ3ffZgZQt13OyUhc89o+ePfC6UVLJzO1KaHje9qRMoFSZuC7sF7Z+cUprkz3XjR" 
+      crossorigin="anonymous"
+    />
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TE1LPJJ75K"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag(){ dataLayer.push(arguments); }
       gtag('js', new Date());
-
       gtag('config', 'G-TE1LPJJ75K');
     </script>
   </head>
+
   <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <!-- Bootstrap JS -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-SFxV8fQbRMv4q3zwVe7U5XxyAAVRUbHHhMjvZJ+RX0bsT+f6ydbvTGH3tdkJqBEl" 
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Botpress Webchat -->
     <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2025/04/24/12/20250424124701-H9CXE1T9.js"></script>
+
+    <!-- IP/Visitor Tracking Script -->
 <script>
 async function getUserDetails() {
   let shouldSkipTracking = false;
@@ -83,7 +105,7 @@ const res = await fetch("https://api.hachion.co/api/check-ip", {
     referrer,
     timestamp: new Date().toISOString()
   };
-    fetch('https://chat.googleapis.com/v1/spaces/AAQAHyjBBRU/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=qGzEPAwWY31czsPPpSugSpneD4pEqnWKEnPu-LTqFTA', {
+    fetch('https://chat.googleapis.com/v1/spaces/AAQAHyjBBRU/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=qGzEPAwsPPpSugSpneD4nPu-LTqFTA', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: formatMessage(payload) })
@@ -113,7 +135,7 @@ const res = await fetch("https://api.hachion.co/api/check-ip", {
     };
     const formattedDate = dateObj.toLocaleString('en-US', options);
 
-    return `🌐 *New Visitor Info*\n
+    return `🌐 New Visitor Info\n
 IP: ${data.ip}
 Country: ${data.country}
 Location: ${data.location}

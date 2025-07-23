@@ -261,10 +261,13 @@ const NavbarTop = () => {
                 onChange={handleSearchChange}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleSearchSubmit(); }}
               />
-              <button className="btn-search-mobile" onClick={handleSearchSubmit}
-              disabled={!searchQuery.trim()} aria-label="Search"
-                title="Search">
-                <IoSearch className="search-icon"  aria-hidden="true"/>
+              <button
+                className="btn-search-icon-mobile"
+                onClick={() => setMobileSearchOpen(true)}
+                aria-label="Open mobile search"
+                title="Search"
+              >
+                <IoSearch className="search-icon" aria-hidden="true" />
               </button>
               <button
                 className="btn-cancel-mobile"
@@ -286,9 +289,14 @@ const NavbarTop = () => {
           )}
 
           {!isMobileSearchOpen && !isDrawerOpen && (
-            <button className="drawer-toggle-btn" onClick={toggleDrawer}>
-              <GiHamburgerMenu className="toggle-icon" />
-            </button>
+            <button
+            className="drawer-toggle-btn"
+            onClick={toggleDrawer}
+            aria-label="Toggle navigation menu"
+            title="Menu"
+          >
+            <GiHamburgerMenu className="toggle-icon" aria-hidden="true" />
+          </button>
           )}
         </div>
         {searchQuery.length >= 2 && !selectedItem && (

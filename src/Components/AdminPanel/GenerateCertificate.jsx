@@ -66,6 +66,8 @@ export default function CandidateCertificate() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [students, setStudents] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
@@ -93,7 +95,9 @@ export default function CandidateCertificate() {
       !certificateData.email ||
       !certificateData.status
     ) {
-      alert("Please fill in all required fields before generating the certificate.");
+      // alert("Please fill in all required fields before generating the certificate.");
+      setSuccessMessage("");
+    setErrorMessage("❌ Please fill in all required fields before generating the certificate.");
       return;
     }
   
@@ -130,14 +134,19 @@ export default function CandidateCertificate() {
             certificate_id: certificateId, 
           }));
         }
-  
+  setErrorMessage("");
+      setSuccessMessage("✅ Certificate generated successfully.");
         // alert("Certificate generated successfully!");
       } else {
-        alert("Failed to generate certificate.");
+        // alert("Failed to generate certificate.");
+        setSuccessMessage("");
+      setErrorMessage("❌ Failed to generate certificate.");
       }
     } catch (error) {
       
-      alert("An error occurred.");
+      // alert("An error occurred.");
+      setSuccessMessage("");
+    setErrorMessage("❌ An error occurred while generating the certificate.");
     }
   };
   const handleImgReset = () => {
@@ -293,7 +302,9 @@ export default function CandidateCertificate() {
     const certificateId = certificateData.certificate_id;
   
     if (!certificateId) {
-      alert("Certificate ID not available.");
+      // alert("Certificate ID not available.");
+      setSuccessMessage("");
+    setErrorMessage("❌ Certificate ID not available.");
       return;
     }
   
@@ -303,13 +314,19 @@ export default function CandidateCertificate() {
       });
   
       if (response.ok) {
-        alert("Email sent successfully!");
+        // alert("Email sent successfully!");
+        setErrorMessage("");
+      setSuccessMessage("✅ Email sent successfully.");
       } else {
-        alert("Failed to send email.");
+        // alert("Failed to send email.");
+         setSuccessMessage("");
+      setErrorMessage("❌ Failed to send email.");
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      alert("An error occurred while sending the email.");
+      // alert("An error occurred while sending the email.");
+       setSuccessMessage("");
+    setErrorMessage("❌ An error occurred while sending the email.");
     }
   };
   useEffect(() => {
@@ -326,11 +343,24 @@ export default function CandidateCertificate() {
   
     fetchCertificateData();
   }, []);
-  const handleDelete = async (id) => {
-           try { 
-            const response = await axios.delete(`https://api.hachion.co/certificate/delete/${id}`); 
-          } catch (error) { 
-          } }; 
+  
+ const handleDelete = async (id) => {
+  try {
+    await axios.delete(`https://api.hachion.co/certificate/delete/${id}`);
+    const updatedList = certificateList.filter(item => item.certificateId !== id);
+    setCertificateList(updatedList);
+    setFilteredCertificate(updatedList);
+
+    // alert("Certificate deleted successfully");
+  setErrorMessage("");
+    setSuccessMessage("✅ Certificate deleted successfully.");
+  } catch (error) {
+    console.error("Delete failed:", error);
+    setSuccessMessage("");
+    setErrorMessage("❌ Failed to delete certificate.");
+  }
+};
+
 const handleDateFilter = () => {
   const filtered = certificate.filter((item) => {
     const itemDate = dayjs(item.completed_date, 'DD-MM-YYYY'); // make sure completed_date format is consistent
@@ -392,7 +422,9 @@ const handleDateReset = () => {
     const certificateId = certificateData.certificate_id;
   
     if (!certificateId) {
-      alert("Certificate ID not available.");
+      // alert("Certificate ID not available.");
+       setSuccessMessage("");
+    setErrorMessage("❌ Certificate ID not available.");
       return;
     }
   
@@ -414,10 +446,14 @@ const handleDateReset = () => {
       a.click();
       a.remove();
   
-      alert("Certificate downloaded successfully!");
+      // alert("Certificate downloaded successfully!");
+       setErrorMessage("");
+    setSuccessMessage("✅ Certificate downloaded successfully.");
     } catch (error) {
       console.error("Download error:", error);
-      alert("Failed to download certificate.");
+      // alert("Failed to download certificate.");
+      setSuccessMessage("");
+    setErrorMessage("❌ Failed to download certificate.");
     }
   };
 
@@ -439,6 +475,8 @@ const handleDateReset = () => {
 <div className='category'>
 <div className='category-header'>
 <p style={{ marginBottom: 0 }}>Generate Certificate </p>
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
 </div>
 <div className='course-details'>
 <div className='course-row'>
@@ -597,9 +635,12 @@ const handleDateReset = () => {
             <div className='course-row'>
             <button className='generate-btn' data-bs-toggle='modal'
                             data-bs-target='#exampleModal' onClick={handleSubmit} disabled={!certificateData.certificate_id}>Save Certificate</button>
+                            {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <button className='generate-btn' onClick={handleSendEmail} disabled={!certificateData.certificate_id}>
   Send to Email
 </button>
+
             </div>
             </div>
             </div>
@@ -703,13 +744,13 @@ const handleDateReset = () => {
         <StyledTableCell align="center">
   {curr.studentId && curr.courseName && curr.completionDate ? (
     <a
-      href={`https://api.hachion.co/download/filename/${curr.studentId}_${curr.courseName.replaceAll(' ', '_')}_${dayjs(curr.completionDate).format('YYYY_MM_DD')}_Certificate.pdf`}
-      download
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      View PDF
-    </a>
+  href={`https://api.hachion.co/certificate/downloadForView/${curr.certificateId}`} // assuming curr.id is certificateId
+  // download
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View PDF
+</a>
   ) : 'Not Available'}
 </StyledTableCell>
         <StyledTableCell align="center">{curr.certificateId}</StyledTableCell>
@@ -717,7 +758,7 @@ const handleDateReset = () => {
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                         <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
-                        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.id)} />
+                        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.certificateId)} />
                         </div>
                       </StyledTableCell>
                     </StyledTableRow>
@@ -732,6 +773,8 @@ const handleDateReset = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
           <div className='pagination-container'>
             <AdminPagination
               currentPage={currentPage}

@@ -51,8 +51,9 @@ const StickyBar = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="whatsapp-link"
+              aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
             >
-              <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" />
+              <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" aria-hidden="true"/>
               <p className="whatsapp-number-footer">{whatsappNumber}</p>
             </a>
           </div>
@@ -64,6 +65,8 @@ const StickyBar = () => {
               href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Send an email to trainings@hachion.co using Gmail"
+              title="Email trainings@hachion.co"
             >
               trainings@hachion.co
             </a>

@@ -75,9 +75,9 @@ const ApplyHiring = () => {
                           className="search-input-career"
                           type="search"
                           placeholder="Enter Job Title, Type, Location or Keywords"
-                          aria-label="Search"
+                          aria-label="Search" title="Search"
                         />
-                        <button className="btn-search-home"  >
+                        <button className="btn-search-home" aria-hidden="true" >
                           <IoSearch style={{ fontSize: '1.8rem' }} />
                         </button>
                       </div>
@@ -85,21 +85,21 @@ const ApplyHiring = () => {
             <div className="filter-container">
           <div className="filter-section">
 
-            <select value={jobTitle} onChange={(e) => setJobTitle(e.target.value)}>
+            <select value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} aria-label="Filter by Title">
               <option value="">Select Job Title</option>
               <option value="SEO Executive">SEO Executive</option>
               <option value="Beanch Sale">Beanch Sale</option>
               <option value="Developer">Developer</option>
             </select>
 
-            <select value={jobType} onChange={(e) => setJobType(e.target.value)}>
+            <select value={jobType} onChange={(e) => setJobType(e.target.value)} aria-label="Filter by Type">
               <option value="">Select Job Type</option>
               <option value="Onsite">Onsite</option>
               <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>
             </select>
 
-            <select value={location} onChange={(e) => setLocation(e.target.value)}>
+            <select value={location} onChange={(e) => setLocation(e.target.value)} aria-label="Filter by Location">
             <option value="">Select Location</option>
             <option value="Hyderabad">Hyderabad</option>
             <option value="Bangalore">Bangalore</option>
@@ -107,7 +107,7 @@ const ApplyHiring = () => {
             <option value="India">India</option>
           </select>
 
-            <select value={experience} onChange={(e) => setExperience(e.target.value)}>
+            <select value={experience} onChange={(e) => setExperience(e.target.value)} aria-label="Filter by Experience">
               <option value="">Experience Level</option>
               <option value="0-1 Years">0-1 Years</option>
               <option value="2-4 Years">2-4 Years</option>

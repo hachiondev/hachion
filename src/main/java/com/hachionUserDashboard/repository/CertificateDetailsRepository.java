@@ -16,10 +16,15 @@ public interface CertificateDetailsRepository extends JpaRepository<CertificateE
 
 	Optional<CertificateEntity> findById(Long certificateId);
 	
-	@Query(value = "SELECT * FROM certificate_details WHERE student_id = :studentId AND course_name = :courseName AND completion_date = :completionDate LIMIT 1", nativeQuery = true)
+//	@Query(value = "SELECT * FROM certificate_details WHERE student_id = :studentId AND course_name = :courseName AND completion_date = :completionDate LIMIT 1", nativeQuery = true)
+//	Optional<CertificateEntity> findByStudentIdAndCourseNameAndCompletionDate(@Param("studentId") String studentId,
+//	                                                                          @Param("courseName") String courseName,
+//	                                                                          @Param("completionDate") String completionDate);
+	
+	@Query(value = "SELECT * FROM certificate_details WHERE student_id = :studentId AND course_name = :courseName LIMIT 1", nativeQuery = true)
 	Optional<CertificateEntity> findByStudentIdAndCourseNameAndCompletionDate(@Param("studentId") String studentId,
-	                                                                          @Param("courseName") String courseName,
-	                                                                          @Param("completionDate") String completionDate);
+	                                                                          @Param("courseName") String courseName);
+	                                                                          
 	@Query(value = "SELECT * FROM certificate_details WHERE LOWER(student_name) = LOWER(:studentName)", nativeQuery = true)
 	List<CertificateEntity> findByStudentNameNative(@Param("studentName") String studentName);
 

@@ -20,6 +20,7 @@ import com.hachionUserDashboard.dto.ApplyJobDetailsRequest;
 import com.hachionUserDashboard.dto.ApplyJobDetailsResponse;
 import com.hachionUserDashboard.entity.ApplyJobDetails;
 import com.hachionUserDashboard.repository.ApplyJobDetailsRepository;
+import com.hachionUserDashboard.util.EmailUtil;
 
 import Service.ApplyJobDetailsService;
 
@@ -28,6 +29,9 @@ public class ApplyJobDetailsServiceImpl implements ApplyJobDetailsService {
 
 	@Autowired
 	private ApplyJobDetailsRepository applyJobDetailsRepository;
+
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Value("${applyjob.resume.upload.dir}")
 	private String resumeUploadDir;
@@ -49,6 +53,9 @@ public class ApplyJobDetailsServiceImpl implements ApplyJobDetailsService {
 		applyJobDetails.setResume(resumeFileName);
 
 		ApplyJobDetails saved = applyJobDetailsRepository.save(applyJobDetails);
+
+		emailUtil.sendResumeToHrEmail(saved, resumeFileName);
+
 		return createApplyJobDetailsResponse(saved);
 	}
 
@@ -125,4 +132,8 @@ public class ApplyJobDetailsServiceImpl implements ApplyJobDetailsService {
 		}
 	}
 
+	public boolean isAlreadyApplied(String jobId, String email) {
+		Long count = applyJobDetailsRepository.countApplicationsByJobIdAndEmail(jobId, email);
+		return count != null && count > 0;
+	}
 }

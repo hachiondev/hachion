@@ -86,8 +86,7 @@ public class Certificateimp implements CertificateService {
 		 Optional<CertificateEntity> existingEntity = certificateRepository
 			        .findByStudentIdAndCourseNameAndCompletionDate(
 			            request.getStudentId(),
-			            request.getCourseName(),
-			            request.getCompletionDate()
+			            request.getCourseName()
 			        );
 
 			    
@@ -121,12 +120,11 @@ public class Certificateimp implements CertificateService {
 
 	public String generateCertificatePdf(String studentName, String studentId, String courseName,
 			String completionDate) {
-//		String folderPath = "certificates";
-//		String outputPdfPath = folderPath + "/" + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
-//		String inputPdfPath = "src/main/resources/templates/Hachion's CertificateFinal.pdf";
 
 		String folderPath = certificateBasePath;
-		String outputPdfPath = folderPath + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
+//		String outputPdfPath = folderPath + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_" + completionDate.replaceAll("[-/]", "_") + "_Certificate.pdf";
+		String outputPdfPath = folderPath + studentId + "_" + courseName.replaceAll("\\s+", "_") + "_Certificate.pdf";
+
 		String inputPdfPath = folderPath + "Hachion's CertificateFinal.pdf";
 
 		try {

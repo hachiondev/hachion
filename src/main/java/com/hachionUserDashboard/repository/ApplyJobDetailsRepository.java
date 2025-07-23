@@ -14,4 +14,6 @@ public interface ApplyJobDetailsRepository extends JpaRepository<ApplyJobDetails
 	ApplyJobDetails findByEmailAndResumeAndJobId(@Param("email") String email, @Param("resume") String resume,
 			@Param("jobId") String jobId);
 
+	@Query(value = "SELECT COUNT(*) FROM apply_job_details WHERE job_id = :jobId AND email = :email", nativeQuery = true)
+    Long countApplicationsByJobIdAndEmail(@Param("jobId") String jobId, @Param("email") String email);
 }

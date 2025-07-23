@@ -14,4 +14,6 @@ public interface ApplyJobDetailsService {
 	public List<ApplyJobDetailsResponse> getAllApplyJobDetails();
 
 	public void deleteApplyJobDetails(Long applyJobDetailsId);
+	
+	public boolean isAlreadyApplied(String jobId, String email);
 }

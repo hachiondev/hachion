@@ -61,9 +61,10 @@ public class ApplyJobDetailsController {
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteApplyJob(@PathVariable("id") Long id) {
-	    applyJobDetailsService.deleteApplyJobDetails(id);
-	    return ResponseEntity.ok("Apply job has been successfully deleted.");
+		applyJobDetailsService.deleteApplyJobDetails(id);
+		return ResponseEntity.ok("Apply job has been successfully deleted.");
 	}
+
 	@GetMapping("/downloadResume")
 	public ResponseEntity<Resource> downloadResume(@RequestParam String jobId, @RequestParam String email,
 			@RequestParam String resumeFileName) {
@@ -87,5 +88,14 @@ public class ApplyJobDetailsController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
+
+	 @GetMapping("/check")
+	    public ResponseEntity<Boolean> checkIfApplied(
+	            @RequestParam String jobId,
+	            @RequestParam String email
+	    ) {
+	        boolean alreadyApplied = applyJobDetailsService.isAlreadyApplied(jobId, email);
+	        return ResponseEntity.ok(alreadyApplied);
+	    }
 
 }

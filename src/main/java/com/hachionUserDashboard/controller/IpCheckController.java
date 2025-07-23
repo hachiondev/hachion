@@ -14,12 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api")
 public class IpCheckController {
 
-	private static final Set<String> BLOCKED_IPS = Set.of("152.59.179.65", // Shreya
+	private static final Set<String> BLOCKED_IPS = Set.of(
+			"152.59.182.27", // Shreya
 			"103.88.236.42", // Ramakrishna
 			"49.42.209.112", // Puspa
-			"106.221.185.77", // Ajay
+			"106.221.182.112", // Ajay
 			"223.185.51.103", // Prasanna
-			"52.59.202.123", // Tarun
+			"152.59.202.216", // Tarun
 			"152.57.170.218", // Hyderabad
 			"117.207.230.172", // Punjab
 			"49.37.65.201", // Niru
@@ -27,7 +28,9 @@ public class IpCheckController {
 			"152.57.233.70", // sirisha
 			"45.249.79.116", // lakshmi
 			"107.217.160.147", // prasad sir
-			"192.168.1.77" // prasad sir
+			"192.168.1.77", // prasad sir
+			"152.59.200.49",//sirisha
+			"49.36.236.51"     //sejal
 	);
 
 	@PostMapping("/check-ip")

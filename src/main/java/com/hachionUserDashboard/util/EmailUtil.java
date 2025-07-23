@@ -1,12 +1,17 @@
 package com.hachionUserDashboard.util;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.hachionUserDashboard.entity.ApplyJobDetails;
 import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.entity.Query;
 import com.hachionUserDashboard.entity.RequestBatch;
@@ -19,6 +24,9 @@ public class EmailUtil {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Value("${applyjob.resume.upload.dir}")
+	private String resumeUploadDir;
 
 	public void sendOtpEmail(String email, String otp) {
 		try {
@@ -55,8 +63,7 @@ public class EmailUtil {
 		}
 	}
 
-	// Send Request Batch Email
-	public void sendRequestEmail(RequestBatch requestBatchRequest) { // Removed @RequestBody
+	public void sendRequestEmail(RequestBatch requestBatchRequest) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		simpleMailMessage.setTo(requestBatchRequest.getEmail());
 		simpleMailMessage.setSubject("Hachion Batch Request Confirmation");
@@ -100,7 +107,7 @@ public class EmailUtil {
 					"""
 					.formatted(enrollRequest.getName(), enrollRequest.getEnroll_date(), enrollRequest.getTime());
 
-			helper.setText(htmlContent, true); // Enable HTML
+			helper.setText(htmlContent, true);
 
 			ClassPathResource logo = new ClassPathResource("images/logo.png");
 			ClassPathResource banner = new ClassPathResource("images/unnamed.jpg");
@@ -110,11 +117,10 @@ public class EmailUtil {
 
 			javaMailSender.send(mimeMessage);
 		} catch (Exception e) {
-			e.printStackTrace(); // Optional: log or rethrow
+			e.printStackTrace();
 		}
 	}
 
-	// Send Set Password Email
 	public void sendSetPasswordEmail(String email, String newPassword) {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -143,14 +149,11 @@ public class EmailUtil {
 
 			ClassPathResource res = new ClassPathResource("images/logo.png");
 			helper.addInline("logoImage", res);
-			// Attach the logo image
-//            FileSystemResource res = new FileSystemResource("C:/Users/hp/uploads/images/logo.png"); // Your logo path
-//            helper.addInline("logoImage", res);
 
 			javaMailSender.send(mimeMessage);
 
 		} catch (MessagingException e) {
-			e.printStackTrace(); // handle error properly
+			e.printStackTrace();
 		}
 	}
 
@@ -166,6 +169,34 @@ public class EmailUtil {
 
 		simpleMailMessage.setText(message);
 		javaMailSender.send(simpleMailMessage);
+	}
+
+	public void sendResumeToHrEmail(ApplyJobDetails details, String resumeFileName) {
+		try {
+			MimeMessage message = javaMailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			helper.setTo("hr@hachion.co");
+			helper.setCc("nagalakshmi.hachion@gmail.com");
+			helper.setSubject("New Job Application: " + details.getJobTitle());
+			helper.setText(
+					"<p>Dear HR Team,</p>" + "<p>A new application has been submitted for the job: "
+							+ "<span style='color:black;font-weight:bold'>" + details.getJobTitle() + "</span></p>"
+							+ "<p>Candidate Details:<br>" + "Name: <span style='color:black;font-weight:bold'>"
+							+ details.getStudentName() + "</span><br>"
+							+ "Email: <span style='color:black;font-weight:bold'>" + details.getEmail() + "</span><br>"
+							+ "Phone: <span style='color:black;font-weight:bold'>" + details.getMobileNumber()
+							+ "</span></p>" + "<p>Resume attached.</p>" + "<p>Regards,<br>Hachion Job Portal</p>",
+					true);
+
+			FileSystemResource file = new FileSystemResource(new File(resumeUploadDir + "/" + resumeFileName));
+			helper.addAttachment(resumeFileName, file);
+
+			javaMailSender.send(message);
+			System.out.println("✅ Resume email sent to HR.");
+		} catch (Exception e) {
+			System.err.println("❌ Failed to send resume email: " + e.getMessage());
+		}
 	}
 
 }

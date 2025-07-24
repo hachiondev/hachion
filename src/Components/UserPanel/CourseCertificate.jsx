@@ -55,7 +55,7 @@ const { courseName } = useParams();
           <li className='cert-content-points'><span className='point-icon'><FaRegHandPointRight  /></span> <div><strong>Lifelong Learning Access : </strong>Stay updated with evolving technology trends through access to course updates, alumni networks, and support channels.</div></li>
           </ol>
           </div>
-          <img className='course-cert-img' src={Certificate} alt='Certificate Img' />
+          <img className='course-cert-img' src={Certificate} alt='Certificate Img' loading="lazy"/>
           </div>
 
     </div>

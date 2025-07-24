@@ -358,7 +358,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
                 <button className="cancel-btn" onClick={() => setShowAssessmentLoginPopup(false)}>Cancel</button>
               </div>
               <div className="modal-right">
-                <img src={AssessmentImg} alt="Login Prompt" />
+                <img src={AssessmentImg} alt="Login Prompt" loading="lazy"/>
               </div>
             </div>
           </div>
@@ -389,7 +389,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
           <h2 className="modal-title">Enrollment Required</h2>
           <div className="modal-body-login">
             <div className="modal-right">
-              <img src={LiveImg} alt="Enroll Prompt" />
+              <img src={LiveImg} alt="Enroll Prompt" loading="lazy"/>
             </div>
             <div className="modal-left">
               <p>Please enroll in a <strong>LIVE CLASS</strong> to download the Assessment PDF.</p>
@@ -412,7 +412,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
       {isLoginModalVisible && (
         <div className="login-modal">
           <div className="login-modal-content" ref={modalRef}>
-            <img src={logo} alt="logo" className="hlogo" />
+            <img src={logo} alt="logo" className="hlogo" loading="lazy"/>
             <button className="close-modal-btn" onClick={hideLoginModal}>×</button>
             <h2 className="modal-title">Download Brochure</h2>
             <div className="modal-body-login">
@@ -432,7 +432,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
                 <button className="cancel-btn" onClick={hideLoginModal}>Cancel</button>
               </div>
               <div className="modal-right">
-                <img src={loginPopupImg} alt="Login Prompt" />
+                <img src={loginPopupImg} alt="Login Prompt" loading="lazy"/>
               </div>
             </div>
           </div>

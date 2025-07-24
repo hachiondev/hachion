@@ -268,7 +268,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
         </div>
       </form>
 
-      {showModal && (
+      {/* {showModal && (
   <div className="modal" style={{ display: "block" }} onClick={() => { setShowModal(false); closeModal(false); }}>
     <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
       <div className="modal-content" id="#querymodal">
@@ -290,7 +290,7 @@ const ApplyForm = ({ closeModal = () => {} }) => {
       </div>
     </div>
   </div>
-)}
+)} */}
     </div>
   );
 };

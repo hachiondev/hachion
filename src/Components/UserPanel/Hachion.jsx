@@ -10,7 +10,7 @@ import expertHelp from '../../Assets/expertHelp.png';
 // Reusable component for each training feature
 const TrainingFeature = ({ image, title, description }) => (
   <div className='about-us-div-content'>
-    <img src={image} alt={title} />
+    <img src={image} alt={title} loading="lazy"/>
     <h6>{title}</h6>
     <p>{description}</p>
   </div>

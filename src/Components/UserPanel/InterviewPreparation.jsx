@@ -6,7 +6,7 @@ import './Course.css';
 // Reusable component for each feature
 const ProfileBuildingItem = ({ image, title, description }) => (
   <div className='profile-building-div'>
-    <img src={image} alt={title} />
+    <img src={image} alt={title} loading="lazy"/>
     <div>
       <h5>{title}</h5>
       <p>{description}</p>

@@ -15,7 +15,7 @@ const Corporate = () => {
     <>
       <div className="corporate">
         <div className="corporate-content">
-          <img src={corporateImage} alt='corporate-image' className="corporate-image" />
+          <img src={corporateImage} alt='corporate-image' className="corporate-image" loading="lazy"/>
           <button className="know-more" onClick={handleKnowMoreClick}>
             Know More
           </button>

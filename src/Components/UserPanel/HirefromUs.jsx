@@ -63,7 +63,7 @@ const HirefromUs = () => {
                 <p className='hire-title-text'>Hachion helps you hire skilled talent faster and more affordably.</p>
                 <button className='post-job-button' onClick={() => postJobRef.current?.scrollIntoView({ behavior: 'smooth' })}>Post Job</button>
                 </div>
-                <img className='hire-banner-img' src={banner} alt='Hire banner' />
+                <img className='hire-banner-img' src={banner} alt='Hire banner' fetchpriority="high"/>
                 <div>
               </div>
               </div>
@@ -78,13 +78,13 @@ const HirefromUs = () => {
           <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>Wide Tech Coverage: </strong>Access professionals skilled in 150+ in-demand domains like DevOps, Cloud, Data Science, QA, and more.</div></li>
           <li className='hire-points'><span className='point-icon'><IoMdCheckmarkCircleOutline /></span> <div><strong>All-Year Talent Availability: </strong>A consistent pipeline of qualified candidates ready when you are.</div></li>
           </ol>
-          <img className='hire-img' src={whyhachion} alt='Why hire from Hachion' />
+          <img className='hire-img' src={whyhachion} alt='Why hire from Hachion' loading="lazy"/>
           </div>
 
           <h2 className='hire-sub-title'>Top IT firms collaborate with Hachion</h2>
             <div className='hire-part'>
-          <img className='hire-collab' src={collabration} alt='Collabration' />  
-          <img className='hire-logo' src={companies} alt='IT Logos' />
+          <img className='hire-collab' src={collabration} alt='Collabration' loading="lazy"/>  
+          <img className='hire-logo' src={companies} alt='IT Logos' loading="lazy"/>
           </div>
           <div ref={postJobRef} style={{marginTop: 20}}>
           <PostJob />

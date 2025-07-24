@@ -68,7 +68,7 @@ qualification
   return (
     <div className='Job-card' onClick={handleClick} style={{ cursor: 'pointer' }}>
       <div className='Job-title'>
-        <img src={image} alt='job-img'/>
+        <img src={image} alt='job-img' loading="lazy"/>
         <div>
           <p className='Job-card-content'>{jobTitle}</p>
           <p className='Job-card-sub'>{companyName}</p>

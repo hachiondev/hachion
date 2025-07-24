@@ -49,6 +49,7 @@ export const Home = () => {
       console.log("Scroll to top clicked!");
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+    
   return (
     <>
       <Helmet>

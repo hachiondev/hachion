@@ -1710,7 +1710,7 @@ padding: 20px;
       font-size: 14px;
   }
     .work-date {
-      font-size: 10px;
+      font-size: 12px;
   }
   
     .user {
@@ -2142,7 +2142,7 @@ padding: 20px;
    
    .customized-content-para {
        font-weight: 400;
-       font-size: 10px;
+       font-size: 12px;
        margin-bottom: 5px;
        padding-right: 5px;
    }
@@ -2209,7 +2209,7 @@ padding: 20px;
   .view-all-corporate {
        border-radius: 5px;
        padding: 3px 10px;
-       font-size: 10px;
+       font-size: 12px;
        white-space: nowrap;
    }
 

@@ -6,7 +6,8 @@
   import { Menu, MenuItem, Button } from '@mui/material';
   import Flag from 'react-world-flags';
   import {AiFillCaretDown } from 'react-icons/ai'
-import { countries, getDefaultCountry } from './countryUtils';
+import { countries, getDefaultCountry } from '../../countryUtils';
+
 
   const RegisterHere = () => {
     const [firstName, setFirstName] = useState("");

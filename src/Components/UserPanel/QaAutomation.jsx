@@ -145,9 +145,18 @@ const QaAutomation = () => {
     fetchCourseData();
   }, [courseName]);
   
-
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+  if (loading) {
+    return (
+      <div className="loading-overlay">
+        <img
+          src="/HachionLogo.png"
+          alt="Loading..."
+          className='loading-logo'
+        />
+      </div>
+    );
+  }
 
   return (
     <>

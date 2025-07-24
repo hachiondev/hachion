@@ -1243,7 +1243,7 @@ background-color: white;
           margin-left: 10px;
         }
         .about-us-left-content{
-          font-size: 10px;
+          font-size: 12px;
           padding: 0 25px 0 25px ;
           line-height: 16px;
           text-align: justify;
@@ -1390,7 +1390,7 @@ background-color: white;
       #studentreg.form-control-student{
       width: 300px ;
       height: 30px ;
-      font-size: 10px;
+      font-size: 12px;
       margin: 5px 5%;
     }
       .student-register-button {
@@ -1490,14 +1490,14 @@ background-color: white;
         white-space: nowrap; 
         padding: 10px;
         gap: 10px;
-        font-size: 10px;
+        font-size: 12px;
         width: 100%;
       }
       .story-div{
         align-items: center;
       }
       .story-content{
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 400;
         white-space: wrap;
         line-height: 12px;
@@ -1687,7 +1687,7 @@ background-color: white;
   min-width: 80px;
   max-width: 100px;
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
 }
 .daily-icon {
   font-size: 16px;

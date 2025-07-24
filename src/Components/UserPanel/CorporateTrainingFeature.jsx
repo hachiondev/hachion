@@ -51,7 +51,7 @@ const CorporateTrainingFeature = () => {
         <div className='customized-column'>
           {features.map((item, index) => (
             <div className='customized-content' key={index}>
-              <img src={item.icon} alt={`${item.heading}-icon`} />
+              <img src={item.icon} alt={`${item.heading}-icon`} loading="lazy"/>
               <div>
                 <p className='customized-content-heading'>{item.heading}</p>
                 <p className='customized-content-para'>{item.para}</p>
@@ -59,7 +59,7 @@ const CorporateTrainingFeature = () => {
             </div>
           ))}
         </div>
-        <img src={training} alt='training-illustration' className='training-img' />
+        <img src={training} alt='training-illustration' className='training-img' loading="lazy"/>
       </div>
     </>
   );

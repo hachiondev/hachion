@@ -122,22 +122,22 @@ const Footer = () => {
       <div className='footer-link'>
       <a href="https://www.facebook.com/hachion.co" aria-label="Facebook"
     target="_blank" 
-    rel="noopener noreferrer"><img src={facebook} alt='facebook-icon'/></a>
+    rel="noopener noreferrer"><img src={facebook} alt='facebook-icon' loading="lazy"/></a>
     <a href="https://x.com/hachion_co" aria-label="Twitter"
     target="_blank" 
-    rel="noopener noreferrer"><img src={twitter} alt='twitter-icon'/></a>
+    rel="noopener noreferrer"><img src={twitter} alt='twitter-icon' loading="lazy"/></a>
     <a href="https://www.linkedin.com/company/hachion" aria-label="Linkedin"
     target="_blank" 
-    rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon'/></a>
+    rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon' loading="lazy"/></a>
     <a href="https://www.instagram.com/hachion_trainings" aria-label="Instagram"
     target="_blank" 
-    rel="noopener noreferrer"><img src={instagram} alt='instagram-icon'/></a>
+    rel="noopener noreferrer"><img src={instagram} alt='instagram-icon' loading="lazy"/></a>
     <a href="https://www.quora.com/profile/Hachion-4" aria-label="Quora"
     target="_blank" 
-    rel="noopener noreferrer"><img src={quora} alt='quora-icon'/></a>
+    rel="noopener noreferrer"><img src={quora} alt='quora-icon' loading="lazy"/></a>
       <a href="https://www.youtube.com/@hachion" aria-label="YouTube"
     target="_blank" 
-    rel="noopener noreferrer"><img src={youtube} alt='youtube'/></a>
+    rel="noopener noreferrer"><img src={youtube} alt='youtube' loading="lazy"/></a>
       </div>
       </div>
       </div>

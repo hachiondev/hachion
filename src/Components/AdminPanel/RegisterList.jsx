@@ -40,6 +40,7 @@ import AdminPagination from './AdminPagination';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
+import { countries as staticCountries } from '../../countryUtils';
 import Select from 'react-select';
 dayjs.extend(customParseFormat);
 
@@ -156,29 +157,12 @@ const [currentPage, setCurrentPage] = useState(1);
       setOpen(false); 
     };
 
-    useEffect(() => {
-      fetch("https://restcountries.com/v3.1/all?fields=name,idd,cca2")
-        .then(res => res.json())
-        .then(data => {
-          const formattedCountries = data
-            .filter(c => c.idd?.root) 
-            .map(c => {
-              const code = c.idd.root + (c.idd.suffixes?.[0] || "");
-              return {
-                name: c.name.common,
-                code,
-                flag: c.cca2 
-              };
-            })
-            .sort((a, b) => a.name.localeCompare(b.name)); 
-    
-          setCountries(formattedCountries);
-        })
-        .catch(err => {
-          console.error("Failed to load countries:", err);
-        });
-    }, []);
+useEffect(() => {
+  
+  const formattedCountries = staticCountries.filter(c => c.name && c.code);
 
+  setCountries(formattedCountries);
+}, []);
     const handleCountrySelect = (country) => {
   setSelectedCountry(country);
 
@@ -485,57 +469,62 @@ const mobileNumber = studentData.mobile?.trim();
        <div className="course-row">
        
       <div className="col">
-        <label className="form-label">Country <span className="star">*</span></label>
-        <Select 
-          options={countries.map((country) => ({
-            value: country.name,
+  <label className="form-label">
+    Country <span className="star">*</span>
+  </label>
+  <Select
+    options={countries
+      .filter((country) => country.name && country.code) 
+      .map((country) => ({
+        value: country.name,
+        label: (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Flag code={country.flag} style={{ width: '20px', marginRight: '10px' }} />
+            {country.name} ({country.code})
+          </div>
+        ),
+        flag: country.flag,
+        code: country.code
+      }))}
+    onChange={(selected) => {
+      setSelectedCountry(selected);
+      setStudentData((prev) => ({
+        ...prev,
+        country: selected.value
+      }));
+    }}
+    value={
+      selectedCountry.value
+        ? {
+            value: selectedCountry.value,
             label: (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Flag code={country.flag} style={{ width: '20px', marginRight: '10px' }} />
-                {country.name} ({country.code})
+                <Flag code={selectedCountry.flag} style={{ width: '20px', marginRight: '10px' }} />
+                {selectedCountry.value} ({selectedCountry.code})
               </div>
-            ),
-            flag: country.flag,
-            code: country.code
-          }))}
-          onChange={(selected) => {
-            setSelectedCountry(selected);
-            setStudentData((prev) => ({
-              ...prev,
-              country: selected.value
-            }));
-          }}
-          value={
-            selectedCountry.value
-              ? {
-                  value: selectedCountry.value,
-                  label: (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Flag code={selectedCountry.flag} style={{ width: '20px', marginRight: '10px' }} />
-                      {selectedCountry.value} ({selectedCountry.code})
-                    </div>
-                  )
-                }
-              : null
+            )
           }
-        styles={{
-            control: (base) => ({
-              ...base,
-              minHeight: '50px',
-              height: '50px',
-            }),
-            valueContainer: (base) => ({
-              ...base,
-              height: '50px',
-              padding: '0 8px',
-            }),
-            indicatorsContainer: (base) => ({
-              ...base,
-              height: '50px',
-            }),
-          }}
-        />
-      </div>
+        : null
+    }
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '50px',
+        height: '50px'
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        height: '50px',
+        padding: '0 8px'
+      }),
+      indicatorsContainer: (base) => ({
+        ...base,
+        height: '50px'
+      })
+    }}
+  />
+</div>
+
         <div className="col">
         <label className="form-label">Mobile <span className="star">*</span></label>
         <div style={{ position: 'relative' }}>
@@ -570,7 +559,7 @@ const mobileNumber = studentData.mobile?.trim();
             onBlur={handleMobileBlur}
             style={{
               paddingLeft: selectedCountry.code ? `${selectedCountry.code.length * 10 + 20}px` : '10px',
-              // height: '38px',
+              
               fontSize: '16px',
               fontFamily: 'inherit',
             }}

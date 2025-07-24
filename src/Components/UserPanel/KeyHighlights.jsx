@@ -46,27 +46,27 @@ const KeyHighlights = () => {
    <h2 className='qa-heading '>Key Highlights</h2>
    <div className='key-highlights-header'>
     <div className='key-highlights-content'>
-        <img src={LiveOnline} alt='teaching-online' className='key-icons'/>
+        <img src={LiveOnline} alt='teaching-online' className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights1}</p>
     </div>
     <div className='key-highlights-content'>
-        <img src={LiveVideo} alt='video' className='key-icons'/>
+        <img src={LiveVideo} alt='video' className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights2}</p>
     </div>
     <div className='key-highlights-content'>
-        <img src={LiveProject} alt='live-projects' className='key-icons'/>
+        <img src={LiveProject} alt='live-projects' className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights3}</p>
     </div>
     <div className='key-highlights-content'>
-        <img src={JobAssistance} alt='job-assistance'  className='key-icons'/>
+        <img src={JobAssistance} alt='job-assistance'  className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights4} </p>
     </div>
     <div className='key-highlights-content'>
-        <img src={Resume} alt='Resume' className='key-icons'/>
+        <img src={Resume} alt='Resume' className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights5}</p>
     </div>
     <div className='key-highlights-content'>
-        <img src={Certification} alt='certification' className='key-icons'/>
+        <img src={Certification} alt='certification' className='key-icons' loading="lazy"/>
         <p className='key-highlights-para'>{course.keyHighlights6}</p>
     </div>
 

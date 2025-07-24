@@ -26,7 +26,7 @@ const JobDetailsCard = ({
     <div className='Details-column'>
       <div className='Details-card'>
         <div className='Details-title'>
-          <img src={image} alt='job-img' />
+          <img src={image} alt='job-img' loading="lazy"/>
           <div className='Title-and-Details'>
             <div>
               <p className='Details-card-content'>{jobTitle}</p>

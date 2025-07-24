@@ -48,7 +48,7 @@ const JobDetails = () => {
               </nav>
               </div>
               <div >
-                <img className='career-banner-img' src={jobdetails} alt='Apply Banner' />
+                <img className='career-banner-img' src={jobdetails} alt='Apply Banner' fetchpriority="high"/>
                 <div className="career-part">
                 <ApplyDetails/>
                 <ApplyForm/>

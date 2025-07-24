@@ -285,7 +285,7 @@ if (currency === 'INR') {
           <div className='qa-right'>
             {/* <p className='certified'>Certified-students: {course.totalEnrollment}</p> */}
             <div className="qa-video-container">
-              <img src={qaheader} alt='video-frame' className="qa-video-image" />
+              <img src={qaheader} alt='video-frame' className="qa-video-image" fetchpriority="high"/>
               {course.youtubeLink && (
                 <button
                   className="play-btn-overlay"

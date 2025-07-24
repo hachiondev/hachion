@@ -3,7 +3,7 @@ import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
 import axios from 'axios';
-import { countries, getDefaultCountry } from './countryUtils';
+import { countries, getDefaultCountry } from '../../countryUtils';
 const PostJob = () => {
   const [error, setError] = useState('');
   const [messageType, setMessageType] = useState('');

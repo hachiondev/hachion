@@ -261,7 +261,7 @@ const ContactUs = () => {
       <Topbar />
       <NavbarTop />
       <div className="about-banner">
-        <img src={contactUsBanner} alt="contact-us-banner" />
+        <img src={contactUsBanner} alt="contact-us-banner" loading="lazy"/>
       </div>
       <div className="contact-us-all">
         <div className='blogs-header'>
@@ -282,7 +282,7 @@ const ContactUs = () => {
         {officeLocations.map((loc, i) => (
   <div className="contact-us-div" key={i}>
     <div className="contact-us-box">
-      <img src={loc.flag} alt={`${loc.name} flag`} className="flag" />
+      <img src={loc.flag} alt={`${loc.name} flag`} className="flag" loading="lazy"/>
       <div className="office-location">
         <p>{loc.name}</p>
         <p>{loc.address}</p>
@@ -295,7 +295,7 @@ const ContactUs = () => {
           <div className="contact-us-left">
             <h3>Enquiries</h3>
             <div className="contact-block">
-              <img src={whatsappIcon} alt="whatsapp-icon" />
+              <img src={whatsappIcon} alt="whatsapp-icon" loading="lazy"/>
               <p className="contact-info">
                 <a
                   href="https://wa.me/17324852499"
@@ -307,7 +307,7 @@ const ContactUs = () => {
               </p>
             </div>
             <div className="contact-block">
-              <img src={mailIcon} alt="mail-icon" />
+              <img src={mailIcon} alt="mail-icon" loading="lazy"/>
               <p className="contact-info">
                 <a
                   href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
@@ -324,35 +324,35 @@ const ContactUs = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={facebookIcon} alt="facebook-icon" />
+                <img src={facebookIcon} alt="facebook-icon" loading="lazy"/>
               </a>
               <a
                 href="https://x.com/hachion_co"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={twitter} alt="twitter-icon" />
+                <img src={twitter} alt="twitter-icon" loading="lazy"/>
               </a>
               <a
                 href="https://www.linkedin.com/company/hachion"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={linkedin} alt="linkedin-icon" />
+                <img src={linkedin} alt="linkedin-icon" loading="lazy"/>
               </a>
               <a
                 href="https://www.instagram.com/hachion_trainings"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={instagram} alt="instagram-icon" />
+                <img src={instagram} alt="instagram-icon" loading="lazy"/>
               </a>
               <a
                 href="https://www.quora.com/profile/Hachion-4"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={quora} alt="quora-icon" />
+                <img src={quora} alt="quora-icon" loading="lazy"/>
               </a>
             </div>
           </div>
@@ -456,38 +456,6 @@ const ContactUs = () => {
                 </div>
               </div>
             </form>
-            {showModal && (
-              <div
-                className="modal"
-                style={{ display: "block" }}
-                onClick={() => setShowModal(false)}
-              >
-                <div
-                  className="modal-dialog"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="modal-content" id="#querymodal">
-                    <button
-                      className="close-btn"
-                      aria-label="Close"
-                      onClick={() => setShowModal(false)}
-                    >
-                      <RiCloseCircleLine />
-                    </button>
-                    <div className="modal-body">
-                      <img
-                        src={success}
-                        alt="Success"
-                        className="success-gif"
-                      />
-                      <p className="modal-para">
-                        Thank you! Our Team will contact you soon
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

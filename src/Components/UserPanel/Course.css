@@ -691,7 +691,9 @@ border-radius: 10px;
 
 .qa-video-image {
   max-width: 100%;
+  width: 450px;
   height: auto;
+  aspect-ratio: 10/7;
   border-radius: 10px;
   display: block;
 }
@@ -923,13 +925,11 @@ font-weight: 600;
 text-align:center;
 }
 
-.key-icons{
-height:60px;
-width:60px;
-margin-left: 30px;
-background: linear-gradient(to right, #00AEEF,#006489);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+.key-icons {
+  height: 60px;
+  width: 60px;
+  margin-left: 30px;
+  object-fit: contain;
 }
 
 .key-highlights-header{
@@ -2502,13 +2502,13 @@ padding-left: 2vh;
 }            
 .live-mode{
   padding: 10px;
-  font-size: 10px;
+  font-size: 12px;
   text-align: justify;
   margin-bottom: 0;
 }
 
 .feature-content{
-  font-size: 10px;
+  font-size: 12px;
   padding: 5px 5px 5px 0;
   white-space: nowrap;
   margin-bottom: 0;
@@ -2539,7 +2539,7 @@ padding-left: 2vh;
   font-size: 12px;
 }
 .profile-building-div p{
-  font-size: 10px;
+  font-size: 12px;
   text-align: justify;
 }
 .profile-building-div img{
@@ -2594,7 +2594,7 @@ padding-left: 2vh;
   margin-left: 0;
   padding: 5px;
   margin-bottom: 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .qa-content p{
@@ -2653,7 +2653,7 @@ padding-left: 2vh;
 
 /* .mob-cert {
   display: flex;
-  font-size: 10px;
+  font-size: 12px;
   justify-content: flex-end;
   font-weight: 700;
   color: #000;
@@ -2675,14 +2675,14 @@ padding-left: 2vh;
   }
 .fee{
 padding-top: 5px;
-font-size: 10px;
+font-size: 12px;
 }
 .qa-video-container {
   max-width: 400px;
 }
 
 .qa-video-image {
-  width: 100%;
+  max-width: 450px;
   display: block;
 }
 .qa-automation-skeleton {
@@ -2954,14 +2954,14 @@ max-height: 3em;
 
 .sidebar-course-time{
   gap: 5px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .sidebar-course-month{  
   font-size: 12px;
   white-space: nowrap;
 }
 .sidebar-course-review{  
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   font-style: italic;
   white-space: nowrap;
@@ -3207,7 +3207,7 @@ max-height: 3em;
   }
 
 .date-span {
-  font-size: 10px; 
+  font-size: 12px; 
 }
 
 .demo, .class {
@@ -3259,7 +3259,7 @@ max-height: 3em;
 }
 
 .mentoring-mode-content{
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   text-align: justify;
   margin-bottom: 10px;
@@ -3285,7 +3285,7 @@ max-height: 3em;
     }
     
     .qa-sub-content{
-      font-size: 10px;
+      font-size: 12px;
       text-align: justify;
     }
 
@@ -3326,7 +3326,7 @@ max-height: 3em;
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 5px;
-      font-size: 10px;
+      font-size: 12px;
       text-align: left;
     }
     
@@ -3414,7 +3414,7 @@ max-height: 3em;
   font-size: 12px;
 }
 .cert-content-points{
-  font-size: 10px;
+  font-size: 12px;
   padding: 10px;
 }
     
@@ -3687,4 +3687,23 @@ border: 1px solid #b3b3b3;
     width: 375px !important;
     height: 50px;
   }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-logo {
+  width: 100px;
+  height: 100px;
+  animation: pulse 1.5s infinite ease-in-out;
 }

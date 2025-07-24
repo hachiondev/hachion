@@ -25,7 +25,7 @@ const CustomizeTraining = () => {
       <div className='customize-training'>
         {trainingOptions.map((option, index) => (
           <div className='customize-training-div' key={index}>
-            <img src={option.img} alt={option.alt} />
+            <img src={option.img} alt={option.alt} loading="lazy"/>
             <p className='customize-training-div-content'>{option.text}</p>
           </div>
         ))}

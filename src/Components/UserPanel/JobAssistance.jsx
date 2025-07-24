@@ -5,7 +5,7 @@ import accessImage from '../../Assets/access.png';
 // Reusable component for each job assistance item
 const JobAssistanceItem = ({ image, title, description, extraClass = '' }) => (
   <div className='profile-building-div'>
-    <img src={image} alt={title} />
+    <img src={image} alt={title} loading="lazy"/>
     <div>
       <h5>{title}</h5>
       <p className={extraClass}>{description}</p>

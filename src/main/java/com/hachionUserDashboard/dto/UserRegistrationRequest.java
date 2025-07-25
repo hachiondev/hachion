@@ -13,6 +13,7 @@ public class UserRegistrationRequest {
 	private String lastName;
 	private String country;
 	private String mode;
+	private String profileImage;
 
 	public String getConfirmPassword() {
 		return confirmPassword;
@@ -104,6 +105,14 @@ public class UserRegistrationRequest {
 
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 	
 }

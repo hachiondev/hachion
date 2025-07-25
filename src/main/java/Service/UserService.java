@@ -2,6 +2,8 @@ package Service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
@@ -99,5 +101,5 @@ public interface UserService {
 
 	public UserProfileResponse getUserProfileByEmail(String email);
 
-	public void resetPassword(UserRegistrationRequest request);
+	public void resetPassword(UserRegistrationRequest request, MultipartFile profileImage);
 }

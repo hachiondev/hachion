@@ -1,6 +1,10 @@
 
 package com.hachionUserDashboard.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,8 +15,11 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
@@ -46,6 +53,9 @@ public class Userimpl implements UserService {
 
 	@Autowired
 	private WebhookSenderService webhookSenderService;
+	
+	@Value("${user.profile.image.upload.dir}")
+	private String uploadDir;
 
 	@Override
 	public String sendOtp(String email) {
@@ -490,6 +500,7 @@ public class Userimpl implements UserService {
 			response.setEmail(user.getEmail());
 			response.setMobile(user.getMobile());
 			response.setStudentId(user.getStudentId());
+			response.setProfileImage(user.getProfileImage());
 
 			return response;
 		} else {
@@ -527,7 +538,9 @@ public class Userimpl implements UserService {
 //			System.out.println("User not found with email: " + request.getEmail());
 //		}
 //	}
-	public void resetPassword(UserRegistrationRequest request) {
+	
+	@Transactional
+	public void resetPassword(UserRegistrationRequest request, MultipartFile profileImage) {
 		Optional<RegisterStudent> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
 
 		if (optionalUser.isPresent()) {
@@ -535,7 +548,12 @@ public class Userimpl implements UserService {
 
 			if (request.getPassword() != null && !request.getPassword().isEmpty()) {
 				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-					System.out.println("Old password is incorrect");
+//					System.out.println("Old password is incorrect");
+					System.out.println("Request Password: " + request.getPassword());
+					System.out.println("User Encoded Password: " + user.getPassword());
+					System.out.println("Password Match: " + passwordEncoder.matches(request.getPassword(), user.getPassword()));
+					String encoded = passwordEncoder.encode("Hach@123");
+					System.out.println("Encoded: " + encoded);
 					return;
 				}
 
@@ -567,8 +585,36 @@ public class Userimpl implements UserService {
 				user.setMobile(request.getMobile());
 			}
 
-			userRepository.save(user);
+			if (profileImage != null && !profileImage.isEmpty()) {
+			    try {
+			        String originalFilename = profileImage.getOriginalFilename();
+			        String studentId = user.getStudentId();
 
+			        // Optional sanitization
+			        String sanitizedFilename = originalFilename.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+			        String newFileName = studentId + "_" + sanitizedFilename;
+
+			        // Delete old image if it exists
+			        String oldFileName = user.getProfileImage();
+			        if (oldFileName != null && !oldFileName.isEmpty()) {
+			            Path oldFilePath = Paths.get(uploadDir, oldFileName);
+			            Files.deleteIfExists(oldFilePath);
+			        }
+
+			        // Save new image
+			        Path newFilePath = Paths.get(uploadDir, newFileName);
+			        Files.createDirectories(newFilePath.getParent());
+			        Files.write(newFilePath, profileImage.getBytes());
+
+			        user.setProfileImage(newFileName);
+
+			    } catch (IOException e) {
+			        System.out.println("Failed to save profile image: " + e.getMessage());
+			    }
+			}
+
+
+			userRepository.save(user);
 		} else {
 			System.out.println("User not found with email: " + request.getEmail());
 		}

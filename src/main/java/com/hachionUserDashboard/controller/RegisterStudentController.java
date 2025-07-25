@@ -68,6 +68,8 @@ public class RegisterStudentController {
 		String tempPassword = "Hach@123";
 		String hashedPassword = passwordEncoder.encode(tempPassword);
 		student.setPassword(hashedPassword);
+		
+		
 
 		String fullName = student.getUserName();
 		student.setStudentId(generateNextStudentId());

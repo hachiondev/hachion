@@ -5,6 +5,7 @@ public class UserProfileResponse {
 	private String email;
 	private String mobile;
 	private String studentId;
+	private String profileImage;
 
 	public UserProfileResponse() {
 	}
@@ -53,6 +54,14 @@ public class UserProfileResponse {
 
 	public void setPhone(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 }

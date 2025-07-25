@@ -21,12 +21,12 @@ public class IpCheckController {
 			"106.221.182.112", // Ajay
 			"223.185.51.103", // Prasanna
 			"152.59.202.216", // Tarun
-//			"152.57.170.218", // Hyderabad
+			"152.57.170.218", // Hyderabad
 			"117.207.230.172", // Punjab
 			"49.37.65.201", // Niru
 			"157.49.40.238", // satyam
 			"152.57.233.70", // sirisha
-//			"45.249.79.116", // lakshmi
+			"45.249.79.116", // lakshmi
 			"107.217.160.147", // prasad sir
 			"192.168.1.77", // prasad sir
 			"152.59.200.49",//sirisha

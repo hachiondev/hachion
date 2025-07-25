@@ -93,6 +93,9 @@ public class RegisterStudent {
 	@Column(name = "date", nullable = false)
 	private LocalDate date;
 
+	@Column(name = "profile_image")
+	private String profileImage;
+
 	public Long getId() {
 		return id;
 	}
@@ -351,6 +354,14 @@ public class RegisterStudent {
 	public void setActive(boolean b) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 }

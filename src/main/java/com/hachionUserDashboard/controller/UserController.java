@@ -1,10 +1,17 @@
 package com.hachionUserDashboard.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -17,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.CourseUserRequest;
@@ -159,9 +168,42 @@ public class UserController {
 		return ResponseEntity.ok(profile);
 	}
 
+//	@PostMapping("/reset-password")
+//	public ResponseEntity<String> resetPassword(@RequestBody UserRegistrationRequest request) {
+//		userService.resetPassword(request);
+//		return ResponseEntity.ok("Password updated successfully");
+//	}
 	@PostMapping("/reset-password")
-	public ResponseEntity<String> resetPassword(@RequestBody UserRegistrationRequest request) {
-		userService.resetPassword(request);
-		return ResponseEntity.ok("Password updated successfully");
+	public ResponseEntity<String> resetPassword(
+	    @RequestPart("data") UserRegistrationRequest request,
+	    @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+	) {
+	    userService.resetPassword(request, profileImage);
+	    return ResponseEntity.ok("Password updated successfully");
+	}
+	
+	@GetMapping("/profile/{filename:.+}")
+	public ResponseEntity<Resource> getProfileImage(@PathVariable String filename) {
+	    try {
+	        Path imagePath = Paths.get("uploads/profile_images").resolve(filename).normalize();
+	        Resource resource = new UrlResource(imagePath.toUri());
+
+	        if (resource.exists() && resource.isReadable()) {
+	            // Dynamically detect content type
+	            String contentType = Files.probeContentType(imagePath);
+	            if (contentType == null) {
+	                contentType = "application/octet-stream"; // Fallback
+	            }
+
+	            return ResponseEntity.ok()
+	                    .contentType(MediaType.parseMediaType(contentType))
+	                    .body(resource);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+
+	    } catch (IOException e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
 }

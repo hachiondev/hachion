@@ -35,6 +35,8 @@ const LargeAvatar = styled(Avatar)({
 });
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -66,127 +68,120 @@ const togglePasswordVisibility = (field) => {
   const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
   
-  const countries = [
-    { name: 'India', code: '+91', flag: 'IN' },
-    { name: 'United States', code: '+1', flag: 'US' },
-    { name: 'United Kingdom', code: '+44', flag: 'GB' },
-    { name: 'Thailand', code: '+66', flag: 'TH' },
-    { name: 'Canada', code: '+1', flag: 'CA' },
-    { name: 'Australia', code: '+61', flag: 'AU' },
-    { name: 'Germany', code: '+49', flag: 'DE' },
-    { name: 'France', code: '+33', flag: 'FR' },
-    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
-    { name: 'Qatar', code: '+974', flag: 'QA' },
-    { name: 'Japan', code: '+81', flag: 'JP' },
-    { name: 'China', code: '+86', flag: 'CN' },
-    { name: 'Russia', code: '+7', flag: 'RU' },
-    { name: 'South Korea', code: '+82', flag: 'KR' },
-    { name: 'Brazil', code: '+55', flag: 'BR' },
-    { name: 'Mexico', code: '+52', flag: 'MX' },
-    { name: 'South Africa', code: '+27', flag: 'ZA' },
-    { name: 'Netherlands', code: '+31', flag: 'NL' }
-  ];
-const navigate = useNavigate();
-  const defaultCountry = countries.find((c) => c.flag === "US");
-  
-    
-    useEffect(() => {
-      fetch("https://ipwho.is/")
-        .then((res) => res.json())
-        .then((data) => {
-          const userCountryCode = data?.country_code;
-          const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-          if (matchedCountry) {
-            setSelectedCountry(matchedCountry);
-          }
-        })
-        .catch(() => {
-        
-        });
-    }, []);
-
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
   
-  const locationName = countries.find(c => c.flag === selectedCountry?.flag)?.name || '';
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('loginuserData');  
-    console.log("Stored user data from localStorage:", storedUser);
-  
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      const parsedEmail = parsedUser.email;
-      console.log("Parsed email:", parsedEmail);
-  
+  const storedUser = localStorage.getItem('loginuserData');  
+  if (storedUser) {
+    const parsedUser = JSON.parse(storedUser);
+    const parsedEmail = parsedUser.email;
 
-      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
-        params: { email: parsedEmail }
-      })
-      .then((response) => {
-        console.log("Response from backend:", response.data);
-        const data = response.data;
-        setName(data.name);
-        setEmail(data.email);
-        setMobileNumber(data.mobile);
-        
-      })
-      .catch((error) => {
-        console.error('Failed to fetch user profile', error);
-      });
-    }
-  }, []);
+    axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      params: { email: parsedEmail }
+    })
+    .then((response) => {
+      const data = response.data;
+      setName(data.name);
+      setEmail(data.email);
+      setMobileNumber(data.mobile);
+
+      
+      if (data.profileImage) {
+        const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
+        setProfileImage(fullImageUrl);
+      }
+    })
+    .catch((error) => {
+      console.error('Failed to fetch user profile', error);
+    });
+  }
+}, []);
+
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswords((prev) => ({ ...prev, [name]: value }));
   };
   
-  const handleResetPassword = (e) => {
-    e.preventDefault();
-     setSuccessMessage('');
+const handleResetPassword = async (e) => {
+  e.preventDefault();
+  setSuccessMessage('');
   setErrorMessage('');
-    const email = document.getElementById('inputEmail')?.value;
-    if (!email) {
-      
-     setErrorMessage("❌ User email not found.");
-      return;
-    }
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      
-      setErrorMessage("❌ New password and confirm password do not match.");
-      return;
-    }
-    setIsUpdating(true); 
-    axios.post('https://api.hachion.co/api/v1/user/reset-password', {
-      email,
-      password: passwords.oldPassword,
-      newPassword: passwords.newPassword,
-      confirmPassword: passwords.confirmPassword,
-      userName: name
-    })
-    .then(response => {
-      setIsUpdating(false);   
-      setSuccessMessage("✅ Details updated successfully."); 
-       const storedUser = JSON.parse(localStorage.getItem('loginuserData'));
-  const updatedUser = { ...storedUser, name }; 
-  localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
-   setTimeout(() => {
-    localStorage.removeItem('authToken');       
-    localStorage.removeItem('loginuserData');   
-    navigate('/login');
-  }, 3000);
-    })
-    .catch(error => {
-      setIsUpdating(false);  
-       setErrorMessage("❌ Failed to reset password.");
-    console.error("Reset password error:", error);
-      
-    });
+
+  const email = document.getElementById('inputEmail')?.value;
+  if (!email) {
+    setErrorMessage("❌ User email not found.");
+    return;
+  }
+
+  const isPasswordChanged = passwords.newPassword && passwords.oldPassword && passwords.confirmPassword;
+
+  if (isPasswordChanged && passwords.newPassword !== passwords.confirmPassword) {
+    setErrorMessage("❌ New password and confirm password do not match.");
+    return;
+  }
+
+  const formData = new FormData();
+
+  const requestObject = {
+    email,
+    password: passwords.oldPassword,
+    newPassword: passwords.newPassword,
+    confirmPassword: passwords.confirmPassword,
+    userName: name,
+    mobile: mobileNumber
   };
+
+  formData.append("data", new Blob([JSON.stringify(requestObject)], { type: "application/json" }));
+
+  if (profileImage && typeof profileImage !== 'string') {
+    formData.append("profileImage", profileImage);
+  }
+
+  setIsUpdating(true);
+
+  try {
+    const response = await axios.post('https://api.hachion.co/api/v1/user/reset-password', formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+
+    setIsUpdating(false);
+    setSuccessMessage("✅ Profile updated successfully.");
+
+    
+    const storedUser = JSON.parse(localStorage.getItem('loginuserData'));
+    const updatedUser = { ...storedUser, name };
+
+    
+    if (response.data?.profileImageUrl) {
+      updatedUser.profileImage = response.data.profileImageUrl;
+      setProfileImage(response.data.profileImageUrl); 
+    }
+
+    localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
+
+    if (isPasswordChanged) {
+      
+      setTimeout(() => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('loginuserData');
+        navigate('/login');
+      }, 3000);
+    }
+
+  } catch (error) {
+    setIsUpdating(false);
+    setErrorMessage("❌ Failed to update profile.");
+    console.error("Reset password error:", error);
+  }
+};
+
+
   const openMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -198,7 +193,8 @@ const navigate = useNavigate();
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
+     
+      setProfileImage(file);
     }
   };
   
@@ -217,28 +213,38 @@ const navigate = useNavigate();
           <div className="input-row">
             <div className="profile">
               <StyledBadge
-                overlap="circular"
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={
-                  profileImage ? (
-                    <FiX size={16} color="red" onClick={removeImage} />
-                  ) : (
-                    <label htmlFor="imageUpload">
-                      <FiCamera size={16} />
-                      <input
-                        type="file"
-                        id="imageUpload"
-                        style={{ display: 'none' }}
-                        onChange={handleImageUpload}
-                      />
-                    </label>
-                  )
-                }
-              >
-                <LargeAvatar src={profileImage}>
-                  {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
-                </LargeAvatar>
-              </StyledBadge>
+  overlap="circular"
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+  badgeContent={
+    profileImage ? (
+      <FiX size={16} color="red" onClick={removeImage} style={{ cursor: 'pointer' }} />
+    ) : (
+      <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
+        <FiCamera size={16} />
+        <input
+          type="file"
+          id="imageUpload"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleImageUpload}
+        />
+      </label>
+    )
+  }
+>
+  <LargeAvatar
+    src={
+      profileImage
+        ? typeof profileImage === 'string'
+          ? profileImage
+          : URL.createObjectURL(profileImage)
+        : undefined
+    }
+  >
+    {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
+  </LargeAvatar>
+</StyledBadge>
+
             </div>
             
             <div className="col-md-5">

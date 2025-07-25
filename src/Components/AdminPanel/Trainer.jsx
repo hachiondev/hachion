@@ -550,9 +550,9 @@ image: file,
               </StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
               <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
-              <StyledTableCell align="left">{row.demo_link_1}</StyledTableCell>
-              <StyledTableCell align="left">{row.demo_link_2}</StyledTableCell>
-              <StyledTableCell align="left">{row.demo_link_3}</StyledTableCell>
+              <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_1}</StyledTableCell>
+              <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>
+              <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_3}</StyledTableCell>
               <StyledTableCell sx={{ width: 400, whiteSpace: 'pre-wrap' }} align="left">{row.summary}</StyledTableCell>
               <StyledTableCell align="center">{row.date}</StyledTableCell>
               <StyledTableCell align="center">

@@ -3,11 +3,10 @@
   padding: 0;
   box-sizing: border-box;
   font-family:  'Open Sans', sans-serif;
-
 }
 /* Base styles for large screens (desktop, laptop) */
 .topbar {
-/* height: 80px; */
+height: 50px;
 background-color: rgba(0, 174, 239, 1);
 display: flex;
 justify-content: space-between;
@@ -91,21 +90,6 @@ font-size: 2rem;
  color: white;
 }
 
-/* .login-link-home {
-font-size: 1.1rem;
-font-weight: 500;
-text-decoration: none;
-color: white;
-} */
-
-.login-div {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 1rem;
-padding: 10px;
-}
-
 .whatsapp-number-footer{
 font-weight: 500;
 font-size: 16px;
@@ -184,14 +168,6 @@ font-size: 2.25rem;
 margin: 4vh;
 }
 
-.login-link-home{
-font-size: 1.1rem;
-font-weight: 500;
-padding:5px;
-text-decoration: none;
-color:white;
-}
-
 .login-div{
 display:flex;
 justify-content: center;
@@ -200,9 +176,7 @@ flex-direction: row;
 color: white;
 font-weight: 700;
 gap:1rem;
-padding: 10px;
 }
-
 
 /* Navbar items */
 .navbar {
@@ -454,6 +428,22 @@ background-color: #EA4335;
   object-fit: cover;
   display: block;
 }
+.banner-skeleton {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 5;
+  background-color: #f0f0f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-skeleton-image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s infinite;
+}
   .popup-overlay {
   position: fixed;
   top: 0;
@@ -538,44 +528,40 @@ white-space: nowrap;
 animation-play-state: paused;
 }
 
-.login-div-content{
+.login-div {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* ensures adequate spacing */
+}
+
+.accessible-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 30px;
+  padding: 5px 20px;
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  border: none;
+  border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  position: relative;
-  display: inline-block;
-  padding: 5px 15px;
-  font-size: 1.25rem;
-  border-radius: 8px;
-  color: white;
-  border:none;
   transition: background-color 0.3s ease;
-  }
-.login-div-content:hover{
-background-color: rgba(255, 255, 255, 0.2);
-border: 2px solid white;
-font-weight: 600;
 }
-.login-div-content:hover::after{
-content: "";
-position: absolute;
-top: 0.5vh;
-left: 0.25vw;
-font-weight: 600;
-right: 0.25vw;
-bottom: 0.5vh;
-background-color: rgba(255, 255, 255, 0.2);
-z-index: -1;
-transition: background-color 0.3s ease;
-}
-/* .nav-item{
-position: relative;
-display: inline-block;
-height: 6vh;
-border-radius: 10px;
-border:none;
-transition: background-color 0.3s ease,color 0.3s ease;
 
-} */
+.accessible-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  border: 2px solid white;
+}
+
+.login-separator {
+  color: white;
+  font-size: 2rem;
+}
+
 .nav-item:hover{
 border: 3px solid #00AEEF;
 background-color: #CCEFFC;
@@ -939,6 +925,24 @@ margin: 5px auto;
 max-width: 70vw; 
 overflow-x: auto;
 scroll-behavior: smooth;
+min-height: 300px;
+}
+.skeleton-card {
+  width: 220px;
+  height: 250px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.2s infinite;
+  border-radius: 10px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 .scroll-arrow-left, .scroll-arrow-right {
@@ -2734,7 +2738,12 @@ display: none;
   font-size: 12px;
   text-align: center;
   max-width: 380px;
+  min-height: 150px;
   }
+  .skeleton-card {
+  width: 90%;
+  height: 150px;
+}
 
   .course-card {
     width: 100%; /* Each card takes half the available width */

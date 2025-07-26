@@ -176,16 +176,13 @@ const NavbarTop = () => {
 
   const toggleDrawer = () => {
     setDrawerOpen(!isDrawerOpen);
-    console.log(`Drawer ${isDrawerOpen ? "closed" : "opened"}`);
   };
 
   const handleNavClick = (link) => {
     setActiveLink(link);
-    console.log(`Navigating to: ${link}`);
   };
 
   const handleClick = () => {
-    console.log("Navigating to Home");
     navigate('/');
   };
 
@@ -283,8 +280,10 @@ const NavbarTop = () => {
             <button
               className="btn-search-icon-mobile"
               onClick={() => setMobileSearchOpen(true)}
+              aria-label="Open mobile search"
+              title="Search"
             >
-              <IoSearch className="search-icon" />
+              <IoSearch className="search-icon" aria-hidden="true"/>
             </button>
           )}
 

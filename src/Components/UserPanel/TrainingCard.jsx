@@ -46,7 +46,7 @@ const TrainingCard = ({ mode, heading, date, time, duration, image, scheduleCoun
           <FaCircle className="mob-card-header-icon" />
           {mode}
         </div>
-        <h4 className="course-name">{heading}</h4>
+        <h3 className="course-name">{heading}</h3>
         <div className="date-time-container">
           <p className="card-date">{date}</p>
           <p className="time">{time}</p>

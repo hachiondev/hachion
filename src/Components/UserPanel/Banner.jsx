@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 const Banner = () => {
   const [banners, setBanners] = useState([]);
   const [apiError, setApiError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const staticBanner = { home_banner_image: Banner3 };
@@ -27,7 +28,8 @@ const Banner = () => {
           console.error("Error fetching banners:", error);
           setBanners([staticBanner]);
           setApiError(true);
-        });
+        })
+        .finally(() => setLoading(false));
     }, 500);
 
     return () => clearTimeout(timer);
@@ -42,39 +44,55 @@ const Banner = () => {
         <link rel="preload" as="image" href={Banner3} type="image/webp" fetchpriority="high"/>
       </Helmet>
 
-      <div
-        id="autoScrollingBanner"
-        className="carousel slide"
-        data-bs-ride="carousel"
-        data-bs-interval="3000"
-      >
-        <div className="carousel-indicators">
-          {displayBanners.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              data-bs-target="#autoScrollingBanner"
-              data-bs-slide-to={index}
-              className={index === 0 ? "active" : ""}
-              aria-label={`Slide ${index + 1}`}
-            />
-          ))}
+      {loading ? (
+        <div className="banner-skeleton">
+          <div className="banner-skeleton-image" />
         </div>
-
-        <div className="carousel-inner">
-          {displayBanners.map((banner, index) => {
-            const imageUrl =
-              index === 0 || apiError
-                ? banner.home_banner_image
-                : `https://api.hachion.co/${banner.home_banner_image}`;
-
-            return (
-              <div
+      ) : (
+        <div
+          id="autoScrollingBanner"
+          className="carousel slide"
+          data-bs-ride="carousel"
+          data-bs-interval="3000"
+        >
+          <div className="carousel-indicators">
+            {displayBanners.map((_, index) => (
+              <button
                 key={index}
-                className={`carousel-item ${index === 0 ? "active" : ""}`}
-              >
-                {banner.path ? (
-                  <a href={banner.path}>
+                type="button"
+                data-bs-target="#autoScrollingBanner"
+                data-bs-slide-to={index}
+                className={index === 0 ? "active" : ""}
+                aria-label={`Slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          <div className="carousel-inner">
+            {displayBanners.map((banner, index) => {
+              const imageUrl =
+                index === 0 || apiError
+                  ? banner.home_banner_image
+                  : `https://api.hachion.co/${banner.home_banner_image}`;
+
+              return (
+                <div
+                  key={index}
+                  className={`carousel-item ${index === 0 ? "active" : ""}`}
+                >
+                  {banner.path ? (
+                    <a href={banner.path}>
+                      <img
+                        src={imageUrl}
+                        className="banner-img"
+                        alt={`Banner ${index + 1}`}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchpriority={index === 0 ? "high" : "auto"}
+                        decoding="async"
+                        crossOrigin="anonymous"
+                      />
+                    </a>
+                  ) : (
                     <img
                       src={imageUrl}
                       className="banner-img"
@@ -82,24 +100,14 @@ const Banner = () => {
                       loading={index === 0 ? "eager" : "lazy"}
                       fetchpriority={index === 0 ? "high" : "auto"}
                       decoding="async"
-                      crossOrigin="anonymous"
                     />
-                  </a>
-                ) : (
-                  <img
-                    src={imageUrl}
-                    className="banner-img"
-                    alt={`Banner ${index + 1}`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "auto"}
-                    decoding="async"
-                  />
-                )}
-              </div>
-            );
-          })}
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

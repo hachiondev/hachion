@@ -12,6 +12,7 @@ const SummerEvents = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [topCount, setTopCount] = useState(() => {
     const width = window.innerWidth;
     if (width <= 768) return 0; // Mobile
@@ -33,6 +34,7 @@ const SummerEvents = () => {
 
   useEffect(() => {
     const fetchSummerCourses = async () => {
+      setLoading(true);
       try {
         const summerResponse = await axios.get('https://api.hachion.co/summerevents');
         const summerData = summerResponse.data || [];
@@ -59,7 +61,9 @@ const SummerEvents = () => {
         setSummerCourses(detailedSummerCourses);
       } catch (error) {
         console.error('Error fetching summer courses:', error);
-      }
+      } finally {
+      setLoading(false);
+    }
     };
 
     fetchSummerCourses();
@@ -163,7 +167,12 @@ const SummerEvents = () => {
 
       {/* Courses */}
       <div className="training-card-holder">
-        {filteredCourses.slice(0, showMore ? filteredCourses.length : 4).map((course, index) => (
+      {loading ? (
+        Array.from({ length: 4 }).map((_, index) => (
+          <div className="skeleton-card" key={index}></div>
+        ))
+      ) : filteredCourses.length > 0 ? (
+        filteredCourses.slice(0, showMore ? filteredCourses.length : 4).map((course, index) => (
           <SummerCard
             key={index}
             heading={course.courseName}
@@ -176,9 +185,11 @@ const SummerEvents = () => {
             onClick={() => handleCardClick(course)}
             className="course-card"
           />
-        ))}
-        {filteredCourses.length === 0 && <p>No courses available.</p>}
-      </div>
+        ))
+      ) : (
+        <p>No courses available.</p>
+      )}
+    </div>
 
       {filteredCourses.length > 4 && (
         <button className="cards-view" onClick={toggleShowMore}>

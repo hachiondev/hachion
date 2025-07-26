@@ -12,6 +12,7 @@ const Trending = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [topCount, setTopCount] = useState(() => {
     const width = window.innerWidth;
     if (width <= 768) return 0; // Mobile
@@ -33,6 +34,7 @@ const Trending = () => {
 
   useEffect(() => {
     const fetchTrendingCourses = async () => {
+      setLoading(true);
       try {
         const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
         const trendingData = trendingResponse.data || [];
@@ -59,7 +61,9 @@ const Trending = () => {
         setTrendingCourses(detailedTrendingCourses);
       } catch (error) {
         console.error('Error fetching trending courses:', error);
-      }
+      } finally {
+      setLoading(false);
+    }
     };
 
     fetchTrendingCourses();
@@ -163,7 +167,12 @@ const Trending = () => {
 
       {/* Courses */}
       <div className="training-card-holder">
-        {filteredCourses.slice(0, showMore ? filteredCourses.length : 4).map((course, index) => (
+      {loading ? (
+        Array.from({ length: 4 }).map((_, index) => (
+          <div className="skeleton-card" key={index}></div>
+        ))
+      ) : filteredCourses.length > 0 ? (
+        filteredCourses.slice(0, showMore ? filteredCourses.length : 4).map((course, index) => (
           <CourseCard
             key={index}
             heading={course.courseName}
@@ -176,9 +185,11 @@ const Trending = () => {
             onClick={() => handleCardClick(course)}
             className="course-card"
           />
-        ))}
-        {filteredCourses.length === 0 && <p>No courses available.</p>}
-      </div>
+        ))
+      ) : (
+        <p>No courses available.</p>
+      )}
+    </div>
 
       {filteredCourses.length > 4 && (
         <button className="cards-view" onClick={toggleShowMore}>

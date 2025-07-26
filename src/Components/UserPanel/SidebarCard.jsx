@@ -46,7 +46,7 @@ const SidebarCard = ({ title, month, time, Rating, RatingByPeople, image, studen
     onClick={isMobile ? handleClick : undefined} >
       <div className="sidebar-card-header-div">
         <p className="sidebar-card-heading">Certified Students: {student}</p>
-        <img src={image} alt="card-img" className="sidebar-card-icon" />
+        <img src={image} alt="card-img" className="sidebar-card-icon" loading="lazy"/>
       </div>
       <div className="sidebar-course-details">
         <h3 className="sidebar-course-name">{title}</h3>

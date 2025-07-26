@@ -35,16 +35,20 @@ const Sidebar = ({ onSelectCategory }) => {
 
 
   // Check if mobile view is active (max-width: 480px)
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 480);
-    };
+useEffect(() => {
+  const mediaQuery = window.matchMedia("(max-width: 480px)");
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
+  const handleResize = () => {
+    setIsMobileView(mediaQuery.matches);
+  };
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  handleResize(); // Initial match check
+  mediaQuery.addEventListener("change", handleResize);
+
+  return () => {
+    mediaQuery.removeEventListener("change", handleResize);
+  };
+}, []);
 
   const handleCategoryChange = (e) => {
     const selected = e.target.value;

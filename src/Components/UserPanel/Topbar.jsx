@@ -131,14 +131,10 @@ const Topbar = () => {
       ) : (
         <div className='topbar-right'>
           <div className='login-div'>
-            <Link to='/login' className='login-link-home'>
-              <button className='login-div-content'>Login</button>
-            </Link>
-            <PiLineVerticalThin style={{ color: 'white', fontSize: '2rem' }} />
-            <Link to='/register' className='login-link-home'>
-              <button className='login-div-content'>Register</button>
-            </Link>
-          </div>
+          <Link to='/login' className='login-div-content accessible-button'>Login</Link>
+          <PiLineVerticalThin className="login-separator" />
+          <Link to='/register' className='login-div-content accessible-button'>Register</Link>
+        </div>
         </div>
       )}
     </div>

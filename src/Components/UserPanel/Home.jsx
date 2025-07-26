@@ -29,7 +29,6 @@ export const Home = () => {
   }, [location]);
   
         useEffect(() => {
-          console.log("Privacy component mounted. Scrolling to top...");
           window.scrollTo(0, 0);
         }, []);
       
@@ -46,7 +45,6 @@ export const Home = () => {
           return () => window.removeEventListener("scroll", handleScroll);
         }, []);
       const scrollToTop = () => {
-      console.log("Scroll to top clicked!");
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     

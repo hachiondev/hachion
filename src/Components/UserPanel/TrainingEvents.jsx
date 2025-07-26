@@ -10,7 +10,7 @@ const TrainingEvents = () => {
   const navigate = useNavigate();
   const [mergedCourses, setMergedCourses] = useState([]);
   const [viewAll, setViewAll] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [modeFilter, setModeFilter] = useState("");
   const [courseFilter, setCourseFilter] = useState("");
   const [timeFilter, setTimeFilter] = useState("");
@@ -22,6 +22,7 @@ const TrainingEvents = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
@@ -50,20 +51,18 @@ const TrainingEvents = () => {
             created_at: matchingCourse?.createdAt || "",
           };
         });
-
-        // console.log("Merged Courses:", mergedData);
         setMergedCourses(mergedData);
 
         const uniqueCourses = [
           ...new Set(scheduleRes.map((course) => course.schedule_course_name.trim())),
         ];
-        // console.log("unique courses:", JSON.stringify(uniqueCourses, null, 2));
 
         setCourseOptions(uniqueCourses);
-        // console.log("unique for set courses:", JSON.stringify(uniqueCourses, null, 2));
       } catch (error) {
         console.error("Error fetching data:", error);
-      }
+      } finally {
+      setLoading(false);
+    }
     };
 
     fetchData();
@@ -151,11 +150,7 @@ const TrainingEvents = () => {
   const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
   const handleSearchIconClick = () => {
-    // Optional: You can also filter data manually here if you want
-    console.log('Search icon clicked with input:', courseFilter);
-    // No clearing of input box ✅
   };
-  //console.log(filteredCourses);
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
@@ -197,15 +192,6 @@ const TrainingEvents = () => {
       </div>
     </div>
 
-          {/* <input 
-type="text"
-className="all-courses"
-placeholder="All Courses"
-value={courseFilter}
-onChange={handleCourseChange}
-list="course-options"
-/> */}
-
 <datalist id="course-options">
   {courseOptions
     .filter((course) =>
@@ -217,52 +203,48 @@ list="course-options"
     ))}
 </datalist>
 
-          {/* <select value={courseFilter} onChange={handleCourseChange}>
-            <option value="">All Courses</option>
-            {courseOptions.map((course, idx) => (
-              <option key={idx} value={course}>
-                {course}
-              </option>
-            ))}
-          </select> */}
-
           <button className="view-all" onClick={resetFilters}>
             Reset
           </button>
         </div>
       </div>
 
-      <div className="training-card-holder">
-        {filteredCourses.length > 0 ? (
-          (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
-            (course, index) => (
-              <TrainingCard
-  key={course.course_id || index}
-  id={course.course_id}
-  heading={course.schedule_course_name}
-  image={
-    course.course_image
-      ? `https://api.hachion.co/${course.course_image}`
-      : ""
-  }
-  date={course.schedule_date ? formatDate(course.schedule_date) : ""}
-  time={course.schedule_time || ""}
-  duration={
-    course.schedule_duration
-      ? `Duration: ${course.schedule_duration}`
-      : ""
-  }
-  mode={course.schedule_mode || ""}
-  scheduleCount={course.sessions?.length || 0} // 👈 Pass count here
-/>                  
-            )
-          )
-        ) : (
-          <div className="no-schedules-message">
-            <p>No schedules are available</p>
-          </div>
-        )}
-      </div>
+     <div className="training-card-holder">
+  {loading ? (
+    // 🔄 Skeletons while loading
+    Array.from({ length: 4 }).map((_, i) => (
+      <div className="skeleton-card" key={i}></div>
+    ))
+  ) : filteredCourses.length > 0 ? (
+    (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
+      (course, index) => (
+        <TrainingCard
+          key={course.course_id || index}
+          id={course.course_id}
+          heading={course.schedule_course_name}
+          image={
+            course.course_image
+              ? `https://api.hachion.co/${course.course_image}`
+              : ""
+          }
+          date={course.schedule_date ? formatDate(course.schedule_date) : ""}
+          time={course.schedule_time || ""}
+          duration={
+            course.schedule_duration
+              ? `Duration: ${course.schedule_duration}`
+              : ""
+          }
+          mode={course.schedule_mode || ""}
+          scheduleCount={course.sessions?.length || 0}
+        />
+      )
+    )
+  ) : (
+    <div className="no-schedules-message">
+      <p>No schedules are available</p>
+    </div>
+  )}
+</div>
     </div>
   );
 };

@@ -24,6 +24,7 @@ import Salesforce from './Components/UserPanel/Salesforce';
 import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
+import UserProtectedRoute from './UserProtectedRoute';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
@@ -100,6 +101,9 @@ function AppRoutes() {
       <Route element={<ProtectedRoute />}>
           <Route path="admindashboardview" element={<AdminDashboardView />} />
       </Route>
+      <Route element={<UserProtectedRoute />}>
+      <Route path="/userdashboard/:section?" element={<UserDashboard />} />
+     </Route>
       <Route path='/admincourse' element={<CategoryTable />} />
       <Route path='/workshop' element={<Workshop/>}/>
       <Route path='/workshop/:slug' element={<SalWorkshop/>}/>
@@ -109,7 +113,6 @@ function AppRoutes() {
       <Route path="/blogs/:category_name/:id" element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
-      <Route path="/userdashboard/:section?" element={<UserDashboard />} />
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>

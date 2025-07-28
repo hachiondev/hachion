@@ -30,7 +30,6 @@ const NavbarTop = () => {
    const [blogs, setBlogs] = useState([]);
    const [selectedItem, setSelectedItem] = useState(null);
    const location = useLocation();
-
  
    // Helper function to format course name for the URL
    const formatCourseName = (courseName) => {
@@ -376,7 +375,7 @@ const NavbarTop = () => {
                       Corporate Training
                     </div>
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                      All Courses
+                      Categories
                     </div>
                     {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -392,7 +391,7 @@ const NavbarTop = () => {
                   Corporate Training
                 </div>
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                  All Courses
+                  Categories
                 </div>
                 {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -420,7 +419,7 @@ const NavbarTop = () => {
             className={`nav-item ${location.pathname === '/coursedetails' ? 'active' : ''}`}
           >
             <Link to="/coursedetails" className="nav-item-link">
-              All Courses
+              Categories
             </Link>
           </button>
 

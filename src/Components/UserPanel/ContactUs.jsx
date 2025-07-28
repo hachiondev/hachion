@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
-import { AiFillCaretDown } from "react-icons/ai";
-import { Menu, MenuItem, Button } from "@mui/material";
-import Flag from "react-world-flags";
 import contactUsBanner from "../../Assets/contactus.png";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import UsaFlag from "../../Assets/usflag.jpg";
@@ -20,10 +17,8 @@ import quora from "../../Assets/Component 141.png";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { useNavigate } from "react-router-dom";
-import { RiCloseCircleLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
-import success from "../../Assets/success.gif";
 import axios from "axios";
 
 const initialValues = {
@@ -46,6 +41,8 @@ const ContactUs = () => {
     flag: "US",
     name: "United States",
   });
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
     const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
@@ -68,8 +65,7 @@ const ContactUs = () => {
             setWhatsappLink('https://wa.me/17324852499');
           }
         } catch (error) {
-          console.error('❌ Location fetch error:', error);
-          // fallback to US number
+          
           setWhatsappNumber('+1 (732) 485-2499');
           setWhatsappLink('https://wa.me/17324852499');
         }
@@ -78,52 +74,10 @@ const ContactUs = () => {
       detectUserCountry();
        }, []);
   useEffect(() => {
-    window.scrollTo(0, 0); // This will scroll to the top of the page
-    console.log("Page loaded and scrolled to top");
+    window.scrollTo(0, 0); 
+    
   }, []);
 
-  const countries = [
-    { name: "India", code: "+91", flag: "IN" },
-    { name: "United States", code: "+1", flag: "US" },
-    { name: "United Kingdom", code: "+44", flag: "GB" },
-    { name: "Thailand", code: "+66", flag: "TH" },
-    { name: "Canada", code: "+1", flag: "CA" },
-    { name: "Australia", code: "+61", flag: "AU" },
-    { name: "Germany", code: "+49", flag: "DE" },
-    { name: "France", code: "+33", flag: "FR" },
-    { name: "United Arab Emirates", code: "+971", flag: "AE" },
-    { name: "Qatar", code: "+974", flag: "QA" },
-    { name: "Japan", code: "+81", flag: "JP" },
-    { name: "China", code: "+86", flag: "CN" },
-    { name: "Russia", code: "+7", flag: "RU" },
-    { name: "South Korea", code: "+82", flag: "KR" },
-    { name: "Brazil", code: "+55", flag: "BR" },
-    { name: "Mexico", code: "+52", flag: "MX" },
-    { name: "South Africa", code: "+27", flag: "ZA" },
-    { name: "Netherlands", code: "+31", flag: "NL" },
-    ];
-  
-    useEffect(() => {
-      fetch("https://ipwho.is/")
-        .then((res) => res.json())
-        .then((data) => {
-          const userCountryCode = data?.country_code;
-          const matchedCountry = countries.find(
-            (c) => c.flag === userCountryCode
-          );
-          if (matchedCountry) {
-            setSelectedCountry(matchedCountry);
-          }
-        })
-        .catch(() => {});
-    }, []);
-  
-    const handleCountrySelect = (country) => {
-      console.log("Country selected:", country.name, country.code);
-      setSelectedCountry(country);
-      closeMenu();
-      mobileInputRef.current?.focus();
-    };
 
   const openMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -141,13 +95,6 @@ const ContactUs = () => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = userData.email || "";
   
-  //  if (!userEmail) {
-  //     console.warn("🔒 No logged-in user found. Redirecting to /login...");
-  //      window.confirm("Please login before unsubscribe from hachion");
-  //     navigate("/login");
-  //     return;
-  //   }
-  
     values.email = userEmail;
    
     const fetchUserProfile = async () => {
@@ -163,19 +110,18 @@ const ContactUs = () => {
         if (data.name) {
           values.name = data.name;
         } else {
-          console.warn("⚠️ Name not found in response.");
+          
         }
        
         if (data.mobile) {
           setMobileNumber(data.mobile);
         } else {
-          console.warn("⚠️ Mobile number not found.");
         }
         if (data.country) {
           values.country = data.country;
         }
       } catch (error) {
-        console.error("❌ Error fetching profile:", error);
+        
       }
     };
   
@@ -205,16 +151,33 @@ const ContactUs = () => {
         headers: { "Content-Type": "application/json" }
       });
   
-      if (response.status === 200) {
-        setShowModal(true);
-        setMobileNumber("");
-        formik.resetForm();
-      }
-    } catch (error) {
-      console.error("Error submitting query:", error);
-    }
+       if (response.status === 200) {
+    setShowModal(true);
+    setMobileNumber("");
+    formik.resetForm();
+    setSuccessMessage("✅ Query submitted successfully.");
+    setErrorMessage("");
+  } else {
+    setErrorMessage("❌ Failed to submit query.");
+    setSuccessMessage("");
+  }
+
+} catch (error) {
+  setErrorMessage("❌ Something went wrong while submitting the form.");
+  setSuccessMessage("");
+}
   };
-  
+  useEffect(() => {
+  if (successMessage || errorMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 2000); 
+
+    return () => clearTimeout(timer); 
+  }
+}, [successMessage, errorMessage]);
+
   const handlePrivacy = () => {
     navigate("/privacy");
   };
@@ -225,9 +188,6 @@ const ContactUs = () => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values) => {
-      console.log(values);
-    },
   });
   
   const {
@@ -421,6 +381,8 @@ const ContactUs = () => {
                 ></textarea>
               </div>
               <div class="mb-3">
+              {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
                 <button
                   type="button"
                   class="submit-button"
@@ -428,6 +390,7 @@ const ContactUs = () => {
                 >
                   Submit
                 </button>
+                
                 {/* Error message display */}
                 {error && <p className="error-message">{error}</p>}
                 <div class="form-check">

@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Blogs.css';
@@ -9,29 +9,24 @@ import { FaArrowUp } from 'react-icons/fa';
 
 const Privacy = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  // Scroll to top when component is mounted
+
+  
   useEffect(() => {
-    console.log("Privacy component mounted. Scrolling to top...");
     window.scrollTo(0, 0);
   }, []);
 
-  // Handle Scroll - Show/Hide Button
+  
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
+      setShowScrollButton(window.scrollY > 300);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll to top function
+  
   const scrollToTop = () => {
-    console.log("Scroll to top clicked!");
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

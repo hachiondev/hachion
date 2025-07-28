@@ -78,7 +78,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import LiveOnlineTrainingMain from './LiveOnlineTrainingMain';
-import CorporateMode from './CorporateMode';
+// import CorporateMode from './CorporateMode';
 // import MentoringMode from './MentoringMode';
 import SelfPlaced from './SelfPlaced';
 import CrashCourse from './CrashCourse';
@@ -89,7 +89,7 @@ const ModeOfTraining = () => {
     { id: 2, title: 'Crash Course (Fast Track)', component: <CrashCourse /> },
     // { id: 3, title: 'Mentoring Mode', component: <MentoringMode /> },
     { id: 3, title: 'Self-Paced Learning', component: <SelfPlaced /> },
-    { id: 4, title: 'Corporate Training', component: <CorporateMode /> },
+    // { id: 4, title: 'Corporate Training', component: <CorporateMode /> },
   ];
 
   return (

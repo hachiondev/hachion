@@ -8,30 +8,39 @@ import StickyBar from "./StickyBar";
 import Footer from "./Footer";
 import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+
 const Sitemap = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [Category, setCategory] = useState([]); // Dynamic Category
+  const [Category, setCategory] = useState([]);
   const [courses, setCourses] = useState([]);
   const API_URL = "https://api.hachion.co/course-categories/all";
   const navigate = useNavigate();
-  // Scroll to top function
+
+  
   const scrollToTop = () => {
-    console.log("Scroll to top clicked!");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Fetch categories from the API
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(API_URL, {
           headers: {
-            Authorization: "Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S", // Replace with your token if needed
+            Authorization: "Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S",
             "Content-Type": "application/json",
           },
         });
-
-        setCategory(response.data); // Assuming response.data is an array of categories
+        setCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -39,35 +48,36 @@ const Sitemap = () => {
 
     fetchCategories();
   }, []);
-
-  // Fetch courses from the API
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("https://api.hachion.co/courses/all");
         if (Array.isArray(response.data)) {
-          setCourses(response.data); // Set the courses if data is an array
+          setCourses(response.data);
         } else {
           console.error("Unexpected API response format:", response.data);
-          setCourses([]); // Fallback to an empty array
+          setCourses([]);
         }
       } catch (error) {
         console.error("Error fetching courses:", error.message);
-        setCourses([]); // Fallback to an empty array
+        setCourses([]);
       }
     };
 
     fetchCourses();
   }, []);
 
-  // Handle button click to navigate
+  
   const handleCourseDetails = (coursename) => {
     if (coursename) {
-      const formattedName = coursename.toLowerCase().replace(/\s+/g, "-"); // Format course name
+      const formattedName = coursename
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9\-]/g, ""); 
       navigate(`/coursedetails/${formattedName}`);
     }
   };
-
   return (
     <>
       <Topbar />
@@ -117,7 +127,7 @@ const Sitemap = () => {
                     <button
                       className="txtCoursebtn"
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent parent click event
+                        e.stopPropagation(); 
                         handleCourseDetails(item.courseName);
                       }}
                     >

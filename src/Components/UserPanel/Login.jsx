@@ -49,12 +49,12 @@ const Login = () => {
   
         try {
           localStorage.setItem('loginuserData', JSON.stringify(loginuserData));
-          localStorage.setItem('authToken', response.data.token); // Save the token
+          localStorage.setItem('authToken', response.data.token); 
         } catch (error) {
           console.error('Error saving to localStorage:', error);
         }
   
-        const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
+        const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
         localStorage.removeItem('redirectAfterLogin');
         window.location.href = redirectPath;
       } else {
@@ -71,18 +71,16 @@ const Login = () => {
   };
 
   const facebookLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  // Backend Facebook OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  
   };
 
   const linkedinLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  // Backend LinkedIn OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  
   };
 
   const appleLogin = () => {
-    window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  // Backend Apple OAuth
+    window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  
   };
-
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
   };
@@ -119,10 +117,7 @@ const Login = () => {
                     {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
                   </span>
                 </div>
-              
-                {/* <Link to='/forgotpassword' style={{ textDecoration: 'none' }}>
-                  <p className='forgot-password'>Forgot Password?</p>
-                </Link> */}
+                
                 <div className='forgot-align'> 
                   <Link to='/forgotpassword' className='forgot-password'> Forgot Password? </Link>
                 </div>

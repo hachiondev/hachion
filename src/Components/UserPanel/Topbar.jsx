@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
@@ -9,12 +9,15 @@ import { IoLogOut } from 'react-icons/io5';
 import profile1 from '../../Assets/profile2.png';
 import whatsapp from '../../Assets/logos_whatsapp-icon.png';
 import './Home.css';
+import axios from 'axios';
 
 const Topbar = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
   const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
+const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
     const detectUserCountry = async () => {
@@ -23,8 +26,6 @@ const Topbar = () => {
         if (!res.ok) throw new Error('Failed to fetch location data');
 
         const data = await res.json();
-      
-
         if (data.country_code === 'IN') {
           setWhatsappNumber('+91-949-032-3388');
           setWhatsappLink('https://wa.me/919490323388');
@@ -33,8 +34,7 @@ const Topbar = () => {
           setWhatsappLink('https://wa.me/17324852499');
         }
       } catch (error) {
-        console.error('❌ Location fetch error:', error);
-        // fallback to US number
+               
         setWhatsappNumber('+1 (732) 485-2499');
         setWhatsappLink('https://wa.me/17324852499');
       }
@@ -42,18 +42,33 @@ const Topbar = () => {
 
     detectUserCountry();
 
-    const storedUserData = localStorage.getItem('loginuserData');
-    if (storedUserData) {
-      const parsedData = JSON.parse(storedUserData);
-      setUserData(parsedData);
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const storedUser = localStorage.getItem('loginuserData');  
+  if (storedUser) {
+    const parsedUser = JSON.parse(storedUser);
+    setUserData(parsedUser); 
+    setIsLoggedIn(true);
+    const parsedEmail = parsedUser.email;
+
+    axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      params: { email: parsedEmail }
+    })
+    .then((response) => {
+      const data = response.data;
+      if (data.profileImage) {
+        const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
+        
+        setProfileImage(fullImageUrl);
+      } 
+    })
+   
+  } 
+}, []);
 
   const handleLogout = () => {
     localStorage.removeItem('loginuserData');
     setIsLoggedIn(false);
     setUserData(null);
+    navigate('/login');
   };
 
   return (
@@ -96,7 +111,10 @@ const Topbar = () => {
         <div className='topbar-right'>
           <div className='user-info'>
             <div className="btn-group">
-              <Avatar src={userData?.picture || profile1} alt="user_name" />
+             <Avatar
+  src={profileImage || profile1}
+  alt="user_name"
+/>
               <div className="dropdown">
                 <Link
                   className="btn-logout dropdown-toggle"
@@ -118,11 +136,17 @@ const Topbar = () => {
                     </Link>
                   </li>
                   {/* <li><hr className="dropdown-divider" /></li> */}
-                  <li>
-                    <Link className="dropdown-item" to="#" onClick={handleLogout}>
-                      <IoLogOut className="dropdown-icon-top" /> Logout
-                    </Link>
-                  </li>
+                 <li>
+  <button
+    className="dropdown-item"
+    type="button"
+    onClick={handleLogout}
+     style={{ cursor: 'pointer' }}
+  >
+    <IoLogOut className="dropdown-icon-top" /> Logout
+  </button>
+</li>
+
                 </ul>
               </div>
             </div>

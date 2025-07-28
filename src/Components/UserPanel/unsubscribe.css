@@ -106,6 +106,10 @@
   height: 50px;
   padding: 5px;
 }
+.u-submit-button:disabled {
+  background-color: #7a7a7a;
+  cursor: not-allowed;
+}
 
 @media (min-width: 350px) and (max-width: 480px) {
   .unsub-us-div {
@@ -216,6 +220,13 @@
 }
 
   #unsub1.form-control-unsub {
+    max-width: 100%;
+    width: 80vw; /* 80% of the screen width */
+    height: 35px;
+    font-size: 12px;
+    padding: 5px;
+  }
+    #unsub1.form-select-unsub {
     max-width: 100%;
     width: 80vw; /* 80% of the screen width */
     height: 35px;

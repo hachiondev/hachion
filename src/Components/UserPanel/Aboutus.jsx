@@ -20,6 +20,84 @@ import careerSupport from '../../Assets/careerSupport.png';
 import handsOnLearning from '../../Assets/handsonLearning.png';
 import onlineTeaching from '../../Assets/onlineTeaching.png';
 
+const statistics = [
+  {
+    icon: <HiOutlineUserGroup className='story-icon' aria-hidden="true" />,
+    number: '88,000',
+    label: 'Foreign Followers',
+  },
+  {
+    icon: <PiStudentLight className='story-icon' aria-hidden="true" />,
+    number: '4789',
+    label: 'Students Enrolled',
+  },
+  {
+    icon: <MdContacts className='story-icon' aria-hidden="true" />,
+    number: '96',
+    label: 'Certified Teachers',
+  },
+  {
+    icon: <GrDocumentVerified className='story-icon' aria-hidden="true" />,
+    number: '488',
+    label: 'Complete Courses',
+  },
+];
+
+const features = [
+  {
+    img: FlexibleLearning,
+    title: "Flexible Learning",
+    desc: "Online Training accessible at your convenience",
+    alt: "Flexible Learning Icon"
+  },
+  {
+    img: onlineTeaching,
+    title: "Expert Instructor",
+    desc: "Industry professionals delivering valuable content",
+    alt: "Expert Instructor Icon"
+  },
+  {
+    img: handsOnLearning,
+    title: "Hands-On Learning",
+    desc: "Practical classes with easy-to-follow material",
+    alt: "Hands-On Learning Icon"
+  },
+  {
+    img: careerSupport,
+    title: "Career Support",
+    desc: "Assistance with CVs, interviews, and job placement",
+    alt: "Career Support Icon"
+  },
+  {
+    img: Assistance,
+    title: "24/7 Support",
+    desc: "Continuous support through online chat and phone",
+    alt: "24/7 Support Icon"
+  },
+  {
+    img: Success,
+    title: "Proven Success",
+    desc: "Positive feedback from participants and successful outcomes",
+    alt: "Proven Success Icon"
+  }
+];
+
+const StatisticCard = ({ icon, number, label }) => (
+  <div className='story-div'>
+    {icon}
+    <p className='number'>{number}</p>
+    <p className='story-content'>{label}</p>
+  </div>
+);
+
+const FeatureCard = ({ img, title, desc, alt }) => (
+  <div className='about-us-div-content'>
+    <img src={img} alt={alt} />
+    <h6>{title}</h6>
+    <p>{desc}</p>
+  </div>
+);
+
 const Aboutus = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -30,107 +108,70 @@ const Aboutus = () => {
       <Topbar />
       <NavbarTop />
       <div className='about-banner'>
-        <img src={aboutUsBanner} alt='about-us' />
+        <img src={aboutUsBanner} alt='About Us Banner' />
       </div>
-      <div className='about-us'>
-      <div className='blogs-header'>
-      <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a> <MdKeyboardArrowRight/>            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              About Us
-            </li>
-          </ol>
-        </nav>
+      <main className='about-us'>
+        <div className='blogs-header'>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                {/* If using React Router, use Link instead of <a> */}
+                {/* <Link to="/">Home</Link> <MdKeyboardArrowRight /> */}
+                <a href="/">Home</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                About Us
+              </li>
+            </ol>
+          </nav>
         </div>
-        <div className='about-us-content'>
+        <section className='about-us-content'>
           <h1 className='about-us-heading'>About Hachion</h1>
           <div className='about-us-top'>
             <p className='about-us-left-content'>
-            Hachion is an organization that has been set up with the purpose of bridging the gap between graduates and corporate. In terms of entry or multi level seniority the industry has been transforming very quickly. Traditional and conventional hiring practices are becoming obsolete in the dynamic economic conditions globally. Corporate have been benefiting from our Just-In-Time skilled resource pool which can be deployed and be market ready in just a few days than the campus pool being hired in the conventional method. Our content and delivery methodology adopt the best practices followed by the industry which focuses on equipping students with the necessary skills to succeed.
+              {/* --- Replace below with your actual full About Us text --- */}
+              Hachion is an organization founded to bridge the gap between graduates and the corporate world. Whether for entry-level or senior roles, the industry has transformed, demanding both practical skills and theoretical knowledge from prospective employees. Hachion’s mission is to empower learners with quality education, ensuring their readiness for real-world challenges and successful integration into professional environments.
             </p>
-            <img src={aboutUsSider} alt='' />
+            <img src={aboutUsSider} alt='About Hachion Illustration' />
           </div>
           <p className='about-us-left-content'>
-          Our placement services focus on providing extensive end-to- end services as per the customized requirement of our clients enabling them to get the right candidates by helping them to save the time and resources. Identifying and sourcing candidates from our extensive network of clients and candidates who are engaged in similar business related to our clients as well as usage of various platforms enable us to find the right candidates at a quicker time frame along with the right fit to the requisite profile. We believe that the key to effective service is to truly understand from the client requirements, operations and their philosophies by engaging them as partners.
+            {/* --- Replace below with your actual full Placement Services text --- */}
+            Our placement services provide comprehensive, end-to-end support tailored to client requirements, helping them find the right talent efficiently. We strive to make the recruitment process seamless for organizations and rewarding for candidates, saving valuable time and resources for all stakeholders.
           </p>
+          
           <h2 className='about-us-heading'>Our Story</h2>
           <div className='our-story'>
-            <div className='story-div'>
-              <HiOutlineUserGroup className='story-icon' />
-              <p className='number'>88,000</p>
-              <p className='story-content'> Foreign Followers</p>
-            </div>
-            <div className='story-div'>
-              <PiStudentLight className='story-icon' />
-              <p className='number'>4789</p>
-              <p className='story-content'> Students Enrolled</p>
-            </div>
-            <div className='story-div'>
-              <MdContacts className='story-icon' />
-              <p className='number'>96</p>
-              <p className='story-content'> Certified Teachers</p>
-            </div>
-            <div className='story-div'>
-              <GrDocumentVerified className='story-icon' />
-              <p className='number'>488</p>
-              <p className='story-content'> Complete Courses</p>
-            </div>
+            {statistics.map((stat, idx) => (
+              <StatisticCard key={idx} {...stat} />
+            ))}
           </div>
 
           <h2 className='about-us-heading'>Our Vision</h2>
           <div className='about-us-top'>
             <p className='about-us-left-content'>
-            Our Vision is to synergize the “right talent” with the “right requirement” and to see that quality manpower is constructively and appropriately channelized. To help talented and specialized individuals in building their own career and to ensure our clients find employees according to their specific requirements is a constant driving force in line with our vision. As a part of our mission we are aligned with various institutions from various regions aided by our expansive network to fetch formerly unexposed talents and avail them to our reputed clients.
+              {/* --- Replace below with your actual Vision text --- */}
+              Our vision is to synergize the “right talent” with the “right requirement” and ensure quality manpower is constructively and appropriately channelized. We aim to help talented and aspiring individuals realize their full potential and match them with organizations seeking the best.
             </p>
-            <img src={visionImage} alt='' />
+            <img src={visionImage} alt='Hachion Vision' />
           </div>
-          <h2 className='about-us-heading'>What We Do ?</h2>
-          <p className='about-us-left-content'>
-We provide a wide range of online courses to both large organizations and individual learners. Over 100+ online courses are available on our intuitive and interactive platform www.hachion.co. Some of the most popular courses are QA Testing, AWS, DevOps, Tableau, PowerBI, Business Analyst, Salesforce and Hadoop.
 
-Our Real-time experts with over 10 years of experience in IT are ready to take you to the next level and increase your career opportunities. We are extremely passionate and committed to what we do. It shows in our interactions which are consistent with valuable information, designed strategically to be acquired with ease.</p>
-          <h2 className='about-us-heading'>Why to choose Hachion ? </h2>
-
+          <h2 className='about-us-heading'>What We Do</h2>
           <p className='about-us-left-content'>
-            Hachion offers you the flexibility to learn anytime, anywhere with instructor-led online training programs...
+            {/* --- Replace below with your actual What We Do text --- */}
+            We offer a wide range of online courses to both organizations and individuals. Our platform, www.hachion.co, features over 100+ interactive online courses. Our real-time experts, each with over 10 years of IT experience, are passionate about sharing industry-relevant knowledge to boost your career prospects. We believe in practical, hands-on learning and continuous support for every learner.
+          </p>
+
+          <h2 className='about-us-heading'>Why Choose Hachion?</h2>
+          <p className='about-us-left-content'>
+            Hachion offers flexible, instructor-led online training programs that let you learn anytime, anywhere. Our expert instructors, practical curriculum, and dedicated support team ensure a rewarding learning journey, helping you achieve your professional goals.
           </p>
           <div className='about-us-div'>
-  <div className='about-us-div-content'>
-    <img src={FlexibleLearning} alt='' />
-    <h6>Flexible Learning</h6>
-    <p>Online Training accessible at your convenience</p>
-  </div>
-  <div className='about-us-div-content'>
-    <img src={onlineTeaching} alt='' />
-    <h6>Expert Instructor</h6>
-    <p>Industries professionals delivering valuable content</p>
-  </div>
-  <div className='about-us-div-content'>
-    <img src={handsOnLearning} alt='' />
-    <h6>Hands-On Learning</h6>
-    <p>Practical classes with easy-to-follow material.</p>
-  </div>
-  <div className='about-us-div-content'>
-    <img src={careerSupport} alt='' />
-    <h6>Career Support</h6>
-    <p>Assistance with CVs, interviews, and job placement.</p>
-  </div>
-  <div className='about-us-div-content'>
-    <img src={Assistance} alt='' />
-    <h6>24/7 Support</h6>
-    <p>Continuous support through online chat and phone.</p>
-  </div>
-  <div className='about-us-div-content'>
-    <img src={Success} alt='' />
-    <h6>Proven Success</h6>
-    <p>Positive feedback from participants and successful outcomes.</p>
-  </div>
-</div>
-
-        </div>
-      </div>
+            {features.map((feature, idx) => (
+              <FeatureCard key={idx} {...feature} />
+            ))}
+          </div>
+        </section>
+      </main>
       <Learners page="about" />
       <Footer />
       <StickyBar />

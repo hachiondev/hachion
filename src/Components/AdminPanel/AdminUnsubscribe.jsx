@@ -190,6 +190,7 @@ export default function AdminUnsubscribe() {
                 <StyledTableCell align='center'>Mobile</StyledTableCell>
                 <StyledTableCell align='center'>Country</StyledTableCell>
                 <StyledTableCell align="center">Reason</StyledTableCell>
+                <StyledTableCell align='center'>Duration</StyledTableCell>
                 <StyledTableCell align="center">Comments</StyledTableCell>
                 <StyledTableCell sx={{ width: 100 }} align="center">Date</StyledTableCell>
               </TableRow>
@@ -204,6 +205,7 @@ export default function AdminUnsubscribe() {
                     <StyledTableCell align="center">{row.mobile}</StyledTableCell>
                     <StyledTableCell align="center">{row.country}</StyledTableCell>
                     <StyledTableCell align="left">{row.reason}</StyledTableCell>
+                    <StyledTableCell align="left">{row.duration}</StyledTableCell>
                     <StyledTableCell align="left">{row.comments}</StyledTableCell>
                     <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
                   </StyledTableRow>

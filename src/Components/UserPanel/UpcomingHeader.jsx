@@ -19,15 +19,22 @@ const UpcomingHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      let current = '';
-      for (const section of sections) {
-        const element = document.getElementById(section.id);
-        if (element && element.getBoundingClientRect().top <= 100) {
-          current = section.id;
-        }
+  let closestSection = '';
+  let minOffset = Number.POSITIVE_INFINITY;
+
+  for (const section of sections) {
+    const element = document.getElementById(section.id);
+    if (element) {
+      const offset = Math.abs(element.getBoundingClientRect().top);
+      if (offset < minOffset) {
+        minOffset = offset;
+        closestSection = section.id;
       }
-      setActiveSection(current);
-    };
+    }
+  }
+
+  setActiveSection(closestSection);
+};
 
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // initial check

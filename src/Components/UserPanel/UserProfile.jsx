@@ -212,40 +212,41 @@ const handleResetPassword = async (e) => {
         <form className='review-form-content'>
           <div className="input-row">
             <div className="profile">
-              <StyledBadge
-  overlap="circular"
-  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-  badgeContent={
-    profileImage ? (
-      <FiX size={16} color="red" onClick={removeImage} style={{ cursor: 'pointer' }} />
-    ) : (
-      <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
-        <FiCamera size={16} />
-        <input
-          type="file"
-          id="imageUpload"
-          accept="image/*"
-          style={{ display: 'none' }}
-          onChange={handleImageUpload}
-        />
-      </label>
-    )
-  }
->
-  <LargeAvatar
-    src={
-      profileImage
-        ? typeof profileImage === 'string'
-          ? profileImage
-          : URL.createObjectURL(profileImage)
-        : undefined
-    }
-  >
-    {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
-  </LargeAvatar>
-</StyledBadge>
+  <input
+    type="file"
+    id="imageUpload"
+    accept="image/*"
+    style={{ display: 'none' }}
+    onChange={handleImageUpload}
+  />
 
-            </div>
+  <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
+    <StyledBadge
+      overlap="circular"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      badgeContent={
+        profileImage ? (
+          <FiX size={16} color="red" onClick={removeImage} style={{ cursor: 'pointer' }} />
+        ) : (
+          <FiCamera size={16} />
+        )
+      }
+    >
+      <LargeAvatar
+        src={
+          profileImage
+            ? typeof profileImage === 'string'
+              ? profileImage
+              : URL.createObjectURL(profileImage)
+            : undefined
+        }
+      >
+        {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
+      </LargeAvatar>
+    </StyledBadge>
+  </label>
+</div>
+
             
             <div className="col-md-5">
               <label htmlFor="inputName" className="form-label">Name</label>

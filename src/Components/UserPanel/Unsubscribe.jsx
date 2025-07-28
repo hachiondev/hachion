@@ -11,11 +11,13 @@ import { LoginSchema } from "../Schemas";
 import success from "../../Assets/success.gif";
 import axios from "axios";
 import { GoHeartFill } from "react-icons/go";
+import { countries, getDefaultCountry } from '../../countryUtils';
 
 const initialValues = {
   name: "",
   email: "",
   number: "",
+  duration: "",
   reason: "",
   comment: "",
   date: "",
@@ -24,144 +26,92 @@ const initialValues = {
 
 const Unsubscribe = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
-  const mobileInputRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState({
-    code: "+1",
-    flag: "US",
-    name: "United States",
-  });
-  const [isChecked, setIsChecked] = useState(false);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    window.scrollTo(0, 0); 
-  }, []);
+const [showModal, setShowModal] = useState(false);
+const [mobileNumber, setMobileNumber] = useState("");
+const [selectedCountry, setSelectedCountry] = useState({ code: "+1", flag: "US", name: "United States" });
+const [anchorEl, setAnchorEl] = useState(null);
+const [isChecked, setIsChecked] = useState(false);
+const [error, setError] = useState("");
 const [selectedReasons, setSelectedReasons] = useState([]);
+const mobileInputRef = useRef(null);
+  
+const matchedCountry = countries.find(c => mobileNumber.startsWith(c.code)) || selectedCountry;
 
-  const countries = [
-    { name: "India", code: "+91", flag: "IN" },
-    { name: "United States", code: "+1", flag: "US" },
-    { name: "United Kingdom", code: "+44", flag: "GB" },
-    { name: "Thailand", code: "+66", flag: "TH" },
-    { name: "Canada", code: "+1", flag: "CA" },
-    { name: "Australia", code: "+61", flag: "AU" },
-    { name: "Germany", code: "+49", flag: "DE" },
-    { name: "France", code: "+33", flag: "FR" },
-    { name: "United Arab Emirates", code: "+971", flag: "AE" },
-    { name: "Qatar", code: "+974", flag: "QA" },
-    { name: "Japan", code: "+81", flag: "JP" },
-    { name: "China", code: "+86", flag: "CN" },
-    { name: "Russia", code: "+7", flag: "RU" },
-    { name: "South Korea", code: "+82", flag: "KR" },
-    { name: "Brazil", code: "+55", flag: "BR" },
-    { name: "Mexico", code: "+52", flag: "MX" },
-    { name: "South Africa", code: "+27", flag: "ZA" },
-    { name: "Netherlands", code: "+31", flag: "NL" },
-  ];
+const { values, handleBlur, handleChange } = useFormik({
+  initialValues,
+  validationSchema: LoginSchema,
+  onSubmit: () => {}
+});
 
-  const defaultCountry = countries.find((c) => c.flag === "US");
+const defaultCountry = getDefaultCountry("US");
 
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const userCountryCode = data?.country_code;
-        const matchedCountry = countries.find(
-          (c) => c.flag === userCountryCode
-        );
-        if (matchedCountry) {
-          setSelectedCountry(matchedCountry);
-        }
-      })
-      .catch(() => {});
-  }, []);
+useEffect(() => {
+  const detectAndSetCountry = async () => {
+    try {
+      const res = await fetch("https://ipwho.is/");
+      if (!res.ok) throw new Error("Location fetch failed");
+      const data = await res.json();
 
-  const handleCountrySelect = (country) => {
-    
-    setSelectedCountry(country);
-    closeMenu();
-    mobileInputRef.current?.focus();
+      const matched = countries.find(c => c.flag === data?.country_code);
+      if (matched) setSelectedCountry(matched);
+
+    } catch (err) {
+      
+    }
   };
 
-  const openMenu = (event) => {
-    
-    setAnchorEl(event.currentTarget);
-  };
 
-  const closeMenu = () => {
-    
-    setAnchorEl(null);
-  };
+  detectAndSetCountry();
 
-  const handleCheckboxChange = (e) => {
-  const label = e.target.nextSibling.textContent.trim(); // Gets the checkbox label
-  const isCurrentlyChecked = e.target.checked;
-
-  setSelectedReasons((prev) => {
-    const updated = isCurrentlyChecked
-      ? [...prev, label]
-      : prev.filter((reason) => reason !== label);
-    setIsChecked(updated.length > 0);
-    return updated;
-  });
-};
-
-
-const matchedCountry = countries.find((c) =>
-  mobileNumber.startsWith(c.code)
-);
-
-  useEffect(() => {
   const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
   const userEmail = userData.email || "";
 
-  
-
- if (!userEmail) {
-    console.warn("🔒 No logged-in user found. Redirecting to /login...");
-     window.confirm("Please login before unsubscribe from hachion");
+  if (!userEmail) {
+    window.confirm("Please login before unsubscribe from hachion");
     navigate("/login");
     return;
   }
 
-  
   values.email = userEmail;
- 
+
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch(
-        `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
-      );
-
-      if (!response.ok) {
-        throw new Error("❌ Failed to fetch profile data");
+      const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+      const data = await res.json();
+      if (res.ok) {
+        values.name = data.name || "";
+        values.country = data.country || "";
+        setMobileNumber(data.mobile || "");
       }
-      const data = await response.json();
-      if (data.name) {
-        values.name = data.name;
-      } else {
-        console.warn("⚠️ Name not found in response.");
-      }
-     
-      if (data.mobile) {
-        setMobileNumber(data.mobile);
-      } else {
-        console.warn("⚠️ Mobile number not found.");
-      }
-      if (data.country) {
-        values.country = data.country;
-      }
-    } catch (error) {
-      console.error("❌ Error fetching profile:", error);
+    } catch (err) {
+      
     }
   };
 
   fetchUserProfile();
 }, []);
 
-  const handleFormSubmit = async (e) => {
+const handleCountrySelect = (country) => {
+  setSelectedCountry(country);
+  setAnchorEl(null);
+  mobileInputRef.current?.focus();
+};
+
+const openMenu = (e) => setAnchorEl(e.currentTarget);
+const closeMenu = () => setAnchorEl(null);
+
+const handleCheckboxChange = (e) => {
+  const label = e.target.nextSibling.textContent.trim();
+  setSelectedReasons((prev) => {
+    const updated = e.target.checked
+      ? [...prev, label]
+      : prev.filter((r) => r !== label);
+    setIsChecked(updated.length > 0);
+    return updated;
+  });
+};
+
+const handleFormSubmit = async (e) => {
   e.preventDefault();
 
   if (!isChecked) {
@@ -170,31 +120,30 @@ const matchedCountry = countries.find((c) =>
   } else {
     setError("");
   }
+
   const form = e.target.closest("form");
   if (!form.checkValidity()) {
-    e.stopPropagation();
     form.classList.add("was-validated");
     return;
-  }  
+  }
+
   const requestBody = {
     userName: values.name,
     email: values.email,
     mobile: mobileNumber,
     reason: selectedReasons.join(", "),
     comments: values.comment,
-    country: matchedCountry ? matchedCountry.name : "United States"
+    country: matchedCountry.name
   };
+
   try {
-    const response = await fetch("https://api.hachion.co/unsubscribe", {
+    const res = await fetch("https://api.hachion.co/unsubscribe", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody)
     });
-    if (response.ok) {
-      const data = await response.json();
-      
+
+    if (res.ok) {
       setShowModal(true);
       values.name = "";
       values.email = "";
@@ -202,53 +151,35 @@ const matchedCountry = countries.find((c) =>
       setMobileNumber("");
       setIsChecked(false);
       form.classList.remove("was-validated");
-        setTimeout(() => {
+
+      setTimeout(() => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("loginuserData");
         navigate("/");
       }, 3000);
     } else {
-      const errorData = await response.json();
-      console.error("Unsubscribe failed:", errorData);
+      const errorData = await res.json();
+      
       setError("Something went wrong. Please try again.");
     }
   } catch (err) {
-    console.error("Network error:", err);
+    
     setError("Unable to connect to the server.");
   }
 };
-  const handlePrivacy = () => {
-    navigate("/privacy");
-  };
-  const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: LoginSchema,
-      onSubmit: (values) => { 
-      },
-    });
-  const [whatsappNumber, setWhatsappNumber] = useState("+1 (732) 485-2499");
-  const [whatsappLink, setWhatsappLink] = useState("https://wa.me/17324852499");
-  useEffect(() => {
-    const detectUserCountry = async () => {
-      try {
-        const res = await fetch("https://ipwho.is/");
-        if (!res.ok) throw new Error("Failed to fetch location data");
-        const data = await res.json();
-                if (data.country_code === "IN") {
-          setWhatsappNumber("+91-949-032-3388");
-          setWhatsappLink("https://wa.me/919490323388");
-        } else {
-          setWhatsappNumber("+1 (732) 485-2499");
-          setWhatsappLink("https://wa.me/17324852499");
-        }
-      } catch (error) {
-        console.error("❌ Error fetching user location:", error);
-      }
-    };
 
-    detectUserCountry();
-  }, []);
+const handlePrivacy = () => {
+  navigate("/privacy");
+};
+
+const isFormValid = (
+  values.name.trim() !== "" &&
+  values.email.trim() !== "" &&
+  mobileNumber.trim() !== "" &&
+  selectedReasons.length > 0 &&
+  values.duration.trim() !== "" &&
+  values.comment.trim() !== ""
+);
 
   return (
     <>
@@ -390,6 +321,28 @@ const matchedCountry = countries.find((c) =>
                   </label>
                 </div>
               </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">
+                  Choose Duration<span className="required">*</span>
+                </label>
+                <select
+                  className="form-select-unsub"
+                  id="unsub1"
+                  name="duration"
+                  value={values.duration}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                >
+                  <option value="">Select Duration</option>
+                  <option value="1 Month">1 Month</option>
+                  <option value="3 Months">3 Months</option>
+                  <option value="6 Months">6 Months</option>
+                  <option value="1 Year">1 Year</option>
+                  <option value="Permanently">Permanently</option>
+                </select>
+                <div className="invalid-feedback">Please select a duration.</div>
+                </div>
                <div class="mb-3 d-flex flex-column">
                 <label for="exampleFormControlTextarea1" class="form-label">
                   Comments<span className="required">*</span>
@@ -407,8 +360,13 @@ const matchedCountry = countries.find((c) =>
               <div class="mb-3">
                 <button
                   type="button"
-                  class="u-submit-button"
+                  className="u-submit-button"
                   onClick={handleFormSubmit}
+                  disabled={!isFormValid}
+                  style={{
+                    opacity: isFormValid ? 1 : 0.5,
+                    cursor: isFormValid ? 'pointer' : 'not-allowed'
+                  }}
                 >
                   Submit
                 </button>

@@ -91,7 +91,7 @@ function AppRoutes() {
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/hire-from-us' element={<HirefromUs/>}/>
       <Route path='/career' element={<ApplyHiring/>}/>
-      <Route path='/career/apply' element={<JobDetails/>}/>
+      <Route path='/career/apply/:jobTitle' element={<JobDetails/>}/>
       <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
       <Route path='/adminnav' element={<AdminNavbar/>}/>
       <Route path='/adminsidebar' element={<AdminSidebar/>}/>

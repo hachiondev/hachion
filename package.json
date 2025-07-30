@@ -43,6 +43,7 @@
     "react-time-picker": "^7.0.0",
     "react-world-flags": "^1.6.0",
     "sitemap": "^8.0.0",
+    "slugify": "^1.6.6",
     "styled-component": "^2.8.0",
     "swiper": "^11.2.8",
     "typewriter-effect": "^2.22.0",

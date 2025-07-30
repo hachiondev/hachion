@@ -919,7 +919,7 @@ color: white;
 .training-card-holder {
 display: flex;
 flex-wrap: wrap;
-justify-content: flex-start; 
+justify-content: center; 
 gap: 12px; 
 margin: 5px auto;
 max-width: 70vw; 

@@ -13,7 +13,15 @@ import './Home.css';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import { useLocation } from 'react-router-dom';
-
+import {
+  Button,
+  Menu,
+  MenuItem,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -30,6 +38,10 @@ const NavbarTop = () => {
    const [blogs, setBlogs] = useState([]);
    const [selectedItem, setSelectedItem] = useState(null);
    const location = useLocation();
+   const [categories, setCategories] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [submenuAnchorEl, setSubmenuAnchorEl] = useState({});
+  const [openSubmenuId, setOpenSubmenuId] = useState(null);
  
    // Helper function to format course name for the URL
    const formatCourseName = (courseName) => {
@@ -216,6 +228,54 @@ const NavbarTop = () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isDrawerOpen]);
+  useEffect(() => {
+  const fetchAllCategoryCourses = async () => {
+    try {
+      const categoryRes = await axios.get("https://api.hachion.co/course-categories/all");
+      setCategories(categoryRes.data);
+
+      const allCourses = [];
+
+      for (const category of categoryRes.data) {
+        const courseRes = await axios.get(
+          `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(category.name)}`
+        );
+        const categoryCourses = courseRes.data.map(course => ({
+          ...course,
+          categoryId: category._id, // attach categoryId to filter later
+        }));
+        allCourses.push(...categoryCourses);
+      }
+
+      setCourses(allCourses);
+    } catch (error) {
+      console.error("Error fetching category-wise courses:", error);
+    }
+  };
+
+  fetchAllCategoryCourses();
+}, []);
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpenSubmenuId(null);
+  };
+
+  const handleSubmenuOpen = (event, categoryId) => {
+    setSubmenuAnchorEl((prev) => ({ ...prev, [categoryId]: event.currentTarget }));
+    setOpenSubmenuId(categoryId);
+  };
+
+  const handleSubmenuClose = () => {
+    setOpenSubmenuId(null);
+  };
+
+  const getCoursesByCategory = (categoryId) =>
+    courses.filter((course) => course.categoryId === categoryId);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -229,6 +289,62 @@ const NavbarTop = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
+        <Button
+        variant="outlined"
+        onClick={() => navigate('/coursedetails')}
+        onMouseEnter={handleOpen}
+        endIcon={<ArrowDropDownIcon />}
+      >
+        Categories
+      </Button>
+
+<Menu
+  anchorEl={anchorEl}
+  open={Boolean(anchorEl)}
+  onClose={handleClose}
+  MenuListProps={{ onMouseLeave: handleClose }}
+  PaperProps={{
+    style: {
+      maxHeight: 500, // Scrollable
+      overflowY: 'auto',
+    },
+  }}
+>
+  {categories.slice(0, 15).map((category) => (
+    <MenuItem
+      key={category._id}
+      onMouseEnter={(e) => handleSubmenuOpen(e, category._id)}
+      onMouseLeave={handleSubmenuClose}
+    >
+      <ListItemText>{category.name}</ListItemText>
+      <ListItemIcon>
+        <ArrowRightIcon fontSize="small" />
+      </ListItemIcon>
+
+      <Menu
+        anchorEl={submenuAnchorEl[category._id]}
+        open={openSubmenuId === category._id}
+        onClose={handleSubmenuClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        MenuListProps={{ onMouseLeave: handleSubmenuClose }}
+      >
+        {getCoursesByCategory(category._id).map((course) => (
+          <MenuItem
+            key={course._id}
+            onClick={() => {
+              const formattedCourse = formatCourseName(course.name);
+              navigate(`/coursedetails/${formattedCourse}`);
+              handleClose();
+            }}
+          >
+            {course.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </MenuItem>
+  ))}
+</Menu>
         <div className="right-icons">
           {searchVisible ? (
             <div className="search-div-home" role="search">
@@ -398,9 +514,9 @@ const NavbarTop = () => {
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
                 </button>
-                <button className="drawer-button" onClick={() => navigate('/register')}>
+                {/* <button className="drawer-button" onClick={() => navigate('/register')}>
                   Register
-                </button>
+                </button> */}
               </>
             )}
           </div>
@@ -415,13 +531,13 @@ const NavbarTop = () => {
             </Link>
           </button>
 
-          <button
+          {/* <button
             className={`nav-item ${location.pathname === '/coursedetails' ? 'active' : ''}`}
           >
             <Link to="/coursedetails" className="nav-item-link">
-              Categories
+              Categories 
             </Link>
-          </button>
+          </button> */}
 
           {/* <button
             className={`nav-item ${location.pathname === '/hire-from-us' ? 'active' : ''}`}

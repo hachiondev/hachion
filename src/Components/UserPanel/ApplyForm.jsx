@@ -19,7 +19,7 @@ const initialValues = {
   date: "",
 };
 
-const ApplyForm = ({ closeModal = () => {} }) => {
+const ApplyForm = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");

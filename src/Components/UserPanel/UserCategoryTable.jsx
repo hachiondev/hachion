@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -15,6 +16,7 @@ dayjs.extend(customParseFormat);
 
 export default function UserCategoryTable() {
   const [enrollments, setEnrollments] = useState([]);
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchEnrollments = async () => {
@@ -97,6 +99,7 @@ export default function UserCategoryTable() {
           </TableContainer>
         </div>
       </div>
+      <button className='explore-btn'  onClick={()=>navigate('/coursedetails')}>Explore All Courses</button>
     </>
   );
 }

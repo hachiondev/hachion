@@ -25,6 +25,8 @@ import UserProfile from './UserProfile';
 import { BiArrowToLeft } from "react-icons/bi";
 import { BiArrowToRight } from "react-icons/bi";
 import { useParams } from 'react-router-dom';
+import { TbBriefcaseFilled } from "react-icons/tb";
+import UserAppliedJobs from './UserAppliedJobs';
 
 const UserDashboard = () => {
   const { section } = useParams();
@@ -58,6 +60,7 @@ const UserDashboard = () => {
     { title: 'Certificate', icon: <PiCertificateBold/> },
     // { title: 'Videos', icon: <MdOutlineVideoCameraFront /> },
     // { title: 'Messages', icon: <BsFillEnvelopeFill /> },
+    { title: 'Applied Jobs', icon: <TbBriefcaseFilled /> },
     { title: 'Review', icon: <MdRateReview /> },
     { title: 'Settings', icon: <TbSettingsBolt /> },
   ];
@@ -83,6 +86,8 @@ const email = loginuserData?.email || '';
         return <UserCategoryTable />;
       // case 'Messages':
       //   return <UserMessages />;
+      case 'Applied Jobs':
+        return <UserAppliedJobs />;
       case 'Review':
         return <UserReviews />;
       // case 'Videos':

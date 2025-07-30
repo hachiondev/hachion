@@ -32,7 +32,10 @@ qualification }) => {
     workDays
   });
 
-    navigate('/career/apply', {
+    const slugify = (text) =>
+    text.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-');
+
+      navigate(`/career/apply/${slugify(jobTitle)}`, {
       state: {
         jobId,
         jobTitle,

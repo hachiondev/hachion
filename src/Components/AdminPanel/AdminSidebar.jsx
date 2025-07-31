@@ -20,7 +20,7 @@ const menuItems = [
   { title: 'Course Category', icon: <TbCategoryPlus /> },
   { title: 'Course', icon: <FaBook /> },
   { title: 'Corporate Training', icon: <MdCorporateFare /> },
-  { title: 'Kids Summer Courses', icon: <FaChildren /> },
+  { title: 'Kids Courses', icon: <FaChildren /> },
   { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
   { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },

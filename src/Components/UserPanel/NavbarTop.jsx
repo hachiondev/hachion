@@ -315,6 +315,7 @@ const NavbarTop = () => {
       key={category._id}
       onMouseEnter={(e) => handleSubmenuOpen(e, category._id)}
       onMouseLeave={handleSubmenuClose}
+      onClick={() => navigate('/coursedetails')}
     >
       <ListItemText>{category.name}</ListItemText>
       <ListItemIcon>

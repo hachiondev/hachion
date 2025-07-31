@@ -37,9 +37,7 @@ import Paper from '@mui/material/Paper';
     const { selectedBatchData, enrollText, modeType,  sendEmail,
   sendWhatsApp,
   sendText } = location.state || {};
-  console.log("SelectedBatch from live online: " + JSON.stringify(selectedBatchData));
-console.log("Mode from live online: " + JSON.stringify(modeType));
-
+  
   const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [successMessage, setSuccessMessage] = useState("");
@@ -66,7 +64,7 @@ const [exchangeRate, setExchangeRate] = useState(1);
       initialValues: initialValues,
       validationSchema: LoginSchema,
       onSubmit: (values) => {
-        console.log(values);
+        
       }
     });
 
@@ -88,13 +86,14 @@ const [exchangeRate, setExchangeRate] = useState(1);
     const courseName = localStorage.getItem("courseName");
     const batchId = localStorage.getItem("batchId");
 
+
     if (!studentId || !courseName || !batchId) {
       alert("Missing payment info. Please try again.");
       return;
     }
 const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   const discount = batchData.discount ?? 0;
-console.log("➡️ discount from localStorage:", discount);
+
 
 
     try {
@@ -330,7 +329,6 @@ const handleRadioChange = (event) => {
     let mobile = '';
 
     try {
-      
       const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
@@ -369,12 +367,8 @@ const handleRadioChange = (event) => {
   sendWhatsApp,
   sendText
 };
-
-
-
 try {
   const response = await axios.post('https://api.hachion.co/enroll/add', payload);
-
  
   if (response.status >= 200 && response.status < 300) {
     setSuccessMessage("✅ Registered Successfully.");
@@ -405,64 +399,180 @@ localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
 }
   };
 
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
+
 const handlePayment = async () => {
   try {
     const amount = 1.00;
+    console.log("🟡 STEP: Starting payment");
+    console.log("Amount for payment:", amount);
 
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+    console.log("User from localStorage:", user);
+
     if (!user || !user.email) {
       alert("Please log in before making payment.");
+      console.warn("⚠️ User not logged in or email missing");
       return;
     }
 
     const userEmail = user.email;
+    console.log("Fetching profile for email:", userEmail);
 
+    
     const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
       params: { email: userEmail }
     });
 
+    console.log("✅ Profile response received:", profileResponse.data);
+
     const studentId = profileResponse.data?.studentId;
+    const mobile = profileResponse.data?.mobile || '';
     const batchId = selectedBatchData?.batchId;
     const courseName = selectedBatchData?.schedule_course_name;
 
+    console.log("Extracted from profile:");
+    console.log("studentId:", studentId);
+    console.log("mobile:", mobile);
+    console.log("batchId:", batchId);
+    console.log("courseName:", courseName);
 
     if (!studentId || !batchId || !courseName) {
       alert("Missing required details to proceed with payment.");
+      console.error("❌ Required data missing: studentId/batchId/courseName");
       return;
     }
 
-    
+    console.log("Saving batch & course data to localStorage");
     localStorage.setItem("studentId", studentId);
     localStorage.setItem("courseName", courseName);
     localStorage.setItem("batchId", batchId);
-localStorage.setItem("selectedBatchData", JSON.stringify({
-  ...selectedBatchData,
-  discount: courseData?.discount ?? 0 
-}));
+    localStorage.setItem("selectedBatchData", JSON.stringify({
+      ...selectedBatchData,
+      discount: courseData?.discount ?? 0 
+    }));
 
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
-    // const returnUrl = `http://localhost:3000/enroll/${slug}`;
     const returnUrl = `https://hachion.co/enroll/${slug}`;
+    console.log("Slugified return URL:", returnUrl);
 
+    if (mobile.startsWith('+91')) {
+      console.log("🧾 Initiating Razorpay payment");
 
-    const response = await axios.post("https://api.hachion.co/create-order", null, {
-      params: {
-        amount,
-        returnUrl
-      }
-    });
+      const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
+        params: { amount }
+      });
 
-     const approvalUrl = response.data;
-    if (approvalUrl.startsWith("https://www.paypal.com")) {
-      window.location.href = approvalUrl;
+      console.log("✅ Razorpay order response:", orderRes.data);
+      const razorpayOrder = orderRes.data;
+      const razorpayOrderId = razorpayOrder.id;
+
+      const options = {
+        key: "rzp_live_1g4Axfq4KHi3kl",
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "Hachion",
+        description: `Payment for ${courseName}`,
+        order_id: razorpayOrderId,
+        handler: async function (response) {
+          console.log("💳 Razorpay response received:", response);
+
+          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+
+          try {
+            console.log("📦 Sending capture request to backend");
+            const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay", null, {
+              params: {
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+                signature: razorpay_signature,
+                studentId,
+                courseName,
+                batchId,
+                discount: courseData?.discount ?? 0
+              }
+            });
+
+            console.log("✅ Razorpay capture response:", captureRes.data);
+            alert(captureRes.data);
+          } catch (error) {
+            console.error("❌ Error capturing Razorpay payment:", error);
+            if (error.response) {
+              console.error("Response:", error.response.data);
+            }
+            alert("Payment verification failed.");
+          }
+        },
+        prefill: {
+          name: user.name,
+          email: user.email,
+          contact: mobile.replace('+91', '')
+        },
+        theme: {
+          color: "#3399cc"
+        }
+      };
+console.log("window.Razorpay available?", !!window.Razorpay);
+
+     try {
+  console.log("🔓 Opening Razorpay modal");
+  console.log("window.Razorpay available?", !!window.Razorpay);
+
+  const rzp = new window.Razorpay(options);
+  console.log("window.Razorpay available?", !!window.Razorpay);
+
+  rzp.open();
+} catch (err) {
+  console.error("❌ Failed to open Razorpay modal:", err);
+  alert("Failed to open Razorpay modal.");
+}
+
     } else {
-      alert("Unexpected response: " + approvalUrl);
+      console.log("🌍 Initiating PayPal flow");
+
+      const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
+        params: {
+          amount,
+          returnUrl
+        }
+      });
+
+      console.log("✅ PayPal create-order response:", paypalRes.data);
+      const approvalUrl = paypalRes.data;
+
+      if (approvalUrl.startsWith("https://www.paypal.com")) {
+        console.log("🔁 Redirecting to PayPal approval URL");
+        window.location.href = approvalUrl;
+      } else {
+        console.error("⚠️ Unexpected PayPal response:", approvalUrl);
+        alert("Unexpected response: " + approvalUrl);
+      }
     }
-  } catch (error) {
-    console.error("Error creating order:", error);
+
+} catch (error) {
+  console.error("❌ Error in handlePayment:", error);
+  if (error instanceof Error) {
+    console.error("Error message:", error.message);
+    console.error("Stack trace:", error.stack);
+  } else if (typeof error === "object" && error !== null) {
+    console.error("Error object keys:", Object.keys(error));
+  } else {
+    console.error("Unknown error type:", error);
+  }
     alert("Failed to start payment.");
   }
 };
+
+
+
 const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const isDisallowedMode = disallowedModes.includes(modeType);
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');

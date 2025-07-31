@@ -25,7 +25,7 @@ const componentMap = {
   'Course': <Course />,
   'Corporate Training': <CorporateCourses />,
   'Trending Courses': <TrendingCourseTable />,
-  'Kids Summer Courses': <AdminSummerEvents />,
+  'Kids Courses': <AdminSummerEvents />,
   'Trainer': <Trainer />,
   'Jobs': <Jobs />,
   'Certificates': <Certificate />,

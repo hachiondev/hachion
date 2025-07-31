@@ -65,13 +65,15 @@ export default function AdminSummerEvents() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",status:false});
+    const [editedData, setEditedData] = useState({title:"",category_name:"",course_name:"",status:false, titleStatus:true});
     const [courseData, setCourseData] = useState({
         summerevents_id:"",
+        title:"",
           category_name:"",
             course_name: "",
             date:currentDate,
-            status:false
+            status:false,
+            titleStatus:true
          });
 const [currentPage, setCurrentPage] = useState(1);
    const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -105,6 +107,7 @@ const handleStatusChange = (e) => {
   setCourseData((prevData) => ({
     ...prevData,
     status: e.target.checked,
+    titleStatus: e.target.checked,
   }));
 };
 
@@ -112,6 +115,7 @@ const handleInputStatusChange = (e) => {
   setEditedData((prevData) => ({
     ...prevData,
     status: e.target.checked,
+    titleStatus: e.target.checked,
   }));
 };
 
@@ -291,39 +295,66 @@ const displayedCourse = filteredCourse.slice(
     <>  
      {showAddCourse ?  (
       <div className='course-category'>
-        <h3>Kids Summer Courses</h3>
+        <h3>Kids Courses</h3>
         <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
-                        <a href="#!" onClick={() => setShowAddCourse(false)}>Summer Courses</a> <MdKeyboardArrowRight />
+                        <a href="#!" onClick={() => setShowAddCourse(false)}>Kids Courses</a> <MdKeyboardArrowRight />
                         </li>
                         <li className="breadcrumb-item active" aria-current="page">
-                        Add Summer Course
+                        Add Kids Course
                         </li>
                       </ol>
                     </nav>
 
-  <div className="category">
-      <div className="category-header">
-        <p style={{ marginBottom: 0 }}>Add Summer Course</p>
+              <div className="category">
+                  <div className="category-header">
+                    <p style={{ marginBottom: 0 }}>Enable/Disable Kids Component</p>
+                  </div>
+            <div className='course-details'>
+            <div className='course-row'>
+            <div className="col-md-3">
+                  <label className="form-label">Kids Title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    className="form-control"
+                    placeholder="Enter Title"
+                    value={courseData.title}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="col" style={{ display: 'flex', gap: 20 }}> 
+    <label className="form-label">Title Status:</label>
+    <Switch
+  checked={courseData?.titleStatus ?? true}
+  onChange={handleStatusChange}
+  color="primary"
+/>
+<span>{courseData?.titleStatus ? 'Enable' : 'Disable'}</span>
       </div>
-<div className='course-details'>
-<div className='course-row'>
-
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Category
-        </option>
-        {category.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-
-</div>
+      </div>
+      </div>
+      </div>
+    <div className="category">
+                  <div className="category-header">
+                    <p style={{ marginBottom: 0 }}>Add Kids Course</p>
+                  </div>
+            <div className='course-details'>
+        <div className='course-row'>
+        <div class="col-md-3">
+          <label for="inputState" class="form-label">Category Name</label>
+          <select id="inputState" class="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
+          <option value="" disabled>
+                Select Category
+              </option>
+              {category.map((curr) => (
+                <option key={curr.id} value={curr.name}>
+                  {curr.name}
+                </option>
+              ))}
+          </select>
+      </div>
   <div class="col-md-3">
   <label htmlFor="inputState" className="form-label">
         Course Name
@@ -367,10 +398,10 @@ const displayedCourse = filteredCourse.slice(
 ):(<div>
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className='course-category'>
-      <h3>Summer Courses</h3>
+      <h3>Kids Courses</h3>
         <div className='category'>
           <div className='category-header'>
-            <p style={{ marginBottom: 0 }}>Summer Course Details</p>
+            <p style={{ marginBottom: 0 }}>Kids Course Details</p>
           </div>
           <div className='date-schedule'>
             Start Date
@@ -416,11 +447,10 @@ const displayedCourse = filteredCourse.slice(
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
               </div>
               <button type="button" className="btn-category" onClick={handleAddSummerCourseClick} >
-                <FiPlus /> Add Summer Course
+                <FiPlus /> Add Kids Course
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </LocalizationProvider>
@@ -495,14 +525,13 @@ const displayedCourse = filteredCourse.slice(
       style: { borderRadius: 20 },
     }}>
   <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Summer Course
+    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Kids Course
     <Button onClick={handleClose} className="close-btn">
       <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
     </Button>
     </DialogTitle>
   </div>
   <DialogContent>
-  
     <div className="col">
       <label htmlFor="categoryName" className="form-label">Category Name</label>
       <select

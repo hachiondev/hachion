@@ -19,15 +19,22 @@ dayjs.extend(customParseFormat);
 export default function UserAppliedJobs() {
 const [jobData, setJobData] = useState([]);
   const navigate=useNavigate();
+  
+  const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+  const userEmail = userData.email || "";
+
   useEffect(() => {
-      axios.get('https://api.hachion.co/apply-job/getAll')
-        .then((response) => {
-          setJobData(response.data);
-        })
-        .catch((error) => {
-          console.error('Error fetching job applications:', error);
-        });
-    }, []);
+  if (userEmail) {
+    axios.get(`https://api.hachion.co/apply-job/by-email?email=${userEmail}`)
+      .then((response) => {
+        setJobData(response.data);
+      })
+      .catch((error) => {
+        
+      });
+  }
+}, [userEmail]);
+
   return (
   <>  
    <div className='courses-enrolled'>

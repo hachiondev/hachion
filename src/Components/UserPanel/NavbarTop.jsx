@@ -286,37 +286,42 @@ const NavbarTop = () => {
   </button>
 
   <ul className="dropdown-menu custom-dropdown-menu">
-    <div className="scrollable-category-list">
-      {categories.map((category) => (
-        <li key={category._id} className="dropend position-relative">
-          <button
-            className="dropdown-item dropdown-toggle"
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleSubmenu(e, category._id);
-            }}
-            aria-expanded={openCategory === category._id}
-          >
-            {category.name}
-          </button>
+    <li>
+      <div className="scrollable-category-list">
+        {categories.map((category) => (
+          <div key={category._id} className="dropend position-relative">
+            <button
+              className="dropdown-item dropdown-toggle"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleSubmenu(e, category._id);
+              }}
+              aria-expanded={openCategory === category._id}
+            >
+              {category.name}
+            </button>
 
-          {openCategory === category._id && (
-            <ul className="course-list">
-              <li>
-                <button className="dropdown-item">AWS</button>
-              </li>
-              <li>
-                <button className="dropdown-item">Salesforce</button>
-              </li>
-              <li>
-                <button className="dropdown-item">Servicenow</button>
-              </li>
-            </ul>
-          )}
-        </li>
-      ))}
-    </div>
+            {openCategory === category._id && (
+              <ul className="course-list">
+                <li>
+                  <button className="dropdown-item">AWS</button>
+                </li>
+                <li>
+                  <button className="dropdown-item">Salesforce</button>
+                </li>
+                <li>
+                  <button className="dropdown-item">Servicenow</button>
+                </li>
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </li>
+
+    <li><hr className="dropdown-divider w-100" /></li>
+    <li><a class="btn btn-link" href="/coursedetails"><strong>Explore All Categories</strong></a></li>
   </ul>
 </div>
         <div className="right-icons">

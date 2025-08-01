@@ -229,6 +229,15 @@ width: auto;
   background-color: #ccc;
   border-radius: 4px;
 }
+.course-list {
+  list-style: disc;
+  margin: 0;
+}
+
+.course-list .dropdown-item {
+  font-size: 14px;
+  padding-left: 0.5rem;
+}
 
 .dropdown-menu {
   padding: 0;

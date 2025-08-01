@@ -548,7 +548,6 @@ public class Userimpl implements UserService {
 
 			if (request.getPassword() != null && !request.getPassword().isEmpty()) {
 				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//					System.out.println("Old password is incorrect");
 					System.out.println("Request Password: " + request.getPassword());
 					System.out.println("User Encoded Password: " + user.getPassword());
 					System.out.println("Password Match: " + passwordEncoder.matches(request.getPassword(), user.getPassword()));

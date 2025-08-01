@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.ApplyJobDetailsRequest;
 import com.hachionUserDashboard.dto.ApplyJobDetailsResponse;
+import com.hachionUserDashboard.dto.JobApplicationResponse;
 import com.hachionUserDashboard.entity.ApplyJobDetails;
 import com.hachionUserDashboard.repository.ApplyJobDetailsRepository;
 import com.hachionUserDashboard.util.EmailUtil;
@@ -136,4 +137,22 @@ public class ApplyJobDetailsServiceImpl implements ApplyJobDetailsService {
 		Long count = applyJobDetailsRepository.countApplicationsByJobIdAndEmail(jobId, email);
 		return count != null && count > 0;
 	}
+	
+	 public List<JobApplicationResponse> getApplicationsByEmail(String email) {
+	        List<Object[]> rows = applyJobDetailsRepository.findJobApplicationsByEmail(email);
+	        List<JobApplicationResponse> result = new ArrayList<>();
+
+	        for (Object[] row : rows) {
+	            JobApplicationResponse response = new JobApplicationResponse(
+	                (String) row[0], // companyLogo
+	                (String) row[1], // companyName
+	                (String) row[2], // jobTitle
+	                (String) row[3], // jobId (used as JobDetails)
+	                (row[4] != null) ? ((java.sql.Date) row[4]).toLocalDate() : null // date
+	            );
+	            result.add(response);
+	        }
+
+	        return result;
+	    }
 }

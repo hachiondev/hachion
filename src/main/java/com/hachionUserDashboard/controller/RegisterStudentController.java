@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.entity.RegisterStudent;
@@ -68,8 +69,6 @@ public class RegisterStudentController {
 		String tempPassword = "Hach@123";
 		String hashedPassword = passwordEncoder.encode(tempPassword);
 		student.setPassword(hashedPassword);
-		
-		
 
 		String fullName = student.getUserName();
 		student.setStudentId(generateNextStudentId());
@@ -121,5 +120,15 @@ public class RegisterStudentController {
 	public ResponseEntity<?> deleteRegisterStudent(@PathVariable int id) {
 		repo.deleteById(id);
 		return ResponseEntity.ok("Student deleted successfully.");
+	}
+
+	@GetMapping("/check-mobile")
+	public ResponseEntity<?> checkMobileExists(@RequestParam String mobile) {
+		int count = repo.countByMobile(mobile);
+		if (count > 0) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Mobile number already exists");
+		} else {
+			return ResponseEntity.ok("Mobile number is available");
+		}
 	}
 }

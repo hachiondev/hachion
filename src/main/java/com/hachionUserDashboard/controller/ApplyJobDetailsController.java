@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.ApplyJobDetailsRequest;
 import com.hachionUserDashboard.dto.ApplyJobDetailsResponse;
+import com.hachionUserDashboard.dto.JobApplicationResponse;
 import com.hachionUserDashboard.entity.ApplyJobDetails;
 import com.hachionUserDashboard.repository.ApplyJobDetailsRepository;
 
@@ -89,13 +90,15 @@ public class ApplyJobDetailsController {
 		}
 	}
 
-	 @GetMapping("/check")
-	    public ResponseEntity<Boolean> checkIfApplied(
-	            @RequestParam String jobId,
-	            @RequestParam String email
-	    ) {
-	        boolean alreadyApplied = applyJobDetailsService.isAlreadyApplied(jobId, email);
-	        return ResponseEntity.ok(alreadyApplied);
-	    }
+	@GetMapping("/check")
+	public ResponseEntity<Boolean> checkIfApplied(@RequestParam String jobId, @RequestParam String email) {
+		boolean alreadyApplied = applyJobDetailsService.isAlreadyApplied(jobId, email);
+		return ResponseEntity.ok(alreadyApplied);
+	}
 
+	@GetMapping("/by-email")
+	public ResponseEntity<List<JobApplicationResponse>> getApplicationsByEmail(@RequestParam String email) {
+		List<JobApplicationResponse> applications = applyJobDetailsService.getApplicationsByEmail(email);
+		return ResponseEntity.ok(applications);
+	}
 }

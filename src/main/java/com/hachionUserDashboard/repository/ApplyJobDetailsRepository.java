@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +17,10 @@ public interface ApplyJobDetailsRepository extends JpaRepository<ApplyJobDetails
 			@Param("jobId") String jobId);
 
 	@Query(value = "SELECT COUNT(*) FROM apply_job_details WHERE job_id = :jobId AND email = :email", nativeQuery = true)
-    Long countApplicationsByJobIdAndEmail(@Param("jobId") String jobId, @Param("email") String email);
+	Long countApplicationsByJobIdAndEmail(@Param("jobId") String jobId, @Param("email") String email);
+
+	@Query(value = """
+			SELECT company_logo, company_name, job_title, job_id, date FROM apply_job_details WHERE email = :email
+			""", nativeQuery = true)
+	List<Object[]> findJobApplicationsByEmail(@Param("email") String email);
 }

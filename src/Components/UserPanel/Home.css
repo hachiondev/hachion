@@ -199,6 +199,97 @@ width: auto;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+.custom-category-btn {
+  background-color: #00AEEF !important;
+  color: white !important;
+  font-size: 16px;
+  padding: 6px 12px;
+}
+
+.custom-dropdown-menu {
+  padding: 1rem;
+  font-size: 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: auto;
+  overflow: visible;
+}
+
+.scrollable-category-list {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 250px;
+}
+
+.scrollable-category-list::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-category-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.dropdown-menu {
+  padding: 0;
+  margin: 0;
+}
+.categories-btn {
+  background-color: #00aeef;
+  color: #fff;
+  font-size: 14px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dropdown-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  padding: 10px;
+  width: 250px;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.category-name {
+  background: none;
+  border: none;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.course-submenu {
+  list-style: none;
+  margin-top: 4px;
+  margin-left: 10px;
+  padding: 0;
+  background: #f9f9f9;
+  border-left: 2px solid #00aeef;
+}
+
+.course-item {
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #555;
+}
 
 .search-div-home {
 height: 40px;
@@ -1653,6 +1744,9 @@ height: 45px;
   .mobile-drawer {
     display: none; /* Ensure drawer is not visible on tablet */
   }
+  .custom-category-btn {
+    display: none !important;
+  }
 
   .card-icon {
     height: 70px;
@@ -1829,6 +1923,9 @@ height: 45px;
     .mobile-drawer {
     display: block; /* Drawer becomes visible when toggled */
     }
+    .custom-category-btn {
+    display: none !important;
+  }
       
       /* Container for search and hamburger buttons */
       .navbar .right-icons {
@@ -2306,7 +2403,9 @@ align-items: center;
 justify-content: flex-end;
 gap: 20px; /* Space between the search and hamburger */
 }
-
+.custom-category-btn {
+    display: none !important;
+  }
 /* Mobile search bar taking full width */
 .search-div-mobile {
 position: absolute; /* Absolute positioning to overlay the entire navbar */

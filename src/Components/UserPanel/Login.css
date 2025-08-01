@@ -203,7 +203,7 @@ justify-content: flex-end;
   .captcha{
     margin-left: 2vw;
   }
-.btn{
+.login-button{
     width:26vw;
     padding: 1vh;
     font-weight: bold;
@@ -260,7 +260,7 @@ justify-content: flex-end;
       }
       .input-group,
       .form-control,
-      .btn {
+      .login-button {
         width: 520px;
         font-size: 1rem;
        height: 50px;
@@ -335,7 +335,7 @@ justify-content: flex-end;
     }
     .input-group,
     .form-control,
-    .btn {
+    .login-button {
       width: 70vw;
       font-size: 1rem;
       border-radius: 5px;
@@ -460,7 +460,7 @@ justify-content: flex-end;
   
     .input-group,
     .form-control,
-    .btn {
+    .login-button {
       width: 90vw;
       height: 50px;
       font-size: 14px;

@@ -119,7 +119,7 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
       setSuccessMessage("✅ Payment successful! You are now enrolled.");
       setErrorMessage("");
     } catch (error) {
-      console.error("Error capturing order:", error);
+      
       setSuccessMessage("");
       setErrorMessage("❌ Failed to complete payment.");
     }
@@ -215,7 +215,7 @@ useEffect(() => {
           setExchangeRate(rate);
         }
       } catch (err) {
-        console.warn('Geolocation or exchange rate fetch failed. Using USD.');
+        
         setCurrency('USD');
         setExchangeRate(1);
       }
@@ -267,10 +267,10 @@ const getField = (baseField) => {
       if (matchedCourse) {
         setCourseData(matchedCourse);
       } else {
-        console.error("Course not found.");
+        
       }
     } catch (error) {
-      console.error('Error fetching course data:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -300,7 +300,7 @@ const handleRadioChange = (event) => {
             setMobileNumber(matchedStudent.mobile || '');
           }
         } catch (err) {
-          console.error('Error fetching student data:', err);
+          
         }
       };
 
@@ -341,7 +341,7 @@ const handleRadioChange = (event) => {
         return;
       }
     } catch (error) {
-      console.error('Error fetching studentId:', error);
+      
       setErrorMessage("❌ Unable to fetch your student ID. Please try again later.");
       return;
     }
@@ -384,7 +384,7 @@ localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
     setSuccessMessage("");
   }
 } catch (error) {
-  console.error('Error during enrollment:', error);
+  
 
   const errorMessage = error?.response?.data;
 
@@ -411,47 +411,38 @@ const loadRazorpayScript = () =>
 
 const handlePayment = async () => {
   try {
-    const amount = 1.00;
-    console.log("🟡 STEP: Starting payment");
-    console.log("Amount for payment:", amount);
+    const amount = Math.round(getField('total'));
 
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
-    console.log("User from localStorage:", user);
+    
 
     if (!user || !user.email) {
       alert("Please log in before making payment.");
-      console.warn("⚠️ User not logged in or email missing");
+      
       return;
     }
 
     const userEmail = user.email;
-    console.log("Fetching profile for email:", userEmail);
-
-    
+        
     const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
       params: { email: userEmail }
     });
 
-    console.log("✅ Profile response received:", profileResponse.data);
+    
 
     const studentId = profileResponse.data?.studentId;
     const mobile = profileResponse.data?.mobile || '';
     const batchId = selectedBatchData?.batchId;
     const courseName = selectedBatchData?.schedule_course_name;
 
-    console.log("Extracted from profile:");
-    console.log("studentId:", studentId);
-    console.log("mobile:", mobile);
-    console.log("batchId:", batchId);
-    console.log("courseName:", courseName);
-
+    
     if (!studentId || !batchId || !courseName) {
       alert("Missing required details to proceed with payment.");
-      console.error("❌ Required data missing: studentId/batchId/courseName");
+      
       return;
     }
 
-    console.log("Saving batch & course data to localStorage");
+    
     localStorage.setItem("studentId", studentId);
     localStorage.setItem("courseName", courseName);
     localStorage.setItem("batchId", batchId);
@@ -462,16 +453,16 @@ const handlePayment = async () => {
 
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
     const returnUrl = `https://hachion.co/enroll/${slug}`;
-    console.log("Slugified return URL:", returnUrl);
+    
 
     if (mobile.startsWith('+91')) {
-      console.log("🧾 Initiating Razorpay payment");
+      
 
       const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
         params: { amount }
       });
 
-      console.log("✅ Razorpay order response:", orderRes.data);
+      
       const razorpayOrder = orderRes.data;
       const razorpayOrderId = razorpayOrder.id;
 
@@ -483,12 +474,12 @@ const handlePayment = async () => {
         description: `Payment for ${courseName}`,
         order_id: razorpayOrderId,
         handler: async function (response) {
-          console.log("💳 Razorpay response received:", response);
+          
 
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
 
           try {
-            console.log("📦 Sending capture request to backend");
+            
             const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay", null, {
               params: {
                 paymentId: razorpay_payment_id,
@@ -501,14 +492,19 @@ const handlePayment = async () => {
               }
             });
 
-            console.log("✅ Razorpay capture response:", captureRes.data);
-            alert(captureRes.data);
+            // alert(captureRes.data);
+            setSuccessMessage("✅ " + captureRes.data);
+setErrorMessage("");
           } catch (error) {
+            // console.error("❌ Error capturing Razorpay payment:", error);
+            // if (error.response) {
+            //   console.error("Response:", error.response.data);
+            // }
+            // alert("Payment verification failed.");
             console.error("❌ Error capturing Razorpay payment:", error);
-            if (error.response) {
-              console.error("Response:", error.response.data);
-            }
-            alert("Payment verification failed.");
+const errMsg = error?.response?.data || "❌ Payment verification failed.";
+setErrorMessage(errMsg);
+setSuccessMessage("");
           }
         },
         prefill: {
@@ -520,23 +516,21 @@ const handlePayment = async () => {
           color: "#3399cc"
         }
       };
-console.log("window.Razorpay available?", !!window.Razorpay);
+
 
      try {
-  console.log("🔓 Opening Razorpay modal");
-  console.log("window.Razorpay available?", !!window.Razorpay);
-
+  
   const rzp = new window.Razorpay(options);
-  console.log("window.Razorpay available?", !!window.Razorpay);
+  
 
   rzp.open();
 } catch (err) {
-  console.error("❌ Failed to open Razorpay modal:", err);
+  
   alert("Failed to open Razorpay modal.");
 }
 
     } else {
-      console.log("🌍 Initiating PayPal flow");
+      
 
       const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
         params: {
@@ -545,29 +539,31 @@ console.log("window.Razorpay available?", !!window.Razorpay);
         }
       });
 
-      console.log("✅ PayPal create-order response:", paypalRes.data);
+      
       const approvalUrl = paypalRes.data;
 
       if (approvalUrl.startsWith("https://www.paypal.com")) {
-        console.log("🔁 Redirecting to PayPal approval URL");
+        
         window.location.href = approvalUrl;
       } else {
-        console.error("⚠️ Unexpected PayPal response:", approvalUrl);
-        alert("Unexpected response: " + approvalUrl);
+        
+        // alert("Unexpected response: " + approvalUrl);
+        setErrorMessage("❌ Unexpected PayPal response.");
+setSuccessMessage("");
       }
     }
 
 } catch (error) {
-  console.error("❌ Error in handlePayment:", error);
+  
   if (error instanceof Error) {
-    console.error("Error message:", error.message);
-    console.error("Stack trace:", error.stack);
+  
   } else if (typeof error === "object" && error !== null) {
-    console.error("Error object keys:", Object.keys(error));
+    
   } else {
-    console.error("Unknown error type:", error);
+   
   }
-    alert("Failed to start payment.");
+    setErrorMessage("❌ Failed to start payment.");
+setSuccessMessage("");
   }
 };
 
@@ -760,8 +756,9 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
                 </div>
                 <div className="paylater">
-                  {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
+                
+                  {/* {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)} */}
                 
 <button
   onClick={saveEnrollment}

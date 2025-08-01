@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -39,9 +40,7 @@ const NavbarTop = () => {
    const [selectedItem, setSelectedItem] = useState(null);
    const location = useLocation();
    const [categories, setCategories] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [submenuAnchorEl, setSubmenuAnchorEl] = useState({});
-  const [openSubmenuId, setOpenSubmenuId] = useState(null);
+  const [openCategory, setOpenCategory] = useState(null);
  
    // Helper function to format course name for the URL
    const formatCourseName = (courseName) => {
@@ -256,26 +255,13 @@ const NavbarTop = () => {
   fetchAllCategoryCourses();
 }, []);
 
-  const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setOpenSubmenuId(null);
-  };
-
-  const handleSubmenuOpen = (event, categoryId) => {
-    setSubmenuAnchorEl((prev) => ({ ...prev, [categoryId]: event.currentTarget }));
-    setOpenSubmenuId(categoryId);
-  };
-
-  const handleSubmenuClose = () => {
-    setOpenSubmenuId(null);
-  };
-
   const getCoursesByCategory = (categoryId) =>
     courses.filter((course) => course.categoryId === categoryId);
+
+ const toggleSubmenu = (e, categoryId) => {
+    e.stopPropagation();
+    setOpenCategory((prev) => (prev === categoryId ? null : categoryId));
+  };
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -289,63 +275,50 @@ const NavbarTop = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
-        <Button
-        variant="outlined"
-        onClick={() => navigate('/coursedetails')}
-        onMouseEnter={handleOpen}
-        endIcon={<ArrowDropDownIcon />}
-      >
-        Categories
-      </Button>
+<div className="dropdown">
+  <button
+    type="button"
+    className="btn btn-outline custom-category-btn dropdown-toggle d-none d-md-block"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Categories
+  </button>
 
-<Menu
-  anchorEl={anchorEl}
-  open={Boolean(anchorEl)}
-  onClose={handleClose}
-  MenuListProps={{ onMouseLeave: handleClose }}
-  PaperProps={{
-    style: {
-      maxHeight: 500, // Scrollable
-      overflowY: 'auto',
-    },
-  }}
->
-  {categories.slice(0, 15).map((category) => (
-    <MenuItem
-      key={category._id}
-      onMouseEnter={(e) => handleSubmenuOpen(e, category._id)}
-      onMouseLeave={handleSubmenuClose}
-      onClick={() => navigate('/coursedetails')}
-    >
-      <ListItemText>{category.name}</ListItemText>
-      <ListItemIcon>
-        <ArrowRightIcon fontSize="small" />
-      </ListItemIcon>
-
-      <Menu
-        anchorEl={submenuAnchorEl[category._id]}
-        open={openSubmenuId === category._id}
-        onClose={handleSubmenuClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        MenuListProps={{ onMouseLeave: handleSubmenuClose }}
-      >
-        {getCoursesByCategory(category._id).map((course) => (
-          <MenuItem
-            key={course._id}
-            onClick={() => {
-              const formattedCourse = formatCourseName(course.name);
-              navigate(`/coursedetails/${formattedCourse}`);
-              handleClose();
+  <ul className="dropdown-menu custom-dropdown-menu">
+    <div className="scrollable-category-list">
+      {categories.map((category) => (
+        <li key={category._id} className="dropend position-relative">
+          <button
+            className="dropdown-item dropdown-toggle"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSubmenu(e, category._id);
             }}
+            aria-expanded={openCategory === category._id}
           >
-            {course.name}
-          </MenuItem>
-        ))}
-      </Menu>
-    </MenuItem>
-  ))}
-</Menu>
+            {category.name}
+          </button>
+
+          {openCategory === category._id && (
+            <ul className="course-list">
+              <li>
+                <button className="dropdown-item">AWS</button>
+              </li>
+              <li>
+                <button className="dropdown-item">Salesforce</button>
+              </li>
+              <li>
+                <button className="dropdown-item">Servicenow</button>
+              </li>
+            </ul>
+          )}
+        </li>
+      ))}
+    </div>
+  </ul>
+</div>
         <div className="right-icons">
           {searchVisible ? (
             <div className="search-div-home" role="search">

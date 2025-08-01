@@ -11,10 +11,12 @@ public class UnsubscribeRequest {
 	private String userName;
 
 	private String country;
-	
+
 	private String reason;
 
 	private String comments;
+
+	private String chooseDuration;
 
 	public Long getUnsubscribeId() {
 		return unsubscribeId;
@@ -70,6 +72,14 @@ public class UnsubscribeRequest {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getChooseDuration() {
+		return chooseDuration;
+	}
+
+	public void setChooseDuration(String chooseDuration) {
+		this.chooseDuration = chooseDuration;
 	}
 
 }

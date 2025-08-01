@@ -37,6 +37,9 @@ public class UnsubscribeEntity {
 
 	private String comments;
 
+	@Column(name = "choose_duration")
+	private String chooseDuration;
+
 	public Long getUnsubscribeId() {
 		return unsubscribeId;
 	}
@@ -99,6 +102,14 @@ public class UnsubscribeEntity {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getChooseDuration() {
+		return chooseDuration;
+	}
+
+	public void setChooseDuration(String chooseDuration) {
+		this.chooseDuration = chooseDuration;
 	}
 
 }

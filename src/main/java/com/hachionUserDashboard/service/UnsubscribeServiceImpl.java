@@ -34,6 +34,7 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 		unsubscribeEntity.setDate(LocalDate.now());
 		unsubscribeEntity.setReason(unsubscribeRequest.getReason());
 		unsubscribeEntity.setComments(unsubscribeRequest.getComments());
+		unsubscribeEntity.setChooseDuration(unsubscribeRequest.getChooseDuration());
 
 		registerStudentRepository.deleteByEmailNative(unsubscribeRequest.getEmail());
 		UnsubscribeEntity unsubscribeEntityResponse = unsubscribeRepository.save(unsubscribeEntity);
@@ -72,6 +73,7 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 		unsubscribeResponse.setDate(unsubscribeEntityResponse.getDate());
 		unsubscribeResponse.setReason(unsubscribeEntityResponse.getReason());
 		unsubscribeResponse.setComments(unsubscribeEntityResponse.getComments());
+		unsubscribeResponse.setChooseDuration(unsubscribeEntityResponse.getChooseDuration());
 		return unsubscribeResponse;
 	}
 

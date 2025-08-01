@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Value("${user.profile.image.upload.dir}")
+	private String uploadDir;
 
 	@PostMapping("/send-otp")
 	public ResponseEntity<String> sendOtp(@RequestParam String email) {
@@ -133,7 +137,6 @@ public class UserController {
 		return "Successfully Login";
 	}
 
-	
 	@GetMapping("/students/{courseName}")
 	public ResponseEntity<List<StudentInfoResponse>> getStudentsByCourse(@PathVariable String courseName) {
 		List<StudentInfoResponse> students = userService.getStudentsByCourse(courseName);
@@ -174,36 +177,32 @@ public class UserController {
 //		return ResponseEntity.ok("Password updated successfully");
 //	}
 	@PostMapping("/reset-password")
-	public ResponseEntity<String> resetPassword(
-	    @RequestPart("data") UserRegistrationRequest request,
-	    @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
-	) {
-	    userService.resetPassword(request, profileImage);
-	    return ResponseEntity.ok("Password updated successfully");
+	public ResponseEntity<String> resetPassword(@RequestPart("data") UserRegistrationRequest request,
+			@RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+		userService.resetPassword(request, profileImage);
+		return ResponseEntity.ok("Password updated successfully");
 	}
-	
+
 	@GetMapping("/profile/{filename:.+}")
 	public ResponseEntity<Resource> getProfileImage(@PathVariable String filename) {
-	    try {
-	        Path imagePath = Paths.get("uploads/profile_images").resolve(filename).normalize();
-	        Resource resource = new UrlResource(imagePath.toUri());
+		try {
+			Path imagePath = Paths.get(uploadDir).resolve(filename).normalize();
+			Resource resource = new UrlResource(imagePath.toUri());
 
-	        if (resource.exists() && resource.isReadable()) {
-	            // Dynamically detect content type
-	            String contentType = Files.probeContentType(imagePath);
-	            if (contentType == null) {
-	                contentType = "application/octet-stream"; // Fallback
-	            }
+			if (resource.exists() && resource.isReadable()) {
+				// Dynamically detect content type
+				String contentType = Files.probeContentType(imagePath);
+				if (contentType == null) {
+					contentType = "application/octet-stream"; // Fallback
+				}
 
-	            return ResponseEntity.ok()
-	                    .contentType(MediaType.parseMediaType(contentType))
-	                    .body(resource);
-	        } else {
-	            return ResponseEntity.notFound().build();
-	        }
+				return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
+			} else {
+				return ResponseEntity.notFound().build();
+			}
 
-	    } catch (IOException e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	    }
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 }

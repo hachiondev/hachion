@@ -20,6 +20,8 @@ public class UnsubscribeResponse {
 
 	private String comments;
 
+	private String chooseDuration;
+
 	public Long getUnsubscribeId() {
 		return unsubscribeId;
 	}
@@ -82,6 +84,14 @@ public class UnsubscribeResponse {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getChooseDuration() {
+		return chooseDuration;
+	}
+
+	public void setChooseDuration(String chooseDuration) {
+		this.chooseDuration = chooseDuration;
 	}
 
 }

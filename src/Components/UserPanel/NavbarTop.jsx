@@ -24,6 +24,10 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 
+import DropdownSidebar from './DropdownSidebar';
+import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
+import './Course.css';
+
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
   const [searchVisible, setSearchVisible] = useState(true);
@@ -41,6 +45,79 @@ const NavbarTop = () => {
    const location = useLocation();
    const [categories, setCategories] = useState([]);
   const [openCategory, setOpenCategory] = useState(null);
+
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const bannerRef = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [cardsPerPage, setCardsPerPage] = useState(4);
+    const [totalCards, setTotalCards] = useState(0);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef();
+
+    const handleMouseEnter = () => setIsDropdownOpen(true);
+  const handleMouseLeave = () => {
+    if (window.innerWidth > 768) return; // only close on hover in desktop
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickToggle = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+    const handleCategorySelect = (category) => {
+      setSelectedCategory(category);
+      setCurrentPage(1);
+      if (bannerRef.current) {
+        window.scrollTo(0, 400); 
+      }
+    };
+  
+    const updateTotalCards = (total) => {
+      setTotalCards(total);
+    };
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);  
+      
+      // Set cards per page based on window size
+      const updateCardsPerPage = () => {
+        const width = window.innerWidth;
+        if (width <= 768) {
+          setCardsPerPage(4); // Mobile view
+        }
+        else if (width <= 1024) {
+          setCardsPerPage(6); // Smaller tablet view
+        }
+        else if (width <= 1366) {
+          setCardsPerPage(6); // Larger tablet view
+        } else {
+          setCardsPerPage(6); // Desktop view
+        }
+      };
+  
+      // Update cards per page initially
+      updateCardsPerPage();
+  
+      // Add event listener for window resize
+      window.addEventListener('resize', updateCardsPerPage);
+      
+      // Cleanup event listener on component unmount
+      return () => {
+        window.removeEventListener('resize', updateCardsPerPage);
+      };
+    }, []);
  
    // Helper function to format course name for the URL
    const formatCourseName = (courseName) => {
@@ -275,55 +352,52 @@ const NavbarTop = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
-<div className="dropdown">
-  <button
-    type="button"
-    className="btn btn-outline custom-category-btn dropdown-toggle d-none d-md-block"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    Categories
-  </button>
+<div className="dropdown" ref={dropdownRef}>
+      <button
+        className="btn btn-outline custom-category-btn dropdown-toggle d-none d-md-block"
+        onClick={handleClickToggle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        Categories
+      </button>
+  {isDropdownOpen && (
+        <ul
+          className="dropdown-menu custom-dropdown-menu show"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <li>
+            <div className="course-content">
+              <div className="scrollable-category-list">
+                <h2 className="dropdown-sidebar-heading">Categories</h2>
+                <DropdownSidebar onSelectCategory={handleCategorySelect} />
+              </div>
 
-  <ul className="dropdown-menu custom-dropdown-menu">
-    <li>
-      <div className="scrollable-category-list">
-        {categories.map((category) => (
-          <div key={category._id} className="dropend position-relative">
-            <button
-              className="dropdown-item dropdown-toggle"
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleSubmenu(e, category._id);
-              }}
-              aria-expanded={openCategory === category._id}
-            >
-              {category.name}
-            </button>
-
-            {openCategory === category._id && (
-              <ul className="course-list">
+              <div className="sidebar-right-container">
+                <meta
+                  name="description"
+                  content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
+                />
+                <div className="scrollable-category-list">
+                  <DropdownCardRight
+                    category={selectedCategory}
+                    currentPage={currentPage}
+                    cardsPerPage={cardsPerPage}
+                    onTotalCardsChange={updateTotalCards}
+                  />
+                </div>
                 <li>
-                  <button className="dropdown-item">AWS</button>
+                  <a className="btn btn-link" href="/coursedetails">
+                    <strong>Explore All Courses</strong>
+                  </a>
                 </li>
-                <li>
-                  <button className="dropdown-item">Salesforce</button>
-                </li>
-                <li>
-                  <button className="dropdown-item">Servicenow</button>
-                </li>
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-    </li>
-
-    <li><hr className="dropdown-divider w-100" /></li>
-    <li><a class="btn btn-link" href="/coursedetails"><strong>Explore All Categories</strong></a></li>
-  </ul>
-</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      )}
+    </div>
         <div className="right-icons">
           {searchVisible ? (
             <div className="search-div-home" role="search">

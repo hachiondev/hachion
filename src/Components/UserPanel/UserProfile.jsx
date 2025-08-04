@@ -67,15 +67,16 @@ const togglePasswordVisibility = (field) => {
   const [isUpdating, setIsUpdating] = useState(false);  
   const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-  
+  const [mobileError, setMobileError] = useState('');
+const [initialMobile, setInitialMobile] = useState('');
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     closeMenu();
     mobileInputRef.current?.focus();
   };
-  
 
-  useEffect(() => {
+useEffect(() => {
   const storedUser = localStorage.getItem('loginuserData');  
   if (storedUser) {
     const parsedUser = JSON.parse(storedUser);
@@ -89,15 +90,15 @@ const togglePasswordVisibility = (field) => {
       setName(data.name);
       setEmail(data.email);
       setMobileNumber(data.mobile);
+      setInitialMobile(data.mobile); 
 
-      
       if (data.profileImage) {
         const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
         setProfileImage(fullImageUrl);
       }
     })
     .catch((error) => {
-      console.error('Failed to fetch user profile', error);
+      
     });
   }
 }, []);
@@ -108,6 +109,26 @@ const togglePasswordVisibility = (field) => {
     setPasswords((prev) => ({ ...prev, [name]: value }));
   };
   
+const validateMobile = async (value) => {
+  if (!value || value === initialMobile) {
+    setMobileError('');
+    return;
+  }
+
+  try {
+    const encodedMobile = encodeURIComponent(value);
+    const response = await axios.get(`https://api.hachion.co/check-mobile?mobile=${encodedMobile}`);
+
+    setMobileError('');
+  } catch (error) {
+    if (error.response && error.response.status === 409) {
+      setMobileError('❌ Mobile number already exists.');
+    } else {
+      setMobileError('❌ Failed to validate mobile number.');
+    }
+  }
+};
+
 const handleResetPassword = async (e) => {
   e.preventDefault();
   setSuccessMessage('');
@@ -118,7 +139,6 @@ const handleResetPassword = async (e) => {
     setErrorMessage("❌ User email not found.");
     return;
   }
-
   const isPasswordChanged = passwords.newPassword && passwords.oldPassword && passwords.confirmPassword;
 
   if (isPasswordChanged && passwords.newPassword !== passwords.confirmPassword) {
@@ -153,10 +173,8 @@ const handleResetPassword = async (e) => {
     setIsUpdating(false);
     setSuccessMessage("✅ Profile updated successfully.");
 
-    
     const storedUser = JSON.parse(localStorage.getItem('loginuserData'));
     const updatedUser = { ...storedUser, name };
-
     
     if (response.data?.profileImageUrl) {
       updatedUser.profileImage = response.data.profileImageUrl;
@@ -177,11 +195,9 @@ const handleResetPassword = async (e) => {
   } catch (error) {
     setIsUpdating(false);
     setErrorMessage("❌ Failed to update profile.");
-    console.error("Reset password error:", error);
+    
   }
 };
-
-
   const openMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -276,14 +292,18 @@ const handleResetPassword = async (e) => {
               <label className="form-label">Mobile Number</label>
               <div className="input-wrapper" >
         
-                <input
-                  type="tel"
-                  className="form-control"
-                  ref={mobileInputRef}
-                  placeholder="Enter your mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                readOnly/>
+              <input
+  type="tel"
+  className="form-control"
+  ref={mobileInputRef}
+  placeholder="Enter your mobile number"
+  value={mobileNumber}
+  onChange={(e) => setMobileNumber(e.target.value)}
+  onBlur={(e) => validateMobile(e.target.value)}
+/>
+{mobileError && (
+  <p style={{ color: 'red', fontWeight: 'bold', marginTop: '5px' }}>{mobileError}</p>
+)}
               </div>
             </div>
             </div>

@@ -121,9 +121,9 @@
 }
 
 .recent-blog-card {
-  width: 330px;
+  width: 350px;
   flex: 0 0 auto;
-  margin-right: 10px;
+  margin: 10px;
   background-color: white;
   box-shadow: 5px 5px 5px #d3d3d3;
   display: flex;

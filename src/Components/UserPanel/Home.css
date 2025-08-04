@@ -313,7 +313,7 @@ border-radius: 20px;
 box-shadow: 5px 5px 5px #BABABA;
 display: flex;
 background-color: white;
-margin-left: 16vw;
+/* margin-left: 16vw; */
 }
 
 .search-input-home {
@@ -362,9 +362,13 @@ cursor: pointer;
 }
 
 .nav-item {
+border: 3px solid transparent;
 background: none;
-border: none;
-padding: 0;
+ padding: 0.5vh 1vh;
+  box-sizing: border-box;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .nav-item.active {
@@ -372,8 +376,7 @@ border: 3px solid #00AEEF;
 background-color: #CCEFFC;
 color: #00AEEF !important;
 border-radius: 10px;
-padding-left: 0.5vh;
-padding-right: 0.5vh;
+padding: 0.5vh 1vh;
 font-weight: 500;
 }
 
@@ -650,17 +653,18 @@ animation-play-state: paused;
   font-size: 1rem;
   text-decoration: none;
   color: white;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, font-weight 0.3s ease;
+  box-sizing: border-box;
 }
 
 .accessible-button:hover {
   background-color: rgba(255, 255, 255, 0.2);
   font-weight: 600;
-  border: 2px solid white;
+  border-color: white;
 }
 
 .login-separator {
@@ -673,8 +677,7 @@ border: 3px solid #00AEEF;
 background-color: #CCEFFC;
 color: #00AEEF !important;
 border-radius: 10px; 
-padding-left: 0.5vw;
-padding-right: 0.5vw;
+padding: 0.5vh 1vh;
 font-weight: 500;
 }
 
@@ -822,7 +825,7 @@ font-weight:700;
 transition: background-color 0.3s ease;
 }
 
-.course-name {
+.course-name, .upcoming-course-name {
 font-size: 16px;
 font-weight: 600;
 color: black; 
@@ -835,7 +838,6 @@ overflow: hidden;
 text-overflow: ellipsis;
 line-height: 1.5;
 height: 3em;
-
 }
 
 .date-time-container {
@@ -992,21 +994,26 @@ border-top-right-radius: 0;
 background-color:rgba(0, 174, 239, 1) ;
 color: white !important;
 }
-.card:hover .course-review
+
+.card:hover .course-review,
+.card:hover .course-month,
+.card:hover .course-name
 {
 display: none;
 }
 .card:hover .new-batch-para
 {
 color: white !important;
+font-style: italic;
 display: block;
+text-align: justify;
 }
 .card:hover .course-date
 {
 
 color: white !important;
 }
-.card:hover .course-name
+.card:hover .course-name, .card:hover .upcoming-course-name
 {
 color: white !important;
 }
@@ -1130,7 +1137,7 @@ transition: color 0.3s, border-color 0.3s;
   display: none; /* Hide course names after the 7th one */
 }
 
-.course-name,.course-date{
+.course-name,.course-date, .upcoming-course-name{
 margin: 5px 0;
 transition: all 0.3s ease;
 }
@@ -1719,8 +1726,7 @@ height: 45px;
 
     .nav-item.active {
       border-radius: 5px;
-      padding-left: 0.5vh;
-      padding-right: 0.5vh;
+      padding: 0.5vh 1vh;
       }
 
       .coupon-btn, .register-now-btn {
@@ -2080,8 +2086,7 @@ height: 45px;
   
       .nav-item.active {
         border-radius: 5px;
-        padding-left: 0.5vh;
-        padding-right: 0.5vh;
+        padding: 0.5vh 1vh;
         }
   
         .coupon-btn, .register-now-btn {
@@ -2489,7 +2494,7 @@ border: none;
 cursor: pointer;
 }
 
-.navbar-nav {
+.navbar-nav, .nav-item {
 display: none !important; /* Hide the normal navbar items on mobile */
 }
 
@@ -2709,7 +2714,7 @@ border-radius: 5px;
   height: 140px;
   }
 
-.course-name{
+.course-name, .upcoming-course-name{
   font-size: 14px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -3035,7 +3040,7 @@ to{
   z-index: 10;
   max-height: 400px;
   overflow-y: auto;
-  margin-left: 48%;
+  margin-left: 41%;
   padding: 0;
   width: 35%;
   border-radius: 4px;

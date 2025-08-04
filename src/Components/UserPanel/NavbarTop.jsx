@@ -575,7 +575,7 @@ const NavbarTop = () => {
           </div>
         )}
 
-        <div className="navbar-nav">
+        {/* <div className="navbar-nav"> */}
           <button
             className={`nav-item ${location.pathname === '/corporate' ? 'active' : ''}`}
           >
@@ -599,7 +599,7 @@ const NavbarTop = () => {
               Hire from Us
             </Link>
           </button> */}
-        </div>
+        {/* </div> */}
       </div>
     </nav>
   );

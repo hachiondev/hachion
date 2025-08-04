@@ -67,10 +67,12 @@ const CourseDetail = ({
   const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
+  const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
+const [aboutError, setAboutError] = useState("");
   const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
     keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',iamount:'',idiscount:'',itotal:'',isamount:'',isdiscount:'',istotal:'',isqamount:'',isqdiscount:'',isqtotal:'',icamount:'',icdiscount:'',ictotal:'',imamount:'',imdiscount:'',imtotal:'',mentoring1:'',mentoring2:'',self1:'',
-    self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',courseHighlight:'',courseDescription:'',date:currentDate,
+    self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',aboutCourse:'',courseHighlight:'',courseDescription:'',date:currentDate,
   });
   console.log(formData);
 
@@ -245,7 +247,8 @@ const handleSubmit = async (e) => {
     metaTitle: formData.headerTitle,
   metaKeyword: formData.courseKeyword,
   metaDescription: formData.courseKeywordDescription,
-    courseHighlight: formData.courseHighlight,
+  aboutCourse: formData.aboutCourse,
+  courseHighlight: formData.courseHighlight,
     courseDescription: formData.courseDescription,
   };
   const formNewData = new FormData();
@@ -335,6 +338,7 @@ const handleEditClick = async (courseId) => {
     courseKeyword: course.metaKeyword, 
     // metaDescription:course.courseDescription,
     courseKeywordDescription: course.metaDescription, 
+    aboutCourse:course.aboutCourse,
     courseHighlight:course.courseHighlight,
     courseDescription:course.courseDescription
             });
@@ -729,7 +733,33 @@ const handleShortCourseBlur = async () => {
                 </div>
                 </div>
                 <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Only add 4 Lines)</label>
+                <label for="exampleFormControlTextarea1" class="form-label">About Course(Add only 160 Characters)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="inputEmail4"
+                    name="aboutCourse"
+                    value={formData.aboutCourse}
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      const count = text.length;
+                      if (count > 160) {
+                        setAboutError("Character limit exceeded. Please keep it within 160 characters.");
+                      } else {
+                        setAboutError("");
+                      }
+                      handleInputChange(null, "aboutCourse", text);
+                      setAboutCharacterCount(count);
+                    }}
+                  />
+
+                  <div style={{ marginLeft: '10px', marginTop: '8px', fontSize: '14px', color: aboutCharacterCount > 160 ? 'red' : 'black' }}>
+                    Character Count: {aboutCharacterCount}/160
+                  </div>
+                  {aboutError && <p className="error-message" style={{ color: "red" }}>{aboutError}</p>}
+                </div>
+                <div class="mb-3" style={{ paddingBottom: "20px" }}>
+                <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Add only 4 Lines)</label>
                   <ReactQuill
                     theme="snow"
                     id="courseHighlight"

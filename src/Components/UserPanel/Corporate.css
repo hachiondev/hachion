@@ -852,7 +852,7 @@ padding: 20px;
 .recent-entries, .workshop-entries {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: 2vh;
   overflow-x: auto; /* Enable horizontal scrolling */
   scrollbar-width: none; /* Hide scrollbar for Firefox */
@@ -913,9 +913,10 @@ padding: 20px;
   text-align: right;
 }
 .blog-bottom{
-  margin: 4vh;
+  /* margin: 4vh; */
   width: 80%;
-  margin-left: 10vw;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .views {

@@ -69,10 +69,9 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
 
         <div className="new-batch">
           <p className="new-batch-para">
-            New Batch: <span> In few days</span>
+          Learning a software course helps individuals build and manage applications, solve real-world problems, and succeed in fast-growing, tech-driven industries.
           </p>
         </div>
-
     
         {!isMobile && (
           <button

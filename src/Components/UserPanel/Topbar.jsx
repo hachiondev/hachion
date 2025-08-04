@@ -156,8 +156,8 @@ const [profileImage, setProfileImage] = useState(null);
         <div className='topbar-right'>
           <div className='login-div'>
           <Link to='/login' className='login-div-content accessible-button'>Login</Link>
-          <PiLineVerticalThin className="login-separator" />
-          <Link to='/register' className='login-div-content accessible-button'>Register</Link>
+          {/* <PiLineVerticalThin className="login-separator" />
+          <Link to='/register' className='login-div-content accessible-button'>Register</Link> */}
         </div>
         </div>
       )}

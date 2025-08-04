@@ -80,12 +80,30 @@ const BlogList = ({ selectedCategories }) => {
                     })
                     .replace(",", "")}
                 </p>
-                <a
+                {/* <a
                   href={`/blogs/${blog.category_name
                     .replace(/\s+/g, "-")
                     .toLowerCase()}/${blog.id}`}
                   className="txtReadmore"
-                >
+                > */}
+{/* <a
+  href={`/blogs/${blog.category_name
+    .replace(/\s+/g, "-")
+    .toLowerCase()}/${blog.title
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .toLowerCase()}`}
+  className="txtReadmore"
+> */}
+<a
+  href={`/blogs/${blog.category_name
+    .replace(/\s+/g, "-")
+    .toLowerCase()}/${blog.title
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .toLowerCase()}-${blog.id}`}
+  className="txtReadmore"
+>
                   Read More
                 </a>
               </div>

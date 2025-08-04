@@ -15,6 +15,7 @@ import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
+import RecentEntries from './RecentEntries';
 
 export const Home = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -92,6 +93,10 @@ export const Home = () => {
 <Career/>
 <Association/>
 <Learners page="home"/>
+<div className='blog-bottom'>
+        <h2 className='association-head'>Recent Blog Entries</h2>
+        <RecentEntries />
+      </div>
 <Footer/>
 {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>

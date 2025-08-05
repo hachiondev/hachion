@@ -379,7 +379,10 @@ const NavbarTop = () => {
                   name="description"
                   content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
                 />
-                <div className="scrollable-category-list">
+                <div className="selected-category-heading">
+                {selectedCategory} Courses
+              </div>
+                <div>
                   <DropdownCardRight
                     category={selectedCategory}
                     currentPage={currentPage}

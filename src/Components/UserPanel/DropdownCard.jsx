@@ -32,9 +32,9 @@ const DropdownCard = ({ title, month, time, Rating, RatingByPeople, image, stude
     for (let i = 1; i <= 5; i++) {
       stars.push(
         i <= rating ? (
-          <MdOutlineStar key={i} className="star-icon filled" />
+          <MdOutlineStar key={i} className="dropdown-star-icon filled" />
         ) : (
-          <MdOutlineStarBorder key={i} className="star-icon" />
+          <MdOutlineStarBorder key={i} className="dropdown-star-icon" />
         )
       );
     }
@@ -46,9 +46,10 @@ const DropdownCard = ({ title, month, time, Rating, RatingByPeople, image, stude
     onClick={handleClick}>
       <div className="dropdown-card-header-div">
         <img src={image} alt="card-img" className="dropdown-card-icon" loading="lazy"/>
+        <h3 className="dropdown-course-name">{title}</h3>
       </div>
       <div className="dropdown-course-details">
-        <h3 className="dropdown-course-name">{title}</h3>
+        {/* <h3 className="dropdown-course-name">{title}</h3> */}
         <div className="dropdown-course-time">
           <p className="dropdown-course-month">
             <RxCalendar /> {month} Days

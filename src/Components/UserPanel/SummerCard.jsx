@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import kidbackground from '../../Assets/kidbanner2.webp';
 import './Home.css';
 
-const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {
+const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople, aboutCourse }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -67,11 +67,13 @@ const SummerCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
           Rating: {renderStars(Rating)} ({RatingByPeople})
         </p>
 
-        <div className="new-batch">
-          <p className="new-batch-para">
-          Learning a software course helps individuals build and manage applications, solve real-world problems, and succeed in fast-growing, tech-driven industries.
-          </p>
-        </div>
+         <div className="new-batch">
+        <p className="new-batch-para">
+          {aboutCourse
+            ? aboutCourse
+            : "Learning a software course helps individuals build and manage applications, solve real-world problems, and succeed in fast-growing, tech-driven industries."}
+        </p>
+      </div>
     
         {!isMobile && (
           <button

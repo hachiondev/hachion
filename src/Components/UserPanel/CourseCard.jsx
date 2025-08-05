@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import cardbackground from '../../Assets/course2.webp';
 import './Home.css';
 
-const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => {
+const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople, aboutCourse }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -68,10 +68,12 @@ const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople }) => 
         </p>
 
         <div className="new-batch">
-          <p className="new-batch-para">
-          Learning a software course helps individuals build and manage applications, solve real-world problems, and succeed in fast-growing, tech-driven industries.
-          </p>
-        </div>
+        <p className="new-batch-para">
+          {aboutCourse
+            ? aboutCourse
+            : "Learning a software course helps individuals build and manage applications, solve real-world problems, and succeed in fast-growing, tech-driven industries."}
+        </p>
+      </div>
     
         {!isMobile && (
           <button

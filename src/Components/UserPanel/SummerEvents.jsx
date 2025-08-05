@@ -182,6 +182,7 @@ const SummerEvents = () => {
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}
+            aboutCourse={course.aboutCourse}
             onClick={() => handleCardClick(course)}
             className="course-card"
           />

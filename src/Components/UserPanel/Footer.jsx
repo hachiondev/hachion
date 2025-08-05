@@ -132,7 +132,7 @@ const Footer = () => {
     <a href="https://www.instagram.com/hachion_trainings" aria-label="Instagram"
     target="_blank" 
     rel="noopener noreferrer"><img src={instagram} alt='instagram-icon' loading="lazy"/></a>
-    <a href="https://www.quora.com/profile/Hachion-4" aria-label="Quora"
+    <a href="https://www.quora.com/profile/Hachion" aria-label="Quora"
     target="_blank" 
     rel="noopener noreferrer"><img src={quora} alt='quora-icon' loading="lazy"/></a>
       <a href="https://www.youtube.com/@hachion" aria-label="YouTube"

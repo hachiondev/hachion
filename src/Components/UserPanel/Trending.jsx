@@ -123,7 +123,7 @@ const Trending = () => {
             <div className="dropdown-container">
               <RiMenuUnfold3Line className="course-menu" onClick={handleDropdownClick} />
               {dropdownVisible && (
-                <div className="dropdown-list">
+                <div className="trending-dropdown-list">
                   {categories.slice(topCount).map((category) => (
                     <div
                       key={category}
@@ -182,6 +182,7 @@ const Trending = () => {
             course_id={course.id}
             RatingByPeople={course.ratingByNumberOfPeople}
             Rating={course.starRating}
+            aboutCourse={course.aboutCourse}
             onClick={() => handleCardClick(course)}
             className="course-card"
           />

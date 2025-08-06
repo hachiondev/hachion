@@ -267,9 +267,9 @@ if (currency === 'INR') {
               Fee:<span className='start-span'>Starts from </span> <span className='amount'>{currency} {Math.round(convertedTotalFee)}/-</span>
              
             </p>
-                <h6 className='sidebar-course-review'>
+                <p className='sidebar-course-review'>
                   Rating: {course.starRating} {renderStars(course.starRating)} ({course.ratingByNumberOfPeople})
-                </h6>
+                </p>
               </div>
             </div>
             <div

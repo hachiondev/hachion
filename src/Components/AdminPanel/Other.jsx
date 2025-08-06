@@ -379,7 +379,7 @@ export default function Other() {
               <div>
                 <div className="course-details">
                   <div className="col">
-                    <label className="form-label">Banner popup Image</label>
+                    <label className="form-label">Banner popup Image (max-width=800px, max-height=500px)</label>
                     <input
                       type="file"
                       className="schedule-input"

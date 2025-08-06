@@ -196,8 +196,8 @@ useEffect(() => {
     });
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="have-modal-overlay">
+      <div className="have-modal-content">
         <div className="request-batch">
           <div className="request-header">Have any Query ?</div>
           <AiOutlineCloseCircle onClick={closeModal} className="button-close" />
@@ -333,7 +333,7 @@ useEffect(() => {
                 className="modal-dialog"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="modal-content" id="#querymodal">
+                <div className="have-modal-content" id="#querymodal">
                   <button
                     className="close-btn"
                     aria-label="Close"

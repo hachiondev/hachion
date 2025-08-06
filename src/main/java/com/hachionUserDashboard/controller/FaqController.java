@@ -278,9 +278,9 @@ public class FaqController {
 
 		Faq faq = optionalFaq.get();
 
-		String filePath = uploadDir + faq.getFaq_pdf();
-
-		if (filePath != null && !filePath.isEmpty()) {
+		String pdfFileName = faq.getFaq_pdf();
+		if (pdfFileName != null && !pdfFileName.trim().isEmpty()) {
+			String filePath = uploadDir + pdfFileName;
 			File file = new File(filePath);
 			if (file.exists()) {
 				boolean deleted = file.delete();

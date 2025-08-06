@@ -76,7 +76,6 @@ public class BlogsController {
 				directory.mkdirs();
 			}
 
-			// Save file
 			Path filePath = Paths.get(directory.getAbsolutePath(), file.getOriginalFilename());
 			Files.write(filePath, file.getBytes());
 			return subFolder + "/" + file.getOriginalFilename();
@@ -220,7 +219,7 @@ public class BlogsController {
 	@GetMapping("/blog/download/{type}/{filename}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String type, @PathVariable String filename) {
 		try {
-			// Ensure valid type (either images or pdfs)
+
 			if (!type.equals("images") && !type.equals("pdfs")) {
 				return ResponseEntity.badRequest().build();
 			}

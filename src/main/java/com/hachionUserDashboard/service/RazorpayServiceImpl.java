@@ -47,7 +47,7 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 	public String createOrder(Double amount) {
 		try {
 			JSONObject orderRequest = new JSONObject();
-			int amountInPaise = (int) (amount * 100); // Convert to paise
+			int amountInPaise = (int) (amount * 100); 
 			orderRequest.put("amount", amountInPaise);
 			orderRequest.put("currency", "INR");
 			orderRequest.put("receipt", "txn_" + System.currentTimeMillis());

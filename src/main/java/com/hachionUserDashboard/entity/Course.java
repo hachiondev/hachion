@@ -126,6 +126,9 @@ public class Course {
 
 	@Column
 	private String shortCourse;
+	
+	@Column
+	private String aboutCourse;
 
 	public Double getMamount() {
 		return mamount;
@@ -619,6 +622,14 @@ public class Course {
 
 	public void setIctotal(Double ictotal) {
 		this.ictotal = ictotal;
+	}
+
+	public String getAboutCourse() {
+		return aboutCourse;
+	}
+
+	public void setAboutCourse(String aboutCourse) {
+		this.aboutCourse = aboutCourse;
 	}
 
 }

@@ -145,7 +145,7 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 			Optional<RegisterStudent> student = registerStudentRepository.findByStudentId(studentId);
 			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
 			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
-			
+
 			String rawJson = new ObjectMapper().writeValueAsString(order);
 
 			PaymentTransaction tx = new PaymentTransaction();
@@ -165,8 +165,6 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 //			Optional<User> student = registerStudentRepository.findByStudentId(studentId);
 //			String studentEmail = student.map(User::getEmail).orElse(payerEmail);
 //			String studentName = student.map(User::getFullName).orElse("Student"); 
-
-			
 
 			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
 
@@ -193,11 +191,11 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 	private PaymentRequest convertTransactionToPaymentRequest(PaymentTransaction tx, String studentName,
 			String studentEmail) {
 		PaymentRequest pr = new PaymentRequest();
-		pr.setStudentName(studentName); // You can look up by studentId if needed
+		pr.setStudentName(studentName);
 		pr.setEmail(studentEmail);
-//	    pr.setMobile("N/A"); // Lookup from DB if available
+//	    pr.setMobile("N/A"); 
 		pr.setCourseName(tx.getCourseName());
-		pr.setCourseFee(tx.getAmount()); // Original fee if known
+		pr.setCourseFee(tx.getAmount());
 		pr.setDiscount(0);
 		pr.setTax(0);
 		pr.setTotalAmount(tx.getAmount());
@@ -212,7 +210,7 @@ public class PayPalServiceImpl implements PayPalServiceInterface {
 		installment.setReceivedPay(tx.getAmount());
 
 		pr.setInstallments(List.of(installment));
-		pr.setSelectedInstallmentId(1L); // dummy
+		pr.setSelectedInstallmentId(1L);
 
 		return pr;
 

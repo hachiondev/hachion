@@ -366,6 +366,7 @@ public class CourseController {
 				course.setMetaKeyword(updatedCourse.getMetaKeyword());
 				course.setMetaDescription(updatedCourse.getMetaDescription());
 				course.setCourseHighlight(updatedCourse.getCourseHighlight());
+				course.setAboutCourse(updatedCourse.getAboutCourse());
 				course.setCourseDescription(updatedCourse.getCourseDescription());
 
 				if (courseImage != null && !courseImage.isEmpty()) {
@@ -427,7 +428,7 @@ public class CourseController {
 		List<Course> courses = repo.findCoursesByCategory(courseCategory);
 
 		if (courses.isEmpty()) {
-			return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); // Custom message
+			return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); 
 		}
 
 		return new ResponseEntity<>(courses, HttpStatus.OK);

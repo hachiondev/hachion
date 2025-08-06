@@ -13,7 +13,20 @@ import './Home.css';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import { useLocation } from 'react-router-dom';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 
+import DropdownSidebar from './DropdownSidebar';
+import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
+import './Course.css';
 
 const NavbarTop = () => {
   const [activeLink, setActiveLink] = useState(null);
@@ -30,7 +43,81 @@ const NavbarTop = () => {
    const [blogs, setBlogs] = useState([]);
    const [selectedItem, setSelectedItem] = useState(null);
    const location = useLocation();
+   const [categories, setCategories] = useState([]);
+  const [openCategory, setOpenCategory] = useState(null);
 
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const bannerRef = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [cardsPerPage, setCardsPerPage] = useState(4);
+    const [totalCards, setTotalCards] = useState(0);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef();
+
+    const handleMouseEnter = () => setIsDropdownOpen(true);
+  const handleMouseLeave = () => {
+    if (window.innerWidth > 768) return; // only close on hover in desktop
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickToggle = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+    const handleCategorySelect = (category) => {
+      setSelectedCategory(category);
+      setCurrentPage(1);
+      if (bannerRef.current) {
+        window.scrollTo(0, 400); 
+      }
+    };
+  
+    const updateTotalCards = (total) => {
+      setTotalCards(total);
+    };
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);  
+      
+      // Set cards per page based on window size
+      const updateCardsPerPage = () => {
+        const width = window.innerWidth;
+        if (width <= 768) {
+          setCardsPerPage(4); // Mobile view
+        }
+        else if (width <= 1024) {
+          setCardsPerPage(6); // Smaller tablet view
+        }
+        else if (width <= 1366) {
+          setCardsPerPage(6); // Larger tablet view
+        } else {
+          setCardsPerPage(6); // Desktop view
+        }
+      };
+  
+      // Update cards per page initially
+      updateCardsPerPage();
+  
+      // Add event listener for window resize
+      window.addEventListener('resize', updateCardsPerPage);
+      
+      // Cleanup event listener on component unmount
+      return () => {
+        window.removeEventListener('resize', updateCardsPerPage);
+      };
+    }, []);
  
    // Helper function to format course name for the URL
    const formatCourseName = (courseName) => {
@@ -176,16 +263,13 @@ const NavbarTop = () => {
 
   const toggleDrawer = () => {
     setDrawerOpen(!isDrawerOpen);
-    console.log(`Drawer ${isDrawerOpen ? "closed" : "opened"}`);
   };
 
   const handleNavClick = (link) => {
     setActiveLink(link);
-    console.log(`Navigating to: ${link}`);
   };
 
   const handleClick = () => {
-    console.log("Navigating to Home");
     navigate('/');
   };
 
@@ -220,6 +304,41 @@ const NavbarTop = () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isDrawerOpen]);
+  useEffect(() => {
+  const fetchAllCategoryCourses = async () => {
+    try {
+      const categoryRes = await axios.get("https://api.hachion.co/course-categories/all");
+      setCategories(categoryRes.data);
+
+      const allCourses = [];
+
+      for (const category of categoryRes.data) {
+        const courseRes = await axios.get(
+          `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(category.name)}`
+        );
+        const categoryCourses = courseRes.data.map(course => ({
+          ...course,
+          categoryId: category._id, // attach categoryId to filter later
+        }));
+        allCourses.push(...categoryCourses);
+      }
+
+      setCourses(allCourses);
+    } catch (error) {
+      console.error("Error fetching category-wise courses:", error);
+    }
+  };
+
+  fetchAllCategoryCourses();
+}, []);
+
+  const getCoursesByCategory = (categoryId) =>
+    courses.filter((course) => course.categoryId === categoryId);
+
+ const toggleSubmenu = (e, categoryId) => {
+    e.stopPropagation();
+    setOpenCategory((prev) => (prev === categoryId ? null : categoryId));
+  };
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -233,6 +352,55 @@ const NavbarTop = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
+<div className="dropdown" ref={dropdownRef}>
+      <button
+        className="btn btn-outline custom-category-btn dropdown-toggle d-none d-md-block"
+        onClick={handleClickToggle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        Categories
+      </button>
+  {isDropdownOpen && (
+        <ul
+          className="dropdown-menu custom-dropdown-menu show"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <li>
+            <div className="course-content">
+              <div className="scrollable-category-list">
+                <h2 className="dropdown-sidebar-heading">Categories</h2>
+                <DropdownSidebar onSelectCategory={handleCategorySelect} />
+              </div>
+
+              <div className="sidebar-right-container">
+                <meta
+                  name="description"
+                  content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
+                />
+                <div className="selected-category-heading">
+                {selectedCategory} Courses
+              </div>
+                <div>
+                  <DropdownCardRight
+                    category={selectedCategory}
+                    currentPage={currentPage}
+                    cardsPerPage={cardsPerPage}
+                    onTotalCardsChange={updateTotalCards}
+                  />
+                </div>
+                <li>
+                  <a className="btn btn-link" href="/coursedetails">
+                    <strong>Explore All Courses</strong>
+                  </a>
+                </li>
+              </div>
+            </div>
+          </li>
+        </ul>
+      )}
+    </div>
         <div className="right-icons">
           {searchVisible ? (
             <div className="search-div-home" role="search">
@@ -283,8 +451,10 @@ const NavbarTop = () => {
             <button
               className="btn-search-icon-mobile"
               onClick={() => setMobileSearchOpen(true)}
+              aria-label="Open mobile search"
+              title="Search"
             >
-              <IoSearch className="search-icon" />
+              <IoSearch className="search-icon" aria-hidden="true"/>
             </button>
           )}
 
@@ -377,7 +547,7 @@ const NavbarTop = () => {
                       Corporate Training
                     </div>
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                      All Courses
+                      Categories
                     </div>
                     {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -393,22 +563,22 @@ const NavbarTop = () => {
                   Corporate Training
                 </div>
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                  All Courses
+                  Categories
                 </div>
                 {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
                 <button className="drawer-button" onClick={() => navigate('/login')}>
                   Login
                 </button>
-                <button className="drawer-button" onClick={() => navigate('/register')}>
+                {/* <button className="drawer-button" onClick={() => navigate('/register')}>
                   Register
-                </button>
+                </button> */}
               </>
             )}
           </div>
         )}
 
-        <div className="navbar-nav">
+        {/* <div className="navbar-nav"> */}
           <button
             className={`nav-item ${location.pathname === '/corporate' ? 'active' : ''}`}
           >
@@ -417,13 +587,13 @@ const NavbarTop = () => {
             </Link>
           </button>
 
-          <button
+          {/* <button
             className={`nav-item ${location.pathname === '/coursedetails' ? 'active' : ''}`}
           >
             <Link to="/coursedetails" className="nav-item-link">
-              All Courses
+              Categories 
             </Link>
-          </button>
+          </button> */}
 
           {/* <button
             className={`nav-item ${location.pathname === '/hire-from-us' ? 'active' : ''}`}
@@ -432,7 +602,7 @@ const NavbarTop = () => {
               Hire from Us
             </Link>
           </button> */}
-        </div>
+        {/* </div> */}
       </div>
     </nav>
   );

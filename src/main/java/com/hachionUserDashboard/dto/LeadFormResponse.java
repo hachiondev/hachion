@@ -1,40 +1,30 @@
-package com.hachionUserDashboard.entity;
+package com.hachionUserDashboard.dto;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LeadFormResponse {
 
-@Table(name = "lead_form")
-public class LeadForm {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "lead_form_id", nullable = false)
 	private Long leadFormId;
 
-	@Column(name = "full_name")
 	private String fullName;
 
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name = "country")
 	private String country;
 
-	@Column(name = "course_interest")
 	private String courseInterest;
 
-	@Column(name = "marketer_id")
 	private String marketerId;
 
 	private LocalDate date;

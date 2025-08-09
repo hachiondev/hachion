@@ -42,12 +42,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white', 
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
     padding: '3px 4px',
   },
 }));
@@ -75,16 +75,20 @@ export default function Faq() {
     const [rows, setRows] = useState([{ id:Date.now(),faq_title:"",description:"" }]);
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+      const [errorMessage, setErrorMessage] = useState("");
     const [displayedCategories, setDisplayedCategories] = useState([]);
-        const [allData, setAllData] = useState([]); // All fetched data
+        const [allData, setAllData] = useState([]); 
         const [catChange, setCatChange] = useState(0);
-    // Data to be displayed
+    
     const [filterData, setFilterData] = useState({
       category_name: "",
       course_name: "",
     });
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [selectedFaqIds, setSelectedFaqIds] = useState([]);
+
     const [editedRow, setEditedRow] = useState({faq_id:"",category_name:"",course_name:"",faq_pdf:"",faq_title:"",description:""});
     const [curriculumData, setCurriculumData] = useState({
     
@@ -115,10 +119,10 @@ export default function Faq() {
         
         const handleRowsPerPageChange = (rows) => {
           setRowsPerPage(rows);
-          setCurrentPage(1); // Reset to the first page whenever rows per page changes
+          setCurrentPage(1); 
         };
         
-        // Slice filteredCurriculum based on rowsPerPage and currentPage
+        
           useEffect(() => {
                  const displayed = filteredCurriculum.slice(
                    (currentPage - 1) * rowsPerPage,
@@ -152,13 +156,13 @@ export default function Faq() {
      
                 
     const handleClose = () => {
-      setOpen(false); // Close the modal
+      setOpen(false); 
     };
     useEffect(() => {
       const fetchCategory = async () => {
         try {
           const response = await axios.get("https://api.hachion.co/course-categories/all");
-          setCourse(response.data); // Assuming the data contains an array of trainer objects
+          setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -172,7 +176,7 @@ export default function Faq() {
             );
             setFilterCourse(filtered);
           } else {
-            setFilterCourse([]); // Reset when no category is selected
+            setFilterCourse([]); 
           }
         }, [curriculumData.category_name, courseCategory]);
           useEffect(() => {
@@ -189,7 +193,7 @@ export default function Faq() {
       const fetchCourseCategory = async () => {
         try {
           const response = await axios.get("https://api.hachion.co/courses/all");
-          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+          setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -198,29 +202,17 @@ export default function Faq() {
     }, []);
   
 
-    const handleDeleteConfirmation = (faq_id) => {
-        if (window.confirm("Are you sure you want to delete this Faq?")) {
-          handleDelete(faq_id);
-        }
-      };
-      // const handleInputChange = (e) => {
-      //   const { name, value } = e.target;
-      //   setEditedRow((prev) => ({
-      //     ...prev,
-      //     [name]: value,
-      //   }));
-      // };
+   
 
       const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditedRow((prev) => ({
           ...prev,
           [name]: value,
-          ...(name === "category_name" && { course_name: "" }), // Reset course when category changes
+          ...(name === "category_name" && { course_name: "" }), 
         }));
         if (editedRow.category_name) {
-          // alert(name);
-          //alert(value);
+          
           setCatChange(1);
           const filtered = courseCategory.filter(
             (course) => course.courseCategory === value
@@ -262,7 +254,6 @@ export default function Faq() {
         try {
           const formData = new FormData();
       
-          // Construct only the necessary fields
           const curriculumData = {
             category_name: editedRow.category_name,
             course_name: editedRow.course_name,
@@ -272,8 +263,7 @@ export default function Faq() {
           };
       
           formData.append("faqData", JSON.stringify(curriculumData));
-      
-          // Append file only if it is selected and is a File object
+               
           if (
             editedRow.faq_pdf &&
             editedRow.faq_pdf instanceof File
@@ -323,11 +313,10 @@ export default function Faq() {
     );
 
     setFilteredCurriculum(filtered);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); 
 
     if (name) {
-      // alert(name);
-      // alert(value);
+      
       setCatChange(1);
       const filtered = courseCategory.filter(
         (course) => course.courseCategory === value
@@ -338,26 +327,62 @@ export default function Faq() {
       setFilterCourse([]);
     }
   };
-        useEffect(() => {
-          const fetchData = async () => {
-            try {
-              const response = await axios.get("https://api.hachion.co/faq");
-              setAllData(response.data);
-              setFilteredCurriculum(response.data); // Used for paginated display
-            } catch (error) {
-              console.error("Error fetching curriculum data", error);
-            }
-          };
-          fetchData();
-        }, []);
-      const handleDelete = async (faq_id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`); 
-          console.log("FAQ deleted successfully:", response.data); 
-        } catch (error) { 
-          console.error("Error deleting Faq:", error); 
-        } };
+
+        const fetchData = async () => {
+  try {
+    const response = await axios.get("https://api.hachion.co/faq");
+    setAllData(response.data);
+    setFilteredCurriculum(response.data); 
+  } catch (error) {
+    console.error("Error fetching curriculum data", error);
+  }
+};
+
+
+useEffect(() => {
+  fetchData();
+}, []);
+
+        const handleCheckboxChange = (faq_id) => {
+  setSelectedFaqIds((prev) =>
+    prev.includes(faq_id)
+      ? prev.filter((id) => id !== faq_id)
+      : [...prev, faq_id]
+  );
+};
+
+const handleDeleteConfirmation = () => {
+  if (selectedFaqIds.length === 0) {
+    alert("Please select at least one FAQ to delete.");
+    return;
+  }
+
+  if (window.confirm(`Are you sure you want to delete ${selectedFaqIds.length} selected FAQ(s)?`)) {
+    handleDelete();
+  }
+};
+const handleDelete = async () => {
+  try {
+    const response = await axios.post("https://api.hachion.co/faq/delete", selectedFaqIds);
+
+    if (response.status === 200) {
+      setSuccessMessage("✅ Selected FAQ(s) deleted successfully.");
+      setErrorMessage("");
+    } else {
+      setSuccessMessage("");
+      setErrorMessage("❌ Some FAQ(s) could not be deleted.");
+    }
+
+    await fetchData();
+    setSelectedFaqIds([]);
+  } catch (error) {
+    console.error("Error deleting FAQ(s):", error);
+    setSuccessMessage("");
+    setErrorMessage("❌ Something went wrong while deleting FAQ(s).");
+  }
+};
+
+
       useEffect(() => {
         const filtered = allData.filter((item) => {
           const curriculumDate = new Date(item.date);
@@ -392,7 +417,7 @@ export default function Faq() {
         if (file) {
             setCurriculumData((prev) => ({
                 ...prev,
-                faq_pdf: file, // Store the file object directly
+                faq_pdf: file, 
             }));
         }
     };
@@ -402,7 +427,7 @@ export default function Faq() {
       if (file) {
           setEditedRow((prev) => ({
               ...prev,
-              faq_pdf: file, // Store the file object directly
+              faq_pdf: file, 
           }));
       }
   };
@@ -436,7 +461,7 @@ const handleSubmit = async (e) => {
   const uploadPromises = rows.map(async (row) => {
     const formData = new FormData();
 
-    // Append static shared values
+    
     formData.append("faqData", JSON.stringify({
       category_name: curriculumData.category_name,
       course_name: curriculumData.course_name,
@@ -445,7 +470,6 @@ const handleSubmit = async (e) => {
       date: currentDate,
     }));
 
-    // Add the same PDF to each entry
     if (curriculumData.faq_pdf) {
       formData.append("faqPdf", curriculumData.faq_pdf);
     }
@@ -475,7 +499,7 @@ const handleSubmit = async (e) => {
     alert("All faq entries added successfully.");
     setShowAddCourse(false);
     setCurriculumData({});
-    setRows([{ id: Date.now(), faq_title: "", description: "" }]); // Reset to initial row
+    setRows([{ id: Date.now(), faq_title: "", description: "" }]); 
   } else {
     alert("Some entries failed to upload. Please check the console for errors.");
   }
@@ -701,7 +725,10 @@ const handleSubmit = async (e) => {
         <TableHead>
           <TableRow>
             <StyledTableCell  align='center' sx={{ width: '100px' }}>
-              <Checkbox />
+               <Checkbox 
+    checked={selectedFaqIds.includes(course.faq_id)}
+    onChange={() => handleCheckboxChange(course.faq_id)}
+  />
             </StyledTableCell>
             <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Title</StyledTableCell>
@@ -716,7 +743,10 @@ const handleSubmit = async (e) => {
   displayedCategories.map((course, index) => (
     <StyledTableRow key={course.curr_id}>
       <StyledTableCell align="center">
-        <Checkbox />
+       <Checkbox
+            checked={selectedFaqIds.includes(course.faq_id)}
+            onChange={() => handleCheckboxChange(course.faq_id)}
+          />
       </StyledTableCell>
       <StyledTableCell align="center">
         {index + 1 + (currentPage - 1) * rowsPerPage}
@@ -753,18 +783,20 @@ const handleSubmit = async (e) => {
 )}
 </TableBody>
     </Table>
+    
     </TableContainer>):(<p>Please select category or courses to display data</p>)}
     {(filterData.category_name || filterData.course_name) ?(
     <div className='pagination-container'>
           <AdminPagination
       currentPage={currentPage}
       rowsPerPage={rowsPerPage}
-      totalRows={filteredCurriculum.length} // Use the full list for pagination
+      totalRows={filteredCurriculum.length} 
       onPageChange={handlePageChange}
     />
               </div>):(<p></p>)}
     {message && <div className="success-message">{message}</div>}
-
+ {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
     </div>)}
 
     <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
@@ -837,7 +869,7 @@ const handleSubmit = async (e) => {
         onChange={(e) =>
           setEditedRow((prev) => ({
             ...prev,
-            faq_pdf: e.target.files[0], // must be a File object
+            faq_pdf: e.target.files[0], 
           }))
         }
         

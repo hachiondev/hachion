@@ -12,12 +12,16 @@ import registerbanner from '../../Assets/register.png';
 import aboutHachion from '../../Assets/aboutlead.png';
 import Benefits from './LeadBenefits';
 import { useNavigate } from "react-router-dom";
+import { countries, getDefaultCountry } from '../../countryUtils';
 
 const LeadForm = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(false);
   const [messageType, setMessageType] = useState('');
+      const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [mobileError, setMobileError] = useState("");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -31,63 +35,19 @@ const LeadForm = () => {
 
   const mobileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedCountry, setSelectedCountry] = useState({
-    code: '+1',
-    flag: 'US',
-    name: 'United States',
-  });
-
-  const countries = [
-    { name: 'India', code: '+91', flag: 'IN' },
-    { name: 'United States', code: '+1', flag: 'US' },
-    { name: 'United Kingdom', code: '+44', flag: 'GB' },
-    { name: 'Thailand', code: '+66', flag: 'TH' },
-    { name: 'Canada', code: '+1', flag: 'CA' },
-    { name: 'Australia', code: '+61', flag: 'AU' },
-    { name: 'Germany', code: '+49', flag: 'DE' },
-    { name: 'France', code: '+33', flag: 'FR' },
-    { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
-    { name: 'Qatar', code: '+974', flag: 'QA' },
-    { name: 'Japan', code: '+81', flag: 'JP' },
-    { name: 'China', code: '+86', flag: 'CN' },
-    { name: 'Russia', code: '+7', flag: 'RU' },
-    { name: 'South Korea', code: '+82', flag: 'KR' },
-    { name: 'Brazil', code: '+55', flag: 'BR' },
-    { name: 'Mexico', code: '+52', flag: 'MX' },
-    { name: 'South Africa', code: '+27', flag: 'ZA' },
-    { name: 'Netherlands', code: '+31', flag: 'NL' }
-  ];
-
-  const timeZoneAbbreviationMap = {
-    "Europe/Amsterdam": "CEST",
-    "Europe/Berlin": "CEST",
-    "America/Los_Angeles": "PDT",
-    "America/New_York": "EDT",
-    "Asia/Kolkata": "IST",
-    "Asia/Bangkok": "ICT",
-    "America/Toronto": "EDT",
-    "Australia/Sydney": "AEST",
-    "Europe/Paris": "CEST",
-    "Asia/Dubai": "GST",
-    "Asia/Qatar": "AST",
-    "Asia/Tokyo": "JST",
-    "Asia/Shanghai": "CST",
-    "Europe/Moscow": "MSK",
-    "Asia/Seoul": "KST",
-    "America/Sao_Paulo": "BRT",
-    "America/Mexico_City": "CDT",
-    "Africa/Johannesburg": "SAST"
-  };
+  const [isRefValid, setIsRefValid] = useState(true);
+  const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCountrySelect = (country) => {
-    setSelectedCountry(country);
-    closeMenu();
-    mobileInputRef.current?.focus();
-  };
+const handleCountrySelect = (country) => {
+  setSelectedCountry(country);
+  setFormData((prev) => ({ ...prev, country: country.name })); 
+  closeMenu();
+  mobileInputRef.current?.focus();
+};
 
   const openMenu = (event) => setAnchorEl(event.currentTarget);
   const closeMenu = () => setAnchorEl(null);
@@ -114,35 +74,59 @@ const LeadForm = () => {
         setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
       });
   }, []);
+  
 
-  const handleSubmit =async (e) => {
-    e.preventDefault();
-    if (!isChecked) {
-      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
-      return;
-    }
-    setError("")
+const handleMobileBlur = () => {
+  const mobile = formData.mobileNumber;
 
-    const { fullName, email, mobileNumber, country, courseInterest, batchTiming, marketerId } = formData;
+  if (!mobile || mobile.length !== 10) {
+    setMobileError("❌ Mobile number must be exactly 10 digits.");
+  } else {
+    setMobileError("");
+  }
+};
 
-    if (!fullName || !email || !mobileNumber || !country || !courseInterest || !batchTiming|| !marketerId) {
-      setError('Please fill all the details to register.');
-      setMessageType('error');
-      return;
-    }
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    console.log("Form Submitted:", {
-      fullName,
-      email,
-      mobileNumber: `${selectedCountry.code} ${mobileNumber}`,
-      country,
-      courseInterest,
-      batchTiming,
-      marketerId
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  if (!isChecked) {
+    setErrorMessage("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+    return;
+  }
+
+  const { fullName, email, mobileNumber, country, courseInterest, batchTiming, marketerId } = formData;
+
+  if (!fullName || !email || !mobileNumber || !courseInterest) {
+    setErrorMessage("Please fill all the details to register.");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.hachion.co/leadform", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        fullName,
+        email,
+        mobileNumber,
+        country,
+        courseInterest,
+        batchTiming,
+        marketerId
+      })
     });
 
-    setError('Registration successful!');
-    setMessageType('success');
+    if (!response.ok) {
+      throw new Error("Failed to submit the form.");
+    }
+
+    const data = await response.json();
+    setSuccessMessage("Registration successful!");
     setFormData({
       fullName: "",
       email: "",
@@ -152,14 +136,22 @@ const LeadForm = () => {
       batchTiming: "",
       marketerId: "",
     });
-  };
-  
-  useEffect(() => {
+    setIsChecked(false);
+  } catch (error) {
+    setErrorMessage("Something went wrong. Please try again later.");
+  }
+};
+
+useEffect(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const marketerId = urlParams.get('ref');
-
+  const allowedRefs = ['a', 'b', 'c', 'd', 'e'];
   if (marketerId) {
-    setFormData((prev) => ({ ...prev, marketerId }));
+    if (allowedRefs.includes(marketerId)) {
+      setFormData((prev) => ({ ...prev, marketerId }));
+    } else {
+      navigate("/", { replace: true });
+    }
   }
 }, []);
   const handleCheckboxChange = (e) => {
@@ -256,9 +248,13 @@ const LeadForm = () => {
                       ref={mobileInputRef}
                       value={formData.mobileNumber}
                       onChange={handleChange}
+                      onBlur={handleMobileBlur}
                       placeholder="Enter your mobile number"
                       style={{ paddingLeft: '100px' }}
                     />
+                     {mobileError && (
+            <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>{mobileError}</small>
+          )}
                   </div>
                   </div>
                  <div className="form-group col-10" style={{ marginBottom: '20px' }}>
@@ -293,7 +289,8 @@ const LeadForm = () => {
                     {error}
                   </div>
                 )}
-
+                 {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
                 <button type="submit" className="student-register-button">
                   Register
                 </button>

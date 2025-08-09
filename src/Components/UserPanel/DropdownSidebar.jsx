@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
+import { MdArrowForwardIos } from "react-icons/md";
 import './Course.css';
 
 const DropdownSidebar = ({ onSelectCategory }) => {
@@ -11,25 +12,30 @@ const DropdownSidebar = ({ onSelectCategory }) => {
   const API_URL = 'https://api.hachion.co/course-categories/all';
 
   // Fetch categories from the API
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(API_URL, {
-          headers: {
-            'Authorization': 'Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S',
-            'Content-Type': 'application/json',
-           
-          },
-        });
+useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(API_URL, {
+        headers: {
+          'Authorization': 'Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S',
+          'Content-Type': 'application/json',
+        },
+      });
 
-        setMenuItems(response.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
+      const allOption = { _id: "all", name: "All" };
+      const updatedMenu = [allOption, ...response.data];
 
-    fetchCategories();
-  }, []);
+      setMenuItems(updatedMenu);
+
+      setActiveIndex(0);
+      onSelectCategory("All");
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  fetchCategories();
+}, []);
 
   const handleMenuItemClick = (index, name) => {
     setActiveIndex(index);
@@ -55,8 +61,8 @@ const DropdownSidebar = ({ onSelectCategory }) => {
                 >
                   {item.name}
                   {item.submenu && item.submenu.length > 0 && (
-                    <span onClick={() => handleSubmenuToggle(index)}>
-                      {openSubmenuIndex === index ? <IoIosArrowDown /> : <IoIosArrowForward />}
+                    <span>
+                      <MdArrowForwardIos />
                     </span>
                   )}
                 </button>

@@ -199,6 +199,16 @@ width: auto;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
+.custom-category-btn::after {
+  display: none !important;
+}
+
+.arrow-icon {
+  font-size: 24px;
+  transition: transform 0.2s ease;
+}
+
 .custom-category-btn {
   background-color: #00AEEF !important;
   color: white !important;
@@ -358,6 +368,8 @@ cursor: pointer;
 }
 
 .nav-item-link {
+  min-height: 30px;
+  min-width: 48px; 
   height: 6vh;
   font-size: 16px;
   font-weight: 400;
@@ -366,7 +378,10 @@ cursor: pointer;
   text-decoration: none;
   padding: 10px 15px;
   transition: color 0.3s ease;
-  white-space: nowrap; /* Prevent text wrap */
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-item {

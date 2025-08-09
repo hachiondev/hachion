@@ -101,6 +101,24 @@ export default function LeadRegistration() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+useEffect(() => {
+  const fetchLeads = async () => {
+    try {
+      const response = await fetch("https://api.hachion.co/leadform"); // update URL if needed
+      if (!response.ok) {
+        throw new Error("Failed to fetch leads");
+      }
+
+      const data = await response.json();
+      setAllLeads(data);
+      setLeadRegistration(data);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    }
+  };
+
+  fetchLeads();
+}, []);
 
   return (
     <>
@@ -182,13 +200,14 @@ export default function LeadRegistration() {
               {displayedCategories.length > 0 ? (
                 displayedCategories.map((row, index) => (
                   <StyledTableRow key={index}>
+                    
                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                    <StyledTableCell align="center">{row.referenceId}</StyledTableCell>
                     <StyledTableCell align="center">{row.marketerId}</StyledTableCell>
-                    <StyledTableCell align="center">{row.marketerName}</StyledTableCell>
                     <StyledTableCell align="left">{row.fullName}</StyledTableCell>
-                    <StyledTableCell align="left">{row.emailId}</StyledTableCell>
+                    <StyledTableCell align="left">{row.email}</StyledTableCell>
                     <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
-                    <StyledTableCell align="left">{row.interested}</StyledTableCell>
+                    <StyledTableCell align="left">{row.courseInterest}</StyledTableCell>
                     <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
                   </StyledTableRow>
                 ))

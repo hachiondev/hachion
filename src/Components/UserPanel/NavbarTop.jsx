@@ -20,10 +20,8 @@ import {
   ListItemText,
   ListItemIcon,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
-
+import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropup } from "react-icons/io";
 import DropdownSidebar from './DropdownSidebar';
 import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
 import './Course.css';
@@ -79,6 +77,9 @@ const NavbarTop = () => {
     const handleCategorySelect = (category) => {
       setSelectedCategory(category);
       setCurrentPage(1);
+      if (category === "All") {
+    setCourses(courses);
+  }
       if (bannerRef.current) {
         window.scrollTo(0, 400); 
       }
@@ -309,6 +310,9 @@ const NavbarTop = () => {
     try {
       const categoryRes = await axios.get("https://api.hachion.co/course-categories/all");
       setCategories(categoryRes.data);
+      const allOption = { _id: "all", name: "All" };
+      const updatedCategories = [allOption, ...categoryRes.data];
+      setCategories(updatedCategories);
 
       const allCourses = [];
 
@@ -353,13 +357,16 @@ const NavbarTop = () => {
           />
         )}
 <div className="dropdown" ref={dropdownRef}>
-      <button
+        <button 
         className="btn btn-outline custom-category-btn dropdown-toggle d-none d-md-block"
         onClick={handleClickToggle}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        Categories
+        Explore All Courses{" "}
+    <span className="ms-1 arrow-icon">
+      {isDropdownOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+    </span>
       </button>
   {isDropdownOpen && (
         <ul
@@ -370,8 +377,9 @@ const NavbarTop = () => {
           <li>
             <div className="course-content">
               <div className="scrollable-category-list">
-                <h2 className="dropdown-sidebar-heading">Categories</h2>
-                <DropdownSidebar onSelectCategory={handleCategorySelect} />
+                <h2 className="dropdown-sidebar-heading">All Categories</h2>
+                <DropdownSidebar onSelectCategory={handleCategorySelect} 
+                selectedCategory={selectedCategory}/>
               </div>
 
               <div className="sidebar-right-container">
@@ -547,7 +555,7 @@ const NavbarTop = () => {
                       Corporate Training
                     </div>
                     <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                      Categories
+                      Explore All Courses
                     </div>
                     {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 
@@ -563,7 +571,7 @@ const NavbarTop = () => {
                   Corporate Training
                 </div>
                 <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                  Categories
+                  Explore All Courses
                 </div>
                 {/* <div className="drawer-item" onClick={() => navigate('/hire-from-us')}>Hire from Us</div> */}
 

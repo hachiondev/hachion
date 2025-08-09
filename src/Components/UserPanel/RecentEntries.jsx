@@ -1,51 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import RecentEntriesCard from './RecentEntriesCard';
-// import './Blogs.css';
-// import { useNavigate } from 'react-router-dom';
-
-// const RecentEntries = () => {
-//   const navigate = useNavigate();
-//   const [blogs, setBlogs] = useState([]); // State to store blogs
-
-//   useEffect(() => {
-//     const fetchBlogs = async () => {
-//       try {
-//         const response = await axios.get('https://api.hachion.co/blog');
-//         setBlogs(response.data); // Store API data in state
-//       } catch (error) {
-//         console.error('Error fetching blog data:', error);
-//       }
-//     };
-
-//     fetchBlogs();
-//   }, []);
-
-//   return (
-//     <div className='recent-entries'>
-//       {blogs.length > 0 ? (
-//         blogs.map((blog) => (
-//           <RecentEntriesCard
-//   key={blog.id}
-//   imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
-//   content={blog.title}
-//   views={blog.views || '100'}
-//   date={blog.date}
-//   onClick={() =>
-//     navigate(`/blogs/${blog.category_name.replace(/\s+/g, '-').toLowerCase()}`)
-//   }
-// />
-
-//         ))
-//       ) : (
-//         <p>Loading recent entries...</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default RecentEntries;
-
 import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import RecentEntriesCard from "./RecentEntriesCard";
@@ -57,8 +9,7 @@ import { Carousel } from "react-bootstrap";
 const RecentEntries = () => {
   const navigate = useNavigate();
   const scrollContainerRef = useRef(null);
-
-  const [blogs, setBlogs] = useState([]); // State to store blogs
+  const [blogs, setBlogs] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const blogsPerPage = 3;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -109,29 +60,8 @@ const RecentEntries = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % groupedBlogs.length);
   };
 
-  // useEffect(() => {
-  //   fetch(`https://api.hachion.co/blogs/${blogs.blog_image}`)
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         setImageExists(false);
-  //       }
-  //     })
-  //     .catch(() => setImageExists(false));
-  // }, [blogs.blog_image]);
-
-  // const imageSrc = imageExists
-  //   ? `https://api.hachion.co/blogs/${blogs.blog_image}`
-  //   : "https://api.hachion.co/Default_blogimage";
-
   return (
     <div className="recent-entries-container">
-      {/* <button
-        className="arrow custom-prev"
-        data-bs-target="#recentEntriesCarousel"
-        data-bs-slide="prev"
-      >
-        <IoIosArrowBack />
-      </button> */}
 
       {/* Bootstrap Carousel */}
       <div id="recentEntriesCarousel" className="carousel slide">
@@ -186,6 +116,7 @@ const RecentEntries = () => {
           className="arrow custom-prev"
           data-bs-target="#recentEntriesCarousel"
           data-bs-slide="prev"
+          aria-label="Previous Slide"
           onClick={goToPrev}
         >
           <IoIosArrowBack />
@@ -207,6 +138,7 @@ const RecentEntries = () => {
           className="arrow custom-next"
           data-bs-target="#recentEntriesCarousel"
           data-bs-slide="next"
+           aria-label="Next Slide"
           onClick={goToNext}
         >
           <IoIosArrowForward />

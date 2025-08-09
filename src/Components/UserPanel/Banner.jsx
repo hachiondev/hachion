@@ -17,7 +17,8 @@ const Banner = () => {
         .then((response) => {
           if (response.data.length > 0) {
             const combinedBanners = [staticBanner, ...response.data];
-            setBanners(combinedBanners);
+            const validBanners = combinedBanners.filter(b => b.home_banner_image);
+setBanners(validBanners);
             setApiError(false);
           } else {
             setBanners([staticBanner]);
@@ -35,9 +36,12 @@ const Banner = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const displayBanners =
-    banners.length > 0 ? banners : [{ home_banner_image: Banner3 }];
-
+  // const displayBanners =
+  //   banners.length > 0 ? banners : [{ home_banner_image: Banner3 }];
+const displayBanners =
+  banners.length > 0
+    ? banners.filter(b => b.home_banner_image)
+    : [{ home_banner_image: Banner3 }];
   return (
     <>
       <Helmet>
@@ -74,7 +78,6 @@ const Banner = () => {
                 index === 0 || apiError
                   ? banner.home_banner_image
                   : `https://api.hachion.co/${banner.home_banner_image}`;
-
               return (
                 <div
                   key={index}

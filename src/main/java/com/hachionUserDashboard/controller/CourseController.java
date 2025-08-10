@@ -198,7 +198,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -428,7 +431,7 @@ public class CourseController {
 		List<Course> courses = repo.findCoursesByCategory(courseCategory);
 
 		if (courses.isEmpty()) {
-			return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<>("No courses available", HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<>(courses, HttpStatus.OK);
@@ -446,5 +449,21 @@ public class CourseController {
 			throw new ResourceNotFoundException("ShortCourse already exists in the system");
 		}
 		return ResponseEntity.ok("ShortCourse is available");
+	}
+
+	@GetMapping("/names-and-categories")
+	
+	public List<Map<String, String>> getCourseNamesCategoriesAndImages() {
+	    List<Object[]> results = repo.findAllCourseNamesCategoriesAndImages();
+
+	    List<Map<String, String>> courses = new ArrayList<>();
+	    for (Object[] row : results) {
+	        Map<String, String> courseMap = new HashMap<>();
+	        courseMap.put("courseName", (String) row[0]);
+	        courseMap.put("courseCategory", (String) row[1]);
+	        courseMap.put("courseImage", (String) row[2]);
+	        courses.add(courseMap);
+	    }
+	    return courses;
 	}
 }

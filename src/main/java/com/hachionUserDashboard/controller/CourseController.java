@@ -339,7 +339,6 @@ public class CourseController {
 				course.setSqdiscount(updatedCourse.getSqdiscount());
 				course.setSqtotal(updatedCourse.getSqtotal());
 
-//new columns for india location 
 				course.setIamount(updatedCourse.getIamount());
 				course.setIdiscount(updatedCourse.getIdiscount());
 				course.setItotal(updatedCourse.getItotal());

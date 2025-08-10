@@ -142,7 +142,6 @@ import com.hachionUserDashboard.repository.BannerRepository;
 
 @RequestMapping
 @CrossOrigin
-//@CrossOrigin(origins ="http://localhost:3000")
 @RestController
 public class BannerController {
 

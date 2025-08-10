@@ -61,8 +61,6 @@ public class FaqController {
 		return repo.findAll();
 	}
 
-//	private final String uploadDir = upload + "faq/";
-
 	private String saveFile(MultipartFile file, String subFolder) throws IOException {
 		if (file != null && !file.isEmpty()) {
 			System.out.println("Saving file: " + file.getOriginalFilename());
@@ -187,38 +185,36 @@ public class FaqController {
 
 	@PostMapping("/faq/delete")
 	public ResponseEntity<String> deleteMultipleFaqs(@RequestBody List<Integer> ids) {
-	    List<String> failedDeletes = new ArrayList<>();
+		List<String> failedDeletes = new ArrayList<>();
 
-	    for (Integer id : ids) {
-	        Optional<Faq> optionalFaq = repo.findById(id);
-	        if (!optionalFaq.isPresent()) {
-	            failedDeletes.add("FAQ with ID " + id + " not found.");
-	            continue;
-	        }
+		for (Integer id : ids) {
+			Optional<Faq> optionalFaq = repo.findById(id);
+			if (!optionalFaq.isPresent()) {
+				failedDeletes.add("FAQ with ID " + id + " not found.");
+				continue;
+			}
 
-	        Faq faq = optionalFaq.get();
-	        String pdfFileName = faq.getFaq_pdf();
-	        if (pdfFileName != null && !pdfFileName.trim().isEmpty()) {
-	            String filePath = uploadDir + pdfFileName;
-	            File file = new File(filePath);
-	            if (file.exists() && !file.delete()) {
-	                failedDeletes.add("Failed to delete PDF for ID " + id);
-	                continue;
-	            }
-	        }
+			Faq faq = optionalFaq.get();
+			String pdfFileName = faq.getFaq_pdf();
+			if (pdfFileName != null && !pdfFileName.trim().isEmpty()) {
+				String filePath = uploadDir + pdfFileName;
+				File file = new File(filePath);
+				if (file.exists() && !file.delete()) {
+					failedDeletes.add("Failed to delete PDF for ID " + id);
+					continue;
+				}
+			}
 
-	        repo.delete(faq);
-	    }
+			repo.delete(faq);
+		}
 
-	    if (!failedDeletes.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.MULTI_STATUS)
-	                .body("Some deletions failed:\n" + String.join("\n", failedDeletes));
-	    }
+		if (!failedDeletes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.MULTI_STATUS)
+					.body("Some deletions failed:\n" + String.join("\n", failedDeletes));
+		}
 
-	    return ResponseEntity.ok("All selected FAQs deleted successfully.");
+		return ResponseEntity.ok("All selected FAQs deleted successfully.");
 	}
-
-
 
 	@GetMapping("/faq/pdf/{filename}")
 	public ResponseEntity<Resource> getPdf(@PathVariable String filename) {

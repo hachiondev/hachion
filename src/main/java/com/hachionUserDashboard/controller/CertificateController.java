@@ -38,8 +38,6 @@ import Service.CertificateService;
 
 @RequestMapping
 @CrossOrigin
-//@CrossOrigin(origins ="http://localhost:3000")
-
 @RestController
 public class CertificateController {
 
@@ -116,46 +114,29 @@ public class CertificateController {
 		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 
-//	@DeleteMapping("/certificate/delete/{id}")
-//	public ResponseEntity<String> deleteCertificate(@PathVariable Long id) {
-//	    Optional<CertificateEntity> optionalCertificate = certificateRepository.findById(id);
-//
-//	    if (optionalCertificate.isPresent()) {
-//	    	certificateRepository.deleteById(id);
-//	        return ResponseEntity.ok("Certificate deleted successfully");
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//	                .body("Certificate with ID " + id + " not found");
-//	    }
-//	}
-	
 	@DeleteMapping("/certificate/delete/{id}")
 	public ResponseEntity<String> deleteCertificate(@PathVariable Long id) {
-	    Optional<CertificateEntity> optionalCertificate = certificateRepository.findById(id);
+		Optional<CertificateEntity> optionalCertificate = certificateRepository.findById(id);
 
-	    if (optionalCertificate.isPresent()) {
-	        CertificateEntity certificate = optionalCertificate.get();
-	        String filePath = certificate.getCertificatePath();
+		if (optionalCertificate.isPresent()) {
+			CertificateEntity certificate = optionalCertificate.get();
+			String filePath = certificate.getCertificatePath();
 
-	        // Delete the physical file if it exists
-	        File file = new File(filePath);
-	        if (file.exists()) {
-	            boolean deleted = file.delete();
-	            if (!deleted) {
-	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                        .body("Failed to delete certificate file from server.");
-	            }
-	        }
+			File file = new File(filePath);
+			if (file.exists()) {
+				boolean deleted = file.delete();
+				if (!deleted) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							.body("Failed to delete certificate file from server.");
+				}
+			}
 
-	        // Delete the DB record
-	        certificateRepository.deleteById(id);
-	        return ResponseEntity.ok("Certificate deleted successfully.");
-	    } else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body("Certificate with ID " + id + " not found.");
-	    }
+			certificateRepository.deleteById(id);
+			return ResponseEntity.ok("Certificate deleted successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Certificate with ID " + id + " not found.");
+		}
 	}
-
 
 	@PostMapping("/certificate/generate")
 	public ResponseEntity<byte[]> generateCertificate(@RequestBody CertificateRequest request) {
@@ -208,7 +189,7 @@ public class CertificateController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-	
+
 	@GetMapping("/certificate/downloadForView/{certificateId}")
 	public ResponseEntity<byte[]> downloadCertificateForView(@PathVariable Long certificateId) {
 		Optional<CertificateEntity> optional = certificateRepository.findById(certificateId);
@@ -257,29 +238,6 @@ public class CertificateController {
 		return new ResponseEntity<>(certificates, HttpStatus.OK);
 	}
 
-//	@GetMapping("/download/filename/{fileName}")
-//	public ResponseEntity<byte[]> downloadByFileName(@PathVariable String fileName) {
-//		String filePath = "certificates/" + fileName;
-//
-//		File file = new File(filePath);
-//		if (!file.exists()) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//		}
-//
-//		try {
-//			byte[] pdfBytes = Files.readAllBytes(file.toPath());
-//
-//			HttpHeaders headers = new HttpHeaders();
-//			headers.setContentType(MediaType.APPLICATION_PDF);
-//			headers.setContentDisposition(ContentDisposition.inline().filename(fileName).build());
-//
-//			return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//		}
-//	}
-
 	@GetMapping("/certificate/byname/{studentName}")
 	public ResponseEntity<List<CertificateEntity>> getByStudentName(@PathVariable String studentName) {
 		List<CertificateEntity> certificates = certificateService.getCertificatesByStudentName(studentName);
@@ -290,6 +248,5 @@ public class CertificateController {
 
 		return ResponseEntity.ok(certificates);
 	}
-	
 
 }

@@ -10,8 +10,8 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
 
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request) {
-        // You can log the error or extract details from the request
-        return "error"; // Your error view (e.g., error.html)
+        
+        return "error";
     }
 
     public String getErrorPath() {

@@ -85,69 +85,6 @@ public class CurriculumController {
 		return null;
 	}
 
-//	@PostMapping("curriculum/add")
-//	public ResponseEntity<?> addCurriculum(@RequestPart("curriculumData") String curriculumData,
-//			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf,
-//			@RequestPart(value = "assessmentPdf", required = false) MultipartFile assessmentPdf) {
-//
-//		try {
-//			ObjectMapper objectMapper = new ObjectMapper();
-//			objectMapper.registerModule(new JavaTimeModule());
-//			Curriculum curriculum = objectMapper.readValue(curriculumData, Curriculum.class);
-//
-//			if (curriculumPdf != null && !curriculumPdf.isEmpty()) {
-//				String originalFileName = curriculumPdf.getOriginalFilename();
-//
-//				if (!originalFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
-//					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-//							"Invalid file name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
-//				}
-//
-//				String pdfFileName = "pdfs/" + originalFileName;
-//
-//				Optional<Curriculum> existingCurriculum = repo.findPdfByExactName(pdfFileName);
-//				if (existingCurriculum.isPresent()) {
-//					System.out.println("PDF already exists in the database: " + pdfFileName);
-//					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This PDF already exists.");
-//				}
-//
-//				String pdfPath = saveFile(curriculumPdf, "pdfs");
-//				curriculum.setCurriculum_pdf(pdfPath != null ? pdfPath : "");
-//			} else {
-//				curriculum.setCurriculum_pdf("");
-//			}
-//
-//			if (assessmentPdf != null && !assessmentPdf.isEmpty()) {
-//				String assessmentFileName = assessmentPdf.getOriginalFilename();
-//
-//				if (!assessmentFileName.matches("[a-zA-Z0-9_&\\-\\s/\\.]*")) {
-//					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-//							"Invalid Assessment PDF name. Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.");
-//				}
-//
-//				String assessmentDbPath = "pdfs/assessments/" + assessmentFileName;
-//				Optional<Curriculum> existingAssessment = repo.findPdfByAssessmentExactName(assessmentDbPath);
-//				if (existingAssessment.isPresent()) {
-//					System.out.println("Assessment PDF already exists in the database: " + assessmentDbPath);
-//					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Assessment PDF already exists.");
-//				}
-//
-//				String assessmentPath = saveFile(assessmentPdf, "pdfs/assessments");
-//				curriculum.setAssessment_pdf(assessmentPath != null ? assessmentPath : "");
-//			} else {
-//				curriculum.setAssessment_pdf("");
-//			}
-//
-//			Curriculum saved = repo.save(curriculum);
-//			return ResponseEntity.status(HttpStatus.CREATED).body(saved);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body("Error adding curriculum: " + e.getMessage());
-//		}
-//	}
-
 	@PostMapping("curriculum/add")
 	public ResponseEntity<?> addCurriculum(@RequestPart("curriculumData") String curriculumData,
 			@RequestPart(value = "curriculumPdf", required = false) MultipartFile curriculumPdf,

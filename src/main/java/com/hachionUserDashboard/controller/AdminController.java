@@ -129,41 +129,31 @@ import com.hachionUserDashboard.dto.LoginAdminDTO;
 import Response.LoginMessage;
 import Service.AdminService;
 
-
-
-
 @RestController
 @CrossOrigin
-//@CrossOrigin(origins ="http://localhost:3000")
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
 @RequestMapping("/api/v1/user")
 public class AdminController {
 
-//	@Value("${allowed.origin}")
-//	private String allowedOrigin;
-	
-  @Autowired
-  private AdminService adminService;
+	@Autowired
+	private AdminService adminService;
 
-  @PostMapping("/adminregister")
-  public ResponseEntity<String> register(@RequestBody AdminDTO adminDto) {
-      String response = (String) adminService.register(adminDto);
-      return new ResponseEntity<>(response, HttpStatus.OK);
-  }
+	@PostMapping("/adminregister")
+	public ResponseEntity<String> register(@RequestBody AdminDTO adminDto) {
+		String response = (String) adminService.register(adminDto);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
+	@PostMapping("/adminlogin")
+	public ResponseEntity<?> login(@RequestBody LoginAdminDTO loginDto) {
+		LoginMessage response = adminService.loginAdmin(loginDto);
 
-  @PostMapping("/adminlogin")
-  public ResponseEntity<?> login(@RequestBody LoginAdminDTO loginDto) {
-      LoginMessage response = adminService.loginAdmin(loginDto);
+		if (response.getStatus()) {
 
-      if (response.getStatus()) {
-          // Login success, return 200 OK
-          return ResponseEntity.ok(response);
-      } else {
-          // Login failed, return 401 Unauthorized
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-      }
-  }
+			return ResponseEntity.ok(response);
+		} else {
 
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+		}
+	}
 
 }

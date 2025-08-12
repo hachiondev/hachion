@@ -44,6 +44,7 @@ import LeadForm from "./Components/UserPanel/LeadForm";
 import HirefromUs from './Components/UserPanel/HirefromUs';
 import ApplyHiring from './Components/UserPanel/ApplyHiring';
 import JobDetails from './Components/UserPanel/JobDetails';
+import EnrollPayment from './Components/UserPanel/EnrollPayment';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ function AppRoutes() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
+      <Route path='/payment/:courseName' element={<EnrollPayment/>}/>
       <Route path="/blogs/:category_name/:title" element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>

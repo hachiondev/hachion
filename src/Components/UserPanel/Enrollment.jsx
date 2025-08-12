@@ -86,15 +86,12 @@ const [exchangeRate, setExchangeRate] = useState(1);
     const courseName = localStorage.getItem("courseName");
     const batchId = localStorage.getItem("batchId");
 
-
     if (!studentId || !courseName || !batchId) {
       alert("Missing payment info. Please try again.");
       return;
     }
 const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   const discount = batchData.discount ?? 0;
-
-
 
     try {
       const response = await axios.post("https://api.hachion.co/capture-order", null, {
@@ -104,17 +101,13 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
           courseName,
           batchId,
           discount: discount
-          
         },
       });
-
-      
       
       localStorage.removeItem("studentId");
       localStorage.removeItem("courseName");
       localStorage.removeItem("batchId");
  localStorage.removeItem("selectedBatchData");
-
 
       setSuccessMessage("✅ Payment successful! You are now enrolled.");
       setErrorMessage("");
@@ -124,7 +117,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
       setErrorMessage("❌ Failed to complete payment.");
     }
   };
-
   
     const countries = [
       { name: 'India', code: '+91', flag: 'IN' },
@@ -149,7 +141,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
 
     const defaultCountry = countries.find((c) => c.flag === "US");
     
-        
         useEffect(() => {
           fetch("https://ipwho.is/")
             .then((res) => res.json())
@@ -161,7 +152,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
               }
             })
             .catch(() => {
-            
             });
         }, []);
 
@@ -185,7 +175,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   }
 }, [mobileNumber]);
 
-
     const openMenu = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -193,7 +182,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
     const closeMenu = () => {
       setAnchorEl(null);
     };
-
 
 useEffect(() => {
   const detectCurrency = async () => {
@@ -385,7 +373,6 @@ localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
   }
 } catch (error) {
   
-
   const errorMessage = error?.response?.data;
 
   if (errorMessage === "This enrollment record already exists for Live Class in the database.") {
@@ -428,8 +415,6 @@ const handlePayment = async () => {
       params: { email: userEmail }
     });
 
-    
-
     const studentId = profileResponse.data?.studentId;
     const mobile = profileResponse.data?.mobile || '';
     const batchId = selectedBatchData?.batchId;
@@ -442,7 +427,6 @@ const handlePayment = async () => {
       return;
     }
 
-    
     localStorage.setItem("studentId", studentId);
     localStorage.setItem("courseName", courseName);
     localStorage.setItem("batchId", batchId);
@@ -454,15 +438,12 @@ const handlePayment = async () => {
     const slug = courseName.toLowerCase().replace(/\s+/g, '-');
     const returnUrl = `https://hachion.co/enroll/${slug}`;
     
-
     if (mobile.startsWith('+91')) {
       
-
       const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
         params: { amount }
       });
 
-      
       const razorpayOrder = orderRes.data;
       const razorpayOrderId = razorpayOrder.id;
 
@@ -474,7 +455,6 @@ const handlePayment = async () => {
         description: `Payment for ${courseName}`,
         order_id: razorpayOrderId,
         handler: async function (response) {
-          
 
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
 
@@ -517,11 +497,9 @@ setSuccessMessage("");
         }
       };
 
-
      try {
   
   const rzp = new window.Razorpay(options);
-  
 
   rzp.open();
 } catch (err) {
@@ -531,7 +509,6 @@ setSuccessMessage("");
 
     } else {
       
-
       const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
         params: {
           amount,
@@ -539,7 +516,6 @@ setSuccessMessage("");
         }
       });
 
-      
       const approvalUrl = paypalRes.data;
 
       if (approvalUrl.startsWith("https://www.paypal.com")) {
@@ -567,11 +543,10 @@ setSuccessMessage("");
   }
 };
 
-
-
 const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const isDisallowedMode = disallowedModes.includes(modeType);
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
+
     return (
       <>
       <Topbar/>
@@ -674,6 +649,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
           <div className='personal-details-header'>
               <p>2. Course Details</p>
               </div>
+              <div className='details-box'>
               <div className='enroll-table'>
               <EnrollmentTable/>
               </div>
@@ -693,10 +669,12 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
           </div>
           </div>
               </div>
+              </div>
               <div className='personal-details'>
               <div className='personal-details-header'>
                   <p>3. Order summary</p>
                   </div>
+                  <div className='details-box'>
                 {loading ? (
   <div>Loading...</div>
 ) : courseData ? (
@@ -754,8 +732,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                   {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
     {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
-                </div>
-                <div className="paylater">
                 
                   {/* {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
     {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)} */}
@@ -769,6 +745,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
 </button>
 
                 <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
+                </div>
                 </div>
                 </div>
                   </div>

@@ -42,13 +42,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
+    borderRight: '1px solid white', 
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
   },
 }));
 
@@ -102,12 +102,11 @@ export default function Review() {
                     setEditedData((prev) => ({
                       ...prev,
                       display: checked 
-                        ? [...prev.display, value]  // Add value if checked
-                        : prev.display.filter((item) => item !== value), // Remove if unchecked
+                        ? [...prev.display, value]  
+                        : prev.display.filter((item) => item !== value), 
                     }));
                   };
-                  
-                   // Inside your CourseCategory component
+                
                    const handleCheckboxChange = (event) => {
                     const { value, checked } = event.target;
                     let updatedPages = [...reviewData.displayPages];
@@ -121,20 +120,20 @@ export default function Review() {
                     setReviewData({
                       ...reviewData,
                       displayPages: updatedPages,
-                      display: updatedPages.length > 0 ? updatedPages.join(", ") : "", // Join values as a string
+                      display: updatedPages.length > 0 ? updatedPages.join(", ") : "", 
                     });
                   }; 
                  const handleRowsPerPageChange = (rows) => {
                    setRowsPerPage(rows);
-                   setCurrentPage(1); // Reset to the first page whenever rows per page changes
+                   setCurrentPage(1); 
                  };
 
                  const handleFileChange = (e) => {
                   const file = e.target.files[0];
                   if (file) {
-                      setReviewData((prevData) => ({
+                      setEditedData((prevData) => ({
                           ...prevData,
-                          image: file, // Ensure file object is stored
+                          image: file, 
                       }));
                   }
               };
@@ -143,6 +142,7 @@ export default function Review() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+ 
 const handleDateFilter = () => {
   const filtered = review.filter((item) => {
     const itemDate = new Date(item.date || item.schedule_date);
@@ -216,12 +216,12 @@ useEffect(() => {
           const { name, value } = e.target;
           setEditedData((prev) => ({
             ...prev,
-            [name]: value,  // Updates the corresponding field
+            [name]: value,  
           }));
         };
         
     const handleClose = () => {
-      setOpen(false); // Close the modal
+      setOpen(false); 
     };
     useEffect(() => {
       const fetchCourseCategory = async () => {
@@ -261,11 +261,11 @@ useEffect(() => {
         const formData = new FormData();
     
         const updatedReviewObject = {
-          name: editedData.student_name,
-          social_id: editedData.source,
-          display: editedData.display.join(","), // Convert array to comma-separated string
+          name: editedData.name,
+          social_id: editedData.social_id,
+          display: editedData.display.join(","), 
           course_name: editedData.course_name,
-          review: editedData.comment,
+          review: editedData.review,
           email: editedData.email || "",
           type: editedData.type || "",
           trainer_name: editedData.trainer_name || "",
@@ -273,7 +273,7 @@ useEffect(() => {
           location: editedData.location || "",
           date: new Date().toISOString().split("T")[0],
         };
-    
+      
         formData.append("review", JSON.stringify(updatedReviewObject));
     
         if (editedData.image instanceof File) {
@@ -316,13 +316,40 @@ useEffect(() => {
           console.error("Error deleting Review:", error); 
         } }; 
         
-        const handleClickOpen = (row) => {
-            setSelectedRow(row); 
-            setEditedData(row)
-            console.log("ROW",editedData);// Set the selected row data
-            setOpen(true); // Open the modal
-          };
     
+      const handleClickOpen = (curr) => {
+  try {
+    console.log("handleClickOpen called with:", curr);
+
+    const safeDisplay = Array.isArray(curr?.display)
+      ? curr.display
+      : typeof curr?.display === "string" && curr.display.length > 0
+        ? curr.display.split(",")
+        : [];
+
+    setEditedData({
+  name: curr?.name || "",
+  social_id: curr?.social_id || "",
+  category_name: curr?.category_name || "",
+  course_name: curr?.course_name || "",
+  review: curr?.review || "",
+  display: safeDisplay,
+  email: curr?.email || "",
+  type: curr?.type ?? true,
+  trainer_name: curr?.trainer_name || "",
+  rating: String(curr?.rating ?? ""),
+  location: curr?.location || "",
+  review_id: curr?.review_id || "",
+  user_image: curr?.user_image,
+});
+
+
+    setOpen(true);
+  } catch (err) {
+    console.error("Error in handleClickOpen:", err);
+  }
+};
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setReviewData((prevData) => ({
@@ -335,7 +362,7 @@ useEffect(() => {
       e.preventDefault();
       const currentDate = new Date().toISOString().split("T")[0];
   
-      // Create an object to match the backend's expected structure
+      
       const reviewObject = {
           name: reviewData.student_name,
           social_id: reviewData.source,
@@ -351,10 +378,10 @@ useEffect(() => {
       };
   
       const formData = new FormData();
-      formData.append("review", JSON.stringify(reviewObject)); // Convert object to JSON string
+      formData.append("review", JSON.stringify(reviewObject)); 
   
       if (reviewData.image) {
-          formData.append("user_image", reviewData.image); // Match the backend field name
+          formData.append("user_image", reviewData.image); 
       }
   
       try {
@@ -368,7 +395,7 @@ useEffect(() => {
               }
           );
   
-          if (response.status === 201) { // Use 201 since backend sends CREATED status
+          if (response.status === 201) { 
               alert("Review added successfully!");
               setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "", image: null });
 
@@ -386,7 +413,7 @@ useEffect(() => {
       const fetchCategory = async () => {
         try {
           const response = await axios.get("https://api.hachion.co/course-categories/all");
-          setCourse(response.data); // Assuming the data contains an array of trainer objects
+          setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
         }
@@ -400,7 +427,7 @@ useEffect(() => {
             );
             setFilterCourse(filtered);
           } else {
-            setFilterCourse([]); // Reset when no category is selected
+            setFilterCourse([]); 
           }
         }, [reviewData.category_name, courseCategory]);
 
@@ -512,7 +539,7 @@ useEffect(() => {
               id={id}
               name="displayPages"
               value={value}
-              // checked={reviewData.displayPages.includes(value)}
+              
               onChange={handleCheckboxChange}
             />
             <label className="form-check-label" htmlFor={id}>
@@ -649,7 +676,7 @@ useEffect(() => {
               <AdminPagination
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
-          totalRows={filteredReview.length} // Use the full list for pagination
+          totalRows={filteredReview.length} 
           onPageChange={handlePageChange}
         />
                   </div>
@@ -672,7 +699,7 @@ useEffect(() => {
   <div class="col">
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
-  name="student_name"
+  name="name"
   value={editedData.name}
   onChange={handleInputChange}/>
   </div>
@@ -688,7 +715,8 @@ useEffect(() => {
               </div>
               <div class="col">
     <label for="inputState" class="form-label">Source</label>
-    <select id="inputState" class="form-select" name='source' value={editedData.social_id} onChange={handleInputChange}>
+    <select id="inputState" class="form-select"  name="social_id"
+  value={editedData.social_id} onChange={handleInputChange}>
       <option selected>Select </option>
       <option>Linkedin</option>
       <option>Facebook</option>
@@ -743,7 +771,7 @@ useEffect(() => {
     <div class="mb-6">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
-  name="comment"
+  name="review"
   value={editedData.review}
   onChange={handleInputChange}></textarea>
 </div>
@@ -813,37 +841,5 @@ useEffect(() => {
   </DialogActions>
 </Dialog>
 
-    {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleCloseModal}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        <img
-                          src={success}
-                          alt='Success'
-                          className='success-gif'
-                        />
-                        <p className='modal-para'>
-                     Review Added Successfully
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    </div> */}
-   
  </> );
 }

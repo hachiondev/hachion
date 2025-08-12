@@ -27,30 +27,8 @@ import { BiArrowToRight } from "react-icons/bi";
 import { useParams } from 'react-router-dom';
 import { TbBriefcaseFilled } from "react-icons/tb";
 import UserAppliedJobs from './UserAppliedJobs';
-
-const UserDashboard = () => {
-  const { section } = useParams();
-  const [dropdownOpen, setDropdownOpen] = useState({});
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('Enrolls');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for collapsed sidebar
-  
-  const toggleDropdown = (index) => {
-    setDropdownOpen((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
-  };
-
-  useEffect(() => {
-    if (section) {
-      const foundIndex = menuItems.findIndex(item => item.title === section);
-      if (foundIndex !== -1) {
-        setSelectedCategory(section);
-        setActiveIndex(foundIndex);
-      }
-    }
-  }, [section]);
+import UserPathfinder from './UserPathfinder';
+import { CgPathTrim } from "react-icons/cg";
 
   const menuItems = [
     // { title: 'Dashboard', icon: <AiFillDashboard /> },
@@ -62,8 +40,45 @@ const UserDashboard = () => {
     // { title: 'Messages', icon: <BsFillEnvelopeFill /> },
     { title: 'Applied Jobs', icon: <TbBriefcaseFilled /> },
     { title: 'Review', icon: <MdRateReview /> },
+    { title: 'Pathfinder', icon: <CgPathTrim /> },
     { title: 'Settings', icon: <TbSettingsBolt /> },
   ];
+
+const UserDashboard = () => {
+  const { section } = useParams();
+  const initialCategory = section || localStorage.getItem('selectedCategory') || 'Enrolls';
+  const initialIndex = menuItems.findIndex(item => item.title === initialCategory);
+
+  const [dropdownOpen, setDropdownOpen] = useState({});
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  
+  const toggleDropdown = (index) => {
+    setDropdownOpen((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
+
+useEffect(() => {
+    if (section) {
+      const foundIndex = menuItems.findIndex(item => item.title === section);
+      if (foundIndex !== -1) {
+        setSelectedCategory(section);
+        setActiveIndex(foundIndex);
+      }
+    } else {
+      const storedCategory = localStorage.getItem('selectedCategory');
+      if (storedCategory) {
+        setSelectedCategory(storedCategory);
+        const foundIndex = menuItems.findIndex(item => item.title === storedCategory);
+        if (foundIndex !== -1) {
+          setActiveIndex(foundIndex);
+        }
+      }
+    }
+  }, [section]);
 
   const loginuserData = JSON.parse(localStorage.getItem('loginuserData'));
 const email = loginuserData?.email || ''; 
@@ -71,6 +86,7 @@ const email = loginuserData?.email || '';
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
     setSelectedCategory(title); 
+    localStorage.setItem('selectedCategory', title);
     toggleDropdown(index);
   };
 
@@ -93,6 +109,8 @@ const email = loginuserData?.email || '';
       // case 'Videos':
       //   return <UserVideos />;
       // case 'Resume':
+      case 'Pathfinder':
+        return <UserPathfinder/>;
       //   return <UserResume />;
       case 'Settings':
         return <UserProfile />;

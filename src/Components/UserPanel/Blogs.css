@@ -2127,7 +2127,7 @@ margin-bottom: 20px;
 
       /* Enrollment page */
       .enrollment{
-        height: 80px !important;
+        height: 70px !important;
         padding: 10px;
         font-size: 16px !important;
         padding-left: 10px;
@@ -2139,7 +2139,32 @@ margin-bottom: 20px;
           margin-bottom: 0;
           padding: 10px;
           }
+.enrollment-details{
+width: 90% !important;
+margin-left: 5% !important;
+margin-right: 5% !important;
+}
 
+.enrollpayment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 70px;
+  padding: 0 10px;
+  font-size: 20px !important;
+}
+
+.enrollpayment-logo {
+  position: absolute;
+  left: 5px;
+  padding: 2px;
+  height: 30px !important;
+}
+
+.enrollpayment p {
+  margin: 0;
+}
         .personal-details{
           width: auto !important;
          padding: 0 !important;
@@ -2159,7 +2184,15 @@ margin-bottom: 20px;
         .personal-details-header p{
           margin-bottom: 0;
           }
+.details-row {
+    flex-direction: column;
+    align-items: center;
+    margin: 0 !important;
+  }
 
+  .Pay-details {
+    width: 95%;
+  }     
       .enroll-table {
         margin: 0 10px;
         }
@@ -2390,39 +2423,88 @@ margin-left: 0px;
 }
 
 .enrollment{
-  height: 90px;
+  height: 80px;
 padding: 10px;
 background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
 color: white;
 font-size: 32px;
-font-weight: 700;
+font-weight: 600;
 padding-left: 40px;
 align-items: center;
 }
 .enrollment p{
   margin-bottom: 0;
 }
+.enrollpayment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
+  color: white;
+  height: 80px;
+  font-weight: 600;
+  padding: 0 10px;
+  font-size: 32px;
+  white-space: wrap;
+  margin-bottom: 10px;
+}
+
+.enrollpayment-logo {
+  position: absolute;
+  left: 10px;
+  background-color: white;
+  padding: 2px;
+  height: 50px;
+}
+
+.enrollpayment p, .personal-details p {
+  margin: 0;
+}
+.payment-success-section {
+  text-align: center;
+  padding: 15px;
+}
+
+.payment-success-gif {
+  width: 140px;
+  height: auto;
+}
+
+.payment-success-section h3 {
+  color: green;
+  margin-bottom: 5px;
+}
+
+.payment-success-section p {
+  margin: 0;
+  font-size: 14px;
+}
+
 .personal-details{
-  width: 85%;
- padding: 20px;
+  /* width: 80%; */
   background-color: white;
   box-shadow: 5px 5px 10px #d3d3d3;
   border: 1px solid #b3b3b3;
   margin: 20px;
-  margin-left: 10vw;
+  /* margin-left: 10vw;
+  margin-right: 10vw; */
 }
 .personal-details-header{
 height: 70px;
 background: linear-gradient(90deg, #006489 0%, #00AEEF 50%, #006489 100%);
 color: white;
 font-size: 24px;
-font-weight: 700;
+font-weight: 600;
 padding-left: 30px;
 align-content: center;
-margin-bottom: 20px;
+margin-bottom: 10px;
 }
 .enrollment-details{
-background-color: #d3d3d3;
+background-color: white;
+width: 80%;
+margin-left: 10%;
+margin-right: 10%;
 }
 
 .details {
@@ -2430,6 +2512,46 @@ background-color: #d3d3d3;
   justify-content: space-around;
   flex-direction: column;
   padding: 10px;
+}
+.details-box {
+  padding: 15px;
+}
+.details-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+.pay-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+.detail-label {
+  flex: 0 0 150px;
+  font-weight: 500;
+}
+
+.detail-value {
+  flex: 1;
+  font-weight: bold;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+}
+.summary-label {
+  flex: 0 0 250px;
+  font-weight: 500;
+}
+
+.Pay-details {
+  flex: 1;
+  min-width: 300px;
+  background-color: white;
+  box-shadow: 5px 5px 10px #d3d3d3;
+  border: 1px solid #b3b3b3;
+  flex-wrap: wrap;
 }
 
 .row {
@@ -2598,7 +2720,6 @@ font-weight: 600;
   font-weight: 700;
   box-shadow: 5px 5px 10px #d3d3d3;
   margin-left: 30px;
-
 }
 .paylater{
   display: flex;
@@ -2606,6 +2727,26 @@ font-weight: 600;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+}
+.EnrollPay-btn{
+  border-radius: 10px;
+  background-color: #00AEEF;
+  border: none;
+  color: white;
+  font-size: large;
+  padding: 5px 20px ;
+  font-weight: 600;
+  box-shadow: 5px 5px 10px #d3d3d3;
+}
+.EnrollPay-outline-btn{
+  border-radius: 10px;
+  border:1px solid #00AEEF;
+  background-color: white;
+  color: #00AEEF;
+  font-size: large;
+  padding: 5px 20px ;
+  font-weight: 600;
+  box-shadow: 5px 5px 10px #d3d3d3;
 }
 .note{
   color: #FF0000;

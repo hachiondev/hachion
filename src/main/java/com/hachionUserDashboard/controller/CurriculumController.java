@@ -196,7 +196,7 @@ public class CurriculumController {
 
 		html.append("<li>");
 		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i].trim().replace("", "•").replace("\uF0B7", "•");
+			String line = lines[i].trim().replace("", "•").replace("\uF0B7", "•").replace("●", "•");
 
 			if (line.matches("^\\d+\\.\\s+.*")) {
 				if (!insideSubList) {

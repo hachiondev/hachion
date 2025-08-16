@@ -14,6 +14,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { PiStudentFill } from "react-icons/pi";
 import { FaChildren } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa6";
+import { CgPathFront } from "react-icons/cg";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -35,6 +36,7 @@ const menuItems = [
       { title: 'Payments', icon: <RiMoneyDollarCircleFill /> },
       { title: 'Certificates', icon: <TbCertificate /> },
       { title: 'Tracking', icon: <LuFocus /> },
+      { title: 'Student Interests', icon: <CgPathFront /> },
     ],
   },
   { title: 'Reports', icon: <IoNewspaperOutline /> },

@@ -1,8 +1,9 @@
 import React from "react";
 
-const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
+const PopupInterest4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
   return (
-     <div className="resume-div">
+     <div className="have-modal-overlay">
+      <div className="interest-modal-content">
         <div className="popup-interest">
             <div className="pathfinder-header">
       <p>Follow-Up & Communication</p>
@@ -64,7 +65,8 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
     </form>
     </div>
     </div>
+    </div>
   );
 };
 
-export default Pathfinder4;
+export default PopupInterest4;

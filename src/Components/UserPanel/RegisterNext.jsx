@@ -4,6 +4,10 @@ import logo from '../../Assets/logo.png';
 import LoginSide from './LoginSide';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import PopupInterest1 from './PopupInterest1';
+import PopupInterest2 from './PopupInterest2';
+import PopupInterest3 from './PopupInterest3';
+import PopupInterest4 from './PopupInterest4';
 
 const RegisterNext = () => {
   const [otp, setOtp] = useState(Array(4).fill("")); // OTP array initialized
@@ -18,6 +22,22 @@ const RegisterNext = () => {
   const userDataString = localStorage.getItem('registeruserData');
   const registeruserData = userDataString ? JSON.parse(userDataString) : {  email: '' };
 const [registerMessage, setRegisterMessage] = useState("");
+const [showInterestPopup, setShowInterestPopup] = useState(false);
+const [popupStep, setPopupStep] = useState(1);
+const [formData, setFormData] = useState({
+  role: "",
+  otherRole: "",
+  goal: "",
+  interests: [],
+  learningMethods: [],
+  trainingMode: "",
+  skillLevel: ""
+});
+
+const handleFormChange = (field, value) => {
+  setFormData(prev => ({ ...prev, [field]: value }));
+};
+
   const handleOtpChange = (e, index) => {
     const value = e.target.value.replace(/\D/g, ""); 
     if (value.length <= 1) {
@@ -36,7 +56,6 @@ const [registerMessage, setRegisterMessage] = useState("");
       }
     }
   };
-  
 
 const verifyAccount = async (otpArray, password, confirmPassword) => {
     const otp = otpArray.join(""); 
@@ -100,7 +119,9 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
 
         setRegisterMessage("You are successfully registered!");
         setMessageType("success");
-        setTimeout(() => navigate('/login'), 5000);
+        setTimeout(() => {
+          setShowInterestPopup(true);
+        }, 1000);
     } catch (error) {
         const msg = typeof error === "string" ? error : error.message || "An unexpected error occurred";
         setRegisterMessage(msg);
@@ -144,6 +165,19 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
       setResendLoading(false);
     }
   };
+const handleSkip = () => {
+  localStorage.setItem("user", JSON.stringify(registeruserData));
+  navigate("/");
+};
+
+const handleNext = () => setPopupStep(prev => prev + 1);
+const handleBack = () => setPopupStep(prev => prev - 1);
+
+const handleSubmitPopup = () => {
+  localStorage.setItem("userPreferences", JSON.stringify(formData));
+  localStorage.setItem("user", JSON.stringify(registeruserData));
+  navigate("/");
+};
 
   return (
     <div className="login">
@@ -235,6 +269,43 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
         </div>
       </div>
       <LoginSide />
+
+      {showInterestPopup && (
+  <>
+    {popupStep === 1 && (
+      <PopupInterest1
+        formData={formData}
+        onChange={handleFormChange}
+        onNext={handleNext}
+        onSkip={handleSkip}
+      />
+    )}
+    {popupStep === 2 && (
+      <PopupInterest2
+        formData={formData}
+        onChange={handleFormChange}
+        onNext={handleNext}
+        onBack={handleBack}
+      />
+    )}
+    {popupStep === 3 && (
+      <PopupInterest3
+        formData={formData}
+        onChange={handleFormChange}
+        onNext={handleNext}
+        onBack={handleBack}
+      />
+    )}
+    {popupStep === 4 && (
+      <PopupInterest4
+        formData={formData}
+        onChange={handleFormChange}
+        onSubmit={handleSubmitPopup}
+        onBack={handleBack}
+      />
+    )}
+  </>
+)}
     </div>
   );
 };

@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useNavigate } from 'react-router-dom';
 
   const initialValues = {
     name: "",
@@ -54,6 +55,7 @@ const [selectedValue, setSelectedValue] = useState('a');
 const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
 const [currency, setCurrency] = useState('USD');
 const [exchangeRate, setExchangeRate] = useState(1);
+  const navigate = useNavigate();
     const [selectedCountry, setSelectedCountry] = useState({
           code: '+1',
           flag: 'US',
@@ -730,20 +732,20 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 <div className="input-row">
                 <div>
                   {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
-                <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
-                
-                  {/* {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-    {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)} */}
-                
-<button
-  onClick={saveEnrollment}
-  disabled={isEnrollDisabled || isDisallowedMode}
- className={`enroll-now-btn ${(isEnrollDisabled || isDisallowedMode) ? 'disabled' : ''}`}
->
-  Enroll Now, Pay Later
-</button>
-
+                  {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
+                              <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
+                                {/* {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+                  {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)} */}    
+              </div>
+              <button className="payment-btn" onClick={() => navigate('/installments')}>Go with Installments</button>
+                <div className="paylater">
+                <button
+                  onClick={saveEnrollment}
+                  disabled={isEnrollDisabled || isDisallowedMode}
+                className={`enroll-now-btn ${(isEnrollDisabled || isDisallowedMode) ? 'disabled' : ''}`}
+                >
+                  Enroll Now, Pay Later
+                </button>
                 <p>(<span className="note">*Note</span> : Payment must be made after the first 3 trial sessions)</p>
                 </div>
                 </div>

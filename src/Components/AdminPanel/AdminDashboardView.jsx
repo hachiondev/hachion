@@ -19,6 +19,7 @@ import Payments from './Payments';
 import Tracking from './Tracking';
 import AdminSummerEvents from './AdminSummerEvents';
 import Jobs from './Jobs';
+import StudentInterests from './StudentInterests';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -33,6 +34,7 @@ const componentMap = {
   'Payments': <Payments />,
   'Registration': <Registration />,
   'Tracking': <Tracking />,
+  'Student Interests': <StudentInterests />,
   'Reports': <Reports />,
   'Schedule Request': <ScheduleRequest />,
   'Blog': <Blogs />,

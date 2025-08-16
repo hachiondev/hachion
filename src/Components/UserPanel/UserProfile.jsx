@@ -286,6 +286,7 @@ const handleResetPassword = async (e) => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                readOnly
               />
             </div>
             <div className="col-md-5">

@@ -1,18 +1,10 @@
 import React from "react";
 
-const Pathfinder3 = ({ formData, onChange, onNext, onBack }) => {
-  const handleCheckboxGroup = (field, value) => {
-    let updated = [...(formData[field] || [])];
-    if (updated.includes(value)) {
-      updated = updated.filter((item) => item !== value);
-    } else {
-      updated.push(value);
-    }
-    onChange(field, updated);
-  };
+const PopupInterest3 = ({ formData, onChange, onNext, onBack }) => {
 
   return (
-    <div className="resume-div">
+    <div className="have-modal-overlay">
+      <div className="interest-modal-content">
         <div className="popup-interest">
             <div className="pathfinder-header">
       <p>Personalized Recommendations</p>
@@ -79,7 +71,8 @@ const Pathfinder3 = ({ formData, onChange, onNext, onBack }) => {
     </form>
     </div>
     </div>
+    </div>
   );
 };
 
-export default Pathfinder3;
+export default PopupInterest3;

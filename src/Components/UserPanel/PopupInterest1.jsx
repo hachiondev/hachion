@@ -2,50 +2,33 @@ import React, { useEffect, useState} from "react";
 import Select from "react-select";
 import axios from "axios";
 
-const Pathfinder1 = ({ formData, onChange, onNext, onEdit }) => {
+const PopupInterest1 = ({ formData, onChange, onNext, onSkip }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [courses, setCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {
-        axios
-          .get("https://api.hachion.co/courses/all")
-          .then((res) => {
-            setCourses(res.data);
-          })
-          .catch((err) => {
-            console.error("Error fetching courses:", err);
-            setErrorMessage("Failed to load courses. Please try again.");
-          });
-      }, []);
-    
-      const courseOptions = courses.map((course) => ({
-        value: course.courseName,
-        label: course.courseName,
-      }));
-    
-      const handleCourseChange = (selectedOptions) => {
-    const selectedValues = selectedOptions
-      ? selectedOptions.map((opt) => opt.value)
-      : [];
-      setSelectedCourses(selectedValues);
-    onChange("selectedCourses", selectedValues);
-  };
-const handleEditClick = () => {
-    setIsEditing((prev) => !prev);
-    if (typeof onEdit === "function") {
-      onEdit();
-    }
-  };
+    axios
+      .get("https://api.hachion.co/courses/all")
+      .then((res) => {
+        setCourses(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching courses:", err);
+        setErrorMessage("Failed to load courses. Please try again.");
+      });
+  }, []);
 
-  const isFormFilled =
-    formData.role &&
-    formData.goal &&
-    (formData.selectedCourses || []).length > 0 &&
-    (formData.role !== "Other" || formData.otherRole.trim() !== "");
+  const courseOptions = courses.map((course) => ({
+    value: course.courseName,
+    label: course.courseName,
+  }));
 
+  const handleCourseChange = (selectedOptions) => {
+    const selectedValues = selectedOptions ? selectedOptions.map((opt) => opt.value) : [];
+    onChange("interests", selectedValues);
+  };
   return (
-    <div className="resume-div">
+    <div className="have-modal-overlay">
+      <div className="interest-modal-content">
         <div className="popup-interest">
             <div className="pathfinder-header">
       <p>Basic Background & Goals</p>
@@ -59,7 +42,6 @@ const handleEditClick = () => {
         id="pathfinder"
           value={formData.role}
           onChange={(e) => onChange("role", e.target.value)}
-          disabled={!isEditing}
         >
           <option value="">-- Select your role --</option>
           <option value="School Student">School Student</option>
@@ -78,7 +60,6 @@ const handleEditClick = () => {
             placeholder="Please specify"
             value={formData.otherRole}
             onChange={(e) => onChange("otherRole", e.target.value)}
-            disabled={!isEditing}
           />
         )}
       </div>
@@ -90,7 +71,6 @@ const handleEditClick = () => {
             id="pathfinder"
           value={formData.goal}
           onChange={(e) => onChange("goal", e.target.value)}
-          disabled={!isEditing}
         >
           <option value="">-- Select your goal --</option>
           <option value="Get a job in tech">Get a job in tech</option>
@@ -110,17 +90,14 @@ const handleEditClick = () => {
                       options={courseOptions}
                       isMulti
                       onChange={handleCourseChange}
-                      value={courseOptions.filter((opt) =>
-                (formData.selectedCourses || []).includes(opt.value)
-              )}
+                      value={courseOptions.filter((opt) => formData.interests.includes(opt.value))}
                       placeholder="Search or select courses..."
-                      isDisabled={!isEditing}
                   />
                     <div
                       className="border rounded p-2 mt-2"
-                      style={{ maxHeight: "150px", overflowY: "auto" }}
+                      style={{ maxHeight: "140px", overflowY: "auto" }}
                     >
-                      {(formData.selectedCourses || []).map((courseName, index) => (
+                      {formData.interests.map((courseName, index) => (
                         <div className="form-check" key={index}>
                           <input
                             className="form-check-input"
@@ -136,16 +113,17 @@ const handleEditClick = () => {
 
         <div class="form-group row">
         <div class="col-auto">
-        <button class="edit-path-button" type="button" onClick={handleEditClick}>{isEditing ? "Cancel" : "Edit"}</button>
+        <button class="edit-path-button" type="button" onClick={onSkip}>Skip Now</button>
         </div>
         <div class="col-auto">
-        <button class="path-button" type="button" onClick={onNext} disabled={!isFormFilled}>Next</button>
+        <button class="path-button" type="button" onClick={onNext}>Next</button>
       </div>
       </div>
       </form>
       </div>
     </div>
+    </div>
   );
 };
 
-export default Pathfinder1;
+export default PopupInterest1;

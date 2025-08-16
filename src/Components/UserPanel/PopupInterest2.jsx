@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
+const PopupInterest2 = ({ formData, onChange, onNext, onBack }) => {
   const handleCheckboxGroup = (field, value) => {
     let updated = [...(formData[field] || [])];
     if (updated.includes(value)) {
@@ -12,7 +12,8 @@ const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
   };
 
   return (
-    <div className="resume-div">
+    <div className="have-modal-overlay">
+      <div className="interest-modal-content">
         <div className="popup-interest">
             <div className="pathfinder-header">
       <p>Learning Preferences</p>
@@ -88,7 +89,8 @@ const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
       </form>
       </div>
     </div>
+    </div>
   );
 };
 
-export default Pathfinder2;
+export default PopupInterest2;

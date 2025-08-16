@@ -22,6 +22,9 @@ const UserPathfinder = () => {
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  const handleEdit = () => {
+  console.log("Edit clicked in Pathfinder1");
+};
 
   return (
     <div>
@@ -35,6 +38,7 @@ const UserPathfinder = () => {
           formData={formData}
           onChange={handleChange}
           onNext={handleNext}
+          onEdit={handleEdit} 
         />
       )}
       {step === 2 && (

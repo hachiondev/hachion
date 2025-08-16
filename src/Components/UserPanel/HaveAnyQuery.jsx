@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./Course.css";
-import { AiOutlineCloseCircle, AiFillCaretDown } from "react-icons/ai";
-import { Menu, MenuItem, Button } from "@mui/material";
-import Flag from "react-world-flags";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import success from "../../Assets/success.gif";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { useFormik } from "formik";
@@ -22,7 +20,6 @@ const HaveAnyQuery = ({ closeModal }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
@@ -91,14 +88,6 @@ const HaveAnyQuery = ({ closeModal }) => {
 useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = userData.email || "";
-  
-  //  if (!userEmail) {
-  //     console.warn("🔒 No logged-in user found. Redirecting to /login...");
-  //      window.confirm("Please login before unsubscribe from hachion");
-  //     navigate("/login");
-  //     return;
-  //   }
-  
     values.email = userEmail;
    
     const fetchUserProfile = async () => {
@@ -171,19 +160,6 @@ useEffect(() => {
     setSuccessMessage("");
       console.error("Error submitting query:", error);
     }
-  };
-  const handleCountrySelect = (country) => {
-    setSelectedCountry(country);
-    closeMenu();
-    mobileInputRef.current?.focus();
-  };
-
-  const openMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const closeMenu = () => {
-    setAnchorEl(null);
   };
 
   const { values, errors, handleBlur, touched, handleChange, handleSubmit } =

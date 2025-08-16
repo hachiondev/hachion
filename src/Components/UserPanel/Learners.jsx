@@ -94,7 +94,7 @@ const Learners = ({ page }) => {
                     rating={review.rating}
                     profileImage={
                       review.user_image
-                        ? `https://api.hachion.co/${review.user_image}`
+                        ? `https://api.hachion.co/userreview/${review.user_image}`
                         : ""
                     }
                     onReadMore={() =>

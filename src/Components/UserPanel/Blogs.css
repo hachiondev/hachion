@@ -2507,6 +2507,24 @@ margin-left: 10%;
 margin-right: 10%;
 }
 
+.installments-section {
+  margin: 20px;
+  font-size: large;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.installments-label {
+  margin-right: 10px;
+}
+
+.installments-options label {
+  margin-right: 30px;
+  cursor: pointer;
+}
+
 .details {
   display: flex;
   justify-content: space-around;

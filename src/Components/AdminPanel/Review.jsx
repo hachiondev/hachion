@@ -71,6 +71,8 @@ export default function Review() {
     const[filterCourse,setFilterCourse]=useState([]);
     const[filteredReview,setFilteredReview]=useState([])
     const [open, setOpen] = React.useState(false);
+     const [successMessage, setSuccessMessage] = useState("");
+      const [errorMessage, setErrorMessage] = useState("");
     const currentDate = new Date().toISOString().split('T')[0];
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
@@ -128,16 +130,13 @@ export default function Review() {
                    setCurrentPage(1); 
                  };
 
-                 const handleFileChange = (e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                      setEditedData((prevData) => ({
-                          ...prevData,
-                          image: file, 
-                      }));
-                  }
-              };
-              
+             const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setEditedData(prev => ({ ...prev, image: file }));
+  setReviewData(prev => ({ ...prev, image: file }));
+};
   const displayedCategories = filteredReview.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -249,13 +248,6 @@ useEffect(() => {
     fetchReview();
 }, []);
 
-
-    const handleDeleteConfirmation = (review_id) => {
-        if (window.confirm("Are you sure you want to delete this Resume details")) {
-          handleDelete(review_id);
-        }
-      };
-
     const handleSave = async () => {
       try {
         const formData = new FormData();
@@ -305,18 +297,33 @@ useEffect(() => {
         setMessage("Error updating Review.");
       }
     };
+
+     const handleDeleteConfirmation = (review_id) => {
+        if (window.confirm("Are you sure you want to delete this Review details")) {
+          handleDelete(review_id);
+        }
+      };
+
+const handleDelete = async (review_id) => {
+  try {
+    const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`);
+    console.log("Review deleted successfully:", response.data);
+
     
-            
-      const handleDelete = async (review_id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`); 
-          console.log("Review deleted successfully:", response.data); 
-        } catch (error) { 
-          console.error("Error deleting Review:", error); 
-        } }; 
-        
+    setSuccessMessage("✅ Review deleted successfully.");
+    setErrorMessage("");
+
     
+    setReview(prevReviews => prevReviews.filter(review => review.id !== review_id));
+    setFilteredReview(prevReviews => prevReviews.filter(review => review.id !== review_id));
+
+  } catch (error) {
+    console.error("Error deleting Review:", error);
+    setErrorMessage("❌ Failed to delete review.");
+    setSuccessMessage("");
+  }
+};
+
       const handleClickOpen = (curr) => {
   try {
     console.log("handleClickOpen called with:", curr);
@@ -362,6 +369,11 @@ useEffect(() => {
       e.preventDefault();
       const currentDate = new Date().toISOString().split("T")[0];
   
+       const fileInput = document.querySelector('input[type="file"]');
+  if (fileInput && fileInput.files.length > 0) {
+    reviewData.image = fileInput.files[0];
+  }
+
       
       const reviewObject = {
           name: reviewData.student_name,
@@ -420,6 +432,7 @@ useEffect(() => {
       };
       fetchCategory();
     }, []);
+    
 useEffect(() => {
           if (reviewData.category_name) {
             const filtered = courseCategory.filter(
@@ -645,11 +658,24 @@ useEffect(() => {
     <StyledTableRow key={curr.review_id}>
       <StyledTableCell align="center">
         <Checkbox />
+        
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="center">
+      {/* <StyledTableCell align="center">
         {curr.user_image ? <img src={curr.user_image} alt="User" width="50" height="50" /> : 'No Image'}
-        </StyledTableCell>
+        </StyledTableCell> */}
+        <StyledTableCell align="center">
+  {curr.user_image ? (
+    <img
+      src={`https://api.hachion.co/userreview/${curr.user_image}`}
+      alt="User"
+      width="50"
+      height="50"
+    />
+  ) : (
+    'No Image'
+  )}
+</StyledTableCell>
       <StyledTableCell align="left">{curr.name}</StyledTableCell>
       <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
@@ -671,6 +697,8 @@ useEffect(() => {
 )}
 </TableBody>
     </Table>
+    {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
     </TableContainer>
     <div className='pagination-container'>
               <AdminPagination

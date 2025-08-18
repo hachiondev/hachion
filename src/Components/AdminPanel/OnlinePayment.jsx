@@ -47,7 +47,7 @@ export default function OnlinePayment() {
         const date = new Date(item.date || item.payment_date);
         const matchesSearch =
           searchTerm === '' ||
-          [item.name, item.email, item.course_name, item.method]
+          [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.method, item.status, item.method, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
             .map(field => (field || '').toLowerCase())
             .some(field => field.includes(searchTerm.toLowerCase()));
         const inDateRange =
@@ -84,7 +84,7 @@ export default function OnlinePayment() {
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className='course-category'>
-                      <div className='category-header'><p style={{ marginBottom: 0 }}>View OnlinePayment List</p></div>
+                      <div className='category-header'><p style={{ marginBottom: 0 }}>View Online Payment List</p></div>
                       <div className='date-schedule'>
                                   Start Date
                                   <DatePicker 
@@ -126,7 +126,7 @@ export default function OnlinePayment() {
                             <input
                               className="search-input"
                               type="search"
-                              placeholder="Enter Name, Course Name or Method"
+                              placeholder="Enter Name, Course Name, Status or Keywords"
                               aria-label="Search"
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
@@ -152,6 +152,11 @@ export default function OnlinePayment() {
                             <StyledTableCell align="center">Mobile</StyledTableCell>
                             <StyledTableCell align="center">Course Name</StyledTableCell>
                             <StyledTableCell align="center">Course Fee</StyledTableCell>
+                            <StyledTableCell align="center">Coupon</StyledTableCell>
+                            <StyledTableCell align="center">No. of Installments</StyledTableCell>
+                            <StyledTableCell align="center">Paid Installments</StyledTableCell>
+                            <StyledTableCell align="center">Balance Fee</StyledTableCell>
+                            <StyledTableCell align="center">Status</StyledTableCell>
                             <StyledTableCell align="center">Payment Method</StyledTableCell>
                             <StyledTableCell align="center">Created Date </StyledTableCell>
                         </TableRow>
@@ -168,6 +173,11 @@ export default function OnlinePayment() {
                             <StyledTableCell align="center">{row.mobile}</StyledTableCell>
                             <StyledTableCell align="left">{row.course_name}</StyledTableCell>
                             <StyledTableCell align="left">{row.fee}</StyledTableCell>
+                            <StyledTableCell align="left">{row.coupon}</StyledTableCell>
+                            <StyledTableCell align="center">{row.installments}</StyledTableCell>
+                            <StyledTableCell align="center">{row.paidInstallments}</StyledTableCell>
+                            <StyledTableCell align="center">{row.balance}</StyledTableCell>
+                            <StyledTableCell align="center">{row.status}</StyledTableCell>
                             <StyledTableCell align="left">{row.method}</StyledTableCell>
                             <StyledTableCell align="center">{row.date}</StyledTableCell>
                             </StyledTableRow>

@@ -404,7 +404,7 @@ useEffect(() => {
     
       if (name === 'installments') {
         if (count > 4) {
-          setErrorMessage("❌ Maximum 4 instalments are allowed.");
+          setErrorMessage("❌ Maximum 4 installments are allowed.");
           setSuccessMessage("");
           updatedData.installments = "4"; 
           setPaymentData(updatedData);
@@ -918,7 +918,7 @@ const handleSaveAndSendInvoice = async (e) => {
     <input type="text" class="schedule-input" id="inputEmail4" name='discount' value={paymentData.discount} onChange={handleChange}/>
   </div>
   <div class="col">
-    <label for="inputEmail4" class="form-label">No. of Instalments</label>
+    <label for="inputEmail4" class="form-label">No. of installments</label>
     <input type="text" class="schedule-input" id="inputEmail4" name='installments' value={paymentData.installments} onChange={handleChange}/>
   </div>
   <div class="col">
@@ -1229,7 +1229,7 @@ const handleSaveAndSendInvoice = async (e) => {
 </div>
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                <input className="search-input" type="search" placeholder="Enter Courses, Name, Status or Keywords" aria-label="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
@@ -1257,7 +1257,7 @@ const handleSaveAndSendInvoice = async (e) => {
             <StyledTableCell align="center">Mobile</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Course Fee</StyledTableCell>
-            <StyledTableCell align="center">No. of Instalments</StyledTableCell>
+            <StyledTableCell align="center">No. of installments</StyledTableCell>
             <StyledTableCell align="center">Balance Fee</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
             <StyledTableCell align="center">Created Date </StyledTableCell>

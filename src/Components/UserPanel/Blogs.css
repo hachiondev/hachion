@@ -2302,6 +2302,7 @@ margin-right: 5% !important;
         white-space: nowrap;
         border-collapse: collapse;
         overflow-x: auto;
+        margin-left: 0 !important;
       }
   
       .table-cell-left,
@@ -2333,23 +2334,24 @@ margin-right: 5% !important;
           width: auto;
         }
 
-        .payment-btn{
+        .payment-btn, .enroll-now-btn{
           width: 95%;
-          height: 40px;
           border-radius: 5px !important;
           background-color: #00AEEF;
           border: none;
           color: white;
-          font-size: 14px !important;
-          padding: 5px 30px ;
+          /* font-size: 14px !important; */
+          padding: 5px;
           font-weight: 700;
-          box-shadow: 5px 5px 10px #d3d3d3;
           margin-left: 10px !important;
           margin-bottom: 10px;
-          margin-top: 10px;
+          margin-top: 10px !important;
         }
+      .paylater p{
+       max-width: 95% !important;
+      }
         .paylater{
-        margin-top: 10px !important;
+        margin-top: 5px !important;
 }
 }
 
@@ -2687,7 +2689,7 @@ font-weight: 600;
 
 .table-container {
   width: fit-content;
-  max-width: 50%;
+  max-width: 60%;
   margin-left: 40px;
   border-collapse: collapse;
 }
@@ -2733,18 +2735,23 @@ font-weight: 600;
   background-color: #00AEEF;
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: large;
   padding: 6px 30px ;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 5px 5px 10px #d3d3d3;
   margin-left: 30px;
+  margin-top: 20px;
 }
 .paylater{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 50px;
+}
+.paylater p{
+font-size: small;
+max-width: 250px;
 }
 .EnrollPay-btn{
   border-radius: 10px;
@@ -2776,7 +2783,7 @@ font-weight: 600;
   padding: 6px 20px;
   border: none;
   border-radius: 10px;
-  font-size: 24px;
+  font-size: large;
   font-weight: bold;
   opacity: 1;
   transition: 0.3s ease;

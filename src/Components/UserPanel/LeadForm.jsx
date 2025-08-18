@@ -169,6 +169,7 @@ useEffect(() => {
     <>
       <Topbar />
       <NavbarTop />
+      <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -179,6 +180,7 @@ useEffect(() => {
             </li>
           </ol>
         </nav>
+        </div>
         <div >
           <img className='banner-img' src={registerbanner} alt='Lead Form Banner' />
           <div className="contact-us-all">

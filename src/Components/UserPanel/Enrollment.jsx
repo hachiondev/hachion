@@ -729,14 +729,14 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
 ) : (
   <div>No matching course found.</div>
 )}
-                <div className="input-row">
                 <div>
                   {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
                   {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
-                              <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
                                 {/* {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
                   {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)} */}    
               </div>
+                <div className="input-row">
+                <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
               <button className="payment-btn" onClick={() => navigate('/installments')}>Go with Installments</button>
                 <div className="paylater">
                 <button

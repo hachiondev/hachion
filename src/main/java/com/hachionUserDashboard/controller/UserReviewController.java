@@ -8,7 +8,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +36,9 @@ import com.hachionUserDashboard.repository.UserReviewRepository;
 @RestController
 public class UserReviewController {
 
+	@Value("${image.upload.userreview.path}")
+	private String uploadPath;
+
 	@Autowired
 	private UserReviewRepository repo;
 
@@ -45,20 +52,37 @@ public class UserReviewController {
 		return repo.findAll();
 	}
 
-	private final String uploadDir = System.getProperty("user.home") + "/uploads/";
+//	private final String uploadDir = System.getProperty("user.home") + "/uploads/";
+//
+//	// Method to upload image file
+//	private String saveImage(MultipartFile image) throws IOException {
+//		if (image != null && !image.isEmpty()) {
+//			// Ensure the image directory exists
+//			File directory = new File(uploadDir + "images/");
+//			if (!directory.exists()) {
+//				directory.mkdirs(); // Create directories if they do not exist
+//			}
+//
+//			Path imagePath = Paths.get(directory.getAbsolutePath(), image.getOriginalFilename());
+//			Files.write(imagePath, image.getBytes()); // Save image to disk
+//			return "images/" + image.getOriginalFilename(); // Save relative path in DB
+//		}
+//		return null;
+//	}
 
-	// Method to upload image file
 	private String saveImage(MultipartFile image) throws IOException {
 		if (image != null && !image.isEmpty()) {
-			// Ensure the image directory exists
-			File directory = new File(uploadDir + "images/");
+			File directory = new File(uploadPath); // /home/ec2-user/uploads/images/
 			if (!directory.exists()) {
-				directory.mkdirs(); // Create directories if they do not exist
+				directory.mkdirs(); // Create folder if not exists
 			}
 
+			// Save the image physically in the images folder
 			Path imagePath = Paths.get(directory.getAbsolutePath(), image.getOriginalFilename());
-			Files.write(imagePath, image.getBytes()); // Save image to disk
-			return "images/" + image.getOriginalFilename(); // Save relative path in DB
+			Files.write(imagePath, image.getBytes());
+
+			// In DB store "images/filename.png"
+			return "images/" + image.getOriginalFilename();
 		}
 		return null;
 	}
@@ -104,65 +128,169 @@ public class UserReviewController {
 
 //    @PutMapping("/userreview/update/{id}")
 //    public ResponseEntity<UserReview> updateUserReview(@PathVariable int id, @RequestBody UserReview updatedUserReview) {
-	@PutMapping("userreview/update/{id}")
-	public ResponseEntity<String> updateReview(@PathVariable int id, @RequestPart("review") String reviewData,
-			@RequestPart(value = "user_image", required = false) MultipartFile user_image) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule()); // Register Java 8 Date/Time module
-			UserReview updatedUserReview = objectMapper.readValue(reviewData, UserReview.class);
+//	@PutMapping("userreview/update/{id}")
+//	public ResponseEntity<String> updateReview(@PathVariable int id, @RequestPart("review") String reviewData,
+//			@RequestPart(value = "user_image", required = false) MultipartFile user_image) {
+//		try {
+//			ObjectMapper objectMapper = new ObjectMapper();
+//			objectMapper.registerModule(new JavaTimeModule()); // Register Java 8 Date/Time module
+//			UserReview updatedUserReview = objectMapper.readValue(reviewData, UserReview.class);
+//
+//			return repo.findById(id).map(userReview -> {
+//				// Update fields
+//				userReview.setName(updatedUserReview.getName());
+//				userReview.setEmail(updatedUserReview.getEmail());
+//				userReview.setLocation(updatedUserReview.getLocation());
+//				userReview.setCourse_name(updatedUserReview.getCourse_name());
+//				userReview.setRating(updatedUserReview.getRating());
+//				userReview.setSocial_id(updatedUserReview.getSocial_id());
+//				userReview.setTrainer_name(updatedUserReview.getTrainer_name());
+//				userReview.setReview(updatedUserReview.getReview());
+//				userReview.setType(updatedUserReview.isType());
+//				userReview.setDisplay(updatedUserReview.getDisplay());
+//				userReview.setStatus(updatedUserReview.getStatus());
+//				// Check if a new image is uploaded
+//				if (user_image != null && !user_image.isEmpty()) {
+//					try {
+//						String imagePath = saveImage(user_image); // Save new image
+//						if (imagePath != null) {
+//							userReview.setUser_image(imagePath); // Update image path
+//						} else {
+//							return ResponseEntity.badRequest().body("Failed to save the new image.");
+//						}
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//								.body("Error saving image: " + e.getMessage());
+//					}
+//				}
+//				// If no new image is uploaded, keep the existing one
+//
+//				repo.save(userReview); // Save updated review
+//				return ResponseEntity.ok("Review updated successfully.");
+//			}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found."));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body("Error updating review: " + e.getMessage());
+//		}
+//	}
 
-			return repo.findById(id).map(userReview -> {
-				// Update fields
-				userReview.setName(updatedUserReview.getName());
-				userReview.setEmail(updatedUserReview.getEmail());
-				userReview.setLocation(updatedUserReview.getLocation());
-				userReview.setCourse_name(updatedUserReview.getCourse_name());
-				userReview.setRating(updatedUserReview.getRating());
-				userReview.setSocial_id(updatedUserReview.getSocial_id());
-				userReview.setTrainer_name(updatedUserReview.getTrainer_name());
-				userReview.setReview(updatedUserReview.getReview());
-				userReview.setType(updatedUserReview.isType());
-				userReview.setDisplay(updatedUserReview.getDisplay());
-				userReview.setStatus(updatedUserReview.getStatus());
-				// Check if a new image is uploaded
-				if (user_image != null && !user_image.isEmpty()) {
-					try {
-						String imagePath = saveImage(user_image); // Save new image
-						if (imagePath != null) {
-							userReview.setUser_image(imagePath); // Update image path
-						} else {
-							return ResponseEntity.badRequest().body("Failed to save the new image.");
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-								.body("Error saving image: " + e.getMessage());
-					}
-				}
-				// If no new image is uploaded, keep the existing one
-
-				repo.save(userReview); // Save updated review
-				return ResponseEntity.ok("Review updated successfully.");
-			}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found."));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error updating review: " + e.getMessage());
-		}
-	}
-
+	
 //            repo.save(userReview);
 //            return ResponseEntity.ok(userReview);
 //        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 //    }
+	
+	@PutMapping("userreview/update/{id}")
+	public ResponseEntity<String> updateReview(
+	        @PathVariable int id,
+	        @RequestPart("review") String reviewData,
+	        @RequestPart(value = "user_image", required = false) MultipartFile user_image) {
+	    try {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.registerModule(new JavaTimeModule());
+	        UserReview updatedUserReview = objectMapper.readValue(reviewData, UserReview.class);
+
+	        return repo.findById(id).map(userReview -> {
+	            
+	            userReview.setName(updatedUserReview.getName());
+	            userReview.setEmail(updatedUserReview.getEmail());
+	            userReview.setLocation(updatedUserReview.getLocation());
+	            userReview.setCourse_name(updatedUserReview.getCourse_name());
+	            userReview.setRating(updatedUserReview.getRating());
+	            userReview.setSocial_id(updatedUserReview.getSocial_id());
+	            userReview.setTrainer_name(updatedUserReview.getTrainer_name());
+	            userReview.setReview(updatedUserReview.getReview());
+	            userReview.setType(updatedUserReview.isType());
+	            userReview.setDisplay(updatedUserReview.getDisplay());
+	            userReview.setStatus(updatedUserReview.getStatus());
+
+	            
+	            if (user_image != null && !user_image.isEmpty()) {
+	                try {
+	                    
+	                    String oldImagePath = userReview.getUser_image();
+	                    if (oldImagePath != null) {
+	                        File oldFile = new File(oldImagePath);
+	                        if (oldFile.exists()) {
+	                            if (!oldFile.delete()) {
+	                                System.err.println("Failed to delete old image: " + oldImagePath);
+	                            }
+	                        }
+	                    }
+
+	                    
+	                    String imagePath = saveImage(user_image);
+	                    if (imagePath != null) {
+	                        userReview.setUser_image(imagePath);
+	                    } else {
+	                        return ResponseEntity.badRequest().body("Failed to save the new image.");
+	                    }
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                            .body("Error saving image: " + e.getMessage());
+	                }
+	            }
+	            repo.save(userReview);
+	            return ResponseEntity.ok("Review updated successfully.");
+	        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found."));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error updating review: " + e.getMessage());
+	    }
+	}
+
 
 	@DeleteMapping("userreview/delete/{id}")
 	public ResponseEntity<String> deleteUserReview(@PathVariable int id) {
-		return repo.findById(id).map(userReview -> {
-			repo.delete(userReview);
-			return ResponseEntity.ok("Review deleted successfully.");
-		}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found."));
+	    return repo.findById(id).map(userReview -> {
+
+	        
+	        String imageName = userReview.getUser_image();
+	        if (imageName != null && !imageName.trim().isEmpty()) {
+
+	            
+	            String fileNameOnly = imageName.replaceFirst("^images/", "");
+
+	            
+	            File oldImage = new File(uploadPath, fileNameOnly);
+
+	            
+	            if (oldImage.exists()) {
+	                boolean deleted = oldImage.delete();
+	                if (!deleted) {
+	                    System.err.println("Failed to delete image: " + oldImage.getAbsolutePath());
+	                }
+	            }
+	        }
+
+	        
+	        repo.delete(userReview);
+	        return ResponseEntity.ok("Review deleted successfully.");
+	    }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found."));
+	}
+
+
+	@GetMapping("userreview/images/{filename:.+}")
+	public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
+		// Load file from upload folder
+		Path filePath = Paths.get(uploadPath).resolve(filename).normalize();
+		Resource resource = new UrlResource(filePath.toUri());
+
+		if (!resource.exists()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		// Detect content type
+		String contentType = Files.probeContentType(filePath);
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
 
 }

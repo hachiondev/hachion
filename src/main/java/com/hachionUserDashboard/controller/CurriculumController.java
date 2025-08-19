@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -368,6 +370,54 @@ public class CurriculumController {
 		repo.delete(curriculum);
 		return ResponseEntity.ok("Curriculum and associated PDFs deleted successfully.");
 	}
+
+//	@PostMapping("/curriculum/delete")
+//	public ResponseEntity<String> deleteMultipleCurriculums(@RequestBody List<Integer> ids) {
+//	    List<String> failedDeletes = new ArrayList<>();
+//
+//	    for (Integer id : ids) {
+//	        Optional<Curriculum> optionalCurriculum = repo.findById(id);
+//	        if (!optionalCurriculum.isPresent()) {
+//	            failedDeletes.add("Curriculum with ID " + id + " not found.");
+//	            continue;
+//	        }
+//
+//	        Curriculum curriculum = optionalCurriculum.get();
+//
+//	        String curriculumPdfPath = curriculum.getCurriculum_pdf();
+//	        if (curriculumPdfPath != null && !curriculumPdfPath.isEmpty()) {
+//	            File curriculumPdfFile = new File(uploadDir + curriculumPdfPath);
+//	            if (curriculumPdfFile.exists()) {
+//	                boolean deleted = curriculumPdfFile.delete();
+//	                if (!deleted) {
+//	                    failedDeletes.add("Failed to delete curriculum PDF for ID " + id);
+//	                    continue;
+//	                }
+//	            }
+//	        }
+//
+//	        String assessmentPdfPath = curriculum.getAssessment_pdf();
+//	        if (assessmentPdfPath != null && !assessmentPdfPath.isEmpty()) {
+//	            File assessmentPdfFile = new File(uploadDir + assessmentPdfPath);
+//	            if (assessmentPdfFile.exists()) {
+//	                boolean deleted = assessmentPdfFile.delete();
+//	                if (!deleted) {
+//	                    failedDeletes.add("Failed to delete assessment PDF for ID " + id);
+//	                    continue;
+//	                }
+//	            }
+//	        }
+//
+//	        repo.delete(curriculum);
+//	    }
+//
+//	    if (!failedDeletes.isEmpty()) {
+//	        return ResponseEntity.status(HttpStatus.MULTI_STATUS)
+//	                .body("Some deletions failed:\n" + String.join("\n", failedDeletes));
+//	    }
+//
+//	    return ResponseEntity.ok("All selected curriculums deleted successfully.");
+//	}
 
 	@GetMapping("/curriculum/pdfs/{filename}")
 	public ResponseEntity<Resource> getPdf(@PathVariable String filename) {

@@ -35,4 +35,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 //	List<Object[]> findAllCourseNamesAndCategories();
 	@Query(value = "SELECT course_name, course_category, course_image FROM course", nativeQuery = true)
 	List<Object[]> findAllCourseNamesCategoriesAndImages();
+
+	@Query(value = "SELECT c.iamount, c.idiscount FROM course c WHERE c.course_name = :courseName", nativeQuery = true)
+	List<Object[]> findCourseFeeByCourseName(@Param("courseName") String courseName);
+
 }

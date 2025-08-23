@@ -1,13 +1,17 @@
 package com.hachionUserDashboard.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -51,8 +55,32 @@ public class PaymentTransaction {
 	@Column(name = "payment_date")
 	private LocalDateTime paymentDate;
 
+	@Column(name = "is_installment")
+	private Boolean isInstallment = false;
+
+	@Column(name = "installment_count")
+	private Integer installmentCount = 0;
+
+	@Column(name = "balance")
+	private Double balance = 0.0;
+
+	@Column
+	private Double courseFee;
+
+	@Column(name = "number_of_installments")
+	private Integer numSelectedInstallments = 0;
+
+	@Column(name = "checkbox_clicked")
+	private Integer checkboxClicked = 0;
+
 	@Lob
 	private String rawResponseJson;
+	
+	@Column(name = "payment_method")
+	private String paymentMethod;
+
+	@OneToMany(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<OnlinePaymentInstallments> onlinePaymentInstallments = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -156,6 +184,70 @@ public class PaymentTransaction {
 
 	public void setDiscount(Double discount) {
 		this.discount = discount;
+	}
+
+	public Boolean getIsInstallment() {
+		return isInstallment;
+	}
+
+	public void setIsInstallment(Boolean isInstallment) {
+		this.isInstallment = isInstallment;
+	}
+
+	public Integer getInstallmentCount() {
+		return installmentCount;
+	}
+
+	public void setInstallmentCount(Integer installmentCount) {
+		this.installmentCount = installmentCount;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public List<OnlinePaymentInstallments> getOnlinePaymentInstallments() {
+		return onlinePaymentInstallments;
+	}
+
+	public void setOnlinePaymentInstallments(List<OnlinePaymentInstallments> onlinePaymentInstallments) {
+		this.onlinePaymentInstallments = onlinePaymentInstallments;
+	}
+
+	public Double getCourseFee() {
+		return courseFee;
+	}
+
+	public void setCourseFee(Double courseFee) {
+		this.courseFee = courseFee;
+	}
+
+	public Integer getNumSelectedInstallments() {
+		return numSelectedInstallments;
+	}
+
+	public void setNumSelectedInstallments(Integer numSelectedInstallments) {
+		this.numSelectedInstallments = numSelectedInstallments;
+	}
+
+	public Integer getCheckboxClicked() {
+		return checkboxClicked;
+	}
+
+	public void setCheckboxClicked(Integer checkboxClicked) {
+		this.checkboxClicked = checkboxClicked;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 }

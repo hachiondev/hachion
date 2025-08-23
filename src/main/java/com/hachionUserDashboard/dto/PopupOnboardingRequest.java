@@ -1,74 +1,42 @@
-package com.hachionUserDashboard.entity;
+package com.hachionUserDashboard.dto;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.hachionUserDashboard.service.StringListConverter;
+public class PopupOnboardingRequest {
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "popup_onboarding")
-public class PopupOnboarding {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "popup_onboarding_id")
 	private Long popupOnboardingId;
 
-	@Column(name = "student_id")
 	private String studentId;
 
-	@Column(name = "student_name")
 	private String studentName;
 
-	@Column(name = "student_email")
 	private String studentEmail;
 
-	@Column(name = "mobile")
 	private String mobile;
 
-	@Column(name = "current_role")
 	private String currentRole;
 
-	@Column(name = "primary_goal")
 	private String primaryGoal;
 
-	@Column(name = "areas_of_interest")
 	private String areasOfInterest;
 
-	@Column(name = "prefer_to_learn")
-	@Convert(converter = StringListConverter.class)
 	private List<String> preferToLearn;
 
-	@Column(name = "preferred_training_mode")
 	private String preferredTrainingMode;
 
-	@Column(name = "current_skill")
 	private String currentSkill;
 
-	@Column(name = "looking_for_job")
 	private String lookingForJob;
 
-	@Column(name = "real_time_projects")
 	private String realTimeProjects;
 
-	@Column(name = "certification_or_placement")
 	private String certificationOrPlacement;
 
-	@Column(name = "speak_to_course_advisor")
 	private String speakToCourseAdvisor;
 
-	@Column(name = "where_you_heard")
 	private String whereYouHeard;
-
-	@Column(name = "filling_date")
+	
 	private LocalDate fillingDate;
 
 	public Long getPopupOnboardingId() {

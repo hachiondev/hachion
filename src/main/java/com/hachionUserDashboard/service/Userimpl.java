@@ -27,7 +27,6 @@ import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
-import com.hachionUserDashboard.util.EmailUtil;
 import com.hachionUserDashboard.util.OtpUtil;
 
 import Response.LoginResponse;
@@ -42,17 +41,17 @@ public class Userimpl implements UserService {
 	private RegisterStudentRepository userRepository;
 
 	private OtpUtil otpUtil;
-	@Autowired
-	private EmailUtil emailUtil;
+//	@Autowired
+//	private EmailUtil emailUtil;
 
-	@Autowired
-	private EmailService emailService;
+//	@Autowired
+//	private EmailService emailService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private WebhookSenderService webhookSenderService;
+//	@Autowired
+//	private WebhookSenderService webhookSenderService;
 	
 	@Value("${user.profile.image.upload.dir}")
 	private String uploadDir;
@@ -76,7 +75,7 @@ public class Userimpl implements UserService {
 		System.out.println(otp);
 		user.setOTPStatus(false);
 
-		emailUtil.sendOtpEmail(email, otp);
+//		emailUtil.sendOtpEmail(email, otp);
 		userRepository.save(user);
 //		emailUtil.sendOtpEmail(email, otp);
 
@@ -128,8 +127,8 @@ public class Userimpl implements UserService {
 		user.setMode(registrationRequest.getMode());
 		user.setDate(LocalDate.now());
 
-		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
-				registrationRequest.getFirstName());
+//		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
+//				registrationRequest.getFirstName());
 
 		RegisterStudent save = userRepository.save(user);
 
@@ -139,7 +138,7 @@ public class Userimpl implements UserService {
 		System.out.println("Mobile: " + registrationRequest.getMobile());
 		System.out.println("Country: " + registrationRequest.getCountry());
 
-		webhookSenderService.sendRegistrationDetails(save);
+//		webhookSenderService.sendRegistrationDetails(save);
 
 		return "Password and user details updated successfully.";
 	}
@@ -367,7 +366,7 @@ public class Userimpl implements UserService {
 		userRepository.save(user);
 
 		// Send the new OTP to the user's email
-		emailUtil.sendOtpEmail(user.getEmail(), newOtp);
+//		emailUtil.sendOtpEmail(user.getEmail(), newOtp);
 
 		return "OTP regenerated and sent successfully.";
 	}
@@ -386,7 +385,7 @@ public class Userimpl implements UserService {
 		userRepository.save(user);
 
 		// Send the random password to the user's email
-		emailUtil.sendSetPasswordEmail(email, randomPassword);
+//		emailUtil.sendSetPasswordEmail(email, randomPassword);
 
 		return "Please check your email to get your new password.";
 	}

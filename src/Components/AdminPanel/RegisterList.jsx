@@ -282,7 +282,6 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
     const handleClickOpen = (row) => {
   setFormMode("Edit");
 
-
   const [codePart, ...numberParts] = (row.mobile || "").split(" ");
   const numberPart = numberParts.join(" ");
 

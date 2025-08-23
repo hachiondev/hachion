@@ -866,7 +866,7 @@ font-weight: 400;
   font-weight: 400;
   }
 
-.have-modal-overlay {
+.have-modal-overlay,  .installment-modal-overlay{
 position: fixed;
 top: 0;
 left: 0;
@@ -884,6 +884,15 @@ background-color: white;
 overflow: hidden;
 border-radius: 20px;
 width: 600px; /* Adjust width as needed */
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+position: relative;
+}
+
+.installment-modal-content {
+background-color: white;
+overflow: hidden;
+border-radius: 20px;
+width: 60%;
 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 position: relative;
 }
@@ -987,7 +996,7 @@ background-color: white;
 }
 
 .request-header {
-height: 100px;
+height: 80px;
 border-radius: 20px 20px 0px 0px;
 background: linear-gradient(to right, #006489, #00AEEF, #006489);
 color: white;
@@ -997,6 +1006,10 @@ text-align: center;
 display: flex;
 align-items: center;
 justify-content: center; 
+}
+
+.request-header p{
+  margin-bottom: 0;
 }
 
 /* Align the calendar icon at the end */

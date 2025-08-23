@@ -7,24 +7,22 @@
   import TextField from '@mui/material/TextField';
   import StickyBar from './StickyBar';
   import Footer from './Footer'
-  import { AiFillCaretDown } from 'react-icons/ai';
-  import { Menu, MenuItem, Button } from '@mui/material';
-  import Flag from 'react-world-flags';
+  import { Dialog, DialogContent } from "@mui/material";
   import { useFormik } from 'formik';
   import { LoginSchema } from '../Schemas';
   import { useLocation } from 'react-router-dom';
   import { MdKeyboardArrowRight } from 'react-icons/md';
   import { Link } from 'react-router-dom';
-  
+  import RequestInstallment from "./RequestInstallment";
   import { useParams } from 'react-router-dom';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useNavigate } from 'react-router-dom';
+  import Table from '@mui/material/Table';
+  import TableBody from '@mui/material/TableBody';
+  import TableCell from '@mui/material/TableCell';
+  import TableContainer from '@mui/material/TableContainer';
+  import TableHead from '@mui/material/TableHead';
+  import TableRow from '@mui/material/TableRow';
+  import Paper from '@mui/material/Paper';
+  import { useNavigate } from 'react-router-dom';
 
   const initialValues = {
     name: "",
@@ -35,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 
   const Enrollment = () => {
     const location = useLocation();
+    const [openInstallmentPopup, setOpenInstallmentPopup] = useState(false);
     const { selectedBatchData, enrollText, modeType,  sendEmail,
   sendWhatsApp,
   sendText } = location.state || {};
@@ -737,7 +736,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
               </div>
                 <div className="input-row">
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
-              <button className="payment-btn" onClick={() => navigate('/installments')}>Go with Installments</button>
+             <button className="payment-btn"  onClick={() => setOpenInstallmentPopup(true)}>Request for Installments</button>
                 <div className="paylater">
                 <button
                   onClick={saveEnrollment}
@@ -754,6 +753,16 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
       </div>
       <Footer/>
       <StickyBar/>
+      <Dialog
+        open={openInstallmentPopup}
+        onClose={() => setOpenInstallmentPopup(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent>
+          <RequestInstallment selectedBatchData={selectedBatchData} />
+        </DialogContent>
+      </Dialog>
       </>
     )
   }

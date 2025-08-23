@@ -34,10 +34,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const OnlineInstallments = () => {
+const RequestInstallment = ({ selectedBatchData } ) => {
     const { courseName } = useParams();
  const location = useLocation();
-  const { selectedBatchData } = location.state || {};  
  const [courseData, setCourseData] = useState(
     selectedBatchData || {
       courseName: courseName || "React JS Fundamentals",
@@ -261,35 +260,17 @@ const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
   return (
     <>
-      <Topbar />
-      <NavbarTop />
-      <div className='blogs-header'>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item">
-              <Link to={`/coursedetails/${courseSlug}`}>{courseData?.courseName} </Link> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item">
-              <Link to={`/enroll/${courseSlug}`}>Enroll {courseData?.courseName} </Link> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Installments {courseData?.courseName} 
-            </li>
-          </ol>
-        </nav>
-      </div>
-
-      <div className='enrollment'>
-        <p>Go with Installments</p>
+     <div className="installment-modal-overlay">
+      <div className="installment-modal-content">
+        <div className="request-batch">
+          <div className="request-header">
+        <p>Installments Request</p>
       </div>
 
       <div className='enrollment-details'>
         {/* Installments Selection */}
         <div className="installments-section">
-          <label className="installments-label">No. of Installments:</label>
+          <label className="installments-label">Select no. of Installments:</label>
           <div className="installments-options">
             <label>
               <input 
@@ -297,7 +278,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 name="installments" 
                 value="2" 
                 onChange={handleInstallmentChange} 
-              /> 2
+              /> 2 Installments
             </label>
             <label>
               <input 
@@ -305,7 +286,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 name="installments" 
                 value="3" 
                 onChange={handleInstallmentChange} 
-              /> 3
+              /> 3 Installments
             </label>
           </div>
         </div>
@@ -320,7 +301,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 <Table className="table-details" sx={{ minWidth: 700 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center"> </StyledTableCell>
                       <StyledTableCell align="center">Installments</StyledTableCell>
                       <StyledTableCell align="center">Installment Amount</StyledTableCell>
                       <StyledTableCell align="center">Total</StyledTableCell>
@@ -335,13 +315,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
     
                         return (
                           <StyledTableRow key={index}>
-                            <StyledTableCell align="center">
-                              <Checkbox
-                                checked={paidInstallment.includes(index + 1)}
-                                disabled={paidCheckBoxInstallment.includes(index + 1)}
-                                onClick={() => handlePayment(index + 1)}
-                              />
-                            </StyledTableCell>
                             <StyledTableCell align="center">{index + 1}</StyledTableCell>
                             <StyledTableCell align="center">
           {currency} {baseInstallment.toFixed(2)}
@@ -358,86 +331,16 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
             </div>
           </div>
         </div>
-        {paidInstallment.length > 0 && (
-          <div className='personal-details' ref={summaryRef}>
-            <div className='personal-details-header'>
-              <p>2. Installment Order Summary</p>
-            </div>
-            <div className='details-box'>
-              <TableContainer component={Paper} className="table-container">
-                <Table aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="table-cell-left">Course Name</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        {courseName}
-                      </TableCell>
-                    </TableRow>
-
-                    {/* Only show the clicked installments */}
-                    {paidInstallment.map((inst) => (
-                      <TableRow key={inst}>
-                        <TableCell className="table-cell-left">Installment {inst} Fee</TableCell>
-                        <TableCell align="right" className="table-cell-right">
-                          {/* {currency} {perInstallment.toFixed(2)} */}
-                          {currency} {(courseData.iamount / selectedInstallments).toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-
-                    <TableRow>
-                      <TableCell className="table-cell-left">Processing Fee</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        + {currency} {500}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="table-cell-left">Total</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                       {currency} {(installmentsSubtotal + 500).toFixed(2)}
-
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell className="table-cell-left">
-                        Discount ({courseData.idiscount}%)
-                      </TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        - {currency} {discountAmount.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell className="table-cell-left">
-                        Tax
-                      </TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                         + {currency} {0}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow className="net-amount">
-                      <TableCell className="net-amount-left">Net Payable Amount</TableCell>
-                      <TableCell align="right" className="net-amount-right">
-                        {currency} {netPayable.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <div>
-                {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-                {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
-                <button className="payment-btn" onClick={handlePaymentForRazorPay}>Proceed to Pay</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
+        {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+        <button className="payment-btn" >Submit Request</button>
       </div>
-
-      <Footer />
-      <StickyBar />
+      </div>
+      </div>
+      </div>
+      </div>
     </>
   );
 };
-export default OnlineInstallments;
+export default RequestInstallment;

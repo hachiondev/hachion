@@ -112,7 +112,7 @@ function AppRoutes() {
       <Route path='/blogs' element={<Blogs/>}/>
       <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
-      <Route path='/installments' element={<OnlineInstallments/>}/>
+      <Route path="/installments/:courseName" element={<OnlineInstallments />} />
       <Route path='/payment/:courseName' element={<EnrollPayment/>}/>
       <Route path="/blogs/:category_name/:title" element={<QaTestingBlog />} />
       <Route path='/aboutus' element={<Aboutus/>}/>

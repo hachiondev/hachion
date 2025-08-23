@@ -49,11 +49,44 @@ const TrainerProfile = () => {
   if (error) return <div>{error}</div>;
   if (!course) return <div>Course not found</div>;
 
+// const playVideo = (url) => {
+//   const validUrl = url.startsWith('http') ? url : `https://${url}`;
+//   setSelectedVideoUrl(validUrl.replace("watch?v=", "embed/"));
+//   setVideoModalVisible(true);
+// };
+
 const playVideo = (url) => {
-  const validUrl = url.startsWith('http') ? url : `https://${url}`;
-  setSelectedVideoUrl(validUrl.replace("watch?v=", "embed/"));
-  setVideoModalVisible(true);
-};
+    if (!url) return;
+    let validUrl = url.trim();
+    if (!/^https?:\/\//i.test(validUrl)) validUrl = `https://${validUrl}`;
+
+    // --- YouTube Shorts ---
+    if (/youtube\.com\/shorts\//i.test(validUrl)) {
+      const m = validUrl.match(/\/shorts\/([^?&/]+)/i);
+      if (m && m[1]) {
+        validUrl = `https://www.youtube.com/embed/${m[1]}`;
+      }
+    }
+    // --- YouTube long link ---
+    else if (/youtube\.com\/watch\?/i.test(validUrl)) {
+      const v = new URL(validUrl).searchParams.get('v');
+      if (v) validUrl = `https://www.youtube.com/embed/${v}`;
+    }
+    // --- YouTube short link ---
+    else if (/youtu\.be\//i.test(validUrl)) {
+      const m = validUrl.match(/youtu\.be\/([^?&/]+)/i);
+      if (m && m[1]) validUrl = `https://www.youtube.com/embed/${m[1]}`;
+    }
+
+    // --- Google Drive (file) ---
+    if (/drive\.google\.com\/file\/d\//i.test(validUrl)) {
+      const m = validUrl.match(/\/d\/(.*?)\//);
+      if (m && m[1]) validUrl = `https://drive.google.com/file/d/${m[1]}/preview`;
+    }
+
+    setSelectedVideoUrl(validUrl);
+    setVideoModalVisible(true);
+  };
 
   return (
     <div className='mode-container'>

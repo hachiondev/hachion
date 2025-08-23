@@ -10,6 +10,8 @@ import CourseDetail from './CourseDetail';
 import Resume from './Resume';
 import Review from './Review';
 import StudentReview from './StudentReview';
+import AdminCoupon from './AdminCoupon';
+import AdminTools from './AdminTools';
 export default function Course() {
   const [activeTab, setActiveTab] = useState('courseDetails');
   const handleTabChange = (tab) => {
@@ -24,6 +26,18 @@ export default function Course() {
           onClick={() => handleTabChange('courseDetails')}
         >
           Course Details
+        </div>
+        <div 
+          className={`tab-item ${activeTab === 'adminTools' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('adminTools')}
+        >
+          Tools
+        </div>
+        <div 
+          className={`tab-item ${activeTab === 'adminCoupon' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('adminCoupon')}
+        >
+          Coupon Code
         </div>
         <div 
           className={`tab-item ${activeTab === 'schedule' ? 'active-tab' : ''}`}
@@ -69,6 +83,8 @@ export default function Course() {
         </div>
       </div>
       {activeTab==='courseDetails' && <CourseDetail/>}
+      {activeTab==='adminTools' &&  <AdminTools/>}
+      {activeTab==='adminCoupon' &&  <AdminCoupon/>}
       {activeTab==='schedule' &&  <CourseSchedule/>}
       {activeTab==='curriculum' &&  <Curriculum/>}
       {activeTab==='faq' &&  <Faq/>}

@@ -12,7 +12,9 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { useLocation, useParams } from "react-router-dom";
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { RiCloseCircleLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,9 +36,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const RequestInstallment = ({ selectedBatchData } ) => {
+const RequestInstallment = ({ selectedBatchData, closeModal } ) => {
     const { courseName } = useParams();
+      const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
  const location = useLocation();
+ const modalRef = useRef(null);
+
+ const handleSubmitRequest = () => {
+  setSuccessMessage("Your installment request has been submitted successfully. Once it is approved, you will receive an email notification.");
+  setErrorMessage("");
+  setTimeout(() => {
+   navigate(`/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`);
+  }, 5000);
+};
+
+useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal(); // call parent to hide modal
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
+
  const [courseData, setCourseData] = useState(
     selectedBatchData || {
       courseName: courseName || "React JS Fundamentals",
@@ -260,12 +286,13 @@ const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
   return (
     <>
-     <div className="installment-modal-overlay">
-      <div className="installment-modal-content">
+     <div className="installment-modal-overlay" onClick={closeModal}>
+      <div className="installment-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="request-batch">
           <div className="request-header">
         <p>Installments Request</p>
       </div>
+      <AiOutlineCloseCircle onClick={closeModal} className="button-close" />
 
       <div className='enrollment-details'>
         {/* Installments Selection */}
@@ -331,12 +358,47 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
             </div>
           </div>
         </div>
-        {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-        {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-        <button className="payment-btn" >Submit Request</button>
+        <button className="payment-btn" onClick={handleSubmitRequest}>
+          Submit Request
+        </button>
       </div>
+
+      {successMessage && (
+        <p style={{ color: "green", fontWeight: "bold", marginTop: 10, textAlign: "center" }}>
+          {successMessage}
+        </p>
+      )}
       </div>
+
+      {showModal && (
+                  <div
+                    className="modal"
+                    style={{ display: "block" }}
+                    onClick={() => {
+                      setShowModal(false);
+                      closeModal(false);
+                    }}
+                  >
+                    <div
+                      className="modal-dialog"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="have-modal-content" id="#querymodal">
+                        <button
+                          className="close-btn"
+                          aria-label="Close"
+                          onClick={() => {
+                            setShowModal(false);
+                            closeModal(false);
+                          }}
+                        >
+                          <RiCloseCircleLine />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
       </div>
       </div>
       </div>

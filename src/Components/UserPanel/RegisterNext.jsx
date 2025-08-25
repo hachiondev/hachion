@@ -8,15 +8,16 @@ import PopupInterest1 from './PopupInterest1';
 import PopupInterest2 from './PopupInterest2';
 import PopupInterest3 from './PopupInterest3';
 import PopupInterest4 from './PopupInterest4';
+import axios from "axios";
 
 const RegisterNext = () => {
-  const [otp, setOtp] = useState(Array(4).fill("")); // OTP array initialized
+  const [otp, setOtp] = useState(Array(4).fill("")); 
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordType, setPasswordType] = useState('password');
   const [confirmPasswordType, setConfirmPasswordType] = useState('password');
-  const [resendLoading, setResendLoading] = useState(false); // To manage resend OTP loading state
+  const [resendLoading, setResendLoading] = useState(false); 
   const navigate = useNavigate();
   const [messageType, setMessageType] = useState("");
   const userDataString = localStorage.getItem('registeruserData');
@@ -31,7 +32,12 @@ const [formData, setFormData] = useState({
   interests: [],
   learningMethods: [],
   trainingMode: "",
-  skillLevel: ""
+  skillLevel: "",
+  lookingForJob: "",
+  realTimeProjects: "",
+  certificationOrPlacement: "",
+  speakToCourseAdvisor: "",
+  whereYouHeard: ""
 });
 
 const handleFormChange = (field, value) => {
@@ -160,7 +166,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     } catch (error) {
       setRegisterMessage(error.message);
       setMessageType("error");
-      // alert(`Error: ${error.message}`);
+      
     } finally {
       setResendLoading(false);
     }
@@ -173,12 +179,47 @@ const handleSkip = () => {
 const handleNext = () => setPopupStep(prev => prev + 1);
 const handleBack = () => setPopupStep(prev => prev - 1);
 
-const handleSubmitPopup = () => {
-  localStorage.setItem("userPreferences", JSON.stringify(formData));
-  localStorage.setItem("user", JSON.stringify(registeruserData));
-  navigate("/");
-};
 
+const handleSubmitPopup = async () => {
+  
+   try {
+    
+    const profileResponse = await axios.get(
+      `https://api.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`
+    );
+
+    const profileData = profileResponse.data;
+
+  const payload = {
+    studentId: profileData.studentId || "STU123", 
+    studentName: profileData.name || "Lakshmi",
+    studentEmail: profileData.email || "abc@gmail.com",
+    mobile: profileData.mobile || "8106447416",
+    currentRole: formData.role === "Other" ? formData.otherRole : formData.role,
+    primaryGoal: formData.goal,
+    areasOfInterest: formData.interests.join(", "),
+    preferToLearn: formData.learningMethods,
+    preferredTrainingMode: formData.trainingMode,
+    currentSkill: formData.skillLevel,
+    lookingForJob: formData.lookingForJob || "",
+    realTimeProjects: formData.realTimeProjects || "",
+    certificationOrPlacement: formData.certificationOrPlacement || "",
+    speakToCourseAdvisor: formData.speakToCourseAdvisor || "",
+    whereYouHeard: formData.whereYouHeard || ""
+  };
+
+    await axios.post("https://api.hachion.co/popup-onboarding", payload);
+
+    
+    localStorage.setItem("userPreferences", JSON.stringify(payload));
+    localStorage.setItem("user", JSON.stringify(registeruserData));
+
+    
+    navigate("/");
+  } catch (err) {
+    console.error("Error saving onboarding:", err);
+  }
+};
   return (
     <div className="login">
       <div className="login-left">
@@ -200,12 +241,12 @@ const handleSubmitPopup = () => {
           <div className="otp-verify">
             <p className='tag' style={{marginBottom: '0'}}>Please check your inbox</p>
             <p className='tag'>OTP has been sent to<span className='mail-to-register' style={{marginLeft: '5px'}}>{registeruserData.email}</span></p>
-            {/* <h6 className="enter-otp">Enter OTP: </h6> */}
+            
             <div className="otp">
   {otp.map((digit, index) => (
     <input
       key={index}
-      id={`otp-input-${index}`} // Assign unique ID
+      id={`otp-input-${index}`} 
       className="otp-number"
       type="text"
       maxLength="1"

@@ -7,7 +7,7 @@ const PopupInterest1 = ({ formData, onChange, onNext, onSkip }) => {
   const [courses, setCourses] = useState([]);
     useEffect(() => {
     axios
-      .get("https://api.hachion.co/courses/all")
+      .get("http://localhost:8081/courses/all")
       .then((res) => {
         setCourses(res.data);
       })

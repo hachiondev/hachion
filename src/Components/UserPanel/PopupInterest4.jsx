@@ -15,8 +15,8 @@ const PopupInterest4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
         <select
           className="form-control-pathfinder"
         id="pathfinder"
-          value={formData.advisorCall || ""}
-          onChange={(e) => onChange("advisorCall", e.target.value)}
+          value={formData.speakToCourseAdvisor || ""}
+          onChange={(e) => onChange("speakToCourseAdvisor", e.target.value)}
         >
           <option value="">-- Select --</option>
           <option value="Yes, please schedule a call">Yes, please schedule a call</option>
@@ -31,8 +31,8 @@ const PopupInterest4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
         <select
           className="form-control-pathfinder"
         id="pathfinder"
-          value={formData.heardFrom || ""}
-          onChange={(e) => onChange("heardFrom", e.target.value)}
+          value={formData.whereYouHeard || ""}
+          onChange={(e) => onChange("whereYouHeard", e.target.value)}
         >
           <option value="">-- Select --</option>
           <option value="Google">Google</option>
@@ -43,13 +43,13 @@ const PopupInterest4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
           <option value="Other">Other</option>
         </select>
 
-        {formData.heardFrom === "Other" && (
+        {formData.whereYouHeard === "Other" && (
           <input
             type="text"
             className="form-control-pathfinder mt-2"
             placeholder="Please specify"
-            value={formData.heardFromOther || ""}
-            onChange={(e) => onChange("heardFromOther", e.target.value)}
+            value={formData.whereYouHeardOther || ""}
+            onChange={(e) => onChange("whereYouHeardOther", e.target.value)}
           />
         )}
       </div>

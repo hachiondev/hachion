@@ -7,12 +7,12 @@ import Footer from './Footer';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer,
+TextField, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { useLocation, useParams } from "react-router-dom";
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,11 +34,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+  const initialValues = {
+    name: "",
+    email: "",
+    number:"",
+    country:""
+  };
+
 const OnlineInstallments = () => {
-    const { courseName } = useParams();
- const location = useLocation();
-  const { selectedBatchData } = location.state || {};  
- const [courseData, setCourseData] = useState(
+const { courseName } = useParams();
+const location = useLocation();
+const { selectedBatchData } = location.state || {};  
+const [courseData, setCourseData] = useState(
     selectedBatchData || {
       courseName: courseName || "React JS Fundamentals",
       amount: 15000,
@@ -53,6 +60,9 @@ console.log("installments initial:", courseData);
   const [paidInstallment, setPaidInstallment] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [studentData, setStudentData] = useState(null);
+  const mobileInputRef = useRef(null);
   const summaryRef = useRef(null);
 const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
  useEffect(() => {
@@ -85,6 +95,66 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
 
     fetchCoursePricing();
   }, [selectedBatchData]);
+
+      useEffect(() => {
+    if (mobileNumber) {
+      const dialCodeMatch = countries.find((c) =>
+        mobileNumber.replace(/\s+/g, '').startsWith(c.code)
+      );
+      if (dialCodeMatch) {
+        setStudentData((prev) => ({
+          ...prev,
+          country: dialCodeMatch.name,
+        }));
+      }
+    }
+  }, [mobileNumber]);
+
+      useEffect(() => {
+        const fetchStudentDetails = async () => {
+          const user = JSON.parse(localStorage.getItem('loginuserData'));
+          const email = user?.email;
+  
+          if (!email) return;
+  
+          try {
+            const response = await axios.get('https://api.hachion.co/api/v1/user/students');
+            const allStudents = response.data;
+  
+            const matchedStudent = allStudents.find((student) => student.email === email);
+  
+            if (matchedStudent) {
+              setStudentData(matchedStudent);
+              setMobileNumber(matchedStudent.mobile || '');
+            }
+          } catch (err) {
+            
+          }
+        };
+  
+        fetchStudentDetails();
+      }, []);
+
+          const countries = [
+      { name: 'India', code: '+91', flag: 'IN' },
+      { name: 'United States', code: '+1', flag: 'US' },
+      { name: 'United Kingdom', code: '+44', flag: 'GB' },
+      { name: 'Thailand', code: '+66', flag: 'TH' },
+      { name: 'Canada', code: '+1', flag: 'CA' },
+      { name: 'Australia', code: '+61', flag: 'AU' },
+      { name: 'Germany', code: '+49', flag: 'DE' },
+      { name: 'France', code: '+33', flag: 'FR' },
+      { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
+      { name: 'Qatar', code: '+974', flag: 'QA' },
+      { name: 'Japan', code: '+81', flag: 'JP' },
+      { name: 'China', code: '+86', flag: 'CN' },
+      { name: 'Russia', code: '+7', flag: 'RU' },
+      { name: 'South Korea', code: '+82', flag: 'KR' },
+      { name: 'Brazil', code: '+55', flag: 'BR' },
+      { name: 'Mexico', code: '+52', flag: 'MX' },
+      { name: 'South Africa', code: '+27', flag: 'ZA' },
+      { name: 'Netherlands', code: '+31', flag: 'NL' }
+    ];
 
   const handleInstallmentChange = (e) => {
     setSelectedInstallments(Number(e.target.value));
@@ -283,11 +353,78 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
       </div>
 
       <div className='enrollment'>
-        <p>Go with Installments</p>
+        <p>Enrollment Details</p>
       </div>
 
       <div className='enrollment-details'>
-        {/* Installments Selection */}
+      <div className='personal-details'>
+          <div className='personal-details-header'>
+              <p>1. Personal Details</p>
+          </div>
+        
+          <form className='details'>
+        <div className='input-row'>
+          <div className="col-md-5">
+            <label htmlFor="inputName4" className="form-label">
+              Full Name<span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              
+              placeholder='Enter your full name'
+              value={studentData?.userName || ''}
+              readOnly
+              required
+            />
+          </div>
+          <div className="col-md-5">
+            <label htmlFor="inputEmail4" className="form-label">
+              Email ID<span className="required">*</span>
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              
+              placeholder='abc@gmail.com'
+              value={studentData?.email || ''}
+              readOnly
+            />
+          </div>
+        </div>
+
+        <div className='input-row'>
+          <div className="col-md-5">
+          <label className="form-label">Mobile Number</label>
+          <div className="input-wrapper">
+            <input
+              type="tel"
+              className="form-control"
+              ref={mobileInputRef}
+              placeholder="Enter your mobile number"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              readOnly
+            />
+          </div>
+        </div>
+          <div className="col-md-5"> 
+          <label htmlFor="inputCity" className="form-label">
+            Country<span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your country"
+            value={studentData?.country || ''}
+            readOnly
+            required
+          />
+        </div>
+        </div>
+      </form>
+        </div>
+
         <div className="installments-section">
           <label className="installments-label">No. of Installments:</label>
           <div className="installments-options">
@@ -312,7 +449,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
 
         <div className='personal-details'>
           <div className='personal-details-header'>
-            <p>1. Installment Details</p>
+            <p>2. Installment Details</p>
           </div>
           <div className='details-box'>
             <div className='enroll-table'>
@@ -324,14 +461,14 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                       <StyledTableCell align="center">Installments</StyledTableCell>
                       <StyledTableCell align="center">Installment Amount</StyledTableCell>
                       <StyledTableCell align="center">Total</StyledTableCell>
-                      {/* <StyledTableCell align="center">Action</StyledTableCell> */}
+                      <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                  {selectedInstallments > 0 &&
-  Array.from({ length: selectedInstallments }).map((_, index) => {
-    const baseInstallment = Number(courseData.iamount) / selectedInstallments;
-    const totalWithCharge = baseInstallment + 500;
+                Array.from({ length: selectedInstallments }).map((_, index) => {
+                  const baseInstallment = Number(courseData.iamount) / selectedInstallments;
+                  const totalWithCharge = baseInstallment + 500;
     
                         return (
                           <StyledTableRow key={index}>
@@ -349,19 +486,43 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
         <StyledTableCell align="center">
           <strong>{currency} {totalWithCharge.toFixed(2)}</strong>
         </StyledTableCell>
+        <StyledTableCell align="center">
+                              <button 
+                                className="apply-btn" 
+                                onClick={() => handlePayment(index + 1)}
+                              >
+                                Pay
+                              </button>
+                            </StyledTableCell>
                           </StyledTableRow>
                         );
                       })}
                   </TableBody>
                 </Table>
               </TableContainer>
+
+              <div className='coupon-div'>
+              <p>Have a coupon code ?</p>
+              <div className='coupon'>
+              <TextField
+          placeholder='Enter coupon code'
+            id="filled-start-adornment"
+            className='coupon-field'
+            slotProps={{
+            
+            }}
+            variant="filled"
+          />
+          <button className='apply-btn'>Apply</button>
+          </div>
+          </div>
             </div>
           </div>
         </div>
         {paidInstallment.length > 0 && (
           <div className='personal-details' ref={summaryRef}>
             <div className='personal-details-header'>
-              <p>2. Installment Order Summary</p>
+              <p>3. Installment Order Summary</p>
             </div>
             <div className='details-box'>
               <TableContainer component={Paper} className="table-container">

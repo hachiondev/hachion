@@ -760,7 +760,10 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
         fullWidth
       >
         <DialogContent>
-          <RequestInstallment selectedBatchData={selectedBatchData} />
+          <RequestInstallment 
+            selectedBatchData={selectedBatchData} 
+            closeModal={() => setOpenInstallmentPopup(false)}
+          />
         </DialogContent>
       </Dialog>
       </>

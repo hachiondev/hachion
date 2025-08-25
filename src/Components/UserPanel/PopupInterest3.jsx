@@ -16,8 +16,8 @@ const PopupInterest3 = ({ formData, onChange, onNext, onBack }) => {
         <select
           className="form-control-pathfinder"
         id="pathfinder"
-          value={formData.careerGoal || ""}
-          onChange={(e) => onChange("careerGoal", e.target.value)}
+          value={formData.lookingForJob || ""}
+          onChange={(e) => onChange("lookingForJob", e.target.value)}
         >
           <option value="">-- Select --</option>
           <option value="Yes, job">Yes, job</option>
@@ -49,8 +49,8 @@ const PopupInterest3 = ({ formData, onChange, onNext, onBack }) => {
         <select
           className="form-control-pathfinder"
         id="pathfinder"
-          value={formData.certOrPlacement || ""}
-          onChange={(e) => onChange("certOrPlacement", e.target.value)}
+          value={formData.certificationOrPlacement || ""}
+          onChange={(e) => onChange("certificationOrPlacement", e.target.value)}
         >
           <option value="">-- Select --</option>
           <option value="Certification only">Certification only</option>

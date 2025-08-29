@@ -134,7 +134,7 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 	@Override
 	public String captureOrder(String paymentId, String orderId, String signature, String studentId, String courseName,
-			String batchId, Double discount) {
+			String batchId) {
 		try {
 
 			JSONObject options = new JSONObject();
@@ -162,21 +162,48 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
 			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
 
+			
+			
+			List<Object[]> result = courseRepository.findCourseFeeByCourseName(courseName);
+
+			Double courseFeeFromDb = null;
+			Double discountFromDb = null;
+
+			if (!result.isEmpty()) {
+				Object[] row = result.get(0);
+				courseFeeFromDb = row[0] != null ? ((Number) row[0]).doubleValue() : null;
+				discountFromDb = row[1] != null ? ((Number) row[1]).doubleValue() : null;
+			}
+
+			double courseFee = courseFeeFromDb != null ? courseFeeFromDb : amount;
+			double discount = discountFromDb != null ? discountFromDb : 0.0;
+
+			double discountAmount = (courseFee * discount) / 100;
+			double finalPrice = courseFee - discountAmount;
+
+			
+			String method = payment.get("method"); // upi, card, netbanking, wallet etc.
+			System.out.println("payment method : " + method);
+			
 			String rawJson = payment.toString();
+			
 
 			PaymentTransaction tx = new PaymentTransaction();
 			tx.setOrderId(orderId);
 			tx.setTransactionId(paymentId);
 			tx.setStatus(status);
 			tx.setAmount(amount);
-			tx.setDiscount(discount);
 			tx.setCurrency(currency);
 			tx.setPayerEmail(studentEmail);
 			tx.setStudentId(studentId);
 			tx.setCourseName(courseName);
 			tx.setBatchId(batchId);
 			tx.setPaymentDate(LocalDateTime.now());
+			tx.setCourseFee(courseFeeFromDb);
 			tx.setRawResponseJson(rawJson);
+			tx.setDiscount(discount);
+			tx.setCourseFee(finalPrice);
+			tx.setPaymentMethod(method);
 
 			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
 
@@ -344,4 +371,7 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 		return pr;
 
 	}
+	 public List<PaymentTransaction> getTransactionsByEmailAndCourse(String payerEmail, String courseName) {
+	        return paymentTransactionRepository.findByPayerEmailAndCourseName(payerEmail, courseName);
+	    }
 }

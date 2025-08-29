@@ -451,18 +451,24 @@ public class CourseController {
 	}
 
 	@GetMapping("/names-and-categories")
-	
-	public List<Map<String, String>> getCourseNamesCategoriesAndImages() {
-	    List<Object[]> results = repo.findAllCourseNamesCategoriesAndImages();
 
-	    List<Map<String, String>> courses = new ArrayList<>();
-	    for (Object[] row : results) {
-	        Map<String, String> courseMap = new HashMap<>();
-	        courseMap.put("courseName", (String) row[0]);
-	        courseMap.put("courseCategory", (String) row[1]);
-	        courseMap.put("courseImage", (String) row[2]);
-	        courses.add(courseMap);
-	    }
-	    return courses;
+	public List<Map<String, String>> getCourseNamesCategoriesAndImages() {
+		List<Object[]> results = repo.findAllCourseNamesCategoriesAndImages();
+
+		List<Map<String, String>> courses = new ArrayList<>();
+		for (Object[] row : results) {
+			Map<String, String> courseMap = new HashMap<>();
+			courseMap.put("courseName", (String) row[0]);
+			courseMap.put("courseCategory", (String) row[1]);
+			courseMap.put("courseImage", (String) row[2]);
+			courses.add(courseMap);
+		}
+		return courses;
 	}
+
+	@GetMapping("/getByCourseName/{courseName}")
+	public List<Course> getCoursesByName(@PathVariable("courseName") String courseName) {
+		return repo.findByCourseName(courseName);
+	}
+
 }

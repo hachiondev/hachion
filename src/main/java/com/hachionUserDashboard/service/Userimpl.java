@@ -27,6 +27,7 @@ import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
+import com.hachionUserDashboard.util.EmailUtil;
 import com.hachionUserDashboard.util.OtpUtil;
 
 import Response.LoginResponse;
@@ -41,17 +42,17 @@ public class Userimpl implements UserService {
 	private RegisterStudentRepository userRepository;
 
 	private OtpUtil otpUtil;
-//	@Autowired
-//	private EmailUtil emailUtil;
+	@Autowired
+	private EmailUtil emailUtil;
 
-//	@Autowired
-//	private EmailService emailService;
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-//	@Autowired
-//	private WebhookSenderService webhookSenderService;
+	@Autowired
+	private WebhookSenderService webhookSenderService;
 	
 	@Value("${user.profile.image.upload.dir}")
 	private String uploadDir;
@@ -77,7 +78,7 @@ public class Userimpl implements UserService {
 
 //		emailUtil.sendOtpEmail(email, otp);
 		userRepository.save(user);
-//		emailUtil.sendOtpEmail(email, otp);
+		emailUtil.sendOtpEmail(email, otp);
 
 		return "OTP sent to your email.";
 	}
@@ -127,8 +128,8 @@ public class Userimpl implements UserService {
 		user.setMode(registrationRequest.getMode());
 		user.setDate(LocalDate.now());
 
-//		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
-//				registrationRequest.getFirstName());
+		emailService.sendEmailForRegisterOnlineStudent(registrationRequest.getEmail(),
+				registrationRequest.getFirstName());
 
 		RegisterStudent save = userRepository.save(user);
 
@@ -138,7 +139,7 @@ public class Userimpl implements UserService {
 		System.out.println("Mobile: " + registrationRequest.getMobile());
 		System.out.println("Country: " + registrationRequest.getCountry());
 
-//		webhookSenderService.sendRegistrationDetails(save);
+		webhookSenderService.sendRegistrationDetails(save);
 
 		return "Password and user details updated successfully.";
 	}
@@ -199,55 +200,7 @@ public class Userimpl implements UserService {
 		return userRepository.findBYEmailForOauth(email);
 	}
 
-//	    @Override
-//	    public void saveUser(String email, String username) {
-//	        Optional<User> existingUser = userRepository.findBYEmailForOauth(email);
-//	        if (existingUser.isEmpty()) {
-//	            User newUser = new User();
-//	            newUser.setEmail(email);
-//	            newUser.setUserName(username);
-//	            userRepository.save(newUser);
-//	        }
-//	    }
 
-//	    public Map<String, String> getUserInfo(String accessToken) {
-//	        RestTemplate restTemplate = new RestTemplate();
-//	        String userInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
-//	        
-//	        HttpHeaders headers = new HttpHeaders();
-//	        headers.setBearerAuth(accessToken);
-//	        
-//	        HttpEntity<String> entity = new HttpEntity<>(headers);
-//	        ResponseEntity<Map> response = restTemplate.exchange(userInfoEndpoint, HttpMethod.GET, entity, Map.class);
-//	        
-//	        if (response.getStatusCode() == HttpStatus.OK) {
-//	            Map<String, String> userInfo = response.getBody();
-//	            if (userInfo != null) {
-//	                saveUser(userInfo.get("email"), userInfo.get("name"));
-//	            }
-//	            return userInfo;
-//	        }
-//	        return Collections.emptyMap();
-//	    }
-
-	// public String addUser(UserRegistrationRequest userDTO) {
-//    	String otp= otpUtil.generateOtp();
-//   	emailUtil.sendOtpEmail(userDTO.getEmail(), otp);
-//   	User user = new User(
-//               null, userDTO.getName(),userDTO.getEmail(),
-//                passwordEncoder.encode(userDTO.getPassword())
-//      );
-//        User user=new User();
-//        user.setUserName(userDTO.getName());
-//        user.setEmail(userDTO.getEmail());
-//        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-//        user.setPassword(hashedPassword);
-//        user.setOTP(otp);
-//        user.setOtpgeneratedTime(LocalDateTime.now());
-//       userRepository.save(user);
-//       return user.getUserName(); // Ensure `getUsername` is defined in your `User` entity.
-// }
-//    
 	public List<RegisterStudent> getAllRegisteredStudents() {
 		return userRepository.findAll();
 	}
@@ -286,55 +239,7 @@ public class Userimpl implements UserService {
 	public void UserServiceImpl(RegisterStudentRepository userRepository) {
 		this.userRepository = userRepository;
 	}
-//public String login(LoginRequest loginDto) {
-//    User user = UserRepository.findByEmail(loginDto.getEmail());
-//    if (!loginDto.getPassword().equals(user.getPassword())) {
-//      return "Password is incorrect";
-//    } else if (!user.isActive()) {
-//      return "your account is not verified";
-//    }
-//    return "Login successful";
-//  }
-//
 
-//@Override
-//public ResponseEntity<?> login(LoginRequest loginrequest) {
-//    System.out.println("Login request received for email: " + loginrequest.getEmail());
-//
-//    // Fetch user by email
-//    Optional<User> optionalUser = UserRepository.findOneByEmail(loginrequest.getEmail());
-//    System.out.println("User fetched from database: " + optionalUser);
-//
-//    // Check if optionalUser is null
-//    if (optionalUser == null) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//            .body(new LoginResponse("An unexpected error occurred", false));
-//    }
-//
-//    if (optionalUser.isPresent()) {
-//        User user = optionalUser.get(); // Extract the User object
-//        String providedPassword = loginrequest.getPassword();
-//        String storedPassword = user.getPassword();
-//
-//        System.out.println("Password provided: " + providedPassword);
-//        System.out.println("Password stored: " + storedPassword);
-//
-//        // Compare passwords
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        if (passwordEncoder.matches(providedPassword, storedPassword)) {
-//            // Successful login
-//            return ResponseEntity.ok(new LoginResponse("Login Success", true));
-//        } else {
-//            // Incorrect password
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                .body(new LoginResponse("Password does not match", false));
-//        }
-//    } else {
-//        // Email not found
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//            .body(new LoginResponse("Email does not exist", false));
-//    }
-//}
 
 	public String verifyAccount(String email, String otp) {
 		RegisterStudent user = userRepository.findByEmail(email);
@@ -366,7 +271,7 @@ public class Userimpl implements UserService {
 		userRepository.save(user);
 
 		// Send the new OTP to the user's email
-//		emailUtil.sendOtpEmail(user.getEmail(), newOtp);
+		emailUtil.sendOtpEmail(user.getEmail(), newOtp);
 
 		return "OTP regenerated and sent successfully.";
 	}

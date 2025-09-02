@@ -43,7 +43,7 @@ const AdminLogin = () => {
     <div className="login">
       <div className="login-left">
         <div className="login-top">
-          <img src={logo} alt="logo" className="login-logo" />
+          <img src={logo} alt="logo" className="logo" />
           <h3 className="welcome-back">Welcome back!</h3>
           <h4 className="login-continue">Login to Admin Dashboard</h4>
           <div className="login-mid">

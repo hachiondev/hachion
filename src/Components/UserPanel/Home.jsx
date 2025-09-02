@@ -1,6 +1,4 @@
 import React, { useEffect , useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import Banner from './Banner';
 import Association from './Association';
 import TrainingEvents from './TrainingEvents';
@@ -16,6 +14,8 @@ import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
 import RecentEntries from './RecentEntries';
+import TopBarNew from './TopBarNew';
+import NavbarTop from './NavbarTop';
 
 export const Home = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -81,7 +81,7 @@ export const Home = () => {
 </Helmet>
    <div className='home-background'>
   <PopupBanner/>
-<Topbar/>
+<TopBarNew/>
 <NavbarTop/>
 <Banner/>
 <Trending/>

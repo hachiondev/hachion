@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Topbar from './Topbar';
+import TopBarNew from './TopBarNew';
 import NavbarTop from './NavbarTop';
 import Sidebar from './Sidebar';
 import SidebarRight, { getTotalCards } from './SidebarRight';
@@ -120,7 +120,7 @@ const Course = () => {
   </script>
 </Helmet>
       <div className='course-top'>
-        <Topbar />
+        <TopBarNew />
         <NavbarTop />
      
         <div>

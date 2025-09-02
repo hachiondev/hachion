@@ -31,7 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function EnrollmentTable() {
+export default function EnrollmentTable({ couponData }) {
   const { courseName } = useParams();
   const location = useLocation();
   const modeType = location.state?.modeType || '';
@@ -40,9 +40,6 @@ export default function EnrollmentTable() {
   const [loading, setLoading] = useState(true);
   const [currency, setCurrency] = useState('USD');
   const [exchangeRate, setExchangeRate] = useState(1);
-
-  
-
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -117,6 +114,24 @@ export default function EnrollmentTable() {
     self: "Self-paced Learning",
   };
 
+    const baseAmount = Math.round(getField('amount') * exchangeRate);
+  const baseDiscount = getField('discount') || 0;
+  let finalDiscount = baseDiscount;
+  let finalTotal = Math.round(getField('total') * exchangeRate);
+if (couponData) {
+  const type = couponData.discountType; 
+  const value = couponData.discountValue || 0;
+
+  if (type === "percent") {
+    finalDiscount += value;
+    finalTotal = baseAmount - (baseAmount * finalDiscount / 100);
+  } else if (type === "fixed") {
+    finalTotal = finalTotal + value;
+    if (finalTotal < 0) finalTotal = 0;
+  }
+}
+
+
   return (
     <TableContainer component={Paper}>
       <Table className='table-details' sx={{ minWidth: 700 }} aria-label="customized table">
@@ -135,11 +150,16 @@ export default function EnrollmentTable() {
             <StyledTableCell component="th" scope="row" align="center">
               {courseData.courseName}
             </StyledTableCell>
-            <StyledTableCell align="center">{courseData.batch || "N/A"}</StyledTableCell>
+            {/* <StyledTableCell align="center">{courseData.batch || "N/A"}</StyledTableCell>
             <StyledTableCell align="center">{modeTypeLabels[modeType] || 'N/A'}</StyledTableCell>
             <StyledTableCell align="center">{Math.round(getField('amount') * exchangeRate)}</StyledTableCell>
             <StyledTableCell align="center">{getField('discount')}</StyledTableCell>
-            <StyledTableCell align="center">{currency} {Math.round(getField('total') * exchangeRate)}</StyledTableCell>
+            <StyledTableCell align="center">{currency} {Math.round(getField('total') * exchangeRate)}</StyledTableCell> */}
+             <StyledTableCell align="center">{courseData.batch || "N/A"}</StyledTableCell>
+            <StyledTableCell align="center">{modeTypeLabels[modeType] || 'N/A'}</StyledTableCell>
+            <StyledTableCell align="center">{baseAmount}</StyledTableCell>
+            <StyledTableCell align="center">{finalDiscount}%</StyledTableCell>
+            <StyledTableCell align="center">{currency} {Math.round(finalTotal)}</StyledTableCell>
           </StyledTableRow>
         </TableBody>
       </Table>

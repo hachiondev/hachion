@@ -1,0 +1,76 @@
+.topbar-text {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.logo{
+  height: 40px;
+  width: auto;
+  cursor: pointer;
+}
+
+.categories-toggle::after {
+  display: none !important;
+}
+
+.custom-search {
+  border: 1px solid #00aeef;
+}
+
+.custom-search input {
+  border: none;
+  box-shadow: none;
+}
+
+.search-btn {
+  border-radius: 50% !important;
+  background-color: #00aeef !important;
+  padding: 10px;
+  margin-right: 4px;
+}
+
+.search-btn svg {
+  font-size: 18px;
+}
+
+.search-results {
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1050;
+}
+
+.mobile-search-overlay {
+  overflow-y: auto;
+}
+.mobile-search-close-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-btn-link {
+  color: #00aeef !important;
+  text-decoration: none;
+}
+
+.login-btn-link:hover {
+  color: white !important;
+}
+.forgotpassword-text{
+  margin:0 1vh;
+  white-space: wrap;
+  font-size: small;
+  width: 360px;
+}
+
+@media (max-width: 480px) {
+  .topbar-text {
+    font-size: 12px !important;
+  }
+  .topbar-icon {
+    font-size: 14px !important;
+  }
+}

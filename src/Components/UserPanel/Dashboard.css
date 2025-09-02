@@ -373,7 +373,7 @@ white-space: nowrap;
 .form-control, .form-select{
   width: 100%;
   min-width: 150px;
-  margin: 5px;
+  /* margin: 5px; */
   height: 50px;
   border: 1px solid #b3b3b3;
 }
@@ -458,19 +458,22 @@ padding: 0px;
   position: relative;
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .password-field input {
-  width: 100%;
-  padding-right: 40px;
-  border:1px solid #d3d3d3;
+  width: 360px;
+  height: 48px;
+  padding-right: 20px;
+  border:none;
+  margin:0 1vh;
 }
 
 .eye-icon {
   position: absolute;
-  right: 10px;
+  right: 20px;
   cursor: pointer;
-  color: #00AEEF;
+  color: #000;
   font-size: 1.2rem;
 }
 
@@ -976,13 +979,17 @@ min-width: 500;
 .form-select, .form-control {
   height: 35px !important;
   font-size: small;
-  padding: 5px;
+  /* padding: 5px; */
   margin-bottom: 0;
 }
 
 .profile {
   padding: 10px;
   margin-left: 0px;
+}
+.password-field input {
+  width: 90%;
+  padding-right: 20px;
 }
 
 table {

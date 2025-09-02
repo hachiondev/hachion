@@ -20,6 +20,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 
+
   const initialValues = {
     name: "",
     email: "",
@@ -30,8 +31,9 @@ import { useNavigate } from 'react-router-dom';
   const EnrollPayment = () => {
     const location = useLocation();
     const { selectedBatchData, enrollText, modeType,  sendEmail,
-  sendWhatsApp,
+  sendWhatsApp, email,
   sendText } = location.state || {};
+
 
     const [successMessage, setSuccessMessage] = useState("");
       const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +45,19 @@ import { useNavigate } from 'react-router-dom';
 const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
 const [currency, setCurrency] = useState('USD');
 const [exchangeRate, setExchangeRate] = useState(1);
+const { courseName } = useParams(); 
+ const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [paymentData, setPaymentData] = useState({
+    orderId: "",
+    paymentMethod: "",
+    paymentDate: "",
+    courseFee: "",
+    discount: "",
+    gst: "",
+    total: "",
+    netAmount: ""
+  });
     const [selectedCountry, setSelectedCountry] = useState({
           code: '+1',
           flag: 'US',
@@ -61,10 +76,11 @@ const [exchangeRate, setExchangeRate] = useState(1);
     setSuccessMessage("");
   }
 }, []);
+    
   
   const handleCaptureOrder = async (orderId) => {
     const studentId = localStorage.getItem("studentId");
-    const courseName = localStorage.getItem("courseName");
+    
     const batchId = localStorage.getItem("batchId");
 
     if (!studentId || !courseName || !batchId) {
@@ -103,23 +119,6 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   
     const countries = [
       { name: 'India', code: '+91', flag: 'IN' },
-      { name: 'United States', code: '+1', flag: 'US' },
-      { name: 'United Kingdom', code: '+44', flag: 'GB' },
-      { name: 'Thailand', code: '+66', flag: 'TH' },
-      { name: 'Canada', code: '+1', flag: 'CA' },
-      { name: 'Australia', code: '+61', flag: 'AU' },
-      { name: 'Germany', code: '+49', flag: 'DE' },
-      { name: 'France', code: '+33', flag: 'FR' },
-      { name: 'United Arab Emirates', code: '+971', flag: 'AE' },
-      { name: 'Qatar', code: '+974', flag: 'QA' },
-      { name: 'Japan', code: '+81', flag: 'JP' },
-      { name: 'China', code: '+86', flag: 'CN' },
-      { name: 'Russia', code: '+7', flag: 'RU' },
-      { name: 'South Korea', code: '+82', flag: 'KR' },
-      { name: 'Brazil', code: '+55', flag: 'BR' },
-      { name: 'Mexico', code: '+52', flag: 'MX' },
-      { name: 'South Africa', code: '+27', flag: 'ZA' },
-      { name: 'Netherlands', code: '+31', flag: 'NL' }
     ];
 
     const defaultCountry = countries.find((c) => c.flag === "US");
@@ -338,175 +337,94 @@ useEffect(() => {
   };
 }, []);
 
-const handlePayment = async () => {
-  try {
-    const amount = Math.round(getField('total'));
-
-    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
-    
-
-    if (!user || !user.email) {
-      alert("Please log in before making payment.");
-      
-      return;
-    }
-
-    const userEmail = user.email;
-        
-    const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
-      params: { email: userEmail }
-    });
-
-    const studentId = profileResponse.data?.studentId;
-    const mobile = profileResponse.data?.mobile || '';
-    const batchId = selectedBatchData?.batchId;
-    const courseName = selectedBatchData?.schedule_course_name;
-
-    if (!studentId || !batchId || !courseName) {
-      alert("Missing required details to proceed with payment.");
-      
-      return;
-    }
-
-    localStorage.setItem("studentId", studentId);
-    localStorage.setItem("courseName", courseName);
-    localStorage.setItem("batchId", batchId);
-    localStorage.setItem("selectedBatchData", JSON.stringify({
-      ...selectedBatchData,
-      discount: courseData?.discount ?? 0 
-    }));
-
-    const slug = courseName.toLowerCase().replace(/\s+/g, '-');
-    const returnUrl = `https://hachion.co/enroll/${slug}`;
-    
-    if (mobile.startsWith('+91')) {
-
-      const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
-        params: { amount }
-      });
-
-      const razorpayOrder = orderRes.data;
-      const razorpayOrderId = razorpayOrder.id;
-
-      const options = {
-        key: "rzp_live_1g4Axfq4KHi3kl",
-        amount: razorpayOrder.amount,
-        currency: razorpayOrder.currency,
-        name: "Hachion",
-        description: `Payment for ${courseName}`,
-        order_id: razorpayOrderId,
-        handler: async function (response) {
-          
-
-          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-
-          try {
-            
-            const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay", null, {
-              params: {
-                paymentId: razorpay_payment_id,
-                orderId: razorpay_order_id,
-                signature: razorpay_signature,
-                studentId,
-                courseName,
-                batchId,
-                discount: courseData?.discount ?? 0
-              }
-            });
-
-            // alert(captureRes.data);
-            setSuccessMessage("✅ " + captureRes.data);
-setErrorMessage("");
-          } catch (error) {
-            // console.error("❌ Error capturing Razorpay payment:", error);
-            // if (error.response) {
-            //   console.error("Response:", error.response.data);
-            // }
-            // alert("Payment verification failed.");
-            console.error("❌ Error capturing Razorpay payment:", error);
-const errMsg = error?.response?.data || "❌ Payment verification failed.";
-setErrorMessage(errMsg);
-setSuccessMessage("");
-          }
-        },
-        prefill: {
-          name: user.name,
-          email: user.email,
-          contact: mobile.replace('+91', '')
-        },
-        theme: {
-          color: "#3399cc"
-        }
-      };
-
-     try {
-  
-  const rzp = new window.Razorpay(options);
-
-  rzp.open();
-} catch (err) {
-  
-  alert("Failed to open Razorpay modal.");
-}
-
-    } else {
-      
-      const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
-        params: {
-          amount,
-          returnUrl
-        }
-      });
-      
-      const approvalUrl = paypalRes.data;
-
-      if (approvalUrl.startsWith("https://www.paypal.com")) {
-        
-        window.location.href = approvalUrl;
-      } else {
-        
-        // alert("Unexpected response: " + approvalUrl);
-        setErrorMessage("❌ Unexpected PayPal response.");
-setSuccessMessage("");
-      }
-    }
-
-} catch (error) {
-  
-  if (error instanceof Error) {
-  
-  } else if (typeof error === "object" && error !== null) {
-    
-  } else {
-   
-  }
-    setErrorMessage("❌ Failed to start payment.");
-setSuccessMessage("");
-  }
-};
-
   const navigate = useNavigate();
+  
 
-  const courseData = {
-    courseName: "Full Stack Web Development",
-    courseImage: Python,
-    trainer: "Navya",
-    duration: "6 Months",
-    mode: "Live Training",
-    batchStartDate: "August 15, 2024",
-    batchTime: "07:30 PM EST",
+useEffect(() => {
+  const fetchCourse = async () => {
+    try {
+      setLoading(true);
+
+      let formattedCourseName = courseName;
+
+      formattedCourseName = decodeURIComponent(formattedCourseName);
+      formattedCourseName = formattedCourseName.replace(/-/g, " ");      
+      formattedCourseName = formattedCourseName
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ");
+
+      const response = await axios.get(
+        `https://api.hachion.co/courses/getByCourseName/${formattedCourseName}`
+      );
+
+      
+
+      if (response.data && response.data.length > 0) {
+        const course = response.data[0]; 
+
+        const mappedCourse = {
+          courseName: course.courseName,
+          courseImage: course.courseImage,
+          duration: course.numberOfClasses,
+          iamount: course.iamount,
+          idiscount: course.idiscount,
+        };
+
+        setCourseData(mappedCourse);
+        
+      }
+    } catch (err) {
+      console.error("Error fetching course:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const paymentData = {
-    orderId: "#H001",
-    paymentMethod: "Credit Card",
-    paymentDate: "08-28-2025",
-    courseFee: "15000",
-    discount: "500",
-    gst: "500",
-    total: "15000",
-    netAmount: "15000"
-  };
+  fetchCourse();
+}, [courseName]);
+
+ useEffect(() => {
+    const fetchPaymentData = async () => {
+      try {
+        
+        let courseName = selectedBatchData?.schedule_course_name || "";
+
+        if (!email || !courseName) {
+          console.warn("Missing email or courseName, skipping API call");
+          return;
+        }
+
+        const response = await axios.get(
+          `https://api.hachion.co/razorpay/getByEmailAndCourse?email=${email}&courseName=${encodeURIComponent(courseName)}`
+        );
+
+        let payment = Array.isArray(response.data) && response.data.length > 0
+          ? response.data[0]
+          : response.data;
+
+        
+        if (payment && !payment.paymentMethod && payment.rawResponseJson) {
+          try {
+            const parsedRaw = JSON.parse(payment.rawResponseJson);
+            payment.paymentMethod = parsedRaw.method || null;
+          } catch (err) {
+            console.error("Error parsing rawResponseJson:", err);
+          }
+        }
+        setPaymentData(payment);
+      } catch (error) {
+        console.error("Error fetching payment data:", error);
+      }
+    };
+
+    fetchPaymentData();
+  }, [email, selectedBatchData]);
+
+  if (!paymentData) return <p>Loading...</p>;
+   if (loading) return <p>Loading...</p>;
+  if (!courseData) return <p>No course found</p>;
+
     return (
       <>
       <div className="enrollpayment">
@@ -572,27 +490,27 @@ setSuccessMessage("");
                     <span className="detail-label">Course Name :</span>
                     <span className="detail-value">
                 <img
-                  src={courseData.courseImage}
+                   src={`https://api.hachion.co/${courseData.courseImage}`}
                   alt="Course"
                   style={{ width: "40px", height: "40px", marginRight: "10px" }}
                 />
-                {courseData.courseName}
+                {selectedBatchData.schedule_course_name}
                 </span></div>
                 <div className="pay-row">
                 <span className="detail-label">Trainer : </span>
-                    <span className="detail-value">{courseData.trainer}</span>
+                    <span className="detail-value">{selectedBatchData.trainer_name}</span>
                     </div>
                 <div className="pay-row">
                 <span className="detail-label">Duration : </span>
-                    <span className="detail-value">{courseData.duration}</span>
+                    <span className="detail-value">{courseData.duration }</span>
                     </div>
                 <div className="pay-row">
                 <span className="detail-label">Mode : </span>
-                    <span className="detail-value">{courseData.mode}</span>
+                    <span className="detail-value">{selectedBatchData.schedule_mode}</span>
                     </div>
                 <div className="pay-row">
                 <span className="detail-label">Batch Start Date : </span>
-                    <span className="detail-value">{courseData.batchStartDate} @ {courseData.batchTime}</span>
+                    <span className="detail-value">{selectedBatchData.schedule_date} @ {selectedBatchData.schedule_time}</span>
                     </div>
                 </div>
                 </div>
@@ -616,24 +534,37 @@ setSuccessMessage("");
                 </div>
                 <div className="pay-row">
                     <span className="summary-label">Course Fee :</span>
-                    <span className="detail-value">{paymentData.courseFee}</span>
+                    <span className="detail-value">{courseData?.iamount ?? "0"}</span>
                 </div>
                 <div className="pay-row">
                     <span className="summary-label">Discount(%) :</span>
-                    <span className="detail-value">{paymentData.discount}</span>
+                    <span className="detail-value">{courseData.idiscount}</span>
                 </div>
                 <div className="pay-row">
                     <span className="summary-label">GST(18%) :</span>
-                    <span className="detail-value">{paymentData.gst}</span>
+                    <span className="detail-value">{0}</span>
                 </div>
-                <div className="pay-row">
+                {/* <div className="pay-row">
                     <span className="summary-label">Total :</span>
-                    <span className="detail-value">{paymentData.total}</span>
-                </div>
+                    <span className="detail-value">{}</span>
+                </div> */}
+                <div className="pay-row">
+  <span className="summary-label">Total :</span>
+  <span className="detail-value">
+    {(
+      courseData.iamount -
+      (courseData.iamount * courseData.idiscount) / 100
+    ).toFixed(2)}
+  </span>
+</div>
                 <TableRow className="net-amount">
                 <TableCell className="net-amount-left">Net Payable amount:</TableCell>
                 <TableCell align="right" className="net-amount-right">
-                  {paymentData.netAmount}
+                  {/* {paymentData.netAmount} */}
+                   {(
+    courseData.iamount -
+    (courseData.iamount * courseData.idiscount) / 100
+  ).toFixed(2)}
                 </TableCell>
                 </TableRow>
                 </div>

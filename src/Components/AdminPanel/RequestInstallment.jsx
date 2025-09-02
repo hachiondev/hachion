@@ -9,6 +9,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { IoSearch } from "react-icons/io5";
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
+import { FaCheckCircle } from 'react-icons/fa';
+import { RiCloseCircleLine } from 'react-icons/ri';
 import NoData from '../../Assets/nodata.avif'
 import './Admin.css';
 import dayjs from "dayjs";
@@ -36,19 +38,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-export default function OnlinePayment() {
-    const [onlinePayment, setOnlinePayment] = useState([]);
+export default function RequestInstallment() {
+    const [requestInstallment, setRequestInstallment] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredRows, setFilteredRows] = useState([]);
-    const filteredData = onlinePayment.filter((item) => {
+    const filteredData = requestInstallment.filter((item) => {
         const date = new Date(item.date || item.payment_date);
         const matchesSearch =
           searchTerm === '' ||
-          [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.method, item.status, item.method, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
+          [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.requestInstallments, item.status, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
             .map(field => (field || '').toLowerCase())
             .some(field => field.includes(searchTerm.toLowerCase()));
         const inDateRange =
@@ -62,7 +64,7 @@ export default function OnlinePayment() {
         currentPage * rowsPerPage
       );
        const handleDateFilter = () => {
-          const filtered = onlinePayment.filter((item) => {
+          const filtered = requestInstallment.filter((item) => {
             const itemDate = dayjs(item.date);
             return (
               (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
@@ -75,17 +77,17 @@ export default function OnlinePayment() {
         const handleDateReset = () => {
           setStartDate(null);
           setEndDate(null);
-          setFilteredRows(onlinePayment);
+          setFilteredRows(requestInstallment);
         };
         useEffect(() => {
-        setFilteredRows(onlinePayment);
-      }, [onlinePayment]);
+        setFilteredRows(requestInstallment);
+      }, [requestInstallment]);
 
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className='course-category'>
-                      <div className='category-header'><p style={{ marginBottom: 0 }}>View Online Payment List</p></div>
+                      <div className='category-header'><p style={{ marginBottom: 0 }}>View Installment requests</p></div>
                       <div className='date-schedule'>
                                   Start Date
                                   <DatePicker 
@@ -127,7 +129,7 @@ export default function OnlinePayment() {
                             <input
                               className="search-input"
                               type="search"
-                              placeholder="Enter Name, Course Name, Status or Keywords"
+                              placeholder="Enter Name, Course Name, Imstallments or Keywords"
                               aria-label="Search"
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
@@ -153,13 +155,9 @@ export default function OnlinePayment() {
                             <StyledTableCell align="center">Mobile</StyledTableCell>
                             <StyledTableCell align="center">Course Name</StyledTableCell>
                             <StyledTableCell align="center">Course Fee</StyledTableCell>
-                            <StyledTableCell align="center">Coupon</StyledTableCell>
-                            <StyledTableCell align="center">No. of Installments</StyledTableCell>
-                            <StyledTableCell align="center">Paid Installments</StyledTableCell>
-                            <StyledTableCell align="center">Balance Fee</StyledTableCell>
-                            <StyledTableCell align="center">Status</StyledTableCell>
-                            <StyledTableCell align="center">Payment Method</StyledTableCell>
+                            <StyledTableCell align="center">Requested Installments</StyledTableCell>
                             <StyledTableCell align="center">Created Date </StyledTableCell>
+                            <StyledTableCell align="center">Status</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -175,34 +173,50 @@ export default function OnlinePayment() {
                             <StyledTableCell align="left">{row.course_name}</StyledTableCell>
                             <StyledTableCell align="left">{row.fee}</StyledTableCell>
                             <StyledTableCell align="left">{row.coupon}</StyledTableCell>
-                            <StyledTableCell align="center">{row.installments}</StyledTableCell>
-                            <StyledTableCell align="center">{row.paidInstallments}</StyledTableCell>
-                            <StyledTableCell align="center">{row.balance}</StyledTableCell>
-                            <StyledTableCell align="center">{row.status}</StyledTableCell>
-                            <StyledTableCell align="left">{row.method}</StyledTableCell>
-                            <StyledTableCell align="center">{row.date}</StyledTableCell>
+                            <StyledTableCell align="center">{row.requestInstallments}</StyledTableCell>
+                            <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY')}</StyledTableCell>
+                            <StyledTableCell align="center">
+                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                                {row.status === 'approved' ? (
+                                <span className="approved">Approved</span>
+                                ) : row.status === 'rejected' ? (
+                                <span className="rejected">Rejected</span>
+                                ) : (
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                                    <FaCheckCircle
+                                    className="approve"
+                                    style={{ cursor: 'pointer', color: 'green' }}
+                                    />
+                                    <RiCloseCircleLine
+                                    className="reject"
+                                    style={{ cursor: 'pointer', color: 'red' }}
+                                    />
+                                </div>
+                                )}
+                            </div>
+                            </StyledTableCell>
                             </StyledTableRow>
-                                          ))
-                                        ) : (
-                                          <StyledTableRow>
-                                          <StyledTableCell colSpan={15} align="center" className="program-schedule"><img src={NoData} alt="No Data" />
+                             ))
+                            ) : (
+                            <StyledTableRow>
+                            <StyledTableCell colSpan={11} align="center" className="program-schedule"><img src={NoData} alt="No Data" />
                             <p>No data available</p>
                             </StyledTableCell>
-                                          </StyledTableRow>
-                                        )}
-                                      </TableBody>
-                                    </Table>
-                                  </TableContainer>
+                            </StyledTableRow>
+                            )}
+                        </TableBody>
+                       </Table>
+                       </TableContainer>
                             
-                                  <div className='pagination-container'>
-                                    <AdminPagination
-                                      currentPage={currentPage}
-                                      rowsPerPage={rowsPerPage}
-                                      totalRows={filteredData.length}
-                                      onPageChange={setCurrentPage}
-                                    />
-                                  </div>
-                                </>
-                              );
-                            }
+                        <div className='pagination-container'>
+                         <AdminPagination
+                          currentPage={currentPage}
+                          rowsPerPage={rowsPerPage}
+                          totalRows={filteredData.length}
+                          onPageChange={setCurrentPage}
+                        />
+                        </div>
+         </>
+       );
+     }
                             

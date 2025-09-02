@@ -32,6 +32,8 @@
   };
 
   const Enrollment = () => {
+    const [couponData, setCouponData] = useState(null);
+const [couponCode, setCouponCode] = useState("");
     const location = useLocation();
     const [openInstallmentPopup, setOpenInstallmentPopup] = useState(false);
     const { selectedBatchData, enrollText, modeType,  sendEmail,
@@ -296,6 +298,90 @@ const handleRadioChange = (event) => {
       fetchStudentDetails();
     }, []);
 
+const handleApplyCoupon = async () => {
+  try {
+    const res = await axios.get(`https://api.hachion.co/coupon-code/discount/${couponCode}`);
+    if (res.data && Object.keys(res.data).length > 0) {
+      const { 
+        discountType, 
+        discountValue, 
+        courses: allowedCourses, 
+        countries: allowedCountries, 
+        endDate, 
+        usageLimit, 
+        numberOfHits 
+      } = res.data;
+
+      
+      if (endDate) {
+        const [year, month, day] = endDate.split("-").map(Number);
+        const couponEndDate = new Date(year, month - 1, day); 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (today > couponEndDate) {
+          alert("Coupon code is expired");
+          setCouponData(null);
+          return;
+        }
+      }
+
+      
+      const userCountryName = selectedCountry?.name;
+      if (allowedCountries && !allowedCountries.includes(userCountryName)) {
+        alert("Coupon not valid for your country");
+        setCouponData(null);
+        return;
+      }
+
+      
+      if (usageLimit !== null && numberOfHits > usageLimit) {
+        alert("Coupon usage limit has been reached");
+        setCouponData(null);
+        return;
+      }
+
+      
+      const currentCourse = courseData?.courseName;
+      if (allowedCourses && !allowedCourses.includes(currentCourse)) {
+        alert("Coupon not applicable for this course");
+        setCouponData(null);
+        return;
+      }
+
+      
+      setCouponData({ discountType, discountValue });
+    } else {
+      alert("Invalid coupon code");
+      setCouponData(null);
+    }
+  } catch (err) {
+    console.error("Error applying coupon:", err);
+    alert("Failed to apply coupon");
+  }
+};
+
+const baseAmount = Math.round(getField('amount'));
+const baseDiscount = getField('discount') || 0;
+const baseTotal = Math.round(getField('total'));
+
+let finalDiscount = baseDiscount;
+let finalTotal = baseTotal;
+
+
+if (couponData) {
+  const type = couponData.discountType;  
+  const value = couponData.discountValue || 0;
+
+  if (type === "percent") {
+    finalDiscount += value; 
+    finalTotal = baseAmount - (baseAmount * finalDiscount / 100);
+  } else if (type === "fixed") {
+    finalTotal = baseTotal + value;
+    if (finalTotal < 0) finalTotal = 0;
+  }
+}
+
   const saveEnrollment = async () => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
@@ -398,12 +484,13 @@ useEffect(() => {
 }, []);
 
 const handlePayment = async () => {
+   
   try {
     const amount = Math.round(getField('total'));
+    // const amount = 1.00;
 
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
     
-
     if (!user || !user.email) {
       alert("Please log in before making payment.");
       
@@ -469,19 +556,28 @@ const handlePayment = async () => {
                 studentId,
                 courseName,
                 batchId,
-                discount: courseData?.discount ?? 0
               }
             });
+ 
+       const slug = courseName.toLowerCase().replace(/\s+/g, '-');
+    
+                   navigate(`/payment/${slug}`, {
+              state: {
+                selectedBatchData,
+                enrollText,
+                modeType,
+                sendEmail,
+                sendWhatsApp,
+                sendText,
+                email: user.email,
+              },
+            });
 
-            // alert(captureRes.data);
+    
             setSuccessMessage("✅ " + captureRes.data);
 setErrorMessage("");
           } catch (error) {
-            // console.error("❌ Error capturing Razorpay payment:", error);
-            // if (error.response) {
-            //   console.error("Response:", error.response.data);
-            // }
-            // alert("Payment verification failed.");
+            
             console.error("❌ Error capturing Razorpay payment:", error);
 const errMsg = error?.response?.data || "❌ Payment verification failed.";
 setErrorMessage(errMsg);
@@ -524,7 +620,6 @@ setSuccessMessage("");
         window.location.href = approvalUrl;
       } else {
         
-        // alert("Unexpected response: " + approvalUrl);
         setErrorMessage("❌ Unexpected PayPal response.");
 setSuccessMessage("");
       }
@@ -652,22 +747,22 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
               </div>
               <div className='details-box'>
               <div className='enroll-table'>
-              <EnrollmentTable/>
+              {/* <EnrollmentTable/> */}
+              <EnrollmentTable couponData={couponData} />
               </div>
               <div className='coupon-div'>
               <p>Have a coupon code ?</p>
-              <div className='coupon'>
-              <TextField
-          placeholder='Enter coupon code'
-            id="filled-start-adornment"
-            className='coupon-field'
-            slotProps={{
-            
-            }}
-            variant="filled"
-          />
-          <button className='apply-btn'>Apply</button>
-          </div>
+              
+          <div className='coupon'>
+  <TextField
+    placeholder='Enter coupon code'
+    value={couponCode}
+    onChange={(e) => setCouponCode(e.target.value)}
+    className='coupon-field'
+    variant="filled"
+  />
+  <button className='apply-btn' onClick={handleApplyCoupon}>Apply</button>
+</div>
           </div>
               </div>
               </div>
@@ -698,14 +793,16 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
 <TableRow>
   <TableCell className="table-cell-left">% Discount</TableCell>
   <TableCell align="right" className="table-cell-right">
-    {getField('discount')}
+    {/* {getField('discount')} */}
+    {finalDiscount}
   </TableCell>
 </TableRow>
 
 <TableRow>
   <TableCell className="table-cell-left">Total</TableCell>
   <TableCell align="right" className="table-cell-right">
-     {Math.round(getField('total'))}
+     {/* {Math.round(getField('total'))} */}
+     {Math.round(finalTotal)}
   </TableCell>
 </TableRow>
 
@@ -718,7 +815,8 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
   <TableRow className="net-amount">
   <TableCell className="net-amount-left">Net Payable amount:</TableCell>
   <TableCell align="right" className="net-amount-right">
-    {currency} {Math.round(getField('total'))}
+    {/* {currency} {Math.round(getField('total'))} */}
+     {currency} {Math.round(finalTotal)}
   </TableCell>
 </TableRow>
 </TableBody>

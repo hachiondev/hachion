@@ -46,6 +46,8 @@ import ApplyHiring from './Components/UserPanel/ApplyHiring';
 import JobDetails from './Components/UserPanel/JobDetails';
 import EnrollPayment from './Components/UserPanel/EnrollPayment';
 import OnlineInstallments from './Components/UserPanel/OnlineInstallments';
+import ConfirmOtp from './Components/UserPanel/ConfirmOtp';
+import ResetPassword from './Components/UserPanel/ResetPassword';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -83,8 +85,10 @@ function AppRoutes() {
       <Routes>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
-      <Route path='/registerverification' element={<RegisterNext/>}/>
-      <Route path='/registerhere' element={<RegisterHere/>}/>
+      {/* <Route path='/registerverification' element={<RegisterNext/>}/>
+      <Route path='/registerhere' element={<RegisterHere/>}/> */}
+      <Route path='/confirm-otp' element={<ConfirmOtp />}/>
+      <Route path='/resetpassword' element={<ResetPassword />}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path="/" element={<Home />} />

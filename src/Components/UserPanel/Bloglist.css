@@ -85,13 +85,13 @@
 }
 
 .form-check-input {
-  width: 20px; /* Adjust size */
+  width: 20px;
   height: 20px;
-  appearance: none; /* Removes default styling */
-  border: 2px solid black; /* Black border */
-  background-color: transparent; /* Transparent background */
+  appearance: none; 
+  border: 2px solid black; 
+  /* background-color: transparent;  */
   cursor: pointer;
-  border-radius: none; /* ✅ Removes rounded corners */
+  border-radius: none; 
 }
 
 .txtfilter {

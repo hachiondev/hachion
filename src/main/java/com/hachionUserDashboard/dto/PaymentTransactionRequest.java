@@ -1,97 +1,66 @@
-package com.hachionUserDashboard.entity;
+package com.hachionUserDashboard.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hachionUserDashboard.entity.OnlinePaymentInstallments;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "payment_transactions")
-public class PaymentTransaction {
+public class PaymentTransactionRequest {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "order_id")
 	private String orderId;
 
-	@Column(name = "transaction_id")
 	private String transactionId;
 
-	@Column(name = "status")
 	private String status;
 
-	@Column(name = "amount")
 	private Double amount;
 
-	@Column(name = "discount")
 	private Double discount;
 
-	@Column(name = "currency")
 	private String currency;
 
-	@Column(name = "student_id")
 	private String studentId;
 
-	@Column(name = "student_name")
 	private String studentName;
 
-	@Column(name = "course_name")
 	private String courseName;
 
-	@Column(name = "batch_id")
 	private String batchId;
 
-	@Column(name = "payer_email")
 	private String payerEmail;
 
-	@Column(name = "payment_date")
 	private LocalDateTime paymentDate;
 
-	@Column(name = "request_date")
-	private LocalDate requestDate;
-
-	@Column(name = "is_installment")
 	private Boolean isInstallment = false;
 
-	@Column(name = "installment_count")
 	private Integer installmentCount = 0;
 
-	@Column(name = "balance")
 	private Double balance = 0.0;
 
 	@Column
 	private Double courseFee;
 
-	@Column(name = "number_of_installments")
 	private Integer numSelectedInstallments = 0;
 
-	@Column(name = "checkbox_clicked")
 	private Integer checkboxClicked = 0;
 
 	@Lob
 	private String rawResponseJson;
 
-	@Column(name = "payment_method")
 	private String paymentMethod;
 
-	@Column(name = "request_status")
 	private String requestStatus;
-	
-	@Column(name = "mobile")
+
 	private String mobile;
-	
+
 	@OneToMany(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OnlinePaymentInstallments> onlinePaymentInstallments = new ArrayList<>();
 
@@ -277,14 +246,6 @@ public class PaymentTransaction {
 
 	public void setStudentName(String studentName) {
 		this.studentName = studentName;
-	}
-
-	public LocalDate getRequestDate() {
-		return requestDate;
-	}
-
-	public void setRequestDate(LocalDate requestDate) {
-		this.requestDate = requestDate;
 	}
 
 	public String getMobile() {

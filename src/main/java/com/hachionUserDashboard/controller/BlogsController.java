@@ -160,15 +160,7 @@ public class BlogsController {
 
 				blog.setDate(LocalDate.now());
 
-//				if (blogImage != null && !blogImage.isEmpty()) {
-//					String oldImagePath = blog.getBlog_image();
-//					if (oldImagePath != null) {
-//						Path oldImage = Paths.get(uploadDir + oldImagePath);
-//						Files.deleteIfExists(oldImage);
-//					}
-//					String imagePath = saveFile(blogImage, "images");
-//					blog.setBlog_image(imagePath);
-//				}
+
 				 if (blogImage != null && !blogImage.isEmpty()) {
 		                String oldImagePath = blog.getBlog_image();
 		                if (oldImagePath != null && !oldImagePath.trim().isEmpty()) {

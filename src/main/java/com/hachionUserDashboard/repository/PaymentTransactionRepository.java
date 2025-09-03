@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.hachionUserDashboard.entity.PaymentTransaction;
+
+import jakarta.transaction.Transactional;
 
 public interface PaymentTransactionRepository extends JpaRepository<PaymentTransaction, Long> {
 
@@ -29,4 +32,8 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
 	List<PaymentTransaction> findByPayerEmailAndCourseName(@Param("payerEmail") String payerEmail,
 			@Param("courseName") String courseName);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE payment_transactions SET request_status = :requestStatus WHERE id = :transactionId", nativeQuery = true)
+	int updateRequestStatus(@Param("transactionId") Long transactionId, @Param("requestStatus") String requestStatus);
 }

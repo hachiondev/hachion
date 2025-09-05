@@ -44,26 +44,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const OnlineInstallments = () => {
 const { courseName } = useParams();
 const location = useLocation();
-const { selectedBatchData } = location.state || {};  
-const [courseData, setCourseData] = useState(
-    selectedBatchData || {
-      courseName: courseName || "React JS Fundamentals",
-      amount: 15000,
-      charge: 500,
-      discount: 200,
-      tax: 200,
-    }
-  );
+const { selectedBatchData,numSelectedInstallments } = location.state || {};  
+ const [courseData, setCourseData] = useState({
+  ...(selectedBatchData || { courseName })
+});
+ 
 
 console.log("installments initial:", courseData);
   const [selectedInstallments, setSelectedInstallments] = useState(0);
   const [paidInstallment, setPaidInstallment] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const [errorMessageForCoupon, setErrorMessageForCoupon] = useState("");
   const [mobileNumber, setMobileNumber] = useState('');
   const [studentData, setStudentData] = useState(null);
   const mobileInputRef = useRef(null);
   const summaryRef = useRef(null);
+  const [couponCode, setCouponCode] = useState("");
+const [appliedDiscount, setAppliedDiscount] = useState(null);
+
 const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
  useEffect(() => {
     const fetchCoursePricing = async () => {
@@ -134,6 +134,11 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
   
         fetchStudentDetails();
       }, []);
+      const [selectedCountry, setSelectedCountry] = useState({
+                code: '+1',
+                flag: 'US',
+                name: 'United States',
+              });
 
           const countries = [
       { name: 'India', code: '+91', flag: 'IN' },
@@ -155,6 +160,43 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
       { name: 'South Africa', code: '+27', flag: 'ZA' },
       { name: 'Netherlands', code: '+31', flag: 'NL' }
     ];
+
+    const defaultCountry = countries.find((c) => c.flag === "US");
+        
+            useEffect(() => {
+              fetch("https://ipwho.is/")
+                .then((res) => res.json())
+                .then((data) => {
+                  const userCountryCode = data?.country_code;
+                  const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+                  if (matchedCountry) {
+                    setSelectedCountry(matchedCountry);
+                  }
+                })
+                .catch(() => {
+                });
+            }, []);
+    
+        useEffect(() => {
+      if (mobileNumber) {
+        const dialCodeMatch = countries.find((c) =>
+          mobileNumber.replace(/\s+/g, '').startsWith(c.code)
+        );
+        if (dialCodeMatch) {
+          setStudentData((prev) => ({
+            ...prev,
+            country: dialCodeMatch.name,
+          }));
+        }
+      }
+    }, [mobileNumber]);
+    
+    useEffect(() => {
+  if (numSelectedInstallments) {
+    setSelectedInstallments(numSelectedInstallments);
+  }
+}, [numSelectedInstallments]);
+
 
   const handleInstallmentChange = (e) => {
     setSelectedInstallments(Number(e.target.value));
@@ -192,6 +234,15 @@ const discounted = installmentsSubtotal - discountAmount;
 const taxAmount = Number(courseData.tax ?? 0); 
 const netPayable = discounted + 500 + taxAmount;
 
+useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://checkout.razorpay.com/v1/checkout.js";
+  script.async = true;
+  document.body.appendChild(script);
+  return () => {
+    document.body.removeChild(script);
+  };
+}, []);
 const handlePaymentForRazorPay = async () => {
   try {
     // const amount = Math.round(getField('total'));
@@ -200,7 +251,8 @@ const handlePaymentForRazorPay = async () => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
     
     if (!user || !user.email) {
-      alert("Please log in before making payment.");
+      setErrorMessage("Please log in before making payment.");
+  setSuccessMessage("");
       return;
     }
     const userEmail = user.email;
@@ -213,7 +265,8 @@ const handlePaymentForRazorPay = async () => {
     const batchId = selectedBatchData?.batchId;
     const courseName = selectedBatchData?.schedule_course_name;
     if (!studentId || !batchId || !courseName) {
-      alert("Missing required details to proceed with payment.");
+      setErrorMessage("Missing required details to proceed with payment.");
+        setSuccessMessage("");
       return;
     }
 
@@ -257,6 +310,7 @@ const handlePaymentForRazorPay = async () => {
                 
                 numSelectedInstallments: selectedInstallments,
     checkboxClicked: paidInstallment.length,
+    couponCode
               }
             });
 
@@ -283,7 +337,8 @@ setSuccessMessage("");
   const rzp = new window.Razorpay(options);
   rzp.open();
 } catch (err) {
-  alert("Failed to open Razorpay modal.");
+  setErrorMessage("Failed to open Razorpay modal.");
+          setSuccessMessage("");
 }
     } else {
       const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
@@ -326,6 +381,74 @@ setSuccessMessage("");
     })
     .catch(err => console.error("Error fetching checkbox status:", err));
   }, []);
+
+const handleApplyCoupon = async () => {
+  if (!couponCode) return;
+
+  try {
+    const res = await axios.get(
+      `https://api.hachion.co/coupon-code/discount/${couponCode}`
+    );
+
+    
+    if (!res.data || Object.keys(res.data).length === 0) {
+      setErrorMessageForCoupon("Invalid coupon code");
+      setSuccessMessage("");
+      setAppliedDiscount(null);
+      return;
+    }
+
+    const currentDate = new Date();
+    const couponEndDate = new Date(res.data.endDate);
+    const allowedCountries = res.data.countries || [];
+    const allowedCourses = res.data.courses || [];
+    const usageLimit = res.data.usageLimit;
+    const numberOfHits = res.data.numberOfHits;
+
+    const userCountryName = selectedCountry?.name;
+    if (
+      allowedCountries.length > 0 &&
+      !allowedCountries.includes(userCountryName)
+    ) {
+      setErrorMessageForCoupon("Coupon not valid for your country");
+      setSuccessMessage("");
+      setAppliedDiscount(null);
+      return;
+    }
+
+    if (couponEndDate < currentDate) {
+      setErrorMessageForCoupon("Your coupon is expired");
+      setSuccessMessage("");
+      setAppliedDiscount(null);
+      return;
+    }
+
+    if (usageLimit !== null && numberOfHits > usageLimit) {
+      setErrorMessageForCoupon("Coupon usage limit has been reached");
+      setSuccessMessage("");
+      setAppliedDiscount(null);
+      return;
+    }
+
+    const currentCourse = selectedBatchData?.schedule_course_name;
+    if (allowedCourses && !allowedCourses.includes(currentCourse)) {
+      setErrorMessageForCoupon("Coupon not applicable for this course");
+      setSuccessMessage("");
+      setAppliedDiscount(null);
+      return;
+    }
+
+    setAppliedDiscount(res.data);
+    setErrorMessageForCoupon("");
+    setSuccessMessage("Coupon applied successfully!");
+  } catch (err) {
+    console.error("Invalid coupon", err);
+    setErrorMessageForCoupon("Invalid coupon code");
+    setSuccessMessage("");
+    setAppliedDiscount(null);
+  }
+};
+
 
 const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
@@ -425,27 +548,65 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
       </form>
         </div>
 
-        <div className="installments-section">
-          <label className="installments-label">No. of Installments:</label>
-          <div className="installments-options">
-            <label>
-              <input 
-                type="radio" 
-                name="installments" 
-                value="2" 
-                onChange={handleInstallmentChange} 
-              /> 2
-            </label>
-            <label>
-              <input 
-                type="radio" 
-                name="installments" 
-                value="3" 
-                onChange={handleInstallmentChange} 
-              /> 3
-            </label>
-          </div>
-        </div>
+{/* <div className="installments-section">
+  <label className="installments-label">No. of Installments:</label>
+  <div className="installments-options">
+    <label>
+      <input
+        type="radio"
+        name="installments"
+        value="2"
+        checked={numSelectedInstallments === 2}
+         onChange={handleInstallmentChange}
+        readOnly   
+      />{" "}
+      2
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="installments"
+        value="3"
+        checked={numSelectedInstallments === 3}
+         onChange={handleInstallmentChange}
+        readOnly   
+      />{" "}
+      3
+    </label>
+  </div>
+</div> */}
+
+<div className="installments-section">
+  <label className="installments-label">No. of Installments:</label>
+  <div className="installments-options">
+    {numSelectedInstallments === 2 && (
+      <label>
+        <input
+          type="radio"
+          name="installments"
+          value="2"
+          checked={numSelectedInstallments === 2}
+          onChange={handleInstallmentChange}
+          readOnly
+        />{" "}
+        2
+      </label>
+    )}
+    {numSelectedInstallments === 3 && (
+      <label>
+        <input
+          type="radio"
+          name="installments"
+          value="3"
+          checked={numSelectedInstallments === 3}
+          onChange={handleInstallmentChange}
+          readOnly
+        />{" "}
+        3
+      </label>
+    )}
+  </div>
+</div>
 
         <div className='personal-details'>
           <div className='personal-details-header'>
@@ -465,34 +626,60 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                 {selectedInstallments > 0 &&
-                Array.from({ length: selectedInstallments }).map((_, index) => {
-                  const baseInstallment = Number(courseData.iamount) / selectedInstallments;
-                  const totalWithCharge = baseInstallment + 500;
+                
+    {selectedInstallments > 0 &&
+  Array.from({ length: selectedInstallments }).map((_, index) => {
     
-                        return (
-                          <StyledTableRow key={index}>
-                            <StyledTableCell align="center">
-                              <Checkbox
-                                checked={paidInstallment.includes(index + 1)}
-                                disabled={paidCheckBoxInstallment.includes(index + 1)}
-                                onClick={() => handlePayment(index + 1)}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                            <StyledTableCell align="center">
-          {currency} {baseInstallment.toFixed(2)}
+    const discountAmount = (Number(courseData.iamount) * Number(courseData.idiscount)) / 100;
+const netCourseAmount = Number(courseData.iamount) - discountAmount;
+const baseInstallment = netCourseAmount / selectedInstallments;
+    const charge = Number(500);
+    let displayInstallment = baseInstallment;
+    let totalWithCharge = baseInstallment + charge;
+
+    if (appliedDiscount) {
+      const { discountType, discountValue } = appliedDiscount;
+
+      if (discountType === "percent") {
+        
+        const discountAmt = (baseInstallment * discountValue) / 100;
+        const discountedInstallment = baseInstallment - discountAmt;
+        displayInstallment = discountedInstallment;
+        totalWithCharge = discountedInstallment + charge;
+      } else if (discountType === "fixed") {
+        
+        displayInstallment = baseInstallment;
+        totalWithCharge = baseInstallment - discountValue + charge;
+      }
+    }
+     return (
+      <StyledTableRow key={index}>
+        <StyledTableCell align="center">
+          <Checkbox
+            checked={paidInstallment.includes(index + 1)}
+            disabled={paidCheckBoxInstallment.includes(index + 1)}
+            onClick={() => handlePayment(index + 1)}
+          />
         </StyledTableCell>
+
+        <StyledTableCell align="center">{index + 1}</StyledTableCell>
+
+        <StyledTableCell align="center">
+          {currency} {displayInstallment.toFixed(2)}
+        </StyledTableCell>
+
         <StyledTableCell align="center">
           <strong>{currency} {totalWithCharge.toFixed(2)}</strong>
         </StyledTableCell>
+
         <StyledTableCell align="center">
-                              <button 
-                                className="apply-btn" 
-                                onClick={() => handlePayment(index + 1)}
-                              >
-                                Pay
-                              </button>
+          <button
+            className="apply-btn"
+            onClick={() => handlePayment(index + 1)}
+          >
+            Pay
+          </button>
+          
                             </StyledTableCell>
                           </StyledTableRow>
                         );
@@ -504,93 +691,191 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
               <div className='coupon-div'>
               <p>Have a coupon code ?</p>
               <div className='coupon'>
-              <TextField
-          placeholder='Enter coupon code'
-            id="filled-start-adornment"
-            className='coupon-field'
-            slotProps={{
-            
-            }}
-            variant="filled"
-          />
-          <button className='apply-btn'>Apply</button>
+              <div className="coupon-input-wrapper">
+      <TextField
+        placeholder="Enter coupon code"
+        value={couponCode}
+        onChange={(e) => {
+    setCouponCode(e.target.value);
+
+    
+    if (e.target.value.trim() === "") {
+      setErrorMessageForCoupon("");
+    }
+  }}
+        id="filled-start-adornment"
+        className="coupon-field"
+        variant="filled"
+      />
+
+      {/* Error just below input */}
+      {errorMessageForCoupon && (
+        <p style={{ color: "red", fontSize: "13px", margin: "4px 0 0 0" }}>
+          {errorMessageForCoupon}
+        </p>
+      )}
+    </div>
+    
+    <button className="apply-btn" onClick={handleApplyCoupon}>
+      Apply
+    </button>
+    
           </div>
           </div>
             </div>
           </div>
         </div>
         {paidInstallment.length > 0 && (
-          <div className='personal-details' ref={summaryRef}>
-            <div className='personal-details-header'>
-              <p>3. Installment Order Summary</p>
-            </div>
-            <div className='details-box'>
-              <TableContainer component={Paper} className="table-container">
-                <Table aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="table-cell-left">Course Name</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        {courseName}
-                      </TableCell>
-                    </TableRow>
+  <div className='personal-details' ref={summaryRef}>
+    <div className='personal-details-header'>
+      <p>3. Installment Order Summary</p>
+    </div>
+    <div className='details-box'>
+      <TableContainer component={Paper} className="table-container">
+        <Table aria-label="simple table">
+          <TableBody>
+            {/* Course Name */}
+            <TableRow>
+              <TableCell className="table-cell-left">Course Name</TableCell>
+              <TableCell align="right" className="table-cell-right">
+                {courseName}
+              </TableCell>
+            </TableRow>
 
-                    {/* Only show the clicked installments */}
-                    {paidInstallment.map((inst) => (
-                      <TableRow key={inst}>
-                        <TableCell className="table-cell-left">Installment {inst} Fee</TableCell>
-                        <TableCell align="right" className="table-cell-right">
-                          {/* {currency} {perInstallment.toFixed(2)} */}
-                          {currency} {(courseData.iamount / selectedInstallments).toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+            {/* Installment Fees */}
 
-                    <TableRow>
-                      <TableCell className="table-cell-left">Processing Fee</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        + {currency} {500}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="table-cell-left">Total</TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                       {currency} {(installmentsSubtotal + 500).toFixed(2)}
+            {paidInstallment.map((inst) => (
+              <TableRow key={inst}>
+                <TableCell className="table-cell-left">Installment {inst} Fee</TableCell>
+                <TableCell align="right" className="table-cell-right">
+                  {/* {currency} {(courseData.iamount / selectedInstallments).toFixed(2)} */}
+                  {currency} {(
+        (courseData.iamount - (courseData.iamount * courseData.idiscount / 100)) 
+        / selectedInstallments
+      ).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            ))}
 
-                      </TableCell>
-                    </TableRow>
+            {/* Processing Fee */}
+            <TableRow>
+              <TableCell className="table-cell-left">Processing Fee</TableCell>
+              <TableCell align="right" className="table-cell-right">
+                + {currency} {500}
+              </TableCell>
+            </TableRow>
 
-                    <TableRow>
-                      <TableCell className="table-cell-left">
-                        Discount ({courseData.idiscount}%)
-                      </TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                        - {currency} {discountAmount.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
+            {/* Total before discount */}
+            <TableRow>
+              <TableCell className="table-cell-left">Total</TableCell>
+              <TableCell align="right" className="table-cell-right">
+                {currency} {(installmentsSubtotal + 500).toFixed(2)}
+              </TableCell>
+            </TableRow>
 
-                    <TableRow>
-                      <TableCell className="table-cell-left">
-                        Tax
-                      </TableCell>
-                      <TableCell align="right" className="table-cell-right">
-                         + {currency} {0}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow className="net-amount">
-                      <TableCell className="net-amount-left">Net Payable Amount</TableCell>
-                      <TableCell align="right" className="net-amount-right">
-                        {currency} {netPayable.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <div>
+            {/* Discount */}
+{/*             
+{appliedDiscount && (
+  <TableRow>
+    <TableCell className="table-cell-left">
+      Coupon Discount
+      {appliedDiscount.discountType === "percent"
+        ? ` (${appliedDiscount.discountValue}%)`
+        : ""}
+    </TableCell>
+    <TableCell align="right" className="table-cell-right">
+      - {currency}{" "}
+      {appliedDiscount.discountType === "percent"
+        ? (
+            (courseData.iamount * appliedDiscount.discountValue) /
+            100 /
+            selectedInstallments *
+            paidInstallment.length
+          ).toFixed(2)
+        : appliedDiscount.discountValue}
+    </TableCell>
+  </TableRow>
+)} */}
+{appliedDiscount && !errorMessageForCoupon && (
+  <TableRow>
+    <TableCell className="table-cell-left">
+      {appliedDiscount.discountType === "percent"
+        ? `Coupon Discount (${appliedDiscount.discountValue}%)`
+        : "Coupon Value"}
+    </TableCell>
+    <TableCell align="right" className="table-cell-right">
+      - {currency}{" "}
+      {appliedDiscount.discountType === "percent"
+        ? (
+            (courseData.iamount * appliedDiscount.discountValue) /
+            100 /
+            selectedInstallments *
+            paidInstallment.length
+          ).toFixed(2)
+        : appliedDiscount.discountValue}
+    </TableCell>
+  </TableRow>
+)}
+
+            {/* Tax */}
+            <TableRow>
+              <TableCell className="table-cell-left">Tax</TableCell>
+              <TableCell align="right" className="table-cell-right">
+                + {currency} {0}
+              </TableCell>
+            </TableRow>
+
+            {/* Net Payable */}
+            <TableRow className="net-amount">
+              <TableCell className="net-amount-left">Net Payable Amount</TableCell>
+              <TableCell align="right" className="net-amount-right">
+                {(() => {
+                  const selectedInstallmentsTotal = (courseData.iamount / selectedInstallments) * paidInstallment.length;
+                  const totalDiscountPercent = Number(courseData.idiscount) + (appliedDiscount && appliedDiscount.discountType === "percent" ? Number(appliedDiscount.discountValue) : 0);
+                  const discountAmount = appliedDiscount
+                    ? appliedDiscount.discountType === "percent"
+                      ? (selectedInstallmentsTotal * totalDiscountPercent) / 100
+                      : (selectedInstallmentsTotal * Number(courseData.idiscount)) / 100 + Number(appliedDiscount.discountValue)
+                    : (selectedInstallmentsTotal * Number(courseData.idiscount)) / 100;
+
+                  const netPayable = selectedInstallmentsTotal + 500 - discountAmount + 0; 
+                  return `${currency} ${netPayable.toFixed(2)}`;
+                })()}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+              {/* <div>
                 {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
                 {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
                 <button className="payment-btn" onClick={handlePaymentForRazorPay}>Proceed to Pay</button>
-              </div>
+              </div> */}
+              <div>
+  {successMessage && (
+    <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>
+      {successMessage}
+    </p>
+  )}
+  {errorMessage && (
+    <p style={{ color: "red", fontWeight: "bold", margin: 0 }}>
+      {errorMessage}
+    </p>
+  )}
+
+  <button
+    className="payment-btn"
+    onClick={handlePaymentForRazorPay}
+    disabled={!!errorMessage || !!errorMessageForCoupon} 
+    style={{
+      opacity: errorMessage || errorMessageForCoupon ? 0.6 : 1,
+      cursor: errorMessage || errorMessageForCoupon ? "not-allowed" : "pointer",
+    }}
+  >
+    Proceed to Pay
+  </button>
+</div>
+
             </div>
           </div>
         )}

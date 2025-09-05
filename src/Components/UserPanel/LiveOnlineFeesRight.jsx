@@ -245,8 +245,38 @@ setExchangeRate(rate);
       setMessageType('error');
       return;
     }
-    if ( enrollText === 'Enroll Now') {
-      const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
+    if (enrollText === 'Enroll Now') {
+  try {
+    console.log("📡 Checking installment status for:", studentId, courseName);
+
+    const checkResponse = await axios.get(
+      `https://api.hachion.co/razorpay/checkInstallment`,
+      { params: { studentId, courseName: selectedBatchData.schedule_course_name } }
+    );
+
+    console.log("✅ API response:", checkResponse.data);
+
+    const requestStatus = checkResponse.data?.requestStatus;
+    const numSelectedInstallments = checkResponse.data?.numSelectedInstallments || 0;
+    const formattedCourseName = courseName.toLowerCase().replace(/\s+/g, '-');
+
+    if (requestStatus === 'approved') {
+      console.log("🎯 Approved → navigating installments");
+      navigate(`/installments/${formattedCourseName}`, {
+        state: {
+          selectedBatchData,
+          enrollText,
+          modeType,
+          studentId,
+          courseName,
+          numSelectedInstallments,
+          sendEmail: notificationPrefs.email,
+          sendWhatsApp: notificationPrefs.whatsapp,
+          sendText: notificationPrefs.text,
+          
+        },
+      });
+    } else {
         navigate(`/enroll/${formattedCourseName}`, {
     state: {
       selectedBatchData,
@@ -254,15 +284,23 @@ setExchangeRate(rate);
       modeType,
       sendEmail: notificationPrefs.email,
     sendWhatsApp: notificationPrefs.whatsapp,
-    sendText: notificationPrefs.text
+    sendText: notificationPrefs.text,
+    requestStatus
     }
   });
-  setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-      
+   }
+   setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100);
+      return;
+    } catch (error) {
+      console.error('Error checking installment status:', error);
+      setMessage('Unable to verify installment status. Please try again later.');
+      setMessageType('error');
       return;
     }
+  }
+
     if (modeType === 'live' && enrollText === 'Enroll Free Demo') {
       try {
         if (!selectedBatchData) {
@@ -413,15 +451,7 @@ const handleCheckboxChange = (e) => {
         />{' '}
         WhatsApp
       </label>
-      {/* <label>
-        <input
-          type="checkbox"
-          name="text"
-          checked={notificationPrefs.text}
-          onChange={handleCheckboxChange}
-        />{' '}
-        Text Message
-      </label> */}
+      
     </div>
   </>
 )}

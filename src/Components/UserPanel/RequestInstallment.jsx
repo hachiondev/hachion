@@ -36,25 +36,91 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const RequestInstallment = ({ selectedBatchData, closeModal } ) => {
+const RequestInstallment = ({ 
+  selectedBatchData, 
+  closeModal, 
+  onInstallmentChange, 
+  courseFee, 
+  email, 
+  studentId, 
+  studentName,
+  courseData,
+  mobile
+}) => {
     const { courseName } = useParams();
       const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
  const location = useLocation();
  const modalRef = useRef(null);
 
- const handleSubmitRequest = () => {
-  setSuccessMessage("Your installment request has been submitted successfully. Once it is approved, you will receive an email notification.");
-  setErrorMessage("");
-  setTimeout(() => {
-   navigate(`/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`);
-  }, 5000);
+
+   console.log("selectedBatchData:", selectedBatchData);
+    console.log("courseFee:", courseFee);
+    console.log("email:", email);
+    console.log("studentId:", studentId);
+    console.log("studentName:", studentName);
+    console.log("courseData:", courseData);
+    console.log("mobile (from parent):", mobile);
+
+    
+    console.log("localStorage studentId:", localStorage.getItem("studentId"));
+    console.log("localStorage courseName:", localStorage.getItem("courseName"));
+    console.log("localStorage batchId:", localStorage.getItem("batchId"));
+    console.log("localStorage selectedBatchData:", localStorage.getItem("selectedBatchData"));
+    console.log("localStorage loginuserData:", localStorage.getItem("loginuserData"));
+
+const handleSubmitRequest = async () => {
+  try {
+    // studentId;
+    // studentName;
+    const payerEmail = email;
+    // mobile;
+    const batchId = selectedBatchData?.batchId;
+    const courseName = selectedBatchData?.courseName || courseData.courseName;
+
+    if (!studentId || !courseName || !batchId) {
+      setErrorMessage("Missing required student or course info.");
+      return;
+    }
+
+    const requestData = {
+      studentId,
+      studentName,
+      payerEmail,
+      mobile,
+      courseName,
+      batchId,
+      courseFee: courseData.iamount,
+      numSelectedInstallments: selectedInstallments,
+    };    
+    const response = await axios.post(
+      "https://api.hachion.co/razorpay/installment-request",
+      requestData
+    );
+
+    if (response.status === 200) {
+      setSuccessMessage(
+        "Your installment request has been submitted successfully. Once it is approved, you will receive an email notification."
+      );
+      setErrorMessage("");
+      setTimeout(() => {
+        navigate(`/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`);
+      }, 5000);
+    } else {
+      setErrorMessage("Failed to submit installment request. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error submitting installment request:", error);
+    setErrorMessage(
+      error.response?.data?.message || "Something went wrong. Please try again."
+    );
+  }
 };
 
 useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        closeModal(); // call parent to hide modal
+        closeModal(); 
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -63,16 +129,6 @@ useEffect(() => {
     };
   }, [closeModal]);
 
- const [courseData, setCourseData] = useState(
-    selectedBatchData || {
-      courseName: courseName || "React JS Fundamentals",
-      amount: 15000,
-      charge: 500,
-      discount: 200,
-      tax: 200,
-    }
-  );
-
 console.log("installments initial:", courseData);
   const [selectedInstallments, setSelectedInstallments] = useState(0);
   const [paidInstallment, setPaidInstallment] = useState([]);
@@ -80,53 +136,13 @@ console.log("installments initial:", courseData);
   const [errorMessage, setErrorMessage] = useState("");
   const summaryRef = useRef(null);
 const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
- useEffect(() => {
-    const fetchCoursePricing = async () => {
-      try {
-        if (!selectedBatchData?.schedule_course_name) return;
-        const response = await axios.get("https://api.hachion.co/courses/all");
-        const matchedCourse = response.data.find(
-          (c) =>
-            c.courseName.toLowerCase().replace(/\s+/g, '-') ===
-            selectedBatchData.schedule_course_name
-              ?.toLowerCase()
-              .replace(/\s+/g, '-')
-        );
-
-        if (matchedCourse) {
-          
-          setCourseData({
-            ...selectedBatchData,
-            iamount: matchedCourse.iamount || 0,
-            idiscount: matchedCourse.idiscount || 0,
-            charge: matchedCourse.charge || 0,
-            tax: matchedCourse.tax || 0,
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching course pricing:", err);
-      }
-    };
-
-    fetchCoursePricing();
-  }, [selectedBatchData]);
 
   const handleInstallmentChange = (e) => {
-    setSelectedInstallments(Number(e.target.value));
-    setPaidInstallment([]);
-  };
-
-const handlePayment = (installmentNo) => {
-  setPaidInstallment((prev) => {
-    if (prev.includes(installmentNo)) {
-      return prev.filter(i => i !== installmentNo);
-    } else {
-      return [...prev, installmentNo];
-    }
-  });
-
-  if (summaryRef.current) {
-    summaryRef.current.scrollIntoView({ behavior: "smooth" });
+  const value = Number(e.target.value);
+  setSelectedInstallments(value);
+  setPaidInstallment([]);
+  if (onInstallmentChange) {
+    onInstallmentChange(value); 
   }
 };
   const currency = "₹";
@@ -147,123 +163,6 @@ const discounted = installmentsSubtotal - discountAmount;
 const taxAmount = Number(courseData.tax ?? 0); 
 const netPayable = discounted + 500 + taxAmount;
 
-const handlePaymentForRazorPay = async () => {
-  try {
-    // const amount = Math.round(getField('total'));
-    // const amount = Math.round(netPayable);
-    const amount = 1.00;
-    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
-    
-    if (!user || !user.email) {
-      alert("Please log in before making payment.");
-      return;
-    }
-    const userEmail = user.email;
-    const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
-      params: { email: userEmail }
-    });
-
-    const studentId = profileResponse.data?.studentId;
-    const mobile = profileResponse.data?.mobile || '';
-    const batchId = selectedBatchData?.batchId;
-    const courseName = selectedBatchData?.schedule_course_name;
-    if (!studentId || !batchId || !courseName) {
-      alert("Missing required details to proceed with payment.");
-      return;
-    }
-
-    localStorage.setItem("studentId", studentId);
-    localStorage.setItem("courseName", courseName);
-    localStorage.setItem("batchId", batchId);
-    localStorage.setItem("selectedBatchData", JSON.stringify({
-      ...selectedBatchData,
-      discount: courseData?.discount ?? 0 
-    }));
-
-    const slug = courseName.toLowerCase().replace(/\s+/g, '-');
-    const returnUrl = `https://hachion.co/enroll/${slug}`;
-    
-    if (mobile.startsWith('+91')) {
-
-      const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
-        params: { amount }
-      });
-
-      const razorpayOrder = orderRes.data;
-      const razorpayOrderId = razorpayOrder.id;
-      const options = {
-        key: "rzp_live_1g4Axfq4KHi3kl",
-        amount: razorpayOrder.amount,
-        currency: razorpayOrder.currency,
-        name: "Hachion",
-        description: `Payment for ${courseName}`,
-        order_id: razorpayOrderId,
-        handler: async function (response) {
-          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-          try {
-            const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay-installments", null, {
-              params: {
-                paymentId: razorpay_payment_id,
-                orderId: razorpay_order_id,
-                signature: razorpay_signature,
-                studentId,
-                courseName,
-                batchId,
-                
-                numSelectedInstallments: selectedInstallments,
-    checkboxClicked: paidInstallment.length,
-              }
-            });
-
-            setSuccessMessage("✅ " + captureRes.data);
-setErrorMessage("");
-          } catch (error) {
-            console.error("❌ Error capturing Razorpay payment:", error);
-const errMsg = error?.response?.data || "❌ Payment verification failed.";
-setErrorMessage(errMsg);
-setSuccessMessage("");
-          }
-        },
-        prefill: {
-          name: user.name,
-          email: user.email,
-          contact: mobile.replace('+91', '')
-        },
-        theme: {
-          color: "#3399cc"
-        }
-      };
-
-     try {
-  const rzp = new window.Razorpay(options);
-  rzp.open();
-} catch (err) {
-  alert("Failed to open Razorpay modal.");
-}
-    } else {
-      const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
-        params: {
-          amount,
-          returnUrl
-        }
-      });
-      const approvalUrl = paypalRes.data;
-      if (approvalUrl.startsWith("https://www.paypal.com")) {
-        window.location.href = approvalUrl;
-      } else {
-        setErrorMessage("❌ Unexpected PayPal response.");
-setSuccessMessage("");
-      }
-    }
-} catch (error) {
-  if (error instanceof Error) {
-  } else if (typeof error === "object" && error !== null) {
-  } else {
-  }
-    setErrorMessage("❌ Failed to start payment.");
-setSuccessMessage("");
-  }
-};
  useEffect(() => {
     const studentId = localStorage.getItem("studentId");
     const courseName = localStorage.getItem("courseName");

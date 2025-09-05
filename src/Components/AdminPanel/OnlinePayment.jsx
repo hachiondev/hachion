@@ -13,6 +13,8 @@ import NoData from '../../Assets/nodata.avif'
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import axios from "axios";
+
 
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -80,6 +82,40 @@ export default function OnlinePayment() {
         useEffect(() => {
         setFilteredRows(onlinePayment);
       }, [onlinePayment]);
+useEffect(() => {
+  const fetchOnlinePayments = async () => {
+    try {
+      const res = await axios.get("https://api.hachion.co/razorpay/payments"); // replace with your actual endpoint
+      if (res.data) {
+        // Map backend response to match your existing table field names
+        const mappedData = res.data.map(item => ({
+          student_ID: item.studentId,
+          userName: item.studentName,
+          email: item.email,
+          mobile: item.mobile,
+          course_name: item.courseName,
+          fee: item.courseFee,
+          coupon: item.coupon,
+          installments: item.numOfInstallments,
+          paidInstallments: item.paidInstallments,
+          balance: item.balanceFee,
+          status: item.status,
+          method: item.paymentMethod,
+          date: dayjs(item.createdDate).format("YYYY-MM-DD")
+        }));
+
+        setOnlinePayment(mappedData);
+        setFilteredRows(mappedData); // Initialize filtered rows
+      }
+    } catch (err) {
+      console.error("Error fetching online payments:", err);
+      setOnlinePayment([]);
+      setFilteredRows([]);
+    }
+  };
+
+  fetchOnlinePayments();
+}, []);
 
     return (
         <>

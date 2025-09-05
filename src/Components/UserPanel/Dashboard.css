@@ -454,11 +454,14 @@ padding: 0px;
   padding: 10px;
   margin-left: 150px;
 }
+.register-field {
+  margin-bottom: 20px;
+}
 .password-field {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .password-field input {
@@ -990,6 +993,9 @@ min-width: 500;
 .password-field input {
   width: 90%;
   padding-right: 20px;
+}
+.eye-icon {
+  right: 40px;
 }
 
 table {

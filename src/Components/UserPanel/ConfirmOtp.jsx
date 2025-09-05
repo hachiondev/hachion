@@ -130,7 +130,7 @@ const ConfirmOtp = () => {
         <div className="login-left">
           <div className="login-top">
             <h4 className='login-continue'>Enter OTP</h4>
-            <div className="login-mid-name">
+            {/* <div className="login-mid-name"> */}
               <div className="otp-verify">
                 <p className='tag'>Please check your inbox</p>
                 <p className='tag'>
@@ -186,7 +186,6 @@ const ConfirmOtp = () => {
             </div>
           </div>
         </div>
-      </div>
 
       <Footer />
       <StickyBar />

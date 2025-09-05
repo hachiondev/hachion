@@ -41,7 +41,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import "./Login.css";
-import logo from "../../Assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
@@ -55,13 +54,9 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import PopupInterest1 from './PopupInterest1';
-import PopupInterest2 from './PopupInterest2';
-import PopupInterest3 from './PopupInterest3';
-import PopupInterest4 from './PopupInterest4';
-import axios from "axios";
+import { TbRefresh } from "react-icons/tb";
 
-const RegisterHere = () => {
+const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,11 +68,15 @@ const RegisterHere = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [otpMessage, setOtpMessage] = useState("");
   const [formError, setFormError] = useState("");
   const [passwordType, setPasswordType] = useState('password');
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
-  const [showInterestPopup, setShowInterestPopup] = useState(false);
-  const [popupStep, setPopupStep] = useState(1);
+  const [captchaText, setCaptchaText] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const canvasRef = useRef(null);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     role: "",
@@ -122,124 +121,120 @@ const RegisterHere = () => {
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleClick = async () => {
-    setFormError("");
-    setRegisterMessage("");
+useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        initializeCaptcha(ctx);
+    }, []);
 
-    if (!firstName || !lastName || !email || !mobile || !password) {
-      setFormError("Please fill in all required fields.");
-      return;
-    }
+    const generateRandomChar = (min, max) =>
+        String.fromCharCode(Math.floor
+            (Math.random() * (max - min + 1) + min));
 
-    if (!isValidEmail(email)) {
-      setFormError("Please enter a valid email address.");
-      return;
-    }
-
-    if (!/^\d{6,15}$/.test(mobile)) {
-      setFormError("Please enter a valid mobile number (6–15 digits).");
-      return;
-    }
-
-    setIsLoading(true);
-
-    const sanitizedMobile = mobile.trim().replace(/^(\+)?/, "");
-    const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
-
-    const registeruserData = {
-      firstName,
-      lastName,
-      email,
-      mobile: fullMobileNumber,
-      country: selectedCountry.name,
-      password: password,
+    const generateCaptchaText = () => {
+        let captcha = '';
+        for (let i = 0; i < 2; i++) {
+            captcha += generateRandomChar(65, 90);
+            captcha += generateRandomChar(97, 122);
+            captcha += generateRandomChar(48, 57);
+        }
+        return captcha.split('').sort(
+            () => Math.random() - 0.5).join('');
     };
 
-    try {
-      const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: registeruserData.firstName,
-          lastName: registeruserData.lastName,
-          email: registeruserData.email,
-          country: registeruserData.country,
-          mobile: registeruserData.mobile,
-          mode: "Online",
-          password: password,
-        }),
-      });
+    const drawCaptchaOnCanvas = (ctx, captcha) => {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        const textColors = ['rgb(0,0,0)', 'rgb(130,130,130)'];
+        const letterSpace = 150 / captcha.length;
+        for (let i = 0; i < captcha.length; i++) {
+            const xInitialSpace = 25;
+            ctx.font = '20px Roboto Mono';
+            ctx.fillStyle = textColors[Math.floor(
+                Math.random() * 2)];
+            ctx.fillText(
+                captcha[i],
+                xInitialSpace + i * letterSpace,
+                Math.floor(Math.random() * 16 + 25),
+                100
+            );
+        }
+    };
 
-      const message = await registerResponse.text();
+    const initializeCaptcha = (ctx) => {
+        setUserInput('');
+        const newCaptcha = generateCaptchaText();
+        setCaptchaText(newCaptcha);
+        drawCaptchaOnCanvas(ctx, newCaptcha);
+    };
 
-      if (!registerResponse.ok) {
-        setRegisterMessage(message || "Registration failed");
-        setMessageType("error");
-        throw new Error(message || "Registration failed");
-      }
+    const handleUserInputChange = (e) => {
+        setUserInput(e.target.value);
+    };
 
-      setRegisterMessage("You are successfully registered!");
-      setMessageType("success");
+  const validateForm = () => {
+  const newErrors = {};
 
-      setTimeout(() => {
-        setShowInterestPopup(true);
-      }, 1000);
+  if (!firstName.trim()) newErrors.firstName = "First name is required.";
+  if (!email.trim()) {
+    newErrors.email = "Email is required.";
+  } else if (!isValidEmail(email)) {
+    newErrors.email = "Please enter a valid email address.";
+  }
+  if (!mobile.trim()) {
+    newErrors.mobile = "Mobile number is required.";
+  } else if (!/^\d{10}$/.test(mobile)) {
+    newErrors.mobile = "Enter a valid mobile number (10 digits).";
+  }
+  if (!password.trim()) newErrors.password = "Password is required.";
+  if (!userInput.trim()) {
+    newErrors.captcha = "Captcha is required.";
+  } else if (userInput !== captchaText) {
+    newErrors.captcha = "Captcha does not match.";
+    const ctx = canvasRef.current.getContext("2d");
+    initializeCaptcha(ctx);
+  }
 
-      localStorage.setItem("user", JSON.stringify(registeruserData));
-    } catch (error) {
-      const msg = error.message || "An unexpected error occurred";
-      setRegisterMessage(msg);
-      setMessageType("error");
-    } finally {
-      setIsLoading(false);
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+  const handleClick = async () => {
+  setOtpMessage("");
+
+  if (!validateForm()) return;
+
+  setIsLoading(true);
+
+  const sanitizedMobile = mobile.trim().replace(/^(\+)?/, '');
+  const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
+
+  const data = { firstName, lastName, email, mobile: fullMobileNumber, country: selectedCountry.name };
+
+  try {
+    const response = await fetch(
+      `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
+      { method: "POST", headers: { "Content-Type": "application/json" } }
+    );
+
+    const responseData = await response.json().catch(() => ({}));
+    console.log("OTP responseData:", responseData);
+
+    if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
+      setOtpMessage("OTP sent to your email.");
+      localStorage.setItem("registeruserData", JSON.stringify(data));
+      setTimeout(() => navigate('/registerverification'), 3000);
+    } else {
+      setErrors({ api: responseData?.message || "Failed to send OTP. Please try again." });
     }
-  };
+  } catch (error) {
+    setErrors({ api: `An error occurred: ${error.message}` });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const togglePasswordVisibility = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
-  };
-
-  const handleSkip = () => {
-    navigate("/");
-  };
-
-  const handleNext = () => setPopupStep(prev => prev + 1);
-  const handleBack = () => setPopupStep(prev => prev - 1);
-
-  const handleSubmitPopup = async () => {
-    try {
-      const profileResponse = await axios.get(
-        `https://api.hachion.co/api/v1/user/myprofile?email=${email}`
-      );
-
-      const profileData = profileResponse.data;
-
-      const payload = {
-        studentId: profileData.studentId || "STU123",
-        studentName: profileData.name || `${firstName} ${lastName}`,
-        studentEmail: profileData.email || email,
-        mobile: profileData.mobile || mobile,
-        currentRole: formData.role === "Other" ? formData.otherRole : formData.role,
-        primaryGoal: formData.goal,
-        areasOfInterest: formData.interests.join(", "),
-        preferToLearn: formData.learningMethods,
-        preferredTrainingMode: formData.trainingMode,
-        currentSkill: formData.skillLevel,
-        lookingForJob: formData.lookingForJob || "",
-        realTimeProjects: formData.realTimeProjects || "",
-        certificationOrPlacement: formData.certificationOrPlacement || "",
-        speakToCourseAdvisor: formData.speakToCourseAdvisor || "",
-        whereYouHeard: formData.whereYouHeard || ""
-      };
-
-      await axios.post("https://api.hachion.co/popup-onboarding", payload);
-
-      localStorage.setItem("userPreferences", JSON.stringify(payload));
-
-      navigate("/");
-    } catch (err) {
-      console.error("Error saving onboarding:", err);
-    }
   };
 
   return (
@@ -270,7 +265,8 @@ const RegisterHere = () => {
               <label className="login-label">
                 First Name<span className="star">*</span>
               </label>
-              <div className="password-field">
+              <div className="register-field">
+                <div className="password-field">
                 <input
                   type="text"
                   className="form-control"
@@ -279,11 +275,14 @@ const RegisterHere = () => {
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>
+              {errors.firstName && <p className="error-field-message">{errors.firstName}</p>}
+              </div>
 
               {/* Last Name */}
               <label className="login-label">
-                Last Name<span className="star">*</span>
+                Last Name
               </label>
+              <div className="register-field">
               <div className="password-field">
                 <input
                   type="text"
@@ -293,11 +292,12 @@ const RegisterHere = () => {
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
-
+              </div>
               {/* Email */}
               <label className="login-label">
                 Email ID<span className="star">*</span>
               </label>
+              <div className="register-field">
               <div className="password-field">
                 <input
                   type="email"
@@ -307,11 +307,13 @@ const RegisterHere = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-
+              {errors.email && <p className="error-field-message">{errors.email}</p>}
+              </div>
               {/* Mobile */}
               <label className="login-label">
                 Phone Number<span className="star">*</span>
               </label>
+              <div className="register-field">
               <div className="password-field" style={{ position: "relative" }}>
                 <button onClick={openMenu} className="mobile-button">
                   <Flag code={selectedCountry.flag} className="country-flag me-1" />
@@ -343,9 +345,11 @@ const RegisterHere = () => {
                   pattern="[0-9]*"
                 />
               </div>
-
+              {errors.mobile && <p className="error-field-message">{errors.mobile}</p>}
+              </div>
               {/* Password */}
-              <label className="login-label">Password</label>
+              <label className="login-label">Password<span className="star">*</span></label>
+              <div className="register-field">
               <div className="password-field">
                 <input
                   type={passwordType}
@@ -358,8 +362,36 @@ const RegisterHere = () => {
                   {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
                 </span>
               </div>
+              {errors.password && <p className="error-field-message">{errors.password}</p>}
+              </div>
 
-              {/* Remember me */}
+              <label className="login-label">
+                Enter Captcha<span className="star">*</span>
+              </label>
+
+              <div className="captcha-wrapper">
+                    <canvas ref={canvasRef} className="password-field" style={{backgroundColor: 'none'}}
+                        height="40">
+
+                    </canvas>
+                    <span className="refresh-captcha-btn" id="reload-button" onClick={
+                        () => initializeCaptcha(
+                            canvasRef.current.getContext('2d'))}>
+                       <TbRefresh />
+                    </span>
+                </div>
+                <div className="register-field">
+                <div className="password-field">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter captcha here"
+                    value={userInput}
+                    onChange={handleUserInputChange}/>
+                    </div>
+                    {errors.captcha && <p className="error-field-message">{errors.captcha}</p>}
+                    </div>
+
               <div className="d-flex align-items-center mb-3" style={{margin: '0.2vh 2vh'}}>
               <div className="form-check form-switch align-items-center remember-me">
                 <input className="form-check-input" type="checkbox" id="rememberMeSwitch" />
@@ -369,15 +401,13 @@ const RegisterHere = () => {
               </div>
               </div>
 
-              {/* Error Message */}
-              {formError && <p className="error-message">{formError}</p>}
+              {formError && <p className="error-field-message">{formError}</p>}
               {registerMessage && (
-                <p className={messageType === "error" ? "error-message" : "success-message"}>
+                <p className={messageType === "error" ? "error-field-message" : "success-message"}>
                   {registerMessage}
                 </p>
               )}
 
-              {/* Submit */}
               <div className="d-grid gap-2">
                 <button type="button" className="register-btn" onClick={handleClick} disabled={isLoading}>
                   {isLoading ? "Creating..." : "Create Account"}
@@ -404,44 +434,8 @@ const RegisterHere = () => {
 
       <Footer />
       <StickyBar />
-      {showInterestPopup && (
-        <>
-          {popupStep === 1 && (
-            <PopupInterest1
-              formData={formData}
-              onChange={handleFormChange}
-              onNext={handleNext}
-              onSkip={handleSkip}
-            />
-          )}
-          {popupStep === 2 && (
-            <PopupInterest2
-              formData={formData}
-              onChange={handleFormChange}
-              onNext={handleNext}
-              onBack={handleBack}
-            />
-          )}
-          {popupStep === 3 && (
-            <PopupInterest3
-              formData={formData}
-              onChange={handleFormChange}
-              onNext={handleNext}
-              onBack={handleBack}
-            />
-          )}
-          {popupStep === 4 && (
-            <PopupInterest4
-              formData={formData}
-              onChange={handleFormChange}
-              onSubmit={handleSubmitPopup}
-              onBack={handleBack}
-            />
-          )}
-        </>
-      )}
     </>
   );
 };
 
-export default RegisterHere;
+export default Register;

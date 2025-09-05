@@ -9,6 +9,12 @@ import PopupInterest2 from './PopupInterest2';
 import PopupInterest3 from './PopupInterest3';
 import PopupInterest4 from './PopupInterest4';
 import axios from "axios";
+import TopBarNew from './TopBarNew';
+import NavBar from './NavBar';
+import Footer from './Footer';
+import StickyBar from './StickyBar';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import LoginBanner from '../../Assets/loginbackground.png';
 
 const RegisterNext = () => {
   const [otp, setOtp] = useState(Array(4).fill("")); 
@@ -221,27 +227,29 @@ const handleSubmitPopup = async () => {
   }
 };
   return (
+    <>
+        <TopBarNew />
+        <NavBar />
+        <div className='blogs-header'>
+                  <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item">
+                        <a href="/">Home</a> <MdKeyboardArrowRight />
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Enter OTP
+                      </li>
+                    </ol>
+                  </nav>
+                </div>
+            <img src={LoginBanner} alt='Login Banner' className='login-banner'/>
     <div className="login">
       <div className="login-left">
         <div className="login-top">
-          <img src={logo} alt="logo" className="login-logo" />
-          <h3 className="register-learning">Register to start learning</h3>
-
-          <div className="steps">
-            <h4 className="steps-head">Steps: </h4>
-            <div className="step-one" onClick={() => navigate('/registerhere')}>
-              <h6 className="steps-head-one">1</h6>
-            </div>
-            <hr width="45%" size="1" color="#00AAEF" />
-            <div className="step-one">
-              <h6 className="steps-head-one">2</h6>
-            </div>
-          </div>
-          <div className="login-mid-name">
+          <h4 className="login-continue">Register to start learning</h4>
           <div className="otp-verify">
-            <p className='tag' style={{marginBottom: '0'}}>Please check your inbox</p>
-            <p className='tag'>OTP has been sent to<span className='mail-to-register' style={{marginLeft: '5px'}}>{registeruserData.email}</span></p>
-            
+            <p className='tag'>Please check your inbox</p>
+            <p className='tag'>OTP has been sent to<span className='mail-to-register'>{registeruserData.email}</span></p>
             <div className="otp">
   {otp.map((digit, index) => (
     <input
@@ -258,37 +266,11 @@ const handleSubmitPopup = async () => {
             <p className='go-to-register'> Didn't receive the OTP? <span className='link-to-register' onClick={resendOtp}> 
               {resendLoading ? "Resending..." : "Resend"}</span>
             </p>
-            <label className="login-label">Password</label>
-            <div className="password-field">
-              <input
-                type={passwordType}
-                className="form-control"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span className="eye-icon" onClick={togglePasswordVisibility}>
-                {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
-              </span>
-            </div>
-
-            <label className="login-label">Confirm Password</label>
-            <div className="password-field">
-              <input
-                type={confirmPasswordType}
-                className="form-control"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <span className="eye-icon" onClick={toggleConfirmPasswordVisibility}>
-                {confirmPasswordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
-              </span>
-            </div>
+            
             <button
               type="button"
               className="register-btn"
-              onClick={() => verifyAccount(otp, password, confirmPassword)}
+              onClick={() => verifyAccount(otp)}
               disabled={isLoading}
             >
               {isLoading ? "Verifying..." : "Verify and Register"}
@@ -308,8 +290,6 @@ const handleSubmitPopup = async () => {
             <p className='spam-msg'><span className="note">*Note :</span>If you don't see OTP in your inbox, Kindly check your spam folder.</p>
           </div>
         </div>
-      </div>
-      <LoginSide />
 
       {showInterestPopup && (
   <>
@@ -348,6 +328,9 @@ const handleSubmitPopup = async () => {
   </>
 )}
     </div>
+    <Footer />
+      <StickyBar />
+    </>
   );
 };
 

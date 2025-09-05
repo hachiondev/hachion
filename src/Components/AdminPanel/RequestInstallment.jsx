@@ -15,19 +15,21 @@ import NoData from '../../Assets/nodata.avif'
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import axios from 'axios';
+
 
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#00AEEF',
         color: theme.palette.common.white,
-        borderRight: '1px solid white', // Add vertical lines
+        borderRight: '1px solid white', 
         padding: '3px 5px',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         padding: '3px 4px',
-        borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+        borderRight: '1px solid #e0e0e0', 
     },
 }));
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -50,7 +52,7 @@ export default function RequestInstallment() {
         const date = new Date(item.date || item.payment_date);
         const matchesSearch =
           searchTerm === '' ||
-          [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.requestInstallments, item.status, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
+          [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.requestInstallments, item.requestStatus, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
             .map(field => (field || '').toLowerCase())
             .some(field => field.includes(searchTerm.toLowerCase()));
         const inDateRange =
@@ -82,6 +84,38 @@ export default function RequestInstallment() {
         useEffect(() => {
         setFilteredRows(requestInstallment);
       }, [requestInstallment]);
+
+
+useEffect(() => {
+  const fetchRequestInstallments = async () => {
+    try {
+      const response = await axios.get('https://api.hachion.co/razorpay/request-installments');
+      
+      const mappedData = response.data.map((item) => ({
+        id: item.id,
+        student_ID: item.studentId,
+        userName: item.studentName,
+        email: item.payerEmail,
+        mobile: item.mobile,
+        course_name: item.courseName,
+        batch_id: item.batchId,
+        fee: item.courseFee,
+        requestInstallments: item.numSelectedInstallments,
+        date: item.requestDate,
+         
+        coupon: ''   ,
+        requestStatus: item.requestStatus     
+      }));
+
+      setRequestInstallment(mappedData);
+      setFilteredRows(mappedData);
+    } catch (error) {
+      console.error('Error fetching installment requests:', error);
+    }
+  };
+
+  fetchRequestInstallments();
+}, []);
 
     return (
         <>
@@ -163,38 +197,72 @@ export default function RequestInstallment() {
                     <TableBody>
                     {displayedData.length > 0 ? (
               displayedData.map((row, index) => (
-                <StyledTableRow key={row.batch_id || index}>
+                <StyledTableRow key={row.id || index}>
                             <StyledTableCell><Checkbox /></StyledTableCell>
-                            <StyledTableCell>{index + 1}</StyledTableCell>
+                            {/* <StyledTableCell>{index + 1}</StyledTableCell> */}
+                             <StyledTableCell>
+      {(currentPage - 1) * rowsPerPage + index + 1}
+    </StyledTableCell>
                             <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
                             <StyledTableCell align="left">{row.userName}</StyledTableCell>
                             <StyledTableCell align="left">{row.email}</StyledTableCell>
                             <StyledTableCell align="center">{row.mobile}</StyledTableCell>
                             <StyledTableCell align="left">{row.course_name}</StyledTableCell>
                             <StyledTableCell align="left">{row.fee}</StyledTableCell>
-                            <StyledTableCell align="left">{row.coupon}</StyledTableCell>
                             <StyledTableCell align="center">{row.requestInstallments}</StyledTableCell>
                             <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY')}</StyledTableCell>
+                            
                             <StyledTableCell align="center">
-                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                                {row.status === 'approved' ? (
-                                <span className="approved">Approved</span>
-                                ) : row.status === 'rejected' ? (
-                                <span className="rejected">Rejected</span>
-                                ) : (
-                                <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                                    <FaCheckCircle
-                                    className="approve"
-                                    style={{ cursor: 'pointer', color: 'green' }}
-                                    />
-                                    <RiCloseCircleLine
-                                    className="reject"
-                                    style={{ cursor: 'pointer', color: 'red' }}
-                                    />
-                                </div>
-                                )}
-                            </div>
-                            </StyledTableCell>
+  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+    {row.requestStatus === 'approved' ? (
+      <span className="approved">Approved</span>
+    ) : row.requestStatus === 'rejected' ? (
+      <span className="rejected">Rejected</span>
+    ) : (
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <FaCheckCircle
+          className="approve"
+          style={{ cursor: 'pointer', color: 'green' }}
+          onClick={async () => {
+            try {
+              await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
+                params: { requestStatus: "approved" },
+              });
+              
+              const updatedData = requestInstallment.map((item) =>
+                item.id === row.id ? { ...item, requestStatus: "approved" } : item
+              );
+              setRequestInstallment(updatedData);
+              setFilteredRows(updatedData);
+            } catch (error) {
+              console.error("Error updating requestStatus:", error);
+            }
+          }}
+        />
+        <RiCloseCircleLine
+          className="reject"
+          style={{ cursor: 'pointer', color: 'red' }}
+          onClick={async () => {
+            try {
+              await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
+                params: { requestStatus: "rejected" },
+              });
+              
+              const updatedData = requestInstallment.map((item) =>
+                item.id === row.id ? { ...item, requestStatus: "rejected" } : item
+              );
+              setRequestInstallment(updatedData);
+              setFilteredRows(updatedData);
+            } catch (error) {
+              console.error("Error updating requestStatus:", error);
+            }
+          }}
+        />
+      </div>
+    )}
+  </div>
+</StyledTableCell>
+
                             </StyledTableRow>
                              ))
                             ) : (

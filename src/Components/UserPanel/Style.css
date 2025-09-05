@@ -65,6 +65,47 @@
   font-size: small;
   width: 360px;
 }
+.captcha-wrapper {
+  display: flex;
+  align-items:center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  background-color: rgba(139, 139, 139, 0.12);
+  width: 360px;
+  height: 48px;
+  padding-right: 20px;
+  padding-left: 5px;
+  margin-left: 10px;
+  border-radius: 6px;
+}
+
+#canv canvas{
+  background-color: rgba(139, 139, 139, 0.12) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+a:not([href]):not([class]) {
+  display: none !important;
+}
+
+.refresh-captcha-btn {
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.refresh-captcha-btn:hover {
+  color: #0056b3;
+}
+.error-field-message {
+  color: red;
+  font-size: 11px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  margin-top: 2px;
+}
 
 @media (max-width: 480px) {
   .topbar-text {
@@ -73,4 +114,8 @@
   .topbar-icon {
     font-size: 14px !important;
   }
+  .captcha-wrapper {
+  width: 90%;
+  padding-right: 20px;
+}
 }

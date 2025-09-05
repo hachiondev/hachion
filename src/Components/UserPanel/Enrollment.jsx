@@ -37,8 +37,11 @@ const [couponCode, setCouponCode] = useState("");
     const location = useLocation();
     const [openInstallmentPopup, setOpenInstallmentPopup] = useState(false);
     const { selectedBatchData, enrollText, modeType,  sendEmail,
-  sendWhatsApp,
+  sendWhatsApp, requestStatus,
   sendText } = location.state || {};
+  console.log("location.state:", location.state);
+  console.log("requestStatus from location.state:", requestStatus);
+  console.log("requestStatus from localStorage:", localStorage.getItem("requestStatus"));
   
   const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
@@ -90,7 +93,9 @@ const [exchangeRate, setExchangeRate] = useState(1);
     const batchId = localStorage.getItem("batchId");
 
     if (!studentId || !courseName || !batchId) {
-      alert("Missing payment info. Please try again.");
+      
+      setErrorMessage("❌ Missing payment info. Please try again.");
+  setSuccessMessage("");
       return;
     }
 const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
@@ -320,7 +325,8 @@ const handleApplyCoupon = async () => {
         today.setHours(0, 0, 0, 0);
 
         if (today > couponEndDate) {
-          alert("Coupon code is expired");
+                  setErrorMessage("Coupon code is expired");
+  setSuccessMessage("");
           setCouponData(null);
           return;
         }
@@ -329,14 +335,16 @@ const handleApplyCoupon = async () => {
       
       const userCountryName = selectedCountry?.name;
       if (allowedCountries && !allowedCountries.includes(userCountryName)) {
-        alert("Coupon not valid for your country");
+        setErrorMessage("Coupon not valid for your country");
+  setSuccessMessage("");
         setCouponData(null);
         return;
       }
 
       
       if (usageLimit !== null && numberOfHits > usageLimit) {
-        alert("Coupon usage limit has been reached");
+        setErrorMessage("Coupon usage limit has been reached");
+  setSuccessMessage("");
         setCouponData(null);
         return;
       }
@@ -344,7 +352,8 @@ const handleApplyCoupon = async () => {
       
       const currentCourse = courseData?.courseName;
       if (allowedCourses && !allowedCourses.includes(currentCourse)) {
-        alert("Coupon not applicable for this course");
+        setErrorMessage("Coupon not applicable for this course");
+  setSuccessMessage("");
         setCouponData(null);
         return;
       }
@@ -352,12 +361,14 @@ const handleApplyCoupon = async () => {
       
       setCouponData({ discountType, discountValue });
     } else {
-      alert("Invalid coupon code");
+      setErrorMessage("Invalid coupon code");
+  setSuccessMessage("");
       setCouponData(null);
     }
   } catch (err) {
     console.error("Error applying coupon:", err);
-    alert("Failed to apply coupon");
+    setErrorMessage("Failed to apply coupon");
+  setSuccessMessage("");
   }
 };
 
@@ -493,7 +504,6 @@ const handlePayment = async () => {
     
     if (!user || !user.email) {
       alert("Please log in before making payment.");
-      
       return;
     }
 
@@ -510,8 +520,8 @@ const handlePayment = async () => {
 
     
     if (!studentId || !batchId || !courseName) {
-      alert("Missing required details to proceed with payment.");
-      
+      setErrorMessage("Missing required details to proceed with payment.");
+  setSuccessMessage("");
       return;
     }
 
@@ -601,7 +611,8 @@ setSuccessMessage("");
   rzp.open();
 } catch (err) {
   
-  alert("Failed to open Razorpay modal.");
+  setErrorMessage("Failed to open Razorpay modal.");
+    setSuccessMessage("");
 }
 
     } else {
@@ -834,7 +845,58 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
               </div>
                 <div className="input-row">
                 <button className="payment-btn" onClick={handlePayment}>Proceed to Pay</button>
-             <button className="payment-btn"  onClick={() => setOpenInstallmentPopup(true)}>Request for Installments</button>
+             {/* <button className="payment-btn"  onClick={() => setOpenInstallmentPopup(true)}>Request for Installments</button> */}
+                
+                {/* {requestStatus === "rejected" ? (
+  <button className="payment-btn" style={{ backgroundColor: "red", cursor: "default" }}>
+    Your request has been rejected
+  </button>
+) : (
+  <button className="payment-btn" onClick={() => setOpenInstallmentPopup(true)}>
+    Request for Installments
+  </button>
+)} */}
+{/* <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+  <button 
+    className="payment-btn" 
+    onClick={() => setOpenInstallmentPopup(true)}
+  >
+    Request for Installments
+  </button>
+
+  {requestStatus === "rejected" && (
+    <p style={{ color: "red", marginTop: "8px" }}>
+      Your request has been rejected
+    </p>
+  )}
+</div> */}
+<div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+  <button
+    className="payment-btn"
+    onClick={() => setOpenInstallmentPopup(true)}
+    disabled={requestStatus == null} // disable only if waiting
+    style={{
+      opacity: requestStatus == null ? 0.6 : 1,
+      cursor: requestStatus == null ? "not-allowed" : "pointer",
+    }}
+  >
+    Request for Installments
+  </button>
+
+  {requestStatus === "rejected" && (
+    <p style={{ color: "red", marginTop: "8px" }}>
+      Your request has been rejected
+    </p>
+  )}
+
+  {requestStatus == null && (
+    <p style={{ color: "orange", marginTop: "8px" }}>
+      Your request sent to admin. Please wait for approval
+    </p>
+  )}
+</div>
+
+
                 <div className="paylater">
                 <button
                   onClick={saveEnrollment}
@@ -861,6 +923,12 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
           <RequestInstallment 
             selectedBatchData={selectedBatchData} 
             closeModal={() => setOpenInstallmentPopup(false)}
+            courseFee={courseData?.iamount || 0} 
+            email={studentData?.email || ''}
+            studentId={studentData?.studentId || ''}
+            studentName = {studentData?.userName || ''}
+            courseData={courseData} 
+            mobile={mobileNumber}
           />
         </DialogContent>
       </Dialog>

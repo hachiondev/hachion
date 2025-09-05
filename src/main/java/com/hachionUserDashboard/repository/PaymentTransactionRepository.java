@@ -36,4 +36,10 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
 	@Transactional
 	@Query(value = "UPDATE payment_transactions SET request_status = :requestStatus WHERE id = :transactionId", nativeQuery = true)
 	int updateRequestStatus(@Param("transactionId") Long transactionId, @Param("requestStatus") String requestStatus);
+
+	
+	@Query(value = "SELECT request_status, number_of_installments " + "FROM payment_transactions "
+			+ "WHERE student_id = :studentId " + "AND course_name = :courseName " + "LIMIT 1", nativeQuery = true)
+	List<Object[]> findLatestStatusAndInstallmentsByStudentIdAndCourseName(@Param("studentId") String studentId,
+			@Param("courseName") String courseName);
 }

@@ -65,7 +65,6 @@ public class BlogsController {
 		return repo.findAll();
 	}
 
-//	private final String uploadDir = System.getProperty("user.home") + "/uploads/blogs/";
 
 	private String saveFile(MultipartFile file, String subFolder) throws IOException {
 		if (file != null && !file.isEmpty()) {
@@ -189,7 +188,7 @@ public class BlogsController {
 						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This PDF already exists.");
 					}
 
-					// Delete old PDF
+					
 					String oldPdfPath = blog.getBlog_pdf();
 
 					if (oldPdfPath != null && !oldPdfPath.isEmpty()) {
@@ -231,7 +230,7 @@ public class BlogsController {
 
 			Path filePath = Paths.get(uploadDir + type + "/" + filename);
 
-//			Path filePath = Paths.get(System.getProperty("user.home") + "/uploads/blogs/" + type + "/" + filename);
+
 			if (!Files.exists(filePath)) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}

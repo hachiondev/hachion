@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hachionUserDashboard.dto.InstallmentStatusResponse;
 import com.hachionUserDashboard.dto.PaymentTransactionRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionResponse;
+import com.hachionUserDashboard.dto.PaymentTransactionSummaryResponse;
 import com.hachionUserDashboard.entity.PaymentTransaction;
 
 import Service.RazorpayServiceInterface;
@@ -43,9 +45,9 @@ public class RazorpayController {
 			@RequestParam String signature, @RequestParam String studentId, @RequestParam String courseName,
 			@RequestParam String batchId,
 			@RequestParam(required = false, defaultValue = "0") Integer numSelectedInstallments,
-			Integer checkboxClicked) {
+			Integer checkboxClicked, @RequestParam(value = "couponCode", required = false) String couponCode) {
 		return razorpayService.captureInstllmentOrder(paymentId, orderId, signature, studentId, courseName, batchId,
-				numSelectedInstallments, checkboxClicked);
+				numSelectedInstallments, checkboxClicked, couponCode);
 	}
 
 	@GetMapping("/checkbox-status")
@@ -77,9 +79,25 @@ public class RazorpayController {
 	}
 
 	@PutMapping("/update-status/{transactionId}")
-	public ResponseEntity<String> updateRequestStatus(@PathVariable Long transactionId, @RequestParam String requestStatus) {
+	public ResponseEntity<String> updateRequestStatus(@PathVariable Long transactionId,
+			@RequestParam String requestStatus) {
 
 		razorpayService.updateInstallmentRequestStatus(transactionId, requestStatus);
 		return ResponseEntity.ok("Request status updated successfully.");
+	}
+
+	@GetMapping("/checkInstallment")
+	public ResponseEntity<InstallmentStatusResponse> checkInstallment(@RequestParam String studentId,
+			@RequestParam String courseName) {
+
+		InstallmentStatusResponse response = razorpayService.getLatestStatus(studentId, courseName);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/payments")
+	public ResponseEntity<List<PaymentTransactionSummaryResponse>> getPayments() {
+		List<PaymentTransactionSummaryResponse> payments = razorpayService.getAllPaymentTransactions();
+		return ResponseEntity.ok(payments);
 	}
 }

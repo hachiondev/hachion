@@ -2,8 +2,10 @@ package Service;
 
 import java.util.List;
 
+import com.hachionUserDashboard.dto.InstallmentStatusResponse;
 import com.hachionUserDashboard.dto.PaymentTransactionRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionResponse;
+import com.hachionUserDashboard.dto.PaymentTransactionSummaryResponse;
 import com.hachionUserDashboard.entity.PaymentTransaction;
 
 public interface RazorpayServiceInterface {
@@ -13,7 +15,7 @@ public interface RazorpayServiceInterface {
 			String batchId);
 
 	String captureInstllmentOrder(String paymentId, String orderId, String signature, String studentId,
-			String courseName, String batchId, Integer numSelectedInstallments, Integer checkboxClicked);
+			String courseName, String batchId, Integer numSelectedInstallments, Integer checkboxClicked, String coupon);
 
 	public Integer getCheckboxClicked(String studentId, String courseName, String batchId);
 
@@ -24,4 +26,8 @@ public interface RazorpayServiceInterface {
 	public List<PaymentTransactionResponse> getAllRequestInstallmetns();
 
 	public void updateInstallmentRequestStatus(Long transactionId, String requestStatus);
+
+	public List<PaymentTransactionSummaryResponse> getAllPaymentTransactions();
+
+	public InstallmentStatusResponse getLatestStatus(String studentId, String courseName);
 }

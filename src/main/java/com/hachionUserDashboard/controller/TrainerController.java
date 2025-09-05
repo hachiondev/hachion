@@ -45,21 +45,10 @@ public class TrainerController {
 
 	@GetMapping("/trainers")
 
-//	    @GetMapping("/trainers/{id}")
-//	    public Trainer getTrainer(@PathVariable int id) {
-//	    Trainer trainer=	repo.findById(id).get()	;
-//		return null;
-//	    	}
 	public List<Trainer> getAllTrainers() {
 		List<Trainer> trainers = repo.findAll();
 		return trainers;
 	}
-
-//	@PostMapping("/trainer/add")
-//	@ResponseStatus(code = HttpStatus.CREATED)
-//	public void createTrainer(@RequestBody Trainer trainer) {
-//		repo.save(trainer);
-//	}
 
 	@PostMapping("/trainer/add")
 	public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
@@ -123,13 +112,6 @@ public class TrainerController {
 		return ResponseEntity.ok(trainerNames);
 	}
 
-	/*
-	 * @DeleteMapping("trainer/delete/{id}") public ResponseEntity<?>
-	 * deleteTrainer(@PathVariable Long id) {
-	 * System.out.println("Received trainerId: " + id); // Log to console return
-	 * ResponseEntity.ok("Trainer deleted successfully"); }
-	 * 
-	 */
 	public TrainerService getTrainerservice() {
 		return trainerservice;
 	}

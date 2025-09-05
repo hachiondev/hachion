@@ -24,7 +24,7 @@ import com.hachionUserDashboard.repository.QueryRepository;
 
 
 @CrossOrigin
-//@CrossOrigin(origins = {"http://localhost:3000", "http://hachion.co"})
+
 @RestController
 public class QueryController {
 
@@ -48,7 +48,7 @@ public class QueryController {
 
     @PostMapping("/haveanyquery/add")
     public ResponseEntity<?> addQuery(@RequestBody Query queryRequest) {
-        // Handle adding the request batch, including userName
+        
         Query query = new Query();
         query.setName(queryRequest.getName());
         query.setEmail(queryRequest.getEmail());
@@ -57,7 +57,7 @@ public class QueryController {
        query.setDate(queryRequest.getDate());
        query.setCountry(queryRequest.getCountry());
 
-        // Save requestBatch to the database
+        
         repo.save(query);
         sendQueryEmail(query);
         sendQueryToChat(query);
@@ -65,7 +65,7 @@ public class QueryController {
     }
 
     public void sendQueryToChat(Query query) {
-//        String webhookUrl = "https://chat.googleapis.com/v1/spaces/AAAAf7lFm-A/messages?key=YOUR_KEY&token=YOUR_TOKEN"; // Replace with your actual Webhook URL
+
         String webhookUrl="https://mail.google.com/chat/u/0/#chat/dm/5nJTysAAAAE";
         String message = String.format(
                 "**New Enquiry Received** 📩\n\n" +
@@ -78,7 +78,7 @@ public class QueryController {
                 query.getName(), query.getEmail(), query.getMobile(), query.getComment(), query.getCountry()
         );
 
-        // Create JSON payload
+        
         String jsonPayload = String.format("{\"text\": \"%s\"}", message.replace("\"", "\\\""));
 
         HttpHeaders headers = new HttpHeaders();
@@ -119,7 +119,7 @@ public class QueryController {
 
         simpleMailMessage.setText(message);
         SimpleMailMessage supportMail = new SimpleMailMessage();
-        supportMail.setTo("trainings@hachion.co"); // Replace with the actual support email ID
+        supportMail.setTo("trainings@hachion.co"); 
         supportMail.setSubject("Have any Query?");
         supportMail.setText("Dear Support Team,\n\n" +
                 "The following user has raise a query:\n" +
@@ -131,7 +131,7 @@ public class QueryController {
                 "Please contact the user to assist them further.\n\n" +
                 "Best Regards,\nSystem Notification");
 
-        // Send emails
+        
      
         javaMailSender.send(supportMail);
         javaMailSender.send(simpleMailMessage);

@@ -82,34 +82,6 @@ public class CouponCodeServiceImpl implements CouponCodeServiceInterface {
 		return coupons.stream().map(this::createResponseForCouponCodeResponse).toList();
 	}
 
-//	public List<Object[]> getDiscountByCouponCode(String couponCode) {
-//		return couponCodeRepository.findDiscountByCouponCode(couponCode);
-//	}
-
-//	public Map<String, Object> getDiscountByCouponCode(String couponCode) {
-//	    List<Object[]> results = couponCodeRepository.findDiscountByCouponCode(couponCode);
-//
-//	    if (results.isEmpty()) {
-//	        return Collections.emptyMap(); // or throw exception if preferred
-//	    }
-//
-//	    Object[] row = results.get(0);
-//	    String discountType = (String) row[0];
-//	    Long discountValue = ((Number) row[1]).longValue();
-//	    String countriesCsv = (String) row[2];
-//
-//	    // Convert CSV to List<String>
-//	    List<String> countries = Arrays.stream(countriesCsv.split(","))
-//	                                   .map(String::trim)
-//	                                   .toList();
-//
-//	    Map<String, Object> resultMap = new HashMap<>();
-//	    resultMap.put("discountType", discountType);
-//	    resultMap.put("discountValue", discountValue);
-//	    resultMap.put("countries", countries);
-//
-//	    return resultMap;
-//	}
 
 	@Transactional
 	public Map<String, Object> getDiscountByCouponCode(String couponCode) {
@@ -132,7 +104,7 @@ public class CouponCodeServiceImpl implements CouponCodeServiceInterface {
 		List<String> countries = Arrays.stream(countriesCsv.split(",")).map(String::trim).toList();
 		List<String> courses = Arrays.stream(coursesCsv.split(",")).map(String::trim).toList();
 
-		// Update hit count if still under usageLimit
+		
 		Optional<CouponCode> couponOpt = couponCodeRepository.findByCouponCode(couponCode);
 		if (couponOpt.isPresent()) {
 			CouponCode coupon = couponOpt.get();
@@ -141,11 +113,10 @@ public class CouponCodeServiceImpl implements CouponCodeServiceInterface {
 				coupon.setNumberOfHits(0);
 			}
 
-			if (usageLimit == null) {
-				coupon.setNumberOfHits(coupon.getNumberOfHits() + 1); // always increment
-				couponCodeRepository.save(coupon);
-				numberOfHits = coupon.getNumberOfHits(); // refresh returned value
-			}
+		            coupon.setNumberOfHits(coupon.getNumberOfHits() + 1);
+		            couponCodeRepository.save(coupon);
+		            numberOfHits = coupon.getNumberOfHits();
+		        
 		}
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("discountType", discountType);
@@ -159,29 +130,6 @@ public class CouponCodeServiceImpl implements CouponCodeServiceInterface {
 		return resultMap;
 	}
 
-//	public Map<String, Object> getDiscountByCouponCode(String couponCode) {
-//		List<Object[]> results = couponCodeRepository.findDiscountByCouponCode(couponCode);
-//
-//		if (results.isEmpty()) {
-//			return Collections.emptyMap();
-//		}
-//
-//		Object[] row = results.get(0);
-//		String discountType = (String) row[0];
-//		Long discountValue = ((Number) row[1]).longValue();
-//		String countriesCsv = (String) row[2];
-//		LocalDate endDate = row[3] != null ? ((java.sql.Date) row[3]).toLocalDate() : null;
-//
-//		List<String> countries = Arrays.stream(countriesCsv.split(",")).map(String::trim).toList();
-//
-//		Map<String, Object> resultMap = new HashMap<>();
-//		resultMap.put("discountType", discountType);
-//		resultMap.put("discountValue", discountValue);
-//		resultMap.put("countries", countries);
-//		resultMap.put("endDate", endDate);
-//
-//		return resultMap;
-//	}
 
 	private CouponCodeResponse createResponseForCouponCodeResponse(CouponCode savedCoupon) {
 		CouponCodeResponse response = new CouponCodeResponse();

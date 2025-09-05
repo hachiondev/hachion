@@ -171,11 +171,7 @@ public class UserController {
 		return ResponseEntity.ok(profile);
 	}
 
-//	@PostMapping("/reset-password")
-//	public ResponseEntity<String> resetPassword(@RequestBody UserRegistrationRequest request) {
-//		userService.resetPassword(request);
-//		return ResponseEntity.ok("Password updated successfully");
-//	}
+
 	@PostMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@RequestPart("data") UserRegistrationRequest request,
 			@RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {

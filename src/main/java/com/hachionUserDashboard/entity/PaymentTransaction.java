@@ -33,10 +33,10 @@ public class PaymentTransaction {
 	private String status;
 
 	@Column(name = "amount")
-	private Double amount;
+	private Double amount = 0.0;
 
 	@Column(name = "discount")
-	private Double discount;
+	private Double discount = 0.0;
 
 	@Column(name = "currency")
 	private String currency;
@@ -72,7 +72,7 @@ public class PaymentTransaction {
 	private Double balance = 0.0;
 
 	@Column
-	private Double courseFee;
+	private Double courseFee = 0.0;
 
 	@Column(name = "number_of_installments")
 	private Integer numSelectedInstallments = 0;
@@ -88,10 +88,13 @@ public class PaymentTransaction {
 
 	@Column(name = "request_status")
 	private String requestStatus;
-	
+
 	@Column(name = "mobile")
 	private String mobile;
-	
+
+	@Column(name = "coupon_code")
+	private String couponCode;
+
 	@OneToMany(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OnlinePaymentInstallments> onlinePaymentInstallments = new ArrayList<>();
 
@@ -293,6 +296,14 @@ public class PaymentTransaction {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
 	}
 
 }

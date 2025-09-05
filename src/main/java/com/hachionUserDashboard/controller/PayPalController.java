@@ -25,16 +25,4 @@ public class PayPalController {
 		return payPalService.captureOrder(orderId, studentId, courseName, batchId, discount);
 	}
 
-//	@GetMapping("/testingpaypal")
-//	public ResponseEntity<String> generateTestInvoice(@RequestParam String studentId, @RequestParam String courseName,
-//			@RequestParam String batchId) {
-//		try {
-//			// Delegate everything to service
-//			payPalService.testInvoiceGeneration(studentId, courseName, batchId);
-//			return ResponseEntity.ok("✅ Test invoice generated successfully.");
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body("❌ Error generating test invoice: " + e.getMessage());
-//		}
-//	}
 }

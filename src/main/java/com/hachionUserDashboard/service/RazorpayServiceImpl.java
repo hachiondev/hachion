@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
@@ -11,15 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hachionUserDashboard.dto.InstallmentStatusResponse;
 import com.hachionUserDashboard.dto.PaymentInstallmentRequest;
 import com.hachionUserDashboard.dto.PaymentRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionResponse;
+import com.hachionUserDashboard.dto.PaymentTransactionSummaryResponse;
 import com.hachionUserDashboard.entity.OnlinePaymentInstallments;
 import com.hachionUserDashboard.entity.PaymentTransaction;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.CourseRepository;
-import com.hachionUserDashboard.repository.OnlinePaymentInstallmentsRepository;
 import com.hachionUserDashboard.repository.PaymentTransactionRepository;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.razorpay.Order;
@@ -42,9 +44,6 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 	@Autowired
 	private PaymentTransactionRepository paymentTransactionRepository;
-
-	@Autowired
-	private OnlinePaymentInstallmentsRepository onlinePaymentInstallmentsRepository;
 
 	@Autowired
 	private RegisterStudentRepository registerStudentRepository;
@@ -73,68 +72,6 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 			return "Error creating Razorpay order: " + e.getMessage();
 		}
 	}
-//
-//	@Override
-//	public String captureOrder(String paymentId, String orderId, String signature, String studentId, String courseName,
-//			String batchId, Double discount) {
-//		try {
-//
-//			JSONObject options = new JSONObject();
-//			options.put("razorpay_payment_id", paymentId);
-//			options.put("razorpay_order_id", orderId);
-//			options.put("razorpay_signature", signature);
-//
-//			boolean isSignatureValid = Utils.verifyPaymentSignature(options, keySecret);
-//			if (!isSignatureValid) {
-//				return "Invalid payment signature. Possible tampering.";
-//			}
-//
-//			Payment payment = razorpayClient.payments.fetch(paymentId);
-//			String status = payment.get("status");
-//			if (!"captured".equals(status)) {
-//				return "Payment not captured yet. Status: " + status;
-//			}
-//
-//			double amount = ((Number) payment.get("amount")).doubleValue() / 100.0;
-//
-//			String currency = payment.get("currency");
-//			String payerEmail = payment.get("email");
-//
-//			Optional<RegisterStudent> student = registerStudentRepository.findByStudentId(studentId);
-//			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
-//			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
-//
-//			String rawJson = payment.toString();
-//
-//			PaymentTransaction tx = new PaymentTransaction();
-//			tx.setOrderId(orderId);
-//			tx.setTransactionId(paymentId);
-//			tx.setStatus(status);
-//			tx.setAmount(amount);
-//			tx.setDiscount(discount);
-//			tx.setCurrency(currency);
-//			tx.setPayerEmail(studentEmail);
-//			tx.setStudentId(studentId);
-//			tx.setCourseName(courseName);
-//			tx.setBatchId(batchId);
-//			tx.setPaymentDate(LocalDateTime.now());
-//			tx.setRawResponseJson(rawJson);
-//  
-//			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
-//
-//			// 4. Generate invoice and send
-////	        try {
-////	            paymentService.generateInvoiceForPaypal(paymentRequest, new ExtendedModelMap());
-////	        } catch (Exception ex) {
-////	            System.err.println("⚠️ Razorpay invoice email failed: " + ex.getMessage());
-////	        }
-//
-//			paymentTransactionRepository.save(tx);
-//			return "✅ Razorpay transaction successful: " + paymentId + " (Status: " + status + ")";
-//		} catch (Exception e) {
-//			return "❌ Error capturing Razorpay order: " + e.getMessage();
-//		}
-//	}
 
 	@Override
 	public String captureOrder(String paymentId, String orderId, String signature, String studentId, String courseName,
@@ -183,7 +120,7 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 			double discountAmount = (courseFee * discount) / 100;
 			double finalPrice = courseFee - discountAmount;
 
-			String method = payment.get("method"); // upi, card, netbanking, wallet etc.
+			String method = payment.get("method");
 			System.out.println("payment method : " + method);
 
 			String rawJson = payment.toString();
@@ -207,13 +144,6 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
 
-			// 4. Generate invoice and send
-//	        try {
-//	            paymentService.generateInvoiceForPaypal(paymentRequest, new ExtendedModelMap());
-//	        } catch (Exception ex) {
-//	            System.err.println("⚠️ Razorpay invoice email failed: " + ex.getMessage());
-//	        }
-
 			paymentTransactionRepository.save(tx);
 			return "✅ Razorpay transaction successful: " + paymentId + " (Status: " + status + ")";
 		} catch (Exception e) {
@@ -221,128 +151,12 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 		}
 	}
 
-//	@Override
-//	public String captureInstllmentOrder(String paymentId, String orderId, String signature, String studentId,
-//			String courseName, String batchId, Integer numSelectedInstallments, Integer checkboxClicked) {
-//		try {
-//			JSONObject options = new JSONObject();
-//			options.put("razorpay_payment_id", paymentId);
-//			options.put("razorpay_order_id", orderId);
-//			options.put("razorpay_signature", signature);
-//
-//			boolean isSignatureValid = Utils.verifyPaymentSignature(options, keySecret);
-//			if (!isSignatureValid) {
-//				return "Invalid payment signature. Possible tampering.";
-//			}
-//
-//			Payment payment = razorpayClient.payments.fetch(paymentId);
-//			String status = payment.get("status");
-//			if (!"captured".equals(status)) {
-//				return "Payment not captured yet. Status: " + status;
-//			}
-//
-//			double amount = ((Number) payment.get("amount")).doubleValue() / 100.0;
-//			String currency = payment.get("currency");
-//			String payerEmail = payment.get("email");
-//
-//			Optional<RegisterStudent> student = registerStudentRepository.findByStudentId(studentId);
-//			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
-//			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
-//
-//			List<Object[]> result = courseRepository.findCourseFeeByCourseName(courseName);
-//
-//			Double courseFeeFromDb = null;
-//			Double discountFromDb = null;
-//
-//			if (!result.isEmpty()) {
-//				Object[] row = result.get(0);
-//				courseFeeFromDb = row[0] != null ? ((Number) row[0]).doubleValue() : null;
-//				discountFromDb = row[1] != null ? ((Number) row[1]).doubleValue() : null;
-//			}
-//
-//			double courseFee = courseFeeFromDb != null ? courseFeeFromDb : amount;
-//			double discount = discountFromDb != null ? discountFromDb : 0.0;
-//
-//			double discountAmount = (courseFee * discount) / 100;
-//			double finalPrice = courseFee - discountAmount;
-//
-//			Optional<PaymentTransaction> existingTxOpt = paymentTransactionRepository
-//					.findByStudentIdAndCourseName(studentId, courseName);
-//
-//			PaymentTransaction tx;
-//			if (existingTxOpt.isEmpty()) {
-//
-//				tx = new PaymentTransaction();
-//				tx.setStudentId(studentId);
-//				tx.setCourseName(courseName);
-//				tx.setBatchId(batchId);
-//				tx.setPayerEmail(studentEmail);
-//				tx.setCurrency(currency);
-//				tx.setDiscount(discount);
-//				tx.setPaymentDate(LocalDateTime.now());
-//				tx.setIsInstallment(true);
-//				tx.setOrderId(orderId);
-//				tx.setTransactionId(paymentId);
-//				tx.setStatus(status);
-//				tx.setAmount(0.0);
-//				tx.setCourseFee(finalPrice);
-//				tx.setInstallmentCount(0);
-//				tx.setNumSelectedInstallments(numSelectedInstallments);// will increment below
-//				tx.setCheckboxClicked(checkboxClicked);
-//			} else {
-//				tx = existingTxOpt.get();
-//				tx.setCheckboxClicked(tx.getCheckboxClicked() + checkboxClicked);
-//			}
-//
-//			double totalPaid = amount;
-//			int installmentsToCreate = checkboxClicked != null && checkboxClicked > 0 ? checkboxClicked : 1;
-//			double eachInstallmentAmount = totalPaid / installmentsToCreate;
-//
-//			int startingInstallmentNumber = tx.getInstallmentCount() + 1;
-//
-//			for (int i = 0; i < installmentsToCreate; i++) {
-//				OnlinePaymentInstallments child = new OnlinePaymentInstallments();
-//				child.setPaymentTransaction(tx);
-//
-//				int newInstallmentNumber = startingInstallmentNumber + i;
-//
-//				child.setInstallmentNumber(newInstallmentNumber);
-//
-//				child.setInstallmentAmount(eachInstallmentAmount);
-//				child.setPaidAmount(eachInstallmentAmount);
-//				child.setPaymentDate(LocalDate.now());
-//				child.setStatus("PAID");
-//				child.setOrderId(orderId);
-//				child.setTransactionId(paymentId);
-//
-//				tx.getOnlinePaymentInstallments().add(child);
-//				tx.setInstallmentCount(tx.getInstallmentCount() + 1);
-//			}
-//
-//			double balance = courseFee - tx.getAmount();
-//			tx.setBalance(balance);
-//
-//			tx.setAmount(tx.getAmount() + totalPaid);
-//
-//			tx.setStatus(balance <= 0 ? "PAID" : "PARTIALLY_PAID");
-//			tx.setNumSelectedInstallments(numSelectedInstallments);
-//			tx.setCourseFee(finalPrice);
-//
-//			paymentTransactionRepository.save(tx);
-//
-//			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
-//
-//			return "✅ Razorpay transaction successful: " + paymentId + " (Status: " + tx.getStatus() + ")";
-//
-//		} catch (Exception e) {
-//			return "❌ Error capturing Razorpay order: " + e.getMessage();
-//		}
-//	}
-
 	@Override
 	public String captureInstllmentOrder(String paymentId, String orderId, String signature, String studentId,
-			String courseName, String batchId, Integer numSelectedInstallments, Integer checkboxClicked) {
+			String courseName, String batchId, Integer numSelectedInstallments, Integer checkboxClicked,
+			String couponCode) {
 		try {
+
 			JSONObject options = new JSONObject();
 			options.put("razorpay_payment_id", paymentId);
 			options.put("razorpay_order_id", orderId);
@@ -363,12 +177,14 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 			String currency = payment.get("currency");
 			String payerEmail = payment.get("email");
 
+			String method = payment.get("method");
+			System.out.println("payment method : " + method);
+
 			Optional<RegisterStudent> student = registerStudentRepository.findByStudentId(studentId);
 			String studentEmail = student.map(RegisterStudent::getEmail).orElse(payerEmail);
 			String studentName = student.map(RegisterStudent::getUserName).orElse("Student");
 
 			List<Object[]> result = courseRepository.findCourseFeeByCourseName(courseName);
-
 			Double courseFeeFromDb = null;
 			Double discountFromDb = null;
 
@@ -380,7 +196,6 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 			double courseFee = courseFeeFromDb != null ? courseFeeFromDb : amount;
 			double discount = discountFromDb != null ? discountFromDb : 0.0;
-
 			double discountAmount = (courseFee * discount) / 100;
 			double finalPrice = courseFee - discountAmount;
 
@@ -388,7 +203,21 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 					.findByStudentIdAndCourseName(studentId, courseName);
 
 			PaymentTransaction tx;
-			if (existingTxOpt.isEmpty()) {
+			if (existingTxOpt.isPresent()) {
+
+				tx = existingTxOpt.get();
+				tx.setPayerEmail(studentEmail);
+				tx.setCurrency(currency);
+				tx.setDiscount(discount);
+				tx.setPaymentDate(LocalDateTime.now());
+				tx.setIsInstallment(true);
+				tx.setOrderId(orderId);
+				tx.setTransactionId(paymentId);
+				tx.setCheckboxClicked(
+						(tx.getCheckboxClicked() != null ? tx.getCheckboxClicked() : 0) + checkboxClicked);
+				tx.setCouponCode(couponCode);
+				tx.setPaymentMethod(method);
+			} else {
 
 				tx = new PaymentTransaction();
 				tx.setStudentId(studentId);
@@ -405,15 +234,14 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 				tx.setAmount(0.0);
 				tx.setCourseFee(finalPrice);
 				tx.setInstallmentCount(0);
-				tx.setNumSelectedInstallments(numSelectedInstallments);// will increment below
+				tx.setNumSelectedInstallments(numSelectedInstallments);
 				tx.setCheckboxClicked(checkboxClicked);
-			} else {
-				tx = existingTxOpt.get();
-				tx.setCheckboxClicked(tx.getCheckboxClicked() + checkboxClicked);
+				tx.setCouponCode(couponCode);
+				tx.setPaymentMethod(method);
 			}
 
 			double totalPaid = amount;
-			int installmentsToCreate = checkboxClicked != null && checkboxClicked > 0 ? checkboxClicked : 1;
+			int installmentsToCreate = (checkboxClicked != null && checkboxClicked > 0) ? checkboxClicked : 1;
 			double eachInstallmentAmount = totalPaid / installmentsToCreate;
 
 			int startingInstallmentNumber = tx.getInstallmentCount() + 1;
@@ -423,24 +251,21 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 				child.setPaymentTransaction(tx);
 
 				int newInstallmentNumber = startingInstallmentNumber + i;
-
 				child.setInstallmentNumber(newInstallmentNumber);
-
 				child.setInstallmentAmount(eachInstallmentAmount);
 				child.setPaidAmount(eachInstallmentAmount);
 				child.setPaymentDate(LocalDate.now());
 				child.setStatus("PAID");
 				child.setOrderId(orderId);
 				child.setTransactionId(paymentId);
-
+				child.setPaymentMethod(method);
 				tx.getOnlinePaymentInstallments().add(child);
 				tx.setInstallmentCount(tx.getInstallmentCount() + 1);
 			}
 
-			double balance = courseFee - tx.getAmount();
-			tx.setBalance(balance);
-
 			tx.setAmount(tx.getAmount() + totalPaid);
+			double balance = finalPrice - tx.getAmount();
+			tx.setBalance(balance);
 
 			tx.setStatus(balance <= 0 ? "PAID" : "PARTIALLY_PAID");
 			tx.setNumSelectedInstallments(numSelectedInstallments);
@@ -525,6 +350,7 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 		response.setNumSelectedInstallments(savedTransaction.getNumSelectedInstallments());
 		response.setRequestDate(savedTransaction.getRequestDate());
 		response.setRequestStatus(savedTransaction.getRequestStatus());
+		response.setPaymentMethod(savedTransaction.getPaymentMethod());
 		return response;
 	}
 
@@ -554,4 +380,45 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 	public void updateInstallmentRequestStatus(Long transactionId, String requestStatus) {
 		paymentTransactionRepository.updateRequestStatus(transactionId, requestStatus);
 	}
+
+	public InstallmentStatusResponse getLatestStatus(String studentId, String courseName) {
+		List<Object[]> results = paymentTransactionRepository
+				.findLatestStatusAndInstallmentsByStudentIdAndCourseName(studentId, courseName);
+
+		if (!results.isEmpty()) {
+			Object[] row = results.get(0);
+			String status = (String) row[0];
+			Integer installments = row[1] != null ? ((Number) row[1]).intValue() : 0;
+
+			return new InstallmentStatusResponse(status, installments);
+		}
+
+		return new InstallmentStatusResponse("not_found", 0);
+	}
+
+	public List<PaymentTransactionSummaryResponse> getAllPaymentTransactions() {
+		List<PaymentTransaction> transactions = paymentTransactionRepository.findAll();
+
+		AtomicInteger counter = new AtomicInteger(1);
+
+		return transactions.stream().map(tx -> {
+			PaymentTransactionSummaryResponse res = new PaymentTransactionSummaryResponse();
+			res.setSerialNo(counter.getAndIncrement());
+			res.setStudentId(tx.getStudentId());
+			res.setStudentName(tx.getStudentName());
+			res.setEmail(tx.getPayerEmail());
+			res.setMobile(tx.getMobile());
+			res.setCourseName(tx.getCourseName());
+			res.setCourseFee(tx.getCourseFee());
+			res.setCoupon(tx.getCouponCode());
+			res.setNumOfInstallments(tx.getNumSelectedInstallments());
+			res.setPaidInstallments(tx.getInstallmentCount());
+			res.setBalanceFee(tx.getBalance());
+			res.setStatus(tx.getStatus());
+			res.setPaymentMethod(tx.getPaymentMethod());
+			res.setCreatedDate(tx.getRequestDate());
+			return res;
+		}).collect(Collectors.toList());
+	}
+
 }

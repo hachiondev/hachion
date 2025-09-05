@@ -75,38 +75,7 @@ public class StudentTrackingController {
 		return ResponseEntity.ok(responses);
 	}
 
-//	@GetMapping("/by-date-range")
-//	public ResponseEntity<List<StudentTracking>> getByDateRange(
-//			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-//			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-//
-//		List<StudentTracking> students = studentTrackingRepository.findAllByStartDateBetween(startDate, endDate);
-//		return ResponseEntity.ok(students);
-//	}
-//	@PostMapping("/filter")
-//	public ResponseEntity<List<StudentTracking>> filterStudents(@RequestBody StudentTrackingFilterRequest request) {
-//	    List<StudentTracking> students = studentTrackingRepository.filterStudents(
-//	        request.getCourseCategory(),
-//	        request.getCourseName(),
-//	        request.getStartDate(),
-//	        request.getEndDate()
-//	    );
-//
-//	    return ResponseEntity.ok(students);
-//	}
 
-//	@PostMapping("/filter")
-//	public ResponseEntity<List<StudentTracking>> filterStudents(@RequestBody StudentTrackingFilterRequest request) {
-//	    List<StudentTracking> students = studentTrackingRepository.filterStudents(
-//	        request.getCourseCategory(),
-//	        request.getCourseName(),
-//	        request.getBatchId(),
-//	        request.getStartDate(),
-//	        request.getEndDate()
-//	    );
-//
-//	    return ResponseEntity.ok(students);
-//	}
 	@PostMapping("/filter")
 	public ResponseEntity<List<StudentTracking>> filterStudents(@RequestBody StudentTrackingFilterRequest request) {
 		List<StudentTracking> result = studentTrackingRepository.filterStudentsNative(request.getCourseCategory(),

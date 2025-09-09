@@ -3,6 +3,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -19,13 +20,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#00AEEF',
         color: theme.palette.common.white,
-        borderRight: '1px solid white', // Add vertical lines
+        borderRight: '1px solid white', 
         padding: '3px 5px',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         padding: '3px 4px',
-        borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+        borderRight: '1px solid #e0e0e0', 
     },
 }));
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -44,6 +45,20 @@ export default function StudentInterests() {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredRows, setFilteredRows] = useState([]);
+
+     useEffect(() => {
+    const fetchStudentInterests = async () => {
+      try {
+        const response = await axios.get("https://api.hachion.co/popup-onboarding/getAllOnboarding");
+        setStudentInterest(response.data);
+        setFilteredRows(response.data);
+      } catch (err) {
+        console.error("Error fetching student interests:", err);
+      }
+    };
+    fetchStudentInterests();
+  }, []);
+
     const filteredData = studentInterest.filter((item) => {
         const date = new Date(item.date || item.payment_date);
         const matchesSearch =
@@ -80,6 +95,20 @@ export default function StudentInterests() {
         useEffect(() => {
         setFilteredRows(studentInterest);
       }, [studentInterest]);
+const handleDelete = async (id) => {
+  if (window.confirm("Are you sure you want to delete this record?")) {
+    try {
+      await axios.delete(`https://api.hachion.co/popup-onboarding/${id}`);
+      
+      const updatedData = studentInterest.filter(item => item.popupOnboardingId !== id);
+      setStudentInterest(updatedData);
+      setFilteredRows(updatedData);
+    } catch (err) {
+      console.error("Error deleting record:", err);
+      alert("Failed to delete record.");
+    }
+  }
+};
 
     return (
         <>
@@ -171,25 +200,35 @@ export default function StudentInterests() {
                 <StyledTableRow key={row.batch_id || index}>
                             <StyledTableCell><Checkbox /></StyledTableCell>
                             <StyledTableCell>{index + 1}</StyledTableCell>
-                            <StyledTableCell align="center">{row.student_ID}</StyledTableCell>
-                            <StyledTableCell align="left">{row.userName}</StyledTableCell>
-                            <StyledTableCell align="left">{row.role}</StyledTableCell>
-                            <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.goal}</StyledTableCell>
-                            <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.selectedCourses}</StyledTableCell>
-                            <StyledTableCell align="left">{row.learningMethods}</StyledTableCell>
-                            <StyledTableCell align="left">{row.trainingMode}</StyledTableCell>
-                            <StyledTableCell align="left">{row.skillLevel}</StyledTableCell>
-                            <StyledTableCell align="left">{row.careerGoal}</StyledTableCell>
-                            <StyledTableCell align="left">{row.realTimeProjects}</StyledTableCell>
-                            <StyledTableCell align="left">{row.certOrPlacement}</StyledTableCell>
-                            <StyledTableCell align="left">{row.advisorCall}</StyledTableCell>
-                            <StyledTableCell align="left">{row.heardFrom}</StyledTableCell>
-                            <StyledTableCell align="center">
-                                        {row.date ? dayjs(row.date).format('MMM-DD-YYYY') : ''}
-                                      </StyledTableCell>
-                                      <StyledTableCell align="center">
+                            <StyledTableCell align="center">{row.studentId}</StyledTableCell>
+                  <StyledTableCell align="left">{row.studentName}</StyledTableCell>
+                  <StyledTableCell align="left">{row.currentRole}</StyledTableCell>
+                  <StyledTableCell align="left">{row.primaryGoal}</StyledTableCell>
+                  <StyledTableCell align="left">
+  {Array.isArray(row.areasOfInterest) ? row.areasOfInterest.join(', ') : row.areasOfInterest}
+</StyledTableCell>
+
+<StyledTableCell align="left">
+  {Array.isArray(row.preferToLearn) ? row.preferToLearn.join(', ') : row.preferToLearn}
+</StyledTableCell>
+                  <StyledTableCell align="left">{row.preferredTrainingMode}</StyledTableCell>
+                  <StyledTableCell align="left">{row.currentSkill}</StyledTableCell>
+                  <StyledTableCell align="left">{row.lookingForJob}</StyledTableCell>
+                  <StyledTableCell align="left">{row.realTimeProjects}</StyledTableCell>
+                  <StyledTableCell align="left">{row.certificationOrPlacement}</StyledTableCell>
+                  <StyledTableCell align="left">{row.speakToCourseAdvisor}</StyledTableCell>
+                  <StyledTableCell align="left">{row.whereYouHeard}</StyledTableCell>
+                  <StyledTableCell align="center">{row.fillingDate ? dayjs(row.fillingDate).format('MMM-DD-YYYY') : ''}</StyledTableCell>
+                                      {/* <StyledTableCell align="center">
                                           <RiDeleteBin6Line className="delete"/>
-                                      </StyledTableCell>
+                                      </StyledTableCell> */}
+                                      <StyledTableCell align="center">
+  <RiDeleteBin6Line
+    className="delete"
+    style={{ cursor: 'pointer' }}
+    onClick={() => handleDelete(row.popupOnboardingId)}
+  />
+</StyledTableCell>
                             </StyledTableRow>
                                           ))
                                         ) : (

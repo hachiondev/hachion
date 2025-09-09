@@ -5,7 +5,7 @@ import LoginSide from './LoginSide';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import LoginBanner from '../../Assets/loginbackground.png';
@@ -25,7 +25,6 @@ const ResetPassword = () => {
   const userDataString = localStorage.getItem('registeruserData');
   const registeruserData = userDataString ? JSON.parse(userDataString) : { email: '' };
 
-  // ✅ Toggle visibility handlers
   const togglePasswordVisibility = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
   };
@@ -34,7 +33,7 @@ const ResetPassword = () => {
     setConfirmPasswordType(confirmPasswordType === 'password' ? 'text' : 'password');
   };
 
-  // ✅ Verify and call API
+  
   const verifyAccount = async (password, confirmPassword) => {
     if (!password || !confirmPassword) {
       setRegisterMessage('Please fill in all fields');
@@ -81,7 +80,7 @@ const ResetPassword = () => {
   return (
     <>
       <TopBarNew />
-      <NavBar />
+      <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">

@@ -1,6 +1,8 @@
-import React from "react";
+
+import React, { useEffect } from "react";
 
 const Pathfinder3 = ({ formData, onChange, onNext, onBack }) => {
+
   const handleCheckboxGroup = (field, value) => {
     let updated = [...(formData[field] || [])];
     if (updated.includes(value)) {

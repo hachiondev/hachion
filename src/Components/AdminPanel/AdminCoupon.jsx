@@ -46,17 +46,23 @@ const AdminCoupon = ({ onChange }) => {
   const [coupon, setCoupon] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [countries, setCountries] = useState([]);
-  const [formData, setFormData] = useState({
+
+const [formData, setFormData] = useState({
   id: "",
   course_name: "",
   code: "",
-  author: "",
-  description: "",
   status: "",
-  date: new Date().toISOString().split("T")[0],
+  startDate: new Date().toISOString().split("T")[0],
+  endDate: new Date().toISOString().split("T")[0],
   selectedCourses: [],
   selectedCountries: [],
+  status: "",
+  usageLimit: "",
+  discountType: "",
+  discountValue: "",
+  createdDate: ""
 });
+
   const [formMode, setFormMode] = useState('Add');
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,10 +72,13 @@ const AdminCoupon = ({ onChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [allCoupon, setAllCoupon] = useState([]);
-   const [errorMessage, setErrorMessage] = useState("");
+   
     const [courses, setCourses] = useState([]);
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
+const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
 
     useEffect(() => {
         axios
@@ -97,11 +106,11 @@ const handleCourseChange = (selectedOptions) => {
     return;
   }
 
-  // Check if "All Courses" is selected
+  
   const isAllSelected = selectedOptions.some((opt) => opt.value === "ALL");
 
   if (isAllSelected) {
-    // Select all course names
+    
     setFormData((prev) => ({
       ...prev,
       selectedCourses: courses.map((c) => c.courseName),
@@ -116,14 +125,14 @@ const handleCourseCheckboxChange = (courseName) => {
   setFormData((prev) => ({
     ...prev,
     selectedCourses: prev.selectedCourses.includes(courseName)
-      ? prev.selectedCourses.filter((c) => c !== courseName) // remove if unchecked
-      : [...prev.selectedCourses, courseName], // add if checked
+      ? prev.selectedCourses.filter((c) => c !== courseName) 
+      : [...prev.selectedCourses, courseName], 
   }));
 };
 
-  // ✅ Fetch coupon codes (replace with your API endpoint)
+  
   useEffect(() => {
-    axios.get("https://api.hachion.co/coupons/all")
+    axios.get("https://api.hachion.co/coupon-code/all")
       .then(res => {
         setCoupon(res.data);
         setAllCoupon(res.data);
@@ -131,7 +140,7 @@ const handleCourseCheckboxChange = (courseName) => {
       .catch(console.error);
   }, []);
 
-  // ✅ Search filter
+  
   useEffect(() => {
     const filtered = coupon.filter(c =>
       c.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -156,7 +165,7 @@ const handleCourseCheckboxChange = (courseName) => {
   </components.Option>
 );
 
-  // ✅ Handle input changes
+  
   const handleInputChange = (e, name, value) => {
     if (e) {
       const { name, value } = e.target;
@@ -166,7 +175,7 @@ const handleCourseCheckboxChange = (courseName) => {
     }
   };
 
-  // ✅ Reset form
+  
   const handleReset = () => {
     setFormData({
       id: "", course_name: "", code: "", author: "",
@@ -175,47 +184,97 @@ const handleCourseCheckboxChange = (courseName) => {
     });
   };
 
-  // ✅ Submit form
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      if (formMode === "Add") {
-        await axios.post("https://api.hachion.co/coupons", formData);
-      } else {
-        await axios.put(`https://api.hachion.co/coupons/${formData.id}`, formData);
-      }
-      handleReset();
-      setShowForm(false);
+  try {
+    
+    const payload = {
+      couponId: formData.id || null,
+      courseNames: formData.selectedCourses || [],
+      countryNames: formData.selectedCountries || [],
+      couponCode: formData.code || "",
+      discountType: formData.discountType || "",
+      discountValue: formData.discountValue || "",
+      startDate: startDate ? dayjs(startDate).format("MM/DD/YYYY") : "",
+    endDate: endDate ? dayjs(endDate).format("MM/DD/YYYY") : "",
+    status: formData.status ? "Active" : "Inactive",  
+    usageLimit: formData.usageLimit || ""
+      
+    };
 
-      // refresh list
-      const res = await axios.get("https://api.hachion.co/coupons/all");
-      setCoupon(res.data);
-      setAllCoupon(res.data);
-
-    } catch (error) {
-      console.error("Error saving coupon:", error);
+    if (formMode === "Add") {
+      await axios.post("https://api.hachion.co/coupon-code/create", payload);
+      setSuccessMessage("✅ Coupon created successfully.");
+      setErrorMessage("");
+    } else if (formMode === "Edit") {
+      await axios.put("https://api.hachion.co/coupon-code/update", payload);
+      setSuccessMessage("✅ Coupon updated successfully.");
+      setErrorMessage("");
     }
-  };
 
-  // ✅ Edit
-  const handleEdit = (id) => {
-    const couponToEdit = coupon.find(c => c.id === id);
-    setFormData(couponToEdit);
+  } catch (error) {
+    console.error("❌ Error submitting coupon:", error);
+    setSuccessMessage("");
+    setErrorMessage("❌ Failed to submit coupon. Please try again.");
+  }
+};
+const handleEdit = (couponId) => {
+  const couponToEdit = coupon.find(c => c.couponId === couponId);
+
+  if (couponToEdit) {
+     console.log("Editing coupon:", couponToEdit);
+    console.log("couponToEdit.countryNames:", couponToEdit.countryNames); // Check country names array
+
+    setFormData({
+      id: couponToEdit.couponId || "",
+      code: couponToEdit.couponCode || "",
+      discountType: couponToEdit.discountType || "",
+      discountValue: couponToEdit.discountValue || "",
+      status: couponToEdit.status || "",   
+      usageLimit: couponToEdit.usageLimit || "",
+      startDate: couponToEdit.startDate || new Date().toISOString().split("T")[0],
+      endDate: couponToEdit.endDate || new Date().toISOString().split("T")[0],
+      selectedCourses: couponToEdit.courseNames || [],
+      selectedCountries: couponToEdit.countryNames || []
+    });
+
+    setStartDate(
+      couponToEdit.startDate ? dayjs(couponToEdit.startDate, "MM/DD/YYYY") : dayjs()
+    );
+    setEndDate(
+      couponToEdit.endDate ? dayjs(couponToEdit.endDate, "MM/DD/YYYY") : dayjs()
+    );
+
     setFormMode("Edit");
     setShowForm(true);
-  };
+  }
+};
 
-  // ✅ Delete
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this coupon?")) {
-      await axios.delete(`https://api.hachion.co/coupons/${id}`);
-      setCoupon(coupon.filter(c => c.id !== id));
-      setAllCoupon(allCoupon.filter(c => c.id !== id));
+
+
+  const handleDelete = async (couponId) => {
+  if (window.confirm("Are you sure you want to delete this coupon?")) {
+    try {
+      await axios.delete(`https://api.hachion.co/coupon-code/delete/${couponId}`);
+
+      
+      setCoupon((prev) => prev.filter((c) => c.couponId !== couponId));
+      setAllCoupon((prev) => prev.filter((c) => c.couponId !== couponId));
+ setSuccessMessage("✅ Coupon deleted successfully.");
+      setErrorMessage("");
+  
+    } catch (error) {
+      console.error("❌ Error deleting coupon:", error);
+      
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete coupon. Please try again.");
     }
-  };
+  }
+};
 
-  // ✅ Pagination
+
+  
   const displayedCoupon = filteredCoupon.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -229,7 +288,7 @@ const handleCourseCheckboxChange = (courseName) => {
     setCurrentPage(1);
   };
 
-  // ✅ Date filter
+  
   const handleDateFilter = () => {
     const filtered = allCoupon.filter((item) => {
       const itemDate = dayjs(item.date);
@@ -278,26 +337,23 @@ const handleCourseCheckboxChange = (courseName) => {
     ...countries,
   ];
 
-  const handleCountryChange = (selected) => {
+const handleCountryChange = (selected) => {
   if (!selected || selected.length === 0) {
-    setSelectedCountries([]);
-    setFormData((prev) => ({ ...prev, selectedCountries: [] }));
+    setFormData(prev => ({ ...prev, selectedCountries: [] }));
     return;
   }
 
-  const isAllSelected = selected.some((opt) => opt.value === "ALL");
+  const isAllSelected = selected.some(opt => opt.value === "ALL");
 
   if (isAllSelected) {
-    setSelectedCountries(countries);
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      selectedCountries: countries.map((c) => c.value),
+      selectedCountries: countries.map(c => c.value),
     }));
   } else {
-    setSelectedCountries(selected);
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      selectedCountries: selected.map((c) => c.value),
+      selectedCountries: selected.map(c => c.value),
     }));
   }
 };
@@ -388,47 +444,79 @@ const handleCourseCheckboxChange = (courseName) => {
             <div className="col-md-3">
                   <label className="form-label">Country</label>
                   {countries.length > 0 ? (
-                    <Select
-                      options={countryOptions}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      hideSelectedOptions={false}
-                      components={{
-      Option: (props) => (
-        <div {...props.innerProps} className="d-flex align-items-center p-1">
-          <input
-            type="checkbox"
-            checked={props.isSelected}
-            onChange={() => null}
-            style={{ marginRight: "8px" }}
-          />
-          {props.data.flag && (
-            <Flag
-              code={props.data.flag}
-              style={{ width: "20px", marginRight: "8px" }}
-            />
-          )}
-          <span>
-            {props.data.label}
-          </span>
-        </div>
-      ),
-      MultiValueLabel: (props) => (
-        <div className="d-flex align-items-center">
-          {props.data.flag && (
-            <Flag
-              code={props.data.flag}
-              style={{ width: "16px", marginRight: "6px" }}
-            />
-          )}
-          <span>{props.data.label}</span>
-        </div>
-      ),
-    }}
-                      onChange={handleCountryChange}
-                      value={selectedCountries}
-                      placeholder="Search or select countries..."
-                    />
+    //                 <Select
+    //                   options={countryOptions}
+    //                   isMulti
+    //                   closeMenuOnSelect={false}
+    //                   hideSelectedOptions={false}
+    //                   components={{
+    //   Option: (props) => (
+    //     <div {...props.innerProps} className="d-flex align-items-center p-1">
+    //       <input
+    //         type="checkbox"
+    //         checked={props.isSelected}
+    //         onChange={() => null}
+    //         style={{ marginRight: "8px" }}
+    //       />
+    //       {props.data.flag && (
+    //         <Flag
+    //           code={props.data.flag}
+    //           style={{ width: "20px", marginRight: "8px" }}
+    //         />
+    //       )}
+    //       <span>
+    //         {props.data.label}
+    //       </span>
+    //     </div>
+    //   ),
+    //   MultiValueLabel: (props) => (
+    //     <div className="d-flex align-items-center">
+    //       {props.data.flag && (
+    //         <Flag
+    //           code={props.data.flag}
+    //           style={{ width: "16px", marginRight: "6px" }}
+    //         />
+    //       )}
+    //       <span>{props.data.label}</span>
+    //     </div>
+    //   ),
+    // }}
+    //                   onChange={handleCountryChange}
+    //                   value={selectedCountries}
+    //                   placeholder="Search or select countries..."
+    //                 />
+    <Select
+  options={countryOptions}
+  isMulti
+  closeMenuOnSelect={false}
+  hideSelectedOptions={false}
+  components={{
+    Option: (props) => (
+      <div {...props.innerProps} className="d-flex align-items-center p-1">
+        <input
+          type="checkbox"
+          checked={props.isSelected}
+          onChange={() => null}
+          style={{ marginRight: "8px" }}
+        />
+        {props.data.flag && <Flag code={props.data.flag} style={{ width: "20px", marginRight: "8px" }} />}
+        <span>{props.data.label}</span>
+      </div>
+    ),
+    MultiValueLabel: (props) => (
+      <div className="d-flex align-items-center">
+        {props.data.flag && <Flag code={props.data.flag} style={{ width: "16px", marginRight: "6px" }} />}
+        <span>{props.data.label}</span>
+      </div>
+    ),
+  }}
+  onChange={handleCountryChange}
+  value={countryOptions.filter(opt =>
+    (formData.selectedCountries || []).includes(opt.value)
+  )} 
+  placeholder="Search or select countries..."
+/>
+
                   ) : (
                     <p>Loading countries...</p>
                   )}
@@ -482,8 +570,9 @@ const handleCourseCheckboxChange = (courseName) => {
                 <label className="form-label">Discount Type</label>
                 <select
                 id="type"
+                 name="discountType"  
+      value={formData.discountType}
                 className="form-select"
-                value={formData.type}
                 onChange={handleInputChange}
               >
                 <option value="select">--Select--</option>
@@ -495,10 +584,10 @@ const handleCourseCheckboxChange = (courseName) => {
                 <label className="form-label">Discount Value</label>
                 <input
                   type="number"
-                  name="value"
+                  name="discountValue"
                   className="form-control"
                   placeholder="Enter Discount Value"
-                  value={formData.value}
+                  value={formData.discountValue}
                   onChange={handleInputChange}
                 />
               </div>
@@ -533,10 +622,10 @@ const handleCourseCheckboxChange = (courseName) => {
                 <label className="form-label">Usage Limit</label>
                 <input
                   type="number"
-                  name="limit"
+                  name="usageLimit"
                   className="form-control"
                   placeholder="Enter Usage Limit"
-                  value={formData.limit}
+                  value={formData.usageLimit}
                   onChange={handleInputChange}
                 />
               </div>
@@ -551,14 +640,17 @@ const handleCourseCheckboxChange = (courseName) => {
                 />
                 <span>{formData.status ? 'Active' : 'Inactive'}</span>
               </div>
-
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <div className="course-row">
               <button type="submit" className="submit-btn">
                 {formMode === 'Add' ? 'Submit' : 'Update'}
               </button>
+              
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset
               </button>
+
             </div>
           </div>
         </form>
@@ -642,7 +734,7 @@ const handleCourseCheckboxChange = (courseName) => {
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                {/* <TableBody>
                   {displayedCoupon.length > 0 ? displayedCoupon.map((coupon, index) => (
                     <StyledTableRow key={coupon.id}>
                       <StyledTableCell align="center"><Checkbox /></StyledTableCell>
@@ -667,7 +759,34 @@ const handleCourseCheckboxChange = (courseName) => {
                       <StyledTableCell colSpan={12} align="center">No Coupon Codes found</StyledTableCell>
                     </StyledTableRow>
                   )}
-                </TableBody>
+                </TableBody> */}
+                <TableBody>
+  {displayedCoupon.length > 0 ? displayedCoupon.map((coupon, index) => (
+    <StyledTableRow key={coupon.couponId}>
+      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+      <StyledTableCell align="center">{coupon.courseNames?.join(", ")}</StyledTableCell>
+      <StyledTableCell align="center">{coupon.countryNames?.join(", ")}</StyledTableCell>
+      <StyledTableCell align="center">{coupon.couponCode}</StyledTableCell>
+      <StyledTableCell align="left">{coupon.discountType}</StyledTableCell>
+      <StyledTableCell align="left">{coupon.discountValue}</StyledTableCell>
+      <StyledTableCell align="left">{coupon.usageLimit}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.startDate).format("MM-DD-YYYY")}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.endDate).format("MM-DD-YYYY")}</StyledTableCell>
+      <StyledTableCell align="left">{coupon.status}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MM-DD-YYYY')}</StyledTableCell>
+      <StyledTableCell align="center">
+        <FaEdit className="edit" onClick={() => handleEdit(coupon.couponId)} />
+        <RiDeleteBin6Line className="delete" onClick={() => handleDelete(coupon.couponId)} />
+      </StyledTableCell>
+    </StyledTableRow>
+  )) : (
+    <StyledTableRow>
+      <StyledTableCell colSpan={12} align="center">No Coupon Codes found</StyledTableCell>
+    </StyledTableRow>
+  )}
+</TableBody>
+
               </Table>
             </TableContainer>
             <div className="pagination-container">

@@ -10,7 +10,7 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Topbar from './Topbar';
 import { Link } from 'react-router-dom';
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -23,91 +23,72 @@ const ForgotPassword = () => {
   const [otpMessage, setOtpMessage] = useState("");
   const navigate = useNavigate();
 
-  // const handleSendClick = async () => {
-  //   try {
-  //     // Call the API with the email
-  //     const response = await axios.put(`https://api.hachion.co/api/v1/user/forgotpassword?email=${email}`);
-      
-  //     // If successful, show success message
-  //     if (response.status === 200) {
-  //       setIsSuccess(true);
-  //       setMessage('Password reset link sent to your email');
-  //     }
-  //   } catch (error) {
-  //     // If there's an error, show failure message
-  //     setIsSuccess(false);
-  //     setMessage('Failed to send reset link. Please try again.');
-  //   }
-  // };
-
       const isValidEmail = (email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     };
 
+  
   const handleSendClick = async () => {
-    setFormError("");
-    setOtpMessage("");
+  setFormError("");
+  setOtpMessage("");
 
-    if ( !email ) {
-      setFormError("Please fill in email field.");
-      return;
-    }
+  if (!email) {
+    setFormError("Please fill in email field.");
+    return;
+  }
 
-    if (!isValidEmail(email)) {
-      setFormError("Please enter a valid email address.");
-      return;
-    }
+  if (!isValidEmail(email)) {
+    setFormError("Please enter a valid email address.");
+    return;
+  }
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    const data = { email };
+  const data = { email };
 
-    try {
-      const response = await fetch(
-        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const contentType = response.headers.get("Content-Type");
-      let responseData;
-
-      if (contentType && contentType.includes("application/json")) {
-        responseData = await response.json();
-      } else {
-        const text = await response.text();
-        responseData = { message: text };
+  try {
+    const response = await fetch(
+      `https://api.hachion.co/api/v1/user/forgotpassword?email=${email}`,
+      {
+        method: "PUT",
       }
+    );
 
-      console.log("OTP responseData:", responseData);
+    const contentType = response.headers.get("Content-Type");
+    let responseData;
 
-      if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
-        setFormError("");
-        setOtpMessage("OTP sent to your email.");
-        localStorage.setItem("registeruserData", JSON.stringify(data));
-        setTimeout(() => navigate('/confirm-otp'), 3000);
-      } else {
-        const errorMsg = responseData?.message || "Failed to send OTP. Please try again.";
-        setFormError(errorMsg);
-      }
-    } catch (error) {
-      const backendMessage =
-        error.response?.data?.message || error.response?.data || error.message;
-      setFormError(`An error occurred: ${backendMessage}`);
-    } finally {
-      setIsLoading(false);
+    if (contentType && contentType.includes("application/json")) {
+      responseData = await response.json();
+    } else {
+      const text = await response.text();
+      responseData = { message: text };
     }
-  };
+
+    console.log("Forgot Password responseData:", responseData);
+
+    if (response.ok && responseData?.message?.includes("OTP")) {
+      setFormError("");
+      setOtpMessage("OTP sent to your email.");
+      localStorage.setItem("registeruserData", JSON.stringify(data));
+      setTimeout(() => navigate("/confirm-otp"), 3000);
+    } else {
+      const errorMsg =
+        responseData?.message || "Failed to send OTP. Please try again.";
+      setFormError(errorMsg);
+    }
+  } catch (error) {
+    setFormError(`An error occurred: ${error.message}`);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <>
     <TopBarNew />
-    <NavBar />
+    <NavbarTop />
     <div className='blogs-header'>
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -136,8 +117,8 @@ const ForgotPassword = () => {
                   className='form-control'
                   id='floatingInput'
                   placeholder='abc@gmail.com'
-                  value={email}  // Bind email state to input
-                  onChange={(e) => setEmail(e.target.value)}  // Update email state
+                  value={email}  
+                  onChange={(e) => setEmail(e.target.value)}  
                 />
               </div>
 
@@ -145,61 +126,16 @@ const ForgotPassword = () => {
                 <button
                   type='button'
                   className='register-btn'
-                  data-bs-toggle='modal'
-                  data-bs-target='#exampleModal'
+                  // data-bs-toggle='modal'
+                  // data-bs-target='#exampleModal'
                   onClick={handleSendClick}
                 >
                   Send OTP
                 </button>
                 </div>
-                {/* <div
-                  className='modal fade'
-                  id='exampleModal'
-                  tabIndex='-1'
-                  aria-labelledby='exampleModalLabel'
-                  aria-hidden='true'
-                >
-                  <div className='modal-dialog'>
-                    <div className='modal-content'>
-                      <button
-                        data-bs-dismiss='modal'
-                        className='close-btn'
-                        aria-label='Close'
-                        onClick={handleLogin}
-                      >
-                        <RiCloseCircleLine />
-                      </button>
-
-                      <div className='modal-body'>
-                        {isSuccess ? (
-                          <>
-                            <img
-                              src={success}
-                              alt='Success'
-                              className='success-gif'
-                            />
-                            <p className='modal-para'> Password sent to your Email</p>
-                          </>
-                        ) : (
-                          <p className='modal-para'>{message}</p>
-                        )}
-                      </div>
-
-                      <button
-                        type='button'
-                        className='button-login'
-                        onClick={handleLogin}
-                      >
-                        Login
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
+               
               </div>
             </div>
-        {/* </div>
-        <LoginSide />
-      </div> */}
         </div>
         </div>
       <Footer />

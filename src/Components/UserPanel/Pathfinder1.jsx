@@ -5,11 +5,11 @@ import axios from "axios";
 const Pathfinder1 = ({ formData, onChange, onNext, onEdit }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [courses, setCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  
   const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {
         axios
-          .get("https://api.hachion.co/courses/all")
+          .get("http://localhost:8081/courses/all")
           .then((res) => {
             setCourses(res.data);
           })
@@ -28,7 +28,7 @@ const Pathfinder1 = ({ formData, onChange, onNext, onEdit }) => {
     const selectedValues = selectedOptions
       ? selectedOptions.map((opt) => opt.value)
       : [];
-      setSelectedCourses(selectedValues);
+      
     onChange("selectedCourses", selectedValues);
   };
 const handleEditClick = () => {
@@ -59,7 +59,7 @@ const handleEditClick = () => {
         id="pathfinder"
           value={formData.role}
           onChange={(e) => onChange("role", e.target.value)}
-          disabled={!isEditing}
+          
         >
           <option value="">-- Select your role --</option>
           <option value="School Student">School Student</option>
@@ -78,7 +78,7 @@ const handleEditClick = () => {
             placeholder="Please specify"
             value={formData.otherRole}
             onChange={(e) => onChange("otherRole", e.target.value)}
-            disabled={!isEditing}
+            
           />
         )}
       </div>
@@ -90,7 +90,7 @@ const handleEditClick = () => {
             id="pathfinder"
           value={formData.goal}
           onChange={(e) => onChange("goal", e.target.value)}
-          disabled={!isEditing}
+          
         >
           <option value="">-- Select your goal --</option>
           <option value="Get a job in tech">Get a job in tech</option>
@@ -109,12 +109,12 @@ const handleEditClick = () => {
                       id="pathfinder1"
                       options={courseOptions}
                       isMulti
-                      onChange={handleCourseChange}
-                      value={courseOptions.filter((opt) =>
-                (formData.selectedCourses || []).includes(opt.value)
-              )}
-                      placeholder="Search or select courses..."
-                      isDisabled={!isEditing}
+                      value={(formData.selectedCourses || []).map((course) => ({
+    value: course,
+    label: course,
+  }))}
+  onChange={handleCourseChange}
+  placeholder="Search or select courses..."
                   />
                     <div
                       className="border rounded p-2 mt-2"
@@ -126,7 +126,7 @@ const handleEditClick = () => {
                             className="form-check-input"
                             type="checkbox"
                             checked
-                            readOnly
+                            
                           />
                           <label className="form-check-label">{courseName}</label>
                         </div>
@@ -147,5 +147,6 @@ const handleEditClick = () => {
     </div>
   );
 };
+
 
 export default Pathfinder1;

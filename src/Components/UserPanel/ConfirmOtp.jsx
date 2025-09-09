@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Topbar from './Topbar';
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import LoginBanner from '../../Assets/loginbackground.png';
@@ -112,7 +112,7 @@ const ConfirmOtp = () => {
   return (
     <>
       <TopBarNew />
-      <NavBar />
+      <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -132,11 +132,11 @@ const ConfirmOtp = () => {
             <h4 className='login-continue'>Enter OTP</h4>
             {/* <div className="login-mid-name"> */}
               <div className="otp-verify">
-                <p className='tag'>Please check your inbox</p>
-                <p className='tag'>
+                <p className='tag'>We will send you  OTP in given email to reset your password.</p>
+                {/* <p className='tag'>
                   OTP has been sent to
                   <span className='mail-to-register'>{registeruserData.email}</span>
-                </p>
+                </p> */}
 
                 <div className="otp">
                   {otp.map((digit, index) => (
@@ -152,13 +152,6 @@ const ConfirmOtp = () => {
                   ))}
                 </div>
 
-                <p className='go-to-register'>
-                  Didn't receive the OTP?{" "}
-                  <span className='link-to-register' onClick={resendOtp}>
-                    {resendLoading ? "Resending..." : "Resend"}
-                  </span>
-                </p>
-
                 <button
                   type="button"
                   className="register-btn"
@@ -173,12 +166,20 @@ const ConfirmOtp = () => {
                     style={{
                       color: messageType === "success" ? "green" : "red",
                       marginTop: "5px",
+                      fontSize: "12px",
                     }}
                   >
                     {registerMessage}
                   </div>
                 )}
-              </div>
+              
+
+              <div className='go-to-register'>
+                  <span className='link-to-register' onClick={resendOtp}>
+                    {resendLoading ? "Resending..." : "Resend OTP"}
+                  </span>
+                </div>
+                </div>
 
               <p className='spam-msg'>
                 <span className="note">*Note : </span> If you don't see OTP in your inbox, kindly check your spam folder.

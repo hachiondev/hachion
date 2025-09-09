@@ -92,7 +92,8 @@ const handleSubmitRequest = async () => {
       batchId,
       courseFee: courseData.iamount,
       numSelectedInstallments: selectedInstallments,
-    };    
+    };  
+      
     const response = await axios.post(
       "https://api.hachion.co/razorpay/installment-request",
       requestData
@@ -236,7 +237,7 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                   <TableBody>
                  {selectedInstallments > 0 &&
   Array.from({ length: selectedInstallments }).map((_, index) => {
-    const baseInstallment = Number(courseData.iamount) / selectedInstallments;
+    const baseInstallment = Number(courseData.itotal) / selectedInstallments;
     const totalWithCharge = baseInstallment + 500;
     
                         return (

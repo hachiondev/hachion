@@ -20,6 +20,7 @@ import Tracking from './Tracking';
 import AdminSummerEvents from './AdminSummerEvents';
 import Jobs from './Jobs';
 import StudentInterests from './StudentInterests';
+import AdminUploadImage from './AdminUploadImage';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -38,8 +39,9 @@ const componentMap = {
   'Reports': <Reports />,
   'Schedule Request': <ScheduleRequest />,
   'Blog': <Blogs />,
-  'Support': <Support />,
+  'Upload Images': <AdminUploadImage />,
   'Other': <Other />,
+  'Support': <Support />,
 };
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState(() => {

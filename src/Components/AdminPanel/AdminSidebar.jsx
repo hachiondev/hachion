@@ -15,6 +15,7 @@ import { PiStudentFill } from "react-icons/pi";
 import { FaChildren } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa6";
 import { CgPathFront } from "react-icons/cg";
+import { RiImageAddFill } from "react-icons/ri";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -22,9 +23,7 @@ const menuItems = [
   { title: 'Course', icon: <FaBook /> },
   { title: 'Corporate Training', icon: <MdCorporateFare /> },
   { title: 'Kids Courses', icon: <FaChildren /> },
-  { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
   { title: 'Trending Courses', icon: <FaMoneyBillTrendUp /> },
-  { title: 'Discount Courses', icon: <TbDiscount /> },
   { title: 'Trainer', icon: <LiaChalkboardTeacherSolid /> },
   { title: 'Jobs', icon: <FaBriefcase /> },
   {
@@ -42,10 +41,13 @@ const menuItems = [
   { title: 'Reports', icon: <IoNewspaperOutline /> },
   { title: 'Schedule Request', icon: <BiSolidBookContent /> },
   { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
+  { title: 'Upload Images', icon: <RiImageAddFill /> },
+  { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
+  { title: 'Discount Courses', icon: <TbDiscount /> },
   { title: 'Support', icon: <BiSupport /> },
   { title: 'Internship', icon: <FaHandshakeAngle /> },
   { title: 'Live Class Tracking', icon: <LuFocus /> },
-  { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
+  { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
 ];
 const AdminSidebar = ({ onSelectCategory = () => {} }) => {
   const [activeIndex, setActiveIndex] = useState(null);

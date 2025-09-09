@@ -167,7 +167,7 @@ import google from '../../Assets/google-new.png';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -303,7 +303,7 @@ const Login = () => {
   return (
     <>
     <TopBarNew />
-    <NavBar />
+    <NavbarTop />
     <div className='blogs-header'>
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">

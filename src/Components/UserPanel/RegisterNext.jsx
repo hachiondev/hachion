@@ -10,7 +10,7 @@ import PopupInterest3 from './PopupInterest3';
 import PopupInterest4 from './PopupInterest4';
 import axios from "axios";
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -31,6 +31,7 @@ const RegisterNext = () => {
 const [registerMessage, setRegisterMessage] = useState("");
 const [showInterestPopup, setShowInterestPopup] = useState(false);
 const [popupStep, setPopupStep] = useState(1);
+const [errors, setErrors] = useState({});
 const [formData, setFormData] = useState({
   role: "",
   otherRole: "",
@@ -69,17 +70,11 @@ const handleFormChange = (field, value) => {
     }
   };
 
-const verifyAccount = async (otpArray, password, confirmPassword) => {
+const verifyAccount = async (otpArray) => {
     const otp = otpArray.join(""); 
 
-    if (!otp || !password || !confirmPassword) {
+    if (!otp) {
         setRegisterMessage("Please fill in all fields");
-        setMessageType("error");
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        setRegisterMessage("Passwords do not match");
         setMessageType("error");
         return;
     }
@@ -115,7 +110,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
                 country: registeruserData.country,
                 mobile: registeruserData.mobile,
                 mode: "Online",
-                password: password,
+                password: registeruserData.password,
                 confirmPassword: confirmPassword
             }),
         });
@@ -137,7 +132,7 @@ const verifyAccount = async (otpArray, password, confirmPassword) => {
     } catch (error) {
         const msg = typeof error === "string" ? error : error.message || "An unexpected error occurred";
         setRegisterMessage(msg);
-        // setTimeout(() => navigate('/login'), 5000);
+        
     } finally {
         setIsLoading(false);
     }
@@ -229,7 +224,7 @@ const handleSubmitPopup = async () => {
   return (
     <>
         <TopBarNew />
-        <NavBar />
+        <NavbarTop />
         <div className='blogs-header'>
                   <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
@@ -248,8 +243,11 @@ const handleSubmitPopup = async () => {
         <div className="login-top">
           <h4 className="login-continue">Register to start learning</h4>
           <div className="otp-verify">
-            <p className='tag'>Please check your inbox</p>
-            <p className='tag'>OTP has been sent to<span className='mail-to-register'>{registeruserData.email}</span></p>
+            {/* <p className='tag'>Please check your inbox</p> */}
+            <div className='tag'> Please check your inbox OTP  has been sent to</div>
+            <div className='tag'>
+            <span className='mail-to-register'>{registeruserData.email}</span>
+            </div>
             <div className="otp">
   {otp.map((digit, index) => (
     <input
@@ -263,9 +261,6 @@ const handleSubmitPopup = async () => {
     />
   ))}
 </div>
-            <p className='go-to-register'> Didn't receive the OTP? <span className='link-to-register' onClick={resendOtp}> 
-              {resendLoading ? "Resending..." : "Resend"}</span>
-            </p>
             
             <button
               type="button"
@@ -275,6 +270,7 @@ const handleSubmitPopup = async () => {
             >
               {isLoading ? "Verifying..." : "Verify and Register"}
             </button>
+            {errors.otp && <p className="error-field-message">{errors.otp}</p>}
             {registerMessage && (
               <div
                 style={{
@@ -286,7 +282,12 @@ const handleSubmitPopup = async () => {
                 {registerMessage}
             </div>
           )}
-            </div>
+            <div className='go-to-register'>
+                  <span className='link-to-register' onClick={resendOtp}>
+                    {resendLoading ? "Resending..." : "Resend OTP"}
+                  </span>
+                </div>
+                </div>
             <p className='spam-msg'><span className="note">*Note :</span>If you don't see OTP in your inbox, Kindly check your spam folder.</p>
           </div>
         </div>

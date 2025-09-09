@@ -27,13 +27,14 @@
   display: flex;
   flex-direction: column; 
   padding: 10px;
+  background-color: #F3F3F3;
 }
 
 .course-card-container {
   display: flex;
   flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
   justify-content: flex-start; /* Align cards from the start */
-  gap: 10px; /* Optional, adds space between the cards */
+  gap: 5px; /* Optional, adds space between the cards */
   width: 100%;
 }
 
@@ -160,7 +161,7 @@ color: black;
   font-weight:600;
   font-size: 14px;
   background-color: white;
-  color: black;
+  color: #0F172A;
   cursor: pointer;
   outline: none;
   display: flex;
@@ -345,15 +346,15 @@ gap: 10px;
 }
 .dropdown-sidebar {
   flex: 1;
-  width: 280px;
+  /* width: 240px; */
   background-color: white;
-  color: black;
+  color: #0F172A;
   left: 0;
   right:5px;
   overflow-y: auto;
   border:1 px solid rgba(0, 174, 239, 1);
   margin: 0px;
-  margin-left: 2vw;
+  margin-left: 20px;
   margin-bottom: 20px;
 }
 
@@ -371,13 +372,12 @@ gap: 10px;
 .dropdown-card {
   display: flex;
   flex-direction: column;
-  max-Width: 240px;
+  max-Width: 180px;
   width: 100%;
-  height: 125px;
-  padding: 10px;
+  height: 200px;
+  padding: 0;
   background-color: white;
   border-radius: 10px;
-  align-items: flex-start;
   margin: 5px;
   border: 1px solid #d1d1d1;
   box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.2);
@@ -390,9 +390,8 @@ gap: 10px;
 
 .dropdown-card-header-div {
   display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
-  align-items: center;
+  justify-content: center;
+  align-items: top;
   margin-bottom: 0;
 }
 
@@ -403,20 +402,32 @@ gap: 10px;
   }
 
   .dropdown-card-icon{
-    padding: 5px;
-    height: 40px !important;
+    display: flex;
+    justify-content: center;
     width: auto;
+    height: 90px;
+    /* aspect-ratio: 2/1; */
+    border-radius: 10px 10px 0 0;
+   }
+
+    .dropdown-card-icon img{
+    width: auto;
+    height: 100%;
+    /* aspect-ratio: 2/1; */
+    border-radius: 10px 10px 0 0;
    }
 
 .dropdown-course-details {
-  padding: 5px;
-  padding-left: 0;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
 }
 
 .dropdown-course-name{
-  font-weight:600;
+  font-weight:500;
   margin:0px 5px;
-  color: #00AEEF;
+  color: #1F2937;
   font-size: 14px;
 display: -webkit-box;
 -webkit-box-orient: vertical;
@@ -424,19 +435,45 @@ display: -webkit-box;
 overflow: hidden;
 text-overflow: ellipsis;
 line-height: 1.5;
-max-height: 3em;
+height: 3em;
 }
 
 .dropdown-course-time{
-  gap: 5px;
+  display: flex;
   font-size: 12px;
-  padding: 3px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 .dropdown-course-month{  
   font-size: 12px;
   white-space: nowrap;
-  margin-bottom: 5px;
+  color: #6B7280;
 }
+.course-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* Beginner */
+.course-badge.beginner {
+  background: #FEF9C3;
+  color: #854D0E;
+}
+
+/* Intermediate */
+.course-badge.intermediate {
+  color: #1E40AF;
+  background: #DBEAFE;
+}
+
+/* Expert */
+.course-badge.expert {
+  color: #6B21A8;
+  background: #F3E8FF;
+}
+
 .dropdown-course-review{  
   font-size: 12px;
   font-style: italic;
@@ -448,7 +485,26 @@ max-height: 3em;
     width: 16px;
     color: rgba(251, 188, 5, 1);
 }
-
+.dropdown-view-btn{  
+  font-size: 12px;
+  white-space: nowrap;
+  color: #fff;
+  background-color: #00AEEF;
+  border-radius: 20px;
+  border: none;
+  padding: 2px 15px;
+  margin: 0 15px;
+}
+.dropdown-all-btn{  
+  font-size: 16px;
+  white-space: nowrap;
+  color: #fff;
+  background-color: #00AEEF;
+  border-radius: 20px;
+  border: none;
+  padding: 2px 15px;
+  margin: 10px 15px;
+}
 .qa-automation{
 width:80%;
 border-radius: 20px;

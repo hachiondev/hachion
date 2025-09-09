@@ -1578,10 +1578,10 @@ padding: 20px;
   .blog-heading{
       font-size: 16px;        
   }
-  .blog-bottom{
+  /* .blog-bottom{
       width: 100%;
       margin-left: 10px;
-  }
+  } */
 
   .blogs-container {
       grid-template-columns: repeat(2, 1fr); 

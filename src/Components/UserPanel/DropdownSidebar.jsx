@@ -57,9 +57,11 @@ useEffect(() => {
                   onClick={() => handleMenuItemClick(index, item.name)}
                   onMouseEnter={() => handleMenuItemClick(index, item.name)}
                   className={`menu-item ${activeIndex === index ? 'active' : ''}`}
-                  style={{padding: '4px 8px', fontWeight: '500'}}
+                  style={{padding: '4px 8px', fontWeight: '400'}}
                 >
-                  {item.name}
+                  {item.name} <span>
+                      <MdArrowForwardIos />
+                    </span>
                   {item.submenu && item.submenu.length > 0 && (
                     <span>
                       <MdArrowForwardIos />

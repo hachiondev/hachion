@@ -207,23 +207,24 @@
         padding: 0;
         flex-wrap: nowrap;
         overflow:hidden;
+        margin-bottom: 2px;
       }
       
       .breadcrumb-item {
         display: flex;
         align-items: center;
-        font-size: 16px;
+        font-size: 12px;
       }
       
       .breadcrumb-item a {
         text-decoration: none;
-        color: #00AEEF;
+        color: #929292;
         white-space: nowrap;
       }
       
       .breadcrumb-item.active {
-        color: #6c757d;
-        font-size: 16px;
+        color: #262626;
+        font-size: 12px;
         padding-left: 0;
         white-space: nowrap;
         overflow:hidden;
@@ -238,9 +239,9 @@
         display: none;
        }
       .breadcrumb-item svg {
-        font-size: 24px;
+        font-size: 16px;
         margin: 0 3px;
-        color: #00AEEF;
+        color: #262626;
       }
       .about-us-content{
         width: 80%;

@@ -19,6 +19,15 @@
     flex-direction: row;
     align-items: center;
     padding: 0 2vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.admin-logo {
+    height: 40px;
 }
 
 .search-div {
@@ -177,13 +186,13 @@
 .sidebar-admin {
   background: linear-gradient(90deg, #006489 0%, #00AEEF 100%);
   color: white;
-  width: 280px;
+  width: 240px;
   overflow-y: auto;
   overflow-x: hidden;
   height: 100vh;
   transition: width 0.3s ease;
   position: fixed;
-  top: 0;
+  top: 8vh;
   left: 0;
   z-index: 1000;
 }
@@ -225,7 +234,8 @@
 .admin-right {
   flex-grow: 1;
   padding: 20px;
-  margin-left: 280px; /* default sidebar width */
+  margin-left: 240px;
+  margin-top: 8vh;
   transition: margin-left 0.3s ease;
 }
 
@@ -247,7 +257,7 @@
   text-align: left;
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 5px 10px;
   transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition */
 }
 
@@ -265,10 +275,9 @@
 
 /* Icon inside menu item */
 .menu-item-admin .menu-icon {
-  margin-right: 10px;
+  margin-right: 5px;
   color: white;
-  margin-top: 5px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .menu-icon-title-container {
@@ -286,7 +295,7 @@
 }
 
 .menu-title{
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .dropdown-icon {
@@ -369,19 +378,20 @@
     color: white;
     text-align: center;
     font-weight: 400;
-    font-size: 1.5rem;
-    padding:1.5vh;
+    font-size: 1.2rem;
+    padding:1vh;
     border-radius: 10px 10px 0px 0px;
   }
   .date-schedule{
-    padding: 1.5vh;
+    padding: 1vh;
     border: 1px solid #B3B3B3;
     box-shadow: 5px 5px 10px #d3d3d3;
     border-radius: 0px 0px 20px 20px;
    align-items: center;
    display: flex;
    flex-direction: row;
-   gap: 3vh;
+   gap: 2vh;
+   font-size: 14px;
   }
   .course-filter{
     padding: 1.5vh;
@@ -394,11 +404,11 @@
     /* width:4vw; */
     background-color: #00AEEF;
     border-radius: 30px;
-    padding: 8px 20px;
+    padding: 5px 15px;
     box-shadow: 2px 2px 4px #d3d3d3;
     border: none;
     color: white;
-    font-size:1rem;
+    font-size:14px;
   }
   .resetfilter{
     margin-top: 50px;
@@ -421,6 +431,7 @@
   .btn-category{
     background-color: #00AEEF;
     color: white;
+    font-size: 14px;
     border-radius: 30px;
     padding: 8px 20px ;
     border: 1px solid white;
@@ -431,6 +442,10 @@
     justify-content: flex-start;
     align-items: center;
     gap: 2vh;
+  }
+    .entries-left p{
+    font-size: 14px;
+    margin-bottom: 0;
   }
   .entries-right{
     display: flex;
@@ -531,7 +546,10 @@
   
   .tab-item {
     cursor: pointer;
-    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 5px 10px;
     margin-right: 10px;
     border-bottom: 3px solid transparent;
     transition: border-bottom 0.3s ease;

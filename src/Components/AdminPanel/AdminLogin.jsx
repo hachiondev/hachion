@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Admin.css';
-import logo from '../../Assets/logo.png';
-import LoginSide from '../UserPanel/LoginSide';
+// import logo from '../../Assets/logo.png';
+// import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
@@ -43,7 +43,7 @@ const AdminLogin = () => {
     <div className="login">
       <div className="login-left">
         <div className="login-top">
-          <img src={logo} alt="logo" className="logo" />
+          {/* <img src={logo} alt="logo" className="logo" /> */}
           <h3 className="welcome-back">Welcome back!</h3>
           <h4 className="login-continue">Login to Admin Dashboard</h4>
           <div className="login-mid">
@@ -83,19 +83,22 @@ const AdminLogin = () => {
                   {passwordType === 'password' ? <AiFillEyeInvisible /> : <AiFillEye />}
                 </button>
               </div>
-
-              {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-              <Link to="/adminforgot" style={{ textDecoration: 'none' }}>
-                <p className="forgot-password">Forgot Password?</p>
+              
+              
+              <div className="d-flex justify-content-end align-items-center mb-3 p-2">
+              <Link to="/adminforgot" className="forgot-password">
+                Forgot Password?
               </Link>
+              </div>
 
               <div className="d-grid gap-2">
                 <button className="admin-login" type="submit">
                   Login
                 </button>
               </div>
-            </form>
+              </form>
+          </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           </div>
 
           <p className="go-to-register">
@@ -105,9 +108,8 @@ const AdminLogin = () => {
             </Link>
           </p>
         </div>
-      </div>
-
-      <LoginSide />
+      
+      {/* <LoginSide /> */}
     </div>
   );
 };

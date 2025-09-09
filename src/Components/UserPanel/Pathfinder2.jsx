@@ -1,6 +1,7 @@
-import React from "react";
 
+import React, { useState, useEffect } from "react";
 const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
+  
   const handleCheckboxGroup = (field, value) => {
     let updated = [...(formData[field] || [])];
     if (updated.includes(value)) {
@@ -34,8 +35,8 @@ const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
             <input
               className="form-check-input"
               type="checkbox"
-              checked={formData.learningMethods?.includes(option)}
-              onChange={() => handleCheckboxGroup("learningMethods", option)}
+              checked={formData.preferToLearn?.includes(option)}
+              onChange={() => handleCheckboxGroup("preferToLearn", option)}
             />
             <label className="form-check-label">{option}</label>
           </div>
@@ -67,7 +68,7 @@ const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
         <select
           className="form-control-pathfinder"
         id="pathfinder"
-          value={formData.skillLevel || ""}
+          value={formData.skillLevel  || ""}
           onChange={(e) => onChange("skillLevel", e.target.value)}
         >
           <option value="">-- Select --</option>

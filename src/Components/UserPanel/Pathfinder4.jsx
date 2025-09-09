@@ -1,6 +1,48 @@
-import React from "react";
+
+
+import axios from "axios";
+import React, { useState } from "react";
+
 
 const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleUpdate = async () => {
+    const payload = {
+      studentEmail: formData.studentEmail,
+      currentRole: formData.role,
+      primaryGoal: formData.goal,
+      areasOfInterest: formData.selectedCourses.join(", "),
+    preferToLearn: formData.preferToLearn,
+      preferredTrainingMode: formData.trainingMode,
+      currentSkill: formData.skillLevel,
+      lookingForJob: formData.careerGoal,
+      realTimeProjects: formData.realTimeProjects,
+      certificationOrPlacement: formData.certOrPlacement,
+      speakToCourseAdvisor: formData.advisorCall,
+      whereYouHeard: formData.heardFrom,
+      additionalInfo: formData.additionalInfo
+    };
+    try {
+      const response = await axios.put(
+        "https://api.hachion.co/popup-onboarding/update-by-email",
+        payload
+      );      
+       setSuccessMessage("Your details have been updated successfully!");
+      setErrorMessage("");
+
+      // auto-refresh after 3 seconds
+      // setTimeout(() => {
+      //   if (typeof refreshData === "function") {
+      //     refreshData(); // call parent to reload data
+      //   }
+      //   setSuccessMessage(""); // remove success message
+      // }, 3000);
+    } catch (err) {
+      console.error("Error updating onboarding data:", err);
+      alert("Failed to update details.");
+    }
+  };
   return (
      <div className="resume-div">
         <div className="popup-interest">
@@ -58,9 +100,16 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
         <button class="path-button" type="button" onClick={onBack}>Preview</button>
         </div>
         <div class="col-auto">
-        <button class="path-button" type="button" onClick={onSubmit}>Submit</button>
+        <button class="path-button" type="button" onClick={handleUpdate}>Submit</button>
       </div>
     </div>
+     {/* Success / Error Messages */}
+          {successMessage && (
+            <p style={{ color: "green", marginTop: "10px" }}>{successMessage}</p>
+          )}
+          {errorMessage && (
+            <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
+          )}
     </form>
     </div>
     </div>

@@ -51,7 +51,7 @@ const NavBar = () => {
       {!showSearch ? (
         // 🔍 Search Icon (when collapsed)
         <button className="btn" type="button" onClick={handleToggle}>
-          <IoMdSearch size={24} className="text-info" />
+          <IoMdSearch size={18} className="text-info" />
         </button>
       ) : (
         // 🔎 Expanded Search Bar
@@ -71,7 +71,7 @@ const NavBar = () => {
                 className="btn btn-info d-flex align-items-center justify-content-center search-btn"
                 type="submit"
               >
-                <IoMdSearch size={20} className="text-white" />
+                <IoMdSearch size={18} className="text-white" />
               </button>
             </div>
           </form>
@@ -120,34 +120,14 @@ const NavBar = () => {
             <div className="accordion" id="drawerMenu">
               
               {/* Categories */}
-              {/* <div className="accordion-item">
-                <h2 className="accordion-header" id="headingCategories">
-                  <button
-                    className="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseCategories"
-                    aria-expanded="false"
-                    aria-controls="collapseCategories"
-                  >
-                    Categories
-                  </button>
-                </h2>
-                <div
-                  id="collapseCategories"
-                  className="accordion-collapse collapse"
-                  aria-labelledby="headingCategories"
-                  data-bs-parent="#drawerMenu"
+              <div className="accordion-item">
+                <Link
+                  to="/coursedetails"
+                  className="btn btn-md text-nowrap p-3"
                 >
-                  <div className="accordion-body">
-                    <ul className="list-unstyled mb-0">
-                      <li><a className="d-block py-1 text-decoration-none" href="#">Action</a></li>
-                      <li><a className="d-block py-1 text-decoration-none" href="#">Another action</a></li>
-                      <li><a className="d-block py-1 text-decoration-none" href="#">Something else here</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div> */}
+                  Explore Courses
+                </Link>
+              </div>
 
               {/* Corporate Training - only in drawer */}
               <div className="accordion-item">
@@ -178,7 +158,7 @@ const NavBar = () => {
         {/* ===== DESKTOP NAVBAR ===== */}
         <div className="collapse navbar-collapse d-none d-lg-flex" id="navbarScroll">
           {/* Categories dropdown */}
-          {/* <ul className="navbar-nav me-3 my-2 my-lg-0 navbar-nav-scroll">
+          <ul className="navbar-nav my-lg-0 navbar-nav-scroll">
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
@@ -186,8 +166,9 @@ const NavBar = () => {
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                style={{color: '#000000', fontWeight: '500'}}
               >
-                Categories
+                Explore Courses
               </a>
               <ul className="dropdown-menu">
                 <li><a className="dropdown-item" href="#">Action</a></li>
@@ -195,7 +176,7 @@ const NavBar = () => {
                 <li><a className="dropdown-item" href="#">Something else here</a></li>
               </ul>
             </li>
-          </ul> */}
+          </ul>
 
           {/* Search bar (desktop only) */}
 {/* Search bar (desktop only) */}
@@ -217,7 +198,7 @@ const NavBar = () => {
         className="btn btn-info d-flex align-items-center justify-content-center search-btn"
         type="submit"
       >
-        <IoMdSearch size={20} className="text-white" />
+        <IoMdSearch size={18} className="text-white" />
       </button>
     </div>
   </form>
@@ -225,8 +206,7 @@ const NavBar = () => {
   {/* 🔽 Desktop Search Results */}
   {results.length > 0 && (
     <div
-      className="search-results position-absolute bg-white shadow rounded mt-1"
-      style={{ width: "90%", zIndex: 1050 }}
+      className="search-results position-absolute justify-content-center bg-white shadow rounded mt-1"
     >
       {results.map((item, idx) => (
         <Link
@@ -276,7 +256,7 @@ const NavBar = () => {
                   className="btn btn-info d-flex align-items-center justify-content-center search-btn"
                   type="submit"
                 >
-                  <IoMdSearch size={20} className="text-white" />
+                  <IoMdSearch size={18} className="text-white" />
                 </button>
               </div>
             

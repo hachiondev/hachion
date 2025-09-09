@@ -296,52 +296,52 @@
 //         onMouseEnter={handleMouseEnter}
 //         onMouseLeave={handleMouseLeave}
 //       >
-//         Explore All Courses{" "}
-//     <span className="ms-1 arrow-icon">
-//       {isDropdownOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-//     </span>
-//       </button>
-//   {isDropdownOpen && (
-//         <ul
-//           className="dropdown-menu custom-dropdown-menu show"
-//           onMouseEnter={handleMouseEnter}
-//           onMouseLeave={handleMouseLeave}
-//         >
-//           <li>
-//             <div className="course-content">
-//               <div className="scrollable-category-list">
-//                 <h2 className="dropdown-sidebar-heading">All Categories</h2>
-//                 <DropdownSidebar onSelectCategory={handleCategorySelect} 
-//                 selectedCategory={selectedCategory}/>
-//               </div>
+  //       Explore All Courses{" "}
+  //   <span className="ms-1 arrow-icon">
+  //     {isDropdownOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+  //   </span>
+  //     </button>
+  // {isDropdownOpen && (
+  //       <ul
+  //         className="dropdown-menu custom-dropdown-menu show"
+  //         onMouseEnter={handleMouseEnter}
+  //         onMouseLeave={handleMouseLeave}
+  //       >
+  //         <li>
+  //           <div className="course-content">
+  //             <div className="scrollable-category-list">
+  //               <h2 className="dropdown-sidebar-heading">All Categories</h2>
+  //               <DropdownSidebar onSelectCategory={handleCategorySelect} 
+  //               selectedCategory={selectedCategory}/>
+  //             </div>
 
-//               <div className="sidebar-right-container">
-//                 <meta
-//                   name="description"
-//                   content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
-//                 />
-//                 <div className="selected-category-heading">
-//                 {selectedCategory} Courses
-//               </div>
-//                 <div>
-//                   <DropdownCardRight
-//                     category={selectedCategory}
-//                     currentPage={currentPage}
-//                     cardsPerPage={cardsPerPage}
-//                     onTotalCardsChange={updateTotalCards}
-//                   />
-//                 </div>
-//                 <li>
-//                   <a className="btn btn-link" href="/coursedetails">
-//                     <strong>Explore All Courses</strong>
-//                   </a>
-//                 </li>
-//               </div>
-//             </div>
-//           </li>
-//         </ul>
-//       )}
-//     </div>
+  //             <div className="sidebar-right-container">
+  //               <meta
+  //                 name="description"
+  //                 content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
+  //               />
+  //               <div className="selected-category-heading">
+  //               {selectedCategory} Courses
+  //             </div>
+  //               <div>
+  //                 <DropdownCardRight
+  //                   category={selectedCategory}
+  //                   currentPage={currentPage}
+  //                   cardsPerPage={cardsPerPage}
+  //                   onTotalCardsChange={updateTotalCards}
+  //                 />
+  //               </div>
+  //               <li>
+  //                 <a className="btn btn-link" href="/coursedetails">
+  //                   <strong>Explore All Courses</strong>
+  //                 </a>
+  //               </li>
+  //             </div>
+  //           </div>
+  //         </li>
+  //       </ul>
+  //     )}
+  //   </div>
 //         <div className="right-icons">
 //           {searchVisible ? (
 //             <div className="search-div-home" role="search">
@@ -535,7 +535,7 @@
 // export default NavbarTop;
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logo from '../../Assets/logo.png';
 import { IoSearch, IoCloseCircleSharp } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -549,6 +549,10 @@ import profile1 from '../../Assets/profile2.png';
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowUp } from "react-icons/md";
+import DropdownSidebar from './DropdownSidebar';
+import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
 import './Course.css';
 
 const NavbarTop = () => {
@@ -561,7 +565,67 @@ const NavbarTop = () => {
   const [userData, setUserData] = useState(null);
 
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const bannerRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(4);
+  const [totalCards, setTotalCards] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
 
+  const handleMouseEnter = () => setIsDropdownOpen(true);
+  const handleMouseLeave = () => {
+    // if (window.innerWidth > 768) return; 
+    setIsDropdownOpen(false);
+  };
+  const handleClickToggle = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+    if (bannerRef.current) {
+      window.scrollTo(0, 400);
+    }
+  };
+
+  const updateTotalCards = (total) => {
+    setTotalCards(total);
+  };
+
+  useEffect(() => {
+  window.scrollTo(0, 0);  
+  const updateCardsPerPage = () => {
+    const width = window.innerWidth;
+    if (width <= 768) {
+      setCardsPerPage(4); 
+    } else if (width <= 1024) {
+      setCardsPerPage(6); 
+    } else if (width <= 1366) {
+      setCardsPerPage(6); 
+    } else {
+      setCardsPerPage(6); 
+    }
+  };
+  updateCardsPerPage();
+  window.addEventListener('resize', updateCardsPerPage);
+  return () => window.removeEventListener('resize', updateCardsPerPage);
+}, []);
+
+  const formatCourseName = (courseName) => {
+    return courseName.toLowerCase().replace(/\s+/g, '-');
+  };
   // Fetch courses + blogs
   useEffect(() => {
     const fetchData = async () => {
@@ -632,14 +696,95 @@ const NavbarTop = () => {
         <div className="container-fluid px-4">
 
           {/* ==== Logo ==== */}
+          <div className="d-flex justify-content-start flex-auto">
           <a className="navbar-brand d-flex align-items-center" href="/">
             <img src={logo} alt="logo" className="logo" />
           </a>
+          </div>
 
           {/* ==== Desktop Search ==== */}
-          <div className="d-none d-lg-block flex-grow-1 mx-3" style={{ maxWidth: "600px" }}>
+          <div className="collapse navbar-collapse d-none d-lg-flex" id="navbarScroll">
+          {/* <ul className="navbar-nav my-lg-0 navbar-nav-scroll">
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{color: '#000000', fontWeight: '500'}}
+              >
+                Explore Courses
+              </a>
+              <ul className="dropdown-menu">
+                <li><a className="dropdown-item" href="#">Action</a></li>
+                <li><a className="dropdown-item" href="#">Another action</a></li>
+                <li><a className="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+          </ul> */}
+          <div className="navbar-nav my-lg-0 navbar-nav-scroll" ref={dropdownRef}>
+          <div className="nav-item dropdown">
+        <a 
+        className="nav-link"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        onClick={handleClickToggle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        Explore Courses{" "}
+    <span className="ms-1 arrow-icon">
+      {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+    </span>
+      </a>
+  {isDropdownOpen && (
+        <ul
+          className="dropdown-menu custom-dropdown-menu show"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <li>
+            <div className="course-content">
+              <div className="scrollable-category-list">
+                {/* <h2 className="dropdown-sidebar-heading">All Categories</h2> */}
+                <DropdownSidebar onSelectCategory={handleCategorySelect} 
+                selectedCategory={selectedCategory}/>
+              </div>
+
+              <div className="sidebar-right-container">
+                <meta
+                  name="description"
+                  content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
+                />
+                <div className="selected-category-heading">
+                {selectedCategory} Courses
+              </div>
+                <div>
+                  <DropdownCardRight
+                    category={selectedCategory}
+                    currentPage={currentPage}
+                    cardsPerPage={cardsPerPage}
+                    onTotalCardsChange={updateTotalCards}
+                  />
+                </div>
+                <li>
+                  <button className="dropdown-all-btn" onClick={() => navigate('/coursedetails')} >
+                    Explore All Courses
+                  </button>
+                </li>
+              </div>
+            </div>
+          </li>
+        </ul>
+      )}
+    </div>
+    </div>
+        <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: "600px" }}>
             <form className="d-flex flex-grow-1" role="search">
-              <div className="input-group rounded-pill custom-search" style={{ overflow: "hidden", height: "48px" }}>
+              <div className="input-group rounded-pill custom-search w-100" style={{ overflow: "hidden", height: "48px" }}>
                 <input
                   type="search"
                   className="form-control border-0"
@@ -672,6 +817,7 @@ const NavbarTop = () => {
                 ))}
               </div>
             )}
+          </div>
           </div>
 
           {/* ==== Mobile Right Icons ==== */}
@@ -708,6 +854,7 @@ const NavbarTop = () => {
                   aria-expanded="false"
                 >
                   <Avatar src={userData?.picture || profile1} alt="user avatar" />
+                  <span className="ms-2">{userData?.name || "User"}</span>
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
@@ -750,6 +897,9 @@ const NavbarTop = () => {
                 <Avatar src={userData?.picture || profile1} alt="avatar" />
                 <span className="ms-2">{userData?.name || "User"}</span>
               </div>
+              <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
+                Explore Courses
+              </div>
               <div className="drawer-item" onClick={() => navigate('/corporate')}>
                 Corporate Training
               </div>
@@ -768,6 +918,9 @@ const NavbarTop = () => {
             </>
           ) : (
             <div className="d-flex flex-column gap-2">
+              <Link to="/coursedetails" className="btn btn-md text-start p-3">
+                Explore Courses
+              </Link>
               <Link to="/corporate" className="btn btn-md text-start p-3">
                 Corporate Training
               </Link>
@@ -800,7 +953,7 @@ const NavbarTop = () => {
                 </button>
               </div>
               <button className="btn" onClick={() => setShowMobileSearch(false)}>
-                <IoCloseCircleSharp size={28} className="text-danger" />
+                <IoCloseCircleSharp size={28} style={{color: '#00AEEF'}} />
               </button>
             </form>
           </div>

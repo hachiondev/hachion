@@ -1,44 +1,3 @@
-// import React from 'react'
-// import LoginSide from './LoginSide'
-// import logo from '../../Assets/logo.png'
-// import './Login.css'
-// import email from '../../Assets/Group 39487.png'
-// import {Link} from 'react-router-dom';
-
-// const Register = () => {
-//   const googleLogin = () => {
-//     window.location.href = 'https://api.hachion.co/oauth2/authorization/google';  // Backend Google OAuth
-//   };
-
-//   return (
-// <>
-// <div className='login'>
-// <div className='login-left'>
-// <div className='login-top'>
-//   <img src={logo} alt='logo' className='logo'/>
-//   <h3 className='register-head'>Register to start learning</h3>
-//   <h5 className='option'>Tap on any option to create an account</h5>
-//   <div className='icon-places'>
-//     <Link to='/registerhere' className='register-link-to'>
-//    <div className='icon-text'>
-//   <img src={email} alt='login-with-email' className='icon-text-img'/> 
-//    <div className='icon-text-holder-email'>Sign-up with Email</div> 
-//     </div></Link>
-   
-//   </div>
-//   </div>
-//   <p className='login-link'>Do you have an account with Hachion? <Link to='/login' className='link-to'>Click here to Login </Link></p>
-// </div>
-
-// <LoginSide/>
-// </div>
-  
-//    </>
-//   )
-// }
-
-// export default Register;
-
 import React, { useEffect, useRef, useState } from 'react';
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -49,7 +8,7 @@ import { countries, getDefaultCountry } from '../../countryUtils';
 import LoginBanner from '../../Assets/loginbackground.png';
 import google from '../../Assets/google-new.png';
 import TopBarNew from './TopBarNew';
-import NavBar from './NavBar';
+import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -64,7 +23,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [registerMessage, setRegisterMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // success or error
+  const [messageType, setMessageType] = useState(""); 
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
@@ -208,22 +167,25 @@ useEffect(() => {
   const sanitizedMobile = mobile.trim().replace(/^(\+)?/, '');
   const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
 
-  const data = { firstName, lastName, email, mobile: fullMobileNumber, country: selectedCountry.name };
+  const data = { firstName, lastName, email, mobile: fullMobileNumber, country: selectedCountry.name, password };
 
   try {
     const response = await fetch(
-      `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
+      `http://localhost:8081/api/v1/user/send-otp?email=${email}`,
       { method: "POST", headers: { "Content-Type": "application/json" } }
     );
 
     const responseData = await response.json().catch(() => ({}));
     console.log("OTP responseData:", responseData);
 
-    if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
-      setOtpMessage("OTP sent to your email.");
-      localStorage.setItem("registeruserData", JSON.stringify(data));
-      setTimeout(() => navigate('/registerverification'), 3000);
-    } else {
+   if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
+  setOtpMessage("OTP sent to your email.");
+  localStorage.setItem("registeruserData", JSON.stringify(data));
+
+  console.log("Navigating to /registerverification with data:", data);
+  navigate('/registerverification'); 
+}
+ else {
       setErrors({ api: responseData?.message || "Failed to send OTP. Please try again." });
     }
   } catch (error) {
@@ -233,6 +195,7 @@ useEffect(() => {
   }
 };
 
+
   const togglePasswordVisibility = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
   };
@@ -240,7 +203,7 @@ useEffect(() => {
   return (
     <>
       <TopBarNew />
-      <NavBar />
+      <NavbarTop />
       <div className="blogs-header">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">

@@ -20,6 +20,8 @@ public class PaymentRequest {
 	private Long selectedInstallmentId;
 	private String status;
 	private String invoiceNumber;
+	private Double onlineDiscount;
+	private Double amount = 0.0;
 
 	private List<PaymentInstallmentRequest> installments;
 
@@ -157,6 +159,22 @@ public class PaymentRequest {
 
 	public void setInvoiceNumber(String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
+	}
+
+	public Double getOnlineDiscount() {
+		return onlineDiscount;
+	}
+
+	public void setOnlineDiscount(Double onlineDiscount) {
+		this.onlineDiscount = onlineDiscount;
+	}
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
 }

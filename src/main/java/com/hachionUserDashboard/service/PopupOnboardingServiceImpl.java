@@ -70,42 +70,50 @@ public class PopupOnboardingServiceImpl implements PopupOnboardingService {
 		return response;
 	}
 
+
 	@Override
 	public PopupOnboardingResponse updatePopupOnboarding(PopupOnboardingRequest popupOnboardingRequest) {
 
-		PopupOnboarding onboarding = popupOnboardingRepository.findById(popupOnboardingRequest.getPopupOnboardingId())
-				.orElseThrow(() -> new RuntimeException(
-						"PopupOnboarding not found with id: " + popupOnboardingRequest.getPopupOnboardingId()));
+		PopupOnboarding onboarding = popupOnboardingRepository
+				.findByStudentEmail(popupOnboardingRequest.getStudentEmail()).orElseThrow(() -> new RuntimeException(
+						"PopupOnboarding not found with email: " + popupOnboardingRequest.getStudentEmail()));
 
-		onboarding.setStudentId(popupOnboardingRequest.getStudentId());
-		onboarding.setStudentName(popupOnboardingRequest.getStudentName());
-		onboarding.setStudentEmail(popupOnboardingRequest.getStudentEmail());
-		onboarding.setMobile(popupOnboardingRequest.getMobile());
-		onboarding.setCurrentRole(popupOnboardingRequest.getCurrentRole());
-		onboarding.setPrimaryGoal(popupOnboardingRequest.getPrimaryGoal());
-		onboarding.setAreasOfInterest(popupOnboardingRequest.getAreasOfInterest());
-		onboarding.setPreferToLearn(popupOnboardingRequest.getPreferToLearn()); // auto-converted
-		onboarding.setPreferredTrainingMode(popupOnboardingRequest.getPreferredTrainingMode());
-		onboarding.setCurrentSkill(popupOnboardingRequest.getCurrentSkill());
-		onboarding.setLookingForJob(popupOnboardingRequest.getLookingForJob());
-		onboarding.setRealTimeProjects(popupOnboardingRequest.getRealTimeProjects());
-		onboarding.setCertificationOrPlacement(popupOnboardingRequest.getCertificationOrPlacement());
-		onboarding.setSpeakToCourseAdvisor(popupOnboardingRequest.getSpeakToCourseAdvisor());
-		onboarding.setWhereYouHeard(popupOnboardingRequest.getWhereYouHeard());
+		if (popupOnboardingRequest.getStudentId() != null)
+			onboarding.setStudentId(popupOnboardingRequest.getStudentId());
+		if (popupOnboardingRequest.getStudentName() != null)
+			onboarding.setStudentName(popupOnboardingRequest.getStudentName());
+		if (popupOnboardingRequest.getMobile() != null)
+			onboarding.setMobile(popupOnboardingRequest.getMobile());
+		if (popupOnboardingRequest.getCurrentRole() != null)
+			onboarding.setCurrentRole(popupOnboardingRequest.getCurrentRole());
+		if (popupOnboardingRequest.getPrimaryGoal() != null)
+			onboarding.setPrimaryGoal(popupOnboardingRequest.getPrimaryGoal());
+		if (popupOnboardingRequest.getAreasOfInterest() != null)
+			onboarding.setAreasOfInterest(popupOnboardingRequest.getAreasOfInterest());
+		if (popupOnboardingRequest.getPreferToLearn() != null)
+			onboarding.setPreferToLearn(popupOnboardingRequest.getPreferToLearn());
+		if (popupOnboardingRequest.getPreferredTrainingMode() != null)
+			onboarding.setPreferredTrainingMode(popupOnboardingRequest.getPreferredTrainingMode());
+		if (popupOnboardingRequest.getCurrentSkill() != null)
+			onboarding.setCurrentSkill(popupOnboardingRequest.getCurrentSkill());
+		if (popupOnboardingRequest.getLookingForJob() != null)
+			onboarding.setLookingForJob(popupOnboardingRequest.getLookingForJob());
+		if (popupOnboardingRequest.getRealTimeProjects() != null)
+			onboarding.setRealTimeProjects(popupOnboardingRequest.getRealTimeProjects());
+		if (popupOnboardingRequest.getCertificationOrPlacement() != null)
+			onboarding.setCertificationOrPlacement(popupOnboardingRequest.getCertificationOrPlacement());
+		if (popupOnboardingRequest.getSpeakToCourseAdvisor() != null)
+			onboarding.setSpeakToCourseAdvisor(popupOnboardingRequest.getSpeakToCourseAdvisor());
+		if (popupOnboardingRequest.getWhereYouHeard() != null)
+			onboarding.setWhereYouHeard(popupOnboardingRequest.getWhereYouHeard());
+
 		onboarding.setFillingDate(LocalDate.now());
 
 		PopupOnboarding updated = popupOnboardingRepository.save(onboarding);
 
-		PopupOnboardingResponse response = createResponseForPopupOnboarding(updated);
-
-		return response;
+		return createResponseForPopupOnboarding(updated);
 	}
 
-	@Override
-	public List<PopupOnboardingResponse> getAllPopupOnboarding() {
-		return popupOnboardingRepository.findAll().stream().map(this::createResponseForPopupOnboarding)
-				.collect(Collectors.toList());
-	}
 
 	@Override
 	public void deletePopupOnboarding(Long popupOnboardingId) {
@@ -114,5 +122,21 @@ public class PopupOnboardingServiceImpl implements PopupOnboardingService {
 
 		popupOnboardingRepository.delete(onboarding);
 	}
+
+	@Override
+	public PopupOnboardingResponse findByStudentEmail(String studentEmail) {
+		PopupOnboarding onboarding = popupOnboardingRepository.findByStudentEmail(studentEmail)
+				.orElseThrow(() -> new RuntimeException("PopupOnboarding not found with email: " + studentEmail));
+		PopupOnboardingResponse responseForPopupOnboarding = createResponseForPopupOnboarding(onboarding);
+
+		return responseForPopupOnboarding;
+	}
+	public List<PopupOnboardingResponse> getAllPopupOnboardings() {
+        List<PopupOnboarding> allEntries = popupOnboardingRepository.findAll();
+
+        return allEntries.stream()
+                .map(this::createResponseForPopupOnboarding)
+                .collect(Collectors.toList());
+    }
 
 }

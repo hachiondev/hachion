@@ -70,6 +70,11 @@ public class PaymentTransaction {
 
 	@Column(name = "balance")
 	private Double balance = 0.0;
+	
+	@Column(name = "total_amount")
+	private Double totalAmount = 0.0;
+	
+	
 
 	@Column
 	private Double courseFee = 0.0;
@@ -305,5 +310,15 @@ public class PaymentTransaction {
 	public void setCouponCode(String couponCode) {
 		this.couponCode = couponCode;
 	}
+
+	public Double getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+
 
 }

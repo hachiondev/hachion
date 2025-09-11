@@ -1,7 +1,14 @@
 package com.hachionUserDashboard.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,6 +18,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.hachionUserDashboard.dto.InstallmentStatusResponse;
 import com.hachionUserDashboard.dto.PaymentInstallmentRequest;
@@ -24,6 +35,7 @@ import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.PaymentTransactionRepository;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.razorpay.Order;
 import com.razorpay.Payment;
 import com.razorpay.RazorpayClient;
@@ -43,6 +55,12 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 	private final RazorpayClient razorpayClient;
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private SpringTemplateEngine templateEngine;
+
+	@Autowired
 	private PaymentTransactionRepository paymentTransactionRepository;
 
 	@Autowired
@@ -50,6 +68,12 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 	@Autowired
 	private CourseRepository courseRepository;
+
+	@Value("${payments.upload.path}")
+	private String paymentsUploadPath;
+
+	@Value("${invoice.path}")
+	private String invoiceDirectoryPath;
 
 	public RazorpayServiceImpl(@Value("${razorpay.key_id}") String keyId,
 			@Value("${razorpay.key_secret}") String keySecret) throws Exception {
@@ -107,13 +131,18 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 			Double courseFeeFromDb = null;
 			Double discountFromDb = null;
+			Double courseFeeTotal = null;
 
 			if (!result.isEmpty()) {
 				Object[] row = result.get(0);
 				courseFeeFromDb = row[0] != null ? ((Number) row[0]).doubleValue() : null;
 				discountFromDb = row[1] != null ? ((Number) row[1]).doubleValue() : null;
+				courseFeeTotal = row[2] != null ? ((Number) row[2]).doubleValue() : null;
+
 			}
 
+			PaymentTransaction tx = new PaymentTransaction();
+			tx.setTotalAmount(courseFeeFromDb);
 			double courseFee = courseFeeFromDb != null ? courseFeeFromDb : amount;
 			double discount = discountFromDb != null ? discountFromDb : 0.0;
 
@@ -125,7 +154,6 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 			String rawJson = payment.toString();
 
-			PaymentTransaction tx = new PaymentTransaction();
 			tx.setOrderId(orderId);
 			tx.setTransactionId(paymentId);
 			tx.setStatus(status);
@@ -144,7 +172,9 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 			PaymentRequest paymentRequest = convertTransactionToPaymentRequest(tx, studentName, studentEmail);
 
-			paymentTransactionRepository.save(tx);
+			PaymentTransaction save = paymentTransactionRepository.save(tx);
+
+			generateAndSendInvoice(tx, studentName, studentEmail, save.getMobile());
 			return "✅ Razorpay transaction successful: " + paymentId + " (Status: " + status + ")";
 		} catch (Exception e) {
 			return "❌ Error capturing Razorpay order: " + e.getMessage();
@@ -419,6 +449,140 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 			res.setCreatedDate(tx.getRequestDate());
 			return res;
 		}).collect(Collectors.toList());
+	}
+
+	private void generateAndSendInvoice(PaymentTransaction tx, String studentName, String studentEmail,
+			String studentPhone) {
+		PaymentRequest paymentRequest = new PaymentRequest();
+		paymentRequest.setStudentName(studentName);
+		paymentRequest.setEmail(studentEmail);
+		paymentRequest.setMobile(tx.getMobile());
+		paymentRequest.setCourseName(tx.getCourseName());
+		paymentRequest.setCourseFee(tx.getCourseFee());
+		paymentRequest.setOnlineDiscount(tx.getDiscount());
+		paymentRequest.setTax(0); 
+		paymentRequest.setTotalAmount(tx.getTotalAmount());
+//		paymentRequest.setDiscount(tx.getDiscount());
+
+		String courseAbbreviation = tx.getCourseName().replaceAll("[^A-Za-z]", "").toUpperCase();
+		courseAbbreviation = courseAbbreviation.length() > 5 ? courseAbbreviation.substring(0, 5) : courseAbbreviation;
+
+		String formattedDate = new SimpleDateFormat("MMddyyyy").format(new Date());
+		String invoiceNumber = "HACH" + courseAbbreviation + formattedDate + "-" + tx.getOrderId();
+		System.out.println(invoiceNumber);
+
+		paymentRequest.setInvoiceNumber(invoiceNumber);
+		paymentRequest.setStatus("PAID");
+		paymentRequest.setBalancePay(tx.getBalance());
+		paymentRequest.setAmount(tx.getAmount());
+		paymentRequest.setInstallments(Collections.emptyList());
+
+	
+		generateInvoice(paymentRequest, new ExtendedModelMap());
+	}
+
+	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
+		Context context = new Context();
+		context.setVariable("studentName", paymentRequest.getStudentName());
+		context.setVariable("studentEmail", paymentRequest.getEmail());
+		context.setVariable("studentPhone", paymentRequest.getMobile());
+		context.setVariable("courseName", paymentRequest.getCourseName());
+		context.setVariable("coursePrice", String.format("%.2f", paymentRequest.getCourseFee()));
+//		context.setVariable("discount", paymentRequest.getOnlineDiscount() + ".00");
+		context.setVariable("discount", String.format("%.2f", paymentRequest.getDiscount()));
+
+		context.setVariable("tax", paymentRequest.getTax() + ".00");
+		context.setVariable("totalAmount", String.format("%.2f", paymentRequest.getTotalAmount()));
+		context.setVariable("receivedPay", String.format("%.2f", paymentRequest.getAmount()));
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+		String currentDate = LocalDate.now().format(formatter);
+		context.setVariable("invoiceDate", currentDate);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
+		String formattedDate = sdf.format(new Date());
+		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
+
+		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
+		PaymentInstallmentRequest selectedInstallment = null;
+
+		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
+
+		String status = paymentRequest.getStatus();
+		String emailStatus = status;
+
+//		if (receivedPayAmount > 0.0) {
+//			if (status == null || status.trim().isEmpty()) {
+//				status = "PARTIALLY PAID";
+//			}
+//
+//			context.setVariable("status", status.trim());
+//
+//			emailStatus = status.trim();
+//		} else {
+//
+//			context.setVariable("status", null);
+//
+//			emailStatus = "NOT PAID";
+//		}
+
+		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
+		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/"));
+
+		String renderedHtml = templateEngine.process("invoice_template", context);
+
+		File directory = new File(invoiceDirectoryPath);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		String safeFileName = paymentRequest.getStudentName().replaceAll("\\s+", "_") + "_"
+				+ paymentRequest.getCourseName().replaceAll("\\s+", "_");
+
+		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
+
+		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
+			PdfRendererBuilder builder = new PdfRendererBuilder();
+			builder.useFastMode();
+			String baseUri = new File("/home/ec2-user/uploads").toURI().toString();
+			builder.withHtmlContent(renderedHtml, baseUri);
+			builder.toStream(os);
+			builder.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		File pdfFile = new File(pdfFilePath);
+//		System.out.println("Received Pay Amount: " + receivedPayAmount);
+		System.out.println("Status from paymentRequest: " + status);
+		if (pdfFile.exists()) {
+			try {
+				if ("PARTIALLY PAID".equalsIgnoreCase(emailStatus)) {
+					double amountPaid = paymentRequest.getTotalAmount() - paymentRequest.getBalancePay();
+
+					emailService.sendInvoiceEmailForParitialPaid(paymentRequest.getEmail(),
+							paymentRequest.getStudentName(), paymentRequest.getCourseName(), amountPaid, pdfFilePath);
+
+				} else if ("PAID".equalsIgnoreCase(emailStatus)) {
+					emailService.sendInvoiceEmailForPaid(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+							paymentRequest.getCourseName(), paymentRequest.getTotalAmount(), pdfFilePath);
+
+				} else if ("NOT PAID".equalsIgnoreCase(emailStatus)) {
+					emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
+							paymentRequest.getCourseName(), paymentRequest.getBalancePay(), pdfFilePath);
+
+				} else {
+
+					System.out.println("No email sent for status: " + status);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("PDF file was not created. Email not sent.");
+		}
+
+		model.addAttribute("studentName", paymentRequest.getStudentName());
+		return "invoice_template";
 	}
 
 }

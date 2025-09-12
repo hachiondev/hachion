@@ -313,7 +313,7 @@ const handleResetPassword = async (e) => {
           <div className="input-row">
 <div className="me-3 password-input-wrapper">
   <label htmlFor="oldPassword" className="form-label">Old Password</label>
-  <div className="password-field">
+  <div className="dashboard-field">
     <input
       type={showPasswords.oldPassword ? 'text' : 'password'}
       className="form-control"
@@ -329,7 +329,7 @@ const handleResetPassword = async (e) => {
 
 <div className="me-3 password-input-wrapper">
   <label htmlFor="newPassword" className="form-label">New Password</label>
-  <div className="password-field">
+  <div className="dashboard-field">
     <input
       type={showPasswords.newPassword ? 'text' : 'password'}
       className="form-control"
@@ -345,7 +345,7 @@ const handleResetPassword = async (e) => {
 
 <div className="me-3 password-input-wrapper">
   <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-  <div className="password-field">
+  <div className="dashboard-field">
     <input
       type={showPasswords.confirmPassword ? 'text' : 'password'}
       className="form-control"

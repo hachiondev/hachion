@@ -71,7 +71,7 @@ import { BiTimeFive } from "react-icons/bi";
 import './Course.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-const DropdownCard = ({ title, month, level = "Expert" , image }) => {
+const DropdownCard = ({ title, month, level = "All Levels" , image }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
 

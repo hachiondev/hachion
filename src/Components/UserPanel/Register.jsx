@@ -7,7 +7,7 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import { countries, getDefaultCountry } from '../../countryUtils';
 import LoginBanner from '../../Assets/loginbackground.png';
 import google from '../../Assets/google-new.png';
-import TopBarNew from './TopBarNew';
+import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -202,7 +202,7 @@ useEffect(() => {
 
   return (
     <>
-      <TopBarNew />
+      <Topbar />
       <NavbarTop />
       <div className="blogs-header">
         <nav aria-label="breadcrumb">

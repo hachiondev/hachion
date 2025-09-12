@@ -9,7 +9,7 @@ import PopupInterest2 from './PopupInterest2';
 import PopupInterest3 from './PopupInterest3';
 import PopupInterest4 from './PopupInterest4';
 import axios from "axios";
-import TopBarNew from './TopBarNew';
+import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -223,7 +223,7 @@ const handleSubmitPopup = async () => {
 };
   return (
     <>
-        <TopBarNew />
+        <Topbar />
         <NavbarTop />
         <div className='blogs-header'>
                   <nav aria-label="breadcrumb">

@@ -9,7 +9,6 @@ import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Topbar from './Topbar';
 import { Link } from 'react-router-dom';
-import TopBarNew from './TopBarNew';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -21,6 +20,8 @@ const ForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const [otpMessage, setOtpMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
       const isValidEmail = (email) => {
@@ -28,20 +29,24 @@ const ForgotPassword = () => {
       return emailRegex.test(email);
     };
 
+    const validateForm = () => {
+    const newErrors = {};
+  
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!isValidEmail(email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   
   const handleSendClick = async () => {
   setFormError("");
   setOtpMessage("");
 
-  if (!email) {
-    setFormError("Please fill in email field.");
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    setFormError("Please enter a valid email address.");
-    return;
-  }
+  if (!validateForm()) return;
 
   setIsLoading(true);
 
@@ -63,6 +68,7 @@ const ForgotPassword = () => {
     } else {
       const text = await response.text();
       responseData = { message: text };
+      setErrorMessage(response.data.message);
     }
 
     console.log("Forgot Password responseData:", responseData);
@@ -76,9 +82,11 @@ const ForgotPassword = () => {
       const errorMsg =
         responseData?.message || "Failed to send OTP. Please try again.";
       setFormError(errorMsg);
+      setErrorMessage(response.data.message);
     }
   } catch (error) {
     setFormError(`An error occurred: ${error.message}`);
+    setErrorMessage("An error occurred during login");
   } finally {
     setIsLoading(false);
   }
@@ -87,7 +95,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-    <TopBarNew />
+    <Topbar />
     <NavbarTop />
     <div className='blogs-header'>
               <nav aria-label="breadcrumb">
@@ -111,6 +119,7 @@ const ForgotPassword = () => {
               <label className='login-label'>
                 Email ID<span className='star'>*</span>
               </label>
+              <div className="register-field">
               <div className="password-field">
                 <input
                   type='email'
@@ -121,7 +130,8 @@ const ForgotPassword = () => {
                   onChange={(e) => setEmail(e.target.value)}  
                 />
               </div>
-
+              {errors.email && <p className="error-field-message">{errors.email}</p>}
+              </div>
               <div className="d-grid gap-2">
                 <button
                   type='button'
@@ -133,7 +143,7 @@ const ForgotPassword = () => {
                   Send OTP
                 </button>
                 </div>
-               
+               {errorMessage && <p className="error-field-message">{errorMessage}</p>}
               </div>
             </div>
         </div>

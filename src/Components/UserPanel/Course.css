@@ -456,6 +456,12 @@ height: 3em;
   border-radius: 12px;
 }
 
+/* All Levels */
+.course-badge.all {
+  background: #d9fec3;
+  color: #0e852c;
+}
+
 /* Beginner */
 .course-badge.beginner {
   background: #FEF9C3;

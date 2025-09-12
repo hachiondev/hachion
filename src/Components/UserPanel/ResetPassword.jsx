@@ -4,7 +4,7 @@ import logo from '../../Assets/logo.png';
 import LoginSide from './LoginSide';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-import TopBarNew from './TopBarNew';
+import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -79,7 +79,7 @@ const ResetPassword = () => {
 
   return (
     <>
-      <TopBarNew />
+      <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">

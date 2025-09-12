@@ -92,14 +92,12 @@ const shareOnEmail = () => {
   window.open(gmailUrl, "_blank");
 };
 
-  useEffect(() => {
+useEffect(() => {
   if (selectedBlog?.description) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(selectedBlog.description, "text/html");
     const foundHeadings = [];
-
     const headingTags = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
-
     headingTags.forEach((heading) => {
       const text = heading.textContent.trim();
       const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
@@ -107,11 +105,16 @@ const shareOnEmail = () => {
       foundHeadings.push({ id, text });
     });
 
+    const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))/gi;
+    doc.body.innerHTML = doc.body.innerHTML.replace(
+      imageUrlRegex,
+      '<img src="$1" alt="Image" style="max-width:100%; display:block; margin:10px auto;" />'
+    );
+
     setHeadings(foundHeadings);
     setProcessedHtml(doc.body.innerHTML);
   }
 }, [selectedBlog]);
-
 
   return (
     <>

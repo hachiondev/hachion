@@ -22,6 +22,7 @@
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.5",
     "formik": "^2.4.6",
+    "framer-motion": "^12.23.12",
     "fuse.js": "^7.1.0",
     "html-truncate": "^1.2.2",
     "https-browserify": "^1.0.0",

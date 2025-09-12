@@ -427,11 +427,16 @@ z-index: 1000; /* Ensure it's above other elements */
 
 
 .drawer-item {
-padding: 5px 10px;
+  display: flex;
+  align-items: center;
+padding: 10px;
+margin: 0 10px;
 font-size: 14px;
+gap: 15px;
 border-bottom: 1px solid #eeeeee;
 cursor: pointer;
 white-space: nowrap;
+color: #6B6B6B;
 }
 
 .drawer-sub-item {
@@ -512,35 +517,8 @@ padding-right: 50%;
   padding-right: 90%;
   }
 
-.coupon-btn{
-background-color: #000000;
-color: white;
-border-radius: 30px;
-padding: 3px 15px;
-border: none;
-margin-top: 2vh;
-font-size: 1.1rem;
-font-weight: 600;
-}
-.coupon-btn:hover{
-background-color: #EA4335;
-}
-
 .home-background{
-background-color:#EEEEEE;
-}
-.register-now-btn{
-border-radius: 30px;
-padding: 3px 15px;
-background-color: #ECC963;
-color: #000000;
-border: none;
-margin-top: 2vh;
-font-size: 1.1rem;
-font-weight: 600;
-}
-.register-now-btn:hover{
-background-color: #EA4335;
+background-color:#ffffff;
 }
 
 .join-now{
@@ -571,6 +549,96 @@ background-color: #EA4335;
   background-color: #f0f0f0;
   position: relative;
   overflow: hidden;
+}
+.home-content{
+       display: flex;
+       justify-content: left;
+       flex-direction: column;
+       align-items: flex-start;
+       max-width: 50%;
+      }
+
+  .home-title{
+    color: #121212;
+    font-weight: 600;
+    text-align: left;
+    padding: 20px;
+    flex-wrap: wrap;
+      }
+      .home-title-span{
+    color: #00AEEF;
+    font-weight: 600;
+      }
+      .home-title-text{
+    color: #6D6D6D;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+    padding: 10px 20px;
+      }
+.home-sub-text{
+    color: #6D6D6D;
+    font-size: 16px;
+    font-weight: 400;
+      }
+
+ .home-banner-img{
+        /* width: 600px;
+        aspect-ratio: 1/1; */
+  max-width: 45%;
+  height: auto;
+          }
+
+  .home-banner{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 3%;
+        align-items: center;
+      }
+  .home-start-button{
+        background-color: #00AEEF;
+        color: #ffffff;
+        font-size: medium;
+        font-weight: 500;
+        padding: 5px 30px;
+        border-radius: 50px;
+        border: none;
+        margin: 20px 20px 5px;
+      }
+  .home-browse-button{
+        color: #6D6D6D;
+        font-size: medium;
+        font-weight: 500;
+        padding: 5px 10px;
+        margin: 20px 20px 5px;
+      }
+.avatar-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 20px;
+}
+.avatar-group {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-number{
+  font-size: 0.8rem !important;
+  background-color: #E1E9FE !important;
+  color: #00AEEF !important;
+  border: 1px solid #00AEEF !important;
+  z-index: 2;
+}
+.button-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .banner-skeleton-image {
@@ -637,13 +705,10 @@ max-width: 90%;
 width: 80%;
 }
 .association-head{
-font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
-font-style: italic;
-font-weight: 700;
-letter-spacing: 2%;
-background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
--webkit-text-fill-color: transparent;
--webkit-background-clip: text;
+font-weight: 600;
+letter-spacing: 0;
+line-height: 40px;
+color: #3D3D3D;
 }
 
 .logos-slide img{
@@ -705,6 +770,28 @@ animation-play-state: paused;
 background-color: transparent;
 color: #00AEEF !important;
 }
+.discount-lable{
+font-family: Urbanist;
+height: 20px;
+border-radius: 4px;
+padding: 2px 5px;
+background-color: rgba(0, 174, 239, 1);
+color:rgba(255, 255, 255, 1);
+font-weight:600;
+font-size: 10px;
+border: none;
+margin: 8px 0;
+}
+.card-view-btn{  
+  font-size: 16px;
+  white-space: nowrap;
+  color: #fff;
+  background-color: #00AEEF;
+  border-radius: 20px;
+  border: none;
+  padding: 2px 15px;
+  width: 100%;
+}
 
 .view-all{
 border-radius: 10px;
@@ -722,16 +809,18 @@ background-color: #0D6EFD;
 }
 
 .training-events{
-margin-bottom:3vh;
-margin-top: 3vh;
+margin-bottom: 40px;
+margin-top: 40px;
 }
 
 .training-events-head-upcoming{
-margin-top: 30px;
-justify-content: center;
+margin-top: 40px;
+justify-content: left;
 display: flex;
-padding-top: 20px;
-margin-bottom: 30px;
+margin-left: 5%;
+margin-right: 5%;
+/* padding-top: 20px; */
+margin-bottom: 40px;
 }
 
 .view-btn{
@@ -841,7 +930,7 @@ font-size: 14px;
 font-weight:500;
 background-color: white;
 cursor: pointer;
-color: black;
+color: #6B6B6B;
 }
 
 .dropdown-item:hover {
@@ -854,9 +943,9 @@ transition: background-color 0.3s ease;
 .course-name, .upcoming-course-name {
 font-size: 16px;
 font-weight: 600;
-color: black; 
+color: #262626; 
 margin: 1vh 0;
-text-align: center;
+text-align: left;
 display: -webkit-box;
 -webkit-line-clamp: 2;
 -webkit-box-orient: vertical;
@@ -864,6 +953,31 @@ overflow: hidden;
 text-overflow: ellipsis;
 line-height: 1.5;
 height: 3em;
+width: 70%;
+}
+
+.course-amount {
+display: flex;
+font-size: medium;
+font-weight: 600;
+color: #3D3D3D; 
+margin: 1vh 0;
+gap: 10px;
+}
+.course-amount span{
+display: flex;
+font-size: medium;
+font-weight: 500;
+color: #898080; 
+text-decoration: line-through;
+}
+.discount-duration{
+display: flex;
+font-size: small;
+font-weight: 500;
+color: #FF0000; 
+margin: 1vh 0;
+text-align: right;
 }
 
 .date-time-container {
@@ -975,9 +1089,15 @@ height: 3em;
   }
 
 .card-course-details{
-padding: 1vh;
+padding: 5px 0;
 text-align: center;
 transition: all 0.3s ease;
+}
+
+.card-row{
+display: flex;
+justify-content: space-between;
+align-items: top;
 }
 
 .course-time{
@@ -1004,7 +1124,7 @@ transition: all 0.3s ease
 .enroll-btn:hover{
 background-color: #0D6EFD;
 }
-.card:hover .card-img-div{
+/* .card:hover .card-img-div{
 width:7vw;
 height: 15vh;
 filter: blur(10px);
@@ -1054,7 +1174,7 @@ box-shadow: 1px 1px 1px #d3d3d3;
 .card:hover .enroll-btn:hover{
 background-color: #000000;
 color: white;
-}
+} */
 .training-card-holder {
 display: flex;
 flex-wrap: wrap;
@@ -1105,24 +1225,32 @@ right: 10px;
 width: calc(25% - 10px); 
 border: none !important;
 overflow: hidden !important; 
-box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+box-shadow: 4px 8px 16px rgba(0,0,0,0.1);
 display: flex;
 flex-direction: column;
 justify-items: space-between;
+align-items: center;
 transition: all 0.3s ease;
 cursor: pointer;
-border-radius: 20px 20px 50px 50px; 
+border-radius: 15px;
+padding: 20px;
 }
+.card:hover {
+border: 1px solid #00AEEF !important;
+box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
 .new-batch-para{
 display: none;
 }
 
 .card-image {
 display: block;
-height: 140px;
-width: 100%;
+width: auto;
+height: 130px;
 object-fit: cover;
-border-radius: 0px 0px 50px 50px; 
+object-position: center;
+border-radius: 5px; 
 transition: all 0.3s ease;
 z-index: 0;
 }
@@ -1464,6 +1592,7 @@ margin: 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #6B6B6B;
 }
 
 .dropdown-divider {
@@ -1550,15 +1679,15 @@ gap:1vh;
   margin-bottom: 5px;
 }
 
-@media  (min-width:1025px) and (max-width: 1366px)  {
+@media (max-width: 1366px)  {
   .topbar {
   height: 45px;
 }
-.card-image {
+/* .card-image {
 display: block;
 width: 100%;
 height: 120px;
-}
+} */
   .card-icon {
     height: 70px;
     width: auto;
@@ -1624,7 +1753,7 @@ padding:3px 5px !important;
     }
   }
 
-@media (min-width: 1025px) and (max-width: 1366px){
+@media (max-width: 1366px){
     .training-card-holder{
       max-width: 80%;
       margin-left: 10%;
@@ -1721,7 +1850,7 @@ height: 45px;
 }
 
 /* Styles for Tablet/iPad (min-width: 769px and max-width: 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
   .navbar {
     height: 6vh;
     display: flex;
@@ -1777,11 +1906,11 @@ height: 45px;
     }
     
     .training-events-head-upcoming{
-    margin-top: 30px;
-    margin-left: 25%;
+    margin-top: 40px;
+    /* margin-left: 25%; */
     justify-content: space-between;
     display: flex;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     }
   
   .drawer-toggle-btn {
@@ -1920,7 +2049,7 @@ height: 45px;
   }
   }
 
-  @media (min-width: 481px) and (max-width: 768px) {
+  @media (max-width: 768px) {
     .navbar {
       height: 6vh;
       display: flex;
@@ -2115,23 +2244,43 @@ height: 45px;
         padding: 0.5vh 1vh;
         }
   
-        .coupon-btn, .register-now-btn {
-          font-size: 12px;
-          padding: 3px 5px;
-          border-radius: 20px;
-          }
-    
+.home-banner{
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+        gap: 5px;
+        align-items: center;
+        padding: 5px;
+      }
+      .home-banner-img, .home-img, .home-content{
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+      }
+        .home-start-button, .home-browse-button{
+        padding: 5px;
+        width: 90%;
+        margin: 10px 20px 5px;
+        text-align: center;
+      }
+.button-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
     .training-events{
       margin-bottom:10px;
       margin-top: 10px;
       }
       
       .training-events-head-upcoming{
-      margin-top: 50px;
-      margin-left: 25%;
+      margin-top: 40px;
+      /* margin-left: 25%; */
       justify-content: space-between;
       display: flex;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
       }
     
     .card {
@@ -2314,7 +2463,7 @@ height: 45px;
     }
 
 /* Styles for Mobile (max-width: 480px) */
-@media (min-width: 350px) and (max-width: 480px) {
+@media (max-width: 480px) {
 
 /* TopBar */
 .topbar {
@@ -2641,19 +2790,18 @@ height: 30px;
 
 .card {
 width: 100%;
-flex-direction: row !important;
-margin-top: 1vh;
+/* flex-direction: row !important; */
+/* margin-top: 1vh; */
 }
 
 .new-batch-para{
 display: none;
 }
 
-.card-image{
-border-radius: 0px;
-width: 180px;
-height: 100%;
-}
+/* .card-image{
+width: 100%;
+height: auto;
+} */
 
 .card-date, .time {
  margin-bottom: 2px;
@@ -2729,11 +2877,6 @@ border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   }
 
-/* .card-image{
-  width: 150px;
-  aspect-ratio: 2/1;
-  } */
-
 .card-course-details{
   padding: 15px;
   width: 100%;
@@ -2762,10 +2905,11 @@ font-size: 12px;
   }
 
 .training-events-head-upcoming{
-padding-top: 5px;
-margin-bottom: 0px;
-margin-top: 0px;
-margin-left: 2%;
+/* padding-top: 5px; */
+/* margin-bottom: 0px;
+margin-top: 0px; */
+margin-left: 5%;
+margin-right: 5%;
 justify-content: space-between;
 }
 
@@ -2782,14 +2926,14 @@ justify-content: space-between;
   }
 
 .association-head {
-  text-align: center;
+  text-align: left;
   /* margin-bottom: 5px; */
-  padding-top: 5px;
+  /* padding-top: 5px;
   margin-bottom: 0px;
-  margin-top: 0px;
+  margin-top: 0px; */
   margin-left: 5%;
   margin-right: 5px;
-  justify-content: center;
+  justify-content: left;
 }
 
 .course-title-container {

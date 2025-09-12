@@ -110,22 +110,21 @@ width: 100px;
   border-radius: 20px;
 }
 .association{
-  margin-top: 25px;
-  justify-content: center;
+  margin-top: 40px;
+  justify-content: left;
   display: flex;
-  padding-top: 20px;
-  margin-bottom: 30px;
+  /* padding-top: 20px; */
+  margin-bottom: 40px;
   }
 
 .association-head{
-  font-weight: 700;
-  margin: 30px 0;
-  letter-spacing: 2%;
+  font-weight: 600;
+  /* margin: 30px 0; */
+  letter-spacing: 0%;
   display: flex;
-  justify-content: center;
-  background:linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
+  justify-content: left;
+  color: #3D3D3D;
+
 }
 .customize-training{
 display: flex;
@@ -1023,17 +1022,17 @@ padding: 20px;
   color: #000;
 }
 .training-events{
-  background-color: #EEEEEE;
+  background-color: #fff;
   margin: 10px;
 }
 
 .training-events-head{
-  margin-top: 50px;
-  margin-left: 40%;
+  margin-top: 40px;
+  /* margin-left: 40%; */
   justify-content: space-between;
   display: flex;
   padding-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .card-holder{
@@ -1141,7 +1140,7 @@ padding: 20px;
     }
     
 
-@media  (min-width:1181px) and (max-width: 1366px){
+@media (max-width: 1366px){
   .contact-us-corporate{
       margin-top: 50px;
   }
@@ -1244,15 +1243,14 @@ padding: 20px;
     }
 }
 
-@media  (min-width:780px) and (max-width: 1179px){
+@media (max-width: 1179px){
 .association{
-  margin-top: 30px;
+  margin-top: 40px;
   margin-left: 5%;
   margin-right: 5%;
-  justify-content: center;
+  justify-content: left;
   display: flex;
-  padding-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   }
   .association-head{
       /* margin-left: 10px; */
@@ -1268,7 +1266,7 @@ padding: 20px;
   }
 }
 
-@media (min-width:1025px) and (max-width: 1180px) {
+@media (max-width: 1180px) {
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
     }
@@ -1309,7 +1307,7 @@ padding: 20px;
     }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
     }
@@ -1365,7 +1363,7 @@ padding: 20px;
   }
 }
 
-@media(min-width:481px) and (max-width: 768px) {
+@media (max-width: 768px) {
   .blogs-container {
       grid-template-columns: repeat(3, 1fr); 
     }
@@ -1426,15 +1424,15 @@ padding: 20px;
   }
 
   .training-events-head{
-    margin-top: 50px;
-    margin-left: 25%;
+    margin-top: 40px;
+    /* margin-left: 25%; */
     justify-content: space-between;
     display: flex;
     margin-bottom: 30px;
     }
 }
 
-@media  (min-width:769px) and (max-width: 1179px){
+@media (max-width: 1179px){
   .contact-us-corporate{
       padding: 10px 30px;
       margin-top: 50px;
@@ -1509,7 +1507,7 @@ padding: 20px;
 }
 
 
-@media (min-width:350px) and (max-width:480px){
+@media (max-width:480px){
   .hachion-content {
       margin-left: 10px;
       margin-bottom: 20px;
@@ -1792,9 +1790,9 @@ padding: 20px;
     .association-head {
       text-align: left;
       /* margin-bottom: 5px; */
-      padding-top: 5px;
+      /* padding-top: 5px;
       margin-bottom: 0px;
-      margin-top: 0px;
+      margin-top: 0px; */
       margin-left: 5%;
       margin-right: 5px;
       justify-content: space-between;
@@ -2303,7 +2301,7 @@ padding: 20px;
   padding: 5px;
   }
 
-@media(min-width:768px) and (max-width:1179px){
+@media (max-width:1179px){
   
   #advisor1{
       
@@ -2323,16 +2321,16 @@ padding: 20px;
       width: 98%;
   }
   .training-events-head{
-    margin-top: 50px;
+    margin-top: 40px;
     margin-left: 10%;
     margin-right: 10%;
     justify-content: space-between;
     display: flex;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     }
   }
 
-  @media(min-width:768px) and (max-width:930px){
+  @media (max-width:930px){
     .learner-card-container {
       display: flex;
       justify-content: center;

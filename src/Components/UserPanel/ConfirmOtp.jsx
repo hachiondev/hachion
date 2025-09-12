@@ -6,7 +6,6 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Topbar from './Topbar';
-import TopBarNew from './TopBarNew';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -111,7 +110,7 @@ const ConfirmOtp = () => {
 
   return (
     <>
-      <TopBarNew />
+      <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">

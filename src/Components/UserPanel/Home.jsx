@@ -14,7 +14,7 @@ import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
 import RecentEntries from './RecentEntries';
-import TopBarNew from './TopBarNew';
+import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 
 export const Home = () => {
@@ -81,7 +81,7 @@ export const Home = () => {
 </Helmet>
    <div className='home-background'>
   <PopupBanner/>
-<TopBarNew/>
+<Topbar/>
 <NavbarTop/>
 <Banner/>
 <Trending/>

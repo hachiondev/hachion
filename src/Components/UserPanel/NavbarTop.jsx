@@ -543,6 +543,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import './Home.css';
+import { styled } from '@mui/material/styles';
 import { MdCancel } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
 import profile1 from '../../Assets/profile2.png';
@@ -563,7 +564,7 @@ const NavbarTop = () => {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const bannerRef = useRef(null);
@@ -632,7 +633,7 @@ const NavbarTop = () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
           axios.get("https://api.hachion.co/courses/names-and-categories"),
-          axios.get("https://api.hachion.co/blog"),
+          // axios.get("https://api.hachion.co/blog"),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -690,9 +691,16 @@ const NavbarTop = () => {
     setSearchResults([]);
   };
 
+  const ProfileAvatar = styled(Avatar)({
+    width: 40,
+    height: 40,
+    border: '2px solid #00AEEF',
+    backgroundColor: '#ffffff'
+  });
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-white shadow-sm px-3 px-md-5" style={{ height: "80px" }}>
+      <nav className="navbar navbar-expand-lg bg-white shadow-sm px-3 px-md-4" style={{ height: "80px" }}>
         <div className="container-fluid px-4">
 
           {/* ==== Logo ==== */}
@@ -734,6 +742,7 @@ const NavbarTop = () => {
         onClick={handleClickToggle}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        style={{color: '#000000', fontWeight: '500'}}
       >
         Explore Courses{" "}
     <span className="ms-1 arrow-icon">
@@ -849,26 +858,45 @@ const NavbarTop = () => {
             ) : (
               <div className="dropdown">
                 <button
-                  className="btn d-flex align-items-center dropdown-toggle"
+                  className="btn d-flex align-items-center"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  aria-expanded={isOpen}
+                  style={{
+                  border: "none",
+                  boxShadow: "none",
+                  outline: "none",
+                  background: "transparent",
+                  paddingRight: "0",
+                }}
+                onClick={() => setIsOpen(!isOpen)}
                 >
-                  <Avatar src={userData?.picture || profile1} alt="user avatar" />
-                  <span className="ms-2">{userData?.name || "User"}</span>
+                  {userData?.picture ? (
+                    <ProfileAvatar src={userData.picture} alt="user avatar" />
+                  ) : (
+                    <ProfileAvatar>
+                      <FaUserAlt size={20} color="#b3b3b3" />
+                    </ProfileAvatar>
+                  )}
+                  <span className="ms-2" style={{fontSize: 'small'}}>{userData?.name || "User"}</span>
+                  {isOpen ? (
+                    <MdKeyboardArrowUp className="ms-1 arrow-icon" />
+                  ) : (
+                    <MdKeyboardArrowDown className="ms-1 arrow-icon" />
+                  )}
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <Link className="dropdown-item" to="/userdashboard">
+                    <Link className="dropdown-item" to="/userdashboard/Enrolls">
                       <FaUserAlt /> Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/settings">
+                    <Link className="dropdown-item" to="/userdashboard/Settings">
                       <IoMdSettings /> Settings
                     </Link>
                   </li>
                   <li>
-                    <button className="dropdown-item text-black" onClick={handleLogout}>
+                    <button className="dropdown-item" onClick={handleLogout}>
                       <IoLogOut /> Logout
                     </button>
                   </li>
@@ -893,9 +921,21 @@ const NavbarTop = () => {
         <div className="offcanvas-body">
           {isLoggedIn ? (
             <>
-              <div className="d-flex align-items-center mb-3">
-                <Avatar src={userData?.picture || profile1} alt="avatar" />
+              <div className="d-flex align-items-center mb-2">
+                {userData?.picture ? (
+                  <ProfileAvatar src={userData.picture} alt="user avatar" />
+                ) : (
+                  <ProfileAvatar>
+                    <FaUserAlt size={20} color="#b3b3b3" />
+                  </ProfileAvatar>
+                )}
                 <span className="ms-2">{userData?.name || "User"}</span>
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/Enrolls')}>
+                <FaUserAlt /> Dashboard
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/Settings')}>
+                <IoMdSettings /> Settings
               </div>
               <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                 Explore Courses
@@ -903,27 +943,18 @@ const NavbarTop = () => {
               <div className="drawer-item" onClick={() => navigate('/corporate')}>
                 Corporate Training
               </div>
-              {/* <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
-                Explore All Courses
-              </div> */}
-              <div className="drawer-item" onClick={() => navigate('/userdashboard')}>
-                <FaUserAlt /> Dashboard
-              </div>
-              <div className="drawer-item" onClick={() => navigate('/settings')}>
-                <IoMdSettings /> Settings
-              </div>
-              <button className="drawer-button text-white mt-3" onClick={handleLogout}>
+              <button className="btn btn-info rounded-pill w-100 text-white" onClick={handleLogout}>
                 <IoLogOut /> Logout
               </button>
             </>
           ) : (
             <div className="d-flex flex-column gap-2">
-              <Link to="/coursedetails" className="btn btn-md text-start p-3">
+              <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                 Explore Courses
-              </Link>
-              <Link to="/corporate" className="btn btn-md text-start p-3">
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/corporate')}>
                 Corporate Training
-              </Link>
+              </div>
               <button className="btn btn-outline-info rounded-pill w-100">
                 <Link to="/login" className="btn btn-sm text-nowrap login-btn-link">Log in</Link>
               </button>

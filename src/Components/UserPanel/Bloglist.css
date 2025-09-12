@@ -149,9 +149,9 @@
   padding: 0 !important;
 }
 
-.d-flex {
+/* .d-flex {
   gap: 16px;
-}
+} */
 
 .carousel-controls {
   display: flex;

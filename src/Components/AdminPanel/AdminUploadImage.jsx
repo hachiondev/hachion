@@ -49,18 +49,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function AdminUploadImage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const [images, setImages] = useState([]); // list of uploaded images (from API)
-  const [filteredImages, setFilteredImages] = useState([]); // result after search/date filter
+  const [images, setImages] = useState([]); 
+  const [filteredImages, setFilteredImages] = useState([]); 
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // category/course states
-  const [course, setCourse] = useState([]); // course categories endpoint data
-  const [courseCategory, setCourseCategory] = useState([]); // actual courses list
-  const [filterCourse, setFilterCourse] = useState([]); // courses filtered by selected category
+  
+  const [course, setCourse] = useState([]); 
+  const [courseCategory, setCourseCategory] = useState([]); 
+  const [filterCourse, setFilterCourse] = useState([]); 
+const [courseNames, setCourseNames] = useState([]);
 
   const [rows, setRows] = useState([{ id: Date.now(), tool_image: null, preview: null }]);
 
@@ -72,18 +73,18 @@ export default function AdminUploadImage() {
     courseName: '',
   });
 
-  // Pagination
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Derived data source and displayed rows
+  
   const dataSource = filteredImages.length ? filteredImages : images;
   const displayedCategories = dataSource.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  // handle pagination change
+  
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
@@ -94,7 +95,7 @@ export default function AdminUploadImage() {
     setCurrentPage(1); 
   };
 
-  // row operations for upload UI
+  
   const addRow = () => setRows(prev => [...prev, { id: Date.now(), tool_image: null, preview: null }]);
   const deleteRow = (id) => setRows(prev => prev.filter(row => row.id !== id));
 
@@ -111,15 +112,16 @@ export default function AdminUploadImage() {
     setErrorMessage('');
   };
 
-  // handle select changes (category/course)
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
+     console.log(`Changing field: ${name} => ${value}`);
     setImageData(prev => ({ ...prev, [name]: value }));
 
     if (name === "category_name") {
-      // filter courses belonging to this category
+      
       const filtered = courseCategory.filter(c => {
-        // attempting to be flexible about naming schema
+        
         return (
           c.category_name === value ||
           c.category === value ||
@@ -131,7 +133,7 @@ export default function AdminUploadImage() {
     }
   };
 
-  // date filter logic
+  
   const handleDateFilter = () => {
     const filtered = images.filter((item) => {
       const imageDate = item.date ? new Date(item.date) : null;
@@ -166,9 +168,7 @@ export default function AdminUploadImage() {
     setShowAddCourse(true);
     setSuccessMessage("");
     setErrorMessage("");
-  };
-
-  // Fetch categories and courses (preserves your original endpoints)
+  };  
   useEffect(() => {
     const fetchCategory = async () => {
       try {
@@ -182,21 +182,26 @@ export default function AdminUploadImage() {
   }, []);
 
   useEffect(() => {
+  if (imageData.category_name) {   
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
-        setCourseCategory(response.data || []);
+        const response = await axios.get(
+          `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`
+        );
+        setCourseNames(response.data || []);
       } catch (error) {
-        console.error("Error fetching courses:", error.message);
+        console.error("Error fetching course names:", error.message);
       }
     };
     fetchCourses();
-  }, []);
+  }
+}, [imageData.category_name]);
+
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const resp = await axios.get("https://api.hachion.co/uploadimages/all"); // adjust endpoint if different
+        const resp = await axios.get("https://api.hachion.co/upload_images/all"); // adjust endpoint if different
         if (resp && resp.data) setImages(resp.data);
       } catch (err) {
       }
@@ -213,6 +218,24 @@ export default function AdminUploadImage() {
       setRows(updated);
     }
   };
+const handleDelete = async (fileName) => {
+  if (!window.confirm("Are you sure you want to delete this image?")) return;
+
+  try {
+    const response = await axios.delete(`https://api.hachion.co/upload_images/delete/${fileName}`);
+    console.log("Delete success:", response.data);
+
+    setImages(prev =>
+      prev.filter(courseRow => courseRow.fileName !== fileName)
+    );
+
+    alert(response.data); 
+  } catch (error) {
+    console.error("Error deleting:", error);
+    alert(error.response?.data || "Failed to delete");
+  }
+};
+
 
   return (
     <>  
@@ -253,26 +276,24 @@ export default function AdminUploadImage() {
                     ))}
                   </select>
                 </div>
-
                 <div className="col-md-3">
-                  <label htmlFor="course" className="form-label">Course Name</label>
-                  <select
-                    id="course"
-                    className="form-select"
-                    name="courseName"
-                    value={imageData.courseName}
-                    onChange={handleChange}
-                    disabled={!imageData.category_name}
-                  >
-                    <option value="">Select Course</option>
-                    {filterCourse.map((curr) => (
-                      // try different field names defensively
-                      <option key={curr.id || curr._id || curr.courseName} value={curr.courseName || curr.name || curr.title}>
-                        {curr.courseName || curr.name || curr.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+  <label htmlFor="course" className="form-label">Course Name</label>
+  <select
+    id="course"
+    className="form-select"
+    name="courseName"
+    value={imageData.courseName}
+    onChange={handleChange}
+    disabled={!imageData.category_name}
+  >
+    <option value="">Select Course</option>
+    {courseNames.map((course, idx) => (
+      <option key={idx} value={course}>
+        {course}
+      </option>
+    ))}
+  </select>
+</div>
               </div>
 
               <div className='course-details'>
@@ -340,27 +361,74 @@ export default function AdminUploadImage() {
                 </TableContainer>
 
                 <div className="course-row" style={{ gap: 12, marginTop: 12 }}>
-                  <button
-                    className='submit-btn'
-                    onClick={async () => {
-                      // example submit handler: build FormData and post to API
-                      try {
-                        const fd = new FormData();
-                        fd.append('category_name', imageData.category_name);
-                        fd.append('courseName', imageData.courseName);
-                        rows.forEach((r, idx) => {
-                          if (r.tool_image) fd.append(`images`, r.tool_image);
-                        });
-                        setSuccessMessage('Submit logic executed (implement endpoint).');
-                        setErrorMessage('');
-                      } catch (err) {
-                        setErrorMessage('Upload failed.');
-                        setSuccessMessage('');
-                      }
-                    }}
-                  >
-                    Submit
-                  </button>
+                 <button
+  className='submit-btn'
+  onClick={async () => {
+    console.log("Submit button clicked");
+
+    
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      console.log("Current imageData:", imageData);
+      if (!imageData.category_name || !imageData.courseName) {
+        console.log("Validation failed: Missing category or course");
+        setErrorMessage("Please select category and course");
+         setTimeout(() => setErrorMessage(""), 3000);
+        return;
+      }
+      console.log("Category and Course selected:", imageData.category_name, imageData.courseName);
+
+      const hasFiles = rows.some(r => r.tool_image);
+      if (!hasFiles) {
+        console.log("Validation failed: No files uploaded");
+        setErrorMessage("Please upload at least one image");
+         setTimeout(() => setErrorMessage(""), 3000);
+        return;
+      }
+      console.log("Files to upload:", rows.filter(r => r.tool_image));
+
+      const fd = new FormData();
+      fd.append('categoryName', imageData.category_name);
+      fd.append('courseName', imageData.courseName);
+      rows.forEach((r, index) => {
+        if (r.tool_image) {
+          console.log(`Appending file [${index}]:`, r.tool_image.name);
+          fd.append('files', r.tool_image);
+        }
+      });
+
+      console.log("Sending POST request to /upload");
+      const response = await axios.post(
+        'https://api.hachion.co/upload_images/upload',
+        fd,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+
+      console.log("Upload success:", response.data);
+      setSuccessMessage(response.data || "Images uploaded successfully");
+
+      // handleReset(); 
+
+      const resp = await axios.get("https://api.hachion.co/upload_images/all");
+      console.log("Fetched latest images:", resp.data);
+      setImages(resp.data || []);
+
+    } catch (err) {
+      console.log("Error during upload:", err);
+      console.log("Error response data:", err.response?.data);
+      console.log("Error message:", err.message);
+      setErrorMessage(err.response?.data || "Error uploading images");
+    }
+  }}
+>
+  Submit
+</button>
+
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+{errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+
 
                   <button className='reset-btn' onClick={handleReset}>Reset</button>
                 </div>
@@ -426,7 +494,7 @@ export default function AdminUploadImage() {
                         className="btn-search"
                         type="button"
                         onClick={() => {
-                          // simple search across images
+                          
                           const filtered = images.filter(item =>
                             (item.image_name || '').toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
                             (item.image_url || '').toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -467,50 +535,66 @@ export default function AdminUploadImage() {
               </TableHead>
 
               <TableBody>
-                {displayedCategories.length > 0 ? (
-                  displayedCategories.map((courseRow, index) => (
-                    <StyledTableRow key={courseRow.curr_id || courseRow.id || index}>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
-                      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-                      <StyledTableCell align="left">{courseRow.category_name}</StyledTableCell>
-                      <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
-                      <StyledTableCell align="left">
-                        {(courseRow.tool_image || []).length ? (
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {courseRow.tool_image.slice(0, 4).map((img, i) => (
-                              <img
-                                key={i}
-                                src={img.url}
-                                alt={img.name}
-                                style={{ width: 40, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid #ddd' }}
-                              />
-                            ))}
-                            {courseRow.tool_image.length > 4 && <span>+{courseRow.tool_image.length - 4}</span>}
-                          </div>
-                        ) : ("")}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">{courseRow.image_name}</StyledTableCell>
-                      <StyledTableCell align="left">{courseRow.image_url}</StyledTableCell>
-                      <StyledTableCell align="center">{courseRow.date ? dayjs(courseRow.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
-                      <StyledTableCell align="center">
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                          <RiDeleteBin6Line className="delete" style={{ cursor: 'pointer' }} />
-                        </div>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-                ) : (
-                  <StyledTableRow>
-                    <StyledTableCell colSpan={9} align="center">No data available.</StyledTableCell>
-                  </StyledTableRow>
-                )}
-              </TableBody>
+  {displayedCategories.length > 0 ? (
+    displayedCategories.map((courseRow, index) => (
+      <StyledTableRow key={courseRow.uploadImagesCategoryId || index}>
+        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+        <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+        <StyledTableCell align="left">{courseRow.categoryName}</StyledTableCell>
+        <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
+
+        <StyledTableCell align="left">
+  {courseRow.fileUrl ? (
+    <img
+      src={courseRow.fileUrl}  
+      alt={courseRow.originalFileName} 
+      style={{
+        width: 40,
+        height: 28,
+        objectFit: 'cover',
+        borderRadius: 4,
+        border: '1px solid #ddd'
+      }}
+    />
+  ) : (
+    ""
+  )}
+</StyledTableCell>
+
+
+        <StyledTableCell align="left">
+          {courseRow.originalFileName}
+        </StyledTableCell>
+        <StyledTableCell align="left">
+          {courseRow.fileUrl}
+        </StyledTableCell>
+
+        <StyledTableCell align="center">
+          {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MM-DD-YYYY') : 'N/A'}
+        </StyledTableCell>
+
+        <StyledTableCell align="center">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+             <RiDeleteBin6Line
+    className="delete"
+    style={{ cursor: 'pointer', color: 'red', fontSize: '1.2rem' }}
+     onClick={() => handleDelete(courseRow.fileName)}
+  />           
+          </div>
+        </StyledTableCell>
+      </StyledTableRow>
+    ))
+  ) : (
+    <StyledTableRow>
+      <StyledTableCell colSpan={9} align="center">No data available.</StyledTableCell>
+    </StyledTableRow>
+  )}
+</TableBody>
+
             </Table>
           </TableContainer>
 
-          {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-
+         
           {dataSource.length > 0 && (
             <div className='pagination-container' style={{ marginTop: 12 }}>
               <AdminPagination

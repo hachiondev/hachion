@@ -4,7 +4,8 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { IoSearch } from "react-icons/io5";
-
+import { MdKeyboardArrowUp } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 const TrainingEvents = () => {
   const navigate = useNavigate();
@@ -14,7 +15,8 @@ const TrainingEvents = () => {
   const [modeFilter, setModeFilter] = useState("");
   const [courseFilter, setCourseFilter] = useState("");
   const [timeFilter, setTimeFilter] = useState("");
-
+  const [isModeOpen, setIsModeOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [courseOptions, setCourseOptions] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   // ✅ Get user's timezone
@@ -26,10 +28,10 @@ const TrainingEvents = () => {
       try {
         const [scheduleRes, coursesRes] = await Promise.all([
           fetch(
-            `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+            `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
           ).then((res) => res.json()),
           
-          fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+          fetch("https://api.test.hachion.co/courses/all").then((res) => res.json()),
         ]);
   
 
@@ -154,43 +156,117 @@ const TrainingEvents = () => {
   return (
     <div className="training-events">
       <div className="training-events-head-upcoming">
+        <div className="home-spacing">
         <h2 className="association-head">Upcoming Training Events</h2>
+        <p className="association-head-tag">Handpicked courses across various categories to help you achieve your learning goals</p>
       </div>
 
-      <div className="view-btn">
+      {/* <div className="card-pagination-container">
         <button className="view-all" onClick={() => setViewAll(!viewAll)}>
           {viewAll ? "View Less" : "View All"}
         </button>
-      </div>
+      </div> */}
+      
 
       <div className="filter-container">
         <div className="filter-section">
-          <select value={modeFilter} onChange={handleModeChange} aria-label="Filter by Mode">
-            <option value="">All Modes</option>
-            <option value="Live Class">Live Class</option>
-            <option value="Live Demo">Live Demo</option>
-          </select>
 
-          <select value={timeFilter} onChange={handleTimeChange} aria-label="Filter by Time">
-            <option value="">Any Time</option>
-            <option value="new">Newly Added</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-          </select>
+    {/* Mode Dropdown */}
+    <div className="dropdown">
+      <button
+        className="btn d-flex text-nowrap align-items-center"
+        type="button"
+        id="modeDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded={isModeOpen}
+        style={{backgroundColor: '#E9E7E7', height: '48px', fontSize: '14px'}}
+        onClick={() => setIsModeOpen(!isModeOpen)}
+      >
+        {modeFilter || "All Modes"}
+        {isModeOpen ? (
+          <MdKeyboardArrowUp className="ms-1 arrow-icon" />
+          ) : (
+          <MdKeyboardArrowDown className="ms-1 arrow-icon" />
+          )}
+      </button>
+      <ul className="dropdown-menu" aria-labelledby="modeDropdown">
+        <li>
+          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "" } })}>
+            All Modes
+          </button>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "Live Class" } })}>
+            Live Class
+          </button>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "Live Demo" } })}>
+            Live Demo
+          </button>
+        </li>
+      </ul>
+    </div>
 
-          <div className="course-search-container">
+    {/* Time Dropdown */}
+    <div className="dropdown">
+      <button
+        className="btn d-flex text-nowrap align-items-center"
+        type="button"
+        id="timeDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded={isTimeOpen}
+        style={{backgroundColor: '#E9E7E7', height: '48px', fontSize: '14px'}}
+        onClick={() => setIsTimeOpen(!isTimeOpen)}
+      >
+        {timeFilter || "Any Time"}
+        {isTimeOpen ? (
+          <MdKeyboardArrowUp className="ms-1 arrow-icon" />
+          ) : (
+          <MdKeyboardArrowDown className="ms-1 arrow-icon" />
+          )}
+      </button>
+      <ul className="dropdown-menu" aria-labelledby="timeDropdown">
+        <li>
+          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "" } })}>
+            Any Time
+          </button>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "new" } })}>
+            Newly Added
+          </button>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "today" } })}>
+            Today
+          </button>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "week" } })}>
+            This Week
+          </button>
+        </li>
+      </ul>
+    </div>
+
+          {/* <div className="course-search-container"> */}
+        <form className="d-flex" role="search">
+       <div className="input-group custom-search" style={{height: '48px'}}>
       <input
         type="text"
-        className="course-search-input"
-        placeholder="All Courses"
+        className="form-control border-0"
+        placeholder="Search for Courses"
         value={courseFilter}
         onChange={handleCourseChange}
         list="course-options"
       />
-      <div className="course-search-icon" onClick={handleSearchIconClick}>
-        <IoSearch className="search-icon-style" />
-      </div>
+      <button className="btn btn-info d-flex align-items-center justify-content-center search-btn"
+      type="submit" onClick={handleSearchIconClick}>
+        <IoSearch size={20} className="text-white" />
+      </button>
     </div>
+    </form>
 
 <datalist id="course-options">
   {courseOptions
@@ -208,6 +284,7 @@ const TrainingEvents = () => {
           </button>
         </div>
       </div>
+      </div>
 
      <div className="training-card-holder">
   {loading ? (
@@ -222,9 +299,12 @@ const TrainingEvents = () => {
           key={course.course_id || index}
           id={course.course_id}
           heading={course.schedule_course_name}
+          discountPercentage={course.discount}
+          trainer_name={course.trainerName}
+          level={course.levels}
           image={
             course.course_image
-              ? `https://api.hachion.co/${course.course_image}`
+              ? `https://api.test.hachion.co/${course.course_image}`
               : ""
           }
           date={course.schedule_date ? formatDate(course.schedule_date) : ""}

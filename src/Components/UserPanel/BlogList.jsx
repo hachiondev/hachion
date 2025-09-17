@@ -7,7 +7,7 @@ const BlogList = ({ selectedCategories }) => {
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     axios
-      .get("https://api.hachion.co/blog")
+      .get("https://api.test.hachion.co/blog")
       .then((response) => setBlogs(response.data))
       .catch((error) => console.error("Error fetching blogs", error));
   }, []);
@@ -61,7 +61,7 @@ const BlogList = ({ selectedCategories }) => {
           currentBlogs.map((blog) => (
             <div key={blog.id} className="bloglist-card">
               <img
-                src={`https://api.hachion.co/blogs/${blog.blog_image}`}
+                src={`https://api.test.hachion.co/blogs/${blog.blog_image}`}
                 className="card-img-top"
                 alt="Blog-Image"
               />

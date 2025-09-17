@@ -31,7 +31,7 @@ const id = title?.split("-").pop();
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/blog/${id}`);
+        const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
         setBlogs(response.data);
         setSelectedBlog(response.data);
         console.log("API Response:", response.data);
@@ -49,7 +49,7 @@ const id = title?.split("-").pop();
 
   const handleDownload = () => {
     if (selectedBlog && selectedBlog.blog_pdf) {
-      const pdfUrl = `https://api.hachion.co/blogs/${selectedBlog.blog_pdf}`;
+      const pdfUrl = `https://api.test.hachion.co/blogs/${selectedBlog.blog_pdf}`;
       const link = document.createElement("a");
       link.href = pdfUrl;
       link.setAttribute("download", selectedBlog.blog_pdf);
@@ -145,7 +145,7 @@ useEffect(() => {
           property="og:image"
           content={
             selectedBlog?.blog_image
-              ? `https://api.hachion.co/blogs/${selectedBlog.blog_image}`
+              ? `https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`
               : "https://hachion.co/images/course-banner.jpg"
           }
         />
@@ -237,7 +237,7 @@ useEffect(() => {
             <>
             <div className="salesforce-middle">
                 <img
-                  src={`https://api.hachion.co/blogs/${selectedBlog.blog_image}`}
+                  src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
                   alt={selectedBlog.title}
                 />
                 <div>

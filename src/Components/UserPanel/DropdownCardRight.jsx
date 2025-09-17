@@ -11,7 +11,7 @@
 //   useEffect(() => {
 //     const fetchCourses = async () => {
 //       try {
-//         const response = await axios.get("https://api.hachion.co/courses/all");
+//         const response = await axios.get("https://api.test.hachion.co/courses/all");
 //         if (Array.isArray(response.data)) {
 //           setCourses(response.data); // Set the courses if data is an array
 //         } else {
@@ -52,7 +52,7 @@
 //         key={course.id || index}
 //         title={course.courseName}
 //         RatingByPeople={course.ratingByNumberOfPeople}
-//         image={`https://api.hachion.co/${course.courseImage}`} // Correct property
+//         image={`https://api.test.hachion.co/${course.courseImage}`} // Correct property
 //         Rating={course.starRating}
 //         student={course.totalEnrollment}
 //         month={course.numberOfClasses}
@@ -91,7 +91,7 @@ const DropdownCardRight = ({ category, currentPage, cardsPerPage }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data); // Set the courses if data is an array
         } else {
@@ -131,7 +131,7 @@ const DropdownCardRight = ({ category, currentPage, cardsPerPage }) => {
       <DropdownCard
         key={course.id || index}
         title={course.courseName}
-        image={`https://api.hachion.co/${course.courseImage}`}
+        image={`https://api.test.hachion.co/${course.courseImage}`}
         level={course.level}
         month={course.numberOfClasses}
         course_id={course.id}

@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family:  'Open Sans', sans-serif;
+  font-family:  'Poppins', sans-serif;
 }
 .salesforce-blog-left{
   width: 20%;
@@ -172,7 +172,7 @@
 .workshop-button:hover{
   background-color: #006489;
 }
-@media (min-width: 481px) and (max-width: 1025px){
+@media (max-width: 1025px){
 .salesforce-blog-left{
   width: 25%;
   padding: 10px;
@@ -743,8 +743,7 @@
     background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-style: italic;
+    font-family: 'Poppins', sans-serif;
     font-weight: 700;
     text-align: center;
     padding: 20px;
@@ -1042,7 +1041,7 @@ background-color: white;
 
 
 
-      @media  (min-width:1025px) and (max-width: 1366px){
+      @media (max-width: 1366px){
         .about-us-content{
           width: 95%;
           margin-left: 20px;
@@ -1068,7 +1067,7 @@ background-color: white;
       }
     }
     
-    @media  (min-width:769px) and (max-width: 1024px){
+    @media (max-width: 1024px){
       .about-us-content{
         width: 100%;
         margin-left: 0px;
@@ -1180,7 +1179,7 @@ background-color: white;
     width: 45%;
   }
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
       .points{
       width: 80%;
       }
@@ -1209,7 +1208,7 @@ background-color: white;
     font-size: 14px;
 }
     }
-      @media (min-width:350px) and (max-width:480px){
+      @media (max-width:480px){
         .about-us{
           padding: 25px;
           padding-top: 5px;
@@ -1484,7 +1483,7 @@ background-color: white;
       text-align: center;
     }
 
-    @media (min-width:350px) and (max-width:480px){
+    @media (max-width:480px){
       .our-story{
         justify-content: flex-start; 
         overflow-x: auto; 
@@ -1938,7 +1937,7 @@ margin-bottom: 20px;
       justify-content: space-evenly;
       }
 
-@media (min-width:350px) and (max-width:480px){
+@media (max-width:480px){
 .about-us-div-content {
   flex-basis: 100%; /* One item per row for mobile screens */
 }
@@ -2356,7 +2355,7 @@ margin-right: 5% !important;
 }
 }
 
-@media (min-width: 481px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
 .about-us-div-content {
   flex-basis: 45%; /* Two items per row for tablet and laptop screens */
 }
@@ -2395,7 +2394,7 @@ flex-direction: column;
 }
 
 }
-@media (min-width: 1025px) and (max-width: 1366px) {
+@media (max-width: 1366px) {
 .contact-us{
 margin-left: 10px !important;
 }
@@ -2596,7 +2595,7 @@ margin-right: 10%;
   align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
-  width: 550px;
+  width: 360px;
 }
 
 #enroll1{
@@ -2919,13 +2918,13 @@ margin-bottom: 20px;
       padding: 10px;
     }
     
-    @media (min-width: 350px) and (max-width: 480px) {
+    @media (max-width: 480px) {
       .title_allcourse {
         padding-top: 20px;
       }
     }
     
-    @media (min-width: 768px) {
+    @media (min-width: 767px) {
       .div_category p {
         flex: 1 1 calc(33.333% - 10px); /* 3-column layout */
       }

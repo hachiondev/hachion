@@ -41,7 +41,7 @@
 //     };
   
 //     try {
-//       const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+//       const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
 //       console.log(response.data);
   
 //       if (response.data.status) {
@@ -67,19 +67,19 @@
 //   };  
 
 //   const googleLogin = () => {
-//     window.open('https://api.hachion.co/oauth2/authorization/google', '_self');
+//     window.open('https://api.test.hachion.co/oauth2/authorization/google', '_self');
 //   };
 
 //   const facebookLogin = () => {
-//     window.location.href = 'https://api.hachion.co/oauth2/authorization/facebook';  
+//     window.location.href = 'https://api.test.hachion.co/oauth2/authorization/facebook';  
 //   };
 
 //   const linkedinLogin = () => {
-//     window.location.href = 'https://api.hachion.co/oauth2/authorization/linkedin';  
+//     window.location.href = 'https://api.test.hachion.co/oauth2/authorization/linkedin';  
 //   };
 
 //   const appleLogin = () => {
-//     window.location.href = 'https://api.hachion.co/oauth2/authorization/apple';  
+//     window.location.href = 'https://api.test.hachion.co/oauth2/authorization/apple';  
 //   };
 //   const togglePasswordVisibility = () => {
 //     setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
@@ -198,7 +198,7 @@ const Login = () => {
     };
   
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
       console.log(response.data);
   
       if (response.data.status) {

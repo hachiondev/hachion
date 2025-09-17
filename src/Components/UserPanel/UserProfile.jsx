@@ -82,7 +82,7 @@ useEffect(() => {
     const parsedUser = JSON.parse(storedUser);
     const parsedEmail = parsedUser.email;
 
-    axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+    axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
       params: { email: parsedEmail }
     })
     .then((response) => {
@@ -93,7 +93,7 @@ useEffect(() => {
       setInitialMobile(data.mobile); 
 
       if (data.profileImage) {
-        const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
+        const fullImageUrl = `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`;
         setProfileImage(fullImageUrl);
       }
     })
@@ -117,7 +117,7 @@ const validateMobile = async (value) => {
 
   try {
     const encodedMobile = encodeURIComponent(value);
-    const response = await axios.get(`https://api.hachion.co/check-mobile?mobile=${encodedMobile}`);
+    const response = await axios.get(`https://api.test.hachion.co/check-mobile?mobile=${encodedMobile}`);
 
     setMobileError('');
   } catch (error) {
@@ -166,7 +166,7 @@ const handleResetPassword = async (e) => {
   setIsUpdating(true);
 
   try {
-    const response = await axios.post('https://api.hachion.co/api/v1/user/reset-password', formData, {
+    const response = await axios.post('https://api.test.hachion.co/api/v1/user/reset-password', formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
 

@@ -150,7 +150,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourse = async () => {
           try {
-              const response = await axios.get('https://api.hachion.co/summerevents');
+              const response = await axios.get('https://api.test.hachion.co/summerevents');
               setSummerCourse(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching video:", error.message);
@@ -188,7 +188,7 @@ const displayedCourse = filteredCourse.slice(
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.hachion.co/summerevents/update/${editedData.summerevents_id}`,editedData
+                `https://api.test.hachion.co/summerevents/update/${editedData.summerevents_id}`,editedData
             );
             setSummerCourse((prev) =>
                 prev.map(curr =>
@@ -206,7 +206,7 @@ const displayedCourse = filteredCourse.slice(
       const handleDelete = async (summerevents_id) => {
        
          try { 
-          const response = await axios.delete(`https://api.hachion.co/summerevents/delete/${summerevents_id}`); 
+          const response = await axios.delete(`https://api.test.hachion.co/summerevents/delete/${summerevents_id}`); 
           console.log("Summer Courses deleted successfully:", response.data); 
         } catch (error) { 
           console.error("Error deleting Courses:", error); 
@@ -244,7 +244,7 @@ const displayedCourse = filteredCourse.slice(
         };
       
         try {
-          const response = await axios.post("https://api.hachion.co/summerevents/add", dataToSubmit);
+          const response = await axios.post("https://api.test.hachion.co/summerevents/add", dataToSubmit);
           if (response.status === 201) {
             alert(response.data);
             setCourseData([...courseData, dataToSubmit]); // Update local state
@@ -260,7 +260,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
           setCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -271,7 +271,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourses = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("https://api.test.hachion.co/courses/all");
           console.log("API response:", response.data); // Check the API response
           if (Array.isArray(response.data)) {
             setCourse(response.data); // Update state

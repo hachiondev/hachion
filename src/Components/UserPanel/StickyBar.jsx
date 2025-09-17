@@ -4,8 +4,16 @@ import { PiLineVerticalThin } from "react-icons/pi";
 import { IoIosMail } from "react-icons/io";
 import whatsapp from '../../Assets/logos_whatsapp-icon.png';
 import HaveAnyQuery from './HaveAnyQuery';
+import facebook from '../../Assets/facebook.png';
+import twitter from '../../Assets/twitter.png';
+import youtube from '../../Assets/youtube.png';
+import linkedin from '../../Assets/linkedin.png';
+import instagram from '../../Assets/instagram.png';
+import quora from '../../Assets/Component 141.png';
+import {  useNavigate } from 'react-router-dom';
 
 const StickyBar = () => {
+  const navigate= useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
   const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
@@ -39,11 +47,20 @@ const StickyBar = () => {
     detectUserCountry();
   }, []);
 
+     const handleTerms=()=>{
+    navigate('/terms')
+  }
+   const handlePrivacy=()=>{
+    navigate('/privacy')
+  }
+    const handleUnsubscribe = () => {
+    navigate("/unsubscribe");
+  };
+
   return (
     <>
       <div className="sticky-bar">
-        <div className="contact-info">
-          <p className='query-content' style={{ marginBottom: '0' }}>Have any query ?</p>
+        {/* <div className="contact-info"> */}
 
           <div className="whatsapp-container">
             <a
@@ -58,8 +75,8 @@ const StickyBar = () => {
             </a>
           </div>
 
-          <PiLineVerticalThin style={{ color: 'white', fontSize: '2rem' }} />
-          <IoIosMail className='training-mail-icon' />
+          {/* <PiLineVerticalThin style={{ color: 'white', fontSize: '2rem' }} /> */}
+          {/* <IoIosMail className='training-mail-icon' />
           <p className='training-email-footer'>
             <a
               href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
@@ -70,13 +87,41 @@ const StickyBar = () => {
             >
               trainings@hachion.co
             </a>
-          </p>
+          </p> */}
+          <p className='query-content' style={{ marginBottom: '0' }}>Have any query ?</p>
+        {/* <div className='footer-p'> */}
+              <p className='footer-copyright'>© Hachion 2025. All Rights Reserved.</p>
+              {/* <div className='term'>
+              <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
+              <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>
+              <p className="footer-term" onClick={handleUnsubscribe}>Unsubscribe</p>
+              </div> */}
+              <div className='footer-link'>
+              <a href="https://www.facebook.com/hachion.co" aria-label="Facebook"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={facebook} alt='facebook-icon' loading="lazy"/></a>
+            <a href="https://x.com/hachion_co" aria-label="Twitter"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={twitter} alt='twitter-icon' loading="lazy"/></a>
+            <a href="https://www.linkedin.com/company/hachion" aria-label="Linkedin"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={linkedin} alt='linkedin-icon' loading="lazy"/></a>
+            <a href="https://www.instagram.com/hachion_trainings" aria-label="Instagram"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={instagram} alt='instagram-icon' loading="lazy"/></a>
+            <a href="https://www.quora.com/profile/Hachion" aria-label="Quora"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={quora} alt='quora-icon' loading="lazy"/></a>
+              <a href="https://www.youtube.com/@hachion" aria-label="YouTube"
+            target="_blank" 
+            rel="noopener noreferrer"><img src={youtube} alt='youtube' loading="lazy"/></a>
+              </div>
         </div>
+        {/* </div> */}
+        {/* <button className="contact-button" onClick={openModal}>Contact Us</button> */}
+      {/* </div> */}
 
-        <button className="contact-button" onClick={openModal}>Contact Us</button>
-      </div>
-
-      {isModalOpen && <HaveAnyQuery closeModal={closeModal} />}
+      {/* {isModalOpen && <HaveAnyQuery closeModal={closeModal} />} */}
     </>
   );
 };

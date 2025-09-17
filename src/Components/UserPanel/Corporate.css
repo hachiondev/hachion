@@ -2,7 +2,7 @@
   margin:0;
   padding: 0;
   box-sizing: border-box;
-  font-family:  'Open Sans', sans-serif;
+  font-family:  'Poppins', sans-serif;
   
 }
 .corporate-training{
@@ -110,11 +110,9 @@ width: 100px;
   border-radius: 20px;
 }
 .association{
-  margin-top: 40px;
+  margin: 40px 10%;
   justify-content: left;
   display: flex;
-  /* padding-top: 20px; */
-  margin-bottom: 40px;
   }
 
 .association-head{
@@ -1023,7 +1021,6 @@ padding: 20px;
 }
 .training-events{
   background-color: #fff;
-  margin: 10px;
 }
 
 .training-events-head{
@@ -1235,12 +1232,6 @@ padding: 20px;
     margin-left: 5%;
     margin-right: 5%;
     }
-    .association-head{
-        /* margin-left: 10px; */
-        margin-left: 5%;
-        margin-right: 5%;
-        white-space: nowrap;
-    }
 }
 
 @media (max-width: 1179px){
@@ -1251,12 +1242,6 @@ padding: 20px;
   justify-content: left;
   display: flex;
   margin-bottom: 40px;
-  }
-  .association-head{
-      /* margin-left: 10px; */
-      margin-left: 5%;
-      margin-right: 5%;
-      white-space: nowrap;
   }
   .view-all-div{
     margin-right: 60px;
@@ -1363,7 +1348,7 @@ padding: 20px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .blogs-container {
       grid-template-columns: repeat(3, 1fr); 
     }

@@ -2,7 +2,7 @@
   margin:0;
   padding: 0;
   box-sizing: border-box;
-  font-family:  'Open Sans', sans-serif;
+  font-family:  ''Poppins', sans-serif', sans-serif;
 }
 .sidebar {
   flex: 1;
@@ -44,65 +44,60 @@
   margin: 10px; /* Add margin for spacing */
 }
 
-/* course-pagination for course page */
 .pagination-container {
-  margin-top: auto; /* Pushes pagination to the bottom */
+  margin-top: auto;
   padding: 10px 0;
+}
+.card-pagination-container {
+  margin-top: 0;
+  padding: 5px 0;
 }
 
 .course-pagination-container {
-  position: sticky; /* Keep the course-pagination fixed at the bottom */
-  bottom: 20px; /* Space from the bottom */
-  width: 100%; /* Full width of the container */
-  text-align: center; /* Center align course-pagination */
-  z-index: 10; /* Ensure it's on top of other elements */
+  position: sticky;
+  bottom: 20px;
+  width: 100%; 
+  text-align: center;
+  z-index: 10;
 }
 .course-pagination {
   display: flex;
-  justify-content: center; /* Center the course-pagination buttons */
-  margin: 30px 0; /* Add margin for spacing */
+  justify-content: center; 
+  margin: 30px 0; 
+}
+.cards-pagination {
+  display: flex;
+  justify-content: center;
 }
 
-.course-pagination button {
+.course-pagination button, .cards-pagination button, .course-pagination .arrow, .cards-pagination .arrow {
   font-size: 24px;
-  width: 50px;
-  height: 50px;
-  margin: 0 10px; /* Space between buttons */
-  padding: 5px; /* Add some padding */
-  border: 1px solid #00AEEF; /* Remove default border */
-  background-color: #D9D9D9; /* Bootstrap primary color */
-  color: #00AEEF; /* Text color */
-  cursor: pointer; /* Pointer cursor on hover */
-  border-radius: 50%; /* Rounded corners */
-  transition: background-color 0.3s; /* Smooth color transition */
+  width: 48px;
+  height: 48px;
+  margin: 0 10px;
+  border: 2px solid #00AEEF; 
+  background-color: #fff; 
+  color: #00AEEF;
+  cursor: pointer;
+  border-radius: 50%; 
+  transition: background-color 0.3s;
 }
 
-.course-pagination .arrow {
-  font-size: 24px;
-  width: 50px;
-  height: 50px;
-  margin: 0 10px; /* Space between buttons */
-  padding: 5px; /* Add some padding */
-  border: none; /* Remove default border */
-  background-color: #00AEEF; /* Bootstrap primary color */
-  color: #fff; /* Text color */
-  cursor: pointer; /* Pointer cursor on hover */
-  border-radius: 50%; /* Rounded corners */
-  transition: background-color 0.3s; /* Smooth color transition */
+.course-pagination button:hover, .cards-pagination button:hover {
+  border:  2px solid #0C8EBF;
+  color:  #0C8EBF;
+  background-color: #d9f4ff;
 }
 
-.course-pagination button:hover {
-  background-color:  #0056b3; /* Darker shade on hover */
-}
-
-.course-pagination button:disabled {
+.course-pagination button:disabled, .cards-pagination button:disabled {
   color: #6a6a6a;
-  background-color: #D9D9D9; /* Gray background for disabled */
-  cursor: not-allowed; /* Not-allowed cursor */
+  background-color: #D9D9D9; 
+  cursor: not-allowed;
+  border: 2px solid #6a6a6a;
 }
 
-.course-pagination .active {
-  background-color: #00AEEF; /* Active page button color */
+.course-pagination .active, .cards-pagination .active {
+  background-color: #0C8EBF; 
   color: #fff;
 }
 
@@ -450,9 +445,15 @@ height: 3em;
   white-space: nowrap;
   color: #6B7280;
 }
+.trainer-name{  
+  font-size: 12px;
+  font-weight: 600px;
+  white-space: wrap;
+  color: #262626;
+}
 .course-badge {
   font-size: 10px;
-  padding: 2px 8px;
+  padding: 2px 5px;
   border-radius: 12px;
 }
 
@@ -1533,47 +1534,57 @@ white-space: nowrap;
 }
 
 .corporate {
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  height: auto;
   width: 100%;
+  background-image: url('../../Assets/corporateBackground.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 40px 0;
+}
+
+.corporate-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20%;
+  width: 80%;
 }
 
 .corporate-content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
+}
+.corporate-banner-text {
+  font-weight: 400;
+  color: #fff;
+  line-height: 48px;
+  letter-spacing: -1.2px;
+  text-align: left;
 }
 
 .corporate-image {
-  width: 80%; /* Make the image take full width */
-  height: auto; /* Adjust height automatically */
-  object-fit: cover; /* Ensure the image covers the container without stretching */
-  margin-left: 10vw;
-  margin-right: 10vw;
+  width: 350px;
+  height: auto;
 }
-
 .know-more {
-  position: absolute;
-  right: 13%; /* Position button towards the right of the image */
-  bottom: 15%; /* Position button slightly above the bottom */
-  padding: 8px 15px;
-  border-radius: 10px;
+  width: 140px;
+  padding: 8px 24px;
+  border-radius: 50px;
   background-color: #ffffff;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.438);
   color: black;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border: none;
-  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid #fff;
 }
 
 .know-more:hover {
-  background-color: #000;
-  border: 2px solid white;
-  box-shadow: 2px 2px 2px white;
-  color: white;
+  color: #00AAEF;
 }
 
 .qa-course-heading img{
@@ -1621,8 +1632,7 @@ margin-left: 10px;
 }
 
 .qa-heading{
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-style: italic;
+  font-family: ''Poppins', sans-serif', sans-serif;
   font-weight: 700;
   background: linear-gradient( #00AEEF,#006489);
   -webkit-background-clip: text;
@@ -2083,17 +2093,6 @@ box-shadow: 5px 5px 5px #d3d3d3;
 background-color:white;
 }
 
-/* .career-support-head{
-background: linear-gradient( #00AEEF,#006489);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding:1vh;
-  font-weight:600;
-  padding-left: 2%;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-style: italic;
-} */
-
 .career-support-content{
 display: flex;
 justify-content: space-around;
@@ -2150,17 +2149,20 @@ position: fixed;
 bottom: 0;
 /* width: 100vw; */
 width: 100%;
-height: 35px;
-background-color: #000000; 
+height: 50px;
+background-color: #191919; 
 color: white;
 display: flex;
 align-items: center;
 justify-content: space-between;
-padding: 0 10px;
+padding: 0 10%;
 z-index: 1000;
 /* padding-right: 25px; */
 }
-
+.query-content, .whatsapp-number-footer, .training-email-footer { 
+  font-size: 15px;
+  font-weight: 400;
+}
 .contact-info {
 display: flex;
 align-items: center;
@@ -2231,7 +2233,7 @@ border:2px solid white;
   margin-left: 5px;
 }
 
-@media (min-width: 760px) and (max-width: 1024px){
+@media (max-width: 1024px){
   .upcoming-batch{
     width: 80%;
     margin-left: 10%;
@@ -2368,7 +2370,7 @@ border:2px solid white;
   }
 }
   
-@media (min-width:1025px) and (max-width: 1366px) {
+@media (max-width: 1366px) {
   .sidebar-card {
     width: 280px;
     height: 320px;
@@ -2464,16 +2466,41 @@ padding-left: 2vh;
   .contact-info{
      gap: 10px;
   }
-  .know-more{
-    font-size: 16px;
-    padding: 5px;
-  }
+  .corporate-image {
+  width: 350px;
+}
  }
   
-@media (min-width: 481px) and (max-width: 768px){
+@media (max-width: 767px){
+  .corporate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  width: 100%;
+  margin: 30px 0;
+}
+  .corporate-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10%;
+  width: 80%;
+}
+
+.corporate-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.corporate-image {
+  width: 100%;
+  height: auto;
+}
   .know-more{
-    font-size: 16px;
-    padding: 5px;
+    font-size: 14px;
   }
   .features-icon{
     width: 30px !important;
@@ -2496,8 +2523,8 @@ padding-left: 2vh;
 }
 
 .query-content { 
-  font-size: 16px;        /* Adjust text size if needed */
-  margin-right: 5px;        /* Optional: adjust margins */
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .contact-button {
@@ -2530,7 +2557,7 @@ padding-left: 2vh;
   font-size:20px;
 }
 }
-@media (min-width:1024px) and (max-width: 1366px){
+@media (max-width: 1366px){
 .qa-automation, .key-highlights, .career-support, .mode-of-training{
   width: 80%;
   margin-left: 10%;
@@ -2658,12 +2685,8 @@ padding-left: 2vh;
   font-size: 1.5rem;
 }
 
-.query-content, .whatsapp-number-footer, .training-email-footer { 
-  font-size: 16px;        /* Adjust text size if needed */
 }
-
-}
-@media (min-width:769px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
   .sidebar-card {
     width: 290px;
     height: 300px;
@@ -2691,7 +2714,7 @@ padding-left: 2vh;
 }  
  
 
-@media (min-width:350px) and (max-width:480px){
+@media (max-width:480px){
   .curriculum {
     width: 90%;
     margin: 5px;
@@ -3202,28 +3225,20 @@ max-height: 3em;
   height: auto;
 }
 
-/* course-pagination for course page */
 .course-pagination-container {
-  position: sticky; /* Keep the course-pagination fixed at the bottom */
-  bottom: 10px; /* Space from the bottom */
-  width: 100%; /* Full width of the container */
-  text-align: center; /* Center align course-pagination */
-  z-index: 10; /* Ensure it's on top of other elements */
+  position: sticky;
+  bottom: 10px;
+  width: 100%; 
+  text-align: center;
+  z-index: 10;
 }
 .course-pagination {
   display: flex;
-  justify-content: center; /* Center the course-pagination buttons */
-  margin: 10px 0; /* Add margin for spacing */
+  justify-content: center;
+  margin: 10px 0;
 }
 
-.course-pagination button {
-  font-size: 16px;
-  width: 30px;
-  height: 30px;
-  margin: 0 10px; /* Space between buttons */
-}
-
-.course-pagination .arrow {
+.course-pagination button, .cards-pagination button, .course-pagination .arrow, .cards-pagination .arrow {
   font-size: 16px;
   width: 30px;
   height: 30px;
@@ -3268,13 +3283,12 @@ max-height: 3em;
 .key-highlights-para {
   font-size: 12px;
 }
-
-.know-more{
-  font-size: 12px;
-  right: 2%; 
-  border-radius: 10px;
-  padding: 1px 5px;
-  border-radius: 5px;
+  .corporate-data {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10%;
+  width: 80%;
 }
 
 .upcoming-header-content {
@@ -3428,15 +3442,6 @@ max-height: 3em;
 
 .free {
   font-size: 20px; 
-}
-
-.corporate-content {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.corporate-image {
-  width: 100%; /* Make the image take full width */
 }
 
 .fee-enroll-now {
@@ -3893,7 +3898,7 @@ border: 1px solid #b3b3b3;
   margin-left: 20px;
   padding: 20px;
 }
-@media (min-width:540px) and (max-width:1024px){
+@media (max-width:1024px){
   #query2{
     width: 375px !important;
     height: 50px;

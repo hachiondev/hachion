@@ -25,7 +25,7 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
     };
     try {
       const response = await axios.put(
-        "https://api.hachion.co/popup-onboarding/update-by-email",
+        "https://api.test.hachion.co/popup-onboarding/update-by-email",
         payload
       );      
        setSuccessMessage("Your details have been updated successfully!");

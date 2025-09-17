@@ -49,7 +49,7 @@ export default function StudentInterests() {
      useEffect(() => {
     const fetchStudentInterests = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/popup-onboarding/getAllOnboarding");
+        const response = await axios.get("https://api.test.hachion.co/popup-onboarding/getAllOnboarding");
         setStudentInterest(response.data);
         setFilteredRows(response.data);
       } catch (err) {
@@ -98,7 +98,7 @@ export default function StudentInterests() {
 const handleDelete = async (id) => {
   if (window.confirm("Are you sure you want to delete this record?")) {
     try {
-      await axios.delete(`https://api.hachion.co/popup-onboarding/${id}`);
+      await axios.delete(`https://api.test.hachion.co/popup-onboarding/${id}`);
       
       const updatedData = studentInterest.filter(item => item.popupOnboardingId !== id);
       setStudentInterest(updatedData);

@@ -9,7 +9,7 @@ const BlogsSidebar = ({ showMobileFilters, onFilterChange }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "https://api.test.hachion.co/course-categories/all"
         );
         setCategories(response.data); // assuming the API returns an array of categories
       } catch (error) {

@@ -159,7 +159,7 @@ export default function CourseSchedule() {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/course-categories/all"
+          "https://api.test.hachion.co/course-categories/all"
         );
         setCategory(response.data);
       } catch (error) {
@@ -170,7 +170,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }
@@ -190,7 +190,7 @@ export default function CourseSchedule() {
   // useEffect(() => {
   //   const fetchTrainer = async () => {
   //     try {
-  //       const response = await axios.get("https://api.hachion.co/trainers");
+  //       const response = await axios.get("https://api.test.hachion.co/trainers");
   //       setTrainer(response.data);
   //     } catch (error) {
   //     }
@@ -201,7 +201,7 @@ export default function CourseSchedule() {
 //   const fetchTrainerNames = async () => {
 //     if (courseData.schedule_category_name && courseData.schedule_course_name) {
 //       try {
-//         const response = await axios.get("https://api.hachion.co/trainernames", {
+//         const response = await axios.get("https://api.test.hachion.co/trainernames", {
 //           params: {
 //             categoryName: courseData.schedule_category_name,
 //             courseName: courseData.schedule_course_name
@@ -223,7 +223,7 @@ export default function CourseSchedule() {
 useEffect(() => {
   const fetchTrainerNames = async (categoryName, courseName) => {
     try {
-      const response = await axios.get("https://api.hachion.co/trainernames", {
+      const response = await axios.get("https://api.test.hachion.co/trainernames", {
         params: { categoryName, courseName }
       });
       setTrainer(response.data); // shared trainer list
@@ -346,7 +346,7 @@ const handleSubmit = async () => {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/schedulecourse/add",
+        "https://api.test.hachion.co/schedulecourse/add",
         formattedCourseData
       );
       return response.status === 201 || response.status === 200;
@@ -434,7 +434,7 @@ const isFormValid = () => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/schedulecourse?userType=admin"
+          "https://api.test.hachion.co/schedulecourse?userType=admin"
         );
         setCourses(response.data);
         setFilteredCourses(response.data);
@@ -464,7 +464,7 @@ const isFormValid = () => {
   const handleDelete = async (course_schedule_id) => {
     try {
       await axios.delete(
-        `https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`
+        `https://api.test.hachion.co/schedulecourse/delete/${course_schedule_id}`
       );
       setCourses((prevCourses) =>
         prevCourses.filter(
@@ -490,7 +490,7 @@ const isFormValid = () => {
   //       schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
   //     };
   //     const response = await axios.put(
-  //       `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+  //       `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
   //       updatedEditedRow
   //     );
   //     setCourses((prevCourses) =>
@@ -519,7 +519,7 @@ const isFormValid = () => {
       schedule_date: formattedDateForBackend,
     };
 const response = await axios.put(
-      `https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
+      `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
       editedRow
     );
 

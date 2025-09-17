@@ -251,7 +251,7 @@
   }
 } */
 
-@media (min-width: 481px) and (max-width: 768px) {
+@media (max-width: 767px) {
     /* .Blogsidebar {
     width: 100%;
     position: static;
@@ -272,7 +272,7 @@
     margin-bottom: 10px; /* ✅ Ensures spacing */
   }
 }
-@media (min-width: 350px) and (max-width: 480px) {
+@media (max-width: 480px) {
   .blog-container {
     flex-direction: column;
     width: 90%;

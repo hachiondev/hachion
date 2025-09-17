@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:  'poppins';
+    font-family:  'Poppins', sans-serif;
 }
 
 .login {
@@ -10,8 +10,8 @@
   justify-content: flex-end;
   align-items: center;
   padding: 40px;
-  min-height: 100vh;
-  width: auto;
+  height: 750px;
+  width: 100%;
   background-image: url('../../Assets/loginbackground.webp');
   background-size: cover;
   background-position: center;
@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
+    height: auto;
     padding: 40px;
     margin: 10px;
     border-radius: 4px;
@@ -257,6 +257,7 @@ justify-content: flex-end;
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        height: 900px;
         
       }
       .login-logo{
@@ -325,13 +326,13 @@ justify-content: flex-end;
         gap: 10vw;
       }
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .login {
       display: flex;
       justify-content: center;
       align-items: center;
       background: none;
-      min-height: auto;
+      height: auto;
     }
 
     .login-right {
@@ -723,7 +724,7 @@ cursor: pointer;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .login-banner {
     display: block;
     width: 100%;
@@ -946,7 +947,7 @@ hr {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
 
    
     .register-btn {
@@ -989,7 +990,7 @@ hr {
 
 }
 
-@media (min-width: 350px) and (max-width: 480px) {
+@media (max-width: 480px) {
     .steps {
         flex-direction: row;
         align-items: center;

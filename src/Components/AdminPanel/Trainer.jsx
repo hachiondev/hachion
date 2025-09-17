@@ -124,7 +124,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   }
 
   try {
-    const response = await axios.post("https://api.hachion.co/trainer/add", trainerData);
+    const response = await axios.post("https://api.test.hachion.co/trainer/add", trainerData);
 
    if (response.status >= 200 && response.status < 300) {
   setSuccessMessage("✅ Trainer added successfully.");
@@ -200,7 +200,7 @@ const handleDeleteConfirmation = (trainerId) => {
 useEffect(() => {
   const fetchCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/course-categories/all");
+      const response = await axios.get("https://api.test.hachion.co/course-categories/all");
       setCourse(response.data); 
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -211,7 +211,7 @@ useEffect(() => {
 
  useEffect(() => {
     if (editedRow.category_name) {
-      axios.get(`https://api.hachion.co/courses/coursenames-by-category`, {
+      axios.get(`https://api.test.hachion.co/courses/coursenames-by-category`, {
         params: { categoryName: editedRow.category_name }
       })
       .then(response => setCourseNames(response.data))
@@ -226,7 +226,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourseCategory = async () => {
     try {
-      const response = await axios.get("https://api.hachion.co/courses/all");
+      const response = await axios.get("https://api.test.hachion.co/courses/all");
       setCourseCategory(response.data); 
     } catch (error) {
       console.error("Error fetching categories:", error.message);
@@ -246,7 +246,7 @@ useEffect(() => {
 }, [trainerData.category_name, courseCategory]);
 const handleDelete = async (trainer_id) => {
   try {
-    const response = await axios.delete(`https://api.hachion.co/trainer/delete/${trainer_id}`);
+    const response = await axios.delete(`https://api.test.hachion.co/trainer/delete/${trainer_id}`);
 
     if (response.status === 200) {
       setSuccessMessage("✅ Trainer deleted successfully.");
@@ -278,7 +278,7 @@ const handleSave = async () => {
  
   try {
     const response = await axios.put(
-      `https://api.hachion.co/trainer/update/${selectedRow.trainer_id}`,
+      `https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`,
       editedRow
     );
 
@@ -329,7 +329,7 @@ image: file,
 
   const fetchTrainers = async () => {
     try {
-      const response = await axios.get('https://api.hachion.co/trainers');
+      const response = await axios.get('https://api.test.hachion.co/trainers');
       setTrainers(response.data);
       setFilteredTrainers(response.data);
     } catch (error) {
@@ -338,7 +338,7 @@ image: file,
   };
 
    useEffect(() => {
-    axios.get("https://api.hachion.co/course-categories/all")
+    axios.get("https://api.test.hachion.co/course-categories/all")
       .then(response => {
         setCategories(response.data); 
       })

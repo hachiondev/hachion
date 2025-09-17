@@ -102,9 +102,9 @@
 //     const fetchCoursesCategoriesAndBlogs = async () => {
 //       try {
 //         const [coursesRes, categoryRes, blogsRes] = await Promise.all([
-//            axios.get("https://api.hachion.co/courses/names-and-categories"),
-//           axios.get("https://api.hachion.co/course-categories/all"),
-//           axios.get("https://api.hachion.co/blog"),
+//            axios.get("https://api.test.hachion.co/courses/names-and-categories"),
+//           axios.get("https://api.test.hachion.co/course-categories/all"),
+//           axios.get("https://api.test.hachion.co/blog"),
 //         ]);
 
 //         const allOption = { _id: "all", name: "All" };
@@ -436,8 +436,8 @@
 //               className="result-image"
 //               src={
 //                 item.type === 'course'
-//                   ? `https://api.hachion.co/${item.courseImage}`
-//                   : `https://api.hachion.co/blogs/${item.blog_image}`
+//                   ? `https://api.test.hachion.co/${item.courseImage}`
+//                   : `https://api.test.hachion.co/blogs/${item.blog_image}`
 //               }
 //               alt={item.type}
 //             />
@@ -632,8 +632,8 @@ const NavbarTop = () => {
     const fetchData = async () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
-          axios.get("https://api.hachion.co/courses/names-and-categories"),
-          // axios.get("https://api.hachion.co/blog"),
+          axios.get("https://api.test.hachion.co/courses/names-and-categories"),
+          // axios.get("https://api.test.hachion.co/blog"),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -712,25 +712,6 @@ const NavbarTop = () => {
 
           {/* ==== Desktop Search ==== */}
           <div className="collapse navbar-collapse d-none d-lg-flex" id="navbarScroll">
-          {/* <ul className="navbar-nav my-lg-0 navbar-nav-scroll">
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style={{color: '#000000', fontWeight: '500'}}
-              >
-                Explore Courses
-              </a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Action</a></li>
-                <li><a className="dropdown-item" href="#">Another action</a></li>
-                <li><a className="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-          </ul> */}
           <div className="navbar-nav my-lg-0 navbar-nav-scroll" ref={dropdownRef}>
           <div className="nav-item dropdown">
         <a 
@@ -821,6 +802,11 @@ const NavbarTop = () => {
                     onClick={() => handleCourseClick(item)}
                     style={{ cursor: "pointer" }}
                   >
+                    <img
+                    className="result-image"
+                    src={`https://api.test.hachion.co/${item.courseImage}`}
+                    alt={item.type}
+                  />
                     {item.courseName || item.title}
                   </div>
                 ))}
@@ -999,6 +985,11 @@ const NavbarTop = () => {
                   onClick={() => handleCourseClick(item)}
                   style={{ cursor: "pointer" }}
                 >
+                  <img
+                    className="result-image"
+                    src={`https://api.test.hachion.co/${item.courseImage}`}
+                    alt={item.type}
+                  />
                   {item.courseName || item.title}
                 </div>
               ))}

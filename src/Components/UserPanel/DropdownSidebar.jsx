@@ -9,7 +9,7 @@ const DropdownSidebar = ({ onSelectCategory }) => {
   const [openSubmenuIndex, setOpenSubmenuIndex] = useState(null); // Track open submenu
   const [menuItems, setMenuItems] = useState([]); // Dynamic menu items
 
-  const API_URL = 'https://api.hachion.co/course-categories/all';
+  const API_URL = 'https://api.test.hachion.co/course-categories/all';
 
   // Fetch categories from the API
 useEffect(() => {

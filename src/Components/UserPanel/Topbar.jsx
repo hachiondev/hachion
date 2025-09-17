@@ -49,13 +49,13 @@
 //     setIsLoggedIn(true);
 //     const parsedEmail = parsedUser.email;
 
-//     axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+//     axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
 //       params: { email: parsedEmail }
 //     })
 //     .then((response) => {
 //       const data = response.data;
 //       if (data.profileImage) {
-//         const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
+//         const fullImageUrl = `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`;
         
 //         setProfileImage(fullImageUrl);
 //       } 

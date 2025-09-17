@@ -16,7 +16,7 @@ const AdminLogin = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/adminlogin', {
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/adminlogin', {
         email,
         password,
       });

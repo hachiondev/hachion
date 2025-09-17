@@ -17,7 +17,7 @@ const RecentEntries = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/blog");
+        const response = await axios.get("https://api.test.hachion.co/blog");
         setBlogs(response.data.reverse()); 
       } catch (error) {
         console.error("Error fetching blog data:", error);
@@ -82,7 +82,7 @@ const RecentEntries = () => {
                   {group.map((blog) => (
                     <RecentEntriesCard
                       key={blog.id}
-                      imageSrc={`https://api.hachion.co/blogs/${blog.blog_image}`}
+                      imageSrc={`https://api.test.hachion.co/blogs/${blog.blog_image}`}
                       content={blog.title}
                       // views={blog.views || "100"}
                       // date={blog.date}

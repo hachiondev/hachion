@@ -86,7 +86,7 @@ function AppRoutes() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/registerverification' element={<RegisterNext/>}/>
-      {/* <Route path='/registerhere' element={<RegisterHere/>}/> */}
+      <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/confirm-otp' element={<ConfirmOtp />}/>
       <Route path='/resetpassword' element={<ResetPassword />}/>
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>

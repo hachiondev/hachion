@@ -111,7 +111,7 @@
   cursor: not-allowed;
 }
 
-@media (min-width: 350px) and (max-width: 480px) {
+@media (max-width: 480px) {
   .unsub-us-div {
     width: 340px;
     height: 180px;
@@ -313,7 +313,7 @@
   }
 }
 
-@media (min-width: 481px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
   .unsub-us {
     margin-left: 0px !important;
   }
@@ -322,7 +322,7 @@
     padding: 10px;
   }
 }
-@media (min-width: 1025px) and (max-width: 1366px) {
+@media (max-width: 1366px) {
   .unsub-us {
     margin-left: 10px !important;
   }
@@ -347,8 +347,6 @@
   align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
-  width: 100%; /* Makes width relative to screen size */
-  max-width: 550px; /* Prevents it from growing too large */
 }
 
 .input-group-checkbox {

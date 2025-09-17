@@ -90,7 +90,7 @@ const userEmail = userData.email || '';
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+      const response = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
       const data = await response.json();
 
       if (data && data.mobile) {
@@ -127,7 +127,7 @@ setSuccessMessage('');
     };
   
     try {
-      const response = await fetch('https://api.hachion.co/requestbatch/add', {
+      const response = await fetch('https://api.test.hachion.co/requestbatch/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

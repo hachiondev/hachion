@@ -13,7 +13,7 @@
 
 //     const timer = setTimeout(() => {
 //       axios
-//         .get("https://api.hachion.co/banner")
+//         .get("https://api.test.hachion.co/banner")
 //         .then((response) => {
 //           if (response.data.length > 0) {
 //             const combinedBanners = [staticBanner, ...response.data];
@@ -77,7 +77,7 @@
 //               const imageUrl =
 //                 index === 0 || apiError
 //                   ? banner.home_banner_image
-//                   : `https://api.hachion.co/${banner.home_banner_image}`;
+//                   : `https://api.test.hachion.co/${banner.home_banner_image}`;
 //               return (
 //                 <div
 //                   key={index}

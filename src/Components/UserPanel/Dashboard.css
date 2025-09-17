@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:  'Open Sans', sans-serif;
+    font-family:  'Poppins', sans-serif;
 }
 .user-dashboard-heading{
     background: linear-gradient(90deg, #00AEEF 0%, #FFFFFF 100%);
@@ -635,7 +635,7 @@ align-items: center;
   height: 50px;
 }
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
 /* .sidebar-user {
   width: 250px;
 } */
@@ -730,7 +730,7 @@ table {
 }
 
 /* For very small screens (phones) */
-@media (min-width: 350px) and (max-width: 480px) {
+@media (max-width: 480px) {
 
 .user-dashboard-heading h3{
 font-size: 16px;

@@ -15,7 +15,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/trendingcourse');
+        const response = await fetch('https://api.test.hachion.co/trendingcourse');
         const data = await response.json();
         // Filter courses with status true
         const activeCourses = data.filter(course => course.status === true);
@@ -113,13 +113,13 @@ const Footer = () => {
       <hr  size='2' />
       <div className='footer-bottom'>
       <div className='footer-p'>
-      <p className='footer-copyright'>© Hachion 2025. All Rights Reserved.</p>
+      {/* <p className='footer-copyright'>© Hachion 2025. All Rights Reserved.</p> */}
       <div className='term'>
       <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
       <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>
       <p className="footer-term" onClick={handleUnsubscribe}>Unsubscribe</p>
       </div>
-      <div className='footer-link'>
+      {/* <div className='footer-link'>
       <a href="https://www.facebook.com/hachion.co" aria-label="Facebook"
     target="_blank" 
     rel="noopener noreferrer"><img src={facebook} alt='facebook-icon' loading="lazy"/></a>
@@ -138,7 +138,7 @@ const Footer = () => {
       <a href="https://www.youtube.com/@hachion" aria-label="YouTube"
     target="_blank" 
     rel="noopener noreferrer"><img src={youtube} alt='youtube' loading="lazy"/></a>
-      </div>
+      </div> */}
       </div>
       </div>
     </div>

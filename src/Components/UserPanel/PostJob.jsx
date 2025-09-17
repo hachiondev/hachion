@@ -154,7 +154,7 @@ const handleSubmit = async (e) => {
     console.log(`${pair[0]}:`, pair[1]);
   }
   try {
-    const response = await axios.post("https://api.hachion.co/hire-from-us", finalFormData, {
+    const response = await axios.post("https://api.test.hachion.co/hire-from-us", finalFormData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

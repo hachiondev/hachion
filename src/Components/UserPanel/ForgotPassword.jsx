@@ -54,7 +54,7 @@ const ForgotPassword = () => {
 
   try {
     const response = await fetch(
-      `https://api.hachion.co/api/v1/user/forgotpassword?email=${email}`,
+      `https://api.test.hachion.co/api/v1/user/forgotpassword?email=${email}`,
       {
         method: "PUT",
       }

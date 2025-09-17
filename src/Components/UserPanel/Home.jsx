@@ -3,7 +3,7 @@ import Banner from './Banner';
 import Association from './Association';
 import TrainingEvents from './TrainingEvents';
 import Trending from './Trending';
-import SummerEvents from './SummerEvents';
+import TeensEvents from './TeensEvents';
 import Career from './Career';
 import Learners from './Learners';
 import Footer from './Footer';
@@ -85,7 +85,7 @@ export const Home = () => {
 <NavbarTop/>
 <Banner/>
 <Trending/>
-<SummerEvents/>
+<TeensEvents/>
 <div id="upcoming-events">
 <TrainingEvents/>
 </div>

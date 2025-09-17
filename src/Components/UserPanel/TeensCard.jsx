@@ -3,10 +3,10 @@
 // import { BiTimeFive } from "react-icons/bi";
 // import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 // import { useNavigate } from 'react-router-dom';
-// import cardbackground from '../../Assets/course2.webp';
+// import kidbackground from '../../Assets/kidbanner2.webp';
 // import './Home.css';
 
-// const CourseCard = ({ heading, month, time, image, Rating, RatingByPeople, aboutCourse }) => {
+// const TeensCard = ({ heading, month, time, image, Rating, RatingByPeople, aboutCourse }) => {
 //   const navigate = useNavigate(); 
 //   const [isMobile, setIsMobile] = useState(false);
 
@@ -50,12 +50,12 @@
 //       onClick={isMobile ? handleNavigation : undefined} // Click only on mobile
 //     >
 //       <div className="card-header-div">
-//         <img src={cardbackground} alt="Card" className="card-image" loading="lazy"/>
+//         <img src={kidbackground} alt="Kid Card" className="card-image" loading="lazy"/>
 //         <img src={image} alt="card-img" className="card-icon" loading="lazy"/>
 //       </div>
 
 //       <div className="card-course-details">
-//         <h3 className="course-name">{heading}</h3>
+//         <h4 className="course-name">{heading}</h4>
 //         <div>
 //           <p className="course-month">
 //             <RxCalendar /> {month} Days
@@ -67,7 +67,7 @@
 //           Rating: {renderStars(Rating)} ({RatingByPeople})
 //         </p>
 
-//         <div className="new-batch">
+//          <div className="new-batch">
 //         <p className="new-batch-para">
 //           {aboutCourse
 //             ? aboutCourse
@@ -91,7 +91,7 @@
 //   );
 // };
 
-// export default CourseCard;
+// export default TeensCard;
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -99,7 +99,7 @@ import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import './Home.css';
 
-const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels" }) => {
+const TeensCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels", aboutCourse }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -107,7 +107,7 @@ const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, l
   // Detect if the screen is mobile size
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+      setIsMobile(window.innerWidth <= 768); 
     };
 
     checkScreenSize();
@@ -185,8 +185,6 @@ const handleShare = async (e) => {
     </div>
       <div className="card-header-div">
         <img src={image} alt="Course-img" className="card-image" loading="lazy"/>
-        {/* <img src={image} alt="card-img" className="card-icon" loading="lazy"/> */}
-      
       </div>
 
       <div className="card-course-details">
@@ -224,4 +222,4 @@ const handleShare = async (e) => {
   );
 };
 
-export default CourseCard;
+export default TeensCard;

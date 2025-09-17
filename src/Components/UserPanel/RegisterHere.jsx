@@ -1,257 +1,510 @@
-  import React, { useEffect, useRef, useState } from 'react';
-  import "./Login.css";
-  import logo from "../../Assets/logo.png";
-  import LoginSide from "./LoginSide";
-  import { Link, useNavigate } from "react-router-dom";
-  import { Menu, MenuItem, Button } from '@mui/material';
-  import Flag from 'react-world-flags';
-  import {AiFillCaretDown } from 'react-icons/ai'
-import { countries, getDefaultCountry } from '../../countryUtils';
+//   import React, { useEffect, useRef, useState } from 'react';
+//   import "./Login.css";
+//   import logo from "../../Assets/logo.png";
+//   import LoginSide from "./LoginSide";
+//   import { Link, useNavigate } from "react-router-dom";
+//   import { Menu, MenuItem, Button } from '@mui/material';
+//   import Flag from 'react-world-flags';
+//   import {AiFillCaretDown } from 'react-icons/ai'
+// import { countries, getDefaultCountry } from '../../countryUtils';
 
 
-  const RegisterHere = () => {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile,setMobile]=useState("");
-    const [isLoading, setIsLoading] = useState(false); 
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState(null);
-    const mobileInputRef = useRef(null);
-    const [otpMessage, setOtpMessage] = useState("");
-    const [formError, setFormError] = useState("");
+//   const RegisterHere = () => {
+//     const [firstName, setFirstName] = useState("");
+//     const [lastName, setLastName] = useState("");
+//     const [email, setEmail] = useState("");
+//     const [mobile,setMobile]=useState("");
+//     const [isLoading, setIsLoading] = useState(false); 
+//     const navigate = useNavigate();
+//     const [anchorEl, setAnchorEl] = useState(null);
+//     const mobileInputRef = useRef(null);
+//     const [otpMessage, setOtpMessage] = useState("");
+//     const [formError, setFormError] = useState("");
     
-const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
+// const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
-useEffect(() => {
-  fetch("https://ipwho.is/")
-    .then((res) => res.json())
-    .then((data) => {
-      const userCountryCode = data?.country_code;
-      const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-      if (matchedCountry) {
-        setSelectedCountry(matchedCountry);
-      }
-    })
-    .catch(() => {});
-}, []);
-    const handleCountrySelect = (country) => {
-      setSelectedCountry(country);
-      closeMenu();
-      mobileInputRef.current?.focus();
-    };
+// useEffect(() => {
+//   fetch("https://ipwho.is/")
+//     .then((res) => res.json())
+//     .then((data) => {
+//       const userCountryCode = data?.country_code;
+//       const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+//       if (matchedCountry) {
+//         setSelectedCountry(matchedCountry);
+//       }
+//     })
+//     .catch(() => {});
+// }, []);
+//     const handleCountrySelect = (country) => {
+//       setSelectedCountry(country);
+//       closeMenu();
+//       mobileInputRef.current?.focus();
+//     };
 
-    const openMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
+//     const openMenu = (event) => {
+//       setAnchorEl(event.currentTarget);
+//     };
 
-    const closeMenu = () => {
-      setAnchorEl(null);
-    };
+//     const closeMenu = () => {
+//       setAnchorEl(null);
+//     };
 
-    const isValidEmail = (email) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    };
+//     const isValidEmail = (email) => {
+//       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//       return emailRegex.test(email);
+//     };
 
-const handleClick = async () => {
-    setFormError("");
-    setOtpMessage("");
+// const handleClick = async () => {
+//     setFormError("");
+//     setOtpMessage("");
 
-    if (!firstName || !lastName || !email || !mobile) {
-      setFormError("Please fill in all required fields.");
-      return;
+//     if (!firstName || !lastName || !email || !mobile) {
+//       setFormError("Please fill in all required fields.");
+//       return;
+//     }
+
+//     if (!isValidEmail(email)) {
+//       setFormError("Please enter a valid email address.");
+//       return;
+//     }
+
+//     if (!/^\d{6,15}$/.test(mobile)) {
+//       setFormError("Please enter a valid mobile number (6–15 digits).");
+//       return;
+//     }
+
+//     setIsLoading(true);
+
+// const sanitizedMobile = mobile.trim().replace(/^(\+)?/, '');
+// const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`; 
+
+
+//     const data = { firstName, lastName, email, mobile:fullMobileNumber, country: selectedCountry.name };
+
+//     try {
+//       const response = await fetch(
+//         `https://api.test.hachion.co/api/v1/user/send-otp?email=${email}`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       const contentType = response.headers.get("Content-Type");
+//       let responseData;
+
+//       if (contentType && contentType.includes("application/json")) {
+//         responseData = await response.json();
+//       } else {
+//         const text = await response.text();
+//         responseData = { message: text };
+//       }
+
+//       console.log("OTP responseData:", responseData);
+
+//       if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
+//         setFormError("");
+//         setOtpMessage("OTP sent to your email.");
+//         localStorage.setItem("registeruserData", JSON.stringify(data));
+//         setTimeout(() => navigate('/registerverification'), 3000);
+//       } else {
+//         const errorMsg = responseData?.message || "Failed to send OTP. Please try again.";
+//         setFormError(errorMsg);
+//       }
+//     } catch (error) {
+//       const backendMessage =
+//         error.response?.data?.message || error.response?.data || error.message;
+//       setFormError(`An error occurred: ${backendMessage}`);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//     return (
+//       <div className="login">
+//         <div className="login-left">
+//           <div className="login-top">
+//             <img src={logo} alt="logo" className="login-logo" />
+//             <h3 className="register-learning">Register to start learning</h3>
+
+//             <div className='steps'>
+//       <h4 className='steps-head'>Steps: </h4>
+//       <div className='step-one'>
+//         <h6 className='steps-head-one'>1</h6>
+//   </div>
+//   <hr width='55%' size='1' color='#00AAEF'/>
+//   <div className='step-two'>
+//     <h6 className='steps-head-two'>2</h6>
+//   </div>
+//   </div>
+
+//             <div className="login-mid-name">
+//               <label className="login-label">
+//                 First Name<span className="star">*</span>
+//               </label>
+//               <div className="input-group mb-2">
+//                 <input
+//                   type="text"
+//                   className="form-control"
+//                   id="floatingName"
+//                   placeholder="Enter your first name"
+//                   value={firstName}
+//                   onChange={(e) => setFirstName(e.target.value)}
+//                 />
+//               </div>
+
+//               <label className="login-label">
+//                 Last Name<span className="star">*</span>
+//               </label>
+//               <div className="input-group mb-2">
+//                 <input
+//                   type="text"
+//                   className="form-control"
+//                   id="floatingName"
+//                   placeholder="Enter your last name"
+//                   value={lastName}
+//                   onChange={(e) => setLastName(e.target.value)}
+//                 />
+//               </div>
+
+//               <label className="login-label">
+//                 Email ID<span className="star">*</span>
+//               </label>
+//               <div className="input-group mb-2">
+//                 <input
+//                   type="email"
+//                   className="form-control"
+//                   id="floatingEmail"
+//                   placeholder="abc@gmail.com"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                 />
+//               </div>
+//               <label className="login-label">
+//                     Mobile Number<span className="star">*</span>
+//                   </label>
+//                   <div className="input-wrapper" style={{ position: 'relative' }}>
+                     
+//                       <button
+//   variant="text"
+//   onClick={openMenu}
+//   className='mobile-button'
+// >
+//   <Flag code={selectedCountry.flag} className="country-flag me-1" />
+//   <span style={{ marginRight: '5px', fontWeight: 'bold' }}>
+//     {selectedCountry.flag} ({selectedCountry.code})
+//   </span>
+//   <AiFillCaretDown />
+// </button>
+
+//                       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
+//                         {countries.map((country) => (
+//                           <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
+//                             <Flag code={country.flag} className="country-flag me-2" />
+//                             {country.name} ({country.code})
+//                           </MenuItem>
+//                         ))}
+//                       </Menu>
+//                       <input
+//                         type="tel"
+//                         className="form-control"
+//                         ref={mobileInputRef}
+//                         name="mobile"
+//                         aria-label="Text input with segmented dropdown button"
+//                         id="floatingName"
+//                         value={mobile}
+//                         onChange={(e)=>setMobile(e.target.value)}
+//                         placeholder="Enter your mobile number"
+//                         style={{
+//                         paddingLeft: '120px', border: '1px solid #d3d3d3'
+//                       }}
+//                       />
+//                     </div>
+                  
+//               <button
+//                 type="button"
+//                 className="register-btn"
+//                 onClick={handleClick}
+//                 disabled={isLoading}
+//               >
+//                 {isLoading ? "Sending OTP..." : "Verify"}
+//               </button>
+//               {formError ? (
+//                   <div style={{ color: "red", marginTop: "5px", marginBottom: "5px" }}>
+//                     {formError}
+//                   </div>
+//                 ) : otpMessage ? (
+//                   <div style={{ color: "green", marginTop: "5px", marginBottom: "5px"}}>
+//                     {otpMessage}
+//                   </div>
+//                 ) : null}
+//             </div>
+//             <p className="login-with-hachion">
+//               Do you have an account with Hachion?{" "}
+//               <Link to="/login" className="link-to">
+//                 Click here to Login
+//               </Link>
+//             </p>
+//           </div>
+//         </div>
+//         <LoginSide />
+//       </div>
+//     );
+//   };
+
+//   export default RegisterHere;
+
+import React, { useEffect, useRef, useState } from "react";
+import "./Login.css";
+import { useNavigate, Link } from "react-router-dom";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { TbRefresh } from "react-icons/tb";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import google from "../../Assets/google-new.png";
+import LoginBanner from "../../Assets/loginbackground.png";
+import Topbar from "./Topbar";
+import NavbarTop from "./NavbarTop";
+import Footer from "./Footer";
+import StickyBar from "./StickyBar";
+
+const RegisterHere = () => {
+  const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const [userInput, setUserInput] = useState("");
+  const [captchaText, setCaptchaText] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const canvasRef = useRef(null);
+  const navigate = useNavigate();
+  const [formError, setFormError] = useState("");
+    const [registerMessage, setRegisterMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
+
+  // Initialize captcha on mount
+  useEffect(() => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      initializeCaptcha(ctx);
     }
+  }, []);
 
-    if (!isValidEmail(email)) {
-      setFormError("Please enter a valid email address.");
-      return;
+  const generateCaptchaText = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let text = "";
+    for (let i = 0; i < 6; i++) {
+      text += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return text;
+  };
 
-    if (!/^\d{6,15}$/.test(mobile)) {
-      setFormError("Please enter a valid mobile number (6–15 digits).");
-      return;
+  const drawCaptchaOnCanvas = (ctx, captcha) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "#333";
+    ctx.fillText(captcha, 10, 25);
+  };
+
+  const initializeCaptcha = (ctx) => {
+    const captcha = generateCaptchaText();
+    setCaptchaText(captcha);
+    drawCaptchaOnCanvas(ctx, captcha);
+    setUserInput("");
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!password.trim()) newErrors.password = "Password is required.";
+    if (!userInput.trim()) {
+      newErrors.captcha = "Captcha is required.";
+    } else if (userInput !== captchaText) {
+      newErrors.captcha = "Captcha does not match.";
+      initializeCaptcha(canvasRef.current.getContext("2d"));
     }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (!validateForm()) return;
 
     setIsLoading(true);
 
-const sanitizedMobile = mobile.trim().replace(/^(\+)?/, '');
-const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`; 
+    // Merge with step1 details saved in localStorage
+    const step1 = JSON.parse(localStorage.getItem("registeruserData"));
+    const finalData = { ...step1, password };
+    localStorage.setItem("registerStep2", JSON.stringify(finalData));
 
+    console.log("✅ Step 2 Data:", finalData);
 
-    const data = { firstName, lastName, email, mobile:fullMobileNumber, country: selectedCountry.name };
-
-    try {
-      const response = await fetch(
-        `https://api.hachion.co/api/v1/user/send-otp?email=${email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const contentType = response.headers.get("Content-Type");
-      let responseData;
-
-      if (contentType && contentType.includes("application/json")) {
-        responseData = await response.json();
-      } else {
-        const text = await response.text();
-        responseData = { message: text };
-      }
-
-      console.log("OTP responseData:", responseData);
-
-      if (response.ok && (responseData?.otp || responseData?.message?.includes("OTP"))) {
-        setFormError("");
-        setOtpMessage("OTP sent to your email.");
-        localStorage.setItem("registeruserData", JSON.stringify(data));
-        setTimeout(() => navigate('/registerverification'), 3000);
-      } else {
-        const errorMsg = responseData?.message || "Failed to send OTP. Please try again.";
-        setFormError(errorMsg);
-      }
-    } catch (error) {
-      const backendMessage =
-        error.response?.data?.message || error.response?.data || error.message;
-      setFormError(`An error occurred: ${backendMessage}`);
-    } finally {
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      navigate("/registerverification");
+    }, 1000);
   };
 
-    return (
+  const loginWithGoogle = () => {
+    window.location.href = `https://api.test.hachion.co/oauth2/authorization/google`;
+  };
+
+  return (
+    <>
+      {/* Top Navigation */}
+      <Topbar />
+      <NavbarTop />
+
+      {/* Breadcrumb */}
+      <div className="blogs-header">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Set Password & Verify
+            </li>
+          </ol>
+        </nav>
+      </div>
+
+      {/* Banner */}
+      <img src={LoginBanner} alt="Login Banner" className="login-banner" />
+
+      {/* Register Content */}
       <div className="login">
         <div className="login-left">
           <div className="login-top">
-            <img src={logo} alt="logo" className="login-logo" />
-            <h3 className="register-learning">Register to start learning</h3>
-
-            <div className='steps'>
-      <h4 className='steps-head'>Steps: </h4>
-      <div className='step-one'>
-        <h6 className='steps-head-one'>1</h6>
-  </div>
-  <hr width='55%' size='1' color='#00AAEF'/>
-  <div className='step-two'>
-    <h6 className='steps-head-two'>2</h6>
-  </div>
-  </div>
-
-            <div className="login-mid-name">
+            <h4 className="login-continue">Set Password & Verify</h4>
+            <div className="login-mid">
+              {/* Password */}
               <label className="login-label">
-                First Name<span className="star">*</span>
+                Password<span className="star">*</span>
               </label>
-              <div className="input-group mb-2">
+              <div className="register-field">
+                <div className="password-field">
+                  <input
+                    type={passwordType}
+                    className="form-control"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() =>
+                      setPasswordType(
+                        passwordType === "password" ? "text" : "password"
+                      )
+                    }
+                  >
+                    {passwordType === "password" ? (
+                      <AiFillEye />
+                    ) : (
+                      <AiFillEyeInvisible />
+                    )}
+                  </span>
+                </div>
+                {errors.password && (
+                  <p className="error-field-message">{errors.password}</p>
+                )}
+              </div>
+
+              {/* Captcha */}
+              <label className="login-label">
+                Enter Captcha<span className="star">*</span>
+              </label>
+              <div className="captcha-wrapper">
+                <canvas ref={canvasRef} height="40" width="120"></canvas>
+                <span
+                  className="refresh-captcha-btn"
+                  onClick={() =>
+                    initializeCaptcha(canvasRef.current.getContext("2d"))
+                  }
+                >
+                  <TbRefresh />
+                </span>
+              </div>
+              <div className="register-field">
+                <div className="password-field">
                 <input
                   type="text"
                   className="form-control"
-                  id="floatingName"
-                  placeholder="Enter your first name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Enter captcha here"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
                 />
+                </div>
+                {errors.captcha && (
+                  <p className="error-field-message">{errors.captcha}</p>
+                )}
               </div>
 
-              <label className="login-label">
-                Last Name<span className="star">*</span>
-              </label>
-              <div className="input-group mb-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="floatingName"
-                  placeholder="Enter your last name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
+              {/* Remember Me */}
+              <div className="d-flex align-items-center mb-3" style={{margin: '0.2vh 2vh'}}>
+              <div className="form-check form-switch align-items-center remember-me">
+                <input className="form-check-input" type="checkbox" id="rememberMeSwitch" />
+                <label className="form-check-label" htmlFor="rememberMeSwitch" style={{ fontSize: "12px" }}>
+                  Remember me
+                </label>
+              </div>
               </div>
 
-              <label className="login-label">
-                Email ID<span className="star">*</span>
-              </label>
-              <div className="input-group mb-2">
-                <input
-                  type="email"
-                  className="form-control"
-                  id="floatingEmail"
-                  placeholder="abc@gmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <label className="login-label">
-                    Mobile Number<span className="star">*</span>
-                  </label>
-                  <div className="input-wrapper" style={{ position: 'relative' }}>
-                     
-                      <button
-  variant="text"
-  onClick={openMenu}
-  className='mobile-button'
->
-  <Flag code={selectedCountry.flag} className="country-flag me-1" />
-  <span style={{ marginRight: '5px', fontWeight: 'bold' }}>
-    {selectedCountry.flag} ({selectedCountry.code})
-  </span>
-  <AiFillCaretDown />
-</button>
+              {formError && <p className="error-field-message">{formError}</p>}
+              {registerMessage && (
+                <p className={messageType === "error" ? "error-field-message" : "success-message"}>
+                  {registerMessage}
+                </p>
+              )}
 
-                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeMenu}>
-                        {countries.map((country) => (
-                          <MenuItem key={country.code} onClick={() => handleCountrySelect(country)}>
-                            <Flag code={country.flag} className="country-flag me-2" />
-                            {country.name} ({country.code})
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        ref={mobileInputRef}
-                        name="mobile"
-                        aria-label="Text input with segmented dropdown button"
-                        id="floatingName"
-                        value={mobile}
-                        onChange={(e)=>setMobile(e.target.value)}
-                        placeholder="Enter your mobile number"
-                        style={{
-                        paddingLeft: '120px', border: '1px solid #d3d3d3'
-                      }}
-                      />
-                    </div>
-                  
-              <button
-                type="button"
-                className="register-btn"
-                onClick={handleClick}
-                disabled={isLoading}
-              >
-                {isLoading ? "Sending OTP..." : "Verify"}
-              </button>
-              {formError ? (
-                  <div style={{ color: "red", marginTop: "5px", marginBottom: "5px" }}>
-                    {formError}
-                  </div>
-                ) : otpMessage ? (
-                  <div style={{ color: "green", marginTop: "5px", marginBottom: "5px"}}>
-                    {otpMessage}
-                  </div>
-                ) : null}
+              {/* Next Button */}
+              <div className="d-grid gap-2">
+                <button
+                  type="button"
+                  className="register-btn"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Processing..." : "Next"}
+                </button>
+              </div>
+
+              <hr style={{ width: "90%", margin: "20px" }} />
+
+              {/* Google Signup */}
+              <div className="d-grid gap-2">
+                <button
+                  className="other-btn"
+                  type="button"
+                  onClick={loginWithGoogle}
+                >
+                  <img
+                    src={google}
+                    alt="login-with-google"
+                    className="icon-btn-img"
+                  />
+                  or Sign Up with Google
+                </button>
+              </div>
             </div>
-            <p className="login-with-hachion">
-              Do you have an account with Hachion?{" "}
-              <Link to="/login" className="link-to">
-                Click here to Login
-              </Link>
-            </p>
           </div>
-        </div>
-        <LoginSide />
-      </div>
-    );
-  };
 
-  export default RegisterHere;
+          {/* Already have an account */}
+          <p className="go-to-register">
+            Already have an account?{" "}
+            <Link to="/login" className="link-to-register">
+              Login
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Footer & Sticky Bar */}
+      <Footer />
+      <StickyBar />
+    </>
+  );
+};
+
+export default RegisterHere;
+

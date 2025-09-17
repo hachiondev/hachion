@@ -21,14 +21,14 @@ const TrainerProfile = () => {
   const fetchCourseAndTrainers = async () => {
     try {
       setLoading(true);
-      const courseRes = await axios.get('https://api.hachion.co/courses/all');
+      const courseRes = await axios.get('https://api.test.hachion.co/courses/all');
       const courseData = courseRes.data.find(
         (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
       );
       setCourse(courseData);
 
       if (courseData) {
-        const trainerRes = await axios.get('https://api.hachion.co/trainers');
+        const trainerRes = await axios.get('https://api.test.hachion.co/trainers');
         const matchedTrainers = trainerRes.data.filter(
           (t) => t.course_name.trim().toLowerCase() === courseData.courseName.trim().toLowerCase()
         );

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import imageUrl from '../../Assets/course_card2.webp';
 import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
+import fallbackImg from "../../Assets/18.png";
 
 const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level = "All Levels", scheduleCount }) => {
   const navigate = useNavigate();
@@ -88,7 +89,11 @@ const handleShare = async (e) => {
                 </button>
           </div>
       <div className="card-header-div">
-        <img src={image} alt="Course-img" className="card-image" loading="lazy"/>
+        <img src={image} alt="Course-img" className="card-image" loading="lazy"
+        onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = fallbackImg;
+            }}/>
         <div className="upcoming-card-header">
           <FaCircle className="card-header-icon" />
           {mode}

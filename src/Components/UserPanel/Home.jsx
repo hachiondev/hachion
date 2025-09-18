@@ -16,6 +16,9 @@ import { FaArrowUp } from 'react-icons/fa';
 import RecentEntries from './RecentEntries';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
+import MeetInstructorBanner from './MeetInstructorBanner';
+import ShareKnowledgeBanner from './ShareKnowledgeBanner';
+import KeyBenifits from './KeyBenifits';
 
 export const Home = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -90,6 +93,9 @@ export const Home = () => {
 <TrainingEvents/>
 </div>
 <Corporate/>
+<KeyBenifits/>
+<MeetInstructorBanner/>
+<ShareKnowledgeBanner/>
 <Career/>
 <Association/>
 <Learners page="home"/>

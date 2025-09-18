@@ -718,11 +718,14 @@ const NavbarTop = () => {
         className="nav-link"
         href="#"
         role="button"
-        data-bs-toggle="dropdown"
+        // data-bs-toggle="dropdown"
         aria-expanded="false"
-        onClick={handleClickToggle}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onClick={(e) => {
+        e.preventDefault();
+        handleClickToggle();
+      }}
+        // onMouseEnter={handleMouseEnter}
+        // onMouseLeave={handleMouseLeave}
         style={{color: '#000000', fontWeight: '500'}}
       >
         Explore Courses{" "}
@@ -733,8 +736,8 @@ const NavbarTop = () => {
   {isDropdownOpen && (
         <ul
           className="dropdown-menu custom-dropdown-menu show"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          // onMouseEnter={handleMouseEnter}
+          // onMouseLeave={handleMouseLeave}
         >
           <li>
             <div className="course-content">
@@ -781,6 +784,10 @@ const NavbarTop = () => {
                   placeholder="What would you like to learn?"
                   value={searchQuery}
                   onChange={handleSearchChange}
+                  style={{
+                  outline: "none",
+                  boxShadow: "none",
+                }}
                 />
                 <button
                   className="btn btn-info d-flex align-items-center justify-content-center search-btn"

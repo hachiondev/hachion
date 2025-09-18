@@ -88,9 +88,9 @@ const StickyBar = () => {
               trainings@hachion.co
             </a>
           </p> */}
-          <p className='query-content' style={{ marginBottom: '0' }}>Have any query ?</p>
+          <p className='query-content'>Have any query ?</p>
         {/* <div className='footer-p'> */}
-              <p className='footer-copyright'>© Hachion 2025. All Rights Reserved.</p>
+              <p className='footer-copyright-desktop'>© Hachion 2025. All Rights Reserved.</p>
               {/* <div className='term'>
               <p className='footer-term' onClick={handleTerms}>Terms and Conditions</p>
               <p className='footer-term' onClick={handlePrivacy}>Privacy Policy</p>
@@ -116,6 +116,7 @@ const StickyBar = () => {
             target="_blank" 
             rel="noopener noreferrer"><img src={youtube} alt='youtube' loading="lazy"/></a>
               </div>
+              <p className='footer-copyright-mobile'>© Hachion 2025. All Rights Reserved.</p>
         </div>
         {/* </div> */}
         {/* <button className="contact-button" onClick={openModal}>Contact Us</button> */}

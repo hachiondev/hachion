@@ -93,29 +93,29 @@ const DropdownCardRight = ({ category, currentPage, cardsPerPage }) => {
       try {
         const response = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(response.data)) {
-          setCourses(response.data); // Set the courses if data is an array
+          setCourses(response.data);
         } else {
           console.error("Unexpected API response format:", response.data);
-          setCourses([]); // Fallback to an empty array
+          setCourses([]);
         }
       } catch (error) {
         console.error("Error fetching courses:", error.message);
-        setCourses([]); // Fallback to an empty array
+        setCourses([]);
       }
     };
-  
+
     fetchCourses();
   }, []);
 
   // Filter courses based on the selected category
   useEffect(() => {
-    if (category === "All") {
-      setFilteredCourses(courses);
-    } else {
+    if (category) {
       const filtered = courses.filter(
         (course) => course.courseCategory === category
       );
       setFilteredCourses(filtered);
+    } else {
+      setFilteredCourses([]); // if no category is selected
     }
   }, [category, courses]);
 
@@ -126,30 +126,29 @@ const DropdownCardRight = ({ category, currentPage, cardsPerPage }) => {
 
   return (
     <div className="course-card-container">
-   {currentCards.length > 0 ? (
-    currentCards.map((course, index) => (
-      <DropdownCard
-        key={course.id || index}
-        title={course.courseName}
-        image={`https://api.test.hachion.co/${course.courseImage}`}
-        level={course.level}
-        month={course.numberOfClasses}
-        course_id={course.id}
-      />
-    ))
-  ): (
-    <p style={{paddingTop:'30px', paddingLeft: '20px'}}>No courses available</p>
+      {currentCards.length > 0 ? (
+        currentCards.map((course, index) => (
+          <DropdownCard
+            key={course.id || index}
+            title={course.courseName}
+            image={`https://api.test.hachion.co/${course.courseImage}`}
+            level={course.level}
+            month={course.numberOfClasses}
+            course_id={course.id}
+          />
+        ))
+      ) : (
+        <p style={{ paddingTop: "30px", paddingLeft: "20px" }}>
+          No courses available for <b>{category}</b>
+        </p>
       )}
     </div>
   );
 };
 
-// Function to get total number of cards (for pagination purposes)
+// Function to get total number of cards (for pagination)
 export const getTotalCards = (category, courses = []) => {
-  if (!courses) return 0; // Handle undefined courses
-  if (category === "All") {
-    return courses.length;
-  }
+  if (!courses) return 0;
   return courses.filter((course) => course.courseCategory === category).length;
 };
 

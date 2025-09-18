@@ -97,6 +97,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
+import fallbackImg from "../../Assets/18.png";
 import './Home.css';
 
 const TeensCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels", aboutCourse }) => {
@@ -184,7 +185,11 @@ const handleShare = async (e) => {
           </button>
     </div>
       <div className="card-header-div">
-        <img src={image} alt="Course-img" className="card-image" loading="lazy"/>
+        <img src={image} alt="Course-img" className="card-image" loading="lazy"
+        onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = fallbackImg;
+            }}/>
       </div>
 
       <div className="card-course-details">

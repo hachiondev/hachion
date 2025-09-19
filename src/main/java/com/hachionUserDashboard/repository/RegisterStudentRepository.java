@@ -70,4 +70,7 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 
 	@Query(value = "SELECT COUNT(*) FROM registerstudent WHERE mobile = :mobile", nativeQuery = true)
 	int countByMobile(@Param("mobile") String mobile);
+	
+	 @Query("SELECT r FROM RegisterStudent r WHERE r.email = :email AND r.status = :status")
+	    Optional<RegisterStudent> findByEmailAndSignupStatus(@Param("email") String email, @Param("status") String status);
 }

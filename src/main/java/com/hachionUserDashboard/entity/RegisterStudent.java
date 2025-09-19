@@ -86,6 +86,8 @@ public class RegisterStudent {
 
 	@Column(name = "otp_generated_time", nullable = true)
 	private LocalDateTime otpGeneratedTime;
+	
+	private String status;
 
 	@Column
 	private String mode;
@@ -362,6 +364,14 @@ public class RegisterStudent {
 
 	public void setProfileImage(String profileImage) {
 		this.profileImage = profileImage;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

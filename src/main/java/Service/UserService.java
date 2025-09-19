@@ -1,6 +1,7 @@
 package Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,9 +87,9 @@ public interface UserService {
 
 	String verifyOtp(String email, String otp);
 
-	String updatePassword(UserRegistrationRequest registrationRequest) throws MessagingException;
+	String registerApi(UserRegistrationRequest registrationRequest) throws MessagingException;
 
-	RegisterStudent saveUser(String username, String email);
+	RegisterStudent saveUser(String username, String email, String profileImage);
 //	Map<String, String> getUserInfo(String accessToken);
 
 	public List<RegisterStudent> getAllRegisteredStudents();
@@ -102,4 +103,10 @@ public interface UserService {
 	public UserProfileResponse getUserProfileByEmail(String email);
 
 	public void resetPassword(UserRegistrationRequest request, MultipartFile profileImage);
+
+	public RegisterStudent signInWithGoogle(String email, String username);
+
+	public Optional<RegisterStudent> getUserForSignin(String email, String status);
+
+	public Optional<RegisterStudent> findByEmailForProfile(String email);
 }

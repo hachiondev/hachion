@@ -18,7 +18,8 @@ import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import MeetInstructorBanner from './MeetInstructorBanner';
 import ShareKnowledgeBanner from './ShareKnowledgeBanner';
-import KeyBenifits from './KeyBenifits';
+import WhyChoose from '././WhyChoose';
+import HomeFaq from './HomeFaq';
 
 export const Home = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -87,28 +88,29 @@ export const Home = () => {
 <Topbar/>
 <NavbarTop/>
 <Banner/>
+<Association/>
 <Trending/>
 <TeensEvents/>
 <div id="upcoming-events">
 <TrainingEvents/>
 </div>
 <Corporate/>
-<KeyBenifits/>
+<WhyChoose/>
 <MeetInstructorBanner/>
 <ShareKnowledgeBanner/>
-<Career/>
-<Association/>
+{/* <Career/> */}
 <Learners page="home"/>
-<div className='blog-bottom'>
+{/* <div className='blog-bottom'>
         <h2 className='association-head'>Recent Blog Entries</h2>
         <RecentEntries />
-      </div>
+      </div> */}
+<HomeFaq/>
 <Footer/>
-{showScrollButton && (
+{/* {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />
               </button>
-            )}
+            )} */}
 </div>
 <StickyBar/>
 

@@ -187,46 +187,14 @@ export default function CourseSchedule() {
       setFilterCourse([]);
     }
   }, [courseData.schedule_category_name, courseCategory]);
-  // useEffect(() => {
-  //   const fetchTrainer = async () => {
-  //     try {
-  //       const response = await axios.get("https://api.test.hachion.co/trainers");
-  //       setTrainer(response.data);
-  //     } catch (error) {
-  //     }
-  //   };
-  //   fetchTrainer();
-  // }, []);
-//   useEffect(() => {
-//   const fetchTrainerNames = async () => {
-//     if (courseData.schedule_category_name && courseData.schedule_course_name) {
-//       try {
-//         const response = await axios.get("https://api.test.hachion.co/trainernames", {
-//           params: {
-//             categoryName: courseData.schedule_category_name,
-//             courseName: courseData.schedule_course_name
-//           }
-//         });
-//         setTrainer(response.data); // assuming setTrainer is your useState setter
-//       } catch (error) {
-//         console.error("Error fetching trainer names:", error);
-//         setTrainer([]); // fallback in case of error
-//       }
-//     } else {
-//       setTrainer([]); // reset if selection is cleared
-//     }
-//   };
-
-//   fetchTrainerNames();
-// }, [courseData.schedule_category_name, courseData.schedule_course_name]);
-
+  
 useEffect(() => {
   const fetchTrainerNames = async (categoryName, courseName) => {
     try {
       const response = await axios.get("https://api.test.hachion.co/trainernames", {
         params: { categoryName, courseName }
       });
-      setTrainer(response.data); // shared trainer list
+      setTrainer(response.data); 
     } catch (error) {
       console.error("Error fetching trainer names:", error);
       setTrainer([]);
@@ -483,44 +451,21 @@ const isFormValid = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  // const handleSave = async () => {
-  //   try {
-  //     const updatedEditedRow = {
-  //       ...editedRow,
-  //       schedule_date: dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
-  //     };
-  //     const response = await axios.put(
-  //       `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
-  //       updatedEditedRow
-  //     );
-  //     setCourses((prevCourses) =>
-  //       prevCourses.map((course) =>
-  //         course.course_schedule_id === selectedRow.course_schedule_id
-  //           ? response.data
-  //           : course
-  //       )
-  //     );
-  //     setMessage(true);
-  //     setTimeout(() => {
-  //       setMessage(false);
-  //     }, 5000);
-  //     setOpen(false);
-  //   } catch (error) {
-  //   console.error("❌ Error while saving schedule:", error);
-  //   }
-
-  // };
+  
   const handleSave = async () => {
   try {
-        const formattedDateForBackend = dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD");
-
+        // const formattedDateForBackend = dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD");
+ const formattedDateForBackend = dayjs(
+      editedRow.schedule_date,
+      ["MM-DD-YYYY", "YYYY-MM-DD"]  
+    ).format("YYYY-MM-DD");
     const updatedEditedRow = {
       ...editedRow,
       schedule_date: formattedDateForBackend,
     };
 const response = await axios.put(
       `https://api.test.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`,
-      editedRow
+      updatedEditedRow
     );
 
     setCourses((prevCourses) =>
@@ -546,7 +491,7 @@ const response = await axios.put(
   
     setEditedRow((prev) => ({
       ...prev,
-      schedule_date: parsedDate.format("MM-DD-YYYY"),  // or use ISO format if backend expects it
+      schedule_date: parsedDate.format("MM-DD-YYYY"),  
       schedule_week: parsedDate.format("dddd"),
     }));
   };
@@ -581,14 +526,14 @@ const response = await axios.put(
   const validateForm = () => {
   const rowErrors = [];
 
-  // Validate main form fields
+  
   const newErrors = {
     schedule_category_name: courseData.schedule_category_name ? "" : "Category is required",
     schedule_course_name: courseData.schedule_course_name ? "" : "Course is required",
     rows: [],
   };
 
-  // Validate each row
+  
   rows.forEach((row) => {
     const rowError = {
       schedule_date: row.schedule_date ? "" : "Date is required",
@@ -605,7 +550,7 @@ const response = await axios.put(
   newErrors.rows = rowErrors;
   setFormErrors(newErrors);
 
-  // Return true if no errors
+  
   const hasMainErrors = newErrors.schedule_category_name || newErrors.schedule_course_name;
   const hasRowErrors = rowErrors.some((err) =>
     Object.values(err).some((val) => val !== "")

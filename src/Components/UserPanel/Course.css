@@ -2160,8 +2160,8 @@ position: fixed;
 bottom: 0;
 /* width: 100vw; */
 width: 100%;
-min-height: 50px;
-height: auto;
+/* min-height: 50px; */
+height: 50px;
 background-color: #191919; 
 color: white;
 display: flex;
@@ -2175,6 +2175,7 @@ z-index: 1000;
 .whatsapp-number-footer, .training-email-footer { 
   font-size: 15px;
   font-weight: 400;
+  margin-bottom: 0;
 }
 .query-content { 
   font-size: 15px;
@@ -2390,7 +2391,7 @@ border:2px solid white;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto;
+  height: 50px;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -3679,11 +3680,11 @@ max-height: 3em;
 
 .sticky-bar {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
-  justify-content: center;
-  height: auto;
-  padding: 5px 5%;
+  justify-content: space-around;
+  height: 70px;
+  padding: 5px 3%;
 }
 
 .contact-info img,        /* WhatsApp icon */
@@ -3693,9 +3694,9 @@ max-height: 3em;
   display: none;          /* Hide in mobile view */
 }
 
-.query-content { 
+.query-content, .whatsapp-number-footer { 
   font-size: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .contact-button {

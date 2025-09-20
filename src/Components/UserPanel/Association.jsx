@@ -21,17 +21,17 @@ const images = [
 const Association = () => {
   return (
     <>
-      <div className='association'>
-        <h2 className='association-head'>Top IT firms collaborate with Hachion</h2>
-      </div>
-      <div className="logos">
+      <div className='it-data'>
+        <h2 className='it-title'>Trusted by <span> 200+ Leading Companies and Universities</span></h2>
+      <div className="it-logos">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="logos-slide">
+          <div key={i} className="it-logos-slide">
             {images.map((img, index) => (
               <img key={index} src={img} height="50" width="auto" alt={`image${index + 1}`} />
             ))}
           </div>
         ))}
+      </div>
       </div>
     </>
   );

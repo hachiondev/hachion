@@ -324,8 +324,8 @@ const Trending = () => {
     <div className="training-events">
       <div className="training-events-head-upcoming">
         <div className="home-spacing">
-        <h2 className="association-head">Trending Courses Across Diverse Fields</h2>
-        <p className="association-head-tag">Handpicked courses across various categories to help you achieve your learning goals</p>
+        <h2 className="association-head">Trending IT Online Certification Courses</h2>
+        <p className="association-head-tag">Upgrade your skills with Hachion’s flexible, affordable IT courses and industry-recognized certifications.</p>
       </div>
 
       <div className="card-pagination-container">

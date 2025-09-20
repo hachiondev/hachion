@@ -9,11 +9,10 @@ const MeetInstructorBanner = () => {
     <div className="instructor-banner">
       {/* Left side content */}
       <div className="home-content">
-        <h2 className="instructor-title"> Meet Our Top Instructor </h2>
+        <h2 className="instructor-title">Meet Our Industry Expert Trainers </h2>
         <p className="instructor-title-text">
-          Learn from the best in the field. 
-          Our top instructors bring industry experience and expertise across various subjects, 
-          guiding you to achieve your learning goals.
+          At Hachion, you’ll learn directly from the best in the IT industry. 
+          Our instructors are certified professionals and subject-matter experts with years of real-world experience. They bring hands-on knowledge, practical insights, and proven teaching methods to ensure you gain skills that matter in today’s job market.
         </p>
         <div className="button-row">
           <button className="desktop-border-button">Meet All Our Experts</button>

@@ -98,7 +98,7 @@ const TeensEvents = () => {
         <div className="home-spacing">
           <h2 className="association-head">Online IT Training Courses For Teen’s</h2>
           <p className="association-head-tag">
-            Handpicked courses across various categories to help you achieve your learning goals
+            Kickstart your tech journey with expert-led online IT Certification courses for teens and beginners.
           </p>
         </div>
 

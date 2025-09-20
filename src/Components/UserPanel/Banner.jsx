@@ -156,12 +156,11 @@ const Banner = () => {
         transition={{ duration: 2, ease: "easeOut" }}
       >
         <h1 className="home-title">
-          <span className="home-title-span">Boost Your Career</span> with
-          Industry-Recognized Skills
+          <span className="home-title-span">Boost Your Career</span>  with Industry-Recognized  IT Certifications
         </h1>
         <p className="home-title-text">
-          Flexible, affordable courses designed to help you achieve your goals,
-          whether you're at home, on the go, or anywhere in between.
+          Learn from flexible, affordable, and expert-designed courses trusted by 25,000+ learners worldwide. 
+          Upgrade your skills anytime, anywhere – and achieve your career goals faster.
         </p>
         <div className="avatar-row">
           <AvatarCount /> <span className="home-sub-text">Join with us</span>

@@ -9,9 +9,9 @@ const ShareKnowledgeBanner = () => {
     <div className="instructor-banner">
       {/* Left side content */}
       <div className="home-content">
-        <h2 className="instructor-title"> Share Your Knowledge. Inspire Learners </h2>
+        <h2 className="instructor-title">Share Your Knowledge. Inspire the Next Generation of Learners</h2>
         <p className="instructor-title-text">
-          Join our community of expert instructors and create your own courses to reach thousands of learners worldwide.
+         At Hachion, we believe knowledge grows when it’s shared. Join our global community of expert instructors and transform your expertise into high-quality online IT courses. With our platform, you can reach thousands of learners worldwide, inspire careers, and build your personal brand as a thought leader.
         </p>
         <div className="button-row">
           <button className="desktop-solid-button">Start Teaching Today</button>

@@ -237,8 +237,14 @@ const Footer = () => {
     navigate("/unsubscribe");
   };
   return (
-    
     <div className='footer'>
+      <style>
+        {`
+          .email-input {
+            background-color: #1F1F1F !important;
+          }
+        `}
+      </style>
       <div className='footer-top'>
 
     <div className='footer-logo-head'>

@@ -157,8 +157,9 @@ const TrainingEvents = () => {
     <div className="training-events">
       <div className="training-events-head-upcoming">
         <div className="home-spacing">
-        <h2 className="association-head">Upcoming Training Events</h2>
-        <p className="association-head-tag">Handpicked courses across various categories to help you achieve your learning goals</p>
+        <h2 className="association-head">Upcoming Trainings at Hachion</h2>
+        <p className="association-head-tag">Kickstart your academic journey with expert-led online 
+training for SAT and ACT success</p>
       </div>
 
       {/* <div className="card-pagination-container">

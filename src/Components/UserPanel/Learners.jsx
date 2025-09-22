@@ -391,6 +391,7 @@ const Learners = ({ page }) => {
   };
 
   return (
+    <div className="home-faq-banner">
     <div className="learner-data container position-relative">
       <h2 className="learner-title text-center">
         What Our Learners Are Saying
@@ -442,6 +443,8 @@ const Learners = ({ page }) => {
           )}
         </Modal.Body>
       </Modal>
+    </div>
+    <button className="home-start-button">View More Reviews</button>
     </div>
   );
 };

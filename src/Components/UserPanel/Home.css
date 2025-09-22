@@ -624,6 +624,22 @@ background-color:#F7F7F7;
     text-align: left;
     padding: 10px 16px;
       }
+  .limited-card-holder {
+display: flex;
+flex-wrap: wrap;
+justify-content: center; 
+gap: 12px; 
+margin: 5px auto;
+max-width: 100%; 
+overflow-x: auto;
+scroll-behavior: smooth;
+}
+    .limited-deals-text{
+    color: #3D3D3D;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+      }
 .home-sub-text{
     color: #6D6D6D;
     font-size: 16px;
@@ -728,6 +744,24 @@ background-color:#F7F7F7;
   padding: 10px;
   transition: opacity 1s ease-in-out;
 }
+.limited-deal-content{
+       display: flex;
+       justify-content: left;
+       flex-direction: column;
+       align-items: flex-start;
+       max-width: 40%;
+      }
+.limited-deal-button {
+    background-color: #00AEEF;
+    color: #ffffff;
+    font-size: medium;
+    font-weight: 500;
+    padding: 5px 30px;
+    border-radius: 50px;
+    border: 2px solid #00AEEF;
+    margin: 20px 0 5px;
+    height: 48px;
+}
   .home-start-button{
         background-color: #00AEEF;
         color: #ffffff;
@@ -737,6 +771,7 @@ background-color:#F7F7F7;
         border-radius: 50px;
         border: 2px solid #00AEEF;
         margin: 20px 20px 5px;
+        height: 48px;
       }
   .home-browse-button{
         color: #6D6D6D;
@@ -784,6 +819,7 @@ background-color:#F7F7F7;
         border-radius: 50px;
         border: 2px solid #00AEEF;
         margin: 20px;
+        height: 48px;
       }
   .desktop-border-button:hover, .border-button:hover{
         background-color: #00AEEF;
@@ -798,8 +834,9 @@ background-color:#F7F7F7;
         border-radius: 50px;
         border: 2px solid #00AEEF;
         margin: 20px;
+        height: 48px;
       }
-  .desktop-solid-button:hover, .home-start-button:hover{
+  .desktop-solid-button:hover, .home-start-button:hover, .limited-deal-button:hover{
         background-color: #fff;
         color: #00AEEF;
       }
@@ -985,6 +1022,7 @@ margin: 8px 0;
   border: 1px solid #333333;
   padding: 5px 15px;
   width: 100%;
+  height: 38px;
 }
 .card-view-btn:hover{  
   color: #fff;
@@ -1376,7 +1414,13 @@ color: #6D6D6D;
 font-size: medium;
 white-space: wrap;
 }
-
+.home-blog-title {
+    color: #3D3D3D;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    padding: 20px 10px 0px;
+}
 .card {
 width: calc(25% - 10px); 
 max-height: 360px;
@@ -1392,16 +1436,30 @@ cursor: pointer;
 border-radius: 15px;
 padding: 20px;
 }
-.card:hover {
+.card:hover, .discount-card:hover {
 border: 3px solid #00AEEF !important;
 box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
 }
-.card:hover .card-view-btn{  
+.card:hover .card-view-btn, .discount-card:hover .card-view-btn{  
   color: #fff;
   background-color: #00AEEF;
   border: 1px solid #00AEEF;
 }
-
+.discount-card {
+width: 280px; 
+max-height: 360px;
+box-sizing: border-box;
+border: 1px solid #333333 !important;
+overflow: hidden !important; 
+box-shadow: 4px 8px 16px rgba(0,0,0,0.1);
+display: flex;
+flex-direction: column;
+justify-items: flex-start;
+/* align-items: center; */
+cursor: pointer;
+border-radius: 15px;
+padding: 20px;
+}
 .new-batch-para{
 display: none;
 }
@@ -2108,10 +2166,10 @@ height: 45px;
     padding: 8px 20px 8px 6px;
 }   
     .training-events-head-upcoming{
-    margin-top: 40px;
+      width: 80%;
+    margin: 40px 10%;
     justify-content: space-between;
     display: flex;
-    margin-bottom: 40px;
     }
   
   .drawer-toggle-btn {
@@ -2132,7 +2190,8 @@ height: 45px;
 }
   
   .card {
-    width: 45%; 
+    width: 45%;
+    max-height: fit-content;
     }
   .card-image{
     max-height: 160px;
@@ -2453,17 +2512,28 @@ height: 45px;
   width: 100%;
   height: auto;
 }
-      .home-banner-img, .home-img, .home-content{
+      .home-banner-img, .home-img, .home-content, .home-faq-content, .limited-deal-content{
         width: 100%;
         max-width: 100%;
         margin-left: 0;
       }
-        .home-start-button, .home-browse-button{
+        .home-start-button, .home-browse-button, .limited-deal-button{
         padding: 5px;
         width: 90%;
         margin: 10px 20px 5px;
         text-align: center;
       }
+  .it-title {
+    display: block;
+    padding: 10px 5%;
+}
+.it-logos {
+    width: 90%;
+    margin: 0 5%;
+}
+.it-data {
+    padding: 30px 0;
+}
   .desktop-border-button, .desktop-solid-button{
     display: none;
   }
@@ -2477,6 +2547,7 @@ height: 45px;
         border-radius: 50px;
         border: 2px solid #00AEEF;
         margin: 20px;
+        height: 48px;
       }
     .mobile-solid-button{
       display: block;
@@ -2488,6 +2559,7 @@ height: 45px;
         border-radius: 50px;
         border: none;
         margin: 20px;
+        height: 48px;
       }
 .button-row {
     display: flex;
@@ -2502,10 +2574,10 @@ height: 45px;
       }
       
       .training-events-head-upcoming{
-      margin-top: 40px;
+      margin-top: 30px;
       justify-content: space-between;
       display: flex;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       flex-wrap: wrap;
       }
       .home-spacing {
@@ -3013,9 +3085,6 @@ border-radius: 20px;
   margin-top: 10px;
   }
 
-.it-logos{
-padding: 2px 0;
-}
 .it-logos-slide img{
 margin: 0px 10px;
 height: 30px;

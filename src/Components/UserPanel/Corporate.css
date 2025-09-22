@@ -349,8 +349,7 @@ padding: 2vh;
 }
 
 .learner-data{
-  width: 80%;
-  margin: 40px 10%;
+  width: 100%;
 }
 
 .learner-title{
@@ -397,7 +396,6 @@ position: relative;
      border-radius: 10px;
      background-color: #fff;
      border: 1px solid #E8E6E6;
-     margin: 20px 0;
      padding: 20px;
      box-shadow: 0px 10.37px 20.74px 0px rgba(150, 150, 150, 0.1);
  }
@@ -1343,8 +1341,7 @@ position: relative;
 
   .learner-card {
   display: block;
-  max-width: 250px;
-  height: 360px;
+  /* max-width: 250px; */
   }
   .learner-card-container {
     /* flex-direction: column; */
@@ -1797,10 +1794,8 @@ position: relative;
   
     .learner-card {
       max-width: 340px;
-      height: 220px;
-      /* margin-bottom: 10px; */
       position: relative;
-      margin: 15px;
+      height: 250px;
     }
   
     .learner-top {
@@ -1808,7 +1803,6 @@ position: relative;
       /* justify-content: flex-start; */
       /* align-items: center; */
       flex-direction: row;
-      margin-top: -10px;
     }
   
     .profile-image {

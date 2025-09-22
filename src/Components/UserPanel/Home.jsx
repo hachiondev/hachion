@@ -20,6 +20,7 @@ import MeetInstructorBanner from './MeetInstructorBanner';
 import ShareKnowledgeBanner from './ShareKnowledgeBanner';
 import WhyChoose from '././WhyChoose';
 import HomeFaq from './HomeFaq';
+import LimitedDeals from './LimitedDeals';
 
 export const Home = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -96,14 +97,16 @@ export const Home = () => {
 </div>
 <Corporate/>
 <WhyChoose/>
+<LimitedDeals/>
 <MeetInstructorBanner/>
 <ShareKnowledgeBanner/>
 {/* <Career/> */}
 <Learners page="home"/>
-{/* <div className='blog-bottom'>
-        <h2 className='association-head'>Recent Blog Entries</h2>
+<div className='blog-bottom'>
+        <h2 className='home-blog-title'>Trending Blog</h2>
+        <p className="learner-title-tag">Discover our useful resources and read articles on different categories</p>
         <RecentEntries />
-      </div> */}
+      </div>
 <HomeFaq/>
 <Footer/>
 {/* {showScrollButton && (

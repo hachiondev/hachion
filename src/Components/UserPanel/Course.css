@@ -1592,6 +1592,7 @@ white-space: nowrap;
   font-size: 16px;
   font-weight: 500;
   border: 1px solid #fff;
+  height: 48px;
 }
 
 .know-more:hover {

@@ -47,6 +47,19 @@ const [formData, setFormData] = useState({
   whereYouHeard: ""
 });
 
+
+function nukeAvatarCookies() {
+  const variants = [
+    "avatar=; Path=/; Max-Age=0",
+    "avatar=; Domain=hachion.co; Path=/; Max-Age=0",
+    "avatar=; Domain=.hachion.co; Path=/; Max-Age=0",
+    "avatar=; Domain=hachion.co; Path=/; Max-Age=0; Secure; SameSite=Lax",
+    "avatar=; Domain=.hachion.co; Path=/; Max-Age=0; Secure; SameSite=Lax",
+  ];
+  variants.forEach(v => (document.cookie = v));
+  localStorage.removeItem("avatar");
+}
+
 const handleFormChange = (field, value) => {
   setFormData(prev => ({ ...prev, [field]: value }));
 };
@@ -70,72 +83,86 @@ const handleFormChange = (field, value) => {
     }
   };
 
+
 const verifyAccount = async (otpArray) => {
-    const otp = otpArray.join(""); 
+  const otp = otpArray.join("");
 
-    if (!otp) {
-        setRegisterMessage("Please fill in all fields");
-        setMessageType("error");
-        return;
+  if (!otp) {
+    setRegisterMessage("Please fill in all fields");
+    setMessageType("error");
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    
+    const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: registeruserData.email,
+        otp: otp,
+      }),
+    });
+
+    if (!verifyResponse.ok) {
+      const error = await verifyResponse.text();
+      setRegisterMessage(`Invalid OTP: ${error}`);
+      setMessageType("error");
+      throw error;
     }
 
-    setIsLoading(true);
+    
+    const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName: registeruserData.firstName,
+        lastName:  registeruserData.lastName,
+        email:     registeruserData.email,
+        country:   registeruserData.country,
+        mobile:    registeruserData.mobile,
+        mode:      "Online",
+        password:  registeruserData.password,
+        confirmPassword: confirmPassword
+      }),
+    });
 
-    try {
-        
-        const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: registeruserData.email,
-                otp: otp,
-            }),
-        });
+    const message = await registerResponse.text();
 
-        if (!verifyResponse.ok) {
-            const error = await verifyResponse.text();
-            setRegisterMessage(`Invalid OTP: ${error}`);
-            setMessageType("error");
-            throw error;
-        }
-
-        
-        const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                firstName: registeruserData.firstName,
-                lastName: registeruserData.lastName,
-                email: registeruserData.email,
-                country: registeruserData.country,
-                mobile: registeruserData.mobile,
-                mode: "Online",
-                password: registeruserData.password,
-                confirmPassword: confirmPassword
-            }),
-        });
-
-      
-        const message = await registerResponse.text();
-
-        if (!registerResponse.ok) {
-            setRegisterMessage(message || "Registration failed");
-            setMessageType("error");
-            throw message || "Registration failed";
-        }
-
-        setRegisterMessage("You are successfully registered!");
-        setMessageType("success");
-        setTimeout(() => {
-          setShowInterestPopup(true);
-        }, 1000);
-    } catch (error) {
-        const msg = typeof error === "string" ? error : error.message || "An unexpected error occurred";
-        setRegisterMessage(msg);
-        
-    } finally {
-        setIsLoading(false);
+    if (!registerResponse.ok) {
+      setRegisterMessage(message || "Registration failed");
+      setMessageType("error");
+      throw message || "Registration failed";
     }
+
+    
+    setRegisterMessage("You are successfully registered!");
+    setMessageType("success");
+
+    nukeAvatarCookies();
+    localStorage.removeItem("pendingOAuth");
+
+    const fullName =
+      `${registeruserData.firstName || ""} ${registeruserData.lastName || ""}`.trim() || "User";
+    const toStore = { name: fullName, email: registeruserData.email };
+
+    localStorage.setItem("loginuserData", JSON.stringify(toStore));
+    console.log("[register] wrote loginuserData:", toStore);
+
+    
+    window.dispatchEvent(new Event("storage"));
+
+    setTimeout(() => {
+      setShowInterestPopup(true);
+    }, 1000);
+  } catch (error) {
+    const msg = typeof error === "string" ? error : error.message || "An unexpected error occurred";
+    setRegisterMessage(msg);
+  } finally {
+    setIsLoading(false);
+  }
 };
 
   const togglePasswordVisibility = () => {
@@ -172,55 +199,86 @@ const verifyAccount = async (otpArray) => {
       setResendLoading(false);
     }
   };
+
 const handleSkip = () => {
+  const fullName =
+    `${registeruserData.firstName || ""} ${registeruserData.lastName || ""}`.trim() || "User";
+
+  nukeAvatarCookies();
+  localStorage.removeItem("pendingOAuth");
+
+  const toStore = { name: fullName, email: registeruserData.email };
+  localStorage.setItem("loginuserData", JSON.stringify(toStore));
+  console.log("[register] wrote loginuserData on skip:", toStore);
+
+  window.dispatchEvent(new Event("storage"));
+
   localStorage.setItem("user", JSON.stringify(registeruserData));
   navigate("/");
 };
+
 
 const handleNext = () => setPopupStep(prev => prev + 1);
 const handleBack = () => setPopupStep(prev => prev - 1);
 
 
 const handleSubmitPopup = async () => {
-  
-   try {
-    
+  try {
     const profileResponse = await axios.get(
       `https://api.test.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`
     );
-
     const profileData = profileResponse.data;
 
-  const payload = {
-    studentId: profileData.studentId || "STU123", 
-    studentName: profileData.name || "Lakshmi",
-    studentEmail: profileData.email || "abc@gmail.com",
-    mobile: profileData.mobile || "8106447416",
-    currentRole: formData.role === "Other" ? formData.otherRole : formData.role,
-    primaryGoal: formData.goal,
-    areasOfInterest: formData.interests.join(", "),
-    preferToLearn: formData.learningMethods,
-    preferredTrainingMode: formData.trainingMode,
-    currentSkill: formData.skillLevel,
-    lookingForJob: formData.lookingForJob || "",
-    realTimeProjects: formData.realTimeProjects || "",
-    certificationOrPlacement: formData.certificationOrPlacement || "",
-    speakToCourseAdvisor: formData.speakToCourseAdvisor || "",
-    whereYouHeard: formData.whereYouHeard || ""
-  };
+    nukeAvatarCookies();
+    localStorage.removeItem("pendingOAuth");
+
+    
+    const nameFromServer = profileData.name && String(profileData.name).trim();
+    const localName =
+      nameFromServer ||
+      `${registeruserData.firstName || ""} ${registeruserData.lastName || ""}`.trim() ||
+      "User";
+
+    const loginUser = {
+      name:  localName,
+      email: profileData.email || registeruserData.email
+    };
+
+    localStorage.setItem("loginuserData", JSON.stringify(loginUser));
+    console.log("[register] updated loginuserData from profile:", loginUser);
+
+    
+    window.dispatchEvent(new Event("storage"));
+
+    const payload = {
+      studentId: profileData.studentId || "STU123",
+      studentName: profileData.name || "Lakshmi",
+      studentEmail: profileData.email || "abc@gmail.com",
+      mobile: profileData.mobile || "8106447416",
+      currentRole: formData.role === "Other" ? formData.otherRole : formData.role,
+      primaryGoal: formData.goal,
+      areasOfInterest: formData.interests.join(", "),
+      preferToLearn: formData.learningMethods,
+      preferredTrainingMode: formData.trainingMode,
+      currentSkill: formData.skillLevel,
+      lookingForJob: formData.lookingForJob || "",
+      realTimeProjects: formData.realTimeProjects || "",
+      certificationOrPlacement: formData.certificationOrPlacement || "",
+      speakToCourseAdvisor: formData.speakToCourseAdvisor || "",
+      whereYouHeard: formData.whereYouHeard || ""
+    };
 
     await axios.post("https://api.test.hachion.co/popup-onboarding", payload);
 
-    
     localStorage.setItem("userPreferences", JSON.stringify(payload));
     localStorage.setItem("user", JSON.stringify(registeruserData));
 
-    
     navigate("/");
   } catch (err) {
     console.error("Error saving onboarding:", err);
   }
 };
+
   return (
     <>
         <Topbar />

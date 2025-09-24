@@ -261,6 +261,10 @@ training for SAT and ACT success</p>
         value={courseFilter}
         onChange={handleCourseChange}
         list="course-options"
+        style={{
+         outline: "none",
+          boxShadow: "none",
+           }}
       />
       <button className="btn btn-info d-flex align-items-center justify-content-center search-btn"
       type="submit" onClick={handleSearchIconClick}>

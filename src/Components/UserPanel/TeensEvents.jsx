@@ -94,7 +94,7 @@ const TeensEvents = () => {
 
   return (
     <div className="training-events">
-      <div className="training-events-head-upcoming">
+      <div className="training-title-head">
         <div className="home-spacing">
           <h2 className="association-head">Online IT Training Courses For Teen’s</h2>
           <p className="association-head-tag">

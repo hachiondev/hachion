@@ -565,7 +565,9 @@ background-color:#F7F7F7;
 }
 
 .custom-arrow:hover {
-  background-color: #004d66;
+  background-color: #fff;
+  color: #00AEEF;
+  border: 2px solid #00AEEF;
 }
 
 .left-arrow {
@@ -574,6 +576,33 @@ background-color:#F7F7F7;
 
 .right-arrow {
   right: 0; 
+}
+
+.custom-cards-arrow {
+  position: absolute;
+  top: 50%;
+  font-size: 40px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.3s;
+  background-color: #00AEEF;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.custom-cards-arrow:hover {
+  background-color: #fff;
+  color: #00AEEF;
+  border: 2px solid #00AEEF;
+}
+
+.left-cards-arrow {
+  left: -20px; 
+}
+
+.right-cards-arrow {
+  right: -20px; 
 }
 
 .home-content{
@@ -1057,6 +1086,12 @@ justify-content: space-between;
 display: flex;
 align-items: top;
 }
+.training-title-head{
+margin: 40px 10%;
+justify-content: space-between;
+display: flex;
+align-items: top;
+}
 
 .view-btn{
 display: flex;
@@ -1502,6 +1537,14 @@ z-index: 0;
 }
 .bookmark-active {
   color: black;
+}
+.discountcard-action-icons {
+  position: relative;
+  top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  z-index: 1;
 }
 .courses-list{
 display: flex;
@@ -2165,7 +2208,7 @@ height: 45px;
     width: 100%;
     padding: 8px 20px 8px 6px;
 }   
-    .training-events-head-upcoming{
+    .training-events-head-upcoming, .training-title-head{
       width: 80%;
     margin: 40px 10%;
     justify-content: space-between;
@@ -2579,6 +2622,13 @@ height: 45px;
       display: flex;
       margin-bottom: 30px;
       flex-wrap: wrap;
+      }
+      .training-title-head{
+      margin-top: 30px;
+      justify-content: space-between;
+      display: flex;
+      margin-bottom: 30px;
+      flex-wrap: nowrap;
       }
       .home-spacing {
     max-width: 100%;
@@ -3166,7 +3216,7 @@ font-size: 12px;
   margin-top: 20px;
   }
 
-.training-events-head-upcoming{
+.training-events-head-upcoming, .training-title-head{
 margin-left: 5%;
 margin-right: 5%;
 justify-content: space-between;

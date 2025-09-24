@@ -102,11 +102,7 @@ export const Home = () => {
 <ShareKnowledgeBanner/>
 {/* <Career/> */}
 <Learners page="home"/>
-<div className='blog-bottom'>
-        <h2 className='home-blog-title'>Trending Blog</h2>
-        <p className="learner-title-tag">Discover our useful resources and read articles on different categories</p>
-        <RecentEntries />
-      </div>
+ <RecentEntries />
 <HomeFaq/>
 <Footer/>
 {/* {showScrollButton && (

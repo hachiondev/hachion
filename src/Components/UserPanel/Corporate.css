@@ -903,6 +903,12 @@ position: relative;
   width: 100%;
   object-fit: fill;
 }
+.recent-entries-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 10px;
+}
 .workshop-card-image {
   flex: 1;
   /* width: 100%; */
@@ -911,30 +917,74 @@ position: relative;
 }
 
 .content-block {
-  flex: 1;
-  padding: 10px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 2vh;
+  gap: 8px;
 }
 
 .content {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 21px;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bottom-content {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.category-badge {
+  align-self: flex-start;
+  background-color: #E5E5E5;
+  color: #000;
+  font-size: 14px;
   font-weight: 400;
-  color: #6A6A6A;
+  padding: 4px 8px;
+  border-radius: 16px;
+}
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
 }
 
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.blog-card-description {
+  font-size: 16px;
+  color: #000000;
+  font-weight: 400;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+}
+.blog-author {
+  color: #202939;
+  font-size: medium;
+  margin-bottom: 5px;
+}
 .date {
-  color: #6A6A6A;
-  text-align: right;
+  color: #697586;
+  font-size: medium;
+  margin-bottom: 5px;
 }
 .blog-bottom{
   /* margin: 4vh; */
@@ -1348,6 +1398,9 @@ position: relative;
    justify-content: center;
     /* max-width: 900px; */
   }
+  .recent-entries-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 767px) {
@@ -1531,7 +1584,9 @@ position: relative;
   .recent-card-image {
       width: 170px !important;
   }
-
+.recent-entries-grid {
+    grid-template-columns: 1fr;
+  }
     .workshop-card {
       width: 180px;
       height: 180px;
@@ -1632,19 +1687,10 @@ position: relative;
   }
   
   .content {
-      font-size: 14px;
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3; /* Limits the text to 2 lines */
-      overflow: hidden; /* Hides overflowing text */
-      text-overflow: ellipsis;
-      line-height: 1.5;
-      max-height: 4.5em;
+      font-size: 16px;
   }
   
   .date {
-      color: #6A6A6A;
       font-size: 12px;
       margin-bottom: 5px;
   }

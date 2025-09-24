@@ -123,10 +123,12 @@ import { Link } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
 import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const postJobRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Privacy component mounted. Scrolling to top...");
@@ -170,7 +172,7 @@ const Banner = () => {
         </div>
         <div className="button-row">
           <button className="home-start-button">Start Your Certification</button>
-          <Link className="home-browse-button">Browse All Courses</Link>
+          <Link className="home-browse-button" onClick={() => navigate('/coursedetails')}>Browse All Courses</Link>
         </div>
       </motion.div>
 

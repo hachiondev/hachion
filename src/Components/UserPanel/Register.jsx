@@ -464,6 +464,13 @@ const Register = () => {
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
+ function getCookie(name) {
+  const m = document.cookie.match(
+    new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)')
+  );
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
   useEffect(() => {
     fetch("https://ipwho.is/")
       .then((res) => res.json())
@@ -513,16 +520,74 @@ const Register = () => {
       country: selectedCountry.name,
     };
 
-    // ✅ Save step1 data & go to next screen
+    
     localStorage.setItem("registerStep1", JSON.stringify(userData));
     navigate("/registerhere");
 
     setIsLoading(false);
   };
 
-  const loginWithGoogle = () => {
-    window.location.href = `https://api.test.hachion.co/oauth2/authorization/google`;
-  };
+  const SHARED_DOMAIN = "hachion.co";
+
+function setSharedCookie(name, value, maxAgeSeconds = 300) {
+  
+  document.cookie =
+    `${name}=${encodeURIComponent(value)}; Domain=${SHARED_DOMAIN}; ` +
+    `Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax; Secure`;
+}
+
+function clearCookieAllScopes(name) {
+  
+  document.cookie = `${name}=; Path=/; Max-Age=0`;
+  
+  document.cookie = `${name}=; Domain=${SHARED_DOMAIN}; Path=/; Max-Age=0; SameSite=Lax; Secure`;
+}
+const loginWithGoogle = () => {
+  
+  localStorage.removeItem("loginuserData");
+  localStorage.removeItem("authToken");
+  clearCookieAllScopes("flow");
+  clearCookieAllScopes("auth_error");
+  clearCookieAllScopes("avatar");
+  setSharedCookie("flow", "signup", 300); 
+  console.log("doc.cookie now:", document.cookie);
+  
+  setTimeout(() => {
+    window.location.href = "https://api.test.hachion.co/oauth2/authorization/google";
+  }, 50);
+};
+
+useEffect(() => {
+  try {
+    
+    const existing = localStorage.getItem('loginuserData');
+    if (existing) return;
+
+    fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(user => {
+        if (!user) return;
+
+        let picture = user.picture || getCookie('avatar') || "";
+
+        const toStore = {
+          name:  user.name  || "",
+          email: user.email || "",
+          picture
+        };
+
+        localStorage.setItem('loginuserData', JSON.stringify(toStore));
+
+        if (user.token) {
+          localStorage.setItem('authToken', user.token);
+        }
+
+        
+        window.dispatchEvent(new Event('storage'));
+      })
+      .catch(() => {});
+  } catch (_) {}
+}, []);
 
   return (
     <>

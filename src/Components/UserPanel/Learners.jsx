@@ -391,8 +391,8 @@ const Learners = ({ page }) => {
   };
 
   return (
-    <div className="home-faq-banner">
-    <div className="learner-data container position-relative">
+    <div className="home-faq-banner container">
+    <div className="learner-data position-relative">
       <h2 className="learner-title text-center">
         What Our Learners Are Saying
       </h2>
@@ -401,6 +401,7 @@ const Learners = ({ page }) => {
         From students just starting their IT journey to professionals advancing their careers, thousands have trusted us to deliver world-class online IT training, hands-on projects, and certification support.
       </p>
 
+      <div className="position-relative text-center">
       {/* Left Arrow */}
       <FaAngleLeft className="custom-arrow left-arrow" onClick={goToPrev} />
       {/* Right Arrow */}
@@ -422,6 +423,7 @@ const Learners = ({ page }) => {
             />
           </div>
         ))}
+      </div>
       </div>
 
       {/* Modal */}

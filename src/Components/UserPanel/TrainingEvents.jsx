@@ -154,7 +154,7 @@ const TrainingEvents = () => {
   const handleSearchIconClick = () => {
   };
   return (
-    <div className="training-events">
+    <div className="container">
       <div className="training-events-head-upcoming">
         <div className="home-spacing">
         <h2 className="association-head">Upcoming Trainings at Hachion</h2>
@@ -330,6 +330,19 @@ training for SAT and ACT success</p>
     </div>
   )}
 </div>
+<div className="home-faq-banner container">
+<div className="card-pagination-container">
+        <button className="home-start-button" onClick={() => {
+      if (viewAll) {
+        document.querySelector(".training-events-head-upcoming")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      setViewAll(!viewAll);
+    }}>
+          {viewAll ? "View Less" : "View More"}
+        </button>
+      </div>
+      </div>
     </div>
   );
 };

@@ -321,7 +321,7 @@ const Trending = () => {
   };
 
   return (
-    <div className="training-events">
+    <div className="training-events container">
       <div className="training-title-head">
         <div className="home-spacing">
         <h2 className="association-head">Trending IT Online Certification Courses</h2>
@@ -356,6 +356,8 @@ const Trending = () => {
           course_id={course.id}
           discountPercentage={course.discount}
           trainer_name={course.trainerName}
+          amount={course.itotal}
+          totalAmount={course.iamount}
           level={course.levels}
           onClick={() => handleCardClick(course)}
           className="course-card"

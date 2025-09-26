@@ -137,7 +137,7 @@ useEffect(() => {
             <li key={item._id || index}>
               <button
                 onClick={() => handleMenuItemClick(index, item.name)}
-                // onMouseEnter={() => handleMenuItemClick(index, item.name)}
+                onMouseEnter={() => handleMenuItemClick(index, item.name)}
                 className={`menu-item ${activeIndex === index ? 'active' : ''}`}
                 style={{ padding: '4px 8px', fontWeight: '400' }}
               >

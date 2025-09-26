@@ -133,6 +133,10 @@
   border-radius: 16px;
   padding: 8px;
 }
+.recent-blog-card:hover {
+  border: 1px solid #00aaef;
+  box-shadow: 6px 6px 6px #d3d3d3;
+}
 
 .recent-blog-card-image {
   flex: 1;

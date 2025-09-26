@@ -192,6 +192,7 @@ color: black;
 .menu-item.active {
   background-color: #00AEEF;
   color: rgba(255, 255, 255, 1);
+  border-radius: 0 20px 20px 0;
 }
 
 
@@ -454,11 +455,11 @@ height: 3em;
 .dropdown-course-month{  
   font-size: 12px;
   white-space: nowrap;
-  color: #6B7280;
+  color: #4C4C4D;
 }
 .trainer-name{  
-  font-size: 12px;
-  font-weight: 600px;
+  font-size: 13px;
+  font-weight: 500px;
   white-space: wrap;
   color: #262626;
 }
@@ -1919,6 +1920,7 @@ color: #006489;
   justify-content:space-evenly;
   flex-direction: column;
   gap: 10px;
+  padding: 10px 16px;
 }
 
 .view-more-btn{

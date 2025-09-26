@@ -113,11 +113,11 @@ const handleShare = async (e) => {
         <div className="card-row">
         <h3 className="course-name">{heading}</h3>
         <div className="discount-lable">
-            {discountPercentage} off
+            {discountPercentage}% off
           </div>
         </div>
                 <div className="card-row">
-        <div className="course-amount">{amount} <span>{totalAmount}</span></div>
+        <div className="course-amount">INR {amount} <span>INR {totalAmount}</span></div>
         <div className="discount-duration">
             11:59 Sec Left
           </div>

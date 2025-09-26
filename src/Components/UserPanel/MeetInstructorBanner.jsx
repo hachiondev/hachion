@@ -6,7 +6,7 @@ import "./Home.css";
 const MeetInstructorBanner = () => {
 
   return (
-    <div className="instructor-banner">
+    <div className="instructor-banner container">
       {/* Left side content */}
       <div className="home-content">
         <h2 className="instructor-title">Meet Our Industry Expert Trainers </h2>

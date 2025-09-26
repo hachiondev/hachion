@@ -7,7 +7,7 @@ import HelpFaq from "./HelpFaq";
 const HomeFaq = () => {
 
   return (
-    <div className="home-faq-banner">
+    <div className="home-faq-banner container">
     <div className="home-faq-data">
       {/* Left side content */}
       <div className="home-faq-content">

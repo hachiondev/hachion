@@ -18,7 +18,7 @@ const WhyChoose = () => {
   // const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div className="instructor-banner">
+    <div className="instructor-banner container">
       {/* Left side content */}
       <div className="home-content"
         // onMouseEnter={() => setCurrentIndex(1)}

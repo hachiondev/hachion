@@ -6,7 +6,7 @@ import "./Home.css";
 const ShareKnowledgeBanner = () => {
 
   return (
-    <div className="instructor-banner">
+    <div className="instructor-banner container">
       {/* Left side content */}
       <div className="home-content">
         <h2 className="instructor-title">Share Your Knowledge. Inspire the Next Generation of Learners</h2>

@@ -7,7 +7,7 @@ import DiscountCards from "./DiscountCards";
 const LimitedDeals = () => {
 
   return (
-    <div className="instructor-banner">
+    <div className="instructor-banner container">
       {/* Left side content */}
       <div className="limited-deal-content">
         <h2 className="association-head">Limited Time Deals on Top Courses!</h2>

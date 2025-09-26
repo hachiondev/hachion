@@ -23,7 +23,7 @@ const Association = () => {
     <>
       <div className='it-data'>
         <h2 className='it-title'>Trusted by <span> 200+ Leading Companies and Universities</span></h2>
-      <div className="it-logos">
+      <div className="it-logos container">
         {[...Array(2)].map((_, i) => (
           <div key={i} className="it-logos-slide">
             {images.map((img, index) => (

@@ -117,35 +117,21 @@
 
 // export default Banner;
 
+// Banner.js
 import React, { useEffect, useState, useRef } from "react";
 import banner from "../../Assets/newBanner.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
 import "./Home.css";
-import { useNavigate } from "react-router-dom";
+import BannerButtonPopup from "./BannerButtonPopup";
 
 const Banner = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
-  const postJobRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Privacy component mounted. Scrolling to top...");
     window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -158,21 +144,34 @@ const Banner = () => {
         transition={{ duration: 2, ease: "easeOut" }}
       >
         <h1 className="home-title">
-          <span className="home-title-span">Boost Your Career</span>  with
-          <br />Industry-Recognized 
+          <span className="home-title-span">Boost Your Career</span> with
+          <br />
+          Industry-Recognized
           <br />
           IT Certifications
         </h1>
         <p className="home-title-text">
-          Learn from flexible, affordable, and expert-designed courses trusted by 25,000+ learners worldwide. 
-          Upgrade your skills anytime, anywhere – and achieve your career goals faster.
+          Learn from flexible, affordable, and expert-designed courses trusted by
+          25,000+ learners worldwide. Upgrade your skills anytime, anywhere – and
+          achieve your career goals faster.
         </p>
         <div className="avatar-row">
           <AvatarCount /> <span className="home-sub-text">Join with us</span>
         </div>
         <div className="button-row">
-          <button className="home-start-button">Start Your Certification</button>
-          <Link className="home-browse-button" onClick={() => navigate('/coursedetails')}>Browse All Courses</Link>
+          <button
+            className="home-start-button"
+            onClick={() => setShowPopup(true)}
+          >
+            Start Your Certification
+          </button>
+
+          <Link
+            className="home-browse-button"
+            onClick={() => navigate("/coursedetails")}
+          >
+            Browse All Courses
+          </Link>
         </div>
       </motion.div>
 
@@ -186,9 +185,12 @@ const Banner = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
       />
+
+      {showPopup && <BannerButtonPopup onClose={() => setShowPopup(false)} />}
     </div>
   );
 };
 
 export default Banner;
+
 

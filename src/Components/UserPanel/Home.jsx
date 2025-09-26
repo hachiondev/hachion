@@ -40,7 +40,7 @@ export const Home = () => {
       
         useEffect(() => {
           const handleScroll = () => {
-            if (window.scrollY > 300) {
+            if (window.scrollY > 800) {
               setShowScrollButton(true);
             } else {
               setShowScrollButton(false);
@@ -111,7 +111,7 @@ export const Home = () => {
               </button>
             )} */}
 </div>
-<StickyBar/>
+{showScrollButton && <StickyBar />}
 
     </>
   )

@@ -355,7 +355,7 @@ const DiscountCards = () => {
   };
 
   return (
-    <div className="position-relative">
+    <div className="position-relative text-center">
       {/* Left Arrow */}
       <FaAngleLeft className="custom-cards-arrow left-cards-arrow" onClick={goToPrev} />
       {/* Right Arrow */}
@@ -382,6 +382,17 @@ const DiscountCards = () => {
                 className="course-card"
               />
             ))}
+      </div>
+
+      {/* Page Indicators */}
+      <div className="page-indicators mt-3">
+        {Array.from({ length: totalPages }).map((_, idx) => (
+          <span
+            key={idx}
+            className={`indicator-dot ${currentPage === idx ? "active" : ""}`}
+            onClick={() => setCurrentPage(idx)}
+          ></span>
+        ))}
       </div>
     </div>
   );

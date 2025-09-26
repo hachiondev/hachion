@@ -122,7 +122,7 @@ width: 100px;
   display: flex;
   justify-content: left;
   color: #3D3D3D;
-
+  padding: 10px 16px;
 }
 .customize-training{
 display: flex;
@@ -1839,7 +1839,7 @@ position: relative;
     }
   
     .learner-card {
-      max-width: 340px;
+      width: 100%;
       position: relative;
       height: 250px;
     }

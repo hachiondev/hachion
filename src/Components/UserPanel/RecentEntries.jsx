@@ -178,7 +178,7 @@ const RecentEntries = () => {
   const visibleBlogs = blogs.slice(0, 6);
 
   return (
-     <div className="home-faq-banner">
+     <div className="home-faq-banner container">
       <h2 className='home-blog-title'>Trending Blog</h2>
       <p className="learner-title-tag">Discover our useful resources and read articles on different categories</p>
     <div className="recent-entries-container">

@@ -19,6 +19,7 @@ import { MdKeyboardArrowUp } from "react-icons/md";
 import DropdownSidebar from './DropdownSidebar';
 import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
 import './Course.css';
+import { BsCart2 } from "react-icons/bs";
 
 const NavbarTop = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -397,6 +398,9 @@ useEffect(() => {
 
           {/* ==== Mobile Right Icons ==== */}
           <div className="d-flex align-items-center d-lg-none ms-auto">
+            <button className="btn" type="button">
+            <BsCart2 size={24}/>
+            </button>
             <button className="btn" type="button" onClick={() => setShowMobileSearch(true)}>
               <IoSearch size={24} className="text-info" />
             </button>
@@ -422,6 +426,8 @@ useEffect(() => {
                 </button>
               </>
             ) : (
+              <div className="d-flex align-items-center gap-3">
+              <BsCart2 size={28}/>
               <div className="dropdown">
                 <button
                   className="btn d-flex align-items-center"
@@ -467,6 +473,7 @@ useEffect(() => {
                     </button>
                   </li>
                 </ul>
+              </div>
               </div>
             )}
           </div>

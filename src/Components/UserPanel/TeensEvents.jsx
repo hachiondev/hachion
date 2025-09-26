@@ -93,7 +93,7 @@ const TeensEvents = () => {
   };
 
   return (
-    <div className="training-events">
+    <div className="training-events container">
       <div className="training-title-head">
         <div className="home-spacing">
           <h2 className="association-head">Online IT Training Courses For Teen’s</h2>
@@ -129,6 +129,8 @@ const TeensEvents = () => {
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 discountPercentage={course.discount}
+                amount={course.itotal}
+                totalAmount={course.iamount}
                 trainer_name={course.trainerName}
                 level={course.levels}
                 onClick={() => handleCardClick(course)}

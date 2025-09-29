@@ -59,10 +59,13 @@ public class Payment {
 
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
-	
+
 	@Column(name = "status")
 	private String status;
-	
+
+	@Column(name = "stop_reminder")
+	private String stopReminder;
+
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentInstallment> installments = new ArrayList<>();
 
@@ -193,6 +196,13 @@ public class Payment {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public String getStopReminder() {
+		return stopReminder;
+	}
+
+	public void setStopReminder(String stopReminder) {
+		this.stopReminder = stopReminder;
+	}
 
 }

@@ -22,7 +22,8 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
+		http.cors(cors -> {})
+		.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/**"))
 						.permitAll().anyRequest().authenticated())
 				.oauth2Login(oauth2 -> oauth2.loginPage("/api/v1/user/login2")

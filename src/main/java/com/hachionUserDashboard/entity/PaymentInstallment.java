@@ -49,6 +49,12 @@ public class PaymentInstallment {
 	@Column(name = "reference")
 	private String reference;
 
+	@Column(name = "last_reminder_on")
+	private LocalDate lastReminderOn;
+
+	@Column(name = "reminder_count")
+	private Integer reminderCount;
+
 	public Long getInstallmentId() {
 		return installmentId;
 	}
@@ -127,6 +133,22 @@ public class PaymentInstallment {
 
 	public void setReference(String reference) {
 		this.reference = reference;
+	}
+
+	public LocalDate getLastReminderOn() {
+		return lastReminderOn;
+	}
+
+	public void setLastReminderOn(LocalDate lastReminderOn) {
+		this.lastReminderOn = lastReminderOn;
+	}
+
+	public Integer getReminderCount() {
+		return reminderCount;
+	}
+
+	public void setReminderCount(Integer reminderCount) {
+		this.reminderCount = reminderCount;
 	}
 
 }

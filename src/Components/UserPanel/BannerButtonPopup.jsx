@@ -4,8 +4,7 @@ import axios from "axios";
 import "./Home.css";
 import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import DemandingCourses from "./DemandingCourses";
-import PopupUpcomingCourses from "./PopupUpcomingCourses";
+import BannerDeals from "./BannerDeals";
 
 const BannerButtonPopup = ({ onClose }) => {
   const navigate = useNavigate();
@@ -36,10 +35,7 @@ const BannerButtonPopup = ({ onClose }) => {
 
         {/* Body */}
         <div className="popup-body">
-          <DemandingCourses />
-          <p className="popup-content"><span>200+ students</span> are enrolled from your location and they got certified on these technologies.</p>
-          <p className="popup-sub-content">Would you link to enroll for any of these above courses?</p>
-          <PopupUpcomingCourses />
+          <BannerDeals />
         </div>
 
         {/* Footer/Actions */}
@@ -51,7 +47,7 @@ const BannerButtonPopup = ({ onClose }) => {
           </p>
           <button
             className="join-now"
-            onClick={() => navigate("/coursedetails")}
+            onClick={() => navigate("/contactus")}
           >
             Signup and Talk to Course Advisor
           </button>

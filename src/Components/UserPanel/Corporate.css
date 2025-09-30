@@ -632,9 +632,6 @@ position: relative;
   cursor: pointer;
 }
 
-.popup-content {
-  text-align: center;
-}
 .trainer-popup-content {
    display: flex;
   flex-direction: row;

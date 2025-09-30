@@ -245,6 +245,7 @@ const Footer = () => {
           }
         `}
       </style>
+      <div className="container">
       <div className='footer-top'>
 
     <div className='footer-logo-head'>
@@ -352,6 +353,7 @@ const Footer = () => {
             <IoIosMail className="me-1 topbar-icon text-white" />
             <span className="fw-normal topbar-text">trainings@hachion.co</span>
           </a>
+      </div>
       </div>
       </div>
     </div>

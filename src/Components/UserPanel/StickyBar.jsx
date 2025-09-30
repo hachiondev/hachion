@@ -60,7 +60,7 @@ const StickyBar = () => {
   return (
     <>
       <div className="sticky-bar">
-        {/* <div className="contact-info"> */}
+          <div className="container d-flex align-items-center justify-content-between flex-wrap">
 
           <div className="whatsapp-container">
             <a
@@ -118,7 +118,7 @@ const StickyBar = () => {
               </div>
               <p className='footer-copyright-mobile'>© Hachion 2025. All Rights Reserved.</p>
         </div>
-        {/* </div> */}
+        </div>
         {/* <button className="contact-button" onClick={openModal}>Contact Us</button> */}
       {/* </div> */}
 

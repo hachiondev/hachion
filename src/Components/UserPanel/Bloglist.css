@@ -334,53 +334,64 @@
 
 /* Blog-pagination for course page */
 
-.pagination {
+.user-pagination {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
-.pagination button {
-  width: 50px;
-  height: 50px;
+.user-pagination button {
+  width: 48px;
+  height: 48px;
   padding: 5px;
   margin: 0 5px;
   cursor: pointer;
-  border: 1px solid #00aeef; /* Remove default border */
-  background-color: #d9d9d9; /* Bootstrap primary color */
-  color: #00aeef; /* Text color */
+  border: 1px solid #fff; /* Remove default border */
+  background-color: #fff; /* Bootstrap primary color */
+  color: #6D6D6D; /* Text color */
   cursor: pointer; /* Pointer cursor on hover */
   border-radius: 50%; /* Rounded corners */
   transition: background-color 0.3s; /* Smooth color transition */
 }
 
-.pagination .arrow {
+.user-pagination-arrow {
   font-size: 20px;
   width: 50px;
   height: 50px;
   margin: 0 10px; /* Space between buttons */
   padding: 5px; /* Add some padding */
-  border: none; /* Remove default border */
-  background-color: #00aeef; /* Bootstrap primary color */
-  color: #fff; /* Text color */
+  border: 1px solid #6D6D6D !important;
+  background-color: #fff; /* Bootstrap primary color */
+  color: #6D6D6D; /* Text color */
   cursor: pointer; /* Pointer cursor on hover */
   border-radius: 50%; /* Rounded corners */
   transition: background-color 0.3s; /* Smooth color transition */
 }
-
-.pagination button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-  color: white;
+.user-pagination-icon{
+  font-size: 1.5rem;
+  color: #6D6D6D;
 }
 
-.pagination button:disabled {
+.user-pagination-icon:hover{
+  color: #00aaef;
+}
+.user-pagination button:hover{
+  color: #00aaef;
+  border: 1px solid #00aaef;
+}
+.user-pagination .active {
+  color: #00aaef;
+  border: 1px solid #fff;
+  font-weight: bold;
+}
+.pagination-number.active, .pagination-number:hover {
+    background-color: #fff;
+    color: #00aeef;
+    font-weight: bold;
+}
+
+.user-pagination button:disabled {
   color: #6a6a6a;
   background-color: #d9d9d9; /* Gray background for disabled */
   cursor: not-allowed; /* Not-allowed cursor */
-}
-
-.pagination .active {
-  background-color: #00aeef; /* Active page button color */
-  color: white;
-  font-weight: bold;
 }

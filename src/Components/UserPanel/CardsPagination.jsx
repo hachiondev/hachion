@@ -25,6 +25,7 @@ const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }
         className="arrow"
         onClick={handlePrev}
         disabled={currentPage === 1 || arrowsDisabled}
+        aria-label="Previous Page"
       >
         <IoIosArrowBack />
       </button>
@@ -33,6 +34,7 @@ const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }
         className="arrow"
         onClick={handleNext}
         disabled={currentPage === totalPages || arrowsDisabled}
+        aria-label="Next Page"
       >
         <IoIosArrowForward />
       </button>

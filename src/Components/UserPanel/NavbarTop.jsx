@@ -274,8 +274,8 @@ useEffect(() => {
 
  return (
     <>
-      <nav className="navbar navbar-expand-lg bg-white shadow-sm px-3 px-md-4" style={{ height: "80px" }}>
-        <div className="container-fluid px-4">
+      <nav className="navbar navbar-expand-lg bg-white shadow-sm" style={{ height: "80px" }}>
+        <div className="container">
 
           {/* ==== Logo ==== */}
           <div className="d-flex justify-content-start flex-auto">
@@ -288,66 +288,69 @@ useEffect(() => {
           <div className="collapse navbar-collapse d-none d-lg-flex" id="navbarScroll">
           <div className="navbar-nav my-lg-0 navbar-nav-scroll" ref={dropdownRef}>
           <div className="nav-item dropdown">
-        <a 
-        className="nav-link"
-        href="#"
-        role="button"
-        // data-bs-toggle="dropdown"
-        aria-expanded="false"
-        onClick={(e) => {
-        e.preventDefault();
-        handleClickToggle();
-      }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{color: '#000000', fontWeight: '500'}}
-      >
-        Explore Courses{" "}
-    <span className="ms-1 arrow-icon">
-      {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-    </span>
-      </a>
-  {isDropdownOpen && (
-        <ul
-          className="dropdown-menu custom-dropdown-menu show"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <li>
-            <div className="course-content">
-              <div className="scrollable-category-list">
-                {/* <h2 className="dropdown-sidebar-heading">All Categories</h2> */}
-                <DropdownSidebar onSelectCategory={handleCategorySelect} 
-                selectedCategory={selectedCategory}/>
-              </div>
+          <div className="nav-item dropdown">
+            <button
+              className="nav-link"
+              type="button"
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="true"
+              onClick={handleClickToggle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              style={{ color: "#000000", fontWeight: "500", background: "none", border: "none" }}
+            >
+              Explore Courses{" "}
+              <span className="ms-1 arrow-icon" aria-hidden="true">
+                {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+              </span>
+            </button>
 
-              <div className="sidebar-right-container">
-                <meta
-                  name="description"
-                  content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
-                />
-                <div className="selected-category-heading">
-                {selectedCategory} Courses
-              </div>
-                <div>
-                  <DropdownCardRight
-                    category={selectedCategory}
-                    currentPage={currentPage}
-                    cardsPerPage={cardsPerPage}
-                    onTotalCardsChange={updateTotalCards}
-                  />
-                </div>
+            {isDropdownOpen && (
+              <ul
+                className="dropdown-menu custom-dropdown-menu show"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
                 <li>
-                  <button className="dropdown-all-btn" onClick={() => navigate('/coursedetails')} >
-                    Explore All Courses
-                  </button>
+                  <div className="course-content">
+                    <div className="scrollable-category-list">
+                      <DropdownSidebar
+                        onSelectCategory={handleCategorySelect}
+                        selectedCategory={selectedCategory}
+                      />
+                    </div>
+
+                    <div className="sidebar-right-container">
+                      <meta
+                        name="description"
+                        content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
+                      />
+                      <div className="selected-category-heading">
+                        {selectedCategory} Courses
+                      </div>
+                      <div>
+                        <DropdownCardRight
+                          category={selectedCategory}
+                          currentPage={currentPage}
+                          cardsPerPage={cardsPerPage}
+                          onTotalCardsChange={updateTotalCards}
+                        />
+                      </div>
+                      <li>
+                        <button
+                          className="dropdown-all-btn"
+                          onClick={() => navigate("/coursedetails")}
+                        >
+                          Explore All Courses
+                        </button>
+                      </li>
+                    </div>
+                  </div>
                 </li>
-              </div>
-            </div>
-          </li>
-        </ul>
-      )}
-    </div>
+              </ul>
+            )}
+          </div>
+          </div>
     </div>
         <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: "600px" }}>
             <form className="d-flex flex-grow-1" role="search">
@@ -398,10 +401,12 @@ useEffect(() => {
 
           {/* ==== Mobile Right Icons ==== */}
           <div className="d-flex align-items-center d-lg-none ms-auto">
-            <button className="btn" type="button">
-            <BsCart2 size={24}/>
+            {isLoggedIn && (
+            <button className="btn" type="button" aria-label="Go to cart">
+              <BsCart2 size={24} />
             </button>
-            <button className="btn" type="button" onClick={() => setShowMobileSearch(true)}>
+            )}
+            <button className="btn" type="button" onClick={() => setShowMobileSearch(true)} aria-label="Search">
               <IoSearch size={24} className="text-info" />
             </button>
             <button
@@ -427,12 +432,15 @@ useEffect(() => {
               </>
             ) : (
               <div className="d-flex align-items-center gap-3">
-              <BsCart2 size={28}/>
+              <button className="btn" aria-label="Go to cart">
+              <BsCart2 size={28} />
+            </button>
               <div className="dropdown">
                 <button
                   className="btn d-flex align-items-center"
                   data-bs-toggle="dropdown"
                   aria-expanded={isOpen}
+                  aria-controls="userMenu"
                   style={{
                   border: "none",
                   boxShadow: "none",
@@ -451,12 +459,12 @@ useEffect(() => {
                   )}
                   <span className="ms-2" style={{fontSize: 'small'}}>{userData?.name || "User"}</span>
                   {isOpen ? (
-                    <MdKeyboardArrowUp className="ms-1 arrow-icon" />
+                    <MdKeyboardArrowUp className="ms-1 arrow-icon" aria-hidden="true"/>
                   ) : (
-                    <MdKeyboardArrowDown className="ms-1 arrow-icon" />
+                    <MdKeyboardArrowDown className="ms-1 arrow-icon" aria-hidden="true"/>
                   )}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end">
+                <ul  id="userMenu" className="dropdown-menu dropdown-menu-end">
                   <li>
                     <Link className="dropdown-item" to="/userdashboard/Enrolls">
                       <FaUserAlt /> Dashboard
@@ -556,7 +564,7 @@ useEffect(() => {
                   boxShadow: "none",
                 }}
                 />
-                <button className="btn btn-info d-flex align-items-center justify-content-center search-btn" type="submit">
+                <button className="btn btn-info d-flex align-items-center justify-content-center search-btn" type="submit" aria-label="Search">
                   <IoSearch size={20} className="text-white" />
                 </button>
               </div>

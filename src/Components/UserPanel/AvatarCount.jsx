@@ -19,10 +19,10 @@ export default function CustomSurplusAvatars() {
   return (
     <AvatarGroup max={6} className="avatar-group">
       {shuffled.map((src, index) => (
-        <Avatar key={index} src={src} />
+        <Avatar key={index} src={src} alt={`Learner avatar ${index + 1}`}/>
       ))}
 
-      <Avatar className="avatar-number">+25k</Avatar>
+      <Avatar className="avatar-number" alt="25 thousand more learners">+25k</Avatar>
     </AvatarGroup>
   );
 }

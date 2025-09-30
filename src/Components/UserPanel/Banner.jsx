@@ -119,7 +119,7 @@
 
 // Banner.js
 import React, { useEffect, useState, useRef } from "react";
-import banner from "../../Assets/newBanner.webp";
+import banner from "../../Assets/newBanner1.webp";
 import { Link, useNavigate } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
@@ -135,7 +135,7 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="home-banner">
+    <div className="home-banner container">
       {/* Left side content */}
       <motion.div
         className="home-content"
@@ -166,12 +166,9 @@ const Banner = () => {
             Start Your Certification
           </button>
 
-          <Link
-            className="home-browse-button"
-            onClick={() => navigate("/coursedetails")}
-          >
-            Browse All Courses
-          </Link>
+          <Link to="/coursedetails" className="home-browse-button">
+          Browse All Courses
+        </Link>
         </div>
       </motion.div>
 

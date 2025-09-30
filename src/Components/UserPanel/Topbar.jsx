@@ -203,42 +203,44 @@ const Topbar = () => {
 
   return (
     <div
-      className="container-fluid d-flex justify-content-between align-items-center text-white px-3 px-md-5"
+      className="topbar-wrapper w-100"
       style={{ background: "#0C8EBF", height: "45px" }}
     >
-      {/* Left Section */}
-      <div className="d-flex align-items-center">
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="d-flex align-items-center text-decoration-none text-white me-3"
-          aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
-        >
-          <FaPhone className="me-1 topbar-icon text-white" />
-          <span className="fw-normal topbar-text">{whatsappNumber}</span>
-        </a>
+      <div className="container d-flex justify-content-between align-items-center text-white px-3 h-100">
+        {/* Left Section */}
+        <div className="d-flex align-items-center">
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="d-flex align-items-center text-decoration-none text-white me-3"
+            aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
+          >
+            <FaPhone className="me-1 topbar-icon text-white" />
+            <span className="fw-normal topbar-text">{whatsappNumber}</span>
+          </a>
 
-        <a
-          href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="d-flex align-items-center text-decoration-none text-white"
-          aria-label="Send an email to trainings@hachion.co using Gmail"
-        >
-          <IoIosMail className="me-1 topbar-icon text-white" />
-          <span className="fw-normal topbar-text">trainings@hachion.co</span>
-        </a>
-      </div>
+          <a
+            href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="d-flex align-items-center text-decoration-none text-white"
+            aria-label="Send an email to trainings@hachion.co using Gmail"
+          >
+            <IoIosMail className="me-1 topbar-icon text-white" />
+            <span className="fw-normal topbar-text">trainings@hachion.co</span>
+          </a>
+        </div>
 
-      {/* Right Section */}
-      <div className="d-none d-md-block">
-        <Link
-          to="/corporate"
-          className="btn btn-md text-white text-nowrap "
-        >
-          Corporate Training
-        </Link>
+        {/* Right Section */}
+        <div className="d-none d-md-block">
+          <Link
+            to="/corporate"
+            className="btn btn-md text-white text-nowrap"
+          >
+            Corporate Training
+          </Link>
+        </div>
       </div>
     </div>
   );

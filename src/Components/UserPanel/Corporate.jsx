@@ -14,7 +14,7 @@ const Corporate = () => {
   return (
     <>
       <div className="corporate">
-        <div className="corporate-data">
+        <div className="corporate-data container">
           <img src={corporateImage} alt='corporate-image' className="corporate-image" loading="lazy"/>
            <div className="corporate-content">
             <h2 className="corporate-banner-text">Enhance Your Team’s Skills: Explore Our Corporate Training Options</h2>

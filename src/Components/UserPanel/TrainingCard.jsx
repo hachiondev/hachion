@@ -123,7 +123,7 @@ const handleShare = async (e) => {
         <div className="card-row">
         <h3 className="course-name">{heading}</h3>
         <div className="discount-lable">
-            {discountPercentage} off
+            {discountPercentage}% off
           </div>
         </div>
         <div className="date-time-container">

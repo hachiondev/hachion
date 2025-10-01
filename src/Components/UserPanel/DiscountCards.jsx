@@ -1,270 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import "./Corporate.css";
-// import DiscountCourseCard from './DiscountCourseCard';
-// import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
-
-// const DiscountCards = () => {
-//   const navigate = useNavigate();
-//   const [trendingCourses, setTrendingCourses] = useState([]);
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchTrendingCourses = async () => {
-//       setLoading(true);
-//       try {
-//         const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
-//         const trendingData = trendingResponse.data || [];
-
-//         const activeTrendingCourses = trendingData.filter(course => course.status);
-
-//         const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/all');
-//         const allCourses = allCoursesResponse.data || [];
-
-//         const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
-//         const allTrainers = trainersResponse.data || [];
-
-//         const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
-//           const courseDetails = allCourses.find(course => course.courseName === trendingCourse.course_name);
-//           const matchedTrainer = allTrainers.find(
-//             (t) => t.course_name.trim().toLowerCase() === trendingCourse.course_name.trim().toLowerCase()
-//           );
-
-//           return {
-//             ...trendingCourse,
-//             ...courseDetails,
-//             trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
-//           };
-//         });
-
-//         setTrendingCourses(detailedTrendingCourses);
-//       } catch (error) {
-//         console.error('Error fetching trending courses:', error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchTrendingCourses();
-//   }, []);
-
-//   const handleCardClick = (course) => {
-//     if (!course?.courseName) return;
-//     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-');
-//     navigate(`/coursedetails/${courseSlug}`);
-//   };
-
-//   const totalSlides = Math.ceil(trendingCourses.length / 2);
-
-//   const goToNext = () => {
-//     setActiveIndex((prev) => (prev + 1) % totalSlides);
-//   };
-
-//   const goToPrev = () => {
-//     setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-//   };
-
-//   const getCurrentCourses = () => {
-//     const start = activeIndex * 2;
-//     return trendingCourses.slice(start, start + 2);
-//   };
-
-//   return (
-//     <div className="container position-relative">
-//       {/* Left Arrow */}
-//       <FaAngleLeft className="custom-arrow left-arrow" onClick={goToPrev} />
-
-//       <div className="training-card-holder">
-    //     {loading ? (
-    //       Array.from({ length: 2 }).map((_, index) => (
-    //         <div className="skeleton-card" key={index}></div>
-    //       ))
-    //     ) : getCurrentCourses().length > 0 ? (
-    //       getCurrentCourses().map((course, index) => (
-    //         <DiscountCourseCard
-    //           key={index}
-    //           heading={course.courseName}
-    //           month={course.numberOfClasses}
-    //           image={`https://api.test.hachion.co/${course.courseImage}`}
-    //           course_id={course.id}
-    //           discountPercentage={course.discount}
-    //           trainer_name={course.trainerName}
-    //           level={course.levels}
-    //           onClick={() => handleCardClick(course)}
-    //           className="course-card"
-    //         />
-    //       ))
-    //     ) : (
-    //       <p>No courses available.</p>
-    //     )}
-    //   </div>
-
-//       {/* Right Arrow */}
-//       <FaAngleRight className="custom-arrow right-arrow" onClick={goToNext} />
-
-//       {/* Bottom Indicators */}
-//       <div className="indicators">
-//         {Array.from({ length: totalSlides }).map((_, i) => (
-//           <span
-//             key={i}
-//             className={`dot ${i === activeIndex ? "active" : ""}`}
-//             onClick={() => setActiveIndex(i)}
-//           ></span>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DiscountCards;
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import "./Blogs.css";
-// import { useNavigate } from "react-router-dom";
-// import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-// import { Carousel } from "react-bootstrap";
-// import DiscountCourseCard from "./DiscountCourseCard";
-
-// const DiscountCards = () => {
-//   const navigate = useNavigate();
-//   const [trendingCourses, setTrendingCourses] = useState([]);
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchTrendingCourses = async () => {
-//       setLoading(true);
-//       try {
-//         const trendingResponse = await axios.get("https://api.test.hachion.co/trendingcourse");
-//         const trendingData = trendingResponse.data || [];
-
-//         const activeTrendingCourses = trendingData.filter((course) => course.status);
-
-//         const allCoursesResponse = await axios.get("https://api.test.hachion.co/courses/all");
-//         const allCourses = allCoursesResponse.data || [];
-
-//         const trainersResponse = await axios.get("https://api.test.hachion.co/trainers");
-//         const allTrainers = trainersResponse.data || [];
-
-//         const detailedTrendingCourses = activeTrendingCourses.map((trendingCourse) => {
-//           const courseDetails = allCourses.find(
-//             (course) => course.courseName === trendingCourse.course_name
-//           );
-//           const matchedTrainer = allTrainers.find(
-//             (t) =>
-//               t.course_name.trim().toLowerCase() ===
-//               trendingCourse.course_name.trim().toLowerCase()
-//           );
-
-//           return {
-//             ...trendingCourse,
-//             ...courseDetails,
-//             trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
-//           };
-//         });
-
-//         setTrendingCourses(detailedTrendingCourses);
-//       } catch (error) {
-//         console.error("Error fetching trending courses:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchTrendingCourses();
-//   }, []);
-
-//   const handleCardClick = (course) => {
-//     if (!course?.courseName) return;
-//     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-//     navigate(`/coursedetails/${courseSlug}`);
-//   };
-
-//   // Group courses in chunks of 2
-//   const groupedCourses = [];
-//   for (let i = 0; i < trendingCourses.length; i += 2) {
-//     groupedCourses.push(trendingCourses.slice(i, i + 2));
-//   }
-
-//   const goToPrev = () => {
-//     setActiveIndex((prevIndex) =>
-//       prevIndex === 0 ? groupedCourses.length - 1 : prevIndex - 1
-//     );
-//   };
-
-//   const goToNext = () => {
-//     setActiveIndex((prevIndex) => (prevIndex + 1) % groupedCourses.length);
-//   };
-
-//   return (
-//     <div className="recent-entries-container">
-//       <Carousel
-//         activeIndex={activeIndex}
-//         onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
-//         indicators={false}
-//         controls={false}
-//         interval={null}
-//       >
-//         {groupedCourses.map((group, index) => (
-//           <Carousel.Item key={index}>
-//             <div className="limited-card-holder">
-//               {loading
-//                 ? Array.from({ length: 2 }).map((_, idx) => (
-//                     <div className="skeleton-card" key={idx}></div>
-//                   ))
-//                 : group.map((course, idx) => (
-//                     <DiscountCourseCard
-//                       key={idx}
-//                       heading={course.courseName}
-//                       month={course.numberOfClasses}
-//                       image={`https://api.test.hachion.co/${course.courseImage}`}
-//                       course_id={course.id}
-//                       discountPercentage={course.discount}
-//                       amount={course.itotal}
-//                       totalAmount={course.iamount}
-//                       trainer_name={course.trainerName}
-//                       level={course.levels}
-//                       onClick={() => handleCardClick(course)}
-//                       className="course-card"
-//                     />
-//                   ))}
-//             </div>
-//           </Carousel.Item>
-//         ))}
-//       </Carousel>
-
-//       {/* Buttons & Indicators */}
-//       <div className="carousel-controls">
-//         <button className="arrow custom-prev" onClick={goToPrev}>
-//           <IoIosArrowBack />
-//         </button>
-
-//         <div className="indicator-wrapper">
-//           <ul className="carousel-indicators-line">
-//             {groupedCourses.map((_, index) => (
-//               <li
-//                 key={index}
-//                 onClick={() => setActiveIndex(index)}
-//                 className={index === activeIndex ? "active" : ""}
-//               />
-//             ))}
-//           </ul>
-//         </div>
-
-//         <button className="arrow custom-next" onClick={goToNext}>
-//           <IoIosArrowForward />
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DiscountCards;
-
 import React, { useState, useEffect } from "react";
 import "./Corporate.css";
 import "./Blogs.css";
@@ -274,14 +7,43 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import DiscountCourseCard from "./DiscountCourseCard";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const countryToCurrencyMap = {
+  IN: 'INR',
+  US: 'USD',
+  GB: 'GBP',
+  AU: 'AUD',
+  CA: 'CAD',
+  AE: 'AED',
+  JP: 'JPY',
+  EU: 'EUR',
+  TH: 'THB',
+  DE: 'EUR',
+  FR: 'EUR',
+  QA: 'QAR',
+  CN: 'CNY',
+  RU: 'RUB',
+  KR: 'KRW',
+  BR: 'BRL',
+  MX: 'MXN',
+  ZA: 'ZAR',
+  NL: 'EUR',
+};
 const DiscountCards = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [cardsPerRow, setCardsPerRow] = useState(2);
   const [trendingCourses, setTrendingCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [currency, setCurrency] = useState('INR');
+const [fx, setFx] = useState(1); 
+const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
 
-  // Fetch trending courses
+   
+const [country, setCountry] = useState('IN');      
+const [fxFromUSD, setFxFromUSD] = useState(1);     
+
+
+const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString(); 
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       setLoading(true);
@@ -326,7 +88,7 @@ const DiscountCards = () => {
     fetchTrendingCourses();
   }, []);
 
-  // Handle responsive cards per row
+  
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 576) setCardsPerRow(1);
@@ -353,6 +115,39 @@ const DiscountCards = () => {
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${courseSlug}`);
   };
+  
+useEffect(() => {
+  (async () => {
+    try {
+      
+      const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+      const cc = geoResponse?.data?.country || 'US';
+      setCountry(cc);
+
+      const cur = countryToCurrencyMap[cc] || 'USD';
+      setCurrency(cur);
+      if (cc === 'IN' || cc === 'US') { setFxFromUSD(1); return; }
+
+      
+      const cached = JSON.parse(localStorage.getItem('fxRatesUSD') || 'null');
+      const fresh = cached && (Date.now() - cached.t) < 6 * 60 * 60 * 1000;
+      let rates = cached?.rates;
+
+      if (!fresh) {
+        const exchangeResponse = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+        rates = exchangeResponse.data.rates;
+        localStorage.setItem('fxRatesUSD', JSON.stringify({ t: Date.now(), rates }));
+      }
+
+      setFxFromUSD(rates[cur] || 1);
+    } catch (e) {
+      console.error('Currency detection/FX failed', e);
+      setCountry('US');
+      setCurrency('USD');
+      setFxFromUSD(1);
+    }
+  })();
+}, []);
 
   return (
     <div className="position-relative text-center">
@@ -373,9 +168,36 @@ const DiscountCards = () => {
                 month={course.numberOfClasses}
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
-                discountPercentage={course.discount}
-                amount={course.itotal}
-                totalAmount={course.iamount}
+                
+                  discountPercentage={
+  country === 'IN'
+    ? (course.idiscount != null ? Number(course.idiscount) : 0)
+    : (course.discount  != null ? Number(course.discount)  : 0)
+}
+                amount={
+  (() => {
+    const isIN = country === 'IN';
+    const isUS = country === 'US';
+
+    const rawNow   = isIN ? course.itotal  : course.total;   
+    const rawMrp   = isIN ? course.iamount : course.amount;  
+
+    const valNow = isIN ? Number(rawNow) : (Number(rawNow) * (isUS ? 1 : fxFromUSD));
+    return `${currency} ${fmt(valNow)}`;
+  })()
+}
+totalAmount={
+  (() => {
+    const isIN = country === 'IN';
+    const isUS = country === 'US';
+
+    const rawNow   = isIN ? course.itotal  : course.total;
+    const rawMrp   = isIN ? course.iamount : course.amount;
+
+    const valMrp = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
+    return `${fmt(valMrp)}`;
+  })()
+}
                 trainer_name={course.trainerName}
                 level={course.levels}
                 onClick={() => handleCardClick(course)}

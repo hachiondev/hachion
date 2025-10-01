@@ -253,7 +253,7 @@ const Blogs = () => {
                 </div>
               </div>
               <div className="course-row">
-                {/* <div className="col-md-4">
+                <div className="col-md-4">
                   <label className="form-label">Author</label>
                   <input
                     type="text"
@@ -263,7 +263,7 @@ const Blogs = () => {
                     value={formData.author}
                     onChange={handleInputChange}
                   />
-                </div> */}
+                </div>
                 <div className="col-md-4">
                   <label className="form-label">Blog Image (w-360 x h-160px)</label>
                   <input
@@ -397,7 +397,7 @@ const Blogs = () => {
                     <StyledTableCell align="center">Category</StyledTableCell>
                     <StyledTableCell align="center">Image</StyledTableCell>
                     <StyledTableCell align="center">Title</StyledTableCell>
-                    {/* <StyledTableCell align="center">Author</StyledTableCell> */}
+                    <StyledTableCell align="center">Author</StyledTableCell>
                     <StyledTableCell align="center">PDF</StyledTableCell>
                     <StyledTableCell align="center">Description</StyledTableCell>
                     <StyledTableCell align="center">Date</StyledTableCell>

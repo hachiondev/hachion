@@ -48,6 +48,8 @@ import EnrollPayment from './Components/UserPanel/EnrollPayment';
 import OnlineInstallments from './Components/UserPanel/OnlineInstallments';
 import ConfirmOtp from './Components/UserPanel/ConfirmOtp';
 import ResetPassword from './Components/UserPanel/ResetPassword';
+import ViewFaq from './Components/UserPanel/ViewFaq';
+import DiscountDeals from './Components/UserPanel/DiscountDeals';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -92,6 +94,8 @@ function AppRoutes() {
       <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path="/" element={<Home />} />
+      <Route path='/viewfaqs' element={<ViewFaq/>}/>
+      <Route path='/discountdeals' element={<DiscountDeals/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
       <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>

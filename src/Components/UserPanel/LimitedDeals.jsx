@@ -3,8 +3,10 @@ import Instructorbanner from "../../Assets/topinstructor.webp";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import DiscountCards from "./DiscountCards";
+import {  useNavigate } from 'react-router-dom';
 
 const LimitedDeals = () => {
+  const navigate= useNavigate();
 
   return (
     <div className="limited-component container">
@@ -15,7 +17,7 @@ const LimitedDeals = () => {
           Special prices on selected courses for a limited period. Countdown to savings starts now!
         </p>
         <div className="button-row">
-          <button className="limited-deal-button">Explore All Deals</button>
+          <button className="limited-deal-button" onClick={() => {navigate("/discountdeals");}}>Explore All Deals</button>
         </div>
         </div>
 

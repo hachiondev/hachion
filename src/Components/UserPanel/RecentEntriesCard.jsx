@@ -65,7 +65,7 @@ const RecentEntriesCard = ({
         {category && <span className="category-badge">{category}</span>}
 
         {/* Title */}
-        <p className="content">{content}</p>
+        <h3 className="content">{content}</h3>
 
         {/* Description */}
         <p className="blog-card-description">A hacker is someone who finds and exploits weaknesses in systems—these can be computer programs, websites, phones, or even human behavior.</p>

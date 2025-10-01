@@ -38,14 +38,14 @@ const HelpFaq = () => {
   };
 
   return (
-      <div className="curriculum-topic">
+      <div className="help-faq-topic container">
         {staticFaqs.map((item, index) => (
           <div key={index}>
             <div
               className="help-faq-content"
               onClick={() => handleToggleExpand(index)}
             >
-              <p>{item.faq_title}</p>
+              <h3 className="help-faq-que">{item.faq_title}</h3>
               <p>
                 {expandedTopics[index] ? (
                   <MdKeyboardArrowUp className="ms-1 arrow-icon"/>
@@ -57,7 +57,7 @@ const HelpFaq = () => {
 
             {expandedTopics[index] && (
               <div className="help-faq-details">
-                <div className="quill-content">{item.description}</div>
+                <div className="faq-description">{item.description}</div>
               </div>
             )}
           </div>

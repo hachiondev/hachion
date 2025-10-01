@@ -3,12 +3,13 @@ import Faq from "../../Assets/faq.webp";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import HelpFaq from "./HelpFaq";
+import {  useNavigate } from 'react-router-dom';
 
 const HomeFaq = () => {
-
+const navigate= useNavigate();
   return (
     <div className="home-faq-banner container">
-    <div className="home-faq-data">
+    <div className="home-faq-data container">
       {/* Left side content */}
       <div className="home-faq-content">
         <p className="instructor-title-text">
@@ -29,7 +30,9 @@ const HomeFaq = () => {
         fetchpriority="high"
       />
     </div>
-    <button className="home-start-button">View FAQS</button>
+    <button className="home-start-button" onClick={() => {navigate("/viewfaqs");}}>
+      View FAQS
+      </button>
     </div>
   );
 };

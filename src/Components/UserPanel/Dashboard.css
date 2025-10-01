@@ -457,7 +457,7 @@ padding: 0px;
 .register-field {
   margin-bottom: 20px;
 }
-.password-field, .dashboard-field {
+.password-field, .dashboard-field, .form-field input {
   position: relative;
   display: flex;
   align-items: center;
@@ -478,6 +478,21 @@ padding: 0px;
   border:none;
   margin:0 1vh;
   border: 1px solid #b3b3b3;
+}
+
+.form-field input {
+  height: 48px;
+  padding-right: 10px;
+  border:none;
+  margin:0 1vh;
+  border:none;
+}
+.form-field textarea {
+  min-height: 100px;
+  padding-right: 10px;
+  border:none;
+  margin:0 1vh;
+  border:none;
 }
 
 .eye-icon {

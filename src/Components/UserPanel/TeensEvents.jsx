@@ -5,6 +5,29 @@ import TeensCard from './TeensCard';
 import CardsPagination from './CardsPagination';
 import './Home.css';
 
+
+const countryToCurrencyMap = {
+  IN: 'INR',
+  US: 'USD',
+  GB: 'GBP',
+  AU: 'AUD',
+  CA: 'CAD',
+  AE: 'AED',
+  JP: 'JPY',
+  EU: 'EUR',
+  TH: 'THB',
+  DE: 'EUR',
+  FR: 'EUR',
+  QA: 'QAR',
+  CN: 'CNY',
+  RU: 'RUB',
+  KR: 'KRW',
+  BR: 'BRL',
+  MX: 'MXN',
+  ZA: 'ZAR',
+  NL: 'EUR',
+};
+
 const TeensEvents = () => {
   const navigate = useNavigate();
   const [summerCourses, setSummerCourses] = useState([]);
@@ -13,6 +36,14 @@ const TeensEvents = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(4);
+const [currency, setCurrency] = useState('INR');
+const [fx, setFx] = useState(1); 
+const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
+
+   
+const [country, setCountry] = useState('IN');      
+const [fxFromUSD, setFxFromUSD] = useState(1);   
+const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString(); 
 
   useEffect(() => {
     const fetchSummerCourses = async () => {
@@ -92,6 +123,40 @@ const TeensEvents = () => {
     window.scrollTo(0, 0);
   };
 
+useEffect(() => {
+  (async () => {
+    try {
+      
+      const geoResponse = await axios.get('https://ipinfo.io/json?token=82aafc3ab8d25b');
+      const cc = geoResponse?.data?.country || 'US';
+      setCountry(cc);
+
+      
+      const cur = countryToCurrencyMap[cc] || 'USD';
+      setCurrency(cur);
+      if (cc === 'IN' || cc === 'US') { setFxFromUSD(1); return; }
+
+      
+      const cached = JSON.parse(localStorage.getItem('fxRatesUSD') || 'null');
+      const fresh = cached && (Date.now() - cached.t) < 6 * 60 * 60 * 1000;
+      let rates = cached?.rates;
+
+      if (!fresh) {
+        const exchangeResponse = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+        rates = exchangeResponse.data.rates;
+        localStorage.setItem('fxRatesUSD', JSON.stringify({ t: Date.now(), rates }));
+      }
+
+      setFxFromUSD(rates[cur] || 1);
+    } catch (e) {
+      console.error('Currency detection/FX failed', e);
+      setCountry('US');
+      setCurrency('USD');
+      setFxFromUSD(1);
+    }
+  })();
+}, []);
+
   return (
     <div className="training-events container">
       <div className="training-title-head">
@@ -122,15 +187,44 @@ const TeensEvents = () => {
           filteredCourses
             .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
             .map((course, index) => (
+              
               <TeensCard
                 key={index}
                 heading={course.courseName}
                 month={course.numberOfClasses}
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
-                discountPercentage={course.discount}
-                amount={course.itotal}
-                totalAmount={course.iamount}
+                
+                 discountPercentage={
+  country === 'IN'
+    ? (course.idiscount != null ? Number(course.idiscount) : 0)
+    : (course.discount  != null ? Number(course.discount)  : 0)
+}
+
+                amount={
+  (() => {
+    const isIN = country === 'IN';
+    const isUS = country === 'US';
+
+    const rawNow   = isIN ? course.itotal  : course.total;   
+    const rawMrp   = isIN ? course.iamount : course.amount;  
+
+    const valNow = isIN ? Number(rawNow) : (Number(rawNow) * (isUS ? 1 : fxFromUSD));
+    return `${currency} ${fmt(valNow)}`;
+  })()
+}
+totalAmount={
+  (() => {
+    const isIN = country === 'IN';
+    const isUS = country === 'US';
+
+    const rawNow   = isIN ? course.itotal  : course.total;
+    const rawMrp   = isIN ? course.iamount : course.amount;
+
+    const valMrp = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
+    return `${fmt(valMrp)}`;
+  })()
+}
                 trainer_name={course.trainerName}
                 level={course.levels}
                 onClick={() => handleCardClick(course)}
@@ -141,6 +235,7 @@ const TeensEvents = () => {
           <p>No courses available.</p>
         )}
       </div>
+     
     </div>
   );
 };

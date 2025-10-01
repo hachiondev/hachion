@@ -45,12 +45,15 @@ const TrainingEvents = () => {
               course.courseName.toLowerCase().trim() ===
               scheduleItem.schedule_course_name.toLowerCase().trim()
           );
-
+console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem.trainer_name);
           return {
             ...scheduleItem,
+            trainerName: scheduleItem.trainer_name, 
             course_id: matchingCourse?.id || null,
             course_image: matchingCourse?.courseImage || "",
             created_at: matchingCourse?.createdAt || "",
+            numberOfClasses: matchingCourse?.numberOfClasses || null,
+            discount: Number(matchingCourse?.discount ?? 0), 
           };
         });
         setMergedCourses(mergedData);
@@ -298,8 +301,10 @@ training for SAT and ACT success</p>
       <div className="skeleton-card" key={i}></div>
     ))
   ) : filteredCourses.length > 0 ? (
+    
     (viewAll ? filteredCourses : filteredCourses.slice(0, 4)).map(
       (course, index) => (
+
         <TrainingCard
           key={course.course_id || index}
           id={course.course_id}
@@ -307,6 +312,7 @@ training for SAT and ACT success</p>
           discountPercentage={course.discount}
           trainer_name={course.trainerName}
           level={course.levels}
+          month={course.numberOfClasses}
           image={
             course.course_image
               ? `https://api.test.hachion.co/${course.course_image}`

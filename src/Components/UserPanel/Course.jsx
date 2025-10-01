@@ -166,6 +166,7 @@ import StickyBar from './StickyBar';
 import './Course.css';
 import { Helmet } from 'react-helmet-async';
 import TrendingCourseNames from './TrendingCourseNames';
+import InstructorProfile from './InstructorProfile';
 
 const Course = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -258,6 +259,7 @@ const Course = () => {
           </div>
         </div>
         <TrendingCourseNames />
+        <InstructorProfile />
         <Footer />
         <StickyBar />
       </div>

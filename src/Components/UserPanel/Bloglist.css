@@ -395,3 +395,59 @@
   background-color: #d9d9d9; /* Gray background for disabled */
   cursor: not-allowed; /* Not-allowed cursor */
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  margin: 0 5px;
+  cursor: pointer;
+  border: 1px solid #fff; /* Remove default border */
+  background-color: #fff; /* Bootstrap primary color */
+  color: #6D6D6D; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 50%; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth color transition */
+}
+
+.pagination-arrow {
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+  margin: 0 10px; /* Space between buttons */
+  padding: 5px; /* Add some padding */
+  border: 1px solid #6D6D6D !important;
+  background-color: #fff; /* Bootstrap primary color */
+  color: #6D6D6D; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 50%; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth color transition */
+}
+.pagination-icon{
+  font-size: 1.5rem;
+  color: #6D6D6D;
+}
+
+.pagination-icon:hover{
+  color: #00aaef;
+}
+.pagination button:hover{
+  color: #00aaef;
+  border: 1px solid #00aaef;
+}
+.pagination .active {
+  color: #00aaef;
+  border: 1px solid #fff;
+  font-weight: bold;
+}
+
+.pagination button:disabled {
+  color: #6a6a6a;
+  background-color: #d9d9d9; /* Gray background for disabled */
+  cursor: not-allowed; /* Not-allowed cursor */
+}

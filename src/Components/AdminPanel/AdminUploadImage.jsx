@@ -22,6 +22,13 @@ import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 
+const sortImages = (arr) =>
+  arr.slice().sort((a, b) =>
+    (a.categoryName || '').localeCompare(b.categoryName || '', 'en', { sensitivity: 'base' }) ||
+    (a.courseName   || '').localeCompare(b.courseName   || '', 'en', { sensitivity: 'base' }) ||
+    (a.originalFileName || '').localeCompare(b.originalFileName || '', 'en', { numeric: true, sensitivity: 'base' })
+  );
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -78,13 +85,19 @@ const [courseNames, setCourseNames] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   
-  const dataSource = filteredImages.length ? filteredImages : images;
-  const displayedCategories = dataSource.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  // const dataSource = filteredImages.length ? filteredImages : images;
+  // const displayedCategories = dataSource.slice(
+  //   (currentPage - 1) * rowsPerPage,
+  //   currentPage * rowsPerPage
+  // );
 
-  
+  const baseData = filteredImages.length ? filteredImages : images;
+const dataSource = sortImages(baseData); // <-- enforce order here
+const displayedCategories = dataSource.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
@@ -115,7 +128,6 @@ const [courseNames, setCourseNames] = useState([]);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
-     console.log(`Changing field: ${name} => ${value}`);
     setImageData(prev => ({ ...prev, [name]: value }));
 
     if (name === "category_name") {
@@ -134,27 +146,43 @@ const [courseNames, setCourseNames] = useState([]);
   };
 
   
+  // const handleDateFilter = () => {
+  //   const filtered = images.filter((item) => {
+  //     const imageDate = item.date ? new Date(item.date) : null;
+  //     const start = startDate ? dayjs(startDate).startOf('day').toDate() : null;
+  //     const end = endDate ? dayjs(endDate).endOf('day').toDate() : null;
+
+  //     const matchSearch =
+  //       (item.image_name || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       (item.image_url || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       (item.date ? dayjs(item.date).format('YYYY-MM-DD') : "").toLowerCase().includes(searchTerm.toLowerCase());
+
+  //     const inRange =
+  //       (!start || (imageDate && imageDate >= start)) &&
+  //       (!end || (imageDate && imageDate <= end));
+
+  //     return matchSearch && inRange;
+  //   });
+
+  //   setFilteredImages(filtered);
+  //   setCurrentPage(1);
+  // };
+
   const handleDateFilter = () => {
-    const filtered = images.filter((item) => {
-      const imageDate = item.date ? new Date(item.date) : null;
-      const start = startDate ? dayjs(startDate).startOf('day').toDate() : null;
-      const end = endDate ? dayjs(endDate).endOf('day').toDate() : null;
+  const start = startDate ? dayjs(startDate).startOf('day') : null;
+  const end   = endDate   ? dayjs(endDate).endOf('day')   : null;
 
-      const matchSearch =
-        (item.image_name || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.image_url || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.date ? dayjs(item.date).format('YYYY-MM-DD') : "").toLowerCase().includes(searchTerm.toLowerCase());
+  const filtered = images.filter((item) => {
+    const d = item.createdDate ? dayjs(item.createdDate) : null;
+    const inRange =
+      (!start || (d && d.isAfter(start.subtract(1, 'millisecond')))) &&
+      (!end   || (d && d.isBefore(end.add(1, 'millisecond'))));
+    return inRange;
+  });
 
-      const inRange =
-        (!start || (imageDate && imageDate >= start)) &&
-        (!end || (imageDate && imageDate <= end));
-
-      return matchSearch && inRange;
-    });
-
-    setFilteredImages(filtered);
-    setCurrentPage(1);
-  };
+  setFilteredImages(sortImages(filtered));
+  setCurrentPage(1);
+};
 
   const handleDateReset = () => {
     setStartDate(null);
@@ -223,11 +251,13 @@ const handleDelete = async (fileName) => {
 
   try {
     const response = await axios.delete(`https://api.test.hachion.co/upload_images/delete/${fileName}`);
-    console.log("Delete success:", response.data);
+    
 
-    setImages(prev =>
-      prev.filter(courseRow => courseRow.fileName !== fileName)
-    );
+    // setImages(prev =>
+    //   prev.filter(courseRow => courseRow.fileName !== fileName)
+    // );
+setImages(prev => prev.filter(row => row.fileName !== fileName));
+setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
 
     alert(response.data); 
   } catch (error) {
@@ -364,61 +394,58 @@ const handleDelete = async (fileName) => {
                  <button
   className='submit-btn'
   onClick={async () => {
-    console.log("Submit button clicked");
+    
 
     
     setErrorMessage("");
     setSuccessMessage("");
 
     try {
-      console.log("Current imageData:", imageData);
+      
       if (!imageData.category_name || !imageData.courseName) {
-        console.log("Validation failed: Missing category or course");
+      
         setErrorMessage("Please select category and course");
          setTimeout(() => setErrorMessage(""), 3000);
         return;
       }
-      console.log("Category and Course selected:", imageData.category_name, imageData.courseName);
+      
 
       const hasFiles = rows.some(r => r.tool_image);
       if (!hasFiles) {
-        console.log("Validation failed: No files uploaded");
+        
         setErrorMessage("Please upload at least one image");
          setTimeout(() => setErrorMessage(""), 3000);
         return;
       }
-      console.log("Files to upload:", rows.filter(r => r.tool_image));
-
+      
       const fd = new FormData();
       fd.append('categoryName', imageData.category_name);
       fd.append('courseName', imageData.courseName);
       rows.forEach((r, index) => {
         if (r.tool_image) {
-          console.log(`Appending file [${index}]:`, r.tool_image.name);
+          
           fd.append('files', r.tool_image);
         }
       });
 
-      console.log("Sending POST request to /upload");
+      
       const response = await axios.post(
         'https://api.test.hachion.co/upload_images/upload',
         fd,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      console.log("Upload success:", response.data);
+      
       setSuccessMessage(response.data || "Images uploaded successfully");
 
       // handleReset(); 
 
       const resp = await axios.get("https://api.test.hachion.co/upload_images/all");
-      console.log("Fetched latest images:", resp.data);
+      
       setImages(resp.data || []);
 
     } catch (err) {
-      console.log("Error during upload:", err);
-      console.log("Error response data:", err.response?.data);
-      console.log("Error message:", err.message);
+      
       setErrorMessage(err.response?.data || "Error uploading images");
     }
   }}
@@ -493,15 +520,27 @@ const handleDelete = async (fileName) => {
                       <button
                         className="btn-search"
                         type="button"
-                        onClick={() => {
+                        // onClick={() => {
                           
-                          const filtered = images.filter(item =>
-                            (item.image_name || '').toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            (item.image_url || '').toString().toLowerCase().includes(searchTerm.toLowerCase())
-                          );
-                          setFilteredImages(filtered);
-                          setCurrentPage(1);
-                        }}
+                        //   const filtered = images.filter(item =>
+                        //     (item.image_name || '').toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        //     (item.image_url || '').toString().toLowerCase().includes(searchTerm.toLowerCase())
+                        //   );
+                        //   setFilteredImages(filtered);
+                        //   setCurrentPage(1);
+                        // }}
+                        onClick={() => {
+  const q = searchTerm.toLowerCase();
+  const filtered = images.filter(item =>
+    (item.originalFileName || '').toLowerCase().includes(q) ||
+    (item.fileUrl || '').toLowerCase().includes(q) ||
+    (item.categoryName || '').toLowerCase().includes(q) ||
+    (item.courseName || '').toLowerCase().includes(q)
+  );
+  setFilteredImages(sortImages(filtered)); // keep it sorted
+  setCurrentPage(1);
+}}
+
                       >
                         <IoSearch style={{ fontSize: '2rem' }} />
                       </button>
@@ -537,7 +576,9 @@ const handleDelete = async (fileName) => {
               <TableBody>
   {displayedCategories.length > 0 ? (
     displayedCategories.map((courseRow, index) => (
-      <StyledTableRow key={courseRow.uploadImagesCategoryId || index}>
+      // <StyledTableRow key={courseRow.uploadImagesCategoryId || index}>
+      <StyledTableRow key={courseRow.fileUrl || `${courseRow.uploadImagesCategoryId}-${courseRow.fileName}`}>
+
         <StyledTableCell align="center"><Checkbox /></StyledTableCell>
         <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
         <StyledTableCell align="left">{courseRow.categoryName}</StyledTableCell>

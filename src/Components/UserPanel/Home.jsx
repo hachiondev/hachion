@@ -101,8 +101,8 @@ export const Home = () => {
 <MeetInstructorBanner/>
 <ShareKnowledgeBanner/>
 {/* <Career/> */}
-<Learners page="home"/>
  <RecentEntries />
+ <Learners page="home"/>
 <HomeFaq/>
 <Footer/>
 {/* {showScrollButton && (

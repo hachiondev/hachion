@@ -141,7 +141,9 @@ const LearnerCard = (props) => {
       <div className='learner-card'>
         <div className='learner-top'>
           <div className='learner-image'>
-            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' />
+            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' variant="square"/>
+          </div>
+          <div className='rating'>{renderStarRating(props.rating)}</div>
           </div>
           <div className='learner-info'>
             <div className='learner-name'>
@@ -150,7 +152,7 @@ const LearnerCard = (props) => {
             <p className='job-location'>
               {props.location || "Unknown"}</p>
           </div>
-        </div>
+        
         <div className="learner-description-bottom">
         <p className="learner-description">
           {props.content && props.content.length > 150
@@ -177,13 +179,14 @@ const LearnerCard = (props) => {
         <DialogContent>
           <div className='popup-content'>
           <div className='learner-image'>
-            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' />
+            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' variant="square"/>
             </div>
+            <div className='rating'>{renderStarRating(props.rating)}</div>
             <div className='learner-name'>
             <p className='name'>{props.name}</p>
-                </div>
             <p className='job-location'>{props.location}</p>
-            <p className='full-review'>{props.content}</p>
+            </div>
+            <p className='learner-description'>{props.content}</p>
           </div>
         </DialogContent>
       </Dialog>

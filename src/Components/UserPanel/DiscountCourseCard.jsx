@@ -10,10 +10,10 @@ const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
-  // Detect if the screen is mobile size
+  
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+      setIsMobile(window.innerWidth <= 768); 
     };
 
     checkScreenSize();
@@ -21,18 +21,13 @@ const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Format course name for URL
   const formattedName = heading
   ? heading.toLowerCase().replace(/\s+/g, '-')
   : '';
-
-
-  // Function to navigate to course details
   const handleNavigation = () => {
     navigate(`/coursedetails/${formattedName}`);
   };
 
-// Function to handle share
 const handleShare = async (e) => {
   e.stopPropagation();
   const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
@@ -40,7 +35,7 @@ const handleShare = async (e) => {
 
   try {
     if (navigator.canShare && navigator.canShare({ files: [] })) {
-      // Mobile native share with image
+      
       const response = await fetch(image);
       const blob = await response.blob();
       const file = new File([blob], "course-image.jpg", { type: blob.type });
@@ -52,19 +47,19 @@ const handleShare = async (e) => {
         files: [file],
       });
     } else if (navigator.share) {
-      // Basic native share (no image)
+      
       await navigator.share({
         title: heading,
         text: shareMessage,
         url: courseUrl,
       });
     } else {
-      // ✅ Fallback: open social media share instead of copying text
+      
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage + " " + courseUrl)}`;
       const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(courseUrl)}`;
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(courseUrl)}`;
 
-      // Example: open WhatsApp share
+      
       window.open(whatsappUrl, "_blank");
     }
   } catch (err) {
@@ -118,7 +113,7 @@ const handleShare = async (e) => {
           </div>
         </div>
                 <div className="card-row">
-        <div className="course-amount">INR {amount} <span>INR {totalAmount}</span></div>
+        <div className="course-amount">{amount} <span>{totalAmount}</span></div>
         <div className="discount-duration">
             11:59 Sec Left
           </div>

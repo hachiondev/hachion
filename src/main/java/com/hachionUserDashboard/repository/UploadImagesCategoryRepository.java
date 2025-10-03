@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,7 @@ public interface UploadImagesCategoryRepository extends JpaRepository<UploadImag
 	@Query(value = "SELECT * FROM upload_images_category WHERE category_name = :categoryName AND course_name = :courseName LIMIT 1", nativeQuery = true)
 	Optional<UploadImagesCategory> findByCategoryNameAndCourseName(@Param("categoryName") String categoryName,
 			@Param("courseName") String courseName);
+
+	@Query(value = "SELECT * FROM upload_images_category ORDER BY category_name ASC", nativeQuery = true)
+	List<UploadImagesCategory> findAllCategoriesAlphabetical();
 }

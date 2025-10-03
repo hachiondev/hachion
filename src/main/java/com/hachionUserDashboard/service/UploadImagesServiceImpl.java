@@ -153,10 +153,9 @@ public class UploadImagesServiceImpl implements UploadImagesService {
 		categoryRepo.save(category);
 	}
 
-
 	@Override
 	public List<UploadAllImagesResponse> getAllCategoriesWithImages() {
-		List<UploadImagesCategory> categories = categoryRepo.findAll();
+		List<UploadImagesCategory> categories = categoryRepo.findAllCategoriesAlphabetical();
 
 		return categories.stream().flatMap(category -> category.getImages().stream().map(img -> {
 			UploadAllImagesResponse dto = new UploadAllImagesResponse();

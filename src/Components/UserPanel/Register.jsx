@@ -591,6 +591,7 @@ useEffect(() => {
 
   return (
     <>
+    <div className='home-background'>
       <Topbar />
       <NavbarTop />
 
@@ -755,6 +756,7 @@ useEffect(() => {
 
       <Footer />
       <StickyBar />
+      </div>
     </>
   );
 };

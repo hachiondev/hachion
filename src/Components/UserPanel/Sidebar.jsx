@@ -291,6 +291,11 @@ const Sidebar = ({ onFilterChange }) => {
         )}
       </div>
       <hr className="faq-seperater" />
+      <div className="sidebar-offer">
+      <h3 className="home-blog-title">Get 50% Off Development Courses!</h3>
+      <p className="home-sub-text">Hurry! Sale Ends in 2 Days</p>
+      <button className="home-start-button">Start Today</button>
+      </div>
     </div>
   );
 

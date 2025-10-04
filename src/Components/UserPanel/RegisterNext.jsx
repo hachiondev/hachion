@@ -281,6 +281,7 @@ const handleSubmitPopup = async () => {
 
   return (
     <>
+    <div className='home-background'>
         <Topbar />
         <NavbarTop />
         <div className='blogs-header'>
@@ -389,6 +390,7 @@ const handleSubmitPopup = async () => {
     </div>
     <Footer />
       <StickyBar />
+      </div>
     </>
   );
 };

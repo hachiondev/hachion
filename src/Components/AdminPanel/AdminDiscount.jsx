@@ -128,26 +128,33 @@ const handleCourseCheckboxChange = (courseName) => {
 
   
   useEffect(() => {
-    axios.get("https://api.test.hachion.co/coupon-code/all")
+    axios.get("https://api.test.hachion.co/discounts-courses")
       .then(res => {
         setCoupon(res.data);
         setAllCoupon(res.data);
+         setFilteredCoupon(res.data); 
       })
       .catch(console.error);
   }, []);
 
-  
-  useEffect(() => {
-    const filtered = coupon.filter(c =>
-      c.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.discountPercentage?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.startDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.endDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.type?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCoupon(filtered);
-  }, [coupon, searchTerm]);
+const filtered = coupon.filter(c => {
+  const q = (searchTerm || "").toLowerCase();
+  const courses = Array.isArray(c.courseNames) ? c.courseNames.join(", ") : "";
+  const countries = Array.isArray(c.countryNames) ? c.countryNames.join(", ") : "";
+  const disc = (c.discountPercentage ?? "").toString();
+  const status = (c.status ?? "");
+  const sd = (c.startDate ?? "");
+  const ed = (c.endDate ?? "");
+
+  return (
+    courses.toLowerCase().includes(q) ||
+    countries.toLowerCase().includes(q) ||
+    disc.toLowerCase().includes(q) ||
+    status.toLowerCase().includes(q) ||
+    sd.toLowerCase().includes(q) ||
+    ed.toLowerCase().includes(q)
+  );
+});
 
   const CheckboxOption = (props) => (
   <components.Option {...props}>
@@ -170,40 +177,70 @@ const handleCourseCheckboxChange = (courseName) => {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
-
-  
   const handleReset = () => {
+  
     setFormData({
-      id: "", course_name: "", code: "", author: "",
-      description: "", status: "",
-      date: new Date().toISOString().split('T')[0],
-    });
+  id: "",
+  course_name: "",            
+  discountPercentage: "",
+  status: false,              
+  startDate: new Date().toISOString().split("T")[0],
+  endDate: new Date().toISOString().split("T")[0],
+  selectedCourses: [],
+  selectedCountries: [],
+  createdDate: ""
+});
+setStartDate(null);   
+  setEndDate(null);
   };
 
-  const handleSubmit = async (e) => {
+
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    
     const payload = {
-      couponId: formData.id || null,
+      discountId: formData.id || null,
       courseNames: formData.selectedCourses || [],
       countryNames: formData.selectedCountries || [],
       discountPercentage: formData.discountPercentage || "",
       startDate: startDate ? dayjs(startDate).format("MM/DD/YYYY") : "",
-    endDate: endDate ? dayjs(endDate).format("MM/DD/YYYY") : "",
-    status: formData.status ? "Active" : "Inactive",  
-      
+      endDate: endDate ? dayjs(endDate).format("MM/DD/YYYY") : "",
+      status: formData.status ? "Active" : "Inactive",
     };
 
     if (formMode === "Add") {
-      await axios.post("https://api.test.hachion.co/coupon-code/create", payload);
-      setSuccessMessage("✅ Coupon created successfully.");
+      const { data: created } = await axios.post(
+        "https://api.test.hachion.co/discounts-courses",
+        payload
+      );
+      setCoupon(prev => [created, ...prev]);
+      setAllCoupon(prev => [created, ...prev]);
+      setFilteredCoupon(prev => [created, ...prev]);
+
+      setSuccessMessage("✅ Discount created successfully.");
       setErrorMessage("");
+      setShowForm(false);
+setStartDate(null);
+setEndDate(null);
+      setTimeout(() => setSuccessMessage(""), 3000);
+
     } else if (formMode === "Edit") {
-      await axios.put("https://api.test.hachion.co/coupon-code/update", payload);
-      setSuccessMessage("✅ Coupon updated successfully.");
+      const { data: updated } = await axios.put(
+        "https://api.test.hachion.co/discounts-courses",
+        payload
+      );
+      setCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
+      setAllCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
+      setFilteredCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
+
+      setSuccessMessage("✅ Discount updated successfully.");
       setErrorMessage("");
+      setShowForm(false);
+      setIsEditing(false);
+setStartDate(null);
+setEndDate(null);
+      setTimeout(() => setSuccessMessage(""), 3000);
     }
 
   } catch (error) {
@@ -212,56 +249,64 @@ const handleCourseCheckboxChange = (courseName) => {
     setErrorMessage("❌ Failed to submit coupon. Please try again.");
   }
 };
-const handleEdit = (couponId) => {
-  const couponToEdit = coupon.find(c => c.couponId === couponId);
 
-  if (couponToEdit) {
-     console.log("Editing coupon:", couponToEdit);
-    console.log("couponToEdit.countryNames:", couponToEdit.countryNames); // Check country names array
+const handleEdit = (discountId) => {
+  const discountToEdit = coupon.find(c => c.discountId === discountId);
 
-    setFormData({
-      id: couponToEdit.couponId || "",
-      code: couponToEdit.couponCode || "",
-      discountPercentage: couponToEdit.discountPercentage || "",
-      status: couponToEdit.status || "",   
-      startDate: couponToEdit.startDate || new Date().toISOString().split("T")[0],
-      endDate: couponToEdit.endDate || new Date().toISOString().split("T")[0],
-      selectedCourses: couponToEdit.courseNames || [],
-      selectedCountries: couponToEdit.countryNames || []
-    });
+  if (discountToEdit) {
+     console.log("Editing coupon:", discountToEdit);
+    console.log("discountToEdit.countryNames:", discountToEdit.countryNames); 
 
-    setStartDate(
-      couponToEdit.startDate ? dayjs(couponToEdit.startDate, "MM/DD/YYYY") : dayjs()
-    );
-    setEndDate(
-      couponToEdit.endDate ? dayjs(couponToEdit.endDate, "MM/DD/YYYY") : dayjs()
-    );
+setFormData({
+  id: discountToEdit.discountId || "",
+  discountPercentage: discountToEdit.discountPercentage ?? "",
+  
+  status: (discountToEdit.status ?? "").toLowerCase() === "active",
+  startDate: discountToEdit.startDate || "",
+  endDate: discountToEdit.endDate || "",
+  selectedCourses: discountToEdit.courseNames || [],
+  selectedCountries: discountToEdit.countryNames || []
+});
+
+const parseDate = (s) => {
+  if (!s) return dayjs();
+  return dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true).isValid()
+    ? dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true)
+    : dayjs(s);
+};
+
+setStartDate(discountToEdit.startDate ? parseDate(discountToEdit.startDate) : dayjs());
+setEndDate(discountToEdit.endDate ? parseDate(discountToEdit.endDate) : dayjs());
 
     setFormMode("Edit");
     setShowForm(true);
   }
 };
 
-  const handleDelete = async (couponId) => {
-  if (window.confirm("Are you sure you want to delete this coupon?")) {
-    try {
-      await axios.delete(`https://api.test.hachion.co/coupon-code/delete/${couponId}`);
 
-      
-      setCoupon((prev) => prev.filter((c) => c.couponId !== couponId));
-      setAllCoupon((prev) => prev.filter((c) => c.couponId !== couponId));
- setSuccessMessage("✅ Coupon deleted successfully.");
-      setErrorMessage("");
-  
-    } catch (error) {
-      console.error("❌ Error deleting coupon:", error);
-      
-      setSuccessMessage("");
-      setErrorMessage("❌ Failed to delete coupon. Please try again.");
-    }
+  const handleDelete = async (discountId) => {
+  if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+
+  try {
+    const resp = await axios.delete(`https://api.test.hachion.co/discounts-courses/${discountId}`);
+    const serverMsg = resp?.data ? String(resp.data) : "";
+    setCoupon(prev => prev.filter(c => c.discountId !== discountId));
+    setAllCoupon(prev => prev.filter(c => c.discountId !== discountId));
+    setFilteredCoupon(prev => prev.filter(c => c.discountId !== discountId));
+
+    setSuccessMessage(serverMsg || `✅ Successfully deleted discount with id ${discountId}`);
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 3000);
+
+  } catch (error) {
+    console.error("❌ Error deleting coupon:", error);
+    setSuccessMessage("");
+    setErrorMessage("❌ Failed to delete coupon. Please try again.");
+    
   }
 };
-  
+
   const displayedCoupon = filteredCoupon.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -277,14 +322,20 @@ const handleEdit = (couponId) => {
 
   
   const handleDateFilter = () => {
+    
     const filtered = allCoupon.filter((item) => {
-      const itemDate = dayjs(item.date);
-      return (
-        (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
-        (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
-      );
-    });
-    setCoupon(filtered);
+  const parse = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
+  const itemStart = parse(item.startDate);
+  const hasStart = startDate && dayjs(startDate).isValid();
+  const hasEnd = endDate && dayjs(endDate).isValid();
+
+  const afterStart = !hasStart || (itemStart.isValid() && itemStart.isAfter(dayjs(startDate).subtract(1, "day")));
+  const beforeEnd = !hasEnd || (itemStart.isValid() && itemStart.isBefore(dayjs(endDate).add(1, "day")));
+
+  return afterStart && beforeEnd;
+});
+setCoupon(filtered);
+
   };
   const handleDateReset = () => {
     setStartDate(null);
@@ -400,7 +451,7 @@ const handleCountryChange = (selected) => {
                     (formData.selectedCourses || []).includes(opt.value)
                   )}
                   placeholder="Search or select courses..."
-                  isDisabled={formMode === "Edit" && !isEditing}
+                  
                 />
                 <div
                 className="border rounded p-3 mt-2"
@@ -641,7 +692,7 @@ const handleCountryChange = (selected) => {
                 </TableHead>
                 <TableBody>
   {displayedCoupon.length > 0 ? displayedCoupon.map((coupon, index) => (
-    <StyledTableRow key={coupon.couponId}>
+    <StyledTableRow key={coupon.discountId}>
       <StyledTableCell align="center"><Checkbox /></StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
       <StyledTableCell align="center">{coupon.courseNames?.join(", ")}</StyledTableCell>
@@ -652,8 +703,8 @@ const handleCountryChange = (selected) => {
       <StyledTableCell align="left">{coupon.status}</StyledTableCell>
       <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MM-DD-YYYY')}</StyledTableCell>
       <StyledTableCell align="center">
-        <FaEdit className="edit" onClick={() => handleEdit(coupon.couponId)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDelete(coupon.couponId)} />
+        <FaEdit className="edit" onClick={() => handleEdit(coupon.discountId)} />
+        <RiDeleteBin6Line className="delete" onClick={() => handleDelete(coupon.discountId)} />
       </StyledTableCell>
     </StyledTableRow>
   )) : (
@@ -673,6 +724,9 @@ const handleCountryChange = (selected) => {
                 onPageChange={handlePageChange}
               />
             </div>
+            {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+{errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+
           </div>
         </LocalizationProvider>
       )}

@@ -50,6 +50,8 @@ import ConfirmOtp from './Components/UserPanel/ConfirmOtp';
 import ResetPassword from './Components/UserPanel/ResetPassword';
 import ViewFaq from './Components/UserPanel/ViewFaq';
 import DiscountDeals from './Components/UserPanel/DiscountDeals';
+import Instructors from './Components/UserPanel/Instructors';
+import InstructorDetails from './Components/UserPanel/InstructorDetails';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -96,6 +98,8 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path='/viewfaqs' element={<ViewFaq/>}/>
       <Route path='/discountdeals' element={<DiscountDeals/>}/>
+      <Route path='/instructor-profiles' element={<Instructors/>}/>
+      <Route path='/:trainer_name-instructor-details' element={<InstructorDetails/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
       <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>

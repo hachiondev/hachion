@@ -304,6 +304,7 @@ useEffect(() => {
 
   return (
     <>
+    <div className='home-background'>
     <Topbar />
     <NavbarTop />
     <div className='blogs-header'>
@@ -447,6 +448,7 @@ onClick={dismissError}
       </div>
       <Footer />
       <StickyBar />
+      </div>
     </>
   );
 }

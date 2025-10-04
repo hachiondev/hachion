@@ -495,7 +495,7 @@ justify-content: flex-end;
     .register-btn, .other-btn {
         font-size: 14px;
         margin: 0;
-        width: 90%;
+        width: 90% !important;
         height: 40px;
     }
   }

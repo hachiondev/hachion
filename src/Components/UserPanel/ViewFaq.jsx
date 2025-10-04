@@ -65,7 +65,7 @@ const ViewFaq = () => {
     </div>
     </div>
 
-    <button className="faq-button" onClick={() => setShowPopup(true)}>Get in Touch With Us</button>
+    <button className="faq-button" onClick={() => setShowPopup(true)}>Ask Question</button>
   </div>
 </div>
     <Footer />

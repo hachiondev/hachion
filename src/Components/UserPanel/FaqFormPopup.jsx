@@ -56,7 +56,7 @@ const validateForm = () => {
           </button>
         </div>
 
-            <h4>Frequently Ask Question</h4>
+            <h4>Ask Question?</h4>
 
               <label className="login-label">
                 Name<span className="star">*</span>

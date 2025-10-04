@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import Instructorbanner from "../../Assets/topinstructor.webp";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const MeetInstructorBanner = () => {
+  const navigate = useNavigate();
 
   return (
     <div className="instructor-banner container">
@@ -15,7 +16,7 @@ const MeetInstructorBanner = () => {
           Our instructors are certified professionals and subject-matter experts with years of real-world experience. They bring hands-on knowledge, practical insights, and proven teaching methods to ensure you gain skills that matter in today’s job market.
         </p>
         <div className="button-row">
-          <button className="desktop-border-button">Meet All Our Experts</button>
+          <button className="desktop-border-button" onClick={() => navigate("/instructor-profiles")}>Meet All Our Experts</button>
         </div>
         </div>
 
@@ -26,7 +27,7 @@ const MeetInstructorBanner = () => {
         alt="Instructor banner"
         fetchpriority="high"
       />
-      <button className="mobile-border-button">Meet All Our Experts</button>
+      <button className="mobile-border-button" onClick={() => navigate("/instructor-profiles")}>Meet All Our Experts</button>
     </div>
   );
 };

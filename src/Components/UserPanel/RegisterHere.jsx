@@ -129,7 +129,7 @@ const handleSubmit = async () => {
 
   return (
     <>
-      {/* Top Navigation */}
+      <div className='home-background'>
       <Topbar />
       <NavbarTop />
 
@@ -281,6 +281,7 @@ const handleSubmit = async () => {
       {/* Footer & Sticky Bar */}
       <Footer />
       <StickyBar />
+      </div>
     </>
   );
 };

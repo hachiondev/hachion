@@ -175,7 +175,7 @@ const RecentEntries = () => {
   }, []);
 
   // Limit to first 6 blogs
-  const visibleBlogs = blogs.slice(0, 6);
+  const visibleBlogs = blogs.slice(0, 8);
 
   return (
      <div className="home-faq-banner container">

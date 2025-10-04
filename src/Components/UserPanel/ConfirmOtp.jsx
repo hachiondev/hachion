@@ -110,6 +110,7 @@ const ConfirmOtp = () => {
 
   return (
     <>
+        <div className='home-background'>
       <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
@@ -189,6 +190,7 @@ const ConfirmOtp = () => {
 
       <Footer />
       <StickyBar />
+      </div>
     </>
   );
 };

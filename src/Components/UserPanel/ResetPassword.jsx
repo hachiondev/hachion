@@ -79,6 +79,7 @@ const ResetPassword = () => {
 
   return (
     <>
+    <div className='home-background'>
       <Topbar />
       <NavbarTop />
       <div className='blogs-header'>
@@ -162,6 +163,7 @@ const ResetPassword = () => {
       </div>
       <Footer />
       <StickyBar />
+      </div>
     </>
   );
 };

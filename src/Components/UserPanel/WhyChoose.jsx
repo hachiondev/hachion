@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import KeyBenifit from "../../Assets/key.webp";
 // import KeyBenifit2 from "../../Assets/keynext.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import key1 from "../../Assets/key1.png";
 import key2 from "../../Assets/key2.png";
@@ -10,26 +10,18 @@ import key4 from "../../Assets/key4.png";
 import key5 from "../../Assets/key5.png";
 
 const WhyChoose = () => {
-  // const images = [
-  //   KeyBenifit,
-  //   KeyBenifit2,
-  // ];
-
-  // const [currentIndex, setCurrentIndex] = useState(0);
+ const navigate = useNavigate();
 
   return (
     <div className="instructor-banner container">
       {/* Left side content */}
-      <div className="home-content"
-        // onMouseEnter={() => setCurrentIndex(1)}
-        // onMouseLeave={() => setCurrentIndex(0)}
-        >
+      <div className="home-content">
         <h2 className="instructor-title">Why choose our certification courses?</h2>
         <p className="home-title-text">
           Advance your career with Hachion’s expert-led IT training, trusted by learners worldwide for its unique features.
         </p>
         <div className="button-row">
-          <button className="border-button">Start Learn Today</button>
+          <button className="border-button" onClick={() => navigate("/coursedetails")}>Start Learn Today</button>
         </div>
         <hr className="seperater"/>
         <img

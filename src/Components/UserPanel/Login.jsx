@@ -325,12 +325,12 @@ useEffect(() => {
         <div className='login-left'>
           <div className='login-top'>
             <h4 className='login-continue'>Login</h4>
-            {errorMessage1 && (
+            <div className='login-mid'>  
+              {errorMessage1 && (
               <p className="error-field-message" onClick={dismissError} style={{cursor:'pointer'}}>
                 {errorMessage1}
               </p>
             )}
-            <div className='login-mid'>  
                 <label className='login-label'>Email<span className='star'>*</span></label>
                 <div className="register-field">
                 <div className="password-field">
@@ -423,7 +423,7 @@ onClick={dismissError}
                 <div className="d-grid gap-2">
                 <button
                 className="register-btn"
-                type="submit"
+                type="button"
                 onClick={handleLogin}
               >
                 Login
@@ -433,7 +433,7 @@ onClick={dismissError}
                 <div className="d-grid gap-2">
                 <button
                 className="other-btn"
-                type="submit"
+                type="button"
                 onClick={handleGoogleLogin}
               >
                 <img src={google} alt='login-with-google' className='icon-btn-img'/>

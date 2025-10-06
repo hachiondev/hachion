@@ -52,6 +52,7 @@ import ViewFaq from './Components/UserPanel/ViewFaq';
 import DiscountDeals from './Components/UserPanel/DiscountDeals';
 import Instructors from './Components/UserPanel/Instructors';
 import InstructorDetails from './Components/UserPanel/InstructorDetails';
+import ViewReviews from './Components/UserPanel/ViewReviews';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -100,6 +101,7 @@ function AppRoutes() {
       <Route path='/discountdeals' element={<DiscountDeals/>}/>
       <Route path='/instructor-profiles' element={<Instructors/>}/>
       <Route path='/:trainer_name-instructor-details' element={<InstructorDetails/>}/>
+      <Route path='/view-all-reviews' element={<ViewReviews/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
       <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>

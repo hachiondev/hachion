@@ -6,7 +6,7 @@ import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 import './Home.css';
 
-const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels", amount, totalAmount }) => {
+const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels", amount, totalAmount, timeLeftLabel }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -116,9 +116,9 @@ const handleShare = async (e) => {
         </div>
                 <div className="card-row">
         <div className="course-amount">{amount} <span>{totalAmount}</span></div>
-        <div className="discount-duration">
-            11:59 Sec Left
-          </div>
+         {timeLeftLabel ? (
+  <div className="discount-duration">{timeLeftLabel}</div>
+) : null}
         </div>
     
         <button className="card-view-btn" onClick={(e) => {

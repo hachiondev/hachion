@@ -6,6 +6,9 @@ import Select from "react-select";
 import { IoSearch } from "react-icons/io5";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const TrainingEvents = () => {
   const navigate = useNavigate();
@@ -19,8 +22,25 @@ const TrainingEvents = () => {
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [courseOptions, setCourseOptions] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
-  // ✅ Get user's timezone
+  
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const [discountRules, setDiscountRules] = useState([]);
+const [country, setCountry] = useState('US');
+const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en';
+const regionNames = new Intl.DisplayNames([locale], { type: 'region' });
+
+useEffect(() => {
+  (async () => {
+    try {
+      const resp = await fetch('https://ipinfo.io/json?token=82aafc3ab8d25b');
+      const data = await resp.json();
+      setCountry((data?.country || 'US').toUpperCase());
+    } catch {
+      setCountry('US');
+    }
+  })();
+}, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +74,8 @@ console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem
             created_at: matchingCourse?.createdAt || "",
             numberOfClasses: matchingCourse?.numberOfClasses || null,
             discount: Number(matchingCourse?.discount ?? 0), 
+            idiscount: Number(matchingCourse?.idiscount ?? 0),
+
           };
         });
         setMergedCourses(mergedData);
@@ -73,10 +95,62 @@ console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem
     fetchData();
   }, [userTimezone]);
 
+
+  const normalizeStr = (s) => (s || "").toString().trim().toLowerCase();
+const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
+const inWindow = (start, end) => {
+  const today = dayjs();
+  const s = parseMDY(start);
+  const e = parseMDY(end);
+  const okS = s.isValid() ? !today.isBefore(s, "day") : true;
+  const okE = e.isValid() ? !today.isAfter(e, "day") : true;
+  return okS && okE;
+};
+const expandRuleCountry = (token) => {
+  const t = (token || "").toString().trim();
+  if (!t) return [];
+  if (/^[A-Za-z]{2}$/.test(t)) {
+    const code = t.toUpperCase();
+    const name = regionNames.of(code) || "";
+    return [normalizeStr(code), normalizeStr(name)];
+  }
+  return [normalizeStr(t)];
+};
+const expandUserCountry = (cc) => {
+  const code = (cc || "").toUpperCase();
+  const name = regionNames.of(code) || "";
+  return new Set([normalizeStr(code), normalizeStr(name)]);
+};
+const getRuleDiscountPct = (courseName, countryCode) => {
+  if (!discountRules?.length) return 0;
+  const userCountryTokens = expandUserCountry(countryCode);
+  const courseKey = normalizeStr(courseName);
+  let best = 0;
+  for (const r of discountRules) {
+    if ((r.status || "").toLowerCase() !== "active") continue;
+    if (!inWindow(r.startDate, r.endDate)) continue;
+    const courses = Array.isArray(r.courseNames) ? r.courseNames : [];
+    const countries = Array.isArray(r.countryNames) ? r.countryNames : [];
+    const courseOk =
+      courses.some(c => normalizeStr(c) === courseKey) ||
+      courses.some(c => normalizeStr(c) === "all");
+    const countryOk =
+      countries.some(c => {
+        const tokens = expandRuleCountry(c);
+        return tokens.some(t => userCountryTokens.has(t));
+      }) ||
+      countries.some(c => normalizeStr(c) === "all");
+    if (courseOk && countryOk) {
+      const pct = Number(r.discountPercentage || 0);
+      if (pct > best) best = pct;
+    }
+  }
+  return best;
+};
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
-  
-    // Force date to be parsed as local
+
     const parts = dateString.split("-");
     const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
   
@@ -137,7 +211,7 @@ console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem
   
   
   useEffect(() => {
-    setFilteredCourses([]); // Reset state
+    setFilteredCourses([]); 
     setTimeout(() => {
       setFilteredCourses([...getFilteredCourses()]);
     }, 0);
@@ -148,14 +222,25 @@ console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem
     setCourseFilter("");
     setTimeFilter("");
   };
-
-  // Event handlers for dropdown changes
   const handleCourseChange = (e) => setCourseFilter(e.target.value);
   const handleModeChange = (e) => setModeFilter(e.target.value);
   const handleTimeChange = (e) => setTimeFilter(e.target.value);
 
   const handleSearchIconClick = () => {
   };
+
+  useEffect(() => {
+  (async () => {
+    try {
+      const resp = await fetch('https://api.test.hachion.co/discounts-courses');
+      const data = await resp.json();
+      setDiscountRules(Array.isArray(data) ? data : []);
+    } catch {
+      setDiscountRules([]);
+    }
+  })();
+}, []);
+
   return (
     <div className="container">
       <div className="training-events-head-upcoming">
@@ -279,7 +364,7 @@ training for SAT and ACT success</p>
 <datalist id="course-options">
   {courseOptions
     .filter((course) =>
-      course.toLowerCase() !== courseFilter.toLowerCase() && // ✨ Hide exact match
+      course.toLowerCase() !== courseFilter.toLowerCase() && 
       course.toLowerCase().includes(courseFilter.toLowerCase())
     )
     .map((course, idx) => (
@@ -296,7 +381,7 @@ training for SAT and ACT success</p>
 
      <div className="training-card-holder">
   {loading ? (
-    // 🔄 Skeletons while loading
+    
     Array.from({ length: 4 }).map((_, i) => (
       <div className="skeleton-card" key={i}></div>
     ))
@@ -309,7 +394,17 @@ training for SAT and ACT success</p>
           key={course.course_id || index}
           id={course.course_id}
           heading={course.schedule_course_name}
-          discountPercentage={course.discount}
+          
+          discountPercentage={
+  (() => {
+    const rulePct = getRuleDiscountPct(course.schedule_course_name, country);
+    if (rulePct > 0) return rulePct;
+    return country === 'IN'
+      ? (course.idiscount != null ? Number(course.idiscount) : 0)
+      : (course.discount  != null ? Number(course.discount)  : 0);
+  })()
+}
+
           trainer_name={course.trainerName}
           level={course.levels}
           month={course.numberOfClasses}

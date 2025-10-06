@@ -149,8 +149,8 @@ const LearnerCard = (props) => {
             <div className='learner-name'>
               <p className='name'>{props.name}</p>
             </div>
-            <p className='job-location'>
-              {props.location || "Unknown"}</p>
+            {/* <p className='job-location'>
+              {props.location || "Unknown"}</p> */}
           </div>
         
         <div className="learner-description-bottom">
@@ -184,7 +184,7 @@ const LearnerCard = (props) => {
             <div className='rating'>{renderStarRating(props.rating)}</div>
             <div className='learner-name'>
             <p className='name'>{props.name}</p>
-            <p className='job-location'>{props.location}</p>
+            {/* <p className='job-location'>{props.location}</p> */}
             </div>
             <p className='learner-description'>{props.content}</p>
           </div>

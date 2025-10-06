@@ -337,8 +337,10 @@ import LearnerCard from "./LearnerCard";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {  useNavigate } from 'react-router-dom';
 
 const Learners = ({ page }) => {
+  const navigate= useNavigate();
   const [reviews, setReviews] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -446,7 +448,7 @@ const Learners = ({ page }) => {
         </Modal.Body>
       </Modal>
     </div>
-    <button className="home-start-button">View More Reviews</button>
+    <button className="home-start-button" onClick={() => {navigate("/view-all-reviews");}}>View More Reviews</button>
     </div>
   );
 };

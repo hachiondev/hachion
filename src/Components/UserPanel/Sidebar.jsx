@@ -131,9 +131,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { LuListFilter } from "react-icons/lu";
+import {  useNavigate } from 'react-router-dom';
 import "./Course.css";
 
 const Sidebar = ({ onFilterChange }) => {
+  const navigate= useNavigate();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevels, setSelectedLevels] = useState(["All Levels"]);
@@ -294,7 +296,7 @@ const Sidebar = ({ onFilterChange }) => {
       <div className="sidebar-offer">
       <h3 className="home-blog-title">Get 50% Off Development Courses!</h3>
       <p className="home-sub-text">Hurry! Sale Ends in 2 Days</p>
-      <button className="home-start-button">Start Today</button>
+      <button className="home-start-button" onClick={() => {navigate("/discountdeals");}}>Start Today</button>
       </div>
     </div>
   );

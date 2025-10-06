@@ -1179,6 +1179,31 @@ white-space: nowrap;
 .it-logos:hover .it-logos-slide{
 animation-play-state: paused;
 }
+.it-reviews-head {
+    font-weight: 600;
+    letter-spacing: 0%;
+    display: flex;
+    justify-content: left;
+    color: #3D3D3D;
+    padding: 10px 16px;
+}
+.it-logos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  padding: 10px 15px;
+}
+.it-logo-review {
+  height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.it-logo-review:hover {
+  transform: scale(1.05);
+}
 .trending-data{
 width: 100%;
 padding: 40px 0;
@@ -3142,6 +3167,20 @@ height: 45px;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+}
+.it-reviews-head {
+        text-align: left;
+        margin-left: 5%;
+        margin-right: 5px;
+        font-size: 20px;
+        white-space: wrap;
+    }
+.it-logos-grid {
+  gap: 20px;
+  padding: 5px 10px;
+}
+.it-logo-review {
+  height: 30px;
 }
     }
 

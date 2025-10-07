@@ -529,7 +529,7 @@ background-color:#F7F7F7;
   background-color: #00AEEF;
   margin-top: 10px;
   gap: 10px;
-  padding: 5px;
+  padding: 10px;
 }
 .popup-bottom-text{
   font-size: 12px;
@@ -542,12 +542,11 @@ background-color:#F7F7F7;
   color: #00AEEF;
   background-color: #fff;
   border-radius: 6px;
-  padding: 0 2px;
-  height: 14px;
+  padding: 2px 5px;
 }
 
 .join-now{
-  padding: 4px 12px;
+  padding: 3px 12px;
   background-color: #fff;
   color: #000000;
   border: 1px solid #E2E0DB;
@@ -813,7 +812,7 @@ scroll-behavior: smooth;
   /* width: 80%; */
   margin: 40px auto;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
 }
 .home-faq-banner{
   display: flex;
@@ -1675,7 +1674,6 @@ min-height: 300px;
 
 .popup-title-text {
     color: #3D3D3D;
-    font-size: 14px;
     font-weight: 600;
     text-align: left;
     padding: 5px 15px;
@@ -1683,7 +1681,7 @@ min-height: 300px;
 }
 .popup-content{
   text-align: left;
-  font-size: 12px;
+  font-size: medium;
   font-weight: 600;
   color: #3D3D3D;
   margin-bottom: 3px;

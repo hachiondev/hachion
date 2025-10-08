@@ -367,6 +367,20 @@ a:not([href]):not([class]) {
     padding: 0 10px;
     margin-bottom: 0;
 }
+.become-expert-title {
+    color: #3D3D3D;
+    font-weight: 600;
+    text-align: left;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+.become-expert-center-title {
+    color: #3D3D3D;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+    flex-wrap: wrap;
+}
 .expert-content {
   display: flex;
   align-items: start;
@@ -393,10 +407,197 @@ a:not([href]):not([class]) {
   color: #23BD33;
   font-size: 30px;
 }
+.right-icon{
+  color: #00AEEF;
+  font-size: 24px;
+  padding: 0 5px;
+}
 
+.expert-points-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+  display: block;
+}
+.expert-points-list li {
+  display: list-item;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+.expert-point-details {
+    width: 100%;
+    font-size: 14px;
+    color: #3D3D3D;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+.help-background {
+  display: flex;
+  justify-content: center;
+    background-color: #C2EEFC;
+    padding: 40px 0;
+    width: 100%;
+}
+.support-lable{
+  font-size: small;
+  font-weight: 500;
+  color: #8C94A3;
+  margin-bottom: 8px;
+}
+.support-mail, .expert-online-title{
+  font-size: medium;
+  font-weight: 500;
+  color: #1D2026;
+  margin-bottom: 5px;
+}
+.trainer-story-wrapper {
+  position: relative;
+  text-align: left;
+  max-width: 550px;
+  padding: 0 20px;
+}
+.trainer-story{
+  font-size: medium;
+  font-weight: 400;
+  color: #1D2026;
+  padding: 25px;
+  background-color: #C2EEFC;
+  height: 250px;
+}
+.trainer-author {
+  display: block;
+  margin-top: 8px;
+  font-style: italic;
+  color: #666;
+}
+.quote-icon{
+  color: #00AEEF;
+  font-size: 56px;
+}
+.trainer-arrow-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.trainer-arrow-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 22px;
+}
+.trainer-arrow-btn.prev, .trainer-arrow-btn.next{
+  color: #1D2026;
+  font-size: 24px;
+  background-color: #F5F7FA;
+  cursor: pointer;
+}
+.trainer-arrow-btn:active, .trainer-arrow-btn:hover{
+  color: #fff;
+  font-size: 24px;
+  background-color: #00AEEF;
+}
+.expert-online-card{
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  gap: 10px;
+}
+.expert-online-lable{
+font-size: small;
+font-weight: 400;
+color: #6E7485;
+white-space: wrap;
+}
+.expert-row{
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: stretch;
+  justify-content: center;
+  gap: 10px;
+}
+.expert-popup-header {
+    align-items: center;
+    background: #eee;
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 8px;
+}
+.expert-popup-container {
+    background: #EEEEEE;
+    border-radius: 4px;
+    width: auto;
+    max-width: 100%;
+    max-height: 95vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+.instructor-fields{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.expert-popup-btn{
+    background-color: #00aeef;
+    border: 2px solid #00aeef;
+    border-radius: 50px;
+    color: #fff;
+    font-size: medium;
+    font-weight: 500;
+    height: 40px;
+    padding: 3px 10px;
+    width: 150px;
+    margin: 3px 10px;
+}
+.custom-upload-field {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 48px;
+  width: 360px;
+  max-width: 100%;
+}
+
+.upload-icon {
+  font-size: 18px;
+  margin-right: 10px;
+  color: #555;
+}
+
+.upload-text {
+  color: #777;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 @media (max-width: 1024px) {
-  .profiles-grid {
+  .profiles-grid, .expert-row {
     grid-template-columns: repeat(2, 1fr);
 }
 }
@@ -405,8 +606,29 @@ a:not([href]):not([class]) {
   width: 100%;
   max-width: 100%;
 }
-  .profiles-grid {
+.custom-upload-field {
+  height: 35px;
+  width: 90%;
+}
+  .profiles-grid, .expert-row {
     grid-template-columns: repeat(1, 1fr);
+}
+.expert-statistics {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 10%;
+}
+.help-background {
+  display: flex;
+  justify-content: center;
+    flex-direction: column;
+    padding: 20px 0;
+}
+.instructor-fields{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 }
 @media (max-width: 480px) {

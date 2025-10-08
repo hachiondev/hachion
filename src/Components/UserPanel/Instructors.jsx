@@ -24,8 +24,12 @@ const Instructors = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
+const [teacherOptions, setTeacherOptions] = useState([]);
+  
+const [enrollCounts, setEnrollCounts] = useState({}); 
+const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 
-  // Fetch trainers
+
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
@@ -42,7 +46,21 @@ const Instructors = () => {
     fetchTrainers();
   }, []);
 
-  // Fetch courses for dropdown
+  useEffect(() => {
+  const fetchTeacherOptions = async () => {
+    try {
+      const res = await axios.get("https://api.test.hachion.co/trainersnames-unique");
+      if (Array.isArray(res.data)) {
+        setTeacherOptions(res.data);
+      }
+    } catch (err) {
+      console.error("Error fetching unique trainers:", err);
+    }
+  };
+  fetchTeacherOptions();
+}, []);
+
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -56,7 +74,7 @@ const Instructors = () => {
     };
     fetchCourses();
   }, []);
-
+  
   const filteredTrainers = trainers.filter((trainer) => {
     const matchesSearch =
       trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -83,6 +101,35 @@ const Instructors = () => {
     window.addEventListener("resize", updateCardsPerPage);
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
+
+
+  useEffect(() => {
+  if (!filteredTrainers.length) return;
+
+  
+  const toFetch = filteredTrainers.filter(t => enrollCounts[countKey(t)] == null);
+
+  if (!toFetch.length) return;
+
+  const requests = toFetch.map(t =>
+    axios.get("https://api.test.hachion.co/enroll/count", {
+      params: {
+        trainerName: t.trainer_name,
+        courseName: t.course_name, 
+      },
+    }).then(res => ({ key: countKey(t), count: res.data?.count ?? 0 }))
+      .catch(() => ({ key: countKey(t), count: 0 }))
+  );
+
+  Promise.all(requests).then(rows => {
+    setEnrollCounts(prev => {
+      const next = { ...prev };
+      rows.forEach(r => { next[r.key] = r.count; });
+      return next;
+    });
+  });
+}, [filteredTrainers]); 
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -168,11 +215,15 @@ const Instructors = () => {
               onChange={(e) => setSelectedTeacher(e.target.value)}
             >
               <option value="">All Teachers</option>
-              {trainers.map((trainer) => (
-                <option key={trainer.id} value={trainer.trainer_name}>
-                  {trainer.trainer_name}
-                </option>
-              ))}
+              {teacherOptions.map((trainer) => (
+  <option
+    key={trainer.trainer_id || trainer.id || trainer.trainer_name}
+    value={trainer.trainer_name}
+  >
+    {trainer.trainer_name}
+  </option>
+))}
+
             </select>
           </div>
 
@@ -212,7 +263,11 @@ const Instructors = () => {
                       <div className="instructor-rating">
                         {renderStarRating(trainer.rating || 4.7)}
                       </div>
-                      <p className="instructor-rating">1200 Students</p>
+                      {/* <p className="instructor-rating">1200 Students</p> */}
+                    <p className="instructor-rating">
+  {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0)} Students
+</p>
+
                     </div>
                     <button
                       className="view-profile-btn"

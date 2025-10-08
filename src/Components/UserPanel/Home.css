@@ -2835,6 +2835,9 @@ height: 45px;
         border-radius: 5px;
         padding: 0.5vh 1vh;
         }
+.page-indicators{
+  display: none;
+}
   
 .home-banner{
         display: flex;

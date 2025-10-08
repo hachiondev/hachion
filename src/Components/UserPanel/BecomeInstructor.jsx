@@ -1,17 +1,30 @@
 import React, { useEffect, useState, useRef } from "react"; 
 import StartInstructor from "../../Assets/e1.webp";
 import Teaching from "../../Assets/e2.webp";
+import Rules from "../../Assets/e3.webp";
+import Help from "../../Assets/e4.webp";
+import Story from "../../Assets/e5.webp";
 import Users from "../../Assets/Users.png";
 import Notebook from "../../Assets/Notebook.png";
 import Globe from "../../Assets/GlobeHemisphereWest.png";
 import CircleWavyCheck from "../../Assets/CircleWavyCheck.png";
 import Stack from "../../Assets/Stack.png";
+import SupportMail from "../../Assets/support-mail-icon.png";
+import Apply from "../../Assets/expert-icon1.png";
+import Profile from "../../Assets/expert-icon2.png";
+import Course from "../../Assets/expert-icon3.png";
+import Earn from "../../Assets/expert-icon4.png";
 import { FaCheckCircle } from "react-icons/fa";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { PiQuotesDuotone } from "react-icons/pi";
+import { LiaArrowLeftSolid } from "react-icons/lia";
+import { LiaArrowRightSolid } from "react-icons/lia";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import "./Home.css";
+import InstructorForm from "./InstructorForm";
 
 const statistics = [
   {
@@ -55,8 +68,71 @@ const ExpertStatistic = ({ img, number, label, alt }) => (
   </div>
 );
 
+const onlineInstructor = [
+  {
+    img: Apply,
+    title: '1. Apply to Become an Instructor',
+    content: 'Join thousands of certified instructors and start your teaching journey.',
+    alt: "Apply"
+  },
+  {
+    img: Profile,
+    title: '2. Set Up Your Profile',
+    content: ' Showcase your skills and experience with a professional profile.',
+    alt: 'Profile',
+  },
+  {
+    img: Course,
+    title: '3. Create Your Course',
+    content: 'Upload lessons, add resources, and publish your online course.',
+    alt: 'Course',
+  },
+  {
+    img: Earn,
+    title: '4. Start Teaching & Earning',
+    content: 'Reach students worldwide, share your knowledge, and grow your income.',
+    alt: 'Earn',
+  },
+];
+const OnlineInstructor = ({ img, title, content, alt }) => (
+  <div className='expert-online-card'>
+    <img src={img} alt={alt} />
+    <div className='expert-online-title'>{title}</div>
+    <p className='expert-online-lable'>{content}</p>
+  </div>
+);
+
+const stories = [
+    {
+      text: "Best live online training institute for all IT courses. Here I got the best Job Assistance to build my career.",
+      author: "– Ravi Kumar",
+    },
+    {
+      text: "Hachion helped me improve my technical skills and provided great placement support.",
+      author: "– Priya Sharma",
+    },
+    {
+      text: "Trainers are very supportive and experienced. Loved the hands-on training approach.",
+      author: "– Ramesh Babu",
+    },
+  ];
+
 const BecomeInstructor = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
+   const [currentIndex, setCurrentIndex] = useState(0);
+   const [showPopup, setShowPopup] = useState(false);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === stories.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? stories.length - 1 : prevIndex - 1
+    );
+  };
 
   // Scroll button logic
   useEffect(() => {
@@ -82,7 +158,7 @@ const BecomeInstructor = () => {
            Become an instructor & start teaching with 26k certified instructors. Create a success story with 67.1k Students — Grow yourself with 71 countries.
           </p>
           <div className="button-row">
-            <button className="home-start-button" >Get Started</button>
+            <button className="home-start-button"  onClick={() => setShowPopup(true)}>Get Started</button>
           </div>
         </div>
         <img
@@ -92,6 +168,7 @@ const BecomeInstructor = () => {
           fetchpriority="high"
         />
       </div>
+      {showPopup && <InstructorForm onClose={() => setShowPopup(false)} />}
       <div className='expert-statistics'>
             {statistics.map((stat, idx) => (
               <ExpertStatistic key={idx} {...stat} />
@@ -112,18 +189,18 @@ const BecomeInstructor = () => {
           
                 {/* Right side content */}
                 <div className="home-content">
-                    <h2 className="association-head">Why you’ll start teaching on Hachion</h2>
+                    <h2 className="become-expert-title">Why Teach Online with Hachion</h2>
                   <p className="home-title-text">
-                    Advance your career with Hachion’s expert-led IT training, trusted by learners worldwide for its unique features.
+                    Turn your knowledge into impact. Hachion gives you the tools to share your expertise, grow your audience, and earn—all from one easy-to-use platform.
                   </p>
                   <div className='expert-points'>
                   <FaCheckCircle className="check-icon" />
                   <div className='expert-sub-content'>
                   <h3 className="teaching-title-text">
-                    Teach your students as you want.
+                    Teach your way
                   </h3>
                 <p className="help-faq-details">
-                   Gain knowledge from professionals with real-world experience. Learn insights, tips, and strategies used by industry leaders.
+                   Design lessons the way you want—live, recorded, or interactive. You stay in control of your teaching style.
                   </p>
                   </div>
                   </div>
@@ -131,10 +208,10 @@ const BecomeInstructor = () => {
                     <FaCheckCircle className="check-icon" />
                     <div className='expert-sub-content'>
                   <h3 className="teaching-title-text">
-                   Manage your course, payment in one place
+                   All-in-one dashboard
                   </h3>
                 <p className="help-faq-details">
-                  Learn at your own pace with self-paced modules or live interactive classes that fit your schedule.
+                   Manage courses, track student progress, and receive payments securely in one place.
                   </p>
                   </div>
                   </div>
@@ -142,15 +219,177 @@ const BecomeInstructor = () => {
                     <FaCheckCircle className="check-icon" />
                     <div className='expert-sub-content'>
                   <h3 className="teaching-title-text">
-                    Chat with your students
+                     Connect with learners
                   </h3>
                 <p className="help-faq-details">
-                  Practice through real projects, assignments, and peer discussions for stronger skill retention.
+                  Engage directly with your students through built-in chat, feedback, and Q&A support.
                   </p>
                   </div>
                   </div>
               </div>
               </div>
+
+              <div className="home-faq-banner container">
+                    <h2 className="become-expert-center-title">How to Become a Successful Online Instructor</h2>
+              <div className="expert-row">
+            {onlineInstructor.map((inst, idx) => (
+              <OnlineInstructor key={idx} {...inst} />
+            ))}
+          </div>
+          </div>
+
+              <div className="instructor-banner container">
+                {/* Left side content */}
+                <div className="home-content">
+                    <h2 className="become-expert-title">Instructor Rules & Guidelines</h2>
+                  <p className="home-title-text">
+                    To ensure quality learning for students, all instructors must follow these basic rules. These guidelines help maintain trust, professionalism, and a great teaching experience.
+                  </p>
+                  <ul className="expert-points-list">
+                  <li className="help-faq-details">
+                    Provide accurate, original, and high-quality course content.
+                  </li>
+                  <li className="help-faq-details">
+                    Maintain a professional and respectful tone with all students.
+                  </li>
+                  <li className="help-faq-details">
+                    Keep your instructor profile and course materials updated.
+                  </li>
+                  <li className="help-faq-details">
+                    Follow platform policies on pricing, promotions, and communication.
+                  </li>
+                </ul>
+              </div>
+              {/* Right side content */}
+              <div className="home-content">
+                  <img
+                  src={Rules}
+                  alt="Rules banner"
+                  className="key-image"
+                  fetchpriority="high"
+                />
+                  </div>
+              </div>
+
+              <div className='help-background'>
+              <div className="instructor-banner container">
+                {/* Left side content */}
+                <div className="home-content">
+                  
+                  <img
+                  src={Help}
+                  alt="Help banner"
+                  className="key-image"
+                  fetchpriority="high"
+                />
+                  </div>
+          
+                {/* Right side content */}
+                <div className="home-content">
+                    <h2 className="become-expert-title">We’re Always Here to Help You</h2>
+                  <p className="home-title-text">
+                    Need assistance? Our support team is ready to guide you every step of the way — whether you’re exploring new opportunities, switching careers, or simply need quick answers.
+                  </p>
+                  <div className='expert-points'>
+                  <FaArrowRightLong className="right-icon" />
+                <p className="expert-point-details">
+                   Get expert help tailored to your needs
+                  </p>
+                  </div>
+                  <div className='expert-points'>
+                    <FaArrowRightLong Circle className="right-icon" />
+                <p className="expert-point-details">
+                  Restart or upgrade your career path with confidence
+                  </p>
+                  </div>
+                  <div className='expert-points'>
+                    <FaArrowRightLong className="right-icon" />
+                <p className="expert-point-details">
+                  Fast and reliable support whenever you need it
+                  </p>
+                  </div>
+                  <div className='expert-points'>
+                    <FaArrowRightLong className="right-icon" />
+                <p className="expert-point-details">
+                  Hassle-free solutions for all your queries
+                  </p>
+                  </div>
+                  <div className='expert-content'>
+                <img src={SupportMail} alt='SupportMail' />
+                <div className='expert-sub-content'>
+                <p className='support-lable'>Email us anytime</p>
+                <a
+                  href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="d-flex align-items-center text-decoration-none text-white"
+                  aria-label="Send an email to trainings@hachion.co using Gmail"
+                  >
+                  <p className='support-mail'>trainings@hachion.co</p>
+                   </a>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+
+              <div className="instructor-banner container">
+              {/* Left side content */}
+              <div className="home-content">
+                <h2 className="become-expert-title">
+                  20,000+ Instructors Built Their Success Story with Hachion
+                </h2>
+                <p className="home-title-text">
+                  Join a thriving community of instructors who transformed their teaching careers with Hachion. We empower educators with the tools, training, and support they need to grow, inspire, and succeed.
+                </p>
+                <ul className="expert-points-list">
+                  <li className="help-faq-details">
+                    Launch and scale your teaching career with ease
+                  </li>
+                  <li className="help-faq-details">
+                    Access cutting-edge resources and mentorship
+                  </li>
+                  <li className="help-faq-details">
+                    Connect with a global network of passionate learners and trainers
+                  </li>
+                </ul>
+
+                <div className="trainer-story-wrapper">
+                  <div className="trainer-story">
+                    <PiQuotesDuotone className="quote-icon" />
+                    <p className="trainer-quote">{stories[currentIndex].text}</p>
+                    <span className="trainer-author">{stories[currentIndex].author}</span>
+                  </div>
+
+                  <div className="trainer-arrow-container">
+                  <button
+                    className={`trainer-arrow-btn prev ${currentIndex === 0 ? "active" : ""}`}
+                    onClick={handlePrev}
+                  >
+                    <LiaArrowLeftSolid />
+                  </button>
+                  <button
+                    className={`trainer-arrow-btn next ${
+                      currentIndex === stories.length - 1 ? "active" : ""
+                    }`}
+                    onClick={handleNext}
+                  >
+                    <LiaArrowRightSolid />
+                  </button>
+                </div>
+                </div>
+              </div>
+
+              {/* Right side content */}
+              <div className="home-content">
+                <img
+                  src={Story}
+                  alt="Story banner"
+                  className="key-image"
+                  fetchpriority="high"
+                />
+              </div>
+            </div>
 
       <Footer />
       {showScrollButton && <StickyBar />}

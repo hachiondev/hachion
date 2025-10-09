@@ -325,32 +325,24 @@ useEffect(() => {
         <div className='login-left'>
           <div className='login-top'>
             <h4 className='login-continue'>Login</h4>
-            <div className='login-mid'>  
-              {errorMessage1 && (
+            {errorMessage1 && (
               <p className="error-field-message" onClick={dismissError} style={{cursor:'pointer'}}>
                 {errorMessage1}
               </p>
             )}
+            <div className='login-mid'>  
                 <label className='login-label'>Email<span className='star'>*</span></label>
                 <div className="register-field">
                 <div className="password-field">
-                  {/* <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Enter your Email"
-                    value={email}
-                    Change={(e)=>{ setEmail(e.target.value); dismissError(); }}
-                    onFocus={dismissError}
-                    onInput={dismissError}/> */}
                     <input
-  type="email"
-  className="form-control"
-  placeholder="Enter your Email"
-  value={email}
-  onChange={(e) => { setEmail(e.target.value); dismissError(); }}  
-  onFocus={dismissError}
-  onInput={dismissError}
-/>
+                      type="email"
+                      className="form-control"
+                      placeholder="Enter your Email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); dismissError(); }}  
+                      onFocus={dismissError}
+                      onInput={dismissError}
+                    />
                     </div>
                     {errors.email && <p className="error-field-message">{errors.email}</p>}
                     </div>
@@ -375,13 +367,12 @@ useEffect(() => {
                 
               <label className="login-label">
                 Enter Captcha<span className="star">*</span>
-                
               </label>
 
               <div className="captcha-wrapper">
                     <canvas ref={canvasRef} className="password-field" style={{backgroundColor: 'none'}}
                         height="40">
-onClick={dismissError}
+                      onClick={dismissError}
                     </canvas>
                     <span className="refresh-captcha-btn" id="reload-button" onClick={
                         () => initializeCaptcha(

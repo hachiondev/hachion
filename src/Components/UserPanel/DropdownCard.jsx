@@ -69,6 +69,7 @@ import React, { useEffect, useState } from 'react';
 import { RxCalendar } from "react-icons/rx";
 import { BiTimeFive } from "react-icons/bi";
 import './Course.css';
+import fallbackImg from "../../Assets/18.png";
 import { Link, useNavigate } from 'react-router-dom';
 
 const DropdownCard = ({ title, month, level = "All Levels" , image }) => {
@@ -96,7 +97,11 @@ const DropdownCard = ({ title, month, level = "All Levels" , image }) => {
     <div className="dropdown-card"
     onClick={handleClick}>
       <div className="dropdown-card-icon">
-        <img src={image} alt="card-img" loading="lazy"/>
+        <img src={image} alt="course-img" loading="lazy"
+        onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = fallbackImg;
+            }}/>
       </div>
       <div className="dropdown-course-details">
         <div className="dropdown-course-time">

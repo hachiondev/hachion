@@ -223,7 +223,7 @@ width: auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-height: auto;
   overflow: visible;
-  width: 60vw;
+  width: 65vw;
   transform: translateX(-10%);
 }
 
@@ -239,7 +239,7 @@ width: auto;
   overflow-y: auto;
   overflow-x: hidden;
   width: auto;
-  max-width: 220px;
+  max-width: 250px;
 }
 
 .scrollable-category-list::-webkit-scrollbar {
@@ -1160,7 +1160,7 @@ padding-left: 8px;
 }
 
 .it-logos-slide img{
-height: 40px;
+height: 30px;
 margin: 5px 20px;
 }
 
@@ -1195,7 +1195,7 @@ animation-play-state: paused;
   padding: 10px 15px;
 }
 .it-logo-review {
-  height: 40px;
+  height: 30px;
   width: auto;
   transition: transform 0.3s ease;
 }
@@ -2334,6 +2334,12 @@ gap:1vh;
   margin-bottom: 5px;
 }
 
+@media (min-width: 1800px)  {
+  .custom-dropdown-menu {
+  width: 50vw;
+}
+}
+
 @media (max-width: 1366px)  {
   .topbar {
   height: 45px;
@@ -2898,6 +2904,9 @@ height: 45px;
         max-width: 90%;
         margin: 0 auto;
       }
+ .home-faq-content{
+flex: 0 0 100%;
+ }
         .home-start-button, .home-browse-button, .limited-deal-button{
         padding: 5px;
         width: 90%;
@@ -3181,7 +3190,7 @@ height: 45px;
   padding: 5px 10px;
 }
 .it-logo-review {
-  height: 30px;
+  height: 20px;
 }
     }
 
@@ -3499,7 +3508,7 @@ border-radius: 20px;
 
 .it-logos-slide img{
 margin: 0px 10px;
-height: 30px;
+height: 20px;
 }
 
 .card {

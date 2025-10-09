@@ -132,19 +132,17 @@ useEffect(() => {
   return (
     <div>
       <div className={`dropdown-sidebar ${activeIndex !== null ? 'show-cards' : ''}`}>
-        <ul className="menu">
+        <ul className="category-menu">
           {menuItems.map((item, index) => (
             <li key={item._id || index}>
               <button
                 onClick={() => handleMenuItemClick(index, item.name)}
                 onMouseEnter={() => handleMenuItemClick(index, item.name)}
-                className={`menu-item ${activeIndex === index ? 'active' : ''}`}
+                className={`category-menu-item ${activeIndex === index ? 'active' : ''}`}
                 style={{ padding: '4px 8px', fontWeight: '400' }}
               >
-                {item.name}
-                <span>
-                  <MdArrowForwardIos />
-                </span>
+                <span className="category-menu-text">{item.name}</span>
+                <MdArrowForwardIos className="category-menu-arrow" />
               </button>
             </li>
           ))}

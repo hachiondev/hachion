@@ -39,11 +39,17 @@ const NavbarTop = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
 
-  const handleMouseEnter = () => setIsDropdownOpen(true);
-  const handleMouseLeave = () => {
-     
+const handleMouseEnter = () => {
+  clearTimeout(window.dropdownTimeout);
+  setIsDropdownOpen(true);
+};
+
+const handleMouseLeave = () => {
+  window.dropdownTimeout = setTimeout(() => {
     setIsDropdownOpen(false);
-  };
+  }, 200);
+};
+
   const handleClickToggle = () => {
     setIsDropdownOpen(prev => !prev);
   };
@@ -271,6 +277,36 @@ useEffect(() => {
     })
     .catch(err => console.error("[NavbarTop] /api/me failed:", err));
 }, []);
+
+useEffect(() => {
+  const handleDrawerOpen = () => {
+    document.body.style.overflow = "hidden";
+  };
+  const handleDrawerClose = () => {
+    document.body.style.overflow = "";
+  };
+
+  const drawer = document.getElementById("mobileDrawer");
+  if (drawer) {
+    drawer.addEventListener("show.bs.offcanvas", handleDrawerOpen);
+    drawer.addEventListener("hidden.bs.offcanvas", handleDrawerClose);
+  }
+
+  return () => {
+    if (drawer) {
+      drawer.removeEventListener("show.bs.offcanvas", handleDrawerOpen);
+      drawer.removeEventListener("hidden.bs.offcanvas", handleDrawerClose);
+    }
+  };
+}, []);
+
+useEffect(() => {
+  if (showMobileSearch) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+}, [showMobileSearch]);
 
  return (
     <>

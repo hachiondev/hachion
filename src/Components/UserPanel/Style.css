@@ -41,9 +41,9 @@
   left: 0;
 }
 
-.mobile-search-overlay {
+/* .mobile-search-overlay {
   overflow-y: auto;
-}
+} */
 .mobile-search-close-btn {
   background: transparent;
   border: none;

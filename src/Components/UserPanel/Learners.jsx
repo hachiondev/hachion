@@ -415,6 +415,8 @@ const Learners = ({ page }) => {
             <LearnerCard
               name={review.name}
               location={review.location}
+              company={review.company}
+              role={review.role}
               content={review.review}
               profileImage={
                 review.user_image

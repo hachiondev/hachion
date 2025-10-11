@@ -111,7 +111,7 @@ const ForgotPassword = () => {
               </nav>
             </div>
         <img src={LoginBanner} alt='Login Banner' className='login-banner'/>
-      <div className='login'>
+      <div className='login container'>
         <div className='login-left'>
           <div className='login-top'>
             <h4 className='login-continue'>Forgot Password</h4>
@@ -149,8 +149,8 @@ const ForgotPassword = () => {
             </div>
         </div>
         </div>
-      <Footer />
-      <StickyBar />
+      {/* <Footer />
+      <StickyBar /> */}
       </div >
     </>
   );

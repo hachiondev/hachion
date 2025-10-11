@@ -129,7 +129,10 @@ const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
     });
   });
 }, [filteredTrainers]); 
-
+const formatForUrl = (str) => 
+  str.toLowerCase().replace(/\s+/g, "-"); 
+// const enrollKey = `${trainer.trainer_name}::${trainer.course_name}`;
+// const enrollCount = enrollCounts[enrollKey] ?? 0;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -267,12 +270,11 @@ const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
                     <p className="instructor-rating">
   {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0)} Students
 </p>
-
                     </div>
                     <button
                       className="view-profile-btn"
                       onClick={() =>
-                        navigate(`/${trainer.trainer_name}-instructor-details`, { state: { trainer } })
+                        navigate(`/${formatForUrl(trainer.course_name)}-${trainer.trainer_name}-instructor-details`, { state: { trainer, enrollCount: (enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0), } })
                       }
                     >
                       View Profile

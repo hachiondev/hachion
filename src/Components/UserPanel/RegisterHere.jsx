@@ -151,7 +151,7 @@ const handleSubmit = async () => {
       <img src={LoginBanner} alt="Login Banner" className="login-banner" />
 
       {/* Register Content */}
-      <div className="login">
+      <div className='login container'>
         <div className="login-left">
           <div className="login-top">
             <h4 className="login-continue">Set Password & Verify</h4>
@@ -279,8 +279,8 @@ const handleSubmit = async () => {
       </div>
 
       {/* Footer & Sticky Bar */}
-      <Footer />
-      <StickyBar />
+      {/* <Footer />
+      <StickyBar /> */}
       </div>
     </>
   );

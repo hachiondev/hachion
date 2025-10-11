@@ -117,12 +117,11 @@ width: 100px;
 
 .association-head{
   font-weight: 600;
-  /* margin: 30px 0; */
   letter-spacing: 0%;
   display: flex;
   justify-content: left;
   color: #3D3D3D;
-  padding: 10px 16px;
+  padding: 3px 16px;
 }
 .customize-training{
 display: flex;
@@ -366,7 +365,7 @@ padding: 2vh;
   display: flex;
   justify-content: center;
   text-align: center;
-  padding: 10px;
+  padding: 0px;
 }
 
 .learner-cover{
@@ -403,6 +402,136 @@ position: relative;
 
  .learner-image{
   justify-items: center;
+}
+
+/* 3 cards per row layout */
+.video-review-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+  padding: 20px;
+}
+
+.video-learner-card {
+  max-width: 400px;
+  height: 400px;
+  margin: 5px;
+  background-color: #fff;
+  border: 1px solid #e8e6e6;
+  box-shadow: 0px 10.37px 20.74px rgba(150, 150, 150, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-learner-image {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.video-profile-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.review-video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.review-video-play-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.review-video-icon-btn {
+  font-size: 50px;
+  color: #00aeef;
+}
+
+.video-learner-name {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  background-color: #fff;
+  border-bottom: 3px solid #00aeef;
+  margin: 0;
+  padding: 10px 20px;
+  z-index: 1;
+}
+
+.video-review-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+  padding: 20px 0;
+}
+
+.review-video-modal {
+  position: fixed;
+  inset: 0; 
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.review-video-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.review-video-modal-content iframe,
+.review-video-modal-content video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.review-video-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 10;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
  .profile-image{
@@ -914,18 +1043,61 @@ position: relative;
   /* aspect-ratio: 9 / 5; */
   object-fit:fill;
 }
+.recent-blog-card {
+  /* width: 350px; */
+  /* flex: 0 0 auto;
+  margin: 10px;
+  background-color: #FBFBFB;
+  border: 1px solid #E9E9E9;
+  box-shadow: 5px 5px 5px #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 8px; */
+    box-sizing: border-box;
+    cursor: pointer;
+    justify-items: flex-start;
+    overflow: hidden !important;
+    width: calc(25% - 10px);
+    border: 1px solid #E2E0DB;
+    border-radius: 15px;
+    max-height: 360px;
+    max-width: 300px;
+    padding: 16px;
+}
+.recent-blog-card:hover {
+  border: 1px solid #00aaef;
+  /* box-shadow: 6px 6px 6px #d3d3d3; */
+}
 
+.recent-blog-card-image {
+  /* flex: 1;
+  width: 100%;
+  aspect-ratio: 9/4;
+  object-fit: cover;
+  border-radius: 5px; */
+  border-radius: 5px;
+    display: block;
+    object-fit: fill;
+    object-position: top;
+    transition: all .3s ease;
+    width: 100%;
+    z-index: 0;
+    max-height: 120px;
+}
 .content-block {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 8px;
-  padding: 5px;
+  gap: 6px;
+  padding: 0;
   transition: all .3s ease;
+  width: 100%;
 }
 
 .content {
-  max-width: 250px;
+  max-width: 100%;
   font-size: 16px;
   font-weight: 500;
   display: -webkit-box;
@@ -936,6 +1108,7 @@ position: relative;
   text-align: left;
   height: 3em;
   line-height: 1.5;
+  color: #000;
 }
 
 .bottom-content {
@@ -947,10 +1120,14 @@ position: relative;
   align-self: flex-start;
   background-color: #E5E5E5;
   color: #000;
-  font-size: 12px;
+  font-size: small;
   font-weight: 400;
-  padding: 4px 8px;
-  border-radius: 10px;
+  padding: 2px 6px;
+  border-radius: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .author-info {
   display: flex;
@@ -966,7 +1143,7 @@ position: relative;
   object-fit: cover;
 }
 .blog-card-description {
-  max-width: 260px;
+  max-width: 100%;
   font-size: 12px;
   color: #000000;
   font-weight: 400;
@@ -985,13 +1162,15 @@ position: relative;
 }
 .blog-author {
   color: #202939;
-  font-size: 13px;
+  font-size: medium;
   margin-bottom: 5px;
+  font-weight: 500;
 }
 .date {
   color: #697586;
-  font-size: 13px;
+  font-size: medium;
   margin-bottom: 5px;
+  font-weight: 400;
 }
 .blog-bottom{
   /* margin: 4vh; */
@@ -1405,6 +1584,16 @@ position: relative;
     /* grid-template-columns: repeat(2, 1fr); */
     gap: 10px;
   }
+  .video-review-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+    .recent-blog-card-image{
+  max-height: 160px;
+  }
+  .recent-blog-card{
+  max-height: fit-content;
+  width: 45%;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1458,6 +1647,10 @@ position: relative;
     display: flex;
     margin-bottom: 30px;
     }
+      .recent-blog-card {
+  padding: 15px;
+  width: 100%;
+}
 }
 
 @media (max-width: 1179px){
@@ -1687,6 +1880,10 @@ position: relative;
     .bottom-content {
       font-size: 14px;
   }
+    .recent-blog-card {
+  max-height: 380px;
+  max-width: 100%;
+}
 
   .content-block {
       flex: 1;
@@ -1921,6 +2118,12 @@ position: relative;
       /* max-width: 430px; */
       margin-bottom: 0;
     }
+  .video-learner-card {
+  width: 100%;
+}
+  .video-review-container {
+    grid-template-columns: 1fr;
+  }
 
     .carousel-indicators-line {
       list-style: none;

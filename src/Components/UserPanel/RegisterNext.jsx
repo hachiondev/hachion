@@ -297,7 +297,7 @@ const handleSubmitPopup = async () => {
                   </nav>
                 </div>
             <img src={LoginBanner} alt='Login Banner' className='login-banner'/>
-    <div className="login">
+    <div className='login container'>
       <div className="login-left">
         <div className="login-top">
           <h4 className="login-continue">Register to start learning</h4>
@@ -388,8 +388,8 @@ const handleSubmitPopup = async () => {
   </>
 )}
     </div>
-    <Footer />
-      <StickyBar />
+    {/* <Footer />
+      <StickyBar /> */}
       </div>
     </>
   );

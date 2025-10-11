@@ -268,40 +268,36 @@ const DiscountCards = () => {
   const goToPrev = () =>
     setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
 
-  
   useEffect(() => {
-    let stopped = false;
-    const compute = () => {
-      if (stopped) return;
-      const next = {};
-      currentCourses.forEach((c) => {
-        const key = c.id ?? c.courseName;
-        const endsAt = getSaleEndsAt(c.courseName, country);
-        if (!endsAt) return;
-        const diffMs = endsAt.getTime() - Date.now();
-        if (diffMs <= 0) return;
+  let stopped = false;
+  const compute = () => {
+    if (stopped) return;
+    const next = {};
+    currentCourses.forEach((c) => {
+      const key = c.id ?? c.courseName;
+      const endsAt = getSaleEndsAt(c.courseName, country);
+      if (!endsAt) return;
+      const diffMs = endsAt.getTime() - Date.now();
+      if (diffMs <= 0) return;
 
-        const totalSec = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSec / 86400);
-        const hours = Math.floor((totalSec % 86400) / 3600);
-        const minutes = Math.floor((totalSec % 3600) / 60);
-        const seconds = totalSec % 60;
+      const totalSec = Math.floor(diffMs / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
 
-        const pad = (n) => n.toString().padStart(2, "0");
-        const label = days > 0
-          ? `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`
-          : `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`;
+      const pad = (n) => n.toString().padStart(2, "0");
+      const label = days > 0
+        ? `${days}d ${pad(hours)}h Left`
+        : `${pad(hours)}h Left`;
 
-        next[key] = label;
-      });
-      setCountdowns(next);
-    };
-    compute();
-    const t = setInterval(compute, 1000);
-    return () => { stopped = true; clearInterval(t); };
-  }, [currentCourses, country, discountRules]);
+      next[key] = label;
+    });
+    setCountdowns(next);
+  };
+  compute();
+  const t = setInterval(compute, 1000);
+  return () => { stopped = true; clearInterval(t); };
+}, [currentCourses, country, discountRules]);
 
-  
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");

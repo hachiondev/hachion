@@ -27,6 +27,8 @@ const InstructorDetails = () => {
   const { trainer_name } = useParams();
 
   const [trainer, setTrainer] = useState(location.state?.trainer || null);
+  const [enrollCount, setEnrollCount] = useState(location.state?.enrollCount ?? 0);
+
   const [allCourses, setAllCourses] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,14 +36,14 @@ const InstructorDetails = () => {
   const [fxFromUSD, setFxFromUSD] = useState(1);
   const [country, setCountry] = useState("IN");
 
-  // Filter courses for this trainer
-const trainerCourses = allCourses.filter(course => 
-  course.trainerName?.toLowerCase() === trainer.trainer_name?.toLowerCase()
+const trainerCourses = allCourses.filter(course =>
+  trainer?.trainer_name &&
+  course.trainerName?.toLowerCase() === trainer.trainer_name.toLowerCase()
 );
 
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  // Fetch trainer
+  
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
@@ -57,7 +59,7 @@ const trainerCourses = allCourses.filter(course =>
     fetchTrainer();
   }, [trainer, trainer_name]);
 
-  // Fetch all courses
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -83,20 +85,23 @@ const trainerCourses = allCourses.filter(course =>
     fetchCourses();
   }, []);
 
-  // Fetch all reviews
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const res = await axios.get("https://api.test.hachion.co/userreview");
-        setReviews(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-      }
-    };
-    fetchReviews();
-  }, []);
+  
+useEffect(() => {
+  const fetchReviewsByCourse = async () => {
+    if (!trainer?.course_name) return;
+    try {
+      const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
+      const res = await axios.get(url);
+      setReviews(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching course reviews:", err);
+      setReviews([]);
+    }
+  };
+  fetchReviewsByCourse();
+}, [trainer?.course_name]);
 
-  // Detect country and currency
+
   useEffect(() => {
     (async () => {
       try {
@@ -168,7 +173,10 @@ const trainerCourses = allCourses.filter(course =>
                   <small className="text-muted ms-1">({reviews.length} reviews)</small>
                 </div>
                 <div className="me-4">
-                  <span className="fw-semibold"><GoPeople size="20" color="#00aeef"/> {trainer.students || "200+"}</span>
+                  {/* <span className="fw-semibold"><GoPeople size="20" color="#00aeef"/> {{enrollCount}}</span> */}
+                    <span className="fw-semibold">
+    <GoPeople size="20" color="#00aeef"/> {enrollCount ?? 0}
+  </span>
                   <small className="text-muted"> students</small>
                 </div>
                 <div>

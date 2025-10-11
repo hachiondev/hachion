@@ -108,7 +108,7 @@ const DropdownCard = ({ title, month, level = "All Levels" , image }) => {
           <span className={`course-badge ${level?.toLowerCase()}`}>
             {level}
           </span>
-          <div className="dropdown-course-month">
+          <div className="dropdown-card-month">
             <BiTimeFive /> {month} Days
           </div>
         </div>

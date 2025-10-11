@@ -256,42 +256,40 @@ const withPerCourseDiscount = allCourses
 const orderedCourses = [...withRuleActive, ...withPerCourseDiscount];
 
 const displayedCourses = viewAll ? orderedCourses : orderedCourses.slice(0, cardsToShow);
+useEffect(() => {
+  let stopped = false;
+  const compute = () => {
+    if (stopped) return;
+    const next = {};
 
-  useEffect(() => {
-    let stopped = false;
-    const compute = () => {
-      if (stopped) return;
-      const next = {};
+    displayedCourses.forEach((c) => {
+      const key = c.id ?? c.courseName;
+      const endsAt = getSaleEndsAt(c.courseName, country);
+      if (!endsAt) return;
 
-      displayedCourses.forEach((c) => {
-        const key = c.id ?? c.courseName;
-        const endsAt = getSaleEndsAt(c.courseName, country);
-        if (!endsAt) return;
+      const diffMs = endsAt.getTime() - Date.now();
+      if (diffMs <= 0) return;
 
-        const diffMs = endsAt.getTime() - Date.now();
-        if (diffMs <= 0) return;
+      const totalSec = Math.floor(diffMs / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
 
-        const totalSec = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSec / 86400);
-        const hours = Math.floor((totalSec % 86400) / 3600);
-        const minutes = Math.floor((totalSec % 3600) / 60);
-        const seconds = totalSec % 60;
+      const pad = (n) => n.toString().padStart(2, "0");
+      const label = days > 0
+        ? `${days}d ${pad(hours)}h Left`
+        : `${pad(hours)}h Left`;
 
-        const pad = (n) => n.toString().padStart(2, "0");
-        const label = days > 0
-          ? `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`
-          : `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`;
+      next[key] = label;
+    });
 
-        next[key] = label;
-      });
+    setCountdowns(next);
+  };
 
-      setCountdowns(next);
-    };
+  compute();
+  const t = setInterval(compute, 1000); // still running every second
+  return () => { stopped = true; clearInterval(t); };
+}, [displayedCourses, country, discountRules]);
 
-    compute();
-    const t = setInterval(compute, 1000);
-    return () => { stopped = true; clearInterval(t); };
-  }, [displayedCourses, country, discountRules]);
 
   const handleCardClick = (course) => {
     if (!course?.courseName) return;

@@ -94,16 +94,20 @@ const handleShare = async (e) => {
       </div>
 
       <div className="card-course-details">
-        <div className="card-row">
+          <div className="card-row">
+          <div className="card-text-space">
           <div className="dropdown-course-month">
            {month} Days
           </div>
-          <div className={`course-badge ${level?.toLowerCase()}`}>
+          <div className="dropdown-course-month">
             {level}
           </div>
-          <div className="trainer-name">
-            By {trainer_name}
           </div>
+        <div className="trainer-name">
+        By {trainer_name && trainer_name.length > 8 
+          ? trainer_name.slice(0, 8) + "…" 
+          : trainer_name}
+      </div>
         </div>
         <div className="card-row">
         <h3 className="course-name">{heading}</h3>

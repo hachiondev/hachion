@@ -21,9 +21,10 @@ const RecentEntries = () => {
   }, []);
   const visibleBlogs = blogs.slice(0, 8);
   return (
-     <div className="home-faq-banner container">
-      <h2 className='home-blog-title'>Trending Blog</h2>
-      <p className="learner-title-tag">Discover our useful resources and read articles on different categories</p>
+    <div className="training-events container">
+      <h2 className='association-head'>Trending Blog</h2>
+      <p className="association-head-tag">Discover our useful resources and read articles on different categories</p>
+      <div className="home-blog-cards">
     <div className="recent-entries-container">
     <div className="recent-entries-grid">
       {visibleBlogs.map((blog) => (
@@ -59,6 +60,7 @@ const RecentEntries = () => {
     navigate("/blogs");}}>
   View More Blogs
 </button>
+    </div>
     </div>
   );
 };

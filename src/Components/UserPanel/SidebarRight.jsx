@@ -188,6 +188,7 @@ const getSaleEndsAt = (courseName, countryCode) => {
   if (!end.isValid()) return null;
   return end.endOf("day").toDate();
 };
+
 useEffect(() => {
   let stopped = false;
 
@@ -209,14 +210,12 @@ useEffect(() => {
       const totalSec = Math.floor(diffMs / 1000);
       const days = Math.floor(totalSec / 86400);
       const hours = Math.floor((totalSec % 86400) / 3600);
-      const minutes = Math.floor((totalSec % 3600) / 60);
-      const seconds = totalSec % 60;
 
       const pad = (n) => n.toString().padStart(2, "0");
       const label =
         days > 0
-          ? `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`
-          : `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s Left`;
+          ? `${days}d ${pad(hours)}h Left`
+          : `${pad(hours)}h Left`;
 
       next[c.id ?? c.courseName] = label;
     });

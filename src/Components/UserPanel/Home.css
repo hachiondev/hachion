@@ -624,11 +624,11 @@ background-color:#F7F7F7;
 }
 
 .left-cards-arrow {
-  left: -40px; 
+  left: -45px; 
 }
 
 .right-cards-arrow {
-  right: -40px; 
+  right: -45px; 
 }
 .page-indicators {
   display: flex;
@@ -821,7 +821,7 @@ scroll-behavior: smooth;
   /* width: 80%; */
   margin: 40px auto;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 .home-faq-data{
   display: flex;
@@ -922,6 +922,13 @@ position: relative;
 border: 1px solid #00AEEF;
 color: #00AEEF;
 }
+.home-blog-cards{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 .key-image {
   width: 90%;
   height: auto;
@@ -933,7 +940,7 @@ color: #00AEEF;
        justify-content: left;
        flex-direction: column;
        align-items: flex-start;
-       max-width: 40%;
+       max-width: 35%;
       }
 .limited-deal-button {
     background-color: #00AEEF;
@@ -1290,9 +1297,9 @@ margin: 8px 0;
   background-color: #fff;
   border-radius: 20px;
   border: 1px solid #E2E0DB;
-  padding: 5px 15px;
+  padding: 5px 14px;
   width: 100%;
-  height: 38px;
+  height: 35px;
 }
 .card-view-btn:hover, .popup-card-view-btn:hover{  
   color: #fff;
@@ -1342,14 +1349,15 @@ margin-top: 40px;
 /* margin: 40px 10%; */
 justify-content: space-between;
 display: flex;
-align-items: top;
+align-items: start;
+padding: 0 1%;
 }
 .training-title-head{
-/* margin: 40px 10%; */
-margin: 40px auto;
+margin: 10px auto;
 justify-content: space-between;
 display: flex;
-align-items: top;
+align-items: start;
+padding: 0 1%;
 }
 
 .view-btn{
@@ -1408,11 +1416,13 @@ text-align: center;
 background-color: white !important;
 color: #2A2A2A ;
 white-space: nowrap;
+border: 2px solid #FFFFFF;
+box-shadow: rgba(0, 0, 0, 0.25);
 }
 
 .card-header-icon {
   margin-right: 10px;
-  font-size: 10px;
+  font-size: 12px;
   color: #15750C;
   animation: colorChange 2s infinite ease-in-out;
 }
@@ -1462,7 +1472,7 @@ transition: background-color 0.3s ease;
 }
 
 .course-name, .upcoming-course-name {
-font-size: 16px;
+font-size: 15px;
 font-weight: 600;
 color: #262626; 
 margin: 1vh 0;
@@ -1502,6 +1512,14 @@ color: #FF0000;
 margin: 1vh 0;
 text-align: right;
 }
+.upcoming-time{
+display: flex;
+font-size: 15px;
+font-weight: 500;
+color: #FF0000; 
+margin: 1vh 0;
+text-align: right;
+}
 
 .date-time-container {
   display: flex;
@@ -1511,10 +1529,12 @@ text-align: right;
 }
 
 .card-date {
+  display: flex;
   text-align: left;
-  flex: 1;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
+  color: #3D3D3D;
+  margin: 1vh 0;
 }
 
 .time {
@@ -1632,7 +1652,8 @@ transition: all 0.3s ease;
 .card-row{
 display: flex;
 justify-content: space-between;
-align-items: top;
+align-items: start;
+margin: 5px 0;
 }
 
 .course-time{
@@ -1761,6 +1782,7 @@ justify-items: flex-start;
 cursor: pointer;
 border-radius: 15px;
 padding:0 20px;
+padding-bottom: 20px;
 }
 .home-popup-card {
 width: calc(25% - 10px); 
@@ -1799,6 +1821,7 @@ justify-items: flex-start;
 cursor: pointer;
 border-radius: 15px;
 padding:0 20px;
+padding-bottom: 20px;
 }
 .new-batch-para{
 display: none;
@@ -2520,8 +2543,6 @@ height: 45px;
     padding: 8px 20px 8px 6px;
 }   
     .training-events-head-upcoming, .training-title-head{
-      /* width: 80%;
-    margin: 40px 10%; */
     justify-content: space-between;
     display: flex;
     }
@@ -2861,6 +2882,9 @@ height: 45px;
   margin: 30px auto;
   align-items: center;
 }
+.home-blog-cards {
+    align-items: normal;
+}
 .faq-image {
   width: 100%;
   height: auto;
@@ -2961,17 +2985,14 @@ flex: 0 0 100%;
       }
       
       .training-events-head-upcoming{
-      margin-top: 30px;
+      margin: 10px 0;
       justify-content: space-between;
       display: flex;
-      margin-bottom: 30px;
       flex-wrap: wrap;
       }
       .training-title-head{
-      margin-top: 30px;
       justify-content: space-between;
       display: flex;
-      margin-bottom: 30px;
       flex-wrap: nowrap;
       }
       .home-spacing {

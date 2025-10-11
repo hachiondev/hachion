@@ -321,7 +321,7 @@ useEffect(() => {
             </div>
         <img src={LoginBanner} alt='Login Banner' className='login-banner'/>
       
-      <div className='login'>
+      <div className='login container'>
         <div className='login-left'>
           <div className='login-top'>
             <h4 className='login-continue'>Login</h4>
@@ -437,8 +437,8 @@ useEffect(() => {
             <p className='go-to-register'>Don't have an account? <Link to='/register' className='link-to-register'> Sign Up </Link></p>
         </div>
       </div>
-      <Footer />
-      <StickyBar />
+      {/* <Footer />
+      <StickyBar /> */}
       </div>
     </>
   );

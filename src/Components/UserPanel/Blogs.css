@@ -1791,19 +1791,33 @@ background-color: white;
     width: 100%;
   }
     }
+
+.contact-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 340px;
+  height: 100%;
+  padding: 20px;
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url(../../Assets/contactbanner.webp);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .contact-us-div{
-background-color: #ffffff;
-padding: 2vh;
-box-shadow: 5px 5px 10px #d3d3d3;
-width: 24vw;
-border-radius: 20px;
+padding: 20px;
+max-width: 400px;
 }
 
 .contact-us-box{
   display:'flex';
    flex-direction:'row';
-   padding:'2vh';
-   padding-top:'8vh',;
+   padding:'20px';
   justify-content:'space-evenly';
   }
 .contact-us-all{
@@ -1851,8 +1865,9 @@ width: 2vw;
 }
 
 .flag{
-  height: 100px;
-  width: 100px;
+  max-width: 350px;
+  height: auto;
+  gap: 20px;
 }
 .contact-us-right{
 width: 668px;
@@ -2031,10 +2046,10 @@ margin-bottom: 20px;
   margin: 5px;
   }
 
-  .flag{
-    height: 100px;
-    width: 100px;
-  }
+.flag{
+  max-width: 100%;
+  height: auto;
+}
   .contact-us-right{ 
   width: 340px;
   background-color: #ffffff;

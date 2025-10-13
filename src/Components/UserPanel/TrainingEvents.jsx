@@ -246,8 +246,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
       <div className="training-events-head-upcoming">
         <div className="home-spacing">
         <h2 className="association-head">Upcoming Trainings at Hachion</h2>
-        <p className="association-head-tag">Kickstart your academic journey with expert-led online 
-training for SAT and ACT success</p>
+        <p className="association-head-tag">Empower your future with hands-on training and expert guidance from Hachion’s certified instructors.</p>
       </div>
 
       {/* <div className="card-pagination-container">

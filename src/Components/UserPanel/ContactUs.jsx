@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
-import contactUsBanner from "../../Assets/contactus.png";
+import contactUsBanner from "../../Assets/contactbanner.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import UsaFlag from "../../Assets/usflag.jpg";
+import UsaFlag from "../../Assets/usa.webp";
 import "./Blogs.css";
-import indiaFlag from "../../Assets/india.jpg";
-import dubaiFlag from "../../Assets/dubai.jpg";
+import indiaFlag from "../../Assets/india.webp";
+import dubaiFlag from "../../Assets/dubai.webp";
 import whatsappIcon from "../../Assets/logos_whatsapp-icon.png";
 import mailIcon from "../../Assets/uiw_mail.png";
 import facebookIcon from "../../Assets/facebook_symbol.svg.png";
@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
 import axios from "axios";
+import { TbSlashes } from "react-icons/tb";
 
 const initialValues = {
   name: "",
@@ -220,22 +221,21 @@ const ContactUs = () => {
     <>
       <Topbar />
       <NavbarTop />
-      <div className="about-banner">
-        <img src={contactUsBanner} alt="contact-us-banner" loading="lazy"/>
-      </div>
-      <div className="contact-us-all">
-        <div className='blogs-header'>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a> <MdKeyboardArrowRight />{" "}
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Contact Us
-            </li>
-          </ol>
-        </nav>
-        </div>
+
+        <div className="contact-banner">
+                <h1 className="instructor-profile-title">Contact Us</h1>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="instructor-breadcrumb-item">
+                      <a href="/">Home</a> <TbSlashes color="#00aeef" />
+                    </li>
+                    <li className="instructor-breadcrumb-item active" aria-current="page">
+                      Contact Us
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+        <div className="contact-us-all">
         <h1 className="about-us-heading">Office Location</h1>
 
         <div className="contact-us">

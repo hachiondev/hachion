@@ -69,7 +69,7 @@ const CourseDetail = ({
   const [characterCount, setCharacterCount] = useState(0);
   const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
 const [aboutError, setAboutError] = useState("");
-  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',
+  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',level: '',
     ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
     keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',iamount:'',idiscount:'',itotal:'',isamount:'',isdiscount:'',istotal:'',isqamount:'',isqdiscount:'',isqtotal:'',icamount:'',icdiscount:'',ictotal:'',imamount:'',imdiscount:'',imtotal:'',mentoring1:'',mentoring2:'',self1:'',
     self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',aboutCourse:'',courseHighlight:'',courseDescription:'',date:currentDate,
@@ -220,6 +220,7 @@ const handleSubmit = async (e) => {
     date: currentDate,
     youtubeLink: formData.youtubeLink,
     numberOfClasses: formData.numberOfClasses,
+    level: formData.level,
     starRating: formData.starRating,
     ratingByNumberOfPeople: formData.ratingByNumberOfPeople,
     totalEnrollment: formData.totalEnrollment,
@@ -308,6 +309,7 @@ const handleEditClick = async (courseId) => {
         shortCourse: course.shortCourse,
         youtubeLink: course.youtubeLink ,
         numberOfClasses: course.numberOfClasses ,
+        level: course.level,
         dailySessions: course.dailySessions ,
         starRating: course.starRating ,
         ratingByNumberOfPeople: course.ratingByNumberOfPeople,
@@ -371,6 +373,7 @@ const handleReset=()=>{
     courseImage: null,
     youtubeLink: '',
     numberOfClasses: '',
+    level: '',
     dailySessions: '',
     starRating: '',
     ratingByNumberOfPeople: '',
@@ -518,6 +521,16 @@ const handleShortCourseBlur = async () => {
                   </div>
                 </div>
                 <div className="course-row">
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">Level</label>
+                  <select id="inputState" class="form-select" name='level' value={formData.level} onChange={handleInputChange}>
+                    <option selected>Select </option>
+                    <option>All Levels</option>
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Expert</option>
+                  </select>
+              </div>
               <div className="col-md-4">
                 <label className="form-label">Star Rating</label>
                 <input

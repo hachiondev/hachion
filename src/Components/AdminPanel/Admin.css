@@ -539,7 +539,7 @@
     border: 3px solid #0D6EFD;
     color: #0D6EFD;
   }
-  .certificate-tabs {
+  /* .certificate-tabs {
     display: flex;
     margin-bottom: 20px;
   }
@@ -556,8 +556,102 @@
   }
   
   .active-tab {
-    border-bottom: 3px solid blue; /* Blue line under active tab */
-  }
+    border-bottom: 3px solid blue;
+  } */
+
+  .tabs-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 1000px;
+}
+
+.certificate-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  border-bottom: 1px solid #ddd;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 20px;
+}
+
+.certificate-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #333;
+  font-size: medium;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab-item:hover {
+  color: #007bff;
+}
+
+.active-tab {
+  border-bottom: 2px solid #007bff;
+  color: #007bff;
+}
+
+/* Scroll Buttons */
+.tab-scroll-btn {
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  padding: 3px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.tab-scroll-btn:hover {
+  color: #007bff;
+}
+
+.tab-scroll-btn.left {
+  left: -20px;
+}
+
+.tab-scroll-btn.right {
+  right: -20px;
+}
+
+/* Optional: Add gradient fade at edges for better look */
+.tabs-wrapper::before,
+.tabs-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tabs-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #fff 60%, transparent);
+}
+
+.tabs-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #fff 60%, transparent);
+}
+
   .pagination{
     display: flex;
     align-items: flex-end;

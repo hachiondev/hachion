@@ -34,7 +34,7 @@ const RecentEntries = () => {
           content={blog.title}
           category={blog.category_name}
           description={blog.description}
-          author={blog.authorName}
+          author={blog.author}
           avatarSrc={blog.avatar}
           date={(() => {
             if (!blog?.date) return "Loading...";

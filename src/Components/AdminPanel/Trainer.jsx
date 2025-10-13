@@ -54,8 +54,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, profileImage, trainer_name, course_name,demo1, demo2,demo3,summary,date,Action) {
-  return { S_No, profileImage, trainer_name,course_name,demo1,demo2,demo3,summary,date,Action};
+function createData(S_No, profileImage, trainer_name, trainer_rating, course_name,demo1, demo2,demo3,summary,date,Action) {
+  return { S_No, profileImage, trainer_name,trainer_rating,course_name,demo1,demo2,demo3,summary,date,Action};
 }
 
 
@@ -86,6 +86,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   id:"",
       trainer_name: "",
       profileImage: "",
+      trainer_rating: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -100,6 +101,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
     setTrainerData({
       trainer_name: "",
       profileImage: "",
+      trainer_rating: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -385,6 +387,13 @@ image: file,
                   required
                 />
               </div>
+      <div class="col-md-3">
+    <label className='form-label'>Trainer Rating</label>
+    <input type="number" class="form-control" placeholder="Enter Trainer rating" aria-label="First name" 
+    name="trainer_rating"
+    value={trainerData.trainer_rating}
+    onChange={handleChange}/>
+  </div>
               </div>
   <div className='course-row'>
   <div class="col-md-3">
@@ -530,6 +539,7 @@ image: file,
             <StyledTableCell sx={{ width: 60 }}>S.No.</StyledTableCell>
             <StyledTableCell align="center">Trainer Image</StyledTableCell>
             <StyledTableCell align="center">Trainer Name</StyledTableCell>
+            <StyledTableCell align="center">Rating</StyledTableCell>
             <StyledTableCell align="center">Course Name</StyledTableCell>
             <StyledTableCell align="center">Demo 1</StyledTableCell>
             <StyledTableCell align="center">Demo 2</StyledTableCell>
@@ -549,6 +559,7 @@ image: file,
               {row.profileImagee ? <img src={row.profileImage} alt="User" width="50" height="50" /> : 'No Image'}
               </StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
+              <StyledTableCell align="center">{row.trainer_rating}</StyledTableCell>
               <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_1}</StyledTableCell>
               <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>

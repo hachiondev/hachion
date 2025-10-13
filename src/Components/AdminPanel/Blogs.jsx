@@ -43,7 +43,7 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    id: "", category_name: "", title: "", author: "",
+    id: "", category_name: "", title: "", author: "", author_image: "",
     blog_image: "", blog_pdf: "", description: "",
     date: new Date().toISOString().split('T')[0],
     meta_title: "", meta_keyword: "", meta_description: "" });
@@ -89,7 +89,7 @@ const Blogs = () => {
   };
   const handleReset = () => {
     setFormData({
-      id: "", category_name: "", title: "", author: "",
+      id: "", category_name: "", title: "", author: "",author_image: "",
       blog_image: "", blog_pdf: "", description: "",
       date: new Date().toISOString().split('T')[0],
       meta_title: "", meta_keyword: "", meta_description: ""
@@ -101,6 +101,7 @@ const Blogs = () => {
       category_name: formData.category_name,
       title: formData.title,
       author: formData.author,
+      author_image: formData.author_image,
       description: formData.description,
       date: formData.date,
       meta_keyword: formData.meta_keyword,
@@ -157,6 +158,7 @@ const Blogs = () => {
         category_name: blog.category_name || '',
         title: blog.title || '',
         author: blog.author || '',
+        author_image: '',
         description: blog.description || '',
         blog_image: '',
         blog_pdf: '',
@@ -253,6 +255,16 @@ const Blogs = () => {
                 </div>
               </div>
               <div className="course-row">
+                <div className="col-md-4">
+                  <label className="form-label">Author Image</label>
+                  <input
+                    type="file"
+                    name="author_image"
+                    accept="image/*"
+                    className="form-control"
+                    onChange={handleFileChange}
+                  />
+                </div>
                 <div className="col-md-4">
                   <label className="form-label">Author</label>
                   <input
@@ -397,9 +409,10 @@ const Blogs = () => {
                     <StyledTableCell align="center">Category</StyledTableCell>
                     <StyledTableCell align="center">Image</StyledTableCell>
                     <StyledTableCell align="center">Title</StyledTableCell>
-                    <StyledTableCell align="center">Author</StyledTableCell>
                     <StyledTableCell align="center">PDF</StyledTableCell>
                     <StyledTableCell align="center">Description</StyledTableCell>
+                    <StyledTableCell align="center">Author Image</StyledTableCell>
+                    <StyledTableCell align="center">Author</StyledTableCell>
                     <StyledTableCell align="center">Date</StyledTableCell>
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
@@ -431,6 +444,12 @@ const Blogs = () => {
                           dangerouslySetInnerHTML={{ __html: blog.description }}
                         />
                       </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {blog.author_image ? (
+                          <img src={`https://api.test.hachion.co/blogs/${blog.author_image}`} alt="Author" width="50" />
+                        ) : 'No Image'}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{blog.author}</StyledTableCell>
                       <StyledTableCell align="center">{dayjs(blog.date).format('MM-DD-YYYY')}</StyledTableCell>
                       <StyledTableCell align="center">
                         <FaEdit className="edit" onClick={() => handleEdit(blog.id)} />

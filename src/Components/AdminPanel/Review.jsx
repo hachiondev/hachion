@@ -77,8 +77,8 @@ export default function Review() {
     const[message,setMessage]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [selectedRow, setSelectedRow] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:""});
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,source:"",comment:"",display:"",
+    const [selectedRow, setSelectedRow] = useState({category_name:"",course_name:"",student_name:"",image:null,rating: "",location: "", video_link: "",trainer_name:"",type:"",source:"",comment:""});
+    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,rating: "",location: "", video_link: "",trainer_name:"",type:"",source:"",comment:"",display:"",
       displayPages:[]});
     const [reviewData, setReviewData] = useState({
         review_id:"",
@@ -87,7 +87,11 @@ export default function Review() {
             date:currentDate,
             type:false,
            student_name:"",
+           rating: "",
+           location: "",
+           video_link: "",
            source:"",
+           trainer_name: "",
            comment:"",
            image:null,display:"",
            displayPages:[]
@@ -204,8 +208,13 @@ useEffect(() => {
                 category_name:"",
                   course_name: "",
                   date:currentDate,
+                  type:"",
                  student_name:"",
+                 rating: "",
+                 location: "",
+                 video_link: "",
                  source:"",
+                 trainer_name: "",
                  comment:"",
                  image:null
                  });
@@ -258,6 +267,8 @@ useEffect(() => {
           display: editedData.display.join(","), 
           course_name: editedData.course_name,
           review: editedData.review,
+          location: editedData.location,
+          video_link: editedData.video_link,
           email: editedData.email || "",
           type: editedData.type || "",
           trainer_name: editedData.trainer_name || "",
@@ -340,6 +351,7 @@ const handleDelete = async (review_id) => {
   category_name: curr?.category_name || "",
   course_name: curr?.course_name || "",
   review: curr?.review || "",
+  video_link: curr?.video_link,
   display: safeDisplay,
   email: curr?.email || "",
   type: curr?.type ?? true,
@@ -381,6 +393,7 @@ const handleDelete = async (review_id) => {
           display:reviewData.display,
           course_name: reviewData.course_name,
           review: reviewData.comment,
+          video_link: reviewData.video_link,
           email: reviewData.email || "",
           type: true,
           trainer_name: reviewData.trainer_name || "",
@@ -409,7 +422,7 @@ const handleDelete = async (review_id) => {
   
           if (response.status === 201) { 
               alert("Review added successfully!");
-              setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "", image: null });
+              setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "", image: null,rating: "", });
 
           }
       } catch (error) {
@@ -464,9 +477,9 @@ useEffect(() => {
 </div>
 <div className='course-details'>
 <div className='course-row'>
-<div class="mb-6">
+<div class="col-md-4">
   <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+  <input type="text" id="inputtext6" class="form-control" placeholder='Enter Student Name' aria-describedby="passwordHelpInline"
   name="student_name"
   value={reviewData.student_name}
   onChange={handleChange}/></div>
@@ -480,17 +493,62 @@ useEffect(() => {
                   required
                 />
               </div>
-              <div class="col-md-3">
+    <div class="col-md-2">
+      <label for="exampleFormControlTextarea1" class="form-label">Student Rating</label>
+      <input type="number" id="inputtext6" class="form-control"
+      name="rating"
+      value={reviewData.rating}
+      onChange={handleChange}/></div>
+              <div class="col-md-2">
     <label for="inputState" class="form-label">Source</label>
     <select id="inputState" class="form-select" name='source' value={reviewData.source} onChange={handleChange}>
-      <option selected>Select </option>
-      <option>Linkedin</option>
-      <option>Facebook</option>
-      <option>Twitter</option>
-      <option>Instagram</option>
-      <option>Google</option>
+      <option value="">Select</option>
+  <option value="Linkedin">LinkedIn</option>
+  <option value="Facebook">Facebook</option>
+  <option value="Twitter">Twitter</option>
+  <option value="Instagram">Instagram</option>
+  <option value="Google">Google</option>
     </select>
 </div>
+</div>
+<div className='course-row'>
+  <div class="col-md-2">
+  <label for="exampleFormControlTextarea1" class="form-label">Location</label>
+  <input type="text" id="inputtext6" class="form-control" placeholder='Enter Location' aria-describedby="passwordHelpInline"
+  name="location"
+  value={reviewData.location}
+  onChange={handleChange}/></div>
+  <div class="col-md-4">
+  <label for="exampleFormControlTextarea1" class="form-label">Video Review Link</label>
+  <input type="link" id="inputtext6" class="form-control" placeholder='Enter youtube link' aria-describedby="passwordHelpInline"
+  name="video_link"
+  value={reviewData.video_link}
+  onChange={handleChange}/></div>
+      <div class="col-md-2">
+    <label for="inputState" class="form-label">Review Type</label>
+    <select
+  id="inputState"
+  className="form-select"
+  name="type"
+  value={reviewData.type}
+  onChange={handleChange}
+>
+  <option value="">Select</option>
+  <option value="Course">Course</option>
+  <option value="Trainer">Trainer</option>
+  <option value="Both">Both</option>
+</select>
+</div>
+<div class="col-md-4">
+  <label for="exampleFormControlTextarea1" class="form-label">Trainer Name</label>
+  <input type="text" id="inputtext6" class="form-control" placeholder='Enter Trainer Name' aria-describedby="passwordHelpInline"
+  name="trainer_name"
+  value={reviewData.trainer_name}
+   disabled={!(reviewData.type === "Trainer" || reviewData.type === "Both")}
+  onChange={handleChange}
+  style={{
+      cursor: !(reviewData.type === "Trainer" || reviewData.type === "Both") ? "not-allowed" : "text"
+    }}/></div>
 </div>
 <div className="course-row">
   <div class="col-md-3">
@@ -646,6 +704,10 @@ useEffect(() => {
             <StyledTableCell align='center'>Images</StyledTableCell>
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align="center">Source</StyledTableCell>
+            <StyledTableCell align="center">Location</StyledTableCell>
+            <StyledTableCell align="center">Video Link</StyledTableCell>
+            <StyledTableCell align="center">Review Type</StyledTableCell>
+            <StyledTableCell align="center">Trainer</StyledTableCell>
             <StyledTableCell align="center">Technology</StyledTableCell>
             <StyledTableCell align="center">Comment </StyledTableCell>
             <StyledTableCell align="center">Date </StyledTableCell>
@@ -678,6 +740,10 @@ useEffect(() => {
 </StyledTableCell>
       <StyledTableCell align="left">{curr.name}</StyledTableCell>
       <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
+      <StyledTableCell align="center">{curr.location}</StyledTableCell>
+      <StyledTableCell align="center">{curr.video_link}</StyledTableCell>
+      <StyledTableCell align="center">{curr.type}</StyledTableCell>
+      <StyledTableCell align="center">{curr.trainer_name}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
       <StyledTableCell align="left"
       style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{curr.review}</StyledTableCell>
@@ -745,14 +811,34 @@ useEffect(() => {
     <label for="inputState" class="form-label">Source</label>
     <select id="inputState" class="form-select"  name="social_id"
   value={editedData.social_id} onChange={handleInputChange}>
-      <option selected>Select </option>
-      <option>Linkedin</option>
-      <option>Facebook</option>
-      <option>Twitter</option>
-      <option>Instagram</option>
-      <option>Google</option>
+    <option value="">Select</option>
+  <option value="Linkedin">LinkedIn</option>
+  <option value="Facebook">Facebook</option>
+  <option value="Twitter">Twitter</option>
+  <option value="Instagram">Instagram</option>
+  <option value="Google">Google</option>
     </select>
 </div>
+</div>
+
+<div className="course-row">
+        <div class="col">
+    <label for="inputState" class="form-label">Review Type</label>
+    <select id="inputState" class="form-select"  name="type"
+  value={editedData.type} onChange={handleInputChange}>
+  <option value="">Select</option>
+  <option value="Course">Course</option>
+  <option value="Trainer">Trainer</option>
+  <option value="Both">Both</option>
+    </select>
+</div>
+  <div class="col">
+  <label for="exampleFormControlTextarea1" class="form-label">Trainer</label>
+  <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
+  name="trainer_name"
+  value={editedData.trainer_name}
+  onChange={handleInputChange}/>
+  </div>
 </div>
 
 <div className="course-row">

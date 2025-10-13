@@ -65,7 +65,7 @@ const RecentEntriesCard = ({
             </div>
           )}
           <div className="author-details">
-            <p className="blog-author">Swapna</p>
+            <p className="blog-author">{author}</p>
             <p className="date">{date}</p>
           </div>
         </div>

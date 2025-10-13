@@ -282,6 +282,7 @@ useEffect(() => {
                 })()
               }
             level={course.levels}
+            trainer_name={course.trainer}
             month={course.numberOfClasses}
             course_id={course.id}
             timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}

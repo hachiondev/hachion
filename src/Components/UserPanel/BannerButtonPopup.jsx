@@ -42,14 +42,15 @@ const BannerButtonPopup = ({ onClose }) => {
         <div className="popup-bottom">
         <div className="popup-badge">NEW</div>
           <p className="popup-bottom-text">
-            Discount available on these courses, hurry up to enroll and grab the
-            discount price, it’s a very limited offer.
+            {/* Discount available on these courses, hurry up to enroll and grab the
+            discount price, it’s a very limited offer. */}
+            💥 Limited-time discounts available — hurry before the offer ends!
           </p>
           <button
             className="join-now"
             onClick={() => navigate("/contactus")}
           >
-            Signup and Talk to Course Advisor
+           Talk to Advisor
           </button>
         </div>
       </div>

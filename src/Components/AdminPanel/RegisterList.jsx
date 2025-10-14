@@ -81,7 +81,7 @@ export default function RegisterList() {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
         
-    const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
+    const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",whatsapp:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [mobileError, setMobileError] = useState("");
 const [anchorElCountry, setAnchorElCountry] = useState(null);
 const [selectedCountry, setSelectedCountry] = useState({
@@ -94,6 +94,7 @@ const [selectedCountry, setSelectedCountry] = useState({
         userName:"",
         email:"",
         mobile:"",
+        whatsapp:"",
         country:"",
         location:"",
        time_zone:"",
@@ -132,6 +133,7 @@ const [currentPage, setCurrentPage] = useState(1);
         userName:"",
         email:"",
         mobile:"",
+        whatsapp:"",
         country:"",
         location:"",
        time_zone:"",
@@ -399,6 +401,7 @@ const mobileNumber = studentData.mobile?.trim();
     userName,
     email,
     mobile,
+    whatsapp,
     country,
     location,
     visa_status,
@@ -413,6 +416,7 @@ const mobileNumber = studentData.mobile?.trim();
     userName.trim() &&
     email.trim() &&
     mobile.trim() &&
+    whatsapp.trim() &&
     country.trim() &&
     location.trim() &&
     visa_status !== "Select Visa Status" &&
@@ -570,12 +574,17 @@ const mobileNumber = studentData.mobile?.trim();
         </div>
       </div>
        <div class="col">
+         <label for="inputState" class="form-label">WhatsApp Number</label>
+         <input type="number" class="schedule-input"
+         name="whatsapp" value={studentData.whatsapp} onChange={handleChange}/>
+       </div>
+       </div>
+       <div className="course-row">
+        <div class="col">
          <label for="inputState" class="form-label">Time Zone</label>
          <input type="text" class="schedule-input"
          name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
        </div>
-       </div>
-       <div className="course-row">
          <div class="col">
          <label for="inputState" class="form-label">Entered by</label>
          <input type="text" class="schedule-input"
@@ -736,6 +745,7 @@ const mobileNumber = studentData.mobile?.trim();
             <StyledTableCell align='center'>Student Name</StyledTableCell>
             <StyledTableCell align='center'>Email</StyledTableCell>
             <StyledTableCell align="center">Mobile</StyledTableCell>
+            <StyledTableCell align="center">WhatsApp</StyledTableCell>
             <StyledTableCell align="center">Country</StyledTableCell>
             <StyledTableCell align="center">Location</StyledTableCell>
             <StyledTableCell align="center">Time Zone</StyledTableCell>
@@ -763,6 +773,7 @@ const mobileNumber = studentData.mobile?.trim();
       <StyledTableCell align="left">{row.userName}</StyledTableCell>
       <StyledTableCell align="left">{row.email}</StyledTableCell>
       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+      <StyledTableCell align="center">{row.whatsapp}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
         <StyledTableCell align="center">{row.location}</StyledTableCell>
         <StyledTableCell align="center">{row.time_zone}</StyledTableCell>

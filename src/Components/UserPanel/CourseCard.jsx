@@ -6,7 +6,7 @@ import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 import './Home.css';
 
-const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level = "All Levels", amount, totalAmount, timeLeftLabel }) => {
+const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -106,11 +106,14 @@ const handleShare = async (e) => {
             {level}
           </div>
           </div>
-         <div className="trainer-name">
-        By {trainer_name && trainer_name.length > 8 
-          ? trainer_name.slice(0, 8) + "…" 
-          : trainer_name}
-      </div>
+         {trainer_name && trainer_name.trim() !== "" && (
+  <div className="trainer-name">
+    By {trainer_name.length > 8 
+      ? trainer_name.slice(0, 8) + "…" 
+      : trainer_name}
+  </div>
+)}
+
         </div>
         <div className="card-row">
         <h3 className="course-name">{heading}</h3>

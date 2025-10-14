@@ -809,8 +809,15 @@ scroll-behavior: smooth;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* width: 80%; */
   margin: 40px auto;
+  flex-wrap: wrap;
+  align-items: start;
+}
+.discount-popup-component{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 30px auto;
   flex-wrap: wrap;
   align-items: start;
 }
@@ -1220,6 +1227,7 @@ background-color: #F4F4F4;
 }
 .trending-title{
 display: flex;
+font-weight: 500;
 justify-content: center;
 color: #3D3D3D;
 }
@@ -2649,7 +2657,7 @@ height: 45px;
        align-items: center;
        max-width: 100%;
       }
- .limited-component{
+ .limited-component, .discount-popup-component{
   display: flex;
   justify-content: center;
 }
@@ -2875,11 +2883,10 @@ height: 45px;
         align-items: center;
         padding: 5px;
       }
-.instructor-banner, .home-faq-banner, .limited-component{
+.instructor-banner, .home-faq-banner, .limited-component, .discount-popup-component{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* width: 90%; */
   margin: 30px auto;
   align-items: center;
 }

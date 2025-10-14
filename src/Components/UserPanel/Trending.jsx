@@ -92,7 +92,7 @@ const [countdowns, setCountdowns] = useState({});
         return {
           ...trendingCourse,
           ...courseDetails,
-          trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
+          trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
         };
       });
 
@@ -427,7 +427,7 @@ const getSaleEndsAt = (courseName, countryCode) => {
       return `${fmt(mrpVal)}`; 
     })()
   }
-          level={course.levels}
+          level={course.level}
           onClick={() => handleCardClick(course)}
           className="course-card"
 timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}

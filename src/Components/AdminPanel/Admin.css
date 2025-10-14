@@ -189,7 +189,7 @@
   width: 240px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 100vh;
+  height: calc(100vh - 12vh);
   transition: width 0.3s ease;
   position: fixed;
   top: 8vh;

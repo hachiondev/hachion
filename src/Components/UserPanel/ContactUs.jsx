@@ -3,17 +3,11 @@ import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import contactUsBanner from "../../Assets/contactbanner.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import UsaFlag from "../../Assets/usa.webp";
+import Usa from "../../Assets/usa.webp";
 import "./Blogs.css";
-import indiaFlag from "../../Assets/india.webp";
-import dubaiFlag from "../../Assets/dubai.webp";
-import whatsappIcon from "../../Assets/logos_whatsapp-icon.png";
-import mailIcon from "../../Assets/uiw_mail.png";
-import facebookIcon from "../../Assets/facebook_symbol.svg.png";
-import twitter from "../../Assets/twitter.png";
-import linkedin from "../../Assets/linkedin.png";
-import instagram from "../../Assets/instagram.png";
-import quora from "../../Assets/Component 141.png";
+import india from "../../Assets/india.webp";
+import dubai from "../../Assets/dubai.webp";
+import ContactForm from "../../Assets/contact1.webp";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { useNavigate } from "react-router-dom";
@@ -46,47 +40,31 @@ const ContactUs = () => {
     const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
-    const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');
-    const [whatsappLink, setWhatsappLink] = useState('https://wa.me/17324852499');
+   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
   
     useEffect(() => {
-      const detectUserCountry = async () => {
-        try {
-          const res = await fetch('https://ipwho.is/');
-          if (!res.ok) throw new Error('Failed to fetch location data');
-  
-          const data = await res.json();
-        
-  
-          if (data.country_code === 'IN') {
-            setWhatsappNumber('+91-949-032-3388');
-            setWhatsappLink('https://wa.me/919490323388');
-          } else {
-            setWhatsappNumber('+1 (732) 485-2499');
-            setWhatsappLink('https://wa.me/17324852499');
-          }
-        } catch (error) {
-          
-          setWhatsappNumber('+1 (732) 485-2499');
-          setWhatsappLink('https://wa.me/17324852499');
+    // Detect user country and set phone number accordingly
+    const detectUserCountry = async () => {
+      try {
+        const res = await fetch("https://ipwho.is/");
+        if (!res.ok) throw new Error("Failed to fetch location data");
+
+        const data = await res.json();
+        if (data.country_code === "IN") {
+          setContactNumber("+91 94903 23388");
+        } else {
+          setContactNumber("+1 (732) 485-2499");
         }
-      };
-  
-      detectUserCountry();
-       }, []);
+      } catch (error) {
+        setContactNumber("+1 (732) 485-2499");
+      }
+    };
+    detectUserCountry();
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0); 
     
   }, []);
-
-
-  const openMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const closeMenu = () => {
-    setAnchorEl(null);
-  };
 
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
@@ -203,18 +181,15 @@ const ContactUs = () => {
     const officeLocations = [
       {
         name: "New Jersey, USA",
-        address: "Hachion 601 Voyage Trce Leander Texas 78641",
-        flag: UsaFlag
+        country: Usa
       },
       {
         name: "Hyderabad, India",
-        address: "Hachion GP Rao Enclaves, 301, 3rd floor Road No 3 KPHB colony, Hyderabad 500072.",
-        flag: indiaFlag
+        country: india
       },
       {
         name: "Dubai, UAE",
-        address: "Sports City Dubai UAE",
-        flag: dubaiFlag
+        country: dubai
       }
     ];
   return (
@@ -222,7 +197,7 @@ const ContactUs = () => {
       <Topbar />
       <NavbarTop />
 
-        <div className="contact-banner">
+        <div className="contact-banner container">
                 <h1 className="instructor-profile-title">Contact Us</h1>
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb">
@@ -235,100 +210,21 @@ const ContactUs = () => {
                   </ol>
                 </nav>
               </div>
-        <div className="contact-us-all">
-        <h1 className="about-us-heading">Office Location</h1>
 
-        <div className="contact-us">
-        {officeLocations.map((loc, i) => (
-  <div className="contact-us-div" key={i}>
-    <div className="contact-us-box">
-      <img src={loc.flag} alt={`${loc.name} flag`} className="flag" loading="lazy"/>
-      <div className="office-location">
-        <p>{loc.name}</p>
-        <p>{loc.address}</p>
-      </div>
-    </div>
-  </div>
-))}
-        </div>
-        <div className="contact-us-bottom-box">
-          <div className="contact-us-left">
-            <h3>Enquiries</h3>
-            <div className="contact-block">
-              <img src={whatsappIcon} alt="whatsapp-icon" loading="lazy"/>
-              <p className="contact-info">
-                <a
-                  href="https://wa.me/17324852499"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                 {whatsappNumber}
-                </a>
-              </p>
-            </div>
-            <div className="contact-block">
-              <img src={mailIcon} alt="mail-icon" loading="lazy"/>
-              <p className="contact-info">
-                <a
-                  href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  trainings@hachion.co
-                </a>
-              </p>
-            </div>
-            <div className="contact-us-icon">
-              <a
-                href="https://www.facebook.com/hachion.co"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={facebookIcon} alt="facebook-icon" loading="lazy"/>
-              </a>
-              <a
-                href="https://x.com/hachion_co"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={twitter} alt="twitter-icon" loading="lazy"/>
-              </a>
-              <a
-                href="https://www.linkedin.com/company/hachion"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={linkedin} alt="linkedin-icon" loading="lazy"/>
-              </a>
-              <a
-                href="https://www.instagram.com/hachion_trainings"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={instagram} alt="instagram-icon" loading="lazy"/>
-              </a>
-              <a
-                href="https://www.quora.com/profile/Hachion-4"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={quora} alt="quora-icon" loading="lazy"/>
-              </a>
-            </div>
-          </div>
-          <div className="contact-us-right">
-            <div className="contact-us-right-header">
-              <p>Get in touch with us</p>
-            </div>
+        <div className="home-banner container">
+          <div className="home-content">
+            <h3 className="contact-title">Let’s talk.</h3>
+             <p className="contact-info">Leave us a note here, or give us a call at {contactNumber}.</p>
             <form className="contact-form">
-              <div class="mb-3">
+              {/* <div class="mb-3"> */}
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name
+                  Full Name<span className="star">*</span>
                 </label>
+                <div className="register-field">
+                <div className="form-field">
                 <input
                   type="text"
-                  className="form-control-contact"
-                  id="contact1"
+                  className="form-control"
                   placeholder="Enter your full name"
                   name="name"
                   value={values.name}
@@ -336,29 +232,33 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
-              <div class="mb-3">
+              </div>
+              {/* <div class="mb-3"> */}
                 <label for="exampleFormControlInput1" class="form-label">
-                  Email Id
+                  Email Id<span className="star">*</span>
                 </label>
+                <div className="register-field">
+                <div className="form-field">
                 <input
                   type="email"
-                  className="form-control-contact"
-                  id="contact1"
-                  placeholder="Enter your email id"
+                  className="form-control"
+                  placeholder="Enter your Email"
                   name="email"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </div>
-              <label className="form-label">Mobile Number</label>
-              <div className="input-wrapper" style={{ position: 'relative' }}>
-                 
+              </div>
+              <label className="form-label">Phone Number<span className="star">*</span></label>
+              {/* <div className="input-wrapper" style={{ position: 'relative' }}> */}
+                 <div className="register-field">
+                <div className="form-field">
                         <input
                         type="tel"
-                        className="form-control-contact"
+                        className="form-control"
                         ref={mobileInputRef}
-                        id="contact1"
+                        // id="contact1"
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value)}
                         aria-label="Text input with segmented dropdown button"
@@ -366,20 +266,25 @@ const ContactUs = () => {
                          
                         />
                       </div>
-              <div class="mb-3">
+                      </div>
+              {/* <div class="mb-3"> */}
                 <label for="exampleFormControlTextarea1" class="form-label">
-                  Comments
+                  Tell us about your idea<span className="star">*</span>
                 </label>
+                <div className="register-field">
+                <div className="form-field">
                 <textarea
-                  class="form-control-contact"
-                  id="contact3"
-                  rows="3"
+                  className="form-control"
+                  placeholder="Type your Idea...."
+                  rows={5}
                   name="comment"
                   value={values.comment}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                ></textarea>
+                />
               </div>
+              </div>
+              {/* </div> */}
               <div class="mb-3">
               {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
@@ -388,7 +293,7 @@ const ContactUs = () => {
                   class="submit-button"
                   onClick={handleFormSubmit}
                 >
-                  Submit
+                  Send
                 </button>
                 
                 {/* Error message display */}
@@ -419,7 +324,75 @@ const ContactUs = () => {
                 </div>
               </div>
             </form>
+            </div>
+
+            <img
+                    className="contact-form-image"
+                    src={ContactForm}
+                    alt="Contact Form"
+                    fetchpriority="high"
+                  />
+        </div>
+          <div className="contact-us-all">
+          <div className="container">
+        <h2 className="trending-title">Our offices</h2>
+        <div className="contact-us">
+        {officeLocations.map((loc, i) => (
+  <div className="contact-us-div" key={i}>
+    <div className="contact-us-box">
+      <img src={loc.country} alt={`${loc.name} country`} className="contact-address" loading="lazy"/>
+      <div className="office-location">
+        <h3 className="trending-title">{loc.name}</h3>
+        {/* <p>{loc.address}</p> */}
+      </div>
+    </div>
+  </div>
+))}
+  </div>
+    </div>
+
+    <div className="instructor-banner container">
+          <div className="home-content">
+            <h3 className="contact-title">For Others</h3>
+            {["University/college associations", "Media queries", "Fest sponsorships", "For everything else"].map(
+              (title, i) => (
+                <div key={i}>
+                  <h4 className="contact-title">
+                    <span>{title}</span>
+                  </h4>
+                  <p className="contact-info">
+                    Email us :
+                    <span>
+                      <a
+                        href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        trainings@hachion.co
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              )
+            )}
           </div>
+    
+          <div className="home-content">
+            <h3 className="contact-title">Address</h3>
+            <div className="contact-block">
+            <h3 className="contact-title-text">Head Office:<span> New Jersey, USA</span></h3>
+            <p className="contact-title-text"><span>Hachion 601 Voyage Trce Leander Texas 78641</span></p>
+            </div>
+            <div className="contact-block">
+            <h3 className="contact-title-text">India Office:<span> Hyderabad, India</span></h3>
+            <p className="contact-title-text"><span>Hachion GP Rao Enclaves, 301, 3rd floor Road No 3</span></p>
+            <p className="contact-title-text"><span>KPHB colony, Hyderabad 500072.</span></p>
+            </div>
+            <div className="contact-block">
+            <h3 className="contact-title-text">Dubai Office:<span> Dubai, UAE</span></h3>
+            <p className="contact-title-text"><span>Sports City Dubai UAE</span></p>
+            </div>
+        </div>
         </div>
       </div>
       <Footer />

@@ -75,7 +75,7 @@ console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem
             numberOfClasses: matchingCourse?.numberOfClasses || null,
             discount: Number(matchingCourse?.discount ?? 0), 
             idiscount: Number(matchingCourse?.idiscount ?? 0),
-
+level: matchingCourse?.level ||""
           };
         });
         setMergedCourses(mergedData);
@@ -405,7 +405,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
 }
 
           trainer_name={course.trainerName}
-          level={course.levels}
+          level={course.level}
           month={course.numberOfClasses}
           image={
             course.course_image

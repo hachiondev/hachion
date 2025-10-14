@@ -72,7 +72,7 @@ import './Course.css';
 import fallbackImg from "../../Assets/18.png";
 import { Link, useNavigate } from 'react-router-dom';
 
-const DropdownCard = ({ title, month, level = "All Levels" , image }) => {
+const DropdownCard = ({ title, month, level , image }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
 

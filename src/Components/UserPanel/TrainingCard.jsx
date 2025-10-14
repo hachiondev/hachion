@@ -7,7 +7,7 @@ import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 
-const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level = "All Levels", scheduleCount }) => {
+const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level, scheduleCount }) => {
   const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -118,11 +118,14 @@ const handleShare = async (e) => {
             {level}
           </div>
           </div>
-          <div className="trainer-name">
-        By {trainer_name && trainer_name.length > 8 
-          ? trainer_name.slice(0, 8) + "…" 
-          : trainer_name}
-      </div>
+          {trainer_name && trainer_name.trim() !== "" && (
+  <div className="trainer-name">
+    By {trainer_name.length > 8 
+      ? trainer_name.slice(0, 8) + "…" 
+      : trainer_name}
+  </div>
+)}
+
         </div>
         <div className="card-row">
         <h3 className="course-name">{heading}</h3>

@@ -55,7 +55,7 @@ const [countdowns, setCountdowns] = useState({});
         return {
             ...summerCourse,
             ...courseDetails,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
+            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
           };
         });
 
@@ -395,7 +395,7 @@ discountPercentage={
     })()
   }
                 trainer_name={course.trainerName}
-                level={course.levels}
+                level={course.level}
                 onClick={() => handleCardClick(course)}
                 
                 className="course-card"

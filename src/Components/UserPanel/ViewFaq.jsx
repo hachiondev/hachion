@@ -32,16 +32,17 @@ const ViewFaq = () => {
         </div>
 
   <div className="faq-side">
-    <h2>Didn’t Find the Answer?
-        <br />
-        Ask us Questions</h2>
-    <p>Call us directly, submit a sample or email us!</p>
+    <h2>Didn’t Find What You’re Looking For?
+        {/* <br />
+        Ask us Questions */}
+        </h2>
+    <p>we’re happy to help!</p>
     <hr className="faq-side-divide"/>
     <div className="faq-contact">
     <div className="faq-part">
       <img src={Address} alt="Address" className="icon" />
       <div>
-      <h3>Address Business</h3>
+      <h3>Address :</h3>
       <p>As per location Address</p>
       </div>
       </div>
@@ -49,7 +50,7 @@ const ViewFaq = () => {
       <div className="faq-part">
       <img src={Contact} alt="Contact" className="icon" />
       <div>
-        <h3>Contact With Us</h3>
+        <h3>Contact Us :</h3>
       <p>Call us: +91-949-032-3388</p>
       <p>trainings@hachion.co</p>
       </div>
@@ -58,7 +59,7 @@ const ViewFaq = () => {
       <div className="faq-part">
       <img src={Time} alt="Time" className="icon" />
       <div>
-        <h3>Working Time</h3>
+        <h3> Working Hours :</h3>
       <p>Mon - Thu: 8.00am - 4.00pm</p>
       <p>Friday - Sat: 8:00 am - 12:30 pm</p>
     </div>

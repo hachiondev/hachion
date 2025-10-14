@@ -60,7 +60,7 @@ const ExploreDeals = () => {
           );
           return {
             ...c,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
+            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
           };
         });
 
@@ -286,7 +286,7 @@ useEffect(() => {
   };
 
   compute();
-  const t = setInterval(compute, 1000); // still running every second
+  const t = setInterval(compute, 1000); 
   return () => { stopped = true; clearInterval(t); };
 }, [displayedCourses, country, discountRules]);
 
@@ -360,7 +360,7 @@ useEffect(() => {
                 })()
               }
 
-              level={course.levels}
+              level={course.level}
               onClick={() => handleCardClick(course)}
               className="course-card"
               timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}

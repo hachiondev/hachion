@@ -9,7 +9,6 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-
 const Sidebar = ({ onFilterChange }) => {
   const navigate= useNavigate();
   const [categories, setCategories] = useState([]);
@@ -75,34 +74,40 @@ useEffect(() => {
   };
 
   const handleCheckboxChange = (value, type) => {
-    let updated;
-    if (type === "category") {
-      updated = selectedCategories.includes(value)
-        ? selectedCategories.filter((c) => c !== value)
-        : [...selectedCategories, value];
-      setSelectedCategories(updated);
-    } else if (type === "level") {
-      if (value === "All Levels") {
-        updated = ["All Levels"];
-      } else {
-        updated = selectedLevels.includes(value)
-          ? selectedLevels.filter((l) => l !== value)
-          : [...selectedLevels.filter((l) => l !== "All Levels"), value];
-      }
-      setSelectedLevels(updated);
-    } else if (type === "price") {
-      updated = selectedPrice.includes(value)
-        ? selectedPrice.filter((p) => p !== value)
-        : [...selectedPrice, value];
-      setSelectedPrice(updated);
-    }
+  let updated;
 
-    onFilterChange({
-      categories: type === "category" ? updated : selectedCategories,
-      levels: type === "level" ? updated : selectedLevels,
-      price: type === "price" ? updated : selectedPrice,
-    });
-  };
+  if (type === "category") {
+    updated = selectedCategories.includes(value)
+      ? selectedCategories.filter((c) => c !== value)
+      : [...selectedCategories, value];
+    setSelectedCategories(updated);
+  } else if (type === "level") {
+    if (value === "All Levels") {
+      updated = ["All Levels"];
+    } else {
+      updated = selectedLevels.includes(value)
+        ? selectedLevels.filter((l) => l !== value)
+        : [...selectedLevels.filter((l) => l !== "All Levels"), value];
+
+      if (updated.length === 0) updated = ["All Levels"];
+    }
+    setSelectedLevels(updated);
+  } else if (type === "price") {
+    updated = selectedPrice.includes(value)
+      ? selectedPrice.filter((p) => p !== value)
+      : [...selectedPrice, value];
+    setSelectedPrice(updated);
+  }
+
+  const levelsRaw = type === "level" ? updated : selectedLevels;
+  const levelsForFilter = levelsRaw.includes("All Levels") ? [] : levelsRaw;
+
+  onFilterChange({
+    categories: type === "category" ? updated : selectedCategories,
+    levels: levelsForFilter,   
+    price: type === "price" ? updated : selectedPrice,
+  });
+};
 
   useEffect(() => {
   const fetchRules = async () => {
@@ -127,6 +132,15 @@ useEffect(() => {
     }
   };
   fetchCourses();
+}, []);
+
+useEffect(() => {
+  onFilterChange({
+    categories: selectedCategories,
+    levels: [],           
+    price: selectedPrice,
+  });
+  
 }, []);
 
 const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);

@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-// NEW: country → currency map (same as TeensEvents)
 const countryToCurrencyMap = {
   IN: 'INR',  US: 'USD',  GB: 'GBP',  AU: 'AUD',  CA: 'CAD',  AE: 'AED',  JP: 'JPY',  EU: 'EUR',
   TH: 'THB',  DE: 'EUR',  FR: 'EUR',  QA: 'QAR',  CN: 'CNY',  RU: 'RUB',  KR: 'KRW',  BR: 'BRL',
@@ -20,31 +19,28 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
   const [country, setCountry] = useState('US');
   const [countdowns, setCountdowns] = useState({});
 
-  // NOTE: keep original state names
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  // utility used later for trainer matching
   const normalize = (s) => (s || '').toString().trim().toLowerCase();
 
-  // Fetch courses + trainers, then merge trainer into course without renaming fields
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const [coursesRes, trainersRes] = await Promise.all([
           axios.get("https://api.test.hachion.co/courses/all"),
-          axios.get("https://api.test.hachion.co/trainers") // NEW
+          axios.get("https://api.test.hachion.co/trainers") 
         ]);
 
         const all = Array.isArray(coursesRes.data) ? coursesRes.data : [];
         const trainers = Array.isArray(trainersRes.data) ? trainersRes.data : [];
 
-        // If a course already has 'trainer', keep it; otherwise, try to fill it from /trainers
+        
         const withTrainer = all.map(c => {
           if (c.trainer) return c;
           const match = trainers.find(t => normalize(t.course_name) === normalize(c.courseName));
-          return match ? { ...c, trainer: match.trainer_name } : c; // keep original prop name 'trainer'
+          return match ? { ...c, trainer: match.trainer_name } : c; 
         });
 
         setCourses(withTrainer);
@@ -55,7 +51,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
     fetchCourses();
   }, []);
 
-  // Filtering (unchanged)
+  
   useEffect(() => {
     let filtered = courses;
 
@@ -63,22 +59,22 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
       filtered = filtered.filter((c) => filters.categories.includes(c.courseCategory));
     }
 
-    if (filters.levels && filters.levels.length > 0 && !filters.levels.includes("All Levels")) {
-      filtered = filtered.filter((c) => filters.levels.includes(c.levels));
-    }
+if (filters.levels && filters.levels.length > 0) {
+  filtered = filtered.filter((c) => filters.levels.includes(c.level));
+}
 
     if (filters.price && filters.price.length > 0) {
-      filtered = filtered.filter((c) => {
-        const priceType = c.itotal > 0 ? "Paid" : "Free";
-        return filters.price.includes(priceType);
-      });
-    }
+  filtered = filtered.filter((c) => {
+    const paidAmount = country === 'IN' ? Number(c.itotal || 0) : Number(c.total || 0);
+    const priceType = paidAmount > 0 ? "Paid" : "Free";
+    return filters.price.includes(priceType);
+  });
+}
 
     setFilteredCourses(filtered);
     if (onTotalCardsChange) onTotalCardsChange(filtered.length);
   }, [filters, courses, onTotalCardsChange]);
 
-  // Detect geo + set country, currency, and FX (matches TeensEvents logic)
   useEffect(() => {
     (async () => {
       try {
@@ -89,7 +85,6 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
         const cur = countryToCurrencyMap[cc] || 'USD';
         setCurrency(cur);
 
-        // IN/US → no FX conversion from USD fields
         if (cc === 'IN' || cc === 'US') { setFxFromUSD(1); return; }
 
         const cached = JSON.parse(localStorage.getItem('fxRatesUSD') || 'null');
@@ -112,7 +107,6 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
     })();
   }, []);
 
-  // Discount rules (unchanged)
   useEffect(() => {
     const fetchRules = async () => {
       try {
@@ -231,7 +225,6 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
     return end.endOf("day").toDate();
   };
 
-  // countdowns (unchanged)
   useEffect(() => {
     let stopped = false;
 
@@ -323,7 +316,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
                 return `${fmt(mrpVal)}`;
               })()
             }
-            level={course.levels}
+            level={course.level}
             trainer_name={course.trainer} 
             month={course.numberOfClasses}
             course_id={course.id}

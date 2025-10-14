@@ -49,7 +49,7 @@ const DiscountCards = () => {
           );
           return {
             ...c,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "No Trainer",
+            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
           };
         });
 
@@ -323,6 +323,7 @@ const DiscountCards = () => {
                 month={course.numberOfClasses}
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
+                
                 discountPercentage={
                   (() => {
                     const rulePct = getRuleDiscountPct(course.courseName, country);
@@ -357,7 +358,7 @@ const DiscountCards = () => {
                   })()
                 }
                 trainer_name={course.trainerName}
-                level={course.levels}
+                level={course.level}
                 onClick={() => handleCardClick(course)}
                 className="course-card"
                 timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}

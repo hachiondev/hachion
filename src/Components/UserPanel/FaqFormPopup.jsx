@@ -56,7 +56,8 @@ const validateForm = () => {
           </button>
         </div>
 
-            <h4>Ask Question?</h4>
+            <h4>Ask a Question</h4>
+            <p className="login-label">Didn’t find what you’re looking for? Send us your question, and we’ll get back to you soon.</p>
 
               <label className="login-label">
                 Name<span className="star">*</span>
@@ -100,7 +101,7 @@ const validateForm = () => {
             <div className="form-field">
                 <textarea
                 className="form-control"
-                placeholder="Enter your Message"
+                placeholder="Type your question or message here..."
                 rows={4} 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

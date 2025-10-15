@@ -347,6 +347,88 @@ a:not([href]):not([class]) {
   background: rgba(31, 171, 255, 0.2);
   color: #00aeef;
 }
+.about-content {
+  display: flex;
+    justify-content: left;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    max-width: 50%;
+    background-image: url('../../Assets/meet-founder-background.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.about-partner{
+  display: flex;
+  color: #056839;
+  font-size: medium;
+  font-weight: 400;
+  padding: 0 16px;
+  gap: 10px;
+}
+.about-partner span{
+  color: #1D1D1D;
+}
+.about-statistics {
+  display: flex;
+  justify-content: center;
+    background-image: url('../../Assets/abouticonsbackground.webp');
+    padding: 40px 0;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.about-number{
+  font-size: x-large;
+  font-weight: 700;
+  color: #0E2A46;
+}
+.about-label{
+  font-size: small;
+  font-weight: 400;
+  color: #0E2A46;
+}
+.about-feat-card{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px 50px;
+  gap: 10px;
+}
+.about-feat-lable{
+font-size: medium;
+font-weight: 400;
+color: #333333;
+white-space: wrap;
+}
+.about-feat-title{
+  font-size: large;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 5px;
+}
+.about-card-row{
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+  justify-content: center;
+  gap: 10px;
+}
+.aboutus-feat-title {
+   display: flex;
+    justify-content: center;
+    color: #3D3D3D;
+    font-weight: 600;
+}
+.about-right-icon {
+    color: #00AEEF;
+    font-size: 28px;
+    padding: 2px;
+}
 .expert-statistics {
   display: flex;
   justify-content: center;
@@ -597,7 +679,7 @@ white-space: wrap;
 }
 
 @media (max-width: 1024px) {
-  .profiles-grid, .expert-row {
+  .profiles-grid, .expert-row, .about-card-row {
     grid-template-columns: repeat(2, 1fr);
 }
 }
@@ -610,10 +692,10 @@ white-space: wrap;
   height: 35px;
   width: 90%;
 }
-  .profiles-grid, .expert-row {
+  .profiles-grid, .expert-row, .about-card-row {
     grid-template-columns: repeat(1, 1fr);
 }
-.expert-statistics {
+.expert-statistics, .about-statistics {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -629,6 +711,12 @@ white-space: wrap;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.about-content {
+ margin: 0 auto;
+ max-width: 90%;
+  width: 100%;
+  padding: 5px;
 }
 }
 @media (max-width: 480px) {

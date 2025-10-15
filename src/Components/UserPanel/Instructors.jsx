@@ -264,7 +264,7 @@ const formatForUrl = (str) =>
                     <hr className="faq-seperater"/>
                     <div className="card-row">
                       <div className="instructor-rating">
-                        {renderStarRating(trainer.rating || 4.7)}
+                        {renderStarRating(trainer.trainerRating || 5)}
                       </div>
                       {/* <p className="instructor-rating">1200 Students</p> */}
                     <p className="instructor-rating">

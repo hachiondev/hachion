@@ -169,7 +169,7 @@ useEffect(() => {
               <div className="d-flex flex-wrap">
                 <div className="me-4 d-flex align-items-center">
                   <FaStar className="text-warning me-1" />
-                  <span className="fw-semibold">{trainer.rating || 4.8}</span>
+                  <span className="fw-semibold">{trainer.trainerRating || 5}</span>
                   <small className="text-muted ms-1">({reviews.length} reviews)</small>
                 </div>
                 <div className="me-4">

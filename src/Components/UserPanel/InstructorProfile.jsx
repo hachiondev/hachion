@@ -104,6 +104,7 @@ const goToNext = () => {
                     summary={trainer.summary}
                     profileImage={trainer.profileImage}
                     demo_link_1={trainer.demo_link_1}
+                    trainerRating={trainer.trainerRating}
                     onPlayVideo={playVideo}
                   />
                 </div>

@@ -31,6 +31,19 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 
 import axios from 'axios';
 
+// Convert backend data -> frontend shape
+const normalizeTrainer = (t) => ({
+  ...t,
+  trainer_rating: t.trainer_rating ?? t.trainerRating ?? "",
+});
+
+// Convert frontend shape -> backend shape
+const toBackendTrainer = (t) => {
+  const out = { ...t, trainerRating: t.trainer_rating };
+  delete out.trainer_rating;
+  return out;
+};
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -126,13 +139,17 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   }
 
   try {
-    const response = await axios.post("https://api.test.hachion.co/trainer/add", trainerData);
+    // const response = await axios.post("https://api.test.hachion.co/trainer/add", trainerData);
+const response = await axios.post("https://api.test.hachion.co/trainer/add", toBackendTrainer(trainerData));
 
    if (response.status >= 200 && response.status < 300) {
   setSuccessMessage("✅ Trainer added successfully.");
   console.log("✅ Message set: Trainer added successfully.");
   setErrorMessage("");
-  setTrainers((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
+  // setTrainers((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
+  const added = normalizeTrainer(response.data);
+setTrainers((prev) => [...prev, { ...added, dateAdded: currentDate }]);
+
   handleReset();
 }
   } catch (error) {
@@ -279,16 +296,24 @@ const handleClose = () => {
 const handleSave = async () => {
  
   try {
-    const response = await axios.put(
-      `https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`,
-      editedRow
-    );
+    // const response = await axios.put(
+    //   `https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`,
+    //   editedRow
+    // );
+const response = await axios.put(`https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`, toBackendTrainer(editedRow));
 
-    setTrainers((prevTrainers) =>
-      prevTrainers.map((trainer) =>
-        trainer.trainer_id === selectedRow.trainer_id ? response.data : trainer
-      )
-    );
+    // setTrainers((prevTrainers) =>
+    //   prevTrainers.map((trainer) =>
+    //     trainer.trainer_id === selectedRow.trainer_id ? response.data : trainer
+    //   )
+    // );
+    const updated = normalizeTrainer(response.data);
+setTrainers((prevTrainers) =>
+  prevTrainers.map((trainer) =>
+    trainer.trainer_id === selectedRow.trainer_id ? updated : trainer
+  )
+);
+
     setMessage(true); 
    
     setTimeout(() => {
@@ -332,8 +357,14 @@ image: file,
   const fetchTrainers = async () => {
     try {
       const response = await axios.get('https://api.test.hachion.co/trainers');
-      setTrainers(response.data);
-      setFilteredTrainers(response.data);
+      // setTrainers(response.data);
+      // setFilteredTrainers(response.data);
+      const normalized = Array.isArray(response.data)
+  ? response.data.map(normalizeTrainer)
+  : [];
+setTrainers(normalized);
+setFilteredTrainers(normalized);
+
     } catch (error) {
       console.error('Error fetching trainers:', error);
     }
@@ -463,11 +494,15 @@ image: file,
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
  
 <div className="course-row">
-  <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+  {/* <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button> */}
+
+                  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+
   <button className='reset-btn' onClick={handleReset}>Reset</button>
 </div>
 </div>
+
 </div>
 </div>
 ):(<div>

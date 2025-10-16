@@ -21,7 +21,7 @@ const WhyChoose = () => {
           Advance your career with Hachion’s expert-led IT training, trusted by learners worldwide for its unique features.
         </p>
         <div className="button-row">
-          <button className="border-button" onClick={() => navigate("/coursedetails")}>Start Learn Today</button>
+          <button className="border-button" onClick={() => navigate("/coursedetails")}>Start Learning Today</button>
         </div>
         <hr className="seperater"/>
         <img

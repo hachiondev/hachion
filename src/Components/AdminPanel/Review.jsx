@@ -78,7 +78,7 @@ export default function Review() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [selectedRow, setSelectedRow] = useState({category_name:"",course_name:"",student_name:"",image:null,rating: "",location: "", video_link: "",trainer_name:"",type:"",source:"",comment:""});
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,rating: "",location: "", video_link: "",trainer_name:"",type:"",source:"",comment:"",display:"",
+    const [editedData, setEditedData] = useState({category_name:"",course_name:"",student_name:"",image:null,rating: "",location: "", videoLink: "",trainer_name:"",type:"",source:"",comment:"",reviewType:"",display:"",
       displayPages:[]});
     const [reviewData, setReviewData] = useState({
         review_id:"",
@@ -89,9 +89,10 @@ export default function Review() {
            student_name:"",
            rating: "",
            location: "",
-           video_link: "",
+           videoLink: "",
            source:"",
            trainer_name: "",
+           reviewType:"",
            comment:"",
            image:null,display:"",
            displayPages:[]
@@ -268,9 +269,10 @@ useEffect(() => {
           course_name: editedData.course_name,
           review: editedData.review,
           location: editedData.location,
-          video_link: editedData.video_link,
+          videoLink: editedData.videoLink, 
           email: editedData.email || "",
           type: editedData.type || "",
+          reviewType: editedData.reviewType || "",
           trainer_name: editedData.trainer_name || "",
           rating: editedData.rating || "",
           location: editedData.location || "",
@@ -351,10 +353,12 @@ const handleDelete = async (review_id) => {
   category_name: curr?.category_name || "",
   course_name: curr?.course_name || "",
   review: curr?.review || "",
-  video_link: curr?.video_link,
+  // video_link: curr?.video_link,
+  videoLink: curr?.videoLink,
   display: safeDisplay,
   email: curr?.email || "",
   type: curr?.type ?? true,
+  reviewType: curr?.reviewType || "",
   trainer_name: curr?.trainer_name || "",
   rating: String(curr?.rating ?? ""),
   location: curr?.location || "",
@@ -393,12 +397,14 @@ const handleDelete = async (review_id) => {
           display:reviewData.display,
           course_name: reviewData.course_name,
           review: reviewData.comment,
-          video_link: reviewData.video_link,
+          // video_link: reviewData.video_link,
+           videoLink: reviewData.videoLink,
           email: reviewData.email || "",
           type: true,
           trainer_name: reviewData.trainer_name || "",
           rating: reviewData.rating || "",
           location: reviewData.location || "",
+          reviewType: reviewData.reviewType,
           date: currentDate
       };
   
@@ -422,7 +428,7 @@ const handleDelete = async (review_id) => {
   
           if (response.status === 201) { 
               alert("Review added successfully!");
-              setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "", image: null,rating: "", });
+              setReviewData({ student_name: "", source: "", display:"", category_name: "", course_name: "", comment: "",reviewType:"", image: null,rating: "", });
 
           }
       } catch (error) {
@@ -521,16 +527,16 @@ useEffect(() => {
   <div class="col-md-4">
   <label for="exampleFormControlTextarea1" class="form-label">Video Review Link</label>
   <input type="link" id="inputtext6" class="form-control" placeholder='Enter youtube link' aria-describedby="passwordHelpInline"
-  name="video_link"
-  value={reviewData.video_link}
+  name="videoLink"
+  value={reviewData.videoLink}
   onChange={handleChange}/></div>
       <div class="col-md-2">
     <label for="inputState" class="form-label">Review Type</label>
     <select
   id="inputState"
   className="form-select"
-  name="type"
-  value={reviewData.type}
+  name="reviewType"
+  value={reviewData.reviewType}
   onChange={handleChange}
 >
   <option value="">Select</option>
@@ -544,10 +550,10 @@ useEffect(() => {
   <input type="text" id="inputtext6" class="form-control" placeholder='Enter Trainer Name' aria-describedby="passwordHelpInline"
   name="trainer_name"
   value={reviewData.trainer_name}
-   disabled={!(reviewData.type === "Trainer" || reviewData.type === "Both")}
+   disabled={!(reviewData.reviewType  === "Trainer" || reviewData.reviewType  === "Both")}
   onChange={handleChange}
   style={{
-      cursor: !(reviewData.type === "Trainer" || reviewData.type === "Both") ? "not-allowed" : "text"
+      cursor: !(reviewData.reviewType  === "Trainer" || reviewData.reviewType  === "Both") ? "not-allowed" : "text"
     }}/></div>
 </div>
 <div className="course-row">
@@ -741,8 +747,8 @@ useEffect(() => {
       <StyledTableCell align="left">{curr.name}</StyledTableCell>
       <StyledTableCell align="center">{curr.social_id}</StyledTableCell>
       <StyledTableCell align="center">{curr.location}</StyledTableCell>
-      <StyledTableCell align="center">{curr.video_link}</StyledTableCell>
-      <StyledTableCell align="center">{curr.type}</StyledTableCell>
+      <StyledTableCell align="center">{curr.videoLink}</StyledTableCell>
+      <StyledTableCell align="center">{curr.reviewType}</StyledTableCell>
       <StyledTableCell align="center">{curr.trainer_name}</StyledTableCell>
       <StyledTableCell align="left">{curr.course_name}</StyledTableCell>
       <StyledTableCell align="left"
@@ -824,8 +830,8 @@ useEffect(() => {
 <div className="course-row">
         <div class="col">
     <label for="inputState" class="form-label">Review Type</label>
-    <select id="inputState" class="form-select"  name="type"
-  value={editedData.type} onChange={handleInputChange}>
+    <select id="inputState" class="form-select"  name="reviewType"
+  value={editedData.reviewType} onChange={handleInputChange}>
   <option value="">Select</option>
   <option value="Course">Course</option>
   <option value="Trainer">Trainer</option>

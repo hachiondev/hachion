@@ -1832,13 +1832,15 @@ flex-direction: row;
 justify-content: space-between;
 }
 
-.contact-info{
+.contact-mail-data{
+display: flex;
+gap: 10px;
 font-size: medium;
 font-weight: 500;
 color: #000;
 padding: 3px 16px
 }
-.contact-info span{
+.contact-mail-data span{
 font-size: medium;
 font-weight: 400;
 color: #00AEEF;
@@ -1976,8 +1978,8 @@ margin-bottom: 20px;
   gap: 10px;
   }
 
-  .contact-info{
-  align-items: center;
+  .contact-mail-data{
+    display: block;
   }
   .contact-title-text {
     font-size: medium;

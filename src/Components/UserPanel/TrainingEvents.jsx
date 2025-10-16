@@ -256,87 +256,32 @@ const getRuleDiscountPct = (courseName, countryCode) => {
       </div> */}
       
 
-      <div className="filter-container">
-        <div className="filter-section">
+    <div className="filter-container">
+  <div className="filter-section">
+    {/* Mode Select */}
+    <select
+    className="custom-select-drop"
+      id="modeFilter"
+      value={modeFilter}
+      onChange={(e) => handleModeChange(e)}
+    >
+      <option value="">All Modes</option>
+      <option value="Live Class">Live Class</option>
+      <option value="Live Demo">Live Demo</option>
+    </select>
 
-    {/* Mode Dropdown */}
-    <div className="dropdown">
-      <button
-        className="btn d-flex text-nowrap align-items-center"
-        type="button"
-        id="modeDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded={isModeOpen}
-        style={{backgroundColor: '#E9E7E7', height: '48px', fontSize: '14px'}}
-        onClick={() => setIsModeOpen(!isModeOpen)}
-      >
-        {modeFilter || "All Modes"}
-        {isModeOpen ? (
-          <MdKeyboardArrowUp className="ms-1 arrow-icon" />
-          ) : (
-          <MdKeyboardArrowDown className="ms-1 arrow-icon" />
-          )}
-      </button>
-      <ul className="dropdown-menu" aria-labelledby="modeDropdown">
-        <li>
-          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "" } })}>
-            All Modes
-          </button>
-        </li>
-        <li>
-          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "Live Class" } })}>
-            Live Class
-          </button>
-        </li>
-        <li>
-          <button className="dropdown-item" onClick={() => handleModeChange({ target: { value: "Live Demo" } })}>
-            Live Demo
-          </button>
-        </li>
-      </ul>
-    </div>
-
-    {/* Time Dropdown */}
-    <div className="dropdown">
-      <button
-        className="btn d-flex text-nowrap align-items-center"
-        type="button"
-        id="timeDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded={isTimeOpen}
-        style={{backgroundColor: '#E9E7E7', height: '48px', fontSize: '14px'}}
-        onClick={() => setIsTimeOpen(!isTimeOpen)}
-      >
-        {timeFilter || "Any Time"}
-        {isTimeOpen ? (
-          <MdKeyboardArrowUp className="ms-1 arrow-icon" />
-          ) : (
-          <MdKeyboardArrowDown className="ms-1 arrow-icon" />
-          )}
-      </button>
-      <ul className="dropdown-menu" aria-labelledby="timeDropdown">
-        <li>
-          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "" } })}>
-            Any Time
-          </button>
-        </li>
-        <li>
-          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "new" } })}>
-            Newly Added
-          </button>
-        </li>
-        <li>
-          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "today" } })}>
-            Today
-          </button>
-        </li>
-        <li>
-          <button className="dropdown-item" onClick={() => handleTimeChange({ target: { value: "week" } })}>
-            This Week
-          </button>
-        </li>
-      </ul>
-    </div>
+    {/* Time Select */}
+    <select
+    className="custom-select-drop"
+      id="timeFilter"
+      value={timeFilter}
+      onChange={(e) => handleTimeChange(e)}
+    >
+      <option value="">Any Time</option>
+      <option value="new">Newly Added</option>
+      <option value="today">Today</option>
+      <option value="week">This Week</option>
+    </select>
 
           {/* <div className="course-search-container"> */}
         <form className="d-flex" role="search">

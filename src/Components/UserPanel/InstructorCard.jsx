@@ -8,7 +8,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { BsFillPlayCircleFill } from "react-icons/bs";
-import { MdOutlineStar } from "react-icons/md";
+
+import { MdStar, MdStarHalf, MdStarBorder } from "react-icons/md";
+
 
 const InstructorCard = (props) => {
   const [open, setOpen] = useState(false);
@@ -20,14 +22,25 @@ const InstructorCard = (props) => {
         .filter((link) => link)
     : [];
 
-    const renderStarRating = (rating) => {
-      return [...Array(5)].map((_, i) => (
-        <MdOutlineStar
-          key={i}
-          className={`star-icon ${i < rating ? 'filled-star' : 'empty-star'}`}
-        />
-      ));
-    };
+
+const renderStarRating = (rating) => {
+  const r = Math.max(0, Math.min(5, parseFloat(rating) || 0)); 
+  const full = Math.floor(r);
+  const half = r - full >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+
+  return (
+    <>
+      {[...Array(full)].map((_, i) => (
+        <MdStar key={`f${i}`} className="star-icon filled-star" title={`${r} / 5`} />
+      ))}
+      {half === 1 && <MdStarHalf className="star-icon filled-star" title={`${r} / 5`} />}
+      {[...Array(empty)].map((_, i) => (
+        <MdStarBorder key={`e${i}`} className="star-icon empty-star" title={`${r} / 5`} />
+      ))}
+    </>
+  );
+};
 
   return (
     <>
@@ -47,7 +60,7 @@ const InstructorCard = (props) => {
               <p className="name">{props.trainer_name}</p>
             </div>
             <p className="job-profile">{props.profile}</p>
-            <div className='rating'>{renderStarRating(props.rating)}</div>
+            <div className='rating'>{renderStarRating(props.trainerRating)}</div>
           </div>
         <hr className="faq-seperater"/>
           <p className="learner-description">

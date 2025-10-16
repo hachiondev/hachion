@@ -347,6 +347,15 @@ a:not([href]):not([class]) {
   background: rgba(31, 171, 255, 0.2);
   color: #00aeef;
 }
+.about-head{
+font-weight: 600;
+letter-spacing: 0;
+line-height: 40px;
+color: #3D3D3D;
+display: flex;
+justify-content: left;
+padding: 3px 16px;
+}
 .about-content {
   display: flex;
     justify-content: left;

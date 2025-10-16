@@ -186,7 +186,7 @@ import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Blogs.css';
 import Benefit from '../../Assets/about1.webp';
-import whatwedo from '../../Assets/about2.webp';
+import whatwedo from '../../Assets/about3.webp';
 import founder from '../../Assets/founder.webp';
 import data1 from '../../Assets/foreign.webp';
 import data2 from '../../Assets/studentenroll.webp';
@@ -198,14 +198,13 @@ import feat3 from '../../Assets/learn-icon.webp';
 import feat4 from '../../Assets/career-icon.webp';
 import feat5 from '../../Assets/247-icon.webp';
 import feat6 from '../../Assets/success-icon.webp';
-import aboutUsSider from '../../Assets/aboutussider.png';
-import visionImage from '../../Assets/OurVision.png';
 import Learners from './Learners';
 import StickyBar from './StickyBar';
 import Footer from './Footer';
 import { TiTick } from "react-icons/ti";
 import { TbSlashes } from "react-icons/tb";
 import HomeFaq from './HomeFaq';
+import { useNavigate } from "react-router-dom";
 
 const statistics = [
   {
@@ -292,6 +291,7 @@ const FeatureCard = ({ img, title, desc, alt }) => (
 );
 
 const Aboutus = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -323,7 +323,7 @@ const Aboutus = () => {
       />
       {/* Right side image */}
       <div className="home-content">
-        <h2 className="association-head">Hachion: Bridging Education and Industry Success</h2>
+        <h2 className="about-head">Hachion: Bridging Education and Industry Success</h2>
         <p className="instructor-title-text">
           At Hachion, we empower learners to turn their education into real-world success. Through hands-on training, expert mentorship, and career-focused programs, we prepare you for opportunities in today’s global job market.
         </p>
@@ -345,6 +345,7 @@ const Aboutus = () => {
             </p>
             </div>
             </div>
+          <button className="home-start-button" onClick={() => navigate("/coursedetails")}>Start Learning Today</button>
         </div>
     </div>
      <div className='about-statistics container'>
@@ -367,7 +368,7 @@ const Aboutus = () => {
       <div className="instructor-banner container">
       {/* Left side content */}
       <div className="home-content">
-        <h2 className="association-head">What We Do ?</h2>
+        <h2 className="about-head">What We Do ?</h2>
         <p className="instructor-title-text">
         Hachion helps learners gain the practical, job-ready skills employers look for.
         </p>
@@ -399,10 +400,18 @@ const Aboutus = () => {
       />
     </div>
      <Learners page="about" />
+
+     {/* <div className="home-faq-banner container">
+              <h2 className="aboutus-feat-title">Meet our team</h2>
+               <p className="learner-title-tag">
+                 A multidisciplinary crew of instructors, product thinkers, and support champions powering your learning journey.
+                  </p>
+          </div> */}
+
      <div className="instructor-banner container">
       {/* Left side content */}
         <div className="about-content">
-        <h2 className="association-head">Meet the Founder</h2>
+        <h2 className="about-head">Meet the Founder</h2>
         <p className="about-partner">
              Name :<span>Lakshmi Prasad</span>
             </p>

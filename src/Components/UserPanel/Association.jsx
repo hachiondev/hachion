@@ -1,17 +1,17 @@
 import React from 'react';
 import './Home.css';
-import img1 from '../../Assets/image 11.png';
-import img2 from '../../Assets/image 12.png';
-import img3 from '../../Assets/image 13.png';
-import img4 from '../../Assets/image 14.png';
-import img5 from '../../Assets/image 15.png';
-import img6 from '../../Assets/image 16.png';
-import img7 from '../../Assets/image 17.png';
-import img8 from '../../Assets/image 18.png';
-import img9 from '../../Assets/image 19.png';
-import img10 from '../../Assets/image 20.png';
-import img11 from '../../Assets/image 21.png';
-import img12 from '../../Assets/image 22.png';
+import img1 from '../../Assets/cl1.webp';
+import img2 from '../../Assets/cl2.webp';
+import img3 from '../../Assets/cl3.webp';
+import img4 from '../../Assets/cl4.webp';
+import img5 from '../../Assets/cl5.webp';
+import img6 from '../../Assets/cl6.webp';
+import img7 from '../../Assets/cl7.webp';
+import img8 from '../../Assets/cl8.webp';
+import img9 from '../../Assets/cl9.webp';
+import img10 from '../../Assets/cl10.webp';
+import img11 from '../../Assets/cl11.webp';
+import img12 from '../../Assets/cl12.webp';
 
 const images = [
   img1, img2, img3, img4, img5, img6,

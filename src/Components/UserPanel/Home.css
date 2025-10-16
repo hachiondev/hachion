@@ -597,11 +597,11 @@ background-color:#F7F7F7;
 }
 
 .left-arrow {
-  left: -40px; 
+  left: -42px; 
 }
 
 .right-arrow {
-  right: -40px; 
+  right: -42px; 
 }
 
 .custom-cards-arrow {
@@ -624,11 +624,11 @@ background-color:#F7F7F7;
 }
 
 .left-cards-arrow {
-  left: -45px; 
+  left: -30px; 
 }
 
 .right-cards-arrow {
-  right: -45px; 
+  right: -30px; 
 }
 .page-indicators {
   display: flex;
@@ -792,12 +792,25 @@ scroll-behavior: smooth;
 }
 
  .home-banner-img{
-        /* width: 600px;
-        aspect-ratio: 1/1; */
+  /* width: 600px;
+  aspect-ratio: 1/1; */
   max-width: 45%;
   height: auto;
-          }
+  }
 
+  .home-banner-background{
+    align-items: center;
+    background-image: url(../../Assets/b4.webp);
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+      }
   .home-banner{
         display: flex;
         flex-direction: row;
@@ -990,6 +1003,7 @@ color: #00AEEF;
     justify-content: space-between;
     gap: 20px;
     padding: 10px 20px;
+    flex-wrap: wrap;
 }
 .avatar-group {
   display: flex;
@@ -1150,6 +1164,9 @@ font-weight: 600;
 letter-spacing: 0;
 line-height: 40px;
 color: #3D3D3D;
+display: flex;
+justify-content: left;
+padding: 3px 16px;
 }
 .it-data{
 width: 100%;
@@ -1203,7 +1220,7 @@ animation-play-state: paused;
 .it-logos-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 30px;
   padding: 10px 15px;
@@ -1589,6 +1606,27 @@ text-align: right;
   background-position: right 8px center;
   background-repeat: no-repeat;
 }
+.custom-select-drop {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 35px 10px 15px; /* extra space on right for arrow */
+  font-size: 14px;
+  color: #333;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path fill='none' stroke='%23333' stroke-width='2' d='M1 1l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center; /* move arrow slightly left to create gap */
+  cursor: pointer;
+}
+
+.custom-select-drop:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #00aeef;
+}
+
 .custom-search{
  width: 100%;
 max-width: 400px;
@@ -1944,12 +1982,6 @@ color:black;
 font-size: 16px;
 font-weight: 600;
 font-style: italic;
-}
-
-.star-icon{
-height:1.9vh;
-width:1vw;
-color:rgba(251, 188, 5, 1);
 }
 
 .course-month{
@@ -2945,6 +2977,10 @@ flex: 0 0 100%;
         margin: 10px 20px 5px;
         text-align: center;
       }
+  .avatar-row {
+    justify-content: center;
+    gap: 10px;
+}
   .it-title {
     display: block;
     padding: 10px 5%;
@@ -3174,9 +3210,17 @@ flex: 0 0 100%;
     margin: 0.5vh 0.5vw;
     }
     .filter-container {
-      display: flex;
+      /* display: flex;
       justify-content: center;
       margin-bottom: 10px;
+      width: 100%; */
+      box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px 20px;
+    width: 100%;
     }
     
     .filter-section {
@@ -3481,7 +3525,7 @@ display: none !important; /* Hide the normal navbar items on mobile */
   max-width: 450px;
 }
 
-.filter-section {
+/* .filter-section {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -3496,11 +3540,28 @@ display: none !important; /* Hide the normal navbar items on mobile */
   border-radius: 5px;
   min-width: 100px;
   width: 45%;
-}
+} */
+
+.filter-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-section select {
+    width: 90%;
+    font-size: 12px;
+    height: 48px;
+  }
+
+  .search-btn {
+    width: 28px;
+    height: 28px;
+  }
 
 .custom-search{
   width: 80%;
-max-width: 350px;
+/* max-width: 350px; */
 }
 
 .course-search-container {
@@ -3640,14 +3701,14 @@ justify-content: space-between;
   margin-top: 0px !important;
   }
 
-.association-head, .association-head-tag {
+.association-head {
   text-align: left;
-  /* margin-bottom: 5px; */
-  /* padding-top: 5px;
-  margin-bottom: 0px;
-  margin-top: 0px; */
-  margin-left: 5%;
-  margin-right: 5px;
+  justify-content: left;
+  white-space: wrap;
+  max-width: 240px;
+}
+.association-head-tag {
+  text-align: left;
   justify-content: left;
 }
 

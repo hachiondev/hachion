@@ -115,14 +115,6 @@ width: 100px;
   display: flex;
   }
 
-.association-head{
-  font-weight: 600;
-  letter-spacing: 0%;
-  display: flex;
-  justify-content: left;
-  color: #3D3D3D;
-  padding: 3px 16px;
-}
 .customize-training{
 display: flex;
  align-items: center;
@@ -392,6 +384,7 @@ position: relative;
 
  .learner-card{
      max-height: 300px;
+     height: 100%;
      border-radius: 10px;
      background-color: #fff;
      border: 1px solid #E8E6E6;
@@ -584,11 +577,25 @@ position: relative;
   margin-top:0px;
 }
 
-.star-icon{
+/* .star-icon{
   height:24px;
   width: 24px;
   color:rgba(251, 188, 5, 1);
-  }
+  } */
+
+  .star-icon {
+  font-size: medium;
+  vertical-align: middle;
+  color: rgba(251, 188, 5, 1);
+}
+
+.star-icon .filled-star {
+  color: rgba(251, 188, 5, 1);
+}
+
+.star-icon .empty-star {
+  color: #d5d5d5 !important; 
+}
 
  .learner-info{
      display: flex;
@@ -775,8 +782,8 @@ position: relative;
 .top{
   display: flex;
   justify-content: space-between;
-  background: linear-gradient(90deg, #006489, #00aeef, #006489);
-  color: #ffffff;
+  /* background: linear-gradient(90deg, #006489, #00aeef, #006489); */
+  color: #3D3D3D;
 }
 .close-button {
   display: flex;
@@ -2014,20 +2021,6 @@ position: relative;
     .association{
      margin: 5px;
   }
-  
-    .association-head {
-      text-align: left;
-      /* margin-bottom: 5px; */
-      /* padding-top: 5px;
-      margin-bottom: 0px;
-      margin-top: 0px; */
-      margin-left: 5%;
-      margin-right: 5px;
-      justify-content: space-between;
-      font-size: 20px;
-      white-space: wrap;
-      max-width: 240px;
-    }
   
     .learner-card-item {
       display: block;

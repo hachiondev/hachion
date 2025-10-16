@@ -180,7 +180,7 @@ const ContactUs = () => {
   
     const officeLocations = [
       {
-        name: "New Jersey, USA",
+        name: "Texas, USA",
         country: Usa
       },
       {
@@ -214,7 +214,7 @@ const ContactUs = () => {
         <div className="home-banner container">
           <div className="home-content">
             <h3 className="contact-title">Let’s talk.</h3>
-             <p className="contact-info">Leave us a note here, or give us a call at {contactNumber}.</p>
+             <p className="contact-mail-data">Leave us a note here, or give us a call at {contactNumber}.</p>
             <form className="contact-form">
               {/* <div class="mb-3"> */}
                 <label for="exampleFormControlInput1" class="form-label">
@@ -360,8 +360,8 @@ const ContactUs = () => {
                   <h4 className="contact-title">
                     <span>{title}</span>
                   </h4>
-                  <p className="contact-info">
-                    Email us :
+                  <p className="contact-mail-data">
+                    Email us : 
                     <span>
                       <a
                         href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
@@ -380,7 +380,7 @@ const ContactUs = () => {
           <div className="home-content">
             <h3 className="contact-title">Address</h3>
             <div className="contact-block">
-            <h3 className="contact-title-text">Head Office:<span> New Jersey, USA</span></h3>
+            <h3 className="contact-title-text">Head Office:<span> Texas, USA</span></h3>
             <p className="contact-title-text"><span>Hachion 601 Voyage Trce Leander Texas 78641</span></p>
             </div>
             <div className="contact-block">

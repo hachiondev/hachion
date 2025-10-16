@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import banner from "../../Assets/newBanner2.webp";
+import banner from "../../Assets/home-banner1.webp";
 import { Link, useNavigate } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
@@ -15,7 +15,8 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="home-banner container">
+    <div className="home-banner-background container">
+    <div className="home-banner">
       {/* Left side content */}
       <motion.div
         className="home-content"
@@ -64,6 +65,7 @@ const Banner = () => {
       />
 
       {showPopup && <BannerButtonPopup onClose={() => setShowPopup(false)} />}
+    </div>
     </div>
   );
 };

@@ -3,6 +3,8 @@ package com.hachionUserDashboard.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "payments")
 public class Payment {

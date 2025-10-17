@@ -2,6 +2,8 @@ package com.hachionUserDashboard.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,200 +12,194 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "userreview")
 public class UserReview {
-	  @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private int review_id;
-	    
-	    
-	    @Column
-	    private String name;
-	    
-	    @Column
-	    private String email;
-	    
-	    @Column
-	    private String status;
-	    
-	    @Lob
-	    private String user_image; 
-	    
-	    public UserReview(String user_image) {
-			super();
-			this.user_image = user_image;
-		}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int review_id;
 
-		public String getUser_image() {
-			return user_image;
-		}
+	@Column
+	private String name;
 
-		public void setUser_image(String user_image) {
-			this.user_image = user_image;
-		}
+	@Column
+	private String email;
 
-		@Column
-	    private boolean type;
-	    
-	    @Column
-	    private String course_name;
-	    
-	    @Column
-	    private String trainer_name;
-	    
-	    @Column
-	    private String social_id;
-	    
-	    @Column
-	    private int rating;
-	    
-	    @Lob
-		@Column(nullable = true, columnDefinition = "LONGTEXT")
-	    private String review;
-	    
-	    @Column
-	    private String location;
-	    
-	    
-	    @Column(name = "date")  // Make sure the name matches your SQL column
-	    private LocalDate date;
-	    
-	    @Column
-	    private String display;
+	@Column
+	private String status;
 
-	    public UserReview() {
-	    }
+	@Lob
+	private String user_image;
 
-		public int getReview_id() {
-			return review_id;
-		}
+	@Column
+	private boolean type;
 
-		public void setReview_id(int review_id) {
-			this.review_id = review_id;
-		}
+	@Column
+	private String course_name;
 
-		public String getName() {
-			return name;
-		}
+	@Column
+	private String trainer_name;
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	@Column
+	private String social_id;
 
-		public String getEmail() {
-			return email;
-		}
+	@Column
+	private Double rating;
 
-		public void setEmail(String email) {
-			this.email = email;
-		}
+	@Lob
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
+	private String review;
 
-		public String getLocation() {
-			return location;
-		}
+	@Column(name = "review_type")
+	private String reviewType;
 
-		public void setLocation(String location) {
-			this.location = location;
-		}
+	@Column
+	private String location;
 
-	
+	@Column(name = "date") // Make sure the name matches your SQL column
+	private LocalDate date;
 
-		public boolean isType() {
-			return type;
-		}
+	@Column
+	private String display;
 
-		public void setType(boolean type) {
-			this.type = type;
-		}
+	@Column(nullable = true, name = "video_link", columnDefinition = "TEXT")
+	private String videoLink;
 
-		public String getCourse_name() {
-			return course_name;
-		}
+	public UserReview() {
+	}
 
-		public void setCourse_name(String course_name) {
-			this.course_name = course_name;
-		}
+	public int getReview_id() {
+		return review_id;
+	}
 
-		public String getTrainer_name() {
-			return trainer_name;
-		}
+	public void setReview_id(int review_id) {
+		this.review_id = review_id;
+	}
 
-		public String getDisplay() {
-			return display;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public void setDisplay(String display) {
-			this.display = display;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public void setTrainer_name(String trainer_name) {
-			this.trainer_name = trainer_name;
-		}
+	public String getEmail() {
+		return email;
+	}
 
-		public String getSocial_id() {
-			return social_id;
-		}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-		public void setSocial_id(String social_id) {
-			this.social_id = social_id;
-		}
+	public String getLocation() {
+		return location;
+	}
 
-		public int getRating() {
-			return rating;
-		}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
-		public void setRating(int rating) {
-			this.rating = rating;
-		}
+	public UserReview(String user_image) {
+		super();
+		this.user_image = user_image;
+	}
 
-		public String getReview() {
-			return review;
-		}
+	public String getUser_image() {
+		return user_image;
+	}
 
-		public void setReview(String review) {
-			this.review = review;
-		}
+	public void setUser_image(String user_image) {
+		this.user_image = user_image;
+	}
 
-		public LocalDate getDate() {
-			return date;
-		}
+	public boolean isType() {
+		return type;
+	}
 
-		public void setDate(LocalDate date) {
-			this.date = date;
-		}
+	public void setType(boolean type) {
+		this.type = type;
+	}
 
-		public UserReview(int review_id, String name, String email, boolean type, String course_name,String location,
-				String trainer_name, String social_id, int rating, String review, LocalDate date, String display) {
-			super();
-			this.review_id = review_id;
-			this.name = name;
-			this.email = email;
-			this.location=location;
-			this.type = type;
-			this.course_name = course_name;
-			this.trainer_name = trainer_name;
-			this.social_id = social_id;
-			this.rating = rating;
-			this.review = review;
-			this.date = date;
-			this.display=display;
-		}
+	public String getCourse_name() {
+		return course_name;
+	}
 
-		@Override
-		public String toString() {
-			return "UserReview [review_id=" + review_id + ", name=" + name + ", email=" + email + ", user_image="
-					+ user_image + ", type=" + type + ", course_name=" + course_name + ", trainer_name=" + trainer_name
-					+ ", social_id=" + social_id + ", rating=" + rating + ", review=" + review + ", location="
-					+ location + ", date=" + date + ", display=" + display + "]";
-		}
+	public void setCourse_name(String course_name) {
+		this.course_name = course_name;
+	}
 
-		public String getStatus() {
-			return status;
-		}
+	public String getTrainer_name() {
+		return trainer_name;
+	}
 
-		public void setStatus(String status) {
-			this.status = status;
-		}
-	    
+	public String getDisplay() {
+		return display;
+	}
+
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
+	public void setTrainer_name(String trainer_name) {
+		this.trainer_name = trainer_name;
+	}
+
+	public String getSocial_id() {
+		return social_id;
+	}
+
+	public void setSocial_id(String social_id) {
+		this.social_id = social_id;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getVideoLink() {
+		return videoLink;
+	}
+
+	public void setVideoLink(String videoLink) {
+		this.videoLink = videoLink;
+	}
+
+	public String getReviewType() {
+		return reviewType;
+	}
+
+	public void setReviewType(String reviewType) {
+		this.reviewType = reviewType;
+	}
+
 }

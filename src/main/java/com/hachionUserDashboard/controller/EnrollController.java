@@ -336,4 +336,13 @@ public class EnrollController {
 		return ResponseEntity.ok(Map.of("canDownload", true));
 	}
 
+	@GetMapping("enroll/count")
+	public ResponseEntity<Map<String, Object>> getEnrollmentCount(@RequestParam String trainerName,
+			@RequestParam String courseName) {
+
+		long count = repo.countByTrainerAndCourse(trainerName, courseName);
+
+		return ResponseEntity.ok(Map.of("trainerName", trainerName, "courseName", courseName, "count", count));
+	}
+
 }

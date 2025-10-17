@@ -17,13 +17,13 @@ import jakarta.persistence.Table;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "coupon_code")
-public class CouponCode {
+@Table(name = "discount_courses")
+public class DiscountCourses {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "coupon_id")
-	private Long couponId;
+	@Column(name = "discount_id")
+	private Long discountId;
 
 	@Column(name = "course_names")
 	@Convert(converter = StringListConverter.class)
@@ -33,14 +33,8 @@ public class CouponCode {
 	@Convert(converter = StringListConverter.class)
 	private List<String> countryNames;
 
-	@Column(name = "coupon_code")
-	private String couponCode;
-
-	@Column(name = "discount_type")
-	private String discountType;
-
-	@Column(name = "discount_value")
-	private Long discountValue;
+	@Column(name = "discount_percentage")
+	private Integer discountPercentage;
 
 	@Column(name = "start_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
@@ -49,9 +43,6 @@ public class CouponCode {
 	@Column(name = "end_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private LocalDate endDate;
-
-	@Column(name = "usage_limit")
-	private int usageLimit;
 
 	@Column(name = "status")
 	private String status;
@@ -62,12 +53,12 @@ public class CouponCode {
 	@Column(name = "number_of_hits")
 	private Integer numberOfHits;
 
-	public Long getCouponId() {
-		return couponId;
+	public Long getDiscountId() {
+		return discountId;
 	}
 
-	public void setCouponId(Long couponId) {
-		this.couponId = couponId;
+	public void setDiscountId(Long discountId) {
+		this.discountId = discountId;
 	}
 
 	public List<String> getCourseNames() {
@@ -86,28 +77,12 @@ public class CouponCode {
 		this.countryNames = countryNames;
 	}
 
-	public String getCouponCode() {
-		return couponCode;
+	public Integer getDiscountPercentage() {
+		return discountPercentage;
 	}
 
-	public void setCouponCode(String couponCode) {
-		this.couponCode = couponCode;
-	}
-
-	public String getDiscountType() {
-		return discountType;
-	}
-
-	public void setDiscountType(String discountType) {
-		this.discountType = discountType;
-	}
-
-	public Long getDiscountValue() {
-		return discountValue;
-	}
-
-	public void setDiscountValue(Long discountValue) {
-		this.discountValue = discountValue;
+	public void setDiscountPercentage(Integer discountPercentage) {
+		this.discountPercentage = discountPercentage;
 	}
 
 	public LocalDate getStartDate() {
@@ -124,14 +99,6 @@ public class CouponCode {
 
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
-	}
-
-	public int getUsageLimit() {
-		return usageLimit;
-	}
-
-	public void setUsageLimit(int usageLimit) {
-		this.usageLimit = usageLimit;
 	}
 
 	public String getStatus() {
@@ -157,6 +124,5 @@ public class CouponCode {
 	public void setNumberOfHits(Integer numberOfHits) {
 		this.numberOfHits = numberOfHits;
 	}
-
 
 }

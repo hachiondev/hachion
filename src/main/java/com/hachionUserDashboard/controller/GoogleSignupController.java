@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,16 @@ import com.hachionUserDashboard.repository.RegisterStudentRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+@CrossOrigin(
+		  origins = {"https://test.hachion.co","https://hachion.co","https://www.hachion.co"},
+		  allowCredentials = "true",
+		  allowedHeaders = "*",
+		  methods = {
+		    org.springframework.web.bind.annotation.RequestMethod.GET,
+		    org.springframework.web.bind.annotation.RequestMethod.OPTIONS
+		  }
+		)
 
 @RestController
 @RequestMapping("/api")

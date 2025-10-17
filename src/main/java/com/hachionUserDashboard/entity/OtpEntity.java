@@ -2,9 +2,12 @@ package com.hachionUserDashboard.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class OtpEntity {
 	 @Id

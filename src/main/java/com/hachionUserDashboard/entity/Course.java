@@ -2,6 +2,8 @@ package com.hachionUserDashboard.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "course")
 public class Course {
@@ -126,9 +130,12 @@ public class Course {
 
 	@Column
 	private String shortCourse;
-	
+
 	@Column
 	private String aboutCourse;
+
+	@Column
+	private String level = "All Levels";
 
 	public Double getMamount() {
 		return mamount;
@@ -630,6 +637,14 @@ public class Course {
 
 	public void setAboutCourse(String aboutCourse) {
 		this.aboutCourse = aboutCourse;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 }

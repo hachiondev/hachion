@@ -52,6 +52,11 @@ public class UserReviewController {
 		return repo.findAll();
 	}
 
+	@GetMapping("/userreview/instructor/{courseName}")
+	public List<UserReview> getReviewsByCourse(@PathVariable String courseName) {
+		return repo.findByCourseName(courseName);
+	}
+
 	private String saveImage(MultipartFile image) throws IOException {
 		if (image != null && !image.isEmpty()) {
 			File directory = new File(uploadPath);
@@ -118,6 +123,8 @@ public class UserReviewController {
 				userReview.setType(updatedUserReview.isType());
 				userReview.setDisplay(updatedUserReview.getDisplay());
 				userReview.setStatus(updatedUserReview.getStatus());
+				userReview.setVideoLink(updatedUserReview.getVideoLink());
+				userReview.setReviewType(updatedUserReview.getReviewType());
 
 				if (user_image != null && !user_image.isEmpty()) {
 					try {

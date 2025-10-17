@@ -1,7 +1,11 @@
 package com.hachionUserDashboard.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hachionUserDashboard.dto.TrainerRequest;
 import com.hachionUserDashboard.entity.Trainer;
 import com.hachionUserDashboard.repository.TrainerRepository;
 
@@ -28,7 +33,8 @@ import Service.TrainerService;
 
 public class TrainerController {
 
-	private TrainerService trainerservice = null;
+	@Autowired
+	private TrainerService trainerservice;
 
 	@Autowired
 	TrainerRepository repo;
@@ -43,11 +49,30 @@ public class TrainerController {
 		return trainer;
 	}
 
+//	@GetMapping("/trainers")
+//	public List<Trainer> getAllCourse() {
+//		return repo.findAll();
+//	}
+
 	@GetMapping("/trainers")
+	public List<TrainerRequest> getAllCourse() {
+		return repo.findAll().stream().map(trainerservice::toDtoWithBlended).toList();
+	}
+
+	@GetMapping("/trainersnames-unique")
 
 	public List<Trainer> getAllTrainers() {
-		List<Trainer> trainers = repo.findAll();
-		return trainers;
+		List<Trainer> trainers = repo.findDistinctTrainersOrdered();
+		Map<String, Trainer> uniqueByName = new LinkedHashMap<>();
+		for (Trainer t : trainers) {
+			if (t.getTrainer_name() == null || t.getTrainer_name().isBlank()) {
+				continue;
+			}
+			String key = t.getTrainer_name().trim().toLowerCase(Locale.ROOT);
+			uniqueByName.putIfAbsent(key, t);
+		}
+
+		return new ArrayList<>(uniqueByName.values());
 	}
 
 	@PostMapping("/trainer/add")
@@ -86,7 +111,7 @@ public class TrainerController {
 			trainer.setDemo_link_2(updatedTrainer.getDemo_link_2());
 			trainer.setDemo_link_3(updatedTrainer.getDemo_link_3());
 			trainer.setDate(LocalDate.now());
-
+			trainer.setTrainerRating(updatedTrainer.getTrainerRating());
 			repo.save(trainer);
 
 			return ResponseEntity.ok(trainer);

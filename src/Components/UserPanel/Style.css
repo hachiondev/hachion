@@ -438,6 +438,114 @@ white-space: wrap;
     font-size: 28px;
     padding: 2px;
 }
+.team-section {
+  padding: 40px 0;
+  text-align: center;
+}
+.tab-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 25px 0;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  border: none;
+  background: #f5f5f5;
+  padding: 8px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  background: #00aaff;
+  color: #fff;
+}
+
+.tab-button:hover {
+  background: #00aaff;
+  color: #fff;
+}
+
+/* Grid Layout */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+}
+
+/* Card Styles */
+.team-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  padding: 15px 10px;
+  width: 100%;
+  max-width: 250px;
+  text-align: left;
+  transition: transform 0.2s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  background: #7D818D;
+  margin-bottom: 10px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.team-name {
+  font-size: large;
+  font-weight: 400;
+  margin-bottom: 4px;
+  color: #161C2D;
+}
+
+.team-role {
+  font-size: medium;
+  color: #161C2D;
+  font-weight: 400;
+}
+
+/* Join Team Card */
+.join-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.join-content {
+  text-align: left;
+}
+
+.join-title {
+  font-weight: 500;
+  font-size: large;
+  margin-bottom: 8px;
+  color: #161C2D;
+}
+
+.apply-link {
+  color: #00aaff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.apply-link:hover {
+  text-decoration: underline;
+}
 .expert-statistics {
   display: flex;
   justify-content: center;
@@ -691,6 +799,9 @@ white-space: wrap;
   .profiles-grid, .expert-row, .about-card-row {
     grid-template-columns: repeat(2, 1fr);
 }
+.team-grid{
+  grid-template-columns: repeat(3, 1fr);
+}
 }
 @media (max-width: 768px) {
   .expert-filter-item, .expert-filter-item select{
@@ -701,7 +812,7 @@ white-space: wrap;
   height: 35px;
   width: 90%;
 }
-  .profiles-grid, .expert-row, .about-card-row {
+  .profiles-grid, .expert-row, .about-card-row, .team-grid {
     grid-template-columns: repeat(1, 1fr);
 }
 .expert-statistics, .about-statistics {

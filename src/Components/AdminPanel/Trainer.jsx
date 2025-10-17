@@ -31,18 +31,23 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 
 import axios from 'axios';
 
-// Convert backend data -> frontend shape
 const normalizeTrainer = (t) => ({
   ...t,
-  trainer_rating: t.trainer_rating ?? t.trainerRating ?? "",
+  trainerRating: t.trainerRating ?? t.trainerRating ?? "",
 });
 
-// Convert frontend shape -> backend shape
+
 const toBackendTrainer = (t) => {
-  const out = { ...t, trainerRating: t.trainer_rating };
-  delete out.trainer_rating;
+  const out = { ...t };
+
+  
+  if (out.trainerRating !== undefined && out.trainerRating !== null && out.trainerRating !== "") {
+    out.trainerRating = Number(out.trainerRating);
+  }
+
   return out;
 };
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -67,8 +72,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(S_No, profileImage, trainer_name, trainer_rating, course_name,demo1, demo2,demo3,summary,date,Action) {
-  return { S_No, profileImage, trainer_name,trainer_rating,course_name,demo1,demo2,demo3,summary,date,Action};
+function createData(S_No, profileImage, trainer_name, trainerRating, course_name,demo1, demo2,demo3,summary,date,Action) {
+  return { S_No, profileImage, trainer_name,trainerRating,course_name,demo1,demo2,demo3,summary,date,Action};
 }
 
 
@@ -88,7 +93,7 @@ const[message,setMessage]=useState(false);
   const [endDate, setEndDate] = useState(null);
    const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-  const [editedRow, setEditedRow] = useState({ profileImage: '', trainer_name: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
+  const [editedRow, setEditedRow] = useState({ profileImage: '', trainer_name: '', trainerRating: '', course_name: '', summary: '', demo_link_1: '', demo_link_2: '', demo_link_3: '' ,date:''});
   const [selectedRow, setSelectedRow] = React.useState({ category_name: '', Date: '' });
   const currentDate = new Date().toISOString().split('T')[0];
   const [categories, setCategories] = useState([]);
@@ -99,7 +104,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
   id:"",
       trainer_name: "",
       profileImage: "",
-      trainer_rating: "",
+      trainerRating: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -114,7 +119,7 @@ const [rowsPerPage, setRowsPerPage] = useState(10);
     setTrainerData({
       trainer_name: "",
       profileImage: "",
-      trainer_rating: "",
+      trainerRating: "",
       course_name: "",
       category_name: "",
       summary: "",
@@ -146,7 +151,7 @@ const response = await axios.post("https://api.test.hachion.co/trainer/add", toB
   setSuccessMessage("✅ Trainer added successfully.");
   console.log("✅ Message set: Trainer added successfully.");
   setErrorMessage("");
-  // setTrainers((prev) => [...prev, { ...response.data, dateAdded: currentDate }]);
+  
   const added = normalizeTrainer(response.data);
 setTrainers((prev) => [...prev, { ...added, dateAdded: currentDate }]);
 
@@ -200,7 +205,7 @@ useEffect(() => {
 
 const handleRowsPerPageChange = (rows) => {
   setRowsPerPage(rows);
-  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+  setCurrentPage(1); 
 };
 const displayedCourse = filteredTrainers.slice(
   (currentPage - 1) * rowsPerPage,
@@ -296,17 +301,8 @@ const handleClose = () => {
 const handleSave = async () => {
  
   try {
-    // const response = await axios.put(
-    //   `https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`,
-    //   editedRow
-    // );
+    
 const response = await axios.put(`https://api.test.hachion.co/trainer/update/${selectedRow.trainer_id}`, toBackendTrainer(editedRow));
-
-    // setTrainers((prevTrainers) =>
-    //   prevTrainers.map((trainer) =>
-    //     trainer.trainer_id === selectedRow.trainer_id ? response.data : trainer
-    //   )
-    // );
     const updated = normalizeTrainer(response.data);
 setTrainers((prevTrainers) =>
   prevTrainers.map((trainer) =>
@@ -326,30 +322,35 @@ setTrainers((prevTrainers) =>
   }
 };
 
+
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setEditedRow((prev) => ({
     ...prev,
-    [name]: value,
+    [name]: name === "trainerRating" ? (value === "" ? "" : Number(value)) : value,
   }));
 };
+
 const handleChange = (e) => {
   const { name, value } = e.target;
   setTrainerData((prevData) => ({
     ...prevData,
-    [name]: value,
+    [name]: name === "trainerRating" ? (value === "" ? "" : Number(value)) : value,
   }));
 };
-const handleFileChange = (e) => {
-const file = e.target.files[0];
-if (file) {
-setTrainerData((prevData) => ({
-...prevData,
-image: file,
- }));
- }
- };
 
+
+const handleFileChange = (e) => {
+  const { name, files } = e.target || {};
+   const file = files?.[0] || null;
+   if (!file) return; 
+   
+   if (open) {
+     setEditedRow((prev) => ({ ...prev, [name]: file }));
+   } else {
+     setTrainerData((prev) => ({ ...prev, [name]: file }));
+   }
+ };
  useEffect(() => {
     fetchTrainers();
   }, []);
@@ -357,8 +358,7 @@ image: file,
   const fetchTrainers = async () => {
     try {
       const response = await axios.get('https://api.test.hachion.co/trainers');
-      // setTrainers(response.data);
-      // setFilteredTrainers(response.data);
+      
       const normalized = Array.isArray(response.data)
   ? response.data.map(normalizeTrainer)
   : [];
@@ -379,7 +379,7 @@ setFilteredTrainers(normalized);
         console.error("Error fetching categories:", error);
       });
   }, []);
-// const handleCourseChange = (event) => setCourse(event.target.value);
+
   return (
     
     <>   
@@ -420,9 +420,9 @@ setFilteredTrainers(normalized);
               </div>
       <div class="col-md-3">
     <label className='form-label'>Trainer Rating</label>
-    <input type="number" class="form-control" placeholder="Enter Trainer rating" aria-label="First name" 
-    name="trainer_rating"
-    value={trainerData.trainer_rating}
+    <input type="number" class="form-control" placeholder="Enter Trainer rating" aria-label="Rating" 
+    name="trainerRating"
+    value={trainerData.trainerRating}
     onChange={handleChange}/>
   </div>
               </div>
@@ -594,7 +594,7 @@ setFilteredTrainers(normalized);
               {row.profileImagee ? <img src={row.profileImage} alt="User" width="50" height="50" /> : 'No Image'}
               </StyledTableCell>
               <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
-              <StyledTableCell align="center">{row.trainer_rating}</StyledTableCell>
+              <StyledTableCell align="center">{row.trainerRating}</StyledTableCell>
               <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
               <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_1}</StyledTableCell>
               <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>
@@ -672,6 +672,13 @@ setFilteredTrainers(normalized);
                   required
                 />
               </div>
+          <div class="col">
+        <label className='form-label'>Trainer Rating</label>
+        <input type="number" class="form-control" 
+        name="trainerRating"
+        value={editedRow.trainerRating || ""}
+        onChange={handleInputChange}/>
+      </div>
       <div className="col">
       <label htmlFor="inputState" className="form-label">Category Name</label>
       <select

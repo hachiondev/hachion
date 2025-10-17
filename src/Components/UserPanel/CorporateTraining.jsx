@@ -13,6 +13,7 @@ import Learners from './Learners';
 import Advisor from './Advisor';
 import { FaArrowUp } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import Trending from './Trending';
 
 const CorporateTraining = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -61,9 +62,10 @@ useEffect(() => {
         <Association />
         <Hachion />
         <CustomizeTraining />
-        <LeadingExpert />
+        {/* <LeadingExpert /> */}
+        <Trending />
         <CorporateTrainingFeature />
-        <Learners />
+        <Learners page="home"/>
         <div ref={advisorRef}>
           <Advisor /> {/* Set the ref to Advisor component */}
         </div>

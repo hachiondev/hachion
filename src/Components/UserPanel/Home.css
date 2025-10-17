@@ -800,7 +800,7 @@ scroll-behavior: smooth;
 
   .home-banner-background{
     align-items: center;
-    background-image: url(../../Assets/b4.webp);
+    background-image: url(../../Assets/hb.webp);
     background-position:center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -817,6 +817,14 @@ scroll-behavior: smooth;
         justify-content: space-between;
         /* padding-left: 3%; */
         align-items: center;
+      }
+   .corporate-training-banner{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 20px;
+        align-items: center;
+        background: linear-gradient(89.59deg, #84D9F9 10.08%, #959595 97.85%);
       }
 .instructor-banner, .limited-component{
   display: flex;
@@ -2907,7 +2915,7 @@ height: 45px;
   display: none;
 }
   
-.home-banner{
+.home-banner, .corporate-training-banner{
         display: flex;
         flex-direction: column-reverse;
         justify-content: center;

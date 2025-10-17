@@ -156,7 +156,7 @@ useEffect(() => {
         <div className="border-0 shadow-sm p-4 d-flex flex-column flex-md-row align-items-start">
           <Avatar
             alt={trainer.trainer_name}
-            src={trainer.profileImage || "https://randomuser.me/api/portraits/women/8.jpg"}
+            src={trainer.profileImage || " "}
             sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: "10px" }}
           />
           <div className="flex-grow-1 d-flex flex-column flex-md-row justify-content-between">
@@ -169,7 +169,7 @@ useEffect(() => {
               <div className="d-flex flex-wrap">
                 <div className="me-4 d-flex align-items-center">
                   <FaStar className="text-warning me-1" />
-                  <span className="fw-semibold">{trainer.trainerRating || 5}</span>
+                  <span className="fw-semibold">{trainer.trainerUserRating || 5}</span>
                   <small className="text-muted ms-1">({reviews.length} reviews)</small>
                 </div>
                 <div className="me-4">
@@ -260,6 +260,7 @@ useEffect(() => {
               name={fb.name}
               location={fb.location}
               content={fb.review}
+              rating={fb.rating}
               profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
             />
           )) : <p>No reviews available.</p>}

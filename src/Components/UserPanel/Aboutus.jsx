@@ -181,7 +181,7 @@
 
 // export default Aboutus;
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Blogs.css';
@@ -205,6 +205,7 @@ import { TiTick } from "react-icons/ti";
 import { TbSlashes } from "react-icons/tb";
 import HomeFaq from './HomeFaq';
 import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
 
 const statistics = [
   {
@@ -292,6 +293,25 @@ const FeatureCard = ({ img, title, desc, alt }) => (
 
 const Aboutus = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("All");
+
+  const teamMembers = [
+    { id: 1, name: "Shaheen", role: "HR", category: "HR" },
+    { id: 2, name: "Shoeb", role: "Lead", category: "Business" },
+    { id: 3, name: "Priyanka", role: "Cordinator", category: "Business" },
+    { id: 4, name: "Niru", role: "Cordinator", category: "Business" },
+    { id: 5, name: "Shreya", role: "Lead", category: "SEO" },
+    { id: 6, name: "Sejal", role: "Graphic Designer", category: "SEO" },
+    { id: 7, name: "Swapna", role: "Content Writer", category: "SEO" },
+    { id: 8, name: "Sirisha", role: "UXUI Developer", category: "Developer" },
+    { id: 9, name: "Naga Lakshmi", role: "Full Stack Developer", category: "Developer" },
+  ];
+
+  const filteredMembers =
+    activeTab === "All"
+      ? teamMembers
+      : teamMembers.filter((member) => member.category === activeTab);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -401,12 +421,51 @@ const Aboutus = () => {
     </div>
      <Learners page="about" />
 
-     {/* <div className="home-faq-banner container">
-              <h2 className="aboutus-feat-title">Meet our team</h2>
-               <p className="learner-title-tag">
-                 A multidisciplinary crew of instructors, product thinkers, and support champions powering your learning journey.
-                  </p>
-          </div> */}
+     <div className="team-section container">
+      {/* Header Section */}
+      <div className="home-faq-banner">
+        <h2 className="aboutus-feat-title">Meet our team</h2>
+        <p className="learner-title-tag">
+          A multidisciplinary crew of instructors, product thinkers, and support
+          champions powering your learning journey.
+        </p>
+      </div>
+
+      {/* Tab Menu */}
+      <div className="tab-menu">
+        {["All", "Business", "SEO", "HR", "Developer"].map((tab) => (
+          <button
+            key={tab}
+            className={`tab-button ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Cards Grid */}
+      <div className="team-grid">
+        {filteredMembers.map((member) => (
+          <div key={member.id} className="team-card">
+            <div className="team-image">
+              <Avatar variant="square"/></div>
+            <h3 className="team-name">{member.name}</h3>
+            <p className="team-role">{member.role}</p>
+          </div>
+        ))}
+
+        {/* Join Team Card */}
+        <div className="team-card join-card">
+          <div className="join-content">
+            <p className="join-title">Interested to join our team?</p>
+            <a href="#" className="apply-link">
+              Apply now →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
      <div className="instructor-banner container">
       {/* Left side content */}

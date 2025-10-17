@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Corporate.css';
-import { MdOutlineStar } from "react-icons/md";
+// import { MdOutlineStar } from "react-icons/md";
+import { MdStar, MdStarHalf, MdStarOutline } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
 import linkedin from '../../Assets/linkedin.png';
 import facebook from '../../Assets/facebook.png';
@@ -26,15 +27,27 @@ const getSocialMediaLogo = (social_id) => {
 };
 
 // Star Ratings
+// const renderStarRating = (rating) => {
+//   return [...Array(5)].map((_, i) => (
+//     <MdOutlineStar
+//       key={i}
+//       className={`star-icon ${i < rating ? 'filled-star' : 'empty-star'}`}
+//     />
+//   ));
+// };
 const renderStarRating = (rating) => {
-  return [...Array(5)].map((_, i) => (
-    <MdOutlineStar
-      key={i}
-      className={`star-icon ${i < rating ? 'filled-star' : 'empty-star'}`}
-    />
-  ));
-};
+  return [...Array(5)].map((_, i) => {
+    const diff = rating - i;
 
+    if (diff >= 1) {
+      return <MdStar key={i} className="star-icon filled-star" />;
+    } else if (diff >= 0.5) {
+      return <MdStarHalf key={i} className="star-icon half-star" />;
+    } else {
+      return <MdStarOutline key={i} className="star-icon empty-star" />;
+    }
+  });
+};
 const LearnerCard = (props) => {
   const [open, setOpen] = useState(false);
 

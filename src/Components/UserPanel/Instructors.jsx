@@ -131,8 +131,6 @@ const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 }, [filteredTrainers]); 
 const formatForUrl = (str) => 
   str.toLowerCase().replace(/\s+/g, "-"); 
-// const enrollKey = `${trainer.trainer_name}::${trainer.course_name}`;
-// const enrollCount = enrollCounts[enrollKey] ?? 0;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -264,7 +262,7 @@ const formatForUrl = (str) =>
                     <hr className="faq-seperater"/>
                     <div className="card-row">
                       <div className="instructor-rating">
-                        {renderStarRating(trainer.trainerRating || 5)}
+                        {renderStarRating(trainer.trainerUserRating || 5)}
                       </div>
                       {/* <p className="instructor-rating">1200 Students</p> */}
                     <p className="instructor-rating">

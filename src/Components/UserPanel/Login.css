@@ -259,7 +259,7 @@ justify-content: flex-end;
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        /* height: 900px; */
+        height: 900px;
         min-height: 0;
         
       }
@@ -336,6 +336,7 @@ justify-content: flex-end;
       align-items: center;
       background: none;
       min-height: 0;
+      height: auto;
     }
 
     .login-right {

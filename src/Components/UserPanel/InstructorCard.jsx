@@ -60,7 +60,7 @@ const renderStarRating = (rating) => {
               <p className="name">{props.trainer_name}</p>
             </div>
             <p className="job-profile">{props.profile}</p>
-            <div className='rating'>{renderStarRating(props.trainerRating)}</div>
+            <div className='rating'>{renderStarRating(props.trainerUserRating)}</div>
           </div>
         <hr className="faq-seperater"/>
           <p className="learner-description">

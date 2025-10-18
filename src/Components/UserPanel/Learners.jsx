@@ -17,7 +17,7 @@ const Learners = ({ page }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("https://api.test.hachion.co/userreview");
+        const response = await fetch("https://api.test.hachion.co/userreview/active");
         const data = await response.json();
         if (Array.isArray(data)) {
           const filteredReviews = data.filter(
@@ -85,6 +85,7 @@ const Learners = ({ page }) => {
               company={review.company}
               role={review.role}
               content={review.review}
+              rating={review.rating}
               profileImage={
                 review.user_image
                   ? `https://api.test.hachion.co/userreview/${review.user_image}`

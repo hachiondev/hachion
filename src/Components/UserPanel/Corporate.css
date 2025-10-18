@@ -109,11 +109,6 @@ width: 100px;
   width: 430px;
   border-radius: 20px;
 }
-.association{
-  margin: 40px 10%;
-  justify-content: left;
-  display: flex;
-  }
 
 .customize-training{
 display: flex;
@@ -221,64 +216,43 @@ padding: 2vh;
 .view-all-corporate:hover{
   background-color: #0d6efd;
 }
-.corporate-training-features {
- padding: 2vw;
-  background-color: #fff;
-  margin-left: 10%;
-  width: 80%;
-  margin-right: 10%;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
 
 .customized-column {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   justify-content: space-evenly;
   gap: 10px;
-  width: auto;
-  margin: 5px auto;
-  margin-top: 10px;
-  padding: 5px;
   align-items: center;    
 }
 
 .customized-content {
-  height: 134px;
-  width: 280px;
+  height: 140px;
+  max-width: 300px;
   border-radius: 10px;
-  padding: 10px 0px 10px 0px;
-  box-shadow: 5px 5px 10px #d3d3d3;
+  padding: 15px 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 10px;
 }
 
 .customized-content-heading {
   font-weight: 600;
-  font-size: 1.1rem;
-  text-align: center;
+  font-size: large;
+  text-align: left;
+  margin-bottom: 5px;
 }
 
 .customized-content img {
-  height: 60px;
-  width: 60px;
+  height: 70px;
+  width: 70px;
 }
 
 .customized-content-para {
   font-weight: 400;
-  font-size: 1rem;
-}
-
-.training-img {
-  height: 420px;
-  width: 500px;
-  margin-left: 10px;
-  padding: 5px;
-  align-self: center;
+  font-size: medium;
+  margin-bottom: 5px;
 }
 
 .advisor {
@@ -1448,11 +1422,7 @@ position: relative;
   .leading-expert{
       width: 95%;
   }
-  .corporate-training-features{
-      width: 80%;
-      margin-left: 10%;
-      margin-right: 10%;
-  }
+
   .training-img{
       height: 360px;
   }
@@ -1535,6 +1505,9 @@ position: relative;
 }
 
 @media (max-width: 1024px) {
+  .customized-content {
+  height: 160px;
+}
   .blogs-container {
       grid-template-columns: repeat(4, 1fr); 
     }
@@ -1692,14 +1665,7 @@ position: relative;
   height: 200px;
  
 }
-.customized-content{
-  width: 100%;
-  height: 150px;
-}
-.training-img{
-  height: 450px;
-  width: 100%;
-}
+
 .leading-expert {
  max-width: 80%;
  margin-left: 10%;
@@ -1711,15 +1677,6 @@ position: relative;
 
 .leading-expert{
   width: 80%;
-}
-.corporate-training-features{
-  width: 80%;
-  margin-left: 10%;
-  margin-right: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 
 .advisor-form{
@@ -2017,10 +1974,6 @@ position: relative;
       margin-right: 5%;
       justify-content: space-between;
       }
-
-    .association{
-     margin: 5px;
-  }
   
     .learner-card-item {
       display: block;
@@ -2308,66 +2261,22 @@ position: relative;
   }
   /* Corporate training features */          
    .customized-content {
-       height: 90px;
-       width: 160px;
+       height: auto;
+       width: 100%;
        max-width: 100%;
-       border-radius: 10px;
-       padding: 5px 0px 5px 0px;
-       gap: 5px;
-   }
-   
-   .customized-content-heading {
-       font-weight: 600;
-       font-size: 12px;
-       text-align: left;
-       margin-bottom: 5px;
-       margin-top: 5px;
+       padding: 10px;
    }
    
    .customized-content img {
        height: 60px;
        width: auto;
    }
-   
-   .customized-content-para {
-       font-weight: 400;
-       font-size: 12px;
-       margin-bottom: 5px;
-       padding-right: 5px;
-   }
-   
-  .corporate-training-features {
-      /* margin-left: 5%;
-      margin-right: 5px; */
-      width: 350px; /* Full width for mobile */
-      margin: 0 auto;
-      padding: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      border-radius: 10px;
-  }
 
   .customized-column {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); 
-      width: auto; /* Make columns full width */
-      margin: 5px auto;
-      /* margin-left: 5px;
-      margin-right: 5px; */
-      margin-top: 10px;
-      padding: 5px;
+      grid-template-columns: repeat(1, 1fr); 
       align-items: center;
       justify-content: center;
-      gap: 5px;
-  }
-
-  .training-img {
-      width: 320px; /* Full width for the image */
-      height: 300px;
-      max-width: 100%; /* Maintain the image's aspect ratio */
-      margin: 20px auto;
   }
   
   .leading-expert {

@@ -13,7 +13,6 @@ import Learners from './Learners';
 import Advisor from './Advisor';
 import { FaArrowUp } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
-import Trending from './Trending';
 
 const CorporateTraining = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -26,7 +25,7 @@ const CorporateTraining = () => {
 
     useEffect(() => {
       const handleScroll = () => {
-        if (window.scrollY > 300) {
+        if (window.scrollY > 800) {
           setShowScrollButton(true);
         } else {
           setShowScrollButton(false);
@@ -60,11 +59,10 @@ useEffect(() => {
         <NavbarTop />
         <CorporateBanner onContactUsClick={scrollToAdvisor} /> {/* Pass the scroll function as a prop */}
         <Association />
-        <Hachion />
-        <CustomizeTraining />
-        {/* <LeadingExpert /> */}
-        <Trending />
         <CorporateTrainingFeature />
+        {/* <Hachion /> */}
+        <LeadingExpert />
+        <CustomizeTraining />
         <Learners page="home"/>
         <div ref={advisorRef}>
           <Advisor /> {/* Set the ref to Advisor component */}
@@ -78,7 +76,7 @@ useEffect(() => {
               </button>
             )}
             
-      <StickyBar />
+      {showScrollButton && <StickyBar />}
     </>
   );
 };

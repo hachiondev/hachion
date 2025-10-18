@@ -639,7 +639,7 @@ white-space: wrap;
   display: flex;
   justify-content: center;
     background-color: #C2EEFC;
-    padding: 40px 0;
+    margin: 40px 0;
     width: 100%;
 }
 .support-lable{

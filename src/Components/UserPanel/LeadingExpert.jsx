@@ -1,16 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import './Corporate.css';
-import LeadingExpertCard from './LeadingExpertCard';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import CourseCard from "./CourseCard";
+import CardsPagination from "./CardsPagination";
+import "./Corporate.css";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+
+// Country → Currency mapping
+const countryToCurrencyMap = {
+  IN: "INR",
+  US: "USD",
+  GB: "GBP",
+  AU: "AUD",
+  CA: "CAD",
+  AE: "AED",
+  JP: "JPY",
+  EU: "EUR",
+  TH: "THB",
+  DE: "EUR",
+  FR: "EUR",
+  QA: "QAR",
+  CN: "CNY",
+  RU: "RUB",
+  KR: "KRW",
+  BR: "BRL",
+  MX: "MXN",
+  ZA: "ZAR",
+  NL: "EUR",
+};
 
 const LeadingExpert = () => {
   const navigate = useNavigate();
   const [courseCards, setCourseCards] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(4);
+  const [loading, setLoading] = useState(true);
+  const [discountRules, setDiscountRules] = useState([]);
+  const [countdowns, setCountdowns] = useState({});
+  const [currency, setCurrency] = useState("INR");
+  const [country, setCountry] = useState("IN");
+  const [fxFromUSD, setFxFromUSD] = useState(1);
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale || "en-US";
+  const fmt = (n) =>
+    (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
+  // ✅ Fetch Courses and Corporate Course Data
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const [corporateRes, allCoursesRes] = await Promise.all([
           axios.get("https://api.test.hachion.co/corporatecourse"),
           axios.get("https://api.test.hachion.co/courses/all"),
@@ -28,44 +68,269 @@ const LeadingExpert = () => {
           );
 
           return {
+            ...matchedCourse,
             courseName: corpCourse.course_name,
             image: matchedCourse
               ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
-              : "", // fallback image or empty
+              : "",
+            id: matchedCourse ? matchedCourse.id : Math.random(),
           };
         });
 
         setCourseCards(combinedCourses);
       } catch (error) {
-        console.error("Error fetching course data:", error);
+        console.error("Error fetching corporate courses:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCourses();
   }, []);
 
+  // ✅ Fetch Discount Rules
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          "https://api.test.hachion.co/discounts-courses"
+        );
+        setDiscountRules(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error("Failed to load discount rules", e);
+        setDiscountRules([]);
+      }
+    })();
+  }, []);
+
+  // ✅ Detect Country and Currency
+  useEffect(() => {
+    (async () => {
+      try {
+        const geoResponse = await axios.get(
+          "https://ipinfo.io/json?token=82aafc3ab8d25b"
+        );
+        const cc = geoResponse?.data?.country || "US";
+        setCountry(cc);
+
+        const cur = countryToCurrencyMap[cc] || "USD";
+        setCurrency(cur);
+
+        if (cc === "IN" || cc === "US") {
+          setFxFromUSD(1);
+          return;
+        }
+
+        const cached = JSON.parse(localStorage.getItem("fxRatesUSD") || "null");
+        const fresh = cached && Date.now() - cached.t < 6 * 60 * 60 * 1000;
+        let rates = cached?.rates;
+
+        if (!fresh) {
+          const exchangeResponse = await axios.get(
+            "https://api.exchangerate-api.com/v4/latest/USD"
+          );
+          rates = exchangeResponse.data.rates;
+          localStorage.setItem(
+            "fxRatesUSD",
+            JSON.stringify({ t: Date.now(), rates })
+          );
+        }
+
+        setFxFromUSD(rates[cur] || 1);
+      } catch (e) {
+        console.error("Currency detection/FX failed", e);
+        setCountry("US");
+        setCurrency("USD");
+        setFxFromUSD(1);
+      }
+    })();
+  }, []);
+
+  // ✅ Pagination Controls
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+
+  // ✅ Discount + Countdown Helpers
+  const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
+
+  const inWindow = (start, end) => {
+    const today = dayjs();
+    const s = parseMDY(start);
+    const e = parseMDY(end);
+    const okS = s.isValid() ? !today.isBefore(s, "day") : true;
+    const okE = e.isValid() ? !today.isAfter(e, "day") : true;
+    return okS && okE;
+  };
+
+  const normalizeStr = (s) => (s || "").toString().trim().toLowerCase();
+  const regionNames = new Intl.DisplayNames([locale || "en"], {
+    type: "region",
+  });
+
+  const expandRuleCountry = (token) => {
+    const t = (token || "").toString().trim();
+    if (!t) return [];
+    if (/^[A-Za-z]{2}$/.test(t)) {
+      const code = t.toUpperCase();
+      const name = regionNames.of(code) || "";
+      return [normalizeStr(code), normalizeStr(name)];
+    }
+    return [normalizeStr(t)];
+  };
+
+  const expandUserCountry = (cc) => {
+    const code = (cc || "").toUpperCase();
+    const name = regionNames.of(code) || "";
+    return new Set([normalizeStr(code), normalizeStr(name)]);
+  };
+
+  const getRuleDiscountPct = (courseName, countryCode) => {
+    if (!discountRules?.length) return 0;
+    const userCountryTokens = expandUserCountry(countryCode);
+    const courseKey = normalizeStr(courseName);
+    let best = 0;
+    for (const r of discountRules) {
+      if ((r.status || "").toLowerCase() !== "active") continue;
+      if (!inWindow(r.startDate, r.endDate)) continue;
+      const courses = Array.isArray(r.courseNames) ? r.courseNames : [];
+      const countries = Array.isArray(r.countryNames) ? r.countryNames : [];
+      const courseOk =
+        courses.some((c) => normalizeStr(c) === courseKey) ||
+        courses.some((c) => normalizeStr(c) === "all");
+      const countryOk =
+        countries.some((c) => {
+          const tokens = expandRuleCountry(c);
+          return tokens.some((t) => userCountryTokens.has(t));
+        }) ||
+        countries.some((c) => normalizeStr(c) === "all");
+      if (courseOk && countryOk) {
+        const pct = Number(r.discountPercentage || 0);
+        if (pct > best) best = pct;
+      }
+    }
+    return best;
+  };
+
+  const getActiveRuleFor = (courseName, countryCode) => {
+    if (!discountRules?.length) return null;
+    const userCountryTokens = expandUserCountry(countryCode);
+    const courseKey = normalizeStr(courseName);
+    for (const r of discountRules) {
+      if ((r.status || "").toLowerCase() !== "active") continue;
+      if (!inWindow(r.startDate, r.endDate)) continue;
+      const courses = Array.isArray(r.courseNames) ? r.courseNames : [];
+      const countries = Array.isArray(r.countryNames) ? r.countryNames : [];
+      const courseOk =
+        courses.some((c) => normalizeStr(c) === courseKey) ||
+        courses.some((c) => normalizeStr(c) === "all");
+      const countryOk =
+        countries.some((c) => {
+          const tokens = expandRuleCountry(c);
+          return tokens.some((t) => userCountryTokens.has(t));
+        }) ||
+        countries.some((c) => normalizeStr(c) === "all");
+      if (courseOk && countryOk) return r;
+    }
+    return null;
+  };
+
+  const getSaleEndsAt = (courseName, countryCode) => {
+    const rule = getActiveRuleFor(courseName, countryCode);
+    if (!rule) return null;
+    const end = parseMDY(rule.endDate);
+    if (!end.isValid()) return null;
+    return end.endOf("day").toDate();
+  };
+
+  // ✅ Countdown Timer for Discount Expiry
+  useEffect(() => {
+    let stopped = false;
+    const compute = () => {
+      if (stopped) return;
+      const next = {};
+      courseCards.forEach((c) => {
+        const key = c.id ?? c.courseName;
+        const endsAt = getSaleEndsAt(c.courseName, country);
+        if (!endsAt) return;
+        const diffMs = endsAt.getTime() - Date.now();
+        if (diffMs <= 0) return;
+        const totalSec = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSec / 86400);
+        const hours = Math.floor((totalSec % 86400) / 3600);
+        const pad = (n) => n.toString().padStart(2, "0");
+        const label =
+          days > 0 ? `${days}d ${pad(hours)}h Left` : `${pad(hours)}h Left`;
+        next[key] = label;
+      });
+      setCountdowns(next);
+    };
+    compute();
+    const t = setInterval(compute, 1000);
+    return () => {
+      stopped = true;
+      clearInterval(t);
+    };
+  }, [courseCards, country, discountRules]);
+
+  // ✅ Click handler
+  const handleCardClick = (course) => {
+    if (!course?.courseName) return;
+    const slug = course.courseName.toLowerCase().replace(/\s+/g, "-");
+    navigate(`/coursedetails/${slug}`);
+  };
+
   return (
-    <>
-      <div className='training-events-head'>
-        <h2 className='association-head'>Skill-Building Curriculum</h2>
-        <div className='view-all-div'>
-          <button className='view-all-corporate' onClick={() => navigate('/coursedetails')}>
-            View All
-          </button>
+    <div className="training-events container">
+      <div className="training-title-head">
+        <div className="home-spacing">
+          <h2 className="association-head">Future-Ready Learning Paths</h2>
+          <p className="association-head-tag">
+            Explore our Corporate Courses designed to empower professionals and
+            boost your team’s capabilities.
+          </p>
+        </div>
+
+        <div className="card-pagination-container">
+          <CardsPagination
+            currentPage={currentPage}
+            totalCards={courseCards.length}
+            cardsPerPage={cardsPerPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
 
-      <div className='leading-expert'>
-      {courseCards.map((course, index) => (
-  <LeadingExpertCard
-    key={course.courseName + index} // or course.id if available
-    CourseName={course.courseName}
-    image={course.image}
-  />
-))}
-
+      <div className="training-card-holder">
+        {loading ? (
+          Array.from({ length: cardsPerPage }).map((_, i) => (
+            <div className="skeleton-card" key={i}></div>
+          ))
+        ) : courseCards.length > 0 ? (
+          courseCards
+            .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
+            .map((course, index) => (
+              <CourseCard
+                key={index}
+                heading={course.courseName}
+                image={course.image}
+                level={course.level}
+                onClick={() => handleCardClick(course)}
+                discountPercentage={getRuleDiscountPct(
+                  course.courseName,
+                  country
+                )}
+                amount={`${currency} ${fmt(course.amount || 0)}`}
+                totalAmount={`${fmt(course.amount || 0)}`}
+                timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
+              />
+            ))
+        ) : (
+          <p>No corporate courses available.</p>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

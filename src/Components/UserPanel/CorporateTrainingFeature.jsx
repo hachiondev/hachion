@@ -1,65 +1,37 @@
 import React from 'react';
+import img1 from '../../Assets/image.png';
+import img2 from '../../Assets/image27.png';
 import './Corporate.css';
-import icon1 from '../../Assets/content.jpg';
-import icon2 from '../../Assets/support.jpg';
-import icon3 from '../../Assets/project.jpg';
-import icon4 from '../../Assets/flexibility.jpg';
-import icon5 from '../../Assets/skill.jpg';
-import icon6 from '../../Assets/certificate.jpg';
-import training from '../../Assets/Rectangle 909.png';
 
-const features = [
+const trainingOptions = [
   {
-    icon: icon1,
-    heading: 'Customized Content',
-    para: 'Flexible Content Solutions, Designed for Your Goals',
+    img: img1,
+    alt: 'Instructor-Led Live, Online Training',
+    text: 'Instructor-Led Live, Online Training'
   },
   {
-    icon: icon2,
-    heading: '24/7 Support',
-    para: 'Expert Assistance, Whenever You Need It',
-  },
-  {
-    icon: icon3,
-    heading: 'Projects',
-    para: 'Designed for Impact, Executed with Care',
-  },
-  {
-    icon: icon4,
-    heading: 'Flexibility',
-    para: 'Adapting to Your Needs, Anytime',
-  },
-  {
-    icon: icon5,
-    heading: 'Skill Tracking',
-    para: 'Monitor Growth, Enhance Performance',
-  },
-  {
-    icon: icon6,
-    heading: 'Certification',
-    para: 'Validate Your Skills, Advance Your Career',
-  },
+    img: img2,
+    alt: 'Blended Training',
+    text: 'Blended Training'
+  }
 ];
 
 const CorporateTrainingFeature = () => {
   return (
     <>
-      <div className='association'>
-        <h2 className='association-head'>Corporate Training Features</h2>
+      <div className="instructor-banner container">
+        <h2 className="become-expert-title">Empowering Teams with Innovative Online Corporate Training Solutions</h2>
+        <p className="home-title-text">
+         Hachion offers world-class corporate training and upskilling programs with an impressive 80% completion rate. Our platform combines interactive learning, hands-on practice, and advanced technology to build a future-ready workforce 
+        </p>
+      <div className='customize-training'>
+        {trainingOptions.map((option, index) => (
+          <div className='customize-training-div' key={index}>
+            <img src={option.img} alt={option.alt} loading="lazy"/>
+            <p className='customize-training-div-content'>{option.text}</p>
+          </div>
+        ))}
       </div>
-      <div className='corporate-training-features'>
-        <div className='customized-column'>
-          {features.map((item, index) => (
-            <div className='customized-content' key={index}>
-              <img src={item.icon} alt={`${item.heading}-icon`} loading="lazy"/>
-              <div>
-                <p className='customized-content-heading'>{item.heading}</p>
-                <p className='customized-content-para'>{item.para}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <img src={training} alt='training-illustration' className='training-img' loading="lazy"/>
       </div>
     </>
   );

@@ -14,6 +14,7 @@ const RecentEntriesCard = ({
   onClick 
 }) => {
   const handleImageError = (e) => {
+    
     e.target.src = Blogimageplaceholder;
   };
 
@@ -35,27 +36,36 @@ const RecentEntriesCard = ({
         <h3 className="content">{content}</h3>
 
         {/* Description */}
-        {/* <p className="blog-card-description">{description}</p> */}
-<p className="blog-card-description">
-  {(() => {
-    if (!description) return "";
-    const el = document.createElement("div");
-    el.innerHTML = description;                 
-    return (el.textContent || el.innerText || "").trim();
-  })()}
-</p>
+        <p className="blog-card-description">
+          {(() => {
+            if (!description) return "";
+            const el = document.createElement("div");
+            el.innerHTML = description;
+            return (el.textContent || el.innerText || "").trim();
+          })()}
+        </p>
 
         {/* Author Section */}
         <div className="author-info">
+          {/* ✅ If avatarSrc exists, show image and hide fallback until image fails */}
           {avatarSrc ? (
             <div className="avatar-wrapper">
               <img
                 src={avatarSrc}
                 alt="author-avatar"
                 className="author-avatar"
-                onError={handleImageError}
+                onError={(e) => {
+                  
+                  e.currentTarget.style.display = "none";
+                  const fallback = e.currentTarget.nextElementSibling;
+                  if (fallback) fallback.style.display = "flex";
+                }}
               />
-              <div className="avatar-fallback">
+              {/* fallback circle (hidden by default, shown only if image fails) */}
+              <div
+                className="avatar-fallback"
+                style={{ display: "none" }}
+              >
                 <BsPersonCircle size={48} color="#b3b3b3" />
               </div>
             </div>
@@ -64,6 +74,7 @@ const RecentEntriesCard = ({
               <BsPersonCircle size={48} color="#b3b3b3" />
             </div>
           )}
+
           <div className="author-details">
             <p className="blog-author">{author}</p>
             <p className="date">{date}</p>

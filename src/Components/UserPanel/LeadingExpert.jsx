@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-// Country → Currency mapping
 const countryToCurrencyMap = {
   IN: "INR",
   US: "USD",
@@ -42,11 +41,12 @@ const LeadingExpert = () => {
   const [currency, setCurrency] = useState("INR");
   const [country, setCountry] = useState("IN");
   const [fxFromUSD, setFxFromUSD] = useState(1);
+
   const locale = Intl.DateTimeFormat().resolvedOptions().locale || "en-US";
   const fmt = (n) =>
     (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  // ✅ Fetch Courses and Corporate Course Data
+  // ✅ Fetch Corporate Courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -74,6 +74,7 @@ const LeadingExpert = () => {
               ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
               : "",
             id: matchedCourse ? matchedCourse.id : Math.random(),
+            amount: matchedCourse ? matchedCourse.amount : 0,
           };
         });
 
@@ -103,7 +104,7 @@ const LeadingExpert = () => {
     })();
   }, []);
 
-  // ✅ Detect Country and Currency
+  // ✅ Detect Country & Currency (like Trending.jsx)
   useEffect(() => {
     (async () => {
       try {
@@ -146,13 +147,13 @@ const LeadingExpert = () => {
     })();
   }, []);
 
-  // ✅ Pagination Controls
+  // ✅ Pagination
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
 
-  // ✅ Discount + Countdown Helpers
+  // ✅ Discount Logic
   const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
 
   const inWindow = (start, end) => {
@@ -244,7 +245,7 @@ const LeadingExpert = () => {
     return end.endOf("day").toDate();
   };
 
-  // ✅ Countdown Timer for Discount Expiry
+  // ✅ Countdown for Discounts
   useEffect(() => {
     let stopped = false;
     const compute = () => {
@@ -310,22 +311,27 @@ const LeadingExpert = () => {
         ) : courseCards.length > 0 ? (
           courseCards
             .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
-            .map((course, index) => (
-              <CourseCard
-                key={index}
-                heading={course.courseName}
-                image={course.image}
-                level={course.level}
-                onClick={() => handleCardClick(course)}
-                discountPercentage={getRuleDiscountPct(
-                  course.courseName,
-                  country
-                )}
-                amount={`${currency} ${fmt(course.amount || 0)}`}
-                totalAmount={`${fmt(course.amount || 0)}`}
-                timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
-              />
-            ))
+            .map((course, index) => {
+              const priceInCurrency = (course.amount / fxFromUSD).toFixed(2);
+              return (
+                <CourseCard
+                  key={index}
+                  heading={course.courseName}
+                  image={course.image}
+                  level={course.level}
+                  onClick={() => handleCardClick(course)}
+                  discountPercentage={getRuleDiscountPct(
+                    course.courseName,
+                    country
+                  )}
+                  amount={`${currency} ${fmt(priceInCurrency)}`}
+                  totalAmount={`${fmt(course.amount || 0)}`}
+                  timeLeftLabel={
+                    countdowns[course.id ?? course.courseName] || ""
+                  }
+                />
+              );
+            })
         ) : (
           <p>No corporate courses available.</p>
         )}

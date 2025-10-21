@@ -16,11 +16,13 @@
 
 // export default CorporateBanner;
 
-import React from "react";
+import React, { useState } from "react";
 import './Corporate.css';
 import CorporatePeople from "../../Assets/corporate1.webp";
+import CorporateTrainingForm from "./CorporateTrainingForm";
 
-const CorporateBanner = ({ onContactUsClick }) => {
+const CorporateBanner = () => {
+  const [showPopup, setShowPopup] = useState(false);
   return (
     <div className="home-background">
     <div className="corporate-training-banner container">
@@ -32,7 +34,7 @@ const CorporateBanner = ({ onContactUsClick }) => {
                Empower your workforce with expert-led online IT training and upskilling programs in Cloud, Data Science, AI, and Digital Transformation. Boost productivity, drive innovation, and build a future-ready business
               </p>
               <div className="button-row">
-                <button className="home-start-button"  onClick={onContactUsClick}>Get Free Consultation</button>
+                <button className="home-start-button"  onClick={() => setShowPopup(true)}>Get Free Consultation</button>
               </div>
             </div>
             <img
@@ -42,6 +44,7 @@ const CorporateBanner = ({ onContactUsClick }) => {
               fetchpriority="high"
             />
           </div>
+          {showPopup && <CorporateTrainingForm onClose={() => setShowPopup(false)} />}
             </div>
   );
 };

@@ -16,6 +16,7 @@ import { FaChildren } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa6";
 import { CgPathFront } from "react-icons/cg";
 import { RiImageAddFill } from "react-icons/ri";
+import { FaQuestion } from "react-icons/fa";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -41,6 +42,7 @@ const menuItems = [
   { title: 'Reports', icon: <IoNewspaperOutline /> },
   { title: 'Schedule Request', icon: <BiSolidBookContent /> },
   { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
+  { title: 'General FAQ', icon: <FaQuestion /> },
   { title: 'Upload Images', icon: <RiImageAddFill /> },
   { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },

@@ -8,17 +8,29 @@ const RecentEntries = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get("https://api.test.hachion.co/blog");
-        setBlogs(response.data.reverse()); 
+
+        const mappedBlogs = response.data.map((blog) => ({
+          ...blog,
+          avatar: blog.authorImage
+            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`
+            : "", 
+          blog_image: blog.blog_image
+            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            : "",
+        }));
+
+        setBlogs(mappedBlogs.reverse());
       } catch (error) {
         console.error("Error fetching blog data:", error);
       }
     };
     fetchBlogs();
   }, []);
+
   const visibleBlogs = blogs.slice(0, 8);
   return (
     <div className="training-events container">

@@ -22,6 +22,7 @@ import Jobs from './Jobs';
 import StudentInterests from './StudentInterests';
 import AdminUploadImage from './AdminUploadImage';
 import AdminDiscount from './AdminDiscount';
+import GeneralFaq from './GeneralFaq';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -40,6 +41,7 @@ const componentMap = {
   'Reports': <Reports />,
   'Schedule Request': <ScheduleRequest />,
   'Blog': <Blogs />,
+  'General FAQ': <GeneralFaq />,
   'Upload Images': <AdminUploadImage />,
   'Other': <Other />,
   'Discount Courses': <AdminDiscount />,

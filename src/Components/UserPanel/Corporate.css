@@ -111,35 +111,22 @@ width: 100px;
 }
 
 .customize-training{
-display: flex;
- align-items: center;
- justify-content: center;
-  gap: 3vh;
+    align-items: stretch;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
 }
-.customize-training-div{
-  width: 35%;
-  border-radius: 20px;
-  background-color: #fff;
-  box-shadow:5px 5px 5px #d3d3d3;
+.customize-training-card{
+  align-items: center;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+}
 
-}
-.customize-training-div img{
- padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 90%;
-  height: auto;
-}
-.customize-training-div-content{
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  color:#00AEEF;
-}
-.customize-training{
-  display: flex;
-  flex-direction: row;
-}
 .leading-expert-card {
   width: 240px;
   border-radius: 20px;
@@ -254,43 +241,28 @@ padding: 2vh;
   font-size: medium;
   margin-bottom: 5px;
 }
-
-.advisor {
-  background-image: url('../../Assets/Group\ 39810.png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 40px;
+.corporate-contact-background{
+background-image: url('../../Assets/corporatecontactbackground.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 40px 10px;
+}
+.corporate-contact-form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
 }
 
-.advisor-form {
- width: 80%;
- margin-left: 10vw;
-  border-radius: 20px;
-  background-color: white;
-}
 .enquiry-form{
   padding: 40px;
-}
-.advisor-head {
-  height: 100px;
-  border-radius: 20px 20px 0px 0px;
-  background: linear-gradient(#006489, #00AEEF, #006489);
-  color: white;
-  font-weight: 600;
-  font-size: 2rem;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.advisor-head p {
-  margin: 0;
-}
-
-.form-label {
-  font-weight: bold;
 }
 
 .required {
@@ -1005,10 +977,6 @@ position: relative;
   object-fit: fill;
 }
 .recent-entries-grid {
-  /* display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(4, 1fr);
-  margin: 10px; */
   display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -1020,22 +988,9 @@ position: relative;
 }
 .workshop-card-image {
   flex: 1;
-  /* width: 100%; */
-  /* aspect-ratio: 9 / 5; */
   object-fit:fill;
 }
 .recent-blog-card {
-  /* width: 350px; */
-  /* flex: 0 0 auto;
-  margin: 10px;
-  background-color: #FBFBFB;
-  border: 1px solid #E9E9E9;
-  box-shadow: 5px 5px 5px #d3d3d3;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  border-radius: 16px;
-  padding: 8px; */
     box-sizing: border-box;
     cursor: pointer;
     justify-items: flex-start;
@@ -1386,12 +1341,7 @@ position: relative;
       width: 85vw;
       margin-left: 80px;
   }
-  .customize-training-div{
-      width: 40%;
-  }
-  .customize-training-div img{
-      padding: 10px;
-  }
+
   .leading-expert {
      max-width: 80%;
      margin-left: 10%;
@@ -1426,41 +1376,11 @@ position: relative;
   .training-img{
       height: 360px;
   }
-  .advisor-form{
-      margin:10px;
-  }
   
-  .form-select{
-      margin-left: 0px;
-  }
   .row .col-md-6 {
       margin-bottom: 10px;
   }
 
-  /* .custom-next-icon{
-      margin-right: -150px;
-  }
-  .custom-prev-icon{
-    margin-left: -150px;
-} */
-
-  #advisor1{
-  
-      width: 400px !important;
-  }
-  .advisor-row{
-      gap: 10px !important;
-  }
-  #advisor2{
-      width: 220px !important;
-  }
-  #advisor3{
-      height: 120px;
-      width: 800px !important;
-  }
-  .advisor-form{
-      width: 95%;
-  }
 }
 
 @media (max-width: 1179px){
@@ -1577,6 +1497,9 @@ position: relative;
 }
 
 @media (max-width: 767px) {
+    .customize-training{
+    grid-template-columns: repeat(1, 1fr);
+  }
   .blogs-container {
       grid-template-columns: repeat(3, 1fr); 
     }
@@ -1631,6 +1554,17 @@ position: relative;
   padding: 15px;
   width: 100%;
 }
+.corporate-contact-background{
+    padding: 30px 15px;
+}
+.corporate-contact-form{
+   align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        justify-content: center;
+        padding: 15px 5px;
+}
 }
 
 @media (max-width: 1179px){
@@ -1645,27 +1579,6 @@ position: relative;
       margin-right: 10%;
   }
 
-  .customize-training {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
-  }
-
-.customize-training-div{
-  width: 45%;
-  height: 250px;
-  align-items: center;
-  justify-items: center;
-}
-.customize-training-div img{
-  padding: 10px;
-  width: auto;
-  height: 200px;
- 
-}
-
 .leading-expert {
  max-width: 80%;
  margin-left: 10%;
@@ -1679,13 +1592,6 @@ position: relative;
   width: 80%;
 }
 
-.advisor-form{
-  margin:10px;
-}
-
-.form-select{
-  margin-left: 0px;
-}
 .row .col-md-6 {
   margin-bottom: 10px;
 }
@@ -2133,16 +2039,6 @@ position: relative;
       border-radius: 5px;
   }
 
-  /* Talk to our advisor form */
-  .advisor-form{
-      margin: 20px;
-      width: auto;
-  }
-  .advisor{
-      padding: 5px;
-      margin-top: 20px;
-  }
-
   .enquiry-form{
       /* padding: 5px; */
       padding-top: 10px;
@@ -2151,36 +2047,6 @@ position: relative;
       padding-left: 5%;
       padding-right: 5%;
   }
-
-  .advisor-head {
-      height: 60px;
-      border-radius: 10px 10px 0px 0px;
-      font-size: 16px;
-      width: auto;
-  }
-
-  #advisor1.form-control-advisor{
-      height: 35px !important;
-      width: 280px !important;
-      border-color: #b3b3b3;
-      font-size: 12px;
-      margin: 5px;
-  }
-
-  #advisor1.form-select{
-      height: 35px !important;
-      width: 280px !important;
-      border-color: #b3b3b3;
-      margin-left: 10px;
-      font-size: 12px;
-      margin: 5px;
-  }
-
-  .advisor-row {
-      flex-direction: column !important;
-      gap: 0px !important;
-    }
-
     .country-code-dropdown {
       font-size: 12px;
       height: 30px !important;
@@ -2192,22 +2058,6 @@ position: relative;
       width: 18px;
       margin-right: 3px;
     }
-
-  #advisor2.mobile-number{
-      width: 180px !important;
-      height: 35px;
-      border-radius: 0px 5px 5px 0px;
-      border-color: #b3b3b3;
-      font-size: 12px;
-      margin-bottom: 0px;
-  }
-  #advisor3.form-control-advisor{
-      height: 80px;
-      width: 280px !important;
-      font-size: 12px;
-      border-color: #b3b3b3;
-      margin: 5px;
-  }
 
   .submit-btn {
       padding: 10px;
@@ -2235,30 +2085,6 @@ position: relative;
       margin-bottom: 5px;
       }
 
-  .customize-training{
-      flex-direction: column;
-      gap: 5px;
-  }
-  .customize-training-div{
-      width: 350px;
-      max-width: 100%;
-      border-radius: 10px;
-      /* margin-left: 10px; */
-      padding: 5px;
-      margin-bottom: 10px;
-  }
-  .customize-training-div img{
-      width: 330px;
-      max-width: 90%;
-      margin-left: 10px;
-      padding: 5px;
-      margin-bottom: 10px;
-  }
-
-  .customize-training-div-content{
-      font-size: 16px;
-      margin-bottom: 10px;
-  }
   /* Corporate training features */          
    .customized-content {
        height: auto;
@@ -2333,23 +2159,6 @@ position: relative;
   
 }
 
-#advisor1{
-  display: flex;
-  justify-content: center;
-  height: 50px !important;
-  width: 450px !important;
-  border-radius: 5px;
-  outline: none;
-  border: 1px solid #b3b3b3;
-  padding: 5px;
-}
-.advisor-row{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  /* gap: 50px !important; */
-}
-
 .country-code-dropdown {
   display: flex;
   align-items: center;
@@ -2367,25 +2176,6 @@ position: relative;
   margin-right: 5px;
 }
 
-#advisor2{
-  width: 330px !important;
-  height: 50px;
-  border-radius: 0 5px 5px 0;
-  outline: none;
-  border: 1px solid #b3b3b3;
-  padding: 5px;
-}
-#advisor3{
-  display: flex;
-  justify-content: center;
-  height: 120px;
-  width: 100% !important;
-  max-width: 1100px;
-  border-radius: 5px;
-  outline: none;
-  border: 1px solid #b3b3b3;
-  padding: 5px;
-}
 .center-wrapper {
   display: flex;
   flex-direction: row;
@@ -2399,24 +2189,6 @@ position: relative;
   }
 
 @media (max-width:1179px){
-  
-  #advisor1{
-      
-      width: 300px !important;
-  }
-  .advisor-row{
-      gap: 10px !important;
-  }
-  #advisor2{
-      width: 180px !important;
-  }
-  #advisor3{
-      height: 120px;
-      width: 100% !important;
-  }
-  .advisor-form{
-      width: 98%;
-  }
   .training-events-head{
     margin-top: 40px;
     margin-left: 10%;

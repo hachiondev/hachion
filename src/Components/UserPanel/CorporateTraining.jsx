@@ -10,14 +10,15 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 import CorporateTrainingFeature from './CorporateTrainingFeature';
 import Learners from './Learners';
-import Advisor from './Advisor';
 import { FaArrowUp } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import HomeFaq from './HomeFaq';
+import CorporateContactUs from './CorporateContactUs';
 
 const CorporateTraining = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const advisorRef = useRef(null); // Create a ref for Advisor
-  const scrollToAdvisor = () => {
+  const scrollToCorporateTrainingForm = () => {
     if (advisorRef.current) {
       advisorRef.current.scrollIntoView({ behavior: 'smooth' }); // Scroll to Advisor section smoothly
     }
@@ -45,9 +46,9 @@ const CorporateTraining = () => {
     const location = useLocation();
 
 useEffect(() => {
-  if (location.state?.scrollToAdvisor) {
+  if (location.state?.scrollToCorporateTrainingForm) {
     setTimeout(() => {
-      scrollToAdvisor();
+      scrollToCorporateTrainingForm();
     }, 100);
   }
 }, [location.state]);
@@ -57,16 +58,18 @@ useEffect(() => {
       <Topbar />
       <div className='corporate-training'>
         <NavbarTop />
-        <CorporateBanner onContactUsClick={scrollToAdvisor} /> {/* Pass the scroll function as a prop */}
+        <CorporateBanner onContactUsClick={scrollToCorporateTrainingForm} /> {/* Pass the scroll function as a prop */}
         <Association />
         <CorporateTrainingFeature />
         {/* <Hachion /> */}
         <LeadingExpert />
         <CustomizeTraining />
         <Learners page="home"/>
-        <div ref={advisorRef}>
-          <Advisor /> {/* Set the ref to Advisor component */}
-        </div>
+        <CorporateContactUs/>
+        <HomeFaq/>
+        {/* <div ref={advisorRef}>
+          <CorporateTrainingForm />
+        </div> */}
       </div>
       <Footer />
 

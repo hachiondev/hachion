@@ -1889,6 +1889,7 @@ margin: 10px 0;
 .submit-button{
   background-color: #00AEEF;
   color: white;
+  font-weight: 600;
   padding: 10px 20px;
   width: 100%;
   height: 48px;

@@ -277,7 +277,7 @@ const validateForm = () => {
               <div className="instructor-fields">
                 <div>
                 <label className="login-label">
-                Linked Profile (Optional)<span className="star">*</span>
+                Linked Profile (Optional)
               </label>
               <div className="register-field">
                 <div className="password-field">

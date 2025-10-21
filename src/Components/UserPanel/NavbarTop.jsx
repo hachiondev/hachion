@@ -460,10 +460,10 @@ useEffect(() => {
             {!isLoggedIn ? (
               <>
                 <button className="btn btn-outline-info rounded-pill px-3 text-nowrap">
-                  <Link to="/login" className="btn btn-sm text-nowrap login-btn-link">Log in</Link>
+                  <Link to="/login" className="btn btn-sm text-nowrap fw-bold login-btn-link">Log in</Link>
                 </button>
                 <button className="btn btn-info rounded-pill px-3 text-white text-nowrap">
-                  <Link to="/register" className="btn btn-sm text-white text-nowrap">Sign up</Link>
+                  <Link to="/register" className="btn btn-sm text-white fw-bold text-nowrap">Sign up</Link>
                 </button>
               </>
             ) : (
@@ -573,10 +573,10 @@ useEffect(() => {
                 Corporate Training
               </div>
               <button className="btn btn-outline-info rounded-pill w-100">
-                <Link to="/login" className="btn btn-sm text-nowrap login-btn-link">Log in</Link>
+                <Link to="/login" className="btn btn-sm text-nowrap fw-bold login-btn-link">Log in</Link>
               </button>
               <button className="btn btn-info rounded-pill w-100 text-white">
-                <Link to="/register" className="btn btn-sm text-white text-nowrap">Sign up</Link>
+                <Link to="/register" className="btn btn-sm text-white fw-bold text-nowrap">Sign up</Link>
               </button>
             </div>
           )}

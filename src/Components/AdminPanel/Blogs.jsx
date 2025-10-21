@@ -43,7 +43,7 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    id: "", category_name: "", title: "", author: "", author_image: "",
+    id: "", category_name: "", title: "", author: "", authorImage: "",
     blog_image: "", blog_pdf: "", description: "",
     date: new Date().toISOString().split('T')[0],
     meta_title: "", meta_keyword: "", meta_description: "" });
@@ -89,7 +89,7 @@ const Blogs = () => {
   };
   const handleReset = () => {
     setFormData({
-      id: "", category_name: "", title: "", author: "",author_image: "",
+      id: "", category_name: "", title: "", author: "",authorImage: "",
       blog_image: "", blog_pdf: "", description: "",
       date: new Date().toISOString().split('T')[0],
       meta_title: "", meta_keyword: "", meta_description: ""
@@ -101,7 +101,6 @@ const Blogs = () => {
       category_name: formData.category_name,
       title: formData.title,
       author: formData.author,
-      author_image: formData.author_image,
       description: formData.description,
       date: formData.date,
       meta_keyword: formData.meta_keyword,
@@ -110,6 +109,7 @@ const Blogs = () => {
     });
     const formDataToSend = new FormData();
     formDataToSend.append("blogData", blogPayload);
+    if (formData.authorImage) formDataToSend.append("authorImage", formData.authorImage);
     if (formData.blog_image) formDataToSend.append("blogImage", formData.blog_image);
     if (formData.blog_pdf) formDataToSend.append("blogPdf", formData.blog_pdf);
     try {
@@ -158,7 +158,6 @@ const Blogs = () => {
         category_name: blog.category_name || '',
         title: blog.title || '',
         author: blog.author || '',
-        author_image: '',
         description: blog.description || '',
         blog_image: '',
         blog_pdf: '',
@@ -259,7 +258,7 @@ const Blogs = () => {
                   <label className="form-label">Author Image</label>
                   <input
                     type="file"
-                    name="author_image"
+                    name="authorImage"
                     accept="image/*"
                     className="form-control"
                     onChange={handleFileChange}
@@ -445,8 +444,8 @@ const Blogs = () => {
                         />
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {blog.author_image ? (
-                          <img src={`https://api.test.hachion.co/blogs/${blog.author_image}`} alt="Author" width="50" />
+                        {blog.authorImage ? (
+                          <img src={`https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" />
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="center">{blog.author}</StyledTableCell>

@@ -44,7 +44,7 @@ const Topbar = () => {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="d-flex align-items-center text-decoration-none text-white me-3"
+            className="d-flex align-items-center text-decoration-underline text-white me-3"
             aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
           >
             <FaPhone className="me-1 topbar-icon text-white" />
@@ -55,7 +55,7 @@ const Topbar = () => {
             href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
             target="_blank"
             rel="noopener noreferrer"
-            className="d-flex align-items-center text-decoration-none text-white"
+            className="d-flex align-items-center text-decoration-underline text-white"
             aria-label="Send an email to trainings@hachion.co using Gmail"
           >
             <IoIosMail className="me-1 topbar-icon text-white" />
@@ -67,7 +67,7 @@ const Topbar = () => {
         <div className="d-none d-md-block">
           <Link
             to="/corporate"
-            className="btn btn-md text-white text-nowrap"
+            className="btn btn-md text-white text-decoration-underline text-nowrap "
           >
             Corporate Training
           </Link>

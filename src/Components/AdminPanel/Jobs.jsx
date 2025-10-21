@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Admin.css';
 import AdminPostJob from './AdminPostJob';
 import AdminApplyJobs from './AdminApplyJobs';
+import AdminInstructorJobs from './AdminInstructorJobs';
 export default function Jobs() {
   const [activeTab, setActiveTab] = useState('adminPostJob');
   const handleTabChange = (tab) => {
@@ -23,9 +24,16 @@ export default function Jobs() {
         >
           Applied Jobs
         </div>
+        <div 
+          className={`tab-item ${activeTab === 'adminInstructorJobs' ? 'active-tab' : ''}`}
+          onClick={() => handleTabChange('adminInstructorJobs')}
+        >
+          Instructor Applied Jobs
+        </div>
       </div>
       {activeTab==='adminPostJob' &&  <AdminPostJob/>}
       {activeTab==='adminApplyJobs' &&  <AdminApplyJobs/>}
+      {activeTab==='adminInstructorJobs' &&  <AdminInstructorJobs/>}
     </>
   );
 }

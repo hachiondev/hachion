@@ -137,7 +137,7 @@ padding: 5px;
 border-radius:5px;
 background-color: rgba(0, 174, 239, 1);
 color:white;
-font-weight: 700;
+font-weight: 600;
 font-size:1.1rem;
 border:none;
 margin-left: 250px;
@@ -686,6 +686,9 @@ background-color:#F7F7F7;
     text-align: left;
     padding: 10px 20px;
       }
+       .home-title-text span{
+    color: #00AEEF;
+      }
     .key-title-text{
     color: #3D3D3D;
     font-size: 18px;
@@ -943,7 +946,7 @@ position: relative;
   border-radius: 50px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .faq-button:hover {
@@ -974,7 +977,7 @@ color: #00AEEF;
     background-color: #00AEEF;
     color: #ffffff;
     font-size: medium;
-    font-weight: 500;
+    font-weight: 600;
     padding: 5px 30px;
     border-radius: 50px;
     border: 2px solid #00AEEF;
@@ -985,7 +988,7 @@ color: #00AEEF;
         background-color: #00AEEF;
         color: #ffffff;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 30px;
         border-radius: 50px;
         border: 2px solid #00AEEF;
@@ -996,7 +999,7 @@ color: #00AEEF;
   .home-browse-button{
         color: #6D6D6D;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 10px;
         margin: 20px 20px 5px;
         white-space: nowrap;
@@ -1036,7 +1039,7 @@ color: #00AEEF;
         background-color: #fff;
         color: #00AEEF;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 30px;
         border-radius: 50px;
         border: 2px solid #00AEEF;
@@ -1051,7 +1054,7 @@ color: #00AEEF;
         background-color: #00AEEF;
         color: #ffffff;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 30px;
         border-radius: 50px;
         border: 2px solid #00AEEF;
@@ -2532,12 +2535,6 @@ height: 45px;
   left: 40%; /* Center horizontally */
 }
 
-.coupon-btn, .register-now-btn {
-  font-size: 1rem; /* Adjust button font size for smaller screens */
-  padding: 5px 10px;
-  margin-bottom: -30px;
-}
-
   .footer-p {
     display: flex;
     flex-direction: column;
@@ -3005,7 +3002,7 @@ flex: 0 0 100%;
         background-color: #fff;
         color: #00AEEF;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 30px;
         border-radius: 50px;
         border: 2px solid #00AEEF;
@@ -3017,7 +3014,7 @@ flex: 0 0 100%;
       background-color: #00AEEF;
         color: #ffffff;
         font-size: medium;
-        font-weight: 500;
+        font-weight: 600;
         padding: 5px 30px;
         border-radius: 50px;
         border: none;

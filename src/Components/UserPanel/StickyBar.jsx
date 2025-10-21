@@ -71,7 +71,7 @@ const StickyBar = () => {
               aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
             >
               <img src={whatsapp} alt="whatsapp-icon" className="whatsapp-icon" aria-hidden="true"/>
-              <p className="whatsapp-number-footer">{whatsappNumber}</p>
+              <p className="text-decoration-underline whatsapp-number-footer">{whatsappNumber}</p>
             </a>
           </div>
 

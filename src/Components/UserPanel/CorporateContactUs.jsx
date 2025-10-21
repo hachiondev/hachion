@@ -1,20 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import contactUsBanner from "../../Assets/contactbanner.webp";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import Usa from "../../Assets/usa.webp";
 import "./Blogs.css";
-import india from "../../Assets/india.webp";
-import dubai from "../../Assets/dubai.webp";
-import ContactForm from "../../Assets/contact1.webp";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
+import CorporateContactForm from "../../Assets/corporate3.webp";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
 import axios from "axios";
-import { TbSlashes } from "react-icons/tb";
 
 const initialValues = {
   name: "",
@@ -31,6 +21,7 @@ const ContactUs = () => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
+  const [company, setCompany] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     code: "+1",
     flag: "US",
@@ -40,27 +31,7 @@ const ContactUs = () => {
     const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
-   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
   
-    useEffect(() => {
-    // Detect user country and set phone number accordingly
-    const detectUserCountry = async () => {
-      try {
-        const res = await fetch("https://ipwho.is/");
-        if (!res.ok) throw new Error("Failed to fetch location data");
-
-        const data = await res.json();
-        if (data.country_code === "IN") {
-          setContactNumber("+91 94903 23388");
-        } else {
-          setContactNumber("+1 (732) 485-2499");
-        }
-      } catch (error) {
-        setContactNumber("+1 (732) 485-2499");
-      }
-    };
-    detectUserCountry();
-  }, []);
   useEffect(() => {
     window.scrollTo(0, 0); 
     
@@ -126,7 +97,7 @@ const ContactUs = () => {
     };
   
     try {
-      const response = await axios.post("https://api.test.hachion.co/haveanyquery/add", requestData, {
+      const response = await axios.post("https://api.test.hachion.co/advisors/add", requestData, {
         headers: { "Content-Type": "application/json" }
       });
   
@@ -178,43 +149,18 @@ const ContactUs = () => {
     handleSubmit,
   } = formik;
   
-    const officeLocations = [
-      {
-        name: "Texas, USA",
-        country: Usa
-      },
-      {
-        name: "Hyderabad, India",
-        country: india
-      },
-      {
-        name: "Dubai, UAE",
-        country: dubai
-      }
-    ];
   return (
     <>
-      <Topbar />
-      <NavbarTop />
-
-        <div className="contact-banner container">
-                <h1 className="instructor-profile-title">Contact Us</h1>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="instructor-breadcrumb-item">
-                      <a href="/">Home</a> <TbSlashes color="#00aeef" />
-                    </li>
-                    <li className="instructor-breadcrumb-item active" aria-current="page">
-                      Contact Us
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-
-        <div className="home-banner container">
+        <div className="corporate-contact-background">
+        <div className="corporate-contact-form container">
+                <img
+                    className="contact-form-image"
+                    src={CorporateContactForm}
+                    alt="Corporate Contact Form"
+                    fetchpriority="high"
+                  />
           <div className="home-content">
-            <h3 className="contact-title">Let’s talk.</h3>
-             <p className="contact-mail-data">Leave us a note here, or give us a call at {contactNumber}.</p>
+            <h3 className="contact-title">Contact With Us</h3>
             <form className="contact-form">
               {/* <div class="mb-3"> */}
                 <label for="exampleFormControlInput1" class="form-label">
@@ -235,7 +181,7 @@ const ContactUs = () => {
               </div>
               {/* <div class="mb-3"> */}
                 <label for="exampleFormControlInput1" class="form-label">
-                  Email Id<span className="star">*</span>
+                  Work Email<span className="star">*</span>
                 </label>
                 <div className="register-field">
                 <div className="form-field">
@@ -267,24 +213,24 @@ const ContactUs = () => {
                         />
                       </div>
                       </div>
-              {/* <div class="mb-3"> */}
-                <label for="exampleFormControlTextarea1" class="form-label">
-                  Tell us about your idea<span className="star">*</span>
-                </label>
-                <div className="register-field">
-                <div className="form-field">
-                <textarea
-                  className="form-control"
-                  placeholder="Type your Idea...."
-                  rows={5}
-                  name="comment"
-                  value={values.comment}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+              <div>
+              <label className="login-label">
+                Company Name<span className="star">*</span>
+              </label>
+              <div className="register-field">
+                <div className="password-field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter your Company Name"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </div>
+                {errors.company && <p className="error-field-message">{errors.company}</p>}
               </div>
-              </div>
-              {/* </div> */}
+            </div>
+  
               <div class="mb-3">
               {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
@@ -293,7 +239,7 @@ const ContactUs = () => {
                   class="submit-button"
                   onClick={handleFormSubmit}
                 >
-                  Send
+                  Submit
                 </button>
                 
                 {/* Error message display */}
@@ -307,7 +253,7 @@ const ContactUs = () => {
                     onChange={handleCheckboxChange}
                   />
                   <label class="form-check-label" for="flexCheckChecked">
-                    By clicking on Send, you acknowledge read our{" "}
+                    By clicking on Submit, you acknowledge read our{" "}
                     <span
                       onClick={handlePrivacy}
                       style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
@@ -325,78 +271,8 @@ const ContactUs = () => {
               </div>
             </form>
             </div>
-
-            <img
-                    className="contact-form-image"
-                    src={ContactForm}
-                    alt="Contact Form"
-                    fetchpriority="high"
-                  />
-        </div>
-          <div className="contact-us-all">
-          <div className="container">
-        <h2 className="trending-title">Our offices</h2>
-        <div className="contact-us">
-        {officeLocations.map((loc, i) => (
-  <div className="contact-us-div" key={i}>
-    <div className="contact-us-box">
-      <img src={loc.country} alt={`${loc.name} country`} className="contact-address" loading="lazy"/>
-      <div className="office-location">
-        <h3 className="trending-title">{loc.name}</h3>
-        {/* <p>{loc.address}</p> */}
-      </div>
     </div>
-  </div>
-))}
-  </div>
-    </div>
-
-    <div className="instructor-banner container">
-          <div className="home-content">
-            <h3 className="contact-title">For Others</h3>
-            {["University/college associations", "Media queries", "Fest sponsorships", "For everything else"].map(
-              (title, i) => (
-                <div key={i}>
-                  <h4 className="contact-title">
-                    <span>{title}</span>
-                  </h4>
-                  <p className="contact-mail-data">
-                    Email us : 
-                    <span>
-                      <a
-                        href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        trainings@hachion.co
-                      </a>
-                    </span>
-                  </p>
-                </div>
-              )
-            )}
-          </div>
-    
-          <div className="home-content">
-            <h3 className="contact-title">Address</h3>
-            <div className="contact-block">
-            <h3 className="contact-title-text">Head Office:<span> Texas, USA</span></h3>
-            <p className="contact-title-text"><span>Hachion 601 Voyage Trce Leander Texas 78641</span></p>
-            </div>
-            <div className="contact-block">
-            <h3 className="contact-title-text">India Office:<span> Hyderabad, India</span></h3>
-            <p className="contact-title-text"><span>Hachion GP Rao Enclaves, 301, 3rd floor Road No 3</span></p>
-            <p className="contact-title-text"><span>KPHB colony, Hyderabad 500072.</span></p>
-            </div>
-            <div className="contact-block">
-            <h3 className="contact-title-text">Dubai Office:<span> Dubai, UAE</span></h3>
-            <p className="contact-title-text"><span>Sports City Dubai UAE</span></p>
-            </div>
-        </div>
-        </div>
-      </div>
-      <Footer />
-      <StickyBar />
+</div>
     </>
   );
 };

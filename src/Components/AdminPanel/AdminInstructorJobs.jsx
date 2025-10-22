@@ -17,6 +17,9 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
+const API_BASE = "https://api.test.hachion.co"; 
+
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -51,16 +54,36 @@ export default function AdminInstructorJobs() {
 const [deleteMessage, setDeleteMessage] = useState("");
 const [deleteError, setDeleteError] = useState("");
 
+
   useEffect(() => {
-    axios.get('https://api.test.hachion.co/instructor-job/getAll')
-      .then((response) => {
-        setJobData(response.data);
-        setFilteredData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching job applications:', error);
-      });
-  }, []);
+  axios.get(`${API_BASE}/instructor`)
+    .then((response) => {
+      
+      const normalized = (response.data || []).map(item => ({
+        jobId: item.id,                         
+        applyJobDetailsId: item.id,           
+        instructorName: item.name,
+        email: item.email,
+        mobileNumber: item.mobile,
+        location: item.location,
+        areaExpert: item.area,
+        exp: item.experience,
+        linkedin: item.link,
+        mode: item.mode,
+        skill: item.skill,
+        
+        resume: (item.resumePath || "").replace(/^resumes\//, ""),
+        comment: item.comment,
+        date: item.createdAt || item.updatedAt || new Date().toISOString(),
+      }));
+
+      setJobData(normalized);
+      setFilteredData(normalized);
+    })
+    .catch((error) => {
+      console.error('Error fetching instructor applications:', error);
+    });
+}, []);
 
   const searchedData = filteredData.filter((item) => {
     return (
@@ -96,7 +119,7 @@ const [deleteError, setDeleteError] = useState("");
   if (!confirmed) return;
 
   try {
-    await axios.delete(`https://api.test.hachion.co/instructor-job/delete/${id}`);
+    await axios.delete(`${API_BASE}/instructor/delete/${id}`);
     const updatedData = jobData.filter(item => item.applyJobDetailsId !== id);
     setJobData(updatedData);
     setFilteredData(updatedData);
@@ -192,7 +215,7 @@ const [deleteError, setDeleteError] = useState("");
                   <StyledTableCell align="left">
                     {row.resume ? (
                       <a
-                      href={`https://api.test.hachion.co/instructor-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`}
+                      href={`${API_BASE}/instructor/resumes/${encodeURIComponent(row.resume)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                   >

@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Dashboard.css';
-import { AiFillDashboard } from "react-icons/ai";
+import { RxDashboard } from "react-icons/rx";
 import { PiNotePencilBold } from "react-icons/pi";
 import { PiTrolleySuitcaseFill } from "react-icons/pi";
 import { FaIdCard } from "react-icons/fa6";
@@ -31,7 +31,7 @@ import UserPathfinder from './UserPathfinder';
 import { CgPathTrim } from "react-icons/cg";
 
   const menuItems = [
-    // { title: 'Dashboard', icon: <AiFillDashboard /> },
+    { title: 'Dashboard', icon: <RxDashboard  /> },
     { title: 'Enrolls', icon: <PiNotePencilBold /> },
     // { title: 'Orders', icon: <PiTrolleySuitcaseFill /> },
     // { title: 'Resume', icon: <FaIdCard /> },
@@ -80,8 +80,7 @@ useEffect(() => {
     }
   }, [section]);
 
-  const loginuserData = JSON.parse(localStorage.getItem('loginuserData'));
-const email = loginuserData?.email || ''; 
+   
 
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
@@ -92,8 +91,8 @@ const email = loginuserData?.email || '';
 
   const renderSelectedComponent = () => {
     switch (selectedCategory) {
-      // case 'Dashboard':
-      //   return <UserDashboardCard />;
+      case 'Dashboard':
+        return <UserDashboardCard />;
       // case 'Orders':
       //   return <UserOrders />;
       case 'Certificate':
@@ -127,12 +126,7 @@ const email = loginuserData?.email || '';
     <>
       <Topbar />
       <NavbarTop />
-
-      <div className="user-dashboard-heading">
-      <h3>Welcome {loginuserData?.name || 'User'}</h3>
-
-      </div>
-      <div className="user-dashboard">
+      <div className="user-dashboard container">
         {/* Sidebar with collapse functionality */}
         <div className={`sidebar-user ${isSidebarCollapsed ? 'collapsed' : ''}`}>
           <button className="toggle-sidebar-btn" onClick={toggleSidebar}>

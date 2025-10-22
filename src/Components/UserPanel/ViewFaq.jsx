@@ -5,7 +5,7 @@ import Time from "../../Assets/timeicon.png";
 import FaqBanner from "../../Assets/faq-banner.webp";
 import { Link } from "react-router-dom";
 import "./Home.css";
-import HelpFaq from "./HelpFaq";
+import HelpFaqAll from "./HelpFaqAll";
 import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
@@ -28,8 +28,10 @@ const ViewFaq = () => {
     <div className="home-faq-data container">
       {/* Left side content */}
       <div className="view-faq-content">
-        <HelpFaq />
+        {/* <HelpFaq /> */}
+        <HelpFaqAll />
         </div>
+
 
   <div className="faq-side">
     <h2>Didn’t Find What You’re Looking For?

@@ -829,6 +829,20 @@ useEffect(() => {
 
 <div className="course-row">
         <div class="col">
+    <label for="inputState" class="form-label">Student Rating</label>
+    <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
+  name="rating"
+  value={editedData.rating}
+  onChange={handleInputChange}/>
+  </div>
+  <div class="col">
+  <label for="exampleFormControlTextarea1" class="form-label">Location</label>
+  <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
+  name="location"
+  value={editedData.location}
+  onChange={handleInputChange}/>
+  </div>
+  <div class="col">
     <label for="inputState" class="form-label">Review Type</label>
     <select id="inputState" class="form-select"  name="reviewType"
   value={editedData.reviewType} onChange={handleInputChange}>
@@ -838,6 +852,16 @@ useEffect(() => {
   <option value="Both">Both</option>
     </select>
 </div>
+</div>
+
+<div className="course-row">
+    <div class="col">
+  <label for="exampleFormControlTextarea1" class="form-label">Video Review Link</label>
+  <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
+  name="videoLink"
+  value={editedData.videoLink}
+  onChange={handleInputChange}/>
+  </div>
   <div class="col">
   <label for="exampleFormControlTextarea1" class="form-label">Trainer</label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"

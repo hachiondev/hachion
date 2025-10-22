@@ -234,7 +234,7 @@ a:not([href]):not([class]) {
     border-radius: 20px;
     color: #00aeef;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     height: 38px;
     padding: 5px 15px;
     white-space: nowrap;
@@ -246,7 +246,6 @@ a:not([href]):not([class]) {
     border-radius: 20px;
     color: #00aeef;
     font-size: 14px;
-    font-weight: 500;
     height: 38px;
     padding: 5px 15px;
     white-space: nowrap;
@@ -761,7 +760,7 @@ white-space: wrap;
     border-radius: 50px;
     color: #fff;
     font-size: medium;
-    font-weight: 500;
+    font-weight: 600;
     height: 40px;
     padding: 3px 10px;
     width: 150px;

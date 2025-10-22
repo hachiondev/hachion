@@ -45,17 +45,40 @@ export default function AskFaq() {
   const [message, setMessage] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
-    const fetchAskFaq = async () => {
-      try {
-        const response = await axios.get("https://api.test.hachion.co/askfaq");
-        setAskFaq(response.data);
-        setFilteredData(response.data);
-      } catch (error) {
-        console.error("Error fetching course queries:", error);
-      }
-    };
-    fetchAskFaq();
-  }, []);
+  const fetchAskFaq = async () => {
+    try {
+      const { data } = await axios.get("https://api.test.hachion.co/faq-queries");
+
+      const normalized = (Array.isArray(data) ? data : []).map((x, idx) => {
+        let formattedDate = "";
+        if (x.date) {
+          const dateObj = new Date(x.date);
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const day = String(dateObj.getDate()).padStart(2, "0");
+          const year = dateObj.getFullYear();
+          formattedDate = `${month}-${day}-${year}`; 
+        }
+
+        return {
+          id: x.faqQueryId ?? idx,
+          name: x.name ?? "",
+          email: x.emailId ?? "",
+          message: x.message ?? "",
+          date: formattedDate,
+          studentId: "",
+        };
+      });
+
+      setAskFaq(normalized);
+      setFilteredData(normalized);
+    } catch (error) {
+      console.error("Error fetching course queries:", error);
+    }
+  };
+
+  fetchAskFaq();
+}, []);
+
   const searchedData = filteredData.filter((item) => {
   return (
     searchTerm === '' ||

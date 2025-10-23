@@ -1830,7 +1830,7 @@ width: calc(25% - 10px);
 max-width: 300px;
 max-height: 360px;
 box-sizing: border-box;
-border: 1px solid #E2E0DB !important;
+border: 1px solid #F1F1F3 !important;
 overflow: hidden !important; 
 box-shadow: 4px 8px 16px rgba(0,0,0,0.1);
 display: flex;
@@ -1841,6 +1841,7 @@ cursor: pointer;
 border-radius: 15px;
 padding:0 20px;
 padding-bottom: 20px;
+background-color: #FFFFFF;
 }
 .home-popup-card {
 width: calc(25% - 10px); 
@@ -1869,7 +1870,7 @@ box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
 .discount-card {
 width: 280px; 
 box-sizing: border-box;
-border: 1px solid #E2E0DB !important;
+border: 1px solid #F1F1F3 !important;
 overflow: hidden !important; 
 box-shadow: 4px 8px 16px rgba(0,0,0,0.1);
 display: flex;
@@ -1880,6 +1881,7 @@ cursor: pointer;
 border-radius: 15px;
 padding:0 20px;
 padding-bottom: 20px;
+background-color: #ffffff;
 }
 .new-batch-para{
 display: none;

@@ -7,6 +7,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import axios from "axios";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
+
 const CorporateTrainingForm = ({ onClose }) => {
   const popupRef = useRef();
 
@@ -19,12 +20,14 @@ const CorporateTrainingForm = ({ onClose }) => {
   const [comment, setComment] = useState("");
   const [courses, setCourses] = useState([]);
   const [errors, setErrors] = useState({});
+  const [mobileError, setMobileError] = useState("");
+const [mobileTouched, setMobileTouched] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const mobileInputRef = useRef(null);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Close popup on outside click
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -35,7 +38,6 @@ const CorporateTrainingForm = ({ onClose }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  // Auto-detect country
   useEffect(() => {
     fetch("https://ipwho.is/")
       .then((res) => res.json())
@@ -45,8 +47,8 @@ const CorporateTrainingForm = ({ onClose }) => {
       })
       .catch(() => {});
   }, []);
+const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
 
-  // Fetch courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -59,23 +61,74 @@ const CorporateTrainingForm = ({ onClose }) => {
     fetchCourses();
   }, []);
 
-  // Validation
-  const validateForm = () => {
-    const newErrors = {};
-    if (!name.trim()) newErrors.name = "Name is required.";
-    if (!email.trim()) newErrors.email = "Email is required.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Invalid email.";
-    if (!mobile.trim()) newErrors.mobile = "Mobile number is required.";
-    if (!company.trim()) newErrors.company = "Company name is required.";
-    if (!experience.trim()) newErrors.experience = "Please select number of people.";
-    if (!courseName.trim()) newErrors.courseName = "Please select a course.";
-    if (!comment.trim()) newErrors.comment = "Comment is required.";
-    else if (comment.trim().length < 10) newErrors.comment = "Comment must be at least 10 characters.";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+const handleMobileChange = (e) => {
+  const digits = onlyDigits(e.target.value);
+  setMobile(digits);
 
-  // Form submit
+  
+  setErrors((prev) => {
+    if (prev.mobile && digits.length === 10) {
+      const { mobile, ...rest } = prev;
+      return rest;
+    }
+    return prev;
+  });
+};
+
+const handleMobileBlur = () => {
+  const digits = onlyDigits(mobile);
+  setMobile(digits); 
+
+  if (digits.length !== 10) {
+    setErrors((prev) => ({ ...prev, mobile: "Please enter exactly 10 digits." }));
+  } else {
+    setErrors((prev) => {
+      const { mobile, ...rest } = prev;
+      return rest;
+    });
+  }
+};
+
+const validateForm = () => {
+  const newErrors = {};
+
+  if (!name.trim()) newErrors.name = "Name is required.";
+  if (!email.trim()) newErrors.email = "Email is required.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Invalid email.";
+
+  const mobileDigits = onlyDigits(mobile);
+  if (mobileDigits.length !== 10) newErrors.mobile = "Please enter exactly 10 digits.";
+
+  if (!company.trim()) newErrors.company = "Company name is required.";
+  if (!experience.trim()) newErrors.experience = "Please select number of people.";
+  if (!courseName.trim()) newErrors.courseName = "Please select a course.";
+  if (!comment.trim()) newErrors.comment = "Comment is required.";
+  else if (comment.trim().length < 10) newErrors.comment = "Comment must be at least 10 characters.";
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+  
+const formatMobileWithCode = (code, mobile) => {
+  const digits = String(mobile || "").trim().replace(/\s+/g, ""); 
+  const dial = String(code || "").trim(); 
+  return `${dial} ${digits}`;
+};
+
+const toIntFromRange = (val) => {
+  if (!val) return 0;
+  const v = String(val).trim();
+  if (v.endsWith("+")) return parseInt(v.slice(0, -1).trim(), 10) || 0;
+  if (v.includes("-")) {
+    const [a, b] = v.split("-").map(s => parseInt(s.trim(), 10) || 0);
+    return Math.max(a, b);
+  }
+  const n = parseInt(v, 10);
+  return Number.isNaN(n) ? 0 : n;
+};
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -83,7 +136,7 @@ const CorporateTrainingForm = ({ onClose }) => {
     const requestData = {
       fullName: name,
       emailId: email,
-      mobileNumber: mobile,
+      mobileNumber: formatMobileWithCode(selectedCountry?.code, mobile),
       companyName: company,
       trainingCourse: courseName,
       noOfPeople: experience,
@@ -97,7 +150,7 @@ const CorporateTrainingForm = ({ onClose }) => {
       });
       if (response.status === 200) {
         setSuccessMessage("Thank you! Our team will contact you soon.");
-        // Reset form
+        
         setName("");
         setEmail("");
         setMobile("");
@@ -193,16 +246,21 @@ const CorporateTrainingForm = ({ onClose }) => {
                       </MenuItem>
                     ))}
                   </Menu>
-                  <input
-                    type="tel"
-                    className="form-control"
-                    ref={mobileInputRef}
-                    value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
-                    placeholder="Enter your mobile number"
-                    style={{ paddingLeft: "120px", border: "none" }}
-                  />
-                </div>
+                 
+                  
+ <input
+  type="tel"
+  className="form-control"
+  ref={mobileInputRef}
+  value={mobile}
+  onChange={handleMobileChange}
+  onBlur={handleMobileBlur}
+  placeholder="Enter your mobile number"
+  style={{ paddingLeft: "120px", border: "none" }}
+  maxLength={10}
+  inputMode="numeric"
+  pattern="\d*"
+/>                </div>
                 {errors.mobile && <p className="error-field-message">{errors.mobile}</p>}
               </div>
             </div>

@@ -16,6 +16,20 @@ import activity from "../../Assets/dash-icon7.png";
 const UserDashboardCard = () => {
   const loginuserData = JSON.parse(localStorage.getItem('loginuserData'));
 const email = loginuserData?.email || '';
+
+const recentActivity = [
+    { img: cert, text: "Earned certificate in Web Development", time: "2 hours ago" },
+    { img: learn, text: "Submitted JavaScript Basics assignment", time: "1 day ago" },
+    { img: enroll, text: "Started new course: React Masterclass", time: "2 hours ago" },
+    { img: progress, text: "Reached 75% progress in Python course", time: "3 days ago" },
+  ];
+
+  const upcomingAssignments = [
+    { title: "React Project Final Submission", course: "Advanced React", urgency: "High", due: "Due in 2 days" },
+    { title: "Design System Case Study", course: "UI/UX Design", urgency: "Medium", due: "Due in 5 days" },
+    { title: "Database Schema Design", course: "Full Stack Dev", urgency: "Low", due: "Due in 1 week" },
+    { title: "React Project Final Submission", course: "Advanced React", urgency: "High", due: "Due in 2 days" },
+  ];
   return (
     <>
     <div className="user-dashboard-heading">
@@ -54,22 +68,59 @@ const email = loginuserData?.email || '';
           />
         </div>
         </div>
-      <div className='dashboard-card-row'>
-      <div className='dashboard-user-text'>
-      <div className='dashboard-activity'>
-        <img src={Learn} alt='Learning' />
-        <div className='dashboard-activity-heading'>Continue Learning</div>
-      </div>
-      <div className='dashboard-activity'>
-        <img src={activity} alt='activity' />
-        <div className='dashboard-activity-heading'>Recent Activity</div>
-      </div>
-      </div>
-      <div className='dashboard-activity'>
-        <img src={assignment} alt='assignment' />
-        <div className='dashboard-activity-heading'>Upcoming Assignments</div>
-      </div>
-      </div>
+      <div className='dashboard-activity-row'>
+          {/* Left column */}
+          <div className='dashboard-activity-column'>
+            {/* Continue Learning */}
+            <div className='dashboard-activity'>
+              <div className='dashboard-activity-title'>
+              <img src={Learn} alt='Learning' />
+              <div className='dashboard-activity-heading'>Continue Learning</div>
+            </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className='dashboard-activity recent-activity'>
+              <div className='dashboard-activity-title'>
+              <img src={activity} alt='activity' />
+              <div className='dashboard-activity-heading'>Recent Activity</div>
+              </div>
+              <ul className='activity-list'>
+                {recentActivity.map((item, index) => (
+                  <li key={index}>
+                  <div className='dashboard-activity-title'>
+                    <img src={item.img} alt='activity icon' className='activity-icon' />
+                    <div className='activity-info'>
+                    <p className='activity-text'>{item.text}</p>
+                    <span className='activity-time'>{item.time}</span>
+                  </div>
+                  </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+
+          {/* Right column */}
+          <div className='dashboard-assignment'>
+              <div className='dashboard-activity-title'>
+            <img src={assignment} alt='assignment' />
+            <div className='dashboard-activity-heading'>Upcoming Assignments</div>
+            </div>
+            <ul className='assignment-list'>
+              {upcomingAssignments.map((task, index) => (
+                <li key={index} className={`urgency-${task.urgency.toLowerCase()}`}>
+                  <p className='assignment-title'>{task.title}</p>
+                  <p className='assignment-course'>{task.course}</p>
+                  <p className='assignment-due'>
+                    <span className='urgency'>{task.urgency}</span> – {task.due}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </>
   );

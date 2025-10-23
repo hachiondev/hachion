@@ -29,10 +29,14 @@ import { TbBriefcaseFilled } from "react-icons/tb";
 import UserAppliedJobs from './UserAppliedJobs';
 import UserPathfinder from './UserPathfinder';
 import { CgPathTrim } from "react-icons/cg";
+import { CgMenuGridR } from "react-icons/cg";
+import { BsBookmarkHeart } from "react-icons/bs";
+import UserWishlist from './UserWishlist';
 
   const menuItems = [
     { title: 'Dashboard', icon: <RxDashboard  /> },
     { title: 'Enrolls', icon: <PiNotePencilBold /> },
+    { title: 'Wishlist', icon: <BsBookmarkHeart /> },
     // { title: 'Orders', icon: <PiTrolleySuitcaseFill /> },
     // { title: 'Resume', icon: <FaIdCard /> },
     { title: 'Certificate', icon: <PiCertificateBold/> },
@@ -45,51 +49,44 @@ import { CgPathTrim } from "react-icons/cg";
   ];
 
 const UserDashboard = () => {
-  const { section } = useParams();
-  const initialCategory = section || localStorage.getItem('selectedCategory') || 'Enrolls';
+  const { section } = useParams(); // Get section from URL params
+  const initialCategory = section || localStorage.getItem('selectedCategory') || 'Dashboard';
   const initialIndex = menuItems.findIndex(item => item.title === initialCategory);
 
-  const [dropdownOpen, setDropdownOpen] = useState({});
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  // --- State variables ---
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  
-  const toggleDropdown = (index) => {
-    setDropdownOpen((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
-  };
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 480);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-useEffect(() => {
-    if (section) {
-      const foundIndex = menuItems.findIndex(item => item.title === section);
-      if (foundIndex !== -1) {
-        setSelectedCategory(section);
-        setActiveIndex(foundIndex);
-      }
-    } else {
-      const storedCategory = localStorage.getItem('selectedCategory');
-      if (storedCategory) {
-        setSelectedCategory(storedCategory);
-        const foundIndex = menuItems.findIndex(item => item.title === storedCategory);
-        if (foundIndex !== -1) {
-          setActiveIndex(foundIndex);
-        }
-      }
-    }
+  // --- Handle window resize for mobile view ---
+  useEffect(() => {
+    const handleResize = () => setIsMobileView(window.innerWidth <= 480);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // --- Sync active menu on refresh or URL param change ---
+  useEffect(() => {
+    const category = section || localStorage.getItem('selectedCategory') || 'Dashboard';
+    setSelectedCategory(category);
+    const index = menuItems.findIndex(item => item.title === category);
+    setActiveIndex(index !== -1 ? index : 0);
   }, [section]);
 
-   
-
+  // --- Handle menu click ---
   const handleMenuItemClick = (index, title) => {
     setActiveIndex(index);
-    setSelectedCategory(title); 
-    localStorage.setItem('selectedCategory', title);
-    toggleDropdown(index);
+    setSelectedCategory(title);
+    localStorage.setItem('selectedCategory', title); // Persist selection
+    if (isMobileView) setIsSidebarOpen(false); // Close mobile sidebar on selection
   };
 
-  const renderSelectedComponent = () => {
+  // --- Toggle sidebar collapse ---
+  const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
+
+    const renderSelectedComponent = () => {
     switch (selectedCategory) {
       case 'Dashboard':
         return <UserDashboardCard />;
@@ -99,6 +96,8 @@ useEffect(() => {
         return <Certificate />;
       case 'Enrolls':
         return <UserCategoryTable />;
+      case 'Wishlist':
+        return <UserWishlist />;
       // case 'Messages':
       //   return <UserMessages />;
       case 'Applied Jobs':
@@ -118,26 +117,42 @@ useEffect(() => {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
   return (
     <>
       <Topbar />
       <NavbarTop />
+
+      {/* Mobile Menu Button */}
+      {isMobileView && (
+        <button className="home-start-button" onClick={() => setIsSidebarOpen(true)}>
+          <CgMenuGridR style={{ marginBottom: '3px' }} /> Menu
+        </button>
+      )}
+
       <div className="user-dashboard container">
-        {/* Sidebar with collapse functionality */}
-        <div className={`sidebar-user ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-          <button className="toggle-sidebar-btn" onClick={toggleSidebar}>
-            {isSidebarCollapsed ? <BiArrowToRight /> : <BiArrowToLeft />}
-          </button>
+        {/* Overlay for mobile sidebar */}
+        {isMobileView && isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)} />}
+
+        {/* Sidebar */}
+        <div className={`sidebar-user ${isSidebarCollapsed ? 'collapsed' : ''} ${isMobileView && isSidebarOpen ? 'open' : ''}`}>
+          {/* Sidebar collapse toggle button */}
+          {!isMobileView && (
+            <button className="toggle-sidebar-btn" onClick={toggleSidebar}>
+              {isSidebarCollapsed ? <BiArrowToRight /> : <BiArrowToLeft />}
+            </button>
+          )}
+
+          {/* Close button for mobile */}
+          {isMobileView && (
+            <button className="filter-close-btn" onClick={() => setIsSidebarOpen(false)}>✕</button>
+          )}
+
           <ul className="menu-list-user">
             {menuItems.map((item, index) => (
               <li key={index} className="menu-item-container">
                 <button
                   onClick={() => handleMenuItemClick(index, item.title)}
-                  className={`menu-item-user ${activeIndex === index ? 'active' : ''}`}
+                  className={`menu-item-user ${selectedCategory === item.title ? 'active' : ''}`}
                 >
                   <span className="menu-icon">{item.icon}</span>
                   {!isSidebarCollapsed && <span>{item.title}</span>}
@@ -147,6 +162,7 @@ useEffect(() => {
           </ul>
         </div>
 
+        {/* Main Content */}
         <div className="user-dashboard-content">
           {renderSelectedComponent()}
         </div>

@@ -46,50 +46,67 @@ const LeadingExpert = () => {
   const fmt = (n) =>
     (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  // ✅ Fetch Corporate Courses
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        const [corporateRes, allCoursesRes] = await Promise.all([
-          axios.get("https://api.test.hachion.co/corporatecourse"),
-          axios.get("https://api.test.hachion.co/courses/all"),
-        ]);
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
 
-        const activeCorporateCourses = corporateRes.data.filter(
-          (item) => item.status === true
+      const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([
+        axios.get("https://api.test.hachion.co/corporatecourse"),
+        axios.get("https://api.test.hachion.co/courses/all"),
+        axios.get("https://api.test.hachion.co/trainers"),
+      ]);
+
+      const activeCorporateCourses = (corporateRes.data || []).filter(
+        (item) => item.status === true
+      );
+
+      const allCourses = allCoursesRes.data || [];
+      const allTrainers = trainersRes.data || [];
+
+      const trainerByCourse = new Map(
+        allTrainers.map((t) => [
+          (t.course_name || "").trim().toLowerCase(),
+          t.trainer_name || "",
+        ])
+      );
+
+      const combinedCourses = activeCorporateCourses.map((corpCourse) => {
+        const key = (corpCourse.course_name || "").trim().toLowerCase();
+
+        const matchedCourse = allCourses.find(
+          (course) =>
+            (course.courseName || "").trim().toLowerCase() === key
         );
 
-        const combinedCourses = activeCorporateCourses.map((corpCourse) => {
-          const matchedCourse = allCoursesRes.data.find(
-            (course) =>
-              course.courseName.trim().toLowerCase() ===
-              corpCourse.course_name.trim().toLowerCase()
-          );
+        const trainerName = trainerByCourse.get(key) || "";
 
-          return {
-            ...matchedCourse,
-            courseName: corpCourse.course_name,
-            image: matchedCourse
-              ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
-              : "",
-            id: matchedCourse ? matchedCourse.id : Math.random(),
-            amount: matchedCourse ? matchedCourse.amount : 0,
-          };
-        });
+        return {
+          ...(matchedCourse || {}),
+          courseName: corpCourse.course_name, 
+          image: matchedCourse
+            ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
+            : "",
+          id: matchedCourse ? matchedCourse.id : Math.random(),
+          amount: matchedCourse ? matchedCourse.amount : 0,
 
-        setCourseCards(combinedCourses);
-      } catch (error) {
-        console.error("Error fetching corporate courses:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+          numberOfClasses: matchedCourse ? matchedCourse.numberOfClasses : "",
 
-    fetchCourses();
-  }, []);
+          trainerName,
+        };
+      });
 
-  // ✅ Fetch Discount Rules
+      setCourseCards(combinedCourses);
+    } catch (error) {
+      console.error("Error fetching corporate courses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCourses();
+}, []);
+
   useEffect(() => {
     (async () => {
       try {
@@ -104,7 +121,6 @@ const LeadingExpert = () => {
     })();
   }, []);
 
-  // ✅ Detect Country & Currency (like Trending.jsx)
   useEffect(() => {
     (async () => {
       try {
@@ -147,13 +163,13 @@ const LeadingExpert = () => {
     })();
   }, []);
 
-  // ✅ Pagination
+  
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
 
-  // ✅ Discount Logic
+  
   const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
 
   const inWindow = (start, end) => {
@@ -245,7 +261,6 @@ const LeadingExpert = () => {
     return end.endOf("day").toDate();
   };
 
-  // ✅ Countdown for Discounts
   useEffect(() => {
     let stopped = false;
     const compute = () => {
@@ -275,7 +290,6 @@ const LeadingExpert = () => {
     };
   }, [courseCards, country, discountRules]);
 
-  // ✅ Click handler
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const slug = course.courseName.toLowerCase().replace(/\s+/g, "-");
@@ -319,13 +333,55 @@ const LeadingExpert = () => {
                   heading={course.courseName}
                   image={course.image}
                   level={course.level}
+                  month={course.numberOfClasses}
                   onClick={() => handleCardClick(course)}
-                  discountPercentage={getRuleDiscountPct(
-                    course.courseName,
-                    country
-                  )}
-                  amount={`${currency} ${fmt(priceInCurrency)}`}
-                  totalAmount={`${fmt(course.amount || 0)}`}
+                
+                 discountPercentage={
+    (() => {
+      const rulePct = getRuleDiscountPct(course.courseName, country);
+      if (rulePct > 0) return rulePct;
+
+      return country === 'IN'
+        ? (course.idiscount != null ? Number(course.idiscount) : 0)
+        : (course.discount  != null ? Number(course.discount)  : 0);
+    })()
+  }
+
+  amount={
+    (() => {
+      const isIN = country === 'IN';
+      const isUS = country === 'US';
+
+      const rawMrp   = isIN ? course.iamount : course.amount; 
+      const rawNow   = isIN ? course.itotal  : course.total;  
+
+      const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
+      const nowVal = isIN ? Number(rawNow) : (Number(rawNow) * (isUS ? 1 : fxFromUSD));
+
+      const rulePct = getRuleDiscountPct(course.courseName, country);
+
+      const effectiveNow = rulePct > 0
+        ? mrpVal * (1 - rulePct / 100)   
+        : nowVal;                        
+
+      return `${currency} ${fmt(effectiveNow)}`;
+    })()
+  }
+
+  totalAmount={
+    (() => {
+      const isIN = country === 'IN';
+      const isUS = country === 'US';
+
+      const rawMrp = isIN ? course.iamount : course.amount;
+
+      const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
+
+      return `${fmt(mrpVal)}`; 
+    })()
+  }
+                trainer_name={course.trainerName}
+                 
                   timeLeftLabel={
                     countdowns[course.id ?? course.courseName] || ""
                   }

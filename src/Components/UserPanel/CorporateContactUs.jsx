@@ -78,45 +78,52 @@ const ContactUs = () => {
     fetchUserProfile();
   }, []);
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (!isChecked) {
-      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
-      return;
+
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  if (!isChecked) {
+    setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+    return;
+  }
+  setError("");
+
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const requestData = {
+    fullName: values.name || "",
+    emailId: values.email || "",
+    mobileNumber: mobileNumber || "",
+    companyName: company || "",
+    trainingCourse: "",
+    noOfPeople: 0,
+    comments: values.comment || "",
+    country: selectedCountry?.name || "",
+    
+  };
+
+  try {
+    const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
+      headers: { "Content-Type": "application/json" }
+    });
+
+    if (response.status === 200) {
+      setShowModal(true);
+      setMobileNumber("");
+      formik.resetForm();
+      setCompany("");
+       
+      setSuccessMessage("✅ Query submitted successfully.");
+      setErrorMessage("");
+    } else {
+      setErrorMessage("❌ Failed to submit query.");
+      setSuccessMessage("");
     }
-    setError("");
-  
-    const currentDate = new Date().toISOString().split("T")[0];
-    const requestData = {
-      name: values.name,
-      email: values.email,
-      mobile: mobileNumber,
-      comment: values.comment,
-      date: currentDate,
-      country: selectedCountry.name,
-    };
-  
-    try {
-      const response = await axios.post("https://api.test.hachion.co/advisors/add", requestData, {
-        headers: { "Content-Type": "application/json" }
-      });
-  
-       if (response.status === 200) {
-    setShowModal(true);
-    setMobileNumber("");
-    formik.resetForm();
-    setSuccessMessage("✅ Query submitted successfully.");
-    setErrorMessage("");
-  } else {
-    setErrorMessage("❌ Failed to submit query.");
+  } catch (error) {
+    setErrorMessage("❌ Something went wrong while submitting the form.");
     setSuccessMessage("");
   }
+};
 
-} catch (error) {
-  setErrorMessage("❌ Something went wrong while submitting the form.");
-  setSuccessMessage("");
-}
-  };
   useEffect(() => {
   if (successMessage || errorMessage) {
     const timer = setTimeout(() => {
@@ -204,7 +211,7 @@ const ContactUs = () => {
                         type="tel"
                         className="form-control"
                         ref={mobileInputRef}
-                        // id="contact1"
+                        
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value)}
                         aria-label="Text input with segmented dropdown button"

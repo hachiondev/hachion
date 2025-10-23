@@ -32,11 +32,10 @@ const ViewReviews = () => {
   const [cardsPerPage, setCardsPerPage] = useState(3);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-
-  // Pagination states
   const [corporatePage, setCorporatePage] = useState(1);
   const [studentPage, setStudentPage] = useState(1);
   const [livePage, setLivePage] = useState(1);
+const [corporate, setCorporate] = useState([]);
 
   const images = [
     img1, img2, img3, img4, img5, img6,
@@ -48,7 +47,19 @@ const ViewReviews = () => {
     studentFeedbackRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Fetch reviews from API
+  useEffect(() => {
+  const fetchCorporate = async () => {
+    try {
+      const res = await axios.get("https://api.test.hachion.co/corporatereview");
+      setCorporate(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching corporate reviews:", err);
+      setCorporate([]);
+    }
+  };
+  fetchCorporate();
+}, []);
+
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
@@ -65,7 +76,6 @@ const ViewReviews = () => {
     fetchReviews();
   }, []);
 
-  // Cards per page responsive
   useEffect(() => {
     const updateCardsPerPage = () => {
       const width = window.innerWidth;
@@ -77,40 +87,34 @@ const ViewReviews = () => {
     window.addEventListener("resize", updateCardsPerPage);
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
-
-  // Scroll to top button
   useEffect(() => {
     const handleScroll = () => setShowScrollButton(window.scrollY > 800);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+const handleCorporatePageChange = (page) => setCorporatePage(page);
+const handleStudentPageChange = (page) => setStudentPage(page);
+const handleLivePageChange = (page) => setLivePage(page);
+const corporateStart = (corporatePage - 1) * cardsPerPage;
+const studentStart = (studentPage - 1) * cardsPerPage;
+const liveStart = (livePage - 1) * cardsPerPage;
 
-  // Pagination handlers
-  const handleCorporatePageChange = (page) => setCorporatePage(page);
-  const handleStudentPageChange = (page) => setStudentPage(page);
-  const handleLivePageChange = (page) => setLivePage(page);
+const corporatePaginated = corporate.slice(corporateStart, corporateStart + cardsPerPage);
 
-  // Paginated slices
-  const corporateStart = (corporatePage - 1) * cardsPerPage;
-  const studentStart = (studentPage - 1) * cardsPerPage;
-  const liveStart = (livePage - 1) * cardsPerPage;
 
-  const corporateReviews = reviews.slice(corporateStart, corporateStart + cardsPerPage);
-  const studentReviews = reviews.slice(studentStart, studentStart + cardsPerPage);
-  const liveReviews = reviews.slice(liveStart, liveStart + cardsPerPage);
-
-  // Convert YouTube watch URLs to embed URLs
+const corporateReviews = reviews.slice(corporateStart, corporateStart + cardsPerPage);
+const studentReviews = reviews.slice(studentStart, studentStart + cardsPerPage);
+const liveReviews = reviews.slice(liveStart, liveStart + cardsPerPage);
+  
 const getEmbedUrl = (url) => {
   if (!url) return "";
   let videoId = "";
 
-  // Handles "youtube.com/watch?v=VIDEO_ID"
   if (url.includes("youtube.com/watch")) {
     const urlParams = new URLSearchParams(url.split("?")[1]);
     videoId = urlParams.get("v");
   }
 
-  // Handles "youtu.be/VIDEO_ID"
   else if (url.includes("youtu.be/")) {
     videoId = url.split("/").pop();
   }
@@ -118,7 +122,6 @@ const getEmbedUrl = (url) => {
   return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
 };
 
-  // Video modal handler
   const handlePlayVideo = (videoUrl) => {
     setSelectedVideo(getEmbedUrl(videoUrl));
   };
@@ -157,26 +160,31 @@ const getEmbedUrl = (url) => {
           </div>
           <CardsPagination
             currentPage={corporatePage}
-            totalCards={reviews.length}
+             totalCards={corporate.length}
             cardsPerPage={cardsPerPage}
             onPageChange={handleCorporatePageChange}
           />
         </div>
-        <div className="display-flex row justify-content-center gap-0">
-          {loading ? Array.from({ length: cardsPerPage }).map((_, i) => (
-            <div className="skeleton-card" key={i}></div>
-          )) : corporateReviews.map((fb) => (
-            <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
-              <LearnerCard
-                name={fb.name}
-                location={fb.location}
-                content={fb.review}
-                rating={fb.rating}
-                profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
-              />
-            </div>
-          ))}
-        </div>
+       <div className="display-flex row justify-content-center gap-0">
+  {loading ? Array.from({ length: cardsPerPage }).map((_, i) => (
+    <div className="skeleton-card" key={i}></div>
+  )) : corporatePaginated.map((fb) => (
+    <div key={fb.corporateReviewId} className="col-12 col-md-6 col-lg-4 mb-3">
+      <LearnerCard
+        name={fb.employeeName}
+        location={fb.location}
+        content={fb.comment}
+        rating={fb.employeeRating}
+        profileImage={
+          fb.companyLogo
+            ? `https://api.test.hachion.co/corporatereview/${fb.companyLogo}`
+            : ""
+        }
+      />
+    </div>
+  ))}
+</div>
+
       </div>
 
       {/* Student Feedback */}
@@ -224,18 +232,29 @@ const getEmbedUrl = (url) => {
           />
         </div>
         <div className="display-flex row justify-content-center gap-0">
-          {loading ? Array.from({ length: cardsPerPage }).map((_, i) => (
-            <div className="skeleton-card" key={i}></div>
-          )) : liveReviews.map((fb, index) => (
-            <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
-              <VideoReviewCard
-                name={fb.name}
-                profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
-                demo_link_1={`https://www.youtube.com/watch?v=jFq396RUcqI`}
-                onPlayVideo={handlePlayVideo}
-              />
-            </div>
-          ))}
+          {loading ? (
+  Array.from({ length: cardsPerPage }).map((_, i) => (
+    <div className="skeleton-card" key={i}></div>
+  ))
+) : (
+  liveReviews
+    .filter((fb) => fb.videoLink || fb.demo_link_1) // ✅ show only items with a video link
+    .map((fb) => (
+      <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
+        <VideoReviewCard
+          name={fb.name}
+          profileImage={
+            fb.user_image
+              ? `https://api.test.hachion.co/userreview/${fb.user_image}`
+              : ""
+          }
+          demo_link_1={fb.videoLink || fb.demo_link_1} // ✅ dynamic video link
+          onPlayVideo={handlePlayVideo}
+        />
+      </div>
+    ))
+)}
+
         </div>
       </div>
 

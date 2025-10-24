@@ -14,7 +14,7 @@ import { TbSettingsBolt } from "react-icons/tb";
 import UserDashboardCard from './UserDashboardCard';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
-import UserCategoryTable from './UserCategoryTable';
+import UserEnrolled from './UserEnrolled';
 import UserOrders from './UserOrders';
 import Certificate from './Certificate';
 import UserMessages from './UserMessages';
@@ -95,7 +95,7 @@ const UserDashboard = () => {
       case 'Certificate':
         return <Certificate />;
       case 'Enrolls':
-        return <UserCategoryTable />;
+        return <UserEnrolled />;
       case 'Wishlist':
         return <UserWishlist />;
       // case 'Messages':
@@ -113,7 +113,7 @@ const UserDashboard = () => {
       case 'Settings':
         return <UserProfile />;
       default:
-        return <UserCategoryTable />;
+        return <UserEnrolled />;
     }
   };
 

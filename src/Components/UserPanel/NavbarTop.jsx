@@ -502,7 +502,7 @@ useEffect(() => {
                 </button>
                 <ul  id="userMenu" className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <Link className="dropdown-item" to="/userdashboard/Enrolls">
+                    <Link className="dropdown-item" to="/userdashboard/Dashboard">
                       <FaUserAlt /> Dashboard
                     </Link>
                   </li>
@@ -548,7 +548,7 @@ useEffect(() => {
                 )}
                 <span className="ms-2">{userData?.name || "User"}</span>
               </div>
-              <div className="drawer-item" onClick={() => navigate('/userdashboard/Enrolls')}>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/Dashboard')}>
                 <FaUserAlt /> Dashboard
               </div>
               <div className="drawer-item" onClick={() => navigate('/userdashboard/Settings')}>

@@ -1522,6 +1522,20 @@ line-height: 1.5;
 height: 3em;
 width: 70%;
 }
+.user-course-name {
+font-size: 15px;
+font-weight: 600;
+color: #262626; 
+margin: 1vh 0;
+text-align: left;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis;
+line-height: 1.5;
+height: 3em;
+}
 
 .course-amount {
 display: flex;
@@ -1981,7 +1995,7 @@ transition: color 0.3s, border-color 0.3s;
   display: none; /* Hide course names after the 7th one */
 }
 
-.course-name,.course-date, .upcoming-course-name{
+.course-name,.course-date, .upcoming-course-name, .user-course-name{
 margin: 5px 0;
 transition: all 0.3s ease;
 }
@@ -3659,7 +3673,7 @@ border-radius: 5px;
     animation: growShrink 2s infinite ease-in-out;
     }
 
-.course-name, .upcoming-course-name{
+.course-name, .upcoming-course-name, .user-course-name{
   font-size: 14px;
   display: -webkit-box;
   -webkit-box-orient: vertical;

@@ -37,7 +37,7 @@ import UserWishlist from './UserWishlist';
     { title: 'Dashboard', icon: <RxDashboard  /> },
     { title: 'Enrolls', icon: <PiNotePencilBold /> },
     { title: 'Wishlist', icon: <BsBookmarkHeart /> },
-    // { title: 'Orders', icon: <PiTrolleySuitcaseFill /> },
+    { title: 'Order History', icon: <PiTrolleySuitcaseFill /> },
     // { title: 'Resume', icon: <FaIdCard /> },
     { title: 'Certificate', icon: <PiCertificateBold/> },
     // { title: 'Videos', icon: <MdOutlineVideoCameraFront /> },
@@ -90,8 +90,8 @@ const UserDashboard = () => {
     switch (selectedCategory) {
       case 'Dashboard':
         return <UserDashboardCard />;
-      // case 'Orders':
-      //   return <UserOrders />;
+      case 'Order History':
+        return <UserOrders />;
       case 'Certificate':
         return <Certificate />;
       case 'Enrolls':

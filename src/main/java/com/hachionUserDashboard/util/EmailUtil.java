@@ -19,6 +19,8 @@ import com.hachionUserDashboard.entity.RequestBatch;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
+
+
 @Component
 public class EmailUtil {
 

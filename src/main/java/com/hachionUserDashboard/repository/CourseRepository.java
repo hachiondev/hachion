@@ -30,9 +30,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	@Query(value = "SELECT course_name FROM course", nativeQuery = true)
 	List<String> findAllCourseNames();
 
-//
-//	@Query(value = "SELECT course_name AS courseName, course_category AS courseCategory FROM course", nativeQuery = true)
-//	List<Object[]> findAllCourseNamesAndCategories();
+
 	@Query(value = "SELECT course_name, course_category, course_image FROM course", nativeQuery = true)
 	List<Object[]> findAllCourseNamesCategoriesAndImages();
 
@@ -41,4 +39,22 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
 	@Query(value = "SELECT * FROM course WHERE course_name = :courseName", nativeQuery = true)
 	List<Course> findByCourseName(@Param("courseName") String courseName);
+	
+	 @Query(value = """
+		        SELECT * 
+		        FROM course 
+		        WHERE id IN (:ids)
+		        """, nativeQuery = true)
+		    List<Course> findByIdInNative(@Param("ids") List<Integer> ids);
+
+		    
+		    @Query(value = """
+		        SELECT c.* 
+		        FROM course c
+		        JOIN user_wishlist uw ON uw.course_id = c.id
+		        WHERE uw.email = :email
+		        ORDER BY uw.created_at DESC
+		        """, nativeQuery = true)
+		    List<Course> findCoursesByEmailNative(@Param("email") String email);
+
 }

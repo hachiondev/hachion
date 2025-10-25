@@ -52,6 +52,11 @@ public class UserReviewController {
 		return repo.findAll();
 	}
 
+	@GetMapping("/userreview/active")
+	public List<UserReview> getAllActiveUserReviews() {
+		return repo.findAllByTypeTrue();
+	}
+
 	@GetMapping("/userreview/instructor/{courseName}")
 	public List<UserReview> getReviewsByCourse(@PathVariable String courseName) {
 		return repo.findByCourseName(courseName);

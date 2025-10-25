@@ -37,4 +37,7 @@ public interface UserReviewRepository extends JpaRepository<UserReview, Integer>
 			""")
 	RatingSumCount sumAndCountForTrainerCourse(@Param("trainerName") String trainerName,
 			@Param("courseName") String courseName);
+
+	@Query(value = "SELECT * FROM userreview WHERE type = 1 AND ((LOWER(review_type) = 'course' AND (trainer_name IS NULL OR NULLIF(TRIM(trainer_name), '') IS NULL)) OR (LOWER(review_type) = 'both'))", nativeQuery = true)
+	List<UserReview> findAllByTypeTrue();
 }

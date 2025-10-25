@@ -9,11 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
@@ -36,10 +40,12 @@ import com.hachionUserDashboard.entity.PaymentInstallment;
 import com.hachionUserDashboard.exception.ResourceNotFoundException;
 import com.hachionUserDashboard.repository.CourseRepository;
 import com.hachionUserDashboard.repository.EnrollRepository;
+import com.hachionUserDashboard.repository.PaymentInstallmentRepository;
 import com.hachionUserDashboard.repository.PaymentRepository;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import Service.PaymentService;
+import com.hachionUserDashboard.service.WhatsAppService;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -51,6 +57,9 @@ public class PaymentServiceImpl implements PaymentService {
 	private EnrollRepository enrollRepository;
 
 	@Autowired
+	private PaymentInstallmentRepository paymentInstallmentRepository;
+
+	@Autowired
 	private CourseRepository courseRepository;
 
 	@Autowired
@@ -59,7 +68,12 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private SpringTemplateEngine templateEngine;
 
-//	private static final String UPLOAD_DIR = "uploads/images/";
+	@Autowired
+	private WhatsAppService whatsAppService;
+
+	@Autowired
+	private WebhookSenderService webhookSenderService;
+
 
 	@Value("${payments.upload.path}")
 	private String paymentsUploadPath;
@@ -113,22 +127,17 @@ public class PaymentServiceImpl implements PaymentService {
 				MultipartFile file = files.get(i);
 				try {
 					Path dirPath = Paths.get(paymentsUploadPath);
-					System.out.println("Creating directories at: " + dirPath.toAbsolutePath());
+
 					Files.createDirectories(dirPath);
 
 					Path filePath = dirPath.resolve(file.getOriginalFilename());
-					System.out.println("Resolved file path: " + filePath.toAbsolutePath());
-					System.out.println("Parent exists: " + Files.exists(filePath.getParent()));
-					System.out.println("Writing file: " + file.getOriginalFilename());
 
 					Files.write(filePath, file.getBytes());
-
-					System.out.println("File successfully written to: " + filePath.toAbsolutePath());
 
 					installment.setProof(file.getOriginalFilename());
 
 				} catch (IOException e) {
-					System.err.println("IOException while writing file: " + e.getMessage());
+
 					throw new RuntimeException("Failed to save file for installment " + (i + 1));
 				}
 			}
@@ -161,10 +170,42 @@ public class PaymentServiceImpl implements PaymentService {
 
 		String formattedDate = new SimpleDateFormat("MMddyyyy").format(new Date());
 		String invoiceNumber = "HACH" + courseAbbreviation + formattedDate + "-" + savedPayment.getPaymentId();
-		System.out.println(invoiceNumber);
 
 		savedPayment.setInvoiceNumber(invoiceNumber);
 		paymentRepository.save(savedPayment);
+
+		PaymentInstallment lastPaid = savedPayment.getInstallments().stream()
+				.filter(pi -> pi.getReceivedPay() != null && pi.getReceivedPay() > 0 && pi.getPayDate() != null)
+				.max(Comparator.comparing(PaymentInstallment::getPayDate)).orElse(null);
+
+		Double receivedPayment = (lastPaid != null) ? lastPaid.getReceivedPay() : null;
+
+		PaymentInstallment nextDue = savedPayment.getInstallments().stream().filter(pi -> pi.getDueDate() != null)
+				.filter(pi -> {
+					double actual = pi.getActualPay() == null ? 0.0 : pi.getActualPay();
+					double received = pi.getReceivedPay() == null ? 0.0 : pi.getReceivedPay();
+					return received < actual;
+				}).sorted(Comparator.comparing(PaymentInstallment::getDueDate)).findFirst().orElse(null);
+
+		Double nextPayment = null;
+		LocalDate nextPaymentDate = null;
+		if (nextDue != null) {
+			double actual = nextDue.getActualPay() == null ? 0.0 : nextDue.getActualPay();
+			double received = nextDue.getReceivedPay() == null ? 0.0 : nextDue.getReceivedPay();
+			double remaining = Math.max(0.0, actual - received);
+			nextPayment = remaining > 0.0 ? remaining : null;
+			nextPaymentDate = nextDue.getDueDate();
+		}
+
+		String trainers = "N/A";
+		String batchId = "N/A";
+		String batchTiming = "N/A";
+		String trainingCoordinator = "N/A";
+
+		webhookSenderService.sendPaymentReceivedOffline(savedPayment.getStudentId(), savedPayment.getStudentName(),
+				savedPayment.getEmail(), savedPayment.getMobile(), savedPayment.getCourseName(),
+				savedPayment.getInvoiceNumber(), savedPayment.getTotalAmount(), receivedPayment, nextPayment,
+				nextPaymentDate, trainers, batchId, batchTiming, trainingCoordinator);
 
 		return createPaymentResponse(savedPayment);
 	}
@@ -329,7 +370,7 @@ public class PaymentServiceImpl implements PaymentService {
 							Path filePath = Paths.get("uploads", proofPath);
 							Files.deleteIfExists(filePath);
 						} catch (IOException e) {
-							System.err.println("Failed to delete file: " + proofPath);
+
 						}
 					}
 				}
@@ -410,105 +451,7 @@ public class PaymentServiceImpl implements PaymentService {
 		return response;
 	}
 
-//	@Override
-//	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
-//		Context context = new Context();
-//		context.setVariable("studentName", paymentRequest.getStudentName());
-//		context.setVariable("studentEmail", paymentRequest.getEmail());
-//		context.setVariable("studentPhone", paymentRequest.getMobile());
-//		context.setVariable("courseName", paymentRequest.getCourseName());
-//		context.setVariable("coursePrice", String.format("%.2f", paymentRequest.getCourseFee()));
-//		context.setVariable("discount", paymentRequest.getDiscount() + ".00");
-//		context.setVariable("tax", paymentRequest.getTax() + ".00");
-//		context.setVariable("totalAmount", String.format("%.2f", paymentRequest.getTotalAmount()));
-//
-//		SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
-//		String formattedDate = sdf.format(new Date());
-//		context.setVariable("invoiceNumber", paymentRequest.getInvoiceNumber());
-//
-//		List<PaymentInstallmentRequest> installments = paymentRequest.getInstallments();
-//
-//		PaymentInstallmentRequest selectedInstallment = null;
-//
-//		double receivedPayAmount = 0.0;
-//
-//		if (installments != null && !installments.isEmpty()) {
-//			Long selectedId = paymentRequest.getSelectedInstallmentId();
-//			if (selectedId != null) {
-//				for (PaymentInstallmentRequest inst : installments) {
-//					if (selectedId.equals(inst.getInstallmentId())) {
-//						selectedInstallment = inst;
-//						break;
-//					}
-//				}
-//			}
-//			if (selectedInstallment == null) {
-//				selectedInstallment = installments.get(0);
-//			}
-//
-//			LocalDate payDate = selectedInstallment.getPayDate();
-//			LocalDate dueDate = selectedInstallment.getDueDate();
-//
-//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-//
-//			String formattedPayDate = payDate.format(formatter);
-//			String formattedDueDate = dueDate.format(formatter);
-//
-//			context.setVariable("invoiceDate", formattedPayDate);
-//			context.setVariable("dueDate", formattedDueDate);
-////			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
-//			receivedPayAmount = selectedInstallment.getReceivedPay();
-//
-//			receivedPayAmount = selectedInstallment.getReceivedPay();
-//			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
-//
-//		}
-//		context.setVariable("amountValue", "$" + String.format("%.2f", paymentRequest.getBalancePay()));
-//
-//		String status = paymentRequest.getStatus();
-//		if (receivedPayAmount > 0.0) {
-//			if (status == null || status.trim().isEmpty()) {
-//				status = "PARTIALLY PAID";
-//			}
-//			context.setVariable("status", status.trim());
-//		} else {
-//			context.setVariable("status", null); // hide status if no payment
-//		}
-//
-//		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
-//		context.setVariable("logoPath", "file:///" + logoImagePath.replace("\\", "/")); // ensure proper file URL
-//
-//		String renderedHtml = templateEngine.process("invoice_template", context);
-//
-//		File directory = new File(invoiceDirectoryPath);
-//		if (!directory.exists()) {
-//			directory.mkdirs();
-//		}
-//
-//		String safeFileName = paymentRequest.getStudentName().replaceAll("\\s+", "_") + "_"
-//				+ paymentRequest.getCourseName().replaceAll("\\s+", "_");
-//
-//		String pdfFilePath = invoiceDirectoryPath + File.separator + safeFileName + ".pdf";
-//
-//		try (OutputStream os = new FileOutputStream(pdfFilePath)) {
-//			PdfRendererBuilder builder = new PdfRendererBuilder();
-//			builder.useFastMode();
-//
-//			String baseUri = new File("/home/ec2-user/uploads").toURI().toString();
-//			builder.withHtmlContent(renderedHtml, baseUri);
-//			builder.toStream(os);
-//			builder.run();
-//
-////			emailService.sendInvoiceEmail2(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
-//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(),
-//					paymentRequest.getCourseName(), paymentRequest.getCourseFee(), pdfFilePath);
-//		} catch (Exception e) {
-//
-//		}
-//
-//		model.addAttribute("studentName", paymentRequest.getStudentName());
-//		return "invoice_template";
-//	}
+
 
 	@Override
 	public String generateInvoice(PaymentRequest paymentRequest, Model model) {
@@ -602,8 +545,7 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		File pdfFile = new File(pdfFilePath);
-		System.out.println("Received Pay Amount: " + receivedPayAmount);
-		System.out.println("Status from paymentRequest: " + status);
+
 		if (pdfFile.exists()) {
 			try {
 				if ("PARTIALLY PAID".equalsIgnoreCase(emailStatus)) {
@@ -621,14 +563,13 @@ public class PaymentServiceImpl implements PaymentService {
 							paymentRequest.getCourseName(), paymentRequest.getBalancePay(), pdfFilePath);
 
 				} else {
-					
-					System.out.println("No email sent for status: " + status);
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("PDF file was not created. Email not sent.");
+
 		}
 
 		model.addAttribute("studentName", paymentRequest.getStudentName());
@@ -721,6 +662,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 //		emailService.sendEmailForReminder(to, subject, body);
 		emailService.sendEmailForReminder(paymentRequest);
+
 	}
 
 	@Override
@@ -769,11 +711,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 			context.setVariable("invoiceDate", formattedPayDate);
 			context.setVariable("dueDate", formattedDueDate);
-//			context.setVariable("receivedPay", String.format("%.2f", selectedInstallment.getReceivedPay()));
-//			receivedPayAmount = selectedInstallment.getReceivedPay();
-//
-//			receivedPayAmount = selectedInstallment.getReceivedPay();
-//			context.setVariable("receivedPay", String.format("%.2f", receivedPayAmount));
 
 		}
 
@@ -787,7 +724,7 @@ public class PaymentServiceImpl implements PaymentService {
 			}
 			context.setVariable("status", status.trim());
 		} else {
-			context.setVariable("status", null); 
+			context.setVariable("status", null);
 		}
 
 		String logoImagePath = "/home/ec2-user/uploads/images/HachionLogo.png";
@@ -814,14 +751,215 @@ public class PaymentServiceImpl implements PaymentService {
 			builder.toStream(os);
 			builder.run();
 
-//			emailService.sendInvoiceEmail(paymentRequest.getEmail(), paymentRequest.getStudentName(), pdfFilePath);
-
 		} catch (Exception e) {
 
 		}
 
 		model.addAttribute("studentName", paymentRequest.getStudentName());
 		return "invoice_template";
+	}
+
+
+	@Override
+	@Transactional
+	public void sendAutoRemindersForTomorrowDue() {
+		ZoneId IST = ZoneId.of("Asia/Kolkata");
+		LocalDate today = LocalDate.now(IST);
+		LocalDate headsUpDate = today.plusDays(2);
+
+		List<PaymentInstallment> dueInTwoDays = paymentInstallmentRepository.findUnpaidDueOn(headsUpDate);
+
+		List<PaymentInstallment> overdueAndToday = paymentInstallmentRepository.findUnpaidDueOnOrBefore(today);
+
+		java.util.LinkedHashSet<PaymentInstallment> targetSet = new java.util.LinkedHashSet<>();
+		targetSet.addAll(dueInTwoDays);
+		targetSet.addAll(overdueAndToday);
+		List<PaymentInstallment> allTargets = new java.util.ArrayList<>(targetSet);
+
+		List<PaymentInstallment> sendToday = new java.util.ArrayList<>();
+
+		for (PaymentInstallment pi : allTargets) {
+			LocalDate due = pi.getDueDate();
+			if (due == null) {
+
+				continue;
+			}
+
+			if (!isReminderEnabledParent(pi)) {
+				continue;
+			}
+			if (pi.getLastReminderOn() != null && pi.getLastReminderOn().isEqual(today)) {
+				continue;
+			}
+			if (due.isEqual(headsUpDate)) {
+				sendToday.add(pi);
+			} else if (due.isEqual(today)) {
+				sendToday.add(pi);
+			} else if (due.isBefore(today)) {
+				if (shouldSendByCadence(pi, today)) {
+
+					sendToday.add(pi);
+				} else {
+
+				}
+			}
+		}
+
+		Map<Long, Payment> uniquePayments = new java.util.LinkedHashMap<>();
+		for (PaymentInstallment pi : sendToday) {
+			Payment p = pi.getPayment();
+			if (p != null)
+				uniquePayments.putIfAbsent(p.getPaymentId(), p);
+		}
+		for (Payment p : uniquePayments.values()) {
+			PaymentRequest req = new PaymentRequest();
+			req.setEmail(p.getEmail());
+			req.setInvoiceNumber(p.getInvoiceNumber());
+			req.setBalancePay(p.getBalancePay() == null ? 0.0 : p.getBalancePay());
+			req.setTotalAmount(p.getTotalAmount() == null ? 0.0 : p.getTotalAmount());
+			req.setStudentName(p.getStudentName());
+			req.setCourseName(p.getCourseName());
+
+			try {
+				LocalDate dueDate = null;
+
+				for (PaymentInstallment pi : sendToday) {
+					if (pi.getPayment() != null && pi.getPayment().getPaymentId().equals(p.getPaymentId())) {
+						dueDate = pi.getDueDate();
+						break;
+					}
+				}
+
+				if (dueDate != null) {
+					if (dueDate.isEqual(headsUpDate)) {
+
+						emailService.sendEmailForTwoDaysDue(req, dueDate);
+
+					} else if (dueDate.isEqual(today)) {
+
+						emailService.sendEmailForReminder(req);
+
+					} else if (dueDate.isBefore(today)) {
+						long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(dueDate, today);
+
+						if (daysOverdue >= 7) {
+
+							emailService.sendEmailForSevenDaysOverdue(req, dueDate);
+						} else {
+
+							emailService.sendEmailForOverdue(req, dueDate);
+						}
+					}
+				}
+
+			} catch (Exception ignore) {
+			}
+
+		}
+
+
+		for (PaymentInstallment duePi : sendToday) {
+			Payment p = duePi.getPayment();
+
+			var prevPaidOpt = paymentInstallmentRepository.findLastPaidBefore(p.getPaymentId(), duePi.getDueDate());
+			LocalDate lastPayDate = prevPaidOpt.map(PaymentInstallment::getPayDate).orElse(null);
+			Double lastReceived = prevPaidOpt.map(PaymentInstallment::getReceivedPay).orElse(null);
+
+			try {
+				
+				webhookSenderService.sendPaymentReminder(p.getStudentId(), p.getStudentName(), p.getEmail(),
+						p.getMobile(), p.getCourseName(), p.getInvoiceNumber(),
+						(p.getBalancePay() == null ? 0.0 : p.getBalancePay()),
+						(p.getTotalAmount() == null ? 0.0 : p.getTotalAmount()), duePi.getDueDate(), lastReceived,
+						lastPayDate);
+
+			
+
+				LocalDate dueDate = duePi.getDueDate();
+				if (dueDate != null && dueDate.isEqual(headsUpDate)) {
+
+					
+					double amountDue = (p.getBalancePay() == null ? 0.0 : p.getBalancePay());
+
+					whatsAppService.sendTwoDayHeadsUpReminder(p.getMobile(), p.getStudentName(), amountDue, 
+							p.getCourseName(), dueDate);
+				}
+
+
+				if (dueDate != null && dueDate.isEqual(today)) {
+					
+					double amountDue = (p.getBalancePay() == null ? 0.0 : p.getBalancePay());
+
+					whatsAppService.sendPaymentDueTodayReminder(p.getMobile(), p.getStudentName(), amountDue,
+							p.getCourseName(), dueDate);
+				}
+
+				if (dueDate != null && dueDate.isBefore(today)) {
+					long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(dueDate, today);
+					if (daysOverdue == 2) { 
+						double amountDue = (p.getBalancePay() == null ? 0.0 : p.getBalancePay());
+
+						
+						whatsAppService.sendPaymentOverdue2DaysReminder(p.getMobile(), p.getStudentName(), amountDue,
+								p.getCourseName(), dueDate);
+					}
+				}
+
+				if (dueDate != null && dueDate.isBefore(today)) {
+					long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(dueDate, today);
+
+					
+					if (daysOverdue == 7) {
+						double amountDue = (p.getBalancePay() == null ? 0.0 : p.getBalancePay());
+						whatsAppService.sendPaymentOverdue7DaysReminder(p.getMobile(), p.getStudentName(), amountDue,
+								p.getCourseName(), dueDate);
+					}
+				}
+
+				
+				duePi.setLastReminderOn(today);
+				Integer c = (duePi.getReminderCount() == null ? 0 : duePi.getReminderCount());
+				duePi.setReminderCount(c + 1);
+				paymentInstallmentRepository.save(duePi);
+
+			} catch (Exception ignore) {
+			}
+		}
+
+	}
+
+	private boolean isReminderEnabledParent(PaymentInstallment pi) {
+		try {
+			Payment p = pi.getPayment();
+			if (p == null)
+				return true;
+			String v = p.getStopReminder();
+			if (v == null || v.isBlank())
+				return true;
+			return "start".equalsIgnoreCase(v.trim());
+		} catch (Exception e) {
+			return true;
+		}
+	}
+
+	private boolean shouldSendByCadence(PaymentInstallment pi, LocalDate today) {
+		LocalDate due = pi.getDueDate();
+		if (due == null)
+			return false;
+
+		long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(due, today);
+		if (daysOverdue < 0)
+			return false;
+
+		LocalDate last = pi.getLastReminderOn();
+		if (last != null && last.isEqual(today))
+			return false;
+
+		if (daysOverdue <= 6) {
+			return (daysOverdue % 2 == 0);
+		}
+
+		return ((daysOverdue - 7) % 7 == 0);
 	}
 
 }

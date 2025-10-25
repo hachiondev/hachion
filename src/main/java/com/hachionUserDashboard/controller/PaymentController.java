@@ -42,7 +42,6 @@ public class PaymentController {
 	@Autowired
 	private PaymentService paymentService;
 
-
 	@Value("${invoice.path}")
 	private String invoiceDirectoryPath;
 
@@ -130,19 +129,16 @@ public class PaymentController {
 	public String generateInvoice(@RequestBody PaymentRequest paymentRequest, Model model) {
 		return paymentService.generateInvoice(paymentRequest, model);
 	}
-//	@PostMapping("/generateInvoiceBeforePayment")
-//	public String generateInvoiceBeforePayment(@RequestBody PaymentRequest paymentRequest, Model model) {
-//		return paymentService.generateInvoiceBeforePayment(paymentRequest, model);
-//	}
-	 @PostMapping("/reminder")
-	    public ResponseEntity<String> sendReminderEmail(@RequestBody PaymentRequest paymentRequest) {
-	        try {
-	        	paymentService.sendReminderEmail(paymentRequest);
-	            return ResponseEntity.ok("Reminder email sent successfully.");
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                                 .body("Failed to send reminder email: " + e.getMessage());
-	        }
-	    }
+
+	@PostMapping("/reminder")
+	public ResponseEntity<String> sendReminderEmail(@RequestBody PaymentRequest paymentRequest) {
+		try {
+			paymentService.sendReminderEmail(paymentRequest);
+			return ResponseEntity.ok("Reminder email sent successfully.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Failed to send reminder email: " + e.getMessage());
+		}
+	}
 
 }

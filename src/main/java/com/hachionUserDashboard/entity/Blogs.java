@@ -20,29 +20,30 @@ public class Blogs {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column // Ensure the field is required and set a max length
+	@Column
 	private String category_name;
 
-	@Column // Ensure the field is required and set a max length
+	@Column
 	private String title;
 
-	@Column // Ensure the field is required and set a max length
+	@Column
 	private String author;
 
-	@Column // Ensure the field is required
-	private String blog_image; // URL or file path to the image
+	@Column(name = "author_image")
+	private String authorImage;
 
-	@Column // Ensure the field is required
-	private String blog_pdf; // URL or file path to the PDF
+	@Column
+	private String blog_image;
 
-	
-	@Column(nullable = true, columnDefinition = "LONGTEXT") // Allow longer descriptions
+	@Column
+	private String blog_pdf;
+
+	@Column(nullable = true, columnDefinition = "LONGTEXT")
 	private String description;
 
 	@Column
 	private String meta_title;
 
-	
 	@Column(columnDefinition = "LONGTEXT")
 	private String meta_description;
 
@@ -50,9 +51,7 @@ public class Blogs {
 	@Column(nullable = true, columnDefinition = "LONGTEXT")
 	private String meta_keyword;
 
-
-
-	@Column(name = "date", nullable = false) // Ensure the field is required>>>>>> f0f1d07a35dac3b5786c64c438a5981f78e1126d
+	@Column(name = "date", nullable = false)
 
 	private LocalDate date;
 
@@ -169,6 +168,14 @@ public class Blogs {
 		this.meta_keyword = meta_keyword;
 		this.description = description;
 		this.date = date;
+	}
+
+	public String getAuthorImage() {
+		return authorImage;
+	}
+
+	public void setAuthorImage(String authorImage) {
+		this.authorImage = authorImage;
 	}
 
 }

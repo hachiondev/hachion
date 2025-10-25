@@ -122,7 +122,7 @@ public class Userimpl implements UserService {
 
 		System.out.println("✅ User saved successfully in DB: " + save.getEmail());
 
-		webhookSenderService.sendRegistrationDetails(save);
+		webhookSenderService.sendRegistrationDetailsOnline(save);
 
 		return "User details updated successfully.";
 	}

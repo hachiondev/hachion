@@ -3,8 +3,6 @@ package com.hachionUserDashboard.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "payments")
 public class Payment {
@@ -63,10 +59,13 @@ public class Payment {
 
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
-	
+
 	@Column(name = "status")
 	private String status;
-	
+
+	@Column(name = "stop_reminder")
+	private String stopReminder;
+
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentInstallment> installments = new ArrayList<>();
 
@@ -197,6 +196,13 @@ public class Payment {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public String getStopReminder() {
+		return stopReminder;
+	}
+
+	public void setStopReminder(String stopReminder) {
+		this.stopReminder = stopReminder;
+	}
 
 }

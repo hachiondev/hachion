@@ -191,6 +191,48 @@ public class EmailService {
 		}
 	}
 
+//	public void sendEmailForReminder(PaymentRequest paymentRequest) {
+//		try {
+//			String to = paymentRequest.getEmail();
+//			String courseName = paymentRequest.getCourseName();
+//			double courseFee = paymentRequest.getBalancePay();
+//
+//			String fullName = paymentRequest.getStudentName();
+//			String studentFirstName = fullName != null && fullName.contains(" ") ? fullName.split(" ")[0] : fullName;
+//
+//			String subject = "⏳ Friendly Reminder – Complete Payment to Confirm Your Enrollment for " + courseName;
+//
+//			String htmlContent = String.format(
+//					"<div style='font-family:Arial, sans-serif; font-size:14px; color:#333;'>"
+//							+ "<p>Dear <strong>%s</strong>,</p>" + "<p>We hope you're doing well!</p>"
+//							+ "<p>This is a gentle reminder to complete your payment for the <strong>%s</strong> to secure your spot in the upcoming training.</p>"
+//							+ "<p><strong>💳 Course Fee & Payment Instructions</strong><br>"
+//							+ "Balance Course Fee: <strong>%.2f USD/INR</strong> !important <br>"
+//							+ "Payment Method: <strong>Zelle</strong><br>"
+//							+ "Recipient Email: <strong>trainings@hachion.co</strong><br>"
+//							+ "Recipient Name: <strong>HACH TECHNOLOGIES LLC</strong></p>"
+//							+ "<p>Once the payment is completed, you will receive a confirmation email along with your invoice and access details for the session.</p>"
+//							+ "<p>If you have any questions or need additional assistance, feel free to reach out to us.</p>"
+//							+ "<p>We look forward to having you in the batch and supporting your <strong>%s</strong> journey!</p>"
+//							+ "<br><p>Warm regards,<br><strong>Team Hachion</strong><br>"
+//							+ "🌐 <a href='https://www.hachion.co'>www.hachion.co</a><br>" + "📞 +1 (732) 485-2499<br>"
+//							+ "📧 trainings@hachion.co</p>" + "</div>",
+//					studentFirstName, courseName, courseFee, courseName);
+//
+//			MimeMessage message = mailSender.createMimeMessage();
+//			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+//
+//			helper.setTo(to);
+//			helper.setSubject(subject);
+//			helper.setText(htmlContent, true); // true = HTML
+//			helper.setFrom("hachion.trainings@gmail.com");
+//
+//			mailSender.send(message);
+//		} catch (MessagingException e) {
+//			throw new RuntimeException("Failed to send reminder email", e);
+//		}
+//	}
+
 	public void sendEmailForReminder(PaymentRequest paymentRequest) {
 		try {
 			String to = paymentRequest.getEmail();
@@ -202,22 +244,27 @@ public class EmailService {
 
 			String subject = "⏳ Friendly Reminder – Complete Payment to Confirm Your Enrollment for " + courseName;
 
-			String htmlContent = String.format(
-					"<div style='font-family:Arial, sans-serif; font-size:14px; color:#333;'>"
+			String htmlContent = String
+					.format("<div style='font-family:Arial, sans-serif; font-size:14px; color:#000 !important;'>"
 							+ "<p>Dear <strong>%s</strong>,</p>" + "<p>We hope you're doing well!</p>"
-							+ "<p>This is a gentle reminder to complete your payment for the <strong>%s</strong> to secure your spot in the upcoming training.</p>"
+							+ "<p>This is a gentle reminder to complete your payment for the "
+							+ "<strong>%s</strong> to secure your spot in the upcoming training.</p>"
+
 							+ "<p><strong>💳 Course Fee & Payment Instructions</strong><br>"
-							+ "Course Fee: <strong>%.2f USD/INR</strong><br>"
+							+ "Balance Course Fee: <strong>%.2f USD/INR</strong><br>"
 							+ "Payment Method: <strong>Zelle</strong><br>"
 							+ "Recipient Email: <strong>trainings@hachion.co</strong><br>"
 							+ "Recipient Name: <strong>HACH TECHNOLOGIES LLC</strong></p>"
+
 							+ "<p>Once the payment is completed, you will receive a confirmation email along with your invoice and access details for the session.</p>"
 							+ "<p>If you have any questions or need additional assistance, feel free to reach out to us.</p>"
 							+ "<p>We look forward to having you in the batch and supporting your <strong>%s</strong> journey!</p>"
+
 							+ "<br><p>Warm regards,<br><strong>Team Hachion</strong><br>"
-							+ "🌐 <a href='https://www.hachion.co'>www.hachion.co</a><br>" + "📞 +1 (732) 485-2499<br>"
-							+ "📧 trainings@hachion.co</p>" + "</div>",
-					studentFirstName, courseName, courseFee, courseName);
+							+ "🌐 <a href='https://www.hachion.co' style='color:#001f7f !important;'>www.hachion.co</a><br>"
+							+ "📞 +1 (732) 485-2499<br>"
+							+ "📧 <a href='mailto:trainings@hachion.co' style='color:#001f7f !important;'>trainings@hachion.co</a></p>"
+							+ "</div>", studentFirstName, courseName, courseFee, courseName);
 
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -425,5 +472,197 @@ public class EmailService {
 			throw new MessagingException("Failed to send demo session email", e);
 		}
 	}
+
+	public void sendEmailForTwoDaysDue(PaymentRequest paymentRequest, java.time.LocalDate dueDate) {
+	    try {
+	        String to = paymentRequest.getEmail();
+	        String courseName = paymentRequest.getCourseName();
+	        double balancePay = paymentRequest.getBalancePay();
+	        String studentName = paymentRequest.getStudentName();
+
+	        String subject = "Reminder – Payment Due in 2 Days for Your " + (courseName == null ? "" : courseName);
+
+	        String balanceStr = String.format("%.2f", balancePay);
+	        String dueDateStr = (dueDate == null) ? ""
+	                : dueDate.format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+
+	        String htmlContent =
+	                "<div style='font-family:Arial, sans-serif; font-size:14px; color:#000 !important;'>"
+	                        + "<p style='color:#000 !important;'><strong style='color:#000 !important;'>Subject:</strong> Reminder – Payment Due in 2 Days for Your "
+	                        + (courseName == null ? "" : escape(courseName)) + "</p>"
+
+	                        + "<p style='color:#000 !important;'>Dear " + (studentName == null ? "" : escape(studentName)) + ",</p>"
+
+	                        + "<p style='color:#000 !important;'>This is a friendly reminder that your payment of "
+	                        + "<strong style='color:#000 !important;'>" + escape(balanceStr) + "</strong> for the "
+	                        + "<strong style='color:#000 !important;'>" + (courseName == null ? "" : escape(courseName)) + "</strong> "
+	                        + "course is due on <strong style='color:#000 !important;'>" + escape(dueDateStr) + "</strong> (in 2 days).</p>"
+
+	                        + "<p style='color:#000 !important;'>To avoid any last-minute rush or interruptions in your class schedule, we kindly request you to complete the payment on time.</p>"
+
+	                        + "<p style='color:#000 !important;'>👉 <strong style='color:#000 !important;'>Make your payment via:</strong><br/>"
+	                        + "Zelle – <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a><br/>"
+	                        + "PayPal – <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a></p>"
+
+	                        + "<p style='color:#000 !important;'>Once the payment is made, please share the transaction screenshot with our support team at "
+	                        + "<a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a> for verification.</p>"
+
+	                        + "<p style='color:#000 !important;'>If you have already completed the payment, kindly disregard this message.</p>"
+
+	                        + "<p style='color:#000 !important;'>Best regards,<br/>"
+	                        + "<span style='color:#000 !important;'>Team Hachion</span></p>"
+	                        + "</div>";
+
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	        helper.setTo(to);
+	        helper.setSubject(subject);
+	        helper.setText(htmlContent, true);
+	        helper.setFrom("hachion.trainings@gmail.com");
+
+	        mailSender.send(message);
+	    } catch (MessagingException e) {
+	        throw new RuntimeException("Failed to send D-2 reminder email", e);
+	    }
+	}
+
+	/**
+	 * Optional small helper to HTML-escape dynamic text. Place anywhere in the same
+	 * class.
+	 */
+	private static String escape(String s) {
+		if (s == null)
+			return "";
+		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+
+	// Overdue (every 2 days) email — keeps your existing EmailService style & names
+	public void sendEmailForOverdue(PaymentRequest paymentRequest, java.time.LocalDate dueDate) {
+	    try {
+	        String to = paymentRequest.getEmail();
+	        String courseName = paymentRequest.getCourseName();
+	        double balancePay = paymentRequest.getBalancePay();
+	        String studentName = paymentRequest.getStudentName();
+
+	        String subject = "Payment Overdue – Immediate Attention Required for "
+	                + (courseName == null ? "" : courseName);
+
+	        String balanceStr = String.format("%.2f", balancePay);
+	        String dueDateStr = (dueDate == null) ? ""
+	                : dueDate.format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+
+	        String htmlContent =
+	                "<div style='font-family:Arial, sans-serif; font-size:14px; color:#000 !important;'>"
+	                        + "<p style='color:#000 !important;'><strong style='color:#000 !important;'>Subject:</strong> Payment Overdue – Immediate Attention Required for "
+	                        + (courseName == null ? "" : escape(courseName)) + "</p>"
+
+	                        + "<p style='color:#000 !important;'>Dear " + (studentName == null ? "" : escape(studentName)) + ",</p>"
+
+	                        + "<p style='color:#000 !important;'>This is a reminder that your payment of <strong style='color:#000 !important;'>"
+	                        + escape(balanceStr) + "</strong> for the <strong style='color:#000 !important;'>"
+	                        + (courseName == null ? "" : escape(courseName))
+	                        + "</strong> course, which was due on <strong style='color:#000 !important;'>"
+	                        + escape(dueDateStr) + "</strong>, is still pending.</p>"
+
+	                        + "<p style='color:#000 !important;'>To ensure uninterrupted access to your classes, we kindly request you to complete the payment immediately.</p>"
+
+	                        + "<p style='color:#000 !important;'>👉 <strong style='color:#000 !important;'>You can make the payment via:</strong><br/>"
+	                        + "Zelle – <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a><br/>"
+	                        + "PayPal – <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a></p>"
+
+	                        + "<p style='color:#000 !important;'>Once the payment is completed, please share the transaction screenshot with our support team at "
+	                        + "<a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a> for verification.</p>"
+
+	                        + "<p style='color:#000 !important;'>If you have already completed the payment, please disregard this message.</p>"
+
+	                        + "<p style='color:#000 !important;'>Best regards,<br/>"
+	                        + "<span style='color:#000 !important;'>Team Hachion</span></p>"
+	                        + "</div>";
+
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	        helper.setTo(to);
+	        helper.setSubject(subject);
+	        helper.setText(htmlContent, true);
+	        helper.setFrom("hachion.trainings@gmail.com");
+
+	        mailSender.send(message);
+	    } catch (MessagingException e) {
+	        throw new RuntimeException("Failed to send overdue (D+X) reminder email", e);
+	    }
+	}
+
+
+//	/** Small helper to HTML-escape dynamic text. */
+//	private static String escape(String s) {
+//	    if (s == null) return "";
+//	    return s.replace("&", "&amp;")
+//	            .replace("<", "&lt;")
+//	            .replace(">", "&gt;");
+//	}
+	public void sendEmailForSevenDaysOverdue(PaymentRequest paymentRequest, java.time.LocalDate dueDate) {
+	    try {
+	        String to = paymentRequest.getEmail();
+	        String courseName = paymentRequest.getCourseName();
+	        double balancePay = paymentRequest.getBalancePay();
+	        String studentName = paymentRequest.getStudentName();
+
+	        String subject = "7-Day Overdue Notice – Action Required for " + (courseName == null ? "" : courseName);
+
+	        String balanceStr = String.format("%.2f", balancePay);
+	        String dueDateStr = (dueDate == null) ? ""
+	                : dueDate.format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+
+	        String htmlContent =
+	                "<div style='font-family:Arial, sans-serif; font-size:14px; color:#000 !important;'>"
+	                        + "<p style='color:#000 !important;'>Dear " + (studentName == null ? "" : escape(studentName)) + ",</p>"
+
+	                        + "<p style='color:#000 !important;'>This is a follow-up regarding your pending payment of "
+	                        + "<strong style='color:#000 !important;'>" + escape(balanceStr) + "</strong> for "
+	                        + "<strong style='color:#000 !important;'>" + (courseName == null ? "" : escape(courseName)) + "</strong>, "
+	                        + "originally due on <strong style='color:#000 !important;'>" + escape(dueDateStr) + "</strong>. "
+	                        + "As of today, the payment is <strong style='color:#000 !important;'>7 days overdue</strong>.</p>"
+
+	                        + "<p style='color:#000 !important;'>To ensure your class access remains uninterrupted, please complete the payment immediately.</p>"
+
+	                        + "<p style='color:#000 !important;'><strong style='color:#000 !important;'>How to pay:</strong><br/>"
+	                        + "Zelle: <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a><br/>"
+	                        + "PayPal: <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a></p>"
+
+	                        + "<p style='color:#000 !important;'>Once completed, kindly email the payment screenshot to "
+	                        + "<a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a> "
+	                        + "so we can verify and update your account.</p>"
+
+	                        + "<p style='color:#000 !important;'>If you have already paid, please reply with the screenshot so we can confirm and close this reminder.</p>"
+
+	                        + "<p style='color:#000 !important;'>If you’re facing any difficulty, reply to this email — we’re happy to help.</p>"
+
+	                        + "<p style='color:#000 !important;'>Best regards,<br/>"
+	                        + "<span style='color:#000 !important;'>Team Hachion</span><br/>"
+	                        + "📧 <a href='mailto:trainings@hachion.co' style='color:#001f7f;'>trainings@hachion.co</a></p>"
+	                        + "</div>";
+
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	        helper.setTo(to);
+	        helper.setSubject(subject);
+	        helper.setText(htmlContent, true);
+	        helper.setFrom("hachion.trainings@gmail.com");
+
+	        mailSender.send(message);
+	    } catch (MessagingException e) {
+	        throw new RuntimeException("Failed to send D+7 overdue reminder email", e);
+	    }
+	}
+
+
+//	/** Same tiny HTML-escape helper you used elsewhere */
+//	private static String escape(String s) {
+//	    if (s == null) return "";
+//	    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+//	}
 
 }

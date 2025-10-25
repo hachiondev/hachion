@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
 import com.hachionUserDashboard.service.EmailService;
+import com.hachionUserDashboard.service.WebhookSenderService;
 
 import jakarta.mail.MessagingException;
 
@@ -35,6 +36,9 @@ public class RegisterStudentController {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private WebhookSenderService webhookSenderService;
 
 	@GetMapping("/registerstudent/{id}")
 	public ResponseEntity<RegisterStudent> getRegisterStudent(@PathVariable Integer id) {
@@ -75,7 +79,8 @@ public class RegisterStudentController {
 
 		emailService.sendEmailForRegisterOfflineStudent(student.getEmail(), tempPassword, fullName);
 
-		repo.save(student);
+		RegisterStudent save = repo.save(student);
+		webhookSenderService.sendRegistrationDetailsOffline(save);
 		return ResponseEntity.ok("Student added successfully");
 	}
 

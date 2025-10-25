@@ -223,11 +223,11 @@ public class UserController {
 	        if (avatarCookie != null) {
 	            return ResponseEntity.status(HttpStatus.FOUND)
 	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                    .location(new java.net.URI("https://test.hachion.co"))
+	                    .location(new java.net.URI("https://hachion.co"))
 	                    .build();
 	        } else {
 	            return ResponseEntity.status(HttpStatus.FOUND)
-	                    .location(new java.net.URI("https://test.hachion.co"))
+	                    .location(new java.net.URI("https://hachion.co"))
 	                    .build();
 	        }
 
@@ -250,12 +250,12 @@ public class UserController {
 	                return ResponseEntity.status(HttpStatus.FOUND)
 	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
 	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                        .location(new java.net.URI("https://test.hachion.co/login"))
+	                        .location(new java.net.URI("https://hachion.co/login"))
 	                        .build();
 	            } else {
 	                return ResponseEntity.status(HttpStatus.FOUND)
 	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
-	                        .location(new java.net.URI("https://test.hachion.co/login"))
+	                        .location(new java.net.URI("https://hachion.co/login"))
 	                        .build();
 	            }
 	        }
@@ -274,12 +274,12 @@ public class UserController {
 	            return ResponseEntity.status(HttpStatus.FOUND)
 	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
 	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                    .location(new java.net.URI("https://test.hachion.co/"))
+	                    .location(new java.net.URI("https://hachion.co/"))
 	                    .build();
 	        } else {
 	            return ResponseEntity.status(HttpStatus.FOUND)
 	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
-	                    .location(new java.net.URI("https://test.hachion.co/"))
+	                    .location(new java.net.URI("https://hachion.co/"))
 	                    .build();
 	        }
 	    }
@@ -300,7 +300,7 @@ public class UserController {
 		try {
 			RegisterStudent user = userService.signInWithGoogle(email, username);
 
-			java.net.URI redirect = new java.net.URI("https://test.hachion.co/");
+			java.net.URI redirect = new java.net.URI("https://hachion.co/");
 			return ResponseEntity.status(HttpStatus.FOUND).location(redirect).build();
 
 		} catch (NoSuchElementException e) {

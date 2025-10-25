@@ -12,9 +12,6 @@ import com.hachionUserDashboard.entity.Course;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-	@Query(value = "SELECT * FROM course ORDER BY course_name ASC", nativeQuery = true)
-	List<Course> findAll();
-
 	@Query(value = "SELECT * FROM course WHERE course_category = :courseCategory", nativeQuery = true)
 	List<Course> findCoursesByCategory(@Param("courseCategory") String courseCategory);
 
@@ -39,7 +36,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	@Query(value = "SELECT course_name, course_category, course_image FROM course", nativeQuery = true)
 	List<Object[]> findAllCourseNamesCategoriesAndImages();
 
-	@Query(value = "SELECT c.iamount, c.idiscount FROM course c WHERE c.course_name = :courseName", nativeQuery = true)
+	@Query(value = "SELECT c.iamount, c.idiscount, c.itotal FROM course c WHERE c.course_name = :courseName", nativeQuery = true)
 	List<Object[]> findCourseFeeByCourseName(@Param("courseName") String courseName);
 
 	@Query(value = "SELECT * FROM course WHERE course_name = :courseName", nativeQuery = true)

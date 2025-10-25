@@ -8,7 +8,7 @@ public class TalkToOurAdvisorRequest {
 
 	private String emailId;
 
-	private int noOfPeople;
+	private String noOfPeople;
 
 	private String companyName;
 
@@ -43,11 +43,11 @@ public class TalkToOurAdvisorRequest {
 		this.emailId = emailId;
 	}
 
-	public int getNoOfPeople() {
+	public String getNoOfPeople() {
 		return noOfPeople;
 	}
 
-	public void setNoOfPeople(int noOfPeople) {
+	public void setNoOfPeople(String noOfPeople) {
 		this.noOfPeople = noOfPeople;
 	}
 
@@ -95,7 +95,7 @@ public class TalkToOurAdvisorRequest {
 		super();
 	}
 
-	public TalkToOurAdvisorRequest(Long id, String fullName, String emailId, int noOfPeople, String companyName,
+	public TalkToOurAdvisorRequest(Long id, String fullName, String emailId, String noOfPeople, String companyName,
 			String mobileNumber, String trainingCourse, String comments, String country) {
 		super();
 		this.id = id;

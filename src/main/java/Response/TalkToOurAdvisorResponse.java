@@ -1,5 +1,7 @@
 package Response;
 
+import java.time.LocalDate;
+
 public class TalkToOurAdvisorResponse {
 
 	private Long id;
@@ -8,7 +10,7 @@ public class TalkToOurAdvisorResponse {
 
 	private String emailId;
 
-	private int noOfPeople;
+	private String noOfPeople;
 
 	private String companyName;
 
@@ -21,6 +23,8 @@ public class TalkToOurAdvisorResponse {
 	private String message;
 
 	private String country;
+	
+	private LocalDate date;
 
 	public Long getId() {
 		return id;
@@ -46,11 +50,11 @@ public class TalkToOurAdvisorResponse {
 		this.emailId = emailId;
 	}
 
-	public int getNoOfPeople() {
+	public String getNoOfPeople() {
 		return noOfPeople;
 	}
 
-	public void setNoOfPeople(int noOfPeople) {
+	public void setNoOfPeople(String noOfPeople) {
 		this.noOfPeople = noOfPeople;
 	}
 
@@ -106,7 +110,16 @@ public class TalkToOurAdvisorResponse {
 		super();
 	}
 
-	public TalkToOurAdvisorResponse(Long id, String fullName, String emailId, int noOfPeople, String companyName,
+	
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public TalkToOurAdvisorResponse(Long id, String fullName, String emailId, String noOfPeople, String companyName,
 			String mobileNumber, String trainingCourse, String comments, String message, String country) {
 		super();
 		this.id = id;

@@ -2,8 +2,6 @@ package com.hachionUserDashboard.entity;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "payment_installments")
 public class PaymentInstallment {
@@ -51,6 +48,12 @@ public class PaymentInstallment {
 
 	@Column(name = "reference")
 	private String reference;
+
+	@Column(name = "last_reminder_on")
+	private LocalDate lastReminderOn;
+
+	@Column(name = "reminder_count")
+	private Integer reminderCount;
 
 	public Long getInstallmentId() {
 		return installmentId;
@@ -130,6 +133,22 @@ public class PaymentInstallment {
 
 	public void setReference(String reference) {
 		this.reference = reference;
+	}
+
+	public LocalDate getLastReminderOn() {
+		return lastReminderOn;
+	}
+
+	public void setLastReminderOn(LocalDate lastReminderOn) {
+		this.lastReminderOn = lastReminderOn;
+	}
+
+	public Integer getReminderCount() {
+		return reminderCount;
+	}
+
+	public void setReminderCount(Integer reminderCount) {
+		this.reminderCount = reminderCount;
 	}
 
 }

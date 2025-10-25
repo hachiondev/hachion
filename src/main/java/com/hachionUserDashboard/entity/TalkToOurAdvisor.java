@@ -1,5 +1,7 @@
 package com.hachionUserDashboard.entity;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -9,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -28,7 +29,7 @@ public class TalkToOurAdvisor {
 	private String emailId;
 
 	@Column(name = "no_of_people")
-	private int noOfPeople;
+	private String noOfPeople;
 
 	@Column(name = "company_name")
 	private String companyName;
@@ -44,6 +45,9 @@ public class TalkToOurAdvisor {
 	private String comments;
 
 	private String country;
+	
+	@Column(name = "date")
+	private LocalDate date;
 
 	public Long getId() {
 		return id;
@@ -69,11 +73,11 @@ public class TalkToOurAdvisor {
 		this.emailId = emailId;
 	}
 
-	public int getNoOfPeople() {
+	public String getNoOfPeople() {
 		return noOfPeople;
 	}
 
-	public void setNoOfPeople(int noOfPeople) {
+	public void setNoOfPeople(String noOfPeople) {
 		this.noOfPeople = noOfPeople;
 	}
 
@@ -120,9 +124,18 @@ public class TalkToOurAdvisor {
 	public TalkToOurAdvisor() {
 		super();
 	}
+	
 
-	public TalkToOurAdvisor(Long id, String fullName, String emailId, int noOfPeople, String companyName,
-			String mobileNumber, String trainingCourse, String comments, String country) {
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public TalkToOurAdvisor(Long id, String fullName, String emailId, String noOfPeople, String companyName,
+			String mobileNumber, String trainingCourse, String comments, String country, LocalDate date) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -133,6 +146,8 @@ public class TalkToOurAdvisor {
 		this.trainingCourse = trainingCourse;
 		this.comments = comments;
 		this.country = country;
+		this.date = date;
 	}
+
 
 }

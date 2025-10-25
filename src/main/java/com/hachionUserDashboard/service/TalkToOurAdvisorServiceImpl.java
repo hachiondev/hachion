@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 
 		TalkToOurAdvisor entity = new TalkToOurAdvisor(null, ourAdvisor.getFullName(), ourAdvisor.getEmailId(),
 				ourAdvisor.getNoOfPeople(), ourAdvisor.getCompanyName(), ourAdvisor.getMobileNumber(),
-				ourAdvisor.getTrainingCourse(), ourAdvisor.getComments(), ourAdvisor.getCountry());
+				ourAdvisor.getTrainingCourse(), ourAdvisor.getComments(), ourAdvisor.getCountry(), LocalDate.now());
 		TalkToOurAdvisor savedEntity = repository.save(entity);
 
 		TalkToOurAdvisorResponse response = new TalkToOurAdvisorResponse();
@@ -52,6 +53,8 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 		response.setTrainingCourse(savedEntity.getTrainingCourse());
 		response.setComments(savedEntity.getComments());
 		response.setCountry(savedEntity.getCountry());
+		response.setDate(savedEntity.getDate());
+		
 		return response;
 		} catch (MessagingException e) {
 		
@@ -109,6 +112,7 @@ public class TalkToOurAdvisorServiceImpl implements TalkToOurAdvisorServiceInter
 		advisorResponse.setTrainingCourse(entity.getTrainingCourse());
 		advisorResponse.setComments(entity.getComments());
 		advisorResponse.setCountry(entity.getCountry());
+		advisorResponse.setDate(entity.getDate());
 		return advisorResponse;
 	}
 

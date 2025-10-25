@@ -1,7 +1,9 @@
 package com.hachionUserDashboard.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -31,10 +33,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-		registry.addResourceHandler("/test/courses/images/**")
-				.addResourceLocations("file:" + uploadPath + "/test/courses/images/");
-
 		// Serve all files inside /uploads/ and its subdirectories
 		registry.addResourceHandler("/uploads/**").addResourceLocations("file:" + uploadPath + "/");
 
@@ -46,4 +44,5 @@ public class WebConfig implements WebMvcConfigurer {
 		// Serve static files from another location
 		registry.addResourceHandler("/static/**").addResourceLocations("file:/home/cpanhach/public_html/static/");
 	}
+
 }

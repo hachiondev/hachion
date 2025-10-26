@@ -37,9 +37,21 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
 	@Query(value = "UPDATE payment_transactions SET request_status = :requestStatus WHERE id = :transactionId", nativeQuery = true)
 	int updateRequestStatus(@Param("transactionId") Long transactionId, @Param("requestStatus") String requestStatus);
 
-	
 	@Query(value = "SELECT request_status, number_of_installments " + "FROM payment_transactions "
 			+ "WHERE student_id = :studentId " + "AND course_name = :courseName " + "LIMIT 1", nativeQuery = true)
 	List<Object[]> findLatestStatusAndInstallmentsByStudentIdAndCourseName(@Param("studentId") String studentId,
 			@Param("courseName") String courseName);
+
+	  @Query(value = """
+		        SELECT 
+		            pt.order_id                                       AS orderId,
+		            pt.course_name                                    AS courseName,
+		            DATE(pt.payment_date)                             AS orderDate,
+		            COALESCE(NULLIF(pt.amount, 0), pt.course_fee)     AS price,
+		            COALESCE(pt.status, 'Processing')                 AS status
+		        FROM payment_transactions pt
+		        WHERE LOWER(pt.payer_email) = LOWER(:email)
+		        ORDER BY pt.payment_date DESC
+		        """, nativeQuery = true)
+		    List<Object[]> findDashboardRows(@Param("email") String email);
 }

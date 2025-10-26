@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.dto.InstallmentStatusResponse;
+import com.hachionUserDashboard.dto.PaymentRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionResponse;
 import com.hachionUserDashboard.dto.PaymentTransactionSummaryResponse;
@@ -100,4 +101,8 @@ public class RazorpayController {
 		List<PaymentTransactionSummaryResponse> payments = razorpayService.getAllPaymentTransactions();
 		return ResponseEntity.ok(payments);
 	}
+	 @GetMapping("/orders")
+	    public ResponseEntity<List<PaymentRequest>> getOrders(@RequestParam String email) {
+	        return ResponseEntity.ok(razorpayService.getDashboardOrders(email));
+	    }
 }

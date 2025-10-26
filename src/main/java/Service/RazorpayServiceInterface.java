@@ -3,6 +3,7 @@ package Service;
 import java.util.List;
 
 import com.hachionUserDashboard.dto.InstallmentStatusResponse;
+import com.hachionUserDashboard.dto.PaymentRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionRequest;
 import com.hachionUserDashboard.dto.PaymentTransactionResponse;
 import com.hachionUserDashboard.dto.PaymentTransactionSummaryResponse;
@@ -30,4 +31,6 @@ public interface RazorpayServiceInterface {
 	public List<PaymentTransactionSummaryResponse> getAllPaymentTransactions();
 
 	public InstallmentStatusResponse getLatestStatus(String studentId, String courseName);
+
+	List<PaymentRequest> getDashboardOrders(String email);
 }

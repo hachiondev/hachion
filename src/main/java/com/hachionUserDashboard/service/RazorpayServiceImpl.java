@@ -2,6 +2,7 @@ package com.hachionUserDashboard.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -421,4 +422,33 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 		}).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<PaymentRequest> getDashboardOrders(String email) {
+		List<Object[]> results = paymentTransactionRepository.findDashboardRows(email);
+		List<PaymentRequest> list = new ArrayList<>();
+
+		for (Object[] row : results) {
+			PaymentRequest req = new PaymentRequest();
+			req.setInvoiceNumber(row[0] != null ? row[0].toString() : null); // order_id
+			req.setCourseName(row[1] != null ? row[1].toString() : null); // course_name
+			req.setTotalAmount(row[3] != null ? Double.valueOf(row[3].toString()) : 0.0); // price
+			req.setStatus(formatStatus(row[4] != null ? row[4].toString() : "Processing")); // status
+			list.add(req);
+		}
+		return list;
+	}
+
+	private String formatStatus(String status) {
+		if (status == null || status.trim().isEmpty())
+			return "Processing";
+
+		switch (status.trim().toUpperCase()) {
+		case "PAID":
+			return "Paid";
+		case "PARTIALLY_PAID":
+			return "Partially Paid";
+		default:
+			return "Processing";
+		}
+	}
 }

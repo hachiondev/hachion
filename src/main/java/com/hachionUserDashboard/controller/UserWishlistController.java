@@ -71,8 +71,8 @@ public class UserWishlistController {
 	}
 
 	@GetMapping("/courses")
-	public List<Course> listCourses() {
-		return service.listCourses(currentUserEmailOr401());
+	public List<Course> listCourses(@RequestParam String email) {
+	  return service.listCourses(email);
 	}
 
 

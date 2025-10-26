@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hachionUserDashboard.dto.EnrollRequest;
+import com.hachionUserDashboard.dto.EnrollmentSummaryDto;
 import com.hachionUserDashboard.entity.Enroll;
 import com.hachionUserDashboard.repository.CourseScheduleRepository;
 import com.hachionUserDashboard.repository.CurriculumRepository;
@@ -335,5 +336,18 @@ public class EnrollController {
 
 		return ResponseEntity.ok(Map.of("canDownload", true));
 	}
+	 @GetMapping("/summary")
+	    public ResponseEntity<EnrollmentSummaryDto> getEnrollmentSummary(@RequestParam String email) {
+	        if (email == null || email.isBlank()) {
+	            return ResponseEntity.badRequest().build();
+	        }
+
+	        long count = repo.countByEmail(email);
+	        String lastEnrollDate = repo.findLastEnrollDate(email);
+	        String lastCourseName = repo.findLastCourseName(email);
+
+	        EnrollmentSummaryDto summary = new EnrollmentSummaryDto(email, count, lastEnrollDate, lastCourseName);
+	        return ResponseEntity.ok(summary);
+	    }
 
 }

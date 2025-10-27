@@ -20,6 +20,7 @@ public class PaymentRequest {
 	private Long selectedInstallmentId;
 	private String status;
 	private String invoiceNumber;
+	private String paymentDate;
 
 	private List<PaymentInstallmentRequest> installments;
 
@@ -157,6 +158,14 @@ public class PaymentRequest {
 
 	public void setInvoiceNumber(String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
+	}
+
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 
 }

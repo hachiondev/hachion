@@ -429,10 +429,21 @@ public class RazorpayServiceImpl implements RazorpayServiceInterface {
 
 		for (Object[] row : results) {
 			PaymentRequest req = new PaymentRequest();
-			req.setInvoiceNumber(row[0] != null ? row[0].toString() : null); // order_id
-			req.setCourseName(row[1] != null ? row[1].toString() : null); // course_name
-			req.setTotalAmount(row[3] != null ? Double.valueOf(row[3].toString()) : 0.0); // price
-			req.setStatus(formatStatus(row[4] != null ? row[4].toString() : "Processing")); // status
+			req.setInvoiceNumber(row[0] != null ? row[0].toString() : null); 
+			req.setCourseName(row[1] != null ? row[1].toString() : null); 
+			if (row[2] != null) {
+				String dateOnly;
+				if (row[2] instanceof java.sql.Timestamp ts) {
+					dateOnly = ts.toLocalDateTime().toLocalDate().toString(); 
+				} else if (row[2] instanceof java.util.Date d) {
+					dateOnly = new java.sql.Date(d.getTime()).toString();
+				} else {
+					dateOnly = row[2].toString().split(" ")[0];
+				}
+				req.setPaymentDate(dateOnly);
+			}
+			req.setTotalAmount(row[3] != null ? Double.valueOf(row[3].toString()) : 0.0); 
+			req.setStatus(formatStatus(row[4] != null ? row[4].toString() : "Processing"));
 			list.add(req);
 		}
 		return list;

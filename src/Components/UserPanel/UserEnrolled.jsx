@@ -149,6 +149,7 @@ export default function UserEnrolledCourses() {
                   status={course.status}
                   isLiveClass={course.isLiveClass}
                   date={course.formattedDate}
+                  courseData={course}
                 />
               ))}
             </div>

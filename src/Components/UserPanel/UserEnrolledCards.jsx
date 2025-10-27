@@ -14,6 +14,7 @@ const UserEnrolledCards = ({
   progress = 0,
   status = "Enrolled to Demo",
   isLiveClass = false,
+  courseData = {}, // ✅ add this to receive full course info from parent
 }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -28,13 +29,16 @@ const UserEnrolledCards = ({
 
   const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, "-") : "";
 
+  // ✅ Fixed: Pass proper course data
   const handleNavigation = () => {
-    navigate(`/coursedetails/${formattedName}`);
+    navigate(`/userenrolledassignment/${formattedName}`, {
+      state: { courseData }, // pass the data properly
+    });
   };
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
+    const courseUrl = `${window.location.origin}/userenrolledassignment/${formattedName}`;
     const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
     try {
@@ -61,28 +65,28 @@ const UserEnrolledCards = ({
   };
 
   // ✅ Button label logic
-const getButtonLabel = () => {
-  if (isLiveClass) {
-    return status === "Completed Demo" ? "Download Certificate" : "Join Live Class";
-  }
+  const getButtonLabel = () => {
+    if (isLiveClass) {
+      return status === "Completed Demo" ? "Download Certificate" : "Join Live Class";
+    }
 
-  switch (status) {
-    case "Upcoming Demo":
-      return "Start Course";
-    case "Enrolled to Demo":
-      return progress === 0 ? "Start Course" : "Continue Course";
-    case "Completed":
-      return "Completed Demo";
-    default:
-      return "Start Course";
-  }
-};
+    switch (status) {
+      case "Upcoming Demo":
+        return "Start Course";
+      case "Enrolled to Demo":
+        return progress === 0 ? "Start Course" : "Continue Course";
+      case "Completed":
+        return "Completed Demo";
+      default:
+        return "Start Course";
+    }
+  };
 
   return (
     <div
       className="sidebar-card"
-      style={{ cursor: isMobile ? "pointer" : "default" }}
-      onClick={isMobile ? handleNavigation : undefined}
+      style={{ cursor: "pointer" }}
+      onClick={handleNavigation}
     >
       <div className="card-action-icons">
         <button className="card-icons" onClick={handleShare}>

@@ -54,6 +54,7 @@ import Instructors from './Components/UserPanel/Instructors';
 import InstructorDetails from './Components/UserPanel/InstructorDetails';
 import ViewReviews from './Components/UserPanel/ViewReviews';
 import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
+import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -120,8 +121,12 @@ function AppRoutes() {
           <Route path="admindashboardview" element={<AdminDashboardView />} />
       </Route>
       <Route element={<UserProtectedRoute />}>
-      <Route path="/userdashboard/:section?" element={<UserDashboard />} />
-     </Route>
+        <Route path="/userdashboard/:section?" element={<UserDashboard />} />
+        <Route
+          path="/userenrolledassignment/:coursename"
+          element={<UserEnrolledAssignment />}
+        />
+      </Route>
       <Route path='/admincourse' element={<CategoryTable />} />
       <Route path='/workshop' element={<Workshop/>}/>
       <Route path='/workshop/:slug' element={<SalWorkshop/>}/>

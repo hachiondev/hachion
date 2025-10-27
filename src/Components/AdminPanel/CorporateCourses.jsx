@@ -17,6 +17,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   '&.MuiTableCell-head': {
     backgroundColor: '#00AEEF',
@@ -34,6 +35,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': { backgroundColor: theme.palette.action.hover },
   '&:last-child td, &:last-child th': { border: 0 },
 }));
+
 export default function CorporateCourses() {
   const currentDate = new Date().toISOString().split('T')[0];
   const [category, setCategory] = useState([]);
@@ -52,6 +54,11 @@ export default function CorporateCourses() {
   const [message, setMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  
+  const [addCourseOptions, setAddCourseOptions] = useState([]);   
+  const [editCourseOptions, setEditCourseOptions] = useState([]); 
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
@@ -63,6 +70,21 @@ export default function CorporateCourses() {
   const resetCourseData = () => {
     setCourseData({ corporatecourse_id: "", category_name: "", course_name: "", date: currentDate, status: false });
   };
+
+  
+  const fetchCourseNamesByCategory = async (categoryName) => {
+    if (!categoryName) return [];
+    const url = `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
+    try {
+      const { data } = await axios.get(url);
+      
+      return Array.isArray(data) ? data.map(n => ({ id: n, courseName: n })) : [];
+    } catch (e) {
+      console.error("Error fetching course names by category:", e?.message || e);
+      return [];
+    }
+  };
+
   const fetchCourses = async () => {
     try {
       const [catRes, courseRes, corpRes] = await Promise.all([
@@ -79,13 +101,29 @@ export default function CorporateCourses() {
     }
   };
   useEffect(() => { fetchCourses(); }, []);
+
   useEffect(() => {
     const filtered = trendingCourse.filter((c) =>
-      c.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.category_name.toLowerCase().includes(searchTerm.toLowerCase())
+      (c.course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.category_name || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCourse(filtered);
   }, [searchTerm, trendingCourse]);
+
+  
+  useEffect(() => {
+    let ignore = false;
+    (async () => {
+      if (courseData.category_name) {
+        const names = await fetchCourseNamesByCategory(courseData.category_name);
+        if (!ignore) setAddCourseOptions(names);
+      } else {
+        setAddCourseOptions([]);
+      }
+    })();
+    return () => { ignore = true; };
+  }, [courseData.category_name]);
+
   const handleDateFilter = () => {
     const filtered = trendingCourse.filter((item) => {
       const courseDate = new Date(item.date);
@@ -95,6 +133,12 @@ export default function CorporateCourses() {
     });
     setFilteredCourse(filtered);
   };
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredCourse(trendingCourse);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -103,6 +147,7 @@ export default function CorporateCourses() {
         alert(response.data);
         fetchCourses();
         resetCourseData();
+        setAddCourseOptions([]); 
       }
     } catch {
       alert("Error adding course.");
@@ -115,6 +160,7 @@ export default function CorporateCourses() {
       setMessage("Course updated successfully!");
       setTimeout(() => setMessage(""), 5000);
       setOpen(false);
+      setEditCourseOptions([]); 
     } catch {
       setMessage("Error updating course.");
     }
@@ -125,18 +171,16 @@ export default function CorporateCourses() {
       fetchCourses();
     }
   };
+
+  
   const filteredCourseOptions = course.filter(
     (c) => c.courseCategory === courseData.category_name
   );
+
   const displayedCourse = filteredCourse.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
-  const handleDateReset = () => {
-  setStartDate(null);
-  setEndDate(null);
-  setFilteredCourse(trendingCourse);
-};
 
   return (
     <>
@@ -163,7 +207,12 @@ export default function CorporateCourses() {
                   <div className="course-row">
                     <div className="col-md-3">
                       <label className="form-label">Category Name</label>
-                      <select className="form-select" name="category_name" value={courseData.category_name} onChange={(e) => setCourseData({ ...courseData, category_name: e.target.value })}>
+                      <select
+                        className="form-select"
+                        name="category_name"
+                        value={courseData.category_name}
+                        onChange={(e) => setCourseData({ ...courseData, category_name: e.target.value, course_name: "" })}
+                      >
                         <option value="">Select Category</option>
                         {category.map((c) => (
                           <option key={c.id} value={c.name}>{c.name}</option>
@@ -172,9 +221,16 @@ export default function CorporateCourses() {
                     </div>
                     <div className="col-md-3">
                       <label className="form-label">Course Name</label>
-                      <select className="form-select" name="course_name" value={courseData.course_name} onChange={(e) => setCourseData({ ...courseData, course_name: e.target.value })} disabled={!courseData.category_name}>
+                      <select
+                        className="form-select"
+                        name="course_name"
+                        value={courseData.course_name}
+                        onChange={(e) => setCourseData({ ...courseData, course_name: e.target.value })}
+                        disabled={!courseData.category_name}
+                      >
                         <option value="">Select Course</option>
-                        {filteredCourseOptions.map((c) => (
+                        {/* ADDED: prefer API-based options; fallback to original filteredCourseOptions */}
+                        {(addCourseOptions.length ? addCourseOptions : filteredCourseOptions).map((c) => (
                           <option key={c.id} value={c.courseName}>{c.courseName}</option>
                         ))}
                       </select>
@@ -182,7 +238,11 @@ export default function CorporateCourses() {
                   </div>
                   <div className="col" style={{ display: 'flex', gap: 20 }}>
                     <label className="form-label">Status:</label>
-                    <Switch checked={courseData.status} onChange={(e) => setCourseData({ ...courseData, status: e.target.checked })} color="primary" />
+                    <Switch
+                      checked={courseData.status}
+                      onChange={(e) => setCourseData({ ...courseData, status: e.target.checked })}
+                      color="primary"
+                    />
                     <span>{courseData.status ? 'Enable' : 'Disable'}</span>
                   </div>
                   <div className="course-row">
@@ -249,7 +309,20 @@ export default function CorporateCourses() {
                         <StyledTableCell align="center">{row.status ? "Enabled" : "Disabled"}</StyledTableCell>
                         <StyledTableCell align="center">{row.date}</StyledTableCell>
                         <StyledTableCell align="center">
-                          <FaEdit onClick={() => { setEditedData(row); setOpen(true); }} className="edit" />
+                          <FaEdit
+                            onClick={async () => {
+                              setEditedData(row);
+                              
+                              if (row.category_name) {
+                                const names = await fetchCourseNamesByCategory(row.category_name);
+                                setEditCourseOptions(names);
+                              } else {
+                                setEditCourseOptions([]);
+                              }
+                              setOpen(true);
+                            }}
+                            className="edit"
+                          />
                           <RiDeleteBin6Line onClick={() => handleDelete(row.corporatecourse_id)} className="delete" />
                         </StyledTableCell>
                       </StyledTableRow>
@@ -267,19 +340,41 @@ export default function CorporateCourses() {
           )}
         </div>
       </LocalizationProvider>
-      <Dialog className="dialog-box" open={open} onClose={() => setOpen(false)} aria-labelledby="edit-schedule-dialog"
-          PaperProps={{
-            style: { borderRadius: 20 },
-          }}>
-        <div >
-          <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Corporate Course
-          <Button onClick={() => setOpen(false)} className="close-btn"><IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} /></Button>
+
+      <Dialog
+        className="dialog-box"
+        open={open}
+        onClose={() => { setOpen(false); setEditCourseOptions([]); }}
+        aria-labelledby="edit-schedule-dialog"
+        PaperProps={{ style: { borderRadius: 20 } }}
+      >
+        <div>
+          <DialogTitle className="dialog-title" id="edit-schedule-dialog">
+            Edit Corporate Course
+            <Button onClick={() => { setOpen(false); setEditCourseOptions([]); }} className="close-btn">
+              <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+            </Button>
           </DialogTitle>
-            </div>
-            <DialogContent>
+        </div>
+        <DialogContent>
           <div className="col">
             <label className="form-label">Category Name</label>
-            <select className="form-select" name="category_name" value={editedData.category_name || ""} onChange={(e) => setEditedData({ ...editedData, category_name: e.target.value })}>
+            <select
+              className="form-select"
+              name="category_name"
+              value={editedData.category_name || ""}
+              onChange={async (e) => {
+                const value = e.target.value;
+                setEditedData({ ...editedData, category_name: value, course_name: "" }); 
+                
+                if (value) {
+                  const names = await fetchCourseNamesByCategory(value);
+                  setEditCourseOptions(names);
+                } else {
+                  setEditCourseOptions([]);
+                }
+              }}
+            >
               <option value="">Select Category</option>
               {category.map((c) => (
                 <option key={c.id} value={c.name}>{c.name}</option>
@@ -288,16 +383,27 @@ export default function CorporateCourses() {
           </div>
           <div className="col">
             <label className="form-label">Course Name</label>
-            <select className="form-select" name="course_name" value={editedData.course_name || ""} onChange={(e) => setEditedData({ ...editedData, course_name: e.target.value })}>
-              <option value="">Select Course</option>
-              {course.map((c) => (
+            <select
+              className="form-select"
+              name="course_name"
+              value={editedData.course_name || ""}
+              onChange={(e) => setEditedData({ ...editedData, course_name: e.target.value })}
+              disabled={!editedData.category_name}
+            >
+              <option value="">{editedData.category_name ? "Select Course" : "Select Category first"}</option>
+              {/* ADDED: prefer category API options; fallback to full course list */}
+              {(editCourseOptions.length ? editCourseOptions : course).map((c) => (
                 <option key={c.id} value={c.courseName}>{c.courseName}</option>
               ))}
             </select>
           </div>
           <div className="col" style={{ display: 'flex', gap: 20 }}>
             <label className="form-label">Status:</label>
-            <Switch checked={editedData.status} onChange={(e) => setEditedData({ ...editedData, status: e.target.checked })} color="primary" />
+            <Switch
+              checked={!!editedData.status}
+              onChange={(e) => setEditedData({ ...editedData, status: e.target.checked })}
+              color="primary"
+            />
             <span>{editedData.status ? 'Enable' : 'Disable'}</span>
           </div>
         </DialogContent>

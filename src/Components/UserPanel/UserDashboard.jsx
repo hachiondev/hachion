@@ -113,7 +113,7 @@ const UserDashboard = () => {
       case 'Settings':
         return <UserProfile />;
       default:
-        return <UserEnrolled />;
+        return <UserDashboardCard />;
     }
   };
 

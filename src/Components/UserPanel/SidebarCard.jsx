@@ -5,71 +5,84 @@ import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 import './Home.css';
 
-const SidebarCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel }) => {
-  const navigate = useNavigate(); 
-  const [isMobile, setIsMobile] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
-
+const SidebarCard = ({
+  heading,
+  month,
+  discountPercentage,
+  image,
+  trainer_name,
+  level,
+  amount,
+  totalAmount,
+  timeLeftLabel,
   
+  isWishlisted = false,
+  onToggleWishlist, 
+}) => {
+  const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
+
+  const [bookmarked, setBookmarked] = useState(!!isWishlisted);
+  useEffect(() => {
+    setBookmarked(!!isWishlisted);
+  }, [isWishlisted]);
+
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768); 
+      setIsMobile(window.innerWidth <= 768);
     };
-
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  const formattedName = heading
-  ? heading.toLowerCase().replace(/\s+/g, '-')
-  : '';
+  const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, '-') : '';
 
   const handleNavigation = () => {
     navigate(`/coursedetails/${formattedName}`);
   };
 
-const handleShare = async (e) => {
-  e.stopPropagation();
-  const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
-  const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
+    const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
-  try {
-    if (navigator.canShare && navigator.canShare({ files: [] })) {
-      
-      const response = await fetch(image);
-      const blob = await response.blob();
-      const file = new File([blob], "course-image.jpg", { type: blob.type });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [] })) {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const file = new File([blob], "course-image.jpg", { type: blob.type });
 
-      await navigator.share({
-        title: heading,
-        text: shareMessage,
-        url: courseUrl,
-        files: [file],
-      });
-    } else if (navigator.share) {
-      
-      await navigator.share({
-        title: heading,
-        text: shareMessage,
-        url: courseUrl,
-      });
-    } else {
-      
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage + " " + courseUrl)}`;
-      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(courseUrl)}`;
-      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(courseUrl)}`;
-      
-      window.open(whatsappUrl, "_blank");
+        await navigator.share({
+          title: heading,
+          text: shareMessage,
+          url: courseUrl,
+          files: [file],
+        });
+      } else if (navigator.share) {
+        await navigator.share({
+          title: heading,
+          text: shareMessage,
+          url: courseUrl,
+        });
+      } else {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage + " " + courseUrl)}`;
+        window.open(whatsappUrl, "_blank");
+      }
+    } catch (err) {
+      console.error("Error sharing:", err);
     }
-  } catch (err) {
-    console.error("Error sharing:", err);
-  }
-};
+  };
 
   const handleBookmark = (e) => {
     e.stopPropagation();
-    setBookmarked(!bookmarked);
+    
+    if (typeof onToggleWishlist === 'function') {
+      onToggleWishlist();
+      return;
+    }
+    
+    setBookmarked(prev => !prev);
   };
 
   return (
@@ -79,59 +92,66 @@ const handleShare = async (e) => {
       onClick={isMobile ? handleNavigation : undefined}
     >
       <div className="card-action-icons">
-      <button className="card-icons" onClick={handleShare} aria-label="Share this course"><TbShare3 /></button>
-      <button className="card-icons" onClick={handleBookmark} 
-      aria-label={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}>
-            {bookmarked ? <MdBookmark className="bookmark-active" /> : <MdBookmarkBorder />}
-          </button>
-    </div>
+        <button className="card-icons" onClick={handleShare} aria-label="Share this course">
+          <TbShare3 />
+        </button>
+
+        <button
+          className="card-icons"
+          onClick={handleBookmark}
+          aria-label={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
+          title={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
+        >
+          {bookmarked ? <MdBookmark className="bookmark-active" /> : <MdBookmarkBorder />}
+        </button>
+      </div>
+
       <div className="card-header-div">
-        <img src={image} alt="Course-img" className="card-image" loading="lazy"
-        onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = fallbackImg;
-    }}/>
-        {/* <img src={image} alt="card-img" className="card-icon" loading="lazy"/> */}
-      
+        <img
+          src={image}
+          alt="Course-img"
+          className="card-image"
+          loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = fallbackImg;
+          }}
+        />
       </div>
 
       <div className="card-course-details">
         <div className="card-row">
           <div className="card-text-space">
-          <div className="dropdown-course-month">
-           {month} Days
+            <div className="dropdown-course-month">{month} Days</div>
+            <div className="dropdown-course-month">{level}</div>
           </div>
-          <div className="dropdown-course-month">
-            {level}
-          </div>
-          </div>
-          {trainer_name && trainer_name.trim() !== "" && (
-  <div className="trainer-name">
-    By {trainer_name.length > 8 
-      ? trainer_name.slice(0, 8) + "…" 
-      : trainer_name}
-  </div>
-)}
 
+          {trainer_name && trainer_name.trim() !== "" && (
+            <div className="trainer-name">
+              By {trainer_name.length > 8 ? trainer_name.slice(0, 8) + "…" : trainer_name}
+            </div>
+          )}
         </div>
+
         <div className="card-row">
-        <h3 className="course-name">{heading}</h3>
-        <div className="discount-lable">
-            {discountPercentage}% off
-          </div>
+          <h3 className="course-name">{heading}</h3>
+          <div className="discount-lable">{discountPercentage}% off</div>
         </div>
-                <div className="card-row">
-        <div className="course-amount"> {amount} <span>{totalAmount}</span></div>
-        <div className="discount-duration">
-            {timeLeftLabel}
-          </div>
+
+        <div className="card-row">
+          <div className="course-amount"> {amount} <span>{totalAmount}</span></div>
+          <div className="discount-duration">{timeLeftLabel}</div>
         </div>
-    
-        <button className="card-view-btn" onClick={(e) => {
-              e.stopPropagation();
-              handleNavigation();
-            }}>View Details
-         </button>
+
+        <button
+          className="card-view-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNavigation();
+          }}
+        >
+          View Details
+        </button>
       </div>
     </div>
   );

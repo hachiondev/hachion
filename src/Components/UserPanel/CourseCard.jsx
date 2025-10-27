@@ -5,8 +5,10 @@ import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 import './Home.css';
+import axios from 'axios';
 
-const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel }) => {
+const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel, course_id, userEmail }) => {
+
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -68,10 +70,61 @@ const handleShare = async (e) => {
   }
 };
 
-  const handleBookmark = (e) => {
-    e.stopPropagation();
-    setBookmarked(!bookmarked);
-  };
+  // const handleBookmark = (e) => {
+  //   e.stopPropagation();
+  //   setBookmarked(!bookmarked);
+  // };
+  const handleBookmark = async (e) => {
+  e.stopPropagation();
+
+  const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+  const email = user?.email;
+  if (!email) {
+    alert('Please login before bookmarking.');
+    return;
+  }
+  if (!course_id) {
+    console.error('Missing course_id prop on CourseCard');
+    return;
+  }
+
+  try {
+    const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
+      email,
+      courseId: course_id
+    });
+    if (data && typeof data.bookmarked === 'boolean') {
+      setBookmarked(data.bookmarked);
+    }
+  } catch (err) {
+    console.error('Wishlist toggle failed', err);
+  }
+};
+
+  useEffect(() => {
+  let stop = false;
+
+  const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+  const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
+
+  if (!email || !course_id) return;
+
+  (async () => {
+    try {
+      const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+        params: { email, courseId: course_id }
+      });
+      if (!stop && data && typeof data.bookmarked === 'boolean') {
+        setBookmarked(data.bookmarked);
+      }
+    } catch (e) {
+      // optional: console.warn('wishlist exists check failed', e);
+    }
+  })();
+
+  return () => { stop = true; };
+}, [userEmail, course_id]);
+
 
   return (
     <div

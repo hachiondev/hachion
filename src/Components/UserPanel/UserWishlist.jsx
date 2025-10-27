@@ -14,6 +14,7 @@ const countryToCurrencyMap = {
   CN: "CNY", RU: "RUB", KR: "KRW", BR: "BRL", MX: "MXN", ZA: "ZAR", NL: "EUR",
 };
 
+
 export default function UserWishlist() {
   const [courses, setCourses] = useState([]);
   const [discountRules, setDiscountRules] = useState([]);
@@ -28,34 +29,68 @@ export default function UserWishlist() {
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
   const normalize = (s) => (s || "").toString().trim().toLowerCase();
 
-  // --- Fetch courses and trainers ---
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const [coursesRes, trainersRes] = await Promise.all([
-          axios.get("https://api.test.hachion.co/courses/all"),
-          axios.get("https://api.test.hachion.co/trainers")
-        ]);
+  
 
-        const all = Array.isArray(coursesRes.data) ? coursesRes.data : [];
-        const trainers = Array.isArray(trainersRes.data) ? trainersRes.data : [];
+async function toggleWishlist(courseId) {
+  const confirmRemove = window.confirm("Remove this course from your wishlist?");
+  if (!confirmRemove) return;
 
-        const withTrainer = all.map(c => {
-          if (c.trainer) return c;
-          const match = trainers.find(t => normalize(t.course_name) === normalize(c.courseName));
-          return match ? { ...c, trainer: match.trainer_name } : c;
-        });
+  try {
+    const user = JSON.parse(localStorage.getItem("loginuserData")) || null;
+    const email = user?.email;
+    if (!email) {
+      alert("Please login before changing wishlist.");
+      return;
+    }
 
-        setCourses(withTrainer);
-        setTotalCards(withTrainer.length);
-      } catch (error) {
-        console.error("Error fetching courses/trainers:", error.message);
+    const { data } = await axios.post(
+      "https://api.test.hachion.co/api/wishlist/toggle",
+      { email, courseId }
+    );
+
+    if (data && data.bookmarked === false) {
+      setCourses((prev) => {
+        const next = prev.filter((c) => c.id !== courseId);
+        setTotalCards(next.length);
+
+        const firstIdx = (currentPage - 1) * cardsPerPage;
+        if (next.length > 0 && firstIdx >= next.length && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+        return next;
+      });
+    }
+  } catch (err) {
+    console.error("Wishlist toggle failed", err);
+  }
+}
+
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+      const email = user?.email;
+      if (!email) {
+        setCourses([]);
+        setTotalCards(0);
+        return;
       }
-    };
-    fetchCourses();
-  }, []);
 
-  // --- Fetch discount rules ---
+      const { data } = await axios.get("https://api.test.hachion.co/api/wishlist/courses", { params: { email } });
+      const all = Array.isArray(data) ? data : [];
+
+      setCourses(all);
+      setTotalCards(all.length);
+    } catch (error) {
+      console.error("Error fetching wishlist courses:", error.message);
+      setCourses([]);
+      setTotalCards(0);
+    }
+  };
+  fetchCourses();
+}, []);
+
+  
   useEffect(() => {
     const fetchRules = async () => {
       try {
@@ -69,7 +104,6 @@ export default function UserWishlist() {
     fetchRules();
   }, []);
 
-  // --- Detect user location and currency ---
   useEffect(() => {
     (async () => {
       try {
@@ -103,8 +137,6 @@ export default function UserWishlist() {
       }
     })();
   }, []);
-
-  // --- Helpers for discounts ---
   const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
   const inWindow = (start, end) => {
     const today = dayjs();
@@ -189,7 +221,7 @@ export default function UserWishlist() {
     return end.endOf("day").toDate();
   };
 
-  // --- Countdown effect ---
+  
   useEffect(() => {
     let stopped = false;
 
@@ -217,7 +249,8 @@ export default function UserWishlist() {
     return () => { stopped = true; clearInterval(t); };
   }, [courses, country, discountRules]);
 
-  // --- Responsive cards per page ---
+
+
   useEffect(() => {
     const updateCardsPerPage = () => {
       const w = window.innerWidth;
@@ -230,7 +263,7 @@ export default function UserWishlist() {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
-  // --- Pagination logic ---
+  
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = courses.slice(indexOfFirstCard, indexOfLastCard);
@@ -307,7 +340,10 @@ export default function UserWishlist() {
             month={course.numberOfClasses}
             course_id={course.id}
             timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
+            isWishlisted={true}
+   onToggleWishlist={() => toggleWishlist(course.id)}
           />
+
               );
             })}
           </div>

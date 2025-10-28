@@ -16,7 +16,7 @@ import Footer from './Footer';
 import StickyBar from './StickyBar';
 import UserEnrolled from './UserEnrolled';
 import UserOrders from './UserOrders';
-import Certificate from './Certificate';
+import UserCertificate from './UserCertificate';
 import UserMessages from './UserMessages';
 import UserReviews from './UserReviews';
 import UserVideos from './UserVideos';
@@ -93,7 +93,7 @@ const UserDashboard = () => {
       case 'Order History':
         return <UserOrders />;
       case 'Certificate':
-        return <Certificate />;
+        return <UserCertificate />;
       case 'Enrolls':
         return <UserEnrolled />;
       case 'Wishlist':

@@ -1,64 +1,67 @@
 import React, { useState } from "react";
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
+import Topbar from "./Topbar";
+import NavbarTop from "./NavbarTop";
+import Footer from "./Footer";
+import StickyBar from "./StickyBar";
 import { IoArrowBack } from "react-icons/io5";
 import { FaCirclePlay } from "react-icons/fa6";
-import { useParams, useLocation, useNavigate } from "react-router-dom"; // ✅ add useNavigate
-import { FaPlay, FaCheckCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { BiSolidChat } from "react-icons/bi";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import {
+  FaPlay,
+  FaCheckCircle,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
 
 export default function UserEnrolledAssignment() {
   const { coursename } = useParams();
   const { state } = useLocation();
-  const navigate = useNavigate(); // ✅ initialize navigate
+  const navigate = useNavigate();
   const courseData = state?.courseData;
 
+  const [isPlaying, setIsPlaying] = useState(false);
   const [expandedModule, setExpandedModule] = useState(0);
+  const [currentVideo, setCurrentVideo] = useState(null);
 
+  // Example YouTube video IDs
   const modules = [
     {
       title: "Module 1: Introduction to Web Development",
       duration: "25m 44s",
-      lectures: 5,
+      lectures: 3,
       items: [
-        { title: "1. What is Web Development", completed: true },
-        { title: "2. What is Web Development", completed: true },
-        { title: "3. What is Web Development", completed: false },
+        { title: "1. What is Web Development", videoId: "991tOPuwPxY" },
+        { title: "2. Frontend vs Backend", videoId: "sBzRwzY7G-k" },
+        { title: "3. HTML Basics", videoId: "UB1O30fR-EE" },
       ],
     },
     {
       title: "Module 2: Advanced HTML & CSS",
       duration: "29m 44s",
-      lectures: 5,
-      items: [],
-    },
-    {
-      title: "Module 3: JavaScript Essentials",
-      duration: "22m 44s",
-      lectures: 5,
-      items: [],
-    },
-    {
-      title: "Module 4: React Basics and Advanced",
-      duration: "28m 44s",
-      lectures: 5,
-      items: [],
-    },
-    {
-      title: "Module 5: Final Capstone Project",
-      duration: "23m 44s",
-      lectures: 3,
-      items: [],
+      lectures: 2,
+      items: [
+        { title: "1. CSS Flexbox Deep Dive", videoId: "JJSoEo8JSnc" },
+        { title: "2. Responsive Design", videoId: "srvUrASNj0s" },
+      ],
     },
   ];
 
-  const toggleModule = (index) => {
+  const handlePlayClick = () => setIsPlaying(true);
+  const toggleModule = (index) =>
     setExpandedModule(expandedModule === index ? null : index);
-  };
+  const handleGoBack = () => navigate("/userdashboard/enrolls");
 
-  const handleGoBack = () => {
-    navigate(-1);
+  // When selecting a video
+  const handleVideoSelect = (videoId, moduleIndex, itemIndex) => {
+    setIsPlaying(true);
+    setCurrentVideo({
+      videoId,
+      moduleIndex,
+      itemIndex,
+      title: modules[moduleIndex].items[itemIndex].title,
+      moduleTitle: modules[moduleIndex].title,
+    });
   };
 
   return (
@@ -77,26 +80,83 @@ export default function UserEnrolledAssignment() {
         {/* Main Layout */}
         <div className="instructor-banner">
           <div className="home-content">
-            {/* Left Side: Video Player */}
-            <div className="relative w-full flex items-center justify-center">
-              <button className="bg-blue-600 p-4 rounded-full text-white">
-                <FaPlay size={28} />
-              </button>
+            {/* --- FIXED VIDEO BOX WITH CONSTANT SIZE --- */}
+            <div
+              className="video-box"
+              style={{
+                position: "relative",
+                width: "100%",
+                paddingBottom: "56.25%", // keeps 16:9 ratio
+                height: 0,
+                overflow: "hidden",
+                borderRadius: "12px",
+              }}
+            >
+              {!isPlaying ? (
+                <>
+                  <img
+                    src="https://img.youtube.com/vi/991tOPuwPxY/maxresdefault.jpg"
+                    alt="Video Thumbnail"
+                    className="video-thumbnail"
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "12px",
+                    }}
+                  />
+                  <button
+                    className="video-play-button"
+                    onClick={handlePlayClick}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  >
+                    <FaPlay size={32} />
+                  </button>
+                </>
+              ) : (
+                <iframe
+                  src={`https://www.youtube.com/embed/${
+                    currentVideo?.videoId || "991tOPuwPxY"
+                  }?autoplay=1`}
+                  title="Course Video Player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "12px",
+                  }}
+                ></iframe>
+              )}
             </div>
 
-            <div className="p-6">
-              <h2 className="font-semibold mb-2">
+            {/* --- VIDEO DETAILS BELOW --- */}
+            <div className="user-corse-content">
+              <h2 className="user-main-title">
                 {courseData?.course_name || "Course Bootcamp"}
               </h2>
-              <p className="text-gray-500">
-                Module 1: Introduction to Web Development
+              <p className="user-module-text">
+                {currentVideo
+                  ? `${currentVideo.moduleTitle} — ${currentVideo.title}`
+                  : "Module 1: Introduction to Web Development"}
               </p>
             </div>
           </div>
 
           {/* Right Side: Course Content */}
           <div className="home-content">
-            {/* Modules List */}
             <div>
               {modules.map((module, index) => (
                 <div key={index} className="user-assignment">
@@ -106,7 +166,7 @@ export default function UserEnrolledAssignment() {
                     className="flex justify-between items-center p-3"
                   >
                     <div className="card-row">
-                      <div className="user-course-title">{module.title}</div>
+                      <div className="user-module-title">{module.title}</div>
                       {expandedModule === index ? (
                         <FaChevronUp className="text-gray-500" />
                       ) : (
@@ -118,30 +178,28 @@ export default function UserEnrolledAssignment() {
                     </div>
                   </div>
 
-                  {/* Module Lectures */}
+                  {/* Expanded Lectures */}
                   {expandedModule === index && module.items.length > 0 && (
                     <div className="user-assignment-expand">
                       {module.items.map((item, i) => (
-                        <div key={i} className="card-row">
+                        <div
+                          key={i}
+                          className="card-row"
+                          onClick={() =>
+                            handleVideoSelect(item.videoId, index, i)
+                          }
+                        >
                           <div className="user-content-gap">
                             <FaCirclePlay
-                              className={`user-video-icon ${
-                                item.completed ? "done" : "in-progress"
-                              }`}
+                              className="user-video-icon"
                             />
-                            <span
-                              className={`user-course-text ${
-                                item.completed ? "done" : "in-progress"
-                              }`}
-                            >
+                            <span className="user-course-text">
                               {item.title}
                             </span>
                           </div>
-                          <FaCheckCircle
-                            className={`user-task ${
-                              item.completed ? "done" : "in-progress"
-                            }`}
-                          />
+                          {/* <FaCheckCircle
+                              className={`user-task done`}
+                            /> */}
                         </div>
                       ))}
                     </div>
@@ -151,14 +209,14 @@ export default function UserEnrolledAssignment() {
             </div>
 
             {/* Bottom Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-10">
-              <button className="bg-blue-100 text-blue-700 font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-200 transition">
-                Live Support
+            {/* <div className="live-buttons">
+              <button className="live-chat">
+                Live Support <BiSolidChat />
               </button>
-              <button className="bg-blue-600 text-black font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition">
-                Chat with Mentor
+              <button className="live-chat">
+                <BiSolidChat /> Chat with Mentor
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

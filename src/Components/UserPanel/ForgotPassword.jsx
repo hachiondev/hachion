@@ -42,51 +42,41 @@ const ForgotPassword = () => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSendClick = async () => {
-  setFormError("");
+
+const handleSendClick = async () => {
   setOtpMessage("");
+  setErrorMessage("");      
+  setFormError("");
 
   if (!validateForm()) return;
-
   setIsLoading(true);
 
   const data = { email };
 
   try {
-    const response = await fetch(
-      `https://api.test.hachion.co/api/v1/user/forgotpassword?email=${email}`,
-      {
-        method: "PUT",
-      }
+    const res = await fetch(
+      `https://api.test.hachion.co/api/v1/user/forgotpassword?email=${encodeURIComponent(email)}`,
+      { method: "PUT" }
     );
 
-    const contentType = response.headers.get("Content-Type");
-    let responseData;
+    
+    const msg = (await res.text()).trim();
+    console.log("forgotpassword:", { ok: res.ok, status: res.status, msg });
 
-    if (contentType && contentType.includes("application/json")) {
-      responseData = await response.json();
-    } else {
-      const text = await response.text();
-      responseData = { message: text };
-      setErrorMessage(response.data.message);
-    }
+    const isSuccess = res.ok && /\botp\b/i.test(msg);
 
-    console.log("Forgot Password responseData:", responseData);
-
-    if (response.ok && responseData?.message?.includes("OTP")) {
+    if (isSuccess) {
       setFormError("");
       setOtpMessage("OTP sent to your email.");
       localStorage.setItem("registeruserData", JSON.stringify(data));
-      setTimeout(() => navigate("/confirm-otp"), 3000);
+      setTimeout(() => navigate("/confirm-otp"), 1200);
     } else {
-      const errorMsg =
-        responseData?.message || "Failed to send OTP. Please try again.";
-      setFormError(errorMsg);
-      setErrorMessage(response.data.message);
+      const errorMsg = msg || "Failed to send OTP. Please try again.";
+      setFormError(errorMsg);          
+      setErrorMessage("");             
     }
-  } catch (error) {
-    setFormError(`An error occurred: ${error.message}`);
-    setErrorMessage("An error occurred during login");
+  } catch (e) {
+    setFormError(`An error occurred: ${e.message}`);
   } finally {
     setIsLoading(false);
   }
@@ -137,12 +127,16 @@ const ForgotPassword = () => {
                 <button
                   type='button'
                   className='register-btn'
-                  // data-bs-toggle='modal'
-                  // data-bs-target='#exampleModal'
+                  
                   onClick={handleSendClick}
                 >
                   Send OTP
                 </button>
+                {/* right below the button */}
+{otpMessage && <p className="success-field-message">{otpMessage}</p>}
+{formError && <p className="error-field-message">{formError}</p>}
+{/* {errorMessage && <p className="error-field-message">{errorMessage}</p>} */}
+
                 </div>
                {errorMessage && <p className="error-field-message">{errorMessage}</p>}
               </div>

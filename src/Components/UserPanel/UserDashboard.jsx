@@ -3,91 +3,86 @@ import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Dashboard.css';
 import { RxDashboard } from "react-icons/rx";
-import { PiNotePencilBold } from "react-icons/pi";
-import { PiTrolleySuitcaseFill } from "react-icons/pi";
-import { FaIdCard } from "react-icons/fa6";
-import { PiCertificateBold } from "react-icons/pi";
-import { MdOutlineVideoCameraFront } from "react-icons/md";
-import { BsFillEnvelopeFill } from "react-icons/bs";
+import { PiNotePencilBold, PiTrolleySuitcaseFill, PiCertificateBold } from "react-icons/pi";
 import { MdRateReview } from "react-icons/md";
-import { TbSettingsBolt } from "react-icons/tb";
+import { TbSettingsBolt, TbBriefcaseFilled } from "react-icons/tb";
 import UserDashboardCard from './UserDashboardCard';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import UserEnrolled from './UserEnrolled';
 import UserOrders from './UserOrders';
 import UserCertificate from './UserCertificate';
-import UserMessages from './UserMessages';
 import UserReviews from './UserReviews';
-import UserVideos from './UserVideos';
-import UserResume from './UserResume';
-import UserProfile from './UserProfile';
-import { BiArrowToLeft } from "react-icons/bi";
-import { BiArrowToRight } from "react-icons/bi";
-import { useParams } from 'react-router-dom';
-import { TbBriefcaseFilled } from "react-icons/tb";
-import UserAppliedJobs from './UserAppliedJobs';
 import UserPathfinder from './UserPathfinder';
-import { CgPathTrim } from "react-icons/cg";
-import { CgMenuGridR } from "react-icons/cg";
+import UserProfile from './UserProfile';
+import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
+import { useParams, useNavigate } from 'react-router-dom';
+import { CgPathTrim, CgMenuGridR } from "react-icons/cg";
 import { BsBookmarkHeart } from "react-icons/bs";
 import UserWishlist from './UserWishlist';
+import UserAppliedJobs from './UserAppliedJobs';
 
-  const menuItems = [
-    { title: 'Dashboard', icon: <RxDashboard  /> },
-    { title: 'Enrolls', icon: <PiNotePencilBold /> },
-    { title: 'Wishlist', icon: <BsBookmarkHeart /> },
-    { title: 'Order History', icon: <PiTrolleySuitcaseFill /> },
-    // { title: 'Resume', icon: <FaIdCard /> },
-    { title: 'Certificate', icon: <PiCertificateBold/> },
-    // { title: 'Videos', icon: <MdOutlineVideoCameraFront /> },
-    // { title: 'Messages', icon: <BsFillEnvelopeFill /> },
-    { title: 'Applied Jobs', icon: <TbBriefcaseFilled /> },
-    { title: 'Review', icon: <MdRateReview /> },
-    { title: 'Pathfinder', icon: <CgPathTrim /> },
-    { title: 'Settings', icon: <TbSettingsBolt /> },
-  ];
+const menuItems = [
+  { title: 'Dashboard',     slug: 'dashboard',      icon: <RxDashboard /> },
+  { title: 'Enrolls',       slug: 'enrolls',        icon: <PiNotePencilBold /> },
+  { title: 'Wishlist',      slug: 'wishlist',       icon: <BsBookmarkHeart /> },
+  { title: 'Order History', slug: 'order_history',  icon: <PiTrolleySuitcaseFill /> },
+  { title: 'Certificate',   slug: 'certificate',    icon: <PiCertificateBold /> },
+  { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <TbBriefcaseFilled /> },
+  { title: 'Review',        slug: 'review',         icon: <MdRateReview /> },
+  { title: 'Pathfinder',    slug: 'pathfinder',     icon: <CgPathTrim /> },
+  { title: 'Settings',      slug: 'settings',       icon: <TbSettingsBolt /> },
+];
 
 const UserDashboard = () => {
-  const { section } = useParams(); // Get section from URL params
-  const initialCategory = section || localStorage.getItem('selectedCategory') || 'Dashboard';
-  const initialIndex = menuItems.findIndex(item => item.title === initialCategory);
+  const { section } = useParams(); 
+  const navigate = useNavigate();
 
-  // --- State variables ---
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 480);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // --- Handle window resize for mobile view ---
+  
+  useEffect(() => {
+    const urlSlug = (section || '').toLowerCase();
+    const storedSlug = localStorage.getItem('selectedCategorySlug');
+
+    let idx = menuItems.findIndex(m => m.slug === urlSlug);
+    if (idx === -1 && !urlSlug && storedSlug) {
+      
+      const storedIdx = menuItems.findIndex(m => m.slug === storedSlug);
+      if (storedIdx !== -1) {
+        navigate(`/userdashboard/${storedSlug}`, { replace: true });
+        idx = storedIdx;
+      }
+    }
+    if (idx === -1) idx = 0; 
+
+    setActiveIndex(idx);
+    
+    localStorage.setItem('selectedCategorySlug', menuItems[idx].slug);
+  }, [section, navigate]);
+
   useEffect(() => {
     const handleResize = () => setIsMobileView(window.innerWidth <= 480);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // --- Sync active menu on refresh or URL param change ---
-  useEffect(() => {
-    const category = section || localStorage.getItem('selectedCategory') || 'Dashboard';
-    setSelectedCategory(category);
-    const index = menuItems.findIndex(item => item.title === category);
-    setActiveIndex(index !== -1 ? index : 0);
-  }, [section]);
-
-  // --- Handle menu click ---
-  const handleMenuItemClick = (index, title) => {
+  const handleMenuItemClick = (index) => {
+    const slug = menuItems[index].slug;
     setActiveIndex(index);
-    setSelectedCategory(title);
-    localStorage.setItem('selectedCategory', title); // Persist selection
-    if (isMobileView) setIsSidebarOpen(false); // Close mobile sidebar on selection
+    localStorage.setItem('selectedCategorySlug', slug);
+    navigate(`/userdashboard/${slug}`);
+    if (isMobileView) setIsSidebarOpen(false);
   };
 
-  // --- Toggle sidebar collapse ---
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-    const renderSelectedComponent = () => {
-    switch (selectedCategory) {
+  const renderSelectedComponent = () => {
+    const current = menuItems[activeIndex]?.title || 'Dashboard';
+    switch (current) {
       case 'Dashboard':
         return <UserDashboardCard />;
       case 'Order History':
@@ -98,18 +93,12 @@ const UserDashboard = () => {
         return <UserEnrolled />;
       case 'Wishlist':
         return <UserWishlist />;
-      // case 'Messages':
-      //   return <UserMessages />;
       case 'Applied Jobs':
         return <UserAppliedJobs />;
       case 'Review':
         return <UserReviews />;
-      // case 'Videos':
-      //   return <UserVideos />;
-      // case 'Resume':
       case 'Pathfinder':
-        return <UserPathfinder/>;
-      //   return <UserResume />;
+        return <UserPathfinder />;
       case 'Settings':
         return <UserProfile />;
       default:
@@ -149,10 +138,10 @@ const UserDashboard = () => {
 
           <ul className="menu-list-user">
             {menuItems.map((item, index) => (
-              <li key={index} className="menu-item-container">
+              <li key={item.slug} className="menu-item-container">
                 <button
-                  onClick={() => handleMenuItemClick(index, item.title)}
-                  className={`menu-item-user ${selectedCategory === item.title ? 'active' : ''}`}
+                  onClick={() => handleMenuItemClick(index)}
+                  className={`menu-item-user ${activeIndex === index ? 'active' : ''}`}
                 >
                   <span className="menu-icon">{item.icon}</span>
                   {!isSidebarCollapsed && <span>{item.title}</span>}

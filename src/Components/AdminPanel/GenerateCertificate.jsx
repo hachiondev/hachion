@@ -58,10 +58,10 @@ export default function CandidateCertificate() {
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [certificateList, setCertificateList] = useState([]);
   const [editedData, setEditedData] = useState({
-    student_id: "",student_name: "", email: "", course_name: "", status: "", completed_date: "", certificate_img: "", certificate_id: "",
+    student_id: "",student_name: "", email: "", course_name: "", status: "", grade: "", completed_date: "", certificate_img: "", certificate_id: "",
   });
   const [certificateData, setCertificateData] = useState({
-    student_id: "", student_name: "", email: "", course_name: "", status: "", completed_date: "", certificate_img: "", certificate_id: "",
+    student_id: "", student_name: "", email: "", course_name: "", status: "", grade: "", completed_date: "", certificate_img: "", certificate_id: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -92,6 +92,7 @@ export default function CandidateCertificate() {
       !certificateData.student_name ||
       !certificateData.course_name ||
       !certificateData.completed_date ||
+      !certificateData.grade ||
       !certificateData.email ||
       !certificateData.status
     ) {
@@ -108,7 +109,8 @@ export default function CandidateCertificate() {
       // completionDate: certificateData.completed_date,
       completionDate: dayjs(certificateData.completed_date, 'DD-MM-YYYY').format('YYYY-MM-DD'),
       studentEmail: certificateData.email,
-      status: certificateData.status
+      status: certificateData.status,
+      grade: certificateData.grade
     };
   
     try {
@@ -156,7 +158,7 @@ export default function CandidateCertificate() {
   };
   const handleReset = useCallback(() => {
     setCertificateData({
-      student_id: "", student_name: "", email: "", course_name: "", status: "", completed_date: "", certificate_img: "", certificate_id: ""
+      student_id: "", student_name: "", email: "", course_name: "", status: "", grade: "",completed_date: "", certificate_img: "", certificate_id: ""
     });
   }, []);
   const handleInputChange = useCallback((e) => {
@@ -373,6 +375,7 @@ const handleDateFilter = () => {
         item.email,
         item.course_name,
         item.status,
+        item.grade,
         item.certificate_id,
         item.completed_date,
       ]
@@ -561,6 +564,18 @@ const handleDateReset = () => {
                 </select>
                 </div>
                 <div className="col">
+                <label htmlFor="inputEmail4" className="form-label">Grade</label>
+                  <input
+                    type="text"
+                    id="inputState"
+                    className="form-control"
+                    name="grade"
+                    value={certificateData.grade || ''}
+                    onChange={handleInputChange}
+                    placeholder="Enter grade"
+                  />
+              </div>
+                <div className="col">
                 <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
                   <input
                     type="text"
@@ -722,6 +737,7 @@ const handleDateReset = () => {
                   <StyledTableCell align='center'>Email</StyledTableCell>
                   <StyledTableCell align="center">Course Name</StyledTableCell>
                   <StyledTableCell align="center">Course Status</StyledTableCell>
+                  <StyledTableCell align="center">Grade</StyledTableCell>
                   <StyledTableCell align="center">Certificate Image</StyledTableCell>
                   <StyledTableCell align="center">Certificate ID</StyledTableCell>
                   <StyledTableCell align="center">Completed Date</StyledTableCell>
@@ -741,6 +757,7 @@ const handleDateReset = () => {
         <StyledTableCell align="center">{curr.studentEmail}</StyledTableCell>
         <StyledTableCell align="center">{curr.courseName}</StyledTableCell>
         <StyledTableCell align="center">{curr.status}</StyledTableCell>
+        <StyledTableCell align="center">{curr.grade}</StyledTableCell>
         <StyledTableCell align="center">
   {curr.studentId && curr.courseName && curr.completionDate ? (
     <a
@@ -757,7 +774,7 @@ const handleDateReset = () => {
         <StyledTableCell align="center">{dayjs(curr.completionDate).format("MM-DD-YYYY")}</StyledTableCell>
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-                        <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
+                        {/* <FaEdit className="edit" onClick={() => handleClickOpen(curr)} /> */}
                         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.certificateId)} />
                         </div>
                       </StyledTableCell>
@@ -787,7 +804,7 @@ const handleDateReset = () => {
           
               </div>)}
           
-              <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+              {/* <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
               PaperProps={{
                 style: { borderRadius: 20 },
               }}>
@@ -859,7 +876,7 @@ const handleDateReset = () => {
           <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
               <Button onClick={handleSave} className="update-btn">Update</Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
     </>
   );
 }

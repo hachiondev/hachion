@@ -84,10 +84,10 @@ const handleShare = async (e) => {
     >
       <div className="card-action-icons">
             <button className="card-icons" onClick={handleShare} aria-label="Share this course"><TbShare3 /></button>
-            <button className="card-icons" onClick={handleBookmark}
+            {/* <button className="card-icons" onClick={handleBookmark}
             aria-label={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}>
                   {bookmarked ? <MdBookmark className="bookmark-active" /> : <MdBookmarkBorder />}
-                </button>
+                </button> */}
           </div>
       <div className="card-header-div">
         <img src={image} alt="Course-img" className="card-image" loading="lazy"

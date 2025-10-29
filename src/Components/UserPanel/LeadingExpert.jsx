@@ -335,11 +335,12 @@ useEffect(() => {
                   level={course.level}
                   month={course.numberOfClasses}
                   onClick={() => handleCardClick(course)}
-                
+                course_id={course.id}
                  discountPercentage={
     (() => {
       const rulePct = getRuleDiscountPct(course.courseName, country);
       if (rulePct > 0) return rulePct;
+
 
       return country === 'IN'
         ? (course.idiscount != null ? Number(course.idiscount) : 0)

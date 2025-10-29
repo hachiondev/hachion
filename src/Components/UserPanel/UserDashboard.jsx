@@ -3,9 +3,11 @@ import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import './Dashboard.css';
 import { RxDashboard } from "react-icons/rx";
-import { PiNotePencilBold, PiTrolleySuitcaseFill, PiCertificateBold } from "react-icons/pi";
-import { MdRateReview } from "react-icons/md";
-import { TbSettingsBolt, TbBriefcaseFilled } from "react-icons/tb";
+import { PiNotePencilBold, PiCertificateBold } from "react-icons/pi";
+import { MdOutlineRateReview } from "react-icons/md";
+import { GoPerson } from "react-icons/go";
+import { TbSettingsBolt } from "react-icons/tb";
+import { PiBriefcase } from "react-icons/pi";
 import UserDashboardCard from './UserDashboardCard';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
@@ -17,21 +19,23 @@ import UserPathfinder from './UserPathfinder';
 import UserProfile from './UserProfile';
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { useParams, useNavigate } from 'react-router-dom';
-import { CgPathTrim, CgMenuGridR } from "react-icons/cg";
+import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
 import { BsBookmarkHeart } from "react-icons/bs";
 import UserWishlist from './UserWishlist';
 import UserAppliedJobs from './UserAppliedJobs';
+import { BsCart2 } from "react-icons/bs";
 
 const menuItems = [
   { title: 'Dashboard',     slug: 'dashboard',      icon: <RxDashboard /> },
+  { title: 'User Profile',  slug: 'profile',       icon: <GoPerson /> },
   { title: 'Enrolls',       slug: 'enrolls',        icon: <PiNotePencilBold /> },
   { title: 'Wishlist',      slug: 'wishlist',       icon: <BsBookmarkHeart /> },
-  { title: 'Order History', slug: 'order_history',  icon: <PiTrolleySuitcaseFill /> },
+  { title: 'Order History', slug: 'order_history',  icon: <BsCart2 /> },
   { title: 'Certificate',   slug: 'certificate',    icon: <PiCertificateBold /> },
-  { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <TbBriefcaseFilled /> },
-  { title: 'Review',        slug: 'review',         icon: <MdRateReview /> },
-  { title: 'Pathfinder',    slug: 'pathfinder',     icon: <CgPathTrim /> },
-  { title: 'Settings',      slug: 'settings',       icon: <TbSettingsBolt /> },
+  { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <PiBriefcase /> },
+  { title: 'Review',        slug: 'review',         icon: <MdOutlineRateReview /> },
+  { title: 'Pathfinder',    slug: 'pathfinder',     icon: <CgPathOutline  /> },
+  // { title: 'Settings',      slug: 'settings',       icon: <TbSettingsBolt /> },
 ];
 
 const UserDashboard = () => {
@@ -85,6 +89,8 @@ const UserDashboard = () => {
     switch (current) {
       case 'Dashboard':
         return <UserDashboardCard />;
+      case 'User Profile':
+        return <UserProfile />;
       case 'Order History':
         return <UserOrders />;
       case 'Certificate':
@@ -99,8 +105,8 @@ const UserDashboard = () => {
         return <UserReviews />;
       case 'Pathfinder':
         return <UserPathfinder />;
-      case 'Settings':
-        return <UserProfile />;
+      // case 'Settings':
+      //   return <UserProfile />;
       default:
         return <UserDashboardCard />;
     }

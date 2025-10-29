@@ -796,16 +796,16 @@ white-space: nowrap;
   font-weight: 700;
 }
 
-.update-btn{
-  padding: 5px 10px;
-  background-color: #00AEEF;
-  color: #FFFFFF;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 5px 5px 5px #d3d3d3;
-  margin: 5px !important;
-  font-size: 16px;
-  font-weight: 700;
+.update-profile-btn{
+  background-color: #00aeef;
+    border: 2px solid #00aeef;
+    border-radius: 50px;
+    color: #fff;
+    font-size: medium;
+    font-weight: 500;
+    height: 40px;
+    padding: 3px 10px;
+    margin: 3px 10px;
 }
 
 #exampleFormControlTextarea1 {
@@ -836,6 +836,14 @@ height: 100%;
  padding: 2vh;
  flex-direction: column;
   }
+.upload-image-text{
+  color: #4285F4;
+  font-size: medium;
+  font-weight: 400;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 10px;
+}
 .success-message {
   text-align: center;
   color: green;
@@ -895,7 +903,6 @@ height: 100%;
 
 .profile {
   padding: 10px;
-  margin-left: 150px;
 }
 .register-field {
   margin-bottom: 20px;
@@ -922,10 +929,15 @@ height: 100%;
   margin:0 1vh;
   border: 1px solid #b3b3b3;
 }
+.form-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
 .form-field input {
   height: 48px;
-  padding-right: 10px;
+  padding-right: 40px;
   border:none;
   margin:0 1vh;
   border:none;
@@ -1372,12 +1384,9 @@ min-width: 500;
   padding-top: 20px;
 }
 
-.update-btn{
+.update-profile-btn{
   width: 100%;
   padding: 5px auto;
-  border-radius: 5px;
-  border: none;
-  font-size: 14px;
 }
 
 #exampleFormControlTextarea1.form-control {
@@ -1402,10 +1411,6 @@ min-width: 500;
   margin-bottom: 0;
 }
 
-.profile {
-  padding: 10px;
-  margin-left: 0px;
-}
 .password-field input, .password-field select {
   width: 90%;
   padding-right: 20px;

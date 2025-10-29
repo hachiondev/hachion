@@ -79,26 +79,103 @@ const ContactUs = () => {
   }, []);
 
 
+// const handleFormSubmit = async (e) => {
+//   e.preventDefault();
+//   if (!isChecked) {
+//     setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+//     return;
+//   }
+//   setError("");
+
+//   const currentDate = new Date().toISOString().split("T")[0];
+
+//   const requestData = {
+//     fullName: values.name || "",
+//     emailId: values.email || "",
+//     mobileNumber: mobileNumber || "",
+//     companyName: company || "",
+//     trainingCourse: "",
+//     noOfPeople: 0,
+//     comments: values.comment || "",
+//     country: selectedCountry?.name || "",
+    
+//   };
+
+//   try {
+//     const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
+//       headers: { "Content-Type": "application/json" }
+//     });
+
+//     if (response.status === 200) {
+//       setShowModal(true);
+//       setMobileNumber("");
+//       formik.resetForm();
+//       setCompany("");
+       
+//       setSuccessMessage("✅ Query submitted successfully.");
+//       setErrorMessage("");
+//     } else {
+//       setErrorMessage("❌ Failed to submit query.");
+//       setSuccessMessage("");
+//     }
+//   } catch (error) {
+//     setErrorMessage("❌ Something went wrong while submitting the form.");
+//     setSuccessMessage("");
+//   }
+// };
+
 const handleFormSubmit = async (e) => {
   e.preventDefault();
+
+  
+  const missing = [];
+  const nameVal = (values.name || "").trim();
+  const emailVal = (values.email || "").trim();
+  const companyVal = (company || "").trim();
+  const phoneVal = (mobileNumber || "").trim();
+
+  if (!nameVal) missing.push("Full Name");
+  if (!emailVal) missing.push("Work Email");
+  if (!phoneVal) missing.push("Phone Number");
+  if (!companyVal) missing.push("Company Name");
+
+  if (missing.length) {
+    setErrorMessage(`Please fill the mandatory fields: ${missing.join(", ")}.`);
+    setSuccessMessage("");
+    return;
+  }
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+  if (!emailOk) {
+    setErrorMessage("Please enter a valid Work Email.");
+    setSuccessMessage("");
+    return;
+  }
+
+  const digitCount = (phoneVal.match(/\d/g) || []).length;
+  const phoneOk = digitCount >= 7;
+  if (!phoneOk) {
+    setErrorMessage("Please enter a valid Phone Number.");
+    setSuccessMessage("");
+    return;
+  }
+
+  
   if (!isChecked) {
     setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
     return;
   }
   setError("");
 
-  const currentDate = new Date().toISOString().split("T")[0];
-
   const requestData = {
-    fullName: values.name || "",
-    emailId: values.email || "",
-    mobileNumber: mobileNumber || "",
-    companyName: company || "",
+    fullName: nameVal,
+    emailId: emailVal,
+    mobileNumber: phoneVal,
+    companyName: companyVal,
     trainingCourse: "",
     noOfPeople: 0,
-    comments: values.comment || "",
+    comments: (values.comment || "").trim(),
     country: selectedCountry?.name || "",
-    
   };
 
   try {
@@ -111,7 +188,7 @@ const handleFormSubmit = async (e) => {
       setMobileNumber("");
       formik.resetForm();
       setCompany("");
-       
+
       setSuccessMessage("✅ Query submitted successfully.");
       setErrorMessage("");
     } else {
@@ -129,7 +206,7 @@ const handleFormSubmit = async (e) => {
     const timer = setTimeout(() => {
       setSuccessMessage("");
       setErrorMessage("");
-    }, 2000); 
+    }, 5000); 
 
     return () => clearTimeout(timer); 
   }

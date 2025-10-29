@@ -42,7 +42,7 @@ const RecentEntries = () => {
       {visibleBlogs.map((blog) => (
         <RecentEntriesCard
           key={blog.id}
-          imageSrc={`https://api.test.hachion.co/blogs/${blog.blog_image}`}
+          imageSrc={`${blog.blog_image}`}
           content={blog.title}
           category={blog.category_name}
           description={blog.description}

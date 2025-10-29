@@ -212,10 +212,10 @@ export default function UserCertificate() {
                   </div>
 
                   <div className="card-course-details">
-                    <div className="card-row">
+                    {/* <div className="card-row">
                       <p className="trainer-name">Instructor</p>
                       <p className="trainer-name">{certItem.instructor}</p>
-                    </div>
+                    </div> */}
                     <h3 className="grade">Grade {certItem.grade}</h3>
                     <p className="cert-details">
                       Issue Date <span>{certItem.issueDate}</span>

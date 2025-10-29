@@ -4,6 +4,7 @@ import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 import './Home.css';
+import axios from 'axios'; 
 
 const SidebarCard = ({
   heading,
@@ -15,14 +16,18 @@ const SidebarCard = ({
   amount,
   totalAmount,
   timeLeftLabel,
+
   
   isWishlisted = false,
-  onToggleWishlist, 
+  onToggleWishlist,
+  userEmail,        
+  course_id,        
 }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
 
   const [bookmarked, setBookmarked] = useState(!!isWishlisted);
+
   useEffect(() => {
     setBookmarked(!!isWishlisted);
   }, [isWishlisted]);
@@ -35,6 +40,33 @@ const SidebarCard = ({
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  
+  useEffect(() => {
+    if (typeof onToggleWishlist === 'function') return; 
+
+    let stop = false;
+
+    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+    const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
+
+    if (!email || !course_id) return;
+
+    (async () => {
+      try {
+        const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+          params: { email, courseId: course_id }
+        });
+        if (!stop && data && typeof data.bookmarked === 'boolean') {
+          setBookmarked(data.bookmarked);
+        }
+      } catch {
+        
+      }
+    })();
+
+    return () => { stop = true; };
+  }, [onToggleWishlist, userEmail, course_id]);
 
   const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, '-') : '';
 
@@ -74,15 +106,37 @@ const SidebarCard = ({
     }
   };
 
-  const handleBookmark = (e) => {
+  const handleBookmark = async (e) => {
     e.stopPropagation();
-    
+
     if (typeof onToggleWishlist === 'function') {
       onToggleWishlist();
       return;
     }
-    
-    setBookmarked(prev => !prev);
+
+    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+    const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
+
+    if (!email) {
+      alert('Please login before bookmarking.');
+      return;
+    }
+    if (!course_id) {
+      console.error('Missing course_id prop on SidebarCard');
+      return;
+    }
+
+    try {
+      const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
+        email,
+        courseId: course_id
+      });
+      if (data && typeof data.bookmarked === 'boolean') {
+        setBookmarked(data.bookmarked);
+      }
+    } catch (err) {
+      console.error('Wishlist toggle failed', err);
+    }
   };
 
   return (

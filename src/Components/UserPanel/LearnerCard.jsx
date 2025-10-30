@@ -55,17 +55,19 @@ const LearnerCard = (props) => {
     <>
       <div className='learner-card'>
         <div className='learner-top'>
+          <div className='learner-details'>
           <div className='learner-image'>
             <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' variant="square"/>
-          </div>
-          <div className='rating'>{renderStarRating(props.rating)}</div>
           </div>
           <div className='learner-info'>
             <div className='learner-name'>
               <p className='name'>{props.name}</p>
             </div>
-            {/* <p className='job-location'>
-              {props.location || "Unknown"}</p> */}
+            <p className='job-location'>
+              {props.location || ""}</p>
+          </div>
+          </div>
+          <div className='rating'>{renderStarRating(props.rating)}</div>
           </div>
         
         <div className="learner-description-bottom">

@@ -336,6 +336,7 @@ const InstructorForm = ({ onClose }) => {
                   <option value="0-1 Year">0-1 Year</option>
                   <option value="1-2 Years">1-2 Years</option>
                   <option value="2-3 Years">2-3 Years</option>
+                  <option value="3-4 Years">3-4 Years</option>
                   <option value="4-5 Years">4-5 Years</option>
                   <option value="5+ Years">5+ Years</option>
                   <option value="10+ Years">10+ Years</option>

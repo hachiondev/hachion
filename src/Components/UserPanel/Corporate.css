@@ -495,14 +495,20 @@ position: relative;
      align-items: flex-start;
      justify-content: space-between;
  }
+ .learner-details{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+ }
  .name{
+  display: flex;
+  flex-wrap: wrap;
      font-weight:600;
-     font-size: 18px;
+     font-size: 16px;
      margin-bottom: 2px;
      text-align: left;
-     color: #3D3D3D;
+     color: #133240;
     padding-bottom: 0vh;
-     padding-top: 10px;
  }
  .learner-name{
     display: flex;
@@ -519,7 +525,7 @@ position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: medium;
   margin-top:0px;
 }
 

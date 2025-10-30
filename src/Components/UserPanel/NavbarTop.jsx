@@ -12,8 +12,9 @@ import { MdCancel } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
 import profile1 from '../../Assets/profile2.png';
 import { FaUserAlt } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
-import { IoLogOut } from "react-icons/io5";
+import { RxDashboard } from "react-icons/rx";
+import { GoPerson } from "react-icons/go";
+import { MdLogout } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import DropdownSidebar from './DropdownSidebar';
@@ -503,17 +504,17 @@ useEffect(() => {
                 <ul  id="userMenu" className="dropdown-menu dropdown-menu-end">
                   <li>
                     <Link className="dropdown-item" to="/userdashboard/Dashboard">
-                      <FaUserAlt /> Dashboard
+                      <RxDashboard /> Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/userdashboard/Settings">
-                      <IoMdSettings /> Settings
+                    <Link className="dropdown-item" to="/userdashboard/profile">
+                      <GoPerson /> User Profile
                     </Link>
                   </li>
                   <li>
                     <button className="dropdown-item" onClick={handleLogout}>
-                      <IoLogOut /> Logout
+                      <MdLogout /> Logout
                     </button>
                   </li>
                 </ul>
@@ -549,10 +550,10 @@ useEffect(() => {
                 <span className="ms-2">{userData?.name || "User"}</span>
               </div>
               <div className="drawer-item" onClick={() => navigate('/userdashboard/Dashboard')}>
-                <FaUserAlt /> Dashboard
+                <RxDashboard /> Dashboard
               </div>
-              <div className="drawer-item" onClick={() => navigate('/userdashboard/Settings')}>
-                <IoMdSettings /> Settings
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/profile')}>
+                <GoPerson /> User Profile
               </div>
               <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                 Explore Courses
@@ -561,7 +562,7 @@ useEffect(() => {
                 Corporate Training
               </div>
               <button className="btn btn-info rounded-pill w-100 text-white" onClick={handleLogout}>
-                <IoLogOut /> Logout
+                <MdLogout /> Logout
               </button>
             </>
           ) : (

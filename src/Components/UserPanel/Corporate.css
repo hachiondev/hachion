@@ -474,10 +474,12 @@ position: relative;
 }
 
  .profile-image{
-     height: 80px !important;
-     width:80px !important;
-     border-radius: 10px;
-     border:2px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+     height: 60px;
+     width:60px ;
+     object-fit: contain;
  }
  .trainer-card{
   display: flex;
@@ -494,6 +496,7 @@ position: relative;
      flex-direction: row;
      align-items: flex-start;
      justify-content: space-between;
+     padding-bottom: 10px;
  }
  .learner-details{
   display: flex;
@@ -504,7 +507,7 @@ position: relative;
   display: flex;
   flex-wrap: wrap;
      font-weight:600;
-     font-size: 16px;
+     font-size: medium;
      margin-bottom: 2px;
      text-align: left;
      color: #133240;
@@ -566,10 +569,19 @@ position: relative;
  }
  .job-location{
      font-weight: 400;
-     font-size: 16px;
+     font-size: small;
      display: flex;
      justify-content: flex-start;
-     color: #6D6D6D;
+     color: #000000;
+     margin-bottom: 2px;
+ }
+  .company-name{
+     font-weight: 400;
+     font-size: small;
+     display: flex;
+     justify-content: flex-start;
+     color: #00AAEF;
+      margin-bottom: 2px;
  }
 
  .learner-description-bottom {
@@ -583,13 +595,13 @@ position: relative;
   justify-content: flex-start;
   padding: 10px;
   padding-top: 0;
-  width: 90%;
 }
 
  .learner-description{
      font-weight: 400;
-     font-size: 14px;
+     font-size: small;
      text-align: justify;
+     color: #133240;
  }
 
  .custom-prev-icon,
@@ -717,7 +729,8 @@ position: relative;
 .trainer-popup-content {
    display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 20px;
 }
 
 .profile-image-large {
@@ -735,7 +748,7 @@ position: relative;
   display: flex;
   justify-content: space-between;
   /* background: linear-gradient(90deg, #006489, #00aeef, #006489); */
-  color: #3D3D3D;
+  color: #133240;
 }
 .close-button {
   display: flex;
@@ -795,7 +808,7 @@ position: relative;
 }
 .blog{
   background-color:#EEEEEE;
-  ;
+  margin: 0 auto;
 }
 .blog-heading{
   font-size: 2.25rem;
@@ -1924,13 +1937,6 @@ position: relative;
       z-index: 0; /* To ensure the image is above the name */
     }   
 
-    .name{
-      font-size: 16px;
-      padding-bottom: 0vh;
-      padding-top: 5px;
-      margin-bottom: 5px;
-  }
-
   .learner-name img{
       height: 24px;
       width: 24px;
@@ -1957,17 +1963,6 @@ position: relative;
       margin-left: 0px;
       margin-bottom: 5px;
       white-space: wrap;
-    }
-
-    .job-location {
-      text-align: left;
-      font-size: 14px;
-    }
-  
-    .learner-description {
-      font-size: 12px;
-      text-align:justify;
-      
     }
 
     .learner-card-container {

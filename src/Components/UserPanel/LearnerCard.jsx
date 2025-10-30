@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { FaUserAlt } from "react-icons/fa";
 
 // Social Media Icon Selection
 const getSocialMediaLogo = (social_id) => {
@@ -57,7 +58,18 @@ const LearnerCard = (props) => {
         <div className='learner-top'>
           <div className='learner-details'>
           <div className='learner-image'>
-            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' variant="square"/>
+            {props.profileImage ? (
+            <img
+              alt={props.name}
+              src={props.profileImage}
+              variant="square"
+              className="profile-image"
+            />
+          ) : (
+            <div variant="square" className="profile-image">
+              <FaUserAlt size={28} color='#b3b3b3'/>
+            </div>
+          )}
           </div>
           <div className='learner-info'>
             <div className='learner-name'>
@@ -65,11 +77,13 @@ const LearnerCard = (props) => {
             </div>
             <p className='job-location'>
               {props.location || ""}</p>
+            <p className='company-name'>
+              {props.company || ""}</p>
           </div>
           </div>
           <div className='rating'>{renderStarRating(props.rating)}</div>
           </div>
-        
+        <p className='name'>{props.role}</p>
         <div className="learner-description-bottom">
         <p className="learner-description">
           {props.content && props.content.length > 150
@@ -90,19 +104,39 @@ const LearnerCard = (props) => {
         <DialogTitle className='top'>
           {props.name}'s Review
           <IconButton aria-label="close" onClick={() => setOpen(false)} className='close-button'>
-            <CloseIcon style={{color: '#FFFFFF', background: '#00AEEF', borderRadius: '50%'}}/>
+            <CloseIcon style={{color: '#3D3D3D', background: 'none', borderRadius: '50%'}}/>
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <div className='popup-content'>
+            <div className='learner-top'>
+             <div className='learner-details'>
           <div className='learner-image'>
-            <Avatar alt={props.name} src={props.profileImage || ''} className='profile-image' variant="square"/>
+            {props.profileImage ? (
+            <img
+              alt={props.name}
+              src={props.profileImage}
+              variant="square"
+              className="profile-image"
+            />
+          ) : (
+            <div variant="square" className="profile-image">
+              <FaUserAlt size={28} color='#b3b3b3'/>
             </div>
-            <div className='rating'>{renderStarRating(props.rating)}</div>
+          )}
+            </div>
+            <div className='learner-info'>
             <div className='learner-name'>
             <p className='name'>{props.name}</p>
-            {/* <p className='job-location'>{props.location}</p> */}
             </div>
+            <p className='job-location'>{props.location}</p>
+            <p className='company-name'>
+              {props.company || ""}</p>
+            </div>
+            </div>
+            <div className='rating'>{renderStarRating(props.rating)}</div>
+            </div>
+            <p className='name'>{props.role || ""}</p>
             <p className='learner-description'>{props.content}</p>
           </div>
         </DialogContent>

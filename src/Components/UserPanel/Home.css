@@ -1948,6 +1948,20 @@ z-index: 0;
   background: #00AEEF;
   color: white;
 }
+.card-icon-share {
+  background: #00AEEF;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.2s;
+}
 .bookmark-active {
   color: black;
 }

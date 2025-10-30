@@ -173,6 +173,8 @@ const getEmbedUrl = (url) => {
       <LearnerCard
         name={fb.employeeName}
         location={fb.location}
+        company={fb.company}
+        role={fb.role}
         content={fb.comment}
         rating={fb.employeeRating}
         profileImage={

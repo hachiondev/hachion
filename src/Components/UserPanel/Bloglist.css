@@ -5,8 +5,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 10px;
-  margin: 0 10%;
-  width: 80%;
+  margin: 0 auto;
 }
 
 /* .Blogsidebar {
@@ -77,11 +76,10 @@
 }
 
 .txtReadmore {
-  text-align: left;
-  font-size: 1rem;
-  font-weight: 700;
+  text-align: right;
+  font-size: medium;
+  font-weight: 500;
   color: #00aeef;
-  text-decoration: none;
 }
 
 .form-check-input {

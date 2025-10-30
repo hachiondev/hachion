@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import enroll from "../../Assets/dash-icon1.png";
 import learn from "../../Assets/dash-icon2.png";
 import cert from "../../Assets/dash-icon3.png";
+import { TbShare3 } from "react-icons/tb";
 import "./Dashboard.css";
 
 export default function UserCertificate() {
@@ -46,7 +47,7 @@ export default function UserCertificate() {
       setLoading(false);
       return;
     }
-    
+
     (async () => {
       try {
         const res = await fetch(
@@ -56,7 +57,8 @@ export default function UserCertificate() {
         );
         if (!res.ok) throw new Error(`Profile fetch failed: ${res.status}`);
         const data = await res.json();
-        if (!data.studentId) throw new Error("studentId missing in profile response");
+        if (!data.studentId)
+          throw new Error("studentId missing in profile response");
         setStudentId(data.studentId);
         if (data.name) setUserName(data.name);
       } catch (e) {
@@ -184,38 +186,75 @@ export default function UserCertificate() {
                 availabilityById[certItem.id] || (studentId ? "unknown" : "no");
               const isDisabled = !studentId || availability === "no";
               const btnLabel =
-                availability === "no" ? "Not available yet" : "Download Certificate";
+                availability === "no"
+                  ? "Not available yet"
+                  : "Download Certificate";
 
               return (
                 <div key={certItem.id} className="certificate-card">
-                  <div className="card-header-div">
+                  <div className="card-header-div" style={{ position: "relative" }}>
+                    {/* ✅ PDF or status display */}
                     <div
                       className="card-image"
                       style={{
                         width: "100%",
                         height: "200px",
-                        border: "1px dashed #ddd",
+                        border: "1px solid #ddd",
+                        borderRadius: "8px",
+                        overflow: "hidden",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        fontSize: "14px",
+                        backgroundColor: "#f9f9f9",
                       }}
                     >
-                      {!studentId
-                        ? "No Student ID"
-                        : availability === "yes"
-                        ? "PDF ready"
-                        : availability === "no"
-                        ? "Not issued yet"
-                        : "Checking…"}
+                      {!studentId ? (
+                        <p>No Student ID</p>
+                      ) : availability === "checking" ? (
+                        <p>Checking…</p>
+                      ) : availability === "no" ? (
+                        <p>Not issued yet</p>
+                      ) : availability === "yes" ? (
+                        <iframe
+                          src={`${getCertificateURL(
+                            studentId,
+                            certItem.courseName
+                          )}#toolbar=0`}
+                          title={`Certificate Preview for ${certItem.courseName}`}
+                          width="100%"
+                          height="100%"
+                          style={{ border: "none" }}
+                        ></iframe>
+                      ) : (
+                        <p>Loading…</p>
+                      )}
+                    </div>
+
+                    {/* Share button overlay */}
+                    <div
+                      className="card-action-icons"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        zIndex: 5,
+                        display: "flex",
+                        gap: 8,
+                        pointerEvents: "auto",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className="card-icon-share"
+                        aria-label="Share this Blog"
+                        title="Share"
+                      >
+                        <TbShare3 />
+                      </button>
                     </div>
                   </div>
 
                   <div className="card-course-details">
-                    {/* <div className="card-row">
-                      <p className="trainer-name">Instructor</p>
-                      <p className="trainer-name">{certItem.instructor}</p>
-                    </div> */}
                     <h3 className="grade">Grade {certItem.grade}</h3>
                     <p className="cert-details">
                       Issue Date <span>{certItem.issueDate}</span>

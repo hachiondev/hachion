@@ -54,7 +54,6 @@ const renderStarRating = (rating) => {
             />
           </div>
           </div>
-          <div className="trainer-description-bottom">
           <div className="learner-info">
             <div className="learner-name">
               <p className="name">{props.trainer_name}</p>
@@ -62,7 +61,9 @@ const renderStarRating = (rating) => {
             <p className="job-profile">{props.profile}</p>
             <div className='rating'>{renderStarRating(props.trainerUserRating)}</div>
           </div>
+          </div>
         <hr className="faq-seperater"/>
+        <div className="trainer-description-bottom">
           <p className="learner-description">
             {props.summary ? props.summary.substring(0, 150) : ""}...
             <span className="read-more" onClick={() => setOpen(true)}>
@@ -90,7 +91,6 @@ const renderStarRating = (rating) => {
                 </button>
               );
             })} */}
-        </div>
       </div>
 
       {/* Popup Dialog */}
@@ -104,8 +104,8 @@ const renderStarRating = (rating) => {
           >
             <CloseIcon
               style={{
-                color: "#FFFFFF",
-                background: "#00AEEF",
+                color: "#3d3d3d",
+                background: "none",
                 borderRadius: "50%",
               }}
             />
@@ -122,7 +122,6 @@ const renderStarRating = (rating) => {
                 />
               </div>
               </div>
-              <div className="trainer-description-bottom">
                 <div className="learner-info">
               <div className="learner-name">
                 <p className="name">{props.trainer_name}</p>
@@ -130,7 +129,9 @@ const renderStarRating = (rating) => {
               <p className="job-profile">{props.profile}</p>
               <div className='rating'>{renderStarRating(props.rating)}</div>
             </div>
+            </div>
             <hr className="faq-seperater"/>
+            <div className="trainer-description-bottom">
               <p className="full-review">{props.summary}</p>
               {/* {videoLinks.length > 0 &&
                 videoLinks.map((videoLink, i) => {
@@ -151,7 +152,6 @@ const renderStarRating = (rating) => {
                     </button>
                   );
                 })} */}
-          </div>
            </div>
         </DialogContent>
       </Dialog>

@@ -21,7 +21,7 @@ import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
 import Blogs from './Components/UserPanel/Blogs';
 import Salesforce from './Components/UserPanel/Salesforce';
-import QaTestingBlog from './Components/UserPanel/QaTestingBlog';
+import BlogDetails from './Components/UserPanel/BlogDetails';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
 import UserProtectedRoute from './UserProtectedRoute';
@@ -55,6 +55,8 @@ import InstructorDetails from './Components/UserPanel/InstructorDetails';
 import ViewReviews from './Components/UserPanel/ViewReviews';
 import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
 import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';
+import QueryGuard from './Components/UserPanel/QueryGuard';
+import NotFound from './Components/UserPanel/NotFound';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -89,6 +91,7 @@ function AppRoutes() {
     <>
       <TrackPageView />
       <RedirectToLowercase />
+      <QueryGuard />
       <Routes>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
@@ -135,7 +138,7 @@ function AppRoutes() {
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path="/installments/:courseName" element={<OnlineInstallments />} />
       <Route path='/payment/:courseName' element={<EnrollPayment/>}/>
-      <Route path="/blogs/:category_name/:title" element={<QaTestingBlog />} />
+      <Route path="/blogs/:category_name/:title" element={<BlogDetails />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
       <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
@@ -150,6 +153,7 @@ function AppRoutes() {
       <Route path="/sitemap" element={<Sitemap />} />
       <Route path="/summer-tech-bootcamp-for-teens" element={<KidsSummer />} />
       <Route path="/lead-form" element={<LeadForm />} />
+      <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

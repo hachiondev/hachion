@@ -1,7 +1,7 @@
 import React from "react";
 import "./Corporate.css";
 import { BsPersonCircle } from "react-icons/bs";
-import Blogimageplaceholder from "../../Assets/Default_blogimage.jpg";
+import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
 
 const RecentEntriesCard = ({ 
   imageSrc, 

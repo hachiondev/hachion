@@ -4,36 +4,34 @@
   box-sizing: border-box;
   font-family:  'Poppins', sans-serif;
 }
-.salesforce-blog-left{
-  width: 20%;
+.detail-blog-left{
+  width: 25%;
   height: 95vh;
-  background-color: #ffffff;
-  box-shadow: 5px 5px 10px #d3d3d3;
   display: flex;
   flex-direction: column;
   padding: 2vh;
 }
 
-.salesforce-blog-left h3{
-  font-size: 1.5rem;
-  font-weight: 700;
+.detail-blog-left h3{
+  font-size: large;
+  font-weight: 600;
+  color: #000;
 }
-.salesforce-blog{
+.blog-bottom{
+  margin: 40px auto;
+}
+.detail-blog{
   background-color: #EEEEEE;
   display: flex;
   flex-direction: row;
   gap: 4vh;
-  padding: 4vh;
-  padding-left: 10vw;
-  margin: 0vh;
+  margin: 20px auto;
 }
-.salesforce-blog-right{
-  width: 65%;
-  background-color: #ffffff;
-  box-shadow: 5px 5px 10px #d3d3d3;
+.detail-blog-right{
+  width: 75%;
   padding: 2vh;
 }
-.salesforce-right{
+.detail-right{
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -41,55 +39,53 @@
   gap: 3vh;
 }
 
-.salesforce-right-icon{
+.detail-right-icon{
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: 10px;
 }
-.salesforce-right p{
-  font-size: 1.5rem;
+.detail-right p{
+  font-size: medium;
 }
-.salesforce-right img{
-  height: 40px;
-  width: 40px;
+.detail-right img{
+  height: 30px;
+  width: 30px;
 }
 
-.salesforce-top{
+.detail-top{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   white-space: nowrap;
-  padding: 10px;
 }
 
- .salesforce-top h5{
-   font-size: 16px;
-   margin-bottom: 0;
-   padding: 10px;
- }
+ .detail-top-date{
+  color: #888888;
+  font-size: medium;
+}
+
+.table-of-contents{
+  margin: 10px;
+}
 
  .user-icon {
   font-size: 16px;
   margin-right: 5px;
 }
-.salesforce-middle h1{
-  font-weight: 700;
-  font-size: 2rem;
-  background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-
+.detail-middle h1{
+  font-weight: 400;
+  color: #000;
 }
-.salesforce-middle{
+.detail-middle{
   display: flex;
-  flex-direction: row;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  gap: 10px;
+  flex-direction: column;
+  margin: 20px 10px;
 }
-.salesforce-middle img{
+.detail-middle img{
   height: auto;
-  padding-right: 10px;
+  width: 100%;
 }
 .topics{
   padding-left: 4vh;
@@ -118,12 +114,12 @@
   padding-top: 4vh;
   padding-bottom: 4vh;
 }
-.salesforce-blog-bottom{
+.detail-blog-bottom{
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.salesforce-blog-bottom h3{
+.detail-blog-bottom h3{
   font-size: 1.25rem;
   font-weight: 400;
   color: #006489;
@@ -132,7 +128,7 @@
   background-color: #EEEEEE;
   cursor: pointer;
 }
-.salesforce-entries-heading{
+.detail-entries-heading{
   font-size: 2.25rem;
     font-weight: 700;
     background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
@@ -140,7 +136,7 @@
     -webkit-background-clip: text;
 
 }
-.salesforce-entries{
+.detail-entries{
   margin: 4vh;
   width: 80%;
   margin-left: 10vw;
@@ -173,14 +169,14 @@
   background-color: #006489;
 }
 @media (max-width: 1025px){
-.salesforce-blog-left{
+.detail-blog-left{
   width: 25%;
   padding: 10px;
 }
-.salesforce-blog-right{
+.detail-blog-right{
   width: 70%;
 }
-.salesforce-blog{
+.detail-blog{
   padding-left: 0px;
   gap: 10px;
 }
@@ -1515,11 +1511,11 @@ background-color: white;
       }
 
       
-    .salesforce-blog-left{
+    .detail-blog-left{
       display: none;
      }
      
-     .salesforce-blog{
+     .detail-blog{
        background-color: #EEEEEE;
        display: flex;
        flex-direction: row;
@@ -1528,13 +1524,11 @@ background-color: white;
        padding-left: 0;
        margin: 10px;
      }
-     .salesforce-blog-right{
+     .detail-blog-right{
        width: 100%;
-       background-color: #ffffff;
-       box-shadow: 5px 5px 10px #d3d3d3;
        padding: 10px;
      }
-     .salesforce-right{
+     .detail-right{
        display: flex;
        flex-direction: row;
        justify-content: flex-end;
@@ -1542,48 +1536,22 @@ background-color: white;
        gap: 20px;
      }
  
-     .salesforce-right-icon{
+     .detail-right-icon{
        display: flex;
        flex-direction: row;
        justify-content: flex-end;
        gap: 5px;
      }
  
-     .salesforce-right p{
-       font-size: 12px;
+     .detail-right p{
        margin-bottom: 5px;
      }
-     .salesforce-right img{
+     .detail-right img{
        height: 25px;
        width: 25px;
      }
-     .salesforce-middle h1{
-       font-weight: 700;
-       font-size: 24px;
-       background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-       -webkit-text-fill-color: transparent;
-       -webkit-background-clip: text;
-     
-     }
-     .salesforce-middle{
-       display: flex;
-       flex-direction: row;
-       margin-top: 10px;
-       margin-bottom: 10px;
-     }
-
-     .salesforce-top{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      white-space: nowrap;
-      padding: 5px;
-    }
- 
-     .salesforce-top h5{
-       font-size: 12px;
-       margin-bottom: 0;
-       padding: 5px;
+     .detail-middle{
+       margin: 10px 0;
      }
  
      .user-icon {
@@ -1591,11 +1559,6 @@ background-color: white;
        margin-right: 3px;
    }
  
-     .salesforce-middle img{
-       height: 50px;
-       width: 100px;
-       padding-right: 10px;
-     }
      .topics{
        padding-left: 0px;
      }
@@ -1618,14 +1581,14 @@ background-color: white;
        padding-top: 10px;
        padding-bottom: 10px;
      }
-     .salesforce-blog-bottom{
+     .detail-blog-bottom{
        display: flex;
        flex-direction: row;
        justify-content: space-between;
        align-items: center;
        margin-top: 5px;
      }
-     .salesforce-blog-bottom h3{
+     .detail-blog-bottom h3{
        font-size: 12px;
        margin-top: 3px;
        flex-wrap: wrap;
@@ -1636,10 +1599,10 @@ background-color: white;
        background-color: #EEEEEE;
        cursor: pointer;
      }
-     .salesforce-entries-heading{
+     .detail-entries-heading{
       font-size: 16px;      
      }
-     .salesforce-entries{
+     .detail-entries{
       width: 100%;
       margin-left: 10px;
      }

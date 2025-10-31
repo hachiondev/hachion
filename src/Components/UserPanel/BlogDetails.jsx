@@ -11,13 +11,13 @@ import linkedin from "../../Assets/linkedin (1).png";
 import whatsapp from "../../Assets/logos_whatsapp-icon.png";
 import email from "../../Assets/Group 39487.png";
 import { FaUserTie } from "react-icons/fa6";
-import RecentEntries from "./RecentEntries";
+import LatestArticles from "./LatestArticles";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
 
-const QaTestingBlog = () => {
+const BlogDetails = () => {
   const { category_name } = useParams();
   
   const { title } = useParams();
@@ -173,32 +173,13 @@ useEffect(() => {
         </nav>
       </div>
 
-      <div className="salesforce-blog">
-        <div className="salesforce-blog-left">
-          <h3>Recommended Publications</h3>
-          {blogs ? (
-            <p
-              key={blogs.id}
-              onClick={() => setSelectedBlog(blogs)}
-              style={{
-                cursor: "pointer",
-                color: selectedBlog?.id === blogs.id ? "#00AEEF" : "black",
-                fontWeight: selectedBlog?.id === blogs.id ? "bold" : "normal",
-              }}
-            >
-              {blogs.title}
-            </p>
-          ) : (
-            <p>No blogs available</p>
-          )}
-        </div>
-
-        <div className="salesforce-blog-right">
-          <div className="salesforce-right">
+        <div className="detail-blog container">
+        <div className="detail-blog-right">
+          <div className="detail-right">
             {/* <button className="btn-curriculum" onClick={handleDownload}>
               <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download
             </button> */}
-            <div className="salesforce-right-icon">
+            <div className="detail-right-icon">
               <p>Share :</p>
               <img
                 src={facebook}
@@ -235,19 +216,18 @@ useEffect(() => {
 
           {selectedBlog ? (
             <>
-            <div className="salesforce-middle">
+            <div className="detail-middle">
                 <img
                   src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
                   alt={selectedBlog.title}
                 />
                 <div>
-                  <h1>{selectedBlog.title}</h1>
-                  <div className="salesforce-top">
+                  <div className="detail-top">
                     {/* <h5>
                       <FaUserTie className="user-icon" /> {selectedBlog.author}
                     </h5> */}
                     {/* <h5>{selectedBlog.views || "100"} Views</h5> */}
-                    <h5>
+                    <div className="detail-top-date">
                       {(() => {
                         const d = new Date(selectedBlog.date);
                         const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -255,8 +235,9 @@ useEffect(() => {
                         const yyyy = d.getFullYear();
                         return `${mm}-${dd}-${yyyy}`;
                       })()}
-                    </h5>
+                    </div>
                   </div>
+                  <h1>{selectedBlog.title}</h1>
                 </div>
               </div>
               {headings.length > 0 && (
@@ -292,11 +273,29 @@ useEffect(() => {
             <p>No blog selected.</p>
           )}
         </div>
+
+        <div className="detail-blog-left">
+          <h3>Recent Post</h3>
+          {blogs ? (
+            <p
+              key={blogs.id}
+              onClick={() => setSelectedBlog(blogs)}
+              style={{
+                cursor: "pointer",
+                color: selectedBlog?.id === blogs.id ? "#00AEEF" : "black",
+                fontWeight: selectedBlog?.id === blogs.id ? "bold" : "normal",
+              }}
+            >
+              {blogs.title}
+            </p>
+          ) : (
+            <p>No blogs available</p>
+          )}
+        </div>
       </div>
 
       <div className='blog-bottom'>
-        <h2 className='workshop-heading'>Recent Blog Entries</h2>
-        <RecentEntries />
+        <LatestArticles />
       </div>
       <Footer />
       <StickyBar />
@@ -304,4 +303,4 @@ useEffect(() => {
   );
 };
 
-export default QaTestingBlog;
+export default BlogDetails;

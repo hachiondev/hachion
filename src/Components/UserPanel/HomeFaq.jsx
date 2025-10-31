@@ -12,9 +12,9 @@ const navigate= useNavigate();
     <div className="home-faq-data container">
       {/* Left side content */}
       <div className="home-faq-content">
-        <p className="instructor-title-text">
+        {/* <p className="instructor-title-text">
           HELP
-        </p>
+        </p> */}
         <div>
         <h2 className="association-head">FAQS</h2>
         <hr className="faq-seperater"/>

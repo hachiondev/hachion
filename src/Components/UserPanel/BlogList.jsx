@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { BsPersonCircle } from "react-icons/bs";
-import Blogimageplaceholder from "../../Assets/Default_blogimage.jpg";
+import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
 import "./Bloglist.css";
 
 const BlogList = ({ selectedCategories }) => {

@@ -284,7 +284,7 @@ const handleSubmitPopup = async () => {
     <div className='home-background'>
         <Topbar />
         <NavbarTop />
-        <div className='blogs-header'>
+        <div className='container'>
                   <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                       <li className="breadcrumb-item">

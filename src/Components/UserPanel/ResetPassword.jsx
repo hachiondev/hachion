@@ -82,7 +82,7 @@ const ResetPassword = () => {
     <div className='home-background'>
       <Topbar />
       <NavbarTop />
-      <div className='blogs-header'>
+      <div className='container'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -95,7 +95,7 @@ const ResetPassword = () => {
         </nav>
       </div>
       <img src={LoginBanner} alt='Login Banner' className='login-banner'/>
-      <div className='login'>
+      <div className='login container'>
         <div className="login-left">
           <div className="login-top">
             <h4 className='login-continue'>Create New Password</h4>

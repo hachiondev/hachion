@@ -134,7 +134,7 @@ const handleSubmit = async () => {
       <NavbarTop />
 
       {/* Breadcrumb */}
-      <div className="blogs-header">
+      <div className="container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">

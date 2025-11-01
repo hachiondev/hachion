@@ -22,6 +22,41 @@ import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
 import './Course.css';
 import { BsCart2 } from "react-icons/bs";
 
+
+const API_BASE = "http://api.test.hachion.co";
+const resolveImageUrl = (img) => {
+  if (!img) return "";
+  if (/^https?:\/\//i.test(img)) return img;
+  return `${API_BASE}${img.startsWith("/") ? "" : "/"}${img}`;
+};
+async function ensureAvatarFromApi(email, setUserData) {
+  if (!email) return;
+  try {
+    const { data } = await axios.get(`${API_BASE}/api/v1/user/myprofile`, { params: { email } });
+    const img =
+      data?.profileImageUrl
+        ? resolveImageUrl(data.profileImageUrl)
+        : data?.profileImage
+          ? resolveImageUrl(`/api/v1/user/profile/${data.profileImage}`)
+          : "";
+
+    if (img) {
+      setUserData((prev) => {
+        const next = { ...(prev || {}), picture: img, name: prev?.name || data?.name || data?.userName || "" };
+        
+        try {
+          const raw = localStorage.getItem("loginuserData");
+          const stored = raw ? JSON.parse(raw) : {};
+          localStorage.setItem("loginuserData", JSON.stringify({ ...stored, ...next }));
+        } catch {}
+        return next;
+      });
+    }
+  } catch (e) {
+    
+  }
+}
+
 const NavbarTop = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -104,8 +139,8 @@ const handleMouseLeave = () => {
     const fetchData = async () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
-          axios.get("https://api.test.hachion.co/courses/names-and-categories"),
-          // axios.get("https://api.test.hachion.co/blog"),
+          axios.get("http://api.test.hachion.co/courses/names-and-categories"),
+          // axios.get("http://api.test.hachion.co/blog"),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -151,11 +186,19 @@ const handleMouseLeave = () => {
     
     setUserData(parsed);
     setIsLoggedIn(true);
+    if (!parsed.picture && parsed.email) {
+  ensureAvatarFromApi(parsed.email, setUserData);
+}
   } else {
     
     localStorage.removeItem("avatar");
     setUserData(parsed);
     setIsLoggedIn(true);
+
+if (!parsed.picture && parsed.email) {
+  ensureAvatarFromApi(parsed.email, setUserData);
+}
+
   }
       }
     } 
@@ -180,7 +223,7 @@ const handleMouseLeave = () => {
 
 const handleLogout = async () => {
   try {
-    await fetch("https://api.test.hachion.co/api/logout", {
+    await fetch("http://api.test.hachion.co/api/logout", {
       method: "POST",
       credentials: "include", 
     });
@@ -262,7 +305,7 @@ useEffect(() => {
   }
 
   
-  fetch("https://api.test.hachion.co/api/me", { credentials: "include" })
+  fetch("http://api.test.hachion.co/api/me", { credentials: "include" })
     .then(r => r.ok ? r.json() : null)
     .then(u => {
       if (!u) return;
@@ -425,7 +468,7 @@ useEffect(() => {
                   >
                     <img
                     className="result-image"
-                    src={`https://api.test.hachion.co/${item.courseImage}`}
+                    src={`http://api.test.hachion.co/${item.courseImage}`}
                     alt={item.type}
                   />
                     {item.courseName || item.title}
@@ -623,7 +666,7 @@ useEffect(() => {
                 >
                   <img
                     className="result-image"
-                    src={`https://api.test.hachion.co/${item.courseImage}`}
+                    src={`http://api.test.hachion.co/${item.courseImage}`}
                     alt={item.type}
                   />
                   {item.courseName || item.title}

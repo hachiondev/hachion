@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import { BsFileEarmarkPdfFill } from "react-icons/bs";
@@ -10,111 +10,127 @@ import twitter from "../../Assets/twitter.png";
 import linkedin from "../../Assets/linkedin (1).png";
 import whatsapp from "../../Assets/logos_whatsapp-icon.png";
 import email from "../../Assets/Group 39487.png";
-import { FaUserTie } from "react-icons/fa6";
 import LatestArticles from "./LatestArticles";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
+import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
+import { IoLogoWhatsapp } from "react-icons/io";
+import { IoIosMail } from "react-icons/io";
 
 const BlogDetails = () => {
   const { category_name } = useParams();
-  
   const { title } = useParams();
-const id = title?.split("-").pop();
+  const navigate = useNavigate();
+  const id = title?.split("-").pop();
+
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [blogs, setBlogs] = useState([]);
-  const [helmetKey, setHelmetKey] = useState(0);
   const [selectedBlog, setSelectedBlog] = useState(null);
+  const [helmetKey, setHelmetKey] = useState(0);
   const [headings, setHeadings] = useState([]);
   const [processedHtml, setProcessedHtml] = useState("");
 
+  // ✅ Fetch single blog for details
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchSelectedBlog = async () => {
       try {
         const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
-        setBlogs(response.data);
         setSelectedBlog(response.data);
-        console.log("API Response:", response.data);
       } catch (error) {
-        console.error("Error fetching blog data:", error);
+        console.error("Error fetching selected blog:", error);
       }
     };
-
-    fetchBlogs();
+    fetchSelectedBlog();
   }, [id]);
+
+  // ✅ Fetch all blogs for sidebar “Recent Post”
+  useEffect(() => {
+    const fetchAllBlogs = async () => {
+      try {
+        const response = await axios.get("https://api.test.hachion.co/blog");
+        const mappedBlogs = response.data.map((blog) => ({
+          ...blog,
+          blog_image: blog.blog_image
+            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            : Blogimageplaceholder,
+        }));
+        const sortedBlogs = mappedBlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setBlogs(sortedBlogs);
+      } catch (error) {
+        console.error("Error fetching all blogs:", error);
+      }
+    };
+    fetchAllBlogs();
+  }, []);
+
+  // ✅ Scroll button
+  useEffect(() => {
+    const handleScroll = () => setShowScrollButton(window.scrollY > 800);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     setHelmetKey((prev) => prev + 1);
   }, [selectedBlog]);
 
-  const handleDownload = () => {
-    if (selectedBlog && selectedBlog.blog_pdf) {
-      const pdfUrl = `https://api.test.hachion.co/blogs/${selectedBlog.blog_pdf}`;
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.setAttribute("download", selectedBlog.blog_pdf);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      alert("No PDF available for this blog.");
+  // ✅ Parse HTML for headings and inline images
+  useEffect(() => {
+    if (selectedBlog?.description) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(selectedBlog.description, "text/html");
+      const foundHeadings = [];
+      const headingTags = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+      headingTags.forEach((heading) => {
+        const text = heading.textContent.trim();
+        const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+        heading.setAttribute("id", id);
+        foundHeadings.push({ id, text });
+      });
+
+      const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))/gi;
+      doc.body.innerHTML = doc.body.innerHTML.replace(
+        imageUrlRegex,
+        '<img src="$1" alt="Image" style="max-width:100%; display:block; margin:10px auto;" />'
+      );
+
+      setHeadings(foundHeadings);
+      setProcessedHtml(doc.body.innerHTML);
     }
+  }, [selectedBlog]);
+
+  const handleImageError = (e) => {
+    e.target.src = Blogimageplaceholder;
   };
 
   const blogUrl = encodeURIComponent(window.location.href);
 
-  const shareOnFacebook = () => {
-    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`;
-    window.open(facebookShareUrl, "_blank");
+  const shareLinks = {
+    facebook: () =>
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`, "_blank"),
+    twitter: () =>
+      window.open(`https://twitter.com/intent/tweet?url=${blogUrl}`, "_blank"),
+    linkedin: () =>
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`, "_blank"),
+    whatsapp: () =>
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(blogUrl)}`, "_blank"),
+    email: () => {
+      const rawBlogUrl = window.location.href;
+      const emailSubject = "Check out this blog!";
+      const emailBody = `I thought you might like this blog: ${rawBlogUrl}`;
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodeURIComponent(
+        emailSubject
+      )}&body=${encodeURIComponent(emailBody)}`;
+      window.open(gmailUrl, "_blank");
+    },
   };
-
-  const shareOnLinkedIn = () => {
-    const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`;
-    window.open(linkedInShareUrl, "_blank");
-  };
-
-  const shareOnTwitter = () => {
-    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${blogUrl}`;
-    window.open(twitterShareUrl, "_blank");
-  };
-
-  const shareOnWhatsapp = () => {
-  const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(blogUrl)}`;
-  window.open(whatsappShareUrl, "_blank");
-};
-
-const shareOnEmail = () => {
-  const rawBlogUrl = window.location.href;
-  const emailSubject = "Check out this blog!";
-  const emailBody = `I thought you might like this blog: ${rawBlogUrl}`;
-  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-  window.open(gmailUrl, "_blank");
-};
-
-useEffect(() => {
-  if (selectedBlog?.description) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(selectedBlog.description, "text/html");
-    const foundHeadings = [];
-    const headingTags = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
-    headingTags.forEach((heading) => {
-      const text = heading.textContent.trim();
-      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-      heading.setAttribute("id", id);
-      foundHeadings.push({ id, text });
-    });
-
-    const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))/gi;
-    doc.body.innerHTML = doc.body.innerHTML.replace(
-      imageUrlRegex,
-      '<img src="$1" alt="Image" style="max-width:100%; display:block; margin:10px auto;" />'
-    );
-
-    setHeadings(foundHeadings);
-    setProcessedHtml(doc.body.innerHTML);
-  }
-}, [selectedBlog]);
 
   return (
     <>
@@ -130,9 +146,7 @@ useEffect(() => {
         />
         <meta
           property="og:title"
-          content={
-            selectedBlog?.meta_title || "Best Online IT Certification Courses"
-          }
+          content={selectedBlog?.meta_title || "Best Online IT Certification Courses"}
         />
         <meta
           property="og:description"
@@ -154,151 +168,152 @@ useEffect(() => {
         <meta name="robots" content="index, follow" />
       </Helmet>
 
-      <Topbar />
-      <NavbarTop />
+      <div className="home-background">
+        <Topbar />
+        <NavbarTop />
 
-      <div className="blogs-header">
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item">
-              <a href="/blogs">Blog</a> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              {category_name?.replace(/-/g, " ") || "Loading..."}
-            </li>
-          </ol>
-        </nav>
-      </div>
+        <div className="blogs-header">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="/">Home</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item">
+                <a href="/blogs">Blog</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                {category_name?.replace(/-/g, " ") || "Loading..."}
+              </li>
+            </ol>
+          </nav>
+        </div>
 
         <div className="detail-blog container">
-        <div className="detail-blog-right">
-          <div className="detail-right">
-            {/* <button className="btn-curriculum" onClick={handleDownload}>
-              <BsFileEarmarkPdfFill className="btn-pdf-icon" /> Download
-            </button> */}
-            <div className="detail-right-icon">
-              <p>Share :</p>
-              <img
-                src={facebook}
-                alt="facebook"
-                style={{ cursor: "pointer" }}
-                onClick={shareOnFacebook}
-              />
-              <img
-                src={twitter}
-                alt="twitter"
-                style={{ cursor: "pointer" }}
-                onClick={shareOnTwitter}
-              />
-              <img
-                src={linkedin}
-                alt="linkedin"
-                style={{ cursor: "pointer" }}
-                onClick={shareOnLinkedIn}
-              />
-              <img
-                src={whatsapp}
-                alt="WhatsApp"
-                style={{ cursor: "pointer" }}
-                onClick={shareOnWhatsapp}
-              />
-              <img
-                src={email}
-                alt="Email"
-                style={{ cursor: "pointer" }}
-                onClick={shareOnEmail}
-              />
-            </div>
-          </div>
+          <div className="detail-blog-right">
 
-          {selectedBlog ? (
-            <>
-            <div className="detail-middle">
-                <img
-                  src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
-                  alt={selectedBlog.title}
-                />
-                <div>
-                  <div className="detail-top">
-                    {/* <h5>
-                      <FaUserTie className="user-icon" /> {selectedBlog.author}
-                    </h5> */}
-                    {/* <h5>{selectedBlog.views || "100"} Views</h5> */}
-                    <div className="detail-top-date">
-                      {(() => {
-                        const d = new Date(selectedBlog.date);
-                        const mm = String(d.getMonth() + 1).padStart(2, "0");
-                        const dd = String(d.getDate()).padStart(2, "0");
-                        const yyyy = d.getFullYear();
-                        return `${mm}-${dd}-${yyyy}`;
-                      })()}
+            {selectedBlog ? (
+              <>
+                <div className="detail-middle">
+                  <img
+                    src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
+                    alt={selectedBlog.title}
+                    onError={handleImageError}
+                  />
+                  <div>
+                    <div className="detail-top">
+                      <div className="detail-top-date">
+                        {(() => {
+                          const d = new Date(selectedBlog.date);
+                          return d.toLocaleDateString("en-US", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          });
+                        })()}
+                      </div>
                     </div>
+                    <h1>{selectedBlog.title}</h1>
                   </div>
-                  <h1>{selectedBlog.title}</h1>
                 </div>
+
+                {headings.length > 0 && (
+                  <div className="table-of-contents">
+                    <h3>Topics</h3>
+                    <ul>
+                      {headings.map((h) => (
+                        <li key={h.id}>
+                          <a
+                            href={`#${h.id}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              document.getElementById(h.id)?.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                              });
+                            }}
+                          >
+                            {h.text}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div
+                  className="topics"
+                  dangerouslySetInnerHTML={{ __html: processedHtml }}
+                />
+              </>
+            ) : (
+              <p>Loading blog...</p>
+            )}
+
+          <div className="detail-right">
+              <div className="detail-right-icon">
+                <p>Share :</p>
+                <FaFacebookF className="detail-right-social" onClick={shareLinks.facebook} />
+                <FaTwitter className="detail-right-social" onClick={shareLinks.twitter} />
+                <FaLinkedinIn className="detail-right-social" onClick={shareLinks.linkedin} />
+                <IoLogoWhatsapp className="detail-right-social" onClick={shareLinks.whatsapp} />
+                <IoIosMail className="detail-right-social" onClick={shareLinks.email} />
               </div>
-              {headings.length > 0 && (
-                <div className="table-of-contents">
-                  <h3>Topics</h3>
-                  <ul>
-                    {headings.map((h) => (
-                      <li key={h.id}>
-                        <a
-                          href={`#${h.id}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById(h.id)?.scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                            });
-                          }}
-                        >
-                          {h.text}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+            </div>
+            </div>
+
+          <div className="detail-blog-left">
+            <h3>Recent Post</h3>
+            {blogs.length > 0 ? (
+              blogs.slice(0, 5).map((blog) => (
+                <div
+                  key={blog.id}
+                  className="recent-post-item"
+                  onClick={() => {
+                    navigate(
+                      `/blogs/${blog.category_name
+                        .replace(/\s+/g, "-")
+                        .toLowerCase()}/${blog.id}`
+                    );
+                    window.scrollTo(0, 0);
+                  }}
+                >
+                  <img
+                    src={blog.blog_image}
+                    alt={blog.title}
+                    className="recent-post-img"
+                    onError={(e) => (e.target.src = Blogimageplaceholder)}
+                  />
+                  <div className="recent-post-text">
+                    <div className="recent-post-row">
+                    <FaCalendarAlt className="recent-post-date-icon"/>
+                    <p className="recent-post-date">
+                      {(() => {
+                        const d = new Date(blog.date);
+                        return d.toLocaleDateString("en-US", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      })()}
+                    </p>
+                    </div>
+                    <h5 className="recent-post-title">{blog.title}</h5>
+                  </div>
                 </div>
-              )}
-
-              <div
-                className="topics"
-                dangerouslySetInnerHTML={{ __html: processedHtml }}
-              />
-            </>
-          ) : (
-            <p>No blog selected.</p>
-          )}
+              ))
+            ) : (
+              <p>No blogs available</p>
+            )}
+          </div>
         </div>
 
-        <div className="detail-blog-left">
-          <h3>Recent Post</h3>
-          {blogs ? (
-            <p
-              key={blogs.id}
-              onClick={() => setSelectedBlog(blogs)}
-              style={{
-                cursor: "pointer",
-                color: selectedBlog?.id === blogs.id ? "#00AEEF" : "black",
-                fontWeight: selectedBlog?.id === blogs.id ? "bold" : "normal",
-              }}
-            >
-              {blogs.title}
-            </p>
-          ) : (
-            <p>No blogs available</p>
-          )}
+        <div className="blog-bottom">
+          <LatestArticles />
         </div>
+        <Footer />
       </div>
 
-      <div className='blog-bottom'>
-        <LatestArticles />
-      </div>
-      <Footer />
-      <StickyBar />
+      {showScrollButton && <StickyBar />}
     </>
   );
 };

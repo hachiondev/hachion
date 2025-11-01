@@ -40,7 +40,66 @@
   padding: 10px;
   transition: none !important;
 }
+.course-skeleton-explore-card {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in;
+}
 
+.skeleton-explore-image {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
+  background: #e0e0e0;
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-explore-text {
+  width: 80%;
+  height: 16px;
+  border-radius: 4px;
+  margin-top: 12px;
+  background: #e0e0e0;
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-explore-text.title {
+  width: 70%;
+  height: 18px;
+}
+
+.skeleton-explore-text.subtitle {
+  width: 50%;
+  height: 14px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .sidebar-right-all .SidebarCard {
   width: 300px; /* Card width */
   height: 340px; /* Card height */

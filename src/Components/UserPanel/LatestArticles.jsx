@@ -9,27 +9,34 @@ const LatestArticles = () => {
   const [blogs, setBlogs] = useState([]);
 
  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await axios.get("https://api.test.hachion.co/blog");
+  const fetchBlogs = async () => {
+    try {
+      const response = await axios.get("https://api.test.hachion.co/blog");
 
-        const mappedBlogs = response.data.map((blog) => ({
-          ...blog,
-          avatar: blog.authorImage
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`
-            : "", 
-          blog_image: blog.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
-            : "",
-        }));
+      const mappedBlogs = response.data.map((blog) => ({
+        ...blog,
+        avatar: blog.authorImage
+          ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`
+          : "",
+        blog_image: blog.blog_image
+          ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+          : "",
+      }));
 
-        setBlogs(mappedBlogs.reverse());
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-      }
-    };
-    fetchBlogs();
-  }, []);
+      const sortedBlogs = mappedBlogs.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA;
+      });
+
+      setBlogs(sortedBlogs);
+    } catch (error) {
+      console.error("Error fetching blog data:", error);
+    }
+  };
+
+  fetchBlogs();
+}, []);
 
   const visibleBlogs = blogs.slice(0, 4);
   return (

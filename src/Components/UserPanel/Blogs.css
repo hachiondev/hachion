@@ -12,19 +12,72 @@
   padding: 2vh;
 }
 
-.detail-blog-left h3{
-  font-size: large;
+.detail-blog-left h3 {
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.recent-post-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.recent-post-item:hover {
+  transform: translateY(-2px);
+}
+
+.recent-post-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  object-position: left;
+  border-radius: 6px;
+}
+
+.recent-post-text {
+  display: flex;
+  flex-direction: column;
+}
+.recent-post-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.recent-post-date-icon {
+  font-size: small;
+  color: #00AEEF;
+}
+
+.recent-post-date {
+  font-size: small;
+  font-weight: 400;
+  color: #333931;
+  margin: 0;
+}
+
+.recent-post-title {
+  font-size: medium;
   font-weight: 600;
-  color: #000;
+  color: #0E2A46;
+  margin: 4px 0 0 0;
+  line-height: 1.2;
 }
 .blog-bottom{
   margin: 40px auto;
 }
 .detail-blog{
-  background-color: #EEEEEE;
   display: flex;
   flex-direction: row;
-  gap: 4vh;
+  gap: 10px;
   margin: 20px auto;
 }
 .detail-blog-right{
@@ -47,10 +100,28 @@
 }
 .detail-right p{
   font-size: medium;
+  color: #0E2A46;
+  font-weight: 400;
 }
-.detail-right img{
-  height: 30px;
-  width: 30px;
+.detail-right-social {
+  font-size: medium;
+  color: #00AEEF;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.detail-right-social:hover {
+  color: #fff;
+  background-color: #00AEEF;
 }
 
 .detail-top{
@@ -1509,24 +1580,19 @@ background-color: white;
         margin-bottom: 5px;
         margin-top: 5px;
       }
-
-      
-    .detail-blog-left{
-      display: none;
-     }
      
      .detail-blog{
        background-color: #EEEEEE;
        display: flex;
-       flex-direction: row;
-       gap: 0;
+       flex-direction: column;
        padding: 0;
        padding-left: 0;
        margin: 10px;
      }
-     .detail-blog-right{
+     .detail-blog-right, .detail-blog-left{
        width: 100%;
        padding: 10px;
+       height: auto;
      }
      .detail-right{
        display: flex;

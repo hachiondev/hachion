@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TeensCard from './TeensCard';
+import CourseCard from './CourseCard';
 import CardsPagination from './CardsPagination';
 import './Home.css';
 import dayjs from "dayjs";
@@ -344,7 +344,7 @@ const getSaleEndsAt = (courseName, countryCode) => {
             .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
             .map((course, index) => (
               
-              <TeensCard
+              <CourseCard
                 key={index}
                 heading={course.courseName}
                 month={course.numberOfClasses}

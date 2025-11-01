@@ -3,11 +3,14 @@ package Service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
+import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
+import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 
@@ -109,4 +112,6 @@ public interface UserService {
 	public Optional<RegisterStudent> getUserForSignin(String email, String status);
 
 	public Optional<RegisterStudent> findByEmailForProfile(String email);
+
+	public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest request, @Nullable MultipartFile profileImage);
 }

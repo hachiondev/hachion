@@ -13,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "registerstudent")
@@ -90,7 +89,7 @@ public class RegisterStudent {
 
 	@Column(name = "otp_generated_time", nullable = true)
 	private LocalDateTime otpGeneratedTime;
-	
+
 	private String status;
 
 	@Column
@@ -101,6 +100,18 @@ public class RegisterStudent {
 
 	@Column(name = "profile_image")
 	private String profileImage;
+
+	@Column(name = "dob", nullable = true)
+	private LocalDate dob;
+
+	@Column(name = "gender", nullable = true)
+	private String gender;
+
+	@Column(name = "address", length = 500)
+	private String address;
+
+	@Column(name = "bio", length = 1000)
+	private String bio;
 
 	public Long getId() {
 		return id;
@@ -302,15 +313,15 @@ public class RegisterStudent {
 		this.date = date;
 	}
 
-	public RegisterStudent(Long id, String studentId, String name, String email, String mobile, String password,
-			String country, String location, String visa_status, String time_zone, String analyst_name, String source,
-			String remarks, String comments, String send_details, String additional_email, Integer additional_phone,
-			String course_name, String firstName, String lastName, String userName, String oTP, Boolean oTPStatus,
-			LocalDateTime otpGeneratedTime, String mode) {
+	public RegisterStudent(Long id, String studentId, String email, String mobile, String password, String country,
+			String location, String visa_status, String time_zone, String analyst_name, String source, String remarks,
+			String comments, String send_details, String additional_email, Integer additional_phone, String course_name,
+			String firstName, String lastName, String userName, String oTP, Boolean oTPStatus,
+			LocalDateTime otpGeneratedTime, String status, String mode, LocalDate date, String profileImage,
+			LocalDate dob, String gender, String address, String bio) {
 		super();
 		this.id = id;
 		this.studentId = studentId;
-//		this.name = name;
 		this.email = email;
 		this.mobile = mobile;
 		this.password = password;
@@ -332,7 +343,14 @@ public class RegisterStudent {
 		OTP = oTP;
 		OTPStatus = oTPStatus;
 		this.otpGeneratedTime = otpGeneratedTime;
+		this.status = status;
 		this.mode = mode;
+		this.date = date;
+		this.profileImage = profileImage;
+		this.dob = dob;
+		this.gender = gender;
+		this.address = address;
+		this.bio = bio;
 	}
 
 	@Override
@@ -376,6 +394,43 @@ public class RegisterStudent {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public RegisterStudent orElseThrow(Object object) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

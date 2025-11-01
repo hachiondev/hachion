@@ -42,6 +42,8 @@ import com.hachionUserDashboard.dto.CourseUserRequest;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.OtpRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
+import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
+import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
@@ -67,35 +69,41 @@ public class UserController {
 
 	@Value("${spring.security.oauth2.client.registration.google.client-id}")
 	private String clientId;
-	
-	
-	 @Value("${app.frontend.base-url}")
-	    private String feBase; // e.g. https://test.hachion.co or https://hachion.co
 
-	    @Value("${app.frontend.paths.home:/}")
-	    private String feHomePath;
+	@Value("${app.frontend.base-url}")
+	private String feBase; // e.g. https://test.hachion.co or https://hachion.co
 
-	    @Value("${app.frontend.paths.login:/login}")
-	    private String feLoginPath;
+	@Value("${app.frontend.paths.home:/}")
+	private String feHomePath;
 
-	    @Value("${app.frontend.paths.signup:/signup/collect-phone}")
-	    private String feSignupPath;
+	@Value("${app.frontend.paths.login:/login}")
+	private String feLoginPath;
 
-	    // Cookie settings per env
-	    @Value("${app.cookies.domain:}")
-	    private String cookieDomain; // ".hachion.co" in test/prod, empty in dev
+	@Value("${app.frontend.paths.signup:/signup/collect-phone}")
+	private String feSignupPath;
 
-	    @Value("${app.cookies.secure:false}")
-	    private boolean cookieSecure;
+	// Cookie settings per env
+	@Value("${app.cookies.domain:}")
+	private String cookieDomain; // ".hachion.co" in test/prod, empty in dev
 
-	    private String base() {
-	        return feBase.endsWith("/") ? feBase.substring(0, feBase.length() - 1) : feBase;
-	    }
+	@Value("${app.cookies.secure:false}")
+	private boolean cookieSecure;
 
-	    private URI homeUri()   { return URI.create(base() + feHomePath); }
-	    private URI loginUri()  { return URI.create(base() + feLoginPath); }
-	    private URI signupUri() { return URI.create(base() + feSignupPath); }
+	private String base() {
+		return feBase.endsWith("/") ? feBase.substring(0, feBase.length() - 1) : feBase;
+	}
 
+	private URI homeUri() {
+		return URI.create(base() + feHomePath);
+	}
+
+	private URI loginUri() {
+		return URI.create(base() + feLoginPath);
+	}
+
+	private URI signupUri() {
+		return URI.create(base() + feSignupPath);
+	}
 
 //	@PostMapping("/send-otp")
 //	public ResponseEntity<String> sendOtp(@RequestParam String email) {
@@ -158,7 +166,7 @@ public class UserController {
 	@PutMapping("/forgotpassword")
 	public ResponseEntity<String> forgotpassword(@RequestParam String email) {
 		return new ResponseEntity<>(userService.forgotpassword(email), HttpStatus.OK);
-		
+
 	}
 
 	@PutMapping("/setpassword")
@@ -167,125 +175,106 @@ public class UserController {
 	}
 
 	@GetMapping("/profile")
-	public ResponseEntity<?> getUserProfile(
-	        Authentication authentication,
-	        @RequestParam(name = "flow", defaultValue = "login") String flow
-	) throws URISyntaxException {
+	public ResponseEntity<?> getUserProfile(Authentication authentication,
+			@RequestParam(name = "flow", defaultValue = "login") String flow) throws URISyntaxException {
 
-	    System.out.println("\n=== [/api/v1/user/profile] ===");
-	    System.out.println("Flow (request param): " + flow);
-	    System.out.println("Auth present       : " + (authentication != null));
+		System.out.println("\n=== [/api/v1/user/profile] ===");
+		System.out.println("Flow (request param): " + flow);
+		System.out.println("Auth present       : " + (authentication != null));
 
-	    if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User user)) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
-	    }
+		if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User user)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
+		}
 
-	    String email = user.getAttribute("email");
-	    String username = user.getAttribute("name");
+		String email = user.getAttribute("email");
+		String username = user.getAttribute("name");
 
-	    // ---- NEW: safely extract Google profile picture (OIDC preferred, fallback to attribute) ----
-	    String picture = null;
-	    if (authentication.getPrincipal() instanceof OidcUser oidc) {
-	        picture = oidc.getPicture(); // same as (String) oidc.getAttribute("picture")
-	    }
-	    if (picture == null) {
-	        picture = user.getAttribute("picture"); // may be null if scope not granted
-	    }
+		// ---- NEW: safely extract Google profile picture (OIDC preferred, fallback to
+		// attribute) ----
+		String picture = null;
+		if (authentication.getPrincipal() instanceof OidcUser oidc) {
+			picture = oidc.getPicture(); // same as (String) oidc.getAttribute("picture")
+		}
+		if (picture == null) {
+			picture = user.getAttribute("picture"); // may be null if scope not granted
+		}
 
-	    // Build avatar cookie only if we actually have a picture URL
-	    ResponseCookie avatarCookie = null;
-	    if (picture != null && !picture.isBlank()) {
-	        // URL-encode to be safe in cookie value
-	        String enc = URLEncoder.encode(picture, StandardCharsets.UTF_8);
-	        avatarCookie = ResponseCookie.from("avatar", enc)
-	                .path("/")
-	                .maxAge(86400)     // 1 day
-	                .sameSite("Lax")
-	                // .httpOnly(true)  // enable if you don't need JS to read it
-	                 .secure(true)    // enable when serving over HTTPS
-	                .build();
-	        System.out.println("Avatar (picture) present, cookie prepared.");
-	    } else {
-	        System.out.println("No picture attribute from provider.");
-	    }
-	    // --------------------------------------------------------------------------------------------
+		// Build avatar cookie only if we actually have a picture URL
+		ResponseCookie avatarCookie = null;
+		if (picture != null && !picture.isBlank()) {
+			// URL-encode to be safe in cookie value
+			String enc = URLEncoder.encode(picture, StandardCharsets.UTF_8);
+			avatarCookie = ResponseCookie.from("avatar", enc).path("/").maxAge(86400) // 1 day
+					.sameSite("Lax")
+					// .httpOnly(true) // enable if you don't need JS to read it
+					.secure(true) // enable when serving over HTTPS
+					.build();
+			System.out.println("Avatar (picture) present, cookie prepared.");
+		} else {
+			System.out.println("No picture attribute from provider.");
+		}
+		// --------------------------------------------------------------------------------------------
 
-	    if (email == null || email.isBlank()) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "No email from provider"));
-	    }
+		if (email == null || email.isBlank()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "No email from provider"));
+		}
 
-	    if ("signup".equalsIgnoreCase(flow)) {
+		if ("signup".equalsIgnoreCase(flow)) {
 
-	        RegisterStudent saved = userService.saveUser(username, email, picture);
-	        System.out.println("Signup path -> saved userId=" + saved.getId() + ", email=" + saved.getEmail());
+			RegisterStudent saved = userService.saveUser(username, email, picture);
+			System.out.println("Signup path -> saved userId=" + saved.getId() + ", email=" + saved.getEmail());
 
-	        // Attach avatar cookie if present
-	        if (avatarCookie != null) {
-	            return ResponseEntity.status(HttpStatus.FOUND)
-	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                    .location(new java.net.URI("https://hachion.co"))
-	                    .build();
-	        } else {
-	            return ResponseEntity.status(HttpStatus.FOUND)
-	                    .location(new java.net.URI("https://hachion.co"))
-	                    .build();
-	        }
+			// Attach avatar cookie if present
+			if (avatarCookie != null) {
+				return ResponseEntity.status(HttpStatus.FOUND)
+						.header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
+						.location(new java.net.URI("https://hachion.co")).build();
+			} else {
+				return ResponseEntity.status(HttpStatus.FOUND).location(new java.net.URI("https://hachion.co")).build();
+			}
 
-	    } else {
-	        boolean exists = userService.findByEmailForProfile(email).isPresent();
-	        if (!exists) {
-	            System.out.println("Login path -> user not found for email=" + email);
+		} else {
+			boolean exists = userService.findByEmailForProfile(email).isPresent();
+			if (!exists) {
+				System.out.println("Login path -> user not found for email=" + email);
 
-	            org.springframework.http.ResponseCookie err =
-	                    org.springframework.http.ResponseCookie.from("auth_error", "not_registered")
-	                            .path("/")
-	                            .maxAge(120)
-	                            .sameSite("Lax")
-	                            // .httpOnly(true)
-	                             .secure(true)
-	                            .build();
+				org.springframework.http.ResponseCookie err = org.springframework.http.ResponseCookie
+						.from("auth_error", "not_registered").path("/").maxAge(120).sameSite("Lax")
+						// .httpOnly(true)
+						.secure(true).build();
 
-	            // If you prefer not to set avatar for non-registered users, omit avatarCookie here
-	            if (avatarCookie != null) {
-	                return ResponseEntity.status(HttpStatus.FOUND)
-	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
-	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                        .location(new java.net.URI("https://hachion.co/login"))
-	                        .build();
-	            } else {
-	                return ResponseEntity.status(HttpStatus.FOUND)
-	                        .header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
-	                        .location(new java.net.URI("https://hachion.co/login"))
-	                        .build();
-	            }
-	        }
+				// If you prefer not to set avatar for non-registered users, omit avatarCookie
+				// here
+				if (avatarCookie != null) {
+					return ResponseEntity.status(HttpStatus.FOUND)
+							.header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
+							.header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
+							.location(new java.net.URI("https://hachion.co/login")).build();
+				} else {
+					return ResponseEntity.status(HttpStatus.FOUND)
+							.header(org.springframework.http.HttpHeaders.SET_COOKIE, err.toString())
+							.location(new java.net.URI("https://hachion.co/login")).build();
+				}
+			}
 
-	        System.out.println("Login path -> user exists for email=" + email);
+			System.out.println("Login path -> user exists for email=" + email);
 
-	        org.springframework.http.ResponseCookie clear =
-	                org.springframework.http.ResponseCookie.from("auth_error", "")
-	                        .path("/")
-	                        .maxAge(0)
-	                        .sameSite("Lax")
-	                        .build();
+			org.springframework.http.ResponseCookie clear = org.springframework.http.ResponseCookie
+					.from("auth_error", "").path("/").maxAge(0).sameSite("Lax").build();
 
-	        // Set both: clear old auth_error and (if present) avatar
-	        if (avatarCookie != null) {
-	            return ResponseEntity.status(HttpStatus.FOUND)
-	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
-	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
-	                    .location(new java.net.URI("https://hachion.co/"))
-	                    .build();
-	        } else {
-	            return ResponseEntity.status(HttpStatus.FOUND)
-	                    .header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
-	                    .location(new java.net.URI("https://hachion.co/"))
-	                    .build();
-	        }
-	    }
+			// Set both: clear old auth_error and (if present) avatar
+			if (avatarCookie != null) {
+				return ResponseEntity.status(HttpStatus.FOUND)
+						.header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
+						.header(org.springframework.http.HttpHeaders.SET_COOKIE, avatarCookie.toString())
+						.location(new java.net.URI("https://hachion.co/")).build();
+			} else {
+				return ResponseEntity.status(HttpStatus.FOUND)
+						.header(org.springframework.http.HttpHeaders.SET_COOKIE, clear.toString())
+						.location(new java.net.URI("https://hachion.co/")).build();
+			}
+		}
 	}
-
-
 
 	@GetMapping("/signin")
 	public ResponseEntity<?> signIn(Authentication authentication) throws URISyntaxException {
@@ -349,7 +338,6 @@ public class UserController {
 		return ResponseEntity.ok(profile);
 	}
 
-
 	@PostMapping(value = "/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> resetPasswordJson(@RequestBody UserRegistrationRequest request) {
 		userService.resetPassword(request, null);
@@ -406,4 +394,18 @@ public class UserController {
 
 		return ResponseEntity.ok(Map.of("ok", true));
 	}
+
+//	
+//	@PostMapping("/profile/update")
+//	public ResponseEntity<UserProfileUpdateResponse> updateUserProfile(
+//	        @RequestBody UserProfileUpdateRequest data) {
+//	    UserProfileUpdateResponse response = userService.updateProfile(data);
+//	    return ResponseEntity.ok(response);
+//	}
+	@PostMapping(value = "/profile/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public UserProfileUpdateResponse updateProfile(@RequestPart("data") UserProfileUpdateRequest request,
+			@RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+		return userService.updateProfile(request, profileImage);
+	}
+
 }

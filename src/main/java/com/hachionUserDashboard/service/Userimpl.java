@@ -1,10 +1,15 @@
 
 package com.hachionUserDashboard.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -12,6 +17,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
+import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
+import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
 import com.hachionUserDashboard.dto.UserRegistrationRequest;
 import com.hachionUserDashboard.entity.RegisterStudent;
 import com.hachionUserDashboard.repository.RegisterStudentRepository;
@@ -30,6 +38,7 @@ import Response.LoginResponse;
 import Response.UserProfileResponse;
 import Service.UserService;
 import jakarta.mail.MessagingException;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class Userimpl implements UserService {
@@ -52,6 +61,7 @@ public class Userimpl implements UserService {
 
 	@Value("${user.profile.image.upload.dir}")
 	private String uploadDir;
+	private static final DateTimeFormatter OUT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	@Override
 	public String sendOtp(String email) {
@@ -94,7 +104,6 @@ public class Userimpl implements UserService {
 	@Override
 	public String registerApi(UserRegistrationRequest registrationRequest) throws MessagingException {
 
-	
 		RegisterStudent user = userRepository.findByEmail(registrationRequest.getEmail());
 
 		if (user == null) {
@@ -193,19 +202,17 @@ public class Userimpl implements UserService {
 		return userRepository.save(newUser);
 	}
 
-	
 	public Optional<RegisterStudent> getUserForSignin(String email, String status) {
 		return userRepository.findByEmailAndSignupStatus(email, status);
 	}
 
 	@Override
 	public RegisterStudent signInWithGoogle(String email, String username) {
-		
+
 		RegisterStudent existing = userRepository.findBYEmailForOauth(email).orElseThrow(NoSuchElementException::new);
 
-		
 		existing.setUserName(username);
-		
+
 		return userRepository.save(existing);
 	}
 
@@ -438,6 +445,13 @@ public class Userimpl implements UserService {
 			response.setMobile(user.getMobile());
 			response.setStudentId(user.getStudentId());
 			response.setProfileImage(user.getProfileImage());
+			response.setGender(user.getGender());
+			response.setAddress(user.getAddress());
+			response.setBio(user.getBio());
+			response.setLocation(user.getLocation());
+			response.setTimeZone(user.getTime_zone());
+//			response.setDob(user.getDob() != null ? user.getDob().format(OUT) : null);
+			response.setDob(user.getDob()); // <-- no manual formatting, same type
 
 			return response;
 		} else {
@@ -590,4 +604,218 @@ public class Userimpl implements UserService {
 		return userRepository.findByEmailForProfile(email);
 	}
 
+	@Transactional
+	@Override
+	public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest request,
+			@Nullable MultipartFile profileImage) {
+
+		if (request == null || request.getEmail() == null || request.getEmail().isBlank()) {
+			throw new IllegalArgumentException("Email is required to update profile.");
+		}
+
+		RegisterStudent user = userRepository.findByEmail(request.getEmail());
+		if (user == null) {
+			throw new IllegalArgumentException("User not found for email: " + request.getEmail());
+		}
+
+		// 🚫 Do NOT update email or mobile
+		if (request.getFirstName() != null)
+			user.setFirstName(request.getFirstName().trim());
+		if (request.getLastName() != null)
+			user.setLastName(request.getLastName().trim());
+
+		// auto-set username if missing
+		if (request.getUserName() != null && !request.getUserName().isBlank()) {
+			user.setUserName(request.getUserName().trim());
+		} else {
+			String fn = user.getFirstName() != null ? user.getFirstName() : "";
+			String ln = user.getLastName() != null ? user.getLastName() : "";
+			user.setUserName((fn + " " + ln).trim());
+		}
+
+		if (request.getDob() != null) { // field present (could be empty to clear)
+			String dobStr = request.getDob().trim();
+			if (dobStr.isEmpty()) {
+				user.setDob(null); // <-- clear DOB
+			} else {
+				DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+				user.setDob(LocalDate.parse(dobStr, fmt));
+			}
+		}
+
+		if (request.getGender() != null)
+			user.setGender(request.getGender().trim());
+		if (request.getLocation() != null)
+			user.setLocation(request.getLocation().trim());
+		if (request.getTimeZone() != null)
+			user.setTime_zone(request.getTimeZone().trim());
+		if (request.getAddress() != null)
+			user.setAddress(request.getAddress().trim());
+		if (request.getBio() != null)
+			user.setBio(request.getBio().trim());
+
+		// ----- Optional profile image -----
+		if (profileImage != null && !profileImage.isEmpty()) {
+			try {
+				Path baseDir = Paths.get(uploadDir).toAbsolutePath().normalize();
+				Files.createDirectories(baseDir);
+
+				String studentId = (user.getStudentId() != null) ? user.getStudentId() : "USER";
+				String original = profileImage.getOriginalFilename();
+				String safeOriginal = (original == null ? "profile.png" : original).replaceAll("[^a-zA-Z0-9._-]", "_");
+
+				String ext;
+				int dot = safeOriginal.lastIndexOf('.');
+				if (dot > 0 && dot < safeOriginal.length() - 1) {
+					ext = safeOriginal.substring(dot); // includes dot
+				} else {
+					String ct = profileImage.getContentType();
+					ext = (ct != null && ct.endsWith("jpeg")) ? ".jpg" : ".png";
+				}
+
+				String newFileName = studentId + "_" + System.currentTimeMillis() + ext;
+				Path newFilePath = baseDir.resolve(newFileName);
+
+				// delete old file (best-effort)
+				String oldFile = user.getProfileImage();
+				if (oldFile != null && !oldFile.isBlank()) {
+					try {
+						Files.deleteIfExists(baseDir.resolve(oldFile));
+					} catch (IOException ignore) {
+						/* best-effort */ }
+				}
+
+				// save new file
+				Files.copy(profileImage.getInputStream(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+				// update DB with filename
+				user.setProfileImage(newFileName);
+
+			} catch (IOException ioe) {
+				throw new RuntimeException("Failed to save profile image", ioe);
+			}
+		}
+
+		// Save everything (including image filename if changed)
+		userRepository.save(user);
+
+		// ----- Build response (after image handling) -----
+		UserProfileUpdateResponse response = new UserProfileUpdateResponse();
+		response.setMessage("✅ Profile updated successfully.");
+		response.setEmail(user.getEmail());
+		response.setFirstName(user.getFirstName());
+		response.setLastName(user.getLastName());
+		response.setUserName(user.getUserName());
+		response.setDob(
+				user.getDob() != null ? user.getDob().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+						: null);
+		response.setGender(user.getGender());
+		response.setLocation(user.getLocation());
+		response.setTimeZone(user.getTime_zone());
+		response.setAddress(user.getAddress());
+		response.setBio(user.getBio());
+
+		if (user.getProfileImage() != null && !user.getProfileImage().isBlank()) {
+			response.setProfileImageUrl("/api/v1/user/profile/" + user.getProfileImage());
+		}
+
+		return response;
+	}
 }
+//	@Override
+//	public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest request) {
+//		if (request == null || request.getEmail() == null || request.getEmail().isBlank()) {
+//			throw new IllegalArgumentException("Email is required to update profile.");
+//		}
+//
+//		RegisterStudent user = userRepository.findByEmail(request.getEmail());
+//		if (user == null) {
+//			throw new IllegalArgumentException("User not found for email: " + request.getEmail());
+//		}
+//
+//		// 🚫 Do NOT update email or mobile
+//		if (request.getFirstName() != null)
+//			user.setFirstName(request.getFirstName().trim());
+//		if (request.getLastName() != null)
+//			user.setLastName(request.getLastName().trim());
+//
+//		// auto-set username if missing
+//		if (request.getUserName() != null && !request.getUserName().isBlank()) {
+//			user.setUserName(request.getUserName().trim());
+//		} else {
+//			String fn = user.getFirstName() != null ? user.getFirstName() : "";
+//			String ln = user.getLastName() != null ? user.getLastName() : "";
+//			user.setUserName((fn + " " + ln).trim());
+//		}
+//
+//		
+//		if (request.getDob() != null) { // field present (could be empty to clear)
+//		    String dobStr = request.getDob().trim();
+//		    if (dobStr.isEmpty()) {
+//		        user.setDob(null); // <-- clear DOB
+//		    } else {
+//		        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//		        user.setDob(LocalDate.parse(dobStr, fmt));
+//		    }
+//		}
+//		
+//
+//		if (request.getGender() != null)
+//			user.setGender(request.getGender().trim());
+//		if (request.getLocation() != null)
+//			user.setLocation(request.getLocation().trim());
+//		if (request.getTimeZone() != null)
+//			user.setTime_zone(request.getTimeZone().trim());
+//		if (request.getAddress() != null)
+//			user.setAddress(request.getAddress().trim());
+//		if (request.getBio() != null)
+//			user.setBio(request.getBio().trim());
+//
+//		userRepository.save(user);
+//
+//		// ✅ Build Response
+//		UserProfileUpdateResponse response = new UserProfileUpdateResponse();
+//		response.setMessage("✅ Profile updated successfully.");
+//		response.setEmail(user.getEmail());
+//		response.setFirstName(user.getFirstName());
+//		response.setLastName(user.getLastName());
+//		response.setUserName(user.getUserName());
+//		response.setDob(
+//				user.getDob() != null ? user.getDob().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+//						: null);
+//		response.setGender(user.getGender());
+//		response.setLocation(user.getLocation());
+//		response.setTimeZone(user.getTime_zone());
+//		response.setAddress(user.getAddress());
+//		response.setBio(user.getBio());
+//
+////		if (profileImage != null && !profileImage.isEmpty()) {
+////	    try {
+////	        String originalFilename = profileImage.getOriginalFilename();
+////	        String studentId = user.getStudentId();
+////
+////	        // Optional sanitization
+////	        String sanitizedFilename = originalFilename.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+////	        String newFileName = studentId + "_" + sanitizedFilename;
+////
+////	        // Delete old image if it exists
+////	        String oldFileName = user.getProfileImage();
+////	        if (oldFileName != null && !oldFileName.isEmpty()) {
+////	            Path oldFilePath = Paths.get(uploadDir, oldFileName);
+////	            Files.deleteIfExists(oldFilePath);
+////	        }
+////
+////	        // Save new image
+////	        Path newFilePath = Paths.get(uploadDir, newFileName);
+////	        Files.createDirectories(newFilePath.getParent());
+////	        Files.write(newFilePath, profileImage.getBytes());
+////
+////	        user.setProfileImage(newFileName);
+////
+////	    } catch (IOException e) {
+////	        System.out.println("Failed to save profile image: " + e.getMessage());
+////	    }
+////	}
+//
+//		return response;
+//	}

@@ -152,10 +152,14 @@ justify-content: flex-end;
 .spam-msg{
     display: flex;
     justify-content: center;
+    gap: 5px;
     padding: 5px;
     font-size: x-small;
-    width: 360px;
     white-space: wrap;
+}
+.spam-msg span{
+    color: #FF0000;
+    white-space: nowrap;
 }
 .login-banner {
   display: none;
@@ -223,11 +227,6 @@ justify-content: flex-end;
     border: none;
     cursor: pointer;
   }
-  
-  /* .input-group-text img {
-    width: 30px;
-    height: 30px;
-  } */
   
   .form-check-input {
     color: black !important;
@@ -1074,8 +1073,7 @@ color: #333333;
     align-items: center;
     justify-content: space-between;
     /* gap: 30px; */
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 1vh;
 }
 .register-btn{
     width: 360px;

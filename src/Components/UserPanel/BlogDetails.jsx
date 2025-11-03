@@ -10,7 +10,7 @@ import twitter from "../../Assets/twitter.png";
 import linkedin from "../../Assets/linkedin (1).png";
 import whatsapp from "../../Assets/logos_whatsapp-icon.png";
 import email from "../../Assets/Group 39487.png";
-import LatestArticles from "./LatestArticles";
+import MoreBlogs from "./MoreBlogs";
 import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -35,15 +35,20 @@ const BlogDetails = () => {
   const [helmetKey, setHelmetKey] = useState(0);
   const [headings, setHeadings] = useState([]);
   const [processedHtml, setProcessedHtml] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [recentLoading, setRecentLoading] = useState(true);
 
   // ✅ Fetch single blog for details
   useEffect(() => {
     const fetchSelectedBlog = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
         setSelectedBlog(response.data);
       } catch (error) {
         console.error("Error fetching selected blog:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchSelectedBlog();
@@ -52,6 +57,7 @@ const BlogDetails = () => {
   // ✅ Fetch all blogs for sidebar “Recent Post”
   useEffect(() => {
     const fetchAllBlogs = async () => {
+      setRecentLoading(true);
       try {
         const response = await axios.get("https://api.test.hachion.co/blog");
         const mappedBlogs = response.data.map((blog) => ({
@@ -60,10 +66,14 @@ const BlogDetails = () => {
             ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
             : Blogimageplaceholder,
         }));
-        const sortedBlogs = mappedBlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedBlogs = mappedBlogs.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
         setBlogs(sortedBlogs);
       } catch (error) {
         console.error("Error fetching all blogs:", error);
+      } finally {
+        setRecentLoading(false);
       }
     };
     fetchAllBlogs();
@@ -90,7 +100,10 @@ const BlogDetails = () => {
 
       headingTags.forEach((heading) => {
         const text = heading.textContent.trim();
-        const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+        const id = text
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w-]/g, "");
         heading.setAttribute("id", id);
         foundHeadings.push({ id, text });
       });
@@ -190,8 +203,9 @@ const BlogDetails = () => {
 
         <div className="detail-blog container">
           <div className="detail-blog-right">
-
-            {selectedBlog ? (
+            {loading ? (
+              <div className="blog-details-skeleton-card large"></div>
+            ) : selectedBlog ? (
               <>
                 <div className="detail-middle">
                   <img
@@ -249,7 +263,7 @@ const BlogDetails = () => {
               <p>Loading blog...</p>
             )}
 
-          <div className="detail-right">
+            <div className="detail-right">
               <div className="detail-right-icon">
                 <p>Share :</p>
                 <FaFacebookF className="detail-right-social" onClick={shareLinks.facebook} />
@@ -259,56 +273,65 @@ const BlogDetails = () => {
                 <IoIosMail className="detail-right-social" onClick={shareLinks.email} />
               </div>
             </div>
-            </div>
+          </div>
 
+          {/* ✅ RECENT POSTS with Skeleton Loader */}
           <div className="detail-blog-left">
             <h3>Recent Post</h3>
-            {blogs.length > 0 ? (
-              blogs.slice(0, 5).map((blog) => (
-                <div
-                  key={blog.id}
-                  className="recent-post-item"
-                  onClick={() => {
-                    navigate(
-                      `/blogs/${blog.category_name
-                        .replace(/\s+/g, "-")
-                        .toLowerCase()}/${blog.id}`
-                    );
-                    window.scrollTo(0, 0);
-                  }}
-                >
-                  <img
-                    src={blog.blog_image}
-                    alt={blog.title}
-                    className="recent-post-img"
-                    onError={(e) => (e.target.src = Blogimageplaceholder)}
-                  />
-                  <div className="recent-post-text">
-                    <div className="recent-post-row">
-                    <FaCalendarAlt className="recent-post-date-icon"/>
-                    <p className="recent-post-date">
-                      {(() => {
-                        const d = new Date(blog.date);
-                        return d.toLocaleDateString("en-US", {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                        });
-                      })()}
-                    </p>
-                    </div>
-                    <h5 className="recent-post-title">{blog.title}</h5>
+            {recentLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <div className="recent-post-skeleton" key={i}>
+                    <div className="recent-skeleton-image"></div>
+                    <div className="recent-skeleton-text subtitle"></div>
+                    <div className="recent-skeleton-text title"></div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>No blogs available</p>
-            )}
+                ))
+              : blogs.length > 0 ? (
+                  blogs.slice(0, 5).map((blog) => (
+                    <div
+                      key={blog.id}
+                      className="recent-post-item"
+                      onClick={() => {
+                        navigate(
+                          `/blogs/${blog.category_name
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()}/${blog.id}`
+                        );
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      <img
+                        src={blog.blog_image}
+                        alt={blog.title}
+                        className="recent-post-img"
+                        onError={(e) => (e.target.src = Blogimageplaceholder)}
+                      />
+                      <div className="recent-post-text">
+                        <div className="recent-post-row">
+                          <FaCalendarAlt className="recent-post-date-icon" />
+                          <p className="recent-post-date">
+                            {(() => {
+                              const d = new Date(blog.date);
+                              return d.toLocaleDateString("en-US", {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              });
+                            })()}
+                          </p>
+                        </div>
+                        <h5 className="recent-post-title">{blog.title}</h5>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No blogs available</p>
+                )}
           </div>
         </div>
 
         <div className="blog-bottom">
-          <LatestArticles />
+          <MoreBlogs scrollToTop={false} />
         </div>
         <Footer />
       </div>

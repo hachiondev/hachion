@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 dayjs.extend(customParseFormat);
 
-const API_BASE = (process.env.REACT_APP_API_BASE || "http://api.test.hachion.co").replace(/\/+$/,"");
+const API_BASE = (process.env.REACT_APP_API_BASE || "https://api.test.hachion.co").replace(/\/+$/,"");
 const resolveImageUrl = (img) => {
   if (!img) return "";
   if (/^https?:\/\//i.test(img)) return img;
@@ -132,6 +132,8 @@ const UserProfile = () => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName]   = useState('');
+  const [canChangePassword, setCanChangePassword] = useState(true);
+
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -186,12 +188,12 @@ const UserProfile = () => {
         new Blob([JSON.stringify(payload)], { type: 'application/json' })
       );
 
-      if (isFileLike(profileImage)) {
-        form.append('profileImage', profileImage);
-      }
-
+      
+if (canChangePassword && isFileLike(profileImage)) {
+  form.append('profileImage', profileImage);
+}
       const resp = await axios.post(
-        'http://api.test.hachion.co/api/v1/user/profile/update',
+        'https://api.test.hachion.co/api/v1/user/profile/update',
         form
       );
 
@@ -216,7 +218,7 @@ const UserProfile = () => {
       if (r.profileImageUrl) {
         const fullUrl = r.profileImageUrl.startsWith('http')
           ? r.profileImageUrl
-          : `http://api.test.hachion.co${r.profileImageUrl}`;
+          : `https://api.test.hachion.co${r.profileImageUrl}`;
         setProfileImage(fullUrl);
       }
       setName(
@@ -240,7 +242,7 @@ const UserProfile = () => {
       const parsedUser = JSON.parse(storedUser);
       const parsedEmail = parsedUser.email;
 
-      axios.get(`http://api.test.hachion.co/api/v1/user/myprofile`, {
+      axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -263,9 +265,22 @@ const UserProfile = () => {
         setAddress(data.address || '');
         setBio(data.bio || '');
         setDob(parseDobFromApi(data.dob));
+        const provider = data.primaryProvider || data.provider || null;
+const hasPw = (typeof data.passwordSet === 'boolean') ? data.passwordSet
+            : (typeof data.passwordEnabled === 'boolean') ? data.passwordEnabled
+            : undefined;
+
+
+if (provider === 'GOOGLE') {
+  setCanChangePassword(false);
+} else if (hasPw === false) {
+  setCanChangePassword(false);
+} else if (hasPw === true || provider === 'LOCAL') {
+  setCanChangePassword(true);
+}
 
         if (data.profileImage) {
-          const fullImageUrl = `http://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`;
+          const fullImageUrl = `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`;
           setProfileImage(fullImageUrl);
         }
       })
@@ -314,7 +329,7 @@ const UserProfile = () => {
 
     try {
       const encodedMobile = encodeURIComponent(value);
-      await axios.get(`http://api.test.hachion.co/check-mobile?mobile=${encodedMobile}`);
+      await axios.get(`https://api.test.hachion.co/check-mobile?mobile=${encodedMobile}`);
       setMobileError('');
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -362,7 +377,7 @@ const UserProfile = () => {
     setIsUpdating(true);
 
     try {
-      const response = await axios.post('http://api.test.hachion.co/api/v1/user/reset-password', formData, {
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/reset-password', formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
 
@@ -402,16 +417,25 @@ const UserProfile = () => {
   };
   const closeMenu = () => setAnchorEl(null);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) setProfileImage(file);
-  };
+  
+const handleImageUpload = (e) => {
 
-  const removeImage = () => setProfileImage(null);
+  if (!canChangePassword) return;
+  const file = e.target.files[0];
+  if (file) setProfileImage(file);
+};
+
+  
+  const removeImage = () => {
+  
+  if (!canChangePassword) return;
+  setProfileImage(null);
+};
+
 
   return (
     <>
-      <div className="dashboard-activity-title">
+      {/* <div className="dashboard-activity-title">
         {["Profile", "Password", "Social Share"].map((tab) => (
           <button
             key={tab}
@@ -421,7 +445,18 @@ const UserProfile = () => {
             {tab}
           </button>
         ))}
-      </div>
+      </div> */}
+<div className="dashboard-activity-title">
+  {(canChangePassword ? ["Profile", "Password", "Social Share"] : ["Profile", "Social Share"]).map((tab) => (
+    <button
+      key={tab}
+      className={`tab-button ${activeTab === tab ? "active" : ""}`}
+      onClick={() => setActiveTab(tab)}
+    >
+      {tab}
+    </button>
+  ))}
+</div>
 
       {activeTab === "Profile" && (
         <div className="write-review">
@@ -436,7 +471,7 @@ const UserProfile = () => {
                 onChange={handleImageUpload}
               />
 
-              <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
+              {/* <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
                 <StyledBadge
                   overlap="circular"
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -461,7 +496,60 @@ const UserProfile = () => {
               </label>
               <label htmlFor="imageUpload" className="upload-image-text">
                 {profileImage ? "Edit profile photo" : "Upload profile photo"}
-              </label>
+              </label> */}
+              {canChangePassword ? (
+  <>
+    <label htmlFor="imageUpload" style={{ cursor: 'pointer' }}>
+      <StyledBadge
+        overlap="circular"
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        badgeContent={
+          profileImage ? (
+            <FiX size={16} color="red" onClick={removeImage} style={{ cursor: "pointer" }} />
+          ) : null
+        }
+      >
+        <LargeAvatar
+          src={
+            profileImage
+              ? typeof profileImage === 'string'
+                ? profileImage
+                : URL.createObjectURL(profileImage)
+              : undefined
+          }
+        >
+          {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
+        </LargeAvatar>
+      </StyledBadge>
+    </label>
+    <label htmlFor="imageUpload" className="upload-image-text">
+      {profileImage ? "Edit profile photo" : "Upload profile photo"}
+    </label>
+  </>
+) : (
+  <>
+    <StyledBadge
+      overlap="circular"
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    >
+      <LargeAvatar
+        src={
+          profileImage
+            ? typeof profileImage === 'string'
+              ? profileImage
+              : URL.createObjectURL(profileImage)
+            : undefined
+        }
+      >
+        {!profileImage && <FaUserAlt size={50} color="#00AEEF" />}
+      </LargeAvatar>
+    </StyledBadge>
+    <p className="upload-image-text" style={{ color: '#888', cursor: 'not-allowed' }}>
+      Profile photo synced from Google
+    </p>
+  </>
+)}
+
             </div>
 
             <div className="instructor-fields">
@@ -544,21 +632,51 @@ const UserProfile = () => {
                 <div className="register-field">
                   <div className="password-field">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        format="DD-MM-YYYY"
-                        value={dob ? dayjs(dob, 'DD-MM-YYYY', true) : null}
-                        onChange={(newValue) =>
-                          setDob(newValue ? dayjs(newValue).format('DD-MM-YYYY') : '')
-                        }
-                        slotProps={{
-                          textField: {
-                            className: 'form-control',
-                            placeholder: 'Select your DOB',
-                            fullWidth: true
-                          }
-                        }}
-                      />
-                    </LocalizationProvider>
+                    <DatePicker
+                      format="DD-MM-YYYY"
+                      value={dob ? dayjs(dob, 'DD-MM-YYYY', true) : null}
+                      onChange={(newValue) =>
+                        setDob(newValue ? dayjs(newValue).format('DD-MM-YYYY') : '')
+                      }
+                      slotProps={{
+                        textField: {
+                          variant: 'outlined',
+                          placeholder: 'Select your DOB',
+                          fullWidth: true,
+                          InputProps: {
+                            sx: {
+                              borderRadius: '8px',
+                              fontSize: '16px',
+                              width: '360px',
+                              height: '48px',
+                              backgroundColor: '#fff',
+                              '& input': {
+                                padding: '10px 12px',
+                              },
+                            },
+                          },
+                        },
+                      }}
+                      sx={{
+                        width: '100%',
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#fff',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#00AEEF',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#00AEEF',
+                            borderWidth: '1.5px',
+                          },
+                        },
+                        '& .MuiIconButton-root': {
+                          color: '#00AEEF',
+                        },
+                      }}
+                    />
+                  </LocalizationProvider>
                   </div>
                 </div>
               </div>
@@ -657,7 +775,7 @@ const UserProfile = () => {
         </div>
       )}
 
-      {activeTab === "Password" && (
+      {canChangePassword && activeTab === "Password" && (
         <div className="write-review">
           <div className="dashboard-nav">Update Password</div>
           <div>

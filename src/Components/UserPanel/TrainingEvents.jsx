@@ -261,6 +261,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
     {/* Mode Select */}
     <select
     className="custom-select-drop"
+    aria-label="Filter by mode"
       id="modeFilter"
       value={modeFilter}
       onChange={(e) => handleModeChange(e)}
@@ -273,6 +274,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
     {/* Time Select */}
     <select
     className="custom-select-drop"
+    aria-label="Filter by time"
       id="timeFilter"
       value={timeFilter}
       onChange={(e) => handleTimeChange(e)}
@@ -299,7 +301,9 @@ const getRuleDiscountPct = (courseName, countryCode) => {
            }}
       />
       <button className="btn btn-info d-flex align-items-center justify-content-center search-btn"
-      type="submit" onClick={handleSearchIconClick}>
+      type="submit" 
+      aria-label="Search courses"
+      onClick={handleSearchIconClick}>
         <IoSearch size={20} className="text-white" />
       </button>
     </div>
@@ -383,7 +387,9 @@ const getRuleDiscountPct = (courseName, countryCode) => {
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       setViewAll(!viewAll);
-    }}>
+    }}
+    aria-label={viewAll ? "View fewer courses" : "View more courses"}
+    >
           {viewAll ? "View Less" : "View More"}
         </button>
       </div>

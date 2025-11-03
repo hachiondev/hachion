@@ -304,7 +304,6 @@ const expandRuleCountry = (token) => {
   return [normalizeStr(t)];
 };
 
-
 const expandUserCountry = (cc) => {
   const code = (cc || "").toUpperCase();
   const name = regionNames.of(code) || "";

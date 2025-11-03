@@ -7,10 +7,15 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 const countryToCurrencyMap = {
-  IN: 'INR',  US: 'USD',  GB: 'GBP',  AU: 'AUD',  CA: 'CAD',  AE: 'AED',  JP: 'JPY',  EU: 'EUR',
-  TH: 'THB',  DE: 'EUR',  FR: 'EUR',  QA: 'QAR',  CN: 'CNY',  RU: 'RUB',  KR: 'KRW',  BR: 'BRL',
-  MX: 'MXN',  ZA: 'ZAR',  NL: 'EUR',
+  IN: 'INR', US: 'USD', GB: 'GBP', AU: 'AUD', CA: 'CAD', AE: 'AED', JP: 'JPY', EU: 'EUR',
+  TH: 'THB', DE: 'EUR', FR: 'EUR', QA: 'QAR', CN: 'CNY', RU: 'RUB', KR: 'KRW', BR: 'BRL',
+  MX: 'MXN', ZA: 'ZAR', NL: 'EUR',
 };
+
+const SkeletonCard = () => (
+  <div className="sidebar-card skeleton-card">
+  </div>
+);
 
 const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }) => {
   const [courses, setCourses] = useState([]);
@@ -18,6 +23,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
   const [discountRules, setDiscountRules] = useState([]);
   const [country, setCountry] = useState('US');
   const [countdowns, setCountdowns] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
@@ -28,30 +34,33 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const [coursesRes, trainersRes] = await Promise.all([
           axios.get("https://api.test.hachion.co/courses/all"),
-          axios.get("https://api.test.hachion.co/trainers") 
+          axios.get("https://api.test.hachion.co/trainers"),
         ]);
 
         const all = Array.isArray(coursesRes.data) ? coursesRes.data : [];
         const trainers = Array.isArray(trainersRes.data) ? trainersRes.data : [];
 
-        
-        const withTrainer = all.map(c => {
+        const withTrainer = all.map((c) => {
           if (c.trainer) return c;
-          const match = trainers.find(t => normalize(t.course_name) === normalize(c.courseName));
-          return match ? { ...c, trainer: match.trainer_name } : c; 
+          const match = trainers.find(
+            (t) => normalize(t.course_name) === normalize(c.courseName)
+          );
+          return match ? { ...c, trainer: match.trainer_name } : c;
         });
 
         setCourses(withTrainer);
       } catch (error) {
         console.error("Error fetching courses/trainers:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourses();
   }, []);
 
-  
   useEffect(() => {
     let filtered = courses;
 
@@ -59,17 +68,17 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
       filtered = filtered.filter((c) => filters.categories.includes(c.courseCategory));
     }
 
-if (filters.levels && filters.levels.length > 0) {
-  filtered = filtered.filter((c) => filters.levels.includes(c.level));
-}
+    if (filters.levels && filters.levels.length > 0) {
+      filtered = filtered.filter((c) => filters.levels.includes(c.level));
+    }
 
     if (filters.price && filters.price.length > 0) {
-  filtered = filtered.filter((c) => {
-    const paidAmount = country === 'IN' ? Number(c.itotal || 0) : Number(c.total || 0);
-    const priceType = paidAmount > 0 ? "Paid" : "Free";
-    return filters.price.includes(priceType);
-  });
-}
+      filtered = filtered.filter((c) => {
+        const paidAmount = country === 'IN' ? Number(c.itotal || 0) : Number(c.total || 0);
+        const priceType = paidAmount > 0 ? "Paid" : "Free";
+        return filters.price.includes(priceType);
+      });
+    }
 
     setFilteredCourses(filtered);
     if (onTotalCardsChange) onTotalCardsChange(filtered.length);
@@ -85,14 +94,19 @@ if (filters.levels && filters.levels.length > 0) {
         const cur = countryToCurrencyMap[cc] || 'USD';
         setCurrency(cur);
 
-        if (cc === 'IN' || cc === 'US') { setFxFromUSD(1); return; }
+        if (cc === 'IN' || cc === 'US') {
+          setFxFromUSD(1);
+          return;
+        }
 
         const cached = JSON.parse(localStorage.getItem('fxRatesUSD') || 'null');
-        const fresh = cached && (Date.now() - cached.t) < 6 * 60 * 60 * 1000;
+        const fresh = cached && Date.now() - cached.t < 6 * 60 * 60 * 1000;
         let rates = cached?.rates;
 
         if (!fresh) {
-          const exchangeResponse = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+          const exchangeResponse = await axios.get(
+            'https://api.exchangerate-api.com/v4/latest/USD'
+          );
           rates = exchangeResponse.data.rates;
           localStorage.setItem('fxRatesUSD', JSON.stringify({ t: Date.now(), rates }));
         }
@@ -171,15 +185,14 @@ if (filters.levels && filters.levels.length > 0) {
       const countries = Array.isArray(r.countryNames) ? r.countryNames : [];
 
       const courseOk =
-        courses.some(c => normalizeStr(c) === courseKey) ||
-        courses.some(c => normalizeStr(c) === "all");
+        courses.some((c) => normalizeStr(c) === courseKey) ||
+        courses.some((c) => normalizeStr(c) === "all");
 
       const countryOk =
-        countries.some(c => {
+        countries.some((c) => {
           const tokens = expandRuleCountry(c);
-          return tokens.some(t => userCountryTokens.has(t));
-        }) ||
-        countries.some(c => normalizeStr(c) === "all");
+          return tokens.some((t) => userCountryTokens.has(t));
+        }) || countries.some((c) => normalizeStr(c) === "all");
 
       if (courseOk && countryOk) {
         const pct = Number(r.discountPercentage || 0);
@@ -202,15 +215,14 @@ if (filters.levels && filters.levels.length > 0) {
       const countries = Array.isArray(r.countryNames) ? r.countryNames : [];
 
       const courseOk =
-        courses.some(c => normalizeStr(c) === courseKey) ||
-        courses.some(c => normalizeStr(c) === "all");
+        courses.some((c) => normalizeStr(c) === courseKey) ||
+        courses.some((c) => normalizeStr(c) === "all");
 
       const countryOk =
-        countries.some(c => {
+        countries.some((c) => {
           const tokens = expandRuleCountry(c);
-          return tokens.some(t => userCountryTokens.has(t));
-        }) ||
-        countries.some(c => normalizeStr(c) === "all");
+          return tokens.some((t) => userCountryTokens.has(t));
+        }) || countries.some((c) => normalizeStr(c) === "all");
 
       if (courseOk && countryOk) return r;
     }
@@ -248,10 +260,7 @@ if (filters.levels && filters.levels.length > 0) {
         const hours = Math.floor((totalSec % 86400) / 3600);
 
         const pad = (n) => n.toString().padStart(2, "0");
-        const label =
-          days > 0
-            ? `${days}d ${pad(hours)}h Left`
-            : `${pad(hours)}h Left`;
+        const label = days > 0 ? `${days}d ${pad(hours)}h Left` : `${pad(hours)}h Left`;
 
         next[c.id ?? c.courseName] = label;
       });
@@ -273,59 +282,51 @@ if (filters.levels && filters.levels.length > 0) {
 
   return (
     <div className="course-card-container">
-      {currentCards.length > 0 ? (
-        currentCards.map((course, index) => (
-          <SidebarCard
-            key={course.id || index}
-            heading={course.courseName}
-            image={`https://api.test.hachion.co/${course.courseImage}`}
-            discountPercentage={
-              (() => {
+      {loading
+        ? Array.from({ length: cardsPerPage }).map((_, i) => <SkeletonCard key={i} />)
+        : currentCards.length > 0
+        ? currentCards.map((course, index) => (
+            <SidebarCard
+              key={course.id || index}
+              heading={course.courseName}
+              image={`https://api.test.hachion.co/${course.courseImage}`}
+              discountPercentage={(() => {
                 const rulePct = getRuleDiscountPct(course.courseName, country);
                 if (rulePct > 0) return rulePct;
                 return country === 'IN'
-                  ? (course.idiscount != null ? Number(course.idiscount) : 0)
-                  : (course.discount  != null ? Number(course.discount)  : 0);
-              })()
-            }
-            amount={
-              (() => {
+                  ? Number(course.idiscount || 0)
+                  : Number(course.discount || 0);
+              })()}
+              amount={(() => {
                 const isIN = country === 'IN';
                 const isUS = country === 'US';
-
                 const rawMrp = isIN ? course.iamount : course.amount;
-                const rawNow = isIN ? course.itotal  : course.total;
-
-                const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
-                const nowVal = isIN ? Number(rawNow) : (Number(rawNow) * (isUS ? 1 : fxFromUSD));
-
+                const rawNow = isIN ? course.itotal : course.total;
+                const mrpVal = isIN ? Number(rawMrp) : Number(rawMrp) * (isUS ? 1 : fxFromUSD);
+                const nowVal = isIN ? Number(rawNow) : Number(rawNow) * (isUS ? 1 : fxFromUSD);
                 const rulePct = getRuleDiscountPct(course.courseName, country);
-                const effectiveNow = rulePct > 0
-                  ? mrpVal * (1 - rulePct / 100)
-                  : nowVal;
-
+                const effectiveNow = rulePct > 0 ? mrpVal * (1 - rulePct / 100) : nowVal;
                 return `${currency} ${fmt(effectiveNow)}`;
-              })()
-            }
-            totalAmount={
-              (() => {
+              })()}
+              totalAmount={(() => {
                 const isIN = country === 'IN';
                 const isUS = country === 'US';
                 const rawMrp = isIN ? course.iamount : course.amount;
-                const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
+                const mrpVal = isIN ? Number(rawMrp) : Number(rawMrp) * (isUS ? 1 : fxFromUSD);
                 return `${fmt(mrpVal)}`;
-              })()
-            }
-            level={course.level}
-            trainer_name={course.trainer} 
-            month={course.numberOfClasses}
-            course_id={course.id}
-            timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
-          />
-        ))
-      ) : (
-        <p style={{ paddingTop: "30px", paddingLeft: "20px" }}>No courses available</p>
-      )}
+              })()}
+              level={course.level}
+              trainer_name={course.trainer}
+              month={course.numberOfClasses}
+              course_id={course.id}
+              timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
+            />
+          ))
+        : (
+          <p style={{ paddingTop: "30px", paddingLeft: "20px" }}>
+            No courses available
+          </p>
+        )}
     </div>
   );
 };

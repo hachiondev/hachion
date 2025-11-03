@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
@@ -7,18 +7,45 @@ import StickyBar from "./StickyBar";
 import BlogList from "./BlogList";
 import BlogsSidebar from "./BlogsSidebar";
 import LatestArticles from "./LatestArticles";
+import WatchVideos from "./WatchVideos";
+import Pagination from "./Pagination";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
-import "./Course.css"; // ✅ Use same styles as course page
+import "./Course.css";
 import "./Bloglist.css";
-import WatchVideos from "./WatchVideos";
 
 const Blogs = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(6);
+  const [totalBlogs, setTotalBlogs] = useState(0);
+  const bannerRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const updateCardsPerPage = () => {
+      const width = window.innerWidth;
+      if (width <= 768) {
+        setCardsPerPage(4);
+      } else if (width <= 1024) {
+        setCardsPerPage(4);
+      } else {
+        setCardsPerPage(6);
+      }
+    };
+
+    updateCardsPerPage();
+    window.addEventListener("resize", updateCardsPerPage);
+    return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    if (bannerRef.current) {
+      window.scrollTo(0, 400);
+    }
+  };
 
   return (
     <>
@@ -28,71 +55,52 @@ const Blogs = () => {
           name="description"
           content="Get the latest from Hachion, a global online learning platform offering world-class learning experiences to transform lives worldwide."
         />
-        <meta
-          name="keywords"
-          content="IT training, Software Courses, Blogs, Technology, Latest insights"
-        />
-        <meta
-          property="og:title"
-          content="Online IT Training: Get Certified, Find Your Dream Job"
-        />
-        <meta
-          property="og:description"
-          content="Learn online with the best courses at Hachion."
-        />
-        <meta property="og:image" content="/Hachion-logo.png" />
         <link rel="canonical" href="https://hachion.co/blogs" />
-        <script type="application/ld+json">
-          {`
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Hachion",
-            "url": "https://www.hachion.co",
-            "logo": "https://www.hachion.co/Hachion-logo.png",
-            "sameAs": [
-              "https://www.facebook.com/hachion.co",
-              "https://x.com/hachion_co",
-              "https://www.linkedin.com/company/hachion",
-              "https://www.instagram.com/hachion_trainings",
-              "https://www.quora.com/profile/Hachion-4",
-              "https://www.youtube.com/@hachion"
-            ]
-          }
-        `}
-        </script>
       </Helmet>
 
       <Topbar />
       <NavbarTop />
 
-        {/* ✅ Right Section - Blog Cards */}
-        <div className="sidebar-right-container container">
-          <div className="trending-data">
-            <h1 className="trending-title">Hachion Tech Blog</h1>
-            <p className="learner-title-tag text-center mb-4">
-              Discover our useful resources and read Blogs on different categories
-            </p>
-          </div>
-
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <a href="/">Home</a> <MdKeyboardArrowRight />{" "}
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Blog
-              </li>
-            </ol>
-          </nav>
-          <div className="course-content container">
-          <BlogsSidebar
-            onFilterChange={setSelectedCategories}
-          />
-          <div className="sidebar-right-container">
-          <BlogList selectedCategories={selectedCategories} />
+      <div className="sidebar-right-container container">
+        <div className="trending-data" ref={bannerRef}>
+          <h1 className="trending-title">Hachion Tech Blog</h1>
+          <p className="learner-title-tag text-center mb-4">
+            Discover useful resources and insights across tech categories
+          </p>
         </div>
-      </div>
+
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="/">Home</a> <MdKeyboardArrowRight />{" "}
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Blog
+            </li>
+          </ol>
+        </nav>
+
+        <div className="course-content container">
+          <BlogsSidebar onFilterChange={setSelectedCategories} />
+
+          <div className="sidebar-right-container">
+            <BlogList
+              selectedCategories={selectedCategories}
+              currentPage={currentPage}
+              cardsPerPage={cardsPerPage}
+              onTotalBlogsChange={setTotalBlogs}
+            />
+
+            <div className="pagination-container">
+              <Pagination
+                currentPage={currentPage}
+                totalCards={totalBlogs}
+                cardsPerPage={cardsPerPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <LatestArticles />

@@ -23,7 +23,7 @@ import './Course.css';
 import { BsCart2 } from "react-icons/bs";
 
 
-const API_BASE = "http://api.test.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 const resolveImageUrl = (img) => {
   if (!img) return "";
   if (/^https?:\/\//i.test(img)) return img;
@@ -139,8 +139,8 @@ const handleMouseLeave = () => {
     const fetchData = async () => {
       try {
         const [coursesRes, blogsRes] = await Promise.all([
-          axios.get("http://api.test.hachion.co/courses/names-and-categories"),
-          // axios.get("http://api.test.hachion.co/blog"),
+          axios.get("https://api.test.hachion.co/courses/names-and-categories"),
+          // axios.get("https://api.test.hachion.co/blog"),
         ]);
         setCourses(coursesRes.data);
         setBlogs(blogsRes.data);
@@ -223,7 +223,7 @@ if (!parsed.picture && parsed.email) {
 
 const handleLogout = async () => {
   try {
-    await fetch("http://api.test.hachion.co/api/logout", {
+    await fetch("https://api.test.hachion.co/api/logout", {
       method: "POST",
       credentials: "include", 
     });
@@ -305,7 +305,7 @@ useEffect(() => {
   }
 
   
-  fetch("http://api.test.hachion.co/api/me", { credentials: "include" })
+  fetch("https://api.test.hachion.co/api/me", { credentials: "include" })
     .then(r => r.ok ? r.json() : null)
     .then(u => {
       if (!u) return;
@@ -450,6 +450,7 @@ useEffect(() => {
                   className="btn btn-info d-flex align-items-center justify-content-center search-btn"
                   type="submit"
                   onClick={(e) => e.preventDefault()}
+                  aria-label="Search"
                 >
                   <IoSearch size={20} className="text-white" />
                 </button>
@@ -468,7 +469,7 @@ useEffect(() => {
                   >
                     <img
                     className="result-image"
-                    src={`http://api.test.hachion.co/${item.courseImage}`}
+                    src={`https://api.test.hachion.co/${item.courseImage}`}
                     alt={item.type}
                   />
                     {item.courseName || item.title}
@@ -666,7 +667,7 @@ useEffect(() => {
                 >
                   <img
                     className="result-image"
-                    src={`http://api.test.hachion.co/${item.courseImage}`}
+                    src={`https://api.test.hachion.co/${item.courseImage}`}
                     alt={item.type}
                   />
                   {item.courseName || item.title}

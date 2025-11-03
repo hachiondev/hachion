@@ -457,10 +457,11 @@ color: #6B6B6B;
 width: 90%;
 border-radius: 5px;
 margin: 5px;
+padding: 2px;
 background-color: rgba(0, 174, 239, 1);
 color:rgba(255, 255, 255, 1);
-font-weight:700;
-font-size: 16px;
+font-weight:500;
+font-size: 14px;
 border: none;
 box-shadow:5px 5px 5px #d3d3d3;
 cursor: pointer;
@@ -470,19 +471,6 @@ cursor: pointer;
 color: white;
 background-color: #00AEEF;
 }
-
-.drawer-button {
-  width: 90%;
-  border-radius: 5px;
-  margin: 10px 5px 5px 5px;
-  padding: 2px;
-  background-color: rgba(0, 174, 239, 1);
-  color:rgba(255, 255, 255, 1);
-  font-weight:500;
-  font-size: 14px;
-  border: none;
-  box-shadow:5px 5px 5px #d3d3d3;
-  }
 
 #autoScrollingBanner .carousel-indicators {
 position: absolute; /* Ensure the indicators are positioned relative to the banner */
@@ -2742,7 +2730,23 @@ height: 45px;
   max-height: 250px;
   margin-bottom: 10px;
   }
+  .drawer-cancel-icon {
+  font-size: 24px;
+  color: rgba(0, 174, 239, 1);
+  border: none;
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background: none;
+  cursor: pointer;
   }
+  }
+  @media (max-width: 990px) {
+ .input-group,.form-control, .custom-search{
+    width: 100%;
+    max-width: 900px;
+    }
+    }
 
   @media (max-width: 767px) {
     .navbar {
@@ -3273,7 +3277,7 @@ flex: 0 0 100%;
       min-width: 100px;
     }
     .custom-search{
-      width: 80%;
+    width: 80%;
     max-width: 500px;
     }
     .join-now{
@@ -3487,17 +3491,6 @@ border: none;
 cursor: pointer;
 margin-left: 10px;
 }
-
-.drawer-cancel-icon {
-  font-size: 24px;
-  color: rgba(0, 174, 239, 1);
-  border: none;
-  position: absolute;
-  top: 0px;
-  right: 10px;
-  background: none;
-  cursor: pointer;
-  }
 
 .btn-search-icon-mobile {
 height: 32px;

@@ -392,7 +392,7 @@ useEffect(() => {
                     {errors.captcha && <p className="error-field-message">{errors.captcha}</p>}
                     </div>
                 
-                <div className="d-flex justify-content-between align-items-center mb-3" style={{margin: '0.2vh 1.1vh'}}>
+                <div className="d-flex justify-content-between align-items-center mb-3" style={{width: '350px', margin: '0 1vh'}}>
                 {/* Remember Me Toggle */}
                 <div className="form-check form-switch align-items-center remember-me">
                   <input

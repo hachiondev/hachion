@@ -44,6 +44,10 @@ public class CertificateEntity {
 	private String certificatePath;
 
 	private LocalDateTime createdAt = LocalDateTime.now();
+	
+	
+	@Column(name = "grade")
+	private String grade;
 
 	public Long getCertificateId() {
 		return certificateId;
@@ -134,6 +138,14 @@ public class CertificateEntity {
 	public CertificateEntity() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 }

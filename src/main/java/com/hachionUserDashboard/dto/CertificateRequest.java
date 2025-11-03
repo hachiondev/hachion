@@ -7,6 +7,7 @@ public class CertificateRequest {
 	private String courseName;
 	private String completionDate;
 	private String status;
+	private String grade;
 
 	public String getStudentId() {
 		return studentId;
@@ -70,6 +71,14 @@ public class CertificateRequest {
 	public CertificateRequest() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 }

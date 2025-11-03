@@ -50,6 +50,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -61,12 +62,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hachionUserDashboard.dto.CertificateDTO;
 import com.hachionUserDashboard.dto.CertificateRequest;
+import com.hachionUserDashboard.dto.CertificatesResponse;
 import com.hachionUserDashboard.entity.CertificateEntity;
 import com.hachionUserDashboard.repository.CertificateDetailsRepository;
 
 import Service.CertificateService;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class Certificateimp implements CertificateService {
@@ -109,6 +113,7 @@ public class Certificateimp implements CertificateService {
 		entity.setCourseName(request.getCourseName());
 		entity.setCompletionDate(request.getCompletionDate());
 		entity.setStatus(request.getStatus());
+		entity.setGrade(request.getGrade());
 
 		entity = certificateRepository.save(entity);
 
@@ -231,6 +236,31 @@ public class Certificateimp implements CertificateService {
 	    List<CertificateEntity> list = certificateRepository.findByStudentNameNative(studentName);
 	    return list != null ? list : new ArrayList<>();
 	}
+	
+	 @Transactional
+	    public CertificatesResponse getByEmail(String email) {
+	        var rows = certificateRepository.findAllByStudentEmail(email);
+	        List<CertificateDTO> items = rows.stream()
+	                .map(r -> new CertificateDTO(
+	                        r.getId(),
+	                        r.getCourseName(),
+	                        r.getGrade(),
+	                        r.getIssueDate(),
+	                        // If you have a human-friendly "certificate code", map it here.
+	                        // For now we mirror the PK as a string so FE has something to show.
+	                        r.getId() != null ? "CERT-" + r.getId() : null,
+	                        r.getCertificatePath()
+	                ))
+	                .collect(Collectors.toList());
+
+	        long total = certificateRepository.countByStudentEmail(email); // or items.size() if you prefer one query
+	        return new CertificatesResponse(total, items);
+	    }
+
+	    @Transactional
+	    public long countByEmail(String email) {
+	        return certificateRepository.countByStudentEmail(email);
+	    }
 //	private String generateCertificatePdf(String studentName, String studentId, String courseName, String completionDate) {
 //	    String folderPath = "certificates";
 //	    String outputPdfPath = folderPath + "/" + studentId + "_Certificat	e.pdf";

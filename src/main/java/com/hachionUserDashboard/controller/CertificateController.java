@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CertificateRequest;
+import com.hachionUserDashboard.dto.CertificatesResponse;
 import com.hachionUserDashboard.entity.Certificate;
 import com.hachionUserDashboard.entity.CertificateEntity;
 import com.hachionUserDashboard.repository.CertificateDetailsRepository;
@@ -248,5 +250,15 @@ public class CertificateController {
 
 		return ResponseEntity.ok(certificates);
 	}
+	 @GetMapping("/certificate/getByEmail")
+	    public ResponseEntity<CertificatesResponse> getByEmail(@RequestParam("email") String email) {
+	        return ResponseEntity.ok(certificateService.getByEmail(email));
+	    }
+
+	    
+	    @GetMapping("/count")
+	    public ResponseEntity<Map<String, Long>> countByEmail(@RequestParam("email") String email) {
+	        return ResponseEntity.ok(Map.of("total", certificateService.countByEmail(email)));
+	    }
 
 }

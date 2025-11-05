@@ -1080,7 +1080,7 @@ align-items: center;
 .dashboard-content-cards {
     grid-template-columns: repeat(2, 1fr);
   }
-   .wishlist-grid {
+   .wishlist-grid, .certificate-content-cards {
     grid-template-columns: repeat(2, 1fr);
   }
 #nameInput, #emailInput, #locationInput, #genderInput, #oldPasswordInput, #newPasswordInput, #confirmPasswordInput, #extraFieldInput {
@@ -1113,7 +1113,7 @@ align-items: center;
   .dashboard-content-cards {
     grid-template-columns: repeat(1, 1fr);
   }
-   .wishlist-grid {
+   .wishlist-grid, .certificate-content-cards {
     grid-template-columns: repeat(1, 1fr);
   }
   .dashboard-user-div {

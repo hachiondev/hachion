@@ -40,7 +40,7 @@ export const Home = () => {
       
         useEffect(() => {
           const handleScroll = () => {
-            if (window.scrollY > 800) {
+            if (window.scrollY > 1000) {
               setShowScrollButton(true);
             } else {
               setShowScrollButton(false);

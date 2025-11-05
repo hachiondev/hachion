@@ -36,7 +36,7 @@ const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 480);
+      setIsMobileView(window.innerWidth <= 768);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

@@ -152,7 +152,7 @@ const recentActivity = [
         <p>Ready to continue your learning journey today?</p>
       </div>
 
-      <div className='courses-enrolled'>
+      <div className='courses-enrolled container'>
         <div className="dashboard-card">
           <div className='dashboard-content-cards'>
             <DashboardCard

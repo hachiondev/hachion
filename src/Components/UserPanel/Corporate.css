@@ -8,40 +8,6 @@
 .corporate-training{
   background-color: #EEEEEE;
 }
-.corporate-banner{
-  width: 100%; 
-  height: 570px; 
-  background-image: url('../../Assets/Group 39809.png');
-  background-size: cover;
-  background-position: center;
-
-}
-.corporate-banner-heading{
-  font-size: 2.1rem;
-  font-weight: 700;
-  padding-top: 5vh;
-  padding-left: 8.3vw;
-  color: #fff;
-}
-.corporate-banner-content{
-  font-size: 2.8rem;
-  font-weight: 700;
-  color:#fff;
-  padding-top: 6vh;
-  text-align: center;
-}
-.corporate-banner-bottom-content{
-  font-size: 2.1rem;
-  font-weight: 400;
-  font-style: italic;
-  text-align: center;
-  color: #fff;
-}
-
-.corporate-button{
- display: flex;
- justify-content: center;
-}
 
 .contact-us-corporate{
   margin-top:80px;
@@ -297,7 +263,7 @@ background-image: url('../../Assets/corporatecontactbackground.webp');
   padding: 20px 10px 10px;
 }
 .learner-title-tag{
-  color: #6D6D6D;
+  color: #000000;
   font-size: 16px;
   font-weight: 400;
   display: flex;
@@ -510,7 +476,7 @@ position: relative;
      font-size: medium;
      margin-bottom: 2px;
      text-align: left;
-     color: #133240;
+     color: #000000;
     padding-bottom: 0vh;
  }
  .learner-name{
@@ -601,7 +567,7 @@ position: relative;
      font-weight: 400;
      font-size: small;
      text-align: justify;
-     color: #133240;
+     color: #000000;
  }
 
  .custom-prev-icon,
@@ -748,7 +714,7 @@ position: relative;
   display: flex;
   justify-content: space-between;
   /* background: linear-gradient(90deg, #006489, #00aeef, #006489); */
-  color: #133240;
+  color: #000000;
 }
 .close-button {
   display: flex;
@@ -757,9 +723,10 @@ position: relative;
 
 .full-review {
   margin-top: 15px;
-  font-size: 16px;
+  font-size: medium;
   line-height: 1.5;
   text-align: justify;
+  color: #000000;
 }
 
 .learner-card-container {
@@ -789,55 +756,15 @@ position: relative;
   box-shadow: 5px 5px 5px #d3d3d3;
  }
 
- .blog-banner-content{
-  color: white;
-  font-weight: 600;
-  font-size: 2.15rem;
-}
-.blog-banner {
-  height: 220px;
-  width: 100%;
-  background-image: url('../../Assets/blogbanner.png');
-  background-repeat: no-repeat;
-  background-size: cover; 
-  background-position: center; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
 .blog{
   background-color:#EEEEEE;
   margin: 0 auto;
 }
-.blog-heading{
-  font-size: 2.25rem;
-  font-weight: 700;
-  background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  
-}
+
 .blog-header{
   text-align: center;
 }
-.blogs-header{
-  margin-left: 10vw;
-}
-.blog-content{
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #00AAEF;
-}
 
-.blogs-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 1vw; 
-  padding: 2vh;
-  width: 75%;
-  margin-left: 12vw;
-}
 .workshop-container {
   flex: 1;
   display: grid;
@@ -1116,13 +1043,13 @@ position: relative;
   flex-direction: column;
 }
 .blog-author {
-  color: #202939;
+  color: #000000;
   font-size: medium;
   margin-bottom: 5px;
   font-weight: 500;
 }
 .date {
-  color: #697586;
+  color: #000000;
   font-size: medium;
   margin-bottom: 5px;
   font-weight: 400;
@@ -1610,7 +1537,6 @@ position: relative;
 }
 }
 
-
 @media (max-width:480px){
   .hachion-content {
       margin-left: 10px;
@@ -1682,25 +1608,6 @@ position: relative;
       width: 180px !important;
   }
 
-  /* Blog page */
-  .blog-banner-content{
-      font-size: 16px;
-    }
-    .blog-banner {
-      height: 100px;
-  }
-  .blog-heading{
-      font-size: 16px;        
-  }
-
-  .blogs-container {
-      grid-template-columns: repeat(2, 1fr); 
-      width: auto;
-      margin: 0 auto;
-      padding: 10px;
-      gap: 10px;
-      justify-items: center;
-    }
 .mobile-filter-toggle {
     display: block;
   }
@@ -2007,22 +1914,6 @@ position: relative;
       margin-right: 10px;
     }
 
-  .corporate-banner{
-      height: 179px;
-  }
-  .corporate-banner-heading{
-      font-size: 16px;
-      padding-top: 10px;
-      padding-left: 10px;
-  }
-  .corporate-banner-content{
-      font-size: 16px;
-      padding-top: 5px;
-  }
-  .corporate-banner-bottom-content{
-      font-size: 14px;
-      padding-top: 5px;
-  }
   .contact-us-corporate{
       margin-top: 0px;
       font-size: 14px;

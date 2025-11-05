@@ -15,14 +15,17 @@ import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
 import axios from "axios";
 import { TbSlashes } from "react-icons/tb";
+import { Menu, MenuItem } from "@mui/material";
+import Flag from "react-world-flags";
+import { AiFillCaretDown } from "react-icons/ai";
 
 const initialValues = {
   name: "",
   email: "",
   number: "",
   comment: "",
-  date:"",
-  country:""
+  date: "",
+  country: "",
 };
 
 const ContactUs = () => {
@@ -37,125 +40,161 @@ const ContactUs = () => {
     name: "United States",
   });
   const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
-   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
-  
-    useEffect(() => {
-    // Detect user country and set phone number accordingly
-    const detectUserCountry = async () => {
-      try {
-        const res = await fetch("https://ipwho.is/");
-        if (!res.ok) throw new Error("Failed to fetch location data");
+  const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
 
-        const data = await res.json();
-        if (data.country_code === "IN") {
+  const countries = [
+    { name: "United States", code: "+1", flag: "US" },
+    { name: "India", code: "+91", flag: "IN" },
+    { name: "United Kingdom", code: "+44", flag: "GB" },
+    { name: "Canada", code: "+1", flag: "CA" },
+    { name: "Australia", code: "+61", flag: "AU" },
+  ];
+
+  
+  useEffect(() => {
+    fetch("https://ipwho.is/")
+      .then((r) => r.json())
+      .then((data) => {
+        const match = countries.find((c) => c.flag === data?.country_code);
+        if (match) setSelectedCountry(match);
+
+        if (data?.country_code === "IN") {
           setContactNumber("+91 94903 23388");
         } else {
           setContactNumber("+1 (732) 485-2499");
         }
-      } catch (error) {
-        setContactNumber("+1 (732) 485-2499");
-      }
-    };
-    detectUserCountry();
+      })
+      .catch(() => {
+        
+      });
   }, []);
+
   useEffect(() => {
-    window.scrollTo(0, 0); 
-    
+    window.scrollTo(0, 0);
   }, []);
 
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
 
+  
+  const onlyDigits = (v) => String(v || "").replace(/\D/g, "").slice(0, 15);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setAnchorEl(null);
+    mobileInputRef.current?.focus();
+  };
+
+  const handleMobileChange = (e) => {
+    const digits = onlyDigits(e.target.value);
+    setMobileNumber(digits);
+  };
+
+  const handleMobileBlur = () => {
+    setMobileNumber((m) => onlyDigits(m));
+  };
+
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
-    const userEmail = userData.email || "";
-  
+    const userEmail = (userData.email || "").trim();
+
     values.email = userEmail;
-   
+
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
           `https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`
         );
-  
+
         if (!response.ok) {
           throw new Error("❌ Failed to fetch profile data");
         }
         const data = await response.json();
-        if (data.name) {
+
+        if (data?.name) {
           values.name = data.name;
-        } else {
-          
         }
-       
-        if (data.mobile) {
-          setMobileNumber(data.mobile);
-        } else {
+
+        if (data?.mobile) {
+          const clean = String(data.mobile).includes(" ")
+            ? String(data.mobile).split(" ")[1].trim()
+            : String(data.mobile).trim();
+          setMobileNumber(onlyDigits(clean));
         }
-        if (data.country) {
+
+        if (data?.country) {
           values.country = data.country;
         }
-      } catch (error) {
+      } catch (_err) {
         
       }
     };
-  
-    fetchUserProfile();
+
+    if (userEmail) {
+      fetchUserProfile();
+    }
+    
   }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!isChecked) {
-      setError("Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions.");
+      setError(
+        "Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions."
+      );
       return;
     }
     setError("");
-  
+
     const currentDate = new Date().toISOString().split("T")[0];
     const requestData = {
       name: values.name,
       email: values.email,
-      mobile: mobileNumber,
+      mobile: mobileNumber, 
       comment: values.comment,
       date: currentDate,
       country: selectedCountry.name,
     };
-  
+
     try {
-      const response = await axios.post("https://api.test.hachion.co/haveanyquery/add", requestData, {
-        headers: { "Content-Type": "application/json" }
-      });
-  
-       if (response.status === 200) {
-    setShowModal(true);
-    setMobileNumber("");
-    formik.resetForm();
-    setSuccessMessage("✅ Query submitted successfully.");
-    setErrorMessage("");
-  } else {
-    setErrorMessage("❌ Failed to submit query.");
-    setSuccessMessage("");
-  }
+      const response = await axios.post(
+        "https://api.test.hachion.co/haveanyquery/add",
+        requestData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-} catch (error) {
-  setErrorMessage("❌ Something went wrong while submitting the form.");
-  setSuccessMessage("");
-}
-  };
-  useEffect(() => {
-  if (successMessage || errorMessage) {
-    const timer = setTimeout(() => {
+      if (response.status === 200) {
+        setShowModal(true);
+        setMobileNumber("");
+        formik.resetForm();
+        setSuccessMessage("✅ Query submitted successfully.");
+        setErrorMessage("");
+      } else {
+        setErrorMessage("❌ Failed to submit query.");
+        setSuccessMessage("");
+      }
+    } catch (_error) {
+      setErrorMessage("❌ Something went wrong while submitting the form.");
       setSuccessMessage("");
-      setErrorMessage("");
-    }, 2000); 
+    }
+  };
 
-    return () => clearTimeout(timer); 
-  }
-}, [successMessage, errorMessage]);
+  useEffect(() => {
+    if (successMessage || errorMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, errorMessage]);
 
   const handlePrivacy = () => {
     navigate("/privacy");
@@ -168,61 +207,58 @@ const ContactUs = () => {
     initialValues: initialValues,
     validationSchema: LoginSchema,
   });
-  
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = formik;
-  
-    const officeLocations = [
-      {
-        name: "Texas, USA",
-        country: Usa
-      },
-      {
-        name: "Hyderabad, India",
-        country: india
-      },
-      {
-        name: "Dubai, UAE",
-        country: dubai
-      }
-    ];
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik;
+
+  const officeLocations = [
+    {
+      name: "Texas, USA",
+      country: Usa,
+    },
+    {
+      name: "Hyderabad, India",
+      country: india,
+    },
+    {
+      name: "Dubai, UAE",
+      country: dubai,
+    },
+  ];
+
   return (
     <>
       <Topbar />
       <NavbarTop />
 
-        <div className="contact-banner container">
-                <h1 className="instructor-profile-title">Contact Us</h1>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="instructor-breadcrumb-item">
-                      <a href="/">Home</a> <TbSlashes color="#00aeef" />
-                    </li>
-                    <li className="instructor-breadcrumb-item active" aria-current="page">
-                      Contact Us
-                    </li>
-                  </ol>
-                </nav>
-              </div>
+      <div className="contact-banner container">
+        <h1 className="instructor-profile-title">Contact Us</h1>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="instructor-breadcrumb-item">
+              <a href="/">Home</a> <TbSlashes color="#00aeef" />
+            </li>
+            <li className="instructor-breadcrumb-item active" aria-current="page">
+              Contact Us
+            </li>
+          </ol>
+        </nav>
+      </div>
 
-        <div className="home-banner container">
-          <div className="home-content">
-            <h3 className="contact-title">Let’s talk.</h3>
-             <p className="contact-mail-data">Leave us a note here, or give us a call at {contactNumber}.</p>
-            <form className="contact-form">
-              {/* <div class="mb-3"> */}
-                <label for="exampleFormControlInput1" class="form-label">
-                  Full Name<span className="star">*</span>
-                </label>
-                <div className="register-field">
-                <div className="form-field">
+      <div className="home-banner container">
+        <div className="home-content">
+          <h3 className="contact-title">Let’s talk.</h3>
+          <p className="contact-mail-data">
+            Leave us a note here, or give us a call at {contactNumber}.
+          </p>
+          <form className="contact-form">
+            <label htmlFor="contactName" className="form-label">
+              Full Name<span className="star">*</span>
+            </label>
+            <div className="register-field">
+              <div className="form-field">
                 <input
+                  id="contactName"
                   type="text"
                   className="form-control"
                   placeholder="Enter your full name"
@@ -232,14 +268,15 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
-              </div>
-              {/* <div class="mb-3"> */}
-                <label for="exampleFormControlInput1" class="form-label">
-                  Email Id<span className="star">*</span>
-                </label>
-                <div className="register-field">
-                <div className="form-field">
+            </div>
+
+            <label htmlFor="contactEmail" className="form-label">
+              Email Id<span className="star">*</span>
+            </label>
+            <div className="register-field">
+              <div className="form-field">
                 <input
+                  id="contactEmail"
                   type="email"
                   className="form-control"
                   placeholder="Enter your Email"
@@ -249,31 +286,69 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
+            </div>
+
+            <label className="form-label">
+              Phone Number<span className="star">*</span>
+            </label>
+            <div className="register-field">
+              <div className="form-field" style={{ position: "relative" }}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAnchorEl(e.currentTarget);
+                  }}
+                  className="mobile-button"
+                  type="button"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                >
+                  <Flag code={selectedCountry.flag} className="country-flag me-1" />
+                  <span style={{ marginRight: "5px", fontSize: "small" }}>
+                    {selectedCountry.flag} ({selectedCountry.code})
+                  </span>
+                  <AiFillCaretDown />
+                </button>
+
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={() => setAnchorEl(null)}
+                >
+                  {countries.map((country) => (
+                    <MenuItem
+                      key={country.code + country.flag}
+                      onClick={() => handleCountrySelect(country)}
+                    >
+                      <Flag code={country.flag} className="country-flag me-2" />
+                      {country.name} ({country.code})
+                    </MenuItem>
+                  ))}
+                </Menu>
+
+                <input
+                  type="tel"
+                  className="form-control"
+                  ref={mobileInputRef}
+                  value={mobileNumber}
+                  onChange={handleMobileChange}
+                  onBlur={handleMobileBlur}
+                  aria-label="Text input with segmented dropdown button"
+                  placeholder="Enter your mobile number"
+                  style={{ paddingLeft: "120px" }}
+                  maxLength={15}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                />
               </div>
-              <label className="form-label">Phone Number<span className="star">*</span></label>
-              {/* <div className="input-wrapper" style={{ position: 'relative' }}> */}
-                 <div className="register-field">
-                <div className="form-field">
-                        <input
-                        type="tel"
-                        className="form-control"
-                        ref={mobileInputRef}
-                        // id="contact1"
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value)}
-                        aria-label="Text input with segmented dropdown button"
-                        placeholder="Enter your mobile number"
-                         
-                        />
-                      </div>
-                      </div>
-              {/* <div class="mb-3"> */}
-                <label for="exampleFormControlTextarea1" class="form-label">
-                  Tell us about your idea<span className="star">*</span>
-                </label>
-                <div className="register-field">
-                <div className="form-field">
+            </div>
+
+            <label htmlFor="contactComment" className="form-label">
+              Tell us about your idea<span className="star">*</span>
+            </label>
+            <div className="register-field">
+              <div className="form-field">
                 <textarea
+                  id="contactComment"
                   className="form-control"
                   placeholder="Type your Idea...."
                   rows={5}
@@ -283,118 +358,151 @@ const ContactUs = () => {
                   onBlur={handleBlur}
                 />
               </div>
-              </div>
-              {/* </div> */}
-              <div class="mb-3">
-              {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-                <button
-                  type="button"
-                  class="submit-button"
-                  onClick={handleFormSubmit}
-                >
-                  Send
-                </button>
-                
-                {/* Error message display */}
-                {error && <p className="error-message">{error}</p>}
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                    onChange={handleCheckboxChange}
-                  />
-                  <label class="form-check-label" for="flexCheckChecked">
-                    By clicking on Send, you acknowledge read our{" "}
-                    <span
-                      onClick={handlePrivacy}
-                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF" }}
-                    >
-                      Privacy Notice
-                    </span> and 
-                    <span
-                      onClick={handleTerms}
-                      style={{ textDecoration: "underline", cursor: "pointer", color: "#00AAEF", paddingLeft: 5 }}
-                    >
-                      Terms & Conditions
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </form>
             </div>
 
-            <img
-                    className="contact-form-image"
-                    src={ContactForm}
-                    alt="Contact Form"
-                    fetchpriority="high"
-                  />
-        </div>
-          <div className="contact-us-all">
-          <div className="container">
-        <h2 className="trending-title">Our offices</h2>
-        <div className="contact-us">
-        {officeLocations.map((loc, i) => (
-  <div className="contact-us-div" key={i}>
-    <div className="contact-us-box">
-      <img src={loc.country} alt={`${loc.name} country`} className="contact-address" loading="lazy"/>
-      <div className="office-location">
-        <h3 className="trending-title">{loc.name}</h3>
-        {/* <p>{loc.address}</p> */}
-      </div>
-    </div>
-  </div>
-))}
-  </div>
-    </div>
+            <div className="mb-3">
+              {successMessage && (
+                <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>
+              )}
+              {errorMessage && (
+                <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>
+              )}
+              <button type="button" className="submit-button" onClick={handleFormSubmit}>
+                Send
+              </button>
 
-    <div className="instructor-banner container">
+              {error && <p className="error-message">{error}</p>}
+
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckChecked"
+                  onChange={handleCheckboxChange}
+                />
+                <label className="form-check-label" htmlFor="flexCheckChecked">
+                  By clicking on Send, you acknowledge read our{" "}
+                  <span
+                    onClick={handlePrivacy}
+                    style={{
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      color: "#00AAEF",
+                    }}
+                  >
+                    Privacy Notice
+                  </span>{" "}
+                  and
+                  <span
+                    onClick={handleTerms}
+                    style={{
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      color: "#00AAEF",
+                      paddingLeft: 5,
+                    }}
+                  >
+                    Terms & Conditions
+                  </span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <img
+          className="contact-form-image"
+          src={ContactForm}
+          alt="Contact Form"
+          fetchpriority="high"
+        />
+      </div>
+
+      <div className="contact-us-all">
+        <div className="container">
+          <h2 className="trending-title">Our offices</h2>
+          <div className="contact-us">
+            {officeLocations.map((loc, i) => (
+              <div className="contact-us-div" key={i}>
+                <div className="contact-us-box">
+                  <img
+                    src={loc.country}
+                    alt={`${loc.name} country`}
+                    className="contact-address"
+                    loading="lazy"
+                  />
+                  <div className="office-location">
+                    <h3 className="trending-title">{loc.name}</h3>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="instructor-banner container">
           <div className="home-content">
             <h3 className="contact-title">For Others</h3>
-            {["University/college associations", "Media queries", "Fest sponsorships", "For everything else"].map(
-              (title, i) => (
-                <div key={i}>
-                  <h4 className="contact-title">
-                    <span>{title}</span>
-                  </h4>
-                  <p className="contact-mail-data">
-                    Email us : 
-                    <span>
-                      <a
-                        href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        trainings@hachion.co
-                      </a>
-                    </span>
-                  </p>
-                </div>
-              )
-            )}
+            {[
+              "University/college associations",
+              "Media queries",
+              "Fest sponsorships",
+              "For everything else",
+            ].map((title, i) => (
+              <div key={i}>
+                <h4 className="contact-title">
+                  <span>{title}</span>
+                </h4>
+                <p className="contact-mail-data">
+                  Email us :{" "}
+                  <span>
+                    <a
+                      href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      trainings@hachion.co
+                    </a>
+                  </span>
+                </p>
+              </div>
+            ))}
           </div>
-    
+
           <div className="home-content">
             <h3 className="contact-title">Address</h3>
             <div className="contact-block">
-            <h3 className="contact-title-text">Head Office:<span> Texas, USA</span></h3>
-            <p className="contact-title-text"><span>Hachion 601 Voyage Trce Leander Texas 78641</span></p>
+              <h3 className="contact-title-text">
+                Head Office:<span> Texas, USA</span>
+              </h3>
+              <p className="contact-title-text">
+                <span>Hachion 601 Voyage Trce Leander Texas 78641</span>
+              </p>
             </div>
             <div className="contact-block">
-            <h3 className="contact-title-text">India Office:<span> Hyderabad, India</span></h3>
-            <p className="contact-title-text"><span>Hachion GP Rao Enclaves, 301, 3rd floor Road No 3</span></p>
-            <p className="contact-title-text"><span>KPHB colony, Hyderabad 500072.</span></p>
+              <h3 className="contact-title-text">
+                India Office:<span> Hyderabad, India</span>
+              </h3>
+              <p className="contact-title-text">
+                <span>Hachion GP Rao Enclaves, 301, 3rd floor Road No 3</span>
+              </p>
+              <p className="contact-title-text">
+                <span>KPHB colony, Hyderabad 500072.</span>
+              </p>
             </div>
             <div className="contact-block">
-            <h3 className="contact-title-text">Dubai Office:<span> Dubai, UAE</span></h3>
-            <p className="contact-title-text"><span>Sports City Dubai UAE</span></p>
+              <h3 className="contact-title-text">
+                Dubai Office:<span> Dubai, UAE</span>
+              </h3>
+              <p className="contact-title-text">
+                <span>Sports City Dubai UAE</span>
+              </p>
             </div>
-        </div>
+          </div>
         </div>
       </div>
+
       <Footer />
       <StickyBar />
     </>

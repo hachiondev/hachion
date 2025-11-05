@@ -9,7 +9,7 @@ import { GrAttachment } from "react-icons/gr";
 import axios from "axios";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
-const API_BASE = "https://api.test.hachion.co"; 
+const API_BASE = "https://api.test.hachion.co";
 
 const InstructorForm = ({ onClose }) => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const InstructorForm = ({ onClose }) => {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState(""); 
+  const [mobile, setMobile] = useState("");
   const [location, setLocation] = useState("");
   const [link, setLink] = useState("");
   const [skill, setSkill] = useState("");
@@ -32,6 +32,7 @@ const InstructorForm = ({ onClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const [submitting, setSubmitting] = useState(false);
+  
 
   
   useEffect(() => {
@@ -44,16 +45,60 @@ const InstructorForm = ({ onClose }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  
   useEffect(() => {
     fetch("https://ipwho.is/")
       .then((res) => res.json())
       .then((data) => {
-        const userCountryCode = data?.country_code;
-        const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-        if (matchedCountry) setSelectedCountry(matchedCountry);
+        const match = countries.find((c) => c.flag === data?.country_code);
+        if (match) setSelectedCountry(match);
       })
       .catch(() => {});
+  }, []);
+  
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
+    const userEmail = (userData.email || "").trim();
+
+    if (userEmail) setEmail(userEmail);
+    if (!userEmail) return;
+
+    const ctrl = new AbortController();
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
+          { signal: ctrl.signal }
+        );
+        if (!res.ok) throw new Error("Failed to fetch profile data");
+        const data = await res.json();
+
+        if (data?.name) setName(String(data.name));
+        if (data?.email) setEmail(String(data.email));
+
+        
+        if (data?.mobile) {
+          const digits = String(data.mobile).replace(/\D/g, "");
+          const national10 = digits.length > 10 ? digits.slice(-10) : digits;
+          setMobile(national10.slice(0, 10));
+        }
+
+        if (data?.country) {
+          const matchByName =
+            countries.find(
+              (c) =>
+                String(c.name).toLowerCase() === String(data.country).toLowerCase()
+            ) || null;
+          if (matchByName) setSelectedCountry(matchByName);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Profile autofill failed:", err);
+        }
+      }
+    })();
+
+    return () => ctrl.abort();
   }, []);
 
   
@@ -77,7 +122,6 @@ const InstructorForm = ({ onClose }) => {
     mobileInputRef.current?.focus();
   };
 
-  
   const validateForm = () => {
     const newErrors = {};
 
@@ -120,14 +164,12 @@ const InstructorForm = ({ onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  
   const handleSubmit = async () => {
     if (!validateForm()) return;
     try {
       setSubmitting(true);
 
-      
-      const fullMobile = `${selectedCountry.code} ${mobile.replace(/\D/g, "")}`; 
+      const fullMobile = `${selectedCountry.code} ${mobile.replace(/\D/g, "")}`;
 
       const payload = {
         name,

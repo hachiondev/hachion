@@ -13,7 +13,7 @@ import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import LoginBanner from '../../Assets/loginbackground.png';
+import LoginBanner from '../../Assets/loginbackground.webp';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

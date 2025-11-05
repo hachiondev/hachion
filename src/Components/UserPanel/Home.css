@@ -305,7 +305,7 @@ width: auto;
   background: none;
   border: none;
   font-weight: bold;
-  color: #333;
+  color: #000000;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -438,7 +438,7 @@ gap: 15px;
 border-bottom: 1px solid #eeeeee;
 cursor: pointer;
 white-space: nowrap;
-color: #6B6B6B;
+color: #000000;
 }
 
 .drawer-sub-item {
@@ -668,7 +668,7 @@ background-color:#F7F7F7;
     font-weight: 600;
       }
       .home-title-text{
-    color: #6D6D6D;
+    color: #000000;
     font-size: 18px;
     font-weight: 400;
     text-align: left;
@@ -678,7 +678,7 @@ background-color:#F7F7F7;
     color: #00AEEF;
       }
     .key-title-text{
-    color: #3D3D3D;
+    color: #000000;
     font-size: 18px;
     font-weight: 600;
     text-align: left;
@@ -686,7 +686,7 @@ background-color:#F7F7F7;
     margin-bottom: 0;
       }
       .instructor-title-text{
-    color: #6D6D6D;
+    color: #000000;
     font-size: 16px;
     font-weight: 400;
     text-align: left;
@@ -703,14 +703,14 @@ overflow-x: auto;
 scroll-behavior: smooth;
 }
     .limited-deals-text{
-    color: #6D6D6D;
+    color: #000000;
     font-size: 18px;
     font-weight: 400;
     text-align: left;
     padding: 0 16px;
       }
 .home-sub-text{
-    color: #6D6D6D;
+    color: #000000;
     font-size: 16px;
     font-weight: 400;
       }
@@ -725,7 +725,7 @@ scroll-behavior: smooth;
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  border: 1px solid #3D3D3D;
+  border: 1px solid #000000;
   margin-bottom: 5px;
 }
 .home-faq-content{
@@ -750,7 +750,7 @@ scroll-behavior: smooth;
     padding-right: 10px;
     align-content: center;
     text-align: left;
-    border-bottom: 1px solid #3D3D3D;
+    border-bottom: 1px solid #000000;
     cursor: pointer;
     width: 100%; 
     box-sizing: border-box;
@@ -758,7 +758,7 @@ scroll-behavior: smooth;
 .help-faq-que{
  font-size: 16px;
   font-weight: 500;
-  color: #3D3D3D;
+  color: #000000;
 }
 .help-faq-details {
    width: 100%; 
@@ -766,7 +766,7 @@ scroll-behavior: smooth;
     border-radius: 10px;
     margin-bottom: 1vh;
     font-size: 14px;
-    color: #3D3D3D;
+    color: #000000;
     display: flex;
     justify-content: space-between;
    box-sizing: border-box; 
@@ -928,9 +928,9 @@ position: relative;
   height: 50px;
   margin-top: 20px;
   background-color: #fff;
-  color: #3D3D3D;
+  color: #000000;
   padding: 12px 20px;
-  border: 1px solid #3D3D3D;
+  border: 1px solid #000000;
   border-radius: 50px;
   cursor: pointer;
   font-size: 14px;
@@ -985,7 +985,7 @@ color: #00AEEF;
         white-space: nowrap;
       }
   .home-browse-button{
-        color: #6D6D6D;
+        color: #000000;
         font-size: medium;
         font-weight: 600;
         padding: 5px 10px;
@@ -1162,7 +1162,7 @@ max-width: 80%;
 font-weight: 600;
 letter-spacing: 0;
 line-height: 40px;
-color: #3D3D3D;
+color: #000000;
 display: flex;
 justify-content: left;
 padding: 3px 16px;
@@ -1180,7 +1180,7 @@ display: flex;
 justify-content: center;
 font-size: 20px;
 font-weight: 600;
-color: #4F4F4F;
+color: #000000;
 }
 
 .it-title span{
@@ -1213,7 +1213,7 @@ animation-play-state: paused;
     letter-spacing: 0%;
     display: flex;
     justify-content: left;
-    color: #3D3D3D;
+    color: #000000;
     padding: 10px 16px;
 }
 .it-logos-grid {
@@ -1245,7 +1245,7 @@ background-color: #F4F4F4;
 display: flex;
 font-weight: 500;
 justify-content: center;
-color: #3D3D3D;
+color: #000000;
 }
 .trending-content{
 display: flex;
@@ -1257,8 +1257,8 @@ gap: 15px;
 .trending-courses{
   font-size: 16px;
   font-weight:600;
-  color: #6D6D6D;
-  border: 1px solid #6D6D6D;
+  color: #000000;
+  border: 1px solid #000000;
   padding: 8px 20px;
   border-radius: 50px;
 }
@@ -1317,7 +1317,7 @@ margin: 8px 0;
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  color: #262626;
+  color: #000000;
   background-color: #fff;
   border-radius: 20px;
   border: 1px solid #E2E0DB;
@@ -1485,7 +1485,7 @@ font-size: 14px;
 font-weight:500;
 background-color: white;
 cursor: pointer;
-color: #6B6B6B;
+color: #000000;
 }
 
 .dropdown-item:hover {
@@ -1498,7 +1498,7 @@ transition: background-color 0.3s ease;
 .course-name, .upcoming-course-name {
 font-size: 15px;
 font-weight: 600;
-color: #262626; 
+color: #000000; 
 margin: 1vh 0;
 text-align: left;
 display: -webkit-box;
@@ -1513,7 +1513,7 @@ width: 70%;
 .user-course-name {
 font-size: 15px;
 font-weight: 600;
-color: #262626; 
+color: #000000; 
 margin: 1vh 0;
 text-align: left;
 display: -webkit-box;
@@ -1530,7 +1530,7 @@ display: flex;
 flex-wrap: nowrap;
 font-size: 13px;
 font-weight: 600;
-color: #262626; 
+color: #000000; 
 margin: 1vh 0;
 gap: 10px;
 }
@@ -1571,7 +1571,7 @@ text-align: right;
   text-align: left;
   font-weight: 600;
   font-size: 15px;
-  color: #3D3D3D;
+  color: #000000;
   margin: 1vh 0;
 }
 
@@ -1615,7 +1615,7 @@ text-align: right;
   height: 48px;
   outline-color: #E9E7E7;
   background-color: #E9E7E7;
-  color: #4F4F4F;
+  color: #000000;
   background-position: right 8px center;
   background-repeat: no-repeat;
 }
@@ -1628,7 +1628,7 @@ text-align: right;
   border-radius: 8px;
   padding: 10px 35px 10px 15px; /* extra space on right for arrow */
   font-size: 14px;
-  color: #333;
+  color: #000000;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path fill='none' stroke='%23333' stroke-width='2' d='M1 1l5 5 5-5'/></svg>");
   background-repeat: no-repeat;
   background-position: right 15px center; /* move arrow slightly left to create gap */
@@ -1754,7 +1754,7 @@ min-height: 300px;
 }
 
 .popup-title-text {
-    color: #3D3D3D;
+    color: #000000;
     font-weight: 600;
     text-align: left;
     padding: 5px 15px;
@@ -1764,7 +1764,7 @@ min-height: 300px;
   text-align: left;
   font-size: medium;
   font-weight: 600;
-  color: #3D3D3D;
+  color: #000000;
   margin-bottom: 3px;
   padding: 5px 15px;
   gap: 5px;
@@ -1777,7 +1777,7 @@ min-height: 300px;
   justify-content: center;
   font-size: 12px;
   font-weight: 400;
-  color: #6D6D6D;
+  color: #000000;
   margin-bottom: 3px;
 }
 .skeleton-card {
@@ -1815,13 +1815,13 @@ left: 10px;
 right: 10px;
 }
 .association-head-tag{
-color: #6D6D6D;
+color: #000000;
 font-size: medium;
 white-space: wrap;
 padding: 0 16px;
 }
 .home-blog-title {
-    color: #3D3D3D;
+    color: #000000;
     font-weight: 600;
     display: flex;
     justify-content: center;
@@ -2340,7 +2340,7 @@ margin: 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #6B6B6B;
+  color: #000000;
 }
 
 .dropdown-divider {
@@ -2365,13 +2365,13 @@ margin: 0;
   font-size: 24px;
   cursor: pointer;
   margin-top: 1.3vh;
-  color: #333;
+  color: #000000;
 }
 .selected-course {
   font-size: 16px;
   margin-right: 10px;
   font-weight: bold;
-  color: #333;
+  color: #000000;
 }
 
 .logout-btn{

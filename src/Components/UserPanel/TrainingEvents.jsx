@@ -280,7 +280,6 @@ const getRuleDiscountPct = (courseName, countryCode) => {
       onChange={(e) => handleTimeChange(e)}
     >
       <option value="">Any Time</option>
-      <option value="new">Newly Added</option>
       <option value="today">Today</option>
       <option value="week">This Week</option>
     </select>

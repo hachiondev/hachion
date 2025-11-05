@@ -279,7 +279,7 @@ color: black;
   gap: 8px;
   font-size: 16px;
   cursor: pointer;
-  color: #6B6B6B;
+  color: #000000;
   font-weight: 500;
 }
 
@@ -515,7 +515,7 @@ height: 3em;
 .dropdown-course-month{  
   font-size: 12px;
   white-space: nowrap;
-  color: #4C4C4D;
+  color: #000000;
   border: 0.5px solid #B1B1B5;
   border-radius: 3px;
   padding: 2px 4px;
@@ -524,13 +524,13 @@ height: 3em;
 .dropdown-card-month{  
   font-size: 10px;
   white-space: nowrap;
-  color: #4C4C4D;
+  color: #000000;
 }
 .trainer-name{
   font-size: 13px;
   font-weight: 500;
   white-space: wrap;
-  color: #262626;
+  color: #000000;
 }
 .card-text-space{
   display: flex;
@@ -1664,10 +1664,11 @@ white-space: nowrap;
   border-radius: 50px;
   background-color: #ffffff;
   color: black;
-  font-size: 16px;
+  font-size: medium;
   font-weight: 600;
   border: 1px solid #fff;
   height: 48px;
+  white-space: nowrap;
 }
 
 .know-more:hover {
@@ -1844,7 +1845,7 @@ text-align: left;
   margin-bottom: 1vh;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #000000;
   display: flex;
   justify-content: space-between;
 }
@@ -1971,7 +1972,7 @@ color: #006489;
 
 .cancel-btn {
   background-color: #ccc;
-  color: #333;
+  color: #000000;
 }
 
 .modal-right img {
@@ -2604,9 +2605,7 @@ padding-left: 2vh;
   width: 100%;
   height: auto;
 }
-  .know-more{
-    font-size: 14px;
-  }
+
   .features-icon{
     width: 30px !important;
     height: 22px !important;
@@ -3165,7 +3164,7 @@ font-size: 12px;
   color: #000;
   text-align: left;
   padding: 8px 4px;
-  border-bottom: 1px solid #6B6B6B;
+  border-bottom: 1px solid #000000;
 }
 
 .mob-sidebar-text{
@@ -3804,7 +3803,7 @@ max-height: 3em;
   width: 320px; /* Set width of input and select fields to 330px */
   height: 35px; /* Set height to 40px */
   margin-bottom: 10px; /* Adjust margin */
-  border-color: #333;
+  border-color: #000000;
 }
 
 .btn-submit {

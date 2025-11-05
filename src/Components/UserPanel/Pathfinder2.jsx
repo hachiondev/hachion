@@ -38,7 +38,7 @@ const Pathfinder2 = ({ formData, onChange, onNext, onBack }) => {
               checked={formData.preferToLearn?.includes(option)}
               onChange={() => handleCheckboxGroup("preferToLearn", option)}
             />
-            <label className="form-check-label">{option}</label>
+            <label className="Pathfinder-form-check-label">{option}</label>
           </div>
         ))}
       </div>

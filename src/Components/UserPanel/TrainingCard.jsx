@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { FaCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import imageUrl from '../../Assets/course_card2.webp';
 import { TbShare3 } from "react-icons/tb";
-import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.png";
 
 const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level, scheduleCount }) => {

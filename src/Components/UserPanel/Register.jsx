@@ -5,7 +5,7 @@ import { Menu, MenuItem } from "@mui/material";
 import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
 import { countries, getDefaultCountry } from "../../countryUtils";
-import LoginBanner from "../../Assets/loginbackground.png";
+import LoginBanner from "../../Assets/loginbackground.webp";
 import google from "../../Assets/google-new.png";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";

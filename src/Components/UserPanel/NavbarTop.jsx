@@ -10,7 +10,6 @@ import './Home.css';
 import { styled } from '@mui/material/styles';
 import { MdCancel } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
-import profile1 from '../../Assets/profile2.png';
 import { FaUserAlt } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";
 import { GoPerson } from "react-icons/go";
@@ -21,7 +20,10 @@ import DropdownSidebar from './DropdownSidebar';
 import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
 import './Course.css';
 import { BsCart2 } from "react-icons/bs";
-
+import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
+import { BsBookmarkHeart } from "react-icons/bs";
+import { PiNotePencilBold, PiCertificateBold, PiBriefcase } from "react-icons/pi";
+import { MdOutlineRateReview } from "react-icons/md";
 
 const API_BASE = "https://api.test.hachion.co";
 const resolveImageUrl = (img) => {
@@ -547,13 +549,48 @@ useEffect(() => {
                 </button>
                 <ul  id="userMenu" className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <Link className="dropdown-item" to="/userdashboard/Dashboard">
+                    <Link className="dropdown-item" to="/userdashboard/dashboard">
                       <RxDashboard /> Dashboard
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/userdashboard/profile">
                       <GoPerson /> User Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/enrolls">
+                      <PiNotePencilBold /> Enrolls
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/wishlist">
+                      <BsBookmarkHeart /> Wishlist
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/order_history">
+                      <BsCart2 /> Order History
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/certificate">
+                      <PiCertificateBold /> Certificate
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/applied_jobs">
+                      <PiBriefcase /> Applied Jobs
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/review">
+                      <MdOutlineRateReview /> Review
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/userdashboard/pathfinder">
+                      <CgPathOutline /> Pathfinder
                     </Link>
                   </li>
                   <li>
@@ -593,11 +630,32 @@ useEffect(() => {
                 )}
                 <span className="ms-2">{userData?.name || "User"}</span>
               </div>
-              <div className="drawer-item" onClick={() => navigate('/userdashboard/Dashboard')}>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/dashboard')}>
                 <RxDashboard /> Dashboard
               </div>
               <div className="drawer-item" onClick={() => navigate('/userdashboard/profile')}>
                 <GoPerson /> User Profile
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/enrolls')}>
+                <PiNotePencilBold /> Enrolls
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/wishlist')}>
+                <BsBookmarkHeart /> Wishlist
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/order_history')}>
+                <BsCart2 /> Order History
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/certificate')}>
+                <PiCertificateBold /> Certificate
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/applied_jobs')}>
+                <PiBriefcase /> Applied Jobs
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/review')}>
+                <MdOutlineRateReview /> Review
+              </div>
+              <div className="drawer-item" onClick={() => navigate('/userdashboard/pathfinder')}>
+                <CgPathOutline /> Pathfinder
               </div>
               <div className="drawer-item" onClick={() => navigate('/coursedetails')}>
                 Explore Courses

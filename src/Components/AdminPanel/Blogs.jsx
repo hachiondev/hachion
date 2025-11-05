@@ -383,7 +383,7 @@ const Blogs = () => {
                   <p>entries</p>
                 </div>
                 <div className="entries-right">
-                  <div className="search-div" role="search">
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                     <input
                       className="search-input"
                       type="search"

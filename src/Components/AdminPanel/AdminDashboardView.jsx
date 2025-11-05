@@ -23,6 +23,7 @@ import StudentInterests from './StudentInterests';
 import AdminUploadImage from './AdminUploadImage';
 import AdminDiscount from './AdminDiscount';
 import GeneralFaq from './GeneralFaq';
+import Employees from './Employees';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -45,6 +46,7 @@ const componentMap = {
   'Upload Images': <AdminUploadImage />,
   'Other': <Other />,
   'Discount Courses': <AdminDiscount />,
+  'Employees': <Employees />,
   'Support': <Support />,
 };
 const AdminDashboardView = () => {

@@ -9,7 +9,7 @@ import Topbar from './Topbar';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
-import LoginBanner from '../../Assets/loginbackground.png';
+import LoginBanner from '../../Assets/loginbackground.webp';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const ConfirmOtp = () => {

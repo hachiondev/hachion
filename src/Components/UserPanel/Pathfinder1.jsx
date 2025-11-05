@@ -9,7 +9,7 @@ const Pathfinder1 = ({ formData, onChange, onNext, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {
         axios
-          .get("http://localhost:8081/courses/all")
+          .get("https://api.test.hachion.co/courses/all")
           .then((res) => {
             setCourses(res.data);
           })
@@ -118,7 +118,7 @@ const handleEditClick = () => {
                   />
                     <div
                       className="border rounded p-2 mt-2"
-                      style={{ maxHeight: "150px", overflowY: "auto" }}
+                      style={{ maxHeight: "150px", overflowY: "auto"}}
                     >
                       {(formData.selectedCourses || []).map((courseName, index) => (
                         <div className="form-check" key={index}>
@@ -128,7 +128,7 @@ const handleEditClick = () => {
                             checked
                             
                           />
-                          <label className="form-check-label">{courseName}</label>
+                          <label className="Pathfinder-form-check-label">{courseName}</label>
                         </div>
                       ))}
                     </div>

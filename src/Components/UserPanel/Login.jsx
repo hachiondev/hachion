@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
-import LoginBanner from '../../Assets/loginbackground.png';
+import LoginBanner from '../../Assets/loginbackground.webp';
 import google from '../../Assets/google-new.png';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
@@ -39,49 +39,7 @@ const Login = () => {
     document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax`;
   };
   const dismissError = () => { if (errorMessage1) setErrorMessage1(''); };
-  //  const handleLogin = async (e) => {
-  //   if (!validateForm()) return;
-  //   e.preventDefault();
-    
-  // dismissError();
 
-  //   const loginData = {
-  //     email: email,
-  //     password: password,
-  //   };
-  
-  //   try {
-  //     const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
-  //     console.log(response.data);
-  
-  //     if (response.data.status) {
-  //       const loginuserData = { name: response.data.userName, email: response.data.email, picture: ""  };
-  
-  //       try {
-  //         localStorage.setItem('loginuserData', JSON.stringify(loginuserData));
-  //         localStorage.setItem('authToken', response.data.token); 
-          
-  //  localStorage.removeItem('avatar');        
-  //  document.cookie = "avatar=; Max-Age=0; Path=/; SameSite=Lax"; 
-  //  localStorage.removeItem('pendingOAuth');   
-  
-
-  //  window.dispatchEvent(new Event('storage'));
-  //       } catch (error) {
-  //         console.error('Error saving to localStorage:', error);
-  //       }
-  
-  //       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
-  //       localStorage.removeItem('redirectAfterLogin');
-  //       window.location.href = redirectPath;
-  //     } else {
-  //       setErrorMessage(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during login", error);
-  //     setErrorMessage("An error occurred during login");
-  //   }
-  // }; 
   const handleLogin = async (e) => {
   if (!validateForm()) return;
   e.preventDefault();

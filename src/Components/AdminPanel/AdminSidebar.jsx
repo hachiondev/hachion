@@ -17,6 +17,7 @@ import { FaBriefcase } from "react-icons/fa6";
 import { CgPathFront } from "react-icons/cg";
 import { RiImageAddFill } from "react-icons/ri";
 import { FaQuestion } from "react-icons/fa";
+import { IoIosPeople } from "react-icons/io";
 import './Admin.css';
 const menuItems = [
   { title: 'Dashboard', icon: <FaTachometerAlt /> },
@@ -46,6 +47,7 @@ const menuItems = [
   { title: 'Upload Images', icon: <RiImageAddFill /> },
   { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },
+  { title: 'Employees', icon: <IoIosPeople /> },
   { title: 'Support', icon: <BiSupport /> },
   { title: 'Internship', icon: <FaHandshakeAngle /> },
   { title: 'Live Class Tracking', icon: <LuFocus /> },

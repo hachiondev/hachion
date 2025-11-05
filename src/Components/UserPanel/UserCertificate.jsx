@@ -12,32 +12,9 @@ export default function UserCertificate() {
   const [userName, setUserName] = useState("");
   const [availabilityById, setAvailabilityById] = useState({});
 
-  const [certificates] = useState([
-    {
-      id: 1,
-      courseName: "QA Manual Testing",
-      instructor: "John Smith",
-      grade: "A+",
-      issueDate: "March 10, 2024",
-      certificateId: "CERT-2024-QA-001",
-    },
-    {
-      id: 2,
-      courseName: "Python Programming",
-      instructor: "Sarah Johnson",
-      grade: "A",
-      issueDate: "March 5, 2024",
-      certificateId: "CERT-2024-PY-002",
-    },
-    {
-      id: 3,
-      courseName: "React Frontend Development",
-      instructor: "Michael Lee",
-      grade: "A+",
-      issueDate: "Feb 22, 2024",
-      certificateId: "CERT-2024-RE-003",
-    },
-  ]);
+  const [certificates, setCertificates] = useState([]);
+  const [certsLoading, setCertsLoading] = useState(true);
+  const [certsErr, setCertsErr] = useState(null);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
@@ -92,33 +69,66 @@ export default function UserCertificate() {
     }
   };
 
-  useEffect(() => {
+    useEffect(() => {
     if (!studentId) return;
     let cancelled = false;
+
     (async () => {
-      const entries = await Promise.all(
-        certificates.map(async (c) => {
-          const url = getCertificateURL(studentId, c.courseName);
-          const status = await checkCertificateExists(url);
-          return [c.id, status];
-        })
-      );
-      if (!cancelled) {
-        const map = {};
-        entries.forEach(([id, status]) => (map[id] = status));
-        setAvailabilityById(map);
+      setCertsLoading(true);
+      try {
+        const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+        const userEmail = userData.email || "";
+        const res = await fetch(
+          `https://api.test.hachion.co/certificate/getByEmail?email=${encodeURIComponent(
+            userEmail
+          )}`
+        );
+        if (!res.ok) throw new Error(`Certificates fetch failed: ${res.status}`);
+        const data = await res.json();
+        if (!cancelled) {
+          setCertificates(data.items || []);
+          const entries = await Promise.all(
+            (data.items || []).map(async (c) => {
+              const url =
+                c.certificatePath && c.certificatePath.includes("/uploads/")
+                  ? `https://api.test.hachion.co${c.certificatePath.replace(
+                      "/home/ec2-user",
+                      ""
+                    )}`
+                  : getCertificateURL(studentId, c.courseName);
+              const status = await checkCertificateExists(url);
+              return [c.id, status];
+            })
+          );
+          const map = {};
+          entries.forEach(([id, status]) => (map[id] = status));
+          setAvailabilityById(map);
+        }
+      } catch (e) {
+        if (!cancelled) setCertsErr(e.message);
+      } finally {
+        if (!cancelled) setCertsLoading(false);
       }
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [studentId, certificates]);
+  }, [studentId]);
 
   const stats = {
-    total: certificates.length,
-    averageGrade: "4.2 (A+)",
-    latestMonth: "March 2024",
+    total: certificates.length || 0,
+    averageGrade: certificates.length
+      ? certificates[0].grade || "-"
+      : "-",
+    latestMonth: certificates.length
+      ? new Date(certificates[0].issueDate).toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        })
+      : "-",
   };
+
 
   if (loading) {
     return (

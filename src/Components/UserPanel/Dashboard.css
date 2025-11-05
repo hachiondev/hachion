@@ -60,13 +60,13 @@
   transition: padding 0.3s ease;
   font-size: medium;
   font-weight: 400;
-  color: #1F222E;
+  color: #000000;
   border-radius: 4px;
 }
 
 .menu-item-user .menu-icon {
   font-size: 24px;
-  color: #AFAFAF;
+  color: #000000;
   transition: color 0.3s ease;
 }
 
@@ -133,7 +133,7 @@
 .dashboard-user-heading {
   font-size: medium;
   font-weight: 600;
-  color: #4F4F4F;
+  color: #000000;
   white-space: wrap;
 }
 
@@ -191,7 +191,7 @@
 .dashboard-activity-heading {
   font-size: larger;
   font-weight: 600;
-  color: #4F4F4F;
+  color: #000000;
   white-space: wrap;
 }
 .activity-icon {
@@ -220,13 +220,13 @@
 
 .activity-text {
   font-weight: 500;
-  color: #333;
+  color: #000000;
   margin-bottom: 5px;
 }
 
 .activity-time {
   font-size: small;
-  color: #777;
+  color: #000000;
 }
 
 .assignment-title {
@@ -237,13 +237,13 @@
 
 .assignment-course {
   font-size: medium;
-  color: #555;
+  color: #000000;
   margin-bottom: 5px;
 }
 
 .assignment-due {
   font-size: small;
-  color: #777;
+  color: #000000;
 }
 
 .urgency-high .urgency {
@@ -282,7 +282,7 @@
 
 .progress-text {
   font-size: medium;
-  color: #AFAFAF;
+  color: #000000;
   margin-bottom: 4px;
   font-weight: 500;
 }
@@ -398,7 +398,7 @@
   color: #000;
 }
 .user-module-title{
-  color: #4F4F4F;
+  color: #000000;
     font-size: 18px;
     font-weight: 600;
     text-align: left;
@@ -506,7 +506,7 @@
 .grade {
     font-size: medium;
     font-weight: 600;
-    color: #262626;
+    color: #000000;
     margin: 1vh 0;
     padding-bottom: 5px;
     text-align: left;
@@ -517,7 +517,7 @@
     text-align: left;
     font-size: 13px;
     font-weight: 600;
-    color: #262626;
+    color: #000000;
     min-height: 38px;
     line-height: 1.6;
     margin: 3px 0;
@@ -656,7 +656,7 @@ min-width: 1300;
 .resume-table .MuiTableBody-root .MuiTableCell-root {
   font-size: medium !important;
   font-weight: 400;
-  color: #6B6B6B !important;
+  color: #000000 !important;
   background-color: #fff;
   padding: 10px 15px !important;
   border: none !important;
@@ -1038,6 +1038,7 @@ align-items: center;
   outline: none;
   border: 1px solid #b3b3b3;
   padding: 5px;
+  color: #000000;
 }
 .Pathfinder-label{
   font-size: 16px;
@@ -1045,6 +1046,10 @@ align-items: center;
   margin-bottom: .5rem;
   padding: 3px;
   white-space: wrap;
+  color: #000000;
+}
+.Pathfinder-form-check-label{
+  color: #000;
 }
 
 @media only screen and (max-width: 1366px) {

@@ -5,7 +5,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { TbRefresh } from "react-icons/tb";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import google from "../../Assets/google-new.png";
-import LoginBanner from "../../Assets/loginbackground.png";
+import LoginBanner from "../../Assets/loginbackground.webp";
 import Topbar from "./Topbar";
 import NavbarTop from "./NavbarTop";
 import Footer from "./Footer";

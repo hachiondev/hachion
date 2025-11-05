@@ -170,6 +170,57 @@ const toIntFromRange = (val) => {
     setAnchorEl(null);
     mobileInputRef.current?.focus();
   };
+useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
+  const userEmail = (userData.email || "").trim();
+
+  
+  if (userEmail) setEmail(userEmail);
+
+  if (!userEmail) return; 
+
+  const ctrl = new AbortController();
+
+  (async () => {
+    try {
+      const res = await fetch(
+        `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
+        { signal: ctrl.signal }
+      );
+      if (!res.ok) throw new Error("Failed to fetch profile data");
+      const data = await res.json();
+
+      if (data?.name) setName(String(data.name));
+      if (data?.email && !email) setEmail(String(data.email)); 
+
+      if (data?.mobile) {
+        
+        const digits = String(data.mobile).replace(/\D/g, "");
+        setMobile(digits.slice(-10));
+      }
+
+      if (data?.country) {
+        
+        const countryMatch =
+          countries.find(
+            (c) => String(c.name).toLowerCase() === String(data.country).toLowerCase()
+          ) || null;
+
+        if (countryMatch) {
+          setSelectedCountry(countryMatch);
+        }
+      }
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        
+        console.error("Profile autofill failed:", err);
+      }
+    }
+  })();
+
+  return () => ctrl.abort();
+  
+}, []);
 
   return (
     <div className="popup-overlay">

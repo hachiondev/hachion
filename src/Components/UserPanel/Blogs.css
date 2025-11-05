@@ -60,7 +60,7 @@
 .recent-post-date {
   font-size: small;
   font-weight: 400;
-  color: #333931;
+  color: #000000;
   margin: 0;
 }
 
@@ -198,7 +198,7 @@
 }
 
  .detail-top-date{
-  color: #888888;
+  color: #000000;
   font-size: medium;
 }
 
@@ -351,12 +351,12 @@
       
       .breadcrumb-item a {
         text-decoration: none;
-        color: #929292;
+        color: #000000;
         white-space: nowrap;
       }
       
       .breadcrumb-item.active {
-        color: #262626;
+        color: #000000;
         font-size: 12px;
         padding-left: 0;
         white-space: nowrap;
@@ -374,7 +374,7 @@
       .breadcrumb-item svg {
         font-size: 16px;
         margin: 0 3px;
-        color: #262626;
+        color: #000000;
       }
       .about-us-content{
         width: 80%;

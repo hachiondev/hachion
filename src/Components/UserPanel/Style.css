@@ -228,7 +228,7 @@ a:not([href]):not([class]) {
     font-weight: 500;
     font-size: 18px;
     margin-bottom: 2px;
-    color: #1D2026;
+    color: #000000;
     padding-bottom: 0vh;
     padding-top: 10px;
 }
@@ -237,7 +237,7 @@ a:not([href]):not([class]) {
     font-size: 14px;
     margin-bottom: 2px;
     text-align: center;
-    color: #8C94A3;
+    color: #000000;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     display: -webkit-box;
@@ -257,7 +257,7 @@ a:not([href]):not([class]) {
 .instructor-rating{
   font-size: 14px;
   font-weight: 500;
-  color: #4E5566;
+  color: #000000;
 }
 .view-profile-btn {
     background-color: rgba(31, 171, 255, 0.2);
@@ -285,7 +285,7 @@ a:not([href]):not([class]) {
 .expert-title {
   font-size: 24px;
   padding: 10px 20px;
-  color: #1D2026;
+  color: #000000;
   font-weight: 600;
 }
 .instructors-filter {
@@ -345,6 +345,18 @@ a:not([href]):not([class]) {
   transform: translateY(-50%);
   color: #888;
   pointer-events: none;
+}
+.course-dropdown-list{
+  position: absolute;
+  background: #fff;
+  border: 1px solid #000;
+  border-top: none;
+  z-index: 10;
+  width: 100%;
+  max-width: 360px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 8px 10px;
 }
 .top-badge{
   color: #00aeef;
@@ -625,12 +637,12 @@ white-space: wrap;
 .expert-number{
   font-size: x-large;
   font-weight: 600;
-  color: #1D2026;
+  color: #000000;
 }
 .expert-label{
   font-size: medium;
   font-weight: 500;
-  color: #4E5566;
+  color: #000000;
 }
 .check-icon{
   color: #23BD33;
@@ -674,14 +686,14 @@ white-space: wrap;
 }
 .support-lable{
   font-size: small;
-  font-weight: 500;
-  color: #8C94A3;
+  font-weight: 400;
+  color: #000000;
   margin-bottom: 8px;
 }
 .support-mail, .expert-online-title{
   font-size: medium;
   font-weight: 500;
-  color: #1D2026;
+  color: #000000;
   margin-bottom: 5px;
 }
 .trainer-story-wrapper {
@@ -693,7 +705,7 @@ white-space: wrap;
 .trainer-story{
   font-size: medium;
   font-weight: 400;
-  color: #1D2026;
+  color: #000000;
   padding: 25px;
   background-color: #C2EEFC;
   height: 250px;
@@ -702,7 +714,7 @@ white-space: wrap;
   display: block;
   margin-top: 8px;
   font-style: italic;
-  color: #666;
+  color: #000000;
 }
 .quote-icon{
   color: #00AEEF;
@@ -749,7 +761,7 @@ white-space: wrap;
 .expert-online-lable{
 font-size: small;
 font-weight: 400;
-color: #6E7485;
+color: #000000;
 white-space: wrap;
 }
 .expert-row{

@@ -12,11 +12,15 @@ const Topbar = () => {
   useEffect(() => {
     const detectUserCountry = async () => {
       try {
-        const res = await fetch('https://ipwho.is/');
+        
+        const res = await fetch('https://api.country.is');
         if (!res.ok) throw new Error('Failed to fetch location data');
-
         const data = await res.json();
-        if (data.country_code === 'IN') {
+
+        
+        const code = (data.country || '').toUpperCase();
+
+        if (code === 'IN') {
           setWhatsappNumber('+91-949-032-3388');
           setWhatsappLink('https://wa.me/919490323388');
         } else {
@@ -24,6 +28,7 @@ const Topbar = () => {
           setWhatsappLink('https://wa.me/17324852499');
         }
       } catch (error) {
+        
         setWhatsappNumber('+1 (732) 485-2499');
         setWhatsappLink('https://wa.me/17324852499');
       }
@@ -76,5 +81,6 @@ const Topbar = () => {
     </div>
   );
 };
+
 
 export default Topbar;

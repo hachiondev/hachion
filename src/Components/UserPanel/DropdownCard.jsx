@@ -1,11 +1,11 @@
 // import React, { useEffect, useState } from 'react';
 // import { RxCalendar } from "react-icons/rx";
 // import { BiTimeFive } from "react-icons/bi";
-// import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 // import './Course.css';
-// import { useNavigate } from 'react-router-dom';
+// import fallbackImg from "../../Assets/18.png";
+// import { Link, useNavigate } from 'react-router-dom';
 
-// const DropdownCard = ({ title, month, time, Rating, RatingByPeople, image, student }) => {
+// const DropdownCard = ({ title, month, level , image }) => {
 //   const navigate = useNavigate();
 //   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
 
@@ -26,98 +26,118 @@
 //     }
 //   };
 
-//   // Function to render stars dynamically based on the rating
-//   const renderStars = (rating) => {
-//     const stars = [];
-//     for (let i = 1; i <= 5; i++) {
-//       stars.push(
-//         i <= rating ? (
-//           <MdOutlineStar key={i} className="dropdown-star-icon filled" />
-//         ) : (
-//           <MdOutlineStarBorder key={i} className="dropdown-star-icon" />
-//         )
-//       );
-//     }
-//     return stars;
-//   };
-
 //   return (
 //     <div className="dropdown-card"
 //     onClick={handleClick}>
-//       <div className="dropdown-card-header-div">
-//         <img src={image} alt="card-img" className="dropdown-card-icon" loading="lazy"/>
-//         <h3 className="dropdown-course-name">{title}</h3>
+//       <div className="dropdown-card-icon">
+//         <img src={image} alt="course-img" loading="lazy"
+//         onError={(e) => {
+//               e.target.onerror = null;
+//               e.target.src = fallbackImg;
+//             }}/>
 //       </div>
 //       <div className="dropdown-course-details">
-//         {/* <h3 className="dropdown-course-name">{title}</h3> */}
 //         <div className="dropdown-course-time">
-//           <p className="dropdown-course-month">
-//             <RxCalendar /> {month} Days
-//           </p>
+//           <span className={`course-badge ${level?.toLowerCase()}`}>
+//             {level}
+//           </span>
+//           <div className="dropdown-card-month">
+//             <BiTimeFive /> {month} Days
+//           </div>
 //         </div>
-//         <p className="dropdown-course-review">
-//           Rating: {Rating} {renderStars(Rating)} ({RatingByPeople})
-//         </p>
-//       </div>
+//         <h3 className="dropdown-course-name">{title}</h3>
+//         </div>
+//         <button className="dropdown-view-btn" onClick={handleClick}>View Details
+//          </button>
 //     </div>
 //   );
 // };
 
 // export default DropdownCard;
 
-import React, { useEffect, useState } from 'react';
-import { RxCalendar } from "react-icons/rx";
-import { BiTimeFive } from "react-icons/bi";
-import './Course.css';
-import fallbackImg from "../../Assets/18.png";
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./Course.css";
+import { useNavigate } from "react-router-dom";
+import { MdArrowForwardIos } from "react-icons/md";
 
-const DropdownCard = ({ title, month, level , image }) => {
+const DropdownCourseList = ({ category }) => {
+  const [courses, setCourses] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 760);
+    let isMounted = true;
+
+    const fetchCourses = async () => {
+      try {
+        const { data } = await axios.get("https://api.test.hachion.co/courses/all");
+        if (isMounted) setCourses(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    fetchCourses();
+    return () => (isMounted = false);
   }, []);
 
-  // Handle button click to navigate
-  const handleClick = () => {
-    if (title) {
-      const formattedName = title.toLowerCase().replace(/\s+/g, '-'); // Format course name
-      navigate(`/coursedetails/${formattedName}`);
+  useEffect(() => {
+    if (category && courses.length > 0) {
+      const filteredList = courses.filter(
+        (course) => course.courseCategory === category
+      );
+      setFiltered(filteredList);
     }
+  }, [category, courses]);
+
+  const handleCourseClick = (title) => {
+    const slug = title.toLowerCase().replace(/\s+/g, "-");
+    navigate(`/coursedetails/${slug}`);
   };
 
-  return (
-    <div className="dropdown-card"
-    onClick={handleClick}>
-      <div className="dropdown-card-icon">
-        <img src={image} alt="course-img" loading="lazy"
-        onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = fallbackImg;
-            }}/>
+  if (loading) {
+    return (
+      <div className="scrollable-category-list">
+        <ul className="category-menu">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <li key={index}>
+              <div
+                className="skeleton-explore-text title"
+                style={{ padding: "4px 8px" }}
+              >
+                <div className="skeleton-text-line"></div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="dropdown-course-details">
-        <div className="dropdown-course-time">
-          <span className={`course-badge ${level?.toLowerCase()}`}>
-            {level}
-          </span>
-          <div className="dropdown-card-month">
-            <BiTimeFive /> {month} Days
-          </div>
-        </div>
-        <h3 className="dropdown-course-name">{title}</h3>
-        </div>
-        <button className="dropdown-view-btn" onClick={handleClick}>View Details
-         </button>
+    );
+  }
+
+  if (filtered.length === 0)
+    return <p className="dropdown-no-courses">No courses in {category}</p>;
+
+  return (
+    <div className="scrollable-category-list">
+      <ul className="category-menu">
+        {filtered.map((course, index) => (
+          <li key={course.id || index}>
+            <button
+              onClick={() => handleCourseClick(course.courseName)}
+              className="category-menu-item"
+              style={{ padding: "4px 8px", fontWeight: "400" }}
+            >
+              <div className="category-menu-text">{course.courseName}</div>
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default DropdownCard;
+export default DropdownCourseList;

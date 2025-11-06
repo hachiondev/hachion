@@ -17,7 +17,7 @@ import { MdLogout } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import DropdownSidebar from './DropdownSidebar';
-import DropdownCardRight, { getTotalCards } from './DropdownCardRight';
+import DropdownCard, { getTotalCards } from './DropdownCard';
 import './Course.css';
 import { BsCart2 } from "react-icons/bs";
 import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
@@ -407,15 +407,15 @@ useEffect(() => {
                         name="description"
                         content={`Discover ${selectedCategory} courses designed to enhance your skills and career.`}
                       />
-                      <div className="selected-category-heading">
+                      {/* <div className="selected-category-heading">
                         {selectedCategory} Courses
-                      </div>
+                      </div> */}
                       <div>
-                        <DropdownCardRight
+                        <DropdownCard
                           category={selectedCategory}
-                          currentPage={currentPage}
-                          cardsPerPage={cardsPerPage}
-                          onTotalCardsChange={updateTotalCards}
+                          // currentPage={currentPage}
+                          // cardsPerPage={cardsPerPage}
+                          // onTotalCardsChange={updateTotalCards}
                         />
                       </div>
                       <li>
@@ -485,7 +485,7 @@ useEffect(() => {
           {/* ==== Mobile Right Icons ==== */}
           <div className="d-flex align-items-center d-lg-none ms-auto">
             {isLoggedIn && (
-            <button className="btn" type="button" aria-label="Go to cart">
+            <button className="btn" type="button" aria-label="Go to cart" onClick={() => navigate('/userdashboard/order_history')}>
               <BsCart2 size={24} />
             </button>
             )}
@@ -515,7 +515,7 @@ useEffect(() => {
               </>
             ) : (
               <div className="d-flex align-items-center gap-3">
-              <button className="btn" aria-label="Go to cart">
+              <button className="btn" aria-label="Go to cart" onClick={() => navigate('/userdashboard/order_history')}>
               <BsCart2 size={28} />
             </button>
               <div className="dropdown">
@@ -578,11 +578,11 @@ useEffect(() => {
                       <PiCertificateBold /> Certificate
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link className="dropdown-item" to="/userdashboard/applied_jobs">
                       <PiBriefcase /> Applied Jobs
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link className="dropdown-item" to="/userdashboard/review">
                       <MdOutlineRateReview /> Review
@@ -648,9 +648,9 @@ useEffect(() => {
               <div className="drawer-item" onClick={() => navigate('/userdashboard/certificate')}>
                 <PiCertificateBold /> Certificate
               </div>
-              <div className="drawer-item" onClick={() => navigate('/userdashboard/applied_jobs')}>
+              {/* <div className="drawer-item" onClick={() => navigate('/userdashboard/applied_jobs')}>
                 <PiBriefcase /> Applied Jobs
-              </div>
+              </div> */}
               <div className="drawer-item" onClick={() => navigate('/userdashboard/review')}>
                 <MdOutlineRateReview /> Review
               </div>

@@ -24,19 +24,20 @@ const StickyBar = () => {
   useEffect(() => {
     const detectUserCountry = async () => {
       try {
-        const res = await fetch('https://ipwho.is/');
-        if (!res.ok) throw new Error('Failed to fetch location data');
+      const res = await fetch('https://api.country.is');
+if (!res.ok) throw new Error('Failed to fetch location data');
 
-        const data = await res.json();
-        console.log('🌍 Country from ipwho.is:', data.country_code);
+const data = await res.json();
+const code = (data.country || '').toUpperCase();
 
-        if (data.country_code === 'IN') {
-          setWhatsappNumber('+91-949-032-3388');
-          setWhatsappLink('https://wa.me/919490323388');
-        } else {
-          setWhatsappNumber('+1 (732) 485-2499');
-          setWhatsappLink('https://wa.me/17324852499');
-        }
+if (code === 'IN') {
+  setWhatsappNumber('+91-949-032-3388');
+  setWhatsappLink('https://wa.me/919490323388');
+} else {
+  setWhatsappNumber('+1 (732) 485-2499');
+  setWhatsappLink('https://wa.me/17324852499');
+}
+
       } catch (error) {
         console.error('❌ Location fetch error:', error);
         setWhatsappNumber('+1 (732) 485-2499');

@@ -37,16 +37,17 @@ const [mobileTouched, setMobileTouched] = useState(false);
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
+useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const matchedCountry = countries.find((c) => c.flag === data?.country_code);
+      if (matchedCountry) setSelectedCountry(matchedCountry);
+    })
+    .catch(() => {});
+}, []);
 
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const matchedCountry = countries.find((c) => c.flag === data?.country_code);
-        if (matchedCountry) setSelectedCountry(matchedCountry);
-      })
-      .catch(() => {});
-  }, []);
 const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
 
   useEffect(() => {

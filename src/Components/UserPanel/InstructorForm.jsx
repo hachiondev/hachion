@@ -23,38 +23,52 @@ const InstructorForm = ({ onClose }) => {
   const [location, setLocation] = useState("");
   const [link, setLink] = useState("");
   const [skill, setSkill] = useState("");
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState([]); // multiple courses
   const [courses, setCourses] = useState([]);
   const [experience, setExperience] = useState("");
   const [mode, setMode] = useState("");
   const [upload, setUpload] = useState(null);
   const [errors, setErrors] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
+  const [showCourseDropdown, setShowCourseDropdown] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const [submitting, setSubmitting] = useState(false);
-  
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
         onClose();
+      }
+      // close course dropdown if click is outside the dropdown container
+      if (!event.target.closest(".custom-course-dropdown")) {
+        setShowCourseDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
+  // useEffect(() => {
+  //   fetch("https://ipwho.is/")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const match = countries.find((c) => c.flag === data?.country_code);
+  //       if (match) setSelectedCountry(match);
+  //     })
+  //     .catch(() => {});
+  // }, []);
+
   useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const match = countries.find((c) => c.flag === data?.country_code);
-        if (match) setSelectedCountry(match);
-      })
-      .catch(() => {});
-  }, []);
-  
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const match = countries.find((c) => c.flag === data?.country_code);
+      if (match) setSelectedCountry(match);
+    })
+    .catch(() => {});
+}, []);
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
     const userEmail = (userData.email || "").trim();
@@ -67,7 +81,9 @@ const InstructorForm = ({ onClose }) => {
     (async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
+          `${API_BASE}/api/v1/user/myprofile?email=${encodeURIComponent(
+            userEmail
+          )}`,
           { signal: ctrl.signal }
         );
         if (!res.ok) throw new Error("Failed to fetch profile data");
@@ -76,7 +92,6 @@ const InstructorForm = ({ onClose }) => {
         if (data?.name) setName(String(data.name));
         if (data?.email) setEmail(String(data.email));
 
-        
         if (data?.mobile) {
           const digits = String(data.mobile).replace(/\D/g, "");
           const national10 = digits.length > 10 ? digits.slice(-10) : digits;
@@ -87,7 +102,8 @@ const InstructorForm = ({ onClose }) => {
           const matchByName =
             countries.find(
               (c) =>
-                String(c.name).toLowerCase() === String(data.country).toLowerCase()
+                String(c.name).toLowerCase() ===
+                String(data.country).toLowerCase()
             ) || null;
           if (matchByName) setSelectedCountry(matchByName);
         }
@@ -101,7 +117,6 @@ const InstructorForm = ({ onClose }) => {
     return () => ctrl.abort();
   }, []);
 
-  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -120,6 +135,14 @@ const InstructorForm = ({ onClose }) => {
     setSelectedCountry(country);
     setAnchorEl(null);
     mobileInputRef.current?.focus();
+  };
+
+  const handleCourseToggle = (course) => {
+    if (area.includes(course)) {
+      setArea(area.filter((c) => c !== course));
+    } else {
+      setArea([...area, course]);
+    }
   };
 
   const validateForm = () => {
@@ -141,7 +164,7 @@ const InstructorForm = ({ onClose }) => {
     }
 
     if (!location.trim()) newErrors.location = "Location is required.";
-    if (!area.trim()) newErrors.area = "Area of expertise is required.";
+    if (area.length === 0) newErrors.area = "At least one expertise is required.";
     if (!experience.trim()) newErrors.experience = "Experience is required.";
     if (!mode.trim()) newErrors.mode = "Mode of training is required.";
     if (!skill.trim()) newErrors.skill = "Skill/Occupation is required.";
@@ -178,7 +201,7 @@ const InstructorForm = ({ onClose }) => {
         location,
         link,
         skill,
-        area,
+        area: area.join(", "),
         experience,
         mode,
         comment,
@@ -298,7 +321,6 @@ const InstructorForm = ({ onClose }) => {
                   ref={mobileInputRef}
                   value={mobile}
                   onChange={(e) => {
-                    
                     const v = e.target.value.replace(/\D/g, "").slice(0, 10);
                     setMobile(v);
                   }}
@@ -338,30 +360,109 @@ const InstructorForm = ({ onClose }) => {
         </div>
 
         {/* Row 3 */}
-        <div className="instructor-fields">
-          <div>
-            <label className="login-label" htmlFor="course">
-              Area of Expertise<span className="star">*</span>
-            </label>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  id="course"
-                  className="form-select"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                >
-                  <option value="">Choose Area</option>
-                  {courses.map((course, idx) => (
-                    <option key={idx} value={course}>
-                      {course}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {errors.area && <p className="error-field-message">{errors.area}</p>}
+    <div className="instructor-fields">
+    <div>
+    <div className="custom-course-dropdown" style={{ position: "relative" }}>
+  <label className="login-label" htmlFor="course">
+    Area of Expertise<span className="star">*</span>
+  </label>
+
+  <div className="register-field">
+    <div
+      className="password-field"
+      style={{ position: "relative" }}
+    >
+      {/* Real select element for Bootstrap style + arrow */}
+      <select
+        className="form-select"
+        value={area.length ? "selected" : ""}
+        onMouseDown={(e) => {
+        e.preventDefault();
+        setShowCourseDropdown(!showCourseDropdown);
+      }}
+      onFocus={(e) => e.target.blur()}
+      >
+        <option value="">
+          {area.length > 0
+            ? `${area.length} course(s) selected`
+            : "Choose Courses"}
+        </option>
+      </select>
+      </div>
+
+      {showCourseDropdown && (
+        <div
+          className="course-dropdown-list"
+        >
+          {courses.length === 0 ? (
+            <div style={{ padding: "8px 4px", color: "#666" }}>
+              No courses available
             </div>
-          </div>
+          ) : (
+            courses.map((course, idx) => (
+              <label
+                key={idx}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "6px 4px",
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={area.includes(course)}
+                  onChange={() => handleCourseToggle(course)}
+                  style={{ marginRight: "10px" }}
+                />
+                <span style={{ flex: 1 }}>{course}</span>
+              </label>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+
+    {/* Error message */}
+    {errors.area && (
+      <p className="error-field-message">{errors.area}</p>
+    )}
+
+    {/* Selected tags */}
+    {area.length > 0 && (
+      <div
+        className="selected-area-list"
+        style={{
+          marginTop: "4px",
+          maxWidth: "360px",
+          display: "flex",
+          flexWrap: "wrap",
+        }}
+      >
+        {area.map((course, idx) => (
+          <span
+            key={idx}
+            className="selected-course-item"
+            style={{
+              display: "inline-block",
+              border: "1px solid #000",
+              borderRadius: "30px",
+              padding: "4px 8px",
+              margin: "3px",
+              fontSize: "12px",
+              cursor: "pointer",
+            }}
+            onClick={() => handleCourseToggle(course)}
+            title="Click to remove"
+          >
+            {course} ✕
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+  </div>
 
           <div>
             <label className="login-label">
@@ -391,7 +492,7 @@ const InstructorForm = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Row 4 */}
+        {/* Remaining form unchanged */}
         <div className="instructor-fields">
           <div>
             <label className="login-label">Linked Profile (Optional)</label>
@@ -431,7 +532,7 @@ const InstructorForm = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Row 5 */}
+        {/* Skill + Resume */}
         <div className="instructor-fields">
           <div>
             <label className="login-label">
@@ -455,7 +556,6 @@ const InstructorForm = ({ onClose }) => {
             <label className="login-label">
               Upload Resume/CV<span className="star">*</span>
             </label>
-
             <div className="register-field">
               <div
                 className="password-field custom-upload-field"
@@ -517,8 +617,8 @@ const InstructorForm = ({ onClose }) => {
         >
           {submitting ? "Submitting..." : "Submit"}
         </button>
+        </div>
       </div>
-    </div>
   );
 };
 

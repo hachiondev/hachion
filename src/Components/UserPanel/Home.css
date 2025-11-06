@@ -223,7 +223,7 @@ width: auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-height: auto;
   overflow: visible;
-  width: 65vw;
+  width: 650px;
   transform: translateX(-10%);
 }
 
@@ -239,7 +239,6 @@ width: auto;
   overflow-y: auto;
   overflow-x: hidden;
   width: auto;
-  max-width: 250px;
 }
 
 .scrollable-category-list::-webkit-scrollbar {
@@ -1132,7 +1131,7 @@ color: #00AEEF;
   overflow-y: auto; 
   overflow-x: hidden;
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  padding: 20px;
+  padding: 20px 30px 30px;
 }
 .faq-popup-header {
   display: flex;

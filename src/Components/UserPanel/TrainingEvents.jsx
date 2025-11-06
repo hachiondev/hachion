@@ -293,18 +293,27 @@ const getRuleDiscountPct = (courseName, countryCode) => {
         placeholder="Search for Courses"
         value={courseFilter}
         onChange={handleCourseChange}
+         onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();      
+          e.stopPropagation();
+          handleSearchIconClick(); 
+        }
+      }}
         list="course-options"
         style={{
          outline: "none",
           boxShadow: "none",
            }}
       />
-      <button className="btn btn-info d-flex align-items-center justify-content-center search-btn"
-      type="submit" 
-      aria-label="Search courses"
-      onClick={handleSearchIconClick}>
-        <IoSearch size={20} className="text-white" />
-      </button>
+    <button
+  className="btn btn-info d-flex align-items-center justify-content-center search-btn"
+  type="button"                    
+  aria-label="Search courses"
+  onClick={handleSearchIconClick}
+>
+  <IoSearch size={20} className="text-white" />
+</button>
     </div>
     </form>
 

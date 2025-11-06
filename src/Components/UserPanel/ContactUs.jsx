@@ -18,6 +18,7 @@ import { TbSlashes } from "react-icons/tb";
 import { Menu, MenuItem } from "@mui/material";
 import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
+import { countries, getDefaultCountry } from "../../countryUtils";
 
 const initialValues = {
   name: "",
@@ -45,32 +46,26 @@ const ContactUs = () => {
   const [error, setError] = useState("");
   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
 
-  const countries = [
-    { name: "United States", code: "+1", flag: "US" },
-    { name: "India", code: "+91", flag: "IN" },
-    { name: "United Kingdom", code: "+44", flag: "GB" },
-    { name: "Canada", code: "+1", flag: "CA" },
-    { name: "Australia", code: "+61", flag: "AU" },
-  ];
-
   
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((r) => r.json())
-      .then((data) => {
-        const match = countries.find((c) => c.flag === data?.country_code);
-        if (match) setSelectedCountry(match);
 
-        if (data?.country_code === "IN") {
-          setContactNumber("+91 94903 23388");
-        } else {
-          setContactNumber("+1 (732) 485-2499");
-        }
-      })
-      .catch(() => {
-        
-      });
-  }, []);
+  useEffect(() => {
+  fetch("https://api.country.is")
+    .then((r) => r.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+
+      const match = countries.find((c) => c.flag === data?.country_code);
+      if (match) setSelectedCountry(match);
+
+      if (data?.country_code === "IN") {
+        setContactNumber("+91 94903 23388");
+      } else {
+        setContactNumber("+1 (732) 485-2499");
+      }
+    })
+    .catch(() => {});
+}, []);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -151,7 +151,7 @@ useEffect(() => {
         </nav>
       </div>
 
-      <div className="container my-5">
+      <div className="container">
         {/* Trainer Profile */}
         <div className="border-0 shadow-sm p-4 d-flex flex-column flex-md-row align-items-start">
           <Avatar
@@ -165,27 +165,27 @@ useEffect(() => {
                 <h4 className="mb-0 fw-bold me-2">{trainer.trainer_name}</h4>
                 <span className="badge top-badge"><LuCrown /> Top Rated</span>
               </div>
-              <p className="text-muted mb-2">{trainer.course_name || "Instructor"}</p>
+              <p className="text-black mb-2">{trainer.course_name || "Instructor"}</p>
               <div className="d-flex flex-wrap">
                 <div className="me-4 d-flex align-items-center">
                   <FaStar className="text-warning me-1" />
                   <span className="fw-semibold">{trainer.trainerUserRating || 5}</span>
-                  <small className="text-muted ms-1">({reviews.length} reviews)</small>
+                  <small className="text-black ms-1">({reviews.length} reviews)</small>
                 </div>
                 <div className="me-4">
                   {/* <span className="fw-semibold"><GoPeople size="20" color="#00aeef"/> {{enrollCount}}</span> */}
                     <span className="fw-semibold">
     <GoPeople size="20" color="#00aeef"/> {enrollCount ?? 0}
   </span>
-                  <small className="text-muted"> students</small>
+                  <small className="text-black"> students</small>
                 </div>
                 <div>
                   <span className="fw-semibold"><IoMdPlayCircle size="20" color="#00aeef"/> {trainerCourses.length}</span>
-                  <small className="text-muted"> courses</small>
+                  <small className="text-black"> courses</small>
                 </div>
               </div>
             </div>
-            <div className="text-md-end mt-3 mt-md-0">
+            {/* <div className="text-md-end mt-3 mt-md-0">
               <a href={trainer.website || "#"} target="_blank" rel="noreferrer" className="text-info d-block mb-2"><SlGlobe /> {trainer.website || "https://www.hachion.co"}</a>
               <div className="social-icons d-inline-flex gap-2">
                 <a href={trainer.facebook || "#"}><FaFacebookF /></a>
@@ -194,19 +194,19 @@ useEffect(() => {
                 <a href={trainer.youtube || "#"}><FaYoutube /></a>
                 <a href={trainer.whatsapp || "#"}><FaWhatsapp /></a>
               </div>
-            </div>
+            </div> */}
           </div>
           </div>
         {/* About Section */}
-        <div className="mt-4">
+        <div className="mt-3">
           <h6 className="fw-semibold">ABOUT ME</h6>
-          <p className="text-muted">
+          <p className="text-black">
             {trainer.summary || "This trainer is highly skilled and has helped many students achieve their goals."}
           </p>
         </div>
 
         {/* Courses */}
-<p className="expert-title mt-5">Courses ({trainerCourses.length})</p>
+<p className="expert-title mt-3">Courses ({trainerCourses.length})</p>
 <div className="training-card-holder">
   {trainerCourses.length > 0 ? trainerCourses.map((course, idx) => (
     <CourseCard
@@ -252,7 +252,7 @@ useEffect(() => {
 </div>
 
         {/* Reviews */}
-        <p className="expert-title mt-5">Students Feedback</p>
+        <p className="expert-title mt-3">Students Feedback</p>
         <div className="feedback-grid">
           {reviews.length > 0 ? reviews.map(fb => (
             <LearnerCard

@@ -55,21 +55,22 @@ const HaveAnyQuery = ({ closeModal }) => {
 
   const defaultCountry = countries.find((c) => c.flag === "US");
   
-  
-    useEffect(() => {
-      fetch("https://ipwho.is/")
-        .then((res) => res.json())
-        .then((data) => {
-          const userCountryCode = data?.country_code;
-          const matchedCountry = countries.find(
-            (c) => c.flag === userCountryCode
-          );
-          if (matchedCountry) {
-            setSelectedCountry(matchedCountry);
-          }
-        })
-        .catch(() => {});
-    }, []);
+  useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const userCountryCode = data?.country_code;
+      const matchedCountry = countries.find(
+        (c) => c.flag === userCountryCode
+      );
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
+      }
+    })
+    .catch(() => {});
+}, []);
+
   
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);

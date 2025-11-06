@@ -32,7 +32,7 @@ const menuItems = [
   { title: 'Wishlist',      slug: 'wishlist',       icon: <BsBookmarkHeart /> },
   { title: 'Order History', slug: 'order_history',  icon: <BsCart2 /> },
   { title: 'Certificate',   slug: 'certificate',    icon: <PiCertificateBold /> },
-  { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <PiBriefcase /> },
+  // { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <PiBriefcase /> },
   { title: 'Review',        slug: 'review',         icon: <MdOutlineRateReview /> },
   { title: 'Pathfinder',    slug: 'pathfinder',     icon: <CgPathOutline  /> },
   // { title: 'Settings',      slug: 'settings',       icon: <TbSettingsBolt /> },
@@ -99,8 +99,8 @@ const UserDashboard = () => {
         return <UserEnrolled />;
       case 'Wishlist':
         return <UserWishlist />;
-      case 'Applied Jobs':
-        return <UserAppliedJobs />;
+      // case 'Applied Jobs':
+      //   return <UserAppliedJobs />;
       case 'Review':
         return <UserReviews />;
       case 'Pathfinder':

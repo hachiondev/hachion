@@ -347,13 +347,13 @@ const Aboutus = () => {
         <p className="instructor-title-text">
           At Hachion, we empower learners to turn their education into real-world success. Through hands-on training, expert mentorship, and career-focused programs, we prepare you for opportunities in today’s global job market.
         </p>
-          <div className="expert-points">
+          <div className="aboutus-top">
             <div>
             <h3 className="key-title-text">
              Our Mission
             </h3>
           <p className="instructor-title-text">
-            To build industry-ready professionals by delivering practical learning experiences that boost confidence, skills, and employability.
+            To build industry - ready professionals by delivering practical learning experiences that boost confidence, skills, and employability.
             </p>
             </div>
             <div>

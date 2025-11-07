@@ -23,7 +23,7 @@ const InstructorForm = ({ onClose }) => {
   const [location, setLocation] = useState("");
   const [link, setLink] = useState("");
   const [skill, setSkill] = useState("");
-  const [area, setArea] = useState([]); // multiple courses
+  const [area, setArea] = useState([]); 
   const [courses, setCourses] = useState([]);
   const [experience, setExperience] = useState("");
   const [mode, setMode] = useState("");
@@ -33,13 +33,17 @@ const InstructorForm = ({ onClose }) => {
   const [showCourseDropdown, setShowCourseDropdown] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const [submitting, setSubmitting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
         onClose();
       }
-      // close course dropdown if click is outside the dropdown container
+      
       if (!event.target.closest(".custom-course-dropdown")) {
         setShowCourseDropdown(false);
       }
@@ -48,15 +52,7 @@ const InstructorForm = ({ onClose }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  // useEffect(() => {
-  //   fetch("https://ipwho.is/")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const match = countries.find((c) => c.flag === data?.country_code);
-  //       if (match) setSelectedCountry(match);
-  //     })
-  //     .catch(() => {});
-  // }, []);
+  
 
   useEffect(() => {
   fetch("https://api.country.is")
@@ -70,10 +66,11 @@ const InstructorForm = ({ onClose }) => {
 }, []);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
-    const userEmail = (userData.email || "").trim();
-
+  const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
+  const userEmail = (userData.email || "").trim();
+  setIsLoggedIn(!!userEmail);
     if (userEmail) setEmail(userEmail);
+
     if (!userEmail) return;
 
     const ctrl = new AbortController();
@@ -187,47 +184,98 @@ const InstructorForm = ({ onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
+
   const handleSubmit = async () => {
-    if (!validateForm()) return;
-    try {
-      setSubmitting(true);
+  
+  if (!validateForm()) {
+    setErrorMessage("Please fix the highlighted fields.");
+    setSuccessMessage("");
+    return;
+  }
 
-      const fullMobile = `${selectedCountry.code} ${mobile.replace(/\D/g, "")}`;
+  try {
+    setSubmitting(true);
 
-      const payload = {
-        name,
-        email,
-        mobile: fullMobile,
-        location,
-        link,
-        skill,
-        area: area.join(", "),
-        experience,
-        mode,
-        comment,
-        status: "PENDING",
-      };
+    const fullMobile = `${selectedCountry.code} ${mobile.replace(/\D/g, "")}`;
 
-      const formData = new FormData();
-      formData.append("instructor", JSON.stringify(payload));
-      if (upload) formData.append("resume", upload);
+    const payload = {
+      name,
+      email,
+      mobile: fullMobile,
+      location,
+      link,
+      skill,
+      area: area.join(", "),
+      experience,
+      mode,
+      comment,
+      status: "PENDING",
+    };
 
-      await axios.post(`${API_BASE}/instructor/apply`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+    const formData = new FormData();
+    formData.append("instructor", JSON.stringify(payload));
+    if (upload) formData.append("resume", upload);
 
-      alert("Application submitted successfully!");
-      onClose();
-    } catch (err) {
-      console.error(err);
-      alert(
-        err?.response?.data ||
-          "Something went wrong while submitting the application."
-      );
-    } finally {
-      setSubmitting(false);
+    const res = await axios.post(`${API_BASE}/instructor/apply`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (res.status === 200 || res.status === 201) {
+      setSuccessMessage("✅ Application submitted successfully.");
+      setErrorMessage("");
+
+      if (isLoggedIn) {
+        
+        setLocation("");
+        setLink("");
+        setSkill("");
+        setArea([]);
+        setExperience("");
+        setMode("");
+        setUpload(null);
+        setComment("");
+        setErrors({});
+        setAnchorEl(null);
+        setShowCourseDropdown(false);
+      } else {
+        
+        setName("");
+        setEmail("");
+        setMobile("");
+        setLocation("");
+        setLink("");
+        setSkill("");
+        setArea([]);
+        setExperience("");
+        setMode("");
+        setUpload(null);
+        setComment("");
+        setErrors({});
+        
+        setAnchorEl(null);
+        setShowCourseDropdown(false);
+      }
+    } else {
+      setErrorMessage("❌ Failed to submit application.");
+      setSuccessMessage("");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setErrorMessage("❌ Something went wrong while submitting the application.");
+    setSuccessMessage("");
+  } finally {
+    setSubmitting(false);
+  }
+};
+useEffect(() => {
+  if (!successMessage && !errorMessage) return;
+  const t = setTimeout(() => {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }, 4000);
+  return () => clearTimeout(t);
+}, [successMessage, errorMessage]);
 
   return (
     <div className="popup-overlay">
@@ -617,6 +665,12 @@ const InstructorForm = ({ onClose }) => {
         >
           {submitting ? "Submitting..." : "Submit"}
         </button>
+         {successMessage && (
+                <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>
+              )}
+              {errorMessage && (
+                <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>
+              )}
         </div>
       </div>
   );

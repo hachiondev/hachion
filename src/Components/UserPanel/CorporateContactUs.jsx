@@ -34,6 +34,8 @@ const CorporateContactUs = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
   const [mobileTouched, setMobileTouched] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -55,17 +57,17 @@ const CorporateContactUs = () => {
     setFieldValue,
     resetForm,
   } = formik;
-
-
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const match = countries.find((c) => c.flag === data?.country_code);
-        if (match) setSelectedCountry(match);
-      })
-      .catch(() => {});
-  }, []);
+  
+useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const match = countries.find((c) => c.flag === data?.country_code);
+      if (match) setSelectedCountry(match);
+    })
+    .catch(() => {});
+}, []);
 
   
   useEffect(() => {
@@ -73,7 +75,13 @@ const CorporateContactUs = () => {
     const userEmail = (userData.email || "").trim();
 
     
-    if (userEmail) setFieldValue("email", userEmail, false);
+    if (userEmail) {
+  setFieldValue("email", userEmail, false);
+  setIsLoggedIn(true);
+} else {
+  setIsLoggedIn(false);
+  return; 
+}
 
     if (!userEmail) return;
 
@@ -207,14 +215,34 @@ const CorporateContactUs = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
+if (response.status === 200) {
+  setShowModal(true);
 
-      if (response.status === 200) {
-        setShowModal(true);
-        setMobileNumber("");
-        resetForm();
-        setCompany("");
-        setSuccessMessage("✅ Query submitted successfully.");
-        setErrorMessage("");
+  if (isLoggedIn) {
+    resetForm({
+      values: {
+        ...values,
+        name: values.name,
+        email: values.email,
+        comment: "",
+        date: "",
+        country: selectedCountry?.name || "",
+        number: "",
+      },
+    });
+    setMobileNumber((prev) => prev);
+  } else {
+    resetForm();
+    setMobileNumber("");
+    
+  }
+
+  setCompany("");
+  setIsChecked(false);
+  setMobileTouched(false);
+  setSuccessMessage("✅ Query submitted successfully.");
+  setErrorMessage("");
+
       } else {
         setErrorMessage("❌ Failed to submit query.");
         setSuccessMessage("");
@@ -402,6 +430,7 @@ const CorporateContactUs = () => {
                     type="checkbox"
                     value=""
                     id="flexCheckChecked"
+                     checked={isChecked} 
                     onChange={handleCheckboxChange}
                   />
                   <label

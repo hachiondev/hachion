@@ -119,23 +119,26 @@ const SalWorkshop = () => {
   const convertISTtoLocalTime = (date, time, timeZone = "Asia/Kolkata") => {
     // ... keep this unchanged ...
   };
+useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
+      window.userTimeZoneFromIP = timeZone;
 
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        window.userTimeZoneFromIP = data?.timezone?.id || "America/New_York";
-        const userCountryCode = data?.country_code || "US";
-        const matchedCountry = countries.find(
-          (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
-        );
-        setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
-      })
-      .catch(() => {
-        window.userTimeZoneFromIP = "America/New_York";
-        setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
-      });
-  }, []);
+      const userCountryCode = data?.country_code || "US";
+      const matchedCountry = countries.find(
+        (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
+      );
+      setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
+    })
+    .catch(() => {
+      window.userTimeZoneFromIP = "America/New_York";
+      setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
+    });
+}, []);
+
 
   const handleScrollToWorkshop = () => {
     if (workshopRef.current) {

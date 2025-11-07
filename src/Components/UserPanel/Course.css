@@ -4,6 +4,19 @@
   box-sizing: border-box;
   font-family:  ''Poppins', sans-serif', sans-serif;
 }
+.categories-sidebar {
+  flex: 1;
+  width: 100%;
+  background-color: white;
+  color: black;
+  max-width: 250px;
+  left: 0;
+  right:5px;
+  overflow-y: auto;
+  height:1000px;
+  margin-top: 10px;
+  padding: 16px;
+}
 .sidebar {
   flex: 1;
   width: 100%;

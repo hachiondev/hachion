@@ -671,7 +671,7 @@ background-color:#F7F7F7;
     font-size: 18px;
     font-weight: 400;
     text-align: left;
-    padding: 10px 20px;
+    padding: 5px 20px;
       }
        .home-title-text span{
     color: #00AEEF;
@@ -689,7 +689,8 @@ background-color:#F7F7F7;
     font-size: 16px;
     font-weight: 400;
     text-align: left;
-    padding: 10px 16px;
+    padding: 8px 16px;
+    margin-bottom: 3px;
       }
   .limited-card-holder {
 display: flex;
@@ -1366,8 +1367,7 @@ background-color: #0D6EFD;
 }
 
 .training-events{
-margin-bottom: 40px;
-margin-top: 40px;
+margin: 30px auto;
 }
 
 .training-events-head-upcoming{
@@ -2959,7 +2959,7 @@ height: 45px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 30px auto;
+  margin: 5px auto;
   align-items: center;
 }
 .home-blog-cards {
@@ -3064,8 +3064,7 @@ flex: 0 0 100%;
     width: 100%;
 }
     .training-events{
-      margin-bottom:30px;
-      margin-top: 30px;
+      margin:10px auto;
       }
       
       .training-events-head-upcoming{
@@ -3708,8 +3707,7 @@ font-size: 12px;
 }
 
 .training-events{
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin: 10px auto;
   }
 
 .training-events-head-upcoming, .training-title-head{
@@ -3734,7 +3732,7 @@ justify-content: space-between;
   text-align: left;
   justify-content: left;
   white-space: wrap;
-  max-width: 240px;
+  /* max-width: 240px; */
 }
 .association-head-tag {
   text-align: left;

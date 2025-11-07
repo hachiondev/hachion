@@ -45,6 +45,7 @@ const ContactUs = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
+const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   
 
@@ -131,7 +132,9 @@ const ContactUs = () => {
     };
 
     if (userEmail) {
+      setIsLoggedIn(true);
       fetchUserProfile();
+      
     }
     
   }, []);
@@ -164,13 +167,33 @@ const ContactUs = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
+if (response.status === 200) {
+  setShowModal(true);
 
-      if (response.status === 200) {
-        setShowModal(true);
-        setMobileNumber("");
-        formik.resetForm();
-        setSuccessMessage("✅ Query submitted successfully.");
-        setErrorMessage("");
+  if (isLoggedIn) {
+    
+    formik.resetForm({
+      values: {
+        ...values,
+        name: values.name,
+        email: values.email,
+        comment: "",
+        date: "",
+        country: selectedCountry?.name || "",
+      },
+    });
+    setMobileNumber((prev) => prev); 
+  } else {
+    
+    formik.resetForm();
+    setMobileNumber("");
+    
+  }
+
+  setIsChecked(false); 
+  setSuccessMessage("✅ Query submitted successfully.");
+  setErrorMessage("");
+
       } else {
         setErrorMessage("❌ Failed to submit query.");
         setSuccessMessage("");
@@ -374,6 +397,7 @@ const ContactUs = () => {
                   type="checkbox"
                   value=""
                   id="flexCheckChecked"
+                  checked={isChecked} 
                   onChange={handleCheckboxChange}
                 />
                 <label className="form-check-label" htmlFor="flexCheckChecked">

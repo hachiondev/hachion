@@ -79,29 +79,31 @@ const SummerRegister = () => {
 
   const openMenu = (event) => setAnchorEl(event.currentTarget);
   const closeMenu = () => setAnchorEl(null);
+useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
 
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const timeZone = data?.timezone?.id || "America/New_York";
-        const userCountryCode = data?.country_code || "US";
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
+      const userCountryCode = data?.country_code || "US";
 
-        window.userTimeZoneFromIP = timeZone;
-        setFormData(prev => ({ ...prev, timeZone }));
+      window.userTimeZoneFromIP = timeZone;
+      setFormData((prev) => ({ ...prev, timeZone }));
 
-        const matchedCountry = countries.find(
-          (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
-        );
+      const matchedCountry = countries.find(
+        (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
+      );
 
-        setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
-      })
-      .catch(() => {
-        window.userTimeZoneFromIP = "America/New_York";
-        setFormData(prev => ({ ...prev, timeZone: "America/New_York" }));
-        setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
-      });
-  }, []);
+      setSelectedCountry(matchedCountry || { name: "United States", code: "+1", flag: "US" });
+    })
+    .catch(() => {
+      window.userTimeZoneFromIP = "America/New_York";
+      setFormData((prev) => ({ ...prev, timeZone: "America/New_York" }));
+      setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
+    });
+}, []);
+
 
   const handleSubmit = async (e) => {
   e.preventDefault();

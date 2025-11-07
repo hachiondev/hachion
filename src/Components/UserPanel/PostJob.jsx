@@ -74,18 +74,19 @@ const handleChange = (e) => {
 
   const openMenu = (event) => setAnchorEl(event.currentTarget);
   const closeMenu = () => setAnchorEl(null);
-
-  useEffect(() => {
+useEffect(() => {
   if (countries.length === 0) return;
 
-  fetch("https://ipwho.is/")
+  fetch("https://api.country.is")
     .then((res) => res.json())
     .then((data) => {
-      const timeZone = data?.timezone?.id || "America/New_York";
+      data.country_code = (data.country || "").toUpperCase();
+
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
       const userCountryCode = data?.country_code || "US";
 
       window.userTimeZoneFromIP = timeZone;
-      setFormData(prev => ({ ...prev, timeZone }));
+      setFormData((prev) => ({ ...prev, timeZone }));
 
       const matchedCountry = countries.find(
         (c) => c.flag.toUpperCase() === userCountryCode.toUpperCase()
@@ -95,10 +96,11 @@ const handleChange = (e) => {
     })
     .catch(() => {
       window.userTimeZoneFromIP = "America/New_York";
-      setFormData(prev => ({ ...prev, timeZone: "America/New_York" }));
+      setFormData((prev) => ({ ...prev, timeZone: "America/New_York" }));
       setSelectedCountry({ name: "United States", code: "+1", flag: "US" });
     });
 }, [countries]);
+
 
 
 const handleSubmit = async (e) => {

@@ -295,14 +295,18 @@ const Employees = () => {
                 <div className="course-row">
                     <div className="col">
                     <label className="form-label">Department</label>
-                    <input
-                      type="text"
-                      name="department"
-                      className="form-control"
-                      value={formData.department}
-                      onChange={handleInputChange}
-                      placeholder="Enter Department"
-                    />
+                    <select id="inputState" 
+                    class="form-select" 
+                    name="department" 
+                    value={formData.department} 
+                    onChange={handleInputChange}>
+                  <option value="">Select Department</option>
+                  <option value="HR">HR</option>
+                  <option value="SEO">SEO</option>
+                  <option value="Business">Business</option>
+                  <option value="Developer">Developer</option>
+                  <option value="Recruitment">Recruitment</option>
+                    </select>
                   </div>
                   <div className="col">
                     <label className="form-label">Role</label>

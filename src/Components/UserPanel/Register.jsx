@@ -32,17 +32,18 @@ const Register = () => {
   );
   return m ? decodeURIComponent(m[1]) : null;
 }
+useEffect(() => {
+  fetch("https://api.country.is")
+    .then((res) => res.json())
+    .then((data) => {
+      data.country_code = (data.country || "").toUpperCase();
+      const userCountryCode = data?.country_code;
+      const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+      if (matchedCountry) setSelectedCountry(matchedCountry);
+    })
+    .catch(() => {});
+}, []);
 
-  useEffect(() => {
-    fetch("https://ipwho.is/")
-      .then((res) => res.json())
-      .then((data) => {
-        const userCountryCode = data?.country_code;
-        const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-        if (matchedCountry) setSelectedCountry(matchedCountry);
-      })
-      .catch(() => {});
-  }, []);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);

@@ -263,7 +263,7 @@ if (best.course) {
 }, [discountRules, courses, country]);
 
   const sidebarContent = (
-    <div className="sidebar">
+    <div className="categories-sidebar">
       {/* Categories */}
       <div className="sidebar-section">
         <div className="sidebar-heading" onClick={() => toggleSection("category")}>

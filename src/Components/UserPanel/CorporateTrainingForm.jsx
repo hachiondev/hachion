@@ -26,6 +26,9 @@ const [mobileTouched, setMobileTouched] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const mobileInputRef = useRef(null);
   const [successMessage, setSuccessMessage] = useState("");
+  
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   
   useEffect(() => {
@@ -129,28 +132,38 @@ const toIntFromRange = (val) => {
   return Number.isNaN(n) ? 0 : n;
 };
 
-  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    const requestData = {
-      fullName: name,
-      emailId: email,
-      mobileNumber: formatMobileWithCode(selectedCountry?.code, mobile),
-      companyName: company,
-      trainingCourse: courseName,
-      noOfPeople: experience,
-      comments: comment,
-      country: selectedCountry.name,
-    };
+  const requestData = {
+    fullName: name,
+    emailId: email,
+    mobileNumber: formatMobileWithCode(selectedCountry?.code, mobile),
+    companyName: company,
+    trainingCourse: courseName,
+    noOfPeople: experience,
+    comments: comment,
+    country: selectedCountry.name,
+  };
 
-    try {
-      const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (response.status === 200) {
-        setSuccessMessage("Thank you! Our team will contact you soon.");
+  try {
+    const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (response.status === 200) {
+      setSuccessMessage("Thank you! Our team will contact you soon.");
+
+      
+      if (isLoggedIn) {
+        setCompany("");
+        setCourseName("");
+        setExperience("");
+        setComment("");
+        setErrors({});
+        setAnchorEl(null);
+      } else {
         
         setName("");
         setEmail("");
@@ -159,29 +172,35 @@ const toIntFromRange = (val) => {
         setCourseName("");
         setExperience("");
         setComment("");
+        setErrors({});
+        setAnchorEl(null);
       }
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      setSuccessMessage("Submission failed. Please try again.");
     }
-  };
+  } catch (err) {
+    console.error("Error submitting form:", err);
+    setSuccessMessage("Submission failed. Please try again.");
+  }
+};
 
+  
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setAnchorEl(null);
     mobileInputRef.current?.focus();
   };
+
 useEffect(() => {
   const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
   const userEmail = (userData.email || "").trim();
 
-  
-  if (userEmail) setEmail(userEmail);
+  if (userEmail) {
+    setEmail(userEmail);
+    setIsLoggedIn(true);              
+  }
 
-  if (!userEmail) return; 
+  if (!userEmail) return;
 
   const ctrl = new AbortController();
-
   (async () => {
     try {
       const res = await fetch(
@@ -192,36 +211,29 @@ useEffect(() => {
       const data = await res.json();
 
       if (data?.name) setName(String(data.name));
-      if (data?.email && !email) setEmail(String(data.email)); 
+      if (data?.email && !email) setEmail(String(data.email));
 
       if (data?.mobile) {
-        
         const digits = String(data.mobile).replace(/\D/g, "");
         setMobile(digits.slice(-10));
       }
 
       if (data?.country) {
-        
         const countryMatch =
           countries.find(
             (c) => String(c.name).toLowerCase() === String(data.country).toLowerCase()
           ) || null;
-
-        if (countryMatch) {
-          setSelectedCountry(countryMatch);
-        }
+        if (countryMatch) setSelectedCountry(countryMatch);
       }
     } catch (err) {
       if (err.name !== "AbortError") {
-        
         console.error("Profile autofill failed:", err);
       }
     }
   })();
 
   return () => ctrl.abort();
-  
-}, []);
+}, []); 
 
   return (
     <div className="popup-overlay">

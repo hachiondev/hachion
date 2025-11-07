@@ -1782,11 +1782,6 @@ position: relative;
           scrollbar-width: none; /* Hide scrollbar for Firefox */
           -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
       }
-    
-    .training-events {
-      padding: 10px;
-      margin: 0;
-    }
 
     .training-events-head{
       padding-top: 5px;

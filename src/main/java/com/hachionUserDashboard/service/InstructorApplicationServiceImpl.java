@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hachionUserDashboard.entity.InstructorApplication;
@@ -69,22 +71,49 @@ public class InstructorApplicationServiceImpl implements InstructorApplicationSe
 		Files.deleteIfExists(full);
 	}
 
+//	@Override
+//	public InstructorApplication create(String json, MultipartFile resume) throws IOException {
+//		InstructorApplication app = mapper.readValue(json, InstructorApplication.class);
+//
+//		if (resume != null && !resume.isEmpty()) {
+//			String saved = saveResume(resume);
+//			if (saved == null)
+//				throw new IOException("Failed to save resume");
+//			app.setResumePath(saved);
+//		} else {
+//
+//			app.setResumePath("");
+//		}
+//
+//		return repo.save(app);
+//	}
+	
 	@Override
 	public InstructorApplication create(String json, MultipartFile resume) throws IOException {
-		InstructorApplication app = mapper.readValue(json, InstructorApplication.class);
+	    InstructorApplication app = mapper.readValue(json, InstructorApplication.class);
 
-		if (resume != null && !resume.isEmpty()) {
-			String saved = saveResume(resume);
-			if (saved == null)
-				throw new IOException("Failed to save resume");
-			app.setResumePath(saved);
-		} else {
+	    // Convert list -> CSV if frontend sends array
+	    if (app.getArea() == null && json.contains("\"area\":[")) {
+	        JsonNode node = mapper.readTree(json).get("area");
+	        if (node != null && node.isArray()) {
+	            List<String> list = new ArrayList<>();
+	            node.forEach(n -> list.add(n.asText()));
+	            app.setArea(String.join(",", list));
+	        }
+	    }
 
-			app.setResumePath("");
-		}
+	    if (resume != null && !resume.isEmpty()) {
+	        String saved = saveResume(resume);
+	        if (saved == null)
+	            throw new IOException("Failed to save resume");
+	        app.setResumePath(saved);
+	    } else {
+	        app.setResumePath("");
+	    }
 
-		return repo.save(app);
+	    return repo.save(app);
 	}
+
 
 	@Override
 	public Optional<InstructorApplication> get(Integer id) {

@@ -200,9 +200,14 @@ useEffect(() => {
         {/* About Section */}
         <div className="mt-3">
           <h6 className="fw-semibold">ABOUT ME</h6>
-          <p className="text-black">
-            {trainer.summary || "This trainer is highly skilled and has helped many students achieve their goals."}
-          </p>
+          <div
+          className="full-review"
+          dangerouslySetInnerHTML={{
+            __html:
+              trainer.summary?.trim() ||
+              "This trainer is highly skilled and has helped many students achieve their goals.",
+          }}
+        />
         </div>
 
         {/* Courses */}

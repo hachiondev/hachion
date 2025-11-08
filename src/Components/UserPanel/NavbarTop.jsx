@@ -17,7 +17,7 @@ import { MdLogout } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import DropdownSidebar from './DropdownSidebar';
-import DropdownCard, { getTotalCards } from './DropdownCard';
+import DropdownCourseList, { getTotalCards } from './DropdownCourseList';
 import './Course.css';
 import { BsCart2 } from "react-icons/bs";
 import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
@@ -411,7 +411,7 @@ useEffect(() => {
                         {selectedCategory} Courses
                       </div> */}
                       <div>
-                        <DropdownCard
+                        <DropdownCourseList
                           category={selectedCategory}
                           // currentPage={currentPage}
                           // cardsPerPage={cardsPerPage}

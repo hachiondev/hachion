@@ -8,9 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { BsFillPlayCircleFill } from "react-icons/bs";
-
 import { MdStar, MdStarHalf, MdStarBorder } from "react-icons/md";
-
 
 const InstructorCard = (props) => {
   const [open, setOpen] = useState(false);
@@ -22,25 +20,33 @@ const InstructorCard = (props) => {
         .filter((link) => link)
     : [];
 
+  const renderStarRating = (rating) => {
+    const r = Math.max(0, Math.min(5, parseFloat(rating) || 0));
+    const full = Math.floor(r);
+    const half = r - full >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
 
-const renderStarRating = (rating) => {
-  const r = Math.max(0, Math.min(5, parseFloat(rating) || 0)); 
-  const full = Math.floor(r);
-  const half = r - full >= 0.5 ? 1 : 0;
-  const empty = 5 - full - half;
+    return (
+      <>
+        {[...Array(full)].map((_, i) => (
+          <MdStar key={`f${i}`} className="star-icon filled-star" title={`${r} / 5`} />
+        ))}
+        {half === 1 && <MdStarHalf className="star-icon filled-star" title={`${r} / 5`} />}
+        {[...Array(empty)].map((_, i) => (
+          <MdStarBorder key={`e${i}`} className="star-icon empty-star" title={`${r} / 5`} />
+        ))}
+      </>
+    );
+  };
 
-  return (
-    <>
-      {[...Array(full)].map((_, i) => (
-        <MdStar key={`f${i}`} className="star-icon filled-star" title={`${r} / 5`} />
-      ))}
-      {half === 1 && <MdStarHalf className="star-icon filled-star" title={`${r} / 5`} />}
-      {[...Array(empty)].map((_, i) => (
-        <MdStarBorder key={`e${i}`} className="star-icon empty-star" title={`${r} / 5`} />
-      ))}
-    </>
-  );
-};
+  // ✅ Extract plain text (without HTML) for truncation
+  const getTruncatedText = (html, limit = 150) => {
+    if (!html) return "";
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || "";
+    return text.length > limit ? text.substring(0, limit) + "..." : text;
+  };
 
   return (
     <>
@@ -53,44 +59,26 @@ const renderStarRating = (rating) => {
               className="profile-image"
             />
           </div>
+        </div>
+        <div className="learner-info">
+          <div className="learner-name">
+            <p className="name">{props.trainer_name}</p>
           </div>
-          <div className="learner-info">
-            <div className="learner-name">
-              <p className="name">{props.trainer_name}</p>
-            </div>
-            <p className="job-profile">{props.profile}</p>
-            <div className='rating'>{renderStarRating(props.trainerUserRating)}</div>
-          </div>
-          </div>
-        <hr className="faq-seperater"/>
-        <div className="trainer-description-bottom">
-          <p className="learner-description">
-            {props.summary ? props.summary.substring(0, 150) : ""}...
-            <span className="read-more" onClick={() => setOpen(true)}>
-              {" "}
-              Read More
-            </span>
-          </p>
+          <p className="job-profile">{props.profile}</p>
+          <div className="rating">{renderStarRating(props.trainerUserRating)}</div>
+        </div>
+      </div>
 
-          {/* {videoLinks.length > 0 &&
-            videoLinks.map((videoLink, i) => {
-              const validUrl = videoLink.startsWith("http")
-                ? videoLink
-                : `https://${videoLink}`;
-              return (
-                <button
-                  key={i}
-                  className="demo-play-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    props.onPlayVideo(validUrl);
-                  }}
-                >
-                  <BsFillPlayCircleFill className="demo-icon-btn" />
-                  <strong>Click here to Watch Demo Video</strong>
-                </button>
-              );
-            })} */}
+      <hr className="faq-seperater" />
+      <div className="trainer-description-bottom">
+        {/* ✅ Truncated plain text only on card */}
+        <p className="learner-description">
+          {getTruncatedText(props.summary, 150)}
+          <span className="read-more" onClick={() => setOpen(true)}>
+            {" "}
+            Read More
+          </span>
+        </p>
       </div>
 
       {/* Popup Dialog */}
@@ -111,6 +99,7 @@ const renderStarRating = (rating) => {
             />
           </IconButton>
         </DialogTitle>
+
         <DialogContent>
           <div className="trainer-popup-content">
             <div className="trainer-top">
@@ -121,38 +110,28 @@ const renderStarRating = (rating) => {
                   className="profile-image"
                 />
               </div>
-              </div>
-                <div className="learner-info">
+            </div>
+            <div className="learner-info">
               <div className="learner-name">
                 <p className="name">{props.trainer_name}</p>
               </div>
               <p className="job-profile">{props.profile}</p>
-              <div className='rating'>{renderStarRating(props.rating)}</div>
+              <div className="rating">{renderStarRating(props.rating)}</div>
             </div>
-            </div>
-            <hr className="faq-seperater"/>
-            <div className="trainer-description-bottom">
-              <p className="full-review">{props.summary}</p>
-              {/* {videoLinks.length > 0 &&
-                videoLinks.map((videoLink, i) => {
-                  const validUrl = videoLink.startsWith("http")
-                    ? videoLink
-                    : `https://${videoLink}`;
-                  return (
-                    <button
-                      key={i}
-                      className="demo-play-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        props.onPlayVideo(validUrl);
-                      }}
-                    >
-                      <BsFillPlayCircleFill className="demo-icon-btn" />
-                      <strong>Click here to Watch Demo Video</strong>
-                    </button>
-                  );
-                })} */}
-           </div>
+          </div>
+
+          <hr className="faq-seperater" />
+          <div className="trainer-description-bottom">
+            {/* ✅ Full formatted summary with HTML */}
+            <div
+              className="full-review"
+              dangerouslySetInnerHTML={{
+                __html:
+                  props.summary?.trim() ||
+                  "This trainer is highly skilled and has helped many students achieve their goals.",
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>

@@ -102,6 +102,12 @@ const UserProfile = () => {
   const [bio, setBio] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
+  const [facebook, setFacebook] = useState('');
+const [twitter, setTwitter] = useState('');
+const [linkedin, setLinkedin] = useState('');
+const [website, setWebsite] = useState('');
+const [github, setGithub] = useState('');
+
 
   const [selectedCountry, setSelectedCountry] = useState({
     code: '+1',
@@ -315,6 +321,42 @@ if (provider === 'GOOGLE') {
     })();
     
   }, []); 
+const handleSocialSave = async () => {
+  setSuccessMessage('');
+  setErrorMessage('');
+
+  const storedUserRaw = localStorage.getItem('loginuserData');
+  const storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : {};
+  const emailVal = storedUser.email;
+
+  if (!emailVal) {
+    setErrorMessage('❌ User email not found.');
+    return;
+  }
+
+  const payload = {
+    facebook: (facebook || '').trim(),
+    twitter: (twitter || '').trim(),
+    linkedin: (linkedin || '').trim(),
+    website: (website || '').trim(),
+    github: (github || '').trim(),
+  };
+
+  try {
+    await axios.patch(
+      'https://api.test.hachion.co/api/v1/user/social-links',
+      payload,
+      { params: { email: emailVal } }
+    );
+
+    
+    setSuccessMessage('✅ Social links updated successfully.');
+    setErrorMessage('');
+  } catch (err) {
+    setErrorMessage('❌ Failed to update social links.');
+    setSuccessMessage('');
+  }
+};
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -340,77 +382,89 @@ if (provider === 'GOOGLE') {
     }
   };
 
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
+const handleResetPassword = async (e) => {
+  e.preventDefault();
+  setSuccessMessage('');
+  setErrorMessage('');
 
-    const email = document.getElementById('inputEmail')?.value;
-    if (!email) {
-      setErrorMessage("❌ User email not found.");
-      return;
-    }
-    const isPasswordChanged = passwords.newPassword && passwords.oldPassword && passwords.confirmPassword;
+  
+  const storedUserRaw = localStorage.getItem('loginuserData');
+  const storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : {};
+  const emailFromStorage = storedUser.email;
+  const emailVal = email || emailFromStorage;
 
-    if (isPasswordChanged && passwords.newPassword !== passwords.confirmPassword) {
-      setErrorMessage("❌ New password and confirm password do not match.");
-      return;
-    }
+  if (!emailVal) {
+    setErrorMessage("❌ User email not found.");
+    return;
+  }
 
-    const formData = new FormData();
+  const isPasswordChanged =
+    passwords.newPassword && passwords.oldPassword && passwords.confirmPassword;
 
-    const requestObject = {
-      email,
-      password: passwords.oldPassword,
-      newPassword: passwords.newPassword,
-      confirmPassword: passwords.confirmPassword,
-      userName: name,
-      mobile: mobileNumber
-    };
+  if (isPasswordChanged && passwords.newPassword !== passwords.confirmPassword) {
+    setErrorMessage("❌ New password and confirm password do not match.");
+    return;
+  }
 
-    formData.append("data", new Blob([JSON.stringify(requestObject)], { type: "application/json" }));
+  const formData = new FormData();
 
-    if (profileImage && typeof profileImage !== 'string') {
-      formData.append("profileImage", profileImage);
-    }
-
-    setIsUpdating(true);
-
-    try {
-      const response = await axios.post('https://api.test.hachion.co/api/v1/user/reset-password', formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-
-      setIsUpdating(false);
-      setSuccessMessage("✅ Profile updated successfully.");
-
-      const storedUserRaw = localStorage.getItem('loginuserData');
-      const storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : {};
-      const r = response?.data || {};
-      const updatedUser = {
-        ...storedUser,
-        name,
-        profileImage:    r.profileImage    ?? storedUser.profileImage,
-        profileImageUrl: r.profileImageUrl ?? storedUser.profileImageUrl,
-      };
-      updatedUser.picture = profileToPicture(r, storedUser);
-      localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
-      window.dispatchEvent(new CustomEvent('profile-updated', { detail: updatedUser }));
-      if (updatedUser.picture) setProfileImage(updatedUser.picture);
-
-      if (isPasswordChanged) {
-        setTimeout(() => {
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('loginuserData');
-          navigate('/login');
-        }, 3000);
-      }
-
-    } catch {
-      setIsUpdating(false);
-      setErrorMessage("❌ Failed to update profile.");
-    }
+  const requestObject = {
+    email: emailVal,
+    password: passwords.oldPassword,
+    newPassword: passwords.newPassword,
+    confirmPassword: passwords.confirmPassword,
+    userName: name,
+    mobile: mobileNumber
   };
+
+  formData.append(
+    "data",
+    new Blob([JSON.stringify(requestObject)], { type: "application/json" })
+  );
+
+  if (profileImage && typeof profileImage !== 'string') {
+    formData.append("profileImage", profileImage);
+  }
+
+  setIsUpdating(true);
+
+  try {
+    const response = await axios.post(
+      'https://api.test.hachion.co/api/v1/user/reset-password',
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    setIsUpdating(false);
+    setSuccessMessage("✅ Profile updated successfully.");
+
+    const storedUserRaw2 = localStorage.getItem('loginuserData');
+    const storedUser2 = storedUserRaw2 ? JSON.parse(storedUserRaw2) : {};
+    const r = response?.data || {};
+    const updatedUser = {
+      ...storedUser2,
+      name,
+      profileImage:    r.profileImage    ?? storedUser2.profileImage,
+      profileImageUrl: r.profileImageUrl ?? storedUser2.profileImageUrl,
+    };
+    updatedUser.picture = profileToPicture(r, storedUser2);
+    localStorage.setItem('loginuserData', JSON.stringify(updatedUser));
+    window.dispatchEvent(new CustomEvent('profile-updated', { detail: updatedUser }));
+    if (updatedUser.picture) setProfileImage(updatedUser.picture);
+
+    if (isPasswordChanged) {
+      setTimeout(() => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('loginuserData');
+        navigate('/login');
+      }, 3000);
+    }
+
+  } catch {
+    setIsUpdating(false);
+    setErrorMessage("❌ Failed to update profile.");
+  }
+};
 
   const openMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -837,7 +891,7 @@ const handleImageUpload = (e) => {
           <button className='update-profile-btn' onClick={handleResetPassword}>Update Password</button>
         </div>
       )}
-
+{/* 
       {activeTab === "Social Share" && (
         <div className="write-review">
           <div className="dashboard-nav">Social Details</div>
@@ -886,7 +940,99 @@ const handleImageUpload = (e) => {
 
           <button className='update-profile-btn'>Save Changes</button>
         </div>
-      )}
+      )} */}
+      {activeTab === "Social Share" && (
+  <div className="write-review">
+    <div className="dashboard-nav">Social Details</div>
+
+    <div>
+      <label className="login-label">Facebook</label>
+      <div className="register-field">
+        <div className="form-field">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your link"
+            value={facebook}
+            onChange={(e) => setFacebook(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label className="login-label">Twitter</label>
+      <div className="register-field">
+        <div className="form-field">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your link"
+            value={twitter}
+            onChange={(e) => setTwitter(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label className="login-label">LinkedIn</label>
+      <div className="register-field">
+        <div className="form-field">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your link"
+            value={linkedin}
+            onChange={(e) => setLinkedin(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label className="login-label">Website</label>
+      <div className="register-field">
+        <div className="form-field">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your link"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label className="login-label">GitHub</label>
+      <div className="register-field">
+        <div className="form-field">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your link"
+            value={github}
+            onChange={(e) => setGithub(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+
+    {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+    {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+
+    <button
+      className="update-profile-btn"
+      type="button"
+      onClick={handleSocialSave}
+    >
+      Save Changes
+    </button>
+  </div>
+)}
+
     </>
   );
 };

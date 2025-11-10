@@ -377,16 +377,13 @@
         color: #000000;
       }
       .about-us-content{
-        width: 80%;
-        margin-left: 10vw;
+        margin: 0 auto;
         background-color: #ffffff;
         box-shadow: 5px 5px 10px #d3d3d3;
       }
-      .about-us-heading{
-        background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-    font-weight: 700;
+      .about-us-heading, .workshop-heading{
+    font-weight: 600;
+    color: #000;
     text-align: center;
     padding: 2vh;
       }
@@ -418,14 +415,6 @@
         margin-left: 10vw;
         margin-top: 50px;
         margin-bottom: 50px;
-      }
-      .workshop-heading{
-        background: linear-gradient(180deg, #00AEEF 0%, #006489 100%);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-    font-weight: 700;
-    text-align: center;
-    padding: 2vh;
       }
 
       .workshop-reg{
@@ -1175,11 +1164,6 @@ background-color: white;
 
 
       @media (max-width: 1366px){
-        .about-us-content{
-          width: 95%;
-          margin-left: 20px;
-
-      }
       .about-us-top{
         justify-content: space-between;
     
@@ -1201,11 +1185,6 @@ background-color: white;
     }
     
     @media (max-width: 1024px){
-      .about-us-content{
-        width: 100%;
-        margin-left: 0px;
-
-      }
       .about-us-top{
         justify-content: space-between;
     
@@ -1312,7 +1291,7 @@ background-color: white;
     width: 45%;
   }
     }
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
       .points{
       width: 80%;
       }
@@ -1370,10 +1349,6 @@ background-color: white;
         }
         .about-us-top{
           flex-direction: column;
-        }
-        .about-us-content{
-          width: 98%;
-          margin-left: 10px;
         }
         .about-us-left-content{
           font-size: 12px;
@@ -2867,33 +2842,35 @@ margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: left;
-      padding: 0px 0px 0px 30px;
+      padding: 15px;
       align-items: center;
       text-align: justify;
       align-content: flex-start;
+      color: #000;
     }
     .txtCategory {
       flex: 1 1 100%; /* Default: Full width */
       font-size: 16px;
       font-weight: 400;
-      text-align: justify;
+      text-align: left;
       line-height: 20px;
       white-space: normal; /* Ensures wrapping */
       word-break: break-word; /* Breaks long words */
       overflow-wrap: break-word; /* Ensures text does not overflow */
     }
     .txtCategory a {
-      text-decoration: none;
+      text-decoration: underline;
       font-size: 16px;
       font-weight: 400;
-      color: #6c757d;
+      color: #000;
+      padding: 5px;
     }
     
     .txtCoursebtn {
-      text-decoration: none;
+      text-decoration: underline;
       font-size: 16px;
       font-weight: 400;
-      color: #6c757d;
+      color: #000;
       background: none;
       border: none;
       max-width: 100%; /* Prevents overflow */
@@ -2923,6 +2900,6 @@ margin-bottom: 20px;
     
     @media (min-width: 767px) {
       .div_category p {
-        flex: 1 1 calc(33.333% - 10px); /* 3-column layout */
+        flex: 1 1 calc(33.333% - 10px);
       }
     }

@@ -841,6 +841,9 @@ white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.star{
+  color: red;
+}
 
 @media (max-width: 1024px) {
   .profiles-grid, .expert-row, .about-card-row {

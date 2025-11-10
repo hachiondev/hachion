@@ -82,8 +82,7 @@ const Sitemap = () => {
     <>
       <Topbar />
       <NavbarTop />
-      <div className="about-us">
-        <div className='blogs-header'>
+      <div className="about-us container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -94,13 +93,12 @@ const Sitemap = () => {
             </li>
           </ol>
         </nav>
-        </div>
-        <div className="about-us-content" style={{ color: "#6a6a6a" }}>
+        <div className="about-us-content container">
           <h1 className="about-us-heading">Hachion Sitemap</h1>
           <div className="about-us-left-content">
             <p className="title">All categories</p>
           </div>
-          <div className="sitemap-contenet">
+          <div className="sitemap-contenet container">
             <div class="div_category">
               {Category.map((item, index) => (
                 <div key={index} class="col-12 col-md-6">
@@ -116,7 +114,7 @@ const Sitemap = () => {
           <div className="about-us-left-content">
             <p className="title title_allcourse ">All Courses</p>
           </div>
-          <div className="sitemap-contenet">
+          <div className="sitemap-contenet container">
             <div class="div_category">
               {courses.map((item, index) => (
                 <div key={index} class="col-12 col-md-6 d-flex flex-column">

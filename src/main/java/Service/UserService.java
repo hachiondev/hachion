@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateResponse;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
 import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
@@ -114,4 +116,6 @@ public interface UserService {
 	public Optional<RegisterStudent> findByEmailForProfile(String email);
 
 	public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest request, @Nullable MultipartFile profileImage);
+
+	SocialLinksUpdateResponse updateSocialLinksByEmail(String email, SocialLinksUpdateRequest request);
 }

@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.LoginRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateResponse;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
 import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
@@ -570,6 +572,33 @@ public class Userimpl implements UserService {
 //		}
 //	}
 
+//	@Transactional
+//	public void resetPassword(UserRegistrationRequest request, MultipartFile profileImage) {
+//		Optional<RegisterStudent> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
+//
+//		if (optionalUser.isPresent()) {
+//			RegisterStudent user = optionalUser.get();
+//
+//			if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+//				System.out.println("Password provided: " + request.getPassword()); // debug
+//				String encodedPassword = passwordEncoder.encode(request.getPassword());
+//				user.setPassword(encodedPassword);
+//				System.out.println("Password updated successfully in DB: " + encodedPassword);
+//			}
+//
+//			if (request.getUserName() != null && !request.getUserName().isEmpty()) {
+//				user.setUserName(request.getUserName());
+//			}
+//			if (request.getMobile() != null && !request.getMobile().isEmpty()) {
+//				user.setMobile(request.getMobile());
+//			}
+//
+//			// profile image logic...
+//			userRepository.save(user);
+//		} else {
+//			System.out.println("User not found with email: " + request.getEmail());
+//		}
+//	}
 	@Transactional
 	public void resetPassword(UserRegistrationRequest request, MultipartFile profileImage) {
 		Optional<RegisterStudent> optionalUser = userRepository.findByEmailForProfile(request.getEmail());
@@ -577,11 +606,19 @@ public class Userimpl implements UserService {
 		if (optionalUser.isPresent()) {
 			RegisterStudent user = optionalUser.get();
 
+			// 1) (optional but good) verify old password
 			if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-				System.out.println("Password provided: " + request.getPassword()); // debug
-				String encodedPassword = passwordEncoder.encode(request.getPassword());
+				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+					System.out.println("Old password is incorrect");
+					return; // or throw an exception / return error response
+				}
+			}
+
+			// 2) ✅ use newPassword to update
+			if (request.getNewPassword() != null && !request.getNewPassword().isEmpty()) {
+				String encodedPassword = passwordEncoder.encode(request.getNewPassword());
 				user.setPassword(encodedPassword);
-				System.out.println("Password updated successfully in DB: " + encodedPassword);
+				System.out.println("New password updated successfully in DB: " + encodedPassword);
 			}
 
 			if (request.getUserName() != null && !request.getUserName().isEmpty()) {
@@ -721,101 +758,48 @@ public class Userimpl implements UserService {
 
 		return response;
 	}
+
+	@Transactional
+	public SocialLinksUpdateResponse updateSocialLinksByEmail(String email, SocialLinksUpdateRequest request) {
+	    Optional<RegisterStudent> optionalStudent = userRepository.getByEmail(email);
+	    SocialLinksUpdateResponse response = new SocialLinksUpdateResponse();
+
+	    if (optionalStudent.isPresent()) {
+	        RegisterStudent student = optionalStudent.get();
+
+	        if (request.getFacebook() != null) {
+	            student.setFacebook(request.getFacebook());
+	        }
+	        if (request.getTwitter() != null) {
+	            student.setTwitter(request.getTwitter());
+	        }
+	        if (request.getLinkedin() != null) {
+	            student.setLinkedin(request.getLinkedin());
+	        }
+	        if (request.getWebsite() != null) {
+	            student.setWebsite(request.getWebsite());
+	        }
+	        if (request.getGithub() != null) {
+	            student.setGithub(request.getGithub());
+	        }
+
+	        userRepository.updateSocialLinksByEmailQuery(
+	                email,
+	                student.getFacebook(),
+	                student.getTwitter(),
+	                student.getLinkedin(),
+	                student.getWebsite(),
+	                student.getGithub()
+	        );
+
+	        response.setFacebook(student.getFacebook());
+	        response.setTwitter(student.getTwitter());
+	        response.setLinkedin(student.getLinkedin());
+	        response.setWebsite(student.getWebsite());
+	        response.setGithub(student.getGithub());
+	    }
+
+	    return response;
+	}
+
 }
-//	@Override
-//	public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest request) {
-//		if (request == null || request.getEmail() == null || request.getEmail().isBlank()) {
-//			throw new IllegalArgumentException("Email is required to update profile.");
-//		}
-//
-//		RegisterStudent user = userRepository.findByEmail(request.getEmail());
-//		if (user == null) {
-//			throw new IllegalArgumentException("User not found for email: " + request.getEmail());
-//		}
-//
-//		// 🚫 Do NOT update email or mobile
-//		if (request.getFirstName() != null)
-//			user.setFirstName(request.getFirstName().trim());
-//		if (request.getLastName() != null)
-//			user.setLastName(request.getLastName().trim());
-//
-//		// auto-set username if missing
-//		if (request.getUserName() != null && !request.getUserName().isBlank()) {
-//			user.setUserName(request.getUserName().trim());
-//		} else {
-//			String fn = user.getFirstName() != null ? user.getFirstName() : "";
-//			String ln = user.getLastName() != null ? user.getLastName() : "";
-//			user.setUserName((fn + " " + ln).trim());
-//		}
-//
-//		
-//		if (request.getDob() != null) { // field present (could be empty to clear)
-//		    String dobStr = request.getDob().trim();
-//		    if (dobStr.isEmpty()) {
-//		        user.setDob(null); // <-- clear DOB
-//		    } else {
-//		        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//		        user.setDob(LocalDate.parse(dobStr, fmt));
-//		    }
-//		}
-//		
-//
-//		if (request.getGender() != null)
-//			user.setGender(request.getGender().trim());
-//		if (request.getLocation() != null)
-//			user.setLocation(request.getLocation().trim());
-//		if (request.getTimeZone() != null)
-//			user.setTime_zone(request.getTimeZone().trim());
-//		if (request.getAddress() != null)
-//			user.setAddress(request.getAddress().trim());
-//		if (request.getBio() != null)
-//			user.setBio(request.getBio().trim());
-//
-//		userRepository.save(user);
-//
-//		// ✅ Build Response
-//		UserProfileUpdateResponse response = new UserProfileUpdateResponse();
-//		response.setMessage("✅ Profile updated successfully.");
-//		response.setEmail(user.getEmail());
-//		response.setFirstName(user.getFirstName());
-//		response.setLastName(user.getLastName());
-//		response.setUserName(user.getUserName());
-//		response.setDob(
-//				user.getDob() != null ? user.getDob().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-//						: null);
-//		response.setGender(user.getGender());
-//		response.setLocation(user.getLocation());
-//		response.setTimeZone(user.getTime_zone());
-//		response.setAddress(user.getAddress());
-//		response.setBio(user.getBio());
-//
-////		if (profileImage != null && !profileImage.isEmpty()) {
-////	    try {
-////	        String originalFilename = profileImage.getOriginalFilename();
-////	        String studentId = user.getStudentId();
-////
-////	        // Optional sanitization
-////	        String sanitizedFilename = originalFilename.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
-////	        String newFileName = studentId + "_" + sanitizedFilename;
-////
-////	        // Delete old image if it exists
-////	        String oldFileName = user.getProfileImage();
-////	        if (oldFileName != null && !oldFileName.isEmpty()) {
-////	            Path oldFilePath = Paths.get(uploadDir, oldFileName);
-////	            Files.deleteIfExists(oldFilePath);
-////	        }
-////
-////	        // Save new image
-////	        Path newFilePath = Paths.get(uploadDir, newFileName);
-////	        Files.createDirectories(newFilePath.getParent());
-////	        Files.write(newFilePath, profileImage.getBytes());
-////
-////	        user.setProfileImage(newFileName);
-////
-////	    } catch (IOException e) {
-////	        System.out.println("Failed to save profile image: " + e.getMessage());
-////	    }
-////	}
-//
-//		return response;
-//	}

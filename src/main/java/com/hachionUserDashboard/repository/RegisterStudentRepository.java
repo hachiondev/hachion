@@ -70,7 +70,19 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 
 	@Query(value = "SELECT COUNT(*) FROM registerstudent WHERE mobile = :mobile", nativeQuery = true)
 	int countByMobile(@Param("mobile") String mobile);
-	
-	 @Query("SELECT r FROM RegisterStudent r WHERE r.email = :email AND r.status = :status")
-	    Optional<RegisterStudent> findByEmailAndSignupStatus(@Param("email") String email, @Param("status") String status);
+
+	@Query("SELECT r FROM RegisterStudent r WHERE r.email = :email AND r.status = :status")
+	Optional<RegisterStudent> findByEmailAndSignupStatus(@Param("email") String email, @Param("status") String status);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE registerstudent " + "SET facebook = :facebook, " + "    twitter = :twitter, "
+			+ "    linkedin = :linkedin, " + "    website = :website, " + "    github = :github "
+			+ "WHERE email = :email", nativeQuery = true)
+	int updateSocialLinksByEmailQuery(@Param("email") String email, @Param("facebook") String facebook,
+			@Param("twitter") String twitter, @Param("linkedin") String linkedin, @Param("website") String website,
+			@Param("github") String github);
+
+	Optional<RegisterStudent> getByEmail(String email);
+
 }

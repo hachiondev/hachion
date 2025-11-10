@@ -43,4 +43,19 @@ public class PopupOnboardingController {
 		popupOnboardingService.deletePopupOnboarding(id);
 		return ResponseEntity.ok("Successfully deleted PopupOnboarding");
 	}
+	
+	@PutMapping("/update-by-email")
+    public ResponseEntity<PopupOnboardingResponse> updatePopupOnboardingByEmail(
+            @RequestBody PopupOnboardingRequest request) {
+
+        if (request.getStudentEmail() == null || request.getStudentEmail().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        PopupOnboardingResponse response = popupOnboardingService
+                .updatePopupOnboardingByEmail(request.getStudentEmail(), request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

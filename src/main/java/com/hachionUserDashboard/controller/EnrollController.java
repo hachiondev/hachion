@@ -349,5 +349,14 @@ public class EnrollController {
 	        EnrollmentSummaryDto summary = new EnrollmentSummaryDto(email, count, lastEnrollDate, lastCourseName);
 	        return ResponseEntity.ok(summary);
 	    }
+	 @GetMapping("/enroll/count")
+	 public ResponseEntity<Map<String, Long>> getEnrollCountByTrainerAndCourse(
+	         @RequestParam String trainerName,
+	         @RequestParam String courseName) {
+
+	     long count = repo.countByTrainerAndCourse(trainerName, courseName);
+	     return ResponseEntity.ok(Map.of("count", count));
+	 }
+
 
 }

@@ -114,5 +114,55 @@ public class PopupOnboardingServiceImpl implements PopupOnboardingService {
 
 		popupOnboardingRepository.delete(onboarding);
 	}
+	@Override
+	public PopupOnboardingResponse updatePopupOnboardingByEmail(String email, PopupOnboardingRequest request) {
 
+	    PopupOnboarding onboarding = popupOnboardingRepository
+	            .findTopByStudentEmailOrderByFillingDateDesc(email)
+	            .orElseThrow(() -> new RuntimeException("PopupOnboarding not found for email: " + email));
+
+	    // We ONLY update the fields that come from your Pathfinder4 form
+	    // and keep studentId, name, mobile etc. as-is.
+
+	    if (request.getCurrentRole() != null) {
+	        onboarding.setCurrentRole(request.getCurrentRole());
+	    }
+	    if (request.getPrimaryGoal() != null) {
+	        onboarding.setPrimaryGoal(request.getPrimaryGoal());
+	    }
+	    if (request.getAreasOfInterest() != null) {
+	        onboarding.setAreasOfInterest(request.getAreasOfInterest());
+	    }
+	    if (request.getPreferToLearn() != null) {
+	        onboarding.setPreferToLearn(request.getPreferToLearn());
+	    }
+	    if (request.getPreferredTrainingMode() != null) {
+	        onboarding.setPreferredTrainingMode(request.getPreferredTrainingMode());
+	    }
+	    if (request.getCurrentSkill() != null) {
+	        onboarding.setCurrentSkill(request.getCurrentSkill());
+	    }
+	    if (request.getLookingForJob() != null) {
+	        onboarding.setLookingForJob(request.getLookingForJob());
+	    }
+	    if (request.getRealTimeProjects() != null) {
+	        onboarding.setRealTimeProjects(request.getRealTimeProjects());
+	    }
+	    if (request.getCertificationOrPlacement() != null) {
+	        onboarding.setCertificationOrPlacement(request.getCertificationOrPlacement());
+	    }
+	    if (request.getSpeakToCourseAdvisor() != null) {
+	        onboarding.setSpeakToCourseAdvisor(request.getSpeakToCourseAdvisor());
+	    }
+	    if (request.getWhereYouHeard() != null) {
+	        onboarding.setWhereYouHeard(request.getWhereYouHeard());
+	    }
+	    // If you have an "additionalInfo" field on entity:
+	    
+
+	    onboarding.setFillingDate(LocalDate.now());
+
+	    PopupOnboarding updated = popupOnboardingRepository.save(onboarding);
+	    return createResponseForPopupOnboarding(updated);
+	}
 }

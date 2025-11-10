@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,6 +42,8 @@ import com.hachionUserDashboard.dto.CompletionDateResponse;
 import com.hachionUserDashboard.dto.CourseUserRequest;
 import com.hachionUserDashboard.dto.LoginRequest;
 import com.hachionUserDashboard.dto.OtpRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateRequest;
+import com.hachionUserDashboard.dto.SocialLinksUpdateResponse;
 import com.hachionUserDashboard.dto.StudentInfoResponse;
 import com.hachionUserDashboard.dto.UserProfileUpdateRequest;
 import com.hachionUserDashboard.dto.UserProfileUpdateResponse;
@@ -408,4 +411,12 @@ public class UserController {
 		return userService.updateProfile(request, profileImage);
 	}
 
+	  @PatchMapping("/social-links")
+	    public ResponseEntity<SocialLinksUpdateResponse> updateSocialLinksByEmail(
+	            @RequestParam String email,
+	            @RequestBody SocialLinksUpdateRequest request) {
+
+		  SocialLinksUpdateResponse updated = userService.updateSocialLinksByEmail(email, request);
+	        return ResponseEntity.ok(updated);
+	    }
 }

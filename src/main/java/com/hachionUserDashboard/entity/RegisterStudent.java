@@ -112,6 +112,21 @@ public class RegisterStudent {
 
 	@Column(name = "bio", length = 1000)
 	private String bio;
+	
+	@Column(nullable = true)
+	private String facebook;
+	
+	@Column(nullable = true)
+	private String twitter;
+	
+	@Column(nullable = true)
+	private String linkedin;
+	
+	@Column(nullable = true)
+	private String website;
+	
+	@Column(nullable = true)
+	private String github;
 
 	public Long getId() {
 		return id;
@@ -431,6 +446,46 @@ public class RegisterStudent {
 	public RegisterStudent orElseThrow(Object object) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public String getLinkedin() {
+		return linkedin;
+	}
+
+	public void setLinkedin(String linkedin) {
+		this.linkedin = linkedin;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	public String getGithub() {
+		return github;
+	}
+
+	public void setGithub(String github) {
+		this.github = github;
 	}
 
 }

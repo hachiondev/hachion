@@ -57,4 +57,7 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 
 	@Query(value = "SELECT course_name FROM enroll WHERE email = :email ORDER BY STR_TO_DATE(enroll_date, '%Y-%m-%d') DESC LIMIT 1", nativeQuery = true)
 	String findLastCourseName(@Param("email") String email);
+
+	@Query(value = "SELECT COUNT(*) FROM enroll e WHERE e.trainer = :trainerName AND e.course_name = :courseName", nativeQuery = true)
+	long countByTrainerAndCourse(@Param("trainerName") String trainerName, @Param("courseName") String courseName);
 }

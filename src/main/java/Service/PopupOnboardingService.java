@@ -14,4 +14,6 @@ public interface PopupOnboardingService {
 	public List<PopupOnboardingResponse> getAllPopupOnboarding();
 
 	public void deletePopupOnboarding(Long popupOnboardingId);
+	
+	PopupOnboardingResponse updatePopupOnboardingByEmail(String email, PopupOnboardingRequest request);
 }

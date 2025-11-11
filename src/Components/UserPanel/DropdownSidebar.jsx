@@ -7,7 +7,7 @@ const DropdownSidebar = ({ onSelectCategory }) => {
   const [activeIndex, setActiveIndex] = useState(null); // Track active menu item
   const [menuItems, setMenuItems] = useState([]); // Categories from API
 
-  const API_URL = 'https://api.test.hachion.co/course-categories/all';
+  const API_URL = 'https://api.hachion.co/course-categories/all';
 
   // Fetch categories from API
   useEffect(() => {

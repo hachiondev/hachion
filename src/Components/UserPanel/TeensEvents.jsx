@@ -23,7 +23,6 @@ const TeensEvents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(4);
 const [currency, setCurrency] = useState('INR');
-const [fx, setFx] = useState(1); 
 const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
 const [discountRules, setDiscountRules] = useState([]);
 const [country, setCountry] = useState('IN');      
@@ -31,50 +30,115 @@ const [fxFromUSD, setFxFromUSD] = useState(1);
 const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString(); 
 const [countdowns, setCountdowns] = useState({});
 
+  // useEffect(() => {
+  //   const fetchSummerCourses = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const summerResponse = await axios.get('https://api.hachion.co/summerevents');
+  //       const summerData = summerResponse.data || [];
+
+  //       const activeSummerCourses = summerData.filter(course => course.status);
+
+  //       const allCoursesResponse = await axios.get('https://api.hachion.co/courses/all');
+  //       const allCourses = allCoursesResponse.data || [];
+
+  //       const trainersResponse = await axios.get('https://api.hachion.co/trainers');
+  //       const allTrainers = trainersResponse.data || [];
+
+  //       const detailedSummerCourses = activeSummerCourses.map(summerCourse => {
+  //       const courseDetails = allCourses.find(course => course.courseName === summerCourse.course_name);
+  //       const matchedTrainer = allTrainers.find(
+  //         (t) => t.course_name.trim().toLowerCase() === summerCourse.course_name.trim().toLowerCase()
+  //       );
+
+  //       return {
+  //           ...summerCourse,
+  //           ...courseDetails,
+  //           trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
+  //         };
+  //       });
+
+  //       const uniqueCategories = [
+  //         'All',
+  //         ...new Set(detailedSummerCourses.map(course => course.category_name)),
+  //       ];
+
+  //       setCategories(uniqueCategories);
+  //       setSummerCourses(detailedSummerCourses);
+  //     } catch (error) {
+  //       console.error('Error fetching summer courses:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchSummerCourses();
+  // }, []);
+
   useEffect(() => {
-    const fetchSummerCourses = async () => {
-      setLoading(true);
-      try {
-        const summerResponse = await axios.get('https://api.test.hachion.co/summerevents');
-        const summerData = summerResponse.data || [];
+  const fetchSummerCourses = async () => {
+    setLoading(true);
+    try {
+      
+      const summerResponse = await axios.get('https://api.hachion.co/summerevents');
+      const summerData = summerResponse.data || [];
 
-        const activeSummerCourses = summerData.filter(course => course.status);
+      const activeSummerCourses = summerData.filter(course => course.status);
 
-        const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/all');
-        const allCourses = allCoursesResponse.data || [];
+      
+      const allCoursesResponse = await axios.get('https://api.hachion.co/courses/summary');
+      const rawCourses = allCoursesResponse.data || [];
 
-        const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
-        const allTrainers = trainersResponse.data || [];
+      const allCourses = rawCourses.map(row => ({
+        id: row[0],
+        courseName: row[1],
+        courseImage: row[2],
+        numberOfClasses: row[3],
+        level: row[4],
+        amount: row[5],
+        discount: row[6],
+        total: row[7],
+        iamount: row[8],
+        idiscount: row[9],
+        itotal: row[10],
+        courseCategory: row[11],
+      }));
 
-        const detailedSummerCourses = activeSummerCourses.map(summerCourse => {
-        const courseDetails = allCourses.find(course => course.courseName === summerCourse.course_name);
+      const trainersResponse = await axios.get('https://api.hachion.co/trainers');
+      const allTrainers = trainersResponse.data || [];
+
+      const detailedSummerCourses = activeSummerCourses.map(summerCourse => {
+        const courseDetails = allCourses.find(
+          course => course.courseName === summerCourse.course_name
+        );
+
         const matchedTrainer = allTrainers.find(
           (t) => t.course_name.trim().toLowerCase() === summerCourse.course_name.trim().toLowerCase()
         );
 
         return {
-            ...summerCourse,
-            ...courseDetails,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
-          };
-        });
+          ...summerCourse,
+          ...courseDetails,
+          trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
+        };
+      });
 
-        const uniqueCategories = [
-          'All',
-          ...new Set(detailedSummerCourses.map(course => course.category_name)),
-        ];
+      const uniqueCategories = [
+        'All',
+        ...new Set(detailedSummerCourses.map(course => course.category_name)),
+      ];
 
-        setCategories(uniqueCategories);
-        setSummerCourses(detailedSummerCourses);
-      } catch (error) {
-        console.error('Error fetching summer courses:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setCategories(uniqueCategories);
+      setSummerCourses(detailedSummerCourses);
+    } catch (error) {
+      console.error('Error fetching summer courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchSummerCourses();
-  }, []);
+  fetchSummerCourses();
+}, []);
 
   const filteredCourses =
     activeCategory === 'All'
@@ -92,8 +156,8 @@ const [countdowns, setCountdowns] = useState({});
 
     const updateCardsPerPage = () => {
       const width = window.innerWidth;
-      if (width <= 768) setCardsPerPage(4); 
-      else if (width <= 1024) setCardsPerPage(4);
+      if (width <= 768) setCardsPerPage(2); 
+      else if (width <= 1024) setCardsPerPage(3);
       else setCardsPerPage(4);
     };
 
@@ -104,10 +168,12 @@ const [countdowns, setCountdowns] = useState({});
     };
   }, []);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  };
+const handlePageChange = (page) => {
+  const totalCards = filteredCourses.length;
+  const maxPage = Math.max(totalCards - cardsPerPage + 1, 1);
+  const next = Math.min(Math.max(page, 1), maxPage);
+  setCurrentPage(next);
+};
 
 useEffect(() => {
   (async () => {
@@ -147,7 +213,7 @@ useEffect(() => {
 useEffect(() => {
   (async () => {
     try {
-      const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
+      const { data } = await axios.get("https://api.hachion.co/discounts-courses");
       setDiscountRules(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to load discount rules", e);
@@ -315,14 +381,10 @@ const getSaleEndsAt = (courseName, countryCode) => {
 
   return (
     <div className="training-events container">
-      <div className="training-title-head">
-        <div className="home-spacing">
+      <div className="home-spacing">
+        <div className="training-title-head">
           <h2 className="association-head">Online IT Training Courses For Teen’s</h2>
-          <p className="association-head-tag">
-            Kickstart your tech journey with expert-led online IT Certification courses for teens and beginners.
-          </p>
-        </div>
-
+        
           <div className="card-pagination-container">
             <CardsPagination
               currentPage={currentPage}
@@ -331,7 +393,11 @@ const getSaleEndsAt = (courseName, countryCode) => {
               onPageChange={handlePageChange}
             />
           </div>
-      </div>
+          </div>
+      <p className="association-head-tag">
+            Kickstart your tech journey with expert-led online IT Certification courses for teens and beginners.
+          </p>
+          </div>
 
       {/* Courses */}
       <div className="training-card-holder">
@@ -340,15 +406,14 @@ const getSaleEndsAt = (courseName, countryCode) => {
             <div className="skeleton-card" key={index}></div>
           ))
         ) : filteredCourses.length > 0 ? (
-          filteredCourses
-            .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
+          filteredCourses.slice(currentPage - 1, currentPage - 1 + cardsPerPage)
             .map((course, index) => (
               
               <CourseCard
                 key={index}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.test.hachion.co/${course.courseImage}`}
+                image={`https://api.hachion.co/${course.courseImage}`}
                 course_id={course.id}
 discountPercentage={
     (() => {

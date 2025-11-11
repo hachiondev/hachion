@@ -13,7 +13,7 @@ import Learn from "../../Assets/dash-icon5.png";
 import assignment from "../../Assets/dash-icon6.png";
 import activity from "../../Assets/dash-icon7.png";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 
 function parseDateFlexible(s) {

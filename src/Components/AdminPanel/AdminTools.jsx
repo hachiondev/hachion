@@ -120,7 +120,7 @@ export default function AdminTools() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
         setCourse(response.data); 
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -132,7 +132,7 @@ export default function AdminTools() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data); 
       } catch (error) {
         console.error("Error fetching categories:", error.message);

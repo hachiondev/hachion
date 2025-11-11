@@ -15,7 +15,7 @@ const DropdownCourseList = ({ category }) => {
 
     const fetchCourses = async () => {
       try {
-        const { data } = await axios.get("https://api.test.hachion.co/courses/all");
+        const { data } = await axios.get("https://api.hachion.co/courses/all");
         if (isMounted) setCourses(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error fetching courses:", err);

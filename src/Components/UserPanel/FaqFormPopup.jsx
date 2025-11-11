@@ -43,7 +43,7 @@ const FaqFormPopup = ({ onClose }) => {
     };
 
     try {
-      await axios.post("https://api.test.hachion.co/faq-queries", payload);
+      await axios.post("https://api.hachion.co/faq-queries", payload);
       alert("Thanks! Your question has been submitted.");
       setName("");
       setEmail("");
@@ -71,7 +71,7 @@ const FaqFormPopup = ({ onClose }) => {
       setEmail((prev) => (prev?.trim() ? prev : userEmail));
 
       
-      fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`)
+      fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch profile data");
           return res.json();

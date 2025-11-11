@@ -1156,7 +1156,6 @@ width: 80%;
 display: flex;
 flex-direction: column;
 justify-content: flex-start;
-max-width: 80%;
 }
 .association-head{
 font-weight: 600;
@@ -1370,19 +1369,11 @@ background-color: #0D6EFD;
 margin: 30px auto;
 }
 
-.training-events-head-upcoming{
-/* margin: 40px 10%; */
+.training-title-head, .training-events-head-upcoming{
+margin: 5px 0;
 justify-content: space-between;
 display: flex;
 align-items: start;
-padding: 0 1%;
-}
-.training-title-head{
-margin: 10px auto;
-justify-content: space-between;
-display: flex;
-align-items: start;
-padding: 0 1%;
 }
 
 .view-btn{
@@ -1815,11 +1806,16 @@ left: 10px;
 .scroll-arrow-right {
 right: 10px;
 }
-.association-head-tag{
+.association-head-tag, .association-head-desktop{
+display: flex;
+text-align: left;
 color: #000000;
 font-size: medium;
 white-space: wrap;
 padding: 0 16px;
+}
+.association-head-mobile{
+display: none;
 }
 .home-blog-title {
     color: #000000;
@@ -3068,7 +3064,7 @@ flex: 0 0 100%;
       }
       
       .training-events-head-upcoming{
-      margin: 10px 0;
+      margin: 5px 0;
       justify-content: space-between;
       display: flex;
       flex-wrap: wrap;
@@ -3304,7 +3300,18 @@ flex: 0 0 100%;
 .it-logo-review {
   height: 20px;
 }
-    }
+.association-head-mobile{
+display: flex;
+text-align: left;
+color: #000000;
+font-size: medium;
+white-space: wrap;
+padding: 0 16px;
+}
+.association-head-desktop{
+  display: none;
+}
+}
 
 /* Styles for Mobile (max-width: 480px) */
 @media (max-width: 480px) {
@@ -3553,23 +3560,6 @@ display: none !important; /* Hide the normal navbar items on mobile */
   max-width: 450px;
 }
 
-/* .filter-section {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-left: 0%;
-  margin-right: 0%;
-  padding: 10px;
-}
-
-.filter-section select {
-  padding: 5px;
-  font-size: 12px;
-  border-radius: 5px;
-  min-width: 100px;
-  width: 45%;
-} */
-
 .filter-section {
     flex-direction: column;
     align-items: center;
@@ -3711,8 +3701,6 @@ font-size: 12px;
   }
 
 .training-events-head-upcoming, .training-title-head{
-/* margin-left: 5%;
-margin-right: 5%; */
 justify-content: space-between;
 }
 
@@ -3732,10 +3720,8 @@ justify-content: space-between;
   text-align: left;
   justify-content: left;
   white-space: wrap;
-  /* max-width: 240px; */
 }
 .association-head-tag {
-  text-align: left;
   justify-content: left;
 }
 

@@ -97,7 +97,7 @@ const verifyAccount = async (otpArray) => {
 
   try {
     
-    const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
+    const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -114,7 +114,7 @@ const verifyAccount = async (otpArray) => {
     }
 
     
-    const registerResponse = await fetch("https://api.test.hachion.co/api/v1/user/register", {
+    const registerResponse = await fetch("https://api.hachion.co/api/v1/user/register", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -180,7 +180,7 @@ const verifyAccount = async (otpArray) => {
     const email = registeruserData.email; 
 
     try {
-      const response = await fetch(`https://api.test.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
+      const response = await fetch(`https://api.hachion.co/api/v1/user/regenerate-otp?email=${email}`, {
         method: "PUT",
       });
 
@@ -225,7 +225,7 @@ const handleBack = () => setPopupStep(prev => prev - 1);
 const handleSubmitPopup = async () => {
   try {
     const profileResponse = await axios.get(
-      `https://api.test.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`
+      `https://api.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`
     );
     const profileData = profileResponse.data;
 
@@ -268,7 +268,7 @@ const handleSubmitPopup = async () => {
       whereYouHeard: formData.whereYouHeard || ""
     };
 
-    await axios.post("https://api.test.hachion.co/popup-onboarding", payload);
+    await axios.post("https://api.hachion.co/popup-onboarding", payload);
 
     localStorage.setItem("userPreferences", JSON.stringify(payload));
     localStorage.setItem("user", JSON.stringify(registeruserData));

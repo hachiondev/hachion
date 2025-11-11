@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import './Corporate.css';
-// import { MdOutlineStar } from "react-icons/md";
 import { MdStar, MdStarHalf, MdStarOutline } from "react-icons/md";
-import Avatar from '@mui/material/Avatar';
-import linkedin from '../../Assets/linkedin.png';
-import facebook from '../../Assets/facebook.png';
-import instagram from '../../Assets/instagram.png';
-import twitter from '../../Assets/twitter.png';
-import google from '../../Assets/google.png';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -15,27 +8,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { FaUserAlt } from "react-icons/fa";
 
-// Social Media Icon Selection
-const getSocialMediaLogo = (social_id) => {
-  switch (social_id) {
-    case 'Facebook': return facebook;
-    case 'Instagram': return instagram;
-    case 'Twitter': return twitter;
-    case 'Linkedin': return linkedin;
-    case 'Google': return google;
-    default: return null;
-  }
-};
-
-// Star Ratings
-// const renderStarRating = (rating) => {
-//   return [...Array(5)].map((_, i) => (
-//     <MdOutlineStar
-//       key={i}
-//       className={`star-icon ${i < rating ? 'filled-star' : 'empty-star'}`}
-//     />
-//   ));
-// };
 const renderStarRating = (rating) => {
   return [...Array(5)].map((_, i) => {
     const diff = rating - i;

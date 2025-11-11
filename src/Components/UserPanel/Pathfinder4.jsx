@@ -1,19 +1,57 @@
 
-
 import axios from "axios";
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 
 const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [studentId, setStudentId] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [studentEmail, setStudentEmail] = useState("");
+
+  useEffect(() => {
+    const storedUserRaw = localStorage.getItem("loginuserData");
+    if (!storedUserRaw) return;
+
+    const storedUser = JSON.parse(storedUserRaw);
+    const email = storedUser.email;
+    if (!email) return;
+
+    setStudentEmail(email);
+
+    axios
+      .get("https://api.hachion.co/api/v1/user/myprofile", {
+        params: { email },
+      })
+      .then((resp) => {
+        const data = resp.data || {};
+        if (data.studentId) setStudentId(data.studentId);
+        if (data.name) setStudentName(data.name);
+      })
+      .catch((err) => {
+        console.error("Failed to load profile for popup onboarding:", err);
+      });
+  }, []);
+
   const handleUpdate = async () => {
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const emailToUse = formData.studentEmail || studentEmail;
+    if (!emailToUse) {
+      setErrorMessage("User email not found.");
+      return;
+    }
+
     const payload = {
-      studentEmail: formData.studentEmail,
+      studentId: studentId || formData.studentId || "",
+      studentName: studentName || "",
+      studentEmail: emailToUse,
       currentRole: formData.role,
       primaryGoal: formData.goal,
-      areasOfInterest: formData.selectedCourses.join(", "),
-    preferToLearn: formData.preferToLearn,
+      areasOfInterest: (formData.selectedCourses || []).join(", "),
+      preferToLearn: formData.preferToLearn,
       preferredTrainingMode: formData.trainingMode,
       currentSkill: formData.skillLevel,
       lookingForJob: formData.careerGoal,
@@ -21,28 +59,24 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
       certificationOrPlacement: formData.certOrPlacement,
       speakToCourseAdvisor: formData.advisorCall,
       whereYouHeard: formData.heardFrom,
-      additionalInfo: formData.additionalInfo
+      additionalInfo: formData.additionalInfo,
     };
-    try {
-      const response = await axios.put(
-        "https://api.test.hachion.co/popup-onboarding/update-by-email",
-        payload
-      );      
-       setSuccessMessage("Your details have been updated successfully!");
-      setErrorMessage("");
 
-      // auto-refresh after 3 seconds
-      // setTimeout(() => {
-      //   if (typeof refreshData === "function") {
-      //     refreshData(); // call parent to reload data
-      //   }
-      //   setSuccessMessage(""); // remove success message
-      // }, 3000);
+    try {
+      await axios.put(
+        "https://api.hachion.co/popup-onboarding/update-by-email",
+        payload
+      );
+      setSuccessMessage("Your details have been updated successfully!");
+      setErrorMessage("");
     } catch (err) {
       console.error("Error updating onboarding data:", err);
-      alert("Failed to update details.");
+      setErrorMessage(
+        err.response?.data || "Failed to update details. Please try again."
+      );
     }
   };
+
   return (
      <div className="resume-div">
         <div className="popup-interest">

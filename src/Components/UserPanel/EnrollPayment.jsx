@@ -91,7 +91,7 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   const discount = batchData.discount ?? 0;
 
     try {
-      const response = await axios.post("https://api.test.hachion.co/capture-order", null, {
+      const response = await axios.post("https://api.hachion.co/capture-order", null, {
         params: {
           orderId,
           studentId,
@@ -218,7 +218,7 @@ const getField = (baseField) => {
         if (!email) return;
 
         try {
-          const response = await axios.get('https://api.test.hachion.co/api/v1/user/students');
+          const response = await axios.get('https://api.hachion.co/api/v1/user/students');
           const allStudents = response.data;
 
           const matchedStudent = allStudents.find((student) => student.email === email);
@@ -257,7 +257,7 @@ const getField = (baseField) => {
     let mobile = '';
 
     try {
-      const profileResponse = await axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -296,7 +296,7 @@ const getField = (baseField) => {
   sendText
 };
 try {
-  const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
+  const response = await axios.post('https://api.hachion.co/enroll/add', payload);
  
   if (response.status >= 200 && response.status < 300) {
     setSuccessMessage("✅ Registered Successfully.");
@@ -354,7 +354,7 @@ useEffect(() => {
         .join(" ");
 
       const response = await axios.get(
-        `https://api.test.hachion.co/courses/getByCourseName/${formattedCourseName}`
+        `https://api.hachion.co/courses/getByCourseName/${formattedCourseName}`
       );
 
       
@@ -395,7 +395,7 @@ useEffect(() => {
         }
 
         const response = await axios.get(
-          `https://api.test.hachion.co/razorpay/getByEmailAndCourse?email=${email}&courseName=${encodeURIComponent(courseName)}`
+          `https://api.hachion.co/razorpay/getByEmailAndCourse?email=${email}&courseName=${encodeURIComponent(courseName)}`
         );
 
         let payment = Array.isArray(response.data) && response.data.length > 0
@@ -489,7 +489,7 @@ useEffect(() => {
                     <span className="detail-label">Course Name :</span>
                     <span className="detail-value">
                 <img
-                   src={`https://api.test.hachion.co/${courseData.courseImage}`}
+                   src={`https://api.hachion.co/${courseData.courseImage}`}
                   alt="Course"
                   style={{ width: "40px", height: "40px", marginRight: "10px" }}
                 />

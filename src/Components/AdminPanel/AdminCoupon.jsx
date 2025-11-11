@@ -82,7 +82,7 @@ const [successMessage, setSuccessMessage] = useState("");
 
     useEffect(() => {
         axios
-          .get("https://api.test.hachion.co/courses/all")
+          .get("https://api.hachion.co/courses/all")
           .then((res) => {
             setCourses(res.data);
           })
@@ -132,7 +132,7 @@ const handleCourseCheckboxChange = (courseName) => {
 
   
   useEffect(() => {
-    axios.get("https://api.test.hachion.co/coupon-code/all")
+    axios.get("https://api.hachion.co/coupon-code/all")
       .then(res => {
         setCoupon(res.data);
         setAllCoupon(res.data);
@@ -204,11 +204,11 @@ const handleCourseCheckboxChange = (courseName) => {
     };
 
     if (formMode === "Add") {
-      await axios.post("https://api.test.hachion.co/coupon-code/create", payload);
+      await axios.post("https://api.hachion.co/coupon-code/create", payload);
       setSuccessMessage("✅ Coupon created successfully.");
       setErrorMessage("");
     } else if (formMode === "Edit") {
-      await axios.put("https://api.test.hachion.co/coupon-code/update", payload);
+      await axios.put("https://api.hachion.co/coupon-code/update", payload);
       setSuccessMessage("✅ Coupon updated successfully.");
       setErrorMessage("");
     }
@@ -256,7 +256,7 @@ const handleEdit = (couponId) => {
   const handleDelete = async (couponId) => {
   if (window.confirm("Are you sure you want to delete this coupon?")) {
     try {
-      await axios.delete(`https://api.test.hachion.co/coupon-code/delete/${couponId}`);
+      await axios.delete(`https://api.hachion.co/coupon-code/delete/${couponId}`);
 
       
       setCoupon((prev) => prev.filter((c) => c.couponId !== couponId));

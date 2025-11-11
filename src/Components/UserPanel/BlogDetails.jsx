@@ -43,7 +43,7 @@ const BlogDetails = () => {
     const fetchSelectedBlog = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
+        const response = await axios.get(`https://api.hachion.co/blog/${id}`);
         setSelectedBlog(response.data);
       } catch (error) {
         console.error("Error fetching selected blog:", error);
@@ -59,11 +59,11 @@ const BlogDetails = () => {
     const fetchAllBlogs = async () => {
       setRecentLoading(true);
       try {
-        const response = await axios.get("https://api.test.hachion.co/blog");
+        const response = await axios.get("https://api.hachion.co/blog");
         const mappedBlogs = response.data.map((blog) => ({
           ...blog,
           blog_image: blog.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}`
             : Blogimageplaceholder,
         }));
         const sortedBlogs = mappedBlogs.sort(
@@ -172,7 +172,7 @@ const BlogDetails = () => {
           property="og:image"
           content={
             selectedBlog?.blog_image
-              ? `https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`
+              ? `https://api.hachion.co/blogs/${selectedBlog.blog_image}`
               : "https://hachion.co/images/course-banner.jpg"
           }
         />
@@ -209,7 +209,7 @@ const BlogDetails = () => {
               <>
                 <div className="detail-middle">
                   <img
-                    src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
+                    src={`https://api.hachion.co/blogs/${selectedBlog.blog_image}`}
                     alt={selectedBlog.title}
                     onError={handleImageError}
                   />

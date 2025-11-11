@@ -3,17 +3,18 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import './Course.css';
 
 const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => {
-  const totalPages = Math.ceil(totalCards / cardsPerPage);
+  // Instead of total pages, define the last "start index"
+  const maxPage = Math.max(totalCards - cardsPerPage + 1, 1);
 
   const handlePrev = () => {
     if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+      onPageChange(currentPage - 1); // move 1 card back
     }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
+    if (currentPage < maxPage) {
+      onPageChange(currentPage + 1); // move 1 card forward
     }
   };
 
@@ -25,7 +26,7 @@ const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }
         className="arrow"
         onClick={handlePrev}
         disabled={currentPage === 1 || arrowsDisabled}
-        aria-label="Previous Page"
+        aria-label="Previous Card"
       >
         <IoIosArrowBack />
       </button>
@@ -33,8 +34,8 @@ const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }
       <button
         className="arrow"
         onClick={handleNext}
-        disabled={currentPage === totalPages || arrowsDisabled}
-        aria-label="Next Page"
+        disabled={currentPage === maxPage || arrowsDisabled}
+        aria-label="Next Card"
       >
         <IoIosArrowForward />
       </button>

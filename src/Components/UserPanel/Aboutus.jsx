@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const statistics = [
   {
@@ -166,7 +166,7 @@ const Aboutus = () => {
       ? companyImage.substring(1)
       : companyImage;
 
-    return `https://api.test.hachion.co/uploads/prod/employee_company_logo/${clean}`;
+    return `https://api.hachion.co/uploads/prod/employee_company_logo/${clean}`;
   };
 
   return (

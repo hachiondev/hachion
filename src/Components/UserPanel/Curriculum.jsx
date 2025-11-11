@@ -47,7 +47,7 @@ const [showPaymentPopup, setShowPaymentPopup] = useState(false);
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -74,7 +74,7 @@ const [showPaymentPopup, setShowPaymentPopup] = useState(false);
 
     const fetchCurriculum = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/curriculum');
+        const response = await axios.get('https://api.hachion.co/curriculum');
         const filteredCurriculum = response.data.filter(
           (item) => item.course_name && item.course_name.trim().toLowerCase() === matchedCourseName.toLowerCase()
         );
@@ -123,7 +123,7 @@ const [showPaymentPopup, setShowPaymentPopup] = useState(false);
 
     const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
     if (curriculumWithPdf) {
-      const fullPdfUrl = `https://api.test.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
+      const fullPdfUrl = `https://api.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
       window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
     } else {
       alert('No brochure available for this course.');
@@ -166,7 +166,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
   try {
     console.log("📡 Fetching student profile for email:", userEmail);
 
-    const profileResponse = await axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
+    const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
       params: { email: userEmail },
     });
 
@@ -207,7 +207,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
     
     console.log("📡 Checking eligibility via /enroll/check...");
 
-    const enrollmentResponse = await axios.get(`https://api.test.hachion.co/enroll/check`, {
+    const enrollmentResponse = await axios.get(`https://api.hachion.co/enroll/check`, {
       params: {
         studentId,
         courseName: matchedCourseName,
@@ -224,7 +224,7 @@ const handleDownloadAssessment = async (assessmentPdfPath) => {
     const { canDownload } = enrollmentResponse.data;
 
     if (canDownload) {
-      const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${assessmentFileName}`;
+      const fileUrl = `https://api.hachion.co/curriculum/assessments/${assessmentFileName}`;
       console.log("📥 Downloading file from:", fileUrl);
       window.open(fileUrl, '_blank');
     } else {

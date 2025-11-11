@@ -85,7 +85,7 @@ export default function OnlinePayment() {
 useEffect(() => {
   const fetchOnlinePayments = async () => {
     try {
-      const res = await axios.get("https://api.test.hachion.co/razorpay/payments"); // replace with your actual endpoint
+      const res = await axios.get("https://api.hachion.co/razorpay/payments"); // replace with your actual endpoint
       if (res.data) {
         // Map backend response to match your existing table field names
         const mappedData = res.data.map(item => ({

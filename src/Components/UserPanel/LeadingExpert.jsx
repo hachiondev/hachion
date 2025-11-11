@@ -52,9 +52,9 @@ useEffect(() => {
       setLoading(true);
 
       const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([
-        axios.get("https://api.test.hachion.co/corporatecourse"),
-        axios.get("https://api.test.hachion.co/courses/all"),
-        axios.get("https://api.test.hachion.co/trainers"),
+        axios.get("https://api.hachion.co/corporatecourse"),
+        axios.get("https://api.hachion.co/courses/all"),
+        axios.get("https://api.hachion.co/trainers"),
       ]);
 
       const activeCorporateCourses = (corporateRes.data || []).filter(
@@ -85,7 +85,7 @@ useEffect(() => {
           ...(matchedCourse || {}),
           courseName: corpCourse.course_name, 
           image: matchedCourse
-            ? `https://api.test.hachion.co/${matchedCourse.courseImage}`
+            ? `https://api.hachion.co/${matchedCourse.courseImage}`
             : "",
           id: matchedCourse ? matchedCourse.id : Math.random(),
           amount: matchedCourse ? matchedCourse.amount : 0,
@@ -111,7 +111,7 @@ useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(
-          "https://api.test.hachion.co/discounts-courses"
+          "https://api.hachion.co/discounts-courses"
         );
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {

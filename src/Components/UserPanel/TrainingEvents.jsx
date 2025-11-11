@@ -42,58 +42,136 @@ useEffect(() => {
   })();
 }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [scheduleRes, coursesRes] = await Promise.all([
-          fetch(
-            `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
-          ).then((res) => res.json()),
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       try {
+//         const [scheduleRes, coursesRes] = await Promise.all([
+//           fetch(
+//             `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+//           ).then((res) => res.json()),
           
-          fetch("https://api.test.hachion.co/courses/all").then((res) => res.json()),
-        ]);
+//           fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+//         ]);
   
 
-        if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
-          throw new Error("Invalid API response format");
-        }
+//         if (!Array.isArray(scheduleRes) || !Array.isArray(coursesRes)) {
+//           throw new Error("Invalid API response format");
+//         }
 
-        const mergedData = scheduleRes.map((scheduleItem) => {
-          const matchingCourse = coursesRes.find(
-            (course) =>
-              course.courseName.toLowerCase().trim() ===
-              scheduleItem.schedule_course_name.toLowerCase().trim()
-          );
-console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem.trainer_name);
-          return {
-            ...scheduleItem,
-            trainerName: scheduleItem.trainer_name, 
-            course_id: matchingCourse?.id || null,
-            course_image: matchingCourse?.courseImage || "",
-            created_at: matchingCourse?.createdAt || "",
-            numberOfClasses: matchingCourse?.numberOfClasses || null,
-            discount: Number(matchingCourse?.discount ?? 0), 
-            idiscount: Number(matchingCourse?.idiscount ?? 0),
-level: matchingCourse?.level ||""
-          };
-        });
-        setMergedCourses(mergedData);
+//         const mergedData = scheduleRes.map((scheduleItem) => {
+//           const matchingCourse = coursesRes.find(
+//             (course) =>
+//               course.courseName.toLowerCase().trim() ===
+//               scheduleItem.schedule_course_name.toLowerCase().trim()
+//           );
+// console.log("Trainer for", scheduleItem.schedule_course_name, "is", scheduleItem.trainer_name);
+//           return {
+//             ...scheduleItem,
+//             trainerName: scheduleItem.trainer_name, 
+//             course_id: matchingCourse?.id || null,
+//             course_image: matchingCourse?.courseImage || "",
+//             created_at: matchingCourse?.createdAt || "",
+//             numberOfClasses: matchingCourse?.numberOfClasses || null,
+//             discount: Number(matchingCourse?.discount ?? 0), 
+//             idiscount: Number(matchingCourse?.idiscount ?? 0),
+// level: matchingCourse?.level ||""
+//           };
+//         });
+//         setMergedCourses(mergedData);
 
-        const uniqueCourses = [
-          ...new Set(scheduleRes.map((course) => course.schedule_course_name.trim())),
-        ];
+//         const uniqueCourses = [
+//           ...new Set(scheduleRes.map((course) => course.schedule_course_name.trim())),
+//         ];
 
-        setCourseOptions(uniqueCourses);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
+//         setCourseOptions(uniqueCourses);
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//       } finally {
+//       setLoading(false);
+//     }
+//     };
+
+//     fetchData();
+//   }, [userTimezone]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [scheduleRes, coursesSummaryRes] = await Promise.all([
+        fetch(
+          `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+        ).then((res) => res.json()),
+
+      
+        fetch("https://api.hachion.co/courses/summary").then((res) =>
+          res.json()
+        ),
+      ]);
+
+      if (!Array.isArray(scheduleRes) || !Array.isArray(coursesSummaryRes)) {
+        throw new Error("Invalid API response format");
+      }
+
+      const coursesRes = coursesSummaryRes.map((row) => ({
+        id: row[0],
+        courseName: row[1],
+        courseImage: row[2],
+        numberOfClasses: row[3],
+        level: row[4],
+        amount: row[5],
+        discount: Number(row[6] ?? 0),
+        total: row[7],
+        iamount: row[8],
+        idiscount: Number(row[9] ?? 0),
+        itotal: row[10],
+        courseCategory: row[11],
+        createdAt: row[12], 
+      }));
+
+      const mergedData = scheduleRes.map((scheduleItem) => {
+        const matchingCourse = coursesRes.find(
+          (course) =>
+            course.courseName.toLowerCase().trim() ===
+            scheduleItem.schedule_course_name.toLowerCase().trim()
+        );
+        console.log(
+          "Trainer for",
+          scheduleItem.schedule_course_name,
+          "is",
+          scheduleItem.trainer_name
+        );
+        return {
+          ...scheduleItem,
+          trainerName: scheduleItem.trainer_name,
+          course_id: matchingCourse?.id || null,
+          course_image: matchingCourse?.courseImage || "",
+          created_at: matchingCourse?.createdAt || "", 
+          numberOfClasses: matchingCourse?.numberOfClasses || null,
+          discount: Number(matchingCourse?.discount ?? 0),
+          idiscount: Number(matchingCourse?.idiscount ?? 0),
+          level: matchingCourse?.level || "",
+        };
+      });
+
+      setMergedCourses(mergedData);
+
+      const uniqueCourses = [
+        ...new Set(
+          scheduleRes.map((course) => course.schedule_course_name.trim())
+        ),
+      ];
+      setCourseOptions(uniqueCourses);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
       setLoading(false);
     }
-    };
+  };
 
-    fetchData();
-  }, [userTimezone]);
+  fetchData();
+}, [userTimezone]);
 
 
   const normalizeStr = (s) => (s || "").toString().trim().toLowerCase();
@@ -232,7 +310,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
   useEffect(() => {
   (async () => {
     try {
-      const resp = await fetch('https://api.test.hachion.co/discounts-courses');
+      const resp = await fetch('https://api.hachion.co/discounts-courses');
       const data = await resp.json();
       setDiscountRules(Array.isArray(data) ? data : []);
     } catch {
@@ -243,18 +321,12 @@ const getRuleDiscountPct = (courseName, countryCode) => {
 
   return (
     <div className="container">
+      <div className="home-spacing">
       <div className="training-events-head-upcoming">
         <div className="home-spacing">
         <h2 className="association-head">Upcoming Trainings at Hachion</h2>
-        <p className="association-head-tag">Empower your future with hands-on training and expert guidance from Hachion’s certified instructors.</p>
+        <p className="association-head-mobile">Empower your future with hands-on training and expert guidance from Hachion’s certified instructors.</p>
       </div>
-
-      {/* <div className="card-pagination-container">
-        <button className="view-all" onClick={() => setViewAll(!viewAll)}>
-          {viewAll ? "View Less" : "View All"}
-        </button>
-      </div> */}
-      
 
     <div className="filter-container">
   <div className="filter-section">
@@ -334,7 +406,8 @@ const getRuleDiscountPct = (courseName, countryCode) => {
         </div>
       </div>
       </div>
-
+      <p className="association-head-desktop">Empower your future with hands-on training and expert guidance from Hachion’s certified instructors.</p>
+      </div>
      <div className="training-card-holder">
   {loading ? (
     
@@ -366,7 +439,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
           month={course.numberOfClasses}
           image={
             course.course_image
-              ? `https://api.test.hachion.co/${course.course_image}`
+              ? `https://api.hachion.co/${course.course_image}`
               : ""
           }
           date={course.schedule_date ? formatDate(course.schedule_date) : ""}

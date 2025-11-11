@@ -49,7 +49,7 @@ export default function StudentReview() {
   useEffect(() => {
     const fetchReview = async () => {
         try {
-            const response = await axios.get('https://api.test.hachion.co/userreview');
+            const response = await axios.get('https://api.hachion.co/userreview');
             const filteredReviews = response.data.filter(review => review.type === false);
             setReview(filteredReviews);
             setFilteredReview(filteredReviews);
@@ -100,7 +100,7 @@ export default function StudentReview() {
         formData.append("review", JSON.stringify(updatedReview)); // Send review data as JSON string
 
         // Send update request to backend
-        const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+        const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });
 
@@ -138,7 +138,7 @@ const handleReject = async (review_id) => {
     const formData = new FormData();
     formData.append("review", JSON.stringify(updatedReview));
 
-    const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+    const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
 

@@ -23,7 +23,7 @@ const BlogsSidebar = ({ onFilterChange }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         if (Array.isArray(response.data)) {
           setCategories(response.data);

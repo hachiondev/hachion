@@ -95,7 +95,7 @@ const handleSubmitRequest = async () => {
     };  
       
     const response = await axios.post(
-      "https://api.test.hachion.co/razorpay/installment-request",
+      "https://api.hachion.co/razorpay/installment-request",
       requestData
     );
 
@@ -171,7 +171,7 @@ const netPayable = discounted + 500 + taxAmount;
 
     if (!studentId || !courseName || !batchId) return;
 
-    axios.get("https://api.test.hachion.co/razorpay/checkbox-status", {
+    axios.get("https://api.hachion.co/razorpay/checkbox-status", {
       params: { studentId, courseName, batchId }
     })
     .then(res => {

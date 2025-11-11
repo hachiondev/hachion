@@ -11,13 +11,34 @@ const Learners = ({ page }) => {
   const [reviews, setReviews] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
   const [cardsPerRow, setCardsPerRow] = useState(3);
+  const [startIndex, setStartIndex] = useState(0);
+
+const goToNext = () => {
+  if (reviews.length <= cardsPerRow) return;
+  setStartIndex((prev) => (prev + 1) % reviews.length);
+};
+
+const goToPrev = () => {
+  if (reviews.length <= cardsPerRow) return;
+  setStartIndex((prev) =>
+    prev === 0 ? reviews.length - 1 : prev - 1
+  );
+};
+
+let endIndex = startIndex + cardsPerRow;
+let currentReviews =
+  endIndex <= reviews.length
+    ? reviews.slice(startIndex, endIndex)
+    : [
+        ...reviews.slice(startIndex, reviews.length),
+        ...reviews.slice(0, endIndex - reviews.length),
+      ];
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("https://api.test.hachion.co/userreview/active");
+        const response = await fetch("https://api.hachion.co/userreview/active");
         const data = await response.json();
         if (Array.isArray(data)) {
           const filteredReviews = data.filter(
@@ -44,15 +65,6 @@ const Learners = ({ page }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [page]);
-
-  const totalPages = Math.ceil(reviews.length / cardsPerRow);
-
-  const goToNext = () => setCurrentPage((prev) => (prev + 1) % totalPages);
-  const goToPrev = () =>
-    setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
-
-  const startIndex = currentPage * cardsPerRow;
-  const currentReviews = reviews.slice(startIndex, startIndex + cardsPerRow);
 
   const handleReadMore = (index) => {
     setActiveIndex(startIndex + index);
@@ -88,7 +100,7 @@ const Learners = ({ page }) => {
               rating={review.rating}
               profileImage={
                 review.user_image
-                  ? `https://api.test.hachion.co/userreview/${review.user_image}`
+                  ? `https://api.hachion.co/userreview/${review.user_image}`
                   : ""
               }
               onReadMore={() => handleReadMore(index)}

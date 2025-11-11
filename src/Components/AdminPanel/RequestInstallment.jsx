@@ -89,7 +89,7 @@ export default function RequestInstallment() {
 useEffect(() => {
   const fetchRequestInstallments = async () => {
     try {
-      const response = await axios.get('https://api.test.hachion.co/razorpay/request-installments');
+      const response = await axios.get('https://api.hachion.co/razorpay/request-installments');
       
       const mappedData = response.data.map((item) => ({
         id: item.id,
@@ -225,7 +225,7 @@ useEffect(() => {
           style={{ cursor: 'pointer', color: 'green' }}
           onClick={async () => {
             try {
-              await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
+              await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
                 params: { requestStatus: "approved" },
               });
               
@@ -244,7 +244,7 @@ useEffect(() => {
           style={{ cursor: 'pointer', color: 'red' }}
           onClick={async () => {
             try {
-              await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
+              await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
                 params: { requestStatus: "rejected" },
               });
               

@@ -69,7 +69,7 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
     const fetchCoursePricing = async () => {
       try {
         if (!selectedBatchData?.schedule_course_name) return;
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         const matchedCourse = response.data.find(
           (c) =>
             c.courseName.toLowerCase().replace(/\s+/g, '-') ===
@@ -118,7 +118,7 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
           if (!email) return;
   
           try {
-            const response = await axios.get('https://api.test.hachion.co/api/v1/user/students');
+            const response = await axios.get('https://api.hachion.co/api/v1/user/students');
             const allStudents = response.data;
   
             const matchedStudent = allStudents.find((student) => student.email === email);
@@ -256,7 +256,7 @@ const handlePaymentForRazorPay = async () => {
       return;
     }
     const userEmail = user.email;
-    const profileResponse = await axios.get("https://api.test.hachion.co/api/v1/user/myprofile", {
+    const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
       params: { email: userEmail }
     });
 
@@ -283,7 +283,7 @@ const handlePaymentForRazorPay = async () => {
     
     if (mobile.startsWith('+91')) {
 
-      const orderRes = await axios.post("https://api.test.hachion.co/razorpay/create-razorpay-order", null, {
+      const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
         params: { amount }
       });
 
@@ -299,7 +299,7 @@ const handlePaymentForRazorPay = async () => {
         handler: async function (response) {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
           try {
-            const captureRes = await axios.post("https://api.test.hachion.co/razorpay/capture-razorpay-installments", null, {
+            const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay-installments", null, {
               params: {
                 paymentId: razorpay_payment_id,
                 orderId: razorpay_order_id,
@@ -341,7 +341,7 @@ setSuccessMessage("");
           setSuccessMessage("");
 }
     } else {
-      const paypalRes = await axios.post("https://api.test.hachion.co/create-order", null, {
+      const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
         params: {
           amount,
           returnUrl
@@ -371,7 +371,7 @@ setSuccessMessage("");
 
     if (!studentId || !courseName || !batchId) return;
 
-    axios.get("https://api.test.hachion.co/razorpay/checkbox-status", {
+    axios.get("https://api.hachion.co/razorpay/checkbox-status", {
       params: { studentId, courseName, batchId }
     })
     .then(res => {
@@ -387,7 +387,7 @@ const handleApplyCoupon = async () => {
 
   try {
     const res = await axios.get(
-      `https://api.test.hachion.co/coupon-code/discount/${couponCode}`
+      `https://api.hachion.co/coupon-code/discount/${couponCode}`
     );
 
     

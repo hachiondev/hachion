@@ -25,7 +25,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import AdminPagination from "./AdminPagination";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -600,7 +600,7 @@ const Employees = () => {
       src={
         emp.companyImage.startsWith("http")
           ? emp.companyImage
-          : `https://api.test.hachion.co/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
+          : `https://api.hachion.co/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
       }
       alt="Employee"
       width="50"

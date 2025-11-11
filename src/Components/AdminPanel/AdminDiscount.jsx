@@ -78,7 +78,7 @@ const [successMessage, setSuccessMessage] = useState("");
 
     useEffect(() => {
         axios
-          .get("https://api.test.hachion.co/courses/all")
+          .get("https://api.hachion.co/courses/all")
           .then((res) => {
             setCourses(res.data);
           })
@@ -128,7 +128,7 @@ const handleCourseCheckboxChange = (courseName) => {
 
   
   useEffect(() => {
-    axios.get("https://api.test.hachion.co/discounts-courses")
+    axios.get("https://api.hachion.co/discounts-courses")
       .then(res => {
         setCoupon(res.data);
         setAllCoupon(res.data);
@@ -211,7 +211,7 @@ const handleSubmit = async (e) => {
 
     if (formMode === "Add") {
       const { data: created } = await axios.post(
-        "https://api.test.hachion.co/discounts-courses",
+        "https://api.hachion.co/discounts-courses",
         payload
       );
       setCoupon(prev => [created, ...prev]);
@@ -227,7 +227,7 @@ setEndDate(null);
 
     } else if (formMode === "Edit") {
       const { data: updated } = await axios.put(
-        "https://api.test.hachion.co/discounts-courses",
+        "https://api.hachion.co/discounts-courses",
         payload
       );
       setCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
@@ -288,7 +288,7 @@ setEndDate(discountToEdit.endDate ? parseDate(discountToEdit.endDate) : dayjs())
   if (!window.confirm("Are you sure you want to delete this coupon?")) return;
 
   try {
-    const resp = await axios.delete(`https://api.test.hachion.co/discounts-courses/${discountId}`);
+    const resp = await axios.delete(`https://api.hachion.co/discounts-courses/${discountId}`);
     const serverMsg = resp?.data ? String(resp.data) : "";
     setCoupon(prev => prev.filter(c => c.discountId !== discountId));
     setAllCoupon(prev => prev.filter(c => c.discountId !== discountId));

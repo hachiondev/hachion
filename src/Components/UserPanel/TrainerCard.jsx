@@ -21,7 +21,7 @@ const TrainerCard = (props) => {
       const fetchCourse = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('https://api.test.hachion.co/courses/all');
+          const response = await axios.get('https://api.hachion.co/courses/all');
           const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
           const matchedCourse = response.data.find(
             (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseNameFromUrl
@@ -48,7 +48,7 @@ const TrainerCard = (props) => {
   
       const fetchTrainer = async () => {
         try {
-          const response = await axios.get('https://api.test.hachion.co/trainer');
+          const response = await axios.get('https://api.hachion.co/trainer');
           
         } catch (error) {
           console.error('Error fetching Trainer:', error.message);

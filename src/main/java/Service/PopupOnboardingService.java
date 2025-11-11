@@ -9,11 +9,14 @@ public interface PopupOnboardingService {
 
 	public PopupOnboardingResponse createPopupOnboarding(PopupOnboardingRequest popupOnboardingRequest);
 
-	public PopupOnboardingResponse updatePopupOnboarding(PopupOnboardingRequest popupOnboardingRequest);
+//	public PopupOnboardingResponse updatePopupOnboarding(PopupOnboardingRequest popupOnboardingRequest);
 
-	public List<PopupOnboardingResponse> getAllPopupOnboarding();
-
+	
 	public void deletePopupOnboarding(Long popupOnboardingId);
+
+	public PopupOnboardingResponse findByStudentEmail(String studetnEmail);
+
+	public List<PopupOnboardingResponse> getAllPopupOnboardings();
 	
 	PopupOnboardingResponse updatePopupOnboardingByEmail(String email, PopupOnboardingRequest request);
 }

@@ -2,6 +2,7 @@ package com.hachionUserDashboard.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,41 +71,97 @@ public class PopupOnboardingServiceImpl implements PopupOnboardingService {
 		return response;
 	}
 
+
+//	@Override
+//	public PopupOnboardingResponse updatePopupOnboarding(PopupOnboardingRequest popupOnboardingRequest) {
+//
+//		PopupOnboarding onboarding = popupOnboardingRepository
+//				.findByStudentEmail(popupOnboardingRequest.getStudentEmail()).orElseThrow(() -> new RuntimeException(
+//						"PopupOnboarding not found with email: " + popupOnboardingRequest.getStudentEmail()));
+//
+//		if (popupOnboardingRequest.getStudentId() != null)
+//			onboarding.setStudentId(popupOnboardingRequest.getStudentId());
+//		if (popupOnboardingRequest.getStudentName() != null)
+//			onboarding.setStudentName(popupOnboardingRequest.getStudentName());
+//		if (popupOnboardingRequest.getMobile() != null)
+//			onboarding.setMobile(popupOnboardingRequest.getMobile());
+//		if (popupOnboardingRequest.getCurrentRole() != null)
+//			onboarding.setCurrentRole(popupOnboardingRequest.getCurrentRole());
+//		if (popupOnboardingRequest.getPrimaryGoal() != null)
+//			onboarding.setPrimaryGoal(popupOnboardingRequest.getPrimaryGoal());
+//		if (popupOnboardingRequest.getAreasOfInterest() != null)
+//			onboarding.setAreasOfInterest(popupOnboardingRequest.getAreasOfInterest());
+//		if (popupOnboardingRequest.getPreferToLearn() != null)
+//			onboarding.setPreferToLearn(popupOnboardingRequest.getPreferToLearn());
+//		if (popupOnboardingRequest.getPreferredTrainingMode() != null)
+//			onboarding.setPreferredTrainingMode(popupOnboardingRequest.getPreferredTrainingMode());
+//		if (popupOnboardingRequest.getCurrentSkill() != null)
+//			onboarding.setCurrentSkill(popupOnboardingRequest.getCurrentSkill());
+//		if (popupOnboardingRequest.getLookingForJob() != null)
+//			onboarding.setLookingForJob(popupOnboardingRequest.getLookingForJob());
+//		if (popupOnboardingRequest.getRealTimeProjects() != null)
+//			onboarding.setRealTimeProjects(popupOnboardingRequest.getRealTimeProjects());
+//		if (popupOnboardingRequest.getCertificationOrPlacement() != null)
+//			onboarding.setCertificationOrPlacement(popupOnboardingRequest.getCertificationOrPlacement());
+//		if (popupOnboardingRequest.getSpeakToCourseAdvisor() != null)
+//			onboarding.setSpeakToCourseAdvisor(popupOnboardingRequest.getSpeakToCourseAdvisor());
+//		if (popupOnboardingRequest.getWhereYouHeard() != null)
+//			onboarding.setWhereYouHeard(popupOnboardingRequest.getWhereYouHeard());
+//
+//		onboarding.setFillingDate(LocalDate.now());
+//
+//		PopupOnboarding updated = popupOnboardingRepository.save(onboarding);
+//
+//		return createResponseForPopupOnboarding(updated);
+//	}
+//
 	@Override
-	public PopupOnboardingResponse updatePopupOnboarding(PopupOnboardingRequest popupOnboardingRequest) {
+	public PopupOnboardingResponse updatePopupOnboardingByEmail(String email, PopupOnboardingRequest request) {
+		Optional<PopupOnboarding> optional = popupOnboardingRepository
+				.findTopByStudentEmailOrderByFillingDateDesc(email);
 
-		PopupOnboarding onboarding = popupOnboardingRepository.findById(popupOnboardingRequest.getPopupOnboardingId())
-				.orElseThrow(() -> new RuntimeException(
-						"PopupOnboarding not found with id: " + popupOnboardingRequest.getPopupOnboardingId()));
+		PopupOnboarding onboarding;
 
-		onboarding.setStudentId(popupOnboardingRequest.getStudentId());
-		onboarding.setStudentName(popupOnboardingRequest.getStudentName());
-		onboarding.setStudentEmail(popupOnboardingRequest.getStudentEmail());
-		onboarding.setMobile(popupOnboardingRequest.getMobile());
-		onboarding.setCurrentRole(popupOnboardingRequest.getCurrentRole());
-		onboarding.setPrimaryGoal(popupOnboardingRequest.getPrimaryGoal());
-		onboarding.setAreasOfInterest(popupOnboardingRequest.getAreasOfInterest());
-		onboarding.setPreferToLearn(popupOnboardingRequest.getPreferToLearn()); // auto-converted
-		onboarding.setPreferredTrainingMode(popupOnboardingRequest.getPreferredTrainingMode());
-		onboarding.setCurrentSkill(popupOnboardingRequest.getCurrentSkill());
-		onboarding.setLookingForJob(popupOnboardingRequest.getLookingForJob());
-		onboarding.setRealTimeProjects(popupOnboardingRequest.getRealTimeProjects());
-		onboarding.setCertificationOrPlacement(popupOnboardingRequest.getCertificationOrPlacement());
-		onboarding.setSpeakToCourseAdvisor(popupOnboardingRequest.getSpeakToCourseAdvisor());
-		onboarding.setWhereYouHeard(popupOnboardingRequest.getWhereYouHeard());
+		if (optional.isPresent()) {
+			onboarding = optional.get();
+		} else {
+			onboarding = new PopupOnboarding();
+			onboarding.setStudentEmail(email);
+		}
+
+		if (request.getStudentId() != null)
+			onboarding.setStudentId(request.getStudentId());
+		if (request.getStudentName() != null)
+			onboarding.setStudentName(request.getStudentName());
+		if (request.getMobile() != null)
+			onboarding.setMobile(request.getMobile());
+		if (request.getCurrentRole() != null)
+			onboarding.setCurrentRole(request.getCurrentRole());
+		if (request.getPrimaryGoal() != null)
+			onboarding.setPrimaryGoal(request.getPrimaryGoal());
+		if (request.getAreasOfInterest() != null)
+			onboarding.setAreasOfInterest(request.getAreasOfInterest());
+		if (request.getPreferToLearn() != null)
+			onboarding.setPreferToLearn(request.getPreferToLearn());
+		if (request.getPreferredTrainingMode() != null)
+			onboarding.setPreferredTrainingMode(request.getPreferredTrainingMode());
+		if (request.getCurrentSkill() != null)
+			onboarding.setCurrentSkill(request.getCurrentSkill());
+		if (request.getLookingForJob() != null)
+			onboarding.setLookingForJob(request.getLookingForJob());
+		if (request.getRealTimeProjects() != null)
+			onboarding.setRealTimeProjects(request.getRealTimeProjects());
+		if (request.getCertificationOrPlacement() != null)
+			onboarding.setCertificationOrPlacement(request.getCertificationOrPlacement());
+		if (request.getSpeakToCourseAdvisor() != null)
+			onboarding.setSpeakToCourseAdvisor(request.getSpeakToCourseAdvisor());
+		if (request.getWhereYouHeard() != null)
+			onboarding.setWhereYouHeard(request.getWhereYouHeard());
+
 		onboarding.setFillingDate(LocalDate.now());
 
-		PopupOnboarding updated = popupOnboardingRepository.save(onboarding);
-
-		PopupOnboardingResponse response = createResponseForPopupOnboarding(updated);
-
-		return response;
-	}
-
-	@Override
-	public List<PopupOnboardingResponse> getAllPopupOnboarding() {
-		return popupOnboardingRepository.findAll().stream().map(this::createResponseForPopupOnboarding)
-				.collect(Collectors.toList());
+		PopupOnboarding saved = popupOnboardingRepository.save(onboarding);
+		return createResponseForPopupOnboarding(saved);
 	}
 
 	@Override
@@ -114,55 +171,23 @@ public class PopupOnboardingServiceImpl implements PopupOnboardingService {
 
 		popupOnboardingRepository.delete(onboarding);
 	}
+
 	@Override
-	public PopupOnboardingResponse updatePopupOnboardingByEmail(String email, PopupOnboardingRequest request) {
+	public PopupOnboardingResponse findByStudentEmail(String studentEmail) {
+		PopupOnboarding onboarding = popupOnboardingRepository.findByStudentEmail(studentEmail)
+				.orElseThrow(() -> new RuntimeException("PopupOnboarding not found with email: " + studentEmail));
+		PopupOnboardingResponse responseForPopupOnboarding = createResponseForPopupOnboarding(onboarding);
 
-	    PopupOnboarding onboarding = popupOnboardingRepository
-	            .findTopByStudentEmailOrderByFillingDateDesc(email)
-	            .orElseThrow(() -> new RuntimeException("PopupOnboarding not found for email: " + email));
-
-	    // We ONLY update the fields that come from your Pathfinder4 form
-	    // and keep studentId, name, mobile etc. as-is.
-
-	    if (request.getCurrentRole() != null) {
-	        onboarding.setCurrentRole(request.getCurrentRole());
-	    }
-	    if (request.getPrimaryGoal() != null) {
-	        onboarding.setPrimaryGoal(request.getPrimaryGoal());
-	    }
-	    if (request.getAreasOfInterest() != null) {
-	        onboarding.setAreasOfInterest(request.getAreasOfInterest());
-	    }
-	    if (request.getPreferToLearn() != null) {
-	        onboarding.setPreferToLearn(request.getPreferToLearn());
-	    }
-	    if (request.getPreferredTrainingMode() != null) {
-	        onboarding.setPreferredTrainingMode(request.getPreferredTrainingMode());
-	    }
-	    if (request.getCurrentSkill() != null) {
-	        onboarding.setCurrentSkill(request.getCurrentSkill());
-	    }
-	    if (request.getLookingForJob() != null) {
-	        onboarding.setLookingForJob(request.getLookingForJob());
-	    }
-	    if (request.getRealTimeProjects() != null) {
-	        onboarding.setRealTimeProjects(request.getRealTimeProjects());
-	    }
-	    if (request.getCertificationOrPlacement() != null) {
-	        onboarding.setCertificationOrPlacement(request.getCertificationOrPlacement());
-	    }
-	    if (request.getSpeakToCourseAdvisor() != null) {
-	        onboarding.setSpeakToCourseAdvisor(request.getSpeakToCourseAdvisor());
-	    }
-	    if (request.getWhereYouHeard() != null) {
-	        onboarding.setWhereYouHeard(request.getWhereYouHeard());
-	    }
-	    // If you have an "additionalInfo" field on entity:
-	    
-
-	    onboarding.setFillingDate(LocalDate.now());
-
-	    PopupOnboarding updated = popupOnboardingRepository.save(onboarding);
-	    return createResponseForPopupOnboarding(updated);
+		return responseForPopupOnboarding;
 	}
+	public List<PopupOnboardingResponse> getAllPopupOnboardings() {
+        List<PopupOnboarding> allEntries = popupOnboardingRepository.findAll();
+
+        return allEntries.stream()
+                .map(this::createResponseForPopupOnboarding)
+                .collect(Collectors.toList());
+    }
+
+	
+
 }

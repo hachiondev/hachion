@@ -24,38 +24,42 @@ public class PopupOnboardingController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<PopupOnboardingResponse> updatePopupOnboarding(@PathVariable Long id,
-			@RequestBody PopupOnboardingRequest request) {
-		request.setPopupOnboardingId(id); // ensure id is set
-		PopupOnboardingResponse response = popupOnboardingService.updatePopupOnboarding(request);
+
+	@GetMapping("/get-by-email/{email}")
+	public ResponseEntity<PopupOnboardingResponse> getPopupOnboardingByEmail(@PathVariable String email) {
+		PopupOnboardingResponse response = popupOnboardingService.findByStudentEmail(email);
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping
-	public ResponseEntity<List<PopupOnboardingResponse>> getAllPopupOnboarding() {
-		List<PopupOnboardingResponse> responses = popupOnboardingService.getAllPopupOnboarding();
-		return ResponseEntity.ok(responses);
-	}
+//	@PutMapping("/update-by-email")
+//	public ResponseEntity<PopupOnboardingResponse> updatePopupOnboarding(@RequestBody PopupOnboardingRequest request) {
+//
+//		PopupOnboardingResponse response = popupOnboardingService.updatePopupOnboarding(request);
+//		return ResponseEntity.ok(response);
+//	}
 
+	@PutMapping("/update-by-email")
+	public ResponseEntity<PopupOnboardingResponse> updatePopupOnboardingByEmail(
+			@RequestBody PopupOnboardingRequest request) {
+
+		if (request.getStudentEmail() == null || request.getStudentEmail().isBlank()) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		PopupOnboardingResponse response = popupOnboardingService
+				.updatePopupOnboardingByEmail(request.getStudentEmail(), request);
+
+		return ResponseEntity.ok(response);
+	}
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletePopupOnboarding(@PathVariable Long id) {
 		popupOnboardingService.deletePopupOnboarding(id);
 		return ResponseEntity.ok("Successfully deleted PopupOnboarding");
 	}
-	
-	@PutMapping("/update-by-email")
-    public ResponseEntity<PopupOnboardingResponse> updatePopupOnboardingByEmail(
-            @RequestBody PopupOnboardingRequest request) {
 
-        if (request.getStudentEmail() == null || request.getStudentEmail().isBlank()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        PopupOnboardingResponse response = popupOnboardingService
-                .updatePopupOnboardingByEmail(request.getStudentEmail(), request);
-
-        return ResponseEntity.ok(response);
-    }
-
+	@GetMapping("/getAllOnboarding")
+	public ResponseEntity<List<PopupOnboardingResponse>> getAllPopupOnboardings() {
+		List<PopupOnboardingResponse> list = popupOnboardingService.getAllPopupOnboardings();
+		return ResponseEntity.ok(list);
+	}
 }

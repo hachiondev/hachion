@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.hachionUserDashboard.dto.CourseSummaryDto;
 import com.hachionUserDashboard.entity.Course;
 
 @Repository
@@ -55,13 +56,22 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 			""", nativeQuery = true)
 	List<Course> findCoursesByEmailNative(@Param("email") String email);
 
-//	@Query(value = """
-//			SELECT c.*
-//			FROM course c
-//			JOIN user_wishlist uw ON uw.course_id = c.id
-//			WHERE uw.email = :email
-//			ORDER BY uw.created_at DESC
-//			""", nativeQuery = true)
-//	List<Course> findCoursesByEmailNative(@Param("email") String email);
+	@Query(value = """
+			SELECT
+			    id,
+			    course_name,
+			    course_image,
+			    number_of_classes,
+			    level,
+			    amount,
+			    discount,
+			    total,
+			    iamount,
+			    idiscount,
+			    itotal,
+			    course_category
+			FROM course
+			""", nativeQuery = true)
+	List<Object[]> findAllSummaryNative();
 
 }

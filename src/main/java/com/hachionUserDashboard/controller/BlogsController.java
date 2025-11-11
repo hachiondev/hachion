@@ -165,7 +165,7 @@ public class BlogsController {
                 blog.setMeta_description(updatedBlog.getMeta_description());
                 blog.setMeta_keyword(updatedBlog.getMeta_keyword());
                 blog.setMeta_title(updatedBlog.getMeta_title());
-                blog.setDate(LocalDate.now());
+//                blog.setDate(LocalDate.now());
 
                 // Replace blog image if a new one is uploaded
                 if (blogImage != null && !blogImage.isEmpty()) {

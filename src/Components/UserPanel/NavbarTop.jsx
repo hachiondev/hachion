@@ -171,6 +171,21 @@ const NavbarTop = () => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
   }, [drawerOpen]);
 
+  const handleMouseEnter = () => {
+  clearTimeout(window.dropdownTimeout);
+  setIsDropdownOpen(true);
+};
+
+const handleMouseLeave = () => {
+  window.dropdownTimeout = setTimeout(() => {
+    setIsDropdownOpen(false);
+  }, 200);
+};
+
+  const handleClickToggle = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
+
   return (
     <>
       {/* Navbar */}
@@ -185,14 +200,24 @@ const NavbarTop = () => {
             <div className="navbar-nav my-lg-0 navbar-nav-scroll" ref={dropdownRef}>
               <div className="nav-item dropdown">
                 <button
-                  className="nav-link"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  style={{ color: "#000", fontWeight: "500", background: "none", border: "none" }}
-                >
-                  Explore Courses {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-                </button>
+              className="nav-link"
+              type="button"
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="true"
+              onClick={handleClickToggle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              style={{ color: "#000000", fontWeight: "500", background: "none", border: "none" }}
+            >
+              Explore Courses{" "}
+              <span className="ms-1 arrow-icon" aria-hidden="true">
+                {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+              </span>
+            </button>
                 {isDropdownOpen && (
-                  <ul className="dropdown-menu custom-dropdown-menu show">
+                  <ul className="dropdown-menu custom-dropdown-menu show"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}>
                     <li>
                       <div className="course-content">
                         <div className="scrollable-category-list">

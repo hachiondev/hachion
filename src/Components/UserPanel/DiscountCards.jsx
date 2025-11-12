@@ -34,34 +34,56 @@ const DiscountCards = () => {
 
   
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const allCoursesResponse = await axios.get("https://api.hachion.co/courses/all");
-        const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
+  (async () => {
+    setLoading(true);
+    try {
+      
+      const allCoursesResponse = await axios.get("https://api.hachion.co/courses/summary");
+      const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
 
-        const courses  = allCoursesResponse.data || [];
-        const trainers = trainersResponse.data || [];
+      const rows = Array.isArray(allCoursesResponse.data) ? allCoursesResponse.data : [];
 
-        const merged = courses.map((c) => {
-          const matchedTrainer = trainers.find(
-            t => (t.course_name || '').trim().toLowerCase() === (c.courseName || '').trim().toLowerCase()
-          );
-          return {
-            ...c,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
-          };
-        });
+      
+      const courses = rows.map((row) => ({
+        id: row[0],
+        courseName: row[1],
+        courseImage: row[2],
+        numberOfClasses: row[3],
+        level: row[4],
+        amount: row[5],
+        discount: row[6],
+        total: row[7],
+        iamount: row[8],
+        idiscount: row[9],
+        itotal: row[10],
+        courseCategory: row[11],
+      }));
 
-        setTrendingCourses(merged);
-      } catch (e) {
-        console.error("Error fetching courses/trainers:", e);
-        setTrendingCourses([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+      const trainers = trainersResponse.data || [];
+
+
+      const merged = courses.map((c) => {
+        const matchedTrainer = trainers.find(
+          t =>
+            (t.course_name || '').trim().toLowerCase() ===
+            (c.courseName   || '').trim().toLowerCase()
+        );
+        return {
+          ...c,
+          trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
+        };
+      });
+
+      setTrendingCourses(merged);
+    } catch (e) {
+      console.error("Error fetching courses/trainers:", e);
+      setTrendingCourses([]);
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, []);
+
 
   useEffect(() => {
     const handleResize = () => {

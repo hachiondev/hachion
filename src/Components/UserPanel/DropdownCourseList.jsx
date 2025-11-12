@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Course.css";
 import { useNavigate } from "react-router-dom";
-import { MdArrowForwardIos } from "react-icons/md";
 
 const DropdownCourseList = ({ category }) => {
   const [courses, setCourses] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [activeCourse, setActiveCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -15,8 +15,25 @@ const DropdownCourseList = ({ category }) => {
 
     const fetchCourses = async () => {
       try {
-        const { data } = await axios.get("https://api.hachion.co/courses/all");
-        if (isMounted) setCourses(Array.isArray(data) ? data : []);
+        const { data } = await axios.get("https://api.hachion.co/courses/summary");
+        const rows = Array.isArray(data) ? data : [];
+
+        const mapped = rows.map((row) => ({
+          id: row[0],
+          courseName: row[1],
+          courseImage: row[2],
+          numberOfClasses: row[3],
+          level: row[4],
+          amount: row[5],
+          discount: row[6],
+          total: row[7],
+          iamount: row[8],
+          idiscount: row[9],
+          itotal: row[10],
+          courseCategory: row[11],
+        }));
+
+        if (isMounted) setCourses(mapped);
       } catch (err) {
         console.error("Error fetching courses:", err);
       } finally {
@@ -28,16 +45,23 @@ const DropdownCourseList = ({ category }) => {
     return () => (isMounted = false);
   }, []);
 
+  // Filter courses when category changes
   useEffect(() => {
     if (category && courses.length > 0) {
       const filteredList = courses.filter(
         (course) => course.courseCategory === category
       );
       setFiltered(filteredList);
+
+      // Auto-select first course for this category
+      if (filteredList.length > 0) {
+        setActiveCourse(filteredList[0].courseName);
+      }
     }
   }, [category, courses]);
 
   const handleCourseClick = (title) => {
+    setActiveCourse(title);
     const slug = title.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${slug}`);
   };
@@ -48,10 +72,7 @@ const DropdownCourseList = ({ category }) => {
         <ul className="category-menu">
           {Array.from({ length: 6 }).map((_, index) => (
             <li key={index}>
-              <div
-                className="skeleton-explore-text title"
-                style={{ padding: "4px 8px" }}
-              >
+              <div className="skeleton-explore-text title" style={{ padding: "4px 8px" }}>
                 <div className="skeleton-text-line"></div>
               </div>
             </li>
@@ -71,7 +92,9 @@ const DropdownCourseList = ({ category }) => {
           <li key={course.id || index}>
             <button
               onClick={() => handleCourseClick(course.courseName)}
-              className="category-menu-item"
+              className={`category-menu-item ${
+                activeCourse === course.courseName ? "active" : ""
+              }`}
               style={{ padding: "4px 8px", fontWeight: "400" }}
             >
               <div className="category-menu-text">{course.courseName}</div>

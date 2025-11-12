@@ -1,9 +1,5 @@
 import React from 'react';
 import './Home.css';
-import img1 from '../../Assets/image 72.png';
-import img2 from '../../Assets/image 69.png';
-import img3 from '../../Assets/image 68.png';
-import img4 from '../../Assets/image 70.png';
 import { LiaHandsHelpingSolid } from "react-icons/lia";
 import { PiCertificate } from "react-icons/pi";
 import { HiOutlineDocumentChartBar } from "react-icons/hi2";

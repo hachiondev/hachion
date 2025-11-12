@@ -258,10 +258,12 @@ color: black;
   padding-top: 5px;
 }
 .category-menu-item:hover {
-  color: #1D4ED8;
+  color: #fff;
+  background-color: #00AAEF;
 }
 .category-menu-item.active {
-  color: #1D4ED8;
+  color: #fff;
+  background-color: #00AAEF;
 }
 .sidebar-heading{
   color: #000;

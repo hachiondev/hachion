@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import './Course.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Certificate from '../../Assets/coursecertificate.png';
+import Certificate from '../../Assets/newcertificate.png';
 import { FaRegHandPointRight } from "react-icons/fa";
 
 const CourseCertificate = () => {

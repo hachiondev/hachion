@@ -38,6 +38,7 @@
   overflow-y: auto;
   z-index: 1050;
   width: 100%;
+  max-width: 400px;
   left: 0;
 }
 

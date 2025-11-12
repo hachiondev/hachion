@@ -25,7 +25,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import AdminPagination from "./AdminPagination";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
-const API_BASE = "https://api.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

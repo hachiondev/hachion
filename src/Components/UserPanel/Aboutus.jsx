@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 
-const API_BASE = "https://api.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 
 const statistics = [
   {

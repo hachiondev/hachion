@@ -143,6 +143,10 @@ const BecomeInstructor = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
   return (
     <div className="home-background">
       <Topbar />

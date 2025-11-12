@@ -15,6 +15,10 @@ import FaqFormPopup from "./FaqFormPopup";
 const ViewFaq = () => {
   const [showPopup, setShowPopup] = useState(false);
 
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
   return (
     <div className="course-top">
         <Topbar />

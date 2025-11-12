@@ -91,7 +91,7 @@ export default function UserCertificate() {
             (data.items || []).map(async (c) => {
               const url =
                 c.certificatePath && c.certificatePath.includes("/uploads/")
-                  ? `https://api.hachion.co${c.certificatePath.replace(
+                  ? `https://api.test.hachion.co${c.certificatePath.replace(
                       "/home/ec2-user",
                       ""
                     )}`

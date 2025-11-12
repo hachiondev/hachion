@@ -1018,7 +1018,6 @@ position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
 }
 
 .author-avatar {

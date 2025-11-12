@@ -24,7 +24,7 @@ import { BsBookmarkHeart } from "react-icons/bs";
 import { PiNotePencilBold, PiCertificateBold, PiBriefcase } from "react-icons/pi";
 import { MdOutlineRateReview } from "react-icons/md";
 
-const API_BASE = "https://api.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 
 const resolveImageUrl = (img) => {
   if (!img) return "";
@@ -61,6 +61,13 @@ async function ensureAvatarFromApi(email, setUserData) {
     }
   } catch {}
 }
+
+const ProfileAvatar = styled(Avatar)({
+    width: 40,
+    height: 40,
+    border: "2px solid #00AEEF",
+    backgroundColor: "#ffffff",
+  });
 
 const NavbarTop = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -160,13 +167,6 @@ const NavbarTop = () => {
     setMobileSearchOpen(false);
   };
 
-  const ProfileAvatar = styled(Avatar)({
-    width: 40,
-    height: 40,
-    border: "2px solid #00AEEF",
-    backgroundColor: "#ffffff",
-  });
-
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
   }, [drawerOpen]);
@@ -247,12 +247,12 @@ const handleMouseLeave = () => {
             {/* Desktop Search */}
             <div
               className="search-container position-relative flex-grow-1 mx-3"
-              style={{ maxWidth: "600px" }}
+              style={{ maxWidth: "500px" }}
             >
               <form className="d-flex flex-grow-1" role="search">
                 <div
                   className="input-group rounded-pill custom-search w-100"
-                  style={{ overflow: "hidden", height: "48px" }}
+                  style={{ overflow: "hidden", height: "48px", maxWidth: "400px" }}
                 >
                   <input
                     type="search"

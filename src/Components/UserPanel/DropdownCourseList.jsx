@@ -7,6 +7,7 @@ const DropdownCourseList = ({ category }) => {
   const [courses, setCourses] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [activeCourse, setActiveCourse] = useState(null);
+  const [hoveredCourse, setHoveredCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -45,7 +46,7 @@ const DropdownCourseList = ({ category }) => {
     return () => (isMounted = false);
   }, []);
 
-  // Filter courses when category changes
+  // Filter courses by category
   useEffect(() => {
     if (category && courses.length > 0) {
       const filteredList = courses.filter(
@@ -53,9 +54,11 @@ const DropdownCourseList = ({ category }) => {
       );
       setFiltered(filteredList);
 
-      // Auto-select first course for this category
+      // Highlight the first course by default
       if (filteredList.length > 0) {
         setActiveCourse(filteredList[0].courseName);
+      } else {
+        setActiveCourse(null);
       }
     }
   }, [category, courses]);
@@ -88,19 +91,25 @@ const DropdownCourseList = ({ category }) => {
   return (
     <div className="scrollable-category-list">
       <ul className="category-menu">
-        {filtered.map((course, index) => (
-          <li key={course.id || index}>
-            <button
-              onClick={() => handleCourseClick(course.courseName)}
-              className={`category-menu-item ${
-                activeCourse === course.courseName ? "active" : ""
-              }`}
-              style={{ padding: "4px 8px", fontWeight: "400" }}
-            >
-              <div className="category-menu-text">{course.courseName}</div>
-            </button>
-          </li>
-        ))}
+        {filtered.map((course, index) => {
+          const isActive =
+            hoveredCourse === course.courseName ||
+            (!hoveredCourse && activeCourse === course.courseName);
+
+          return (
+            <li key={course.id || index}>
+              <button
+                onMouseEnter={() => setHoveredCourse(course.courseName)}
+                onMouseLeave={() => setHoveredCourse(null)}
+                onClick={() => handleCourseClick(course.courseName)}
+                className={`category-menu-item ${isActive ? "active" : ""}`}
+                style={{ padding: "4px 8px", fontWeight: "400" }}
+              >
+                <div className="category-menu-text">{course.courseName}</div>
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

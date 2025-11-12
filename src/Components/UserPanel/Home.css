@@ -660,6 +660,7 @@ background-color:#F7F7F7;
     font-weight: 600;
     text-align: left;
     padding: 20px;
+    padding-top: 0;
     flex-wrap: wrap;
       }
       .home-title-span{
@@ -1634,11 +1635,17 @@ text-align: right;
 
 .custom-search{
  width: 100%;
-max-width: 400px;
+max-width: 300px;
 overflow: hidden;
 height: 48px;
 border-radius: 8px;
 position: relative;
+}
+.custom-search input:focus,
+.custom-search button:focus{
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 .course-search-container {
   position: relative;

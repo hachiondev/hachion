@@ -23,6 +23,10 @@ const DiscountDeals = () => {
     return () => clearInterval(interval);
   }, [banners.length]);
 
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
   return (
     <div className="course-top">
       <Topbar />

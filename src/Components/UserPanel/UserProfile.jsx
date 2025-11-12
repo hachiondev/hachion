@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 dayjs.extend(customParseFormat);
 
-const API_BASE = (process.env.REACT_APP_API_BASE || "https://api.hachion.co").replace(/\/+$/,"");
+const API_BASE = (process.env.REACT_APP_API_BASE || "https://api.test.hachion.co").replace(/\/+$/,"");
 const resolveImageUrl = (img) => {
   if (!img) return "";
   if (/^https?:\/\//i.test(img)) return img;
@@ -224,7 +224,7 @@ if (canChangePassword && isFileLike(profileImage)) {
       if (r.profileImageUrl) {
         const fullUrl = r.profileImageUrl.startsWith('http')
           ? r.profileImageUrl
-          : `https://api.hachion.co${r.profileImageUrl}`;
+          : `https://api.test.hachion.co${r.profileImageUrl}`;
         setProfileImage(fullUrl);
       }
       setName(

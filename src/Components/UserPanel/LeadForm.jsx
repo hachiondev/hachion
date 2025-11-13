@@ -109,7 +109,7 @@ const handleMobileBlur = () => {
   }
 
   try {
-    const response = await fetch("https://api.hachion.co/leadform", {
+    const response = await fetch("https://api.test.hachion.co/leadform", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -87,7 +87,7 @@ const NavbarTop = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/courses/names-and-categories");
+        const res = await axios.get("https://api.test.hachion.co/courses/names-and-categories");
         setCourses(res.data);
       } catch (error) {
         console.error(error);
@@ -129,7 +129,7 @@ const NavbarTop = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://api.hachion.co/api/logout", { method: "POST", credentials: "include" });
+      await fetch("https://api.test.hachion.co/api/logout", { method: "POST", credentials: "include" });
     } catch {}
     finally {
       localStorage.clear();

@@ -61,7 +61,7 @@ const ConfirmOtp = () => {
     setIsLoading(true);
 
     try {
-      const verifyResponse = await fetch("https://api.hachion.co/api/v1/user/verify-otp", {
+      const verifyResponse = await fetch("https://api.test.hachion.co/api/v1/user/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -106,7 +106,7 @@ const ConfirmOtp = () => {
 
     try {
       const response = await fetch(
-        `https://api.hachion.co/api/v1/user/regenerate-otp?email=${registeruserData.email}`,
+        `https://api.test.hachion.co/api/v1/user/regenerate-otp?email=${registeruserData.email}`,
         { method: "PUT" }
       );
 

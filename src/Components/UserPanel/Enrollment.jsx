@@ -102,7 +102,7 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
   const discount = batchData.discount ?? 0;
 
     try {
-      const response = await axios.post("https://api.hachion.co/capture-order", null, {
+      const response = await axios.post("https://api.test.hachion.co/capture-order", null, {
         params: {
           orderId,
           studentId,
@@ -255,7 +255,7 @@ const getField = (baseField) => {
   const fetchCourseData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://api.hachion.co/courses/all');
+      const response = await axios.get('https://api.test.hachion.co/courses/all');
 
       const matchedCourse = response.data.find(
         (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName?.toLowerCase().replace(/\s+/g, '-')
@@ -287,7 +287,7 @@ const handleRadioChange = (event) => {
         if (!email) return;
 
         try {
-          const response = await axios.get('https://api.hachion.co/api/v1/user/students');
+          const response = await axios.get('https://api.test.hachion.co/api/v1/user/students');
           const allStudents = response.data;
 
           const matchedStudent = allStudents.find((student) => student.email === email);
@@ -306,7 +306,7 @@ const handleRadioChange = (event) => {
 
 const handleApplyCoupon = async () => {
   try {
-    const res = await axios.get(`https://api.hachion.co/coupon-code/discount/${couponCode}`);
+    const res = await axios.get(`https://api.test.hachion.co/coupon-code/discount/${couponCode}`);
     if (res.data && Object.keys(res.data).length > 0) {
       const { 
         discountType, 
@@ -416,7 +416,7 @@ if (couponData) {
     let mobile = '';
 
     try {
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -455,7 +455,7 @@ if (couponData) {
   sendText
 };
 try {
-  const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+  const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
  
   if (response.status >= 200 && response.status < 300) {
     setSuccessMessage("✅ Registered Successfully.");
@@ -510,7 +510,7 @@ const handlePayment = async () => {
 
     const userEmail = user.email;
         
-    const profileResponse = await axios.get("https://api.hachion.co/api/v1/user/myprofile", {
+    const profileResponse = await axios.get("https://api.test.hachion.co/api/v1/user/myprofile", {
       params: { email: userEmail }
     });
 
@@ -539,7 +539,7 @@ const handlePayment = async () => {
     
     if (mobile.startsWith('+91')) {
       
-      const orderRes = await axios.post("https://api.hachion.co/razorpay/create-razorpay-order", null, {
+      const orderRes = await axios.post("https://api.test.hachion.co/razorpay/create-razorpay-order", null, {
         params: { amount }
       });
 
@@ -559,7 +559,7 @@ const handlePayment = async () => {
 
           try {
             
-            const captureRes = await axios.post("https://api.hachion.co/razorpay/capture-razorpay", null, {
+            const captureRes = await axios.post("https://api.test.hachion.co/razorpay/capture-razorpay", null, {
               params: {
                 paymentId: razorpay_payment_id,
                 orderId: razorpay_order_id,
@@ -618,7 +618,7 @@ setSuccessMessage("");
 
     } else {
       
-      const paypalRes = await axios.post("https://api.hachion.co/create-order", null, {
+      const paypalRes = await axios.post("https://api.test.hachion.co/create-order", null, {
         params: {
           amount,
           returnUrl

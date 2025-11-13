@@ -75,7 +75,7 @@
         let shouldSkipTracking = false;
         try {
           const isDev = window.location.hostname === "localhost";
-          const res = await fetch("https://api.hachion.co/api/check-ip", {
+          const res = await fetch("https://api.test.hachion.co/api/check-ip", {
             method: "POST",
             headers: isDev ? { "X-Forwarded-For": "152.57.170.218" } : {}
           });

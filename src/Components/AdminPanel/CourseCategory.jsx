@@ -93,7 +93,7 @@ const displayedCategories = filteredCategories.slice(
   currentPage * rowsPerPage
 );
 
-  const API_URL = 'https://api.hachion.co/course-categories/all';
+  const API_URL = 'https://api.test.hachion.co/course-categories/all';
 
   // Fetch Courses on Component Mount
   useEffect(() => {
@@ -152,7 +152,7 @@ const displayedCategories = filteredCategories.slice(
   
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("https://api.hachion.co/course-categories/add", {
+      const response = await axios.post("https://api.test.hachion.co/course-categories/add", {
         name: courseData.category_name,
         date: dayjs(courseData.date).format("YYYY-MM-DD"),
       });
@@ -170,7 +170,7 @@ const displayedCategories = filteredCategories.slice(
   const handleEdit = async () => {
     try {
         const response = await axios.put(
-            `https://api.hachion.co/course-categories/update/${editedRow.id}`,
+            `https://api.test.hachion.co/course-categories/update/${editedRow.id}`,
             editedRow
         );
         setCategories((prev) =>
@@ -189,7 +189,7 @@ const displayedCategories = filteredCategories.slice(
   const handleDelete = async (id) => {
        
     try { 
-     const response = await axios.delete(`https://api.hachion.co/course-categories/delete/${id}`); 
+     const response = await axios.delete(`https://api.test.hachion.co/course-categories/delete/${id}`); 
      console.log("Course category deleted successfully:", response.data); 
    } catch (error) { 
      console.error("Error deleting Video:", error); 

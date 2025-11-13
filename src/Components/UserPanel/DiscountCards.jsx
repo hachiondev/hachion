@@ -22,7 +22,7 @@ const DiscountCards = () => {
   const [trendingCourses, setTrendingCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const [showIndicators, setShowIndicators] = useState(true);
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
   const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
@@ -32,14 +32,22 @@ const DiscountCards = () => {
 
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  
+  const handleResize = () => {
+  if (window.innerWidth < 576) setCardsPerRow(1);
+  else if (window.innerWidth < 992) setCardsPerRow(2);
+  else setCardsPerRow(2);
+
+  // 👇 Add this line
+  setShowIndicators(window.innerWidth >= 768); // show only from tablet width and up
+};
+
   useEffect(() => {
   (async () => {
     setLoading(true);
     try {
       
-      const allCoursesResponse = await axios.get("https://api.hachion.co/courses/summary");
-      const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
+      const allCoursesResponse = await axios.get("https://api.test.hachion.co/courses/summary");
+      const trainersResponse   = await axios.get("https://api.test.hachion.co/trainers");
 
       const rows = Array.isArray(allCoursesResponse.data) ? allCoursesResponse.data : [];
 
@@ -131,7 +139,7 @@ const DiscountCards = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get("https://api.hachion.co/discounts-courses");
+        const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -282,13 +290,23 @@ const DiscountCards = () => {
 
   const orderedCourses = [...withRuleActive, ...withPerCourseDiscount];
 
-  const totalPages = Math.max(1, Math.ceil(orderedCourses.length / cardsPerRow));
-  const startIndex = currentPage * cardsPerRow;
-  const currentCourses = orderedCourses.slice(startIndex, startIndex + cardsPerRow);
+const totalPages = Math.max(1, orderedCourses.length - cardsPerRow + 1);
+const startIndex = currentPage;
+const currentCourses = orderedCourses.slice(startIndex, startIndex + cardsPerRow);
 
-  const goToNext = () => setCurrentPage((prev) => (prev + 1) % totalPages);
-  const goToPrev = () =>
-    setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
+  const goToNext = () => {
+  setCurrentPage((prev) => {
+    const next = prev + 1;
+    return next >= totalPages ? 0 : next;
+  });
+};
+
+const goToPrev = () => {
+  setCurrentPage((prev) => {
+    const next = prev - 1;
+    return next < 0 ? totalPages - 1 : next;
+  });
+};
 
   useEffect(() => {
   let stopped = false;
@@ -343,7 +361,7 @@ const DiscountCards = () => {
                 key={idx}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 
                 discountPercentage={
@@ -388,8 +406,8 @@ const DiscountCards = () => {
             ))}
       </div>
 
-      {/* Page Indicators */}
-      <div className="page-indicators mt-3">
+      {showIndicators && (
+      <div className="page-indicators">
         {Array.from({ length: totalPages }).map((_, idx) => (
           <span
             key={idx}
@@ -398,6 +416,7 @@ const DiscountCards = () => {
           ></span>
         ))}
       </div>
+    )}
     </div>
   );
 };

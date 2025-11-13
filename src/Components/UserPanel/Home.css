@@ -620,6 +620,7 @@ background-color:#F7F7F7;
 .page-indicators {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 15px;
   gap: 5px;
 }
@@ -3141,14 +3142,6 @@ flex: 0 0 100%;
     width: 25px;
     }
 
-    /* .footer-link {
-      display: flex;
-      align-items: center;
-      padding-left: 10%;
-      padding-right: 10%;
-      gap: 10px;
-    } */
-    
     .footer-bottom{
     justify-content: center;
     flex-direction: column;
@@ -3252,10 +3245,6 @@ flex: 0 0 100%;
     margin: 0.5vh 0.5vw;
     }
     .filter-container {
-      /* display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
-      width: 100%; */
       box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
@@ -3318,6 +3307,9 @@ padding: 0 16px;
 .association-head-desktop{
   display: none;
 }
+   .instructor-title{
+    padding: 10px;
+      }
 }
 
 /* Styles for Mobile (max-width: 480px) */

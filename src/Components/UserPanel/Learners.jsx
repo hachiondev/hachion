@@ -38,7 +38,7 @@ let currentReviews =
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("https://api.hachion.co/userreview/active");
+        const response = await fetch("https://api.test.hachion.co/userreview/active");
         const data = await response.json();
         if (Array.isArray(data)) {
           const filteredReviews = data.filter(
@@ -100,7 +100,7 @@ let currentReviews =
               rating={review.rating}
               profileImage={
                 review.user_image
-                  ? `https://api.hachion.co/userreview/${review.user_image}`
+                  ? `https://api.test.hachion.co/userreview/${review.user_image}`
                   : ""
               }
               onReadMore={() => handleReadMore(index)}

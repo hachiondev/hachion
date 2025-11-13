@@ -13,14 +13,14 @@ const BlogList = ({ selectedCategories, currentPage, cardsPerPage, onTotalBlogsC
     const fetchBlogs = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("https://api.hachion.co/blog");
+        const res = await axios.get("https://api.test.hachion.co/blog");
         const mapped = res.data.map((b) => ({
           ...b,
           avatar: b.authorImage
-            ? `https://api.hachion.co/uploads/prod/blogs/${b.authorImage}`
+            ? `https://api.test.hachion.co/uploads/prod/blogs/${b.authorImage}`
             : "",
           blog_image: b.blog_image
-            ? `https://api.hachion.co/uploads/prod/blogs/${b.blog_image}`
+            ? `https://api.test.hachion.co/uploads/prod/blogs/${b.blog_image}`
             : "",
         }));
         setBlogs(mapped.reverse());

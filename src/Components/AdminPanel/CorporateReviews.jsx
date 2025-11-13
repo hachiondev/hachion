@@ -339,8 +339,39 @@ export default function CorporateReview() {
               <div className='course-row'>
                 <div className="col-md-4">
                   <label className="form-label">Employee Rating</label>
-                  <input type="number" className="form-control"
-                    name="employeeRating" value={reviewData.employeeRating} onChange={handleChange} />
+                  {/* <input type="number" className="form-control"
+                    name="employeeRating" value={reviewData.employeeRating} onChange={handleChange} /> */}
+                    <input
+  type="number"
+  className="form-control"
+  name="employeeRating"
+  value={reviewData.employeeRating === "" ? "" : Number(reviewData.employeeRating)}
+  min="0"
+  max="5"
+  onChange={(e) => {
+    let val = e.target.value;
+
+    
+    if (val === "") {
+      setReviewData((prev) => ({ ...prev, employeeRating: "" }));
+      return;
+    }
+
+    val = val.replace(/^0+/, "");
+
+    let num = Number(val);
+
+    if (isNaN(num)) {
+      num = "";
+    } else {
+      if (num > 5) num = 5;   
+      if (num < 0) num = 0;   
+    }
+
+    setReviewData((prev) => ({ ...prev, employeeRating: num }));
+  }}
+/>
+
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Role</label>

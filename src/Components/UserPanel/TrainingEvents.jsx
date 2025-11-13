@@ -48,10 +48,10 @@ useEffect(() => {
 //       try {
 //         const [scheduleRes, coursesRes] = await Promise.all([
 //           fetch(
-//             `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+//             `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
 //           ).then((res) => res.json()),
           
-//           fetch("https://api.hachion.co/courses/all").then((res) => res.json()),
+//           fetch("https://api.test.hachion.co/courses/all").then((res) => res.json()),
 //         ]);
   
 
@@ -101,11 +101,11 @@ useEffect(() => {
     try {
       const [scheduleRes, coursesSummaryRes] = await Promise.all([
         fetch(
-          `https://api.hachion.co/schedulecourse?timezone=${userTimezone}`
+          `https://api.test.hachion.co/schedulecourse?timezone=${userTimezone}`
         ).then((res) => res.json()),
 
       
-        fetch("https://api.hachion.co/courses/summary").then((res) =>
+        fetch("https://api.test.hachion.co/courses/summary").then((res) =>
           res.json()
         ),
       ]);
@@ -310,7 +310,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
   useEffect(() => {
   (async () => {
     try {
-      const resp = await fetch('https://api.hachion.co/discounts-courses');
+      const resp = await fetch('https://api.test.hachion.co/discounts-courses');
       const data = await resp.json();
       setDiscountRules(Array.isArray(data) ? data : []);
     } catch {
@@ -439,7 +439,7 @@ const getRuleDiscountPct = (courseName, countryCode) => {
           month={course.numberOfClasses}
           image={
             course.course_image
-              ? `https://api.hachion.co/${course.course_image}`
+              ? `https://api.test.hachion.co/${course.course_image}`
               : ""
           }
           date={course.schedule_date ? formatDate(course.schedule_date) : ""}

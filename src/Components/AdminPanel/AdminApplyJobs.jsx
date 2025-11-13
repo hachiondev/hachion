@@ -52,7 +52,7 @@ const [deleteMessage, setDeleteMessage] = useState("");
 const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
-    axios.get('https://api.hachion.co/apply-job/getAll')
+    axios.get('https://api.test.hachion.co/apply-job/getAll')
       .then((response) => {
         setJobData(response.data);
         setFilteredData(response.data);
@@ -96,7 +96,7 @@ const [deleteError, setDeleteError] = useState("");
   if (!confirmed) return;
 
   try {
-    await axios.delete(`https://api.hachion.co/apply-job/delete/${id}`);
+    await axios.delete(`https://api.test.hachion.co/apply-job/delete/${id}`);
     const updatedData = jobData.filter(item => item.applyJobDetailsId !== id);
     setJobData(updatedData);
     setFilteredData(updatedData);
@@ -183,7 +183,7 @@ const [deleteError, setDeleteError] = useState("");
                   <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
                   <StyledTableCell align="center">
                     {row.companyLogo ? (
-                      <img src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" />
+                      <img src={`https://api.test.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" />
                     ) : 'No Image'}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.companyName}</StyledTableCell>
@@ -191,7 +191,7 @@ const [deleteError, setDeleteError] = useState("");
                   <StyledTableCell align="left">
                     {row.resume ? (
                       <a
-    href={`https://api.hachion.co/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`}
+    href={`https://api.test.hachion.co/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`}
       target="_blank"
       rel="noopener noreferrer"
 >

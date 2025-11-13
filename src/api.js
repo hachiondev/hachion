@@ -6,7 +6,7 @@ const token = localStorage.getItem('authToken');
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'https://api.hachion.co/',
+  baseURL: 'https://api.test.hachion.co/',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,

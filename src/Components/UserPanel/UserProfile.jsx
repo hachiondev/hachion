@@ -199,7 +199,7 @@ if (canChangePassword && isFileLike(profileImage)) {
   form.append('profileImage', profileImage);
 }
       const resp = await axios.post(
-        'https://api.hachion.co/api/v1/user/profile/update',
+        'https://api.test.hachion.co/api/v1/user/profile/update',
         form
       );
 
@@ -248,7 +248,7 @@ if (canChangePassword && isFileLike(profileImage)) {
       const parsedUser = JSON.parse(storedUser);
       const parsedEmail = parsedUser.email;
 
-      axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: parsedEmail }
       })
       .then((response) => {
@@ -286,7 +286,7 @@ if (provider === 'GOOGLE') {
 }
 
         if (data.profileImage) {
-          const fullImageUrl = `https://api.hachion.co/api/v1/user/profile/${data.profileImage}`;
+          const fullImageUrl = `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`;
           setProfileImage(fullImageUrl);
         }
       })
@@ -344,7 +344,7 @@ const handleSocialSave = async () => {
 
   try {
     await axios.patch(
-      'https://api.hachion.co/api/v1/user/social-links',
+      'https://api.test.hachion.co/api/v1/user/social-links',
       payload,
       { params: { email: emailVal } }
     );
@@ -371,7 +371,7 @@ const handleSocialSave = async () => {
 
     try {
       const encodedMobile = encodeURIComponent(value);
-      await axios.get(`https://api.hachion.co/check-mobile?mobile=${encodedMobile}`);
+      await axios.get(`https://api.test.hachion.co/check-mobile?mobile=${encodedMobile}`);
       setMobileError('');
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -430,7 +430,7 @@ const handleResetPassword = async (e) => {
 
   try {
     const response = await axios.post(
-      'https://api.hachion.co/api/v1/user/reset-password',
+      'https://api.test.hachion.co/api/v1/user/reset-password',
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );

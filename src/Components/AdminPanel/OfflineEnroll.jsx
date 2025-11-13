@@ -43,7 +43,7 @@
 
 //   const handleDelete = async (id) => {
 //     try {
-//       await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+//       await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
 //       setEnrollData(enrollData.filter((item) => item.id !== id));
 //     } catch (error) {
 //       console.error("Error deleting entry:", error);
@@ -384,7 +384,7 @@ const handleFileChange = (e) => {
             return;
         }
         try {
-            const response = await axios.post("https://api.hachion.co/certificate/add", formData, {
+            const response = await axios.post("https://api.test.hachion.co/certificate/add", formData, {
             });
             if (response.status === 201 || response.status === 200) {
                 alert("Enrollment added successfully");

@@ -116,7 +116,7 @@ const loginWithGoogle = () => {
   console.log("doc.cookie now:", document.cookie);
   
   setTimeout(() => {
-    window.location.href = "https://api.hachion.co/oauth2/authorization/google";
+    window.location.href = "https://api.test.hachion.co/oauth2/authorization/google";
   }, 50);
 };
 
@@ -126,7 +126,7 @@ useEffect(() => {
     const existing = localStorage.getItem('loginuserData');
     if (existing) return;
 
-    fetch('https://api.hachion.co/api/me', { credentials: 'include' })
+    fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
       .then(r => (r.ok ? r.json() : null))
       .then(user => {
         if (!user) return;

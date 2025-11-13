@@ -74,14 +74,22 @@ const Employees = () => {
   const [imageDisplayName, setImageDisplayName] = useState("");
   const [existingImagePath, setExistingImagePath] = useState("");
 
-  // Country + flag dropdown states
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const phoneInputRef = useRef(null);
 
   const extractFileName = (path) => (path ? path.split("/").pop() : "");
 
-  // fetch employees
+                 useEffect(() => {
+  if (successMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 4000);  
+
+    return () => clearTimeout(timer);
+  }
+}, [successMessage]);
+  
   useEffect(() => {
     axios
       .get(`${API_BASE}/employees`)
@@ -96,7 +104,7 @@ const Employees = () => {
       });
   }, []);
 
-  // search filter
+  
   useEffect(() => {
     const term = searchTerm.toLowerCase();
     const filtered = employees.filter(
@@ -109,7 +117,7 @@ const Employees = () => {
     setFilteredEmployees(filtered);
   }, [searchTerm, employees]);
 
-  // detect default country
+  
   useEffect(() => {
     fetch("https://api.country.is")
       .then((res) => res.json())
@@ -504,7 +512,7 @@ const Employees = () => {
           </div>
         </div>
       ) : (
-        // ======= EMPLOYEE TABLE =======
+        
         <div className="course-category">
           <h3>Employees</h3>
           <div className="category">
@@ -600,7 +608,7 @@ const Employees = () => {
       src={
         emp.companyImage.startsWith("http")
           ? emp.companyImage
-          : `https://api.hachion.co/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
+          : `https://api.test.hachion.co/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
       }
       alt="Employee"
       width="50"

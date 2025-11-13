@@ -91,7 +91,7 @@ const handleSubmit = async () => {
 
     
     const res = await fetch(
-      `https://api.hachion.co/api/v1/user/send-otp?email=${encodeURIComponent(step1.email)}`,
+      `https://api.test.hachion.co/api/v1/user/send-otp?email=${encodeURIComponent(step1.email)}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -124,7 +124,7 @@ const handleSubmit = async () => {
 };
 
   const loginWithGoogle = () => {
-    window.location.href = `https://api.hachion.co/oauth2/authorization/google`;
+    window.location.href = `https://api.test.hachion.co/oauth2/authorization/google`;
   };
 
   return (

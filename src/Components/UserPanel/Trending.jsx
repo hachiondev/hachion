@@ -71,15 +71,15 @@ const [countdowns, setCountdowns] = useState({});
   //   const fetchTrendingCourses = async () => {
   //     setLoading(true);
   //     try {
-  //       const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
+  //       const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
   //       const trendingData = trendingResponse.data || [];
 
   //       const activeTrendingCourses = trendingData.filter(course => course.status);
 
-  //       const allCoursesResponse = await axios.get('https://api.hachion.co/courses/all');
+  //       const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/all');
   //       const allCourses = allCoursesResponse.data || [];
 
-  //       const trainersResponse = await axios.get('https://api.hachion.co/trainers');
+  //       const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
   //       const allTrainers = trainersResponse.data || [];
 
   //       const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
@@ -116,12 +116,12 @@ const [countdowns, setCountdowns] = useState({});
   const fetchTrendingCourses = async () => {
     setLoading(true);
     try {
-      const trendingResponse = await axios.get('https://api.hachion.co/trendingcourse');
+      const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
       const trendingData = trendingResponse.data || [];
 
       const activeTrendingCourses = trendingData.filter(course => course.status);
 
-      const allCoursesResponse = await axios.get('https://api.hachion.co/courses/summary');
+      const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/summary');
       const rawCourses = allCoursesResponse.data || [];
       const allCourses = rawCourses.map(row => ({
         id: row[0],
@@ -137,7 +137,7 @@ const [countdowns, setCountdowns] = useState({});
         itotal: row[10],
         courseCategory: row[11],
       }));
-      const trainersResponse = await axios.get('https://api.hachion.co/trainers');
+      const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
       const allTrainers = trainersResponse.data || [];
 
 
@@ -248,7 +248,7 @@ useEffect(() => {
 useEffect(() => {
   (async () => {
     try {
-      const { data } = await axios.get("https://api.hachion.co/discounts-courses");
+      const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
       setDiscountRules(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to load discount rules", e);
@@ -442,7 +442,7 @@ const getSaleEndsAt = (courseName, countryCode) => {
           key={index}
           heading={course.courseName}
           month={course.numberOfClasses}
-          image={`https://api.hachion.co/${course.courseImage}`}
+          image={`https://api.test.hachion.co/${course.courseImage}`}
           course_id={course.id}
           
           trainer_name={course.trainerName}

@@ -48,7 +48,7 @@ const trainerCourses = allCourses.filter(course =>
     const fetchTrainer = async () => {
       try {
         if (!trainer) {
-          const res = await axios.get("https://api.hachion.co/trainers");
+          const res = await axios.get("https://api.test.hachion.co/trainers");
           const foundTrainer = res.data.find(t => t.trainer_name.toLowerCase() === trainer_name.toLowerCase());
           setTrainer(foundTrainer || null);
         }
@@ -64,8 +64,8 @@ const trainerCourses = allCourses.filter(course =>
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const resCourses = await axios.get("https://api.hachion.co/courses/all");
-        const resTrainers = await axios.get("https://api.hachion.co/trainers");
+        const resCourses = await axios.get("https://api.test.hachion.co/courses/all");
+        const resTrainers = await axios.get("https://api.test.hachion.co/trainers");
         const coursesWithTrainer = resCourses.data.map(course => {
           const trainerData = resTrainers.data.find(t => 
             t.course_name?.trim().toLowerCase() === course.courseName?.trim().toLowerCase()
@@ -90,7 +90,7 @@ useEffect(() => {
   const fetchReviewsByCourse = async () => {
     if (!trainer?.course_name) return;
     try {
-      const url = `https://api.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
+      const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
       const res = await axios.get(url);
       setReviews(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -218,7 +218,7 @@ useEffect(() => {
       key={idx}
       heading={course.courseName}
       month={course.numberOfClasses || course.duration || 0}
-      image={`https://api.hachion.co/${course.courseImage || course.image}`}
+      image={`https://api.test.hachion.co/${course.courseImage || course.image}`}
       trainer_name={course.trainerName}
       discountPercentage={
       country === 'IN'
@@ -266,7 +266,7 @@ useEffect(() => {
               location={fb.location}
               content={fb.review}
               rating={fb.rating}
-              profileImage={fb.user_image ? `https://api.hachion.co/userreview/${fb.user_image}` : ""}
+              profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
             />
           )) : <p>No reviews available.</p>}
         </div>

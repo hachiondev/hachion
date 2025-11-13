@@ -31,7 +31,7 @@ const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer
 
     (async () => {
       try {
-        const { data } = await axios.get('https://api.hachion.co/api/wishlist/exists', {
+        const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
           params: { email, courseId: course_id }
         });
         if (!stop && data && typeof data.bookmarked === 'boolean') {
@@ -104,7 +104,7 @@ const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer
     }
 
     try {
-      const { data } = await axios.post('https://api.hachion.co/api/wishlist/toggle', {
+      const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
         email,
         courseId: course_id
       });

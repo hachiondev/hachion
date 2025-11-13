@@ -130,7 +130,7 @@ public class UserReviewController {
 				userReview.setStatus(updatedUserReview.getStatus());
 				userReview.setVideoLink(updatedUserReview.getVideoLink());
 				userReview.setReviewType(updatedUserReview.getReviewType());
-
+				userReview.setCategoryName(updatedUserReview.getCategoryName());
 				if (user_image != null && !user_image.isEmpty()) {
 					try {
 

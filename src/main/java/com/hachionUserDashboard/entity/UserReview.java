@@ -38,6 +38,11 @@ public class UserReview {
 	@Column
 	private String course_name;
 
+	
+	@Column(name = "category_name")
+	private String categoryName;
+	
+	
 	@Column
 	private String trainer_name;
 
@@ -200,6 +205,14 @@ public class UserReview {
 
 	public void setReviewType(String reviewType) {
 		this.reviewType = reviewType;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

@@ -121,6 +121,47 @@ const NavbarTop = () => {
     }
   }, []);
 
+    useEffect(() => {
+    // Try to hydrate from localStorage + avatar cookie first
+    const stored = localStorage.getItem("loginuserData");
+    const avatarCookie = getCookie("avatar");
+
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        // If we have cookie avatar but no picture saved, merge it
+        if (!u.picture && avatarCookie) {
+          u.picture = avatarCookie;
+          localStorage.setItem("loginuserData", JSON.stringify(u));
+        }
+        setUserData(u);
+        setIsLoggedIn(true);
+        return; // already hydrated, no need to call /api/me
+      } catch (e) {
+        console.warn("[NavbarTop] JSON parse error for loginuserData in second effect:", e);
+      }
+    }
+
+    // If no valid stored user, ask backend who is logged in (for Google OAuth, etc.)
+    fetch(`${API_BASE}/api/me`, { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((u) => {
+        if (!u) return;
+        const toStore = {
+          name: u.name || "",
+          email: u.email || "",
+          picture: u.picture || avatarCookie || "",
+        };
+        localStorage.setItem("loginuserData", JSON.stringify(toStore));
+        // If you use this flag during OAuth flow, we can clean it up:
+        localStorage.removeItem("pendingOAuth");
+        setUserData(toStore);
+        setIsLoggedIn(true);
+      })
+      .catch((err) => console.error("[NavbarTop] /api/me failed:", err));
+  }, []);
+
+
   const deleteCookieEverywhere = (name) => {
     document.cookie = `${name}=; Max-Age=0; Path=/`;
     document.cookie = `${name}=; Max-Age=0; Path=/; Domain=hachion.co; Secure`;

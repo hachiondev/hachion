@@ -69,6 +69,20 @@ useEffect(() => {
     fetchCategories();
   }, []);
 
+useEffect(() => {
+  if (categories.length > 0) {
+    const first = categories[0].name;
+
+    setSelectedCategories([first]);
+
+    onFilterChange({
+      categories: [first],
+      levels: selectedLevels.includes("All Levels") ? [] : selectedLevels,
+      price: selectedPrice,
+    });
+  }
+}, [categories]);
+
   const toggleSection = (section) => {
     setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));
   };

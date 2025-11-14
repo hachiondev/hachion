@@ -67,7 +67,7 @@ const Course = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    window.scrollTo(0, window.scrollY);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

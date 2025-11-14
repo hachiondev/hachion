@@ -7,7 +7,6 @@ const RecentEntriesCard = ({
   imageSrc, 
   category, 
   content, 
-  description, 
   author, 
   avatarSrc, 
   date, 
@@ -36,14 +35,14 @@ const RecentEntriesCard = ({
         <h3 className="content">{content}</h3>
 
         {/* Description */}
-        <p className="blog-card-description">
+        {/* <p className="blog-card-description">
           {(() => {
             if (!description) return "";
             const el = document.createElement("div");
             el.innerHTML = description;
             return (el.textContent || el.innerText || "").trim();
           })()}
-        </p>
+        </p> */}
 
         {/* Author Section */}
         <div className="author-info">

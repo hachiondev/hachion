@@ -81,7 +81,7 @@ const [filterData, setFilterData] = useState({
 });
 
     const [endDate, setEndDate] = useState(null);
-    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",title:"",topic:"", link:"", assessment_pdf: ""});
+    const [editedRow, setEditedRow] = useState({curriculum_id:"",category_name:"",course_name:"",curriculum_pdf:"",brochure_pdf:"",title:"",topic:"", link:"", assessment_pdf: ""});
     const [rows, setRows] = useState([
       { id: Date.now(), title: '', topic: '', link: '', assessment_pdf: '' }
     ]);
@@ -89,7 +89,8 @@ const [filterData, setFilterData] = useState({
     const [curriculumData, setCurriculumData] = useState({
       category_name: '',
       course_name: '',
-      curriculum_pdf: null
+      curriculum_pdf: null,
+      brochure_pdf: null,
     });
     
         const [currentPage, setCurrentPage] = useState(1);
@@ -147,6 +148,7 @@ const [filterData, setFilterData] = useState({
                   category_name:"",
                     course_name: "",
                  curriculum_pdf:"",
+                 brochure_pdf:"",
                     date:"",
                     title:"",
                     link: "",
@@ -268,6 +270,9 @@ const [filterData, setFilterData] = useState({
     if (editedRow.curriculum_pdf && editedRow.curriculum_pdf instanceof File) {
       formData.append("curriculumPdf", editedRow.curriculum_pdf);
     }
+    if (editedRow.brochure_pdf && editedRow.brochure_pdf instanceof File) {
+      formData.append("brochurepdf", editedRow.brochure_pdf);
+    }
 
     if (editedRow.assessment_pdf && editedRow.assessment_pdf instanceof File) {
       formData.append("assessmentPdf", editedRow.assessment_pdf);
@@ -346,6 +351,7 @@ const [filterData, setFilterData] = useState({
       (item.link || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (item.assessment_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (item.curriculum_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.brochure_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (item.date || "").toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory =
@@ -365,7 +371,8 @@ const [filterData, setFilterData] = useState({
         if (file) {
             setCurriculumData((prev) => ({
                 ...prev,
-                curriculum_pdf: file, 
+                curriculum_pdf: file,
+                brochure_pdf: file, 
             }));
         }
     };
@@ -373,7 +380,8 @@ const [filterData, setFilterData] = useState({
     const handleEditFileUpload =  (e) => {
       setEditedRow(prev => ({
         ...prev,
-        curriculum_pdf: e.target.files[0], 
+        curriculum_pdf: e.target.files[0],
+        brochure_pdf: e.target.files[0], 
       }));
   };   
         const handleClickOpen = (row) => {
@@ -419,6 +427,9 @@ const [filterData, setFilterData] = useState({
 
     if (curriculumData.curriculum_pdf) {
       formData.append("curriculumPdf", curriculumData.curriculum_pdf);
+    }
+    if (curriculumData.brochure_pdf) {
+      formData.append("brochurepdf", curriculumData.brochure_pdf);
     }
 
     if (row.assessment_pdf && row.assessment_pdf instanceof File) {
@@ -512,13 +523,25 @@ const [filterData, setFilterData] = useState({
           ))}
         </select>
       </div>
-  <div class="mb-3">
+      </div>
+  <div className='course-row'>
+  <div class="col-md-3">
   <label for="formFile" class="form-label">Curriculum PDF</label>
   <input
     className="form-control"
     type="file"
     id="formFile"
     name='curriculum_pdf'
+    onChange={handleFileUpload}
+/>
+</div>
+<div class="col-md-3">
+  <label for="formFile" class="form-label">Brochure PDF</label>
+  <input
+    className="form-control"
+    type="file"
+    id="formFile"
+    name='brochure_pdf'
     onChange={handleFileUpload}
 />
 </div>
@@ -758,8 +781,9 @@ const [filterData, setFilterData] = useState({
             <StyledTableCell align="center">Topic</StyledTableCell>
             <StyledTableCell align="center">Video Link</StyledTableCell>
             <StyledTableCell align="center">Assessment PDF</StyledTableCell>
-            <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center">Curriculum PDF</StyledTableCell>
+            <StyledTableCell align="center">Brochure PDF</StyledTableCell>
+            <StyledTableCell align="center">Created Date</StyledTableCell>
             <StyledTableCell align="center" sx={{ width: '100px' }}>Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -785,16 +809,23 @@ const [filterData, setFilterData] = useState({
     )}
     
 </StyledTableCell>
-      <StyledTableCell align="left">{course.link}</StyledTableCell>
-      <StyledTableCell align="left"> {course.assessment_pdf ? course.assessment_pdf.split("/").pop() : ""}</StyledTableCell>
-      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
-      <StyledTableCell align="left" style={{ width: '100px' }}>
+      <StyledTableCell align="left" style={{ maxWidth: '100px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{course.link}</StyledTableCell>
+      <StyledTableCell align="left" style={{ maxWidth: '100px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}> {course.assessment_pdf ? course.assessment_pdf.split("/").pop() : ""}</StyledTableCell>
+      <StyledTableCell align="left" style={{ maxWidth: '100px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>
         {course.curriculum_pdf ? (
           course.curriculum_pdf.split('/').pop()
         ) : (
           'No PDF'
         )}
       </StyledTableCell>
+      <StyledTableCell align="left" style={{ width: '100px' }}>
+        {course.brochure_pdf ? (
+          course.brochure_pdf.split('/').pop()
+        ) : (
+          'No PDF'
+        )}
+      </StyledTableCell>
+      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />
@@ -885,7 +916,7 @@ const [filterData, setFilterData] = useState({
     </div>
     </div>
 
-    <div className="mb-3">
+    <div className="col-md-3">
       <label htmlFor="curriculumPDF" className="form-label">Curriculum's PDF</label>
       <input
   type="file"
@@ -897,7 +928,20 @@ const [filterData, setFilterData] = useState({
     }))
   }
 />
+    </div>
 
+        <div className="col-md-3">
+      <label htmlFor="brochurePDF" className="form-label">Brochure PDF</label>
+      <input
+  type="file"
+  accept=".pdf"
+  onChange={(e) =>
+    setEditedRow((prev) => ({
+      ...prev,
+      brochure_pdf: e.target.files[0], 
+    }))
+  }
+/>
     </div>
 
     <label htmlFor="title">Title</label>

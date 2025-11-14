@@ -43,7 +43,7 @@ const Blogs = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     if (bannerRef.current) {
-      window.scrollTo(0, 400);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -61,15 +61,8 @@ const Blogs = () => {
       <Topbar />
       <NavbarTop />
 
-      <div className="sidebar-right-container container">
-        <div className="trending-data" ref={bannerRef}>
-          <h1 className="trending-title">Hachion Tech Blog</h1>
-          <p className="learner-title-tag text-center mb-4">
-            Discover useful resources and insights across tech categories
-          </p>
-        </div>
-
-        <nav aria-label="breadcrumb">
+      <div className="blogs-header">
+        <nav aria-label="breadcrumb ">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
               <a href="/">Home</a> <MdKeyboardArrowRight />{" "}
@@ -79,6 +72,14 @@ const Blogs = () => {
             </li>
           </ol>
         </nav>
+        </div>
+
+      <div className="sidebar-right-container container">
+        <div className="trending-data" ref={bannerRef}>
+          <h1 className="trending-title">Hachion Tech Blog</h1>
+          <p className="learner-title-tag text-center mb-4">
+            Discover useful resources and insights across tech categories
+          </p>
 
         <div className="course-content container">
           <BlogsSidebar onFilterChange={setSelectedCategories} />
@@ -101,6 +102,7 @@ const Blogs = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <LatestArticles />

@@ -84,7 +84,6 @@ const [countdowns, setCountdowns] = useState({});
       const summerData = summerResponse.data || [];
 
       const activeSummerCourses = summerData.filter(course => course.status);
-
       
       const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/summary');
       const rawCourses = allCoursesResponse.data || [];

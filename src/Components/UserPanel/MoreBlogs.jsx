@@ -66,15 +66,20 @@ const MoreBlogs = ({ scrollToTop = false }) => {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
-  // ✅ Pagination logic
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentBlogs = blogs.slice(indexOfFirstCard, indexOfLastCard);
+  const start = currentPage - 1;
+  const end = start + cardsPerPage;
+  const currentBlogs = blogs.slice(start, end);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    // Smooth scroll to top of blog section or maintain position
-    if (scrollToTop) window.scrollTo({ top: 0, behavior: "smooth" });
+    const totalCards = blogs.length;
+    const maxPage = Math.max(totalCards - cardsPerPage + 1, 1);
+    const next = Math.min(Math.max(page, 1), maxPage);
+
+    setCurrentPage(next);
+
+    if (scrollToTop) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
@@ -106,7 +111,7 @@ const MoreBlogs = ({ scrollToTop = false }) => {
                 <div className="skeleton-card" key={index}></div>
               ))
             ) : currentBlogs.length > 0 ? (
-              currentBlogs.map((blog) => (
+              currentBlogs.map((blog, index) => (
                 <RecentEntriesCard
                   key={blog.id}
                   imageSrc={blog.blog_image}

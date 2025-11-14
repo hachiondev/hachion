@@ -15,7 +15,6 @@ const RecentEntries = () => {
         
         const { data } = await axios.get("https://api.test.hachion.co/blog/recent");
 
-        
         const mapped = data.map((row) => {
           const [
             id,

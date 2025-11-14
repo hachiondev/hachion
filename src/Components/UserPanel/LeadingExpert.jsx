@@ -163,12 +163,31 @@ useEffect(() => {
     })();
   }, []);
 
+  useEffect(() => {
+      window.scrollTo(0, 0);
   
+      const updateCardsPerPage = () => {
+        const width = window.innerWidth;
+        if (width <= 768) setCardsPerPage(2); 
+        else if (width <= 1024) setCardsPerPage(3);
+        else setCardsPerPage(4);
+      };
+  
+      updateCardsPerPage();
+      window.addEventListener('resize', updateCardsPerPage);
+      return () => {
+        window.removeEventListener('resize', updateCardsPerPage);
+      };
+    }, []);
+
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const totalCards = courseCards.length;
+  const maxPage = Math.max(totalCards - cardsPerPage + 1, 1);
+  const next = Math.min(Math.max(page, 1), maxPage);
+  setCurrentPage(next);
+    // setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-
   
   const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
 
@@ -298,14 +317,9 @@ useEffect(() => {
 
   return (
     <div className="training-events container">
+      <div className="home-spacing">
       <div className="training-title-head">
-        <div className="home-spacing">
           <h2 className="association-head">Future-Ready Learning Paths</h2>
-          <p className="association-head-tag">
-            Explore our Corporate Courses designed to empower professionals and
-            boost your team’s capabilities.
-          </p>
-        </div>
 
         <div className="card-pagination-container">
           <CardsPagination
@@ -315,7 +329,12 @@ useEffect(() => {
             onPageChange={handlePageChange}
           />
         </div>
-      </div>
+        </div>
+        <p className="association-head-tag">
+            Explore our Corporate Courses designed to empower professionals and
+            boost your team’s capabilities.
+          </p>
+        </div>
 
       <div className="training-card-holder">
         {loading ? (
@@ -324,7 +343,7 @@ useEffect(() => {
           ))
         ) : courseCards.length > 0 ? (
           courseCards
-            .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
+            .slice(currentPage - 1, currentPage - 1 + cardsPerPage)
             .map((course, index) => {
               const priceInCurrency = (course.amount / fxFromUSD).toFixed(2);
               return (

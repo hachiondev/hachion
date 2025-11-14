@@ -18,38 +18,44 @@ const BlogsSidebar = ({ onFilterChange }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.test.hachion.co/course-categories/all"
-        );
-        if (Array.isArray(response.data)) {
-          setCategories(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+    useEffect(() => {
+      const fetchCategories = async () => {
+        try {
+          const response = await axios.get(
+            "https://api.test.hachion.co/course-categories/all"
+          );
 
-  // ✅ Toggle expand/collapse of category section
+          if (Array.isArray(response.data)) {
+            setCategories(response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+        }
+      };
+
+      fetchCategories();
+    }, []);
+
+    useEffect(() => {
+      if (categories.length > 0) {
+        const firstCategory = categories[0].name;
+        setSelectedCategories([firstCategory]);
+        onFilterChange([firstCategory]);
+      }
+    }, [categories]);
+
   const toggleSection = (section) => {
     setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // ✅ Handle checkbox select/deselect
   const handleCheckboxChange = (category) => {
     const updated = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category];
     setSelectedCategories(updated);
-    onFilterChange(updated); // Send selected categories to parent (Blogs.jsx)
+    onFilterChange(updated); 
   };
 
-  // ✅ Sidebar main content
   const sidebarContent = (
     <div className="Blogsidebar">
       {/* --- Categories --- */}

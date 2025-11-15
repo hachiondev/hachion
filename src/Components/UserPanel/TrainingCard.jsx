@@ -3,7 +3,7 @@ import './Home.css';
 import { FaCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { TbShare3 } from "react-icons/tb";
-import fallbackImg from "../../Assets/18.png";
+import fallbackImg from "../../Assets/18.webp";
 
 const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level, scheduleCount }) => {
   const navigate = useNavigate();

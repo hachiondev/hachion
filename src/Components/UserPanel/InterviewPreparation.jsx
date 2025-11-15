@@ -1,6 +1,6 @@
 import React from 'react';
-import CareerImage from '../../Assets/interview.png';
-import mentorImage from '../../Assets/mentor.png';
+import CareerImage from '../../Assets/interview.webp';
+import mentorImage from '../../Assets/mentor.webp';
 import './Course.css';
 
 // Reusable component for each feature

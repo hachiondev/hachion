@@ -1,11 +1,11 @@
 import React from 'react';
 import './Corporate.css';
-import slashTrainingBudget from '../../Assets/slashTraining.png';
-import remoteTraining from '../../Assets/remoteTraining.png';
-import flexibleTraining from '../../Assets/flexibleSchedule.png';
-import flexibleDesign from '../../Assets/flexibleDesign.png';
-import workforceNeeds from '../../Assets/workforceNeeds.png';
-import expertHelp from '../../Assets/expertHelp.png';
+import slashTrainingBudget from '../../Assets/slashTraining.webp';
+import remoteTraining from '../../Assets/remoteTraining.webp';
+import flexibleTraining from '../../Assets/flexibleSchedule.webp';
+import flexibleDesign from '../../Assets/flexibleDesign.webp';
+import workforceNeeds from '../../Assets/workforceNeeds.webp';
+import expertHelp from '../../Assets/expertHelp.webp';
 
 // Reusable component for each training feature
 const TrainingFeature = ({ image, title, description }) => (

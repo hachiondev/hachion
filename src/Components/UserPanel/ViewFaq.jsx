@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import Address from "../../Assets/addressicon.png";
-import Contact from "../../Assets/contacticon.png";
-import Time from "../../Assets/timeicon.png";
+import Address from "../../Assets/addressicon.webp";
+import Contact from "../../Assets/contacticon.webp";
+import Time from "../../Assets/timeicon.webp";
 import FaqBanner from "../../Assets/faq-banner.webp";
 import { Link } from "react-router-dom";
 import "./Home.css";

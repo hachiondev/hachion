@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Admin.css';
-import logo from '../../Assets/image 133.png';
+import logo from '../../Assets/image 133.webp';
 import { IoSearch } from 'react-icons/io5';
 import { BsEnvelopeFill } from 'react-icons/bs';
 import { IoMdNotifications, IoMdSettings } from 'react-icons/io';

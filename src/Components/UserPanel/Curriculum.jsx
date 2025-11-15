@@ -4,21 +4,15 @@ import axios from 'axios';
 import { BsFileEarmarkPdfFill, BsFillPlayCircleFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
-import loginPopupImg from '../../Assets/loginpopup.png';
-import AssessmentImg from '../../Assets/assesspdf.avif';
-import LiveImg from '../../Assets/liveclass.avif';
-import logo from '../../Assets/logo.png';
-import { Assessment } from '@mui/icons-material';
+import loginPopupImg from '../../Assets/loginpopup.webp';
+import AssessmentImg from '../../Assets/assesspdf.webp';
+import LiveImg from '../../Assets/liveclass.webp';
+import logo from '../../Assets/logo.webp';
 import { useContext } from 'react';
 import { BatchContext } from './BatchContext';
 
-
-
 const Curriculum = () => {
-
    const selectedBatch = useContext(BatchContext);
-  
-
   const [showMore, setShowMore] = useState(false);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [curriculum, setCurriculum] = useState([]);

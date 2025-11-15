@@ -10,10 +10,9 @@ import Register from './Components/UserPanel/Register';
 import HaveAnyQuery from './Components/UserPanel/HaveAnyQuery';
 import RegisterNext from './Components/UserPanel/RegisterNext';
 import RegisterHere from './Components/UserPanel/RegisterHere';
-import LoginSuccess from './Components/UserPanel/LoginSuccess';
 import ForgotPassword from './Components/UserPanel/ForgotPassword';
 import Course from './Components/UserPanel/Course';
-import QaAutomation from './Components/UserPanel/QaAutomation';
+import CourseDetails from './Components/UserPanel/CourseDetails';
 import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import AdminNavbar from './Components/AdminPanel/AdminNavbar';
 import AdminSidebar from './Components/AdminPanel/AdminSidebar';
@@ -99,7 +98,6 @@ function AppRoutes() {
       <Route path='/registerhere' element={<RegisterHere/>}/>
       <Route path='/confirm-otp' element={<ConfirmOtp />}/>
       <Route path='/resetpassword' element={<ResetPassword />}/>
-      <Route path='/loginsuccess' element={<LoginSuccess/>}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path="/" element={<Home />} />
       <Route path='/viewfaqs' element={<ViewFaq/>}/>
@@ -109,7 +107,7 @@ function AppRoutes() {
       <Route path='/become-instructor' element={<BecomeInstructor/>}/>
       <Route path='/view-all-reviews' element={<ViewReviews/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
-      <Route path='/coursedetails/:courseName' element={<QaAutomation />} />
+      <Route path='/coursedetails/:courseName' element={<CourseDetails />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/hire-from-us' element={<HirefromUs/>}/>
       <Route path='/career' element={<ApplyHiring/>}/>

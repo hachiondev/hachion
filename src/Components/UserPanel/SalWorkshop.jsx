@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom';
 import './Course.css';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
-import Banner2 from '../../Assets/bann3.png';
-import salreg from '../../Assets/salreg.png';
+import Banner2 from '../../Assets/bann3.webp';
+import salreg from '../../Assets/salreg.webp';
 import WorkshopHighlights from './WorkshopHighlights';
 import WorkshopLearners from './WorkshopLearners';
 import WorkshopFAQ from './WorkshopFAQ';
@@ -18,7 +18,7 @@ import Flag from 'react-world-flags';
 import {AiFillCaretDown } from 'react-icons/ai';
 import axios from "axios";
 import {MdKeyboardArrowRight} from 'react-icons/md';
-import placeholderImage from '../../Assets/workshopplaceholder.jpg';
+import placeholderImage from '../../Assets/workshopplaceholder.webp';
 
 const SalWorkshop = () => {
   const { slug } = useParams();

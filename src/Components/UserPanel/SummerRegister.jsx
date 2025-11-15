@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
-import regkid from '../../Assets/regkid.jpeg';
+import regkid from '../../Assets/regkid.webp';
 import axios from 'axios';
 const SummerRegister = () => {
   const [error, setError] = useState('');

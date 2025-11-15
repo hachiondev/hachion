@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import { FaCheckCircle } from 'react-icons/fa';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import NoData from '../../Assets/nodata.avif'
+import NoData from '../../Assets/nodata.webp'
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";

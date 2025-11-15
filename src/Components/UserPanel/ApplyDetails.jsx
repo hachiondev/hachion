@@ -1,7 +1,7 @@
 import React from 'react';
 import './Blogs.css';
 import JobDetailsCard from './JobDetailsCard';
-import HachionLogo from '../../Assets/HachionLogo.png';
+import HachionLogo from '../../Assets/HachionLogo.webp';
 import { useLocation } from 'react-router-dom';
 
 

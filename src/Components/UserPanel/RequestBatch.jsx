@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Course.css';
 import { AiOutlineCloseCircle, AiFillCaretDown } from 'react-icons/ai';
-import { Menu, MenuItem, Button } from '@mui/material';
-import Flag from 'react-world-flags';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import calendar from '../../Assets/calendar.png'; 
+import calendar from '../../Assets/calendar.webp'; 
 import { useParams } from "react-router-dom";
 
 const RequestBatch = ({ closeModal }) => {

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
-import logo from '../../Assets/logo.png';
-import LoginSide from './LoginSide';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import PopupInterest1 from './PopupInterest1';
 import PopupInterest2 from './PopupInterest2';

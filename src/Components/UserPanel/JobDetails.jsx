@@ -6,7 +6,7 @@ import ApplyForm from './ApplyForm';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
-import jobdetails from '../../Assets/apply.png';
+import jobdetails from '../../Assets/apply.webp';
 import { MdKeyboardArrowRight } from "react-icons/md";
 const JobDetails = () => {
     const [showScrollButton, setShowScrollButton] = useState(false);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Admin.css';
-// import logo from '../../Assets/logo.png';
+// import logo from '../../Assets/logo.webp';
 // import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';

@@ -8,13 +8,13 @@ import './Blogs.css';
 import KidsLearners from './KidsLearners';
 import SummerFAQ from './SummerFAQ';
 import KidsCourses from './KidsCourses';
-import summerbanners from '../../Assets/summerbanners.jpeg';
-import morningkids from '../../Assets/morningkids.jpeg';
-import aftkids from '../../Assets/aftkids.jpeg';
-import flexkid from '../../Assets/flexkid.jpeg';
-import choosekid from '../../Assets/choosekid.jpeg';
-import discountkids from '../../Assets/discountkids.jpeg';
-import happykids from '../../Assets/happykids.jpeg';
+import summerbanners from '../../Assets/summerbanners.webp';
+import morningkids from '../../Assets/morningkids.webp';
+import aftkids from '../../Assets/aftkids.webp';
+import flexkid from '../../Assets/flexkid.webp';
+import choosekid from '../../Assets/choosekid.webp';
+import discountkids from '../../Assets/discountkids.webp';
+import happykids from '../../Assets/happykids.webp';
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { MdDiscount } from "react-icons/md";
 import SummerRegister from './SummerRegister';
@@ -69,7 +69,7 @@ const KidsSummer = () => {
                                                 4.Project-based tech camp 2025" />
                 <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
                 <meta property="og:description" content="Learn online with the best courses at Hachion." />
-                <meta property="og:image" content="/Hachion-logo.png" />
+                <meta property="og:image" content="/Hachion-logo.webp" />
                 <link rel="canonical" href=" https://hachion.co/summer-tech-bootcamp-for-teens" />
                 <script type="application/ld+json">
                   {`
@@ -78,7 +78,7 @@ const KidsSummer = () => {
                       "@type": "Organization",
                       "name": "Hachion",
                       "url": "https://www.hachion.co",
-                      "logo": "https://www.hachion.co/Hachion-logo.png",
+                      "logo": "https://www.hachion.co/Hachion-logo.webp",
                       "sameAs": [
                       "https://www.facebook.com/hachion.co",
                       "https://x.com/hachion_co",

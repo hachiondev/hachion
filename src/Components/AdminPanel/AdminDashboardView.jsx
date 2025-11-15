@@ -24,6 +24,7 @@ import AdminUploadImage from './AdminUploadImage';
 import AdminDiscount from './AdminDiscount';
 import GeneralFaq from './GeneralFaq';
 import Employees from './Employees';
+import Interview from './Interview';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -48,6 +49,7 @@ const componentMap = {
   'Discount Courses': <AdminDiscount />,
   'Employees': <Employees />,
   'Support': <Support />,
+  'Interview': <Interview />,
 };
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState(() => {

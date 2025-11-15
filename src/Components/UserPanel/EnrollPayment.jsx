@@ -1,23 +1,12 @@
   import React, { useState, useRef,useEffect } from 'react';
   import axios from 'axios';
-  import Topbar from './Topbar';
-  import NavbarTop from './NavbarTop';
   import './Blogs.css';
-  import StickyBar from './StickyBar';
-  import Footer from './Footer'
   import { useLocation } from 'react-router-dom';
-  import { MdKeyboardArrowRight } from 'react-icons/md';
-  import logo from '../../Assets/logo.png';
-  import Python from '../../Assets/python.png';
+  import logo from '../../Assets/logo.webp';
   import paymentsuccess from '../../Assets/paymentsuccess.gif';
   import { useParams } from 'react-router-dom';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 
 

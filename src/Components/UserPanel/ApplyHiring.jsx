@@ -5,7 +5,7 @@ import JobsDisplay from './JobsDisplay';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
-import careerjob from '../../Assets/careerbanner.png';
+import careerjob from '../../Assets/careerbanner.webp';
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 const ApplyHiring = () => {

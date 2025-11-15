@@ -5,10 +5,10 @@ import PostJob from './PostJob';
 import Footer from './Footer';
 import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
-import banner from '../../Assets/hirebanner.png';
-import whyhachion from '../../Assets/whyhire.png';
-import collabration from '../../Assets/hirecollab.png';
-import companies from '../../Assets/itlogos.png';
+import banner from '../../Assets/hirebanner.webp';
+import whyhachion from '../../Assets/whyhire.webp';
+import collabration from '../../Assets/hirecollab.webp';
+import companies from '../../Assets/itlogos.webp';
 import Typewriter from 'typewriter-effect';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 

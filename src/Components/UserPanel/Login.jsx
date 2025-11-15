@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginBanner from '../../Assets/loginbackground.webp';
-import google from '../../Assets/google-new.png';
+import google from '../../Assets/google-new.webp';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Topbar from './Topbar';

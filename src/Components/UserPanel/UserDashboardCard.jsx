@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 import DashboardCard from './DashboardCard'; 
-import {PiVideoFill} from 'react-icons/pi';
-import {FaMoneyBillTrendUp} from 'react-icons/fa6';
-import { PiBookOpenTextFill } from 'react-icons/pi';
-import { FaUserTimes } from 'react-icons/fa';
-import enroll from "../../Assets/dash-icon1.png";
-import learn from "../../Assets/dash-icon2.png";
-import cert from "../../Assets/dash-icon3.png";
-import progress from "../../Assets/dash-icon4.png";
-import Learn from "../../Assets/dash-icon5.png";
-import assignment from "../../Assets/dash-icon6.png";
-import activity from "../../Assets/dash-icon7.png";
+import enroll from "../../Assets/dash-icon1.webp";
+import learn from "../../Assets/dash-icon2.webp";
+import cert from "../../Assets/dash-icon3.webp";
+import progress from "../../Assets/dash-icon4.webp";
+import Learn from "../../Assets/dash-icon5.webp";
+import assignment from "../../Assets/dash-icon6.webp";
+import activity from "../../Assets/dash-icon7.webp";
 
 const API_BASE = "https://api.test.hachion.co";
 

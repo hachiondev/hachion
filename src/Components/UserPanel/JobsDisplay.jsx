@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Blogs.css';
 import JobCard from './JobCard';
-import HachionLogo from '../../Assets/HachionLogo.png'; 
+import HachionLogo from '../../Assets/HachionLogo.webp'; 
 import axios from 'axios';
 import dayjs from 'dayjs';
 

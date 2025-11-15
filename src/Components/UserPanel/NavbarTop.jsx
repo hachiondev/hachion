@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import logo from '../../Assets/logo.png';
+import logo from '../../Assets/logo.webp';
 import { IoSearch, IoCloseCircleSharp } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import axios from 'axios';
 import Fuse from 'fuse.js';
 import './Home.css';
 import { styled } from '@mui/material/styles';
-import { MdCancel } from "react-icons/md";
 import Avatar from '@mui/material/Avatar';
 import { FaUserAlt } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";

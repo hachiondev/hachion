@@ -1,15 +1,15 @@
 import React from 'react'
 import './Home.css';
-import image1 from '../../Assets/icon4.png';
-import Hadoop from '../../Assets/hadoop.png'
-import Salesforce from '../../Assets/Salesforce.png';
-import Blueprism from '../../Assets/BluePrism.png';
-import Service from '../../Assets/ServiceNow.png';
-import Aws from '../../Assets/AWS.png';
-import Pega from '../../Assets/pega.png';
-import Ios from '../../Assets/ios 2.png';
-import Rpa from '../../Assets/uiPath.png';
-import bi from '../../Assets/Power BI.png';
+import image1 from '../../Assets/icon4.webp';
+import Hadoop from '../../Assets/hadoop.webp'
+import Salesforce from '../../Assets/Salesforce.webp';
+import Blueprism from '../../Assets/BluePrism.webp';
+import Service from '../../Assets/ServiceNow.webp';
+import Aws from '../../Assets/AWS.webp';
+import Pega from '../../Assets/pega.webp';
+import Ios from '../../Assets/ios 2.webp';
+import Rpa from '../../Assets/uiPath.webp';
+import bi from '../../Assets/Power BI.webp';
 
 
  const Training = () => {

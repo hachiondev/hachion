@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './Blogs.css';
 import KidsCourseCard from './KidsCourseCard';
-import java from '../../Assets/java.png';
-import mobile from '../../Assets/mobile.png';
-import web from '../../Assets/web.png';
-import videoedit from '../../Assets/videoedit.png';
-import graphic from '../../Assets/graphic.png';
-import market from '../../Assets/market.png';
-import sql from '../../Assets/sql.png';
-import python from '../../Assets/python.png';
+import java from '../../Assets/java.webp';
+import mobile from '../../Assets/mobile.webp';
+import web from '../../Assets/web.webp';
+import videoedit from '../../Assets/videoedit.webp';
+import graphic from '../../Assets/graphic.webp';
+import market from '../../Assets/market.webp';
+import sql from '../../Assets/sql.webp';
+import python from '../../Assets/python.webp';
 
 const KidsCourses = () => {
   const [courseCards] = useState([

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './Admin.css';
-import logo from '../../Assets/logo.png';
-import LoginSide from '../UserPanel/LoginSide';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 const AdminRegister = () => {
@@ -45,7 +43,6 @@ const AdminRegister = () => {
     <div className='login'>
       <div className='login-left'>
         <div className='login-top'>
-          <img src={logo} alt='logo' className='login-logo' />
           <h3 className='register-head'>Register to Admin Dashboard</h3>
           <div className='login-mid'>
             <form onSubmit={handleFormSubmit}>
@@ -115,7 +112,6 @@ const AdminRegister = () => {
           </p>
         </div>
       </div>
-      <LoginSide />
     </div>
   );
 };

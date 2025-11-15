@@ -1,6 +1,6 @@
 import React from 'react';
-import CareerImage from '../../Assets/career-support.png';
-import accessImage from '../../Assets/access.png';
+import CareerImage from '../../Assets/career-support.webp';
+import accessImage from '../../Assets/access.webp';
 
 // Reusable component for each job assistance item
 const JobAssistanceItem = ({ image, title, description, extraClass = '' }) => (

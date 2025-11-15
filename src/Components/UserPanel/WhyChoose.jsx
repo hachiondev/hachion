@@ -3,11 +3,11 @@ import KeyBenifit from "../../Assets/key.webp";
 // import KeyBenifit2 from "../../Assets/keynext.webp";
 import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
-import key1 from "../../Assets/key1.png";
-import key2 from "../../Assets/key2.png";
-import key3 from "../../Assets/key3.png";
-import key4 from "../../Assets/key4.png";
-import key5 from "../../Assets/key5.png";
+import key1 from "../../Assets/key1.webp";
+import key2 from "../../Assets/key2.webp";
+import key3 from "../../Assets/key3.webp";
+import key4 from "../../Assets/key4.webp";
+import key5 from "../../Assets/key5.webp";
 
 const WhyChoose = () => {
  const navigate = useNavigate();

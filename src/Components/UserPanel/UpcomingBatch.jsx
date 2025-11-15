@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import calendar from '../../Assets/calendar.png';
+import calendar from '../../Assets/calendar.webp';
 import './Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
@@ -9,7 +9,7 @@ import SelfPlacedFees from './SelfPlacedFees';
 import SelfPacedQAFees from './SelfPacedQAFees';
 import RequestBatch from './RequestBatch';
 import axios from 'axios';
-import loginPopupImg from '../../Assets/loginpopup.png';
+import loginPopupImg from '../../Assets/loginpopup.webp';
 
 const UpcomingBatch = () => {
   const [activeComponent, setActiveComponent] = useState('LiveOnlineFees');

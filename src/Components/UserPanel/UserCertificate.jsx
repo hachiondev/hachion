@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import enroll from "../../Assets/dash-icon1.png";
-import learn from "../../Assets/dash-icon2.png";
-import cert from "../../Assets/dash-icon3.png";
+import enroll from "../../Assets/dash-icon1.webp";
+import learn from "../../Assets/dash-icon2.webp";
+import cert from "../../Assets/dash-icon3.webp";
 import { TbShare3 } from "react-icons/tb";
 import "./Dashboard.css";
 

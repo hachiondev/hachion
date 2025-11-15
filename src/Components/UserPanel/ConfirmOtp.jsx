@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Login.css';
-import logo from '../../Assets/logo.png';
-import LoginSide from './LoginSide';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Topbar from './Topbar';

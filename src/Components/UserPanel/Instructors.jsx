@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Style.css";
 import "./Home.css";
 import Topbar from "./Topbar";
@@ -14,6 +14,7 @@ import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 const Instructors = () => {
+  const titleRef = useRef(null);
   const navigate = useNavigate();
   const [trainers, setTrainers] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -133,9 +134,13 @@ const formatForUrl = (str) =>
   str.toLowerCase().replace(/\s+/g, "-"); 
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  };
+  setCurrentPage(page);
+
+  if (titleRef.current) {
+    const offsetTop = titleRef.current.offsetTop - 20;
+    window.scrollTo({ top: offsetTop, behavior: "smooth" });
+  }
+};
 
   const renderStarRating = (rating) => (
     <div className="rating-display">
@@ -173,7 +178,8 @@ const formatForUrl = (str) =>
       </div>
 
       <div className="container">
-        <p className="expert-title">Instructors ({filteredTrainers.length})</p>
+        <p ref={titleRef} className="expert-title">
+        Instructors ({filteredTrainers.length})</p>
 
         {/* Filters */}
         <div className="instructors-filter">

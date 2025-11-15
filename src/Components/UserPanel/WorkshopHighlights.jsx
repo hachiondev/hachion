@@ -1,10 +1,10 @@
 import React from 'react';
-import Exp from '../../Assets/exp.png';
+import Exp from '../../Assets/exp.webp';
 import Assig from '../../Assets/assig.png';
-import Handexp from '../../Assets/handexp.png';
-import cv from '../../Assets/cv.png';
-import inter from '../../Assets/inter.png';
-import support from '../../Assets/247.png';
+import Handexp from '../../Assets/handexp.webp';
+import cv from '../../Assets/cv.webp';
+import inter from '../../Assets/inter.webp';
+import support from '../../Assets/247.webp';
 
 const WorkshopHighlights = () => {
   return (

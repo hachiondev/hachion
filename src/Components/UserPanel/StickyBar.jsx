@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './Course.css';
-import { PiLineVerticalThin } from "react-icons/pi";
-import { IoIosMail } from "react-icons/io";
-import whatsapp from '../../Assets/logos_whatsapp-icon.png';
-import HaveAnyQuery from './HaveAnyQuery';
-import facebook from '../../Assets/facebook.png';
-import twitter from '../../Assets/twitter.png';
-import youtube from '../../Assets/youtube.png';
-import linkedin from '../../Assets/linkedin.png';
-import instagram from '../../Assets/instagram.png';
-import quora from '../../Assets/Component 141.png';
+import whatsapp from '../../Assets/logos_whatsapp-icon.webp';
+import facebook from '../../Assets/facebook.webp';
+import twitter from '../../Assets/twitter.webp';
+import youtube from '../../Assets/youtube.webp';
+import linkedin from '../../Assets/linkedin.webp';
+import instagram from '../../Assets/instagram.webp';
+import quora from '../../Assets/Component 141.webp';
 import {  useNavigate } from 'react-router-dom';
 
 const StickyBar = () => {

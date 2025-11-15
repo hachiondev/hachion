@@ -466,6 +466,10 @@ color: #000000;
     border-radius: 6px;
 }
 .other-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
     width: 360px;
     height: 48px;
     background-color: #000000;
@@ -476,6 +480,7 @@ color: #000000;
     border:0px;
     border-radius: 6px;
 }
+
 .otp-number:focus {
     border-color: #00AEEF;
     outline: none;

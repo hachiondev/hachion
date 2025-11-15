@@ -3,10 +3,10 @@ import Topbar from './Topbar'
 import NavbarTop from './NavbarTop'
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import './Blogs.css';
-import facebook from '../../Assets/facebook.png';
-import twitter from '../../Assets/twitter.png';
-import linkedin from '../../Assets/linkedin (1).png';
-import salesforce from '../../Assets/salesforce.png';
+import facebook from '../../Assets/facebook.webp';
+import twitter from '../../Assets/twitter.webp';
+import linkedin from '../../Assets/linkedin.webp';
+import salesforce from '../../Assets/salesforce.webp';
 import { FaUser } from "react-icons/fa";
 import RecentEntries from './RecentEntries';
 import Footer from './Footer';

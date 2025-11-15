@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
-import logo from '../../Assets/logo.png';
-import LoginSide from './LoginSide';
-import success from '../../Assets/success.gif';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import axios from 'axios';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Topbar from './Topbar';
-import { Link } from 'react-router-dom';
 import NavbarTop from './NavbarTop';
 import Footer from './Footer';
 import StickyBar from './StickyBar';

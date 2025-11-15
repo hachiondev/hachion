@@ -2,12 +2,12 @@ import React,{useState,useEffect} from 'react'
 import './Course.css'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import LiveOnline from '../../Assets/la_chalkboard-teacher.png';
-import LiveVideo from '../../Assets/ri_live-line.png';
-import LiveProject from '../../Assets/heroicons_rocket-launch.png';
-import JobAssistance from '../../Assets/marketeq_work.png';
-import Resume from '../../Assets/mi_document.png';
-import Certification from '../../Assets/tabler_certificate.png'
+import LiveOnline from '../../Assets/la_chalkboard-teacher.webp';
+import LiveVideo from '../../Assets/ri_live-line.webp';
+import LiveProject from '../../Assets/heroicons_rocket-launch.webp';
+import JobAssistance from '../../Assets/marketeq_work.webp';
+import Resume from '../../Assets/mi_document.webp';
+import Certification from '../../Assets/tabler_certificate.webp'
 
 const KeyHighlights = () => {
     // const { course_id } = useParams(); // Extract course_id from URL params

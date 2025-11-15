@@ -1,6 +1,6 @@
 import React from 'react';
 import './Corporate.css';
-import placeholderImage from '../../Assets/workshopplaceholder.jpg';
+import placeholderImage from '../../Assets/workshopplaceholder.webp';
 
 const WorkshopEntriesCard = ({ banner_image, title, date, time, timeZone, onClick }) => {
     const handleImageError = (e) => {

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './Admin.css';
-import logo from '../../Assets/logo.png';
-import LoginSide from '../UserPanel/LoginSide';
 import { useNavigate } from 'react-router-dom';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import success from '../../Assets/success.gif';
@@ -21,7 +19,6 @@ const ForgotPassword = () => {
     <div className='login'>
       <div className='login-left'>
         <div className='login-top'>
-          <img src={logo} alt='logo' className='login-logo' />
           <h3 className='register-head'>Recover your password</h3>
           <div className='login-mid'>
             <form onSubmit={handleFormSubmit}>
@@ -72,7 +69,6 @@ const ForgotPassword = () => {
           )}
         </div>
       </div>
-      <LoginSide />
     </div>
   );
 };

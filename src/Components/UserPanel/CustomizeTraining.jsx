@@ -1,11 +1,11 @@
 import React from 'react';
 import './Corporate.css';
-import icon1 from '../../Assets/cc-icon1.png';
-import icon2 from '../../Assets/cc-icon2.png';
-import icon3 from '../../Assets/cc-icon3.png';
-import icon4 from '../../Assets/cc-icon4.png';
-import icon5 from '../../Assets/cc-icon5.png';
-import icon6 from '../../Assets/cc-icon6.png';
+import icon1 from '../../Assets/cc-icon1.webp';
+import icon2 from '../../Assets/cc-icon2.webp';
+import icon3 from '../../Assets/cc-icon3.webp';
+import icon4 from '../../Assets/cc-icon4.webp';
+import icon5 from '../../Assets/cc-icon5.webp';
+import icon6 from '../../Assets/cc-icon6.webp';
 import training from '../../Assets/corporate2.webp';
 
 const features = [

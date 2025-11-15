@@ -1,7 +1,7 @@
 import React from 'react';
-import img1 from '../../Assets/corporate-icon1.png';
-import img2 from '../../Assets/corporate-icon2.png';
-import img3 from '../../Assets/corporate-icon3.png';
+import img1 from '../../Assets/corporate-icon1.webp';
+import img2 from '../../Assets/corporate-icon2.webp';
+import img3 from '../../Assets/corporate-icon3.webp';
 import './Corporate.css';
 
 const trainingOptions = [

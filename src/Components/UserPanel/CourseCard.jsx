@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
-import fallbackImg from "../../Assets/18.png";
+import fallbackImg from "../../Assets/18.webp";
 import './Home.css';
 import axios from 'axios';
 

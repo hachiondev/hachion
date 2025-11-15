@@ -1,13 +1,13 @@
 import React from 'react';
 import LiveOnlineTraining from './LiveOnlineTraining';
-import image2 from '../../Assets/la_chalkboard-teacher.png';
-import image1 from '../../Assets/streamline_business-user-curriculum.png'
-import image3 from '../../Assets/subway_world.png';
-import image4 from '../../Assets/oui_documents.png';
-import image5 from '../../Assets/fluent-mdl2_learning-tools.png';
-import image6 from '../../Assets/hugeicons_peer-to-peer-02.png';
-import image7 from '../../Assets/tabler_certificate.png';
-import image8 from '../../Assets/oui_documents.png';
+import image2 from '../../Assets/la_chalkboard-teacher.webp';
+import image1 from '../../Assets/streamline_business-user-curriculum.webp'
+import image3 from '../../Assets/subway_world.webp';
+import image4 from '../../Assets/oui_documents.webp';
+import image5 from '../../Assets/fluent-mdl2_learning-tools.webp';
+import image6 from '../../Assets/hugeicons_peer-to-peer-02.webp';
+import image7 from '../../Assets/tabler_certificate.webp';
+import image8 from '../../Assets/oui_documents.webp';
 
 
 

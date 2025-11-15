@@ -40,6 +40,7 @@ const menuItems = [
       { title: 'Student Interests', icon: <CgPathFront /> },
     ],
   },
+  { title: 'Interview', icon: <IoNewspaperOutline /> },
   { title: 'Reports', icon: <IoNewspaperOutline /> },
   { title: 'Schedule Request', icon: <BiSolidBookContent /> },
   { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
@@ -52,6 +53,7 @@ const menuItems = [
   { title: 'Internship', icon: <FaHandshakeAngle /> },
   { title: 'Live Class Tracking', icon: <LuFocus /> },
   { title: 'Live Demo & Live Class', icon: <MdLiveTv /> },
+  
 ];
 const AdminSidebar = ({ onSelectCategory = () => {} }) => {
   const [activeIndex, setActiveIndex] = useState(null);

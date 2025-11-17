@@ -1,0 +1,114 @@
+:root{
+  --ink:#0f172a;
+  --muted:#6b7280;
+  --border:#e6e8ee;
+  --panel:#ffffff;
+  --soft:#f5f7fb;
+  --brand:#1aa6df;
+  --brand2:#38c7ff;
+  --save:#16a34a;
+  --shadow:0 14px 36px rgba(15,23,42,.08);
+  --panel2:#6b6f75; /* grey panel */
+}
+
+.ctawrap{
+  padding: 70px;
+  background: radial-gradient(1400px 600px at 50% -240px, #eef4ff, #faf8fb);
+}
+
+.ctacard{
+  max-width: 1200px;
+  margin:0 auto; background:var(--panel);
+  border:1px solid var(--border); border-radius:18px; padding:26px 18px 24px;
+  box-shadow: var(--shadow); text-align:center;
+}
+
+/* pill */
+.ctapill{
+  width:fit-content; margin:0 auto 10px;
+  background:#FED03A; color:#830410; border-radius:999px; padding:5px 20px;
+  display:flex; align-items:center; gap:8px; font-weight:400; 
+  border: 1px solid #830410;
+}
+
+.ctapill img{
+    width: 22px;
+}
+
+/* head */
+.ctatitle{
+  font-size:36px; font-weight:800; color:var(--ink); margin:20px 0;
+}
+.ctasub{ color:var(--muted);  font-weight:400; max-width:800px; margin:0 auto 10px; font-size: 26px; }
+
+/* price */
+.ctapriceRow{
+  display:flex; align-items:center; gap:12px; justify-content:center; margin:20px 0 20px;
+}
+.ctaprice{ color:#FED03A; font-weight:800; font-size:38px; letter-spacing:.3px; }
+.ctamrp{ color:#000000; text-decoration:line-through; font-weight:400; font-size:20px;  }
+.ctasave{ background:#22880066; color:#025531; font-weight:400; border-radius:999px; padding:2px 30px; font-size:16px; border: 1px solid #067830; }
+
+/* buttons */
+.ctaactions{ display:flex; gap:16px; justify-content:center; align-items:center; margin:20px 0 30px; flex-wrap:wrap; }
+.ctabtn{
+  display:inline-flex; align-items:center; gap:8px;
+  background: #00AEEF;
+  color:#fff; border:0; border-radius:999px; padding:12px 32px; font-weight:600; cursor:pointer; font-size: 18px;
+  box-shadow:0 10px 20px rgba(26,166,223,.25);
+}
+.ctabtn .ico{ display:inline-flex; }
+.ctabtn .ico img{ width: 25px; }
+.ctalink{
+  background:transparent; border:0; color:#000000; text-decoration:underline; cursor:pointer; font-weight:400;
+}
+
+/* perks row */
+.ctaperks{
+      display: flex;
+    gap: 70px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 50px 0 40px;
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 18px;
+}
+.ctaperks li{ list-style:disc inside; }
+
+/* panel */
+.ctapanel{
+      background: #7A797D;
+    color: #e8eaed;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 10px 35px;
+    /* max-width: 830px; */
+    box-shadow: var(--shadow);
+}
+.ctapanelhead{ font-weight:600; text-align:center; margin-bottom:18px; font-size: 22px; color: #fff; }
+.ctapanelGrid{
+  display:grid; grid-template-columns: 1fr 1fr; gap:10px;     margin: 40px 0;
+}
+.ctapanelGrid ul{ display:grid; gap:8px;     text-align: left;    padding-left: 10rem; font-size: 20px; font-weight: 400; }
+.ctapanelGrid li{ list-style: none; }
+
+/* assurances */
+.ctaassure{
+      display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    color: #565656;
+    /* font-weight: 400; */
+    margin: 40px;
+    flex-wrap: wrap;
+    font-size: 22px;
+}
+.ctaassure span{ display:inline-flex; align-items:center; gap:8px; }
+
+/* responsive */
+@media (max-width: 640px){
+  .ctapanelGrid{ grid-template-columns: 1fr; }
+  .ctaprice{ font-size:30px; }
+}

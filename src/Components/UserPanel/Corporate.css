@@ -235,22 +235,6 @@ background-image: url('../../Assets/corporatecontactbackground.webp');
   color: red;
 }
 
-.submit-btn {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #fff;
-  background-color: #00AEEF;
-  box-shadow: 5px 5px 5px #d3d3d3;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  justify-content: center;
-  display: inline-block;
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
 .learner-data{
   width: 100%;
 }
@@ -705,20 +689,10 @@ position: relative;
   margin: 10px auto;
 }
 
-/* .top{
-  display: flex;
-  justify-content: space-between;
-  background-color: #dfdfdf;
-} */
 .top{
   display: flex;
   justify-content: space-between;
-  /* background: linear-gradient(90deg, #006489, #00aeef, #006489); */
   color: #000000;
-}
-.close-button {
-  display: flex;
-  justify-items: flex-end;
 }
 
 .full-review {
@@ -735,7 +709,6 @@ position: relative;
 .learner-card-container {
   display: flex;
   justify-content: center;
-  /* max-width: 1100px; */
   width: 80%;
   margin: 0 10%;
   gap: 20px;
@@ -844,15 +817,6 @@ position: relative;
 .clear-align{
     display: flex;
     justify-content: center;
-}
-.clear-button{
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: #00AAEF;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .blog-card {
@@ -1938,16 +1902,6 @@ position: relative;
       margin-right: 3px;
     }
 
-  .submit-btn {
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      width: 280px;
-      margin: 5px;
-  }
-
   .modal-content {
       width: 90% !important; /* Adjust modal size for mobile */
       margin: auto;
@@ -2061,11 +2015,6 @@ position: relative;
   align-items: center;
   justify-content: center;
 }
-.close-btn{
-  display: flex;
-  justify-content: flex-end;
-  padding: 5px;
-  }
 
 @media (max-width:1179px){
   .training-events-head{

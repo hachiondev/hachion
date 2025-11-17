@@ -1,9 +1,3 @@
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family:  'Poppins', sans-serif;
-}
 .detail-blog-left{
   width: 25%;
   height: 95vh;
@@ -2274,16 +2268,6 @@ margin-right: 5% !important;
         margin-bottom: 0px !important;
     }
 
-        .apply-btn{
-        border-radius: 5px !important;
-        background-color: #00AEEF;
-        color: white;
-        padding: 5px 10px;
-        border: none;
-        font-size: 12px !important;
-        font-weight: 600;
-        }
-
         .table-container {
           display: block;
          width: fit-content;
@@ -2648,16 +2632,6 @@ gap: 20px;
     padding: 8px 10px !important;
     background-color: transparent !important;
   }
-
-.apply-btn{
-border-radius: 10px;
-background-color: #00AEEF;
-color: white;
-padding: 5px 10px;
-border: none;
-font-size: 16px;
-font-weight: 600;
-}
 
 .table-container {
   width: fit-content;

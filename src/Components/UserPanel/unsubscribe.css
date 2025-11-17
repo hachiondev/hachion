@@ -93,23 +93,6 @@
   font-style: italic;
   color: #555;
 }
-.u-submit-button {
-  background-color: #00aeef;
-  color: white;
-  /* padding: 2vh;
-  width: 550px; */
-  /* max-width: 100%; */
-  border: none;
-  border-radius: 5px;
-  width: 90%;
-  max-width: 550px;
-  height: 50px;
-  padding: 5px;
-}
-.u-submit-button:disabled {
-  background-color: #7a7a7a;
-  cursor: not-allowed;
-}
 
 @media (max-width: 480px) {
   .unsub-us-div {
@@ -266,20 +249,12 @@
   }
   #unsub3.form-control-unsub {
     max-width: 100%;
-    width: 80vw; /* 80% of the screen width */
+    width: 80vw;
     height: 80px;
     font-size: 12px;
     padding: 5px;
   }
 
-  .u-submit-button {
-    padding: 10px;
-    width: 90%; /* Set button width to 330px */
-    height: 50px; /* Set button height to 40px */
-    margin: 0px; /* Center button */
-    text-align: center;
-    /* margin-left: 5px !important; */
-  }
   .form-check {
     display: flex;
     align-items: center;

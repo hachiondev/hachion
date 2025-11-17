@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
 import "./Home.css";
+import "./Buttons.css";
 import BannerButtonPopup from "./BannerButtonPopup";
 
 const Banner = () => {

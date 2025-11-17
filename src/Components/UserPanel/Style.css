@@ -85,14 +85,7 @@ body.modal-open {
   align-items: center;
   justify-content: center;
 }
-.login-btn-link {
-  color: #00aeef !important;
-  text-decoration: none;
-}
 
-.login-btn-link:hover {
-  color: white !important;
-}
 .forgotpassword-text{
   margin:0 1vh;
   white-space: wrap;
@@ -260,29 +253,7 @@ a:not([href]):not([class]) {
   font-weight: 500;
   color: #000000;
 }
-.view-profile-btn {
-    background-color: rgba(31, 171, 255, 0.2);
-    border: 1px solid rgba(31, 171, 255, 0.2);
-    border-radius: 20px;
-    color: #00aeef;
-    font-size: 14px;
-    font-weight: 600;
-    height: 38px;
-    padding: 5px 15px;
-    white-space: nowrap;
-    width: 100%;
-}
-.view-profile-btn:hover {
-    background-color: #fff;
-    border: 1px solid 00aeef;
-    border-radius: 20px;
-    color: #00aeef;
-    font-size: 14px;
-    height: 38px;
-    padding: 5px 15px;
-    white-space: nowrap;
-    width: 100%;
-}
+
 .expert-title {
   font-size: 24px;
   padding: 10px 20px;
@@ -804,18 +775,7 @@ white-space: wrap;
   flex-direction: row;
   justify-content: space-between;
 }
-.expert-popup-btn{
-    background-color: #00aeef;
-    border: 2px solid #00aeef;
-    border-radius: 50px;
-    color: #fff;
-    font-size: medium;
-    font-weight: 600;
-    height: 40px;
-    padding: 3px 10px;
-    width: 150px;
-    margin: 3px 10px;
-}
+
 .custom-upload-field {
   display: flex;
   align-items: center;

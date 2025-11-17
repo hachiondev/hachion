@@ -129,7 +129,7 @@ public class ChatService {
 
 			boolean allWordsPresent = courseWords.stream().allMatch(inputWords::contains);
 			if (allWordsPresent) {
-				System.out.println("👉 Course-related query detected for: " + course);
+				
 				String courseSlug = normalizedCourse.replaceAll("\\s+", "-");
 				String courseLink = "http://localhost:3000/coursedetails/" + courseSlug;
 				return "🔗 This is the course navigation link. Please click below to view more: \n👉 " + courseLink;

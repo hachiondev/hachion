@@ -6,6 +6,8 @@ public class InterviewTemplateRequest {
 	private String description;
 	private String type;
 	private Long createdByUserId;
+	
+	 private Boolean active;
 
 	public InterviewTemplateRequest() {
 	}
@@ -41,4 +43,13 @@ public class InterviewTemplateRequest {
 	public void setCreatedByUserId(Long createdByUserId) {
 		this.createdByUserId = createdByUserId;
 	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
 }

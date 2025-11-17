@@ -73,22 +73,27 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
 		existing.setTitle(request.getTitle());
 		existing.setDescription(request.getDescription());
 		existing.setType(request.getType());
+		 if (request.getActive() != null) {
+			 existing.setActive(request.getActive());
+	        } else {
+	        	existing.setActive(true);
+	        };
 		existing.setUpdatedAt(LocalDateTime.now());
 		InterviewTemplate saved = interviewTemplateRepository.save(existing);
 		return mapToResponse(saved);
 	}
 
-	@Override
-	public void deactivateTemplate(Long id) {
-		Optional<InterviewTemplate> optional = interviewTemplateRepository.findById(id);
-		if (!optional.isPresent()) {
-			throw new RuntimeException("InterviewTemplate not found with id: " + id);
-		}
-		InterviewTemplate existing = optional.get();
-		existing.setActive(false);
-		existing.setUpdatedAt(LocalDateTime.now());
-		interviewTemplateRepository.save(existing);
-	}
+//	@Override
+//	public void deactivateTemplate(Long id) {
+//		Optional<InterviewTemplate> optional = interviewTemplateRepository.findById(id);
+//		if (!optional.isPresent()) {
+//			throw new RuntimeException("InterviewTemplate not found with id: " + id);
+//		}
+//		InterviewTemplate existing = optional.get();
+//		existing.setActive(false);
+//		existing.setUpdatedAt(LocalDateTime.now());
+//		interviewTemplateRepository.save(existing);
+//	}
 
 	private InterviewTemplateResponse mapToResponse(InterviewTemplate template) {
 		InterviewTemplateResponse dto = new InterviewTemplateResponse();
@@ -102,4 +107,15 @@ public class InterviewTemplateServiceImpl implements InterviewTemplateService {
 		dto.setUpdatedAt(template.getUpdatedAt());
 		return dto;
 	}
+	@Override
+	public void deactivateTemplate(Long id) {
+	    if (!interviewTemplateRepository.existsById(id)) {
+	        throw new RuntimeException("InterviewTemplate not found with id: " + id);
+	    }
+
+	    // 🔥 Hard delete from database
+	    interviewTemplateRepository.deleteById(id);
+	}
+
 }
+

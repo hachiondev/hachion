@@ -95,4 +95,13 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         dto.setCreatedAt(q.getCreatedAt());
         return dto;
     }
+    @Override
+    public List<InterviewQuestionResponse> getAllQuestions() {
+        List<InterviewQuestion> list = interviewQuestionRepository.findAll();
+        List<InterviewQuestionResponse> result = new ArrayList<>();
+        for (InterviewQuestion q : list) {
+            result.add(mapToResponse(q));
+        }
+        return result;
+    }
 }

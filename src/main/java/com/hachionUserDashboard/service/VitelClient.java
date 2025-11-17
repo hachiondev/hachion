@@ -30,7 +30,7 @@ public class VitelClient {
 	private final XmlMapper xmlMapper = new XmlMapper();
 
 	public VitelRecords fetchFor(String extension, LocalDate day) {
-		System.out.println("baseUrl=" + baseUrl + ", user=" + username);
+		
 
 		if (baseUrl == null || baseUrl.isBlank()) {
 			throw new IllegalStateException("vitel.baseUrl is not configured");
@@ -42,15 +42,15 @@ public class VitelClient {
 
 				.toUriString();
 
-		System.out.println("Calling Vitel API: " + url);
+		
 
 		String xml = rest.getForObject(url, String.class);
 
-		System.out.println("📥 Raw XML from Vitel:\n" + xml);
+		
 
-		System.out.println("Vitel XML length=" + (xml == null ? 0 : xml.length()));
+		
 		if (xml != null) {
-			System.out.println("Vitel XML head:\n" + xml.substring(0, Math.min(800, xml.length())));
+			
 		}
 		try {
 			return xmlMapper.readValue(xml, VitelRecords.class);

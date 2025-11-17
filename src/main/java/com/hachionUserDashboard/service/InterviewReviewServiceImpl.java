@@ -14,6 +14,7 @@ import com.hachionUserDashboard.repository.InterviewAssignmentRepository;
 import com.hachionUserDashboard.repository.InterviewReviewRepository;
 
 import Service.InterviewReviewService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class InterviewReviewServiceImpl implements InterviewReviewService {
@@ -64,4 +65,46 @@ public class InterviewReviewServiceImpl implements InterviewReviewService {
 		dto.setReviewedAt(review.getReviewedAt());
 		return dto;
 	}
+
+	@Override
+	@Transactional
+	public InterviewReviewResponse updateReview(Long assignmentId, Long reviewId, InterviewReviewRequest request) {
+		Optional<InterviewReview> optionalReview = interviewReviewRepository.findById(reviewId);
+		if (!optionalReview.isPresent()) {
+			throw new RuntimeException("Review not found with id: " + reviewId);
+		}
+
+		InterviewReview review = optionalReview.get();
+
+		if (!review.getAssignment().getId().equals(assignmentId)) {
+			throw new RuntimeException("Review does not belong to this Assignment");
+		}
+
+		// update values
+		review.setOverallRating(request.getOverallRating());
+		review.setFinalStatus(request.getFinalStatus());
+		review.setComments(request.getComments());
+		review.setReviewedAt(LocalDateTime.now());
+		review.setReviewerUserId(request.getReviewerUserId());
+
+		InterviewReview saved = interviewReviewRepository.save(review);
+		return mapToResponse(saved);
+	}
+
+	@Override
+	public void deleteReview(Long assignmentId, Long reviewId) {
+		Optional<InterviewReview> optionalReview = interviewReviewRepository.findById(reviewId);
+		if (!optionalReview.isPresent()) {
+			throw new RuntimeException("Review not found with id: " + reviewId);
+		}
+
+		InterviewReview review = optionalReview.get();
+
+		if (!review.getAssignment().getId().equals(assignmentId)) {
+			throw new RuntimeException("Review does not belong to this Assignment");
+		}
+
+		interviewReviewRepository.delete(review);
+	}
+
 }

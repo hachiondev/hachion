@@ -35,7 +35,7 @@ public class ChatClient {
 
 		ResponseEntity<String> res = rest.exchange(props.getWebhookUrl(), HttpMethod.POST, entity, String.class);
 
-		System.out.println("Chat response: " + res.getStatusCode() + " body=" + res.getBody());
+		
 		if (!res.getStatusCode().is2xxSuccessful()) {
 			throw new RuntimeException("Google Chat post failed: " + res.getStatusCode());
 		}

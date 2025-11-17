@@ -48,4 +48,9 @@ public class InterviewQuestionController {
     public void deleteQuestion(@PathVariable Long questionId) {
         interviewQuestionService.deleteQuestion(questionId);
     }
+
+    @GetMapping("/questions")
+    public List<InterviewQuestionResponse> getAllQuestions() {
+        return interviewQuestionService.getAllQuestions();
+    }
 }

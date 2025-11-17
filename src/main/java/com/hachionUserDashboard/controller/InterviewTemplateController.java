@@ -20,7 +20,7 @@ import com.hachionUserDashboard.dto.InterviewTemplateResponse;
 import Service.InterviewTemplateService;
 
 @RestController
-@RequestMapping("/api/interviews/templates")
+@RequestMapping("/api/interview-templates")
 @CrossOrigin
 public class InterviewTemplateController {
 

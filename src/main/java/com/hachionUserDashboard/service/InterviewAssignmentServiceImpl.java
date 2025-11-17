@@ -18,6 +18,7 @@ import com.hachionUserDashboard.repository.InterviewAssignmentRepository;
 import com.hachionUserDashboard.repository.InterviewTemplateRepository;
 
 import Service.InterviewAssignmentService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class InterviewAssignmentServiceImpl implements InterviewAssignmentService {
@@ -119,4 +120,55 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 		dto.setCreatedAt(a.getCreatedAt());
 		return dto;
 	}
+
+	@Override
+	public List<InterviewAssignmentResponse> searchAssignments(Long templateId, String status, String search) {
+		List<InterviewAssignment> list = interviewAssignmentRepository.searchAssignments(templateId, status, search);
+
+		List<InterviewAssignmentResponse> result = new ArrayList<>();
+		for (InterviewAssignment a : list) {
+			result.add(mapToResponse(a));
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public void deleteAssignment(Long assignmentId) {
+		interviewAssignmentRepository.deleteByIdNative(assignmentId);
+	}
+	@Override
+    public InterviewAssignmentResponse updateAssignment(Long assignmentId,
+                                                        InterviewAssignmentRequest request) {
+        Optional<InterviewAssignment> optional =
+                interviewAssignmentRepository.findById(assignmentId);
+        if (!optional.isPresent()) {
+            throw new RuntimeException("InterviewAssignment not found with id: " + assignmentId);
+        }
+
+        InterviewAssignment assignment = optional.get();
+
+        // We keep template as-is (no change) for now.
+        assignment.setCandidateUserId(request.getCandidateUserId());
+        assignment.setCandidateName(request.getCandidateName());
+        assignment.setCandidateEmail(request.getCandidateEmail());
+
+        // expiryDateTime comes as ISO string "yyyy-MM-ddTHH:mm:ss"
+        assignment.setExpiryDateTime(null);
+        if (request.getExpiryDateTime() != null &&
+            !request.getExpiryDateTime().isEmpty()) {
+            try {
+                assignment.setExpiryDateTime(
+                        java.time.LocalDateTime.parse(request.getExpiryDateTime())
+                );
+            } catch (java.time.format.DateTimeParseException ex) {
+                throw new RuntimeException(
+                        "Invalid expiryDateTime format, expected ISO-8601"
+                );
+            }
+        }
+
+        InterviewAssignment saved = interviewAssignmentRepository.save(assignment);
+        return mapToResponse(saved);
+    }
 }

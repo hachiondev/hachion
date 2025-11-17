@@ -14,4 +14,7 @@ public interface InterviewQuestionService {
 	InterviewQuestionResponse updateQuestion(Long questionId, InterviewQuestionRequest request);
 
 	void deleteQuestion(Long questionId);
+	
+	List<InterviewQuestionResponse> getAllQuestions();
+
 }

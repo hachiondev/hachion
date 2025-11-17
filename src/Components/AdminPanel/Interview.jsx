@@ -2,9 +2,7 @@ import React, { useState, useRef } from 'react';
 import './Admin.css';
 import InterviewAdminResponses from './InterviewAdminResponses';
 import InterviewAdminReviews from './InterviewAdminReviews';
-import Faq from './Faq';
 import InterviewTemplate from './InterviewTemplate';
-
 import InterviewAssignment from './InterviewAssignment';
 import InterviewQuestionsList from './InterviewQuestionsList';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -63,7 +61,7 @@ export default function Interview() {
           </div>
           <div
             className={`tab-item ${activeTab === 'interviewAdminReviews' ? 'active-tab' : ''}`}
-            onClick={() => handleTabChange('InterviewAdminReviews')}
+            onClick={() => handleTabChange('interviewAdminReviews')}
           >
             Admin Reviews
           </div>

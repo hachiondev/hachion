@@ -1,989 +1,484 @@
-import React, { useState, useEffect} from 'react';
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import axios from 'axios';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import { Helmet } from 'react-helmet';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import { FaEdit } from 'react-icons/fa';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import './Admin.css';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { IoSearch } from 'react-icons/io5';
-import { FiPlus } from 'react-icons/fi';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import AdminPagination from './AdminPagination';
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#00AEEF',
-    color: theme.palette.common.white,
-    borderRight: '1px solid white',
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-    padding: '3px 5px',
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0',
-  },
-}));
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-const InterviewTemplate = ({
-  pageTitle = 'Course',
-  headerTitle = 'View Courses List',
-  buttonLabel = 'Add Courses',
-}) => {
-  const [formMode, setFormMode] = useState('Add'); 
-  const [course,setCourse]=useState([]);
-  const [allCourses,setAllCourses]=useState([]);
-  const [error,setError]=useState([]);
-  const [searchTerm,setSearchTerm]=useState("");
-  const[courses,setCourses]=useState([]);
-  const [categories, setCategories] = useState([]);
-  const [showAddCourse,setShowAddCourse]=useState(false);
-  const [filteredCourses,setFilteredCourses]=useState([])
-  const[message,setMessage]=useState(false);
-  const currentDate = new Date().toISOString().split('T')[0];
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-  const [characterCount, setCharacterCount] = useState(0);
-  const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
-const [aboutError, setAboutError] = useState("");
-  const [formData, setFormData] = useState({course_id:"",title: '',courseName: '',shortCourse: '',courseImage: "",youtubeLink: '',numberOfClasses: '',dailySessions: '',courseCategory:"",starRating: '',level: '',
-    ratingByNumberOfPeople: '',totalEnrollment: '',keyHighlights1:'',keyHighlights2:'',keyHighlights3:'',
-    keyHighlights4:'',keyHighlights5:'',keyHighlights6:'',amount:'',discount:'',total:'',samount:'',sdiscount:'',stotal:'',sqamount:'',sqdiscount:'',sqtotal:'',camount:'',cdiscount:'',ctotal:'',mamount:'',mdiscount:'',mtotal:'',iamount:'',idiscount:'',itotal:'',isamount:'',isdiscount:'',istotal:'',isqamount:'',isqdiscount:'',isqtotal:'',icamount:'',icdiscount:'',ictotal:'',imamount:'',imdiscount:'',imtotal:'',mentoring1:'',mentoring2:'',self1:'',
-    self2:'',headerTitle:'',courseKeyword:'',courseKeywordDescription:'',aboutCourse:'',courseHighlight:'',courseDescription:'',date:currentDate,
-  });
-  console.log(formData);
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import "./InterviewTabs.css";
+
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "https://api.test.hachion.co";
+
+
+const TEMPLATES_ENDPOINT = `${API_BASE_URL}/api/interview-templates`;
+
+
+const ALL_QUESTIONS_ENDPOINT = `${API_BASE_URL}/api/interviews/questions`;
+
+
+const QUESTIONS_FOR_TEMPLATE = (templateId) =>
+  `${API_BASE_URL}/api/interviews/templates/${templateId}/questions`;
+
+const QUESTION_BY_ID = (questionId) =>
+  `${API_BASE_URL}/api/interviews/questions/${questionId}`;
+
+const InterviewQuestionsList = () => {
+  const [templates, setTemplates] = useState([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState(""); 
+  const [questions, setQuestions] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
+  const [viewMode, setViewMode] = useState("list"); 
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const isEditMode = !!editingQuestion;
+
+  const [loading, setLoading] = useState(false);
+
+  
+  const [questionText, setQuestionText] = useState("");
+  const [answerType, setAnswerType] = useState("");
+  const [maxDurationSeconds, setMaxDurationSeconds] = useState("");
+  const [prepTimeSeconds, setPrepTimeSeconds] = useState("");
+  const [maxRetries, setMaxRetries] = useState("");
+  const [displayOrder, setDisplayOrder] = useState("");
+
+  
+  const fetchTemplates = async () => {
+    try {
+      const res = await axios.get(TEMPLATES_ENDPOINT);
+      const list = Array.isArray(res.data) ? res.data : res.data?.content || [];
+      setTemplates(list);
+    } catch (err) {
+      console.error("Failed to load templates:", err);
+    }
+  };
+
+  
+  const fetchAllQuestions = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(ALL_QUESTIONS_ENDPOINT);
+      setQuestions(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Failed to load questions:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
-        setCourse(response.data); 
-      } catch (error) {
-      }
-    };
-    fetchCategory();
+    fetchTemplates();
+    fetchAllQuestions();
   }, []);
-useEffect(() => {
-    const fetchCourses = async () => {
-        try {
-            const response = await axios.get('https://api.hachion.co/courses/all');
-            setCategories(response.data);
-            setFilteredCourses(response.data);
-            setAllCourses(response.data); 
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    fetchCourses();
-}, []);
-   useEffect(() => {
-  if (!startDate && !endDate) {
-    const filtered = allCourses.filter((item) =>
-      item.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.shortCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.date?.toLowerCase().includes(searchTerm.toLowerCase())
+
+  
+  useEffect(() => {
+    if (viewMode === "list") {
+      fetchAllQuestions();
+    }
+  }, [viewMode]);
+
+  
+  const filteredQuestions = useMemo(() => {
+    if (!searchText) return questions;
+    const q = searchText.toLowerCase();
+    return questions.filter(
+      (item) =>
+        (item.questionText && item.questionText.toLowerCase().includes(q)) ||
+        (item.answerType && item.answerType.toLowerCase().includes(q))
     );
-    setFilteredCourses(filtered);
-  }
-}, [searchTerm, allCourses, startDate, endDate]);
+  }, [questions, searchText]);
 
-  const handleDateFilter = () => {
-  const filtered = allCourses.filter((item) => {
-    const courseDate = new Date(item.date);
-    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-
-    const matchSearch =
-      item.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.shortCourse.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.date.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const inRange =
-      (!start || courseDate >= start) &&
-      (!end || courseDate <= end);
-
-    return matchSearch && inRange;
-  });
-
-  setFilteredCourses(filtered);
-};
-
-  const handleDateReset = () => {
-    setStartDate(null);
-    setEndDate(null);
-     setSearchTerm('');
-    setFilteredCourses(allCourses);
+  
+  const resetFormFields = () => {
+    setEditingQuestion(null);
+    setQuestionText("");
+    setAnswerType("");
+    setMaxDurationSeconds("");
+    setPrepTimeSeconds("");
+    setMaxRetries("");
+    setDisplayOrder("");
+    setSelectedTemplateId(""); 
   };
 
-const handleInputChange = (e, quillField = null, quillValue = null) => {
-  setFormData((prevData) => {
-    let { name, value } = e?.target || {};
-    if (quillField) {
-      name = quillField;
-      value = quillValue.trim() === "" || quillValue === "<p><br></p>" ? "" : quillValue;
-    }
-    return { ...prevData, [name]: value };
-  });
-};
-const handleCalculate = (e) => {
-  e.preventDefault();
-  setFormData((prevData) => {
-    const updatedData = { ...prevData };
-    const modes = ["", "m", "s", "sq", "c"];
-    modes.forEach((mode) => {
-      const amountKey = `${mode}amount`;
-      const discountKey = `${mode}discount`;
-      const totalKey = `${mode}total`;
-      const amount = parseFloat(updatedData[amountKey]);
-      const discount = parseFloat(updatedData[discountKey]);
-      const total = parseFloat(updatedData[totalKey]);
-      const hasAmount = !isNaN(amount);
-      const hasDiscount = !isNaN(discount);
-      const hasTotal = !isNaN(total);
-      if (hasAmount && hasDiscount && !hasTotal) {
-        updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
-      } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
-        updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
-      } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
-        updatedData[amountKey] = Math.round(total / (1 - discount / 100));
-      }
-    });
-    return updatedData;
-  });
-};
-const handleCalculateIndia = (e) => {
-  e.preventDefault();
-  setFormData((prevData) => {
-    const updatedData = { ...prevData };
-    const modes = ['i', 'im', 'is', 'isq', 'ic'];
-
-    modes.forEach((mode) => {
-      const amountKey = `${mode}amount`;
-      const discountKey = `${mode}discount`;
-      const totalKey = `${mode}total`;
-
-      const amount = parseFloat(updatedData[amountKey]);
-      const discount = parseFloat(updatedData[discountKey]);
-      const total = parseFloat(updatedData[totalKey]);
-
-      const hasAmount = !isNaN(amount);
-      const hasDiscount = !isNaN(discount);
-      const hasTotal = !isNaN(total);
-
-      if (hasAmount && hasDiscount && !hasTotal) {
-        updatedData[totalKey] = Math.round(amount - (amount * discount) / 100);
-      } else if (hasAmount && hasTotal && !hasDiscount && amount !== 0) {
-        updatedData[discountKey] = Math.round(((amount - total) / amount) * 100);
-      } else if (hasDiscount && hasTotal && !hasAmount && discount !== 100) {
-        updatedData[amountKey] = Math.round(total / (1 - discount / 100));
-      }
-    });
-
-    return updatedData;
-  });
-};
-
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
-  setFormData({ ...formData, courseImage: file });
-};
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-  const courseData = {
-    courseCategory: formData.courseCategory,
-    courseName: formData.courseName,
-    shortCourse: formData.shortCourse,
-    date: currentDate,
-    youtubeLink: formData.youtubeLink,
-    numberOfClasses: formData.numberOfClasses,
-    level: formData.level,
-    starRating: formData.starRating,
-    ratingByNumberOfPeople: formData.ratingByNumberOfPeople,
-    totalEnrollment: formData.totalEnrollment,
-    keyHighlights1: formData.keyHighlights1,
-    keyHighlights2: formData.keyHighlights2,
-    keyHighlights3: formData.keyHighlights3,
-    keyHighlights4: formData.keyHighlights4,
-    keyHighlights5: formData.keyHighlights5,
-    keyHighlights6: formData.keyHighlights6,
-    amount: formData.amount,discount: formData.discount,total: formData.total,
-    mamount: formData.mamount,mdiscount: formData.mdiscount,mtotal: formData.mtotal,
-    samount: formData.samount,sdiscount: formData.sdiscount,stotal: formData.stotal,
-    sqamount: formData.sqamount,sqdiscount: formData.sqdiscount,sqtotal: formData.sqtotal,
-    camount: formData.camount,cdiscount: formData.cdiscount,ctotal: formData.ctotal,
-    iamount: formData.iamount,idiscount: formData.idiscount,itotal: formData.itotal,
-    imamount: formData.imamount,imdiscount: formData.imdiscount,imtotal: formData.imtotal,
-    isamount: formData.isamount,isdiscount: formData.isdiscount,istotal: formData.istotal,
-    isqamount: formData.isqamount,isqdiscount: formData.isqdiscount,isqtotal: formData.isqtotal,
-    icamount: formData.icamount,icdiscount: formData.icdiscount,ictotal: formData.ictotal,
-    mentoring1: formData.mentoring1,
-    mentoring2: formData.mentoring2,
-    self1: formData.self1,
-    self2: formData.self2,
-    dailySessions: formData.dailySessions,
-    metaTitle: formData.headerTitle,
-  metaKeyword: formData.courseKeyword,
-  metaDescription: formData.courseKeywordDescription,
-  aboutCourse: formData.aboutCourse,
-  courseHighlight: formData.courseHighlight,
-    courseDescription: formData.courseDescription,
+  const openAddForm = () => {
+    resetFormFields();
+    setViewMode("form");
   };
-  const formNewData = new FormData();
-  formNewData.append("course", JSON.stringify(courseData));
-  if (formData.courseImage && typeof formData.courseImage !== "string") {
-    formNewData.append("courseImage", formData.courseImage);
-  }
-  try {
-    if (formMode === "Edit") {
-      const response = await axios.put(
-        `https://api.hachion.co/courses/update/${formData.id}`,
-        formNewData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      if (response.status === 200) {
 
-         setSuccessMessage("✅ Course updated successfully.");
-      setErrorMessage("");
-        setCourses((prevCourses) =>
-          prevCourses.map((course) =>
-            course.id === formData.id ? response.data : course
-          )
-        );
-        setShowAddCourse(false); 
-      }
-    } else {
-      
-      const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response.status === 201) {
-         setSuccessMessage("✅ Course added successfully.");
-      setErrorMessage("");
-        setCourses((prevCourses) => [...prevCourses, response.data]);
-        setShowAddCourse(false); 
-      }
-    }
-  } catch (error) {
-     setSuccessMessage("");
-  setErrorMessage("❌ Error submitting course.");
-  }
-};
-
-const handleEditClick = async (courseId) => {
-  setShowAddCourse(true);
-  try {
-    const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
-    if (response.ok) {
-      const course = await response.json();
-      
-      setFormData({
-        id: course.id, 
-       courseCategory: course.courseCategory ,
-        courseName: course.courseName ,
-        courseImage: course.courseImage, 
-        shortCourse: course.shortCourse,
-        youtubeLink: course.youtubeLink ,
-        numberOfClasses: course.numberOfClasses ,
-        level: course.level,
-        dailySessions: course.dailySessions ,
-        starRating: course.starRating ,
-        ratingByNumberOfPeople: course.ratingByNumberOfPeople,
-        totalEnrollment: course.totalEnrollment,
-        keyHighlights1:course.keyHighlights1,
-        keyHighlights2:course.keyHighlights2,
-        keyHighlights3:course.keyHighlights3,
-        keyHighlights4:course.keyHighlights4,
-        keyHighlights5:course.keyHighlights5,
-        keyHighlights6:course.keyHighlights6,
-        amount:course.amount,discount:course.discount,total:course.total,
-        mamount:course.mamount,mdiscount:course.mdiscount,mtotal:course.mtotal,
-        samount:course.samount,sdiscount:course.sdiscount,stotal:course.stotal,
-        sqamount:course.sqamount,sqdiscount:course.sqdiscount,sqtotal:course.sqtotal,
-        camount:course.camount,cdiscount:course.cdiscount,ctotal:course.ctotal,
-        iamount:course.iamount,idiscount:course.idiscount,itotal:course.itotal,
-        imamount:course.imamount,imdiscount:course.imdiscount,imtotal:course.imtotal,
-        isamount:course.isamount,isdiscount:course.isdiscount,istotal:course.istotal,
-        isqamount:course.isqamount,isqdiscount:course.isqdiscount,isqtotal:course.isqtotal,
-        icamount:course.icamount,icdiscount:course.icdiscount,ictotal:course.ictotal,
-        mentoring1:course.mentoring1,
-        mentoring2:course.mentoring2,
-        self1:course.self1,
-    self2:course.self2,
-    // metaTitle:course.headerTitle,
-    headerTitle: course.metaTitle, 
-    // metaKeyword:course.courseKeyword,
-    courseKeyword: course.metaKeyword, 
-    // metaDescription:course.courseDescription,
-    courseKeywordDescription: course.metaDescription, 
-    aboutCourse:course.aboutCourse,
-    courseHighlight:course.courseHighlight,
-    courseDescription:course.courseDescription
-            });
-            setFormMode('Edit');     
-    } else {
-    }
-  } catch (error) {
-  }
-};
-const [currentPage, setCurrentPage] = useState(1);
-   const [rowsPerPage, setRowsPerPage] = useState(10);
-   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo(0, window.scrollY);
+  const openEditForm = (question) => {
+    setEditingQuestion(question);
+    setSelectedTemplateId(String(question.templateId)); 
+    setQuestionText(question.questionText || "");
+    setAnswerType(question.answerType || "");
+    setMaxDurationSeconds(question.maxDurationSeconds ?? "");
+    setPrepTimeSeconds(question.prepTimeSeconds ?? "");
+    setMaxRetries(question.maxRetries ?? "");
+    setDisplayOrder(question.displayOrder ?? "");
+    setViewMode("form");
   };
-const handleRowsPerPageChange = (rows) => {
-  setRowsPerPage(rows);
-  setCurrentPage(1); 
-};
-const displayedCategories = filteredCourses.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
-const handleReset=()=>{
-  setFormData({
-    course_id:"",
-    title: '',
-    courseName: '',
-    shortCourse: '',
-    courseImage: null,
-    youtubeLink: '',
-    numberOfClasses: '',
-    level: '',
-    dailySessions: '',
-    starRating: '',
-    ratingByNumberOfPeople: '',
-    totalEnrollment: '',
-    courseCategory: '',
-    date:""
-       });
-}
-const handleDeleteConfirmation = (id) => {
-  if (window.confirm("Are you sure you want to delete this Courses?")) {
-    handleDelete(id);
-  }
-};
-const handleDelete = async (id) => {
-  try {
-    const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
-    
-    if (response.status === 200) {
-      setSuccessMessage("✅ Course deleted successfully.");
-      setErrorMessage("");
 
-      setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
-       setCategories((prev) => prev.filter((course) => course.id !== id));
-      setFilteredCourses((prev) => prev.filter((course) => course.id !== id));
-      setAllCourses((prev) => prev.filter((course) => course.id !== id));
-    } else {
-      setSuccessMessage("");
-      setErrorMessage("❌ Failed to delete the course.");
+  const handleCancelForm = () => {
+    resetFormFields();
+    setViewMode("list");
+  };
+
+  const getTemplateTitleById = (id) => {
+    const tpl = templates.find((t) => String(t.id) === String(id));
+    return tpl ? tpl.title : "-";
+  };
+
+  const formatDate = (value) => {
+    if (!value) return "-";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleDateString("en-GB");
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedTemplateId) {
+      alert("Template Title is mandatory. Please select an Interview Template.");
+      return;
     }
-  } catch (error) {
-    setSuccessMessage("");
-    setErrorMessage("❌ Something went wrong while deleting the course.");
-  }
-};
- 
-const handleAddTrendingCourseClick = () => {
-  setFormMode('Add'); 
-  setShowAddCourse(true); 
-  handleReset(); 
-};
-const [shortCourseError, setShortCourseError] = useState("");
 
-const handleShortCourseBlur = async () => {
-  const shortCourseValue = formData.shortCourse;
+    const payload = {
+      questionText,
+      answerType,
+      maxDurationSeconds:
+        maxDurationSeconds === "" ? null : Number(maxDurationSeconds),
+      prepTimeSeconds:
+        prepTimeSeconds === "" ? null : Number(prepTimeSeconds),
+      maxRetries: maxRetries === "" ? null : Number(maxRetries),
+      displayOrder: displayOrder === "" ? null : Number(displayOrder),
+    };
 
-  if (!shortCourseValue) return;
+    try {
+      setLoading(true);
+      if (isEditMode) {
+        await axios.put(QUESTION_BY_ID(editingQuestion.id), payload);
+        alert("Question updated successfully");
+      } else {
+        
+        await axios.post(QUESTIONS_FOR_TEMPLATE(selectedTemplateId), payload);
+        alert("Question created successfully");
+      }
 
-  try {
-    await axios.get(`https://api.hachion.co/courses/shortCourse`, {
-      params: { shortCourse: shortCourseValue },
+      resetFormFields();
+      setViewMode("list"); 
+    } catch (err) {
+      console.error("Failed to save question:", err);
+      alert("Failed to save question. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const ok = window.confirm("Are you sure you want to delete this question?");
+    if (!ok) return;
+
+    try {
+      await axios.delete(QUESTION_BY_ID(id));
+      fetchAllQuestions();
+    } catch (err) {
+      console.error("Failed to delete question:", err);
+      alert("Failed to delete question.");
+    }
+  };
+
+
+  if (viewMode === "form") {
+    const isTemplateSelected = !!selectedTemplateId;
+
+    const labelStyle = (active = isTemplateSelected) => ({
+      display: "block",
+      marginBottom: "0.25rem",
+      color: active ? "#111827" : "#9ca3af",
     });
 
-    setShortCourseError("");
-  } catch (error) {
-    if (
-    error.response &&
-    error.response.data &&
-    error.response.data.message === "ShortCourse already exists in the system"
-  ) {
-      setShortCourseError("❌ ShortCourse already exists");
-    } else {
-      setShortCourseError("❌ Unable to verify ShortCourse");
-    }
-  }
-};
+    const fieldStyle = (active = isTemplateSelected) => ({
+      width: "100%",
+      padding: "0.5rem",
+      border: "1px solid",
+      borderColor: active ? "#d1d5db" : "#e5e7eb",
+      backgroundColor: active ? "#ffffff" : "#f9fafb",
+      color: active ? "#111827" : "#9ca3af",
+    });
 
-  return (
-    <>
-      {showAddCourse ? (
-        <div className="course-category">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <a href="#!" onClick={() => { setShowAddCourse(false); setFormMode('Add'); handleReset(); }}>
-                  Course Details
-                </a>
-                <MdKeyboardArrowRight />
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                {formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}
-              </li>
-            </ol>
-          </nav>
-          <div className="category">
-            <div className="category-header">
-              <p style={{ marginBottom: 0 }}>{formMode === 'Add' ? 'Add Course Details' : 'Edit Course Details'}</p>
+    return (
+      <div className="interview-question-wrapper">
+        {/* Breadcrumb */}
+        <div style={{ marginBottom: "0.5rem", fontSize: "13px" }}>
+          <span
+            style={{ cursor: "pointer", color: "#2563eb" }}
+            onClick={() => {
+              resetFormFields();
+              setViewMode("list");
+            }}
+          >
+            Interview Questions List
+          </span>{" "}
+          &gt; <span>{isEditMode ? "Edit Question" : "Add Question"}</span>
+        </div>
+
+        <h2 style={{ marginBottom: "0.75rem" }}>
+          {isEditMode ? "Edit Interview Question" : "Add Interview Question"}
+        </h2>
+
+        {/* Template dropdown */}
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label
+            htmlFor="template-select"
+            style={{
+              display: "block",
+              marginBottom: "0.25rem",
+              fontWeight: 500,
+            }}
+          >
+            Select Interview Template <span style={{ color: "red" }}>*</span>
+          </label>
+          <select
+            id="template-select"
+            value={selectedTemplateId}
+            onChange={(e) => setSelectedTemplateId(e.target.value)}
+            style={{ ...fieldStyle(true), color: "#111827" }}
+            required
+          >
+            <option value="">-- Select Template --</option>
+            {templates.map((tpl) => (
+              <option key={tpl.id} value={tpl.id}>
+                {tpl.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {!isTemplateSelected && (
+          <p style={{ color: "#b91c1c", marginBottom: "0.75rem" }}>
+            Template Title is mandatory. Please select an Interview Template.
+          </p>
+        )}
+
+        {/* Form fields */}
+        <form
+          onSubmit={handleFormSubmit}
+          style={{ display: "grid", gap: "0.75rem" }}
+        >
+          <div>
+            <label htmlFor="questionText" style={labelStyle()}>
+              Question Text <span style={{ color: "red" }}>*</span>
+            </label>
+            <textarea
+              id="questionText"
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
+              rows={3}
+              required
+              disabled={!isTemplateSelected}
+              style={{ ...fieldStyle(), minHeight: "80px" }}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="answerType" style={labelStyle()}>
+              Answer Type <span style={{ color: "red" }}>*</span>
+            </label>
+            <select
+              id="answerType"
+              value={answerType}
+              onChange={(e) => setAnswerType(e.target.value)}
+              required
+              disabled={!isTemplateSelected}
+              style={fieldStyle()}
+            >
+              <option value="">-- Select --</option>
+              <option value="TEXT">Text</option>
+              <option value="VIDEO">Video</option>
+              <option value="AUDIO">Audio</option>
+              <option value="MCQ">MCQ</option>
+            </select>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <label htmlFor="maxDurationSeconds" style={labelStyle()}>
+                Max Duration (seconds)
+              </label>
+              <input
+                id="maxDurationSeconds"
+                type="number"
+                min={0}
+                value={maxDurationSeconds}
+                onChange={(e) => setMaxDurationSeconds(e.target.value)}
+                disabled={!isTemplateSelected}
+                style={fieldStyle()}
+              />
             </div>
-            {message.text && (
-              <div className={`alert alert-${message.type}`}>
-                {message.text}
-              </div>
+
+            <div>
+              <label htmlFor="prepTimeSeconds" style={labelStyle()}>
+                Prep Time (seconds)
+              </label>
+              <input
+                id="prepTimeSeconds"
+                type="number"
+                min={0}
+                value={prepTimeSeconds}
+                onChange={(e) => setPrepTimeSeconds(e.target.value)}
+                disabled={!isTemplateSelected}
+                style={fieldStyle()}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="maxRetries" style={labelStyle()}>
+                Max Retries
+              </label>
+              <input
+                id="maxRetries"
+                type="number"
+                min={0}
+                value={maxRetries}
+                onChange={(e) => setMaxRetries(e.target.value)}
+                disabled={!isTemplateSelected}
+                style={fieldStyle()}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="displayOrder" style={labelStyle()}>
+              Display Order
+            </label>
+            <input
+              id="displayOrder"
+              type="number"
+              min={0}
+              value={displayOrder}
+              onChange={(e) => setDisplayOrder(e.target.value)}
+              disabled={!isTemplateSelected}
+              style={fieldStyle()}
+            />
+          </div>
+
+          <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+            <button
+              type="submit"
+              disabled={loading || !isTemplateSelected}
+              className="interview-template-add-btn"
+            >
+              {isEditMode ? "Update" : "Submit"}
+            </button>
+            <button type="button" onClick={resetFormFields}>
+              Reset
+            </button>
+            <button type="button" onClick={handleCancelForm}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  
+  return (
+    <div className="interview-question-wrapper">
+      <h2 className="interview-template-title">INTERVIEW QUESTIONS LIST</h2>
+
+      <div className="interview-template-toolbar">
+        <div className="interview-template-search">
+          <input
+            type="text"
+            placeholder="Search Question..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
+
+        <button
+          type="button"
+          className="interview-template-add-btn"
+          onClick={openAddForm}
+        >
+          + Add Question
+        </button>
+      </div>
+
+      <div className="interview-template-table-wrapper">
+        <table className="interview-template-table">
+          <thead>
+            <tr>
+              {/* <th>ID</th> */}
+              <th>S.No</th>  
+              <th>Template Title</th>
+              <th>Question</th>
+              <th>Answer Type</th>
+              <th>Duration</th>
+              <th>Prep</th>
+              <th>Retries</th>
+              <th>Order</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!loading && filteredQuestions.length === 0 && (
+              <tr>
+                <td colSpan={10} style={{ textAlign: "center" }}>
+                  No questions found.
+                </td>
+              </tr>
             )}
 
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-              <div className="course-details">
-                <div className="course-row">
-                  <div className="col-md-4">
-                    <label className="form-label">Category Name</label>
-                    <select className="form-select" name='courseCategory' value={formData.courseCategory} onChange={handleInputChange}>
-                      <option value="" disabled>Select Category</option>
-                      {course.map((cat) => (
-                        <option key={cat.id} value={cat.name}>{cat.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Course Name</label>
-                    <input type="text" name="courseName" className="form-control" placeholder="Enter Course Name"
-                      value={formData.courseName} onChange={handleInputChange} required />
-                  </div>
-                  <div className="col-md-4">
-  <label className="form-label">Short Course Name</label>
-  <input
-    type="text"
-    name="shortCourse"
-    className="form-control"
-    placeholder="Enter Short Course Name"
-    value={formData.shortCourse}
-    onChange={handleInputChange}
-    onBlur={handleShortCourseBlur} 
-    required
-  />
-  {shortCourseError && <div style={{ color: "red" }}>{shortCourseError}</div>}  {/* ✅ Optional error display */}
-</div>
-                  </div>
-                  <div className="course-row">
-                  <div className="col-md-4">
-                    <label className="form-label">Course Image</label>
-                    <input type="file" className="form-control" name="courseImage" accept="image/*" onChange={handleFileChange} />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Youtube Link</label>
-                    <input type="text" name="youtubeLink" className="form-control" value={formData.youtubeLink}
-                      onChange={handleInputChange} />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">No. of Classes</label>
-                    <input type="number" name="numberOfClasses" className="form-control" value={formData.numberOfClasses}
-                      onChange={handleInputChange} />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Daily Sessions</label>
-                    <input type="text" name="dailySessions" className="form-control" value={formData.dailySessions}
-                      onChange={handleInputChange} />
-                  </div>
-                </div>
-                <div className="course-row">
-                <div class="col-md-4">
-                  <label for="inputState" class="form-label">Level</label>
-                  <select id="inputState" class="form-select" name='level' value={formData.level} onChange={handleInputChange}>
-                    <option selected>Select </option>
-                    <option>All Levels</option>
-                    <option>Beginner</option>
-                    <option>Intermediate</option>
-                    <option>Expert</option>
-                  </select>
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Star Rating</label>
-                <input
-                  type="text"
-                  name="starRating"
-                  className="form-control"
-                  placeholder="Enter rating"
-                  value={formData.starRating}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Rating by No. of People</label>
-                <input
-                  type="text"
-                  name="ratingByNumberOfPeople"
-                  className="form-control"
-                  placeholder="Enter rating count"
-                  value={formData.ratingByNumberOfPeople}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Certified Students</label>
-                <input
-                  type="text"
-                  name="totalEnrollment"
-                  className="form-control"
-                  placeholder="Enter Certified Students"
-                  value={formData.totalEnrollment}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-            </div>
-            <div className='course-details'>
-            <h3>Key Highlights</h3>
-              <div className='course-row'>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Key Highlights 1</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights1' value={formData.keyHighlights1} onChange={handleInputChange} />
-                </div>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Key Highlights 2</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights2' value={formData.keyHighlights2} onChange={handleInputChange}  />
-                </div>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Key Highlights 3</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='keyHighlights3' value={formData.keyHighlights3} onChange={handleInputChange}  />
-                </div>
-              </div>
-              <div className='course-row'>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Key Highlights 4</label>
-                <input type="text" class="form-control" id="inputEmail4" name='keyHighlights4' value={formData.keyHighlights4} onChange={handleInputChange}  />
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Key Highlights 5</label>
-                <input type="text" class="form-control" id="inputEmail4" name='keyHighlights5' value={formData.keyHighlights5} onChange={handleInputChange}  />
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Key Highlights 6</label>
-                <input type="text" class="form-control" id="inputEmail4" name='keyHighlights6' value={formData.keyHighlights6} onChange={handleInputChange}  />
-                </div>
-                </div>
-                </div> 
-                <h3 style={{marginTop: 20}}>Mode Of Training Fee(USD)</h3>
-                <div className="course-row">
-                  {[
-                    { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
-                    { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
-                    // { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
-                    { label: "Self Paced with Q&A", amount: "sqamount", discount: "sqdiscount", total: "sqtotal" },
-                    { label: "Self Paced Training", amount: "samount", discount: "sdiscount", total: "stotal" },
-                  ].map((mode, index) => (
-                    <div className="course-mode" key={index}>
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id={`flexCheck${index}`} />
-                        <label className="form-check-label" htmlFor={`flexCheck${index}`}>
-                          {mode.label}
-                        </label>
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Amount</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={mode.amount}
-                          value={formData[mode.amount] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Discount %</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={mode.discount}
-                          value={formData[mode.discount] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Total</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={mode.total}
-                          value={formData[mode.total] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <button className='filter' onClick={handleCalculate}>
-                        Calculate
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                <h3 style={{marginTop: 20}}>Mode Of Training Fee(INR)</h3>
-                <div className="course-row">
-                  {[
-                    { label: "Live Training", prefix: "i" },
-                    { label: "Crash Course Training", prefix: "ic" },
-                    // { label: "Mentoring Mode", prefix: "im" },
-                    { label: "Self Paced with Q&A", prefix: "isq" },
-                    { label: "Self Paced Training", prefix: "is" },
-                  ].map((mode, index) => (
-                    <div className="course-mode" key={index}>
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id={`inrCheck${index}`} />
-                        <label className="form-check-label" htmlFor={`inrCheck${index}`}>
-                          {mode.label}
-                        </label>
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Amount</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={`${mode.prefix}amount`}
-                          value={formData[`${mode.prefix}amount`] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Discount %</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={`${mode.prefix}discount`}
-                          value={formData[`${mode.prefix}discount`] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Total</label>
-                        <input
-                          type="number"
-                          className="form-control-mode"
-                          name={`${mode.prefix}total`}
-                          value={formData[`${mode.prefix}total`] || ""}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <button className="filter" onClick={handleCalculateIndia}>
-                        Calculate
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                    <h3>Sample session</h3>
-                <div className='course-row'>
-                <div className='course-details'>
-                <h4>Mentoring Training</h4>
-                <div className='course-col'>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Day 1</label>
-                <input type="number" class="form-control-sample" id="inputEmail4" name='mentoring1' value={formData.mentoring1} onChange={handleInputChange} />
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Day 2</label>
-                <input type="number" class="form-control-sample" id="inputEmail4" name='mentoring2' value={formData.mentoring2} onChange={handleInputChange}/>
-                </div>
-                </div>
-                </div>
-                <div className='course-details'>
-                <h4>Self Paced Training</h4>
-                <div className='course-col'>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Day 1</label>
-                <input type="text" class="form-control-sample" id="inputEmail4" name='self1' value={formData.self1} onChange={handleInputChange}/>
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Day 2</label>
-                <input type="text" class="form-control-sample" id="inputEmail4" name='self2' value={formData.self2} onChange={handleInputChange}/>
-                </div>
-                </div>
-                </div>
-                </div>
-                <div className='course-row'>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Header Title</label>
-                <input type="text" class="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange}/>
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Course keyword with comma</label>
-                <input type="text" class="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
-                </div>
-                <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Course keyword description</label>
-                <input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
-                </div>
-                </div>
-                <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">About Course(Add only 160 Characters)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputEmail4"
-                    name="aboutCourse"
-                    value={formData.aboutCourse}
-                    onChange={(e) => {
-                      const text = e.target.value;
-                      const count = text.length;
-                      if (count > 160) {
-                        setAboutError("Character limit exceeded. Please keep it within 160 characters.");
-                      } else {
-                        setAboutError("");
-                      }
-                      handleInputChange(null, "aboutCourse", text);
-                      setAboutCharacterCount(count);
-                    }}
-                  />
-
-                  <div style={{ marginLeft: '10px', marginTop: '8px', fontSize: '14px', color: aboutCharacterCount > 160 ? 'red' : 'black' }}>
-                    Character Count: {aboutCharacterCount}/160
-                  </div>
-                  {aboutError && <p className="error-message" style={{ color: "red" }}>{aboutError}</p>}
-                </div>
-                <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Add only 4 Lines)</label>
-                  <ReactQuill
-                    theme="snow"
-                    id="courseHighlight"
-                    name="courseHighlight"
-                    value={formData.courseHighlight}
-                    onChange={(content) => {
-                      const plainText = content.replace(/<[^>]*>/g, ""); 
-                      const count = plainText.length;
-                      if (count > 360) {
-                        setError("Character limit exceeded. Please keep it within 360 characters.");
-                      } else {
-                        setError("");
-                      }
-                      handleInputChange(null, "courseHighlight", content);
-                      setCharacterCount(count);
-                    }}
-                  style={{ height: "200px" }}
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                      ["bold", "italic", "underline"],
-                      [{ list: "ordered" }, { list: "bullet" }], 
-                      [{ align: [] }],
-                      [{ indent: "-1" }, { indent: "+1" }], 
-                      ["blockquote"],
-                      ["link"], 
-                      [{ color: [] }],
-                      ["clean"], 
-                    ],
-                  }}
-                  formats={[
-                    "header",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "list",
-                    "bullet",
-                    "align",
-                    "indent",
-                    "blockquote",
-                    "link",
-                    "color",
-                  ]}
-                />
-                <div style={{marginLeft: '10px',marginTop: '8px', fontSize: '14px', color: characterCount > 360 ? 'red' : 'black' }}>
-                    Character Count: {characterCount}/360
-                  </div>
-                  {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
-                </div>
-                <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
-                  <ReactQuill
-                    theme="snow"
-                    id="courseDescription"
-                    name="courseDescription"
-                    value={formData.courseDescription}
-                    onChange={(content) => handleInputChange(null, "courseDescription", content)}
-                  style={{ height: "500px" }} 
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, 4, 5, 6, false] }], 
-                      ["bold", "italic", "underline"], 
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      [{ align: [] }], 
-                      [{ indent: "-1" }, { indent: "+1" }],
-                      ["blockquote"],
-                      ["image"],
-                      ["link"], 
-                      [{ color: [] }],
-                      ["clean"],
-                    ],
-                  }}
-                  formats={[
-                    "header",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "list",
-                    "bullet",
-                    "align",
-                    "indent",
-                    "blockquote",
-                    "image",
-                    "link",
-                    "color",
-                  ]}
-                />
-                {error && <p className="error-message">{error}</p>}
-                </div> 
-                <div className="course-row">
-                <button className='submit-btn' type='submit'>
-                  {formMode === 'Add' ? 'Submit' : 'Update'}
-                </button>
-                <button type="button" className="reset-btn" onClick={handleReset}>Reset</button>
-              </div>
-            </form>
-            <Helmet>
-              <title>{formData.headerTitle || 'Default Title'}</title>
-              <meta name="description" content={formData.courseKeywordDescription || 'Default Description'} />
-              <meta name="keywords" content={formData.courseKeyword || 'Default Keywords'} />
-            </Helmet>
-          </div>
-        </div>
-      ) : (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <div className="course-category">
-            <p>{pageTitle}</p>
-            <div className="category">
-              <div className="category-header">
-                <p style={{ marginBottom: 0 }}>{headerTitle}</p>
-              </div>
-              <div className="date-schedule">
-                Start Date
-                <DatePicker value={startDate} onChange={setStartDate}
-                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
-                End Date
-                <DatePicker value={endDate} onChange={setEndDate}
-                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
-                <button className="filter" onClick={handleDateFilter}>Filter</button>
-                <button className="filter" onClick={handleDateReset}>Reset</button>
-              </div>
-              <div className="entries">
-                <div className="entries-left">
-                  <p>Show</p>
-                  <div className="btn-group">
-                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown">
-                      {rowsPerPage}
-                    </button>
-                    <ul className="dropdown-menu">
-                      {[10, 25, 50].map((num) => (
-                        <li key={num}>
-                          <a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(num)}>{num}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <p>entries</p>
-                </div>
-                <div className="entries-right">
-                  <div className="search">
-                    <div className="search-div" style={{ border: '1px solid #d3d3d3' }}>
-                      <input type="search" className="search-input" placeholder="Search..." value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)} />
-                      <button className="btn-search"><IoSearch /></button>
-                    </div>
-                  </div>
-                  <button className="btn-category" onClick={handleAddTrendingCourseClick}>
-                    <FiPlus /> {buttonLabel}
+            {filteredQuestions.map((q, index) => (
+              <tr key={q.id}>
+                <td>{index + 1}</td>
+                {/* <td>{q.id}</td> */}
+                <td>{getTemplateTitleById(q.templateId)}</td>
+                <td>{q.questionText}</td>
+                <td>{q.answerType}</td>
+                <td>{q.maxDurationSeconds ?? "-"}</td>
+                <td>{q.prepTimeSeconds ?? "-"}</td>
+                <td>{q.maxRetries ?? "-"}</td>
+                <td>{q.displayOrder ?? "-"}</td>
+                <td>{formatDate(q.createdAt)}</td>
+                <td className="interview-template-actions">
+                  <button
+                    type="button"
+                    className="link-btn"
+                    onClick={() => openEditForm(q)}
+                  >
+                    Edit
                   </button>
-                </div>
-              </div>
-              <TableContainer component={Paper} sx={{ padding: '0 10px' }}>
-                <Table sx={{ minWidth: 700 }}>
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
-                      <StyledTableCell align="center">S.No.</StyledTableCell>
-                      <StyledTableCell align="center">Image</StyledTableCell>
-                      <StyledTableCell align="center">Category Name</StyledTableCell>
-                      <StyledTableCell align="center">Short Course</StyledTableCell>
-                      <StyledTableCell align="center">Course Name</StyledTableCell>
-                      <StyledTableCell align="center">Date</StyledTableCell>
-                      <StyledTableCell align="center">Action</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {displayedCategories.length > 0 ? displayedCategories.map((course, idx) => (
-                      <StyledTableRow key={course.id}>
-                        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
-                        <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-                        <StyledTableCell align="center">
-                          {course.courseImage
-                            ? <img src={`https://api.hachion.co/${course.courseImage}`} alt="Course" width="50" />
-                            : 'No Image'}
-                        </StyledTableCell>
-                        <StyledTableCell align="left">{course.courseCategory}</StyledTableCell>
-                        <StyledTableCell align="left">{course.shortCourse}</StyledTableCell>
-                        <StyledTableCell align="left">{course.courseName}</StyledTableCell>
-                        <StyledTableCell align="center">{course.date}</StyledTableCell>
-                        <StyledTableCell align="center">
-                          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                            <FaEdit className="edit" onClick={() => handleEditClick(course.id)} style={{ cursor: "pointer" }} />
-                            <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(course.id)} style={{ cursor: "pointer" }} />
-                          </div>
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    )) : (
-                      <StyledTableRow>
-                        <StyledTableCell colSpan={6} align="center">No courses available.</StyledTableCell>
-                      </StyledTableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-              <div className="pagination-container">
-                <AdminPagination
-                  currentPage={currentPage}
-                  rowsPerPage={rowsPerPage}
-                  totalRows={filteredCourses.length}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            </div>
-          </div>
-        </LocalizationProvider>
-      )}
-    </>
+                  <span className="action-separator">|</span>
+                  <button
+                    type="button"
+                    className="link-btn delete"
+                    onClick={() => handleDelete(q.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {loading && (
+              <tr>
+                <td colSpan={10} style={{ textAlign: "center" }}>
+                  Loading...
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
-export default InterviewTemplate;
+
+export default InterviewQuestionsList;

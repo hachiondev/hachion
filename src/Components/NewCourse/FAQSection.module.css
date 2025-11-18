@@ -1,0 +1,101 @@
+:root{
+  --ink:#0f172a;
+  --muted:#6b7280;
+  --border:#e6e8ee;
+  --panel:#ffffff;
+  --shadow:0 10px 24px rgba(15,23,42,.06);
+  --brand:#1aa6df;
+  --brand2:#38c7ff;
+}
+
+.faqwrap{
+  padding: 28px 70px;
+}
+
+.faqhead{
+  text-align:center; margin-bottom:16px;
+}
+.faqhead h2{
+  font-size: 36px;
+    font-weight: 700; color:var(--ink);
+}
+.faqhead p{ color:var(--muted); margin-top:16px; padding-bottom: 16px; font-size: 18px; }
+
+.faqlist{
+  max-width: 900px; margin: 0 auto;
+  display:grid; gap:12px;
+}
+
+/* item */
+.faqitem{
+  background: var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* summary button */
+.faqbtn{
+  width:100%;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:14px 28px;
+  background:#fff;
+  border:0; cursor:pointer;
+  text-align:left;
+}
+.faqq{
+  font-weight:500; color:#111827; font-size: 22px;
+}
+.faqchevron{
+  color:#98a2b3;
+  transition: transform .2s ease;
+}
+
+/* animated panel using CSS grid trick */
+.faqpanel{
+  display:grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .25s ease;
+  border-top:1px solid var(--border);
+}
+.faqpanelinner{
+  overflow:hidden;
+}
+.faqa{
+  padding:12px 16px 16px;
+  color:#26323d; line-height:1.6;
+}
+
+/* help row */
+.faqhelp{
+  text-align:center; margin-top:60px;
+}
+.faqhelpsub{
+     color: #5c5c5c;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 400;
+}
+.faqactions{
+  display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+}
+.faqprimary{
+  background: #00AEEF;
+  color:#fff; border:0; border-radius:999px; padding:12px 28px;
+  font-weight:600; cursor:pointer;
+  font-size: 20px;
+  box-shadow: 0 10px 18px rgba(26,166,223,.25);
+}
+.faqlink{
+  background:transparent; border:0; color:#5c5c5c; text-decoration:underline; cursor:pointer; font-weight:600;
+}
+
+/* state helper */
+.isopen{}
+
+/* responsive */
+@media (max-width: 640px){
+  .faqhead h2{ font-size:24px; }
+}

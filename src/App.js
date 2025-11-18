@@ -56,6 +56,8 @@ import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
 import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';
 import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
+import NewCourseDetails from './Components/UserPanel/NewCourseDetails';
+import GoogleMobileNumber from './Components/UserPanel/GoogleMobileNumber';
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -99,6 +101,7 @@ function AppRoutes() {
       <Route path='/confirm-otp' element={<ConfirmOtp />}/>
       <Route path='/resetpassword' element={<ResetPassword />}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+      <Route path='/phone-number' element={<GoogleMobileNumber/>}/>
       <Route path="/" element={<Home />} />
       <Route path='/viewfaqs' element={<ViewFaq/>}/>
       <Route path='/discountdeals' element={<DiscountDeals/>}/>
@@ -107,6 +110,7 @@ function AppRoutes() {
       <Route path='/become-instructor' element={<BecomeInstructor/>}/>
       <Route path='/view-all-reviews' element={<ViewReviews/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
+      <Route path='/newcoursedetails' element={<NewCourseDetails/>}/>
       <Route path='/coursedetails/:courseName' element={<CourseDetails />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/hire-from-us' element={<HirefromUs/>}/>

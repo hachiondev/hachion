@@ -63,6 +63,20 @@
     color: #FF0000;
     white-space: nowrap;
 }
+.confirm-number-check {
+    border: 1px solid black;
+    cursor: pointer;
+    border-radius: none;
+}
+.confirm-number-label{
+    display: flex;
+    justify-content: left;
+    gap: 5px;
+    padding: 5px;
+    font-size: x-small;
+    white-space: wrap;
+}
+
 .login-banner {
   display: none;
 }

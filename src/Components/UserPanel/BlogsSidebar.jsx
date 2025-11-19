@@ -11,38 +11,41 @@ const BlogsSidebar = ({ onFilterChange }) => {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 480);
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ Detect screen width change for responsive behavior
+  
   useEffect(() => {
     const handleResize = () => setIsMobileView(window.innerWidth <= 480);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-    useEffect(() => {
-      const fetchCategories = async () => {
-        try {
-          const response = await axios.get(
-            "https://api.test.hachion.co/course-categories/all"
-          );
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.test.hachion.co/blog/categories"
+        );
 
-          if (Array.isArray(response.data)) {
-            setCategories(response.data);
-          }
-        } catch (error) {
-          console.error("Error fetching categories:", error);
+        
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
         }
-      };
-
-      fetchCategories();
-    }, []);
-
-    useEffect(() => {
-      if (categories.length > 0) {
-        const firstCategory = categories[0].name;
-        setSelectedCategories([firstCategory]);
-        onFilterChange([firstCategory]);
+      } catch (error) {
+        console.error("Error fetching blog categories:", error);
       }
-    }, [categories]);
+    };
+
+    fetchCategories();
+  }, []);
+
+  
+  useEffect(() => {
+    if (categories.length > 0) {
+      const firstCategory = categories[0]; 
+      setSelectedCategories([firstCategory]);
+      onFilterChange([firstCategory]);
+    }
+  }, [categories, onFilterChange]);
 
   const toggleSection = (section) => {
     setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));
@@ -52,15 +55,19 @@ const BlogsSidebar = ({ onFilterChange }) => {
     const updated = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category];
+
     setSelectedCategories(updated);
-    onFilterChange(updated); 
+    onFilterChange(updated);
   };
 
   const sidebarContent = (
     <div className="Blogsidebar">
       {/* --- Categories --- */}
       <div className="sidebar-section">
-        <div className="sidebar-heading" onClick={() => toggleSection("category")}>
+        <div
+          className="sidebar-heading"
+          onClick={() => toggleSection("category")}
+        >
           <span>Categories</span>
           {expanded.category ? (
             <IoIosArrowUp className="sidebar-arrow" />
@@ -72,13 +79,13 @@ const BlogsSidebar = ({ onFilterChange }) => {
         {expanded.category && (
           <div className="sidebar-options">
             {categories.map((cat) => (
-              <label key={cat.id || cat.name} className="sidebar-checkbox">
+              <label key={cat} className="sidebar-checkbox">
                 <input
                   type="checkbox"
-                  checked={selectedCategories.includes(cat.name)}
-                  onChange={() => handleCheckboxChange(cat.name)}
+                  checked={selectedCategories.includes(cat)}
+                  onChange={() => handleCheckboxChange(cat)}
                 />
-                {cat.name}
+                {cat}
               </label>
             ))}
           </div>
@@ -98,12 +105,17 @@ const BlogsSidebar = ({ onFilterChange }) => {
           </button>
 
           {/* --- Overlay when drawer is open --- */}
-          {isOpen && <div className="overlay" onClick={() => setIsOpen(false)} />}
+          {isOpen && (
+            <div className="overlay" onClick={() => setIsOpen(false)} />
+          )}
 
           {/* --- Drawer --- */}
           <div className={`sidebar-drawer ${isOpen ? "open" : ""}`}>
             <div className="category-drawer-header">
-              <button className="filter-close-btn" onClick={() => setIsOpen(false)}>
+              <button
+                className="filter-close-btn"
+                onClick={() => setIsOpen(false)}
+              >
                 ✕
               </button>
             </div>

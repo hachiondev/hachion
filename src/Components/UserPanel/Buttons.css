@@ -698,7 +698,14 @@ background-color: white;
     margin-top:-105px; 
     font-size: 12px;
     }
-    .join-now{
+.left-arrow {
+  left: -5px; 
+}
+
+.right-arrow {
+  right: -5px; 
+}
+.join-now{
   padding: 3px 8px;
   font-size: 10px;
   }

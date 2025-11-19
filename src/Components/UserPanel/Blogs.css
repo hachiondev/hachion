@@ -217,6 +217,8 @@
 .detail-middle img{
   height: auto;
   width: 100%;
+  aspect-ratio: 2.1/1;
+  object-fit: cover;
 }
 .topics{
   padding-left: 4vh;

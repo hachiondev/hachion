@@ -1,6 +1,6 @@
 import React from "react";
 import "./Home.css";
-import DiscountCards from "./DiscountCards";
+import PopupCourseCards from "./PopupCourseCards";
 import {  useNavigate } from 'react-router-dom';
 
 const BannerDeals = () => {
@@ -22,7 +22,7 @@ const BannerDeals = () => {
         </div>
 
       {/* Right side image */}
-      <DiscountCards  />
+      <PopupCourseCards  />
     </div>
   );
 };

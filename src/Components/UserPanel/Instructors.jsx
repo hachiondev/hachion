@@ -76,20 +76,24 @@ const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
     fetchCourses();
   }, []);
   
-  const filteredTrainers = trainers.filter((trainer) => {
-    const matchesSearch =
-      trainer.trainer_name.toLowerCase().includes(searchTerm.toLowerCase());
+const filteredTrainers = trainers.filter((trainer) => {
+  const term = searchTerm.toLowerCase().trim();
 
-    const matchesTeacher = selectedTeacher
-      ? trainer.trainer_name === selectedTeacher
-      : true;
+  const matchesSearch =
+    term === "" ||
+    trainer.trainer_name?.toLowerCase().includes(term) ||
+    trainer.course_name?.toLowerCase().includes(term);
 
-    const matchesCourse = selectedCourse
-      ? trainer.course_name === selectedCourse
-      : true;
+  const matchesTeacher = selectedTeacher
+    ? trainer.trainer_name === selectedTeacher
+    : true;
 
-    return matchesSearch && matchesCourse && matchesTeacher;
-  });
+  const matchesCourse = selectedCourse
+    ? trainer.course_name === selectedCourse
+    : true;
+
+  return matchesSearch && matchesCourse && matchesTeacher;
+});
 
   useEffect(() => {
     const updateCardsPerPage = () => {
@@ -267,14 +271,16 @@ const formatForUrl = (str) =>
                     <p className="expert-course">{trainer.course_name}</p>
                     <hr className="faq-seperater"/>
                     <div className="card-row">
-                      <div className="instructor-rating">
-                        {renderStarRating(trainer.trainerUserRating || 5)}
-                      </div>
-                      {/* <p className="instructor-rating">1200 Students</p> */}
-                    <p className="instructor-rating">
-  {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0)} Students
-</p>
-                    </div>
+  <div className="instructor-rating">
+    {renderStarRating(trainer.trainerUserRating || 5)}
+  </div>
+
+  {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0) > 0 && (
+    <p className="instructor-rating">
+      {enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`]} Students
+    </p>
+  )}
+</div>
                     <button
                       className="view-profile-btn"
                       onClick={() =>

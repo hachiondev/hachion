@@ -30,6 +30,23 @@ align-items: center;
 gap: 1rem;
 }
 
+.touch-target {
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  line-height: 1.2;
+  border-radius: 6px;
+}
+
+.topbar-icon {
+  font-size: 18px;
+}
+
+.topbar-text {
+  font-size: medium;
+}
+
 .query-title {
 font-weight: 500;
 color: white;
@@ -1529,8 +1546,9 @@ display: none;
 .card-image {
 display: block;
 width: 100%;
-max-height: 120px; 
-object-fit: fill;
+height: auto; 
+aspect-ratio: 2 / 1;
+object-fit: cover;  
 object-position: top;
 border-radius: 5px; 
 transition: all 0.3s ease;
@@ -1539,8 +1557,9 @@ z-index: 0;
 .home-popup-card-image {
 display: block;
 width: 100%;
-max-height: 70px; 
-object-fit: fill;
+height: auto; 
+aspect-ratio: 2 / 1;
+object-fit: cover;
 object-position: top;
 border-radius: 5px; 
 transition: all 0.3s ease;
@@ -2583,13 +2602,7 @@ flex: 0 0 100%;
       gap: 10px;
       /* max-width: 80%; */
     }
-    .left-arrow {
-  left: -5px; 
-}
 
-.right-arrow {
-  right: -5px; 
-}
     .new-batch{
     display: none;
     }

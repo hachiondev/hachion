@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import banner from "../../Assets/home-banner1.webp";
 import { Link, useNavigate } from "react-router-dom";
 import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
@@ -57,7 +56,7 @@ const Banner = () => {
       {/* Right side image */}
       <motion.img
         className="home-banner-img"
-        src={banner}
+        src="/home-banner1.webp"
         alt="Home banner"
         fetchpriority="high"
         initial={{ x: 150, opacity: 0 }}

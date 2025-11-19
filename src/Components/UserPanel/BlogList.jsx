@@ -4,53 +4,79 @@ import { BsPersonCircle } from "react-icons/bs";
 import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
 import "./Bloglist.css";
 
-const BlogList = ({ selectedCategories, currentPage, cardsPerPage, onTotalBlogsChange }) => {
+const BlogList = ({
+  selectedCategories,
+  currentPage,
+  cardsPerPage,
+  onTotalBlogsChange,
+}) => {
   const [blogs, setBlogs] = useState([]);
-  const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
     const fetchBlogs = async () => {
+      
+      if (!selectedCategories || selectedCategories.length === 0) {
+        setBlogs([]);
+        onTotalBlogsChange(0);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
-        const res = await axios.get("https://api.test.hachion.co/blog");
-        const mapped = res.data.map((b) => ({
-          ...b,
-          avatar: b.authorImage
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${b.authorImage}`
-            : "",
-          blog_image: b.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${b.blog_image}`
-            : "",
-        }));
-        setBlogs(mapped.reverse());
-        setFilteredBlogs(mapped);
-        onTotalBlogsChange(mapped.length);
+        const res = await axios.get("https://api.test.hachion.co/blog/filter", {
+          
+          params: { category: selectedCategories },
+        });
+
+        
+        const mapped = res.data.map((row) => {
+          const [
+            id,
+            category_name,
+            title,
+            author,
+            author_image,
+            blog_image,
+            date,
+          ] = row;
+
+          const avatarPath = author_image || "";
+          const blogImagePath = blog_image || "";
+
+          return {
+            id,
+            category_name,
+            title,
+            author,
+            date,
+            avatar: avatarPath
+              ? `https://api.test.hachion.co/uploads/prod/blogs/${avatarPath}`
+              : "",
+            blog_image: blogImagePath
+              ? `https://api.test.hachion.co/uploads/prod/blogs/${blogImagePath}`
+              : "",
+          };
+        });        
+        const finalBlogs = mapped; 
+        setBlogs(finalBlogs);
+        onTotalBlogsChange(finalBlogs.length);
       } catch (err) {
         console.error("Error fetching blogs:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchBlogs();
-  }, [onTotalBlogsChange]);
+  }, [selectedCategories, onTotalBlogsChange]);
 
-  // Filter by category
-  useEffect(() => {
-    let filtered = blogs;
-    if (selectedCategories.length > 0) {
-      filtered = blogs.filter(
-        (b) => b.category_name && selectedCategories.includes(b.category_name.trim())
-      );
-    }
-    setFilteredBlogs(filtered);
-    onTotalBlogsChange(filtered.length);
-  }, [selectedCategories, blogs, onTotalBlogsChange]);
-
-  // Pagination slice
+  
   const indexOfLast = currentPage * cardsPerPage;
   const indexOfFirst = indexOfLast - cardsPerPage;
-  const currentBlogs = filteredBlogs.slice(indexOfFirst, indexOfLast);
+  const currentBlogs = blogs.slice(indexOfFirst, indexOfLast);
 
   const handleImageError = (e) => {
     e.target.src = Blogimageplaceholder;
@@ -76,13 +102,9 @@ const BlogList = ({ selectedCategories, currentPage, cardsPerPage, onTotalBlogsC
                 <span className="category-badge">{blog.category_name}</span>
               )}
               <h3 className="content">{blog.title}</h3>
-              <p className="blog-card-description">
-                {(() => {
-                  const el = document.createElement("div");
-                  el.innerHTML = blog.description || "";
-                  return (el.textContent || el.innerText || "").trim();
-                })()}
-              </p>
+
+              {/* 🔻 Description removed – backend no longer sends it */}
+
               <div className="author-info">
                 {blog.avatar ? (
                   <img
@@ -97,17 +119,21 @@ const BlogList = ({ selectedCategories, currentPage, cardsPerPage, onTotalBlogsC
                 <div className="author-details">
                   <p className="blog-author">{blog.author}</p>
                   <p className="date">
-                    {new Date(blog.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
+                    {blog.date
+                      ? new Date(blog.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })
+                      : ""}
                   </p>
                 </div>
               </div>
             </div>
             <a
-              href={`/blogs/${blog.category_name?.replace(/\s+/g, "-").toLowerCase()}/${blog.title
+              href={`/blogs/${blog.category_name
+                ?.replace(/\s+/g, "-")
+                .toLowerCase()}/${blog.title
                 ?.replace(/\s+/g, "-")
                 .replace(/[^\w-]+/g, "")
                 .toLowerCase()}-${blog.id}`}
@@ -118,7 +144,7 @@ const BlogList = ({ selectedCategories, currentPage, cardsPerPage, onTotalBlogsC
           </div>
         ))
       ) : (
-        <p>No blogs found for the selected categories.</p>
+        <p>Please select category.</p>
       )}
     </div>
   );

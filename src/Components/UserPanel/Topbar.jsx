@@ -46,26 +46,26 @@ const Topbar = () => {
         {/* Left Section */}
         <div className="d-flex align-items-center">
           <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="d-flex align-items-center text-decoration-underline text-white me-3"
-            aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
-          >
-            <FaPhone className="me-1 topbar-icon text-white" />
-            <span className="fw-normal topbar-text">{whatsappNumber}</span>
-          </a>
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="d-flex align-items-center text-decoration-underline text-white me-3 touch-target"
+          aria-label={`Chat with us on WhatsApp at ${whatsappNumber}`}
+        >
+          <FaPhone className="me-1 topbar-icon text-white" />
+          <span className="fw-normal topbar-text">{whatsappNumber}</span>
+        </a>
 
-          <a
-            href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="d-flex align-items-center text-decoration-underline text-white"
-            aria-label="Send an email to trainings@hachion.co using Gmail"
-          >
-            <IoIosMail className="me-1 topbar-icon text-white" />
-            <span className="fw-normal topbar-text">trainings@hachion.co</span>
-          </a>
+        <a
+          href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="d-flex align-items-center text-decoration-underline text-white touch-target"
+          aria-label="Send an email to trainings@hachion.co using Gmail"
+        >
+          <IoIosMail className="me-1 topbar-icon text-white" />
+          <span className="fw-normal topbar-text">trainings@hachion.co</span>
+        </a>
         </div>
 
         {/* Right Section */}

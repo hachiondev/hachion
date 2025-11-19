@@ -110,7 +110,7 @@ function AppRoutes() {
       <Route path='/become-instructor' element={<BecomeInstructor/>}/>
       <Route path='/view-all-reviews' element={<ViewReviews/>}/>
       <Route path='/coursedetails' element={<Course/>}/>
-      {/* <Route path='/newcoursedetails' element={<NewCourseDetails/>}/> */}
+      <Route path='/newcoursedetails' element={<NewCourseDetails/>}/>
       <Route path='/coursedetails/:courseName' element={<CourseDetails />} />
       <Route path='/corporate' element={<CorporateTraining/>}/>
       <Route path='/hire-from-us' element={<HirefromUs/>}/>

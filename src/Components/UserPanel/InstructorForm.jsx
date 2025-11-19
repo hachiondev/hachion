@@ -495,6 +495,7 @@ useEffect(() => {
             style={{
               display: "inline-block",
               border: "1px solid #000",
+              background: "#fff",
               borderRadius: "30px",
               padding: "4px 8px",
               margin: "3px",

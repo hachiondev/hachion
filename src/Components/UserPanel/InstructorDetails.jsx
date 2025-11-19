@@ -36,10 +36,16 @@ const InstructorDetails = () => {
   const [fxFromUSD, setFxFromUSD] = useState(1);
   const [country, setCountry] = useState("IN");
 
+// const trainerCourses = allCourses.filter(course =>
+//   trainer?.trainer_name &&
+//   course.trainerName?.toLowerCase() === trainer.trainer_name.toLowerCase()
+// );
+
 const trainerCourses = allCourses.filter(course =>
-  trainer?.trainer_name &&
-  course.trainerName?.toLowerCase() === trainer.trainer_name.toLowerCase()
+  course.courseName?.trim().toLowerCase() ===
+  trainer.course_name?.trim().toLowerCase()
 );
+
 
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
@@ -86,20 +92,36 @@ const trainerCourses = allCourses.filter(course =>
   }, []);
 
   
+// useEffect(() => {
+//   const fetchReviewsByCourse = async () => {
+//     if (!trainer?.course_name) return;
+//     try {
+//       const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
+//       const res = await axios.get(url);
+//       setReviews(Array.isArray(res.data) ? res.data : []);
+//     } catch (err) {
+//       console.error("Error fetching course reviews:", err);
+//       setReviews([]);
+//     }
+//   };
+//   fetchReviewsByCourse();
+// }, [trainer?.course_name]);
 useEffect(() => {
-  const fetchReviewsByCourse = async () => {
-    if (!trainer?.course_name) return;
+  const fetchReviewsByTrainerAndCourse = async () => {
+    if (!trainer?.trainer_name || !trainer?.course_name) return;
     try {
-      const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
+      const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(
+        trainer.trainer_name
+      )}/${encodeURIComponent(trainer.course_name)}`;
       const res = await axios.get(url);
       setReviews(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("Error fetching course reviews:", err);
+      console.error("Error fetching trainer+course reviews:", err);
       setReviews([]);
     }
   };
-  fetchReviewsByCourse();
-}, [trainer?.course_name]);
+  fetchReviewsByTrainerAndCourse();
+}, [trainer?.trainer_name, trainer?.course_name]);
 
 
   useEffect(() => {
@@ -185,16 +207,7 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-            {/* <div className="text-md-end mt-3 mt-md-0">
-              <a href={trainer.website || "#"} target="_blank" rel="noreferrer" className="text-info d-block mb-2"><SlGlobe /> {trainer.website || "https://www.hachion.co"}</a>
-              <div className="social-icons d-inline-flex gap-2">
-                <a href={trainer.facebook || "#"}><FaFacebookF /></a>
-                <a href={trainer.twitter || "#"}><FaTwitter /></a>
-                <a href={trainer.instagram || "#"}><FaInstagram /></a>
-                <a href={trainer.youtube || "#"}><FaYoutube /></a>
-                <a href={trainer.whatsapp || "#"}><FaWhatsapp /></a>
-              </div>
-            </div> */}
+          
           </div>
           </div>
         {/* About Section */}
@@ -219,7 +232,7 @@ useEffect(() => {
       heading={course.courseName}
       month={course.numberOfClasses || course.duration || 0}
       image={`https://api.test.hachion.co/${course.courseImage || course.image}`}
-      trainer_name={course.trainerName}
+      trainer_name={trainer.trainer_name}
       discountPercentage={
       country === 'IN'
         ? (course.idiscount != null ? Number(course.idiscount) : 0)

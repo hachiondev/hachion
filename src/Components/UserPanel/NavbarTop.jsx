@@ -304,6 +304,7 @@ const handleMouseLeave = () => {
                   <button
                     className="btn btn-info d-flex align-items-center justify-content-center search-btn"
                     type="submit"
+                    aria-label="Search"
                     onClick={(e) => e.preventDefault()}
                   >
                     <IoSearch size={20} className="text-white" />
@@ -338,11 +339,15 @@ const handleMouseLeave = () => {
               <IoSearch size={26} color="#00AEEF" />
             </button>
             {isLoggedIn && (
-              <button className="btn ms-2" onClick={() => navigate("/userdashboard/order_history")}>
+              <button className="btn ms-2" 
+              aria-label="View cart"
+              onClick={() => navigate("/userdashboard/order_history")}>
                 <BsCart2 size={24} color="#000" />
               </button>
             )}
-            <button className="btn ms-2" onClick={() => setDrawerOpen(true)}>
+            <button className="btn ms-2"
+            aria-label="Open menu"
+            onClick={() => setDrawerOpen(true)}>
               <GiHamburgerMenu size={28} />
             </button>
           </div>
@@ -368,6 +373,7 @@ const handleMouseLeave = () => {
               <div className="d-flex align-items-center gap-3">
                 <button
                   className="btn"
+                  aria-label="View cart"
                   onClick={() => navigate("/userdashboard/order_history")}
                 >
                   <BsCart2 size={28} />
@@ -451,7 +457,9 @@ const handleMouseLeave = () => {
           <a href="/">
             <img src={logo} alt="logo" className="logo" />
           </a>
-          <button className="filter-close-btn" onClick={() => setDrawerOpen(false)}>
+          <button className="filter-close-btn" 
+          aria-label="Close menu"
+          onClick={() => setDrawerOpen(false)}>
             ✕
           </button>
         </div>
@@ -552,6 +560,7 @@ const handleMouseLeave = () => {
             <button
               className="btn btn-info d-flex align-items-center justify-content-center search-btn"
               type="submit"
+              aria-label="Open search"
               onClick={(e) => e.preventDefault()}
             >
               <IoSearch size={20} className="text-white" />
@@ -559,6 +568,7 @@ const handleMouseLeave = () => {
           </div>
           <button
             className="filter-close-btn ms-2"
+            aria-label="Close search"
             onClick={() => {
               setMobileSearchOpen(false);
               setSearchQuery("");

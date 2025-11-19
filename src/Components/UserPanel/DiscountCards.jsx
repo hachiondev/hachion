@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import DiscountCourseCard from "./DiscountCourseCard";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Nodiscount from "../../Assets/nodiscount.webp";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
@@ -37,8 +38,8 @@ const DiscountCards = () => {
   else if (window.innerWidth < 992) setCardsPerRow(2);
   else setCardsPerRow(2);
 
-  // 👇 Add this line
-  setShowIndicators(window.innerWidth >= 768); // show only from tablet width and up
+  
+  setShowIndicators(window.innerWidth >= 768); 
 };
 
   useEffect(() => {
@@ -272,23 +273,14 @@ const DiscountCards = () => {
     return isNaN(pct) ? 0 : pct;
   };
 
+const withRuleActive = trendingCourses
+  .map(c => ({ course: c, secs: getTimeLeftSeconds(c) }))
+  .filter(x => x.secs !== Infinity)          
+  .sort((a, b) => a.secs - b.secs)          
+  .map(x => x.course);
 
-  const withRuleActive = trendingCourses
-    .map(c => ({ course: c, secs: getTimeLeftSeconds(c) }))
-    .filter(x => x.secs !== Infinity)
-    .sort((a, b) => a.secs - b.secs)
-    .map(x => x.course);
 
-  const seen = new Set(withRuleActive.map(c => keyOf(c)));
-
-  const withPerCourseDiscount = trendingCourses
-    .filter(c => !seen.has(keyOf(c)))
-    .map(c => ({ course: c, pct: getPerCourseDiscountPct(c) }))
-    .filter(x => x.pct > 0)
-    .sort((a, b) => b.pct - a.pct)
-    .map(x => x.course);
-
-  const orderedCourses = [...withRuleActive, ...withPerCourseDiscount];
+const orderedCourses = withRuleActive;
 
 const totalPages = Math.max(1, orderedCourses.length - cardsPerRow + 1);
 const startIndex = currentPage;
@@ -346,67 +338,78 @@ const goToPrev = () => {
 
   return (
     <div className="position-relative text-center">
-      {/* Left Arrow */}
-      <FaAngleLeft className="custom-cards-arrow left-cards-arrow" onClick={goToPrev} />
-      {/* Right Arrow */}
-      <FaAngleRight className="custom-cards-arrow right-cards-arrow" onClick={goToNext} />
+      {orderedCourses.length > 1 && (
+      <>
+        <FaAngleLeft className="custom-cards-arrow left-cards-arrow" onClick={goToPrev} />
+        <FaAngleRight className="custom-cards-arrow right-cards-arrow" onClick={goToNext} />
+      </>
+    )}
 
       <div className="d-flex justify-content-center gap-3 flex-wrap">
-        {loading
-          ? Array.from({ length: cardsPerRow }).map((_, idx) => (
-              <div className="skeleton-card" key={idx}></div>
-            ))
-          : currentCourses.map((course, idx) => (
-              <DiscountCourseCard
-                key={idx}
-                heading={course.courseName}
-                month={course.numberOfClasses}
-                image={`https://api.test.hachion.co/${course.courseImage}`}
-                course_id={course.id}
-                
-                discountPercentage={
-                  (() => {
-                    const rulePct = getRuleDiscountPct(course.courseName, country);
-                    if (rulePct > 0) return rulePct;
-                    return country === 'IN'
-                      ? (course.idiscount != null ? Number(course.idiscount) : 0)
-                      : (course.discount  != null ? Number(course.discount)  : 0);
-                  })()
-                }
-                amount={
-                  (() => {
-                    const isIN = country === 'IN';
-                    const isUS = country === 'US';
-                    const rawMrp = isIN ? course.iamount : course.amount;
-                    const rawNow = isIN ? course.itotal  : course.total;
-                    const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
-                    const nowVal = isIN ? Number(rawNow) : (Number(rawNow) * (isUS ? 1 : fxFromUSD));
-                    const rulePct = getRuleDiscountPct(course.courseName, country);
-                    const effectiveNow = rulePct > 0
-                      ? mrpVal * (1 - rulePct / 100)
-                      : nowVal;
-                    return `${currency} ${fmt(effectiveNow)}`;
-                  })()
-                }
-                totalAmount={
-                  (() => {
-                    const isIN = country === 'IN';
-                    const isUS = country === 'US';
-                    const rawMrp = isIN ? course.iamount : course.amount;
-                    const mrpVal = isIN ? Number(rawMrp) : (Number(rawMrp) * (isUS ? 1 : fxFromUSD));
-                    return `${fmt(mrpVal)}`; 
-                  })()
-                }
-                trainer_name={course.trainerName}
-                level={course.level}
-                onClick={() => handleCardClick(course)}
-                className="course-card"
-                timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
-              />
-            ))}
-      </div>
 
-      {showIndicators && (
+  
+  {loading &&
+    Array.from({ length: cardsPerRow }).map((_, idx) => (
+      <div className="skeleton-card" key={idx}></div>
+    ))
+  }
+
+  {/* ❌ No discount courses available */}
+{!loading && orderedCourses.length === 0 && (
+  <div className="no-discounts-msg text-center py-4 d-flex flex-column align-items-center">
+    <img
+      src={Nodiscount}
+      alt="No discounts"
+      className="no-discount-image mb-3"
+      style={{ width: "180px", height: "auto", objectFit: "contain" }}
+    />
+    <h5>No discounts available right now</h5>
+  </div>
+)}
+
+  {/* ✅ Render discount cards */}
+  {!loading && orderedCourses.length > 0 &&
+    currentCourses.map((course, idx) => (
+      <DiscountCourseCard
+        key={idx}
+        heading={course.courseName}
+        month={course.numberOfClasses}
+        image={`https://api.test.hachion.co/${course.courseImage}`}
+        course_id={course.id}
+        discountPercentage={(() => {
+          const rulePct = getRuleDiscountPct(course.courseName, country);
+          return rulePct;
+        })()}
+        amount={(() => {
+          const isIN = country === 'IN';
+          const isUS = country === 'US';
+          const rawMrp = isIN ? course.iamount : course.amount;
+          const rawNow = isIN ? course.itotal  : course.total;
+          const mrpVal = isIN ? Number(rawMrp) : Number(rawMrp) * (isUS ? 1 : fxFromUSD);
+          const nowVal = isIN ? Number(rawNow) : Number(rawNow) * (isUS ? 1 : fxFromUSD);
+          const rulePct = getRuleDiscountPct(course.courseName, country);
+          const effectiveNow = mrpVal * (1 - rulePct / 100);
+          return `${currency} ${fmt(effectiveNow)}`;
+        })()}
+        totalAmount={(() => {
+          const isIN = country === 'IN';
+          const isUS = country === 'US';
+          const rawMrp = isIN ? course.iamount : course.amount;
+          const mrpVal = isIN ? Number(rawMrp) : Number(rawMrp) * (isUS ? 1 : fxFromUSD);
+          return `${fmt(mrpVal)}`;
+        })()}
+        trainer_name={course.trainerName}
+        level={course.level}
+        onClick={() => handleCardClick(course)}
+        className="course-card"
+        timeLeftLabel={countdowns[course.id ?? course.courseName] || ""}
+      />
+    ))
+  }
+</div>
+
+
+      {showIndicators && orderedCourses.length > 1 && (
       <div className="page-indicators">
         {Array.from({ length: totalPages }).map((_, idx) => (
           <span

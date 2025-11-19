@@ -76,7 +76,7 @@ export default function AdminTools() {
     category_name: '',
     courseName: '',
     toolsName: '',
-    toolsDescription: '',
+    toolsLink: '',
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +112,7 @@ export default function AdminTools() {
       category_name:"",
       courseName: "",
       toolsName: "",
-      toolsDescription: "",
+      toolsLink: "",
     });
     setRows([{ id: Date.now(), tool_image: null, preview: null }]);
   };
@@ -375,7 +375,7 @@ export default function AdminTools() {
                     <TableRow>
                       <StyledTableCell align="center">Tools Images</StyledTableCell>
                       <StyledTableCell align="center">Tools Name</StyledTableCell>
-                      <StyledTableCell align="center">Tools Description</StyledTableCell>
+                      <StyledTableCell align="center">Tools Download Link</StyledTableCell>
                       <StyledTableCell align="center" sx={{ width: '150px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -433,9 +433,9 @@ export default function AdminTools() {
                         <StyledTableCell align='center'>
                           <input
                             className='table-curriculum'
-                            name='toolsDescription'
-                            value={row.toolsDescription}
-                            onChange={(e) => handleRowChange(index, 'toolsDescription', e.target.value)}
+                            name='toolsLink'
+                            value={row.toolsLink}
+                            onChange={(e) => handleRowChange(index, 'toolsLink', e.target.value)}
                           />
                         </StyledTableCell>
                         <StyledTableCell align='center'>
@@ -537,7 +537,9 @@ export default function AdminTools() {
                   <StyledTableCell align='center' sx={{ width: '80px' }}>S.No.</StyledTableCell>
                   <StyledTableCell align="center">Category Name</StyledTableCell>
                   <StyledTableCell align="center">Course Name</StyledTableCell>
-                  <StyledTableCell align="center">Tools Images/Name/Description</StyledTableCell>
+                  <StyledTableCell align="center">Tools Images</StyledTableCell>
+                  <StyledTableCell align="center">Tools Name</StyledTableCell>
+                  <StyledTableCell align="center">Tools Download Link</StyledTableCell>
                   <StyledTableCell align="center">Created Date</StyledTableCell>
                   <StyledTableCell align="center" sx={{ width: '100px' }}>Action</StyledTableCell>
                 </TableRow>
@@ -562,8 +564,10 @@ export default function AdminTools() {
                             ))}
                             {courseRow.tool_image.length > 4 && <span>+{courseRow.tool_image.length - 4}</span>}
                           </div>
-                        ) : ("")}-{courseRow.toolsName}-{courseRow.toolsDescription}
+                        ) : ("")}
                       </StyledTableCell>
+                      <StyledTableCell align="left">{courseRow.toolsName}</StyledTableCell>
+                      <StyledTableCell align="left">{courseRow.toolsLink}</StyledTableCell>
                       <StyledTableCell align="center">
                         {courseRow.date ? dayjs(courseRow.date).format('MM-DD-YYYY') : 'N/A'}
                       </StyledTableCell>

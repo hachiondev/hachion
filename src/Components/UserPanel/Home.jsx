@@ -88,6 +88,7 @@ export const Home = () => {
   <PopupBanner/>
 <Topbar/>
 <NavbarTop/>
+<main id="main-content">
 <Banner/>
 <Association/>
 <Trending/>
@@ -104,6 +105,7 @@ export const Home = () => {
  <RecentEntries />
  <Learners page="home"/>
 <HomeFaq/>
+</main>
 <Footer/>
 {/* {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>

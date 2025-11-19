@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./InterviewTabs.css";
-
-
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "https://api.test.hachion.co";
 

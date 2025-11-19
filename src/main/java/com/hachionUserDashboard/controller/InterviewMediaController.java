@@ -24,13 +24,11 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 public class InterviewMediaController {
 
-    // 💾 Where the file is stored on your EC2 (Mobaxterm path)
+    
     private static final String UPLOAD_DIR =
             "/home/ec2-user/uploads/prod/interviews/";
 
-    // 🌐 Public URL prefix to serve the file
-    // TODO: CHANGE this to your actual domain + path
-    // For example: "https://uploads.hachion.co/interviews/"
+    
     private static final String PUBLIC_BASE_URL =
             "https://api.hachion.co/uploads/prod/interviews/";
 
@@ -41,18 +39,18 @@ public class InterviewMediaController {
         }
 
         try {
-            // Make sure folder exists
+            
             Path uploadPath = Paths.get(UPLOAD_DIR);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            // Create safe unique filename
+            
             String originalName = StringUtils.cleanPath(file.getOriginalFilename());
             String ext = "";
             int dot = originalName.lastIndexOf('.');
             if (dot >= 0) {
-                ext = originalName.substring(dot);   // .webm / .mp4 / .wav etc.
+                ext = originalName.substring(dot);   
             }
 
             String newName = System.currentTimeMillis() + "-" +
@@ -60,10 +58,10 @@ public class InterviewMediaController {
 
             Path target = uploadPath.resolve(newName);
 
-            // Copy file to disk
+            
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
 
-            // Build the public URL (this MUST match your Nginx/static mapping)
+            
             String url = PUBLIC_BASE_URL + newName;
 
             Map<String, String> result = new HashMap<>();

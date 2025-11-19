@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -350,6 +351,23 @@ public class BlogsController {
 	@GetMapping("/blog/recent")
 	public List<Object[]> getAllBlogsLightweight() {
 		return repo.findTop8ForRecentEntries();
+	}
+
+	@GetMapping("/blog/categories")
+	public ResponseEntity<List<String>> getBlogCategories() {
+		try {
+			List<String> categories = repo.findAllBlogCategories();
+			return ResponseEntity.ok(categories);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/blog/filter")
+	public ResponseEntity<List<Object[]>> getBlogsByCategory(@RequestParam("category") List<String> categories) {
+
+		List<Object[]> blogs = repo.findByCategoriesForList(categories);
+		return ResponseEntity.ok(blogs);
 	}
 
 }

@@ -208,4 +208,10 @@ public class UserReviewController {
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
 	}
 
+	@GetMapping("/userreview/instructor/{trainerName}/{courseName}")
+	public List<UserReview> getReviewsByTrainerAndCourse(@PathVariable String trainerName,
+			@PathVariable String courseName) {
+		return repo.findByTrainerNameAndCourseName(trainerName, courseName);
+	}
+
 }

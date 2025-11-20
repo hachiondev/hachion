@@ -678,8 +678,7 @@ scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* width: 80%; */
-  margin: 40px auto;
+  margin: 20px auto;
   align-items: center;
   gap: 10px;
 }

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "trainer")
@@ -47,8 +46,12 @@ public class Trainer {
 	@Column(name = "trainer_rating")
 	private Double trainerRating;
 
-	@Column(name = "date") // Make sure the name matches your SQL column
+	@Column(name = "date")
 	private LocalDate date;
+
+	@Column(name = "trainer_image")
+	@Lob
+	private String trainerImage;
 
 	public Trainer() {
 	}
@@ -151,6 +154,14 @@ public class Trainer {
 
 	public void setTrainerRating(Double trainerRating) {
 		this.trainerRating = trainerRating;
+	}
+
+	public String getTrainerImage() {
+		return trainerImage;
+	}
+
+	public void setTrainerImage(String trainerImage) {
+		this.trainerImage = trainerImage;
 	}
 
 }

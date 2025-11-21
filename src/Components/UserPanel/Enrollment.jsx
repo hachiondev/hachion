@@ -1,12 +1,8 @@
   import React, { useState, useRef,useEffect } from 'react';
   import axios from 'axios';
-  import Topbar from './Topbar';
-  import NavbarTop from './NavbarTop';
   import './Blogs.css';
   import EnrollmentTable from './EnrollmentTable';
   import TextField from '@mui/material/TextField';
-  import StickyBar from './StickyBar';
-  import Footer from './Footer'
   import { Dialog, DialogContent } from "@mui/material";
   import { useFormik } from 'formik';
   import { LoginSchema } from '../Schemas';
@@ -657,8 +653,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
 
     return (
       <>
-      <Topbar/>
-      <NavbarTop/>
               <div className='blogs-header'>
                 <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -912,8 +906,6 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                 </div>
                   </div>
       </div>
-      <Footer/>
-      <StickyBar/>
       <Dialog
         open={openInstallmentPopup}
         onClose={() => setOpenInstallmentPopup(false)}

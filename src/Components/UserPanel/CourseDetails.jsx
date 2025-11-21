@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Course.css';
-import Footer from './Footer';
 import CourseDetailsTop from './CourseDetailsTop';
 import KeyHighlights from './KeyHighlights';
 import UpcomingHeader from './UpcomingHeader';
@@ -16,7 +13,6 @@ import CareerSupport from './CareerSupport';
 import CourseCertificate from './CourseCertificate';
 import Learners from './Learners';
 import TrainerProfile from './TrainerProfile';
-import StickyBar from './StickyBar';
 import CurriculumMain from './CurriculumMain';
 import CourseDetailsFaq from './CourseDetailsFaq';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -35,7 +31,6 @@ const CourseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const upcomingBatchRef = useRef(null);
-  const [showScrollButton, setShowScrollButton] = useState(false);
 
     useEffect(() => {
       if (location.hash === '#upcoming-events') {
@@ -51,18 +46,6 @@ const CourseDetails = () => {
             window.scrollTo(0, 0);
           }, []);
         
-          useEffect(() => {
-            const handleScroll = () => {
-              if (window.scrollY > 300) {
-                setShowScrollButton(true);
-              } else {
-                setShowScrollButton(false);
-              }
-            };
-        
-            window.addEventListener("scroll", handleScroll);
-            return () => window.removeEventListener("scroll", handleScroll);
-          }, []);
         const scrollToTop = () => {
         console.log("Scroll to top clicked!");
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -173,8 +156,6 @@ const CourseDetails = () => {
 
 
       <div className='course-top'>
-        <Topbar />
-        <NavbarTop />
         {/* <div className='course-banner'>
           <h3 className='course-banner-content'>{courseData?.courseName}</h3>
         </div> */}
@@ -252,16 +233,6 @@ const CourseDetails = () => {
           <TrainerProfile />
         </div>
         </div>
-        {/* Footer section to stop the sticky behavior */}
-        <div ref={footerRef}>
-          <Footer />
-        </div>
-        {showScrollButton && (
-                      <button className="scroll-to-top" onClick={scrollToTop}>
-                        <FaArrowUp />
-                      </button>
-                    )}
-        <StickyBar />
       </div>
     </>
   );

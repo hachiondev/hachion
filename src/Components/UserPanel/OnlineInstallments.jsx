@@ -1,9 +1,4 @@
-
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import './Blogs.css';
-import StickyBar from './StickyBar';
-import Footer from './Footer';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
@@ -454,8 +449,6 @@ const disallowedModes = ['crash', 'mentoring', 'self', 'selfqa'];
 const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -880,9 +873,6 @@ const baseInstallment = netCourseAmount / selectedInstallments;
           </div>
         )}
       </div>
-
-      <Footer />
-      <StickyBar />
     </>
   );
 };

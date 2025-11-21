@@ -1,15 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import contactUsBanner from "../../Assets/contactbanner.webp";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import Usa from "../../Assets/usa.webp";
 import "./Blogs.css";
 import india from "../../Assets/india.webp";
 import dubai from "../../Assets/dubai.webp";
 import ContactForm from "../../Assets/contact1.webp";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { LoginSchema } from "../Schemas";
@@ -246,9 +240,6 @@ if (response.status === 200) {
 
   return (
     <>
-      <Topbar />
-      <NavbarTop />
-
       <div className="contact-banner container">
         <h1 className="instructor-profile-title">Contact Us</h1>
         <nav aria-label="breadcrumb">
@@ -521,9 +512,6 @@ if (response.status === 200) {
           </div>
         </div>
       </div>
-
-      <Footer />
-      <StickyBar />
     </>
   );
 };

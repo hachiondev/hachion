@@ -4,10 +4,6 @@ import DiscountBanner2 from "../../Assets/d2.webp";
 import DiscountBanner3 from "../../Assets/d3.webp";
 import "./Style.css";
 import "./Home.css";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import Learners from "./Learners";
 import ExploreDeals from "./ExploreDeals";
 
@@ -29,9 +25,6 @@ const DiscountDeals = () => {
 
   return (
     <div className="course-top">
-      <Topbar />
-      <NavbarTop />
-
       {/* ✅ Carousel */}
       <div className="discount-banner-carousel ">
         {/* Slides */}
@@ -67,8 +60,6 @@ const DiscountDeals = () => {
       </div> */}
       <ExploreDeals />
       <Learners page="home"/>
-      <Footer />
-      <StickyBar />
     </div>
   );
 };

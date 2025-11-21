@@ -1,11 +1,6 @@
 import React, { useEffect , useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import './Blogs.css';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import StickyBar from './StickyBar';
-import Footer from './Footer';
-import { FaArrowUp } from 'react-icons/fa';
 
 const Terms = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -15,29 +10,8 @@ const Terms = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Scroll to top function
-  const scrollToTop = () => {
-    console.log("Scroll to top clicked!");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className='about-us'>
       <div className='blogs-header'>
       <nav aria-label="breadcrumb">
@@ -50,7 +24,7 @@ const Terms = () => {
           </ol>
         </nav>
         </div>
-        <div className='about-us-content' style={{color: '#6a6a6a'}}>
+        <div className='about-us-content container'>
           <h1 className='about-us-heading'>Terms and Conditions for Hachion</h1>
 
             <p className='about-us-left-content'>
@@ -136,16 +110,6 @@ const Terms = () => {
           </div>
          
         </div>
-
-      <Footer />
-
-      {showScrollButton && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
-
-      <StickyBar />
     </>
   );
 }

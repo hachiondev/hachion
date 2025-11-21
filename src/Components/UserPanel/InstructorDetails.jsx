@@ -3,10 +3,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { FaStar, FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import { LuCrown } from "react-icons/lu";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import axios from "axios";
 import CourseCard from "./CourseCard";
@@ -159,9 +155,6 @@ useEffect(() => {
 
   return (
     <div className="course-top">
-      <Topbar />
-      <NavbarTop />
-
       {/* Breadcrumb */}
       <div className="blogs-header">
         <nav aria-label="breadcrumb">
@@ -284,9 +277,6 @@ useEffect(() => {
           )) : <p>No reviews available.</p>}
         </div>
       </div>
-
-      <Footer />
-      <StickyBar />
     </div>
   );
 };

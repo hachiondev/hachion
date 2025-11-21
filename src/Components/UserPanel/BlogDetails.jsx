@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
 import "./Blogs.css";
 import MoreBlogs from "./MoreBlogs";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
 import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
@@ -23,7 +19,6 @@ const BlogDetails = () => {
   const navigate = useNavigate();
   const id = title?.split("-").pop();
 
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const [blogs, setBlogs] = useState([]);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [helmetKey, setHelmetKey] = useState(0);
@@ -71,13 +66,6 @@ const BlogDetails = () => {
       }
     };
     fetchAllBlogs();
-  }, []);
-
-  // ✅ Scroll button
-  useEffect(() => {
-    const handleScroll = () => setShowScrollButton(window.scrollY > 800);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -176,8 +164,6 @@ const BlogDetails = () => {
       </Helmet>
 
       <div className="home-background">
-        <Topbar />
-        <NavbarTop />
 
         <div className="blogs-header">
           <nav aria-label="breadcrumb">
@@ -327,10 +313,7 @@ const BlogDetails = () => {
         <div className="blog-bottom">
           <MoreBlogs scrollToTop={false} />
         </div>
-        <Footer />
       </div>
-
-      {showScrollButton && <StickyBar />}
     </>
   );
 };

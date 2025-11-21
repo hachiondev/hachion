@@ -189,7 +189,7 @@ const InstructorForm = ({ onClose }) => {
   const handleSubmit = async () => {
   
   if (!validateForm()) {
-    setErrorMessage("Please fix the highlighted fields.");
+    setErrorMessage("Please fill the mandatory fields.");
     setSuccessMessage("");
     return;
   }

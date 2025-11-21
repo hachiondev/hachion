@@ -1,5 +1,5 @@
 .unsubscribe-container {
-  background-color: #eeeeee;
+  background-color: #f7f7f7;
   padding: 2vh;
   margin-bottom: 0;
 }
@@ -40,15 +40,14 @@
 }
 .unsub-us-right {
   max-width: 90%;
-  background-color: #ffffff;
+  background-color: #f6f6f6;
   margin-top: 20px;
   border-radius: 20px;
-  border: 1px solid #b3b3b3;
   box-shadow: 5px 5px 10px #d3d3d3;
 }
 .unsub-form {
-  margin-left: 40px;
-  padding: 10px;
+  margin: auto;
+  padding: 10px 20px;
 }
 .unsub-us-bottom-div {
   display: flex;
@@ -59,7 +58,7 @@
 }
 .unsub-us-right-header {
   border-radius: 2vh 2vh 0 0;
-  background: linear-gradient(90deg, #006489 0%, #00aeef 49.5%, #006489 100%);
+  background: #00aeef;
   color: white;
   font-size: clamp(1rem, 3vw, 1.5rem);
   font-weight: 600;
@@ -182,7 +181,6 @@
   .unsub-us-right-header {
     display: flex;
     border-radius: 10px 10px 0 0;
-    background: linear-gradient(90deg, #006489 0%, #00aeef 49.5%, #006489 100%);
     color: white;
     font-size: 16px;
     height: 60px;

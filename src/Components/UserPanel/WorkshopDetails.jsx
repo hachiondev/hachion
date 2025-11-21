@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import { useParams } from 'react-router-dom';
 import './Course.css';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import Banner2 from '../../Assets/bann3.webp';
 import salreg from '../../Assets/salreg.webp';
 import WorkshopHighlights from './WorkshopHighlights';
@@ -20,7 +16,7 @@ import axios from "axios";
 import {MdKeyboardArrowRight} from 'react-icons/md';
 import placeholderImage from '../../Assets/workshopplaceholder.webp';
 
-const SalWorkshop = () => {
+const WorkshopDetails = () => {
   const { slug } = useParams();
   const { courseName } = useParams();
   const [error, setError] = useState('');
@@ -262,8 +258,6 @@ useEffect(() => {
   <meta property="og:title" content={workshop?.meta_title || "Best Online IT Workshop Courses"} />
   <meta property="og:description" content={workshop?.meta_description || "Transform your career with Hachion's Online IT Courses."} />
    </Helmet>
-      <Topbar />
-      <NavbarTop />
       <div className='blogs-header'>
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -426,14 +420,10 @@ useEffect(() => {
         <h2 className='workshop-heading'>Recent Workshop Entries</h2>
         <WorkshopEntries />
         </div>
-      <div ref={footerRef}>
-        <Footer />
-      </div>
-      <StickyBar />
       </div>)}
       
     </>
   );
 };
 
-export default SalWorkshop;
+export default WorkshopDetails;

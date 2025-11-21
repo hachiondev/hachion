@@ -1,9 +1,5 @@
 import React, { useEffect , useState, useRef } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import PostJob from './PostJob';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
 import banner from '../../Assets/hirebanner.webp';
 import whyhachion from '../../Assets/whyhire.webp';
@@ -39,8 +35,6 @@ const HirefromUs = () => {
   return (
     <div>
       <div className='home-background'>
-      <Topbar/>
-      <NavbarTop/>
       <div className='hirebackground'>
               <div className='hire-banner'>
                 <div className='hire-content'>
@@ -89,14 +83,7 @@ const HirefromUs = () => {
           <div ref={postJobRef} style={{marginTop: 20}}>
           <PostJob />
         </div>
-      <Footer/>
-      {showScrollButton && (
-              <button className="scroll-to-top" onClick={scrollToTop}>
-                <FaArrowUp />
-              </button>
-            )}
       </div>
-      <StickyBar/>
     </div>
   )
 }

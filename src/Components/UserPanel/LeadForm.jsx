@@ -4,10 +4,6 @@ import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
 import RegistrationImage from '../../Assets/registerImg.webp';
 import { MdKeyboardArrowRight } from "react-icons/md";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import registerbanner from '../../Assets/register.webp';
 import aboutHachion from '../../Assets/aboutlead.webp';
 import Benefits from './LeadBenefits';
@@ -171,8 +167,6 @@ useEffect(() => {
   
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className='blogs-header'>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -330,8 +324,6 @@ useEffect(() => {
         </form>
       </div>
       </div>
-      <Footer />
-      <StickyBar />
     </>
   );
 };

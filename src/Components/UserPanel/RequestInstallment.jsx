@@ -1,10 +1,5 @@
 
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import './Blogs.css';
-import StickyBar from './StickyBar';
-import Footer from './Footer';
-import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';

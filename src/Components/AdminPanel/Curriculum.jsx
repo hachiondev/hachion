@@ -75,6 +75,8 @@ export default function Curriculum() {
     const [allData, setAllData] = useState([]); 
     const [successMessage, setSuccessMessage] = useState("");
       const [errorMessage, setErrorMessage] = useState("");
+      const [brochureError, setBrochureError] = useState("");
+const [curriculumError, setCurriculumError] = useState("");
 const [filterData, setFilterData] = useState({
   category_name: "",
   course_name: "",
@@ -267,11 +269,12 @@ const [filterData, setFilterData] = useState({
 
     formData.append("curriculumData", JSON.stringify(curriculumData));
 
+    
     if (editedRow.curriculum_pdf && editedRow.curriculum_pdf instanceof File) {
       formData.append("curriculumPdf", editedRow.curriculum_pdf);
     }
     if (editedRow.brochure_pdf && editedRow.brochure_pdf instanceof File) {
-      formData.append("brochurepdf", editedRow.brochure_pdf);
+      formData.append("brochurePdf", editedRow.brochure_pdf);
     }
 
     if (editedRow.assessment_pdf && editedRow.assessment_pdf instanceof File) {
@@ -297,7 +300,7 @@ const [filterData, setFilterData] = useState({
       )
     );
 
-    // ✅ Reapply current filter
+    
     const currentCategory = editedRow.category_name;
     const currentCourse = editedRow.course_name;
 
@@ -311,11 +314,7 @@ const [filterData, setFilterData] = useState({
       )
     );
 
-    // setCurriculum((prev) =>
-    //   prev.map((curr) =>
-    //     curr.curriculum_id === editedRow.curriculum_id ? response.data : curr
-    //   )
-    // );
+    
 
     setMessage("Curriculum updated successfully!");
     setTimeout(() => setMessage(""), 5000);
@@ -327,14 +326,32 @@ const [filterData, setFilterData] = useState({
   }
 };
 
-      const handleDelete = async (curriculum_id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.test.hachion.co/curriculum/delete/${curriculum_id}`); 
-          console.log("Curriculum deleted successfully:", response.data); 
-        } catch (error) { 
-          console.error("Error deleting Curriculum:", error); 
-        } }; 
+    const handleDelete = async (curriculum_id) => {
+  try {
+    const response = await axios.delete(
+      `https://api.test.hachion.co/curriculum/delete/${curriculum_id}`
+    );
+
+    console.log("Curriculum deleted successfully:", response.data);
+    setAllData(prev => prev.filter(item => item.curriculum_id !== curriculum_id));
+    setFilteredCurriculum(prev => prev.filter(item => item.curriculum_id !== curriculum_id));
+
+
+    setSuccessMessage("Curriculum deleted successfully!");
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 4000);
+
+  } catch (error) {
+    console.error("Error deleting Curriculum:", error);
+
+    setErrorMessage("Failed to delete curriculum.");
+    setSuccessMessage("");
+
+    setTimeout(() => setErrorMessage(""), 4000);
+  }
+};
+
     useEffect(() => {
   const filtered = allData.filter((item) => {
     const curriculumDate = new Date(item.date);
@@ -366,24 +383,38 @@ const [filterData, setFilterData] = useState({
   setFilteredCurriculum(filtered);
   setCurrentPage(1);
 }, [allData, searchTerm, startDate, endDate, filterData]);
-      const handleFileUpload = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setCurriculumData((prev) => ({
-                ...prev,
-                curriculum_pdf: file,
-                brochure_pdf: file, 
-            }));
-        }
-    };
     
-    const handleEditFileUpload =  (e) => {
-      setEditedRow(prev => ({
-        ...prev,
-        curriculum_pdf: e.target.files[0],
-        brochure_pdf: e.target.files[0], 
-      }));
-  };   
+       const handleCurriculumFileUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setCurriculumData((prev) => ({
+      ...prev,
+      curriculum_pdf: file,
+    }));
+    setCurriculumError(""); 
+  }
+};
+
+ const handleBrochureFileUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setCurriculumData((prev) => ({
+      ...prev,
+      brochure_pdf: file,
+    }));
+    setBrochureError(""); 
+  }
+};
+
+      
+      const handleEditFileUpload =  (e) => {
+        setEditedRow(prev => ({
+          ...prev,
+          curriculum_pdf: e.target.files[0],
+          brochure_pdf: e.target.files[0], 
+        }));
+      };   
+
         const handleClickOpen = (row) => {
             setEditedRow(row)
             setOpen(true);             
@@ -425,12 +456,14 @@ const [filterData, setFilterData] = useState({
       date: currentDate,
     }));
 
-    if (curriculumData.curriculum_pdf) {
+    
+        if (curriculumData.curriculum_pdf) {
       formData.append("curriculumPdf", curriculumData.curriculum_pdf);
     }
     if (curriculumData.brochure_pdf) {
-      formData.append("brochurepdf", curriculumData.brochure_pdf);
+      formData.append("brochurePdf", curriculumData.brochure_pdf);
     }
+
 
     if (row.assessment_pdf && row.assessment_pdf instanceof File) {
       formData.append("assessmentPdf", row.assessment_pdf);
@@ -452,19 +485,50 @@ const [filterData, setFilterData] = useState({
         setErrorMessage("❌ Failed to add curriculum entry.");
         break;
       }
-    } catch (error) {
-      const backendMessage = error.response?.data?.message || error.response?.data || error.message;
-      console.error("Error adding curriculum:", backendMessage);
-      // alert(`Error uploading file: ${backendMessage}`);
-      allSuccessful = false;
-       setSuccessMessage("");
-      setErrorMessage("❌ Error uploading file: " + backendMessage);
-      break;
-    }
+       } catch (error) {
+  const backendMessage =
+    error.response?.data?.message || error.response?.data || error.message;
+
+  console.error("Error adding curriculum:", backendMessage);
+
+  allSuccessful = false;
+  setSuccessMessage("");
+
+  const msgString = String(backendMessage);
+
+  const FILE_NAME_RULE =
+    "Only letters, numbers, hyphens (-), underscores (_), ampersands (&), slashes (/), dots (.), and spaces are allowed.";
+
+  
+  if (msgString.includes("Invalid Brochure PDF")) {
+    setBrochureError(FILE_NAME_RULE);
+    setCurriculumError("");
+    setErrorMessage("");
+    break;
+  }
+
+  
+  if (msgString.includes("Invalid file name") ||
+      msgString.includes("Invalid Curriculum PDF")) {
+
+    setCurriculumError(FILE_NAME_RULE);
+    setBrochureError("");
+    setErrorMessage("");
+    break;
+  }
+
+  
+  setErrorMessage("❌ Error uploading file: " + msgString);
+  setCurriculumError("");
+  setBrochureError("");
+  break;
+}
+
+
   }
 
   if (allSuccessful) {
-    // alert("All curriculum entries added successfully.");
+    
      setSuccessMessage("✅ All curriculum entries added successfully.");
     setErrorMessage("");
     setShowAddCourse(false);
@@ -525,26 +589,56 @@ const [filterData, setFilterData] = useState({
       </div>
       </div>
   <div className='course-row'>
-  <div class="col-md-3">
-  <label for="formFile" class="form-label">Curriculum PDF</label>
+    <div class="col-md-3">
+    <label for="curriculumFile" class="form-label">Curriculum PDF</label>
+    <input
+      className="form-control"
+      type="file"
+      id="curriculumFile"
+      name="curriculum_pdf"
+      accept=".pdf"
+      onChange={handleCurriculumFileUpload}
+    />
+    {curriculumError && (
+      <p
+        style={{
+          color: "red",
+          fontSize: "0.8rem",
+          marginTop: "4px",
+          whiteSpace: "pre-line",
+        }}
+      >
+        {curriculumError}
+      </p>
+    )}
+  </div>
+
+  <div className="col-md-3">
+  <label htmlFor="brochureFile" className="form-label">Brochure PDF</label>
+
   <input
-    className="form-control"
     type="file"
-    id="formFile"
-    name='curriculum_pdf'
-    onChange={handleFileUpload}
-/>
-</div>
-<div class="col-md-3">
-  <label for="formFile" class="form-label">Brochure PDF</label>
-  <input
     className="form-control"
-    type="file"
-    id="formFile"
-    name='brochure_pdf'
-    onChange={handleFileUpload}
-/>
+    id="brochureFile"
+    name="brochure_pdf"
+    accept=".pdf"
+    onChange={handleBrochureFileUpload}
+  />
+
+  {brochureError && (
+    <p
+      style={{
+        color: "red",
+        fontSize: "0.8rem",
+        marginTop: "4px",
+        whiteSpace: "pre-line",
+      }}
+    >
+      {brochureError}
+    </p>
+  )}
 </div>
+
   </div>
   <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650,marginTop:5 }} aria-label="customized table">
@@ -661,8 +755,7 @@ const [filterData, setFilterData] = useState({
       </Table>
     </TableContainer>
     <div className="course-row">
-  <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
 </div>
 </div>
@@ -916,33 +1009,152 @@ const [filterData, setFilterData] = useState({
     </div>
     </div>
 
+      <div className="col-md-3">
+      <label className="form-label">Curriculum's PDF</label>
+
+      <label
+        htmlFor="curriculumPdfEdit"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          border: "1px solid #ced4da",
+          borderRadius: "4px",
+          padding: "6px 10px",
+          cursor: "pointer",
+          backgroundColor: "#fff",
+        }}
+      >
+        <BsFileEarmarkPdfFill size={18} className="edit" />
+        <span
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: 180,
+            fontSize: "0.9rem",
+          }}
+        >
+          {editedRow.curriculum_pdf
+            ? editedRow.curriculum_pdf.name ||
+              editedRow.curriculum_pdf.split("/").pop()
+            : "Select Curriculum PDF"}
+        </span>
+      </label>
+
+      <input
+        id="curriculumPdfEdit"
+        type="file"
+        accept=".pdf"
+        style={{ display: "none" }}
+        onChange={(e) =>
+          setEditedRow((prev) => ({
+            ...prev,
+            curriculum_pdf: e.target.files[0],
+          }))
+        }
+      />
+    </div>
     <div className="col-md-3">
       <label htmlFor="curriculumPDF" className="form-label">Curriculum's PDF</label>
+
+      {editedRow.curriculum_pdf ? (
+        <div
+          style={{
+            marginBottom: 8,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <BsFileEarmarkPdfFill size={20} className="edit" />
+          <span
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: 180,
+            }}
+          >
+            {editedRow.curriculum_pdf.name ||
+              editedRow.curriculum_pdf.split('/').pop()}
+          </span>
+        </div>
+      ) : (
+        <p
+          style={{
+            fontSize: '0.85rem',
+            color: '#888',
+            marginBottom: 8,
+          }}
+        >
+          No PDF
+        </p>
+      )}
+
       <input
-  type="file"
-  accept=".pdf"
-  onChange={(e) =>
-    setEditedRow((prev) => ({
-      ...prev,
-      curriculum_pdf: e.target.files[0], 
-    }))
-  }
-/>
+        id="curriculumPDF"
+        type="file"
+        accept=".pdf"
+        onChange={(e) =>
+          setEditedRow((prev) => ({
+            ...prev,
+            curriculum_pdf: e.target.files[0],
+          }))
+        }
+      />
+    </div>
+    <div className="col-md-3">
+      <label htmlFor="brochurePDF" className="form-label">Brochure PDF</label>
+
+      {editedRow.brochure_pdf ? (
+        <div
+          style={{
+            marginBottom: 8,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <BsFileEarmarkPdfFill size={20} className="edit" />
+          <span
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: 180,
+            }}
+          >
+            {editedRow.brochure_pdf.name ||
+              editedRow.brochure_pdf.split('/').pop()}
+          </span>
+        </div>
+      ) : (
+        <p
+          style={{
+            fontSize: '0.85rem',
+            color: '#888',
+            marginBottom: 8,
+          }}
+        >
+          No PDF
+        </p>
+      )}
+
+      <input
+        id="brochurePDF"
+        type="file"
+        accept=".pdf"
+        onChange={(e) =>
+          setEditedRow((prev) => ({
+            ...prev,
+            brochure_pdf: e.target.files[0],
+          }))
+        }
+      />
     </div>
 
-        <div className="col-md-3">
-      <label htmlFor="brochurePDF" className="form-label">Brochure PDF</label>
-      <input
-  type="file"
-  accept=".pdf"
-  onChange={(e) =>
-    setEditedRow((prev) => ({
-      ...prev,
-      brochure_pdf: e.target.files[0], 
-    }))
-  }
-/>
-    </div>
+
 
     <label htmlFor="title">Title</label>
     <input

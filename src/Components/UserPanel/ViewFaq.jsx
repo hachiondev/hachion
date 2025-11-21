@@ -6,10 +6,6 @@ import FaqBanner from "../../Assets/faq-banner.webp";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import HelpFaqAll from "./HelpFaqAll";
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import FaqFormPopup from "./FaqFormPopup";
 
 const ViewFaq = () => {
@@ -21,8 +17,6 @@ const ViewFaq = () => {
 
   return (
     <div className="course-top">
-        <Topbar />
-        <NavbarTop />
         <img
         className="faq-banner"
         src={FaqBanner}
@@ -75,8 +69,6 @@ const ViewFaq = () => {
     <button className="faq-button" onClick={() => setShowPopup(true)}>Ask Question</button>
   </div>
 </div>
-    <Footer />
-    <StickyBar />
     {showPopup && <FaqFormPopup onClose={() => setShowPopup(false)} />}
     </div>
   );

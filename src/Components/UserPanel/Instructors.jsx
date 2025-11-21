@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Style.css";
 import "./Home.css";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { TbSlashes } from "react-icons/tb";
 import Avatar from "@mui/material/Avatar";
 import { MdOutlineStar } from "react-icons/md";
@@ -163,9 +159,6 @@ const formatForUrl = (str) =>
 
   return (
     <div className="course-top">
-      <Topbar />
-      <NavbarTop />
-
       {/* Banner */}
       <div className="instructor-profile-banner">
         <h1 className="instructor-profile-title">Instructor Profiles</h1>
@@ -308,9 +301,6 @@ const formatForUrl = (str) =>
           </div>
         </div>
       </div>
-
-      <Footer />
-      <StickyBar />
     </div>
   );
 };

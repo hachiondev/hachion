@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import BlogList from "./BlogList";
 import BlogsSidebar from "./BlogsSidebar";
 import LatestArticles from "./LatestArticles";
@@ -58,9 +54,6 @@ const Blogs = () => {
         <link rel="canonical" href="https://hachion.co/blogs" />
       </Helmet>
 
-      <Topbar />
-      <NavbarTop />
-
       <div className="blogs-header">
         <nav aria-label="breadcrumb ">
           <ol className="breadcrumb">
@@ -107,8 +100,6 @@ const Blogs = () => {
 
       <LatestArticles />
       <WatchVideos />
-      <Footer />
-      <StickyBar />
     </>
   );
 };

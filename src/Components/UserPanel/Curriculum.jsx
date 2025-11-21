@@ -95,34 +95,42 @@ const [showPaymentPopup, setShowPaymentPopup] = useState(false);
 
   const showLoginModal = () => setIsLoginModalVisible(true);
   const hideLoginModal = () => setIsLoginModalVisible(false);
+const downloadPdf = () => {
+  
+  const userDataRaw = localStorage.getItem('loginuserData');
 
-  const downloadPdf = () => {
-    const token = localStorage.getItem('authToken');
+  if (!userDataRaw) {
+    showLoginModal();
+    return;
+  }
 
-    if (!token) {
-      showLoginModal();
-      return;
-    }
+  let userData;
+  try {
+    userData = JSON.parse(userDataRaw);
+  } catch (e) {
+    
+    showLoginModal();
+    return;
+  }
 
-    if (!curriculum || curriculum.length === 0) {
-      alert('No curriculum found for this course.');
-      return;
-    }
+  if (!userData || !userData.email) {
+    showLoginModal();
+    return;
+  }
+  if (!curriculum || curriculum.length === 0) {
+    alert('No curriculum found for this course.');
+    return;
+  }
 
-    const userData = JSON.parse(localStorage.getItem('loginuserData'));
-    if (!userData) {
-      showLoginModal();
-      return;
-    }
-
-    const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
-    if (curriculumWithPdf) {
-      const fullPdfUrl = `https://api.test.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
-      window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      alert('No brochure available for this course.');
-    }
-  };
+  const curriculumWithPdf = curriculum.find(item => item.brochure_pdf);
+  if (curriculumWithPdf) {
+    const fullPdfUrl = `https://api.test.hachion.co/uploads/prod/curriculum/${curriculumWithPdf.brochure_pdf}`;
+    window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
+  } else {
+    alert('No brochure available for this course.');
+  }
+};
+ 
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -1,10 +1,6 @@
 import React, { useEffect , useState, useRef } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import ApplyDetails from './ApplyDetails';
 import ApplyForm from './ApplyForm';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
 import jobdetails from '../../Assets/apply.webp';
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -30,8 +26,6 @@ const JobDetails = () => {
   return (
     <div>
       <div className='home-background'>
-      <Topbar/>
-      <NavbarTop/>
       <div className='blogs-header'>
       <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -53,15 +47,8 @@ const JobDetails = () => {
                 <ApplyDetails/>
                 <ApplyForm/>
                 </div>
-      <Footer/>
-      {showScrollButton && (
-              <button className="scroll-to-top" onClick={scrollToTop}>
-                <FaArrowUp />
-              </button>
-            )}
       </div>
       </div>
-      <StickyBar/>
     </div>
   )
 }

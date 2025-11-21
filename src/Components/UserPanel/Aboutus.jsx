@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
 import "./Blogs.css";
 import Benefit from "../../Assets/about1.webp";
 import whatwedo from "../../Assets/about3.webp";
@@ -16,8 +14,6 @@ import feat4 from "../../Assets/career-icon.webp";
 import feat5 from "../../Assets/247-icon.webp";
 import feat6 from "../../Assets/success-icon.webp";
 import Learners from "./Learners";
-import StickyBar from "./StickyBar";
-import Footer from "./Footer";
 import { TiTick } from "react-icons/ti";
 import { TbSlashes } from "react-icons/tb";
 import HomeFaq from "./HomeFaq";
@@ -171,9 +167,6 @@ const Aboutus = () => {
 
   return (
     <>
-      <Topbar />
-      <NavbarTop />
-
       <div className="instructor-profile-banner container">
         <h1 className="instructor-profile-title">ABOUT US</h1>
         <nav aria-label="breadcrumb">
@@ -448,8 +441,6 @@ const Aboutus = () => {
       </div>
 
       <HomeFaq />
-      <Footer />
-      <StickyBar />
     </>
   );
 };

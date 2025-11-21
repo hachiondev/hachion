@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import WorkshopCard from './WorkshopCard';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -121,8 +117,6 @@ const Workshop = () => {
           </script>
         </Helmet>
       <div className='home-background'>
-        <Topbar />
-        <NavbarTop />
         <div>
           <h1 className='course-banner-content'>Workshop</h1>
         </div>
@@ -243,9 +237,7 @@ const Workshop = () => {
             )}
           </div>
         </div>
-        <Footer />
       </div>
-      <StickyBar />
     </>
   );
 };

@@ -19,7 +19,6 @@ import AdminSidebar from './Components/AdminPanel/AdminSidebar';
 import Terms from './Components/UserPanel/Terms';
 import Privacy from './Components/UserPanel/Privacy';
 import Blogs from './Components/UserPanel/Blogs';
-import Salesforce from './Components/UserPanel/Salesforce';
 import BlogDetails from './Components/UserPanel/BlogDetails';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
@@ -32,7 +31,6 @@ import Enrollment from './Components/UserPanel/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
-import SalWorkshop from './Components/UserPanel/SalWorkshop';
 import Workshop from './Components/UserPanel/Workshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
@@ -58,6 +56,9 @@ import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
 import NewCourseDetails from './Components/UserPanel/NewCourseDetails';
 import GoogleMobileNumber from './Components/UserPanel/GoogleMobileNumber';
+import Layout from './Components/UserPanel/Layout';
+import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
+
 const RedirectToLowercase = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -102,6 +103,8 @@ function AppRoutes() {
       <Route path='/resetpassword' element={<ResetPassword />}/>
       <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path='/phone-number' element={<GoogleMobileNumber/>}/>
+      
+      <Route element={<Layout />}>
       <Route path="/" element={<Home />} />
       <Route path='/viewfaqs' element={<ViewFaq/>}/>
       <Route path='/discountdeals' element={<DiscountDeals/>}/>
@@ -116,34 +119,15 @@ function AppRoutes() {
       <Route path='/hire-from-us' element={<HirefromUs/>}/>
       <Route path='/career' element={<ApplyHiring/>}/>
       <Route path='/career/apply/:jobTitle' element={<JobDetails/>}/>
-      <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
-      <Route path='/adminnav' element={<AdminNavbar/>}/>
-      <Route path='/adminsidebar' element={<AdminSidebar/>}/>
-      <Route path="adminlogin" element={<AdminLogin />} />
-      <Route path="adminregister" element={<AdminRegister />} />
-      <Route path="/adminforgot" element={<AdminForgot />} />
-      <Route element={<ProtectedRoute />}>
-          <Route path="admindashboardview" element={<AdminDashboardView />} />
-      </Route>
-      <Route element={<UserProtectedRoute />}>
-        <Route path="/userdashboard/:section?" element={<UserDashboard />} />
-        <Route
-          path="/userenrolledassignment/:coursename"
-          element={<UserEnrolledAssignment />}
-        />
-      </Route>
-      <Route path='/admincourse' element={<CategoryTable />} />
       <Route path='/workshop' element={<Workshop/>}/>
-      <Route path='/workshop/:slug' element={<SalWorkshop/>}/>
+      <Route path='/workshop/:slug' element={<WorkshopDetails/>}/>
       <Route path='/blogs' element={<Blogs/>}/>
-      <Route path="/blogs/:category" element={<Salesforce/>}/>
       <Route path='/enroll/:courseName' element={<Enrollment/>}/>
       <Route path="/installments/:courseName" element={<OnlineInstallments />} />
       <Route path='/payment/:courseName' element={<EnrollPayment/>}/>
       <Route path="/blogs/:category_name/:title" element={<BlogDetails />} />
       <Route path='/aboutus' element={<Aboutus/>}/>
       <Route path='/contactus' element={<ContactUs/>}/>
-      <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
       <Route path='/review' element={<UserWriteReview/>}/>
       <Route path='/addtrending' element={<TrendingCourse/>}/>
       <Route path='/courseschedule' element={<CourseSchedule/>}/>
@@ -156,6 +140,27 @@ function AppRoutes() {
       <Route path="/summer-tech-bootcamp-for-teens" element={<KidsSummer />} />
       <Route path="/lead-form" element={<LeadForm />} />
       <Route path="*" element={<NotFound />} />
+      <Route element={<UserProtectedRoute />}>
+        <Route path="/userdashboard/:section?" element={<UserDashboard />} />
+        <Route
+          path="/userenrolledassignment/:coursename"
+          element={<UserEnrolledAssignment />}
+        />
+      </Route>
+      </Route>
+      <Route path='/haveanyquery' element={<HaveAnyQuery/>}/>
+
+      <Route path='/adminnav' element={<AdminNavbar/>}/>
+      <Route path='/adminsidebar' element={<AdminSidebar/>}/>
+      <Route path="adminlogin" element={<AdminLogin />} />
+      <Route path="adminregister" element={<AdminRegister />} />
+      <Route path="/adminforgot" element={<AdminForgot />} />
+      <Route element={<ProtectedRoute />}>
+          <Route path="admindashboardview" element={<AdminDashboardView />} />
+      </Route>
+      <Route path='/admincourse' element={<CategoryTable />} />
+      <Route path='/admindashboardview' element={<AdminDashboardView/>}/>
+
       </Routes>
     </>
   );

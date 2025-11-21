@@ -1,39 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import './Blogs.css';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import StickyBar from './StickyBar';
-import Footer from './Footer';
-import { FaArrowUp } from 'react-icons/fa';
 
 const Privacy = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
-
-  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollButton(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className='about-us'>
         <div className='blogs-header'>
       <nav aria-label="breadcrumb">
@@ -46,7 +21,7 @@ const Privacy = () => {
           </ol>
         </nav>
         </div>
-        <div className='about-us-content' style={{color: '#6a6a6a'}}>
+        <div className='about-us-content container'>
           <h1 className='about-us-heading'>Legal and Privacy Policy for Hachion</h1>
 
             <p className='about-us-left-content'>
@@ -124,17 +99,6 @@ const Privacy = () => {
           </div>
          
         </div>
-
-      <Footer />
-      
-      {/* Scroll to Top Button */}
-      {showScrollButton && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
-
-      <StickyBar />
     </>
   );
 }

@@ -342,18 +342,19 @@
       .breadcrumb-item {
         display: flex;
         align-items: center;
-        font-size: 12px;
+        font-size: small;
       }
       
       .breadcrumb-item a {
         text-decoration: none;
         color: #000000;
         white-space: nowrap;
+        font-weight: 600;
       }
       
       .breadcrumb-item.active {
-        color: #000000;
-        font-size: 12px;
+        color:#00AEEF !important;
+        font-size: small;
         padding-left: 0;
         white-space: nowrap;
         overflow:hidden;
@@ -393,7 +394,8 @@
         margin: 40px;
       }
       .about-us-left-content{
-        font-size: 16px;
+        color: #000;
+        font-size: medium;
         font-weight: 400;
         padding-top: 20px;
         padding-left: 4vh;
@@ -587,7 +589,7 @@
       background-color: #006489;
     }
     .example{
-      color: #6a6a6a;
+      color: #000;
       font-size: small;
       margin: 2px;
     }
@@ -1164,11 +1166,7 @@ background-color: white;
         justify-content: space-between;
     
       }
-      .about-us-left-content{
-        font-size: 18px;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
+
       .about-us-top img{
       margin: 10px;
         height: 320px;
@@ -1185,11 +1183,7 @@ background-color: white;
         justify-content: space-between;
     
       }
-      .about-us-left-content{
-        font-size: 16px;
-        padding-left: 5px;
-        padding-right: 5px;
-      }
+
       .about-us-top img{
       margin: 0px;
         height: 280px;
@@ -1322,20 +1316,12 @@ background-color: white;
           padding-top: 5px;
         }
 
-        .breadcrumb-item {
-          display: flex;
-          align-items: center;
-          font-size: 12px;
-        }
-
         .breadcrumb-item svg {
           font-size: 16px;
           margin: 0;
         }
         
         .breadcrumb-item.active {
-          color: #6c757d;
-          font-size: 12px;
           flex-wrap: nowrap;
           overflow-x: hidden;
         }
@@ -1347,9 +1333,8 @@ background-color: white;
           flex-direction: column;
         }
         .about-us-left-content{
-          font-size: 12px;
           padding: 0 25px 0 25px ;
-          line-height: 16px;
+          line-height: normal;
           text-align: justify;
         }
 

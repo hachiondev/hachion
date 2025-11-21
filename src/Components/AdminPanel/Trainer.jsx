@@ -1,4 +1,3 @@
-// Trainer.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Admin.css';
@@ -30,7 +29,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
-// helper
+
 const normalizeTrainer = (t) => ({
   ...t,
   trainerRating: t.trainerRating ?? t.trainerRating ?? '',
@@ -81,7 +80,7 @@ export default function Trainer() {
   const [formData, setFormData] = useState({
     id: '',
     trainer_name: '',
-    // profileImage: '',
+    profileImage: '',
     trainerRating: '',
     course_name: '',
     category_name: '',
@@ -100,7 +99,7 @@ export default function Trainer() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // fetch data
+  
   useEffect(() => {
     fetchTrainers();
     fetchCourseCategories();
@@ -146,7 +145,7 @@ export default function Trainer() {
     }
   }, [formData.category_name, courseCategory]);
 
-  // search
+  
   useEffect(() => {
     const filtered = trainers.filter((trainer) =>
       (trainer.trainer_name || '')
@@ -159,7 +158,7 @@ export default function Trainer() {
     setCurrentPage(1);
   }, [searchTerm, trainers]);
 
-  // date filter
+  
   const handleDateFilter = () => {
     const filtered = trainers.filter((item) => {
       const trainerDate = dayjs(item.date);
@@ -178,7 +177,7 @@ export default function Trainer() {
     setCurrentPage(1);
   };
 
-  // pagination
+  
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
@@ -191,7 +190,7 @@ export default function Trainer() {
 
   const displayedCourse = filteredTrainers.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-  // input
+  
   const handleInputChange = (e, field = null, value = null) => {
     const name = field ?? e.target.name;
     const val = field ? value : e.target.value;
@@ -201,22 +200,25 @@ export default function Trainer() {
     }));
   };
 
+  
   const handleReset = () => {
-    setFormData({
-      id: '',
-      trainer_name: '',
-      // profileImage: '',
-      trainerRating: '',
-      course_name: '',
-      category_name: '',
-      summary: '',
-      demo_link_1: '',
-      demo_link_2: '',
-      demo_link_3: '',
-      date: getCurrentDateString(),
-    });
-    setFormMode('Add');
-  };
+  setFormData({
+    id: '',
+    trainer_name: '',
+    profileImage: null,
+    existingImageName: '',
+    trainerRating: '',
+    course_name: '',
+    category_name: '',
+    summary: '',
+    demo_link_1: '',
+    demo_link_2: '',
+    demo_link_3: '',
+    date: getCurrentDateString(),
+  });
+  setFormMode('Add');
+};
+
 
   const openAddForm = () => {
     setFormMode('Add');
@@ -224,60 +226,106 @@ export default function Trainer() {
     handleReset();
   };
 
-  // save trainer
+  
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
+  e.preventDefault();
+  setSuccessMessage("");
+  setErrorMessage("");
 
-    if (!formData.trainer_name || !formData.course_name || !formData.category_name) {
-      setErrorMessage('⚠️ Please fill in all required fields.');
-      return;
+  
+  if (!formData.trainer_name || !formData.course_name || !formData.category_name) {
+    setErrorMessage("⚠️ Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    
+    const trainerPayload = {
+      trainer_name: formData.trainer_name,
+      category_name: formData.category_name,
+      course_name: formData.course_name,
+      summary: formData.summary,
+      demo_link_1: formData.demo_link_1,
+      demo_link_2: formData.demo_link_2,
+      demo_link_3: formData.demo_link_3,
+      date: formData.date,
+      trainerRating:
+        formData.trainerRating === "" || formData.trainerRating == null
+          ? null
+          : Number(formData.trainerRating),
+    };
+
+    
+    const formDataToSend = new FormData();
+    formDataToSend.append("trainerData", JSON.stringify(trainerPayload));
+
+    if (formData.profileImage && formData.profileImage instanceof File) {
+      formDataToSend.append("trainerImage", formData.profileImage);
     }
 
-    try {
-      const payload = toBackendTrainer(formData);
-      let response;
+    let response;
 
-      if (formData.id) {
-        response = await axios.put(
-          `https://api.test.hachion.co/trainer/update/${formData.id}`,
-          payload,
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-        const updated = normalizeTrainer(response.data);
-        setTrainers((prev) => prev.map((t) => (t.trainer_id === formData.id ? updated : t)));
-        setFilteredTrainers((prev) => prev.map((t) => (t.trainer_id === formData.id ? updated : t)));
-        setAllTrainers((prev) => prev.map((t) => (t.trainer_id === formData.id ? updated : t)));
-        setSuccessMessage('✅ Trainer updated successfully.');
-      } else {
-        response = await axios.post('https://api.test.hachion.co/trainer/add', payload, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const added = normalizeTrainer(response.data);
-        setTrainers((prev) => [...prev, added]);
-        setFilteredTrainers((prev) => [...prev, added]);
-        setAllTrainers((prev) => [...prev, added]);
-        setSuccessMessage('✅ Trainer added successfully.');
-      }
+    
+    if (formData.id) {
+      response = await axios.put(
+        `https://api.test.hachion.co/trainer/update/${formData.id}`,
+        formDataToSend
+      );
 
-      handleReset();
-      setShowForm(false);
-      setTimeout(() => setSuccessMessage(''), 4000);
-    } catch (error) {
-      console.error('Error adding/updating trainer:', error);
-      if (
-        error.response &&
-        error.response.status === 409 &&
-        error.response.data === 'Trainer with the same name, category, and course already exists.'
-      ) {
-        setErrorMessage('❌ A trainer with the same name already exists for this category and course.');
-      } else {
-        setErrorMessage('❌ Something went wrong while saving the trainer. Please try again.');
-      }
-      setSuccessMessage('');
+      const updated = normalizeTrainer(response.data);
+
+      setTrainers((prev) =>
+        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+      );
+      setFilteredTrainers((prev) =>
+        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+      );
+      setAllTrainers((prev) =>
+        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+      );
+
+      setSuccessMessage("✅ Trainer updated successfully.");
     }
-  };
+    
+    else {
+      response = await axios.post(
+        "https://api.test.hachion.co/trainer/add",
+        formDataToSend
+      );
+
+      const added = normalizeTrainer(response.data);
+
+      setTrainers((prev) => [...prev, added]);
+      setFilteredTrainers((prev) => [...prev, added]);
+      setAllTrainers((prev) => [...prev, added]);
+
+      setSuccessMessage("✅ Trainer added successfully.");
+    }
+
+    handleReset();
+    setShowForm(false);
+
+    setTimeout(() => setSuccessMessage(""), 4000);
+  } catch (error) {
+    console.error("Error adding/updating trainer:", error);
+
+    if (
+      error.response &&
+      error.response.status === 409 &&
+      error.response.data ===
+        "Trainer with the same name, category, and course already exists."
+    ) {
+      setErrorMessage(
+        "❌ A trainer with the same name already exists for this category and course."
+      );
+    } else {
+      setErrorMessage("❌ Something went wrong while saving the trainer. Please try again.");
+    }
+
+    setSuccessMessage("");
+  }
+};
 
   const handleDeleteConfirmation = (id) => {
     if (window.confirm('Are you sure you want to delete this trainer?')) handleDelete(id);
@@ -302,29 +350,42 @@ export default function Trainer() {
     setShowForm(true);
     try {
       if (row?.trainer_id) {
-        const res = await axios.get(`https://api.test.hachion.co/trainer/${row.trainer_id}`);
+        const res = await axios.get(`https://api.test.hachion.co/trainers/${row.trainer_id}`);
         const trainer = res.data || row;
         setFormData({
-          id: trainer.trainer_id || '',
-          trainer_name: trainer.trainer_name || '',
-          // profileImage: '',
-          trainerRating: trainer.trainerRating || '',
-          course_name: trainer.course_name || '',
-          category_name: trainer.category_name || '',
-          summary: trainer.summary || '',
-          demo_link_1: trainer.demo_link_1 || '',
-          demo_link_2: trainer.demo_link_2 || '',
-          demo_link_3: trainer.demo_link_3 || '',
-          date: trainer.date || getCurrentDateString(),
-        });
+  id: trainer.trainer_id || '',
+  trainer_name: trainer.trainer_name || '',
+  profileImage: null, 
+  existingImageName: trainer.trainerImage
+  ? trainer.trainerImage.substring(trainer.trainerImage.lastIndexOf('__') + 2)
+  : '',
+
+  trainerRating: trainer.trainerRating || '',
+  course_name: trainer.course_name || '',
+  category_name: trainer.category_name || '',
+  summary: trainer.summary || '',
+  demo_link_1: trainer.demo_link_1 || '',
+  demo_link_2: trainer.demo_link_2 || '',
+  demo_link_3: trainer.demo_link_3 || '',
+  date: trainer.date || getCurrentDateString(),
+});
+
       }
     } catch (error) {
       console.error('Failed to fetch trainer details for edit:', error);
       setFormData((prev) => ({ ...prev, ...row }));
     }
   };
+ const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  setFormData(prev => ({
+    ...prev,
+    [e.target.name]: file,   
+    existingImageName: '',   
+  }));
+};
 
-  // render
+  
   return (
     <>
       {showForm ? (
@@ -352,28 +413,81 @@ export default function Trainer() {
             <form onSubmit={handleSubmit}>
               <div className="course-details">
                 <div className="course-row">
-                  <div className="col-md-3">
-                    <label className="form-label">Trainer</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter Trainer name"
-                      name="trainer_name"
-                      value={formData.trainer_name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                 <div className="col-md-3">
+  <label className="form-label">
+    Trainer <span style={{ color: 'red' }}>*</span>
+  </label>
+  <input
+    type="text"
+    className="form-control"
+    placeholder="Enter Trainer name"
+    name="trainer_name"
+    value={formData.trainer_name}
+    onChange={handleInputChange}
+  />
+</div>
 
-                  {/* <div className="col-md-3">
-                    <label className="form-label">Trainer Image</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      name="profileImage"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                    />
-                  </div> */}
+
+                <div className="col-md-3">
+  <label className="form-label">Trainer Image</label>
+
+  {formMode === 'Edit' &&
+   formData.existingImageName &&
+   !formData.profileImage ? (
+    
+    <div className="form-control d-flex justify-content-between align-items-center">
+      <span>{formData.existingImageName}</span>
+      <button
+        type="button"
+        className="btn btn-link p-0"
+        onClick={() => document.getElementById('trainerImageInput').click()}
+      >
+        Change
+      </button>
+      <input
+        id="trainerImageInput"
+        type="file"
+        className="form-control"
+        name="profileImage"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+  ) : formData.profileImage ? (
+    
+    <div className="form-control d-flex justify-content-between align-items-center">
+      <span>{formData.profileImage.name}</span>
+      <button
+        type="button"
+        className="btn btn-link p-0"
+        onClick={() => document.getElementById('trainerImageInput').click()}
+      >
+        Change
+      </button>
+      <input
+        id="trainerImageInput"
+        type="file"
+        className="form-control"
+        name="profileImage"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+  ) : (
+    
+    <input
+      type="file"
+      className="form-control"
+      name="profileImage"
+      accept="image/*"
+      onChange={handleFileChange}
+    />
+  )}
+</div>
+
+
 
                   <div className="col-md-3">
                     <label className="form-label">Trainer Rating</label>
@@ -389,36 +503,42 @@ export default function Trainer() {
                 </div>
 
                 <div className="course-row">
-                  <div className="col-md-3">
-                    <label className="form-label">Category Name</label>
-                    <select
-                      className="form-select"
-                      name="category_name"
-                      value={formData.category_name}
-                      onChange={handleInputChange}
-                    >
-                      <option value="" disabled>Select Category</option>
-                      {courseCategoriesList.map((curr) => (
-                        <option key={curr.id} value={curr.name}>{curr.name}</option>
-                      ))}
-                    </select>
-                  </div>
+                 <div className="col-md-3">
+  <label className="form-label">
+    Category Name <span style={{ color: 'red' }}>*</span>
+  </label>
+  <select
+    className="form-select"
+    name="category_name"
+    value={formData.category_name}
+    onChange={handleInputChange}
+  >
+    <option value="" disabled>Select Category</option>
+    {courseCategoriesList.map((curr) => (
+      <option key={curr.id} value={curr.name}>{curr.name}</option>
+    ))}
+  </select>
+</div>
 
-                  <div className="col-md-3">
-                    <label className="form-label">Course Name</label>
-                    <select
-                      className="form-select"
-                      name="course_name"
-                      value={formData.course_name}
-                      onChange={handleInputChange}
-                      disabled={!formData.category_name}
-                    >
-                      <option value="" disabled>Select Course</option>
-                      {filterCourse.map((curr) => (
-                        <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-                      ))}
-                    </select>
-                  </div>
+
+                <div className="col-md-3">
+  <label className="form-label">
+    Course Name <span style={{ color: 'red' }}>*</span>
+  </label>
+  <select
+    className="form-select"
+    name="course_name"
+    value={formData.course_name}
+    onChange={handleInputChange}
+    disabled={!formData.category_name}
+  >
+    <option value="" disabled>Select Course</option>
+    {filterCourse.map((curr) => (
+      <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+    ))}
+  </select>
+</div>
+
                 </div>
 
                 <div className="mb-6">

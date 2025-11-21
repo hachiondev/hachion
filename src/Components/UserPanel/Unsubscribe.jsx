@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
 import "./unsubscribe.css";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { useNavigate } from "react-router-dom";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { useFormik } from "formik";
@@ -225,8 +221,6 @@ const isFormValid = (
 
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className="unsubscribe-container">
         <div className="unsub-us-bottom-div">
           <div>
@@ -257,24 +251,26 @@ const isFormValid = (
           </div>
           <div className="unsub-us-right">
             <div className="unsub-us-right-header">
-              <p>Unsubscribe</p>
+              Unsubscribe
             </div>
             <form
-              className="needs-validation unsub-form"
+              className="unsub-form"
               enctype="multipart/form-data"
               novalidate
             >
-              <div className="form-group col-10">
-                <p className="form-label">Do you want to unsubscribe?</p>
+              <div className="form-group">
+                <p className="login-label">Do you want to unsubscribe?</p>
               </div>
-              <div class="mb-3 has-validation">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div>
+                <label className="login-label">
                   Full Name<span className="required">*</span>
                 </label>
+                <div className="register-field">
+              <div className="form-field">
                 <input
                   type="text"
-                  className="form-control-unsub"
-                  id="unsub1"
+                  className="form-control"
+                  id="contactEmail"
                   placeholder="Enter your full name"
                   name="name"
                   value={values.name}
@@ -285,14 +281,18 @@ const isFormValid = (
                 />
                 <div class="invalid-feedback">PLease Enter Your Full Name.</div>
               </div>
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              </div>
+              </div>
+              <div>
+                <label className="login-label">
                   Email Id<span className="required">*</span>
                 </label>
+                <div className="register-field">
+              <div className="form-field">
                 <input
                   type="email"
-                  className="form-control-unsub"
-                  id="unsub1"
+                  className="form-control"
+                  id="contactEmail"
                   placeholder="Enter your emailid"
                   name="email"
                   value={values.email}
@@ -303,13 +303,17 @@ const isFormValid = (
                 />
                 <div class="invalid-feedback">PLease Enter Your Email ID.</div>
               </div>
-              <label className="form-label">Mobile Number<span className="required">*</span></label>
-                <div className="input-wrapper" style={{ position: 'relative' }}>
+              </div>
+              </div>
+              <div>
+              <label className="login-label">Mobile Number<span className="required">*</span></label>
+                <div className="register-field">
+                <div className="form-field" style={{ position: "relative" }}>
                   <input
                     type="tel"
                     ref={mobileInputRef}
-                    className="form-control-unsub"
-                    id="unsub1"
+                    className="form-control"
+                    id="contactEmail"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     aria-label="Text input with segmented dropdown button"
@@ -321,7 +325,10 @@ const isFormValid = (
                     readOnly
                   />
                 </div>
-              <label htmlFor="inputEmail" className="form-label" style={{marginTop: 10}}>
+                </div>
+                </div>
+                <div>
+              <label htmlFor="inputEmail" className="login-label">
                 Reason<span className="required">*</span> :
               </label>
               {error && <p className="error-message">{error}</p>}
@@ -334,7 +341,7 @@ const isFormValid = (
                     id="chknotification"
                     onChange={handleCheckboxChange}
                   />
-                  <label class="form-check-label" for="chknotification">
+                  <label className="login-label" for="chknotification">
                     Notifications
                   </label>
                 </div>
@@ -363,18 +370,21 @@ const isFormValid = (
                   </label>
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              </div>
+              <div >
+                <label className="login-label"   >
                   Choose Duration<span className="required">*</span>
                 </label>
+                <div className="register-field">
+              <div className="form-field">
                 <select
-                  className="form-select-unsub"
-                  id="unsub1"
+                  className="form-select"
                   name="duration"
                   value={values.duration}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required
+                  style={{border: 'none'}}
                 >
                   <option value="">Select Duration</option>
                   <option value="1 Month">1 Month</option>
@@ -385,13 +395,17 @@ const isFormValid = (
                 </select>
                 <div className="invalid-feedback">Please select a duration.</div>
                 </div>
-               <div class="mb-3 d-flex flex-column">
-                <label for="exampleFormControlTextarea1" class="form-label">
+                </div>
+                </div>
+               <div>
+                <label className="login-label" for="exampleFormControlTextarea1"  >
                   Comments<span className="required">*</span>
                 </label>
+                <div className="register-field">
+              <div className="form-field">
                 <textarea
-                  class="form-control-unsub"
-                  id="unsub3"
+                  class="form-control"
+                  id="contactComment"
                   rows="3"
                   name="comment"
                   value={values.comment}
@@ -399,7 +413,9 @@ const isFormValid = (
                   onBlur={handleBlur}
                 />
               </div>
-              <div class="mb-3">
+              </div>
+              </div>
+              <div  >
                 <button
                   type="button"
                   className="u-submit-button"
@@ -450,8 +466,6 @@ const isFormValid = (
           </div>
         </div>
       </div>
-      <Footer />
-      <StickyBar />
     </>
   );
 };

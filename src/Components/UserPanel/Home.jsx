@@ -6,16 +6,12 @@ import Trending from './Trending';
 import TeensEvents from './TeensEvents';
 import Career from './Career';
 import Learners from './Learners';
-import Footer from './Footer';
 import Corporate from './Corporate';
-import StickyBar from './StickyBar';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
 import RecentEntries from './RecentEntries';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import MeetInstructorBanner from './MeetInstructorBanner';
 import ShareKnowledgeBanner from './ShareKnowledgeBanner';
 import WhyChoose from '././WhyChoose';
@@ -23,7 +19,6 @@ import HomeFaq from './HomeFaq';
 import LimitedDeals from './LimitedDeals';
 
 export const Home = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
    const location = useLocation();
   useEffect(() => {
     if (location.hash === '#upcoming-events') {
@@ -34,22 +29,10 @@ export const Home = () => {
     }
   }, [location]);
   
-        useEffect(() => {
-          window.scrollTo(0, 0);
-        }, []);
+        // useEffect(() => {
+        //   window.scrollTo(0, 0);
+        // }, []);
       
-        useEffect(() => {
-          const handleScroll = () => {
-            if (window.scrollY > 1000) {
-              setShowScrollButton(true);
-            } else {
-              setShowScrollButton(false);
-            }
-          };
-      
-          window.addEventListener("scroll", handleScroll);
-          return () => window.removeEventListener("scroll", handleScroll);
-        }, []);
       const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -86,8 +69,6 @@ export const Home = () => {
 </Helmet>
    <div className='home-background'>
   <PopupBanner/>
-<Topbar/>
-<NavbarTop/>
 <main id="main-content">
 <Banner/>
 <Association/>
@@ -106,14 +87,12 @@ export const Home = () => {
  <Learners page="home"/>
 <HomeFaq/>
 </main>
-<Footer/>
 {/* {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />
               </button>
             )} */}
 </div>
-{showScrollButton && <StickyBar />}
 
     </>
   )

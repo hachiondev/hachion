@@ -534,13 +534,14 @@ background-color: white;
 }
 .u-submit-button {
   background-color: #00aeef;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  width: 90%;
-  max-width: 550px;
-  height: 50px;
-  padding: 5px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: medium;
+    font-weight: 600;
+    height: 40px;
+    padding: 3px 10px;
+    width: 150px;
+    margin: 3px 10px;
 }
 .u-submit-button:disabled {
   background-color: #7a7a7a;
@@ -721,8 +722,6 @@ background-color: white;
 }
  .u-submit-button {
     padding: 10px;
-    width: 90%;
-    height: 50px;
     margin: 0px;
     text-align: center;
   }

@@ -19,10 +19,6 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { PiQuotesDuotone } from "react-icons/pi";
 import { LiaArrowLeftSolid } from "react-icons/lia";
 import { LiaArrowRightSolid } from "react-icons/lia";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import "./Home.css";
 import InstructorForm from "./InstructorForm";
 
@@ -118,7 +114,6 @@ const stories = [
   ];
 
 const BecomeInstructor = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
    const [currentIndex, setCurrentIndex] = useState(0);
    const [showPopup, setShowPopup] = useState(false);
 
@@ -134,24 +129,12 @@ const BecomeInstructor = () => {
     );
   };
 
-  // Scroll button logic
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollButton(window.scrollY > 800);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   useEffect(() => {
   window.scrollTo(0, 0);
 }, []);
 
   return (
     <div className="home-background">
-      <Topbar />
-      <NavbarTop />
-
       {/* Banner Section */}
       <div className="home-banner container">
         <div className="home-content">
@@ -394,9 +377,6 @@ const BecomeInstructor = () => {
                 />
               </div>
             </div>
-
-      <Footer />
-      {showScrollButton && <StickyBar />}
     </div>
   );
 };

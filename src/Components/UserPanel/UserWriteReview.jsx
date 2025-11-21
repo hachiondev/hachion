@@ -12,6 +12,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
     review_id: Date.now(),
     category_name: "",
     course_name: "",
+    trainer_name: "",
     date: currentDate,
     student_name: "",
     email: "",  // ⬅️ ADDED (missing before)
@@ -30,6 +31,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
   const [enrollments, setEnrollments] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  const [filteredTrainers, setFilteredTrainers] = useState([]);
 
   useEffect(() => {
     axios.get('https://api.test.hachion.co/courses/all')
@@ -87,6 +89,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
       reviewData.student_name.trim() !== "" &&
       reviewData.email.trim() !== "" &&
       reviewData.course_name.trim() !== "" &&
+      reviewData.trainer_name.trim() !== "" &&
       // reviewData.category_name.trim() !== "" &&
       reviewData.review.trim() !== "" &&
       reviewData.rating > 0
@@ -251,22 +254,19 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
               </div>
             </div>
             <div>
-              <label className="login-label">Select Source</label>
+              <label className="login-label">Trainer Name</label><span className='star'>*</span>
               <div className="register-field">
                 <div className="password-field">
                   <select
                     className="form-select"
-                    name="social_id"
-                    value={reviewData.social_id}
+                    name="trainer_name"
+                    value={reviewData.trainer_name}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
-                    <option value="LinkedIn">LinkedIn</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Twitter">Twitter</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Google">Google</option>
-                    <option value="Other">Other</option>
+                    <option value="">Select Trainer</option>
+                    {filteredTrainers.map((trainers, index) => (
+                      <option key={index} value={trainers}>{trainers}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -288,6 +288,27 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
                       sx={{ ml: 1, mt: 1 }}
                     />
                   </Box>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="login-label">Source</label>
+              <div className="register-field">
+                <div className="password-field">
+                  <select
+                    className="form-select"
+                    name="social_id"
+                    value={reviewData.social_id}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Twitter">Twitter</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Google">Google</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </div>
             </div>

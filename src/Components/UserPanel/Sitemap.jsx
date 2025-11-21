@@ -1,36 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
 import "./Blogs.css";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import StickyBar from "./StickyBar";
-import Footer from "./Footer";
 import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Sitemap = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const [Category, setCategory] = useState([]);
   const [courses, setCourses] = useState([]);
   const API_URL = "https://api.test.hachion.co/course-categories/all";
   const navigate = useNavigate();
 
-  
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollButton(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -80,8 +60,6 @@ const Sitemap = () => {
   };
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className="about-us container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -138,16 +116,6 @@ const Sitemap = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
-
-      {showScrollButton && (
-        <button className="scroll-to-top" onClick={scrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
-
-      <StickyBar />
     </>
   );
 };

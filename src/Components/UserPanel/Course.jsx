@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import Sidebar from './Sidebar';
 import SidebarRight from './SidebarRight';
 import Pagination from './Pagination';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import './Course.css';
 import { Helmet } from 'react-helmet-async';
 import TrendingCourseNames from './TrendingCourseNames';
@@ -81,9 +77,6 @@ const Course = () => {
       </Helmet>
 
       <div className="course-top">
-        <Topbar />
-        <NavbarTop />
-
         <div className="course-content container">
           <Sidebar
             onSelectCategory={handleCategorySelect}
@@ -111,8 +104,6 @@ const Course = () => {
         </div>
         <TrendingCourseNames />
         <InstructorProfile />
-        <Footer />
-        <StickyBar />
       </div>
     </>
   );

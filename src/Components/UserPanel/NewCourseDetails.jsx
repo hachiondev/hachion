@@ -10,15 +10,10 @@ import LearnSection from '../NewCourse/LearnSection';
 import StudentsAlsoEnrolled from '../NewCourse/StudentsAlsoEnrolled';
 import StudentsSay from '../NewCourse/StudentsSay';
 import SuccessStories from '../NewCourse/SuccessStories';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
 
 const NewCourseDetails = () => {
   return (
     <div className="page">
-      <Topbar />
-        <NavbarTop />
       <CourseBanner
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
@@ -40,7 +35,6 @@ const NewCourseDetails = () => {
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
       />
-          <Footer />
     </div>
   );
 };

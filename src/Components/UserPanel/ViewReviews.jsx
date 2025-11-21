@@ -1,10 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Viewreviews from "../../Assets/viewreviews-banner.webp";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import LearnerCard from "./LearnerCard";
 import CardsPagination from "./CardsPagination";
 import VideoReviewCard from "./VideoReviewCard";
@@ -134,8 +130,6 @@ const getEmbedUrl = (url) => {
 
   return (
     <div className="home-background">
-      <Topbar />
-      <NavbarTop />
 
       {/* Banner */}
       <div className="home-banner container">
@@ -291,10 +285,6 @@ const getEmbedUrl = (url) => {
           </div>
         </div>
       )}
-
-      <HomeFaq />
-      <Footer />
-      {showScrollButton && <StickyBar />}
     </div>
   );
 };

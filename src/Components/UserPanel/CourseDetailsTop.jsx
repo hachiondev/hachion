@@ -150,31 +150,41 @@ const CourseDetailsTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
       fetchCurriculum();
     }, [matchedCourseName]);
   const downloadPdf = () => {
-    const token = localStorage.getItem('authToken');
-
-    if (!token) {
-      showLoginModal();
-      return; 
-    }
-      if (!curriculum || curriculum.length === 0) {
-      alert('No curriculum found for this course.');
-      return;
-    }
-    const userData = JSON.parse(localStorage.getItem('loginuserData'));
-    if (!userData) {
-      showLoginModal(); 
-      return;
-    }
   
-    const curriculumWithPdf = curriculum.find(item => item.curriculum_pdf);
-    if (curriculumWithPdf) {
-      const fileName = curriculumWithPdf.curriculum_pdf.split('/').pop();
-      const fullPdfUrl = `https://api.test.hachion.co/curriculum/${curriculumWithPdf.curriculum_pdf}`;
-      window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      alert('No brochure available for this course.');
-    }
-  }; 
+  const userDataRaw = localStorage.getItem('loginuserData');
+
+  if (!userDataRaw) {
+    showLoginModal();
+    return;
+  }
+
+  let userData;
+  try {
+    userData = JSON.parse(userDataRaw);
+  } catch (e) {
+    
+    showLoginModal();
+    return;
+  }
+
+  if (!userData || !userData.email) {
+    showLoginModal();
+    return;
+  }
+  if (!curriculum || curriculum.length === 0) {
+    alert('No curriculum found for this course.');
+    return;
+  }
+
+  const curriculumWithPdf = curriculum.find(item => item.brochure_pdf);
+  if (curriculumWithPdf) {
+    const fullPdfUrl = `https://api.test.hachion.co/uploads/prod/curriculum/${curriculumWithPdf.brochure_pdf}`;
+    window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
+  } else {
+    alert('No brochure available for this course.');
+  }
+};
+ 
 
  if (loading) {
   return (
@@ -229,7 +239,7 @@ if (currency === 'INR') {
     course.imtotal,
     course.isqtotal,
     course.istotal
-  ].filter(fee => fee != null && fee > 0); // exclude null/undefined/0
+  ].filter(fee => fee != null && fee > 0); 
 
   convertedTotalFee = inrFees.length > 0 ? Math.min(...inrFees) : 0;
   convertedOriginalFee = course.iamount ?? 0;

@@ -1,8 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import {MdKeyboardArrowRight} from 'react-icons/md';
 import './Blogs.css';
 import KidsLearners from './KidsLearners';
@@ -91,8 +87,6 @@ const KidsSummer = () => {
                   `}
                 </script>
               </Helmet>
-      <Topbar />
-            <NavbarTop />
             <div className='blogs-header'>
                   <nav aria-label="breadcrumb">
                       <ol className="breadcrumb">
@@ -181,11 +175,6 @@ const KidsSummer = () => {
 
           <KidsLearners page="course"/>
           <SummerRegister/>
-             
-          <div ref={footerRef}>
-            <Footer />
-          </div>
-          <StickyBar />
     </div>
   )
 }

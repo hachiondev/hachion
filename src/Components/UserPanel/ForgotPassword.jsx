@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
+import Topbar from '../../Components/Layout/Topbar';
+import NavbarTop from '../../Components/Layout/NavbarTop';
+import Footer from '../../Components/Layout/Footer';
+import StickyBar from '../../Components/Layout/StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import LoginBanner from '../../Assets/loginbackground.webp';
 

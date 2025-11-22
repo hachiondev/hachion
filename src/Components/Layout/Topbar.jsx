@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { IoIosMail } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Style.css';
+import '../../Components/UserPanel/Style.css';
 
 const Topbar = () => {
   const [whatsappNumber, setWhatsappNumber] = useState('+1 (732) 485-2499');

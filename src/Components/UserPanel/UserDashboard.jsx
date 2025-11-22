@@ -1,6 +1,4 @@
 import { React, useState, useEffect } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import './Dashboard.css';
 import { RxDashboard } from "react-icons/rx";
 import { PiNotePencilBold, PiCertificateBold } from "react-icons/pi";
@@ -9,8 +7,6 @@ import { GoPerson } from "react-icons/go";
 import { TbSettingsBolt } from "react-icons/tb";
 import { PiBriefcase } from "react-icons/pi";
 import UserDashboardCard from './UserDashboardCard';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import UserEnrolled from './UserEnrolled';
 import UserOrders from './UserOrders';
 import UserCertificate from './UserCertificate';
@@ -114,9 +110,6 @@ const UserDashboard = () => {
 
   return (
     <>
-      <Topbar />
-      <NavbarTop />
-
       {/* Mobile Menu Button */}
       {isMobileView && (
         <button className="home-start-button" onClick={() => setIsSidebarOpen(true)}>
@@ -162,9 +155,6 @@ const UserDashboard = () => {
           {renderSelectedComponent()}
         </div>
       </div>
-
-      <Footer />
-      <StickyBar />
     </>
   );
 };

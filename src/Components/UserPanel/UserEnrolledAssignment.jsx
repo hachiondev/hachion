@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import Topbar from "./Topbar";
-import NavbarTop from "./NavbarTop";
-import Footer from "./Footer";
-import StickyBar from "./StickyBar";
 import { IoArrowBack } from "react-icons/io5";
 import { FaCirclePlay } from "react-icons/fa6";
 import { BiSolidChat } from "react-icons/bi";
@@ -66,8 +62,6 @@ export default function UserEnrolledAssignment() {
 
   return (
     <>
-      <Topbar />
-      <NavbarTop />
       <div className="container">
         {/* Header */}
         <div className="user-course-nav" onClick={handleGoBack}>
@@ -220,8 +214,6 @@ export default function UserEnrolledAssignment() {
           </div>
         </div>
       </div>
-      <Footer />
-      <StickyBar />
     </>
   );
 }

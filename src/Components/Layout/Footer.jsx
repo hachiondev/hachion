@@ -4,7 +4,7 @@ import { IoIosMail } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 import {  useNavigate } from 'react-router-dom';
 import { IoIosArrowForward } from "react-icons/io";
-import './Home.css';
+import '../../Components/UserPanel/Home.css';
 
 const Footer = () => {
   const navigate= useNavigate();

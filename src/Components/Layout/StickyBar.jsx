@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Course.css';
+import '../../Components/UserPanel/Course.css';
 import whatsapp from '../../Assets/logos_whatsapp-icon.webp';
 import facebook from '../../Assets/facebook.webp';
 import twitter from '../../Assets/twitter.webp';

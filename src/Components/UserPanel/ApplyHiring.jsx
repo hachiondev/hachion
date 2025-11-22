@@ -1,9 +1,5 @@
 import React, { useEffect , useState, useRef } from 'react';
-import Topbar from './Topbar';
-import NavbarTop from './NavbarTop';
 import JobsDisplay from './JobsDisplay';
-import Footer from './Footer';
-import StickyBar from './StickyBar';
 import { FaArrowUp } from 'react-icons/fa';
 import careerjob from '../../Assets/careerbanner.webp';
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -39,8 +35,6 @@ const ApplyHiring = () => {
   return (
     <div>
       <div className='home-background'>
-      <Topbar/>
-      <NavbarTop/>
       <div className='blogs-header'>
       <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -123,15 +117,8 @@ const ApplyHiring = () => {
         <JobsDisplay
           filters={{ jobTitle, jobType, location, experience }}
         />
-      <Footer/>
-      {showScrollButton && (
-              <button className="scroll-to-top" onClick={scrollToTop}>
-                <FaArrowUp />
-              </button>
-            )}
       </div>
       </div>
-      <StickyBar/>
     </div>
   )
 }

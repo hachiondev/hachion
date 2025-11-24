@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Banner.module.css";
 import { cn } from "../lib/utils";
 import heroImage from "../assets/images/banner-hero.png";
 import Medal from "../assets/icons/medal.svg";
+import LoginRequired from "./LoginRequired";
+import VideoModal from "./VideoModal";
+import { Link } from "react-router-dom";
+import EnrollPay from "./EnrollPay";
 
 /* --- Tiny inline icons (SVGS) --- */
 const Star = (p) => (
@@ -51,12 +55,24 @@ export default function Banner({
     oldPrice = "INR 150",
     offerTag = "Limited time offer",
     ctaText = "Enroll Now - Start Learning",
-    onEnroll = () => { },
+    // onEnroll = () => { },
     onAddToCart = () => { },
     statWeeks = "12",
     statProjects = "08",
     statSupport = "24/7",
 }) {
+    const [showLoginRequired, setShowLoginRequired] = useState(false);
+    const [showVideo, setShowVideo] = useState(false);
+    const [showEnroll, setShowEnroll] = useState(false);
+
+    const handleAddToCart = () => {
+        setShowLoginRequired(true);
+    };
+
+    const onEnroll = () => {
+        setShowEnroll(true);
+    }
+
     return (
         <section className={styles.bnwrap}>
             <OfferStrip />
@@ -100,10 +116,12 @@ export default function Banner({
                         </div>
 
                         <div className={styles.bnctaRow}>
+                            {/* <Link to="/enroll-now"> */}
                             <button className={cn(styles.bnbtn, styles.bnbtnprimary)} onClick={onEnroll}>
                                 {ctaText}
                             </button>
-                            <button className={styles.bnlink} onClick={onAddToCart}>
+                            {/* </Link> */}
+                            <button className={styles.bnlink} onClick={handleAddToCart}>
                                 Add to Cart
                             </button>
                         </div>
@@ -116,7 +134,7 @@ export default function Banner({
                 <div className={styles.bnright}>
                     <div className={styles.bnhero}>
                         <img src={heroImage} alt="Course preview" />
-                        <button className={styles.bnplay} aria-label="Watch demo videos">
+                        <button className={styles.bnplay} aria-label="Watch demo videos" onClick={() => setShowVideo(true)}>
                             <Play />
                         </button>
                         <div className={styles.bnherotext}>Watch Demo Videos</div>
@@ -139,6 +157,33 @@ export default function Banner({
                 </div>
 
             </div>
+
+            {showLoginRequired && (
+                <LoginRequired
+                    title="Login Required"
+                    subtitle="To add items to cart please Login"
+                    onCancel={() => setShowLoginRequired(false)}
+                    onLogin={() => {
+                        setShowLoginRequired(false);
+                    }}
+                />
+            )}
+            {showEnroll && (
+                <EnrollPay
+                    courseName="Web Developer: HTML, CSS and JavaScript"
+                    totalAmount="₹4,999"
+                    onClose={() => setShowEnroll(false)}
+                    onPayNow={() => {
+                        setShowEnroll(false);
+                    }}
+                />
+            )}
+            {showVideo && (
+                <VideoModal
+                    videoSrc={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"}
+                    onClose={() => setShowVideo(false)}
+                />
+            )}
         </section>
     );
 }

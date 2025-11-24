@@ -33,7 +33,7 @@ export default function Footer() {
             <img src={logo} alt="logo" />
           </a>
 
-          <h3 className={styles.fttitle}>Subscribe to our <br/>newsletter</h3>
+          <h3 className={styles.fttitle}>Subscribe to our newsletter</h3>
 
           <form
             className={styles.ftnewsletter}

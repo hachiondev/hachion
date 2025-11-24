@@ -35,7 +35,7 @@
   font-size:32px; font-weight:700; color:var(--ink);
 }
 .sshead p{
-  color:var(--muted); margin-top:6px;
+  color: #000000; margin-top:6px;
 }
 
 /* grid */
@@ -72,8 +72,8 @@
     padding: 10px 0px; }
 .ssavatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
 .ssname{ font-weight:600; color:#111827; font-size: 20px;}
-.ssdate{ color:#95a0af; font-weight:500; font-size:12px; }
-.ssquote{ color:#26323d; line-height:1.6; font-size:18px;}
+.ssdate{ color:#000000; font-weight:500; font-size:12px; font-weight: 300;}
+.ssquote{ color:#000000; line-height:1.6; font-size:18px;}
 
 /* CTA panel */
 .sscta{
@@ -83,7 +83,7 @@
   box-shadow: var(--shadow);
 }
 .ssctatitle{ font-weight:700; color:#0f172a; margin-bottom:4px; font-size: 22px;}
-.sscta p{ color:#7a8696; margin-bottom:12px; }
+.sscta p{ color:#000000; margin-bottom:12px; font-weight: 300; }
 .ssctabtn{
   background: linear-gradient(90deg, #1aa6df, #38c7ff);
   color:#fff; border:0; border-radius:999px; padding:10px 18px;
@@ -97,4 +97,16 @@
 @media (max-width: 640px){
   .ssgrid{ grid-template-columns: 1fr; }
   .ssmedia img{ height:200px; }
+}
+
+@media (max-width: 720px) {
+  .sshead h2 {
+    font-size: 26px;
+  }
+  .sshead p {
+    font-size: 16px;
+  }
+  .ssquote {
+    font-size: 16px;
+  }
 }

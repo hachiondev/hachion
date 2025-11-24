@@ -4,7 +4,7 @@ import { cn } from "../lib/utils";
 
 const PlayIcon = () => (
   <svg viewBox="0 0 80 80" width="56" height="56" aria-hidden="true">
-    <circle cx="40" cy="40" r="32" fill="#1fb6ff" stroke="#fff" strokeWidth="6" />
+    <circle cx="40" cy="40" r="32" fill="#1fb6ff" stroke="#fff" strokeWidth="3" />
     <polygon points="34,28 54,40 34,52" fill="#fff" />
   </svg>
 );

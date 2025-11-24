@@ -80,7 +80,7 @@ export default function InstructorSection({
 
           <div className={styles.isactions}>
             <button className={cn(styles.isbtn, styles.isbtnoutline)} onClick={onLinkedIn}>
-              <span className="ico">
+              <span className={styles.ico}>
                 <img src="LinkedIn.png" alt="LinkedIn" height={22} />
               </span>
               View LinkedIn Profile

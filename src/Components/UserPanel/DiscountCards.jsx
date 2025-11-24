@@ -363,7 +363,7 @@ const goToPrev = () => {
       className="no-discount-image mb-3"
       style={{ width: "180px", height: "auto", objectFit: "contain" }}
     />
-    <h5>No discounts available right now</h5>
+    <p>No Limited Time Deals available right now</p>
   </div>
 )}
 

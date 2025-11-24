@@ -107,7 +107,11 @@ const playVideo = (url) => {
                   trainer_name={trainer.trainer_name}
                   profile={trainer.course_name}
                   summary={trainer.summary}
-                  profileImage={trainer.profileImage}
+                   profileImage={
+      trainer.trainerImage
+        ? `https://api.test.hachion.co/${trainer.trainerImage}`
+        : ""
+    }
                   demo_link_1={trainer.demo_link_1}
                   onPlayVideo={playVideo}
                 />

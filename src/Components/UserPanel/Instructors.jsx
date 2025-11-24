@@ -254,11 +254,16 @@ const formatForUrl = (str) =>
                 <div className="instructor-card" key={trainer.id}>
                   <div className="card-course-details">
                     <div className="instructor-image">
-                      <Avatar
-                        alt={trainer.trainer_name}
-                        src={trainer.profileImage || ""}
-                        variant="square"
-                      />
+                     <Avatar
+  alt={trainer.trainer_name}
+  src={
+    trainer.trainerImage
+      ? `https://api.test.hachion.co/${trainer.trainerImage}`
+      : ""
+  }
+  variant="square"
+/>
+
                     </div>
                     <p className="expert-name">{trainer.trainer_name}</p>
                     <p className="expert-course">{trainer.course_name}</p>

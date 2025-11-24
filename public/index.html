@@ -13,6 +13,11 @@
     <!-- ✅ Preconnects for LCP/CDN performance -->
     <link rel="preconnect" href="https://cdn.botpress.cloud" />
     <link rel="preconnect" href="https://webchat.botpress.cloud" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://ipinfo.io" />
+    <link rel="preconnect" href="https://api.test.hachion.co" crossorigin />
+
     <!-- ✅ Add Poppins font -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -21,8 +26,6 @@
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/css/main.423d1398.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/css/main.423d1398.css"></noscript>
-    <link rel="preconnect" href="https://ipinfo.io">
-    <link rel="dns-prefetch" href="https://ipinfo.io">
 
     <!-- ✅ Preload your critical LCP image (adjust URL as needed) -->
     <link rel="preload" as="image" href="/static/media/qa-video.c927978d2dd8f6f77413.png" fetchpriority="high" />
@@ -169,23 +172,25 @@ Visited at: ${formattedDate}`;
       }
 
       window.addEventListener('load', () => {
-      setTimeout(getUserDetails, 2000);
-    });
+        setTimeout(getUserDetails, 2000);
+      });
     </script>
-    <script src="https://unpkg.com/web-vitals@3"></script>
-<script>
-  function sendToServer(metric) {
-    fetch('/analytics', {
-      method: 'POST',
-      body: JSON.stringify(metric),
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
 
-  webVitals.getCLS(sendToServer);
-  webVitals.getFID(sendToServer);
-  webVitals.getLCP(sendToServer);
-  webVitals.getINP(sendToServer);
-</script>
+    <!-- ✅ Defer Web Vitals -->
+    <script src="https://unpkg.com/web-vitals@3" defer></script>
+    <script defer>
+      function sendToServer(metric) {
+        fetch('/analytics', {
+          method: 'POST',
+          body: JSON.stringify(metric),
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      webVitals.getCLS(sendToServer);
+      webVitals.getFID(sendToServer);
+      webVitals.getLCP(sendToServer);
+      webVitals.getINP(sendToServer);
+    </script>
   </body>
 </html>

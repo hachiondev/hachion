@@ -335,7 +335,8 @@ const handleMouseLeave = () => {
 
           {/* Mobile Right Section */}
           <div className="d-flex align-items-center d-lg-none ms-auto">
-            <button className="btn" onClick={() => setMobileSearchOpen(true)}>
+            <button className="btn" onClick={() => setMobileSearchOpen(true)}
+              aria-label="Open search">
               <IoSearch size={26} color="#00AEEF" />
             </button>
             {isLoggedIn && (

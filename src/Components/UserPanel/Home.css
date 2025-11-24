@@ -34,9 +34,15 @@ gap: 1rem;
   padding: 6px 10px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 24px;
+  min-width: auto;
   line-height: 1.2;
   border-radius: 6px;
+}
+
+.touch-target + .touch-target {
+  margin-left: 5px;
 }
 
 .topbar-icon {

@@ -171,9 +171,14 @@ useEffect(() => {
         <div className="border-0 shadow-sm p-4 d-flex flex-column flex-md-row align-items-start">
           <Avatar
             alt={trainer.trainer_name}
-            src={trainer.profileImage || " "}
+             src={
+    trainer.trainerImage
+      ? `https://api.test.hachion.co/${trainer.trainerImage}`
+      : ""
+  }
             sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: "10px" }}
           />
+
           <div className="flex-grow-1 d-flex flex-column flex-md-row justify-content-between">
             <div>
               <div className="d-flex align-items-center mb-2">

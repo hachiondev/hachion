@@ -5,7 +5,6 @@ import AdminLogin from './Components/AdminPanel/AdminLogin';
 import AdminRegister from './Components/AdminPanel/AdminRegister';
 import AdminForgot from './Components/AdminPanel/AdminForgot';
 import {
-  BrowserRouter,
   Routes,
   Route,
   useLocation,
@@ -26,7 +25,7 @@ import Blogs from './Components/UserPanel/Blogs';
 import BlogDetails from './Components/UserPanel/BlogDetails';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
-import UserProtectedRoute from './UserProtectedRoute';
+import UserProtectedRoute from './routes/UserProtectedRoute';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
@@ -36,7 +35,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import Workshop from './Components/UserPanel/Workshop';
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 import Unsubscribe from './Components/UserPanel/Unsubscribe';
 import Sitemap from './Components/UserPanel/Sitemap';
@@ -175,9 +174,6 @@ function AppRoutes() {
 }
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
-  );
+  return <AppRoutes />;
 }
+

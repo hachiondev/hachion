@@ -11,7 +11,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useEffect } from 'react';
-
+import { Outlet } from "react-router-dom";
 import Register from './Components/UserPanel/Register';
 import RegisterNext from './Components/UserPanel/RegisterNext';
 import RegisterHere from './Components/UserPanel/RegisterHere';
@@ -174,6 +174,12 @@ function AppRoutes() {
 }
 
 export default function App() {
-  return <AppRoutes />;
+  // return <AppRoutes />;
+   return (
+    <>
+      <AppRoutes />
+      <Outlet />
+    </>
+  );
 }
 

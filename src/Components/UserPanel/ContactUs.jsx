@@ -42,6 +42,11 @@ const ContactUs = () => {
 const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: LoginSchema,
+  });
+
 
   useEffect(() => {
   fetch("https://api.country.is")
@@ -133,21 +138,38 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
     
   }, []);
 
+  
+    const areMandatoryFieldsFilled = () => {
+    return (
+      values.name.trim() !== "" &&
+      values.email.trim() !== "" &&
+      mobileNumber.trim() !== "" &&
+      values.comment.trim() !== ""
+    );
+  };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    
+    if (!areMandatoryFieldsFilled()) {
+      setError("Please provide all mandatory fields.");
+      return;
+    }
+
     if (!isChecked) {
       setError(
         "Please select the checkbox to acknowledge the Privacy Notice and Terms & conditions."
       );
       return;
     }
-    setError("");
+
+    setError(""); 
 
     const currentDate = new Date().toISOString().split("T")[0];
     const requestData = {
       name: values.name,
       email: values.email,
-      mobile: mobileNumber, 
+      mobile: mobileNumber,
       comment: values.comment,
       date: currentDate,
       country: selectedCountry.name,
@@ -161,33 +183,30 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
           headers: { "Content-Type": "application/json" },
         }
       );
-if (response.status === 200) {
-  setShowModal(true);
 
-  if (isLoggedIn) {
-    
-    formik.resetForm({
-      values: {
-        ...values,
-        name: values.name,
-        email: values.email,
-        comment: "",
-        date: "",
-        country: selectedCountry?.name || "",
-      },
-    });
-    setMobileNumber((prev) => prev); 
-  } else {
-    
-    formik.resetForm();
-    setMobileNumber("");
-    
-  }
+      if (response.status === 200) {
+        setShowModal(true);
 
-  setIsChecked(false); 
-  setSuccessMessage("✅ Query submitted successfully.");
-  setErrorMessage("");
+        if (isLoggedIn) {
+          formik.resetForm({
+            values: {
+              ...values,
+              name: values.name,
+              email: values.email,
+              comment: "",
+              date: "",
+              country: selectedCountry?.name || "",
+            },
+          });
+          setMobileNumber((prev) => prev);
+        } else {
+          formik.resetForm();
+          setMobileNumber("");
+        }
 
+        setIsChecked(false);
+        setSuccessMessage("✅ Query submitted successfully.");
+        setErrorMessage("");
       } else {
         setErrorMessage("❌ Failed to submit query.");
         setSuccessMessage("");
@@ -208,17 +227,13 @@ if (response.status === 200) {
     }
   }, [successMessage, errorMessage]);
 
+
   const handlePrivacy = () => {
     navigate("/privacy");
   };
   const handleTerms = () => {
     navigate("/terms");
   };
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: LoginSchema,
-  });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     formik;
@@ -376,9 +391,21 @@ if (response.status === 200) {
               {errorMessage && (
                 <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>
               )}
-              <button type="button" className="submit-button" onClick={handleFormSubmit}>
-                Send
-              </button>
+             <button
+  type="button"
+  className="submit-button"
+  onClick={handleFormSubmit}
+  disabled={!areMandatoryFieldsFilled() || !isChecked}
+  style={{
+    backgroundColor: !areMandatoryFieldsFilled() || !isChecked ? "#cccccc" : "#00AAEF",
+    color: !areMandatoryFieldsFilled() || !isChecked ? "#666666" : "#ffffff",
+    cursor: !areMandatoryFieldsFilled() || !isChecked ? "not-allowed" : "pointer",
+    opacity: !areMandatoryFieldsFilled() || !isChecked ? 0.7 : 1,
+  }}
+>
+  Send
+</button>
+
 
               {error && <p className="error-message">{error}</p>}
 

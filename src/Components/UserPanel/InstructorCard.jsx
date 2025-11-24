@@ -111,13 +111,24 @@ const InstructorCard = (props) => {
                 />
               </div>
             </div>
-            <div className="learner-info">
+            {/* <div className="learner-info">
               <div className="learner-name">
                 <p className="name">{props.trainer_name}</p>
               </div>
               <p className="job-profile">{props.profile}</p>
               <div className="rating">{renderStarRating(props.rating)}</div>
-            </div>
+            </div> */}
+            <div className="learner-info">
+  <div className="learner-name">
+    <p className="name">{props.trainer_name}</p>
+  </div>
+  <p className="job-profile">{props.profile}</p>
+  {/* use same rating as card */}
+  <div className="rating">
+    {renderStarRating(props.trainerUserRating || props.trainerRating)}
+  </div>
+</div>
+
           </div>
 
           <hr className="faq-seperater" />

@@ -94,6 +94,14 @@ const [filterData, setFilterData] = useState({
       curriculum_pdf: null,
       brochure_pdf: null,
     });
+    const areMandatoryFieldsFilled = () => {
+  const hasCategory = curriculumData.category_name?.trim() !== "";
+  const hasCourse = curriculumData.course_name?.trim() !== "";
+
+  return hasCategory && hasCourse;
+};
+
+const isSubmitDisabled = !areMandatoryFieldsFilled();
     
         const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -559,7 +567,9 @@ const [filterData, setFilterData] = useState({
     <div className='course-details'>
     <div className='course-row'>
     <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
+     <label htmlFor="inputState" className="form-label">
+      Category Name <span style={{ color: "red" }}>*</span>
+    </label>
     <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
     <option value="" disabled>
           Select Category
@@ -572,7 +582,9 @@ const [filterData, setFilterData] = useState({
     </select>
   </div>
   <div className="col-md-3">
-        <label htmlFor="course" className="form-label">Course Name</label>
+         <label htmlFor="course" className="form-label">
+      Course Name <span style={{ color: "red" }}>*</span>
+    </label>
         <select
           id="course"
           className="form-select"
@@ -755,9 +767,24 @@ const [filterData, setFilterData] = useState({
       </Table>
     </TableContainer>
     <div className="course-row">
-  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
-  <button className='reset-btn' onClick={handleReset}>Reset</button>
+  <button
+    className="submit-btn"
+    onClick={handleSubmit}
+    disabled={isSubmitDisabled}
+    style={{
+      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+      color: isSubmitDisabled ? "#666666" : "#ffffff",
+      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+      opacity: isSubmitDisabled ? 0.7 : 1,
+    }}
+  >
+    Submit
+  </button>
+  <button className="reset-btn" onClick={handleReset}>
+    Reset
+  </button>
 </div>
+
 </div>
 </div>
 </div>

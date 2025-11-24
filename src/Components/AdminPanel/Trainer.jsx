@@ -190,15 +190,39 @@ export default function Trainer() {
 
   const displayedCourse = filteredTrainers.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-  
   const handleInputChange = (e, field = null, value = null) => {
-    const name = field ?? e.target.name;
-    const val = field ? value : e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'trainerRating' ? (val === '' ? '' : Number(val)) : val,
-    }));
-  };
+  const name = field ?? e.target.name;
+  let val = field ? value : e.target.value;
+
+  
+  if (name === 'trainerRating') {
+    if (val === '') {
+      setFormData((prev) => ({ ...prev, trainerRating: '' }));
+      return;
+    }
+
+
+    val = String(val).replace(/^0+/, '');
+
+    let num = Number(val);
+
+    if (isNaN(num)) {
+      num = '';
+    } else if (num > 5) {
+      num = 5;
+    } else if (num < 0) {
+      num = 0;
+    }
+
+    setFormData((prev) => ({ ...prev, trainerRating: num }));
+    return;
+  }
+  setFormData((prev) => ({
+    ...prev,
+    [name]: val,
+  }));
+};
+
 
   
   const handleReset = () => {
@@ -486,10 +510,7 @@ export default function Trainer() {
     />
   )}
 </div>
-
-
-
-                  <div className="col-md-3">
+                  {/* <div className="col-md-3">
                     <label className="form-label">Trainer Rating</label>
                     <input
                       type="number"
@@ -499,7 +520,21 @@ export default function Trainer() {
                       value={formData.trainerRating}
                       onChange={handleInputChange}
                     />
-                  </div>
+                  </div> */}
+                  <div className="col-md-3">
+  <label className="form-label">Trainer Rating</label>
+  <input
+    type="number"
+    className="form-control"
+    placeholder="Enter Trainer rating"
+    name="trainerRating"
+    value={formData.trainerRating === '' ? '' : Number(formData.trainerRating)}
+    min="0"
+    max="5"
+    onChange={handleInputChange}
+  />
+</div>
+
                 </div>
 
                 <div className="course-row">

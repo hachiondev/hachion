@@ -1,14 +1,20 @@
-import { configureStore } from '@reduxjs/toolkit';
-import coursesReducer from './slices/userSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import trendingReducer from "./slices/trendingSlice";
+import discountReducer from "./slices/discountSlice";
+import currencyReducer from "./slices/currencySlice";
+import teensReducer from "./slices/teensSlice";
+import trainerReducer from "./slices/trainerSlice";
+import coursesSummaryReducer from "./slices/coursesSummarySlice";
 
 const store = configureStore({
   reducer: {
-    courses: coursesReducer,
+    trending: trendingReducer,
+    teens: teensReducer,
+    discounts: discountReducer,
+    currency: currencyReducer,
+    trainers: trainerReducer,
+    coursesSummary: coursesSummaryReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
 });
 
 export default store;

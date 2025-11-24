@@ -214,7 +214,7 @@ const handleFileChange = (event) => {
 };
 const handleSubmit = async (e) => {
   e.preventDefault();
-  const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+  const currentDate = new Date().toISOString().split("T")[0]; 
   const courseData = {
     courseCategory: formData.courseCategory,
     courseName: formData.courseName,
@@ -336,11 +336,11 @@ const handleEditClick = async (courseId) => {
         mentoring2:course.mentoring2,
         self1:course.self1,
     self2:course.self2,
-    // metaTitle:course.headerTitle,
+    
     headerTitle: course.metaTitle, 
-    // metaKeyword:course.courseKeyword,
+    
     courseKeyword: course.metaKeyword, 
-    // metaDescription:course.courseDescription,
+    
     courseKeywordDescription: course.metaDescription, 
     aboutCourse:course.aboutCourse,
     courseHighlight:course.courseHighlight,
@@ -441,6 +441,25 @@ const handleShortCourseBlur = async () => {
     }
   }
 };
+  const areMandatoryFieldsFilled = () => {
+    const hasCategory = formData.courseCategory?.trim() !== "";
+    const hasCourseName = formData.courseName?.trim() !== "";
+    const hasShortCourse = formData.shortCourse?.trim() !== "";
+    const hasClasses = formData.numberOfClasses?.toString().trim() !== "";
+    const hasImage = !!formData.courseImage; 
+
+    return (
+      hasCategory &&
+      hasCourseName &&
+      hasShortCourse &&
+      hasClasses &&
+      hasImage &&
+      !shortCourseError
+    );
+  };
+
+  const isSubmitDisabled = !areMandatoryFieldsFilled();
+
 
   return (
     <>
@@ -473,38 +492,72 @@ const handleShortCourseBlur = async () => {
               <div className="course-details">
                 <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Category Name</label>
-                    <select className="form-select" name='courseCategory' value={formData.courseCategory} onChange={handleInputChange}>
-                      <option value="" disabled>Select Category</option>
-                      {course.map((cat) => (
-                        <option key={cat.id} value={cat.name}>{cat.name}</option>
-                      ))}
-                    </select>
+                   <label className="form-label">
+  Category Name <span style={{ color: "red" }}>*</span>
+</label>
+<select
+  className="form-select"
+  name="courseCategory"
+  value={formData.courseCategory}
+  onChange={handleInputChange}
+>
+  <option value="" disabled>
+    Select Category
+  </option>
+  {course.map((cat) => (
+    <option key={cat.id} value={cat.name}>
+      {cat.name}
+    </option>
+  ))}
+</select>
+
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">Course Name</label>
-                    <input type="text" name="courseName" className="form-control" placeholder="Enter Course Name"
-                      value={formData.courseName} onChange={handleInputChange} required />
+                   <label className="form-label">
+  Course Name <span style={{ color: "red" }}>*</span>
+</label>
+<input
+  type="text"
+  name="courseName"
+  className="form-control"
+  placeholder="Enter Course Name"
+  value={formData.courseName}
+  onChange={handleInputChange}
+/>
+
                   </div>
                   <div className="col-md-4">
-  <label className="form-label">Short Course Name</label>
-  <input
-    type="text"
-    name="shortCourse"
-    className="form-control"
-    placeholder="Enter Short Course Name"
-    value={formData.shortCourse}
-    onChange={handleInputChange}
-    onBlur={handleShortCourseBlur} 
-    required
-  />
-  {shortCourseError && <div style={{ color: "red" }}>{shortCourseError}</div>}  {/* ✅ Optional error display */}
+ <label className="form-label">
+  Short Course Name <span style={{ color: "red" }}>*</span>
+</label>
+<input
+  type="text"
+  name="shortCourse"
+  className="form-control"
+  placeholder="Enter Short Course Name"
+  value={formData.shortCourse}
+  onChange={handleInputChange}
+  onBlur={handleShortCourseBlur}
+/>
+{shortCourseError && (
+  <div style={{ color: "red" }}>{shortCourseError}</div>
+)}
+
 </div>
                   </div>
                   <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Course Image</label>
-                    <input type="file" className="form-control" name="courseImage" accept="image/*" onChange={handleFileChange} />
+                   <label className="form-label">
+  Course Image <span style={{ color: "red" }}>*</span>
+</label>
+<input
+  type="file"
+  className="form-control"
+  name="courseImage"
+  accept="image/*"
+  onChange={handleFileChange}
+/>
+
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">Youtube Link</label>
@@ -512,9 +565,17 @@ const handleShortCourseBlur = async () => {
                       onChange={handleInputChange} />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">No. of Classes</label>
-                    <input type="number" name="numberOfClasses" className="form-control" value={formData.numberOfClasses}
-                      onChange={handleInputChange} />
+                    <label className="form-label">
+  No. of Classes <span style={{ color: "red" }}>*</span>
+</label>
+<input
+  type="number"
+  name="numberOfClasses"
+  className="form-control"
+  value={formData.numberOfClasses}
+  onChange={handleInputChange}
+/>
+
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">Daily Sessions</label>
@@ -604,7 +665,7 @@ const handleShortCourseBlur = async () => {
                   {[
                     { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
                     { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
-                    // { label: "Mentoring Mode", amount: "mamount", discount: "mdiscount", total: "mtotal" },
+                    
                     { label: "Self Paced with Q&A", amount: "sqamount", discount: "sqdiscount", total: "sqtotal" },
                     { label: "Self Paced Training", amount: "samount", discount: "sdiscount", total: "stotal" },
                   ].map((mode, index) => (
@@ -657,7 +718,7 @@ const handleShortCourseBlur = async () => {
                   {[
                     { label: "Live Training", prefix: "i" },
                     { label: "Crash Course Training", prefix: "ic" },
-                    // { label: "Mentoring Mode", prefix: "im" },
+                    
                     { label: "Self Paced with Q&A", prefix: "isq" },
                     { label: "Self Paced Training", prefix: "is" },
                   ].map((mode, index) => (
@@ -864,12 +925,25 @@ const handleShortCourseBlur = async () => {
                 />
                 {error && <p className="error-message">{error}</p>}
                 </div> 
-                <div className="course-row">
-                <button className='submit-btn' type='submit'>
-                  {formMode === 'Add' ? 'Submit' : 'Update'}
-                </button>
-                <button type="button" className="reset-btn" onClick={handleReset}>Reset</button>
-              </div>
+               <div className="course-row">
+  <button
+    className="submit-btn"
+    type="submit"
+    disabled={isSubmitDisabled}
+    style={{
+      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+      color: isSubmitDisabled ? "#666666" : "#ffffff",
+      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+      opacity: isSubmitDisabled ? 0.7 : 1,
+    }}
+  >
+    {formMode === "Add" ? "Submit" : "Update"}
+  </button>
+  <button type="button" className="reset-btn" onClick={handleReset}>
+    Reset
+  </button>
+</div>
+
             </form>
             <Helmet>
               <title>{formData.headerTitle || 'Default Title'}</title>

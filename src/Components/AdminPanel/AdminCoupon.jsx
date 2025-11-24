@@ -78,7 +78,46 @@ const [formData, setFormData] = useState({
     const [isEditing, setIsEditing] = useState(false);
 const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+const areMandatoryFieldsFilled = () => {
+  const hasCourses =
+    Array.isArray(formData.selectedCourses) &&
+    formData.selectedCourses.length > 0;
 
+  const hasCountries =
+    Array.isArray(formData.selectedCountries) &&
+    formData.selectedCountries.length > 0;
+
+  const hasCode = (formData.code || "").trim() !== "";
+
+  const hasDiscountType =
+    formData.discountType && formData.discountType !== "select";
+
+  const hasDiscountValue =
+    formData.discountValue !== "" &&
+    !isNaN(formData.discountValue) &&
+    Number(formData.discountValue) > 0;
+
+  const hasUsageLimit =
+    formData.usageLimit !== "" &&
+    !isNaN(formData.usageLimit) &&
+    Number(formData.usageLimit) > 0;
+
+  const hasStartDate = !!startDate;
+  const hasEndDate = !!endDate;
+
+  return (
+    hasCourses &&
+    hasCountries &&
+    hasCode &&
+    hasDiscountType &&
+    hasDiscountValue &&
+    hasUsageLimit &&
+    hasStartDate &&
+    hasEndDate
+  );
+};
+
+const isSubmitDisabled = !areMandatoryFieldsFilled();
 
     useEffect(() => {
         axios
@@ -401,7 +440,9 @@ const handleCountryChange = (selected) => {
           <div className="course-details">
             <div className="course-row">
               <div className="col-md-3">
-                <label className="form-label">Course Name</label>
+                <label className="form-label">
+    Course Name <span style={{ color: "red" }}>*</span>
+  </label>
                 <Select
                   options={courseOptions}
                   isMulti
@@ -442,49 +483,12 @@ const handleCountryChange = (selected) => {
 
            <div className="course-row">
             <div className="col-md-3">
-                  <label className="form-label">Country</label>
+                  <label className="form-label">
+  Country <span style={{ color: "red" }}>*</span>
+</label>
+
                   {countries.length > 0 ? (
-    //                 <Select
-    //                   options={countryOptions}
-    //                   isMulti
-    //                   closeMenuOnSelect={false}
-    //                   hideSelectedOptions={false}
-    //                   components={{
-    //   Option: (props) => (
-    //     <div {...props.innerProps} className="d-flex align-items-center p-1">
-    //       <input
-    //         type="checkbox"
-    //         checked={props.isSelected}
-    //         onChange={() => null}
-    //         style={{ marginRight: "8px" }}
-    //       />
-    //       {props.data.flag && (
-    //         <Flag
-    //           code={props.data.flag}
-    //           style={{ width: "20px", marginRight: "8px" }}
-    //         />
-    //       )}
-    //       <span>
-    //         {props.data.label}
-    //       </span>
-    //     </div>
-    //   ),
-    //   MultiValueLabel: (props) => (
-    //     <div className="d-flex align-items-center">
-    //       {props.data.flag && (
-    //         <Flag
-    //           code={props.data.flag}
-    //           style={{ width: "16px", marginRight: "6px" }}
-    //         />
-    //       )}
-    //       <span>{props.data.label}</span>
-    //     </div>
-    //   ),
-    // }}
-    //                   onChange={handleCountryChange}
-    //                   value={selectedCountries}
-    //                   placeholder="Search or select countries..."
-    //                 />
+    
     <Select
   options={countryOptions}
   isMulti
@@ -556,7 +560,7 @@ const handleCountryChange = (selected) => {
 
             <div className="course-row">
               <div className="col-md-3">
-                <label className="form-label">Coupon Code</label>
+                <label className="form-label">Coupon Code <span style={{ color: "red" }}>*</span></label>
                 <input
                   type="text"
                   name="code"
@@ -567,7 +571,10 @@ const handleCountryChange = (selected) => {
                 />
               </div>
               <div className="col-md-3">
-                <label className="form-label">Discount Type</label>
+                <label className="form-label">
+  Discount Type <span style={{ color: "red" }}>*</span>
+</label>
+
                 <select
                 id="type"
                  name="discountType"  
@@ -581,7 +588,10 @@ const handleCountryChange = (selected) => {
               </select>
               </div>
               <div className="col-md-3">
-                <label className="form-label">Discount Value</label>
+                <label className="form-label">
+  Discount Value <span style={{ color: "red" }}>*</span>
+</label>
+
                 <input
                   type="number"
                   name="discountValue"
@@ -595,7 +605,9 @@ const handleCountryChange = (selected) => {
 
             <div className="course-row">
               <div className="col-md-3">
-                <label className="form-label">Start Date</label>
+                <label className="form-label">
+  Start Date <span style={{ color: "red" }}>*</span>
+</label>
                 <br />
                 <DatePicker 
                   value={startDate} 
@@ -607,7 +619,9 @@ const handleCountryChange = (selected) => {
                 />
               </div>
               <div className="col-md-3">
-                <label className="form-label">Expiry Date</label>
+                <label className="form-label">
+  Expiry Date <span style={{ color: "red" }}>*</span>
+</label>
                 <br />
                 <DatePicker 
                   value={endDate} 
@@ -619,7 +633,10 @@ const handleCountryChange = (selected) => {
                 />
               </div>
               <div className="col-md-3">
-                <label className="form-label">Usage Limit</label>
+                <label className="form-label">
+  Usage Limit <span style={{ color: "red" }}>*</span>
+</label>
+
                 <input
                   type="number"
                   name="usageLimit"
@@ -631,7 +648,7 @@ const handleCountryChange = (selected) => {
               </div>
             </div>
                 <div className="col" style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                <label className="form-label">Status:</label>
+                <label className="form-label">Status: <span style={{ color: "red" }}>*</span></label>
                 <br/>
                 <Switch
                   checked={formData.status}
@@ -642,16 +659,26 @@ const handleCountryChange = (selected) => {
               </div>
 {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-            <div className="course-row">
-              <button type="submit" className="submit-btn">
-                {formMode === 'Add' ? 'Submit' : 'Update'}
-              </button>
-              
-              <button type="button" className="reset-btn" onClick={handleReset}>
-                Reset
-              </button>
+           <div className="course-row">
+  <button
+    type="submit"
+    className="submit-btn"
+    disabled={isSubmitDisabled}
+    style={{
+      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+      color: isSubmitDisabled ? "#666666" : "#ffffff",
+      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+      opacity: isSubmitDisabled ? 0.7 : 1,
+    }}
+  >
+    {formMode === "Add" ? "Submit" : "Update"}
+  </button>
 
-            </div>
+  <button type="button" className="reset-btn" onClick={handleReset}>
+    Reset
+  </button>
+</div>
+
           </div>
         </form>
       </div>

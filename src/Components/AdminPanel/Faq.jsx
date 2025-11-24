@@ -97,6 +97,23 @@ export default function Faq() {
          faq_pdf:"",
             date:currentDate,
          });
+         const areMandatoryFieldsFilled = () => {
+  return (
+    (curriculumData.category_name || "").trim() !== "" &&
+    (curriculumData.course_name || "").trim() !== ""
+  );
+};
+
+const isSubmitDisabled = !areMandatoryFieldsFilled();
+
+const areEditMandatoryFieldsFilled = () => {
+  return (
+    (editedRow.category_name || "").trim() !== "" &&
+    (editedRow.course_name || "").trim() !== ""
+  );
+};
+
+const isEditDisabled = !areEditMandatoryFieldsFilled();
         const [currentPage, setCurrentPage] = useState(1);
            const [rowsPerPage, setRowsPerPage] = useState(10);
            
@@ -527,7 +544,10 @@ const handleSubmit = async (e) => {
 <div className='course-details'>
 <div className='course-row'>
 <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
+    <label htmlFor="inputState" className="form-label">
+  Category Name <span style={{ color: "red" }}>*</span>
+</label>
+
     <select id="inputState" class="form-select" name='category_name' value={curriculumData.category_name} onChange={handleChange}>
     <option value="" disabled>
           Select Category
@@ -540,7 +560,10 @@ const handleSubmit = async (e) => {
     </select>
   </div>
   <div className="col-md-3">
-        <label htmlFor="course" className="form-label">Course Name</label>
+        <label htmlFor="course" className="form-label">
+  Course Name <span style={{ color: "red" }}>*</span>
+</label>
+
         <select
           id="course"
           className="form-select"
@@ -610,10 +633,26 @@ const handleSubmit = async (e) => {
     </TableContainer>
   
     <div className="course-row">
-  <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
-  <button className='reset-btn' onClick={handleReset}>Reset</button>
+  <button
+    className="submit-btn"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+    onClick={handleSubmit}
+    disabled={isSubmitDisabled}
+    style={{
+      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+      color: isSubmitDisabled ? "#666666" : "#ffffff",
+      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+      opacity: isSubmitDisabled ? 0.7 : 1,
+    }}
+  >
+    Submit
+  </button>
+  <button className="reset-btn" onClick={handleReset}>
+    Reset
+  </button>
 </div>
+
 </div>
 </div>
 </div>

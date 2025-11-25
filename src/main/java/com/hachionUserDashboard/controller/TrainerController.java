@@ -155,32 +155,6 @@ public class TrainerController {
 	    }
 	}
 
-//
-//	@PutMapping("/trainer/update/{id}")
-//	public ResponseEntity<Trainer> updateTrainer(@PathVariable int id, @RequestBody Trainer updatedTrainer) {
-//		Optional<Trainer> optionalTrainer = repo.findById(id);
-//
-//		if (optionalTrainer.isPresent()) {
-//			Trainer trainer = optionalTrainer.get();
-//
-//			// Set the new values for the trainer
-//			trainer.setTrainer_name(updatedTrainer.getTrainer_name());
-//			trainer.setCategory_name(updatedTrainer.getCategory_name());
-//			trainer.setCourse_name(updatedTrainer.getCourse_name());
-//			trainer.setSummary(updatedTrainer.getSummary());
-//			trainer.setDemo_link_1(updatedTrainer.getDemo_link_1());
-//			trainer.setDemo_link_2(updatedTrainer.getDemo_link_2());
-//			trainer.setDemo_link_3(updatedTrainer.getDemo_link_3());
-//			trainer.setDate(LocalDate.now());
-//			trainer.setTrainerRating(updatedTrainer.getTrainerRating());
-//			repo.save(trainer);
-//
-//			return ResponseEntity.ok(trainer);
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//		}
-//	}
 
 	@DeleteMapping("trainer/delete/{id}")
 	public ResponseEntity<?> deleteTrainer(@PathVariable int id) {

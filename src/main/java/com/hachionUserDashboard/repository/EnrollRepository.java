@@ -60,4 +60,11 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 
 	@Query(value = "SELECT COUNT(*) FROM enroll e WHERE e.trainer = :trainerName AND e.course_name = :courseName", nativeQuery = true)
 	long countByTrainerAndCourse(@Param("trainerName") String trainerName, @Param("courseName") String courseName);
+
+	@Query(value = "SELECT DISTINCT course_name FROM enroll WHERE email = :email", nativeQuery = true)
+	List<String> findCourseNamesByEmail(@Param("email") String email);
+
+	@Query(value = "SELECT DISTINCT trainer FROM enroll WHERE email = :email AND course_name = :courseName", nativeQuery = true)
+	List<String> findTrainersByEmailAndCourse(@Param("email") String email, @Param("courseName") String courseName);
+
 }

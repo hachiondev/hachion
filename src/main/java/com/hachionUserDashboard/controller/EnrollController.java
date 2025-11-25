@@ -336,27 +336,50 @@ public class EnrollController {
 
 		return ResponseEntity.ok(Map.of("canDownload", true));
 	}
-	 @GetMapping("/summary")
-	    public ResponseEntity<EnrollmentSummaryDto> getEnrollmentSummary(@RequestParam String email) {
-	        if (email == null || email.isBlank()) {
-	            return ResponseEntity.badRequest().build();
-	        }
 
-	        long count = repo.countByEmail(email);
-	        String lastEnrollDate = repo.findLastEnrollDate(email);
-	        String lastCourseName = repo.findLastCourseName(email);
+	@GetMapping("/summary")
+	public ResponseEntity<EnrollmentSummaryDto> getEnrollmentSummary(@RequestParam String email) {
+		if (email == null || email.isBlank()) {
+			return ResponseEntity.badRequest().build();
+		}
 
-	        EnrollmentSummaryDto summary = new EnrollmentSummaryDto(email, count, lastEnrollDate, lastCourseName);
-	        return ResponseEntity.ok(summary);
-	    }
-	 @GetMapping("/enroll/count")
-	 public ResponseEntity<Map<String, Long>> getEnrollCountByTrainerAndCourse(
-	         @RequestParam String trainerName,
-	         @RequestParam String courseName) {
+		long count = repo.countByEmail(email);
+		String lastEnrollDate = repo.findLastEnrollDate(email);
+		String lastCourseName = repo.findLastCourseName(email);
 
-	     long count = repo.countByTrainerAndCourse(trainerName, courseName);
-	     return ResponseEntity.ok(Map.of("count", count));
-	 }
+		EnrollmentSummaryDto summary = new EnrollmentSummaryDto(email, count, lastEnrollDate, lastCourseName);
+		return ResponseEntity.ok(summary);
+	}
 
+	@GetMapping("/enroll/count")
+	public ResponseEntity<Map<String, Long>> getEnrollCountByTrainerAndCourse(@RequestParam String trainerName,
+			@RequestParam String courseName) {
+
+		long count = repo.countByTrainerAndCourse(trainerName, courseName);
+		return ResponseEntity.ok(Map.of("count", count));
+	}
+
+	@GetMapping("/enroll/courses/{email}")
+	public ResponseEntity<List<String>> getCourseNamesByEmail(@PathVariable String email) {
+		List<String> courses = repo.findCourseNamesByEmail(email);
+
+		if (courses.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.ok(courses);
+	}
+
+	@GetMapping("/enroll/trainers/{email}/{courseName}")
+	public ResponseEntity<List<String>> getTrainersByEmailAndCourse(@PathVariable String email,
+			@PathVariable String courseName) {
+
+		List<String> trainers = repo.findTrainersByEmailAndCourse(email, courseName);
+
+		if (trainers.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(trainers);
+	}
 
 }

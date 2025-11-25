@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import com.hachionUserDashboard.entity.Trainer;
 
+import jakarta.persistence.Lob;
+
 public class TrainerRequest {
 
 	private int trainer_id;
@@ -16,7 +18,9 @@ public class TrainerRequest {
 	private String demo_link_3;
 	private Double trainerRating; // existing column value
 	private LocalDate date;
-	private Double trainerUserRating; // <<< computed value returned in JSON
+	private Double trainerUserRating;
+	@Lob
+	private String trainerImage;
 
 	public int getTrainer_id() {
 		return trainer_id;
@@ -106,6 +110,14 @@ public class TrainerRequest {
 		this.trainerUserRating = trainerUserRating;
 	}
 
+	public String getTrainerImage() {
+		return trainerImage;
+	}
+
+	public void setTrainerImage(String trainerImage) {
+		this.trainerImage = trainerImage;
+	}
+
 	public static TrainerRequest from(Trainer t) {
 		TrainerRequest d = new TrainerRequest();
 		d.setTrainer_id(t.getTrainer_id());
@@ -118,6 +130,7 @@ public class TrainerRequest {
 		d.setDemo_link_3(t.getDemo_link_3());
 		d.setTrainerRating(t.getTrainerRating());
 		d.setDate(t.getDate());
+		d.setTrainerImage(t.getTrainerImage());
 		return d;
 	}
 

@@ -214,4 +214,9 @@ public class UserReviewController {
 		return repo.findByTrainerNameAndCourseName(trainerName, courseName);
 	}
 
+	@GetMapping("/userreview/email/{email}")
+	public List<UserReview> getReviewsByUserEmail(@PathVariable String email) {
+		return repo.findByEmailIgnoreCaseOrderByDateDesc(email);
+	}
+
 }

@@ -40,9 +40,10 @@ public interface UserReviewRepository extends JpaRepository<UserReview, Integer>
 
 	@Query(value = "SELECT * FROM userreview WHERE type = 1 AND ((LOWER(review_type) = 'course' AND (trainer_name IS NULL OR NULLIF(TRIM(trainer_name), '') IS NULL)) OR (LOWER(review_type) = 'both'))", nativeQuery = true)
 	List<UserReview> findAllByTypeTrue();
-	
-	 @Query(value = "SELECT * FROM userreview ur WHERE ur.trainer_name = :trainerName AND ur.course_name = :courseName", nativeQuery = true)
-	    List<UserReview> findByTrainerNameAndCourseName(
-	            @Param("trainerName") String trainerName,
-	            @Param("courseName") String courseName);
+
+	@Query(value = "SELECT * FROM userreview ur WHERE ur.trainer_name = :trainerName AND ur.course_name = :courseName", nativeQuery = true)
+	List<UserReview> findByTrainerNameAndCourseName(@Param("trainerName") String trainerName,
+			@Param("courseName") String courseName);
+
+	List<UserReview> findByEmailIgnoreCaseOrderByDateDesc(String email);
 }

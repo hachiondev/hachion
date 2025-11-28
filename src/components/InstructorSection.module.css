@@ -10,7 +10,8 @@
 }
 
 .iswrap{
-  padding:30px 70px;
+  padding-top:30px;
+  padding-bottom:30px;
 }
 
 .ishead{
@@ -125,9 +126,6 @@
   .isbadge{ padding:4px 12px; font-size:10px; }
   .isstat{ min-width: 120px; padding:10px 12px; }
   .isphoto{ height:auto; }
-  .iswrap{
-    padding: 35px 15px;
-  }
   .ishead h2{
     font-size: 26px;
     font-weight: 600;

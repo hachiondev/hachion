@@ -12,7 +12,8 @@
 }
 
 .wswrap {
-  padding: 30px 70px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: #fff;
 }
 
@@ -260,6 +261,9 @@
   .wskpis {
     grid-template-columns: 1fr;
   }
+  .wshead h2{
+    font-size: 26px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -281,9 +285,6 @@
   }
 }
 @media (max-width: 720px) {
-  .wswrap {
-    padding: 35px 15px;
-  }
   .wskpis {
     display: flex;
     gap: 6px;

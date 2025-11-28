@@ -100,31 +100,33 @@ export default function SuccessStories() {
 
   return (
     <section className={styles.sswrap}>
-      <div className={styles.sstoppill}>
-         🔴   Live Success Stories
-      </div>
+      <div className="container">
+        <div className={styles.sstoppill}>
+          🔴   Live Success Stories
+        </div>
 
-      <div className={styles.sshead}>
-        <h2>Hear From Our Successful Graduates</h2>
-        <p>Real stories from students who transformed their careers</p>
-      </div>
+        <div className={styles.sshead}>
+          <h2>Hear From Our Successful Graduates</h2>
+          <p>Real stories from students who transformed their careers</p>
+        </div>
 
-      <div className={styles.ssgrid}>
-        {stories.map((s, i) => (
-          <StoryCard key={i} {...s} />
-        ))}
-      </div>
+        <div className={styles.ssgrid}>
+          {stories.map((s, i) => (
+            <StoryCard key={i} {...s} />
+          ))}
+        </div>
 
-      <div className={styles.sscta}>
-        <div className={styles.ssctatitle}>Want to Share Your Success Story?</div>
-        <p>Join our alumni network and inspire the next generation of developers</p>
-        <button
-          className={styles.ssctabtn}
-          onClick={() => console.log("Open submit story form")}
-        >
-          Submit Your Story
-        </button>
+        <div className={styles.sscta}>
+          <div className={styles.ssctatitle}>Want to Share Your Success Story?</div>
+          <p>Join our alumni network and inspire the next generation of developers</p>
+          <button
+            className={styles.ssctabtn}
+            onClick={() => console.log("Open submit story form")}
+          >
+            Submit Your Story
+          </button>
+        </div>
       </div>
-    </section>
+    </section >
   );
 }

@@ -10,7 +10,8 @@
 
 /* section bg */
 .sswrap{
-  padding: 28px 16px 44px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: linear-gradient(106.65deg, rgba(194, 214, 252, 0.5) 13.13%, rgba(254, 233, 233, 0.5) 104.74%);
 }
 

@@ -17,7 +17,7 @@
     rgba(194, 214, 252, 0.5) 6.06%,
     rgba(254, 233, 233, 0.5) 97.67%
   );
-  padding: 30px 70px;
+  padding: 30px 0;
 }
 
 /* Happy Hours banner */
@@ -97,7 +97,7 @@
   justify-content: space-between;
   gap: 20px;
   position: relative;
-  padding: 18px 12px;
+  padding: 18px 0px;
 }
 .dcheadText {
   flex: 1;
@@ -135,10 +135,23 @@
 .dcselect {
   position: relative;
   background: #fff;
-  border: 1px solid #000;
-  border-radius: 999px;
-  padding: 8px 50px 8px 12px;
-  min-width: 220px;
+  border: 1px solid #000000;
+  border-radius: 50px;
+  /* min-width: 260px; */
+}
+.dcselectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px 10px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #0e1320;
+  font-size: 14px;
+  user-select: none;
+}
+.dcselectTrigger:hover {
+  /* background: #f9fafb; */
 }
 .dcselect select {
   appearance: none;
@@ -148,6 +161,58 @@
   font-weight: 400;
   color: #000000;
   font-size: 14px;
+  display: none;
+}
+.dcselectOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+.dcselectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px;
+}
+.dcselectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+.dcselectOption:hover {
+  background: #f0f9ff;
+  color: #0083b0;
+}
+.dcselectOptionActive {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+  font-weight: 600;
+}
+.dcselectOptionActive:hover {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+}
+.dcselectOption svg {
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 .dccaret {
   position: absolute;
@@ -155,6 +220,11 @@
   top: 50%;
   transform: translateY(-50%);
   color: #7a8694;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+.dccaretOpen {
+  transform: translateY(-50%) rotate(180deg);
 }
 .faqchevron {
   color: #36c5ff;
@@ -314,6 +384,311 @@
   background: none;
 }
 
+/* Request Custom Batch Section */
+.dcrequestSection {
+  /* grid-column: 1 / -1; */
+}
+
+.dcrequestCard {
+  /* border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); */
+}
+
+.dcrequestImage {
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; */
+}
+
+.dcrequestImage img {
+  width: 100%;
+  /* height: 100%;
+  object-fit: cover;
+  object-position: center; */
+}
+
+.dcrequestOverlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  /* border-radius: 16px; */
+  padding: 36px 40px;
+  /* margin: 28px;
+  width: calc(100% - 56px);
+  max-width: 680px; */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.dcrequestForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dcrequestDays {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.dcrequestLabel {
+  font-size: 20px;
+  font-weight: 500;
+  color: #0e1320;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.dcrequestCheckboxes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dcrequestCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.dcrequestCheckbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.dcrequestCheckbox:hover .checkmark {
+  border-color: #0083b0;
+}
+
+.dcrequestCheckbox input:checked ~ .checkmark {
+  /* background-color: #0e1320; */
+  border-color: #0e1320;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.dcrequestCheckbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.dcrequestCheckbox .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid #000;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.dcrequestCheckbox span:not(.checkmark) {
+  font-size: 16px;
+  font-weight: 400;
+  color: #0e1320;
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+.dcrequestRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+  width: 80%;
+}
+
+.dcrequestField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dcrequestSelect {
+  background: #fff;
+  /* border: 2px solid #e5e7eb; */
+  border-radius: 10px;
+  padding: 12px 36px 12px 14px;
+  font-size: 14px;
+  color: #0e1320;
+  font-weight: 400;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23666' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: all 0.2s;
+}
+
+.dcrequestSelect:focus {
+  outline: none;
+  border-color: #0083b0;
+  box-shadow: 0 0 0 3px rgba(0, 131, 176, 0.1);
+}
+
+/* Custom Dropdown for Request Batch */
+.dcrequestSelectWrapper {
+  position: relative;
+}
+
+.dcrequestSelectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  padding: 12px 40px 12px 14px;
+  font-size: 14px;
+  color: #0e1320;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+/* .dcrequestSelectTrigger:hover {
+  border-color: #0083b0;
+  background: #f9fafb;
+} */
+
+.dcrequestSelectOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.dcrequestSelectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.dcrequestSelectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.dcrequestSelectOption:hover {
+  background: #f0f9ff;
+  color: #0083b0;
+}
+
+.dcrequestSelectOptionActive {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+  font-weight: 600;
+}
+
+.dcrequestSelectOptionActive:hover {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+}
+
+.dcrequestSelectOption svg {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.dcrequestCaret {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7a8694;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+
+.dcrequestCaretOpen {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dcrequestBtn {
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  border: 0;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 14px 30px;
+  cursor: pointer;
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  /* background: #00b4db;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: fit-content;
+  box-shadow: 0 4px 14px rgba(0, 180, 219, 0.3); */
+}
+/* 
+.dcrequestBtn:hover {
+  background: #0099c0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 180, 219, 0.4);
+}
+
+.dcrequestBtn:active {
+  transform: translateY(0);
+} */
+
 /* Right info card */
 .dcinfo {
   background: #fff;
@@ -386,6 +761,15 @@
     width: 100%;
     justify-content: flex-end;
   }
+  .dcrequestOverlay {
+    max-width: 100%;
+    /* width: calc(100% - 40px); */
+    /* margin: 20px; */
+    padding: 28px 30px;
+  }
+  .dcrequestCard {
+    min-height: 450px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -397,6 +781,52 @@
   }
   .dcdetails {
     grid-template-columns: 1fr;
+  }
+  .dcrequestCard {
+    min-height: 380px;
+  }
+  .dcrequestOverlay {
+    /* width: calc(100% - 30px); */
+    /* margin: 15px; */
+    padding: 24px 20px;
+  }
+  .dcrequestTitle {
+    font-size: 20px;
+  }
+  .dcrequestText {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .dcrequestRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .dcrequestBtn {
+    /* width: 100%; */
+    padding: 13px 36px;
+    font-size: 15px;
+  }
+  .dcrequestCheckboxes {
+    gap: 8px;
+  }
+  .dcrequestCheckbox span:not(.checkmark) {
+    font-size: 13px;
+  }
+  .dcrequestLabel {
+    font-size: 13px;
+  }
+  .checkmark {
+    height: 18px;
+    width: 18px;
+  }
+  .dcrequestCheckbox .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 8px;
+  }
+  .offerBanner {
+    padding: 24px;
   }
 }
 
@@ -413,6 +843,10 @@
   .offerTitle {
     font-size: 12px;
   }
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
   .offerIcon img {
     width: 40px;
     height: 40px;
@@ -428,6 +862,7 @@
   }
   .dchead {
     display: block;
+    padding: 0px;
   }
   .dchead h2 {
     font-size: 22px;
@@ -479,7 +914,7 @@
     font-size: 14px;
     font-weight: 600;
     color: #000000;
-    display: block;
+    /* display: block; */
   }
   .dcdetailtime {
     font-size: 15px;
@@ -492,42 +927,45 @@
   .dcemptytitle {
     font-weight: 600;
   }
-  .dcemptytext{
+  .dcemptytext {
     font-weight: 300;
   }
-  .dcdetailscol{
+  .dcdetailscol {
     box-shadow: none;
   }
-  .dcbtn{
-        padding: 6px 55px;
+  .dcbtn {
+    padding: 6px 30px;
     font-size: 14px;
     font-weight: 600;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
-  .dclink{
+  .dclink {
     margin-bottom: 30px;
   }
-  .dcinfoicon{
+  .dcinfoicon {
     height: 40px;
     width: 40px;
   }
-   .dcinfoicon img{
+  .dcinfoicon img {
     height: 40px;
     width: 40px;
   }
-  .dcinfotitle{
+  .dcinfotitle {
     font-size: 22px;
     font-weight: 500;
   }
-  .dcinfotext{
+  .dcinfotext {
     font-size: 14px;
   }
-  .dcinfolist{
+  .dcinfolist {
     font-size: 14px;
     margin-bottom: 20px;
   }
-  .dcinfolist h4{
+  .dcinfolist h4 {
     font-size: 18px;
     font-weight: 500;
+  }
+  .dcselectTrigger {
+    font-size: 10px;
   }
 }

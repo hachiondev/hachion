@@ -16,9 +16,9 @@ const kpi = [
 
 const categories = [
   { title: "Course Content Quality", score: 4.9, bar: 92 },
-  { title: "Instructor Expertise",  score: 4.8, bar: 90 },
-  { title: "Learning Support",      score: 4.9, bar: 92 },
-  { title: "Career Impact",         score: 4.7, bar: 88 },
+  { title: "Instructor Expertise", score: 4.8, bar: 90 },
+  { title: "Learning Support", score: 4.9, bar: 92 },
+  { title: "Career Impact", score: 4.7, bar: 88 },
 ];
 
 const reviews = [
@@ -52,70 +52,72 @@ const reviews = [
   },
 ];
 
-export default function StudentsSay({ onCta = () => {} }) {
+export default function StudentsSay({ onCta = () => { } }) {
   return (
     <section className={styles.wswrap}>
-      <div className={styles.wshead}>
-        <h2>What Our Students Say</h2>
-        <p>Real feedback from our community of learners</p>
-      </div>
+      <div className="container" >
+        <div className={styles.wshead}>
+          <h2>What Our Students Say</h2>
+          <p>Real feedback from our community of learners</p>
+        </div>
 
-      {/* KPI chips */}
-      <div className={styles.wskpis}>
-        {kpi.map((x) => (
-          <div key={x.label} className={styles.wskpi}>
-            <div className={styles.wskpival}>{x.value}</div>
-            <div className={styles.wskpilab}>{x.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Category cards */}
-      <div className={styles.wscats}>
-        {categories.map((c) => (
-          <div key={c.title} className={styles.wscat}>
-            <div className={styles.wscattitle}>{c.title}</div>
-            <div className={styles.wscatscore}>
-              ⭐ {c.score}
+        {/* KPI chips */}
+        <div className={styles.wskpis}>
+          {kpi.map((x) => (
+            <div key={x.label} className={styles.wskpi}>
+              <div className={styles.wskpival}>{x.value}</div>
+              <div className={styles.wskpilab}>{x.label}</div>
             </div>
-            <div className={styles.wsbar}>
-              <div className={styles.wsbarfill} style={{ width: `${c.bar}%` }} />
-            </div>
-            <div className={styles.wsresp}>2847 responses</div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
-
-      {/* Reviews grid */}
-      <div className={styles.wsgrid}>
-        {reviews.map((r, i) => (
-          <article key={i} className={styles.wscard}>
-            <div className={styles.wscardhead}>
-              <div>
-                <div className={styles.wsname}>{r.name}</div>
-                <div className={styles.wsrole}>{r.role}</div>
+        {/* Category cards */}
+        <div className={styles.wscats}>
+          {categories.map((c) => (
+            <div key={c.title} className={styles.wscat}>
+              <div className={styles.wscattitle}>{c.title}</div>
+              <div className={styles.wscatscore}>
+                ⭐ {c.score}
               </div>
-              <div className={styles.wsrating}>
-                {[...Array(5)].map((_, idx) => (
-                  <Star key={idx} />
-                ))}
-                <span className={styles.wsratingnum}>{r.rating.toFixed(1)}</span>
+              <div className={styles.wsbar}>
+                <div className={styles.wsbarfill} style={{ width: `${c.bar}%` }} />
               </div>
+              <div className={styles.wsresp}>2847 responses</div>
             </div>
-            <p className={styles.wstext}>{r.text}</p>
-          </article>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Bottom CTA panel */}
-      <div className={styles.wscta}>
-        <div className={styles.wsctatitle}>Join 45,000+ Satisfied Students</div>
-        <p>Experience the same transformation that thousands have achieved</p>
-        <button className={styles.wsctabtn} onClick={onCta}>
-          Start Your Journey Today
-        </button>
+        <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
+
+        {/* Reviews grid */}
+        <div className={styles.wsgrid}>
+          {reviews.map((r, i) => (
+            <article key={i} className={styles.wscard}>
+              <div className={styles.wscardhead}>
+                <div>
+                  <div className={styles.wsname}>{r.name}</div>
+                  <div className={styles.wsrole}>{r.role}</div>
+                </div>
+                <div className={styles.wsrating}>
+                  {[...Array(5)].map((_, idx) => (
+                    <Star key={idx} />
+                  ))}
+                  <span className={styles.wsratingnum}>{r.rating.toFixed(1)}</span>
+                </div>
+              </div>
+              <p className={styles.wstext}>{r.text}</p>
+            </article>
+          ))}
+        </div>
+
+        {/* Bottom CTA panel */}
+        <div className={styles.wscta}>
+          <div className={styles.wsctatitle}>Join 45,000+ Satisfied Students</div>
+          <p>Experience the same transformation that thousands have achieved</p>
+          <button className={styles.wsctabtn} onClick={onCta}>
+            Start Your Journey Today
+          </button>
+        </div>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./CourseCurriculum.module.css";
 import { cn } from "../lib/utils";
 import VideoModal from "./VideoModal";
+import LoginRequired from "./LoginRequired";
 
 
 const Chevron = ({ open }) => (
@@ -83,6 +84,7 @@ export default function CourseCurriculum() {
   const [showVideo, setShowVideo] = useState(false);
   return (
     <section className={styles.ccwrap}>
+      <div className="container">
       <div className={styles.cchead}>
         <h2>Course Curriculum</h2>
         <p>
@@ -173,11 +175,20 @@ export default function CourseCurriculum() {
       </div>
 
       {showVideo && (
-        <VideoModal
-          videoSrc={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"}
-          onClose={() => setShowVideo(false)}
+        // <VideoModal
+        //   videoSrc={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"}
+        //   onClose={() => setShowVideo(false)}
+        // />
+        <LoginRequired
+            title="Login Required"
+            subtitle="To add items to cart please Login"
+            onCancel={() => setShowVideo(false)}
+            onLogin={() => {
+                setShowVideo(false);
+            }}
         />
       )}
+      </div>
 
     </section>
   );

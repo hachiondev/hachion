@@ -4,10 +4,10 @@ import { cn } from "../lib/utils";
 
 
 const Share = () => (
-   <img src="shares.png" alt="logo" />
+  <img src="shares.png" alt="logo" />
 );
 const Bookmark = () => (
-   <img src="bookmark.png" alt="logo" />
+  <img src="bookmark.png" alt="logo" />
 );
 
 const sampleCourses = [
@@ -61,24 +61,26 @@ export default function StudentsAlsoEnrolled({
 }) {
   return (
     <section className={styles.saewrap}>
-      <div className={styles.saehead}>
-        <h2>Students Also Enrolled In</h2>
-        <p>
-          Hachion offers flexible, instructor-led online training programs that let you
-          learn anytime, anywhere. Our expert instructors, practical curriculum, and
-          dedicated support team ensure a rewarding learning journey, helping you achieve
-          your professional goals.
-        </p>
-      </div>
+      <div className="container">
+        <div className={styles.saehead}>
+          <h2>Students Also Enrolled In</h2>
+          <p>
+            Hachion offers flexible, instructor-led online training programs that let you
+            learn anytime, anywhere. Our expert instructors, practical curriculum, and
+            dedicated support team ensure a rewarding learning journey, helping you achieve
+            your professional goals.
+          </p>
+        </div>
 
-      <div className={styles.saesgrid}>
-        {courses.map((c) => (
-          <CourseCard key={c.id} c={c} onView={onViewCourse} />
-        ))}
-      </div>
+        <div className={styles.saesgrid}>
+          {courses.map((c) => (
+            <CourseCard key={c.id} c={c} onView={onViewCourse} />
+          ))}
+        </div>
 
-      <div className={styles.saecta}>
-        <button className={styles.saectabtn} onClick={onExplore}>Explore courses</button>
+        <div className={styles.saecta}>
+          <button className={styles.saectabtn} onClick={onExplore}>Explore courses</button>
+        </div>
       </div>
     </section>
   );

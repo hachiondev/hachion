@@ -11,7 +11,8 @@
 }
 
 .cowrap {
-  padding: 28px 70px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: linear-gradient(
     106.65deg,
     rgba(194, 214, 252, 0.5) 13.13%,
@@ -219,9 +220,6 @@
   }
 }
 @media (max-width: 720px) {
-  .cowrap {
-    padding: 35px 15px;
-  }
   .cohead h2 {
     font-size: 26px;
     font-weight: 600;
@@ -239,28 +237,28 @@
   .cokpisub {
     font-size: 14px;
   }
-  .cocardhead{
+  .cocardhead {
     padding: 0;
     font-weight: 600;
     color: #000000;
     font-size: 20px;
   }
-  .copathrole{
+  .copathrole {
     font-size: 14px;
     font-weight: 600;
   }
-  .copaths{
+  .copaths {
     padding: 0;
     margin: 15px 0;
   }
-  .copath{
+  .copath {
     gap: 2px;
   }
-  .copathtags{
+  .copathtags {
     font-size: 12px;
   }
-  .cosalary{
-        font-size: 12px;
-        font-weight: 600;
+  .cosalary {
+    font-size: 12px;
+    font-weight: 600;
   }
 }

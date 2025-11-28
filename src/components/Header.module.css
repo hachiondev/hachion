@@ -7,13 +7,16 @@
 }
 
 /* --- Top Bar --- */
+.hxtopmain{
+  background:#0C8EBF;
+}
 .hxtop{
   background:#0C8EBF;
   color:#fff;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:10px 70px;
+  padding:10px 0;
   gap:12px;
 }
 
@@ -52,7 +55,7 @@
   grid-template-columns: auto auto 1fr auto;
   align-items:center;
   gap:70px;
-  padding:20px 70px;
+  padding:20px 0;
 }
 
 .hxlogo{

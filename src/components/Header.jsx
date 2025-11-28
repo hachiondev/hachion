@@ -63,7 +63,10 @@ export default function Header({
   return (
     <header className={styles.hxheader}>
       {/* Top bar */}
-      <div className={styles.hxtop}>
+      <div className={styles.hxtopmain}>
+        <div className={'container ' + styles.hxtop}>
+
+        
         <div className={styles.hxtopleft}>
           <span className={styles.hxtopitem}>
             <PhoneIcon />
@@ -78,14 +81,16 @@ export default function Header({
             </a>
           </span>
         </div>
+       
 
         <button className={styles.hxcorporate} onClick={onCorporateClick}>
           Corporate Training
         </button>
+         </div>
       </div>
 
       {/* Main bar */}
-      <div className={styles.hxmain}>
+      <div className={'container ' + styles.hxmain}>
         {/* Logo */}
         <a href="/" className={styles.hxlogo} aria-label="Hachion home">
           <img src={logo} alt="logo" />

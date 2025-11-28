@@ -18,6 +18,7 @@ export default function InstructorSection({
 }) {
   return (
     <section className={styles.iswrap}>
+      <div className="container">
       <div className={styles.ishead}>
         <h2>Meet Your Instructor</h2>
         <p>Learn from industry veterans with years of real-world experience</p>
@@ -90,6 +91,7 @@ export default function InstructorSection({
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

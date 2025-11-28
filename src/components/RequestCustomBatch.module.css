@@ -19,8 +19,8 @@
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
+  max-width: 810px;
+  max-height: 95vh;
   overflow-y: auto;
 }
 
@@ -62,7 +62,7 @@
   padding: 0 32px 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 /* Form Row & Col */
@@ -75,13 +75,13 @@
 .rcbCol {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .rcbFormGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 /* Labels */
@@ -127,7 +127,7 @@
 }
 
 /* Unified input styles to match design */
-.rcbInput{
+.rcbInput {
   background: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 5px;
@@ -137,8 +137,14 @@
   height: 42px;
   box-sizing: border-box;
 }
-.rcbInput::placeholder{ color: #9aa3ad; }
-.rcbInput:focus{ outline:none; border-color:#3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+.rcbInput::placeholder {
+  color: #9aa3ad;
+}
+.rcbInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
 
 .rcbPhoneInput {
   flex: 1;
@@ -205,7 +211,9 @@ input[type="date"] {
   pointer-events: none;
   font-size: 16px;
 }
-.rcbCalendarIcon img{    width: 24px;}
+.rcbCalendarIcon img {
+  width: 24px;
+}
 
 /* Select Dropdown */
 .rcbSelect {
@@ -287,7 +295,7 @@ input[type="date"] {
 
 .rcbInfoList li {
   font-size: 13px;
-  color: #0BA5D4;
+  color: #0ba5d4;
   line-height: 1.6;
 }
 
@@ -330,21 +338,21 @@ input[type="date"] {
 }
 
 .rcbSubmitBtn:hover {
-  background: #0890C0;
+  background: #0890c0;
 }
 
 .rcbSubmitBtn:active {
-  background: #077BA8;
+  background: #077ba8;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .rcbOverlay {
-    padding: 0;
+    padding: 10px;
   }
 
   .rcbModal {
-    border-radius: 12px 12px 0 0;
+    border-radius: 12px;
     max-height: 95vh;
   }
 

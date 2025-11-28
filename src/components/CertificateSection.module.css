@@ -11,7 +11,8 @@
 }
 
 .cfwrap {
-  padding: 30px 70px;
+   padding-top:30px;
+  padding-bottom:30px;
   background: #fff;
 }
 
@@ -221,9 +222,6 @@
   }
 }
 @media (max-width: 720px) {
-  .cfwrap {
-    padding: 35px 15px;
-  }
   .cfwrap .cfhead h2 {
     font-size: 26px;
   }

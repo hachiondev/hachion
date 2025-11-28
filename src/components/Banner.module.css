@@ -1,4 +1,7 @@
 /* Offer strip */
+.bnoffertop {
+  background: #e8f6ff;
+}
 .bnoffer {
   background: #e8f6ff;
   color: #0a3f4f;
@@ -6,7 +9,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 10px 70px;
+  padding: 10px 0;
   font-weight: 600;
 }
 .bnofferleft {
@@ -27,16 +30,25 @@
 }
 
 /* Main banner card */
-.bncard {
-  padding: 70px;
-  color: #e8f1f5;
+.bncardmain {
   background: radial-gradient(
     1200px 600px at 80% 30%,
     #00729c,
     #00435b,
     #00374c
   );
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+.bncard {
+  padding-bottom: 60px;
+  padding-top: 60px;
+  color: #e8f1f5;
+  /* background: radial-gradient(
+    1200px 600px at 80% 30%,
+    #00729c,
+    #00435b,
+    #00374c
+  ); */
+  /* box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); */
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 36px;
@@ -239,7 +251,7 @@
   transform: translateX(-50%);
   color: #fff;
   font-weight: 500;
-  font-size: 26px;
+  font-size: 20px;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
@@ -362,7 +374,7 @@
   .bnoffer {
     display: grid;
     justify-content: center;
-    padding: 15px 12px;
+    padding: 15px 0;
   }
   .bnherotext {
     top: 54%;

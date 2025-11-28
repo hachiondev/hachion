@@ -12,7 +12,8 @@
 }
 
 .ctawrap {
-  padding: 70px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: radial-gradient(1400px 600px at 50% -240px, #eef4ff, #faf8fb);
 }
 
@@ -208,11 +209,8 @@
 }
 
 @media (max-width: 720px) {
-  .ctawrap {
-    padding: 35px 15px;
-  }
   .ctawrap .ctatitle {
-    font-size: 28px;
+    font-size: 26px;
   }
   .ctawrap .ctasub {
     font-size: 20px;
@@ -242,23 +240,23 @@
   .ctabtn .ico img {
     width: 20px;
   }
-  .ctaperks{
-        gap: 5px;
+  .ctaperks {
+    gap: 5px;
     font-size: 10px;
     font-weight: 300;
     padding: 0;
   }
-  .ctapanel{
+  .ctapanel {
     margin: 0;
   }
-  .ctapanelGrid{
+  .ctapanelGrid {
     margin: 10px 0;
   }
-  .ctapanelGrid ul{
-        padding: 0;
+  .ctapanelGrid ul {
+    padding: 0;
     font-size: 12px;
   }
-  .ctaassure{
+  .ctaassure {
     gap: 2px;
     font-size: 12px;
     font-weight: 300;

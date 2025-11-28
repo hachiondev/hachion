@@ -13,7 +13,7 @@ import SuccessStories from '../components/SuccessStories';
 
 const Home = () => {
   return (
-    <div className="page">
+    <div>
       <Banner
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}

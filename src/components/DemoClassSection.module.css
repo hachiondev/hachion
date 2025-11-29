@@ -288,11 +288,12 @@
 }
 .dcslotbadge {
   width: fit-content;
-  padding: 6px 30px;
+  padding: 6px 20px;
   border-radius: 10px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12px;
   margin: auto;
+  white-space: nowrap;
 }
 .dcslotbadgeislive {
   background: var(--live);
@@ -758,8 +759,10 @@
     align-items: flex-start;
   }
   .offerCountdown {
-    width: 100%;
+    width: 70%;
+    margin: auto;
     justify-content: flex-end;
+    text-align: center;
   }
   .dcrequestOverlay {
     max-width: 100%;
@@ -859,6 +862,7 @@
     font-size: 14px;
     text-align: center;
     padding: 10px 20px;
+    width: 100%;
   }
   .dchead {
     display: block;

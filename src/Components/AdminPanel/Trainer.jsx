@@ -29,7 +29,6 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
-
 const normalizeTrainer = (t) => ({
   ...t,
   trainerRating: t.trainerRating ?? t.trainerRating ?? '',
@@ -82,6 +81,7 @@ export default function Trainer() {
     trainer_name: '',
     profileImage: '',
     trainerRating: '',
+    enrolledStudents: '',
     course_name: '',
     category_name: '',
     summary: '',
@@ -99,7 +99,6 @@ export default function Trainer() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  
   useEffect(() => {
     fetchTrainers();
     fetchCourseCategories();
@@ -108,7 +107,7 @@ export default function Trainer() {
 
   const fetchTrainers = async () => {
     try {
-      const res = await axios.get('https://api.test.hachion.co/trainers');
+      const res = await axios.get('https://api.hachion.co/trainers');
       const normalized = Array.isArray(res.data) ? res.data.map(normalizeTrainer) : [];
       setTrainers(normalized);
       setFilteredTrainers(normalized);
@@ -120,7 +119,7 @@ export default function Trainer() {
 
   const fetchCourseCategories = async () => {
     try {
-      const res = await axios.get('https://api.test.hachion.co/course-categories/all');
+      const res = await axios.get('https://api.hachion.co/course-categories/all');
       setCourseCategoriesList(res.data || []);
     } catch (err) {
       console.error('Error fetching course categories:', err);
@@ -129,7 +128,7 @@ export default function Trainer() {
 
   const fetchCourseList = async () => {
     try {
-      const res = await axios.get('https://api.test.hachion.co/courses/all');
+      const res = await axios.get('https://api.hachion.co/courses/all');
       setCourseCategory(res.data || []);
     } catch (err) {
       console.error('Error fetching courses list:', err);
@@ -144,7 +143,6 @@ export default function Trainer() {
       setFilterCourse([]);
     }
   }, [formData.category_name, courseCategory]);
-
   
   useEffect(() => {
     const filtered = trainers.filter((trainer) =>
@@ -157,7 +155,6 @@ export default function Trainer() {
     setFilteredTrainers(filtered);
     setCurrentPage(1);
   }, [searchTerm, trainers]);
-
   
   const handleDateFilter = () => {
     const filtered = trainers.filter((item) => {
@@ -177,7 +174,6 @@ export default function Trainer() {
     setCurrentPage(1);
   };
 
-  
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
@@ -193,14 +189,12 @@ export default function Trainer() {
   const handleInputChange = (e, field = null, value = null) => {
   const name = field ?? e.target.name;
   let val = field ? value : e.target.value;
-
   
   if (name === 'trainerRating') {
     if (val === '') {
       setFormData((prev) => ({ ...prev, trainerRating: '' }));
       return;
     }
-
 
     val = String(val).replace(/^0+/, '');
 
@@ -222,8 +216,6 @@ export default function Trainer() {
     [name]: val,
   }));
 };
-
-
   
   const handleReset = () => {
   setFormData({
@@ -232,6 +224,7 @@ export default function Trainer() {
     profileImage: null,
     existingImageName: '',
     trainerRating: '',
+    enrolledStudents: '',
     course_name: '',
     category_name: '',
     summary: '',
@@ -243,21 +236,17 @@ export default function Trainer() {
   setFormMode('Add');
 };
 
-
   const openAddForm = () => {
     setFormMode('Add');
     setShowForm(true);
     handleReset();
   };
 
-  
-  
   const handleSubmit = async (e) => {
   e.preventDefault();
   setSuccessMessage("");
   setErrorMessage("");
 
-  
   if (!formData.trainer_name || !formData.course_name || !formData.category_name) {
     setErrorMessage("⚠️ Please fill in all required fields.");
     return;
@@ -274,12 +263,12 @@ export default function Trainer() {
       demo_link_2: formData.demo_link_2,
       demo_link_3: formData.demo_link_3,
       date: formData.date,
+      enrolledStudents:formData.enrolledStudents,
       trainerRating:
         formData.trainerRating === "" || formData.trainerRating == null
           ? null
           : Number(formData.trainerRating),
     };
-
     
     const formDataToSend = new FormData();
     formDataToSend.append("trainerData", JSON.stringify(trainerPayload));
@@ -290,10 +279,9 @@ export default function Trainer() {
 
     let response;
 
-    
     if (formData.id) {
       response = await axios.put(
-        `https://api.test.hachion.co/trainer/update/${formData.id}`,
+        `https://api.hachion.co/trainer/update/${formData.id}`,
         formDataToSend
       );
 
@@ -314,7 +302,7 @@ export default function Trainer() {
     
     else {
       response = await axios.post(
-        "https://api.test.hachion.co/trainer/add",
+        "https://api.hachion.co/trainer/add",
         formDataToSend
       );
 
@@ -357,7 +345,7 @@ export default function Trainer() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://api.test.hachion.co/trainer/delete/${id}`);
+      await axios.delete(`https://api.hachion.co/trainer/delete/${id}`);
       setTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setFilteredTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setAllTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
@@ -374,7 +362,7 @@ export default function Trainer() {
     setShowForm(true);
     try {
       if (row?.trainer_id) {
-        const res = await axios.get(`https://api.test.hachion.co/trainers/${row.trainer_id}`);
+        const res = await axios.get(`https://api.hachion.co/trainers/${row.trainer_id}`);
         const trainer = res.data || row;
         setFormData({
   id: trainer.trainer_id || '',
@@ -385,6 +373,7 @@ export default function Trainer() {
   : '',
 
   trainerRating: trainer.trainerRating || '',
+  enrolledStudents: trainer.enrolledStudents || '',
   course_name: trainer.course_name || '',
   category_name: trainer.category_name || '',
   summary: trainer.summary || '',
@@ -510,6 +499,7 @@ export default function Trainer() {
     />
   )}
 </div>
+</div>
                   {/* <div className="col-md-3">
                     <label className="form-label">Trainer Rating</label>
                     <input
@@ -521,21 +511,32 @@ export default function Trainer() {
                       onChange={handleInputChange}
                     />
                   </div> */}
-                  <div className="col-md-3">
-  <label className="form-label">Trainer Rating</label>
-  <input
-    type="number"
-    className="form-control"
-    placeholder="Enter Trainer rating"
-    name="trainerRating"
-    value={formData.trainerRating === '' ? '' : Number(formData.trainerRating)}
-    min="0"
-    max="5"
-    onChange={handleInputChange}
-  />
-</div>
-
-                </div>
+    <div className="course-row">
+        <div className="col-md-3">
+        <label className="form-label">Trainer Rating</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Enter Trainer rating"
+          name="trainerRating"
+          value={formData.trainerRating === '' ? '' : Number(formData.trainerRating)}
+          min="0"
+          max="5"
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="col-md-3">
+                    <label className="form-label">Enrolled Students</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Enter Enrolled Students"
+                      name="enrolledStudents"
+                      value={formData.enrolledStudents}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+            </div>
 
                 <div className="course-row">
                  <div className="col-md-3">
@@ -695,10 +696,11 @@ export default function Trainer() {
                     {/* <StyledTableCell align="center">Trainer Image</StyledTableCell> */}
                     <StyledTableCell align="center">Trainer Name</StyledTableCell>
                     <StyledTableCell align="center">Rating</StyledTableCell>
+                    <StyledTableCell align="center">Enrolled Students</StyledTableCell>
                     <StyledTableCell align="center">Course Name</StyledTableCell>
                     <StyledTableCell align="center">Demo 1</StyledTableCell>
-                    <StyledTableCell align="center">Demo 2</StyledTableCell>
-                    <StyledTableCell align="center">Demo 3</StyledTableCell>
+                    {/* <StyledTableCell align="center">Demo 2</StyledTableCell>
+                    <StyledTableCell align="center">Demo 3</StyledTableCell> */}
                     <StyledTableCell align="center">Summary</StyledTableCell>
                     <StyledTableCell align="center">Created Date</StyledTableCell>
                     <StyledTableCell align="center">Action</StyledTableCell>
@@ -720,10 +722,11 @@ export default function Trainer() {
 
                         <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.trainerRating}</StyledTableCell>
+                        <StyledTableCell align="center">{row.enrolledStudents}</StyledTableCell>
                         <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
                         <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_1}</StyledTableCell>
-                        <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>
-                        <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_3}</StyledTableCell>
+                        {/* <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>
+                        <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_3}</StyledTableCell> */}
 
                         <StyledTableCell sx={{ width: 400, whiteSpace: 'pre-wrap' }} align="left">
                           <div style={{ maxHeight: '120px', overflowY: 'auto', maxWidth: '500px' }}

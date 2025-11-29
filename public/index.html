@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://ipinfo.io" />
-    <link rel="preconnect" href="https://api.test.hachion.co" crossorigin />
+    <link rel="preconnect" href="https://api.hachion.co" crossorigin />
 
     <!-- ✅ Add Poppins font -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -79,7 +79,7 @@
         let shouldSkipTracking = false;
         try {
           const isDev = window.location.hostname === "localhost";
-          const res = await fetch("https://api.test.hachion.co/api/check-ip", {
+          const res = await fetch("https://api.hachion.co/api/check-ip", {
             method: "POST",
             headers: isDev ? { "X-Forwarded-For": "152.57.170.218" } : {}
           });

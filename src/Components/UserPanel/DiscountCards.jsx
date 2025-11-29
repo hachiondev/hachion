@@ -47,8 +47,8 @@ const DiscountCards = () => {
     setLoading(true);
     try {
       
-      const allCoursesResponse = await axios.get("https://api.test.hachion.co/courses/summary");
-      const trainersResponse   = await axios.get("https://api.test.hachion.co/trainers");
+      const allCoursesResponse = await axios.get("https://api.hachion.co/courses/summary");
+      const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
 
       const rows = Array.isArray(allCoursesResponse.data) ? allCoursesResponse.data : [];
 
@@ -140,7 +140,7 @@ const DiscountCards = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
+        const { data } = await axios.get("https://api.hachion.co/discounts-courses");
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -266,6 +266,12 @@ const DiscountCards = () => {
     return Math.floor(diffMs / 1000);
   };
 
+  
+const getSaleEndsAtMs = (courseName, countryCode) => {
+  const endsAt = getSaleEndsAt(courseName, countryCode);
+  return endsAt ? endsAt.getTime() : Infinity;
+};
+
   const getPerCourseDiscountPct = (course) => {
     const pct = country === 'IN'
       ? (course.idiscount != null ? Number(course.idiscount) : 0)
@@ -274,13 +280,16 @@ const DiscountCards = () => {
   };
 
 const withRuleActive = trendingCourses
-  .map(c => ({ course: c, secs: getTimeLeftSeconds(c) }))
-  .filter(x => x.secs !== Infinity)          
-  .sort((a, b) => a.secs - b.secs)          
-  .map(x => x.course);
-
+  .map((c) => ({
+    course: c,
+    endMs: getSaleEndsAtMs(c.courseName, country),
+  }))
+  .filter((x) => x.endMs !== Infinity)   
+  .sort((a, b) => a.endMs - b.endMs)     
+  .map((x) => x.course);
 
 const orderedCourses = withRuleActive;
+
 
 const totalPages = Math.max(1, orderedCourses.length - cardsPerRow + 1);
 const startIndex = currentPage;
@@ -363,7 +372,7 @@ const goToPrev = () => {
       className="no-discount-image mb-3"
       style={{ width: "180px", height: "auto", objectFit: "contain" }}
     />
-    <p>No Limited Time Deals available right now</p>
+    <h5>No discounts available right now</h5>
   </div>
 )}
 
@@ -374,7 +383,7 @@ const goToPrev = () => {
         key={idx}
         heading={course.courseName}
         month={course.numberOfClasses}
-        image={`https://api.test.hachion.co/${course.courseImage}`}
+        image={`https://api.hachion.co/${course.courseImage}`}
         course_id={course.id}
         discountPercentage={(() => {
           const rulePct = getRuleDiscountPct(course.courseName, country);

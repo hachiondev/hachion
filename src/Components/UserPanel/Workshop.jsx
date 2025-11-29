@@ -21,7 +21,7 @@ const Workshop = () => {
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
+        const response = await axios.get('https://api.hachion.co/workshopschedule');
         const data = response.data;
 
         setWorkshops(data);
@@ -216,7 +216,7 @@ const Workshop = () => {
                 return (
                   <WorkshopCard
                     key={workshop.id}
-                    banner_image={`https://api.test.hachion.co/${workshop.banner_image}`}
+                    banner_image={`https://api.hachion.co/${workshop.banner_image}`}
                     title={workshop.title}
                     date={(() => {
                       if (!workshop?.date) return 'Loading...';

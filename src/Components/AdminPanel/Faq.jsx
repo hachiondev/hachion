@@ -178,7 +178,7 @@ const isEditDisabled = !areEditMandatoryFieldsFilled();
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -209,7 +209,7 @@ const isEditDisabled = !areEditMandatoryFieldsFilled();
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.test.hachion.co/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -289,7 +289,7 @@ const isEditDisabled = !areEditMandatoryFieldsFilled();
           }
       
           const response = await axios.put(
-            `https://api.test.hachion.co/faq/update/${editedRow.faq_id}`,
+            `https://api.hachion.co/faq/update/${editedRow.faq_id}`,
             formData,
             {
               headers: {
@@ -347,7 +347,7 @@ const isEditDisabled = !areEditMandatoryFieldsFilled();
 
         const fetchData = async () => {
   try {
-    const response = await axios.get("https://api.test.hachion.co/faq");
+    const response = await axios.get("https://api.hachion.co/faq");
     setAllData(response.data);
     setFilteredCurriculum(response.data); 
   } catch (error) {
@@ -380,7 +380,7 @@ const handleDeleteConfirmation = () => {
 };
 const handleDelete = async () => {
   try {
-    const response = await axios.post("https://api.test.hachion.co/faq/delete", selectedFaqIds);
+    const response = await axios.post("https://api.hachion.co/faq/delete", selectedFaqIds);
 
     if (response.status === 200) {
       setSuccessMessage("✅ Selected FAQ(s) deleted successfully.");
@@ -492,7 +492,7 @@ const handleSubmit = async (e) => {
     }
 
     try {
-      const response = await axios.post("https://api.test.hachion.co/faq/add", formData, {
+      const response = await axios.post("https://api.hachion.co/faq/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

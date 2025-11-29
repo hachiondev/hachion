@@ -787,6 +787,7 @@ position: relative;
   border-radius: 8px;
   position: sticky;
   top: 10px;
+  color: #000;
 }
 
 .workshop-sidebar h4 {
@@ -1009,6 +1010,7 @@ position: relative;
 .author-details {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 .blog-author {
   color: #000000;
@@ -1080,7 +1082,7 @@ position: relative;
   justify-content: space-between;
   font-size: 0.9rem;
   font-weight: 400;
-  color: #6A6A6A;
+  color: #000;
 }
 
 .bottom-sub-content {
@@ -1088,12 +1090,12 @@ position: relative;
   gap: 30px;
   font-size: 0.9rem;
   font-weight: 400;
-  color: #6A6A6A;
+  color: #000;
 }
 
 .main-date, .work-date {
   font-size: 16px;
-  color: #6A6A6A;
+  color: #000;
   white-space: nowrap;
 }
 

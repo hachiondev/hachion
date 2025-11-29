@@ -49,7 +49,7 @@ export default function StudentReview() {
   useEffect(() => {
     const fetchReview = async () => {
         try {
-            const response = await axios.get('https://api.test.hachion.co/userreview');
+            const response = await axios.get('https://api.hachion.co/userreview');
             const filteredReviews = response.data.filter(review => review.type === false);
             setReview(filteredReviews);
             setFilteredReview(filteredReviews);
@@ -87,25 +87,22 @@ export default function StudentReview() {
   );
   const handleApprove = async (review_id) => {
     try {
-        // Find the review to update
+        
         const reviewToUpdate = review.find((item) => item.review_id === review_id);
         
         if (!reviewToUpdate) return;
-
-        // Create a new object with type changed to true
         const updatedReview = { ...reviewToUpdate, type: true, status: 'approved' };
 
-        // Create FormData for API request (since the API expects multipart/form-data)
+        
         const formData = new FormData();
-        formData.append("review", JSON.stringify(updatedReview)); // Send review data as JSON string
+        formData.append("review", JSON.stringify(updatedReview)); 
 
-        // Send update request to backend
-        const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+        const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });
 
         if (response.status === 200) {
-            // Update state after successful API call
+            
             const updatedReviews = review.map((item) =>
                 item.review_id === review_id ? updatedReview : item
             );
@@ -118,15 +115,6 @@ export default function StudentReview() {
     }
 };
 
-//   const handleApprove = (review_id) => {
-//     const updatedReviews = review.map((item) =>
-//       item.review_id === review_id 
-//         ? { ...item, status: 'approved', type: true }  // Set type to true on approval
-//         : item
-//     );
-//     setReview(updatedReviews);
-//     setFilteredReview(updatedReviews);
-// };
 
 const handleReject = async (review_id) => {
   try {
@@ -138,7 +126,7 @@ const handleReject = async (review_id) => {
     const formData = new FormData();
     formData.append("review", JSON.stringify(updatedReview));
 
-    const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+    const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
 
@@ -210,8 +198,14 @@ const handleReject = async (review_id) => {
                   <StyledTableCell align="center"><Checkbox /></StyledTableCell>
                   <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {review.user_image ? <img src={review.user_image} alt="User" width="50" height="50"/> : 'No Image'}
-                  </StyledTableCell>
+  <img
+    src={`https://api.hachion.co/uploads/prod/user_review/${review.user_image}`}
+    alt="User"
+    width="50"
+    height="50"
+  />
+</StyledTableCell>
+
                   <StyledTableCell align="left">{review.name}</StyledTableCell>
                   <StyledTableCell align="center">{review.social_id}</StyledTableCell>
                   <StyledTableCell align="left">{review.course_name}</StyledTableCell>

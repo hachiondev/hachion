@@ -21,21 +21,32 @@ const Trending = () => {
     (state) => state.trending || {}
   );
   const { trainers = [] } = useSelector((state) => state.trainers || {});
-  const { rules: discountRules = [] } = useSelector((state) => state.discounts || {});
+  const { rules: discountRules = [] } = useSelector(
+    (state) => state.discounts || {}
+  );
   const { country = "US", currency = "USD", fxFromUSD = 1 } = useSelector(
     (state) => state.currency || {}
   );
 
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
+  // ONE-BY-ONE INDEX
+  const [visibleStart, setVisibleStart] = useState(0);
   const [cardsPerPage, setCardsPerPage] = useState(4);
 
   useEffect(() => {
-     if (!trendingCourses.length) dispatch(fetchTrending());
+    if (!trendingCourses.length) dispatch(fetchTrending());
+  }, [trendingCourses.length]);
+
+  useEffect(() => {
     if (!discountRules.length) dispatch(fetchDiscountRules());
-    if (!country) dispatch(fetchGeoAndRates());
-    if (!trainers) dispatch(fetchTrainers());
- }, []);
+  }, [discountRules.length]);
+
+  useEffect(() => {
+    dispatch(fetchGeoAndRates());
+  }, []);
+
+  useEffect(() => {
+    if (!trainers.length) dispatch(fetchTrainers());
+  }, [trainers.length]);
 
   useEffect(() => {
     const updateCardsPerPage = () => {
@@ -49,15 +60,16 @@ const Trending = () => {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
-  const filteredCourses =
-    activeCategory === "All"
-      ? trendingCourses
-      : trendingCourses.filter((course) => course.category_name === activeCategory);
+  const filteredCourses = trendingCourses;
 
-  const handlePageChange = (page) => {
-    const total = filteredCourses.length;
-    const max = Math.ceil(total / cardsPerPage);
-    setCurrentPage(Math.min(Math.max(page, 1), max));
+  // NEXT / PREV (1 card at a time)
+  const handleMove = (dir) => {
+    if (dir === "next") {
+      if (visibleStart + cardsPerPage < filteredCourses.length)
+        setVisibleStart(visibleStart + 1);
+    } else {
+      if (visibleStart > 0) setVisibleStart(visibleStart - 1);
+    }
   };
 
   const handleCardClick = (course) => {
@@ -70,31 +82,40 @@ const Trending = () => {
     const rule = discountRules.find(
       (r) =>
         r.status?.toLowerCase() === "active" &&
-        (r.courseNames.includes(course.courseName) || r.courseNames.includes("all")) &&
+        (r.courseNames.includes(course.courseName) ||
+          r.courseNames.includes("all")) &&
         (r.countryNames.includes(country) || r.countryNames.includes("all"))
     );
     if (rule) return Number(rule.discountPercentage || 0);
-    return country === "IN" ? Number(course.idiscount) || 0 : Number(course.discount) || 0;
+    return country === "IN"
+      ? Number(course.idiscount) || 0
+      : Number(course.discount) || 0;
   };
 
   return (
     <div className="training-events container">
       <div className="home-spacing">
         <div className="training-title-head">
-          <h2 className="association-head">Trending IT Online Certification Courses</h2>
+          <h2 className="association-head">
+            Trending IT Online Certification Courses
+          </h2>
 
+          {/* Reuse your existing UI */}
           <div className="card-pagination-container">
             <CardsPagination
-              currentPage={currentPage}
+              currentPage={visibleStart + 1}
               totalCards={filteredCourses.length}
               cardsPerPage={cardsPerPage}
-              onPageChange={handlePageChange}
+              onPageChange={(page) => setVisibleStart(page - 1)}
+              onNext={() => handleMove("next")}
+              onPrev={() => handleMove("prev")}
             />
           </div>
         </div>
 
         <p className="association-head-tag text-gray-500 text-lg font-medium">
-          Upgrade your skills with Hachion’s flexible, affordable IT courses and industry-recognized certifications.
+          Upgrade your skills with Hachion’s flexible, affordable IT courses and
+          industry-recognized certifications.
         </p>
       </div>
 
@@ -104,38 +125,55 @@ const Trending = () => {
             <div className="skeleton-card" key={i}></div>
           ))
         ) : filteredCourses.length > 0 ? (
-           filteredCourses.slice(currentPage - 1, currentPage - 1 + cardsPerPage)
-            .map((course, i) => {
-              const trainer = trainers.find(
-                (t) =>
-                  t.course_name?.trim().toLowerCase() === course.courseName?.trim().toLowerCase()
-              );
+          <>
+            <CourseCard
+              heading="New Course Details"
+              month="30"
+              image="/static/banner.png"
+              trainer_name="Trainer"
+              discountPercentage={10}
+              amount={`${currency} ${fmt(99)}`}
+              totalAmount={`${fmt(199)}`}
+              level="Beginner"
+              staticButtonLink="/newcoursedetails"
+              className="course-card"
+            />
 
-              const isIN = country === "IN";
-              const isUS = country === "US";
+            {filteredCourses
+              .slice(visibleStart, visibleStart + (cardsPerPage - 1))
+              .map((course, i) => {
+                const trainer = trainers.find(
+                  (t) =>
+                    t.course_name?.trim().toLowerCase() ===
+                    course.courseName?.trim().toLowerCase()
+                );
 
-              const mrp = isIN ? course.iamount : course.amount;
-              const now = isIN ? course.itotal : course.total;
+                const isIN = country === "IN";
+                const isUS = country === "US";
 
-              const finalPrice = isUS ? Number(now) : Number(now) * fxFromUSD;
-              const displayMrp = isUS ? Number(mrp) : Number(mrp) * fxFromUSD;
+                const mrp = isIN ? course.iamount : course.amount;
+                const now = isIN ? course.itotal : course.total;
 
-              return (
-                <CourseCard
-                  key={i}
-                  heading={course.courseName}
-                  month={course.numberOfClasses}
-                  image={`https://api.test.hachion.co/${course.courseImage}`}
-                  trainer_name={trainer?.trainer_name || "Not Assigned"}
-                  discountPercentage={getDiscountPercentage(course)}
-                  amount={`${currency} ${fmt(finalPrice)}`}
-                  totalAmount={`${fmt(displayMrp)}`}
-                  level={course.level}
-                  onClick={() => handleCardClick(course)}
-                  className="course-card"
-                />
-              );
-            })
+                const finalPrice = isUS ? Number(now) : Number(now) * fxFromUSD;
+                const displayMrp = isUS ? Number(mrp) : Number(mrp) * fxFromUSD;
+
+                return (
+                  <CourseCard
+                    key={i}
+                    heading={course.courseName}
+                    month={course.numberOfClasses}
+                    image={`https://api.hachion.co/${course.courseImage}`}
+                    trainer_name={trainer?.trainer_name || "Not Assigned"}
+                    discountPercentage={getDiscountPercentage(course)}
+                    amount={`${currency} ${fmt(finalPrice)}`}
+                    totalAmount={`${fmt(displayMrp)}`}
+                    level={course.level}
+                    onClick={() => handleCardClick(course)}
+                    className="course-card"
+                  />
+                );
+              })}
+          </>
         ) : (
           <p>No courses available.</p>
         )}

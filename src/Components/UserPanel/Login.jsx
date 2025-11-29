@@ -48,7 +48,7 @@ const Login = () => {
   const loginData = { email, password };
 
   try {
-    const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
+    const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
     console.log(response.data);
 
     if (response.data.status) {
@@ -182,7 +182,7 @@ const handleGoogleLogin = async () => {
 
   
   try {
-    await fetch("https://api.test.hachion.co/logout", {
+    await fetch("https://api.hachion.co/logout", {
       method: "POST",        
       credentials: "include"
     });
@@ -191,7 +191,7 @@ const handleGoogleLogin = async () => {
   }
 
   
-  window.location.href = "https://api.test.hachion.co/oauth2/authorization/google";
+  window.location.href = "https://api.hachion.co/oauth2/authorization/google";
 };
 
 useEffect(() => {
@@ -226,7 +226,7 @@ useEffect(() => {
       return;
     }
     console.log('[auth bootstrap] No user in localStorage → calling /api/me (credentials: include)');
-    fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
+    fetch('https://api.hachion.co/api/me', { credentials: 'include' })
       .then(r => {
         console.log('[auth bootstrap] /api/me status =', r.status);
         if (!r.ok) return null;

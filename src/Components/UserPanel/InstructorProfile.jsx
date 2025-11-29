@@ -29,7 +29,7 @@ const goToNext = () => {
     const fetchTrainers = async () => {
       try {
         setLoading(true);
-        const trainerRes = await axios.get('https://api.test.hachion.co/trainers');
+        const trainerRes = await axios.get('https://api.hachion.co/trainers');
         setTrainers(trainerRes.data); 
       } catch (error) {
         console.error('Error fetching trainers:', error);
@@ -104,7 +104,7 @@ const goToNext = () => {
                     summary={trainer.summary}
                      profileImage={
       trainer.trainerImage
-        ? `https://api.test.hachion.co/${trainer.trainerImage}`
+        ? `https://api.hachion.co/${trainer.trainerImage}`
         : ""
     }
                     demo_link_1={trainer.demo_link_1}

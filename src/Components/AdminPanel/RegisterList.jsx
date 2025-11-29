@@ -179,7 +179,7 @@ useEffect(() => {
     useEffect(() => {
       const fetchStudent = async () => {
           try {
-              const response = await axios.get('https://api.test.hachion.co/registerstudent');
+              const response = await axios.get('https://api.hachion.co/registerstudent');
               setRegisterStudent(response.data); 
               setFilteredStudent(response.data);
           } catch (error) {
@@ -230,7 +230,7 @@ useEffect(() => {
       const handleSave = async () => {
         try {
             const response = await axios.put(
-                `https://api.test.hachion.co/registerstudent/update/${editedData.student_Id}`,editedData
+                `https://api.hachion.co/registerstudent/update/${editedData.student_Id}`,editedData
             );
             setRegisterStudent((prev) =>
                 prev.map(curr =>
@@ -253,7 +253,7 @@ useEffect(() => {
       const handleDelete = async (id) => {
        
          try { 
-          const response = await axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`); 
+          const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`); 
           console.log("Register Student deleted successfully:", response.data); 
           setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
 setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
@@ -310,7 +310,7 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
     };
 
     const response = await axios.put(
-      `https://api.test.hachion.co/registerstudent/update/${studentData.id}`,
+      `https://api.hachion.co/registerstudent/update/${studentData.id}`,
       updatedData
     );
 
@@ -368,7 +368,7 @@ const mobileNumber = studentData.mobile?.trim();
   console.log("Data being sent:", dataToSubmit);
 
   try {
-    const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
+    const response = await axios.post("https://api.hachion.co/registerstudent/add", dataToSubmit);
     if (response.status === 200) {
       setSuccessMessage("✅ Student added successfully.");
       setErrorMessage("");

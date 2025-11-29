@@ -6,7 +6,7 @@ import fallbackImg from "../../Assets/18.webp";
 import './Home.css';
 import axios from 'axios';
 
-const CourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel = "", course_id, userEmail }) => {
+const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onClick, image, trainer_name, level, amount, totalAmount, timeLeftLabel = "", course_id, userEmail }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -31,7 +31,7 @@ useEffect(() => {
 
   (async () => {
     try {
-      const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+      const { data } = await axios.get('https://api.hachion.co/api/wishlist/exists', {
         params: { email, courseId: course_id }
       });
       if (!stop && data && typeof data.bookmarked === 'boolean') {
@@ -100,7 +100,7 @@ useEffect(() => {
     }
 
     try {
-      const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
+      const { data } = await axios.post('https://api.hachion.co/api/wishlist/toggle', {
         email,
         courseId: course_id
       });
@@ -116,7 +116,13 @@ useEffect(() => {
     <div
           className="card"
           style={{ cursor: isMobile ? 'pointer' : 'default' }}
-          onClick={isMobile ? handleNavigation : undefined}
+          onClick={
+    isMobile
+      ? staticButtonLink
+        ? () => navigate(staticButtonLink)
+        : handleNavigation 
+      : undefined
+  }
         >
           <div className="card-action-icons">
             <button className="card-icons" onClick={handleShare} aria-label="Share this course"><TbShare3 /></button>
@@ -158,9 +164,10 @@ useEffect(() => {
         </div>
 
         <button className="card-view-btn" onClick={(e) => {
-          e.stopPropagation();
-          handleNavigation();
-        }}>View Details</button>
+    e.stopPropagation(); 
+    if (staticButtonLink) return navigate(staticButtonLink);
+    if (onClick) return onClick(e);
+  }}>View Details</button>
       </div>
     </div>
   );

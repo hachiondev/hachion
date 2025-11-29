@@ -37,20 +37,22 @@ const InstructorDetails = () => {
 //   course.trainerName?.toLowerCase() === trainer.trainer_name.toLowerCase()
 // );
 
+// const trainerCourses = allCourses.filter(course =>
+//   course.courseName?.trim().toLowerCase() ===
+//   trainer.course_name?.trim().toLowerCase()
+// );
 const trainerCourses = allCourses.filter(course =>
-  course.courseName?.trim().toLowerCase() ===
-  trainer.course_name?.trim().toLowerCase()
+  course?.courseName?.trim().toLowerCase() ===
+  trainer?.course_name?.trim().toLowerCase()
 );
-
 
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  
   useEffect(() => {
     const fetchTrainer = async () => {
       try {
         if (!trainer) {
-          const res = await axios.get("https://api.test.hachion.co/trainers");
+          const res = await axios.get("https://api.hachion.co/trainers");
           const foundTrainer = res.data.find(t => t.trainer_name.toLowerCase() === trainer_name.toLowerCase());
           setTrainer(foundTrainer || null);
         }
@@ -66,11 +68,11 @@ const trainerCourses = allCourses.filter(course =>
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const resCourses = await axios.get("https://api.test.hachion.co/courses/all");
-        const resTrainers = await axios.get("https://api.test.hachion.co/trainers");
+        const resCourses = await axios.get("https://api.hachion.co/courses/all");
+        const resTrainers = await axios.get("https://api.hachion.co/trainers");
         const coursesWithTrainer = resCourses.data.map(course => {
           const trainerData = resTrainers.data.find(t => 
-            t.course_name?.trim().toLowerCase() === course.courseName?.trim().toLowerCase()
+            t.course_name?.trim().toLowerCase() === course?.courseName?.trim().toLowerCase()
           );
           return {
             ...course,
@@ -92,7 +94,7 @@ const trainerCourses = allCourses.filter(course =>
 //   const fetchReviewsByCourse = async () => {
 //     if (!trainer?.course_name) return;
 //     try {
-//       const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
+//       const url = `https://api.hachion.co/userreview/instructor/${encodeURIComponent(trainer.course_name)}`;
 //       const res = await axios.get(url);
 //       setReviews(Array.isArray(res.data) ? res.data : []);
 //     } catch (err) {
@@ -106,7 +108,7 @@ useEffect(() => {
   const fetchReviewsByTrainerAndCourse = async () => {
     if (!trainer?.trainer_name || !trainer?.course_name) return;
     try {
-      const url = `https://api.test.hachion.co/userreview/instructor/${encodeURIComponent(
+      const url = `https://api.hachion.co/userreview/instructor/${encodeURIComponent(
         trainer.trainer_name
       )}/${encodeURIComponent(trainer.course_name)}`;
       const res = await axios.get(url);
@@ -173,7 +175,7 @@ useEffect(() => {
             alt={trainer.trainer_name}
              src={
     trainer.trainerImage
-      ? `https://api.test.hachion.co/${trainer.trainerImage}`
+      ? `https://api.hachion.co/${trainer.trainerImage}`
       : ""
   }
             sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: "10px" }}
@@ -229,7 +231,7 @@ useEffect(() => {
       key={idx}
       heading={course.courseName}
       month={course.numberOfClasses || course.duration || 0}
-      image={`https://api.test.hachion.co/${course.courseImage || course.image}`}
+      image={`https://api.hachion.co/${course.courseImage || course.image}`}
       trainer_name={trainer.trainer_name}
       discountPercentage={
       country === 'IN'
@@ -277,7 +279,7 @@ useEffect(() => {
               location={fb.location}
               content={fb.review}
               rating={fb.rating}
-              profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
+              profileImage={fb.user_image ? `https://api.hachion.co/userreview/${fb.user_image}` : ""}
             />
           )) : <p>No reviews available.</p>}
         </div>

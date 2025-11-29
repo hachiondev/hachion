@@ -31,7 +31,7 @@ const CourseDetailsFaq = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         console.log('API response:', response.data); // Check course data
     
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
@@ -46,7 +46,7 @@ const CourseDetailsFaq = () => {
           console.log('Matched Course:', matchedCourse);
     
           // Fetch faq details
-          const faqResponse = await axios.get('https://api.test.hachion.co/faq');
+          const faqResponse = await axios.get('https://api.hachion.co/faq');
           console.log('faq API response:', faqResponse.data); // Log the faq data
     
           // Normalize both names for reliable comparison
@@ -58,7 +58,7 @@ const CourseDetailsFaq = () => {
   
           // Set the PDF URL if found
           if (matchedfaq && matchedfaq.faq_pdf) {
-            const fullPdfUrl = `https://api.test.hachion.co/faq/${matchedfaq.faq_pdf}`; // Ensure full URL
+            const fullPdfUrl = `https://api.hachion.co/faq/${matchedfaq.faq_pdf}`; // Ensure full URL
             setPdfUrl(fullPdfUrl);
             console.log('PDF URL Set:', fullPdfUrl);
           } else {
@@ -85,7 +85,7 @@ const CourseDetailsFaq = () => {
 
     const fetchFaq = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/faq');
+        const response = await axios.get('https://api.hachion.co/faq');
         const filteredFaq = response.data.filter(
           (item) => item.course_name && item.course_name.trim() === matchedCourseName
         );
@@ -168,7 +168,7 @@ const downloadPdf = () => {
   const faqWithPdf = faq.find(item => item.faq_pdf);
 
   if (faqWithPdf) {
-    const pdfUrl = `https://api.test.hachion.co/faq/${faqWithPdf.faq_pdf}`;
+    const pdfUrl = `https://api.hachion.co/faq/${faqWithPdf.faq_pdf}`;
 
     // Trigger download
     const link = document.createElement('a');

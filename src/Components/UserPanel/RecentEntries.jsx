@@ -13,7 +13,7 @@ const RecentEntries = () => {
     const fetchBlogs = async () => {
       try {
         
-        const { data } = await axios.get("https://api.test.hachion.co/blog/recent");
+        const { data } = await axios.get("https://api.hachion.co/blog/recent");
 
         const mapped = data.map((row) => {
           const [
@@ -27,11 +27,11 @@ const RecentEntries = () => {
           ] = row;
 
           const avatar = author_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${author_image}`
+            ? `https://api.hachion.co/uploads/prod/blogs/${author_image}`
             : "";
 
           const blogImg = blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog_image}`
+            ? `https://api.hachion.co/uploads/prod/blogs/${blog_image}`
             : "";
 
           return {

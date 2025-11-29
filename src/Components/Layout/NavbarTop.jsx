@@ -23,7 +23,7 @@ import { BsBookmarkHeart } from "react-icons/bs";
 import { PiNotePencilBold, PiCertificateBold, PiBriefcase } from "react-icons/pi";
 import { MdOutlineRateReview } from "react-icons/md";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const resolveImageUrl = (img) => {
   if (!img) return "";
@@ -82,11 +82,12 @@ const NavbarTop = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const navigate = useNavigate();
+  const userDropdownRef = useRef();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://api.test.hachion.co/courses/names-and-categories");
+        const res = await axios.get("https://api.hachion.co/courses/names-and-categories");
         setCourses(res.data);
       } catch (error) {
         console.error(error);
@@ -169,7 +170,7 @@ const NavbarTop = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://api.test.hachion.co/api/logout", { method: "POST", credentials: "include" });
+      await fetch("https://api.hachion.co/api/logout", { method: "POST", credentials: "include" });
     } catch {}
     finally {
       localStorage.clear();
@@ -205,7 +206,27 @@ const NavbarTop = () => {
     }
     setSearchResults([]);
     setMobileSearchOpen(false);
+    setSearchQuery("");
   };
+
+  useEffect(() => {
+  function handleClickOutside(e) {
+    const searchBox = document.querySelector(".custom-search");
+    const resultsBox = document.querySelector(".search-results");
+
+    if (
+      searchBox &&
+      !searchBox.contains(e.target) &&
+      resultsBox &&
+      !resultsBox.contains(e.target)
+    ) {
+      setSearchResults([]);
+    }
+  }
+
+  document.addEventListener("click", handleClickOutside);
+  return () => document.removeEventListener("click", handleClickOutside);
+}, []);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
@@ -225,6 +246,20 @@ const handleMouseLeave = () => {
   const handleClickToggle = () => {
     setIsDropdownOpen(prev => !prev);
   };
+
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+      setIsOpen(false); 
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
+
 
   return (
     <>
@@ -379,7 +414,7 @@ const handleMouseLeave = () => {
                 >
                   <BsCart2 size={28} />
                 </button>
-                <div className="dropdown">
+                <div className="dropdown" ref={userDropdownRef}>
                   <button
                     className="btn d-flex align-items-center"
                     onClick={() => setIsOpen(!isOpen)}
@@ -398,47 +433,55 @@ const handleMouseLeave = () => {
                   {isOpen && (
                     <ul className="dropdown-menu dropdown-menu-end show">
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/dashboard">
+                        <Link className="dropdown-item" to="/userdashboard/dashboard"
+                        onClick={() => setIsOpen(false)}>
                           <RxDashboard /> Dashboard
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/profile">
+                        <Link className="dropdown-item" to="/userdashboard/profile"
+                        onClick={() => setIsOpen(false)}>
                           <GoPerson /> Profile
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/enrolls">
+                        <Link className="dropdown-item" to="/userdashboard/enrolls"
+                        onClick={() => setIsOpen(false)}>
                           <PiNotePencilBold /> Enrolls
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/wishlist">
+                        <Link className="dropdown-item" to="/userdashboard/wishlist"
+                        onClick={() => setIsOpen(false)}>
                           <BsBookmarkHeart /> Wishlist
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/order_history">
+                        <Link className="dropdown-item" to="/userdashboard/order_history"
+                        onClick={() => setIsOpen(false)}>
                           <BsCart2 /> Orders
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/certificate">
+                        <Link className="dropdown-item" to="/userdashboard/certificate"
+                        onClick={() => setIsOpen(false)}>
                           <PiCertificateBold /> Certificates
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/review">
+                        <Link className="dropdown-item" to="/userdashboard/review"
+                        onClick={() => setIsOpen(false)}>
                           <MdOutlineRateReview /> Review
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/userdashboard/pathfinder">
+                        <Link className="dropdown-item" to="/userdashboard/pathfinder"
+                        onClick={() => setIsOpen(false)}>
                           <CgPathOutline /> Pathfinder
                         </Link>
                       </li>
                       <li>
-                        <button className="dropdown-item" onClick={handleLogout}>
+                        <button className="dropdown-item" onClick={() => { setIsOpen(false); handleLogout(); }}>
                           <MdLogout /> Logout
                         </button>
                       </li>

@@ -36,6 +36,7 @@ const teensSlice = createSlice({
     summerEvents: [],
     categories: [],
     loading: false,
+    loaded: false,
     error: null,
   },
   reducers: {},
@@ -68,6 +69,7 @@ const teensSlice = createSlice({
       .addCase(fetchSummerEvents.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.loaded = true;
       });
   },
 });

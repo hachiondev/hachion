@@ -11,15 +11,18 @@ const PopupBanner = () => {
   const popupRef = useRef();
 
   useEffect(() => {
+    const alreadyShown = localStorage.getItem("popupShown");
+    if (alreadyShown) return;
     const fetchPopupBanner = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/banner");
+        const response = await axios.get("https://api.hachion.co/banner");
         const enabledPopup = response.data.find(
           (banner) => banner.status === "Enabled" && banner.banner_image
         );
         if (enabledPopup) {
           setPopupBanner(enabledPopup);
           setShowPopup(true);
+          localStorage.setItem("popupShown", "true");
         }
       } catch (error) {
         console.error("Error fetching popup banner:", error);
@@ -59,7 +62,7 @@ const PopupBanner = () => {
         </button>
         <a href="/coursedetails">
           <img
-            src={`https://api.test.hachion.co/${popupBanner.banner_image}`}
+            src={`https://api.hachion.co/${popupBanner.banner_image}`}
             alt="Popup Banner"
             className="popup-image"
             fetchpriority="high"

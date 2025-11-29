@@ -46,8 +46,8 @@ const DiscountCards = () => {
     setLoading(true);
     try {
       
-      const allCoursesResponse = await axios.get("https://api.test.hachion.co/courses/summary");
-      const trainersResponse   = await axios.get("https://api.test.hachion.co/trainers");
+      const allCoursesResponse = await axios.get("https://api.hachion.co/courses/summary");
+      const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
 
       const rows = Array.isArray(allCoursesResponse.data) ? allCoursesResponse.data : [];
 
@@ -139,7 +139,7 @@ const DiscountCards = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
+        const { data } = await axios.get("https://api.hachion.co/discounts-courses");
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -254,41 +254,49 @@ const DiscountCards = () => {
     return best;
   };
 
-  
   const keyOf = (c) => (c.id ?? c.courseName);
 
-  const getTimeLeftSeconds = (course) => {
-    const endsAt = getSaleEndsAt(course.courseName, country);
-    if (!endsAt) return Infinity;
-    const diffMs = endsAt.getTime() - Date.now();
-    if (diffMs <= 0) return Infinity;
-    return Math.floor(diffMs / 1000);
-  };
+const getTimeLeftSeconds = (course) => {
+  const endsAt = getSaleEndsAt(course.courseName, country);
+  if (!endsAt) return Infinity;
+  const diffMs = endsAt.getTime() - Date.now();
+  if (diffMs <= 0) return Infinity;
+  return Math.floor(diffMs / 1000);
+};
 
-  const getPerCourseDiscountPct = (course) => {
-    const pct = country === 'IN'
-      ? (course.idiscount != null ? Number(course.idiscount) : 0)
-      : (course.discount  != null ? Number(course.discount)  : 0);
-    return isNaN(pct) ? 0 : pct;
-  };
+// ✅ Stable sale end timestamp (used for ordering so cards don't reshuffle every second)
+const getSaleEndsAtMs = (courseName, countryCode) => {
+  const endsAt = getSaleEndsAt(courseName, countryCode);
+  return endsAt ? endsAt.getTime() : Infinity;
+};
 
+const getPerCourseDiscountPct = (course) => {
+  const pct = country === 'IN'
+    ? (course.idiscount != null ? Number(course.idiscount) : 0)
+    : (course.discount  != null ? Number(course.discount)  : 0);
+  return isNaN(pct) ? 0 : pct;
+};
+// ✅ Use stable sale-end timestamp so order doesn't change every second
+const withRuleActive = trendingCourses
+  .map((c) => ({
+    course: c,
+    endMs: getSaleEndsAtMs(c.courseName, country),
+  }))
+  .filter((x) => x.endMs !== Infinity)      // only courses with an active rule
+  .sort((a, b) => a.endMs - b.endMs)        // earliest ending deal first
+  .map((x) => x.course);
 
-  const withRuleActive = trendingCourses
-    .map(c => ({ course: c, secs: getTimeLeftSeconds(c) }))
-    .filter(x => x.secs !== Infinity)
-    .sort((a, b) => a.secs - b.secs)
-    .map(x => x.course);
+const seen = new Set(withRuleActive.map((c) => keyOf(c)));
 
-  const seen = new Set(withRuleActive.map(c => keyOf(c)));
+const withPerCourseDiscount = trendingCourses
+  .filter((c) => !seen.has(keyOf(c)))
+  .map((c) => ({ course: c, pct: getPerCourseDiscountPct(c) }))
+  .filter((x) => x.pct > 0)
+  .sort((a, b) => b.pct - a.pct)
+  .map((x) => x.course);
 
-  const withPerCourseDiscount = trendingCourses
-    .filter(c => !seen.has(keyOf(c)))
-    .map(c => ({ course: c, pct: getPerCourseDiscountPct(c) }))
-    .filter(x => x.pct > 0)
-    .sort((a, b) => b.pct - a.pct)
-    .map(x => x.course);
+const orderedCourses = [...withRuleActive, ...withPerCourseDiscount];
 
-  const orderedCourses = [...withRuleActive, ...withPerCourseDiscount];
 
 const totalPages = Math.max(1, orderedCourses.length - cardsPerRow + 1);
 const startIndex = currentPage;
@@ -361,7 +369,7 @@ const goToPrev = () => {
                 key={idx}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.test.hachion.co/${course.courseImage}`}
+                image={`https://api.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 
                 discountPercentage={

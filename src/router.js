@@ -49,7 +49,7 @@ import Reports from "./Components/AdminPanel/Reports";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    // element: <App />,
     children: [
       {
         element: <Layout />,

@@ -14,8 +14,7 @@ const TeensEvents = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 🔹 Redux State Selectors
-  const { summerEvents = [], categories = [], loading = false } = useSelector(
+  const { summerEvents = [], loading = false } = useSelector(
     (state) => state.teens || {}
   );
   const { trainers = [] } = useSelector((state) => state.trainers || {});
@@ -26,24 +25,30 @@ const TeensEvents = () => {
     (state) => state.currency || {}
   );
 
-  // 🔹 Local UI State
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
+  // ONE-BY-ONE INDEX SLIDER
+  const [visibleStart, setVisibleStart] = useState(0);
   const [cardsPerPage, setCardsPerPage] = useState(4);
 
-  // ✅ Helper for formatting numbers
   const fmt = (n) =>
     (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  // ✅ Data fetching (guarded)
   useEffect(() => {
-    if (!summerEvents.length) dispatch(fetchSummerEvents());
-    if (!discountRules.length) dispatch(fetchDiscountRules());
-    if (!country) dispatch(fetchGeoAndRates());
-    if (!trainers.length) dispatch(fetchTrainers());
-  }, []);
+  if (summerEvents.length === 0) dispatch(fetchSummerEvents());
+}, [summerEvents.length]);
 
-  // ✅ Responsive Pagination
+useEffect(() => {
+  if (trainers.length === 0) dispatch(fetchTrainers());
+}, [trainers.length]);
+
+useEffect(() => {
+  if (discountRules.length === 0) dispatch(fetchDiscountRules());
+}, [discountRules.length]);
+
+useEffect(() => {
+  if (!country) dispatch(fetchGeoAndRates());
+}, [country]);
+
+  // Responsive card count
   useEffect(() => {
     const updateCardsPerPage = () => {
       const width = window.innerWidth;
@@ -57,27 +62,23 @@ const TeensEvents = () => {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
-  // ✅ Filtering + Pagination logic
-  const filteredCourses =
-    activeCategory === "All"
-      ? summerEvents
-      : summerEvents.filter(
-          (course) => course.category_name === activeCategory
-        );
+  const filteredCourses = summerEvents;
 
-  const handlePageChange = (page) => {
-    const maxPage = Math.ceil(filteredCourses.length / cardsPerPage);
-    setCurrentPage(Math.min(Math.max(page, 1), maxPage));
+  // NEXT / PREV → moves by ONE card
+  const moveSlider = (dir) => {
+    if (dir === "next") {
+      if (visibleStart + cardsPerPage < filteredCourses.length)
+        setVisibleStart(visibleStart + 1);
+    } else {
+      if (visibleStart > 0) setVisibleStart(visibleStart - 1);
+    }
   };
 
-  // ✅ Handle card click navigation
   const handleCardClick = (course) => {
-    if (!course?.courseName) return;
-    const slug = course.courseName.toLowerCase().replace(/\s+/g, "-");
+    const slug = course.courseName?.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${slug}`);
   };
 
-  // ✅ Dynamic discount logic
   const getDiscountPercentage = (course) => {
     const rule = discountRules.find(
       (r) =>
@@ -97,37 +98,38 @@ const TeensEvents = () => {
 
   return (
     <div className="training-events container">
-      {/* ======= Header Section ======= */}
       <div className="home-spacing">
         <div className="training-title-head">
           <h2 className="association-head">
             Online IT Training Courses For Teens
           </h2>
+
           <div className="card-pagination-container">
             <CardsPagination
-              currentPage={currentPage}
+              currentPage={visibleStart + 1}
               totalCards={filteredCourses.length}
               cardsPerPage={cardsPerPage}
-              onPageChange={handlePageChange}
+              onNext={() => moveSlider("next")}
+              onPrev={() => moveSlider("prev")}
+              onPageChange={(page) => setVisibleStart(page - 1)}
             />
           </div>
         </div>
 
         <p className="association-head-tag">
-          Kickstart your tech journey with expert‑led online IT Certification
+          Kickstart your tech journey with expert-led online IT Certification
           courses for teens and beginners.
         </p>
       </div>
 
-      {/* ======= Course Cards Section ======= */}
       <div className="training-card-holder">
         {loading ? (
-          // Loading Skeletons
           Array.from({ length: cardsPerPage }).map((_, idx) => (
             <div className="skeleton-card" key={idx}></div>
           ))
         ) : filteredCourses.length > 0 ? (
-           filteredCourses.slice(currentPage - 1, currentPage - 1 + cardsPerPage)
+          filteredCourses
+            .slice(visibleStart, visibleStart + cardsPerPage)
             .map((course, idx) => {
               const trainer = trainers.find(
                 (t) =>
@@ -138,25 +140,22 @@ const TeensEvents = () => {
               const isIN = country === "IN";
               const mrp = isIN ? course.iamount : course.amount;
               const now = isIN ? course.itotal : course.total;
-              const mrpVal = isIN
-                ? Number(mrp)
-                : Number(mrp) * (fxFromUSD || 1);
-              const nowVal = isIN
-                ? Number(now)
-                : Number(now) * (fxFromUSD || 1);
+
+              const finalMrp = isIN ? Number(mrp) : Number(mrp) * fxFromUSD;
+              const finalNow = isIN ? Number(now) : Number(now) * fxFromUSD;
 
               return (
                 <CourseCard
                   key={idx}
                   heading={course.courseName}
                   month={course.numberOfClasses}
-                  image={`https://api.test.hachion.co/${course.courseImage}`}
+                  image={`https://api.hachion.co/${course.courseImage}`}
                   course_id={course.id}
                   trainer_name={trainer?.trainer_name || "Not Assigned"}
                   level={course.level}
                   discountPercentage={getDiscountPercentage(course)}
-                  amount={`${currency} ${fmt(nowVal)}`}
-                  totalAmount={`${fmt(mrpVal)}`}
+                  amount={`${currency} ${fmt(finalNow)}`}
+                  totalAmount={`${fmt(finalMrp)}`}
                   onClick={() => handleCardClick(course)}
                 />
               );

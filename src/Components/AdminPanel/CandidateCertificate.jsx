@@ -86,7 +86,7 @@ export default function CandidateCertificate() {
   // useEffect(() => {
   //   const fetchCertificate = async () => {
   //     try {
-  //       const response = await axios.get('https://api.test.hachion.co/certificate');
+  //       const response = await axios.get('https://api.hachion.co/certificate');
   //       setCertificate(response.data);
   //       setFilteredCertificate(response.data);
   //     } catch (error) {
@@ -97,7 +97,7 @@ export default function CandidateCertificate() {
   const handleSave = useCallback(async () => {
     try {
       const response = await axios.put(
-        `https://api.test.hachion.co/certificate/${editedData.id}`, editedData
+        `https://api.hachion.co/certificate/${editedData.id}`, editedData
       );
       setCertificate((prev) =>
         prev.map(curr =>
@@ -126,7 +126,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.hachion.co/course-categories/all");
         setCourse(response.data);
       } catch (error) {
       }
@@ -136,7 +136,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCandidateCertificate = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        const response = await axios.get("https://api.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
       }

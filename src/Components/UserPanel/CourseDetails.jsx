@@ -112,7 +112,7 @@ const CourseDetails = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -133,7 +133,7 @@ const CourseDetails = () => {
     return (
       <div className="loading-overlay">
         <img
-          src="/HachionLogo.webp"
+          src="/HachionLogo.png"
           alt="Loading..."
           className='loading-logo'
         />

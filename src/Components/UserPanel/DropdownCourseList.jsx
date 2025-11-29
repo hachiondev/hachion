@@ -16,7 +16,7 @@ const DropdownCourseList = ({ category }) => {
 
     const fetchCourses = async () => {
       try {
-        const { data } = await axios.get("https://api.test.hachion.co/courses/summary");
+        const { data } = await axios.get("https://api.hachion.co/courses/summary");
         const rows = Array.isArray(data) ? data : [];
 
         const mapped = rows.map((row) => ({

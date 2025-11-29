@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
 import './Dashboard.css';
 
 const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
-  const currentDate = new Date().toISOString().split("T")[0]; 
+  const currentDate = new Date().toISOString().split("T")[0];
 
   const [reviewData, setReviewData] = useState({
     review_id: Date.now(),
@@ -15,92 +14,128 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
     trainer_name: "",
     date: currentDate,
     student_name: "",
-    email: "",  // ⬅️ ADDED (missing before)
+    email: "",
     source: "",
-    review:"",
+    review: "",
     user_image: "",
     rating: 0,
-    type: "",   // ⬅️ allow review type selection to work
+    type: "",
     social_id: ""
   });
 
-  const [courses, setCourses] = useState([]);
-  const [trainers, setTrainers] = useState([]);
+  const [userEmail, setUserEmail] = useState("");
+const [filteredTrainers, setFilteredTrainers] = useState([]);
+
+
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [enrollments, setEnrollments] = useState([]);
-  const [filteredCategories, setFilteredCategories] = useState([]);
+
   const [filteredCourses, setFilteredCourses] = useState([]);
-  const [filteredTrainers, setFilteredTrainers] = useState([]);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("loginuserData")) || {};
+
+    const emailFromStorage =
+      storedUser.email ||
+      storedUser.student_email ||
+      storedUser.emailid ||
+      storedUser.username ||
+      "";
+
+    const nameFromStorage =
+      storedUser.name ||
+      storedUser.fullname ||
+      storedUser.student_name ||
+      "";
+
+    setUserEmail(emailFromStorage);
+
+    setReviewData(prev => ({
+      ...prev,
+      student_name: prev.student_name || nameFromStorage,
+      email: emailFromStorage,
+    }));
+  }, []);
+
+useEffect(() => {
+  if (!userEmail || !reviewData.course_name) {
+    setFilteredTrainers([]);
+    return;
+  }
+
+  const fetchTrainers = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.hachion.co/enroll/trainers/${encodeURIComponent(
+          userEmail
+        )}/${encodeURIComponent(reviewData.course_name)}`
+      );
+
+      setFilteredTrainers(response.data || []);
+    } catch (error) {
+      console.error("Error fetching trainers by email and course:", error);
+      setFilteredTrainers([]);
+    }
+  };
+
+  fetchTrainers();
+}, [userEmail, reviewData.course_name]);
 
   useEffect(() => {
-    axios.get('https://api.test.hachion.co/courses/all')
-      .then(response => setCourses(response.data))
-      .catch(error => console.error("Error fetching courses:", error));
+    if (!userEmail) return;
 
-    axios.get('https://api.test.hachion.co/trainers')
-      .then(response => setTrainers(response.data))
-      .catch(error => console.error("Error fetching trainers:", error));
-
-    const fetchEnrollments = async () => {
+    const fetchUserCourses = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('loginuserData'));
-        const email = user?.email;
-        if (!email) return;
-
-        const response = await axios.get('https://api.test.hachion.co/enroll');
-        const allEnrollments = response.data;
-
-        const userEnrollments = allEnrollments.filter(e => e.email === email);
-
-        setEnrollments(userEnrollments);
-
-        const uniqueCategories = [...new Set(userEnrollments.map(e => e.category_name))].filter(Boolean);
-        const uniqueCourses = [...new Set(userEnrollments.map(e => e.course_name))].filter(Boolean);
-
-        setFilteredCategories(uniqueCategories);
-        setFilteredCourses(uniqueCourses);
-
+        const response = await axios.get(
+          `https://api.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`
+        );
+    
+        setFilteredCourses(response.data || []);
       } catch (error) {
-        console.error("Error fetching user enrollments:", error);
+        console.error("Error fetching course names by email:", error);
+        setFilteredCourses([]); 
       }
     };
 
-    fetchEnrollments();
-  }, []);
+    fetchUserCourses();
+  }, [userEmail]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setReviewData((prevData) => ({
+    setReviewData(prevData => ({
       ...prevData,
       [name]: value,
     }));
   };
 
   const handleFileChange = (e) => {
-    setReviewData((prevData) => ({
+    setReviewData(prevData => ({
       ...prevData,
       user_image: e.target.files[0],
     }));
   };
 
   const isFormValid = () => {
+    const isTrainerRequired = reviewData.type === "Trainer Review";
+
     return (
       reviewData.student_name.trim() !== "" &&
       reviewData.email.trim() !== "" &&
+      reviewData.type.trim() !== "" &&            
       reviewData.course_name.trim() !== "" &&
-      reviewData.trainer_name.trim() !== "" &&
-      // reviewData.category_name.trim() !== "" &&
+      (!isTrainerRequired || reviewData.trainer_name.trim() !== "") &&
       reviewData.review.trim() !== "" &&
       reviewData.rating > 0
     );
   };
 
   const handleSubmit = async () => {
+    const isCourseReview = reviewData.type === "Course Review";
+
     const reviewPayload = {
       name: reviewData.student_name,
       email: reviewData.email,
-      type: false,
+      type: isCourseReview,                 
+      reviewType: reviewData.type,         
       course_name: reviewData.course_name,
       trainer_name: reviewData.trainer_name || "",
       social_id: reviewData.social_id,
@@ -108,7 +143,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
       review: reviewData.review,
       location: reviewData.location || "",
       display: "course",
-      date: new Date().toISOString().split("T")[0]
+      date: new Date().toISOString().split("T")[0],
     };
 
     const formData = new FormData();
@@ -120,7 +155,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
 
     try {
       await axios.post(
-        "https://api.test.hachion.co/userreview/add",
+        "https://api.hachion.co/userreview/add",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -134,7 +169,6 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
         setSuccessMessage("");
         setShowReviewForm(false);
       }, 2000);
-
     } catch (error) {
       console.error("Error adding review:", error.response?.data || error.message);
       setErrorMessage("Failed to submit review. Please try again.");
@@ -144,204 +178,211 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
   };
 
   return (
-      <div>
-        <div className='review-form-content'>
+    <div>
+      <div className="review-form-content">
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
 
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
-          {successMessage && <div className="success-message">{successMessage}</div>}
-
-          <div className="instructor-fields">
-            <div>
-              <label className='login-label'>Student Name</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter your Name"
-                    name="student_name"
-                    value={reviewData.student_name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className='login-label'>Email</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="abc@gmail.com"
-                    name="email"
-                    value={reviewData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="instructor-fields">
-            <div>
-              <label className="login-label">Image</label>
-              <div className="register-field">
-                <div className="password-field">
-                  <input
-                    type="file"
-                    className="form-control"
-                    name="user_image"
-                    onChange={handleFileChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="login-label">Review Type</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <select
-                    className="form-select"
-                    name="type"
-                    value={reviewData.type}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Type</option>
-                    <option value="Course Review">Course Review</option>
-                    <option value="Trainer Review">Trainer Review</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="instructor-fields">
-            {/* <div>
-              <label className='login-label'>Category Name</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <input
-                    type="text"
-                    className="form-select"
-                    placeholder="Enter Category"
-                    name="category_name"
-                    value={reviewData.category_name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div> */}
-
-            <div>
-              <label className="login-label">Course Name</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <select
-                    className="form-select"
-                    name="course_name"
-                    value={reviewData.course_name}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Course</option>
-                    {filteredCourses.map((course, index) => (
-                      <option key={index} value={course}>{course}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div>
-              <label className="login-label">Trainer Name</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <select
-                    className="form-select"
-                    name="trainer_name"
-                    value={reviewData.trainer_name}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Trainer</option>
-                    {filteredTrainers.map((trainers, index) => (
-                      <option key={index} value={trainers}>{trainers}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="instructor-fields">
-            <div>
-              <label className="login-label">Rating</label><span className='star'>*</span>
-              <div className="register-field">
-                <div className="password-field">
-                  <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
-                    <Rating
-                      name="rating"
-                      value={reviewData.rating}
-                      onChange={(event, newValue) =>
-                        setReviewData((prevData) => ({ ...prevData, rating: newValue || 0 }))
-                      }
-                      sx={{ ml: 1, mt: 1 }}
-                    />
-                  </Box>
-                </div>
-              </div>
-            </div>
-            <div>
-              <label className="login-label">Source</label>
-              <div className="register-field">
-                <div className="password-field">
-                  <select
-                    className="form-select"
-                    name="social_id"
-                    value={reviewData.social_id}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    <option value="LinkedIn">LinkedIn</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Twitter">Twitter</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Google">Google</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div className="instructor-fields">
           <div>
-            <label className="login-label">Review</label><span className='star'>*</span>
+            <label className="login-label">
+              Student Name
+            </label>
+            <span className="star">*</span>
             <div className="register-field">
               <div className="password-field">
-                <textarea
+                <input
+                  type="text"
                   className="form-control"
-                  placeholder="Write review"
-                  name="review"
-                  value={reviewData.review}
+                  placeholder="Enter your Name"
+                  name="student_name"
+                  value={reviewData.student_name}
                   onChange={handleChange}
-                  rows={5} 
                 />
               </div>
             </div>
           </div>
 
-          <div className='center'>
-            <button
-              className='submit-btn'
-              onClick={handleSubmit}
-              disabled={!isFormValid()}
-            >
-              Submit
-            </button>
+          <div>
+            <label className="login-label">Email</label>
+            <span className="star">*</span>
+            <div className="register-field">
+              <div className="password-field">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="abc@gmail.com"
+                  name="email"
+                  value={reviewData.email}
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="instructor-fields">
+          <div>
+            <label className="login-label">Image</label>
+            <div className="register-field">
+              <div className="password-field">
+                <input
+                  type="file"
+                  className="form-control"
+                  name="user_image"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
           </div>
 
+          <div>
+            <label className="login-label">Review Type</label>
+            <span className="star">*</span>
+            <div className="register-field">
+              <div className="password-field">
+                <select
+                  className="form-select"
+                  name="type"
+                  value={reviewData.type}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Type</option>
+                  <option value="Course Review">Course Review</option>
+                  <option value="Trainer Review">Trainer Review</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="instructor-fields">
+          <div>
+            <label className="login-label">Course Name</label>
+            <span className="star">*</span>
+            <div className="register-field">
+              <div className="password-field">
+                <select
+                  className="form-select"
+                  name="course_name"
+                  value={reviewData.course_name}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Course</option>
+                  {filteredCourses.map((course, index) => (
+                    <option key={index} value={course}>
+                      {course}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="login-label">
+              Trainer Name
+              {reviewData.type === "Trainer Review" && (
+                <span className="star">*</span>
+              )}
+            </label>
+
+            <div className="register-field">
+              <div className="password-field">
+               <select
+  className="form-select"
+  name="trainer_name"
+  value={reviewData.trainer_name}
+  onChange={handleChange}
+  disabled={reviewData.type !== "Trainer Review" || !reviewData.course_name}
+>
+  <option value="">Select Trainer</option>
+  {filteredTrainers.map((trainer, index) => (
+    <option key={index} value={trainer}>
+      {trainer}
+    </option>
+  ))}
+</select>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="instructor-fields">
+          <div>
+            <label className="login-label">Rating</label>
+            <span className="star">*</span>
+            <div className="register-field">
+              <div className="password-field">
+                <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
+                  <Rating
+                    name="rating"
+                    value={reviewData.rating}
+                    onChange={(event, newValue) =>
+                      setReviewData(prevData => ({
+                        ...prevData,
+                        rating: newValue || 0,
+                      }))
+                    }
+                    sx={{ ml: 1, mt: 1 }}
+                  />
+                </Box>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="login-label">Source</label>
+            <div className="register-field">
+              <div className="password-field">
+                <select
+                  className="form-select"
+                  name="social_id"
+                  value={reviewData.social_id}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                  <option value="Facebook">Facebook</option>
+                  <option value="Twitter">Twitter</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Google">Google</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="login-label">Review</label>
+          <span className="star">*</span>
+          <div className="register-field">
+            <div className="password-field">
+              <textarea
+                className="form-control"
+                placeholder="Write review"
+                name="review"
+                value={reviewData.review}
+                onChange={handleChange}
+                rows={5}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="center">
+          <button
+            className="submit-btn"
+            onClick={handleSubmit}
+            disabled={!isFormValid()}
+          >
+            Submit
+          </button>
         </div>
       </div>
+    </div>
   );
 };
 

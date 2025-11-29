@@ -27,7 +27,7 @@ export default function StudentTracking() {
    useEffect(() => {
     const fetchStudentIds = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/studentsTracking/gettingStudentId?courseName=${encodeURIComponent(studentData.course_name)}`);
+        const response = await axios.get(`https://api.test.hachion.co/studentsTracking/gettingStudentId?courseName=${encodeURIComponent(studentData.course_name)}`);
         const ids = response.data.map(id => ({ studentId: id }));
         setTracking(ids);
       } catch (error) {
@@ -47,7 +47,7 @@ export default function StudentTracking() {
     }
 
     try {
-      const response = await axios.get(`https://api.hachion.co/studentsTracking/gettingEmail?studentId=${studentData.student_id}`);
+      const response = await axios.get(`https://api.test.hachion.co/studentsTracking/gettingEmail?studentId=${studentData.student_id}`);
 
       const student = response.data.length > 0 ? response.data[0] : null;
 
@@ -83,7 +83,7 @@ export default function StudentTracking() {
       if (email) params.append("email", email);
       if (course_name) params.append("courseName", course_name);
 
-      const response = await axios.get(`https://api.hachion.co/studentsTracking/batches?${params.toString()}`);
+      const response = await axios.get(`https://api.test.hachion.co/studentsTracking/batches?${params.toString()}`);
       const validBatchIds = (response.data || []).filter(id => id !== null);
       setBatchOptions(validBatchIds);
     } catch (error) {
@@ -99,7 +99,7 @@ export default function StudentTracking() {
 useEffect(() => {
   const fetchBatchInfo = async () => {
     try {
-      const res = await axios.get(`https://api.hachion.co/studentsTracking/batchInfo?batchId=${encodeURIComponent(studentData.batch_id)}`);
+      const res = await axios.get(`https://api.test.hachion.co/studentsTracking/batchInfo?batchId=${encodeURIComponent(studentData.batch_id)}`);
       const data = res.data;
 
       setStudentData(prev => ({
@@ -138,7 +138,7 @@ const handleUpdate = async () => {
       remarks: studentData.remarks || ""
     };
 
-    const response = await axios.post("https://api.hachion.co/studentsTracking/add", payload);
+    const response = await axios.post("https://api.test.hachion.co/studentsTracking/add", payload);
     
 
     setSuccessMessage("✅ Student tracking updated successfully.");
@@ -150,7 +150,7 @@ const handleUpdate = async () => {
   }
 };
    useEffect(() => {
-  axios.get('https://api.hachion.co/course-categories/all')
+  axios.get('https://api.test.hachion.co/course-categories/all')
     .then((response) => {
       setCategoryOptions(response.data); 
     })
@@ -162,7 +162,7 @@ const handleUpdate = async () => {
 useEffect(() => {
   if (studentData.category_name) {
     axios
-      .get(`https://api.hachion.co/courses/coursenames-by-category?categoryName=${studentData.category_name}`)
+      .get(`https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${studentData.category_name}`)
       .then((response) => {
         const courseObjects = response.data.map(name => ({ courseName: name }));
         setFilterCourse(courseObjects);

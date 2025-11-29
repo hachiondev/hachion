@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Sitemap = () => {
   const [Category, setCategory] = useState([]);
   const [courses, setCourses] = useState([]);
-  const API_URL = "https://api.hachion.co/course-categories/all";
+  const API_URL = "https://api.test.hachion.co/course-categories/all";
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Sitemap = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(response.data)) {
           setCourses(response.data);
         } else {

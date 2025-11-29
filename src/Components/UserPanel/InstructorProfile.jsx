@@ -16,6 +16,22 @@ const InstructorProfile = () => {
   const [trainers, setTrainers] = useState([]);
   const swiperRef = useRef(null);
 
+  // Re-usable rating component
+const StarRating = ({ rating = 0 }) => {
+  const rounded = Math.round(rating); // 2.3 -> 2, etc.
+
+  return (
+    <div className="trainer-rating">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className={`fa fa-star ${star <= rounded ? 'star-filled' : 'star-empty'}`}
+        />
+      ))}
+    </div>
+  );
+};
+
 const goToPrev = () => {
   if (swiperRef.current) swiperRef.current.slidePrev();
 };
@@ -29,7 +45,7 @@ const goToNext = () => {
     const fetchTrainers = async () => {
       try {
         setLoading(true);
-        const trainerRes = await axios.get('https://api.hachion.co/trainers');
+        const trainerRes = await axios.get('https://api.test.hachion.co/trainers');
         setTrainers(trainerRes.data); 
       } catch (error) {
         console.error('Error fetching trainers:', error);
@@ -104,7 +120,7 @@ const goToNext = () => {
                     summary={trainer.summary}
                      profileImage={
       trainer.trainerImage
-        ? `https://api.hachion.co/${trainer.trainerImage}`
+        ? `https://api.test.hachion.co/${trainer.trainerImage}`
         : ""
     }
                     demo_link_1={trainer.demo_link_1}

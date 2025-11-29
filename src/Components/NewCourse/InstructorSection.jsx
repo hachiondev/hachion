@@ -18,6 +18,7 @@ export default function InstructorSection({
 }) {
   return (
     <section className={styles.iswrap}>
+      <div className="container">
       <div className={styles.ishead}>
         <h2>Meet Your Instructor</h2>
         <p>Learn from industry veterans with years of real-world experience</p>
@@ -80,7 +81,7 @@ export default function InstructorSection({
 
           <div className={styles.isactions}>
             <button className={cn(styles.isbtn, styles.isbtnoutline)} onClick={onLinkedIn}>
-              <span className="ico">
+              <span className={styles.ico}>
                 <img src="LinkedIn.png" alt="LinkedIn" height={22} />
               </span>
               View LinkedIn Profile
@@ -90,6 +91,7 @@ export default function InstructorSection({
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

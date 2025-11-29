@@ -1,6 +1,6 @@
 :root{
   --ink:#0f172a;
-  --muted:#6b7280;
+  --muted:#000000;
   --border:#e6e8ee;
   --panel:#ffffff;
   --shadow:0 12px 26px rgba(15,23,42,.08);
@@ -12,15 +12,16 @@
 
 /* section */
 .saewrap{
-  padding: 26px 90px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: #F4F4F4;
 }
 
 .saehead{ text-align:center; margin:0 auto 36px; }
 .saehead h2{ font-size:32px; font-weight:600; color:#000;}
-.saehead p{ color:var(--muted); margin-top:6px; text-align: center;     padding: 20px 100px;
+.saehead p{ color:#000000; margin-top:6px; text-align: center;     padding: 20px 100px;
     font-size: 20px;
-    font-weight: 400;}
+    font-weight: 300;}
 
 /* grid */
 .saesgrid{
@@ -37,7 +38,7 @@
   overflow:hidden;
   box-shadow: var(--shadow);
   display:flex; flex-direction:column;
-  padding: 22px;
+  padding: 14px;
 }
 .saethumb{ position:relative; }
 .saethumb img{ width:100%; height:180px; object-fit:cover; display:block; border-radius: 10px; }
@@ -59,36 +60,36 @@
   display:flex; align-items:center; gap:8px; padding:10px 12px 0; flex-wrap:wrap; position:relative;
 }
 .chip{
-  background:#fff; color:#5b6472;
+  background:#fff; color:#000000;
   border: 1px solid var(--border);
-  border-radius:8px; padding:4px 8px; font-weight:800; font-size:12px;
+  border-radius:8px; padding:4px 8px; font-weight:400; font-size:10px;
 }
-.chipby{ color:#4b4c4e; font-weight:500; }
+.chipby{ color:#000000; font-weight:500; font-size: 12px; }
 .offbadge{
-  margin-left:auto; background:#00AEEF; color:#ffffff; font-weight:700; font-size:12px;
+  margin-left:auto; background:#00AEEF; color:#ffffff; font-weight:500; font-size:12px;
   border-radius:8px; padding:4px 8px;
 }
 
 /* title */
 .saetitle{
   padding:8px 12px 0; margin:0;
-  color:#101827; font-weight:600; font-size:18px; line-height:1.65;
+  color:#000000; font-weight:500; font-size:18px; line-height:1.6;
 }
 
 /* price row */
 .saepriceRow{
   display:flex; align-items:center; gap:10px; padding:8px 12px 0;
 }
-.price{ font-weight:700; color:#0e1726; font-size: 20px; }
-.mrp{ color:#a3adbb; text-decoration:line-through; font-weight:600; }
-.timer{ margin-left:auto; color:var(--danger); font-weight:600; font-size:16px; }
+.price{ font-weight:700; color:#0e1726; font-size: 19px; }
+.mrp{ color:#000000; text-decoration:line-through; font-weight:600; }
+.timer{ margin-left:auto; color:var(--danger); font-weight:600; font-size:13px; }
 
 /* CTA button */
 .saebtn{
   margin:10px 12px 12px;
    background: #00AEEF;
   color:#fff; border:0; border-radius:999px; padding:10px 14px;
-  font-weight:600; cursor:pointer;
+  font-weight:500; cursor:pointer;
   font-size: 18px;
 }
 
@@ -109,4 +110,46 @@
 }
 @media (max-width: 520px){
   .saesgrid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .saewrap h2{
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .saewrap p{
+    font-size: 16px;
+    font-weight: 300;
+    padding: 0;
+  } 
+  .saecard{
+    padding: 20px;
+  }
+  .saecard .chip{
+    font-size: 10px;
+  }
+  .saecard .chipby{
+    font-size: 12px;
+  }
+  .saecard .offbadge{
+    font-size: 10px;
+    padding: 2px 10px;
+  }
+  .saecard .saetitle{
+    font-size: 16px;
+  }
+  .saecard .saepriceRow .price{
+    font-size: 16px;  
+    font-weight: 600;
+  }
+  .saecard .timer{
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .saecard .mrp{
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .saecard .saebtn{
+    font-size: 16px;
+  }
 }

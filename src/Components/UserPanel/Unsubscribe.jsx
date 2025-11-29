@@ -72,7 +72,7 @@ const defaultCountry = getDefaultCountry("US");
 
 //   const fetchUserProfile = async () => {
 //     try {
-//       const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+//       const res = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
 //       const data = await res.json();
 //       if (res.ok) {
 //         values.name = data.name || "";
@@ -116,7 +116,7 @@ useEffect(() => {
 
   const fetchUserProfile = async () => {
     try {
-      const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+      const res = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
       const data = await res.json();
       if (res.ok) {
         values.name = data.name || "";
@@ -175,7 +175,7 @@ const handleFormSubmit = async (e) => {
   };
 
   try {
-    const res = await fetch("https://api.hachion.co/unsubscribe", {
+    const res = await fetch("https://api.test.hachion.co/unsubscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody)
@@ -206,6 +206,10 @@ const handleFormSubmit = async (e) => {
   }
 };
 
+const handlePrivacy = () => {
+  navigate("/privacy");
+};
+
 const isFormValid = (
   values.name.trim() !== "" &&
   values.email.trim() !== "" &&
@@ -214,11 +218,9 @@ const isFormValid = (
   values.duration.trim() !== "" &&
   values.comment.trim() !== ""
 );
-
 useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
   return (
     <>
       <div className="unsubscribe-container">

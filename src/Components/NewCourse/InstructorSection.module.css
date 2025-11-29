@@ -10,7 +10,8 @@
 }
 
 .iswrap{
-  padding:30px 70px;
+  padding-top:30px;
+  padding-bottom:30px;
 }
 
 .ishead{
@@ -20,7 +21,7 @@
   font-size:32px; font-weight:700; color:var(--ink);
 }
 .ishead p{
-  color: var(--muted); margin-top:16px; font-size: 18px; margin-bottom: 46px;
+  color: #000000; margin-top:16px; font-size: 18px; margin-bottom: 46px; font-weight: 300;
 }
 
 .iscard{
@@ -84,14 +85,14 @@
 .isstatlab{ font-weight:700; font-size:13px; text-align: center; color: #000}
 
 .isbio{
-  margin-top:14px; color:#3a4655; line-height:1.6; font-size: 18px;
+  margin-top:14px; color:#000000; line-height:1.6; font-size: 18px;
 }
 
 .issubhead{
   margin-top:35px; font-weight:600; color:#0f172a; font-size:22px;
 }
 .islist{
-  margin-top:8px; color:#2f3947; display:grid; gap:8px; list-style: disc;
+  margin-top:8px; color:#000000; display:grid; gap:8px; list-style: disc;
 }
 
 /* actions */
@@ -107,7 +108,7 @@
 }
 .isbtnoutline{
   background:#fff; border:1px solid var(--border);
-  color:#0f2238; box-shadow:0 4px 12px rgba(0,0,0,.04);
+  color:#000000; box-shadow:0 4px 12px rgba(0,0,0,.04);
 }
 .isbtn .ico, .isbtnoutline .ico{ display:inline-flex; }
 .isbtn .ico img{
@@ -115,13 +116,49 @@
 }
 /* responsive */
 @media (max-width: 1024px){
-  .iscard{ grid-template-columns: 1fr; }
-  .isphoto{ height: 320px; }
+  /* .iscard{ grid-template-columns: 1fr; } */
+  /* .isphoto{ height: 320px; } */
 }
 @media (max-width: 720px){
+  .iscard{ grid-template-columns: 1fr; }
   .iscontent{ padding:12px 14px; }
-  .isname{ font-size:22px; }
-  .isbadge{ padding:6px 8px; font-size:12px; }
+  .isname{ font-size:20px; font-weight: 600;}
+  .isbadge{ padding:4px 12px; font-size:10px; }
   .isstat{ min-width: 120px; padding:10px 12px; }
-  .isphoto{ height:220px; }
+  .isphoto{ height:auto; }
+  .ishead h2{
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .ishead p{
+    font-size: 16px;
+  }
+  .istitle{
+            font-size: 14px;
+        margin-top: 10px;
+  }
+  .isstatlab{
+    font-weight: 400;
+  }
+  .isbio{
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .issubhead{
+    font-size: 20px;
+  }
+  .islist{
+        padding-left: 1rem;
+    font-size: 13px;
+  }
+  .isactions{
+    margin-bottom: 20px;
+  }
+  .isactions .isbtn{
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+    .isactions .isbtn .ico img{
+      height: 15px;
+    }
 }

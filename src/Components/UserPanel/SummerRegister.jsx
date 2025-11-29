@@ -130,7 +130,7 @@ useEffect(() => {
 console.log("payload: " + JSON.stringify(payload));
 
   try {
-    const response = await axios.post("https://api.hachion.co/kids-summer-training", payload); // adjust URL if needed
+    const response = await axios.post("https://api.test.hachion.co/kids-summer-training", payload); // adjust URL if needed
     console.log("Registration successful:", response.data);
 
     setError('Registration successful!');

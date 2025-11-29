@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import styles from "./CourseCurriculum.module.css";
 import { cn } from "../../utils";
+import VideoModal from "./VideoModal";
+import LoginRequired from "./LoginRequired";
 
-/* --- tiny inline icons (no libs) --- */
-const Download = (p) => (
-  <svg viewBox="0 0 24 24" width="18" height="18" {...p}>
-    <path fill="currentColor" d="M5 20h14v-2H5v2zM12 2l-5 5h3v6h4V7h3l-5-5z" />
-  </svg>
-);
+
 const Chevron = ({ open }) => (
   <svg
     viewBox="0 0 24 24"
@@ -19,10 +16,10 @@ const Chevron = ({ open }) => (
   </svg>
 );
 const VideoIco = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#5193f6" d="M17 10.5V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-3.5l4 4v-11l-4 4z"/></svg>
+  <img src="play_button.png" alt="video" width="18" height="18" />
 );
 const FileIco = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#7c8a96" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm1 7h5l-5-5v5z"/></svg>
+  <img src="file.png" alt="file" width="18" height="18" />
 );
 
 /* --- sample data --- */
@@ -84,9 +81,10 @@ const projects = [
 
 export default function CourseCurriculum() {
   const [openId, setOpenId] = useState(1);
-
+  const [showVideo, setShowVideo] = useState(false);
   return (
     <section className={styles.ccwrap}>
+      <div className="container">
       <div className={styles.cchead}>
         <h2>Course Curriculum</h2>
         <p>
@@ -115,7 +113,7 @@ export default function CourseCurriculum() {
                   <div className={styles.cctitle}>
                     <div className={styles.ccttlmain}>{m.title}</div>
                     <div className={styles.ccttlsub}>
-                      <span className={styles.cccapsul}>{m.meta.sections} Sections</span> 
+                      <span className={styles.cccapsul}>{m.meta.sections} Sections</span>
                       <span className={styles.cccapsul}>{m.meta.videos} Videos</span>
                       <span className={styles.cccapsul}>{m.meta.assignments} Assignments</span>
                       <span className={styles.cccapsul}>{m.meta.projects} Project</span>
@@ -131,7 +129,7 @@ export default function CourseCurriculum() {
                   aria-labelledby={`btn-${m.id}`}
                 >
                   {m.items.map((it, i) => (
-                    <div key={i} className={styles.ccrow}>
+                    <div key={i} className={styles.ccrow} onClick={() => it.type === "video" && setShowVideo(true)}>
                       <span>
                         {it.type === "video" ? <VideoIco /> : <FileIco />}
                       </span>
@@ -175,6 +173,23 @@ export default function CourseCurriculum() {
           </div>
         </aside>
       </div>
+
+      {showVideo && (
+        // <VideoModal
+        //   videoSrc={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"}
+        //   onClose={() => setShowVideo(false)}
+        // />
+        <LoginRequired
+            title="Login Required"
+            subtitle="To add items to cart please Login"
+            onCancel={() => setShowVideo(false)}
+            onLogin={() => {
+                setShowVideo(false);
+            }}
+        />
+      )}
+      </div>
+
     </section>
   );
 }

@@ -46,8 +46,8 @@ const DiscountCards = () => {
     setLoading(true);
     try {
       
-      const allCoursesResponse = await axios.get("https://api.hachion.co/courses/summary");
-      const trainersResponse   = await axios.get("https://api.hachion.co/trainers");
+      const allCoursesResponse = await axios.get("https://api.test.hachion.co/courses/summary");
+      const trainersResponse   = await axios.get("https://api.test.hachion.co/trainers");
 
       const rows = Array.isArray(allCoursesResponse.data) ? allCoursesResponse.data : [];
 
@@ -139,7 +139,7 @@ const DiscountCards = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get("https://api.hachion.co/discounts-courses");
+        const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -369,7 +369,7 @@ const goToPrev = () => {
                 key={idx}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 
                 discountPercentage={

@@ -5,13 +5,14 @@ import AdminLogin from './Components/AdminPanel/AdminLogin';
 import AdminRegister from './Components/AdminPanel/AdminRegister';
 import AdminForgot from './Components/AdminPanel/AdminForgot';
 import {
+  BrowserRouter,
   Routes,
   Route,
   useLocation,
   useNavigate,
 } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Outlet } from "react-router-dom";
+
 import Register from './Components/UserPanel/Register';
 import RegisterNext from './Components/UserPanel/RegisterNext';
 import RegisterHere from './Components/UserPanel/RegisterHere';
@@ -25,7 +26,7 @@ import Blogs from './Components/UserPanel/Blogs';
 import BlogDetails from './Components/UserPanel/BlogDetails';
 import Aboutus from './Components/UserPanel/Aboutus';
 import ContactUs from './Components/UserPanel/ContactUs';
-import UserProtectedRoute from './routes/UserProtectedRoute';
+import UserProtectedRoute from './UserProtectedRoute';
 import UserDashboard from './Components/UserPanel/UserDashboard';
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
@@ -35,7 +36,7 @@ import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import Workshop from './Components/UserPanel/Workshop';
-import ProtectedRoute from './routes/ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 import Unsubscribe from './Components/UserPanel/Unsubscribe';
 import Sitemap from './Components/UserPanel/Sitemap';
@@ -58,6 +59,7 @@ import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignmen
 import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
 import NewCourseDetails from './Components/UserPanel/NewCourseDetails';
+import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
 import GoogleMobileNumber from './Components/UserPanel/GoogleMobileNumber';
 import Layout from './Components/Layout/Layout';
 import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
@@ -117,6 +119,7 @@ function AppRoutes() {
           <Route path='/view-all-reviews' element={<ViewReviews />} />
           <Route path='/coursedetails' element={<Course />} />
           <Route path='/newcoursedetails' element={<NewCourseDetails />} />
+          <Route path='/enroll-now' element={<NewEnrollNow />} />
           <Route path='/coursedetails/:courseName' element={<CourseDetails />} />
           <Route path='/corporate' element={<CorporateTraining />} />
           <Route path='/hire-from-us' element={<HirefromUs />} />
@@ -174,12 +177,9 @@ function AppRoutes() {
 }
 
 export default function App() {
-  // return <AppRoutes />;
-   return (
-    <>
+  return (
+    <BrowserRouter>
       <AppRoutes />
-      <Outlet />
-    </>
+    </BrowserRouter>
   );
 }
-

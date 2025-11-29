@@ -50,55 +50,57 @@ const defaultFaqs = [
   },
 ];
 
-export default function FAQSection({ faqs = defaultFaqs, onChat = () => {}, onSchedule = () => {} }) {
+export default function FAQSection({ faqs = defaultFaqs, onChat = () => { }, onSchedule = () => { } }) {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
     <section className={styles.faqwrap} aria-labelledby="faq-heading">
-      <div className={styles.faqhead}>
-        <h2 id="faq-heading">Frequently Asked Questions</h2>
-        <p>Got questions? We’ve got answers</p>
-      </div>
+      <div className="container">
+        <div className={styles.faqhead}>
+          <h2 id="faq-heading">Frequently Asked Questions</h2>
+          <p>Got questions? We’ve got answers</p>
+        </div>
 
-      <div className={styles.faqlist} role="list">
-        {faqs.map((item, idx) => {
-          const open = openIndex === idx;
-          const panelId = `faq-panel-${idx}`;
-          const btnId = `faq-btn-${idx}`;
-          return (
-            <div className={cn(styles.faqitem, open && styles.isopen)} role="listitem" key={idx}>
-              <button
-                id={btnId}
-                className={styles.faqbtn}
-                aria-expanded={open}
-                aria-controls={panelId}
-                onClick={() => setOpenIndex(open ? null : idx)}
-              >
-                <span className={styles.faqq}>{item.q}</span>
-                <Chevron open={open} />
-              </button>
+        <div className={styles.faqlist} role="list">
+          {faqs.map((item, idx) => {
+            const open = openIndex === idx;
+            const panelId = `faq-panel-${idx}`;
+            const btnId = `faq-btn-${idx}`;
+            return (
+              <div className={cn(styles.faqitem, open && styles.isopen)} role="listitem" key={idx}>
+                <button
+                  id={btnId}
+                  className={styles.faqbtn}
+                  aria-expanded={open}
+                  aria-controls={panelId}
+                  onClick={() => setOpenIndex(open ? null : idx)}
+                >
+                  <span className={styles.faqq}>{item.q}</span>
+                  <Chevron open={open} />
+                </button>
 
-              <div
-                id={panelId}
-                className={styles.faqpanel}
-                role="region"
-                aria-labelledby={btnId}
-                style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-              >
-                <div className={styles.faqpanelinner}>
-                  <p className={styles.faqa}>{item.a}</p>
+                <div
+                  id={panelId}
+                  className={styles.faqpanel}
+                  role="region"
+                  aria-labelledby={btnId}
+                  style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+                >
+                  <div className={styles.faqpanelinner}>
+                    <p className={styles.faqa}>{item.a}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      <div className={styles.faqhelp}>
-        <div className={styles.faqhelpsub}>Still have questions?</div>
-        <div className={styles.faqactions}>
-          <button className={styles.faqprimary} onClick={onChat}>Chat with Our Team</button>
-          <button className={styles.faqlink} onClick={onSchedule}>Schedule a Call</button>
+        <div className={styles.faqhelp}>
+          <div className={styles.faqhelpsub}>Still have questions?</div>
+          <div className={styles.faqactions}>
+            <button className={styles.faqprimary} onClick={onChat}>Chat with Our Team</button>
+            <button className={styles.faqlink} onClick={onSchedule}>Schedule a Call</button>
+          </div>
         </div>
       </div>
     </section>

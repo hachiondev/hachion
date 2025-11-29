@@ -1,6 +1,7 @@
 /* wrapper */
 .lswrap {
-  padding: 70px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 /* grid 2 columns */
@@ -66,7 +67,7 @@
 .lsbullets {
   display: grid;
   gap: 10px;
-  color: #475569;
+  color: #000000;
   list-style: disc;
   margin-left: 18px;
 }
@@ -106,7 +107,7 @@
 }
 .lscard h3 {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
   color: #0f172a;
   margin: 0;
 }
@@ -120,7 +121,7 @@
   /* margin-left: 18px; */
 }
 .lsmuted {
-  color: #475569;
+  color: #000000;
   margin: 12px 0 8px;
 }
 
@@ -218,11 +219,40 @@
 }
 @media (max-width: 720px) {
   .lswrap { padding: 28px 16px; }
-  .lsh2 { font-size: 28px; }
+  .lsh2 { font-size: 24px; font-weight: 600; }
   .lslistitem { font-size: 15px; gap: 10px; }
-  .lsicon { width: 32px; height:32px; }
+  .lsicon { width: auto; height:32px; }
   .lsright { align-items: stretch; }
   .lscard { max-width: 100%; padding:16px; box-shadow: 0 8px 20px rgba(15,23,42,0.06); }
+  .lspre h3{
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .lsbullets{
+    margin-left: 0;
+    font-weight: 300;
+  }
+  .lspills{
+    display: grid;
+  }
+  .lstoolcard{
+    padding: 16px 5px;
+  }
+  .lstoolstitle{
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .lstoolname{
+    font-size: 12px;
+  }
+  .lstoollink{
+    font-size: 10px;
+  }
+  .lscardbullets{
+    font-size: 16px;
+    padding-left: 1rem;
+    font-weight: 300;
+  }
 }
 @media (max-width: 720px) {
   .lstoolsgrid {

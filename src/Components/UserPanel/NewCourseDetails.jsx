@@ -13,7 +13,7 @@ import SuccessStories from '../NewCourse/SuccessStories';
 
 const NewCourseDetails = () => {
   return (
-    <div className="page">
+    <div>
       <CourseBanner
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
@@ -35,6 +35,7 @@ const NewCourseDetails = () => {
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
       />
+
     </div>
   );
 };

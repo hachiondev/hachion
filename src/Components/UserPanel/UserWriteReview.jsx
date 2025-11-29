@@ -65,7 +65,7 @@ useEffect(() => {
   const fetchTrainers = async () => {
     try {
       const response = await axios.get(
-        `https://api.hachion.co/enroll/trainers/${encodeURIComponent(
+        `https://api.test.hachion.co/enroll/trainers/${encodeURIComponent(
           userEmail
         )}/${encodeURIComponent(reviewData.course_name)}`
       );
@@ -86,7 +86,7 @@ useEffect(() => {
     const fetchUserCourses = async () => {
       try {
         const response = await axios.get(
-          `https://api.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`
+          `https://api.test.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`
         );
     
         setFilteredCourses(response.data || []);
@@ -127,55 +127,65 @@ useEffect(() => {
       reviewData.rating > 0
     );
   };
+const handleSubmit = async () => {
+  
+  const isCourseReview = reviewData.type === "Course Review";
 
-  const handleSubmit = async () => {
-    const isCourseReview = reviewData.type === "Course Review";
+  const typeBoolean = false; 
 
-    const reviewPayload = {
-      name: reviewData.student_name,
-      email: reviewData.email,
-      type: isCourseReview,                 
-      reviewType: reviewData.type,         
-      course_name: reviewData.course_name,
-      trainer_name: reviewData.trainer_name || "",
-      social_id: reviewData.social_id,
-      rating: reviewData.rating ? Number(reviewData.rating) : 5,
-      review: reviewData.review,
-      location: reviewData.location || "",
-      display: "course",
-      date: new Date().toISOString().split("T")[0],
-    };
+  const displayValue = isCourseReview ? "course" : "trainer";
+  const reviewTypeValue = isCourseReview ? "course" : "trainer";
 
-    const formData = new FormData();
-    formData.append("review", JSON.stringify(reviewPayload));
+  const reviewPayload = {
+    name: reviewData.student_name,
+    email: reviewData.email,
+    type: typeBoolean,              
 
-    if (reviewData.user_image) {
-      formData.append("user_image", reviewData.user_image, reviewData.user_image.name);
-    }
-
-    try {
-      await axios.post(
-        "https://api.hachion.co/userreview/add",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      setSuccessMessage("Review submitted successfully!");
-      setErrorMessage("");
-
-      onSubmitReview(reviewPayload);
-
-      setTimeout(() => {
-        setSuccessMessage("");
-        setShowReviewForm(false);
-      }, 2000);
-    } catch (error) {
-      console.error("Error adding review:", error.response?.data || error.message);
-      setErrorMessage("Failed to submit review. Please try again.");
-      setTimeout(() => setErrorMessage(""), 3000);
-      setSuccessMessage("");
-    }
+    reviewType: reviewTypeValue,    
+    course_name: reviewData.course_name,
+    trainer_name: reviewData.trainer_name || "",
+    social_id: reviewData.social_id,
+    rating: reviewData.rating ? Number(reviewData.rating) : 5,
+    review: reviewData.review,
+    location: reviewData.location || "",
+    display: displayValue,          
+    date: new Date().toISOString().split("T")[0],
   };
+
+  const formData = new FormData();
+  formData.append("review", JSON.stringify(reviewPayload));
+
+  if (reviewData.user_image) {
+    formData.append(
+      "user_image",
+      reviewData.user_image,
+      reviewData.user_image.name
+    );
+  }
+
+  try {
+    await axios.post(
+      "https://api.test.hachion.co/userreview/add",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    setSuccessMessage("Review submitted successfully!");
+    setErrorMessage("");
+
+    onSubmitReview(reviewPayload);
+
+    setTimeout(() => {
+      setSuccessMessage("");
+      setShowReviewForm(false);
+    }, 2000);
+  } catch (error) {
+    console.error("Error adding review:", error.response?.data || error.message);
+    setErrorMessage("Failed to submit review. Please try again.");
+    setTimeout(() => setErrorMessage(""), 3000);
+    setSuccessMessage("");
+  }
+};
 
   return (
     <div>
@@ -248,8 +258,8 @@ useEffect(() => {
                   onChange={handleChange}
                 >
                   <option value="">Select Type</option>
-                  <option value="Course Review">Course Review</option>
-                  <option value="Trainer Review">Trainer Review</option>
+                  <option value="Course Review">Course</option>
+                  <option value="Trainer Review">Trainer</option>
                 </select>
               </div>
             </div>

@@ -15,7 +15,7 @@ const HelpFaq = () => {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch("https://api.hachion.co/general-faq", { signal: ac.signal });
+        const res = await fetch("https://api.test.hachion.co/general-faq", { signal: ac.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 

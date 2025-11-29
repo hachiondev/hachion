@@ -74,7 +74,7 @@ const [filterData, setFilterData] = useState({
 const [filteredStudents, setFilteredStudents] = useState([]);
 
  useEffect(() => {
-    axios.get('https://api.hachion.co/course-categories/all')
+    axios.get('https://api.test.hachion.co/course-categories/all')
       .then((response) => {
         setFilterCategory(response.data); 
       })
@@ -87,7 +87,7 @@ const [filteredStudents, setFilteredStudents] = useState([]);
   if (studentData.category_name) {
     axios
       .get(
-        `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(
+        `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(
           studentData.category_name
         )}`
       )
@@ -134,7 +134,7 @@ useEffect(() => {
   ) {
     const fetchBatchIds = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/studentsTracking/batch-ids', {
+        const response = await axios.get('https://api.test.hachion.co/studentsTracking/batch-ids', {
           params: {
             categoryName: studentData.category_name,
             courseName: studentData.course_name,
@@ -167,7 +167,7 @@ const payload = {
   ...(data.batchId ? { batchId: data.batchId } : {}),
   ...(data.batchType ? { batchType: data.batchType } : {})
 };
-    const response = await axios.post('https://api.hachion.co/studentsTracking/filter', payload);
+    const response = await axios.post('https://api.test.hachion.co/studentsTracking/filter', payload);
 
     const mappedData = response.data.map(item => ({
       student_id: item.studentId,
@@ -203,7 +203,7 @@ const handleSave = async (studentId) => {
       remark
     } = editableRow;
 
-    await axios.put(`https://api.hachion.co/studentsTracking/update-fields`, null, {
+    await axios.put(`https://api.test.hachion.co/studentsTracking/update-fields`, null, {
       params: {
         studentId: studentId,
         batchId: batch_id,

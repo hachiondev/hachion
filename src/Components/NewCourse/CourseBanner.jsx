@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Banner.module.css";
 import { cn } from "../../utils";
 import heroImage from "../../Assets/images/banner-hero.png";
 import Medal from "../../Assets/icons/medal.svg";
+import LoginRequired from "./LoginRequired";
+import VideoModal from "./VideoModal";
+import { Link, useNavigate } from "react-router-dom";
+import EnrollPay from "./EnrollPay";
 
 /* --- Tiny inline icons (SVGS) --- */
 const Star = (p) => (
@@ -28,9 +32,14 @@ const Play = (p) => (
 
 function OfferStrip({ leftText = "Flash Sale! Get 10% OFF & Save INR 2000/-", rightText = "⏳ Hurry! Offer ends in 2 days" }) {
     return (
-        <div className={styles.bnoffer}>
-            <div className={styles.bnofferleft}>{leftText}</div>
-            <div className={styles.bnofferright}>{rightText}</div>
+        <div className={styles.bnoffertop}>
+            <div className="container">
+                <div className={styles.bnoffer}>
+
+                    <div className={styles.bnofferleft}>{leftText}</div>
+                    <div className={styles.bnofferright}>{rightText}</div>
+                </div>
+            </div>
         </div>
     );
 }
@@ -51,94 +60,139 @@ export default function CourseBanner({
     oldPrice = "INR 150",
     offerTag = "Limited time offer",
     ctaText = "Enroll Now - Start Learning",
-    onEnroll = () => { },
+    // onEnroll = () => { },
     onAddToCart = () => { },
     statWeeks = "12",
     statProjects = "08",
     statSupport = "24/7",
 }) {
+    const navigate = useNavigate();
+    const [showLoginRequired, setShowLoginRequired] = useState(false);
+    const [showVideo, setShowVideo] = useState(false);
+    const [showEnroll, setShowEnroll] = useState(false);
+
+    const handleAddToCart = () => {
+        setShowLoginRequired(true);
+    };
+
+    const onEnroll = () => {
+        navigate("/enroll-now");
+        // setShowEnroll(true);
+    }
+
     return (
         <section className={styles.bnwrap}>
+
             <OfferStrip />
 
-            <div className={styles.bncard}>
-                {/* Left */}
-                <div className={styles.bnleft}>
-                    <span className={styles.bnchip}>{level}</span>
+            <div className={styles.bncardmain}>
+                <div className={`container ${styles.bncard}`}>
+                    {/* Left */}
+                    <div className={styles.bnleft}>
+                        <span className={styles.bnchip}>{level}</span>
 
-                    <h1 className={styles.bntitle}>{title}</h1>
+                        <h1 className={styles.bntitle}>{title}</h1>
 
-                    <p className={styles.bnsub}>{subtitle}</p>
+                        <p className={styles.bnsub}>{subtitle}</p>
 
-                    <p className={styles.bnby}>
-                        By <strong>{author}</strong> in {categories.join(", ")}
-                    </p>
+                        <p className={styles.bnby}>
+                            By <strong>{author}</strong> in {categories.join(", ")}
+                        </p>
 
-                    <div className={styles.bnmetrics}>
-                        <span className={styles.bnmetric}>
-                            <span className={styles.bnmetricnogap}>
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star key={i} className={styles.bnstar} />
-                                ))}</span> <b>{rating}</b> ({reviews} review)
-                        </span>
-                        <span className={styles.bnsep}></span>
-                        <span className={styles.bnmetric}>
-                            <img src={Medal} alt="icon" /> {enrolled}
-                        </span>
-                    </div>
-
-                    <div className={styles.bnbullets}>
-                        <span className={styles.bnbullet}><Clock /> {duration}</span>
-                        <span className={styles.bnbullet}><Certificate /> {certificate}</span>
-                    </div>
-
-                    <div className={styles.bnpriceRow}>
-                        <div className={styles.bnprice}>
-                            <span className={styles.bnpricenow}>{price}</span>
-                            <span className={styles.bnpriceold}>{oldPrice}</span>
-                            <span className={styles.bntag}>{offerTag}</span>
+                        <div className={styles.bnmetrics}>
+                            <span className={styles.bnmetric}>
+                                <span className={styles.bnmetricnogap}>
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <Star key={i} className={styles.bnstar} />
+                                    ))}</span> <b>{rating}</b> ({reviews} review)
+                            </span>
+                            <span className={styles.bnsep}></span>
+                            <span className={styles.bnmetric}>
+                                <img src={Medal} alt="icon" /> {enrolled}
+                            </span>
                         </div>
 
-                        <div className={styles.bnctaRow}>
-                            <button className={cn(styles.bnbtn, styles.bnbtnprimary)} onClick={onEnroll}>
-                                {ctaText}
+                        <div className={styles.bnbullets}>
+                            <span className={styles.bnbullet}><Clock /> {duration}</span>
+                            <span className={styles.bnbullet}><Certificate /> {certificate}</span>
+                        </div>
+
+                        <div className={styles.bnpriceRow}>
+                            <div className={styles.bnprice}>
+                                <span className={styles.bnpricenow}>{price}</span>
+                                <span className={styles.bnpriceold}>{oldPrice}</span>
+                                <span className={styles.bntag}>{offerTag}</span>
+                            </div>
+
+                            <div className={styles.bnctaRow}>
+                                {/* <Link to="/enroll-now"> */}
+                                <button className={cn(styles.bnbtn, styles.bnbtnprimary)} onClick={onEnroll}>
+                                    {ctaText}
+                                </button>
+                                {/* </Link> */}
+                                <button className={styles.bnlink} onClick={handleAddToCart}>
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                            <div className={styles.bnnote}>• Lifetime access • EMI starting at $29/month</div>
+                        </div>
+                    </div>
+
+                    {/* Right */}
+                    <div className={styles.bnright}>
+                        <div className={styles.bnhero}>
+                            <img src={heroImage} alt="Course preview" />
+                            <button className={styles.bnplay} aria-label="Watch demo videos" onClick={() => setShowVideo(true)}>
+                                <Play />
                             </button>
-                            <button className={styles.bnlink} onClick={onAddToCart}>
-                                Add to Cart
-                            </button>
-                        </div>
+                            <div className={styles.bnherotext}>Watch Demo Videos</div>
 
-                        <div className={styles.bnnote}>• Lifetime access • EMI starting at $29/month</div>
-                    </div>
-                </div>
-
-                {/* Right */}
-                <div className={styles.bnright}>
-                    <div className={styles.bnhero}>
-                        <img src={heroImage} alt="Course preview" />
-                        <button className={styles.bnplay} aria-label="Watch demo videos">
-                            <Play />
-                        </button>
-                        <div className={styles.bnherotext}>Watch Demo Videos</div>
-
-                        <div className={styles.bnstats}>
-                            <div className={styles.bnstat}>
-                                <div className={cn(styles.bnstatval, styles.bnstatvalBlue)}>{statWeeks}</div>
-                                <div className={styles.bnstatlabel}>Weeks</div>
-                            </div>
-                            <div className={styles.bnstat}>
-                                <div className={cn(styles.bnstatval, styles.bnstatvalGreen)}>{statProjects}</div>
-                                <div className={styles.bnstatlabel}>Projects</div>
-                            </div>
-                            <div className={styles.bnstat}>
-                                <div className={cn(styles.bnstatval, styles.bnstatvalPurple)}>{statSupport}</div>
-                                <div className={styles.bnstatlabel}>Support</div>
+                            <div className={styles.bnstats}>
+                                <div className={styles.bnstat}>
+                                    <div className={cn(styles.bnstatval, styles.bnstatvalBlue)}>{statWeeks}</div>
+                                    <div className={styles.bnstatlabel}>Weeks</div>
+                                </div>
+                                <div className={styles.bnstat}>
+                                    <div className={cn(styles.bnstatval, styles.bnstatvalGreen)}>{statProjects}</div>
+                                    <div className={styles.bnstatlabel}>Projects</div>
+                                </div>
+                                <div className={styles.bnstat}>
+                                    <div className={cn(styles.bnstatval, styles.bnstatvalPurple)}>{statSupport}</div>
+                                    <div className={styles.bnstatlabel}>Support</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
+            {showLoginRequired && (
+                <LoginRequired
+                    title="Login Required"
+                    subtitle="To add items to cart please Login"
+                    onCancel={() => setShowLoginRequired(false)}
+                    onLogin={() => {
+                        setShowLoginRequired(false);
+                    }}
+                />
+            )}
+            {showEnroll && (
+                <EnrollPay
+                    courseName="Web Developer: HTML, CSS and JavaScript"
+                    totalAmount="₹4,999"
+                    onClose={() => setShowEnroll(false)}
+                    onPayNow={() => {
+                        setShowEnroll(false);
+                    }}
+                />
+            )}
+            {showVideo && (
+                <VideoModal
+                    videoSrc={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"}
+                    onClose={() => setShowVideo(false)}
+                />
+            )}
         </section>
     );
 }

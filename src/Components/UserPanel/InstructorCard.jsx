@@ -39,7 +39,7 @@ const InstructorCard = (props) => {
     );
   };
 
-  // ✅ Extract plain text (without HTML) for truncation
+  
   const getTruncatedText = (html, limit = 150) => {
     if (!html) return "";
     const temp = document.createElement("div");

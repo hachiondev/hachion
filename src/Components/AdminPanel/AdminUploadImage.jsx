@@ -200,7 +200,7 @@ const displayedCategories = dataSource.slice(
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
         setCourse(response.data || []);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -214,7 +214,7 @@ const displayedCategories = dataSource.slice(
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`
+          `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`
         );
         setCourseNames(response.data || []);
       } catch (error) {
@@ -229,7 +229,7 @@ const displayedCategories = dataSource.slice(
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const resp = await axios.get("https://api.hachion.co/upload_images/all"); // adjust endpoint if different
+        const resp = await axios.get("https://api.test.hachion.co/upload_images/all"); // adjust endpoint if different
         if (resp && resp.data) setImages(resp.data);
       } catch (err) {
       }
@@ -250,7 +250,7 @@ const handleDelete = async (fileName) => {
   if (!window.confirm("Are you sure you want to delete this image?")) return;
 
   try {
-    const response = await axios.delete(`https://api.hachion.co/upload_images/delete/${fileName}`);
+    const response = await axios.delete(`https://api.test.hachion.co/upload_images/delete/${fileName}`);
     
 
     // setImages(prev =>
@@ -430,7 +430,7 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
 
       
       const response = await axios.post(
-        'https://api.hachion.co/upload_images/upload',
+        'https://api.test.hachion.co/upload_images/upload',
         fd,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -440,7 +440,7 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
 
       // handleReset(); 
 
-      const resp = await axios.get("https://api.hachion.co/upload_images/all");
+      const resp = await axios.get("https://api.test.hachion.co/upload_images/all");
       
       setImages(resp.data || []);
 

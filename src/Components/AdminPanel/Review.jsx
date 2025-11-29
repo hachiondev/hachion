@@ -196,9 +196,10 @@ const fetchTrainerNames = async (categoryName, courseName) => {
     setTrainerOptions([]);
     return;
   }
+
   try {
     setLoadingTrainers(true);
-    const response = await axios.get("https://api.hachion.co/trainernames", {
+    const response = await axios.get("https://api.test.hachion.co/trainernames", {
       params: { categoryName, courseName },
     });
     setTrainerOptions(Array.isArray(response.data) ? response.data : []);
@@ -280,7 +281,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get("https://api.hachion.co/courses/coursenames-by-category", {
+      const response = await axios.get("https://api.test.hachion.co/courses/coursenames-by-category", {
         params: { categoryName: editedData.categoryName },
       });
       setCourseCategory(Array.isArray(response.data) ? response.data : []);
@@ -308,7 +309,7 @@ useEffect(() => {
 
 const fetchReview = async () => {
   try {
-    const response = await axios.get('https://api.hachion.co/userreview');
+    const response = await axios.get('https://api.test.hachion.co/userreview');
     const filteredReviews = response.data.filter(review => review.type === true);
     setReview(filteredReviews);
     setFilteredReview(filteredReviews);
@@ -382,7 +383,7 @@ useEffect(() => {
     }
 
     const response = await axios.put(
-      `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+      `https://api.test.hachion.co/userreview/update/${editedData.review_id}`,
       formData,
       {
         headers: {
@@ -413,7 +414,7 @@ useEffect(() => {
 
 const handleDelete = async (review_id) => {
   try {
-    const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`);
+    const response = await axios.delete(`https://api.test.hachion.co/userreview/delete/${review_id}`);
     console.log("Review deleted successfully:", response.data);
 
     await fetchReview(); 
@@ -474,103 +475,67 @@ const handleChange = (e) => {
     return next;
   });
 };
+const handleSubmit = async () => {
+  const isCourseReview = reviewData.type === "Course Review";
+  const typeBoolean = false;
 
+  const displayValue = isCourseReview ? "course" : "trainer";
+  const reviewTypeValue = isCourseReview ? "course" : "trainer";
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const currentDate = new Date().toISOString().split("T")[0];
-
-  
-  const missingFields = [];
-
-  if (!reviewData.categoryName) missingFields.push("Category Name");
-  if (!reviewData.course_name) missingFields.push("Course Name");
-  if (!reviewData.student_name) missingFields.push("Student Name");
-  if (reviewData.rating === "") missingFields.push("Rating");
-  if (!reviewData.source) missingFields.push("Source");
-  if (!reviewData.location) missingFields.push("Location");
-  if (!reviewData.reviewType) missingFields.push("Review Type");
-  if (!reviewData.comment) missingFields.push("Comment");
-if (!reviewData.display) missingFields.push("Display Reviews:");
-  if (
-    reviewData.reviewType === "Trainer" ||
-    reviewData.reviewType === "Both"
-  ) {
-    if (!reviewData.trainer_name) {
-      missingFields.push("Trainer Name");
-    }
-  }
-
-  if (missingFields.length > 0) {
-    setErrorMessage(
-      `Please fill all mandatory fields: ${missingFields.join(", ")}`
-    );
-    setSuccessMessage("");
-    return; 
-  }
-
-  const fileInput = document.querySelector('input[type="file"]');
-  if (fileInput && fileInput.files.length > 0) {
-    reviewData.image = fileInput.files[0];
-  }
-
-  const reviewObject = {
+  const reviewPayload = {
     name: reviewData.student_name,
-    social_id: reviewData.source,
-    display: reviewData.display,
-    course_name: reviewData.course_name,
-    review: reviewData.comment,
-    videoLink: reviewData.videoLink,
     email: reviewData.email || "",
-    type: true,
+    type: typeBoolean,
+    reviewType: reviewTypeValue,
+    course_name: reviewData.course_name,
     trainer_name: reviewData.trainer_name || "",
-    rating: reviewData.rating || "",
+    social_id: reviewData.social_id,
+    rating: reviewData.rating ? Number(reviewData.rating) : 5,
+    review: reviewData.comment,
     location: reviewData.location || "",
-    reviewType: reviewData.reviewType,
-    categoryName: reviewData.categoryName,
-    date: currentDate
+    display: displayValue, 
+    date: new Date().toISOString().split("T")[0],
   };
 
   const formData = new FormData();
-  formData.append("review", JSON.stringify(reviewObject)); 
+  formData.append("review", JSON.stringify(reviewPayload));
 
   if (reviewData.image) {
-    formData.append("user_image", reviewData.image); 
+    formData.append("user_image", reviewData.image, reviewData.image.name);
   }
 
   try {
-    const response = await axios.post(
-      "https://api.hachion.co/userreview/add",
+    await axios.post(
+      "https://api.test.hachion.co/userreview/add",
       formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
 
-    if (response.status === 201) { 
-      setSuccessMessage("✅ Review added successfully.");
-      setErrorMessage("");
+    setSuccessMessage("Review submitted successfully!");
+    setErrorMessage("");
+    setReviewData({
+      review_id: "",
+      categoryName: "",
+      course_name: "",
+      date: currentDate,
+      type: false,
+      student_name: "",
+      rating: "",
+      location: "",
+      videoLink: "",
+      source: "",
+      trainer_name: "",
+      reviewType: "",
+      comment: "",
+      image: null,
+      display: "",
+      displayPages: [],
+    });
 
-      setReviewData({ 
-        student_name: "", 
-        source: "", 
-        display:"", 
-        categoryName: "", 
-        course_name: "", 
-        comment:"",
-        reviewType:"",
-        image: null,
-        rating: "", 
-      });
-
-      setShowAddCourse(false);  
-      await fetchReview();      
-    }
+    setShowAddCourse(false);
   } catch (error) {
-    console.error("Error adding review:", error);
-    setErrorMessage("❌ Error adding review.");
+    console.error("Error adding review:", error.response?.data || error.message);
+    setErrorMessage("Failed to submit review. Please try again.");
     setSuccessMessage("");
   }
 };
@@ -580,7 +545,7 @@ if (!reviewData.display) missingFields.push("Display Reviews:");
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
           setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -599,7 +564,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get("https://api.hachion.co/courses/coursenames-by-category", {
+      const response = await axios.get("https://api.test.hachion.co/courses/coursenames-by-category", {
         params: { categoryName: reviewData.categoryName },
       });
       setFilterCourse(Array.isArray(response.data) ? response.data : []);
@@ -940,7 +905,7 @@ onChange={handleChange}
         <StyledTableCell align="center">
   {curr.user_image ? (
     <img
-      src={`https://api.hachion.co/userreview/${curr.user_image}`}
+      src={`https://api.test.hachion.co/userreview/${curr.user_image}`}
       alt="User"
       width="50"
       height="50"

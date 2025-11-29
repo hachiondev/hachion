@@ -90,7 +90,7 @@ export default function AdminSummerEvents() {
   
   const fetchCourseNamesByCategory = async (categoryName) => {
     if (!categoryName) return [];
-    const url = `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
+    const url = `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const { data } = await axios.get(url);
       
@@ -178,7 +178,7 @@ export default function AdminSummerEvents() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/summerevents');
+        const response = await axios.get('https://api.test.hachion.co/summerevents');
         setSummerCourse(response.data); 
         setFilteredCourse(response.data || []);
       } catch (error) {
@@ -213,7 +213,7 @@ export default function AdminSummerEvents() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.hachion.co/summerevents/update/${editedData.summerevents_id}`,editedData
+        `https://api.test.hachion.co/summerevents/update/${editedData.summerevents_id}`,editedData
       );
       setSummerCourse((prev) =>
         prev.map(curr =>
@@ -231,7 +231,7 @@ export default function AdminSummerEvents() {
           
   const handleDelete = async (summerevents_id) => {
     try { 
-      const response = await axios.delete(`https://api.hachion.co/summerevents/delete/${summerevents_id}`); 
+      const response = await axios.delete(`https://api.test.hachion.co/summerevents/delete/${summerevents_id}`); 
       console.log("Summer Courses deleted successfully:", response.data); 
     } catch (error) { 
       console.error("Error deleting Courses:", error); 
@@ -297,7 +297,7 @@ export default function AdminSummerEvents() {
     };
   
     try {
-      const response = await axios.post("https://api.hachion.co/summerevents/add", dataToSubmit);
+      const response = await axios.post("https://api.test.hachion.co/summerevents/add", dataToSubmit);
       if (response.status === 201) {
         alert(response.data);
         setCourseData([...courseData, dataToSubmit]); 
@@ -313,7 +313,7 @@ export default function AdminSummerEvents() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
         setCategory(response.data); 
       } catch (error) {
         console.error("Error fetching categories:", error.message);

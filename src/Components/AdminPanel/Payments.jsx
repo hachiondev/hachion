@@ -3,7 +3,7 @@ import './Admin.css';
 import OnlinePayment from './OnlinePayment';
 import OfflinePayment from './OfflinePayment';
 import RequestInstallment from './RequestInstallment';
-export default function Payments() {
+export default function Certificate() {
   const [activeTab, setActiveTab] = useState('requestInstallment');
   const handleTabChange = (tab) => {
     setActiveTab(tab);

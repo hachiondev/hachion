@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../utils";
 
 export function Badge({ className = "", variant = "default", ...props }) {
   const variants = {

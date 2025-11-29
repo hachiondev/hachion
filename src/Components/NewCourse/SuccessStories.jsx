@@ -4,7 +4,7 @@ import { cn } from "../../utils";
 
 const PlayIcon = () => (
   <svg viewBox="0 0 80 80" width="56" height="56" aria-hidden="true">
-    <circle cx="40" cy="40" r="32" fill="#1fb6ff" stroke="#fff" strokeWidth="6" />
+    <circle cx="40" cy="40" r="32" fill="#1fb6ff" stroke="#fff" strokeWidth="3" />
     <polygon points="34,28 54,40 34,52" fill="#fff" />
   </svg>
 );
@@ -100,31 +100,33 @@ export default function SuccessStories() {
 
   return (
     <section className={styles.sswrap}>
-      <div className={styles.sstoppill}>
-         🔴   Live Success Stories
-      </div>
+      <div className="container">
+        <div className={styles.sstoppill}>
+          🔴   Live Success Stories
+        </div>
 
-      <div className={styles.sshead}>
-        <h2>Hear From Our Successful Graduates</h2>
-        <p>Real stories from students who transformed their careers</p>
-      </div>
+        <div className={styles.sshead}>
+          <h2>Hear From Our Successful Graduates</h2>
+          <p>Real stories from students who transformed their careers</p>
+        </div>
 
-      <div className={styles.ssgrid}>
-        {stories.map((s, i) => (
-          <StoryCard key={i} {...s} />
-        ))}
-      </div>
+        <div className={styles.ssgrid}>
+          {stories.map((s, i) => (
+            <StoryCard key={i} {...s} />
+          ))}
+        </div>
 
-      <div className={styles.sscta}>
-        <div className={styles.ssctatitle}>Want to Share Your Success Story?</div>
-        <p>Join our alumni network and inspire the next generation of developers</p>
-        <button
-          className={styles.ssctabtn}
-          onClick={() => console.log("Open submit story form")}
-        >
-          Submit Your Story
-        </button>
+        <div className={styles.sscta}>
+          <div className={styles.ssctatitle}>Want to Share Your Success Story?</div>
+          <p>Join our alumni network and inspire the next generation of developers</p>
+          <button
+            className={styles.ssctabtn}
+            onClick={() => console.log("Open submit story form")}
+          >
+            Submit Your Story
+          </button>
+        </div>
       </div>
-    </section>
+    </section >
   );
 }

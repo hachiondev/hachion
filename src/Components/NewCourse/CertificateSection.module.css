@@ -1,0 +1,281 @@
+:root {
+  --ink: #0f172a;
+  --muted: #6b7280;
+  --border: #e7e9f0;
+  --panel: #ffffff;
+  --chip: #fef9c3;
+  --accBG: #eef4ff;
+  --shareBG: #eaf6ff;
+  --dlBG: #e7fff4;
+  --shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}
+
+.cfwrap {
+   padding-top:30px;
+  padding-bottom:30px;
+  background: #fff;
+}
+
+.cfhead {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.cfhead h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.cfhead p {
+  color: #000000;
+  margin-top: 6px;
+  font-weight: 300;
+}
+
+/* Grid */
+.cfgrid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 22px;
+}
+
+/* LEFT */
+.cftitlerow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.cfround {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--chip);
+}
+.cfh3 {
+  font-weight: 700;
+  color: #0e1320;
+  font-size: 22px;
+}
+.cfsub {
+  color: #000000;
+  font-weight: 400;
+}
+
+.cfchecks {
+  margin: 12px 0 32px;
+  display: grid;
+  gap: 10px;
+}
+.cfchecks li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #11202b;
+  font-weight: 600;
+}
+
+.cfaccredit {
+  background: linear-gradient(
+    106.65deg,
+    rgba(194, 214, 252, 0.5) 13.13%,
+    rgba(254, 233, 233, 0.5) 104.74%
+  );
+
+  border: 1px solid #e1e8ff;
+  border-radius: 4px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+.cfacctitle {
+  font-weight: 700;
+  color: #0f1822;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.cfaccgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.cfaccitem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+.cfacchead {
+  font-weight: 700;
+  color: #0e1420;
+  font-size: 20px;
+}
+.cfaccsub {
+  color: #000000;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.cffeatures {
+  margin-top: 6px;
+}
+.cfftitle {
+  font-weight: 700;
+  color: #0e1420;
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+.cffgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.cffgrid ul {
+  display: grid;
+  gap: 8px;
+  color: #000000;
+  list-style: disc;
+}
+
+/* RIGHT */
+.cfright {
+  display: flex;
+  align-items: center;
+}
+.cfcert {
+  position: relative;
+  width: 100%;
+}
+.cfcert img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.cfcert img:hover {
+  transform: rotate(358deg);
+}
+
+/* Bubbles */
+.cfbubble {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.cfbico {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+.cfbtitle {
+  font-weight: 700;
+  color: #0f1822;
+}
+.cfbsub {
+  color: #7a8696;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.cfshare {
+  right: 16px;
+  top: -7px;
+}
+.cfshare .cfbico {
+  background: var(--shareBG);
+}
+
+.cfleft {
+  padding: 0;
+  margin: 0;
+}
+
+.cfdl {
+  left: 16px;
+  bottom: -7px;
+}
+.cfdl .cfbico {
+  background: var(--dlBG);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cfgrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .cfwrap .cfhead h2 {
+    font-size: 26px;
+  }
+  .cfwrap .cfhead p {
+    font-size: 14px;
+  }
+  .cfh3 {
+    width: auto;
+    font-size: 18px;
+  }
+  .cfsub {
+    font-size: 14px;
+  }
+  .cfgrid {
+    display: block;
+  }
+  .cfchecks{
+    font-size: 12px;
+  }
+  .cfacctitle{
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .cfaccitem img{
+    width: 24px;
+    height: 24px;
+  }
+  .cfacchead{
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .cfaccsub{
+    font-size: 10px;
+  }
+  .cfftitle{
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .cffgrid{
+    font-size: 12px;
+  }
+  .cfbtitle{
+      font-weight: 600;
+    color: #000000;
+    font-size: 10px;
+  }
+  .cfbsub{
+    font-size:8px;
+  }
+  .cfbico{
+    width: 24px;
+    height: 24px;
+  }
+  .cfbubble{
+   padding: 5px 10px;
+  }
+}

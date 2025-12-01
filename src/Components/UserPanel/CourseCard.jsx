@@ -27,20 +27,20 @@ useEffect(() => {
   const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
   const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
 
-  if (!email || !course_id) return;
+  // if (!email || !course_id) return;
 
-  (async () => {
-    try {
-      const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
-        params: { email, courseId: course_id }
-      });
-      if (!stop && data && typeof data.bookmarked === 'boolean') {
-        setBookmarked(data.bookmarked);
-      }
-    } catch (e) {
+  // (async () => {
+  //   try {
+  //     const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+  //       params: { email, courseId: course_id }
+  //     });
+  //     if (!stop && data && typeof data.bookmarked === 'boolean') {
+  //       setBookmarked(data.bookmarked);
+  //     }
+  //   } catch (e) {
       
-    }
-  })();
+  //   }
+  // })();
 
   return () => { stop = true; };
 }, [userEmail, course_id]);
@@ -99,17 +99,17 @@ useEffect(() => {
       return;
     }
 
-    try {
-      const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
-        email,
-        courseId: course_id
-      });
-      if (data && typeof data.bookmarked === 'boolean') {
-        setBookmarked(data.bookmarked); 
-      }
-    } catch (err) {
-      console.error('Wishlist toggle failed', err);
-    }
+    // try {
+    //   const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
+    //     email,
+    //     courseId: course_id
+    //   });
+    //   if (data && typeof data.bookmarked === 'boolean') {
+    //     setBookmarked(data.bookmarked); 
+    //   }
+    // } catch (err) {
+    //   console.error('Wishlist toggle failed', err);
+    // }
   };
 
   return (

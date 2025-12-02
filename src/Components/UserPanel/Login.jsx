@@ -5,10 +5,6 @@ import LoginBanner from '../../Assets/loginbackground.webp';
 import google from '../../Assets/google-new.webp';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import Topbar from '../../Components/Layout/Topbar';
-import NavbarTop from '../../Components/Layout/NavbarTop';
-import Footer from '../../Components/Layout/Footer';
-import StickyBar from '../../Components/Layout/StickyBar';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { TbRefresh } from "react-icons/tb";
 
@@ -263,8 +259,6 @@ useEffect(() => {
   return (
     <>
     <div className='home-background'>
-    <Topbar />
-    <NavbarTop />
     <div className='container'>
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">

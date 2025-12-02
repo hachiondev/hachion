@@ -33,14 +33,14 @@ const DiscountCards = () => {
 
   const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
-  const handleResize = () => {
-  if (window.innerWidth < 576) setCardsPerRow(1);
-  else if (window.innerWidth < 992) setCardsPerRow(2);
-  else setCardsPerRow(2);
+//   const handleResize = () => {
+//   if (window.innerWidth < 576) setCardsPerRow(1);
+//   else if (window.innerWidth < 992) setCardsPerRow(2);
+//   else setCardsPerRow(2);
 
   
-  setShowIndicators(window.innerWidth >= 768); 
-};
+//   setShowIndicators(window.innerWidth >= 768); 
+// };
 
   useEffect(() => {
   (async () => {

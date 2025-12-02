@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
-import Topbar from '../../Components/Layout/Topbar';
-import NavbarTop from '../../Components/Layout/NavbarTop';
-import Footer from '../../Components/Layout/Footer';
-import StickyBar from '../../Components/Layout/StickyBar';
 import LoginBanner from '../../Assets/loginbackground.webp';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
@@ -125,8 +120,6 @@ const ConfirmOtp = () => {
   return (
     <>
       <div className='home-background'>
-        <Topbar />
-        <NavbarTop />
         <div className='container'>
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">

@@ -63,6 +63,7 @@ import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
 import GoogleMobileNumber from './Components/UserPanel/GoogleMobileNumber';
 import Layout from './Components/Layout/Layout';
 import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
+import AuthLayout from './Components/Layout/AuthLayout';
 
 const RedirectToLowercase = () => {
   const location = useLocation();
@@ -99,78 +100,99 @@ function AppRoutes() {
 
       <Routes>
         {/* AUTH ROUTES */}
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/registerverification' element={<RegisterNext />} />
-        <Route path='/registerhere' element={<RegisterHere />} />
-        <Route path='/confirm-otp' element={<ConfirmOtp />} />
-        <Route path='/resetpassword' element={<ResetPassword />} />
-        <Route path='/forgotpassword' element={<ForgotPassword />} />
-        <Route path='/phone-number' element={<GoogleMobileNumber />} />
+
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/registerverification" element={<RegisterNext />} />
+          <Route path="/registerhere" element={<RegisterHere />} />
+          <Route path="/confirm-otp" element={<ConfirmOtp />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/phone-number" element={<GoogleMobileNumber />} />
+        </Route>
 
         {/* USER ROUTES WITH LAYOUT */}
         <Route element={<Layout />}>
-          <Route path='/' element={<Home />} />
-          <Route path='/viewfaqs' element={<ViewFaq />} />
-          <Route path='/discountdeals' element={<DiscountDeals />} />
-          <Route path='/instructor-profiles' element={<Instructors />} />
-          <Route path='/:trainer_name-instructor-details' element={<InstructorDetails />} />
-          <Route path='/become-instructor' element={<BecomeInstructor />} />
-          <Route path='/view-all-reviews' element={<ViewReviews />} />
-          <Route path='/coursedetails' element={<Course />} />
-          <Route path='/newcoursedetails' element={<NewCourseDetails />} />
-          <Route path='/enroll-now' element={<NewEnrollNow />} />
-          <Route path='/coursedetails/:courseName' element={<CourseDetails />} />
-          <Route path='/corporate' element={<CorporateTraining />} />
-          <Route path='/hire-from-us' element={<HirefromUs />} />
-          <Route path='/career' element={<ApplyHiring />} />
-          <Route path='/career/apply/:jobTitle' element={<JobDetails />} />
-          <Route path='/workshop' element={<Workshop />} />
-          <Route path='/workshop/:slug' element={<WorkshopDetails />} />
-          <Route path='/blogs' element={<Blogs />} />
-          <Route path='/blogs/:category_name/:title' element={<BlogDetails />} />
-          <Route path='/aboutus' element={<Aboutus />} />
-          <Route path='/contactus' element={<ContactUs />} />
-          <Route path='/enroll/:courseName' element={<Enrollment />} />
-          <Route path='/installments/:courseName' element={<OnlineInstallments />} />
-          <Route path='/payment/:courseName' element={<EnrollPayment />} />
-          <Route path='/review' element={<UserWriteReview />} />
-          <Route path='/terms' element={<Terms />} />
-          <Route path='/privacy' element={<Privacy />} />
-          <Route path='/unsubscribe' element={<Unsubscribe />} />
-          <Route path='/sitemap' element={<Sitemap />} />
-          <Route path='/summer-tech-bootcamp-for-teens' element={<KidsSummer />} />
-          <Route path='/lead-form' element={<LeadForm />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/viewfaqs" element={<ViewFaq />} />
+          <Route path="/discountdeals" element={<DiscountDeals />} />
+          <Route path="/instructor-profiles" element={<Instructors />} />
+          <Route
+            path="/:trainer_name-instructor-details"
+            element={<InstructorDetails />}
+          />
+          <Route path="/become-instructor" element={<BecomeInstructor />} />
+          <Route path="/view-all-reviews" element={<ViewReviews />} />
+          <Route path="/coursedetails" element={<Course />} />
+          <Route path="/newcoursedetails" element={<NewCourseDetails />} />
+          <Route path="/enroll-now" element={<NewEnrollNow />} />
+          <Route
+            path="/coursedetails/:courseName"
+            element={<CourseDetails />}
+          />
+          <Route path="/corporate" element={<CorporateTraining />} />
+          <Route path="/hire-from-us" element={<HirefromUs />} />
+          <Route path="/career" element={<ApplyHiring />} />
+          <Route path="/career/apply/:jobTitle" element={<JobDetails />} />
+          <Route path="/workshop" element={<Workshop />} />
+          <Route path="/workshop/:slug" element={<WorkshopDetails />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route
+            path="/blogs/:category_name/:title"
+            element={<BlogDetails />}
+          />
+          <Route path="/aboutus" element={<Aboutus />} />
+          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/enroll/:courseName" element={<Enrollment />} />
+          <Route
+            path="/installments/:courseName"
+            element={<OnlineInstallments />}
+          />
+          <Route path="/payment/:courseName" element={<EnrollPayment />} />
+          <Route path="/review" element={<UserWriteReview />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/sitemap" element={<Sitemap />} />
+          <Route
+            path="/summer-tech-bootcamp-for-teens"
+            element={<KidsSummer />}
+          />
+          <Route path="/lead-form" element={<LeadForm />} />
 
           {/* USER PROTECTED */}
           <Route element={<UserProtectedRoute />}>
-            <Route path='/userdashboard/:section?' element={<UserDashboard />} />
             <Route
-              path='/userenrolledassignment/:coursename'
+              path="/userdashboard/:section?"
+              element={<UserDashboard />}
+            />
+            <Route
+              path="/userenrolledassignment/:coursename"
               element={<UserEnrolledAssignment />}
             />
           </Route>
         </Route>
 
         {/* ADMIN ROUTES — NO LAYOUT */}
-        <Route path='/adminlogin' element={<AdminLogin />} />
-        <Route path='/adminregister' element={<AdminRegister />} />
-        <Route path='/adminforgot' element={<AdminForgot />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/adminregister" element={<AdminRegister />} />
+        <Route path="/adminforgot" element={<AdminForgot />} />
 
         {/* ADMIN PROTECTED */}
         <Route element={<ProtectedRoute />}>
-          <Route path='/admindashboardview' element={<AdminDashboardView />} />
+          <Route path="/admindashboardview" element={<AdminDashboardView />} />
         </Route>
 
         {/* ADMIN TABLES */}
-        <Route path='/admincourse' element={<CategoryTable />} />
-        <Route path='/addtrending' element={<TrendingCourse />} />
-        <Route path='/courseschedule' element={<CourseSchedule />} />
-        <Route path='/corporatecourses' element={<CorporateCourses />} />
-        <Route path='/reports' element={<Reports />} />
+        <Route path="/admincourse" element={<CategoryTable />} />
+        <Route path="/addtrending" element={<TrendingCourse />} />
+        <Route path="/courseschedule" element={<CourseSchedule />} />
+        <Route path="/corporatecourses" element={<CorporateCourses />} />
+        <Route path="/reports" element={<Reports />} />
 
         {/* 404 */}
-        <Route path='*' element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

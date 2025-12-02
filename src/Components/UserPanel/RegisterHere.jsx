@@ -6,10 +6,7 @@ import { TbRefresh } from "react-icons/tb";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import google from "../../Assets/google-new.webp";
 import LoginBanner from "../../Assets/loginbackground.webp";
-import Topbar from "../../Components/Layout/Topbar";
-import NavbarTop from "../../Components/Layout/NavbarTop";
-import Footer from "../../Components/Layout/Footer";
-import StickyBar from "../../Components/Layout/StickyBar";
+
 
 const getStep1 = () => {
   const raw =
@@ -130,8 +127,6 @@ const handleSubmit = async () => {
   return (
     <>
       <div className='home-background'>
-      <Topbar />
-      <NavbarTop />
 
       {/* Breadcrumb */}
       <div className="container">

@@ -6,9 +6,6 @@ import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
 import { countries, getDefaultCountry } from "../../countryUtils";
 import LoginBanner from "../../Assets/loginbackground.webp";
-import google from "../../Assets/google-new.webp";
-import Topbar from "../../Components/Layout/Topbar";
-import NavbarTop from "../../Components/Layout/NavbarTop";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
 const GoogleMobileNumber = () => {
@@ -109,8 +106,6 @@ const GoogleMobileNumber = () => {
   return (
     <>
       <div className='home-background'>
-        <Topbar />
-        <NavbarTop />
 
         <div className="container">
           <nav aria-label="breadcrumb">

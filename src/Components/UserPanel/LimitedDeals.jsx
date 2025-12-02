@@ -22,7 +22,7 @@ const LimitedDeals = () => {
         </div>
 
       {/* Right side image */}
-      <DiscountCards  />
+      {/* <DiscountCards  /> */}
     </div>
   );
 };

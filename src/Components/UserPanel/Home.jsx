@@ -1,25 +1,25 @@
-import React, { useEffect , useState } from 'react';
-import Banner from './Banner';
+import React, { useEffect, useState } from 'react';
 import Association from './Association';
-import TrainingEvents from './TrainingEvents';
-import Trending from './Trending';
-import TeensEvents from './TeensEvents';
+import TrainingEvents from './TrainingSection/TrainingEvents';
+import TeensEvents from './TeenSection/TeensEvents';
 import Career from './Career';
-import Learners from './Learners';
-import Corporate from './Corporate';
+import Learners from './LearnerSection/Learners';
+import Corporate from './CorporateSection/Corporate';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
-import RecentEntries from './RecentEntries';
+import RecentEntries from './TrendingBlogSection/RecentEntries';
 import MeetInstructorBanner from './MeetInstructorBanner';
 import ShareKnowledgeBanner from './ShareKnowledgeBanner';
 import WhyChoose from '././WhyChoose';
 import HomeFaq from './HomeFaq';
-import LimitedDeals from './LimitedDeals';
+import LimitedDeals from './LimitedSection/LimitedDeals';
+import Banner from './HomeBannerSection/Banner';
+import Trending from './TrendingSection/Trending';
 
 export const Home = () => {
-   const location = useLocation();
+  const location = useLocation();
   useEffect(() => {
     if (location.hash === '#upcoming-events') {
       const element = document.getElementById('upcoming-events');
@@ -28,27 +28,27 @@ export const Home = () => {
       }
     }
   }, [location]);
-  
-        // useEffect(() => {
-        //   window.scrollTo(0, 0);
-        // }, []);
-      
-      const scrollToTop = () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-    
+
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
       <Helmet>
-  <title>Online IT Training: Get Certified, Find Your Dream Job</title>
-  <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
-  <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
-  <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
-  <meta property="og:description" content="Learn online with the best courses at Hachion." />
-  <meta property="og:image" content="/Hachion-logo.png" />
-  <link rel="canonical" href="https://www.hachion.co/" />
-  <script type="application/ld+json">
-    {`
+        <title>Online IT Training: Get Certified, Find Your Dream Job</title>
+        <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
+        <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
+        <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
+        <meta property="og:description" content="Learn online with the best courses at Hachion." />
+        <meta property="og:image" content="/Hachion-logo.png" />
+        <link rel="canonical" href="https://www.hachion.co/" />
+        <script type="application/ld+json">
+          {`
       {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -65,34 +65,34 @@ export const Home = () => {
       ]
       }
     `}
-  </script>
-</Helmet>
-   <div className='home-background'>
-  <PopupBanner/>
-<main id="main-content">
-<Banner/>
-<Association/>
-<Trending/>
-<TeensEvents/>
-<div id="upcoming-events">
-<TrainingEvents/>
-</div>
-<Corporate/>
-<WhyChoose/>
-<LimitedDeals/>
-<MeetInstructorBanner/>
-<ShareKnowledgeBanner/>
-{/* <Career/> */}
- <RecentEntries />
- <Learners page="home"/>
-<HomeFaq/>
-</main>
-{/* {showScrollButton && (
+        </script>
+      </Helmet>
+      <div className='home-background'>
+        <PopupBanner />
+        <main id="main-content">
+          <Banner />
+          <Association />
+          <Trending />
+          <TeensEvents />
+          <div id="upcoming-events">
+            <TrainingEvents />
+          </div>
+          <Corporate />
+          <WhyChoose />
+          <LimitedDeals />
+          <MeetInstructorBanner />
+          <ShareKnowledgeBanner />
+          {/* <Career/> */}
+          <RecentEntries />
+          <Learners page="home" />
+          <HomeFaq />
+        </main>
+        {/* {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />
               </button>
             )} */}
-</div>
+      </div>
 
     </>
   )

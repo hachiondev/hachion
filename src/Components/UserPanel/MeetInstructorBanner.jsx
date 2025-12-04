@@ -1,4 +1,3 @@
-import React, { useEffect, useState, useRef } from "react";
 import Instructorbanner from "../../Assets/topinstructor.webp";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";

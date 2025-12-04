@@ -129,7 +129,7 @@ const[registerStudent,setRegisterStudent]=useState([]);
     useEffect(() => {
       const fetchStudent = async () => {
           try {
-              const response = await axios.get('https://api.test.hachion.co/registerstudent');
+              const response = await axios.get('https://api.hachion.co/registerstudent');
               setRegisterStudent(response.data); // Use the curriculum state
           } catch (error) {
               console.error("Error fetching student list:", error.message);

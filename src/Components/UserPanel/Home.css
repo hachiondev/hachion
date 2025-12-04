@@ -1050,7 +1050,7 @@ margin: 30px auto;
 margin: 5px 0;
 justify-content: space-between;
 display: flex;
-align-items: start;
+align-items: center;
 }
 
 .card-header-div{
@@ -1263,7 +1263,7 @@ text-align: right;
 }
 
 .filter-section select {
-  padding: 8px;
+  padding: 8px 21px 8px 15px;
   font-size: 14px;
   border-radius: 8px;
   border: none;

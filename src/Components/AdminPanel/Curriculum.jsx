@@ -172,7 +172,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.hachion.co/course-categories/all");
           setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -183,7 +183,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.test.hachion.co/courses/all");
+          const response = await axios.get("https://api.hachion.co/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -214,7 +214,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/curriculum");
+        const response = await axios.get("https://api.hachion.co/curriculum");
         setAllData(response.data);
         setFilteredCurriculum(response.data); 
       } catch (error) {
@@ -290,7 +290,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
     }
 
     const response = await axios.put(
-      `https://api.test.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
+      `https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`,
       formData,
       {
         headers: {
@@ -337,7 +337,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
     const handleDelete = async (curriculum_id) => {
   try {
     const response = await axios.delete(
-      `https://api.test.hachion.co/curriculum/delete/${curriculum_id}`
+      `https://api.hachion.co/curriculum/delete/${curriculum_id}`
     );
 
     console.log("Curriculum deleted successfully:", response.data);
@@ -478,7 +478,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
     }
 
     try {
-      const response = await axios.post("https://api.test.hachion.co/curriculum/add", formData, {
+      const response = await axios.post("https://api.hachion.co/curriculum/add", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

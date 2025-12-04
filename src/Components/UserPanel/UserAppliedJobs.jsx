@@ -25,7 +25,7 @@ const [jobData, setJobData] = useState([]);
 
   useEffect(() => {
   if (userEmail) {
-    axios.get(`https://api.test.hachion.co/apply-job/by-email?email=${userEmail}`)
+    axios.get(`https://api.hachion.co/apply-job/by-email?email=${userEmail}`)
       .then((response) => {
         setJobData(response.data);
       })
@@ -67,7 +67,7 @@ const [jobData, setJobData] = useState([]);
         <TableCell align="center">
           {row.companyLogo ? (
             <img
-              src={`https://api.test.hachion.co/hire-from-us/${row.companyLogo}`}
+              src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`}
               alt="logo"
               width="50"
             />

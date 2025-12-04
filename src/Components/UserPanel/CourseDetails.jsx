@@ -6,12 +6,12 @@ import CourseDetailsTop from './CourseDetailsTop';
 import KeyHighlights from './KeyHighlights';
 import UpcomingHeader from './UpcomingHeader';
 import UpcomingBatch from './UpcomingBatch';
-import Corporate from './Corporate';
+import Corporate from './CorporateSection/Corporate';
 import CoursesAll from './CoursesAll';
 import ModeOfTraining from './ModeOfTraining';
 import CareerSupport from './CareerSupport';
 import CourseCertificate from './CourseCertificate';
-import Learners from './Learners';
+import Learners from "./LearnerSection/Learners";
 import TrainerProfile from './TrainerProfile';
 import CurriculumMain from './CurriculumMain';
 import CourseDetailsFaq from './CourseDetailsFaq';
@@ -112,7 +112,7 @@ const CourseDetails = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );

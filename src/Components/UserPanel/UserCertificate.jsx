@@ -28,7 +28,7 @@ export default function UserCertificate() {
     (async () => {
       try {
         const res = await fetch(
-          `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(
+          `https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(
             userEmail
           )}`
         );
@@ -57,7 +57,7 @@ export default function UserCertificate() {
   const getCertificateURL = (studentId, courseName) => {
     if (!studentId) return "#";
     const fileName = buildCertificateFileName(studentId, courseName);
-    return `https://api.test.hachion.co/uploads/prod/certificates/${fileName}`;
+    return `https://api.hachion.co/uploads/prod/certificates/${fileName}`;
   };
 
   const checkCertificateExists = async (url) => {
@@ -79,7 +79,7 @@ export default function UserCertificate() {
         const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
         const userEmail = userData.email || "";
         const res = await fetch(
-          `https://api.test.hachion.co/certificate/getByEmail?email=${encodeURIComponent(
+          `https://api.hachion.co/certificate/getByEmail?email=${encodeURIComponent(
             userEmail
           )}`
         );
@@ -91,7 +91,7 @@ export default function UserCertificate() {
             (data.items || []).map(async (c) => {
               const url =
                 c.certificatePath && c.certificatePath.includes("/uploads/")
-                  ? `https://api.test.hachion.co${c.certificatePath.replace(
+                  ? `https://api.hachion.co${c.certificatePath.replace(
                       "/home/ec2-user",
                       ""
                     )}`

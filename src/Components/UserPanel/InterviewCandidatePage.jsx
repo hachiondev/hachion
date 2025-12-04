@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://api.test.hachion.co";
+  process.env.REACT_APP_API_BASE_URL || "https://api.hachion.co";
 
 const GET_ASSIGNMENT = (id, token) =>
   `${API_BASE_URL}/api/interviews/assignments/${id}?token=${encodeURIComponent(

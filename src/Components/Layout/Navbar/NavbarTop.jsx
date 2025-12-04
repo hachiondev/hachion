@@ -92,11 +92,13 @@ const NavbarTop = () => {
             </div>
 
             {/* Search */}
+            <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: 500 }}>
             <SearchBox
               query={query}
               onChange={onSearchChange}
             />
             {results.length > 0 && <SearchResults items={results} onSelect={handleCourseClick} />}
+            </div>
           </div>
 
           {/* Mobile Right Section */}

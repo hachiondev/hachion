@@ -44,7 +44,7 @@ const handleSendClick = async () => {
 
   try {
     const res = await fetch(
-      `https://api.test.hachion.co/api/v1/user/forgotpassword?email=${encodeURIComponent(email)}`,
+      `https://api.hachion.co/api/v1/user/forgotpassword?email=${encodeURIComponent(email)}`,
       { method: "PUT" }
     );
 

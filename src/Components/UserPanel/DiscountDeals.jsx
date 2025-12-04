@@ -4,7 +4,7 @@ import DiscountBanner2 from "../../Assets/d2.webp";
 import DiscountBanner3 from "../../Assets/d3.webp";
 import "./Style.css";
 import "./Home.css";
-import Learners from "./Learners";
+import Learners from "./LearnerSection/Learners";
 import ExploreDeals from "./ExploreDeals";
 
 const DiscountDeals = () => {

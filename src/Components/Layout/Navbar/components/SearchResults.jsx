@@ -1,7 +1,7 @@
 // src/Components/Navbar/components/SearchResults.jsx
 import React, { useCallback } from "react";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 const resolveImageUrl = (img) => {
   if (!img) return "";
   if (/^https?:\/\//i.test(img)) return img;

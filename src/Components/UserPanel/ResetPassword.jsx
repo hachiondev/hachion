@@ -49,7 +49,7 @@ const ResetPassword = () => {
     setMessageType('');
 
     try {
-      const response = await fetch('https://api.test.hachion.co/api/v1/user/reset-password', {
+      const response = await fetch('https://api.hachion.co/api/v1/user/reset-password', {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

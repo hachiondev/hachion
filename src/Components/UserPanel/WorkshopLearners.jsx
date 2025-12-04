@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Corporate.css';
 import './Blogs.css';
 import { Carousel, Modal } from 'react-bootstrap';
-import LearnerCard from './LearnerCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import LearnerCard from './LearnerSection/components/LearnerCard';
 
 const WorkshopLearners = ({ page }) => {
   const [reviews, setReviews] = useState([]);
@@ -15,7 +15,7 @@ const WorkshopLearners = ({ page }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.test.hachion.co/userreview');
+        const response = await fetch('https://api.hachion.co/userreview');
         const data = await response.json();
 
         if (Array.isArray(data)) {
@@ -94,7 +94,7 @@ const WorkshopLearners = ({ page }) => {
                     rating={review.rating}
                     profileImage={
                       review.user_image
-                        ? `https://api.test.hachion.co/${review.user_image}`
+                        ? `https://api.hachion.co/${review.user_image}`
                         : ''
                     }
                     onReadMore={() =>

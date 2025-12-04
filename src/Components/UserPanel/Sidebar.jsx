@@ -57,7 +57,7 @@ useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://api.test.hachion.co/course-categories/all"
+          "https://api.hachion.co/course-categories/all"
         );
         if (Array.isArray(response.data)) {
           setCategories(response.data);
@@ -126,7 +126,7 @@ useEffect(() => {
   useEffect(() => {
   const fetchRules = async () => {
     try {
-      const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
+      const { data } = await axios.get("https://api.hachion.co/discounts-courses");
       setDiscountRules(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to load discount rules", e);
@@ -138,7 +138,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchCourses = async () => {
     try {
-      const { data } = await axios.get("https://api.test.hachion.co/courses/all");
+      const { data } = await axios.get("https://api.hachion.co/courses/all");
       setCourses(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to load courses", e);

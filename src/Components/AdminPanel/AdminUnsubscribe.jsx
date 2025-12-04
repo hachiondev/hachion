@@ -91,7 +91,7 @@ export default function AdminUnsubscribe() {
   useEffect(() => {
   const fetchUnsubscribeList = async () => {
     try {
-      const response = await fetch("https://api.test.hachion.co/unsubscribe");
+      const response = await fetch("https://api.hachion.co/unsubscribe");
       const data = await response.json();
       setUnsubscribe(data);
       setList(data); 

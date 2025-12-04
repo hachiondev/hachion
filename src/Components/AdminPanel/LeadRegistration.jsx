@@ -104,7 +104,7 @@ export default function LeadRegistration() {
 useEffect(() => {
   const fetchLeads = async () => {
     try {
-      const response = await fetch("https://api.test.hachion.co/leadform"); // update URL if needed
+      const response = await fetch("https://api.hachion.co/leadform"); // update URL if needed
       if (!response.ok) {
         throw new Error("Failed to fetch leads");
       }

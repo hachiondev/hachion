@@ -90,7 +90,7 @@ useEffect(() => {
     (async () => {
       try {
         const res = await fetch(
-          `https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(
+          `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(
             userEmail
           )}`,
           { signal: ctrl.signal }
@@ -209,7 +209,7 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        "https://api.hachion.co/advisors",
+        "https://api.test.hachion.co/advisors",
         requestData,
         {
           headers: { "Content-Type": "application/json" },

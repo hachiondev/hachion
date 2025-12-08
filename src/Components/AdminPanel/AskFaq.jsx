@@ -47,7 +47,7 @@ export default function AskFaq() {
   useEffect(() => {
   const fetchAskFaq = async () => {
     try {
-      const { data } = await axios.get("https://api.hachion.co/faq-queries");
+      const { data } = await axios.get("https://api.test.hachion.co/faq-queries");
 
       const normalized = (Array.isArray(data) ? data : []).map((x, idx) => {
         let formattedDate = "";

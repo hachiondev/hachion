@@ -8,28 +8,33 @@ const fetchCountry = async () => {
 };
 
 export const useTopBarApi = () => {
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ['userCountry'],
     queryFn: fetchCountry,
+    staleTime: Infinity, // ✅ Data never becomes stale
+    gcTime: Infinity, // ✅ Cache never gets garbage collected (formerly cacheTime)
+    refetchOnWindowFocus: false, // ✅ Don't refetch when user returns to tab
+    refetchOnMount: false, // ✅ Don't refetch on component remount
+    refetchOnReconnect: false, // ✅ Don't refetch when internet reconnects
+    retry: 1, // ✅ Only retry once if it fails
   });
 
   const isIndia = data?.country?.toUpperCase() === 'IN';
 
-  // Default (if loading or error)
+  // Default values (US number)
   let whatsappNumber = '+1 (732) 485-2499';
   let whatsappLink = 'https://wa.me/17324852499';
 
-  if (!error && data) {
-    if (isIndia) {
-      whatsappNumber = '+91-949-032-3388';
-      whatsappLink = 'https://wa.me/919490323388';
-    }
+  // Update if we have data and user is in India
+  if (!error && data && isIndia) {
+    whatsappNumber = '+91-949-032-3388';
+    whatsappLink = 'https://wa.me/919490323388';
   }
 
   return {
     whatsappNumber,
     whatsappLink,
-    isLoading: !data && !error,
+    isLoading,
     error,
   };
 };

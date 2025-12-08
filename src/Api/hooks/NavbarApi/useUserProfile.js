@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE = "https://api.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 
 export function useUserProfile() {
   const [userData, setUserData] = useState(null);

@@ -107,6 +107,7 @@ const TrainingEvents = () => {
 
       return courseNameMatch && modeMatch && timeMatch;
     });
+    console.log("Filtered Courses:", filtered);
 
     // Group sessions
     const grouped = {};
@@ -232,7 +233,7 @@ const TrainingEvents = () => {
                   month={course.numberOfClasses}
                   image={
                     course.course_image
-                      ? `https://api.hachion.co/${course.course_image}`
+                      ? `https://api.test.hachion.co/${course.course_image}`
                       : ""
                   }
                   date={formatDate(course.schedule_date)}

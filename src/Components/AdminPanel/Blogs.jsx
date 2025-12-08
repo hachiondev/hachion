@@ -58,12 +58,12 @@ const Blogs = () => {
   const [allBlogs, setAllBlogs] = useState([]);
 
   useEffect(() => {
-    axios.get("https://api.hachion.co/course-categories/all")
+    axios.get("https://api.test.hachion.co/course-categories/all")
       .then(res => setCategories(res.data))
       .catch(console.error);
   }, []);
   useEffect(() => {
-  axios.get("https://api.hachion.co/blog")
+  axios.get("https://api.test.hachion.co/blog")
     .then(res => {
       setAllBlogs(res.data);
       setBlogs(res.data);
@@ -114,8 +114,8 @@ const Blogs = () => {
     if (formData.blog_pdf) formDataToSend.append("blogPdf", formData.blog_pdf);
     try {
       const endpoint = formData.id
-        ? `https://api.hachion.co/blog/update/${formData.id}`
-        : "https://api.hachion.co/blog/add";
+        ? `https://api.test.hachion.co/blog/update/${formData.id}`
+        : "https://api.test.hachion.co/blog/add";
       const method = formData.id ? axios.put : axios.post;
       const response = await method(endpoint, formDataToSend, {
         maxBodyLength: Infinity,
@@ -141,7 +141,7 @@ const Blogs = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Blog?")) return;
     try {
-      await axios.delete(`https://api.hachion.co/blog/delete/${id}`);
+      await axios.delete(`https://api.test.hachion.co/blog/delete/${id}`);
       setBlogs(prev => prev.filter(blog => blog.id !== id));
     } catch (error) {
       alert("Failed to delete blog");
@@ -151,7 +151,7 @@ const Blogs = () => {
     setFormMode('Edit');
     setShowForm(true);
     try {
-      const res = await axios.get(`https://api.hachion.co/blog/${id}`);
+      const res = await axios.get(`https://api.test.hachion.co/blog/${id}`);
       const blog = res.data;
       setFormData({
         id: blog.id,
@@ -424,7 +424,7 @@ const Blogs = () => {
                       <StyledTableCell align="center">{blog.category_name}</StyledTableCell>
                       <StyledTableCell align="center">
                         {blog.blog_image ? (
-                          <img src={`https://api.hachion.co/blogs/${blog.blog_image}`} alt="Blog" width="50" />
+                          <img src={`https://api.test.hachion.co/blogs/${blog.blog_image}`} alt="Blog" width="50" />
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="left"
@@ -445,7 +445,7 @@ const Blogs = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {blog.authorImage ? (
-                          <img src={`https://api.hachion.co/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" />
+                          <img src={`https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" />
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="center">{blog.author}</StyledTableCell>

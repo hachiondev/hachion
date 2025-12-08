@@ -107,7 +107,7 @@ export default function Trainer() {
 
   const fetchTrainers = async () => {
     try {
-      const res = await axios.get('https://api.hachion.co/trainers');
+      const res = await axios.get('https://api.test.hachion.co/trainers');
       const normalized = Array.isArray(res.data) ? res.data.map(normalizeTrainer) : [];
       setTrainers(normalized);
       setFilteredTrainers(normalized);
@@ -119,7 +119,7 @@ export default function Trainer() {
 
   const fetchCourseCategories = async () => {
     try {
-      const res = await axios.get('https://api.hachion.co/course-categories/all');
+      const res = await axios.get('https://api.test.hachion.co/course-categories/all');
       setCourseCategoriesList(res.data || []);
     } catch (err) {
       console.error('Error fetching course categories:', err);
@@ -128,7 +128,7 @@ export default function Trainer() {
 
   const fetchCourseList = async () => {
     try {
-      const res = await axios.get('https://api.hachion.co/courses/all');
+      const res = await axios.get('https://api.test.hachion.co/courses/all');
       setCourseCategory(res.data || []);
     } catch (err) {
       console.error('Error fetching courses list:', err);
@@ -281,7 +281,7 @@ export default function Trainer() {
 
     if (formData.id) {
       response = await axios.put(
-        `https://api.hachion.co/trainer/update/${formData.id}`,
+        `https://api.test.hachion.co/trainer/update/${formData.id}`,
         formDataToSend
       );
 
@@ -302,7 +302,7 @@ export default function Trainer() {
     
     else {
       response = await axios.post(
-        "https://api.hachion.co/trainer/add",
+        "https://api.test.hachion.co/trainer/add",
         formDataToSend
       );
 
@@ -345,7 +345,7 @@ export default function Trainer() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://api.hachion.co/trainer/delete/${id}`);
+      await axios.delete(`https://api.test.hachion.co/trainer/delete/${id}`);
       setTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setFilteredTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setAllTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
@@ -362,7 +362,7 @@ export default function Trainer() {
     setShowForm(true);
     try {
       if (row?.trainer_id) {
-        const res = await axios.get(`https://api.hachion.co/trainers/${row.trainer_id}`);
+        const res = await axios.get(`https://api.test.hachion.co/trainers/${row.trainer_id}`);
         const trainer = res.data || row;
         setFormData({
   id: trainer.trainer_id || '',

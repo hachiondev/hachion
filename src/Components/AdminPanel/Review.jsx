@@ -199,7 +199,7 @@ const fetchTrainerNames = async (categoryName, courseName) => {
 
   try {
     setLoadingTrainers(true);
-    const response = await axios.get("https://api.hachion.co/trainernames", {
+    const response = await axios.get("https://api.test.hachion.co/trainernames", {
       params: { categoryName, courseName },
     });
     setTrainerOptions(Array.isArray(response.data) ? response.data : []);
@@ -281,7 +281,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get("https://api.hachion.co/courses/coursenames-by-category", {
+      const response = await axios.get("https://api.test.hachion.co/courses/coursenames-by-category", {
         params: { categoryName: editedData.categoryName },
       });
       setCourseCategory(Array.isArray(response.data) ? response.data : []);
@@ -309,7 +309,7 @@ useEffect(() => {
 
 const fetchReview = async () => {
   try {
-    const response = await axios.get('https://api.hachion.co/userreview');
+    const response = await axios.get('https://api.test.hachion.co/userreview');
     const filteredReviews = response.data.filter(review => review.type === true);
     setReview(filteredReviews);
     setFilteredReview(filteredReviews);
@@ -383,7 +383,7 @@ useEffect(() => {
     }
 
     const response = await axios.put(
-      `https://api.hachion.co/userreview/update/${editedData.review_id}`,
+      `https://api.test.hachion.co/userreview/update/${editedData.review_id}`,
       formData,
       {
         headers: {
@@ -414,7 +414,7 @@ useEffect(() => {
 
 const handleDelete = async (review_id) => {
   try {
-    const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`);
+    const response = await axios.delete(`https://api.test.hachion.co/userreview/delete/${review_id}`);
     console.log("Review deleted successfully:", response.data);
 
     await fetchReview(); 
@@ -506,7 +506,7 @@ const handleSubmit = async () => {
 
   try {
     await axios.post(
-      "https://api.hachion.co/userreview/add",
+      "https://api.test.hachion.co/userreview/add",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
@@ -545,7 +545,7 @@ const handleSubmit = async () => {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
           setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -564,7 +564,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get("https://api.hachion.co/courses/coursenames-by-category", {
+      const response = await axios.get("https://api.test.hachion.co/courses/coursenames-by-category", {
         params: { categoryName: reviewData.categoryName },
       });
       setFilterCourse(Array.isArray(response.data) ? response.data : []);
@@ -905,7 +905,7 @@ onChange={handleChange}
         <StyledTableCell align="center">
   {curr.user_image ? (
     <img
-      src={`https://api.hachion.co/userreview/${curr.user_image}`}
+      src={`https://api.test.hachion.co/userreview/${curr.user_image}`}
       alt="User"
       width="50"
       height="50"

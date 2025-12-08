@@ -37,7 +37,7 @@ const htmlToText = (html) => {
   return (doc.body.textContent || "").trim();
 };
 
-const API_BASE = "https://api.hachion.co/general-faq";
+const API_BASE = "https://api.test.hachion.co/general-faq";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -149,7 +149,7 @@ export default function GeneralFaq() {
     useEffect(() => {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/course-categories/all");
+          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
           setCourse(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);
@@ -161,7 +161,7 @@ export default function GeneralFaq() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("https://api.test.hachion.co/courses/all");
           setCourseCategory(response.data); 
         } catch (error) {
           console.error("Error fetching categories:", error.message);

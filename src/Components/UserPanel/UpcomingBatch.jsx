@@ -55,7 +55,7 @@ const UpcomingBatch = () => {
         const userCurrency = currencyMap[country] || 'USD';
         setCurrency(userCurrency);
 
-        const courseRes = await axios.get('https://api.hachion.co/courses/all');
+        const courseRes = await axios.get('https://api.test.hachion.co/courses/all');
         const courseData = courseRes.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );

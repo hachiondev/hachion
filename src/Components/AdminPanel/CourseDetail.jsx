@@ -80,7 +80,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/course-categories/all");
+        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
         setCourse(response.data);
       } catch (error) {
       }
@@ -90,7 +90,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);
@@ -270,7 +270,7 @@ const CourseDetail = ({
     try {
       if (formMode === "Edit") {
         const response = await axios.put(
-          `https://api.hachion.co/courses/update/${formData.id}`,
+          `https://api.test.hachion.co/courses/update/${formData.id}`,
           formNewData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -287,7 +287,7 @@ const CourseDetail = ({
         }
       } else {
 
-        const response = await axios.post("https://api.hachion.co/courses/add", formNewData, {
+        const response = await axios.post("https://api.test.hachion.co/courses/add", formNewData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -307,7 +307,7 @@ const CourseDetail = ({
   const handleEditClick = async (courseId) => {
     setShowAddCourse(true);
     try {
-      const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+      const response = await fetch(`https://api.test.hachion.co/courses/${courseId}`);
       if (response.ok) {
         const course = await response.json();
 
@@ -412,7 +412,7 @@ const CourseDetail = ({
   };
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
+      const response = await axios.delete(`https://api.test.hachion.co/courses/delete/${id}`);
 
       if (response.status === 200) {
         setSuccessMessage("✅ Course deleted successfully.");
@@ -445,7 +445,7 @@ const CourseDetail = ({
     if (!shortCourseValue) return;
 
     try {
-      await axios.get(`https://api.hachion.co/courses/shortCourse`, {
+      await axios.get(`https://api.test.hachion.co/courses/shortCourse`, {
         params: { shortCourse: shortCourseValue },
       });
 
@@ -631,6 +631,52 @@ const CourseDetail = ({
                       className="form-control"
                       placeholder="Enter Prerequisites"
                       value={formData.prerequisities}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="course-row">
+                  <div className="col-md-4">
+                    <label className="form-label">Live Training</label>
+                    <textarea
+                      type="text"
+                      name="Live Training"
+                      className="form-control"
+                      placeholder="Live Training"
+                      value=""
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Crash Course</label>
+                    <textarea
+                      type="text"
+                      name="Crash Course"
+                      className="form-control"
+                      placeholder="Crash Course"
+                      value=""
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Mentoring Mode</label>
+                    <textarea
+                      type="text"
+                      name="Mentoring Mode"
+                      className="form-control"
+                      placeholder="Mentoring Mode"
+                      value=""
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Self-Paced Learning</label>
+                    <textarea
+                      type="text"
+                      name="Self-Paced Learning"
+                      className="form-control"
+                      placeholder="Self-Paced Learning"
+                      value=""
                       onChange={handleInputChange}
                     />
                   </div>
@@ -1113,7 +1159,7 @@ const CourseDetail = ({
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
                           {course.courseImage
-                            ? <img src={`https://api.hachion.co/${course.courseImage}`} alt="Course" width="50" />
+                            ? <img src={`https://api.test.hachion.co/${course.courseImage}`} alt="Course" width="50" />
                             : 'No Image'}
                         </StyledTableCell>
                         <StyledTableCell align="left">{course.courseCategory}</StyledTableCell>

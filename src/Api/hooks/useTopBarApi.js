@@ -20,6 +20,7 @@ export const useTopBarApi = () => {
   });
 
   const isIndia = data?.country?.toUpperCase() === 'IN';
+  const countryCode = data?.country?.toUpperCase() || null;
 
   // Default values (US number)
   let whatsappNumber = '+1 (732) 485-2499';
@@ -33,6 +34,7 @@ export const useTopBarApi = () => {
 
   return {
     whatsappNumber,
+    countryCode,
     whatsappLink,
     isLoading,
     error,

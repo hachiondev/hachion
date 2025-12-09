@@ -67,6 +67,7 @@
   border: 1px solid #d3d3d3;
   background: #ffff;
   border-radius: 6px 0 0 6px;
+  color: #00aaef;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -140,7 +141,7 @@
 .register-login-label {
   margin: 0.3vh 1vh;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   color: #000000;
 }
 

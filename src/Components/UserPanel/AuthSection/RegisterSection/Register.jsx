@@ -8,6 +8,8 @@ import { countries, getDefaultCountry } from "../../../../countryUtils";
 import LoginBanner from "../../../../Assets/loginbackground.webp";
 import google from "../../../../Assets/google-new.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { useTopBarApi } from "../../../../Api/hooks/useTopBarApi";
+import { useUserMe } from "../../../../Api/hooks/RegisterApi/useUserMe";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -21,6 +23,8 @@ const Register = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
+  const { countryCode, isLoading: countryLoading } = useTopBarApi();
+  const { data: user } = useUserMe(getCookie);
 
   function getCookie(name) {
     const m = document.cookie.match(
@@ -28,17 +32,16 @@ const Register = () => {
     );
     return m ? decodeURIComponent(m[1]) : null;
   }
+  
   useEffect(() => {
-    fetch("https://api.country.is")
-      .then((res) => res.json())
-      .then((data) => {
-        data.country_code = (data.country || "").toUpperCase();
-        const userCountryCode = data?.country_code;
-        const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-        if (matchedCountry) setSelectedCountry(matchedCountry);
-      })
-      .catch(() => { });
-  }, []);
+    if (countryCode && !countryLoading) {
+      const matchedCountry = countries.find((c) => c.flag === countryCode);
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
+        console.log(`Country auto-detected: ${matchedCountry.name} (${countryCode})`);
+      }
+    }
+  }, [countryCode, countryLoading]);
 
 
   const handleCountrySelect = (country) => {
@@ -116,37 +119,23 @@ const Register = () => {
     }, 50);
   };
 
-  useEffect(() => {
-    try {
+useEffect(() => {
+  if (!user) return;
 
-      const existing = localStorage.getItem('loginuserData');
-      if (existing) return;
+  const toStore = {
+    name: user.name || "",
+    email: user.email || "",
+    picture: user.picture || ""
+  };
 
-      fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
-        .then(r => (r.ok ? r.json() : null))
-        .then(user => {
-          if (!user) return;
+  localStorage.setItem("loginuserData", JSON.stringify(toStore));
 
-          let picture = user.picture || getCookie('avatar') || "";
+  if (user.token) {
+    localStorage.setItem("authToken", user.token);
+  }
 
-          const toStore = {
-            name: user.name || "",
-            email: user.email || "",
-            picture
-          };
-
-          localStorage.setItem('loginuserData', JSON.stringify(toStore));
-
-          if (user.token) {
-            localStorage.setItem('authToken', user.token);
-          }
-
-
-          window.dispatchEvent(new Event('storage'));
-        })
-        .catch(() => { });
-    } catch (_) { }
-  }, []);
+  window.dispatchEvent(new Event("storage"));
+}, [user]);
 
   return (
     <>

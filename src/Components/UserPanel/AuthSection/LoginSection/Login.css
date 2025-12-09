@@ -46,7 +46,7 @@
   margin-bottom: 0 !important;
 }
 
-.go-to-register {
+.go-to-login {
   display: flex;
   font-size: small;
   justify-content: center;
@@ -186,12 +186,13 @@
   margin-left: 5px;
 }
 
-hr {
+.login-hr {
   border: 1px solid #6A6A6A;
   height: 2px;
   background: #6A6A6A;
-  width: 35%;
+  width: 90%;
   margin: 0 auto;
+  margin: 20px;
 }
 
 .register-link-to {
@@ -269,6 +270,87 @@ hr {
   padding: 10px;
 }
 
+/* Remove all weird shifting */
+.login-mid,
+.form-group,
+.password-field {
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+
+.captcha-wrapper{
+  margin-left: 0px !important;
+}
+
+/* ===== UNIFORM INPUT WIDTH ===== */
+.login .form-control,
+.input-group .form-control {
+  width: 100% !important;
+  margin: 0 !important;
+  height: 48px !important;
+}
+
+/* ===== LABEL FIX ===== */
+.login-label {
+  margin: 6px 0 4px 0 !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== PASSWORD EYE ICON ALIGNMENT ===== */
+.eye-icon {
+  right: 12px !important;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ===== CAPTCHA FIX ===== */
+.captcha-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100% !important;
+}
+
+.captcha-wrapper canvas {
+  width: 100% !important;
+  height: 42px !important;
+  border-radius: 6px;
+}
+
+/* Remove this — it was shifting canvas to right */
+.captcha {
+  margin-left: 0 !important;
+}
+
+/* ===== LOGIN BUTTON FULL WIDTH ===== */
+.login-btn {
+  width: 100% !important;
+  height: 48px;
+  border-radius: 6px;
+  margin: 10px 0 10px 0;
+  font-size: 16px;
+}
+
+.login-g-btn {
+  width: 100% !important;
+  height: 48px;
+  border-radius: 6px;
+  margin: 10px 0 10px 0;
+  align-items: center;
+    background-color: #000;
+    display: flex;
+    font-size: 16px;
+    font-weight: 400;
+    gap: 5px;
+    color: white;
+    justify-content: center;
+}
+
+
+
 /* Small Mobile Phones */
 @media (max-width: 480px) {
   .login {
@@ -298,6 +380,10 @@ hr {
   .forgot-password {
     margin-bottom: 0;
     font-size: 12px;
+  }
+
+  .login-btn{
+    font-size: 18px !important;
   }
 
   .login-banner {
@@ -330,7 +416,7 @@ hr {
     justify-content: center;
   }
 
-    .otp-verify {
+  .otp-verify {
     margin-top: 0vh;
     padding: 10px;
   }
@@ -347,7 +433,7 @@ hr {
 
   .input-group,
   .form-control {
-    width: 90%;
+    width: 100%;
     height: 40px;
     font-size: 14px;
     border-radius: 6px;
@@ -355,11 +441,11 @@ hr {
 
   }
 
-    hr {
+  hr {
     width: 80%;
   }
 
-    .login-link {
+  .login-link {
     font-size: 12px;
   }
 
@@ -367,13 +453,13 @@ hr {
     font-size: 12px !important;
   }
 
-  .login-mid {
-    gap: 2vw;
-    /* padding: 10px; */
+ .login-mid {
+    padding: 20px !important;
+    align-items: baseline;
   }
 
-  .go-to-register {
-    font-size: 12px;
+  .go-to-login {
+    font-size: 16px;
     padding: 5px;
   }
 
@@ -384,6 +470,7 @@ hr {
   .mail-to-register {
     font-size: 11px;
   }
+
 }
 
 @media (max-width: 767px) {
@@ -418,7 +505,7 @@ hr {
     width: 20%;
   }
 
-    .login-banner {
+  .login-banner {
     display: block;
     width: 100%;
     height: auto;
@@ -441,7 +528,7 @@ hr {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    height: 900px;
+    /* height: 900px; */
     min-height: 0;
 
   }
@@ -481,11 +568,12 @@ hr {
   .login-mid-name {
     padding-top: 2vh;
   }
-    .login-link {
+
+  .login-link {
     font-size: 0.9rem;
   }
 
-    .enter-otp {
+  .enter-otp {
     padding-top: 0vh;
   }
 
@@ -494,6 +582,3 @@ hr {
   }
 
 }
-
-
-

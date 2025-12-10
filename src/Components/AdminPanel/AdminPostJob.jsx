@@ -97,7 +97,7 @@ export default function AdminPostJob() {
       useEffect(() => {
   const fetchJobs = async () => {
     try {
-      const response = await axios.get("https://api.test.hachion.co/hire-from-us");
+      const response = await axios.get("https://api.hachion.co/hire-from-us");
       const data = response.data || [];
       console.log("Fetched job data:", data);
       setJobData(data);
@@ -119,7 +119,7 @@ const updateStatus = async (jobId, newStatus) => {
   };
 
   try {
-    await axios.put("https://api.test.hachion.co/hire-from-us", payload);
+    await axios.put("https://api.hachion.co/hire-from-us", payload);
     const updatedJobs = jobData.map(job =>
       job.jobId === jobId ? { ...job, status: newStatus } : job
     );
@@ -230,7 +230,7 @@ const updateStatus = async (jobId, newStatus) => {
                             <StyledTableCell align="left">{row.email}</StyledTableCell>
                             <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
                             <StyledTableCell align="center">{row.companyLogo
-                            ? <img src={`https://api.test.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" />
+                            ? <img src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" />
                             : 'No Image'}
                             </StyledTableCell>
                             <StyledTableCell align="left">{row.company}</StyledTableCell>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getLearnerReviews } from "../../../Components/UserPanel/LearnerSection/services/learnerService";
+import { getLearnerReviews } from "../../../../src/Components/UserPanel/HomePage/LearnerSection/services/learnerService";
 
 export const useLearnerReviews = () => {
   return useQuery({

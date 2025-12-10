@@ -56,7 +56,7 @@ export default function ScheduleRequest() {
   useEffect(() => {
     const fetchRequestBatch = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/requestbatch');
+        const response = await axios.get('https://api.hachion.co/requestbatch');
         setRequestBatch(response.data);
         setFilteredData(response.data);
       } catch (error) {
@@ -74,7 +74,7 @@ export default function ScheduleRequest() {
   const handleDelete = async (batch_id) => {
 
     try {
-      const response = await axios.delete(`https://api.test.hachion.co/requestbatch/delete/${batch_id}`);
+      const response = await axios.delete(`https://api.hachion.co/requestbatch/delete/${batch_id}`);
       console.log("Request batch Deleting Successfully:", response.data);
     } catch (error) {
       console.error("Error deleting batch:", error);

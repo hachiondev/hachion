@@ -6,12 +6,12 @@ import CourseDetailsTop from './CourseDetailsTop';
 import KeyHighlights from './KeyHighlights';
 import UpcomingHeader from './UpcomingHeader';
 import UpcomingBatch from './UpcomingBatch';
-import Corporate from './CorporateSection/Corporate';
+import Corporate from './HomePage/CorporateSection/Corporate';
 import CoursesAll from './CoursesAll';
 import ModeOfTraining from './ModeOfTraining';
 import CareerSupport from './CareerSupport';
 import CourseCertificate from './CourseCertificate';
-import Learners from "./LearnerSection/Learners";
+import Learners from "./HomePage/LearnerSection/Learners";
 import TrainerProfile from './TrainerProfile';
 import CurriculumMain from './CurriculumMain';
 import CourseDetailsFaq from './CourseDetailsFaq';
@@ -19,6 +19,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
+import Loader from './Loader/Loader';
 const CourseDetails = () => {
   const curriculumRef = useRef(null);
   const location = useLocation();
@@ -112,7 +113,7 @@ const CourseDetails = () => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const course = response.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
         );
@@ -131,13 +132,7 @@ const CourseDetails = () => {
   if (error) return <div>Error: {error}</div>;
   if (loading) {
     return (
-      <div className="loading-overlay">
-        <img
-          src="/HachionLogo.png"
-          alt="Loading..."
-          className='loading-logo'
-        />
-      </div>
+      <Loader />
     );
   }
 

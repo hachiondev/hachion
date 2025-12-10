@@ -10,9 +10,9 @@ import Hachion from './Hachion';
 import CustomizeTraining from './CustomizeTraining';
 import LeadingExpert from './LeadingExpert';
 import CorporateTrainingFeature from './CorporateTrainingFeature';
-import Learners from "./LearnerSection/Learners";
+import Learners from "./HomePage/LearnerSection/Learners";
 import HomeFaq from './HomeFaq';
-import CorporateContactUs from './CorporateContactUs';
+import CorporateContactUs from './CorporatePage/CorporateContactUs';
 
 // ===============================
 //   COMPONENT STARTS

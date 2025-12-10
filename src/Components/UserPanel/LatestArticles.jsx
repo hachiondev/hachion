@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Blogs.css";
 import { useNavigate } from "react-router-dom";
-import RecentEntriesCard from "./TrendingBlogSection/components/RecentEntriesCard";
+import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";
 
 const LatestArticles = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const LatestArticles = () => {
     const fetchBlogs = async () => {
       try {
         
-        const response = await axios.get("https://api.test.hachion.co/blog/recent");
+        const response = await axios.get("https://api.hachion.co/blog/recent");
         const mappedBlogs = response.data.map((row) => {
           const [
             id,
@@ -36,10 +36,10 @@ const LatestArticles = () => {
             
             description: "",
             avatar: avatarPath
-              ? `https://api.test.hachion.co/uploads/prod/blogs/${avatarPath}`
+              ? `https://api.hachion.co/uploads/prod/blogs/${avatarPath}`
               : "",
             blog_image: blogImagePath
-              ? `https://api.test.hachion.co/uploads/prod/blogs/${blogImagePath}`
+              ? `https://api.hachion.co/uploads/prod/blogs/${blogImagePath}`
               : "",
           };
         });

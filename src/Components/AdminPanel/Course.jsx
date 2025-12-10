@@ -11,6 +11,7 @@ import CorporateReviews from './CorporateReviews';
 import StudentReview from './StudentReview';
 import AdminCoupon from './AdminCoupon';
 import AdminTools from './AdminTools';
+import Project from './ProjectPage/Project';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 export default function Course() {
@@ -44,8 +45,8 @@ export default function Course() {
           <div
             className={`tab-item ${activeTab === 'courseDetails' ? 'active-tab' : ''}`}
             onClick={() => handleTabChange('courseDetails')}
-          >
-            Course Details
+          >Course Details
+            
           </div>
           <div
             className={`tab-item ${activeTab === 'adminTools' ? 'active-tab' : ''}`}
@@ -107,6 +108,12 @@ export default function Course() {
           >
             Corporate Reviews
           </div>
+          <div
+            className={`tab-item ${activeTab === 'project' ? 'active-tab' : ''}`}
+            onClick={() => handleTabChange('project')}
+          >
+            Project
+          </div>
         </div>
 
         <button className="tab-scroll-btn right" onClick={() => scrollTabs('right')}>
@@ -125,6 +132,7 @@ export default function Course() {
       {activeTab === 'review' && <Review />}
       {activeTab === 'studentreview' && <StudentReview />}
       {activeTab === 'corporatereviews' && <CorporateReviews />}
+      {activeTab === 'project' && <Project />}
     </>
   );
 }

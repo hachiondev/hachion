@@ -3,7 +3,7 @@ import axios from "axios";
 import CardsPagination from "./CardsPagination";
 import "./Blogs.css";
 import { useNavigate } from "react-router-dom";
-import RecentEntriesCard from "./TrendingBlogSection/components/RecentEntriesCard";
+import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";
 
 const MoreBlogs = ({ scrollToTop = false }) => {
   const navigate = useNavigate();
@@ -19,14 +19,14 @@ const MoreBlogs = ({ scrollToTop = false }) => {
     const fetchBlogs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("https://api.test.hachion.co/blog");
+        const response = await axios.get("https://api.hachion.co/blog");
         const mappedBlogs = response.data.map((blog) => ({
           ...blog,
           avatar: blog.authorImage
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`
+            ? `https://api.hachion.co/uploads/prod/blogs/${blog.authorImage}`
             : "",
           blog_image: blog.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}`
             : "",
         }));
 

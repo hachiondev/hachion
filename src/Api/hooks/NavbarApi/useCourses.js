@@ -6,7 +6,7 @@ export function useCourses() {
     queryKey: ["courses"],
     queryFn: async () => {
       const res = await axios.get(
-        "https://api.test.hachion.co/courses/names-and-categories"
+        "https://api.hachion.co/courses/names-and-categories"
       );
       return res.data;
     },

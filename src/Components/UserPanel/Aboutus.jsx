@@ -13,7 +13,7 @@ import feat3 from "../../Assets/learn-icon.webp";
 import feat4 from "../../Assets/career-icon.webp";
 import feat5 from "../../Assets/247-icon.webp";
 import feat6 from "../../Assets/success-icon.webp";
-import Learners from "./LearnerSection/Learners";
+import Learners from "./HomePage/LearnerSection/Learners";
 import { TiTick } from "react-icons/ti";
 import { TbSlashes } from "react-icons/tb";
 import HomeFaq from "./HomeFaq";
@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const statistics = [
   {
@@ -162,7 +162,7 @@ const Aboutus = () => {
       ? companyImage.substring(1)
       : companyImage;
 
-    return `https://api.test.hachion.co/uploads/prod/employee_company_logo/${clean}`;
+    return `https://api.hachion.co/uploads/prod/employee_company_logo/${clean}`;
   };
 
   return (

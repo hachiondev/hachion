@@ -94,7 +94,7 @@ useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          `https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`
+          `https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`
         );
   
         if (!response.ok) {
@@ -142,7 +142,7 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        "https://api.test.hachion.co/haveanyquery/add",
+        "https://api.hachion.co/haveanyquery/add",
         requestData,
         {
           headers: {

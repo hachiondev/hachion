@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserCountry } from "../../../Components/UserPanel/TrendingSection/services/geoService";
-import { getFxRates } from "../../../Components/UserPanel/TrendingSection/services/currencyService";
+import { getUserCountry } from "../../../../src/Components/UserPanel/HomePage/TrendingSection/services/geoService";
+import { getFxRates } from "../../../../src/Components/UserPanel/HomePage/TrendingSection/services/currencyService";
 
 const countryToCurrencyMap = {
   IN: "INR", US: "USD", GB: "GBP", AU: "AUD", CA: "CAD", AE: "AED",

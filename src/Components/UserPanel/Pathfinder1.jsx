@@ -9,7 +9,7 @@ const Pathfinder1 = ({ formData, onChange, onNext, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {
         axios
-          .get("https://api.test.hachion.co/courses/all")
+          .get("https://api.hachion.co/courses/all")
           .then((res) => {
             setCourses(res.data);
           })

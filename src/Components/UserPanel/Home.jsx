@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Association from './Association';
-import TrainingEvents from './TrainingSection/TrainingEvents';
-import TeensEvents from './TeenSection/TeensEvents';
+import TrainingEvents from './HomePage/TrainingSection/TrainingEvents';
+import TeensEvents from './HomePage/TeenSection/TeensEvents';
 import Career from './Career';
-import Learners from './LearnerSection/Learners';
-import Corporate from './CorporateSection/Corporate';
+import Learners from './HomePage/LearnerSection/Learners';
+import Corporate from './HomePage/CorporateSection/Corporate';
 import { Helmet } from "react-helmet-async";
 import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
-import RecentEntries from './TrendingBlogSection/RecentEntries';
+import RecentEntries from './HomePage/TrendingBlogSection/RecentEntries';
 import MeetInstructorBanner from './MeetInstructorBanner';
 import ShareKnowledgeBanner from './ShareKnowledgeBanner';
 import WhyChoose from '././WhyChoose';
 import HomeFaq from './HomeFaq';
-import LimitedDeals from './LimitedSection/LimitedDeals';
-import Banner from './HomeBannerSection/Banner';
-import Trending from './TrendingSection/Trending';
+import LimitedDeals from './HomePage/LimitedSection/LimitedDeals';
+import Banner from './HomePage/HomeBannerSection/Banner';
+import Trending from './HomePage/TrendingSection/Trending';
 
 export const Home = () => {
   const location = useLocation();

@@ -4,7 +4,7 @@ export const useUserMe = (getCookieFn) => {
   return useQuery({
     queryKey: ["user-me"],
     queryFn: async () => {
-      const res = await fetch("https://api.test.hachion.co/api/me", {
+      const res = await fetch("https://api.hachion.co/api/me", {
         credentials: "include",
       });
 

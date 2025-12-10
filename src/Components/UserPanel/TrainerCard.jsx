@@ -23,7 +23,7 @@ const TrainerCard = (props) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.hachion.co/courses/all');
         const courseNameFromUrl = courseName
           ?.toLowerCase()
           ?.replace(/\s+/g, '-');
@@ -56,7 +56,7 @@ const TrainerCard = (props) => {
 
     const fetchTrainer = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/trainer');
+        const response = await axios.get('https://api.hachion.co/trainer');
         
       } catch (error) {
         console.error('Error fetching Trainer:', error.message);
@@ -85,7 +85,7 @@ const TrainerCard = (props) => {
               alt={props.trainer_name}
               src={
                 props.profileImage
-                  ? `https://api.test.hachion.co/${props.profileImage}`
+                  ? `https://api.hachion.co/${props.profileImage}`
                   : ''
               }
               className="profile-image"
@@ -157,7 +157,7 @@ const TrainerCard = (props) => {
                   alt={props.trainer_name}
                   src={
                     props.profileImage
-                      ? `https://api.test.hachion.co/${props.profileImage}`
+                      ? `https://api.hachion.co/${props.profileImage}`
                       : ''
                   }
                   className="profile-image"

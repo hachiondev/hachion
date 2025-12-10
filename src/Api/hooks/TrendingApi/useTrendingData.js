@@ -1,35 +1,41 @@
-import { useQuery } from "@tanstack/react-query";
-import { getCoursesSummary, getTrendingCourses } from "../../../Components/UserPanel/TrendingSection/services/coursesService";
-import { getTrainers } from "../../../Components/UserPanel/TrendingSection/services/trainersService";
+import { useMemo } from "react";
+import { useCoursesSummary } from "../TrainingApi/useCoursesSummary";
+import { useTrainers } from "../TrainingApi/useTrainers";
+import { useTrendingCourses } from "../TrainingApi/useTrendingCourses";
 
 export const useTrendingData = () => {
-  return useQuery({
-    queryKey: ["trending-courses"],
-    queryFn: async () => {
-      const [trendingRaw, summary, trainers] = await Promise.all([
-        getTrendingCourses(),
-        getCoursesSummary(),
-        getTrainers(),
-      ]);
+  const { data: trendingRaw = [], isLoading: loadingTrending } = useTrendingCourses();
+  const { data: summary = [], isLoading: loadingSummary } = useCoursesSummary();
+  const { data: trainers = [], isLoading: loadingTrainers } = useTrainers();
 
-      const activeTrending = (trendingRaw || []).filter(c => c?.status);
+  const loading = loadingTrending || loadingSummary || loadingTrainers;
 
-      const detailed = activeTrending.map(t => {
-        const courseName = (t.course_name || "").trim();
-        const courseDetails = summary.find(s => (s.courseName || "").trim() === courseName);
-        const matchedTrainer = trainers.find(
-          tr => (tr.course_name || "").trim().toLowerCase() === courseName.toLowerCase()
-        );
+  const detailed = useMemo(() => {
+    const activeTrending = (trendingRaw || []).filter(c => c?.status);
 
-        return {
-          ...t,
-          ...courseDetails,
-          trainerName: matchedTrainer?.trainer_name || "",
-        };
-      });
+    return activeTrending.map(t => {
+      const courseName = (t.course_name || "").trim();
 
-      return detailed;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+      const courseDetails = summary.find(
+        s => (s.courseName || "").trim() === courseName
+      );
+
+      const matchedTrainer = trainers.find(
+        tr =>
+          (tr.course_name || "").trim().toLowerCase() ===
+          courseName.toLowerCase()
+      );
+
+      return {
+        ...t,
+        ...courseDetails,
+        trainerName: matchedTrainer?.trainer_name || "",
+      };
+    });
+  }, [trendingRaw, summary, trainers]);
+
+  return {
+    data: detailed,
+    loading,
+  };
 };

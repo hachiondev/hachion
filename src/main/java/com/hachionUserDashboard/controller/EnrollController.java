@@ -10,6 +10,7 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,10 +158,10 @@ public class EnrollController {
 
 		if (requestEnroll.isSendEmail()) {
 			if ("Live Demo".equalsIgnoreCase(requestEnroll.getMode())) {
-				emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
-						dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
-						requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink,
-						technologySlug);
+//				emailService.sendEmailForEnrollForLiveDemo(requestEnroll.getEmail(), requestEnroll.getCourse_name(),
+//						dayOfWeek, formattedDateTime, time, null, requestEnroll.getMeeting_link(), null, null,
+//						requestEnroll.getTrainer(), trainerExperience, null, null, null, null, null, null, calendarLink,
+//						technologySlug);
 			}
 			if ("Live Class".equalsIgnoreCase(requestEnroll.getMode())) {
 				emailService.sendEmailForEnrollForLiveClass(requestEnroll.getEmail(), requestEnroll.getName(),
@@ -181,7 +182,7 @@ public class EnrollController {
 			whatsAppService.sendEnrollmentSms(requestEnroll);
 		}
 
-		webhookSenderService.sendEnrollmentDetails(requestEnroll);
+//		webhookSenderService.sendEnrollmentDetails(requestEnroll);
 
 		return ResponseEntity.ok("Enrollment successfull");
 	}
@@ -300,42 +301,156 @@ public class EnrollController {
 		}
 	}
 
+//	@GetMapping("/enroll/check")
+//	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
+//			@RequestParam String batchId, @RequestParam String assessmentFileName) {
+//
+//		Long enrollmentCount = repo.countEnrollments(studentId, courseName, batchId);
+//		if (enrollmentCount == null || enrollmentCount == 0) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(Map.of("error", "You must enroll before accessing assessments."));
+//		}
+//
+//		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+//		if (isActive == null) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
+//		}
+//		if (!isActive) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(Map.of("error", "This batch is no longer active"));
+//		}
+//
+//		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+//		List<String> fileNamesOnly = assessmentFiles.stream().map(path -> path.substring(path.lastIndexOf("/") + 1))
+//				.collect(Collectors.toList());
+//
+//		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+//
+//		if (assessmentIndex >= 3) {
+//
+//			Double amountPaid = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+//			if (amountPaid == null || amountPaid <= 0) {
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//						.body(Map.of("error", "You must pay to access this assessment."));
+//			}
+//		}
+//
+//		return ResponseEntity.ok(Map.of("canDownload", true));
+//	}
+	
 	@GetMapping("/enroll/check")
-	public ResponseEntity<?> checkLiveClassEnrollment(@RequestParam String studentId, @RequestParam String courseName,
-			@RequestParam String batchId, @RequestParam String assessmentFileName) {
+	public ResponseEntity<?> checkLiveClassEnrollment(
+	        @RequestParam String studentId,
+	        @RequestParam String courseName,
+	        @RequestParam String batchId,
+	        @RequestParam String assessmentFileName) {
 
-		Long enrollmentCount = repo.countEnrollments(studentId, courseName, batchId);
-		if (enrollmentCount == null || enrollmentCount == 0) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(Map.of("error", "You must enroll before accessing assessments."));
-		}
+	    Long enrollmentCount = repo.countEnrollments(studentId, courseName, batchId);
+	    if (enrollmentCount == null || enrollmentCount == 0) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("error", "You must enroll before accessing assessments."));
+	    }
 
-		Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
-		if (isActive == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Batch ID not found"));
-		}
-		if (!isActive) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(Map.of("error", "This batch is no longer active"));
-		}
+	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(batchId);
+	    if (isActive == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("error", "Batch ID not found"));
+	    }
+	    if (!isActive) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("error", "This batch is no longer active"));
+	    }
 
-		List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
-		List<String> fileNamesOnly = assessmentFiles.stream().map(path -> path.substring(path.lastIndexOf("/") + 1))
-				.collect(Collectors.toList());
+	    List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
 
-		int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+	    // NULL-SAFE FILE NAME EXTRACTION
+	    List<String> fileNamesOnly = assessmentFiles.stream()
+	            .filter(Objects::nonNull)
+	            .map(path -> {
+	                int idx = path.lastIndexOf("/");
+	                return (idx == -1) ? path : path.substring(idx + 1);
+	            })
+	            .collect(Collectors.toList());
 
-		if (assessmentIndex >= 3) {
+	    // INDEX CHECK SAFE
+	    int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
 
-			Double amountPaid = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
-			if (amountPaid == null || amountPaid <= 0) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.body(Map.of("error", "You must pay to access this assessment."));
-			}
-		}
+	    if (assessmentIndex >= 3) {
+	        Double amountPaid = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, batchId);
+	        if (amountPaid == null || amountPaid <= 0) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                    .body(Map.of("error", "You must pay to access this assessment."));
+	        }
+	    }
 
-		return ResponseEntity.ok(Map.of("canDownload", true));
+	    return ResponseEntity.ok(Map.of("canDownload", true));
 	}
+	@GetMapping("/enroll/course/check")
+	public ResponseEntity<?> checkAssessmentAccess(
+	        @RequestParam String studentId,
+	        @RequestParam String courseName,
+	        @RequestParam String assessmentFileName) {
+
+	    // STEP 1: Fetch all active batchIds for this course
+	    List<String> activeBatchIds = scheduleRepository.findActiveBatchIdsByCourse(courseName);
+
+	    if (activeBatchIds.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("error", "No active batches found for this course."));
+	    }
+
+	    // STEP 2: Check if student enrolled in ANY batch
+	    String matchedBatchId = null;
+
+	    for (String batchId : activeBatchIds) {
+	        Long count = repo.countEnrollments(studentId, courseName, batchId);
+
+	        if (count != null && count > 0) {
+	            matchedBatchId = batchId;
+	            break;
+	        }
+	    }
+
+	    if (matchedBatchId == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("error", "You must enroll before accessing assessments."));
+	    }
+
+	    // STEP 3: Optional - Check batch active
+	    Boolean isActive = scheduleRepository.findIsActiveByBatchId(matchedBatchId);
+	    if (isActive == null || !isActive) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("error", "This batch is no longer active."));
+	    }
+
+	    // STEP 4: Fetch assessment files
+	    List<String> assessmentFiles = curriculumRepository.findAssessmentFileNamesByCourseName(courseName);
+
+	    List<String> fileNamesOnly = assessmentFiles.stream()
+	            .filter(Objects::nonNull)
+	            .map(path -> {
+	                int idx = path.lastIndexOf("/");
+	                return (idx == -1) ? path : path.substring(idx + 1);
+	            })
+	            .collect(Collectors.toList());
+
+	    int assessmentIndex = fileNamesOnly.indexOf(assessmentFileName);
+
+	    // STEP 5: If assessment index >= 3 then payment must exist
+	    if (assessmentIndex >= 3) {
+	        Double amountPaid = paymentTransactionRepository.findAmountPaidForCourse(studentId, courseName, matchedBatchId);
+
+	        if (amountPaid == null || amountPaid <= 0) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                    .body(Map.of("error", "You must pay to access this assessment."));
+	        }
+	    }
+
+	    // STEP 6: Allow download
+	    return ResponseEntity.ok(Map.of("canDownload", true));
+	}
+
+
 
 	@GetMapping("/summary")
 	public ResponseEntity<EnrollmentSummaryDto> getEnrollmentSummary(@RequestParam String email) {
@@ -380,6 +495,59 @@ public class EnrollController {
 		}
 
 		return ResponseEntity.ok(trainers);
+	}
+
+	@GetMapping("/enroll/is-enrolled")
+	public ResponseEntity<?> isEnrolledForBatch(@RequestParam String studentId, @RequestParam String courseName,
+			@RequestParam String batchId) {
+		Long count = repo.countEnrollments(studentId, courseName, batchId);
+		boolean enrolled = (count != null && count > 0);
+
+		return ResponseEntity.ok(Map.of("enrolled", enrolled, "count", count == null ? 0 : count));
+	}
+
+	@PostMapping("/enroll/resend-email-by-session")
+	public ResponseEntity<?> resendEnrollEmailBySession(@RequestBody Map<String, String> request)
+			throws MessagingException {
+
+		String email = request.get("email");
+		String batchId = request.get("batchId");
+
+		if (email == null || batchId == null) {
+			return ResponseEntity.badRequest().body("Email & batchId are required.");
+		}
+
+		Enroll enrollment = repo.findByEmailAndBatchId(email, batchId);
+
+		if (enrollment == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment found for the selected batch.");
+		}
+
+		if (enrollment.getResendCount() >= 3) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("You have reached the maximum resend limit. Please contact Hachion Support.");
+		}
+
+		// increase resendCount
+		enrollment.setResendCount(enrollment.getResendCount() + 1);
+		repo.save(enrollment);
+
+		// email logic
+		LocalDate date = LocalDate.parse(enrollment.getEnroll_date());
+		String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"));
+
+		String time = enrollment.getTime();
+		String formattedDateTime = dayOfWeek + ", " + formattedDate + " at " + time;
+
+		String technologySlug = enrollment.getCourse_name().toLowerCase().replaceAll("\\s+", "-")
+				.replaceAll("[^a-z0-9\\-]", "");
+
+		emailService.sendEmailForEnrollForLiveDemo(enrollment.getEmail(), enrollment.getCourse_name(), dayOfWeek,
+				formattedDateTime, time, null, enrollment.getMeeting_link(), null, null, enrollment.getTrainer(), null,
+				null, null, null, null, null, null, null, technologySlug);
+
+		return ResponseEntity.ok("Email resent successfully. Check your email.");
 	}
 
 }

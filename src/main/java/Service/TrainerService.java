@@ -1,6 +1,7 @@
 package Service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,5 +18,7 @@ public interface TrainerService {
 	Trainer updateTrainer(int trainerId, Trainer updatedTrainer, MultipartFile trainerImage) throws IOException;
 
 	void deleteTrainer(int trainerId);
+	
+	public List<Trainer> getTrainersByCourseName(String courseName);
 
 }

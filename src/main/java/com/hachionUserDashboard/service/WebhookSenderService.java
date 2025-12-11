@@ -142,6 +142,49 @@ public class WebhookSenderService {
 		}
 	}
 
+	public void sendRequestBatchDetailsForCourse(RequestBatch requestBatch) {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+	    // Extract only timezone (last part)
+	    String fullTime = requestBatch.getTime_zone();     // e.g., "07:00 PM CST"
+	    String[] parts = fullTime.split(" ");
+	    String timeZoneOnly = parts[parts.length - 1];      // e.g., "CST"
+
+	    String message = String.format(
+	        "📢 *Student Requesting for %s Request Batch!*\n\n" +
+	        "*User Name:* %s\n" +
+	        "*Email:* %s\n" +
+	        "*Mobile:* %s\n" +
+	        "*Country:* %s\n" +
+	        "*Preferred Mode:* %s\n" +
+	        "*Course:* %s\n" +
+	        "*Time Zone:* %s\n" +
+	        "*Requested On:* %s",
+	        requestBatch.getMode(),
+	        requestBatch.getUserName(),
+	        requestBatch.getEmail(),
+	        requestBatch.getMobile(),
+	        requestBatch.getCountry(),
+	        requestBatch.getMode(),
+	        requestBatch.getCourseName(),
+	        timeZoneOnly,                                   // only CST / IST etc
+	        requestBatch.getDate().format(formatter)
+	    );
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+
+	    String payload = "{\"text\": \"" + message.replace("\"", "\\\"") + "\"}";
+	    HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+
+	    try {
+	        restTemplate.postForEntity(REQUEST_BATCH_WEBHOOK_URL, entity, String.class);
+	        System.out.println("✅ Request batch webhook sent successfully.");
+	    } catch (Exception e) {
+	        System.err.println("❌ Failed to send request batch webhook: " + e.getMessage());
+	    }
+	}
+
 	public void sendToWorkspace(String userMessage, String botResponse) {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();

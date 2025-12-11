@@ -20,8 +20,12 @@ public interface BlogRepository extends JpaRepository<Blogs, Integer> {
 	@Query(value = "SELECT DISTINCT category_name FROM blogs ORDER BY category_name ASC", nativeQuery = true)
 	List<String> findAllBlogCategories();
 
+//	@Query(value = "SELECT id, category_name, title, author, author_image, blog_image, date " + "FROM blogs "
+//			+ "WHERE category_name IN (:categories) " + "ORDER BY id DESC", nativeQuery = true)
+//	List<Object[]> findByCategoriesForList(@Param("categories") List<String> categories);
+
 	@Query(value = "SELECT id, category_name, title, author, author_image, blog_image, date " + "FROM blogs "
-			+ "WHERE category_name IN (:categories) " + "ORDER BY id DESC", nativeQuery = true)
+			+ "WHERE category_name IN (:categories) " + "ORDER BY category_name DESC, id DESC", nativeQuery = true)
 	List<Object[]> findByCategoriesForList(@Param("categories") List<String> categories);
 
 }

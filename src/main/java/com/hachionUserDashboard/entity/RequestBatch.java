@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "requestbatch")
@@ -45,6 +44,15 @@ public class RequestBatch {
 	private String mode;
 
 	private LocalDate date;
+
+	@Column(name = "preferred_time")
+	private String preferredTime;
+
+	@Column(name = "notification")
+	private String notification;
+	
+	@Column(name = "preferred_day")
+	private String preferredDay;
 
 	public RequestBatch() {
 
@@ -130,4 +138,30 @@ public class RequestBatch {
 		this.date = date;
 	}
 
+
+	public String getNotification() {
+		return notification;
+	}
+
+	public void setNotification(String notification) {
+		this.notification = notification;
+	}
+
+	public String getPreferredDay() {
+		return preferredDay;
+	}
+
+	public void setPreferredDay(String preferredDay) {
+		this.preferredDay = preferredDay;
+	}
+
+	public String getPreferredTime() {
+		return preferredTime;
+	}
+
+	public void setPreferredTime(String preferredTime) {
+		this.preferredTime = preferredTime;
+	}
+
+	
 }

@@ -476,5 +476,15 @@ public class CurriculumController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	 @GetMapping("/curriculum/course/{course}")
+	    public ResponseEntity<?> getCurriculumByCourse(@PathVariable("course") String course) {
+	        List<Curriculum> result = repo.findByNormalizedCourse(course);
 
+	        if (result.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                    .body("No curriculum found for: " + course);
+	        }
+
+	        return ResponseEntity.ok(result);
+	    }
 }

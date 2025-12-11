@@ -61,6 +61,9 @@ public class Enroll {
 	@Column
 	private String meeting_link;
 
+	@Column(name = "resend_count")
+	private int resendCount = 0;
+
 	public int getResendCount() {
 		return resendCount;
 	}
@@ -68,9 +71,6 @@ public class Enroll {
 	public void setResendCount(int resendCount) {
 		this.resendCount = resendCount;
 	}
-
-	@Column(name = "resend_count")
-	private int resendCount = 0;
 
 	public Enroll() {
 

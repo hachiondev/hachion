@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "course")
@@ -135,8 +134,39 @@ public class Course {
 	private String aboutCourse;
 
 	@Column
-	private String level = "All Levels";
+	private int numberOfProjects;
 
+	@Column(columnDefinition = "LONGTEXT")
+	private String whatYouWillLearn;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String whoIsThisCourseFor;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String careerOpportunities;
+
+	@Column
+	private String avarageSalaryRange;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String prerequisities;
+	
+
+	@Column
+	private String level = "All Levels";
+	
+	@Column(columnDefinition = "LONGTEXT")
+	private String liveTraining;
+	
+	@Column(columnDefinition = "LONGTEXT")
+	private String crashCourse;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String mentoringMode;
+	
+	@Column(columnDefinition = "LONGTEXT")
+	private String selfPacedLearning;
+	
 	public Double getMamount() {
 		return mamount;
 	}
@@ -645,6 +675,87 @@ public class Course {
 
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+
+	public String getWhatYouWillLearn() {
+		return whatYouWillLearn;
+	}
+
+	public void setWhatYouWillLearn(String whatYouWillLearn) {
+		this.whatYouWillLearn = whatYouWillLearn;
+	}
+
+	public String getWhoIsThisCourseFor() {
+		return whoIsThisCourseFor;
+	}
+
+	public void setWhoIsThisCourseFor(String whoIsThisCourseFor) {
+		this.whoIsThisCourseFor = whoIsThisCourseFor;
+	}
+
+	public String getCareerOpportunities() {
+		return careerOpportunities;
+	}
+
+	public void setCareerOpportunities(String careerOpportunities) {
+		this.careerOpportunities = careerOpportunities;
+	}
+
+	public String getAvarageSalaryRange() {
+		return avarageSalaryRange;
+	}
+
+	public void setAvarageSalaryRange(String avarageSalaryRange) {
+		this.avarageSalaryRange = avarageSalaryRange;
+	}
+
+	public String getPrerequisities() {
+		return prerequisities;
+	}
+
+	public void setPrerequisities(String prerequisities) {
+		this.prerequisities = prerequisities;
+	}
+
+	public int getNumberOfProjects() {
+		return numberOfProjects;
+	}
+
+	public void setNumberOfProjects(int numberOfProjects) {
+		this.numberOfProjects = numberOfProjects;
+	}
+
+	public String getLiveTraining() {
+		return liveTraining;
+	}
+
+	public void setLiveTraining(String liveTraining) {
+		this.liveTraining = liveTraining;
+	}
+
+	public String getCrashCourse() {
+		return crashCourse;
+	}
+
+	public void setCrashCourse(String crashCourse) {
+		this.crashCourse = crashCourse;
+	}
+
+	public String getMentoringMode() {
+		return mentoringMode;
+	}
+
+	public void setMentoringMode(String mentoringMode) {
+		this.mentoringMode = mentoringMode;
+	}
+
+	public String getSelfPacedLearning() {
+		return selfPacedLearning;
+	}
+
+	public void setSelfPacedLearning(String selfPacedLearning) {
+		this.selfPacedLearning = selfPacedLearning;
 	}
 
 }

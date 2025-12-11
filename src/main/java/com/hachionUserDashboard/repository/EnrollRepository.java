@@ -67,4 +67,6 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 	@Query(value = "SELECT DISTINCT trainer FROM enroll WHERE email = :email AND course_name = :courseName", nativeQuery = true)
 	List<String> findTrainersByEmailAndCourse(@Param("email") String email, @Param("courseName") String courseName);
 
+	Enroll findByEmailAndBatchId(String email, String batchId);
+
 }

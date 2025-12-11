@@ -184,4 +184,15 @@ public class TrainerController {
 	public void setTrainerservice(TrainerService trainerservice) {
 		this.trainerservice = trainerservice;
 	}
+	@GetMapping("/trainernames/by-course")
+	public ResponseEntity<List<String>> getTrainerNamesByCourse(@RequestParam String courseName) {
+
+	    List<String> trainerNames = repo.gettingTrainerNamesByCourse(courseName);
+	    return ResponseEntity.ok(trainerNames);
+	}
+	@GetMapping("/coursedetails/by-course")
+	public ResponseEntity<List<Trainer>> getTrainerDetails(@RequestParam String courseName) {
+	    return ResponseEntity.ok(trainerservice.getTrainersByCourseName(courseName));
+	}
+
 }

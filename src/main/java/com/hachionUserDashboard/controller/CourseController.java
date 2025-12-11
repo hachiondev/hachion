@@ -191,6 +191,17 @@ public class CourseController {
 				course.setAboutCourse(updatedCourse.getAboutCourse());
 				course.setCourseDescription(updatedCourse.getCourseDescription());
 				course.setLevel(updatedCourse.getLevel());
+				course.setWhatYouWillLearn(updatedCourse.getWhatYouWillLearn());
+				course.setNumberOfProjects(updatedCourse.getNumberOfProjects());
+				course.setWhoIsThisCourseFor(updatedCourse.getWhoIsThisCourseFor());
+				course.setCareerOpportunities(updatedCourse.getCareerOpportunities());
+				course.setAvarageSalaryRange(updatedCourse.getAvarageSalaryRange());
+				course.setPrerequisities(updatedCourse.getPrerequisities());
+				course.setLiveTraining(updatedCourse.getLiveTraining());
+				course.setCrashCourse(updatedCourse.getCrashCourse());
+				course.setMentoringMode(updatedCourse.getMentoringMode());
+				course.setSelfPacedLearning(updatedCourse.getSelfPacedLearning());
+				
 				
 				if (courseImage != null && !courseImage.isEmpty()) {
 					try {

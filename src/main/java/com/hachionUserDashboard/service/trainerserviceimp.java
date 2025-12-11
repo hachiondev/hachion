@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -185,5 +186,10 @@ public class trainerserviceimp implements TrainerService {
 		String imagePath = existing.getTrainerImage();
 		trainerRepo.deleteById(trainerId);
 		deleteImageIfExists(imagePath);
+	}
+	
+	@Override
+	public List<Trainer> getTrainersByCourseName(String courseName) {
+	    return trainerRepo.findTrainersByCourseName(courseName);
 	}
 }

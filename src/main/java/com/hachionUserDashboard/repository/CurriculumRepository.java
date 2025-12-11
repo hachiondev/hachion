@@ -22,4 +22,7 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 	@Query(value = "SELECT assessment_pdf FROM curriculum WHERE course_name = :courseName ORDER BY curriculum_id ASC", nativeQuery = true)
 	List<String> findAssessmentFileNamesByCourseName(@Param("courseName") String courseName);
 
+	@Query(value = "SELECT * FROM curriculum WHERE "
+			+ "LOWER(REPLACE(REPLACE(REPLACE(course_name, ' ', ''), '-', ''), '_', '')) = :normalizedCourse", nativeQuery = true)
+	List<Curriculum> findByNormalizedCourse(@Param("normalizedCourse") String normalizedCourse);
 }

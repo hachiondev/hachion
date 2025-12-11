@@ -142,6 +142,10 @@ const Instructors = () => {
       window.scrollTo({ top: offsetTop, behavior: "smooth" });
     }
   };
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const renderStarRating = (rating) => (
     <div className="rating-display">

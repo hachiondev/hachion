@@ -4,12 +4,14 @@ import "./Blogs.css";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useCourses } from "../../Api/hooks/NavbarApi/useCourses";
 
 const Sitemap = () => {
   const [Category, setCategory] = useState([]);
   const [courses, setCourses] = useState([]);
   const API_URL = "https://api.hachion.co/course-categories/all";
   const navigate = useNavigate();
+  const { data: course = [] } = useCourses();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,7 +30,7 @@ const Sitemap = () => {
 
     fetchCategories();
   }, []);
-  
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -48,13 +50,43 @@ const Sitemap = () => {
     fetchCourses();
   }, []);
 
-  
+  const handleNavigation = (courseName) => {
+    if (!courseName) {
+      console.error("courseName is missing:", courseName);
+      return;
+    }
+
+    const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
+
+    sessionStorage.setItem("fromPage", window.location.pathname + window.location.search);
+
+    navigate(`/coursedetails/${formatted}`, {
+      state: { from: window.location.pathname + window.location.search },
+    });
+
+    window.scrollTo(0, 0);
+  };
+
+
+  const handleCategoryClick = (categoryName) => {
+    const matched = course.find(
+      (item) => item.courseCategory?.toLowerCase() === categoryName.toLowerCase()
+    );
+
+    if (!matched) {
+      console.warn("No course found for category:", categoryName);
+      return;
+    }
+
+    handleNavigation(matched.courseName);
+  };
+
   const handleCourseDetails = (coursename) => {
     if (coursename) {
       const formattedName = coursename
         .toLowerCase()
         .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9\-]/g, ""); 
+        .replace(/[^a-z0-9\-]/g, "");
       navigate(`/coursedetails/${formattedName}`);
     }
   };
@@ -77,15 +109,19 @@ const Sitemap = () => {
             <p className="title">All categories</p>
           </div>
           <div className="sitemap-contenet container">
-            <div class="div_category">
+            <div className="div_category">
               {Category.map((item, index) => (
-                <div key={index} class="col-12 col-md-6">
-                  <p class="txtCategory mt-2">
-                    <a href="/coursedetails">{item.name}</a>
-                  </p>
+                <div key={index} className="col-12 col-md-6">
+                  <button
+                    className="txtCoursebtn mt-2"
+                    onClick={() => handleCategoryClick(item.name)}
+                  >
+                    {item.name}
+                  </button>
                 </div>
               ))}
             </div>
+
           </div>
         </div>
         <div className="about-us-content" style={{ marginTop: "20px" }}>
@@ -103,7 +139,7 @@ const Sitemap = () => {
                     <button
                       className="txtCoursebtn"
                       onClick={(e) => {
-                        e.stopPropagation(); 
+                        e.stopPropagation();
                         handleCourseDetails(item.courseName);
                       }}
                     >

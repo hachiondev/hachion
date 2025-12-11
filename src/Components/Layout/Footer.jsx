@@ -20,9 +20,19 @@ const Footer = () => {
   // 🔗 Navigation Handlers
   // -------------------------
   const handleNavigation = (courseName) => {
-    const formatted = courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/coursedetails/${formatted}`);
+    const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
+
+    // Save current page in sessionStorage
+    sessionStorage.setItem("fromPage", window.location.pathname + window.location.search);
+
+    // Navigate to course details with state
+    navigate(`/coursedetails/${formatted}`, {
+      state: { from: window.location.pathname + window.location.search }
+    });
+
+    window.scrollTo(0, 0);
   };
+
 
   const go = (path) => {
     navigate(path);

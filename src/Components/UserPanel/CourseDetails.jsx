@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Course.css';
 import CourseDetailsTop from './CourseDetailsTop';
@@ -32,6 +32,22 @@ const CourseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const upcomingBatchRef = useRef(null);
+  const navigate = useNavigate();
+
+    useEffect(() => {
+    const fromState = location.state?.from;
+    const fromStorage = sessionStorage.getItem("fromPage");
+
+    const from = fromState || fromStorage;
+
+    window.onpopstate = () => {
+      if (from) {
+        navigate(from, { replace: true });
+      } else {
+        navigate(-1);
+      }
+    };
+  }, [navigate, location]);
 
     useEffect(() => {
       if (location.hash === '#upcoming-events') {

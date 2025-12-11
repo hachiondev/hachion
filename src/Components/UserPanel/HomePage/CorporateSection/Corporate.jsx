@@ -7,7 +7,7 @@ const Corporate = () => {
   const navigate = useNavigate();
 
   const handleKnowMoreClick = () => {
-    navigate('/corporate', { replace: true });
+    navigate('/corporate');
     window.scrollTo(0, 0);
   };
 

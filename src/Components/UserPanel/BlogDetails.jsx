@@ -90,7 +90,7 @@ const BlogDetails = () => {
         foundHeadings.push({ id, text });
       });
 
-      const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))/gi;
+      const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|webp))/gi;
       doc.body.innerHTML = doc.body.innerHTML.replace(
         imageUrlRegex,
         '<img src="$1" alt="Image" style="max-width:100%; display:block; margin:10px auto;" />'

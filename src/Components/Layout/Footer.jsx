@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import '../../Components/UserPanel/Home.css';
 
 // TanStack Query Hooks
-import { useTopBarApi } from '../../Api/hooks/useTopBarApi';
-import { useTrendingData } from '../../Api/hooks/TrendingApi/useTrendingData';
+import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
+import { useTrendingData } from '../../Api/hooks/HomePageApi/TrendingApi/useTrendingData';
 
 const Footer = () => {
   const navigate = useNavigate();

@@ -39,7 +39,7 @@ import Workshop from './Components/UserPanel/Workshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
 import Unsubscribe from './Components/UserPanel/Unsubscribe';
-import Sitemap from './Components/UserPanel/Sitemap';
+import Sitemap from './Components/UserPanel/SitemapPage/Sitemap';
 import KidsSummer from './Components/UserPanel/KidsSummer';
 import LeadForm from './Components/UserPanel/LeadForm';
 import HirefromUs from './Components/UserPanel/HirefromUs';

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import RecentEntriesCard from "./components/RecentEntriesCard";
-import { useRecentBlogs } from '../../../../Api/hooks/TrendingBlogApi/useRecentBlogs';
+import { useRecentBlogs } from '../../../../Api/hooks/HomePageApi/TrendingBlogApi/useRecentBlogs';
 import "../../Blogs.css";
 
 const RecentEntries = () => {

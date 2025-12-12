@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSummerEvents } from "../../../../Api/hooks/TeenApi/useSummerEvents";
-import { useTrendingData } from "../../../../Api/hooks/TrendingApi/useTrendingData";
-import { useDiscountRules } from "../../../../Api/hooks/TrendingApi/useDiscountRules";
-import { useGeoData } from "../../../../Api/hooks/TrendingApi/useGeoData";
-import { useCountdowns } from "../../../../Api/hooks/TrendingApi/useCountdowns";
+import { useSummerEvents } from "../../../../Api/hooks/HomePageApi/TeenApi/useSummerEvents";
+import { useTrendingData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";
+import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
+import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import { useCountdowns } from "../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 
 import CourseCard from "../../CourseCard";
 import CardsPagination from "../../CardsPagination";

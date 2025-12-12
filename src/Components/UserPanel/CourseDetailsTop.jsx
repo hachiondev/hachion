@@ -96,7 +96,7 @@ const CourseDetailsTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
 
         const courseNameFromUrl = courseName?.toLowerCase()?.replace(/\s+/g, '-');
         const matchedCourse = response.data.find(

@@ -250,7 +250,7 @@ export default function Resume() {
     useEffect(() => {
       const fetchCourseCategory = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("https://api.test.hachion.co/courses/all");
           setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
         } catch (error) {
           console.error("Error fetching categories:", error.message);

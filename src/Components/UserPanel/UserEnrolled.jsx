@@ -24,7 +24,7 @@ export default function UserEnrolledCourses() {
 
         const [enrollRes, coursesRes, trainersRes] = await Promise.all([
           axios.get("https://api.hachion.co/enroll"),
-          axios.get("https://api.hachion.co/courses/all"),
+          axios.get("https://api.test.hachion.co/courses/all"),
           axios.get("https://api.hachion.co/trainers"),
         ]);
 

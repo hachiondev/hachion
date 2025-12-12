@@ -8,8 +8,8 @@ import { countries, getDefaultCountry } from "../../../../../countryUtils";
 import LoginBanner from "../../../../../Assets/loginbackground.webp";
 import google from "../../../../../Assets/google-new.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { useTopBarApi } from "../../../../../Api/hooks/useTopBarApi";
-import { useUserMe } from "../../../../../Api/hooks/RegisterApi/useUserMe";
+import { useTopBarApi } from "../../../../../Api/hooks/HomePageApi/useTopBarApi";
+import { useUserMe } from "../../../../../Api/hooks/HomePageApi/RegisterApi/useUserMe";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");

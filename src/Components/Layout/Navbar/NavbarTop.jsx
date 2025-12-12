@@ -5,16 +5,16 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import "../../../Components/UserPanel/Home.css";
 import "../../../Components/UserPanel/Course.css";
-import { useCourses } from "../../../Api/hooks/NavbarApi/useCourses";
-import { useBlogs } from "../../../Api/hooks/NavbarApi/useBlogs";
-import { useUserProfile } from "../../../Api/hooks/NavbarApi/useUserProfile";
+import { useCourses } from '../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
+import { useBlogs } from "../../../Api/hooks/HomePageApi/NavbarApi/useBlogs";
+import { useUserProfile } from "../../../Api/hooks/HomePageApi/NavbarApi/useUserProfile";
 import NavbarLogo from "./components/NavbarLogo";
 import SearchBox from "./components/SearchBox";
 import SearchResults from "./components/SearchResults";
 import ExploreDropdown from "./components/ExploreDropdown";
 import UserMenu from "./components/UserMenu";
 import MobileDrawer from "./components/MobileDrawer";
-import { useSearch } from "../../../Api/hooks/NavbarApi/useSearch";
+import { useSearch } from "../../../Api/hooks/HomePageApi/NavbarApi/useSearch";
 
 const NavbarTop = () => {
   const navigate = useNavigate();

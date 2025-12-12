@@ -10,7 +10,7 @@ import quora from '../../Assets/Component 141.webp';
 import { useNavigate } from 'react-router-dom';
 
 // TanStack Query Hook (same as Footer)
-import { useTopBarApi } from '../../Api/hooks/useTopBarApi';
+import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
 
 const StickyBar = () => {
   const navigate = useNavigate();

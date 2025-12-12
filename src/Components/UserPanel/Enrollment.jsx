@@ -251,7 +251,7 @@ const getField = (baseField) => {
   const fetchCourseData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://api.hachion.co/courses/all');
+      const response = await axios.get('https://api.test.hachion.co/courses/all');
 
       const matchedCourse = response.data.find(
         (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName?.toLowerCase().replace(/\s+/g, '-')

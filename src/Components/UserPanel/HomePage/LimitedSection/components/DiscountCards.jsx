@@ -8,10 +8,10 @@ import DiscountCourseCard from "./DiscountCourseCard";
 import Nodiscount from "../../../../../Assets/nodiscount.webp";
 
 // === SHARED HOOKS ===
-import { useTrendingData } from "../../../../../Api/hooks/TrendingApi/useTrendingData";
-import { useGeoData } from "../../../../../Api/hooks/TrendingApi/useGeoData";
-import { useDiscountRules } from "../../../../../Api/hooks/TrendingApi/useDiscountRules";
-import { useCountdowns } from "../../../../../Api/hooks/TrendingApi/useCountdowns";
+import { useTrendingData } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";
+import { useGeoData } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import { useDiscountRules } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
+import { useCountdowns } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 
 // === SHARED UTILITIES ===
 import { 

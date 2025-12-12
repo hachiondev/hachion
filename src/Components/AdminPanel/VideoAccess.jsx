@@ -265,7 +265,7 @@ const displayedCourse = filteredCourse.slice(
     useEffect(() => {
       const fetchCourses = async () => {
         try {
-          const response = await axios.get("https://api.hachion.co/courses/all");
+          const response = await axios.get("https://api.test.hachion.co/courses/all");
           console.log("API response:", response.data); // Check the API response
           if (Array.isArray(response.data)) {
             setCourse(response.data); // Update state

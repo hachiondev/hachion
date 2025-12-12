@@ -62,7 +62,7 @@ const Instructors = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/courses/all");
+        const res = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(res.data)) {
           setCourses(res.data.map(c => c.courseName));
         }

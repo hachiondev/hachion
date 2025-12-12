@@ -36,7 +36,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
       try {
         setLoading(true);
         const [coursesRes, trainersRes] = await Promise.all([
-          axios.get("https://api.hachion.co/courses/all"),
+          axios.get("https://api.test.hachion.co/courses/all"),
           axios.get("https://api.hachion.co/trainers"),
         ]);
 

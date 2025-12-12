@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import LearnerCard from "./components/LearnerCard";
-import { useLearnerReviews } from "../../../../Api/hooks/LearnerApi/useLearnerReviews";
+import { useLearnerReviews } from "../../../../Api/hooks/HomePageApi/LearnerApi/useLearnerReviews";
 
 const Learners = ({ page }) => {
   const navigate = useNavigate();

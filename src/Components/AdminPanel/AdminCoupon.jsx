@@ -121,7 +121,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
 
     useEffect(() => {
         axios
-          .get("https://api.hachion.co/courses/all")
+          .get("https://api.test.hachion.co/courses/all")
           .then((res) => {
             setCourses(res.data);
           })

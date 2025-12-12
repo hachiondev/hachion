@@ -90,7 +90,7 @@ if (userCurrency !== 'INR' && userCurrency !== 'USD') {
 }
 setExchangeRate(rate);
 
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courses = response.data;
         const matchedCourse = courses.find(
           (course) => course.courseName.toLowerCase().replace(/\s+/g, '-') === courseName

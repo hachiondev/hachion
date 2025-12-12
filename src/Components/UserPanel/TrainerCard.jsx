@@ -23,7 +23,7 @@ const TrainerCard = (props) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courseNameFromUrl = courseName
           ?.toLowerCase()
           ?.replace(/\s+/g, '-');

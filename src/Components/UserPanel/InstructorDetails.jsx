@@ -65,7 +65,7 @@ const trainerCourses = allCourses.filter(course =>
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const resCourses = await axios.get("https://api.hachion.co/courses/all");
+        const resCourses = await axios.get("https://api.test.hachion.co/courses/all");
         const resTrainers = await axios.get("https://api.hachion.co/trainers");
         const coursesWithTrainer = resCourses.data.map(course => {
           const trainerData = resTrainers.data.find(t => 

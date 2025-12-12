@@ -53,7 +53,7 @@ useEffect(() => {
 
       const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([
         axios.get("https://api.hachion.co/corporatecourse"),
-        axios.get("https://api.hachion.co/courses/all"),
+        axios.get("https://api.test.hachion.co/courses/all"),
         axios.get("https://api.hachion.co/trainers"),
       ]);
 

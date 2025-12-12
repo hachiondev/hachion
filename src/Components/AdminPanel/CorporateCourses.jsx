@@ -89,7 +89,7 @@ export default function CorporateCourses() {
     try {
       const [catRes, courseRes, corpRes] = await Promise.all([
         axios.get("https://api.hachion.co/course-categories/all"),
-        axios.get("https://api.hachion.co/courses/all"),
+        axios.get("https://api.test.hachion.co/courses/all"),
         axios.get("https://api.hachion.co/corporatecourse")
       ]);
       setCategory(catRes.data);

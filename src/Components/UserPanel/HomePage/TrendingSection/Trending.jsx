@@ -4,10 +4,10 @@ import CourseCard from "../../CourseCard";
 import CardsPagination from "../../CardsPagination";
 import "../../Home.css";
 import { getActiveRuleFor, getRuleDiscountPct } from "./utils/discountUtils";
-import { useTrendingData } from "../../../../Api/hooks/TrendingApi/useTrendingData";
-import { useGeoData } from "../../../../Api/hooks/TrendingApi/useGeoData";
-import { useDiscountRules } from "../../../../Api/hooks/TrendingApi/useDiscountRules";
-import { useCountdowns } from "../../../../Api/hooks/TrendingApi/useCountdowns";
+import { useTrendingData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";
+import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
+import { useCountdowns } from "../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 
 const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 

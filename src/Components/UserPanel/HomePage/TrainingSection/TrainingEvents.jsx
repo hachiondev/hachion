@@ -6,10 +6,10 @@ import Select from "react-select";
 import { IoSearch } from "react-icons/io5";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useGeoData } from "../../../../Api/hooks/TrendingApi/useGeoData";
-import { useScheduleCourses } from "../../../../Api/hooks/TrainingApi/useScheduleCourses";
-import { useCoursesSummary } from "../../../../Api/hooks/TrainingApi/useCoursesSummary";
-import { useDiscountRules } from "../../../../Api/hooks/TrendingApi/useDiscountRules";
+import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import { useScheduleCourses } from "../../../../Api/hooks/HomePageApi/TrainingApi/useScheduleCourses";
+import { useCoursesSummary } from "../../../../Api/hooks/HomePageApi/TrainingApi/useCoursesSummary";
+import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 
 dayjs.extend(customParseFormat);
 

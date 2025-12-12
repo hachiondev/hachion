@@ -64,7 +64,7 @@ const [paidCheckBoxInstallment, setPaidCheckBoxInstallment] = useState([]);
     const fetchCoursePricing = async () => {
       try {
         if (!selectedBatchData?.schedule_course_name) return;
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
         const matchedCourse = response.data.find(
           (c) =>
             c.courseName.toLowerCase().replace(/\s+/g, '-') ===

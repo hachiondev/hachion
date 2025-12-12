@@ -50,7 +50,7 @@ const ExploreDeals = () => {
       setLoading(true);
       try {
         const allCoursesResponse = await axios.get(
-          'https://api.hachion.co/courses/all'
+          'https://api.test.hachion.co/courses/all'
         );
         const trainersResponse = await axios.get(
           'https://api.hachion.co/trainers'

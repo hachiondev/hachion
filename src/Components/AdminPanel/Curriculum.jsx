@@ -183,7 +183,7 @@ export default function Curriculum() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get("https://api.hachion.co/courses/all");
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
         setCourseCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);

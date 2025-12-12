@@ -92,7 +92,7 @@ const Project = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);

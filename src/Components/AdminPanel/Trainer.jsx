@@ -34,16 +34,6 @@ const normalizeTrainer = (t) => ({
   trainerRating: t.trainerRating ?? t.trainerRating ?? '',
 });
 
-const toBackendTrainer = (t) => {
-  const out = { ...t };
-  out.trainer_id = t.id || t.trainer_id;
-  delete out.id;
-  if (out.trainerRating !== undefined && out.trainerRating !== null && out.trainerRating !== '') {
-    out.trainerRating = Number(out.trainerRating);
-  }
-  return out;
-};
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -82,6 +72,9 @@ export default function Trainer() {
     profileImage: '',
     trainerRating: '',
     enrolledStudents: '',
+    experience: '',
+    designation: '',
+    experienceCredentials: '',
     course_name: '',
     category_name: '',
     summary: '',
@@ -90,6 +83,7 @@ export default function Trainer() {
     demo_link_3: '',
     date: getCurrentDateString(),
   });
+  const [errors, setErrors] = useState({});
 
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -98,6 +92,29 @@ export default function Trainer() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Mandatory fields
+  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials','trainerRating','summary'];
+
+  // Check form validity without setting state
+  const checkFormValidity = () => {
+    const newErrors = {};
+    
+    // Check each mandatory field
+    mandatoryFields.forEach(field => {
+      if (!formData[field] || formData[field].toString().trim() === '') {
+        newErrors[field] = `${field.replace('_', ' ')} is required`;
+      }
+    });
+    
+    return { isValid: Object.keys(newErrors).length === 0, errors: newErrors };
+  };
+
+  // Check if submit button should be enabled
+  const isSubmitEnabled = () => {
+    const { isValid } = checkFormValidity();
+    return isValid;
+  };
 
   useEffect(() => {
     fetchTrainers();
@@ -128,7 +145,7 @@ export default function Trainer() {
 
   const fetchCourseList = async () => {
     try {
-      const res = await axios.get('https://api.hachion.co/courses/all');
+      const res = await axios.get('https://api.test.hachion.co/courses/all');
       setCourseCategory(res.data || []);
     } catch (err) {
       console.error('Error fetching courses list:', err);
@@ -143,7 +160,7 @@ export default function Trainer() {
       setFilterCourse([]);
     }
   }, [formData.category_name, courseCategory]);
-  
+
   useEffect(() => {
     const filtered = trainers.filter((trainer) =>
       (trainer.trainer_name || '')
@@ -155,7 +172,7 @@ export default function Trainer() {
     setFilteredTrainers(filtered);
     setCurrentPage(1);
   }, [searchTerm, trainers]);
-  
+
   const handleDateFilter = () => {
     const filtered = trainers.filter((item) => {
       const trainerDate = dayjs(item.date);
@@ -187,54 +204,78 @@ export default function Trainer() {
   const displayedCourse = filteredTrainers.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   const handleInputChange = (e, field = null, value = null) => {
-  const name = field ?? e.target.name;
-  let val = field ? value : e.target.value;
-  
-  if (name === 'trainerRating') {
-    if (val === '') {
-      setFormData((prev) => ({ ...prev, trainerRating: '' }));
+    const name = field ?? e.target.name;
+    let val = field ? value : e.target.value;
+
+    if (name === 'trainerRating') {
+      if (val === '') {
+        setFormData((prev) => ({ ...prev, trainerRating: '' }));
+        return;
+      }
+
+      val = String(val).replace(/^0+/, '');
+
+      let num = Number(val);
+
+      if (isNaN(num)) {
+        num = '';
+      } else if (num > 5) {
+        num = 5;
+      } else if (num < 0) {
+        num = 0;
+      }
+
+      setFormData((prev) => ({ ...prev, trainerRating: num }));
+      
+      // Clear error for this field
+      if (errors[name]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
+      
       return;
     }
-
-    val = String(val).replace(/^0+/, '');
-
-    let num = Number(val);
-
-    if (isNaN(num)) {
-      num = '';
-    } else if (num > 5) {
-      num = 5;
-    } else if (num < 0) {
-      num = 0;
+    
+    setFormData((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+    
+    // Clear error for this field
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     }
+  };
 
-    setFormData((prev) => ({ ...prev, trainerRating: num }));
-    return;
-  }
-  setFormData((prev) => ({
-    ...prev,
-    [name]: val,
-  }));
-};
-  
   const handleReset = () => {
-  setFormData({
-    id: '',
-    trainer_name: '',
-    profileImage: null,
-    existingImageName: '',
-    trainerRating: '',
-    enrolledStudents: '',
-    course_name: '',
-    category_name: '',
-    summary: '',
-    demo_link_1: '',
-    demo_link_2: '',
-    demo_link_3: '',
-    date: getCurrentDateString(),
-  });
-  setFormMode('Add');
-};
+    setFormData({
+      id: '',
+      trainer_name: '',
+      profileImage: null,
+      existingImageName: '',
+      trainerRating: '',
+      enrolledStudents: '',
+      experience: '',
+      designation: '',
+      experienceCredentials: '',
+      course_name: '',
+      category_name: '',
+      summary: '',
+      demo_link_1: '',
+      demo_link_2: '',
+      demo_link_3: '',
+      date: getCurrentDateString(),
+    });
+    setErrors({});
+    setFormMode('Add');
+  };
 
   const openAddForm = () => {
     setFormMode('Add');
@@ -243,101 +284,104 @@ export default function Trainer() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSuccessMessage("");
-  setErrorMessage("");
+    e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
 
-  if (!formData.trainer_name || !formData.course_name || !formData.category_name) {
-    setErrorMessage("⚠️ Please fill in all required fields.");
-    return;
-  }
-
-  try {
+    // Validate form before submitting
+    const { isValid, errors: validationErrors } = checkFormValidity();
+    setErrors(validationErrors);
     
-    const trainerPayload = {
-      trainer_name: formData.trainer_name,
-      category_name: formData.category_name,
-      course_name: formData.course_name,
-      summary: formData.summary,
-      demo_link_1: formData.demo_link_1,
-      demo_link_2: formData.demo_link_2,
-      demo_link_3: formData.demo_link_3,
-      date: formData.date,
-      enrolledStudents:formData.enrolledStudents,
-      trainerRating:
-        formData.trainerRating === "" || formData.trainerRating == null
+    if (!isValid) {
+      setErrorMessage("⚠️ Please fill in all required fields marked with *");
+      return;
+    }
+
+    try {
+      const trainerPayload = {
+        trainer_name: formData.trainer_name,
+        category_name: formData.category_name,
+        course_name: formData.course_name,
+        summary: formData.summary,
+        demo_link_1: formData.demo_link_1,
+        demo_link_2: formData.demo_link_2,
+        demo_link_3: formData.demo_link_3,
+        date: formData.date,
+        enrolledStudents: formData.enrolledStudents,
+        experience: formData.experience,
+        designation: formData.designation,
+        experienceCredentials: formData.experienceCredentials,
+        trainerRating: formData.trainerRating === "" || formData.trainerRating == null
           ? null
           : Number(formData.trainerRating),
-    };
-    
-    const formDataToSend = new FormData();
-    formDataToSend.append("trainerData", JSON.stringify(trainerPayload));
+      };
 
-    if (formData.profileImage && formData.profileImage instanceof File) {
-      formDataToSend.append("trainerImage", formData.profileImage);
-    }
+      const formDataToSend = new FormData();
+      formDataToSend.append("trainerData", JSON.stringify(trainerPayload));
 
-    let response;
+      if (formData.profileImage && formData.profileImage instanceof File) {
+        formDataToSend.append("trainerImage", formData.profileImage);
+      }
 
-    if (formData.id) {
-      response = await axios.put(
-        `https://api.hachion.co/trainer/update/${formData.id}`,
-        formDataToSend
-      );
+      let response;
 
-      const updated = normalizeTrainer(response.data);
+      if (formData.id) {
+        response = await axios.put(
+          `https://api.hachion.co/trainer/update/${formData.id}`,
+          formDataToSend
+        );
 
-      setTrainers((prev) =>
-        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
-      );
-      setFilteredTrainers((prev) =>
-        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
-      );
-      setAllTrainers((prev) =>
-        prev.map((t) => (t.trainer_id === formData.id ? updated : t))
-      );
+        const updated = normalizeTrainer(response.data);
 
-      setSuccessMessage("✅ Trainer updated successfully.");
-    }
-    
-    else {
-      response = await axios.post(
-        "https://api.hachion.co/trainer/add",
-        formDataToSend
-      );
+        setTrainers((prev) =>
+          prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+        );
+        setFilteredTrainers((prev) =>
+          prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+        );
+        setAllTrainers((prev) =>
+          prev.map((t) => (t.trainer_id === formData.id ? updated : t))
+        );
 
-      const added = normalizeTrainer(response.data);
+        setSuccessMessage("✅ Trainer updated successfully.");
+      } else {
+        response = await axios.post(
+          "https://api.hachion.co/trainer/add",
+          formDataToSend
+        );
 
-      setTrainers((prev) => [...prev, added]);
-      setFilteredTrainers((prev) => [...prev, added]);
-      setAllTrainers((prev) => [...prev, added]);
+        const added = normalizeTrainer(response.data);
 
-      setSuccessMessage("✅ Trainer added successfully.");
-    }
+        setTrainers((prev) => [...prev, added]);
+        setFilteredTrainers((prev) => [...prev, added]);
+        setAllTrainers((prev) => [...prev, added]);
 
-    handleReset();
-    setShowForm(false);
+        setSuccessMessage("✅ Trainer added successfully.");
+      }
 
-    setTimeout(() => setSuccessMessage(""), 4000);
-  } catch (error) {
-    console.error("Error adding/updating trainer:", error);
+      handleReset();
+      setShowForm(false);
 
-    if (
-      error.response &&
-      error.response.status === 409 &&
-      error.response.data ===
+      setTimeout(() => setSuccessMessage(""), 4000);
+    } catch (error) {
+      console.error("Error adding/updating trainer:", error);
+
+      if (
+        error.response &&
+        error.response.status === 409 &&
+        error.response.data ===
         "Trainer with the same name, category, and course already exists."
-    ) {
-      setErrorMessage(
-        "❌ A trainer with the same name already exists for this category and course."
-      );
-    } else {
-      setErrorMessage("❌ Something went wrong while saving the trainer. Please try again.");
-    }
+      ) {
+        setErrorMessage(
+          "❌ A trainer with the same name already exists for this category and course."
+        );
+      } else {
+        setErrorMessage("❌ Something went wrong while saving the trainer. Please try again.");
+      }
 
-    setSuccessMessage("");
-  }
-};
+      setSuccessMessage("");
+    }
+  };
 
   const handleDeleteConfirmation = (id) => {
     if (window.confirm('Are you sure you want to delete this trainer?')) handleDelete(id);
@@ -365,40 +409,55 @@ export default function Trainer() {
         const res = await axios.get(`https://api.hachion.co/trainers/${row.trainer_id}`);
         const trainer = res.data || row;
         setFormData({
-  id: trainer.trainer_id || '',
-  trainer_name: trainer.trainer_name || '',
-  profileImage: null, 
-  existingImageName: trainer.trainerImage
-  ? trainer.trainerImage.substring(trainer.trainerImage.lastIndexOf('__') + 2)
-  : '',
-
-  trainerRating: trainer.trainerRating || '',
-  enrolledStudents: trainer.enrolledStudents || '',
-  course_name: trainer.course_name || '',
-  category_name: trainer.category_name || '',
-  summary: trainer.summary || '',
-  demo_link_1: trainer.demo_link_1 || '',
-  demo_link_2: trainer.demo_link_2 || '',
-  demo_link_3: trainer.demo_link_3 || '',
-  date: trainer.date || getCurrentDateString(),
-});
-
+          id: trainer.trainer_id || '',
+          trainer_name: trainer.trainer_name || '',
+          profileImage: null,
+          existingImageName: trainer.trainerImage
+            ? trainer.trainerImage.substring(trainer.trainerImage.lastIndexOf('__') + 2)
+            : '',
+          trainerRating: trainer.trainerRating || '',
+          enrolledStudents: trainer.enrolledStudents || '',
+          experience: trainer.experience || '',
+          designation: trainer.designation || '',
+          experienceCredentials: trainer.experienceCredentials || '',
+          course_name: trainer.course_name || '',
+          category_name: trainer.category_name || '',
+          summary: trainer.summary || '',
+          demo_link_1: trainer.demo_link_1 || '',
+          demo_link_2: trainer.demo_link_2 || '',
+          demo_link_3: trainer.demo_link_3 || '',
+          date: trainer.date || getCurrentDateString(),
+        });
+        setErrors({});
       }
     } catch (error) {
       console.error('Failed to fetch trainer details for edit:', error);
       setFormData((prev) => ({ ...prev, ...row }));
+      setErrors({});
     }
   };
- const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  setFormData(prev => ({
-    ...prev,
-    [e.target.name]: file,   
-    existingImageName: '',   
-  }));
-};
 
-  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: file,
+      existingImageName: '',
+    }));
+    
+    // Clear error for this field
+    if (errors[e.target.name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[e.target.name];
+        return newErrors;
+      });
+    }
+  };
+
+  // Get current submit enabled status
+  const submitEnabled = isSubmitEnabled();
+
   return (
     <>
       {showForm ? (
@@ -425,160 +484,201 @@ export default function Trainer() {
 
             <form onSubmit={handleSubmit}>
               <div className="course-details">
+                {/* Row 1: Trainer Name and Image */}
                 <div className="course-row">
-                 <div className="col-md-3">
-  <label className="form-label">
-    Trainer <span style={{ color: 'red' }}>*</span>
-  </label>
-  <input
-    type="text"
-    className="form-control"
-    placeholder="Enter Trainer name"
-    name="trainer_name"
-    value={formData.trainer_name}
-    onChange={handleInputChange}
-  />
-</div>
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Trainer <span style={{ color: 'red' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Trainer name"
+                      name="trainer_name"
+                      value={formData.trainer_name}
+                      onChange={handleInputChange}
+                      // style={{ borderColor: errors.trainer_name ? 'red' : '#ced4da' }}
+                    />
+                    {/* {errors.trainer_name && (
+                      <div className="text-danger small">{errors.trainer_name}</div>
+                    )} */}
+                  </div>
 
+                  <div className="col-md-3">
+                    <label className="form-label">Trainer Image</label>
+                    {formMode === 'Edit' && formData.existingImageName && !formData.profileImage ? (
+                      <div className="form-control d-flex justify-content-between align-items-center">
+                        <span>{formData.existingImageName}</span>
+                        <button
+                          type="button"
+                          className="btn btn-link p-0"
+                          onClick={() => document.getElementById('trainerImageInput').click()}
+                        >
+                          Change
+                        </button>
+                        <input
+                          id="trainerImageInput"
+                          type="file"
+                          className="form-control"
+                          name="profileImage"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    ) : formData.profileImage ? (
+                      <div className="form-control d-flex justify-content-between align-items-center">
+                        <span>{formData.profileImage.name}</span>
+                        <button
+                          type="button"
+                          className="btn btn-link p-0"
+                          onClick={() => document.getElementById('trainerImageInput').click()}
+                        >
+                          Change
+                        </button>
+                        <input
+                          id="trainerImageInput"
+                          type="file"
+                          className="form-control"
+                          name="profileImage"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        className="form-control"
+                        name="profileImage"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                    )}
+                  </div>
+                </div>
 
-                <div className="col-md-3">
-  <label className="form-label">Trainer Image</label>
-
-  {formMode === 'Edit' &&
-   formData.existingImageName &&
-   !formData.profileImage ? (
-    
-    <div className="form-control d-flex justify-content-between align-items-center">
-      <span>{formData.existingImageName}</span>
-      <button
-        type="button"
-        className="btn btn-link p-0"
-        onClick={() => document.getElementById('trainerImageInput').click()}
-      >
-        Change
-      </button>
-      <input
-        id="trainerImageInput"
-        type="file"
-        className="form-control"
-        name="profileImage"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
-    </div>
-  ) : formData.profileImage ? (
-    
-    <div className="form-control d-flex justify-content-between align-items-center">
-      <span>{formData.profileImage.name}</span>
-      <button
-        type="button"
-        className="btn btn-link p-0"
-        onClick={() => document.getElementById('trainerImageInput').click()}
-      >
-        Change
-      </button>
-      <input
-        id="trainerImageInput"
-        type="file"
-        className="form-control"
-        name="profileImage"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
-    </div>
-  ) : (
-    
-    <input
-      type="file"
-      className="form-control"
-      name="profileImage"
-      accept="image/*"
-      onChange={handleFileChange}
-    />
-  )}
-</div>
-</div>
-                  {/* <div className="col-md-3">
-                    <label className="form-label">Trainer Rating</label>
+                {/* Row 2: Trainer Rating and Experience */}
+                <div className="course-row">
+                  <div className="col-md-3">
+                    <label className="form-label">Trainer Rating <span style={{ color: 'red' }}>*</span></label>
                     <input
                       type="number"
                       className="form-control"
                       placeholder="Enter Trainer rating"
                       name="trainerRating"
-                      value={formData.trainerRating}
+                      value={formData.trainerRating === '' ? '' : Number(formData.trainerRating)}
+                      min="0"
+                      max="5"
                       onChange={handleInputChange}
                     />
-                  </div> */}
-    <div className="course-row">
-        <div className="col-md-3">
-        <label className="form-label">Trainer Rating</label>
-        <input
-          type="number"
-          className="form-control"
-          placeholder="Enter Trainer rating"
-          name="trainerRating"
-          value={formData.trainerRating === '' ? '' : Number(formData.trainerRating)}
-          min="0"
-          max="5"
-          onChange={handleInputChange}
-        />
-      </div>
-      {/* <div className="col-md-3">
-                    <label className="form-label">Enrolled Students</label>
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Experience <span style={{ color: 'red' }}>*</span>
+                    </label>
                     <input
                       type="number"
                       className="form-control"
-                      placeholder="Enter Enrolled Students"
-                      name="enrolledStudents"
-                      value={formData.enrolledStudents}
+                      placeholder="Enter years of experience"
+                      name="experience"
+                      value={formData.experience}
                       onChange={handleInputChange}
+                      // style={{ borderColor: errors.experience ? 'red' : '#ced4da' }}
                     />
-                  </div> */}
-            </div>
-
-                <div className="course-row">
-                 <div className="col-md-3">
-  <label className="form-label">
-    Category Name <span style={{ color: 'red' }}>*</span>
-  </label>
-  <select
-    className="form-select"
-    name="category_name"
-    value={formData.category_name}
-    onChange={handleInputChange}
-  >
-    <option value="" disabled>Select Category</option>
-    {courseCategoriesList.map((curr) => (
-      <option key={curr.id} value={curr.name}>{curr.name}</option>
-    ))}
-  </select>
-</div>
-
-
-                <div className="col-md-3">
-  <label className="form-label">
-    Course Name <span style={{ color: 'red' }}>*</span>
-  </label>
-  <select
-    className="form-select"
-    name="course_name"
-    value={formData.course_name}
-    onChange={handleInputChange}
-    disabled={!formData.category_name}
-  >
-    <option value="" disabled>Select Course</option>
-    {filterCourse.map((curr) => (
-      <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-    ))}
-  </select>
-</div>
-
+                    {/* {errors.experience && (
+                      <div className="text-danger small">{errors.experience}</div>
+                    )} */}
+                  </div>
                 </div>
 
+                {/* Row 3: Designation and Experience & Credentials */}
+                <div className="course-row">
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Designation <span style={{ color: 'red' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter designation"
+                      name="designation"
+                      value={formData.designation}
+                      onChange={handleInputChange}
+                      // style={{ borderColor: errors.designation ? 'red' : '#ced4da' }}
+                    />
+                    {/* {errors.designation && (
+                      <div className="text-danger small">{errors.designation}</div>
+                    )} */}
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Experience & Credentials <span style={{ color: 'red' }}>*</span>
+                    </label>
+                    <textarea
+                      className="form-control"
+                      placeholder="Enter experience and credentials"
+                      name="experienceCredentials"
+                      value={formData.experienceCredentials}
+                      onChange={handleInputChange}
+                      rows="3"
+                      // style={{ borderColor: errors.experienceCredentials ? 'red' : '#ced4da' }}
+                    />
+                    {/* {errors.experienceCredentials && (
+                      <div className="text-danger small">{errors.experienceCredentials}</div>
+                    )} */}
+                  </div>
+                </div>
+
+                {/* Row 4: Category and Course */}
+                <div className="course-row">
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Category Name <span style={{ color: 'red' }}>*</span>
+                    </label>
+                    <select
+                      className="form-select"
+                      name="category_name"
+                      value={formData.category_name}
+                      onChange={handleInputChange}
+                      // style={{ borderColor: errors.category_name ? 'red' : '#ced4da' }}
+                    >
+                      <option value="">Select Category</option>
+                      {courseCategoriesList.map((curr) => (
+                        <option key={curr.id} value={curr.name}>{curr.name}</option>
+                      ))}
+                    </select>
+                    {/* {errors.category_name && (
+                      <div className="text-danger small">{errors.category_name}</div>
+                    )} */}
+                  </div>
+
+                  <div className="col-md-3">
+                    <label className="form-label">
+                      Course Name <span style={{ color: 'red' }}>*</span>
+                    </label>
+                    <select
+                      className="form-select"
+                      name="course_name"
+                      value={formData.course_name}
+                      onChange={handleInputChange}
+                      disabled={!formData.category_name}
+                      // style={{ borderColor: errors.course_name ? 'red' : '#ced4da' }}
+                    >
+                      <option value="">Select Course</option>
+                      {filterCourse.map((curr) => (
+                        <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+                      ))}
+                    </select>
+                    {/* {errors.course_name && (
+                      <div className="text-danger small">{errors.course_name}</div>
+                    )} */}
+                  </div>
+                </div>
+
+                {/* Trainer Profile Summary */}
                 <div className="mb-6">
-                  <label className="form-label">Trainer Profile Summary</label>
+                  <label className="form-label">Trainer Profile Summary <span style={{ color: 'red' }}>*</span></label>
                   <ReactQuill
                     theme="snow"
                     value={formData.summary}
@@ -587,6 +687,7 @@ export default function Trainer() {
                   />
                 </div>
 
+                {/* Demo Links */}
                 <div className="row align-items-center">
                   <div className="col-md-3">
                     <label className="form-label">Demo Link 1</label>
@@ -602,7 +703,7 @@ export default function Trainer() {
 
                 <div className="row align-items-center">
                   <div className="col-md-3">
-                    <label className="form-label">Demo Link 2 (Optional)</label>
+                    <label className="form-label">Demo Link 2</label>
                     <input
                       type="text"
                       className="form-control"
@@ -615,7 +716,7 @@ export default function Trainer() {
 
                 <div className="row align-items-center">
                   <div className="col-md-3">
-                    <label className="form-label">Demo Link 3 (Optional)</label>
+                    <label className="form-label">Demo Link 3</label>
                     <input
                       type="text"
                       className="form-control"
@@ -626,12 +727,28 @@ export default function Trainer() {
                   </div>
                 </div>
 
+                {/* Messages */}
                 {successMessage && <p style={{ color: 'green', fontWeight: 'bold' }}>{successMessage}</p>}
                 {errorMessage && <p style={{ color: 'red', fontWeight: 'bold' }}>{errorMessage}</p>}
 
+                {/* Submit and Reset Buttons */}
                 <div className="course-row">
-                  <button type="submit" className="submit-btn">{formMode === 'Add' ? 'Submit' : 'Update'}</button>
-                  <button type="button" className="reset-btn" onClick={handleReset}>Reset</button>
+                  <button 
+                    type="submit" 
+                    className="submit-btn"
+                    disabled={!submitEnabled}
+                    style={{
+                      backgroundColor: submitEnabled ? "#00AAEF" : "#cccccc",
+                      color: submitEnabled ? "#ffffff" : "#666666",
+                      cursor: submitEnabled ? "pointer" : "not-allowed",
+                      opacity: submitEnabled ? 1 : 0.7,
+                    }}
+                  >
+                    {formMode === 'Add' ? 'Submit' : 'Update'}
+                  </button>
+                  <button type="button" className="reset-btn" onClick={handleReset}>
+                    Reset
+                  </button>
                 </div>
               </div>
             </form>
@@ -693,14 +810,12 @@ export default function Trainer() {
                   <TableRow>
                     <StyledTableCell sx={{ width: 50 }} align="center"><Checkbox /></StyledTableCell>
                     <StyledTableCell sx={{ width: 60 }}>S.No.</StyledTableCell>
-                    {/* <StyledTableCell align="center">Trainer Image</StyledTableCell> */}
                     <StyledTableCell align="center">Trainer Name</StyledTableCell>
                     <StyledTableCell align="center">Rating</StyledTableCell>
-                    <StyledTableCell align="center">Enrolled Students</StyledTableCell>
+                    <StyledTableCell align="center">Experience</StyledTableCell>
+                    <StyledTableCell align="center">Designation</StyledTableCell>
                     <StyledTableCell align="center">Course Name</StyledTableCell>
                     <StyledTableCell align="center">Demo 1</StyledTableCell>
-                    {/* <StyledTableCell align="center">Demo 2</StyledTableCell>
-                    <StyledTableCell align="center">Demo 3</StyledTableCell> */}
                     <StyledTableCell align="center">Summary</StyledTableCell>
                     <StyledTableCell align="center">Created Date</StyledTableCell>
                     <StyledTableCell align="center">Action</StyledTableCell>
@@ -713,30 +828,19 @@ export default function Trainer() {
                       <StyledTableRow key={row.trainer_id || index}>
                         <StyledTableCell align="center"><Checkbox /></StyledTableCell>
                         <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-
-                        {/* <StyledTableCell align="center">
-                          {row.profileImage ? (
-                            <img src={row.profileImage} alt="User" width="50" height="50" />
-                          ) : 'No Image'}
-                        </StyledTableCell> */}
-
                         <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.trainerRating}</StyledTableCell>
-                        <StyledTableCell align="center">{row.enrolledStudents}</StyledTableCell>
+                        <StyledTableCell align="center">{row.experience || '-'}</StyledTableCell>
+                        <StyledTableCell align="center">{row.designation || '-'}</StyledTableCell>
                         <StyledTableCell sx={{ width: 100 }} align="left">{row.course_name}</StyledTableCell>
                         <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_1}</StyledTableCell>
-                        {/* <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_2}</StyledTableCell>
-                        <StyledTableCell sx={{ width: 200, whiteSpace: 'pre-wrap' }} align="left">{row.demo_link_3}</StyledTableCell> */}
-
                         <StyledTableCell sx={{ width: 400, whiteSpace: 'pre-wrap' }} align="left">
                           <div style={{ maxHeight: '120px', overflowY: 'auto', maxWidth: '500px' }}
                             dangerouslySetInnerHTML={{ __html: row.summary || '' }} />
                         </StyledTableCell>
-
                         <StyledTableCell align="center">
                           {row.date ? dayjs(row.date).format('MM-DD-YYYY') : ''}
                         </StyledTableCell>
-
                         <StyledTableCell align="center">
                           <FaEdit className="edit" onClick={() => handleEdit(row)} />
                           <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.trainer_id)} />
@@ -745,7 +849,7 @@ export default function Trainer() {
                     ))
                   ) : (
                     <StyledTableRow>
-                      <StyledTableCell colSpan={12} align="center">No data available.</StyledTableCell>
+                      <StyledTableCell colSpan={11} align="center">No data available.</StyledTableCell>
                     </StyledTableRow>
                   )}
                 </TableBody>

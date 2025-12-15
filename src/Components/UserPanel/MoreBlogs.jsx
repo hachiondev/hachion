@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import CardsPagination from "./CardsPagination";
+import CardsPagination from "./Common/CardsPagination";
 import "./Blogs.css";
 import { useNavigate } from "react-router-dom";
 import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";

@@ -145,7 +145,7 @@ export default function Trainer() {
 
   const fetchCourseList = async () => {
     try {
-      const res = await axios.get('https://api.test.hachion.co/courses/all');
+      const res = await axios.get('https://api.hachion.co/courses/all');
       setCourseCategory(res.data || []);
     } catch (err) {
       console.error('Error fetching courses list:', err);

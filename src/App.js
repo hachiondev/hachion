@@ -64,6 +64,7 @@ import GoogleMobileNumber from './Components/UserPanel/HomePage/AuthSection/Goog
 import Layout from './Components/Layout/Layout';
 import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
 import AuthLayout from './Components/Layout/AuthLayout';
+import CourseDetailsWrapper from './Components/UserPanel/CourseDetailsWrapper/CourseDetailsWrapper';
 
 const RedirectToLowercase = () => {
   const location = useLocation();
@@ -128,9 +129,9 @@ function AppRoutes() {
           <Route path="/newcoursedetails" element={<NewCourseDetails />} />
           <Route path="/enroll-now" element={<NewEnrollNow />} />
           <Route
-            path="/coursedetails/:courseName"
-            element={<CourseDetails />}
-          />
+  path="/coursedetails/:courseName"
+  element={<CourseDetailsWrapper />}
+/>
           <Route path="/corporate" element={<CorporateTraining />} />
           <Route path="/hire-from-us" element={<HirefromUs />} />
           <Route path="/career" element={<ApplyHiring />} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Viewreviews from "../../Assets/viewreviews-banner.webp";
-import CardsPagination from "./CardsPagination";
+import CardsPagination from "./Common/CardsPagination";
 import VideoReviewCard from "./VideoReviewCard";
 import HomeFaq from "./HomeFaq";
 

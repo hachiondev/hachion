@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CourseCard from "../../CourseCard";
-import CardsPagination from "../../CardsPagination";
+import CardsPagination from "../../Common/CardsPagination";
 import "../../Home.css";
 import { getActiveRuleFor, getRuleDiscountPct } from "./utils/discountUtils";
 import { useTrendingData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";

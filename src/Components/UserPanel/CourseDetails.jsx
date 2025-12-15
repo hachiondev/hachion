@@ -24,125 +24,86 @@ import { useAllCourses } from '../../Api/hooks/SitemapPageApi/useAllCourses';
 const CourseDetails = () => {
   const curriculumRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const [helmetKey, setHelmetKey] = useState(0);
   const upcomingHeaderRef = useRef(null);
   const footerRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const { courseName } = useParams();
   const upcomingBatchRef = useRef(null);
-  const { data: allCourses  = [], isLoading , isError} = useAllCourses("courseDetailsPage");
+  const {
+    data: allCourses = [],
+    isLoading,
+    isError,
+  } = useAllCourses("courseDetailsPage");
+  const slugify = (text = "") =>
+  text.toLowerCase().trim().replace(/\s+/g, "-");
 
-  useEffect(() => {
-    if (location.hash === '#upcoming-events') {
-      const element = document.getElementById('upcoming-events');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [location]);
-
+  /* ---------------- FIND COURSE ---------------- */
   const courseData = allCourses.find(
-  (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === courseName
-);
+    (c) => slugify(c.courseName) === courseName
+  );
 
-useEffect(() => {
-  setHelmetKey((prev) => prev + 1);
-}, [courseData]);
-
+  /* ---------------- SCROLL TO TOP ON COURSE CHANGE ---------------- */
   useEffect(() => {
-    console.log("Privacy component mounted. Scrolling to top...");
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [courseName]);
 
-  const scrollToTop = () => {
-    console.log("Scroll to top clicked!");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+  /* ---------------- HELMET FORCE UPDATE ---------------- */
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Sticky logic
-  useEffect(() => {
-    const handleScroll = () => {
-      if (upcomingHeaderRef.current) {
-        const { top } = upcomingHeaderRef.current.getBoundingClientRect();
-        setIsSticky(top <= 0); // Set sticky if the header's top reaches 0 or less
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // Intersection Observer to detect when footer is in view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsSticky(false); // Unstick the header when the footer comes into view
-          }
-        });
-      },
-      { rootMargin: '0px', threshold: 0.1 }
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
+    if (courseData) {
+      setHelmetKey((prev) => prev + 1);
     }
+  }, [courseData]);
 
-    return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
-      }
-    };
-  }, []);
-
-  const handleVideoButtonClick = () => {
-    if (curriculumRef.current) {
-      curriculumRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
+  /* ---------------- HASH SCROLL (SAFE) ---------------- */
   useEffect(() => {
-    if (!isLoading && location?.state?.scrollTo === 'upcoming-batch') {
-      upcomingBatchRef.current?.scrollIntoView({ behavior: 'smooth' });
-      // Clear state to avoid repeating
-      window.history.replaceState({}, document.title);
+    if (!isLoading && location.hash) {
+      const id = location.hash.replace("#", "");
+      const element = document.getElementById(id);
+      element?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [isLoading, location]);
+  }, [location.hash, isLoading]);
 
-
+  /* ---------------- STATE SCROLL (SAFE) ---------------- */
   // useEffect(() => {
-  //   const fetchCourseData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get('https://api.test.hachion.co/courses/all');
-  //       const course = response.data.find(
-  //         (c) => c.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
-  //       );
-  //       setCourseData(course);
-  //       setHelmetKey((prevKey) => prevKey + 1); // Force re-render
-  //     } catch (error) {
-  //       console.error('Error fetching course details:', error);
-  //     } finally {
-  //       setLoading(false);
+  //   if (!isLoading && location.state?.scrollTo === "upcoming-batch") {
+  //     upcomingBatchRef.current?.scrollIntoView({ behavior: "smooth" });
+  //     navigate(location.pathname, { replace: true });
+  //   }
+  // }, [isLoading, location.state, navigate, location.pathname]);
+
+  // /* ---------------- STICKY HEADER ---------------- */
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (upcomingHeaderRef.current) {
+  //       const { top } = upcomingHeaderRef.current.getBoundingClientRect();
+  //       setIsSticky(top <= 0);
   //     }
   //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
-  //   fetchCourseData();
-  // }, [courseName]);
-
-  if (isError) return <div>Error: {isError}</div>;
-  if (isLoading) {
-    return (
-      <Loader />
+  /* ---------------- FOOTER INTERSECTION ---------------- */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && setIsSticky(false),
+      { threshold: 0.1 }
     );
-  }
+
+    footerRef.current && observer.observe(footerRef.current);
+    return () => footerRef.current && observer.unobserve(footerRef.current);
+  }, []);
+
+  /* ---------------- VIDEO SCROLL ---------------- */
+  const handleVideoButtonClick = () => {
+    curriculumRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  /* ---------------- LOAD STATES ---------------- */
+  if (isError) return <div>Something went wrong.</div>;
+  // if (isLoading || !courseData) return <Loader />;
 
   return (
     <>

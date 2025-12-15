@@ -15,6 +15,10 @@ const Sitemap = () => {
   const { data: Category = [], isLoading: loadingCategories, error: categoryError } = useCategories();
   const { data: courses = [], isLoading: loadingCourses, error: coursesError } = useAllCourses();
 
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
     if (loadingCategories || loadingCourses) {
     return (
       <Loader/>
@@ -35,8 +39,6 @@ const handleCategoryClick = (categoryName) => {
   navigate("/coursedetails", {
     state: { selectedCategory: categoryName }
   });
-
-  window.scrollTo(0, 0);
 };
 
   const handleCourseDetails = (coursename) => {

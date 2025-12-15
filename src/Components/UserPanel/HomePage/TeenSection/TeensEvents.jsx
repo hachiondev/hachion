@@ -9,7 +9,7 @@ import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeo
 import { useCountdowns } from "../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 
 import CourseCard from "../../CourseCard";
-import CardsPagination from "../../CardsPagination";
+import CardsPagination from "../../Common/CardsPagination";
 
 import { getRuleDiscountPct, getActiveRuleFor } from "../TrendingSection/utils/discountUtils";
 

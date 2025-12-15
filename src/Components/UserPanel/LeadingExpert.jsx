@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import CourseCard from "./CourseCard";
-import CardsPagination from "./CardsPagination";
+import CardsPagination from "./Common/CardsPagination";
 import "./Corporate.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -53,7 +53,7 @@ useEffect(() => {
 
       const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([
         axios.get("https://api.hachion.co/corporatecourse"),
-        axios.get("https://api.test.hachion.co/courses/all"),
+        axios.get("https://api.hachion.co/courses/all"),
         axios.get("https://api.hachion.co/trainers"),
       ]);
 

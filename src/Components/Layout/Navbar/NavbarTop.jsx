@@ -15,6 +15,7 @@ import ExploreDropdown from "./components/ExploreDropdown";
 import UserMenu from "./components/UserMenu";
 import MobileDrawer from "./components/MobileDrawer";
 import { useSearch } from "../../../Api/hooks/HomePageApi/NavbarApi/useSearch";
+import { BsCart2 } from "react-icons/bs";
 
 const NavbarTop = () => {
   const navigate = useNavigate();
@@ -130,7 +131,7 @@ const NavbarTop = () => {
               <div className="d-flex align-items-center gap-3">
                 <button className="btn" aria-label="View cart" onClick={() => navigate("/userdashboard/order_history")}>
                   {/* cart icon placeholder */}
-                  <svg style={{ width: 28, height: 28 }} viewBox="0 0 24 24"><path fill="currentColor" d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM7.2 6l1.2 6h8.2l1.8-4H8.6"/></svg>
+                  <BsCart2 style={{ width: 28, height: 28 }}/>
                 </button>
 
                 <div className="dropdown" ref={userDropdownRef}>

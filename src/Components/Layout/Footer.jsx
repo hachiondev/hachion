@@ -2,7 +2,7 @@ import React from 'react';
 import FooterLogo from '../../Assets/Logowhite.webp';
 import { IoIosMail, IoIosArrowForward } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../../Components/UserPanel/Home.css';
 
 // TanStack Query Hooks
@@ -11,6 +11,7 @@ import { useTrendingData } from '../../Api/hooks/HomePageApi/TrendingApi/useTren
 
 const Footer = () => {
   const navigate = useNavigate();
+  const location = useLocation(); 
   const { whatsappNumber, whatsappLink } = useTopBarApi();
 
   // Fetch Trending Courses — TANSTACK ✔
@@ -19,25 +20,19 @@ const Footer = () => {
   // -------------------------
   // 🔗 Navigation Handlers
   // -------------------------
-  const handleNavigation = (courseName) => {
-    const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
-
-    // Save current page in sessionStorage
-    sessionStorage.setItem("fromPage", window.location.pathname + window.location.search);
-
-    // Navigate to course details with state
-    navigate(`/coursedetails/${formatted}`, {
-      state: { from: window.location.pathname + window.location.search }
-    });
-
-    window.scrollTo(0, 0);
-  };
+const handleNavigation = (courseName) => {
+  const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
+  navigate(`/coursedetails/${formatted}`);
+};
 
 
-  const go = (path) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
+const go = (path) => {
+  navigate(path, {
+    state: {
+      from: location.pathname + location.search,
+    },
+  });
+};
 
   return (
     <div className="footer">

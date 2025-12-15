@@ -19,6 +19,10 @@ const Workshop = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
+  useEffect(() => {
     const fetchWorkshops = async () => {
       try {
         const response = await axios.get('https://api.hachion.co/workshopschedule');

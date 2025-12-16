@@ -25,6 +25,12 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 import 'react-quill/dist/quill.snow.css'
 import { FiUpload } from "react-icons/fi";
+import { useCategories } from "../../Api/hooks/NavbarApi/useCategories";
+import { useCourses } from "../../Api/hooks/NavbarApi/useCourses";
+import { useAddTools } from "../../Api/hooks/AdminTools/useAddTools";
+import { useGetAllToolsFlat } from "../../Api/hooks/AdminTools/useGetAllToolsFlat";
+import { useUpdateToolItem } from "../../Api/hooks/AdminTools/useUpdateToolItem";
+import { useDeleteToolItem } from "../../Api/hooks/AdminTools/useDeleteToolItem";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,9 +56,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AdminTools() {
-  const [courseCategory,setCourseCategory]=useState([]);
-  const [course,setCourse]=useState([]);
-  const [filterCourse,setFilterCourse]=useState([]);
+  
   const [searchTerm,setSearchTerm]=useState("");
   const [showAddCourse, setShowAddCourse] = useState(false);
   const[tools,setTools]=useState([]);
@@ -63,6 +67,7 @@ export default function AdminTools() {
   const [allData, setAllData] = useState([]); 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
   const [filterData, setFilterData] = useState({
     category_name: "",
     courseName: "",
@@ -78,9 +83,66 @@ export default function AdminTools() {
     toolsName: '',
     toolsLink: '',
   });
+const [editingRow, setEditingRow] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+const {
+  data: categories = [],
+  isLoading: categoriesLoading,
+  error: categoriesError
+} = useCategories();
+const {
+  data: courses = [],
+  isLoading: coursesLoading,
+  error: coursesError
+} = useCourses();
+
+const {
+  mutate: addTools,
+  isLoading: isAdding,
+  error: addError,
+} = useAddTools();
+
+
+const {
+  data: toolsFlat = [],
+  isLoading: toolsLoading,
+  error: toolsError,
+} = useGetAllToolsFlat();
+
+const {
+  mutate: updateTool,
+  isLoading: isUpdating,
+} = useUpdateToolItem();
+
+const {
+  mutate: deleteToolItem,
+  isLoading: isDeleting,
+} = useDeleteToolItem();
+
+const isEditMode = !!toolsData.tool_id;
+const isRowValid = (row) => {
+  return (
+    row.toolsName &&
+    row.toolsName.trim() !== "" &&
+    row.toolsLink &&
+    row.toolsLink.trim() !== "" &&
+    (row.tool_image || row.preview)
+  );
+};
+
+const isFormValid = React.useMemo(() => {
+  if (!toolsData.category_name || !toolsData.courseName) {
+    return false;
+  }
+
+  if (isEditMode) {
+    return rows.length === 1 && isRowValid(rows[0]);
+  }
+
+  return rows.length > 0 && rows.every(isRowValid);
+}, [toolsData, rows, isEditMode]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -117,48 +179,8 @@ export default function AdminTools() {
     setRows([{ id: Date.now(), tool_image: null, preview: null }]);
   };
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
-        setCourse(response.data); 
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
-    };
-    fetchCategory();
-  }, []);
 
-  useEffect(() => {
-    const fetchCourseCategory = async () => {
-      try {
-        const response = await axios.get("https://api.test.hachion.co/courses/all");
-        setCourseCategory(response.data); 
-      } catch (error) {
-        console.error("Error fetching categories:", error.message);
-      }
-    };
-    fetchCourseCategory();
-  }, []);
 
-  useEffect(() => {
-    if (!toolsData.category_name) {
-      setFilterCourse([]);
-      return;
-    }
-
-    const matched = (courseCategory || []).filter(c => {
-      const cat = (c.category_name || c.category || "").toString().trim();
-      return cat === toolsData.category_name;
-    });
-
-    const normalized = matched.map((c) => ({
-      id: c.id || c._id || c.course_id || `${c.courseName}-${c.id}`,
-      courseName: c.courseName || c.title || c.name || ""
-    })).filter(c => !!c.courseName);
-
-    setFilterCourse(normalized);
-  }, [toolsData.category_name, courseCategory]);
 
   const normalizeToDate = (val) => {
     if (!val) return null;
@@ -194,6 +216,17 @@ export default function AdminTools() {
     setSearchTerm('');
     setFilteredTools(tools);
   };
+  useEffect(() => {
+  if (successMessage || errorMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 6000); 
+
+    return () => clearTimeout(timer);
+  }
+}, [successMessage, errorMessage]);
+
 
   useEffect(() => {
     const filtered = allData.filter((item) => {
@@ -239,12 +272,26 @@ export default function AdminTools() {
       setToolsData((prev) => ({ ...prev, courseName: "" }));
     }
   };
+const handleAddTrendingCourseClick = () => {
+  
+  setEditingRow(null);
 
-  const handleAddTrendingCourseClick = () => {
-    setShowAddCourse(true);
-    setSuccessMessage("");
-    setErrorMessage("");
-  };
+  setToolsData({
+    tool_id: "",
+    category_name: "",
+    courseName: "",
+    toolsName: "",
+    toolsLink: "",
+  });
+
+  setRows([
+    { id: Date.now(), tool_image: null, preview: null }
+  ]);
+
+  setShowAddCourse(true);
+  setSuccessMessage("");
+  setErrorMessage("");
+};
 
   const handleImageSelect = (file, index) => {
     if (!file) return;
@@ -253,70 +300,140 @@ export default function AdminTools() {
     updated[index].preview = URL.createObjectURL(file);
     setRows(updated);
   };
+const filteredCourses = React.useMemo(() => {
+  if (!toolsData.category_name) return [];
 
-  const handleSubmit = () => {
-    if (!toolsData.category_name || !toolsData.courseName) {
-      setErrorMessage("Please select Category Name and Course Name.");
-      setSuccessMessage("");
-      return;
-    }
-    const selectedImages = rows
-      .filter(r => !!r.tool_image)
-      .map(r => ({ name: r.tool_image.name, url: r.preview }));
+  return courses.filter(
+    (c) => c.courseCategory === toolsData.category_name
+  );
+}, [courses, toolsData.category_name]);
 
-    const payload = {
-      curr_id: toolsData.tool_id || Date.now(),
+const handleSubmit = () => {
+  if (!toolsData.category_name || !toolsData.courseName) {
+    setErrorMessage("Please select Category and Course");
+    return;
+  }
+
+  const row = rows[0];
+
+  if (!row.toolsName || !row.toolsLink) {
+    setErrorMessage("Tools name and link are required");
+    return;
+  }
+
+  if (toolsData.tool_id) {
+    updateTool(
+      {
+        itemId: toolsData.tool_id,
+        category_name: toolsData.category_name,
+        courseName: toolsData.courseName,
+        toolsName: row.toolsName,
+        toolsLink: row.toolsLink,
+        toolImage: row.tool_image || null,
+      },
+      {
+        onSuccess: () => {
+          setSuccessMessage("Tool updated successfully");
+          setShowAddCourse(false);
+          setEditingRow(null);
+          setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+          setToolsData({ tool_id: "", category_name: "", courseName: "" });
+        },
+        onError: (err) => {
+          setErrorMessage(
+            err?.response?.data?.message || "Update failed"
+          );
+        },
+      }
+    );
+    return;
+  }
+
+  const validRows = rows.filter(
+    r => r.toolsName && r.toolsLink && r.tool_image
+  );
+
+  if (validRows.length === 0) {
+    setErrorMessage("Please add at least one tool row");
+    return;
+  }
+
+  addTools(
+    {
       category_name: toolsData.category_name,
       courseName: toolsData.courseName,
-      tool_image: selectedImages,
-      date: new Date()
-    };
-
-    if (toolsData.tool_id) {
-      const updated = allData.map(item => item.curr_id === toolsData.tool_id ? payload : item);
-      setAllData(updated);
-      setSuccessMessage("Tools updated successfully.");
-    } else {
-      setAllData([payload, ...allData]);
-      setSuccessMessage("Tools added successfully.");
+      rows: validRows,
+    },
+    {
+      onSuccess: () => {
+        setSuccessMessage("Tools added successfully");
+        setShowAddCourse(false);
+        setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+        setToolsData({ category_name: "", courseName: "" });
+      },
+      onError: (err) => {
+        setErrorMessage(
+          err?.response?.data?.message || "Failed to add tools"
+        );
+      },
     }
-    setErrorMessage("");
-    setToolsData({ tool_id: "", category_name: "", courseName: "" });
-    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
-    setShowAddCourse(false);
-  };
+  );
+};
 
-  const handleEditClick = (row) => {
-    setToolsData({
-      tool_id: row.curr_id,
+const handleEditClick = (row) => {
+  setEditingRow(row);
+
+  setToolsData({
+    tool_id: row.id, 
+    category_name: row.category_name,
+    courseName: row.courseName,
+  });
+
+  setRows([
+    {
+      id: row.id,
+      tool_image: null,
+      preview: row.imageUrl
+        ? `https://api.test.hachion.co/uploads/test/tools_images/${row.imageUrl}`
+        : null,
+      toolsName: row.toolsName,
+      toolsLink: row.toolsLink,
+    },
+  ]);
+
+  setShowAddCourse(true);
+};
+const handleDeleteClick = (row) => {
+  if (!window.confirm("Are you sure you want to delete this tool?")) {
+    return;
+  }
+
+  deleteToolItem(
+    {
+      itemId: row.id,                 
       category_name: row.category_name,
       courseName: row.courseName,
-    });
-    const incoming = (row.tool_image || []);
-    if (incoming.length > 0) {
-      const preRows = incoming.map((img) => ({
-        id: Date.now() + Math.random(),
-        tool_image: null,
-        preview: img.url || null
-      }));
-      setRows(preRows.length ? preRows : [{ id: Date.now(), tool_image: null, preview: null }]);
-    } else {
-      setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+    },
+    {
+      onSuccess: () => {
+        setSuccessMessage("Tool deleted successfully");
+        setErrorMessage("");
+      },
+      onError: (err) => {
+        setErrorMessage(
+          err?.response?.data || "Failed to delete tool"
+        );
+      },
     }
-    setShowAddCourse(true);
-  };
-
-  const handleDeleteClick = (id) => {
-    const updated = allData.filter(item => item.curr_id !== id);
-    setAllData(updated);
-    setSuccessMessage("Tools deleted.");
-    setErrorMessage("");
-  };
+  );
+};
 
   useEffect(() => {
-    setTools(allData);
-    setFilteredTools(allData);
-  }, [allData]);
+  if (toolsFlat.length > 0) {
+    setAllData(toolsFlat);
+    setFilteredTools(toolsFlat);
+  }
+}, [toolsFlat]);
 
   return (
     <>  
@@ -325,7 +442,27 @@ export default function AdminTools() {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="#!" onClick={() => setShowAddCourse(false)}>Tools Covered </a> <MdKeyboardArrowRight />
+                {/* <a href="#!" onClick={() => setShowAddCourse(false)}>Tools Covered </a> <MdKeyboardArrowRight /> */}
+                <a
+  href="#!"
+  onClick={() => {
+    setShowAddCourse(false);
+
+    
+    setEditingRow(null);
+    setToolsData({
+      tool_id: "",
+      category_name: "",
+      courseName: "",
+      toolsName: "",
+      toolsLink: "",
+    });
+    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+  }}
+>
+  Tools Covered
+</a>
+
               </li>
               <li className="breadcrumb-item active" aria-current="page">
                 {toolsData.tool_id ? "Edit Tools" : "Add Tools"}
@@ -339,43 +476,84 @@ export default function AdminTools() {
             <div className='course-details'>
               <div className='course-row'>
                 <div className="col-md-3">
-                  <label htmlFor="inputState" className="form-label">Category Name</label>
-                  <select id="inputState" className="form-select" name='category_name' value={toolsData.category_name} onChange={handleChange}>
+                  <label htmlFor="inputState" className="form-label">Category Name <span className="required">*</span></label>
+                  {/* <select id="inputState" className="form-select" name='category_name' value={toolsData.category_name} onChange={handleChange}> */}
+                    <select
+  id="inputState"
+  className="form-select"
+  name="category_name"
+  value={toolsData.category_name}
+  onChange={handleChange}
+  disabled={!!toolsData.tool_id}   
+>
+
                     <option value="" disabled>
                       Select Category
                     </option>
-                    {course.map((curr) => (
-                      <option key={curr.id || curr._id || curr.name} value={curr.name}>
-                        {curr.name}
-                      </option>
-                    ))}
+                    {categoriesLoading && (
+  <option disabled>Loading categories...</option>
+)}
+
+{categoriesError && (
+  <option disabled>Error loading categories</option>
+)}
+
+{categories.map((curr) => (
+  <option key={curr.id} value={curr.name}>
+    {curr.name}
+  </option>
+))}
+
                   </select>
                 </div>
-                <div className="col-md-3">
-                  <label htmlFor="course" className="form-label">Course Name</label>
-                  <select
-                    id="course"
-                    className="form-select"
-                    name="courseName"
-                    value={toolsData.courseName}
-                    onChange={handleChange}
-                    disabled={!toolsData.category_name}
-                  >
-                    <option value="" disabled>Select Course</option>
-                    {filterCourse.map((curr) => (
-                      <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-                    ))}
-                  </select>
-                </div>
+               <div className="col-md-3">
+  <label htmlFor="course" className="form-label">Course Name <span className="required">*</span></label>
+
+  <select
+    id="course"
+    className="form-select"
+    name="courseName"
+    value={toolsData.courseName}
+    onChange={handleChange}
+     disabled={!toolsData.category_name || !!toolsData.tool_id}
+    
+  >
+    <option value="" disabled>
+      Select Course
+    </option>
+
+    {!toolsData.category_name && (
+      <option disabled>Select category first</option>
+    )}
+
+    {coursesLoading && (
+      <option disabled>Loading courses...</option>
+    )}
+
+    {coursesError && (
+      <option disabled>Error loading courses</option>
+    )}
+
+    {filteredCourses.map((curr, index) => (
+      <option
+        key={`${curr.courseName}-${index}`}
+        value={curr.courseName}
+      >
+        {curr.courseName}
+      </option>
+    ))}
+  </select>
+</div>
+
               </div>
 
               <TableContainer component={Paper}>
                 <Table sx={{ maxWidth: 800,marginTop:5 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center">Tools Images</StyledTableCell>
-                      <StyledTableCell align="center">Tools Name</StyledTableCell>
-                      <StyledTableCell align="center">Tools Download Link</StyledTableCell>
+                      <StyledTableCell align="center">Tools Images <span className="required">*</span></StyledTableCell>
+                      <StyledTableCell align="center">Tools Name <span className="required">*</span></StyledTableCell>
+                      <StyledTableCell align="center">Tools Download Link <span className="required">*</span></StyledTableCell>
                       <StyledTableCell align="center" sx={{ width: '150px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -428,6 +606,7 @@ export default function AdminTools() {
                             name='toolsName'
                             value={row.toolsName}
                             onChange={(e) => handleRowChange(index, 'toolsName', e.target.value)}
+                            disabled={isEditMode}
                           />
                         </StyledTableCell>
                         <StyledTableCell align='center'>
@@ -438,10 +617,30 @@ export default function AdminTools() {
                             onChange={(e) => handleRowChange(index, 'toolsLink', e.target.value)}
                           />
                         </StyledTableCell>
-                        <StyledTableCell align='center'>
-                          <GoPlus onClick={addRow} style={{ fontSize: '2rem', color: '#00AEEF', marginRight: '10px' }} />
-                          <IoClose onClick={() => deleteRow(row.id)} style={{ fontSize: '2rem', color: 'red' }} />
-                        </StyledTableCell>
+                       <StyledTableCell align="center">
+  {!isEditMode && (
+    <>
+      <GoPlus
+        onClick={addRow}
+        style={{
+          fontSize: "2rem",
+          color: "#00AEEF",
+          marginRight: "10px",
+          cursor: "pointer",
+        }}
+      />
+      <IoClose
+        onClick={() => deleteRow(row.id)}
+        style={{
+          fontSize: "2rem",
+          color: "red",
+          cursor: "pointer",
+        }}
+      />
+    </>
+  )}
+</StyledTableCell>
+
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -449,9 +648,18 @@ export default function AdminTools() {
               </TableContainer>
 
               <div className="course-row" style={{ gap: 12 }}>
-                <button className='submit-btn' onClick={handleSubmit}>
-                  {toolsData.tool_id ? "Update" : "Submit"}
-                </button>
+                <button
+  className='submit-btn'
+  onClick={handleSubmit}
+  disabled={!isFormValid || isAdding || isUpdating}
+  style={{
+    opacity: (!isFormValid || isAdding || isUpdating) ? 0.6 : 1,
+    cursor: (!isFormValid || isAdding || isUpdating) ? "not-allowed" : "pointer",
+  }}
+>
+  {toolsData.tool_id ? "Update" : "Submit"}
+</button>
+
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
               </div>
             </div>
@@ -556,7 +764,7 @@ export default function AdminTools() {
                       </StyledTableCell>
                       <StyledTableCell align="left">{courseRow.category_name}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
-                      <StyledTableCell align="left">
+                      {/* <StyledTableCell align="left">
                         {(courseRow.tool_image || []).length ? (
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             {courseRow.tool_image.slice(0, 4).map((img, i) => (
@@ -565,16 +773,38 @@ export default function AdminTools() {
                             {courseRow.tool_image.length > 4 && <span>+{courseRow.tool_image.length - 4}</span>}
                           </div>
                         ) : ("")}
-                      </StyledTableCell>
+                      </StyledTableCell> */}
+                      <StyledTableCell align="center">
+  {courseRow.imageUrl && (
+    <img
+      src={`https://api.test.hachion.co/uploads/test/tools_images/${courseRow.imageUrl}`}
+      alt={courseRow.toolsName}
+      style={{
+        width: 40,
+        height: 28,
+        objectFit: "cover",
+        borderRadius: 4,
+        border: "1px solid #ddd",
+      }}
+    />
+  )}
+</StyledTableCell>
+
                       <StyledTableCell align="left">{courseRow.toolsName}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.toolsLink}</StyledTableCell>
                       <StyledTableCell align="center">
-                        {courseRow.date ? dayjs(courseRow.date).format('MM-DD-YYYY') : 'N/A'}
+                        {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MM-DD-YYYY') : 'N/A'}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                           <FaEdit className="edit" onClick={() => handleEditClick(courseRow)} style={{ cursor: 'pointer' }} />
-                          <RiDeleteBin6Line className="delete" onClick={() => handleDeleteClick(courseRow.curr_id)} style={{ cursor: 'pointer' }} />
+                          {/* <RiDeleteBin6Line className="delete" onClick={() => handleDeleteClick(courseRow.curr_id)} style={{ cursor: 'pointer' }} /> */}
+                        <RiDeleteBin6Line
+  className="delete"
+  onClick={() => handleDeleteClick(courseRow)}
+  style={{ cursor: "pointer" }}
+/>
+
                         </div>
                       </StyledTableCell>
                     </StyledTableRow>

@@ -5,6 +5,8 @@ import person from "../../Assets/icons/Person-2.png";
 import job from "../../Assets/icons/job.png";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
 import { useParams } from "react-router-dom";
+import { useToolsByCourse } from "../../Api/hooks/CourseApi/useToolsByCourse";
+
 
 const CheckCircle = () => (
     <img src={checkMark} alt="check" className={styles.lsicon} />
@@ -38,6 +40,8 @@ export default function LearnSection() {
     
     const { courseName } = useParams();
     const { data: course } = useCourseByName(courseName);
+    const { data: tools = [], isLoading } = useToolsByCourse(courseName);
+
 
     const defaultWhatYouWillLearn = [
         "Build responsive websites using HTML5, CSS3, and JavaScript",
@@ -150,32 +154,44 @@ export default function LearnSection() {
                 </div>
 
                 {/* Tools Cover */}
-                <div className={styles.lstools}>
-                    <h3 className={styles.lstoolstitle}>Tools Cover</h3>
+               <div className={styles.lstools}>
+  <h3 className={styles.lstoolstitle}>Tools Cover</h3>
 
-                    <div className={styles.lstoolsgrid}>
-                        {tools.map((t) => (
-                            <div key={t.name} className={styles.lstoolcard}>
-                                <div className={styles.lstoolicon}>
-                                    <img
-                                        src={t.image}
-                                        alt={t.name}
-                                        className={styles.lstooliconimg}
-                                    />
-                                </div>
+  {isLoading ? (
+    <p>Loading tools...</p>
+  ) : tools.length === 0 ? (
+    <p>No tools available for this course.</p>
+  ) : (
+    <div className={styles.lstoolsgrid}>
+      {tools.map((tool) => (
+        <div key={tool.toolsName} className={styles.lstoolcard}>
+          <div className={styles.lstoolicon}>
+            <img
+              src={`https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`}
+              alt={tool.toolsName}
+              className={styles.lstooliconimg}
+            />
+          </div>
 
-                                <div className={styles.lstoolname}>{t.name}</div>
-                                <a
-                                    className={styles.lstoollink}
-                                    href="#"
-                                    onClick={(e) => e.preventDefault()}
-                                >
-                                    Download link
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+          <div className={styles.lstoolname}>
+            {tool.toolsName}
+          </div>
+
+          <a
+            className={styles.lstoollink}
+            href={tool.toolsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download link
+
+          </a>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
             </div>
         </section>
     );

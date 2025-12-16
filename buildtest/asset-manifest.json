@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.6797235c.css",
-    "main.js": "/static/js/main.9abad804.js",
+    "main.js": "/static/js/main.7da267ab.js",
     "static/js/514.76807b27.chunk.js": "/static/js/514.76807b27.chunk.js",
     "static/js/47.580f4eb1.chunk.js": "/static/js/47.580f4eb1.chunk.js",
     "static/js/453.8acd2121.chunk.js": "/static/js/453.8acd2121.chunk.js",
@@ -106,7 +106,7 @@
     "static/media/cc-icon5.webp": "/static/media/cc-icon5.6af622981c303772c46a.webp",
     "static/media/abouticonsbackground.webp": "/static/media/abouticonsbackground.9afa35925750a8fdce5b.webp",
     "static/media/cc-icon2.webp": "/static/media/cc-icon2.30859d5ed51ad927bd8d.webp",
-    "static/media/medal.svg": "/static/media/medal.7fe5311a3203aa9769ec398b29ad9e72.svg",
+    "static/media/medal.svg": "/static/media/medal.ef2ad64c0b7d3eb96815b6b20b358b41.svg",
     "static/media/corporatecontactbackground.webp": "/static/media/corporatecontactbackground.c65543b4159ffe0658d2.webp",
     "static/media/market.webp": "/static/media/market.9af4c840741ced58796f.webp",
     "static/media/247-icon.webp": "/static/media/247-icon.b2aaf3f24e40e7fd6875.webp",
@@ -177,13 +177,13 @@
     "static/media/addressicon.webp": "/static/media/addressicon.3198824fb6f94873816c.webp",
     "static/media/contacticon.webp": "/static/media/contacticon.ec627c106329b5a9b3c4.webp",
     "main.6797235c.css.map": "/static/css/main.6797235c.css.map",
-    "main.9abad804.js.map": "/static/js/main.9abad804.js.map",
+    "main.7da267ab.js.map": "/static/js/main.7da267ab.js.map",
     "514.76807b27.chunk.js.map": "/static/js/514.76807b27.chunk.js.map",
     "47.580f4eb1.chunk.js.map": "/static/js/47.580f4eb1.chunk.js.map",
     "453.8acd2121.chunk.js.map": "/static/js/453.8acd2121.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6797235c.css",
-    "static/js/main.9abad804.js"
+    "static/js/main.7da267ab.js"
   ]
 }

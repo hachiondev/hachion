@@ -1,0 +1,268 @@
+:root {
+  --bg: #1f1f1f; /* footer background */
+  --bg2: #121315; /* bottom strip bg */
+  --ink: #e7e7e7;
+  --muted: #9d9d9d;
+  --muter: #7c828a;
+  --border: #272a2e;
+  --accent: #22c1ff;
+  --accent2: #19a4df;
+}
+
+.ft {
+  background: var(--bg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue",
+    Arial;
+}
+
+/* top grid */
+.ftgrid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 40px;
+  max-width: 1350px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin: 0 auto;
+}
+
+/* brand area */
+.ftlogo {
+  display: flex;
+  align-items: baseline;
+  text-decoration: none;
+  color: #fff;
+  font-size: 52px;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+.ftlogo img {
+  width: 250px;
+}
+.ftlogomark {
+  color: #0e1116;
+  position: relative;
+  text-shadow: 0 0 0 #0e1116;
+}
+.ftlogomark::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 60%;
+  width: 28px;
+  height: 3px;
+  background: #1aa6df;
+  transform: rotate(-20deg);
+  border-radius: 2px;
+}
+.ftlogotext {
+  margin-left: 6px;
+  color: #dfe9ef;
+}
+
+.fttitle {
+  font-size: 28px;
+  margin: 30px 0 30px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 2.5rem;
+}
+
+.ftnewsletter {
+  position: relative;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+.ftnewsletter input {
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  color: #eaeef2;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  outline: 0;
+}
+.ftnewsletter input::placeholder {
+  color: #6c737b;
+}
+.ftnewsletter button {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  background: transparent;
+  border: 0;
+  color: #6c737b;
+  cursor: pointer;
+}
+
+.ftcontact {
+  margin-top: 16px;
+  display: grid;
+  gap: 5px;
+}
+.ftcontactrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cfd6dd;
+  font-weight: 600;
+}
+.ftcontactrow a {
+  color: #cfd6dd;
+  text-decoration: none;
+}
+
+/* link columns */
+.ftcols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+.ftcolhead {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #fff;
+}
+.ftcol ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.ftcol a {
+  color: #9d9d9d;
+  text-decoration: none;
+  font-weight: 400;
+}
+.ftcol a:hover {
+  color: #f0f3f6;
+}
+
+/* bottom bar */
+.ftbottomarea {
+  background: var(--bg2);
+}
+.ftbottom {
+  display: grid;
+  grid-template-columns: auto 0.6fr 1fr auto;
+  align-items: center;
+  gap: 16px;
+  max-width: 1350px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  margin: 0 auto;
+  color: #d9dee4;
+  background: var(--bg2);
+}
+.ftwhats {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+.ftwhats a {
+  color: #cfead7;
+  text-decoration: none;
+}
+.ftwhats img {
+  width: 25px;
+}
+.ftmiddle {
+  text-align: center;
+  color: #c8ced6;
+}
+.ftcopy {
+  color: #c8ced6;
+  font-weight: 600;
+}
+.ftsocials {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 1350px;
+}
+/* simple round social placeholders */
+.ftsocial {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 900;
+  background: #2a2d31;
+  border: 1px solid #30343a;
+}
+.ftf {
+  background: #1877f2;
+}
+.ftx {
+  background: #0f1419;
+}
+.ftl {
+  background: #0a66c2;
+}
+.fti {
+  background: #e1306c;
+}
+.ftq {
+  background: #b92b27;
+}
+.fty {
+  background: #ff0000;
+}
+
+/* responsive */
+@media (max-width: 1024px) {
+  .ftgrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .ftgrid .ftlogo {
+    justify-content: center;
+  }
+  .fttitle {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .ftnewsletter {
+    margin: 0 auto 40px;
+  }
+  .ftbottom {
+    grid-template-columns: 1fr;
+    text-align: center;
+    row-gap: 10px;
+  }
+  .ftsocials {
+    justify-content: center;
+  }
+  .ftcontactrow {
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .ftcols {
+    display: block;
+    text-align: center;
+  }
+  .ftcol {
+    margin-bottom: 30px;
+  }
+  .ftwhats {
+    justify-content: center;
+    font-weight: 400;
+    font-size: 17px;
+  }
+  .ftmiddle {
+    font-size: 18px;
+    font-weight: 300;
+  }
+  .ftcopy {
+    font-size: 16px;
+    font-weight: 400;
+  }
+}

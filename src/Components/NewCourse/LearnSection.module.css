@@ -1,0 +1,266 @@
+/* wrapper */
+.lswrap {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* grid 2 columns */
+.lsgrid {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 0.9fr;
+  gap: 36px;
+  align-items: start;
+  /* max-width: 1200px; */
+}
+
+.lsh2 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 18px;
+  line-height: 1.05;
+}
+
+/* learn list */
+.lslist {
+  margin: 14px 0 10px;
+  display: grid;
+  gap: 14px;
+  padding: 0;
+}
+.lslistitem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.6;
+  color: #000;
+  font-size: 22px;
+    font-weight: 300;
+}
+.lsicon {
+  padding: 8px 2px;
+  height: 38px;
+}
+.lsicon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.lsiconimg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* prerequisites */
+.lspre {
+  margin-top: 28px;
+}
+.lspre h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+.lsbullets {
+  display: grid;
+  gap: 10px;
+  color: #000000;
+  list-style: disc;
+  margin-left: 18px;
+}
+
+/* right column cards */
+.lsright {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: end;
+}
+.lscard {
+  background: #ffffff;
+  border: 1px solid rgba(14,20,30,0.06);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 18px 36px rgba(15,23,42,0.08);
+  width: 100%;
+  /* max-width: 520px; */
+}
+.lsright > .lscard { /* keep cards visually aligned to the right */
+  margin-left: auto;
+}
+.lscardhead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.lscardico {
+  /* display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f0fdf4;
+  color: #065f46; */
+}
+.lscard h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+.lscardbullets {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+  color: #0f172a;
+  list-style: disc;
+  font-size: 20px;
+  /* margin-left: 18px; */
+}
+.lsmuted {
+  color: #000000;
+  margin: 12px 0 8px;
+}
+
+/* pills */
+.lspills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.lspill {
+  /* background: linear-gradient(180deg,#f0fdf4,#e6fbef); */
+  background: #7BF6CB33;
+  color: #217E02;
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(16,24,40,0.03);
+}
+
+/* salary panel */
+.lssalary {
+  margin-top: 14px;
+  background: linear-gradient(90deg, #e6fbff 0%, #eaf7ee 40%, #e6f0fb 100%);
+  border-radius: 10px;
+  padding: 18px;
+}
+.lssalarytitle {
+  color: #000000;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.lssalaryval {
+  color: #0f9d58;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Tools band */
+.lstools {
+  margin-top: 28px;
+  background: #f5f7f7;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+}
+.lstoolstitle {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+.lstoolsgrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+}
+.lstoolcard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+.lstoolicon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 10px;
+  border-radius: 12px;
+  /* background: #eef2ff; */
+}
+.lstooliconimg{
+    height: 56px;
+}
+.lstoolname {
+  font-weight: 600;
+  color: #57575F;
+}
+.lstoollink {
+  margin-top: 6px;
+  display: inline-block;
+  font-size: 12px;
+  color: #1FABFF;
+  text-decoration: underline;
+}
+
+/* responsive */
+@media (max-width: 1000px) {
+  .lsgrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .lswrap { padding: 28px 16px; }
+  .lsh2 { font-size: 24px; font-weight: 600; }
+  .lslistitem { font-size: 15px; gap: 10px; }
+  .lsicon { width: auto; height:32px; }
+  .lsright { align-items: stretch; }
+  .lscard { max-width: 100%; padding:16px; box-shadow: 0 8px 20px rgba(15,23,42,0.06); }
+  .lspre h3{
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .lsbullets{
+    margin-left: 0;
+    font-weight: 300;
+  }
+  .lspills{
+    display: grid;
+  }
+  .lstoolcard{
+    padding: 16px 5px;
+  }
+  .lstoolstitle{
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .lstoolname{
+    font-size: 12px;
+  }
+  .lstoollink{
+    font-size: 10px;
+  }
+  .lscardbullets{
+    font-size: 16px;
+    padding-left: 1rem;
+    font-weight: 300;
+  }
+}
+@media (max-width: 720px) {
+  .lstoolsgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 721px) and (max-width: 1024px) {
+  .lstoolsgrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const API = "https://api.test.hachion.co"; 
+const API = "https://api.test.hachion.co";
 
 export function useCurriculumAll(courseName) {
-  const normalize = (str) =>
-    (str || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
-
-  const normalizedCourse = normalize(courseName);
+  const normalizedCourse = decodeURIComponent(courseName || "")
+    .toLowerCase()
+    .replace(/[\s\-_]/g, "");
 
   return useQuery({
     queryKey: ["curriculumAll", normalizedCourse],
@@ -16,11 +15,10 @@ export function useCurriculumAll(courseName) {
       const res = await axios.get(
         `${API}/curriculum/course/${normalizedCourse}`
       );
-      const curriculum = res.data;
 
       return {
-        uiCurriculum: curriculum,
-        curriculum: curriculum,
+        uiCurriculum: res.data,
+        curriculum: res.data,
       };
     },
 

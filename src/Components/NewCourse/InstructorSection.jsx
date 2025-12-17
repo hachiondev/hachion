@@ -19,7 +19,17 @@ export default function InstructorSection({
   onAsk = () => {},
 }) {
   
-  const { courseName } = useParams();
+  
+  const { courseName: courseNameSlug } = useParams();
+const courseName = courseNameSlug
+  ? decodeURIComponent(courseNameSlug)
+      .replace(/[-_]+/g, " ")
+      .replace(/\+\+/g, "pp")   // C++ → cpp
+      .trim()
+      .toLowerCase()
+  : "";
+
+
   const { data: trainerList = [] } = useTrainerDetailsByCourse(courseName);
 
   const trainerName = trainerList[0]?.trainer_name;

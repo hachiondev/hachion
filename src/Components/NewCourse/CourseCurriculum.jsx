@@ -55,20 +55,27 @@ export default function CourseCurriculum() {
   const [videoUrl, setVideoUrl] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [selectedTab, setSelectedTab] = useState({});
+const { courseName: courseNameSlug } = useParams();
 
-  const { courseName } = useParams();
+/// Human-readable course name
+const courseName = courseNameSlug
+  ? decodeURIComponent(courseNameSlug)
+      .replace(/-/g, " ")
+      .trim()
+  : "";
+
+  const encodedCourseName = encodeURIComponent(courseName);
+
+
 
   const { data: courseDetails } = useCourseByName(courseName);
 
   const { data: projects = [], isLoading: projectsLoading } =
   useProjectsByCourseName(courseName);
 
- 
-  const normalizedCourse = (str) =>
-    (str || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
-  const courseKey = normalizedCourse(courseName);
 
-  const { data, isLoading } = useCurriculumAll(courseKey);
+  const { data, isLoading } = useCurriculumAll(encodedCourseName);
+
   const curriculum = data?.curriculum || [];
   const uiCurriculum = data?.uiCurriculum || [];
 
@@ -117,18 +124,18 @@ useEffect(() => {
   }
 }, [accessData, isError, accessError]);
 
+const downloadPdf = () => {
+  if (!email) return setShowRegisterPrompt(true);
+  if (!curriculum.length) return alert("No curriculum found.");
 
-  const downloadPdf = () => {
-    if (!email) return setShowRegisterPrompt(true);
-    if (!curriculum.length) return alert("No curriculum found.");
+  const matched = curriculum.find((item) => item.brochure_pdf);
+  if (!matched) return alert("No brochure PDF uploaded.");
 
-    const matched = curriculum.find((item) => item.curriculum_pdf);
-    if (!matched) return alert("No curriculum PDF uploaded.");
+  const filename = matched.brochure_pdf.split("/").pop();
+  const finalUrl = `https://api.test.hachion.co/curriculum/pdfs/${filename}`;
+  window.open(finalUrl, "_blank");
+};
 
-    const filename = matched.curriculum_pdf.split("/").pop();
-    const finalUrl = `https://api.test.hachion.co/curriculum/pdfs/${filename}`;
-    window.open(finalUrl, "_blank");
-  };
 
 const handleDownloadAssessment = (assessmentPdfPath) => {
   if (!email || !studentId) return setShowRegisterPrompt(true);
@@ -523,7 +530,7 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
               border: "none",
             }}
             onClick={() => {
-              window.location.href = `/checkout/${courseKey}`;
+              window.location.href = `/checkout/${encodedCourseName}`;
             }}
           >
             Enroll Now

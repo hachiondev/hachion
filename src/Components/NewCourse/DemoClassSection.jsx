@@ -74,6 +74,7 @@ useEffect(() => {
     isLoading: isProfileLoading,
     
   } = useUserProfile();
+  
 const { courseName } = useParams();
 
 
@@ -81,11 +82,10 @@ const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
 const normalizeCourseSlug = (slug) =>
   slug
-    .replace(/[-_]+/g, " ")  
-    .replace(/\s+/g, " ")    
+    .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
+    .replace(/\s+/g, " ")
     .trim()
-    .toLowerCase();          
-
+    .toLowerCase();
 
 const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
 

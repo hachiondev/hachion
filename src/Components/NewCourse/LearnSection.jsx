@@ -38,7 +38,16 @@ const tools = [
 
 export default function LearnSection() {
     
-    const { courseName } = useParams();
+    const { courseName: courseNameSlug } = useParams();
+
+const courseName = courseNameSlug
+  ? decodeURIComponent(courseNameSlug)
+      .replace(/[-_]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+  : "";
+
     const { data: course } = useCourseByName(courseName);
     const { data: tools = [], isLoading } = useToolsByCourse(courseName);
 

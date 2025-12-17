@@ -79,12 +79,15 @@ const stripHtml = (html) => {
 
 export default function CourseBanner() {
   const navigate = useNavigate();
-  
-const { courseName } = useParams();
+  const { courseName } = useParams();
 
 const courseNameForApi = courseName
-  ? decodeURIComponent(courseName).toLowerCase()
+  ? decodeURIComponent(courseName)
+      .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
+      .trim()
+      .toLowerCase()
   : "";
+
 
 
   const [showLoginRequired, setShowLoginRequired] = useState(false);

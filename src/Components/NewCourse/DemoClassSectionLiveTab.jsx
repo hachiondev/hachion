@@ -31,7 +31,8 @@ function DemoClassSectionLiveTab({
   showRegisterPrompt,        
   onCloseRegisterPrompt, 
 enrollingSessionId,
-onResendClick
+onResendClick,
+resetLiveSubmitting
 }) {
   
   const liveContent =
@@ -77,6 +78,10 @@ useEffect(() => {
     setIsSubmitting(false);
   }
 }, [isRequestBatchSuccess, requestBatchError]);
+
+useEffect(() => {
+  setIsSubmitting(false); // ✅ reset when modal closes
+}, [resetLiveSubmitting]);
 
   return (
     <div className={styles.dcgrid}>
@@ -401,7 +406,7 @@ useEffect(() => {
             lineHeight: "1.4",
           }}
         >
-          Login to enroll in demo and live sessions.
+          Before proceeding, please login into our Hachion.
         </p>
 
         <div style={{ display: "flex", gap: "10px" }}>

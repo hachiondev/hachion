@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../utils";
-import RequestCustomBatch from "./RequestCustomBatch";
+// import RequestCustomBatch from "./RequestCustomBatch";
+import RequestBatch from "../UserPanel/RequestBatch";
+
 import EnrollNotification from "./EnrollNotification";
 import { useParams } from "react-router-dom";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
@@ -31,6 +33,7 @@ export default function DemoClassSection() {
   const [tz, setTz] = useState(browserTz);
 
   const [showRequestBatch, setShowRequestBatch] = useState(false);
+  const [resetLiveSubmitting, setResetLiveSubmitting] = useState(0);
   const [enrollNow, setEnrollNow] = useState(false);
 
 const [mentoringPreferredTime, setMentoringPreferredTime] = useState("");
@@ -165,6 +168,16 @@ const handleLiveEnrollClick = async (session) => {
     userProfile,
     isProfileLoading,
   });
+
+  const handleRequestBatchWithLoginCheck = () => {
+  // wait until profile loads
+  if (isProfileLoading) return;
+  if (!userProfile || !userProfile.studentId) {
+    setShowRegisterPrompt(true);
+    return;
+  }
+   setShowRequestBatch(true);
+};
 
   const handleClick = () => {
     const selectedDays = Array.from(
@@ -360,7 +373,9 @@ useEffect(() => {
 
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
-            onRequestClick={handleClick}
+            // onRequestClick={handleClick}
+            onRequestClick={handleRequestBatchWithLoginCheck}
+
             liveTraining={courseData?.liveTraining}       
     isCourseLoading={isCourseLoading}              
     courseError={courseError}  
@@ -372,6 +387,7 @@ useEffect(() => {
      showRegisterPrompt={showRegisterPrompt}
     onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
 enrollingSessionId={enrollingSessionId}
+resetLiveSubmitting={resetLiveSubmitting}
 
      
           />
@@ -443,7 +459,7 @@ enrollingSessionId={enrollingSessionId}
   />
 )}
 
-        {showRequestBatch && (
+        {/* {showRequestBatch && (
           <RequestCustomBatch
             onClose={() => setShowRequestBatch(false)}
             onSubmit={(formData) => {
@@ -451,7 +467,17 @@ enrollingSessionId={enrollingSessionId}
               setShowRequestBatch(false);
             }}
           />
-        )}
+        )} */}
+       {showRequestBatch && (
+  <RequestBatch
+    closeModal={() => {
+      setShowRequestBatch(false);
+      setResetLiveSubmitting(Date.now()); // ✅ RESET BUTTON STATE
+    }}
+  />
+)}
+
+
       </div>
 
       {enrollNow && (

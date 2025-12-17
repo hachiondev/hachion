@@ -83,7 +83,7 @@ export function useDemoLivePayment({
       try {
         await axios.post(`${API_BASE}/enroll/add`, {
 
-          name: userProfile.userName,
+          name: userProfile.userName || userProfile.name || "",
           studentId: userProfile.studentId,
           email: userProfile.email,
           mobile,

@@ -51,7 +51,6 @@ const courseName = courseNameSlug
     const { data: course } = useCourseByName(courseName);
     const { data: tools = [], isLoading } = useToolsByCourse(courseName);
 
-
     const defaultWhatYouWillLearn = [
         "Build responsive websites using HTML5, CSS3, and JavaScript",
         "Master React.js for creating dynamic user interfaces",

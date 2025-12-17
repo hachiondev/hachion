@@ -136,12 +136,6 @@ useEffect(() => {
             course.courseName.toLowerCase().trim() ===
             scheduleItem.schedule_course_name.toLowerCase().trim()
         );
-        console.log(
-          "Trainer for",
-          scheduleItem.schedule_course_name,
-          "is",
-          scheduleItem.trainer_name
-        );
         return {
           ...scheduleItem,
           trainerName: scheduleItem.trainer_name,

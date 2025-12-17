@@ -148,6 +148,7 @@
   font-weight: 500;
   color: #0e1320;
   font-size: 14px;
+  -webkit-user-select: none;
   user-select: none;
 }
 .dcselectTrigger:hover {
@@ -288,7 +289,7 @@
 }
 .dcslotbadge {
   width: fit-content;
-  padding: 6px 30px;
+  padding: 8px 21px;
   border-radius: 10px;
   font-weight: 700;
   font-size: 12px;
@@ -419,6 +420,7 @@
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.97);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   /* border-radius: 16px; */
   padding: 36px 40px;
@@ -461,6 +463,7 @@
   gap: 6px;
   cursor: pointer;
   position: relative;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -573,6 +576,7 @@
   color: #0e1320;
   font-weight: 400;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
   transition: all 0.2s;
 }
@@ -772,65 +776,7 @@
   }
 }
 
-@media (max-width: 640px) {
-  .dcslots {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .dctabs {
-    grid-template-columns: 1fr 1fr;
-  }
-  .dcdetails {
-    grid-template-columns: 1fr;
-  }
-  .dcrequestCard {
-    min-height: 380px;
-  }
-  .dcrequestOverlay {
-    /* width: calc(100% - 30px); */
-    /* margin: 15px; */
-    padding: 24px 20px;
-  }
-  .dcrequestTitle {
-    font-size: 20px;
-  }
-  .dcrequestText {
-    font-size: 13px;
-    margin-bottom: 18px;
-  }
-  .dcrequestRow {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .dcrequestBtn {
-    /* width: 100%; */
-    padding: 13px 36px;
-    font-size: 15px;
-  }
-  .dcrequestCheckboxes {
-    gap: 8px;
-  }
-  .dcrequestCheckbox span:not(.checkmark) {
-    font-size: 13px;
-  }
-  .dcrequestLabel {
-    font-size: 13px;
-  }
-  .checkmark {
-    height: 18px;
-    width: 18px;
-  }
-  .dcrequestCheckbox .checkmark:after {
-    left: 5px;
-    top: 2px;
-    width: 5px;
-    height: 8px;
-  }
-  .offerBanner {
-    padding: 24px;
-  }
-}
-
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .dcwrap {
     padding: 14px;
   }
@@ -865,10 +811,10 @@
     padding: 0px;
   }
   .dchead h2 {
-    font-size: 22px;
+    font-size: 35px;
   }
   .dchead p {
-    font-size: 12px;
+    font-size: 26px;
   }
   .dctimezone {
     padding: 15px 8px;
@@ -885,7 +831,7 @@
   .dctabs .dctab {
     margin: 6px;
     padding: 4px 4px;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 400;
     min-height: 43px;
     border-radius: 10px;
@@ -898,10 +844,306 @@
     padding: 20px 18px;
   }
   .dcslotdate {
-    font-size: 12px;
+    font-size: 24px;
   }
   .dcslotcount {
+    font-size: 20px;
+  }
+  .dcslots .dcslotbadge {
+    font-weight: 500;
+    font: 18px;
+  }
+  .dcdetailscol h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dcdetailrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    /* display: block; */
+  }
+  .dcdetailtime {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .dcdetailmeta {
     font-size: 12px;
+    font-weight: 400;
+  }
+  .dcemptytitle {
+    font-weight: 600;
+  }
+  .dcemptytext {
+    font-weight: 300;
+  }
+  .dcdetailscol {
+    box-shadow: none;
+  }
+  .dcbtn {
+    padding: 6px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    /* margin-top: 20px; */
+  }
+  .dclink {
+    margin-bottom: 30px;
+  }
+  .dcinfoicon {
+    height: 40px;
+    width: 40px;
+  }
+  .dcinfoicon img {
+    height: 40px;
+    width: 40px;
+  }
+  .dcinfotitle {
+    font-size: 35px;
+    font-weight: 500;
+  }
+  .dcinfosubdescription{
+    font-size: 24px;
+  }
+  .dcinfotext {
+    font-size: 14px;
+  }
+  .dcinfolist {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .dcinfolist h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dcselectTrigger {
+    font-size: 10px;
+  }
+  
+}
+
+
+@media (max-width: 480px) {
+  .dcwrap {
+    padding: 14px;
+  }
+  .offerLeft {
+    gap: 1px;
+  }
+  .offerBanner {
+    /* flex-direction: row; */
+  }
+  .offerTitle {
+    font-size: 12px;
+  }
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
+  .offerIcon img {
+    width: 40px;
+    height: 40px;
+    align-content: center;
+  }
+  .offerSubtitle {
+    font-size: 10px;
+  }
+  .offerCountdown {
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+  .dchead {
+    display: block;
+    padding: 0px;
+  }
+  .dchead h2 {
+    font-size: 30px;
+  }
+
+  .dcinfosubdescription{
+    font-size: 18px;
+  }
+  .dchead p {
+    font-size: 22px;
+  }
+  .dctimezone {
+    padding: 15px 8px;
+  }
+  .dctimezone label {
+    font-size: 12px;
+  }
+  .dcselect select {
+    font-size: 12px;
+  }
+  .dctabs {
+    background: transparent;
+  }
+  .dctabs .dctab {
+    margin: 6px;
+    padding: 4px 4px;
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 43px;
+    border-radius: 10px;
+    color: #000;
+  }
+  .dctabs .dctabisactive {
+    color: #fff;
+  }
+  .dcslots .dcslot {
+    padding: 20px 18px;
+  }
+  .dcslotdate {
+    font-size: 20px;
+  }
+  .dcslotcount {
+    font-size: 20px;
+  }
+  .dcslots .dcslotbadge {
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .dcdetailscol h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dcdetailrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    /* display: block; */
+  }
+  .dcdetailtime {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .dcdetailmeta {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .dcemptytitle {
+    font-weight: 600;
+  }
+  .dcemptytext {
+    font-weight: 300;
+  }
+  .dcdetailscol {
+    box-shadow: none;
+  }
+  .dcbtn {
+    padding: 6px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    /* margin-top: 20px; */
+  }
+  .dclink {
+    margin-bottom: 30px;
+  }
+  .dcinfoicon {
+    height: 40px;
+    width: 40px;
+  }
+  .dcinfoicon img {
+    height: 40px;
+    width: 40px;
+  }
+  .dcinfotitle {
+    font-size: 30px;
+    font-weight: 500;
+  }
+  .dcinfotext {
+    font-size: 16px;
+  }
+  .dcinfolist {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .dcinfolist h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dcselectTrigger {
+    font-size: 10px;
+  }
+  
+}
+
+@media (max-width: 375px) {
+  .dcwrap {
+    padding: 14px;
+  }
+  .offerLeft {
+    gap: 1px;
+  }
+  .offerBanner {
+    /* flex-direction: row; */
+  }
+  .offerTitle {
+    font-size: 12px;
+  }
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
+  .offerIcon img {
+    width: 40px;
+    height: 40px;
+    align-content: center;
+  }
+  .offerSubtitle {
+    font-size: 10px;
+  }
+  .offerCountdown {
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+  .dchead {
+    display: block;
+    padding: 0px;
+  }
+  .dchead h2 {
+    font-size: 26px;
+  }
+  .dchead p {
+    font-size: 18px;
+  }
+
+   .dcinfosubdescription{
+    font-size: 18px;
+  }
+  .dctimezone {
+    padding: 15px 8px;
+  }
+  .dctimezone label {
+    font-size: 12px;
+  }
+  .dcselect select {
+    font-size: 12px;
+  }
+  .dctabs {
+    background: transparent;
+  }
+  .dctabs .dctab {
+    margin: 6px;
+    padding: 4px 4px;
+    font-size: 14px;
+    font-weight: 400;
+    min-height: 43px;
+    border-radius: 10px;
+    color: #000;
+  }
+  .dctabs .dctabisactive {
+    color: #fff;
+  }
+  .dcslots .dcslot {
+    padding: 20px 18px;
+  }
+  .dcslotdate {
+    font-size: 16px;
+  }
+  .dcslotcount {
+    font-size: 16px;
   }
   .dcslots .dcslotbadge {
     font-weight: 500;
@@ -955,7 +1197,7 @@
     font-weight: 500;
   }
   .dcinfotext {
-    font-size: 14px;
+    font-size: 16px;
   }
   .dcinfolist {
     font-size: 14px;

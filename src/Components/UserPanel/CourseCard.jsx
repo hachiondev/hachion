@@ -7,13 +7,13 @@ import './Home.css';
 import axios from 'axios';
 
 const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onClick, image, trainer_name, level, amount, totalAmount, timeLeftLabel = "", course_id, userEmail }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768); 
+      setIsMobile(window.innerWidth <= 768);
     };
 
     checkScreenSize();
@@ -21,35 +21,35 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-useEffect(() => {
-  let stop = false;
+  useEffect(() => {
+    let stop = false;
 
-  const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
-  const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
+    const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
+    const email = user?.email || userEmail || localStorage.getItem('userEmail') || '';
 
-  // if (!email || !course_id) return;
+    // if (!email || !course_id) return;
 
-  // (async () => {
-  //   try {
-  //     const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
-  //       params: { email, courseId: course_id }
-  //     });
-  //     if (!stop && data && typeof data.bookmarked === 'boolean') {
-  //       setBookmarked(data.bookmarked);
-  //     }
-  //   } catch (e) {
-      
-  //   }
-  // })();
+    // (async () => {
+    //   try {
+    //     const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+    //       params: { email, courseId: course_id }
+    //     });
+    //     if (!stop && data && typeof data.bookmarked === 'boolean') {
+    //       setBookmarked(data.bookmarked);
+    //     }
+    //   } catch (e) {
 
-  return () => { stop = true; };
-}, [userEmail, course_id]);
+    //   }
+    // })();
+
+    return () => { stop = true; };
+  }, [userEmail, course_id]);
 
   const formattedName = heading
-  ? heading.toLowerCase().replace(/\s+/g, '-')
-  : '';
+    ? heading.toLowerCase().replace(/\s+/g, '-')
+    : '';
   const handleNavigation = () => {
-    navigate(`/coursedetails/${formattedName}`);
+    navigate(`/newcoursedetails/${formattedName}`);
   };
 
   const handleShare = async (e) => {
@@ -84,13 +84,13 @@ useEffect(() => {
     }
   };
 
-  
+
   const handleBookmark = async (e) => {
     e.stopPropagation();
 
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
     const email = user?.email;
-    if (!email ) {
+    if (!email) {
       alert('Please login before bookmarking.');
       return;
     }
@@ -114,31 +114,31 @@ useEffect(() => {
 
   return (
     <div
-          className="card"
-          style={{ cursor: isMobile ? 'pointer' : 'default' }}
-          onClick={
-    isMobile
-      ? staticButtonLink
-        ? () => navigate(staticButtonLink)
-        : handleNavigation 
-      : undefined
-  }
-        >
-          <div className="card-action-icons">
-            <button className="card-icons" onClick={handleShare} aria-label="Share this course"><TbShare3 /></button>
-            <button className="card-icons" onClick={handleBookmark}
-              aria-label={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}>
-              {bookmarked ? <MdBookmark className="bookmark-active" /> : <MdBookmarkBorder />}
-            </button>
-          </div>
-    
-          <div className="card-header-div">
-            <img src={image} alt="Course-img" className="card-image" loading="lazy"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = fallbackImg;
-              }}/>
-          </div>
+      className="card"
+      style={{ cursor: isMobile ? 'pointer' : 'default' }}
+      onClick={
+        isMobile
+          ? staticButtonLink
+            ? () => navigate(staticButtonLink)
+            : handleNavigation
+          : undefined
+      }
+    >
+      <div className="card-action-icons">
+        <button className="card-icons" onClick={handleShare} aria-label="Share this course"><TbShare3 /></button>
+        <button className="card-icons" onClick={handleBookmark}
+          aria-label={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}>
+          {bookmarked ? <MdBookmark className="bookmark-active" /> : <MdBookmarkBorder />}
+        </button>
+      </div>
+
+      <div className="card-header-div">
+        <img src={image} alt="Course-img" className="card-image" loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = fallbackImg;
+          }} />
+      </div>
 
       <div className="card-course-details">
         <div className="card-row">
@@ -163,11 +163,28 @@ useEffect(() => {
           {timeLeftLabel ? (<div className="discount-duration">{timeLeftLabel}</div>) : null}
         </div>
 
-        <button className="card-view-btn" onClick={(e) => {
-    e.stopPropagation(); 
-    if (staticButtonLink) return navigate(staticButtonLink);
-    if (onClick) return onClick(e);
-  }}>View Details</button>
+        <button
+  className="card-view-btn"
+  onClick={(e) => {
+    e.stopPropagation();
+
+    if (staticButtonLink) {
+      navigate(staticButtonLink);
+      return;
+    }
+
+    if (onClick) {
+      onClick(); // ✅ no event passed
+      return;
+    }
+
+    // fallback safety
+    handleNavigation();
+  }}
+>
+  View Details
+</button>
+
       </div>
     </div>
   );

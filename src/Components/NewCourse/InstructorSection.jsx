@@ -75,7 +75,13 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
         <div className={styles.iscard}>
           {/* Photo */}
           <div className={styles.isphoto}>
-            <img src="instructor.png" alt={`${trainerName || name} headshot`} />
+           <img
+  src="/InstructorDefaultImage.webp"
+  alt={`${trainerName || name} headshot`}
+  onError={(e) => {
+    e.currentTarget.src = "/InstructorDefaultImage.webp";
+  }}
+/>
           </div>
 
           {/* Content */}

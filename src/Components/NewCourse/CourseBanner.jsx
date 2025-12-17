@@ -79,7 +79,6 @@ const stripHtml = (html) => {
 
 export default function CourseBanner() {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const { courseName } = useParams();
 
 const courseNameForApi = courseName
@@ -88,14 +87,6 @@ const courseNameForApi = courseName
       .trim()
       .toLowerCase()
   : "";
-=======
-
-  const { courseName } = useParams();
-
-  const courseNameForApi = courseName
-    ? decodeURIComponent(courseName).toLowerCase().replaceAll('-',' ')
-    : "";
->>>>>>> 113d8f3a30d0ad88be95a3304f37fc4bd4bde698
 
 
 
@@ -110,39 +101,39 @@ const courseNameForApi = courseName
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
-  const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
+const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
   const { data: trainers = [] } = useTrainersByCourse(courseNameForApi);
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
 
 
-  const hasSpecialDiscount = !!discountRule;
-  const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
-  const discountType = discountRule?.discountType || "PERCENTAGE";
-  const discountFixedAmount = discountRule?.discountAmount ?? 0;
+const hasSpecialDiscount = !!discountRule;
+const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
+const discountType = discountRule?.discountType || "PERCENTAGE";
+const discountFixedAmount = discountRule?.discountAmount ?? 0;
 
 
-  const offerRightText = (() => {
-    if (!discountRule?.endDate) return "";
+const offerRightText = (() => {
+  if (!discountRule?.endDate) return "";
 
-    const end = dayjs(discountRule.endDate, ["MM/DD/YYYY", "YYYY-MM-DD"], true).endOf("day");
-    if (!end.isValid()) return "";
+  const end = dayjs(discountRule.endDate, ["MM/DD/YYYY", "YYYY-MM-DD"], true).endOf("day");
+  if (!end.isValid()) return "";
 
-    const now = dayjs();
-    if (!end.isAfter(now)) return "";
+  const now = dayjs();
+  if (!end.isAfter(now)) return "";
 
-    const diffDays = end.diff(now, "day");
+  const diffDays = end.diff(now, "day");
 
-    if (diffDays >= 1) {
-      return `⏳ Hurry! Offer ends in ${diffDays} day${diffDays > 1 ? "s" : ""}`;
-    }
+  if (diffDays >= 1) {
+    return `⏳ Hurry! Offer ends in ${diffDays} day${diffDays > 1 ? "s" : ""}`;
+  }
 
-    const diffHours = Math.max(1, end.diff(now, "hour"));
-    return `⏳ Hurry! Offer ends in ${diffHours} hour${diffHours > 1 ? "s" : ""}`;
-  })();
+  const diffHours = Math.max(1, end.diff(now, "hour"));
+  return `⏳ Hurry! Offer ends in ${diffHours} hour${diffHours > 1 ? "s" : ""}`;
+})();
 
-  const showOfferStrip = hasSpecialDiscount && offerRightText;
+const showOfferStrip = hasSpecialDiscount && offerRightText;
 
 
   if (isLoading) {
@@ -195,163 +186,163 @@ const courseNameForApi = courseName
     ? `${course.numberOfClasses} Classes`
     : "Duration will be updated soon";
 
-  const baseDiscount = course.idiscount ?? course.discount ?? 0;
-  const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
+const baseDiscount = course.idiscount ?? course.discount ?? 0; 
+const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
 
-  let convertedTotalFee = 0;
-  let convertedOriginalFee = 0;
+let convertedTotalFee = 0;
+let convertedOriginalFee = 0;
 
-  if (currency === "INR") {
-    const inrPlans = [
-      { total: course.itotal, amount: course.iamount },
-      { total: course.ictotal, amount: course.icamount },
-      { total: course.imtotal, amount: course.imamount },
-      { total: course.isqtotal, amount: course.isqamount },
-      { total: course.istotal, amount: course.isamount },
-    ].filter(
-      (p) =>
-        (p.total != null && p.total > 0) ||
-        (p.amount != null && p.amount > 0)
+if (currency === "INR") {
+  const inrPlans = [
+    { total: course.itotal,  amount: course.iamount },
+    { total: course.ictotal, amount: course.icamount },
+    { total: course.imtotal, amount: course.imamount },
+    { total: course.isqtotal, amount: course.isqamount },
+    { total: course.istotal, amount: course.isamount },
+  ].filter(
+    (p) =>
+      (p.total != null && p.total > 0) ||
+      (p.amount != null && p.amount > 0)
+  );
+
+  if (inrPlans.length > 0) {
+    const minTotal = Math.min(
+      ...inrPlans.map((p) => (p.total ?? p.amount))
     );
+    const bestPlan =
+      inrPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
+      inrPlans[0];
 
-    if (inrPlans.length > 0) {
-      const minTotal = Math.min(
-        ...inrPlans.map((p) => (p.total ?? p.amount))
-      );
-      const bestPlan =
-        inrPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
-        inrPlans[0];
+    const originalAmount = bestPlan.amount ?? 0; 
 
-      const originalAmount = bestPlan.amount ?? 0;
+    if (hasSpecialDiscount) {
+      
+      let discountedAmount = originalAmount;
 
-      if (hasSpecialDiscount) {
-
-        let discountedAmount = originalAmount;
-
-        if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
-          const discountValue = (originalAmount * ruleDiscountPct) / 100;
-          discountedAmount = originalAmount - discountValue;
-        } else if (discountType === "FIXED" && discountFixedAmount) {
-          const discountValue = discountFixedAmount;
-          discountedAmount = Math.max(0, originalAmount - discountValue);
-        } else {
-
-          discountedAmount = bestPlan.total ?? originalAmount;
-        }
-
-        convertedOriginalFee = originalAmount;
-        convertedTotalFee = discountedAmount;
+      if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
+        const discountValue = (originalAmount * ruleDiscountPct) / 100;
+        discountedAmount = originalAmount - discountValue;
+      } else if (discountType === "FIXED" && discountFixedAmount) {
+        const discountValue = discountFixedAmount;
+        discountedAmount = Math.max(0, originalAmount - discountValue);
       } else {
-
-        convertedTotalFee = bestPlan.total ?? originalAmount;
-        convertedOriginalFee = originalAmount;
+        
+        discountedAmount = bestPlan.total ?? originalAmount;
       }
-    }
-  } else {
-    const usdPlans = [
-      { total: course.total, amount: course.amount },
-      { total: course.ctotal, amount: course.camount },
-      { total: course.mtotal, amount: course.mamount },
-      { total: course.sqtotal, amount: course.sqamount },
-      { total: course.stotal, amount: course.samount },
-    ].filter(
-      (p) =>
-        (p.total != null && p.total > 0) ||
-        (p.amount != null && p.amount > 0)
-    );
 
-    if (usdPlans.length > 0) {
-      const minTotal = Math.min(
-        ...usdPlans.map((p) => (p.total ?? p.amount))
-      );
-      const bestPlan =
-        usdPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
-        usdPlans[0];
-
-      const originalAmount = bestPlan.amount ?? 0;
-
-      if (hasSpecialDiscount) {
-
-        let discountedAmount = originalAmount;
-
-        if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
-          const discountValue = (originalAmount * ruleDiscountPct) / 100;
-          discountedAmount = originalAmount - discountValue;
-        } else if (discountType === "FIXED" && discountFixedAmount) {
-          const discountValue = discountFixedAmount;
-          discountedAmount = Math.max(0, originalAmount - discountValue);
-        } else {
-          discountedAmount = bestPlan.total ?? originalAmount;
-        }
-
-        convertedOriginalFee = originalAmount * exchangeRate;
-        convertedTotalFee = discountedAmount * exchangeRate;
-      } else {
-
-        convertedTotalFee = (bestPlan.total ?? originalAmount) * exchangeRate;
-        convertedOriginalFee = originalAmount * exchangeRate;
-      }
+      convertedOriginalFee = originalAmount;      
+      convertedTotalFee = discountedAmount;       
+    } else {
+      
+      convertedTotalFee = bestPlan.total ?? originalAmount;
+      convertedOriginalFee = originalAmount;
     }
   }
+} else {
+  const usdPlans = [
+    { total: course.total,  amount: course.amount },
+    { total: course.ctotal, amount: course.camount },
+    { total: course.mtotal, amount: course.mamount },
+    { total: course.sqtotal, amount: course.sqamount },
+    { total: course.stotal, amount: course.samount },
+  ].filter(
+    (p) =>
+      (p.total != null && p.total > 0) ||
+      (p.amount != null && p.amount > 0)
+  );
 
-  let offerSaving = 0;
-  let offerLeftText = "";
+  if (usdPlans.length > 0) {
+    const minTotal = Math.min(
+      ...usdPlans.map((p) => (p.total ?? p.amount))
+    );
+    const bestPlan =
+      usdPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
+      usdPlans[0];
 
-  // if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
-  //   offerSaving = convertedOriginalFee - convertedTotalFee;
+    const originalAmount = bestPlan.amount ?? 0; 
 
-  //   if (offerSaving > 0) {
-  //     if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+    if (hasSpecialDiscount) {
+      
+      let discountedAmount = originalAmount;
 
-  //       offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${currency} ${Math.round(
-  //         offerSaving
-  //       )}/-`;
-  //     } else {
-
-  //       offerLeftText = `Flash Sale! Save ${currency} ${Math.round(
-  //         offerSaving
-  //       )}/-`;
-  //     }
-  //   }
-  // }
-
-  if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
-    offerSaving = convertedOriginalFee - convertedTotalFee;
-
-    if (offerSaving > 0) {
-      const roundedSaving = Math.round(offerSaving);
-
-      // Only India (INR) should show "/-"
-      const savingText =
-        currency === "INR"
-          ? `${currency} ${roundedSaving}/-`
-          : `${currency} ${roundedSaving}`;
-
-      if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-        offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${savingText}`;
+      if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
+        const discountValue = (originalAmount * ruleDiscountPct) / 100;
+        discountedAmount = originalAmount - discountValue;
+      } else if (discountType === "FIXED" && discountFixedAmount) {
+        const discountValue = discountFixedAmount;
+        discountedAmount = Math.max(0, originalAmount - discountValue);
       } else {
-        offerLeftText = `Flash Sale! Save ${savingText}`;
+        discountedAmount = bestPlan.total ?? originalAmount;
       }
+
+      convertedOriginalFee = originalAmount * exchangeRate;      
+      convertedTotalFee = discountedAmount * exchangeRate;       
+    } else {
+      
+      convertedTotalFee = (bestPlan.total ?? originalAmount) * exchangeRate;
+      convertedOriginalFee = originalAmount * exchangeRate;
     }
   }
+}
 
-  const price = convertedTotalFee
-    ? `${currency} ${Math.round(convertedTotalFee)}`
-    : "Price on request";
+let offerSaving = 0;
+let offerLeftText = "";
 
-  const oldPrice = convertedOriginalFee
-    ? `${currency} ${Math.round(convertedOriginalFee)}`
-    : "";
+// if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
+//   offerSaving = convertedOriginalFee - convertedTotalFee;
+
+//   if (offerSaving > 0) {
+//     if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+      
+//       offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${currency} ${Math.round(
+//         offerSaving
+//       )}/-`;
+//     } else {
+      
+//       offerLeftText = `Flash Sale! Save ${currency} ${Math.round(
+//         offerSaving
+//       )}/-`;
+//     }
+//   }
+// }
+
+if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
+  offerSaving = convertedOriginalFee - convertedTotalFee;
+
+  if (offerSaving > 0) {
+    const roundedSaving = Math.round(offerSaving);
+
+    // Only India (INR) should show "/-"
+    const savingText =
+      currency === "INR"
+        ? `${currency} ${roundedSaving}/-`
+        : `${currency} ${roundedSaving}`;
+
+    if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+      offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${savingText}`;
+    } else {
+      offerLeftText = `Flash Sale! Save ${savingText}`;
+    }
+  }
+}
+
+const price = convertedTotalFee
+  ? `${currency} ${Math.round(convertedTotalFee)}`
+  : "Price on request";
+
+const oldPrice = convertedOriginalFee
+  ? `${currency} ${Math.round(convertedOriginalFee)}`
+  : "";
 
 
   return (
     <section className={styles.bnwrap}>
-      {showOfferStrip && (
-        <OfferStrip
-          leftText={offerLeftText}
-          rightText={offerRightText}
-        />
-      )}
+{showOfferStrip && (
+  <OfferStrip
+    leftText={offerLeftText}
+    rightText={offerRightText}
+  />
+)}
 
       <div className={styles.bncardmain}>
         <div className={`container ${styles.bncard}`}>
@@ -374,21 +365,22 @@ const courseNameForApi = courseName
                     <Star key={i} filled={i < filledStars} />
                   ))}
                 </span>{" "}
-                <span className={styles.bnreview}><b>{rating}</b> ({reviews} reviews)</span>
+                <b>{rating}</b> ({reviews} reviews)
               </span>
 
+              <span className={styles.bnsep}></span>
+
               <span className={styles.bnmetric}>
-                <img src={Medal} alt="icon" className={styles.medal}/> 
-                <span className={styles.bnenroll}>{enrolled}</span>
+                <img src={Medal} alt="icon" /> {enrolled}
               </span>
             </div>
 
             <div className={styles.bnbullets}>
               <span className={styles.bnbullet}>
-                <Clock className={styles.medal}/> {duration}
+                <Clock /> {duration}
               </span>
               <span className={styles.bnbullet}>
-                <Certificate className={styles.medal}/> Certificate included
+                <Certificate /> Certificate included
               </span>
             </div>
 
@@ -426,60 +418,60 @@ const courseNameForApi = courseName
           </div>
 
           {/* Right */}
-          <div className={styles.bnright}>
-            <div className={styles.bnhero}>
-              <img
-                src={
-                  hasYoutubeDemo
-                    ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                    : heroImage
-                }
-                alt="Course preview"
-              />
+<div className={styles.bnright}>
+  <div className={styles.bnhero}>
+    <img
+      src={
+        hasYoutubeDemo
+          ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+          : heroImage
+      }
+      alt="Course preview"
+    />
 
-              {hasYoutubeDemo && (
-                <button
-                  className={styles.bnplay}
-                  aria-label="Watch demo video"
-                  onClick={() => setShowVideo(true)}
-                >
-                  <Play />
-                </button>
-              )}
+    {hasYoutubeDemo && (
+      <button
+        className={styles.bnplay}
+        aria-label="Watch demo video"
+        onClick={() => setShowVideo(true)}
+      >
+        <Play />
+      </button>
+    )}
 
-              <div className={styles.bnherotext}>
-                {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
-              </div>
+    <div className={styles.bnherotext}>
+      {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
+    </div>
 
-              <div className={styles.bnstats}>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalBlue)}
-                  >
-                    {course.numberOfClasses || 12}
-                  </div>
-                  <div className={styles.bnstatlabel}>Classes</div>
-                </div>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalGreen)}
-                  >
-                    {course.numberOfProjects || 3}
-
-                  </div>
-                  <div className={styles.bnstatlabel}>Projects</div>
-                </div>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalPurple)}
-                  >
-                    24/7
-                  </div>
-                  <div className={styles.bnstatlabel}>Support</div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className={styles.bnstats}>
+      <div className={styles.bnstat}>
+        <div
+          className={cn(styles.bnstatval, styles.bnstatvalBlue)}
+        >
+          {course.numberOfClasses || 12}
+        </div>
+        <div className={styles.bnstatlabel}>Classes</div>
+      </div>
+      <div className={styles.bnstat}>
+        <div
+          className={cn(styles.bnstatval, styles.bnstatvalGreen)}
+        >
+          {course.numberOfProjects || 3}
+        
+        </div>
+        <div className={styles.bnstatlabel}>Projects</div>
+      </div>
+      <div className={styles.bnstat}>
+        <div
+          className={cn(styles.bnstatval, styles.bnstatvalPurple)}
+        >
+          24/7
+        </div>
+        <div className={styles.bnstatlabel}>Support</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
         </div>
@@ -503,17 +495,17 @@ const courseNameForApi = courseName
         />
       )}
 
-      {showVideo && (
-        <VideoModal
-          videoSrc={
-            hasYoutubeDemo
-              ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1`
-              : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-          }
-          isYoutube={hasYoutubeDemo}
-          onClose={() => setShowVideo(false)}
-        />
-      )}
+    {showVideo && (
+  <VideoModal
+    videoSrc={
+      hasYoutubeDemo
+        ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1`
+        : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    }
+    isYoutube={hasYoutubeDemo}
+    onClose={() => setShowVideo(false)}
+  />
+)}
 
     </section>
   );

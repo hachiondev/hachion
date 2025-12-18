@@ -25,7 +25,9 @@ const NewCourseDetails = () => {
       {/* <CareerOutcomes /> */}
       <CertificateSection />
       {/* <SuccessStories /> */}
-      <StudentsSay onCta={() => console.log("Start your journey")} />
+      {/* <StudentsSay onCta={() => console.log("Start your journey")} /> */}
+      <StudentsSay />
+
       <StudentsAlsoEnrolled />
       <FAQSection
         onChat={() => console.log("Open chat widget")}

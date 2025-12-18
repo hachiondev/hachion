@@ -1,5 +1,4 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./StudentsSay.module.css";
 import { cn } from "../../utils";
 import { useUserReviewsByCourse } from "../../Api/hooks/CourseApi/useUserReviewsByCourse";
@@ -32,7 +31,17 @@ const categories = [
   { title: "Career Impact", score: 4.7, bar: 88 },
 ];
 
-export default function StudentsSay({ onCta = () => {} }) {
+export default function StudentsSay({ onCta }) {
+
+   const navigate = useNavigate();
+  // const handleCta = onCta || (() => navigate("/coursedetails"));
+
+  const handleCta = onCta || (() => {
+  console.log("Navigating to /coursedetails");
+  navigate("/coursedetails");
+});
+
+
   /* ===============================
      Get & normalize course name
   =============================== */
@@ -140,7 +149,7 @@ export default function StudentsSay({ onCta = () => {} }) {
             Join 45,000+ Satisfied Students
           </div>
           <p>Experience the same transformation that thousands have achieved</p>
-          <button className={styles.wsctabtn} onClick={onCta}>
+          <button type="button" className={styles.wsctabtn} onClick={handleCta}>
             Start Your Journey Today
           </button>
         </div>

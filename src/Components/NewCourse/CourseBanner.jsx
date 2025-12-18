@@ -411,9 +411,9 @@ const oldPrice = convertedOriginalFee
                 </button>
               </div>
 
-              <div className={styles.bnnote}>
+              {/* <div className={styles.bnnote}>
                 • Lifetime access • EMI starting at $29/month
-              </div>
+              </div> */}
             </div>
           </div>
 

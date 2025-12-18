@@ -206,31 +206,10 @@ const handleNotifyChange = (e) => {
       Enrolled
     </button>
 
-    {/* Notification Options */}
-    <div style={{ display: "flex", gap: "12px", fontSize: "14px" }}>
-      <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <input
-          type="checkbox"
-          name="email"
-          checked={notifyVia.email}
-          onChange={handleNotifyChange}
-        />
-        Email
-      </label>
 
-      <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <input
-          type="checkbox"
-          name="whatsapp"
-          checked={notifyVia.whatsapp}
-          onChange={handleNotifyChange}
-        />
-        WhatsApp
-      </label>
-    </div>
 
     {/* Resend Button */}
-    {/* <button
+    <button
       className={styles.dclink}
       disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
       onClick={() => {
@@ -267,16 +246,44 @@ const handleNotifyChange = (e) => {
         : sendingBatchId === sess.batchId
         ? "Sending..."
         : "Resend"}
-    </button> */}
+    </button>
   </div>
 ) : (
-  <button
-    className={styles.dcbtn}
-    disabled={enrollingSessionId === sess.id}
-    onClick={() => onEnrollClick(sess)}
-  >
-    {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
-  </button>
+<>
+  <div className={styles.enrollActions}>
+    <button
+      className={styles.dcbtn}
+      disabled={enrollingSessionId === sess.id}
+      onClick={() => onEnrollClick(sess)}
+    >
+      {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
+    </button>
+
+    {/* Notification Options */}
+    <div className={styles.notifyOptions}>
+      <label className={styles.notifyLabel}>
+        <input
+          type="checkbox"
+          name="email"
+          checked={notifyVia.email}
+          onChange={handleNotifyChange}
+        />
+        <span>Email</span>
+      </label>
+
+      <label className={styles.notifyLabel}>
+        <input
+          type="checkbox"
+          name="whatsapp"
+          checked={notifyVia.whatsapp}
+          onChange={handleNotifyChange}
+        />
+        <span>WhatsApp</span>
+      </label>
+    </div>
+  </div>
+</>
+
 )}
 
                   </div>

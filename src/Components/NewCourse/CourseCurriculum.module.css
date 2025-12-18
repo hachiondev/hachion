@@ -20,17 +20,20 @@
   /* max-width: 880px; */
   margin: 0 auto 18px;
 }
+
 .cchead h2 {
   font-size: 36px;
   font-weight: 700;
   color: var(--ink);
 }
+
 .cchead p {
   color: #000000;
   font-size: 18px;
   font-weight: 300;
   margin: 20px auto 20px;
 }
+
 .ccdownload {
   display: inline-flex;
   align-items: center;
@@ -54,13 +57,14 @@
   grid-template-columns: 1.7fr 0.8fr;
   gap: 18px;
 }
+
 .ccgridbody {
   background: white;
   padding: 40px;
 }
 
 /* Accordion */
-.ccacc + .ccacc {
+.ccacc+.ccacc {
   margin-top: 12px;
 }
 
@@ -77,14 +81,17 @@
   box-shadow: var(--shadow);
   justify-content: space-between;
 }
+
 .ccaccheadisopen {
   border-color: #dfe8ff;
   box-shadow: 0 12px 24px rgba(79, 142, 247, 0.12);
 }
+
 .cctitle {
   width: 100%;
   text-align: left;
 }
+
 .ccnum {
   width: 35px;
   height: 35px;
@@ -96,17 +103,20 @@
   font-weight: 500;
   font-size: 22px;
 }
+
 .ccttlmain {
   font-size: 20px;
   font-weight: 600;
   color: #000000;
   margin-bottom: 8px;
 }
+
 .ccttlsub {
   color: #000000;
   font-weight: 700;
   font-size: 12px;
 }
+
 .ccttlsub span {
   padding: 2px 8px;
   color: #000000;
@@ -126,6 +136,7 @@
   background: white;
   margin: 0;
 }
+
 .ccaccpanelopen {
   /* height will be set via max-content trick: use auto with padding */
   height: auto;
@@ -144,10 +155,12 @@
   margin: 8px 10px 8px 0;
   cursor: pointer;
 }
+
 .ccrowtitle {
   color: #000000;
   font-weight: 500;
 }
+
 .ccrowmeta {
   color: #000000;
   font-weight: 400;
@@ -158,6 +171,7 @@
   display: grid;
   gap: 14px;
 }
+
 .cccard {
   background: #fff;
   border: 1px solid var(--border);
@@ -165,12 +179,14 @@
   padding: 12px;
   box-shadow: var(--shadow);
 }
+
 .cccardhead {
   font-weight: 700;
   color: #000000;
   padding: 6px 8px;
   font-size: 20px;
 }
+
 .ccstar {
   display: flex;
   align-items: center;
@@ -182,6 +198,7 @@
   display: grid;
   gap: 10px;
 }
+
 .ccprojrow {
   display: flex;
   align-items: flex-start;
@@ -191,6 +208,7 @@
   border-radius: 10px;
   padding: 10px;
 }
+
 .ccbadge {
   min-width: 26px;
   height: 26px;
@@ -202,10 +220,12 @@
   place-items: center;
   margin-top: 2px;
 }
+
 .ccprojtitle {
   font-weight: 600;
   color: #000000;
 }
+
 .ccprojsub {
   color: #000000;
   font-weight: 300;
@@ -218,65 +238,6 @@
   padding: 6px 8px 10px 22px;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .ccgrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .ccwrap {
-    padding-top: 35px;
-    padding-bottom: 35px;
-  }
-  .ccwrap .cchead h2 {
-    font-size: 28px;
-  }
-  .cchead p {
-    font-size: 16px;
-  }
-  .ccdownload {
-    font-size: 14px;
-  }
-  .ccgridbody {
-    padding: 16px;
-  }
-  .cctitle .ccttlmain {
-    font-size: 14px;
-  }
-  .ccnum {
-    height: 24px;
-    font-size: 14px;
-  }
-  .ccttlsub {
-    color: #000000;
-    font-weight: 600;
-    font-size: 10px;
-  }
-  .ccttlsub span {
-    font-size: 10px;
-    padding: 2px 6px;
-    margin-bottom: 4px;
-    display: inline-block;
-  }
-  .ccrowtitle{
-    font-size: 12px;
-  }
-  .ccrowmeta{
-    font-size: 10px;
-  }
-  .ccprojsub{
-    font-size: 12px;
-  }
-  .cccardhead{
-    font-size: 18px;
-  }
-  .ccwhy{
-        font-size: 14px;
-    font-weight: 300;
-  }
-}
 .cccapsul {
   padding: 6px 12px;
   font-size: 13px;
@@ -298,4 +259,237 @@
   background: #0057ff !important;
   color: #fff !important;
   border-color: #0057ff !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ccgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 35px;
+  }
+
+  .cchead p {
+    font-size: 22px;
+  }
+
+  .ccdownload {
+    font-size: 20px;
+  }
+
+  .ccgridbody {
+    padding: 16px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 20px;
+  }
+
+  .ccnum {
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  .ccttlsub span {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 10px;
+  }
+
+  .ccprojsub {
+    font-size: 17px;
+  }
+
+  .cccardhead {
+    font-size: 26px;
+  }
+
+  .ccwhy {
+    font-size: 22px;
+        font-weight: 400;
+  }
+
+    .cccapsul {
+    font-size: 18px;
+  }
+
+    .ccprojtitle {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 28px;
+  }
+
+  .cchead p {
+    font-size: 16px;
+  }
+
+  .ccdownload {
+    font-size: 14px;
+  }
+
+  .ccgridbody {
+    padding: 16px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 18px;
+  }
+
+  .ccnum {
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  .ccttlsub span {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 10px;
+  }
+
+  .ccprojsub {
+    font-size: 16px;
+  }
+
+  .cccardhead {
+    font-size: 24px;
+  }
+
+  .ccwhy {
+
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .cccapsul {
+    font-size: 17px;
+  }
+
+  .ccprojtitle {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 28px;
+  }
+
+  .cchead p {
+    font-size: 16px;
+  }
+
+  .ccdownload {
+    font-size: 14px;
+  }
+
+  .ccgridbody {
+    padding: 16px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 14px;
+  }
+
+  .ccnum {
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  .ccttlsub span {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 10px;
+  }
+
+  .ccprojtitle {
+    font-size: 16px;
+  }
+
+  .ccprojsub {
+    font-size: 14px;
+  }
+
+  .cccardhead {
+    font-size: 18px;
+  }
+
+  .ccwhy {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .cccapsul {
+    font-size: 14px;
+  }
 }

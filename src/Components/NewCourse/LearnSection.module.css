@@ -219,7 +219,8 @@
 }
 
 .lstooliconimg {
-  height: 56px;
+  height: auto;
+  width: 56px;
 }
 
 .lstoolname {

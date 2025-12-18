@@ -283,7 +283,7 @@
 }
 
 .dctabisactive {
-  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  background: var(--brand);
   color: #fff;
 }
 
@@ -338,6 +338,7 @@
 .dcslotbadgeisdemo {
   background: var(--demo);
   color: #1674e1;
+  cursor: pointer;
 }
 
 /* Details panel */
@@ -413,7 +414,7 @@
 
 .dcemptyicon {
   font-size: 28px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .dcemptyicon img {
@@ -426,7 +427,7 @@
 
 .dcemptytext {
   color: #000000;
-  padding: 20px 40px;
+  padding: 0px 40px;
 }
 
 .dclink {

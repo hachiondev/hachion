@@ -408,7 +408,7 @@ useEffect(() => {
       <aside className={styles.dcinfo}>
         <div className={styles.dcinfohead}>
           <div className={styles.dcinfoicon} aria-hidden="true">
-            <img src="self_paced.png" alt="self-paced" />
+            <img src="/self_paced.png" alt="self-paced" />
           </div>
           <div>
             <div className={styles.dcinfotitle}>

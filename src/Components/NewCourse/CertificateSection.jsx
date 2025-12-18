@@ -8,13 +8,13 @@ const Check = () => (
   </svg>
 );
 const Badge = () => (
-  <img src="doc.png" alt="badge" width="44" height="44" />
+  <img src="/doc.png" alt="badge" width="44" height="44" />
 );
 const Iso = () => (
-  <img src="ISO.png" alt="ISO" width="44" height="44" />
+  <img src="/ISO.png" alt="ISO" width="44" height="44" />
 );
 const Pmi = () => (
-  <img src="MicrosoftProject.png" alt="MicrosoftProject" width="44" height="44" />
+  <img src="/MicrosoftProject.png" alt="MicrosoftProject" width="44" height="44" />
 );
 const Share = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -22,7 +22,7 @@ const Share = () => (
   </svg>
 );
 const DownloadIco = () => (
-  <img src="Downloading.png" alt="Download" width="44" height="44" />
+  <img src="/Downloading.png" alt="Download" width="44" height="44" />
 );
 
 export default function CertificateSection({
@@ -100,7 +100,7 @@ export default function CertificateSection({
           {/* RIGHT */}
           <div className={styles.cfright}>
             <div className={styles.cfcert}>
-              <img src="cer.png" alt="Certificate preview" />
+              <img src="/cer.png" alt="Certificate preview" />
               {/* Top callout */}
               <div className={cn(styles.cfbubble, styles.cfshare)}>
                 <span className={styles.cfbico}><Share /></span>

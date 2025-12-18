@@ -15,19 +15,19 @@ export default function InstructorSection({
     "Computer Science, Stanford University",
     "AWS Certified Solutions Architect",
   ],
-  onLinkedIn = () => {},
-  onAsk = () => {},
+  onLinkedIn = () => { },
+  onAsk = () => { },
 }) {
-  
-  
+
+
   const { courseName: courseNameSlug } = useParams();
-const courseName = courseNameSlug
-  ? decodeURIComponent(courseNameSlug)
+  const courseName = courseNameSlug
+    ? decodeURIComponent(courseNameSlug)
       .replace(/[-_]+/g, " ")
       .replace(/\+\+/g, "pp")   // C++ → cpp
       .trim()
       .toLowerCase()
-  : "";
+    : "";
 
 
   const { data: trainerList = [] } = useTrainerDetailsByCourse(courseName);
@@ -39,30 +39,30 @@ const courseName = courseNameSlug
   const experience = trainerList[0]?.experience;
   const experienceCredentials = trainerList[0]?.experienceCredentials;
 
-const rawExperienceCredentials = trainerList[0]?.experienceCredentials;
+  const rawExperienceCredentials = trainerList[0]?.experienceCredentials;
 
-const experienceCredentialsArray =
-  typeof rawExperienceCredentials === "string"
-    ? rawExperienceCredentials
-        .split("\n")              
-        .map(item => item.replace(/^\*\s*/, "").trim()) 
-        .filter(Boolean)          
-    : [];
+  const experienceCredentialsArray =
+    typeof rawExperienceCredentials === "string"
+      ? rawExperienceCredentials
+        .split("\n")
+        .map(item => item.replace(/^\*\s*/, "").trim())
+        .filter(Boolean)
+      : [];
 
 
-  
+
   const finalRating = Number(trainerRating || stats.rating);
 
-  
+
   const fullStars = Math.floor(finalRating);
   const decimal = finalRating - fullStars;
 
   const stars = Array.from({ length: 5 }, (_, i) => {
-    if (i < fullStars) return "★"; 
-    if (i === fullStars && decimal >= 0.5) return "⯨"; 
-    return "☆"; 
+    if (i < fullStars) return "★";
+    if (i === fullStars && decimal >= 0.5) return "⯨";
+    return "☆";
   }).join("");
-const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
+  const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
 
   return (
     <section className={styles.iswrap}>
@@ -75,13 +75,13 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
         <div className={styles.iscard}>
           {/* Photo */}
           <div className={styles.isphoto}>
-           <img
-  src="/InstructorDefaultImage.webp"
-  alt={`${trainerName || name} headshot`}
-  onError={(e) => {
-    e.currentTarget.src = "/InstructorDefaultImage.webp";
-  }}
-/>
+            <img
+              src="/InstructorDefaultImage.webp"
+              alt={`${trainerName || name} headshot`}
+              onError={(e) => {
+                e.currentTarget.src = "/InstructorDefaultImage.webp";
+              }}
+            />
           </div>
 
           {/* Content */}
@@ -92,15 +92,15 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
             </div>
 
             {/* <div className={styles.istitle}>{title}</div> */}
-<div className={styles.istitle}>
-  {designation || title}
-</div>
+            <div className={styles.istitle}>
+              {designation || title}
+            </div>
 
             <div className={styles.isstats}>
               <div className={styles.isstat}>
                 <div className={styles.isstatval}>
                   <span className={styles.isstatico}>
-                    <img src="users.png" alt="logo" />
+                    <img src="/users.png" alt="logo" />
                   </span>
                   {experience ? `${experience}+` : stats.years}
 
@@ -111,7 +111,7 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
               <div className={styles.isstat}>
                 <div className={styles.isstatval}>
                   <span className={styles.isstatico}>
-                    <img src="users.png" alt="logo" />
+                    <img src="/users.png" alt="logo" />
                   </span>
                   {stats.students}
                 </div>
@@ -121,7 +121,7 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
               <div className={styles.isstat}>
                 <div className={styles.isstatval}>
                   <span className={styles.isstatico}>
-                    <img src="users.png" alt="logo" />
+                    <img src="/users.png" alt="logo" />
                   </span>
 
                   {/* ⭐ EXACT fractional rating */}
@@ -139,14 +139,14 @@ const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
 
 
             <div className={styles.issubhead}>Experience & Credentials:</div>
-           <ul className={styles.islist}>
-  {(experienceCredentialsArray.length > 0
-    ? experienceCredentialsArray
-    : creds
-  ).map((c, index) => (
-    <li key={index}>{c}</li>
-  ))}
-</ul>
+            <ul className={styles.islist}>
+              {(experienceCredentialsArray.length > 0
+                ? experienceCredentialsArray
+                : creds
+              ).map((c, index) => (
+                <li key={index}>{c}</li>
+              ))}
+            </ul>
 
 
 

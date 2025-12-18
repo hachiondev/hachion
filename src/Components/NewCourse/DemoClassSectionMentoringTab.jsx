@@ -40,7 +40,7 @@ function DemoClassSectionMentoringTab({
   isCourseLoading,
   courseError,
 }) {
-  
+
   const mentoringContent =
     mentoringMode && mentoringMode.trim().length > 0
       ? mentoringMode
@@ -54,22 +54,22 @@ What's Included:
 • English
 • Lifetime access with free updates
 • No prior programming experience required`;
-const isAnyDaySelected = () => {
-  const checkboxes = document.querySelectorAll(".dayCheckbox");
-  return Array.from(checkboxes).some((cb) => cb.checked);
-};
-const [isSubmitting, setIsSubmitting] = useState(false);
+  const isAnyDaySelected = () => {
+    const checkboxes = document.querySelectorAll(".dayCheckbox");
+    return Array.from(checkboxes).some((cb) => cb.checked);
+  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-const isMentoringFormValid =
-  isAnyDaySelected() &&
-  preferredTime &&
-  notification;
+  const isMentoringFormValid =
+    isAnyDaySelected() &&
+    preferredTime &&
+    notification;
 
-useEffect(() => {
-  if (isRequestBatchSuccess || requestBatchError) {
-    setIsSubmitting(false);
-  }
-}, [isRequestBatchSuccess, requestBatchError]);
+  useEffect(() => {
+    if (isRequestBatchSuccess || requestBatchError) {
+      setIsSubmitting(false);
+    }
+  }, [isRequestBatchSuccess, requestBatchError]);
 
   return (
     <div className={styles.dcgrid}>
@@ -179,7 +179,7 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 preferredTime === option.value &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
                                 setPreferredTime(
@@ -232,7 +232,7 @@ useEffect(() => {
                         className={cn(
                           styles.dcrequestCaret,
                           notificationDropdownOpen &&
-                            styles.dcrequestCaretOpen
+                          styles.dcrequestCaretOpen
                         )}
                       >
                         <Chevron />
@@ -264,7 +264,7 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 notification === option.label &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
                                 setNotification(
@@ -296,41 +296,41 @@ useEffect(() => {
               </div>
 
               {/* Request Batch button */}
-           
-<button
-  onClick={() => {
-    if (isSubmitting || isRequestBatchLoading) return;
 
-    setIsSubmitting(true);     
-    onRequestClick();
-  }}
-  disabled={
-    isSubmitting ||
-    isRequestBatchLoading ||
-    isProfileLoading ||
-    !isMentoringFormValid
-  }
-  style={{
-    width: "100%",
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    fontSize: "15px",
-    fontWeight: "600",
-    backgroundColor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
-        ? "#C4C4C4"
-        : "#2a7cf7",
-    color: "#fff",
-    cursor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
-        ? "not-allowed"
-        : "pointer",
-    transition: "background-color 0.2s ease",
-  }}
->
-  {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-</button>
+              <button
+                onClick={() => {
+                  if (isSubmitting || isRequestBatchLoading) return;
+
+                  setIsSubmitting(true);
+                  onRequestClick();
+                }}
+                disabled={
+                  isSubmitting ||
+                  isRequestBatchLoading ||
+                  isProfileLoading ||
+                  !isMentoringFormValid
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  backgroundColor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
+                      ? "#C4C4C4"
+                      : "#2a7cf7",
+                  color: "#fff",
+                  cursor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
+                      ? "not-allowed"
+                      : "pointer",
+                  transition: "background-color 0.2s ease",
+                }}
+              >
+                {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+              </button>
 
               {/* Messages */}
               {showMessage && isRequestBatchSuccess && (
@@ -357,7 +357,7 @@ useEffect(() => {
       <aside className={styles.dcinfo}>
         <div className={styles.dcinfohead}>
           <div className={styles.dcinfoicon} aria-hidden="true">
-            <img src="monitor.png" alt="monitor" />
+            <img src="/monitor.png" alt="monitor" />
           </div>
           <div>
             <div className={styles.dcinfotitle}>Mentoring Mode</div>
@@ -370,7 +370,7 @@ useEffect(() => {
         ) : (
           <div
             className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }} 
+            style={{ whiteSpace: "pre-line" }}
           >
             {mentoringContent}
           </div>

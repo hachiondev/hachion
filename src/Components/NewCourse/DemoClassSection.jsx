@@ -36,96 +36,96 @@ export default function DemoClassSection() {
   const [resetLiveSubmitting, setResetLiveSubmitting] = useState(0);
   const [enrollNow, setEnrollNow] = useState(false);
 
-const [mentoringPreferredTime, setMentoringPreferredTime] = useState("");
-const [mentoringNotification, setMentoringNotification] = useState("Email Only");
-const [mentoringTimeDropdownOpen, setMentoringTimeDropdownOpen] = useState(false);
-const [mentoringNotificationDropdownOpen, setMentoringNotificationDropdownOpen] = useState(false);
+  const [mentoringPreferredTime, setMentoringPreferredTime] = useState("");
+  const [mentoringNotification, setMentoringNotification] = useState("Email Only");
+  const [mentoringTimeDropdownOpen, setMentoringTimeDropdownOpen] = useState(false);
+  const [mentoringNotificationDropdownOpen, setMentoringNotificationDropdownOpen] = useState(false);
 
-const [selfPreferredTime, setSelfPreferredTime] = useState("");
-const [selfNotification, setSelfNotification] = useState("Email Only");
-const [selfTimeDropdownOpen, setSelfTimeDropdownOpen] = useState(false);
-const [selfNotificationDropdownOpen, setSelfNotificationDropdownOpen] = useState(false);
+  const [selfPreferredTime, setSelfPreferredTime] = useState("");
+  const [selfNotification, setSelfNotification] = useState("Email Only");
+  const [selfTimeDropdownOpen, setSelfTimeDropdownOpen] = useState(false);
+  const [selfNotificationDropdownOpen, setSelfNotificationDropdownOpen] = useState(false);
 
   const [showMessage, setShowMessage] = useState(false);
 
   const [enrollSuccessMessage, setEnrollSuccessMessage] = useState("");
-const [enrollErrorMessage, setEnrollErrorMessage] = useState("");
+  const [enrollErrorMessage, setEnrollErrorMessage] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
-const [enrollingSessionId, setEnrollingSessionId] = useState(null);
-const [tabMessage, setTabMessage] = useState({
-  live: false,
-  crash: false,
-  mentoring: false,
-  self: false
-});
-useEffect(() => {
-  if (!enrollSuccessMessage && !enrollErrorMessage) return;
+  const [enrollingSessionId, setEnrollingSessionId] = useState(null);
+  const [tabMessage, setTabMessage] = useState({
+    live: false,
+    crash: false,
+    mentoring: false,
+    self: false
+  });
+  useEffect(() => {
+    if (!enrollSuccessMessage && !enrollErrorMessage) return;
 
-  const timer = setTimeout(() => {
-    setEnrollSuccessMessage("");
-    setEnrollErrorMessage("");
-  }, 6000);
+    const timer = setTimeout(() => {
+      setEnrollSuccessMessage("");
+      setEnrollErrorMessage("");
+    }, 6000);
 
-  return () => clearTimeout(timer);
-}, [enrollSuccessMessage, enrollErrorMessage]);
+    return () => clearTimeout(timer);
+  }, [enrollSuccessMessage, enrollErrorMessage]);
 
   const {
     data: userProfile,
     isLoading: isProfileLoading,
-    
+
   } = useUserProfile();
-  
-const { courseName } = useParams();
+
+  const { courseName } = useParams();
 
 
-const rawSlug = courseName ? decodeURIComponent(courseName) : "";
+  const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
-const normalizeCourseSlug = (slug) =>
-  slug
-    .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+  const normalizeCourseSlug = (slug) =>
+    slug
+      .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
 
-const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+  const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
 
 
-const courseSlug = rawSlug ? rawSlug.toLowerCase() : "";
-const displayCourseName = courseNameForApi
-  ? courseNameForApi.replace(/\w\S*/g, (txt) =>
+  const courseSlug = rawSlug ? rawSlug.toLowerCase() : "";
+  const displayCourseName = courseNameForApi
+    ? courseNameForApi.replace(/\w\S*/g, (txt) =>
       txt.charAt(0).toUpperCase() + txt.slice(1)
     )
-  : "this course";
+    : "this course";
 
-const {
-  data: courseData,
-  isLoading: isCourseLoading,
-  error: courseError,
-} = useCourseByName(courseNameForApi);
+  const {
+    data: courseData,
+    isLoading: isCourseLoading,
+    error: courseError,
+  } = useCourseByName(courseNameForApi);
 
 
-const {
-  handleLiveEnrollPayment,
+  const {
+    handleLiveEnrollPayment,
 
-} = useDemoLivePayment({
-  courseData,
-  userProfile,
-  courseNameForApi,
-   setEnrollSuccessMessage,
-  setEnrollErrorMessage
-});
-const handleLiveEnrollClick = async (session) => {
-  if (!userProfile || !userProfile.studentId) {
-    setShowRegisterPrompt(true);
-    return;
-  }
-  setShowRegisterPrompt(false);
-  setEnrollingSessionId(session.id);
+  } = useDemoLivePayment({
+    courseData,
+    userProfile,
+    courseNameForApi,
+    setEnrollSuccessMessage,
+    setEnrollErrorMessage
+  });
+  const handleLiveEnrollClick = async (session) => {
+    if (!userProfile || !userProfile.studentId) {
+      setShowRegisterPrompt(true);
+      return;
+    }
+    setShowRegisterPrompt(false);
+    setEnrollingSessionId(session.id);
 
-  await handleLiveEnrollPayment(session);
+    await handleLiveEnrollPayment(session);
 
-  setEnrollingSessionId(null);
-};
+    setEnrollingSessionId(null);
+  };
 
 
   const {
@@ -170,42 +170,42 @@ const handleLiveEnrollClick = async (session) => {
   });
 
   const handleRequestBatchWithLoginCheck = () => {
-  // wait until profile loads
-  if (isProfileLoading) return;
-  if (!userProfile || !userProfile.studentId) {
-    setShowRegisterPrompt(true);
-    return;
-  }
-   setShowRequestBatch(true);
-};
+    // wait until profile loads
+    if (isProfileLoading) return;
+    if (!userProfile || !userProfile.studentId) {
+      setShowRegisterPrompt(true);
+      return;
+    }
+    setShowRequestBatch(true);
+  };
 
   const handleClick = () => {
     const selectedDays = Array.from(
       document.querySelectorAll(".dayCheckbox:checked")
     ).map((cb) => cb.nextSibling?.nextSibling?.textContent?.trim());
 
-   const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
+    const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
 
-const preferredTimeForTab =
-  activeTab === "mentoring"
-    ? mentoringPreferredTime
-    : activeTab === "self"
-    ? selfPreferredTime
-    : null;
+    const preferredTimeForTab =
+      activeTab === "mentoring"
+        ? mentoringPreferredTime
+        : activeTab === "self"
+          ? selfPreferredTime
+          : null;
 
 
-const notificationForTab =
-  activeTab === "mentoring"
-    ? mentoringNotification
-    : activeTab === "self"
-    ? selfNotification
-    : null;
+    const notificationForTab =
+      activeTab === "mentoring"
+        ? mentoringNotification
+        : activeTab === "self"
+          ? selfNotification
+          : null;
 
-handleRequestBatch({
-  preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
-  notification: allowMentoringSelf ? notificationForTab : null,
-  selectedDays: allowMentoringSelf ? selectedDays : [],
-});
+    handleRequestBatch({
+      preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
+      notification: allowMentoringSelf ? notificationForTab : null,
+      selectedDays: allowMentoringSelf ? selectedDays : [],
+    });
 
   };
 
@@ -213,47 +213,47 @@ handleRequestBatch({
     setEnrollNow(false);
   };
 
-useEffect(() => {
-  
-  if (isRequestBatchSuccess) {
-    document.querySelectorAll(".dayCheckbox").forEach(cb => (cb.checked = false));
+  useEffect(() => {
 
-    if (activeTab === "mentoring") {
-      setMentoringPreferredTime("");
-      setMentoringNotification("");
-      setMentoringTimeDropdownOpen(false);
-      setMentoringNotificationDropdownOpen(false);
+    if (isRequestBatchSuccess) {
+      document.querySelectorAll(".dayCheckbox").forEach(cb => (cb.checked = false));
+
+      if (activeTab === "mentoring") {
+        setMentoringPreferredTime("");
+        setMentoringNotification("");
+        setMentoringTimeDropdownOpen(false);
+        setMentoringNotificationDropdownOpen(false);
+      }
+
+      if (activeTab === "self") {
+        setSelfPreferredTime("");
+        setSelfNotification("");
+        setSelfTimeDropdownOpen(false);
+        setSelfNotificationDropdownOpen(false);
+      }
     }
 
-    if (activeTab === "self") {
-      setSelfPreferredTime("");
-      setSelfNotification("");
-      setSelfTimeDropdownOpen(false);
-      setSelfNotificationDropdownOpen(false);
-    }
-  }
 
-  
-  if (isRequestBatchSuccess || requestBatchError) {
-    setTabMessage(prev => ({
-      ...prev,
-      [activeTab]: true
-    }));
-
-    const timer = setTimeout(() => {
+    if (isRequestBatchSuccess || requestBatchError) {
       setTabMessage(prev => ({
         ...prev,
-        [activeTab]: false
+        [activeTab]: true
       }));
-    }, 6000);
 
-    return () => clearTimeout(timer);
-  }
-}, [
-  isRequestBatchSuccess,
-  requestBatchError
-  
-]);
+      const timer = setTimeout(() => {
+        setTabMessage(prev => ({
+          ...prev,
+          [activeTab]: false
+        }));
+      }, 6000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [
+    isRequestBatchSuccess,
+    requestBatchError
+
+  ]);
 
   const timeOptions = [
     { value: "09:00 AM - 10:00 AM", label: "09:00 AM - 10:00 AM" },
@@ -368,7 +368,7 @@ useEffect(() => {
             selectedGroup={selectedGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            
+
             showMessage={tabMessage[activeTab]}
 
             isRequestBatchSuccess={isRequestBatchSuccess}
@@ -376,20 +376,20 @@ useEffect(() => {
             // onRequestClick={handleClick}
             onRequestClick={handleRequestBatchWithLoginCheck}
 
-            liveTraining={courseData?.liveTraining}       
-    isCourseLoading={isCourseLoading}              
-    courseError={courseError}  
-      onEnrollClick={handleLiveEnrollClick} 
-      enrollSuccessMessage={enrollSuccessMessage}
-  enrollErrorMessage={enrollErrorMessage}
-         userProfile={userProfile}
-    courseName={courseData?.courseName || courseNameForApi}
-     showRegisterPrompt={showRegisterPrompt}
-    onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
-enrollingSessionId={enrollingSessionId}
-resetLiveSubmitting={resetLiveSubmitting}
+            liveTraining={courseData?.liveTraining}
+            isCourseLoading={isCourseLoading}
+            courseError={courseError}
+            onEnrollClick={handleLiveEnrollClick}
+            enrollSuccessMessage={enrollSuccessMessage}
+            enrollErrorMessage={enrollErrorMessage}
+            userProfile={userProfile}
+            courseName={courseData?.courseName || courseNameForApi}
+            showRegisterPrompt={showRegisterPrompt}
+            onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
+            enrollingSessionId={enrollingSessionId}
+            resetLiveSubmitting={resetLiveSubmitting}
 
-     
+
           />
         )}
 
@@ -407,57 +407,57 @@ resetLiveSubmitting={resetLiveSubmitting}
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}
-             crashCourse={courseData?.crashCourse || ""}
-    isCourseLoading={isCourseLoading}                
-    courseError={courseError}     
+            crashCourse={courseData?.crashCourse || ""}
+            isCourseLoading={isCourseLoading}
+            courseError={courseError}
           />
         )}
-{activeTab === "mentoring" && (
-  <DemoClassSectionMentoringTab
-    timeOptions={timeOptions}
-    notificationOptions={notificationOptions}
-    preferredTime={mentoringPreferredTime}
-    setPreferredTime={setMentoringPreferredTime}
-    notification={mentoringNotification}
-    setNotification={setMentoringNotification}
-    timeDropdownOpen={mentoringTimeDropdownOpen}
-    setTimeDropdownOpen={setMentoringTimeDropdownOpen}
-    notificationDropdownOpen={mentoringNotificationDropdownOpen}
-    setNotificationDropdownOpen={setMentoringNotificationDropdownOpen}
-    isRequestBatchLoading={isRequestBatchLoading}
-    isProfileLoading={isProfileLoading}
-    showMessage={tabMessage[activeTab]}
-    isRequestBatchSuccess={isRequestBatchSuccess}
-    requestBatchError={requestBatchError}
-    onRequestClick={handleClick}
-     mentoringMode={courseData?.mentoringMode || ""}  
-    isCourseLoading={isCourseLoading}                
-    courseError={courseError}     
-          
-  />
-)}
-{activeTab === "self" && (
-  <DemoClassSectionSelfTab
-    timeOptions={timeOptions}
-    notificationOptions={notificationOptions}
-    preferredTime={selfPreferredTime}
-    setPreferredTime={setSelfPreferredTime}
-    notification={selfNotification}
-    setNotification={setSelfNotification}
-    timeDropdownOpen={selfTimeDropdownOpen}
-    setTimeDropdownOpen={setSelfTimeDropdownOpen}
-    notificationDropdownOpen={selfNotificationDropdownOpen}
-    setNotificationDropdownOpen={setSelfNotificationDropdownOpen}
-    isRequestBatchLoading={isRequestBatchLoading}
-    isProfileLoading={isProfileLoading}
-    showMessage={tabMessage[activeTab]}
-    isRequestBatchSuccess={isRequestBatchSuccess}
-    requestBatchError={requestBatchError}
-    onRequestClick={handleClick}
-      selfPacedLearning={courseData?.selfPacedLearning || ""}  
-    isCourseLoading={isCourseLoading}  
-  />
-)}
+        {activeTab === "mentoring" && (
+          <DemoClassSectionMentoringTab
+            timeOptions={timeOptions}
+            notificationOptions={notificationOptions}
+            preferredTime={mentoringPreferredTime}
+            setPreferredTime={setMentoringPreferredTime}
+            notification={mentoringNotification}
+            setNotification={setMentoringNotification}
+            timeDropdownOpen={mentoringTimeDropdownOpen}
+            setTimeDropdownOpen={setMentoringTimeDropdownOpen}
+            notificationDropdownOpen={mentoringNotificationDropdownOpen}
+            setNotificationDropdownOpen={setMentoringNotificationDropdownOpen}
+            isRequestBatchLoading={isRequestBatchLoading}
+            isProfileLoading={isProfileLoading}
+            showMessage={tabMessage[activeTab]}
+            isRequestBatchSuccess={isRequestBatchSuccess}
+            requestBatchError={requestBatchError}
+            onRequestClick={handleClick}
+            mentoringMode={courseData?.mentoringMode || ""}
+            isCourseLoading={isCourseLoading}
+            courseError={courseError}
+
+          />
+        )}
+        {activeTab === "self" && (
+          <DemoClassSectionSelfTab
+            timeOptions={timeOptions}
+            notificationOptions={notificationOptions}
+            preferredTime={selfPreferredTime}
+            setPreferredTime={setSelfPreferredTime}
+            notification={selfNotification}
+            setNotification={setSelfNotification}
+            timeDropdownOpen={selfTimeDropdownOpen}
+            setTimeDropdownOpen={setSelfTimeDropdownOpen}
+            notificationDropdownOpen={selfNotificationDropdownOpen}
+            setNotificationDropdownOpen={setSelfNotificationDropdownOpen}
+            isRequestBatchLoading={isRequestBatchLoading}
+            isProfileLoading={isProfileLoading}
+            showMessage={tabMessage[activeTab]}
+            isRequestBatchSuccess={isRequestBatchSuccess}
+            requestBatchError={requestBatchError}
+            onRequestClick={handleClick}
+            selfPacedLearning={courseData?.selfPacedLearning || ""}
+            isCourseLoading={isCourseLoading}
+          />
+        )}
 
         {/* {showRequestBatch && (
           <RequestCustomBatch
@@ -468,14 +468,14 @@ resetLiveSubmitting={resetLiveSubmitting}
             }}
           />
         )} */}
-       {showRequestBatch && (
-  <RequestBatch
-    closeModal={() => {
-      setShowRequestBatch(false);
-      setResetLiveSubmitting(Date.now()); // ✅ RESET BUTTON STATE
-    }}
-  />
-)}
+        {showRequestBatch && (
+          <RequestBatch
+            closeModal={() => {
+              setShowRequestBatch(false);
+              setResetLiveSubmitting(Date.now()); // ✅ RESET BUTTON STATE
+            }}
+          />
+        )}
 
 
       </div>

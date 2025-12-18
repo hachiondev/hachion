@@ -12,7 +12,7 @@ import { useProjectsByCourseName } from "../../Api/hooks/CurriculumApi/useProjec
 function toEmbedUrl(url) {
   if (!url) return "";
 
-  
+
   if (url.includes("watch?v=")) {
     const id = url.split("watch?v=")[1].split("&")[0];
     return `https://www.youtube.com/embed/${id}`;
@@ -54,14 +54,14 @@ export default function CourseCurriculum() {
   const [videoUrl, setVideoUrl] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [selectedTab, setSelectedTab] = useState({});
-const { courseName: courseNameSlug } = useParams();
+  const { courseName: courseNameSlug } = useParams();
 
-/// Human-readable course name
-const courseName = courseNameSlug
-  ? decodeURIComponent(courseNameSlug)
+  /// Human-readable course name
+  const courseName = courseNameSlug
+    ? decodeURIComponent(courseNameSlug)
       .replace(/-/g, " ")
       .trim()
-  : "";
+    : "";
 
   const encodedCourseName = encodeURIComponent(courseName);
 
@@ -70,7 +70,7 @@ const courseName = courseNameSlug
   const { data: courseDetails } = useCourseByName(courseName);
 
   const { data: projects = [], isLoading: projectsLoading } =
-  useProjectsByCourseName(courseName);
+    useProjectsByCourseName(courseName);
 
 
   const { data, isLoading } = useCurriculumAll(encodedCourseName);
@@ -94,61 +94,61 @@ const courseName = courseNameSlug
 
 
   const {
-  data: accessData,
-  error: accessError,
-  isError,
-} = useAssessmentAccess(checkParams);
+    data: accessData,
+    error: accessError,
+    isError,
+  } = useAssessmentAccess(checkParams);
 
-useEffect(() => {
+  useEffect(() => {
 
-  if (accessData?.canDownload) {
-    const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
-    window.open(fileUrl, "_blank", "noopener,noreferrer");
+    if (accessData?.canDownload) {
+      const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
+      window.open(fileUrl, "_blank", "noopener,noreferrer");
 
-    setCheckParams((prev) => ({ ...prev, enabled: false }));
-    return;
-  }
-
-  if (isError && accessError) {
-    const apiError =
-      accessError.response?.data?.error || "";
-
-    if (apiError.toLowerCase().includes("enroll")) {
-      setShowEnrollPrompt(true);
-    } else {
-      alert(apiError || "Access denied");
+      setCheckParams((prev) => ({ ...prev, enabled: false }));
+      return;
     }
 
-    setCheckParams((prev) => ({ ...prev, enabled: false }));
-  }
-}, [accessData, isError, accessError]);
+    if (isError && accessError) {
+      const apiError =
+        accessError.response?.data?.error || "";
 
-const downloadPdf = () => {
-  if (!email) return setShowRegisterPrompt(true);
-  if (!curriculum.length) return alert("No curriculum found.");
+      if (apiError.toLowerCase().includes("enroll")) {
+        setShowEnrollPrompt(true);
+      } else {
+        alert(apiError || "Access denied");
+      }
 
-  const matched = curriculum.find((item) => item.brochure_pdf);
-  if (!matched) return alert("No brochure PDF uploaded.");
+      setCheckParams((prev) => ({ ...prev, enabled: false }));
+    }
+  }, [accessData, isError, accessError]);
 
-  const filename = matched.brochure_pdf.split("/").pop();
-  const finalUrl = `https://api.test.hachion.co/curriculum/pdfs/${filename}`;
-  window.open(finalUrl, "_blank");
-};
+  const downloadPdf = () => {
+    if (!email) return setShowRegisterPrompt(true);
+    if (!curriculum.length) return alert("No curriculum found.");
+
+    const matched = curriculum.find((item) => item.brochure_pdf);
+    if (!matched) return alert("No brochure PDF uploaded.");
+
+    const filename = matched.brochure_pdf.split("/").pop();
+    const finalUrl = `https://api.test.hachion.co/curriculum/pdfs/${filename}`;
+    window.open(finalUrl, "_blank");
+  };
 
 
-const handleDownloadAssessment = (assessmentPdfPath) => {
-  if (!email || !studentId) return setShowRegisterPrompt(true);
+  const handleDownloadAssessment = (assessmentPdfPath) => {
+    if (!email || !studentId) return setShowRegisterPrompt(true);
 
-  const assessmentFileName = assessmentPdfPath.split("/").pop();
+    const assessmentFileName = assessmentPdfPath.split("/").pop();
 
 
-  setCheckParams({
-    studentId,
-    courseName,
-    assessmentFileName,
-    enabled: true,
-  });
-};
+    setCheckParams({
+      studentId,
+      courseName,
+      assessmentFileName,
+      enabled: true,
+    });
+  };
 
 
 
@@ -161,12 +161,12 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
         <div className={styles.cchead}>
           <h2>Course Curriculum</h2>
           <p>
-  {courseDetails?.aboutCourse || 
-    "Master industry-level skills — unlock hands-on modules, video learning sessions, and real project work."}
-</p>
+            {courseDetails?.aboutCourse ||
+              "Master industry-level skills — unlock hands-on modules, video learning sessions, and real project work."}
+          </p>
 
           <button className={styles.ccdownload} onClick={downloadPdf}>
-            <img src="Download.png" alt="Download" height={24} /> Detailed
+            <img src="/Download.png" alt="Download" height={24} /> Detailed
             Syllabus
           </button>
         </div>
@@ -201,11 +201,10 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
                         <div className={styles.ccttlsub}>
                           {/* TOPICS TAB */}
                           <button
-                            className={`${styles.cccapsul} ${
-                              selectedTab[m.curriculum_id] === "topics"
+                            className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
                                 ? styles.activeCap
                                 : ""
-                            }`}
+                              }`}
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedTab((prev) => ({
@@ -224,11 +223,10 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
                           {/* ASSIGNMENT TAB */}
                           {m.assessment_pdf && (
                             <button
-                              className={`${styles.cccapsul} ${
-                                selectedTab[m.curriculum_id] === "assignment"
+                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
                                   ? styles.activeCap
                                   : ""
-                              }`}
+                                }`}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedTab((prev) => ({
@@ -245,28 +243,27 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
                             </button>
                           )}
                           {m.link && (
-    <button
-      type="button"
-      className={`${styles.cccapsul} ${
-        selectedTab[m.curriculum_id] === "video"
-          ? styles.activeCap
-          : ""
-      }`}
-      onClick={(e) => {
-        e.stopPropagation();
-        setSelectedTab((prev) => ({
-          ...prev,
-          [m.curriculum_id]:
-            prev[m.curriculum_id] === "video"
-              ? null
-              : "video",
-        }));
-        setOpenId(m.curriculum_id);
-      }}
-    >
-      Videos
-    </button>
-  )}
+                            <button
+                              type="button"
+                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
+                                  ? styles.activeCap
+                                  : ""
+                                }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedTab((prev) => ({
+                                  ...prev,
+                                  [m.curriculum_id]:
+                                    prev[m.curriculum_id] === "video"
+                                      ? null
+                                      : "video",
+                                }));
+                                setOpenId(m.curriculum_id);
+                              }}
+                            >
+                              Videos
+                            </button>
+                          )}
                         </div>
                       </div>
 
@@ -304,20 +301,20 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
                             📄 Download Assignment
                           </button>
                         )}
-                       {selectedTab[m.curriculum_id] === "video" && m.link && (
-  <div style={{ padding: "10px 0" }}>
-    <button
-      className={styles.ccvideobtn}
-      style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-      onClick={() => {
-        setVideoUrl(toEmbedUrl(m.link)); 
-        setShowVideo(true);
-      }}
-    >
-      ▶ Play Video
-    </button>
-  </div>
-)}
+                      {selectedTab[m.curriculum_id] === "video" && m.link && (
+                        <div style={{ padding: "10px 0" }}>
+                          <button
+                            className={styles.ccvideobtn}
+                            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
+                            onClick={() => {
+                              setVideoUrl(toEmbedUrl(m.link));
+                              setShowVideo(true);
+                            }}
+                          >
+                            ▶ Play Video
+                          </button>
+                        </div>
+                      )}
 
 
                     </div>
@@ -329,40 +326,40 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
           {/* RIGHT SIDEBAR */}
           <aside className={styles.ccright}>
             <div className={styles.cccard}>
-               <div className={styles.cccardhead}>Hands-on Projects</div>
+              <div className={styles.cccardhead}>Hands-on Projects</div>
 
-    <div className={styles.ccproj}>
-      {projectsLoading && <p>Loading projects...</p>}
+              <div className={styles.ccproj}>
+                {projectsLoading && <p>Loading projects...</p>}
 
-      {!projectsLoading && projects.length === 0 && (
-        <p>No projects available for this course.</p>
-      )}
+                {!projectsLoading && projects.length === 0 && (
+                  <p>No projects available for this course.</p>
+                )}
 
-      {projects.map((project, i) => (
-        <div key={i} className={styles.ccprojrow}>
-          <span className={styles.ccbadge}>{i + 1}</span>
+                {projects.map((project, i) => (
+                  <div key={i} className={styles.ccprojrow}>
+                    <span className={styles.ccbadge}>{i + 1}</span>
 
-          <div>
-            <div className={styles.ccprojtitle}>
-               {project.projectName}
+                    <div>
+                      <div className={styles.ccprojtitle}>
+                        {project.projectName}
+                      </div>
+
+                      <div className={styles.ccprojsub}>
+                        {/* <span>{project.projectName}</span> */}
+
+
+                        {/* description comes as HTML */}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: project.description,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className={styles.ccprojsub}>
-              {/* <span>{project.projectName}</span> */}
-
-
-              {/* description comes as HTML */}
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: project.description,
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
 
             <div className={styles.cccard}>
               <div className={`${styles.cccardhead} ${styles.ccstar}`}>
@@ -471,86 +468,86 @@ const handleDownloadAssessment = (assessmentPdfPath) => {
           </div>
         )}
         {showEnrollPrompt && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.5)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 9999,
-    }}
-  >
-    <div
-      style={{
-        width: "560px",
-        background: "#fff",
-        borderRadius: "12px",
-        padding: "20px",
-        display: "flex",
-        boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
-      }}
-    >
-      <div style={{ width: "45%", textAlign: "center" }}>
-        <img
-          src={require("../../Assets/loginpopup.webp")}
-          alt="enroll popup"
-          style={{
-            width: "100%",
-            borderRadius: "8px",
-            transform: "scaleX(-1)",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          width: "55%",
-          paddingLeft: "20px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <h3>Please Enroll</h3>
-        <p>You must enroll any live class to access assignments.</p>
-
-        <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-          <button
+          <div
             style={{
-              padding: "10px 22px",
-              background: "#0057ff",
-              color: "#fff",
-              borderRadius: "6px",
-              border: "none",
-            }}
-            onClick={() => {
-              window.location.href = `/checkout/${encodedCourseName}`;
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 9999,
             }}
           >
-            Enroll Now
-          </button>
+            <div
+              style={{
+                width: "560px",
+                background: "#fff",
+                borderRadius: "12px",
+                padding: "20px",
+                display: "flex",
+                boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
+              }}
+            >
+              <div style={{ width: "45%", textAlign: "center" }}>
+                <img
+                  src={require("../../Assets/loginpopup.webp")}
+                  alt="enroll popup"
+                  style={{
+                    width: "100%",
+                    borderRadius: "8px",
+                    transform: "scaleX(-1)",
+                  }}
+                />
+              </div>
 
-          <button
-            style={{
-              padding: "10px 22px",
-              background: "#f1f1f1",
-              border: "1px solid #ccc",
-              borderRadius: "6px",
-            }}
-            onClick={() => setShowEnrollPrompt(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+              <div
+                style={{
+                  width: "55%",
+                  paddingLeft: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <h3>Please Enroll</h3>
+                <p>You must enroll any live class to access assignments.</p>
+
+                <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                  <button
+                    style={{
+                      padding: "10px 22px",
+                      background: "#0057ff",
+                      color: "#fff",
+                      borderRadius: "6px",
+                      border: "none",
+                    }}
+                    onClick={() => {
+                      window.location.href = `/checkout/${encodedCourseName}`;
+                    }}
+                  >
+                    Enroll Now
+                  </button>
+
+                  <button
+                    style={{
+                      padding: "10px 22px",
+                      background: "#f1f1f1",
+                      border: "1px solid #ccc",
+                      borderRadius: "6px",
+                    }}
+                    onClick={() => setShowEnrollPrompt(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </section>

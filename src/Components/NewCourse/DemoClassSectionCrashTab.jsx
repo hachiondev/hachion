@@ -130,7 +130,7 @@ What's Included:
 
             <div className={cn(styles.dcdetailscol, styles.dcempty)}>
               <div className={styles.dcemptyicon} aria-hidden="true">
-                <img src="calendar.png" alt="calendar" />
+                <img src="/calendar.png" alt="calendar" />
               </div>
 
               <p className={styles.dcemptytext}>
@@ -183,7 +183,7 @@ What's Included:
       <aside className={styles.dcinfo}>
         <div className={styles.dcinfohead}>
           <div className={styles.dcinfoicon} aria-hidden="true">
-            <img src="crash.png" alt="crash" />
+            <img src="/crash.png" alt="crash" />
           </div>
           <div>
             <div className={styles.dcinfotitle}>Crash Course</div>

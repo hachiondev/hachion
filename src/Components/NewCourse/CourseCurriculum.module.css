@@ -71,7 +71,7 @@
 .ccacchead {
   width: 100%;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 12px;
   background: #dbe0e64d;
   border: 1px solid var(--border);
@@ -168,8 +168,9 @@
 
 /* Right sidebar */
 .ccright {
-  display: grid;
-  gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .cccard {
@@ -178,6 +179,8 @@
   border-radius: 10px;
   padding: 12px;
   box-shadow: var(--shadow);
+  overflow: auto;
+  height: 35%;
 }
 
 .cccardhead {
@@ -261,6 +264,41 @@
   border-color: #0057ff !important;
 }
 
+/* View More Button Styles */
+.viewMoreContainer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.viewMoreBtn {
+  background: linear-gradient(90deg, var(--blue), var(--accent));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(79, 142, 247, 0.3);
+}
+
+.viewMoreBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 142, 247, 0.4);
+}
+
+.viewMoreArrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+
 /* Responsive */
 @media (max-width: 1024px) {
   .ccgrid {
@@ -329,6 +367,10 @@
     font-size: 26px;
   }
 
+    .cccard{
+    height: 50%;
+  }
+
   .ccwhy {
     font-size: 22px;
         font-weight: 400;
@@ -340,6 +382,10 @@
 
     .ccprojtitle {
     font-size: 20px;
+  }
+    .viewMoreBtn {
+    padding: 14px 32px;
+    font-size: 18px;
   }
 }
 
@@ -404,6 +450,10 @@
     font-size: 24px;
   }
 
+    .cccard{
+    height: 50%;
+  }
+
   .ccwhy {
 
     font-size: 18px;
@@ -416,6 +466,11 @@
 
   .ccprojtitle {
     font-size: 20px;
+  }
+
+    .viewMoreBtn {
+    padding: 12px 24px;
+    font-size: 16px;
   }
 }
 
@@ -480,6 +535,10 @@
     font-size: 14px;
   }
 
+  .cccard{
+    height: 50%;
+  }
+
   .cccardhead {
     font-size: 18px;
   }
@@ -490,6 +549,11 @@
   }
 
   .cccapsul {
+    font-size: 14px;
+  }
+
+    .viewMoreBtn {
+    padding: 10px 20px;
     font-size: 14px;
   }
 }

@@ -90,6 +90,7 @@ What's Included:
                 <button
                   type="button"
                   data-mode="select"
+                  className={styles.selectAllBtn}
                   onClick={(e) => {
                     const btn = e.currentTarget;
                     const mode = btn.dataset.mode || "select";
@@ -105,23 +106,9 @@ What's Included:
                       btn.textContent = "Select All";
                     }
                   }}
-                  style={{
-                    marginBottom: "10px",
-                    padding: "6px 14px",
-                    background: "#2a7cf7",
-                    color: "#fff",
-                    borderRadius: "6px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
                 >
                   Select All
                 </button>
-
                 <div className={styles.dcrequestCheckboxes}>
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
                     (day) => (
@@ -313,6 +300,7 @@ What's Included:
                 style={{
                   width: "100%",
                   padding: "12px",
+                  marginBottom:"14px",
                   borderRadius: "8px",
                   border: "none",
                   fontSize: "15px",

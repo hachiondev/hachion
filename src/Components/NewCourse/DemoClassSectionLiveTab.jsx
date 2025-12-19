@@ -125,7 +125,8 @@ const handleNotifyChange = (e) => {
                 key={g.key}
                 className={cn(
                   styles.dcslot,
-                  selectedGroupKey === g.key && styles.dcslotActive
+                  selectedGroupKey === g.key && styles.dcslotActive,
+                      selectedGroupKey === g.key && `${styles.dcslotActive} ${g.type === "live" ? styles['live-active'] : styles['demo-active']}`
                 )}
                 onClick={() => setSelectedGroupKey(g.key)}
               >

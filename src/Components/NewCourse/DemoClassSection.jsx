@@ -281,7 +281,7 @@ export default function DemoClassSection() {
           <div className={styles.offerBanner}>
             <div className={styles.offerLeft}>
               <div className={styles.offerIcon} aria-hidden="true">
-                <img src="Offer.png" alt="Offer" />
+                <img src="/Offer.png" alt="Offer" />
               </div>
               <div className={styles.offerText}>
                 <div className={styles.offerTitle}>Happy Hours Offer!</div>

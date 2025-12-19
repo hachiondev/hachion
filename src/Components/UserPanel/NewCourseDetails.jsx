@@ -10,8 +10,12 @@ import LearnSection from '../NewCourse/LearnSection';
 import StudentsAlsoEnrolled from '../NewCourse/StudentsAlsoEnrolled';
 import StudentsSay from '../NewCourse/StudentsSay';
 import SuccessStories from '../NewCourse/SuccessStories';
+import { useEffect } from 'react';
 
 const NewCourseDetails = () => {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   return (
     <div>
       <CourseBanner

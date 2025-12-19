@@ -137,7 +137,7 @@ const Trending = () => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/newcoursedetails/${courseSlug}`);
+    navigate(`/coursedetails/${courseSlug}`);
   };
   
   const updateTotalCards = (total) => {
@@ -405,7 +405,7 @@ const Trending = () => {
               amount={`${currency} ${fmt(99)}`}
               totalAmount={`${fmt(199)}`}
               level="Beginner"
-              staticButtonLink="/newcoursedetails/python"
+              staticButtonLink="/coursedetails/python"
               className="course-card"
             />
 

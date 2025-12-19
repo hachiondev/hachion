@@ -127,14 +127,14 @@ function AppRoutes() {
           <Route path="/coursedetails" element={<Course />} />
           {/* <Route path="/newcoursedetails" element={<NewCourseDetails />} /> */}
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
-          {/* <Route
+          <Route
             path="/coursedetails/:courseName"
-            element={<CourseDetails />}
-          /> */}
-           <Route
-            path="/newcoursedetails/:courseName"
             element={<NewCourseDetails />}
           />
+           {/* <Route
+            path="/newcoursedetails/:courseName"
+            element={<NewCourseDetails />}
+          /> */}
           <Route path="/corporate" element={<CorporateTraining />} />
           <Route path="/hire-from-us" element={<HirefromUs />} />
           <Route path="/career" element={<ApplyHiring />} />

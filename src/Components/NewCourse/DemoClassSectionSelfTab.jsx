@@ -93,40 +93,27 @@ useEffect(() => {
                 </label>
 
                 <button
-                  type="button"
-                  data-mode="select"
-                  onClick={(e) => {
-                    const btn = e.currentTarget;
-                    const mode = btn.dataset.mode || "select";
-                    const checkboxes =
-                      document.querySelectorAll(".dayCheckbox");
-
-                    if (mode === "select") {
-                      checkboxes.forEach((cb) => (cb.checked = true));
-                      btn.dataset.mode = "deselect";
-                      btn.textContent = "Deselect All";
-                    } else {
-                      checkboxes.forEach((cb) => (cb.checked = false));
-                      btn.dataset.mode = "select";
-                      btn.textContent = "Select All";
-                    }
-                  }}
-                  style={{
-                    marginBottom: "10px",
-                    padding: "6px 14px",
-                    background: "#2a7cf7",
-                    color: "#fff",
-                    borderRadius: "6px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  Select All
-                </button>
+                                  type="button"
+                                  data-mode="select"
+                                  className={styles.selectAllBtn}
+                                  onClick={(e) => {
+                                    const btn = e.currentTarget;
+                                    const mode = btn.dataset.mode || "select";
+                                    const checkboxes = document.querySelectorAll(".dayCheckbox");
+                
+                                    if (mode === "select") {
+                                      checkboxes.forEach((cb) => (cb.checked = true));
+                                      btn.dataset.mode = "deselect";
+                                      btn.textContent = "Deselect All";
+                                    } else {
+                                      checkboxes.forEach((cb) => (cb.checked = false));
+                                      btn.dataset.mode = "select";
+                                      btn.textContent = "Select All";
+                                    }
+                                  }}
+                                >
+                                  Select All
+                                </button>
 
                 <div className={styles.dcrequestCheckboxes}>
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(

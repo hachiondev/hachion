@@ -55,6 +55,7 @@ export default function CourseCurriculum() {
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [selectedTab, setSelectedTab] = useState({});
   const { courseName: courseNameSlug } = useParams();
+  const [showAll, setShowAll] = useState(false);
 
   /// Human-readable course name
   const courseName = courseNameSlug
@@ -175,153 +176,167 @@ export default function CourseCurriculum() {
         <div className={styles.ccgrid}>
           {/* LEFT SIDE ACCORDION */}
           <div className={styles.ccgridbody}>
-            {uiCurriculum.length === 0 && <p>No curriculum available.</p>}
+  {uiCurriculum.length === 0 && <p>No curriculum available.</p>}
 
-            {uiCurriculum
-              .filter((m) => m.title && m.title.trim() !== "")
-              .map((m, idx) => {
-                const open = openId === m.curriculum_id;
+  {uiCurriculum
+    .filter((m) => m.title && m.title.trim() !== "")
+    .slice(0, showAll ? uiCurriculum.length : 5) // Show only 5 initially
+    .map((m, idx) => {
+      const open = openId === m.curriculum_id;
 
-                return (
-                  <div className={styles.ccacc} key={m.curriculum_id}>
-                    <button
-                      className={cn(
-                        styles.ccacchead,
-                        open && styles.ccaccheadisopen
-                      )}
-                      onClick={() =>
-                        setOpenId(open ? null : m.curriculum_id)
-                      }
-                    >
-                      <span className={styles.ccnum}>{idx + 1}</span>
+      return (
+        <div className={styles.ccacc} key={m.curriculum_id}>
+          <button
+            className={cn(
+              styles.ccacchead,
+              open && styles.ccaccheadisopen
+            )}
+            onClick={() =>
+              setOpenId(open ? null : m.curriculum_id)
+            }
+          >
+            <span className={styles.ccnum}>{idx + 1}</span>
 
-                      <div className={styles.cctitle}>
-                        <div className={styles.ccttlmain}>{m.title}</div>
+            <div className={styles.cctitle}>
+              <div className={styles.ccttlmain}>{m.title}</div>
 
-                        <div className={styles.ccttlsub}>
-                          {/* TOPICS TAB */}
-                          <button
-                            className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
-                                ? styles.activeCap
-                                : ""
-                              }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedTab((prev) => ({
-                                ...prev,
-                                [m.curriculum_id]:
-                                  prev[m.curriculum_id] === "topics"
-                                    ? null
-                                    : "topics",
-                              }));
-                              setOpenId(m.curriculum_id);
-                            }}
-                          >
-                            Topics Included
-                          </button>
+              <div className={styles.ccttlsub}>
+                {/* TOPICS TAB */}
+                <button
+                  className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
+                      ? styles.activeCap
+                      : ""
+                    }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedTab((prev) => ({
+                      ...prev,
+                      [m.curriculum_id]:
+                        prev[m.curriculum_id] === "topics"
+                          ? null
+                          : "topics",
+                    }));
+                    setOpenId(m.curriculum_id);
+                  }}
+                >
+                  Topics Included
+                </button>
 
-                          {/* ASSIGNMENT TAB */}
-                          {m.assessment_pdf && (
-                            <button
-                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTab((prev) => ({
-                                  ...prev,
-                                  [m.curriculum_id]:
-                                    prev[m.curriculum_id] === "assignment"
-                                      ? null
-                                      : "assignment",
-                                }));
-                                setOpenId(m.curriculum_id);
-                              }}
-                            >
-                              Assignment
-                            </button>
-                          )}
-                          {m.link && (
-                            <button
-                              type="button"
-                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTab((prev) => ({
-                                  ...prev,
-                                  [m.curriculum_id]:
-                                    prev[m.curriculum_id] === "video"
-                                      ? null
-                                      : "video",
-                                }));
-                                setOpenId(m.curriculum_id);
-                              }}
-                            >
-                              Videos
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                {/* ASSIGNMENT TAB */}
+                {m.assessment_pdf && (
+                  <button
+                    className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
+                        ? styles.activeCap
+                        : ""
+                      }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedTab((prev) => ({
+                        ...prev,
+                        [m.curriculum_id]:
+                          prev[m.curriculum_id] === "assignment"
+                            ? null
+                            : "assignment",
+                      }));
+                      setOpenId(m.curriculum_id);
+                    }}
+                  >
+                    Assignment
+                  </button>
+                )}
+                {m.link && (
+                  <button
+                    type="button"
+                    className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
+                        ? styles.activeCap
+                        : ""
+                      }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedTab((prev) => ({
+                        ...prev,
+                        [m.curriculum_id]:
+                          prev[m.curriculum_id] === "video"
+                            ? null
+                            : "video",
+                      }));
+                      setOpenId(m.curriculum_id);
+                    }}
+                  >
+                    Videos
+                  </button>
+                )}
+              </div>
+            </div>
 
-                      <Chevron open={open} />
-                    </button>
+            <Chevron open={open} />
+          </button>
 
-                    {/* PANEL CONTENT */}
-                    <div
-                      className={cn(
-                        styles.ccaccpanel,
-                        open && styles.ccaccpanelopen
-                      )}
-                    >
-                      {selectedTab[m.curriculum_id] === "topics" && (
-                        <>
-                          {extractListItems(m.topic).map((point, i) => (
-                            <div key={i} className={styles.ccrow}>
-                              <span>•</span>
-                              <span className={styles.ccrowtitle}>
-                                {point}
-                              </span>
-                            </div>
-                          ))}
-                        </>
-                      )}
-
-                      {selectedTab[m.curriculum_id] === "assignment" &&
-                        m.assessment_pdf && (
-                          <button
-                            className={styles.ccassess}
-                            onClick={() =>
-                              handleDownloadAssessment(m.assessment_pdf)
-                            }
-                          >
-                            📄 Download Assignment
-                          </button>
-                        )}
-                      {selectedTab[m.curriculum_id] === "video" && m.link && (
-                        <div style={{ padding: "10px 0" }}>
-                          <button
-                            className={styles.ccvideobtn}
-                            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-                            onClick={() => {
-                              setVideoUrl(toEmbedUrl(m.link));
-                              setShowVideo(true);
-                            }}
-                          >
-                            ▶ Play Video
-                          </button>
-                        </div>
-                      )}
-
-
-                    </div>
+          {/* PANEL CONTENT */}
+          <div
+            className={cn(
+              styles.ccaccpanel,
+              open && styles.ccaccpanelopen
+            )}
+          >
+            {selectedTab[m.curriculum_id] === "topics" && (
+              <>
+                {extractListItems(m.topic).map((point, i) => (
+                  <div key={i} className={styles.ccrow}>
+                    <span>•</span>
+                    <span className={styles.ccrowtitle}>
+                      {point}
+                    </span>
                   </div>
-                );
-              })}
+                ))}
+              </>
+            )}
+
+            {selectedTab[m.curriculum_id] === "assignment" &&
+              m.assessment_pdf && (
+                <button
+                  className={styles.ccassess}
+                  onClick={() =>
+                    handleDownloadAssessment(m.assessment_pdf)
+                  }
+                >
+                  📄 Download Assignment
+                </button>
+              )}
+            {selectedTab[m.curriculum_id] === "video" && m.link && (
+              <div style={{ padding: "10px 0" }}>
+                <button
+                  className={styles.ccvideobtn}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
+                  onClick={() => {
+                    setVideoUrl(toEmbedUrl(m.link));
+                    setShowVideo(true);
+                  }}
+                >
+                  ▶ Play Video
+                </button>
+              </div>
+            )}
           </div>
+        </div>
+      );
+    })}
+    
+  {/* View More / View Less Button */}
+  {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
+    <div className={styles.viewMoreContainer}>
+      <button
+        className={styles.viewMoreBtn}
+        onClick={() => setShowAll(!showAll)}
+      >
+        {showAll ? "View Less" : "View More"} 
+        <span className={styles.viewMoreArrow}>
+          {showAll ? "↑" : "↓"}
+        </span>
+      </button>
+    </div>
+  )}
+</div>
 
           {/* RIGHT SIDEBAR */}
           <aside className={styles.ccright}>

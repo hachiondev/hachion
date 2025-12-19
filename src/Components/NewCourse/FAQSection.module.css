@@ -18,7 +18,7 @@
   margin-bottom: 16px;
 }
 .faqhead h2 {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--ink);
 }
@@ -62,7 +62,7 @@
 .faqq {
   font-weight: 500;
   color: #111827;
-  font-size: 22px;
+  font-size: 17px;
 }
 .faqchevron {
   color: #98a2b3;

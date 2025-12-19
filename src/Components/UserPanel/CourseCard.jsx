@@ -49,7 +49,7 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
     ? heading.toLowerCase().replace(/\s+/g, '-')
     : '';
   const handleNavigation = () => {
-    navigate(`/newcoursedetails/${formattedName}`);
+    navigate(`/coursedetails/${formattedName}`);
   };
 
   const handleShare = async (e) => {

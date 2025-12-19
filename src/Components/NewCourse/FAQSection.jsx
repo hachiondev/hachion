@@ -107,12 +107,13 @@ export default function FAQSection({
           <div className={styles.faqactions}>
            <button
   className={styles.faqprimary}
-  onClick={() =>
-    window.open(
-      "https://api.whatsapp.com/send/?phone=919490323388&text&type=phone_number&app_absent=0",
-      "_blank"
-    )
-  }
+  onClick={() => {
+    if (window.ChatwayWidget && window.ChatwayWidget.open) {
+      window.ChatwayWidget.open();
+    } else {
+      console.warn("Chatway not loaded yet");
+    }
+  }}
 >
   Chat with Our Team
 </button>

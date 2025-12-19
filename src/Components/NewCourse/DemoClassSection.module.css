@@ -309,6 +309,14 @@
   border-radius: 12px;
   padding: 25px 20px;
   box-shadow: var(--shadow);
+  transition: all 0.2s ease; /* Add transition for smooth effect */
+  cursor: pointer; /* Make it clear it's clickable */
+}
+
+.dcslotActive {
+border: 1px solid #1fb6ff !important;
+    box-shadow: 0 0 0 3px rgb(31 182 255 / 26%) !important;
+    position: relative;
 }
 
 .dcslotdate {
@@ -340,6 +348,25 @@
   color: #1674e1;
   cursor: pointer;
 }
+
+/* Select All button - Fixed alignment */
+.selectAllBtn {
+  margin-bottom: 15px; /* Increased for better spacing */
+  padding: 8px 16px; /* Slightly larger padding */
+  background: #2a7cf7;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: 120px; /* Fixed width instead of 100% */
+  text-align: center;
+  transition: all 0.2s ease;
+  align-self: flex-start; /* Align to left */
+}
+
+
 
 /* Details panel */
 .dcdetails {
@@ -477,7 +504,7 @@
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   /* border-radius: 16px; */
-  padding: 36px 40px;
+  padding: 6px 40px;
   /* margin: 28px;
   width: calc(100% - 56px);
   max-width: 680px; */
@@ -487,18 +514,18 @@
 .dcrequestForm {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  /* gap: 18px; */
 }
 
 .dcrequestDays {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 30px;
+  gap: 0;
+  margin-bottom: 5px;
 }
 
 .dcrequestLabel {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   color: #0e1320;
   display: block;
@@ -544,6 +571,7 @@
   border-color: #0083b0;
 }
 
+
 .dcrequestCheckbox input:checked~.checkmark {
   /* background-color: #0e1320; */
   border-color: #0e1320;
@@ -581,7 +609,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   width: 90%;
 }
 

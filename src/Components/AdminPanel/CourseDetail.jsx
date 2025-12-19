@@ -22,6 +22,7 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -38,6 +39,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: '1px solid #e0e0e0',
   },
 }));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -46,6 +48,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 const CourseDetail = ({
   pageTitle = 'Course',
   headerTitle = 'View Courses List',
@@ -59,7 +62,7 @@ const CourseDetail = ({
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const [filteredCourses, setFilteredCourses] = useState([])
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [message, setMessage] = useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
@@ -69,13 +72,27 @@ const CourseDetail = ({
   const [characterCount, setCharacterCount] = useState(0);
   const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
   const [aboutError, setAboutError] = useState("");
+  const [trainers, setTrainers] = useState([]); // State for trainers
+  
   const [formData, setFormData] = useState({
-    course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", starRating: '', level: '',
-    ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
+    course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
+    starRating: '', level: '', ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining:'', crashCourse: '', mentoringMode:'',selfPacedLearning: '',
   });
-  console.log(formData);
+
+  // Fetch trainers from API
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      try {
+        const response = await axios.get("https://api.test.hachion.co/api/v1/trainers/all");
+        setTrainers(response.data);
+      } catch (error) {
+        console.error("Error fetching trainers:", error);
+      }
+    };
+    fetchTrainers();
+  }, []);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -83,10 +100,12 @@ const CourseDetail = ({
         const response = await axios.get("https://api.test.hachion.co/course-categories/all");
         setCourse(response.data);
       } catch (error) {
+        console.error("Error fetching categories:", error);
       }
     };
     fetchCategory();
   }, []);
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -100,6 +119,7 @@ const CourseDetail = ({
     };
     fetchCourses();
   }, []);
+
   useEffect(() => {
     if (!startDate && !endDate) {
       const filtered = allCourses.filter((item) =>
@@ -151,6 +171,7 @@ const CourseDetail = ({
       return { ...prevData, [name]: value };
     });
   };
+
   const handleCalculate = (e) => {
     e.preventDefault();
     setFormData((prevData) => {
@@ -177,6 +198,7 @@ const CourseDetail = ({
       return updatedData;
     });
   };
+
   const handleCalculateIndia = (e) => {
     e.preventDefault();
     setFormData((prevData) => {
@@ -213,6 +235,7 @@ const CourseDetail = ({
     const file = event.target.files[0];
     setFormData({ ...formData, courseImage: file });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString().split("T")[0];
@@ -220,6 +243,7 @@ const CourseDetail = ({
       courseCategory: formData.courseCategory,
       courseName: formData.courseName,
       shortCourse: formData.shortCourse,
+      ...(formMode === 'Edit' && { defaultTrainer: formData.defaultTrainer }),
       date: currentDate,
       youtubeLink: formData.youtubeLink,
       numberOfClasses: formData.numberOfClasses,
@@ -264,13 +288,15 @@ const CourseDetail = ({
       crashCourse: formData.crashCourse,
       mentoringMode: formData.mentoringMode,
       selfPacedLearning: formData.selfPacedLearning
-
     };
+
     const formNewData = new FormData();
     formNewData.append("course", JSON.stringify(courseData));
+    
     if (formData.courseImage && typeof formData.courseImage !== "string") {
       formNewData.append("courseImage", formData.courseImage);
     }
+
     try {
       if (formMode === "Edit") {
         const response = await axios.put(
@@ -278,8 +304,8 @@ const CourseDetail = ({
           formNewData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
+        
         if (response.status === 200) {
-
           setSuccessMessage("✅ Course updated successfully.");
           setErrorMessage("");
           setCourses((prevCourses) =>
@@ -290,7 +316,6 @@ const CourseDetail = ({
           setShowAddCourse(false);
         }
       } else {
-
         const response = await axios.post("https://api.test.hachion.co/courses/add", formNewData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
@@ -321,6 +346,7 @@ const CourseDetail = ({
           courseName: course.courseName,
           courseImage: course.courseImage,
           shortCourse: course.shortCourse,
+          defaultTrainer: course.defaultTrainer || "",
           youtubeLink: course.youtubeLink,
           numberOfClasses: course.numberOfClasses,
           level: course.level,
@@ -348,11 +374,8 @@ const CourseDetail = ({
           mentoring2: course.mentoring2,
           self1: course.self1,
           self2: course.self2,
-
           headerTitle: course.metaTitle,
-
           courseKeyword: course.metaKeyword,
-
           courseKeywordDescription: course.metaDescription,
           aboutCourse: course.aboutCourse,
           courseHighlight: course.courseHighlight,
@@ -363,31 +386,38 @@ const CourseDetail = ({
           careerOpportunities: course.careerOpportunities,
           avarageSalaryRange: course.avarageSalaryRange,
           prerequisities: course.prerequisities,
-               liveTraining: course.liveTraining,
-      crashCourse: course.crashCourse,
-      mentoringMode: course.mentoringMode,
-      selfPacedLearning: course.selfPacedLearning
+          liveTraining: course.liveTraining,
+          crashCourse: course.crashCourse,
+          mentoringMode: course.mentoringMode,
+          selfPacedLearning: course.selfPacedLearning
         });
         setFormMode('Edit');
       } else {
+        console.error("Failed to fetch course data");
       }
     } catch (error) {
+      console.error("Error fetching course:", error);
     }
   };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
+  
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
+  
   const displayedCategories = filteredCourses.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
   const handleReset = () => {
     setFormData({
       course_id: "",
@@ -399,6 +429,7 @@ const CourseDetail = ({
       numberOfClasses: '',
       level: '',
       dailySessions: '',
+      defaultTrainer: '',
       starRating: '',
       ratingByNumberOfPeople: '',
       totalEnrollment: '',
@@ -410,18 +441,19 @@ const CourseDetail = ({
       careerOpportunities: '',
       avarageSalaryRange: '',
       prerequisities: '',
-       liveTraining: '',
+      liveTraining: '',
       crashCourse: '',
       mentoringMode: '',
-      selfPacedLearning:''      
-
+      selfPacedLearning: ''      
     });
   }
+
   const handleDeleteConfirmation = (id) => {
     if (window.confirm("Are you sure you want to delete this Courses?")) {
       handleDelete(id);
     }
   };
+
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`https://api.test.hachion.co/courses/delete/${id}`);
@@ -449,6 +481,7 @@ const CourseDetail = ({
     setShowAddCourse(true);
     handleReset();
   };
+
   const [shortCourseError, setShortCourseError] = useState("");
 
   const handleShortCourseBlur = async () => {
@@ -474,25 +507,65 @@ const CourseDetail = ({
       }
     }
   };
+
+  // Updated mandatory fields check to include ALL required fields
   const areMandatoryFieldsFilled = () => {
+    // Original mandatory fields
     const hasCategory = formData.courseCategory?.trim() !== "";
     const hasCourseName = formData.courseName?.trim() !== "";
     const hasShortCourse = formData.shortCourse?.trim() !== "";
+      const hasDefaultTrainer = formMode === 'Edit' 
+    ? formData.defaultTrainer?.trim() !== "" 
+    : true;
     const hasClasses = formData.numberOfClasses?.toString().trim() !== "";
     const hasImage = !!formData.courseImage;
+    
+    // New mandatory fields from previous request
+    const hasProjects = formData.numberOfProjects?.toString().trim() !== "";
+    const hasWhatYouWillLearn = formData.whatYouWillLearn?.trim() !== "";
+    const hasWhoIsThisCourseFor = formData.whoIsThisCourseFor?.trim() !== "";
+    const hasCareerOpportunities = formData.careerOpportunities?.trim() !== "";
+    const hasAverageSalaryRange = formData.avarageSalaryRange?.trim() !== "";
+    const hasPrerequisites = formData.prerequisities?.trim() !== "";
+    const hasYoutubeLink = formData.youtubeLink?.trim() !== "";
+    const hasLevel = formData.level?.trim() !== "";
+    const hasStarRating = formData.starRating?.toString().trim() !== "";
+    const hasRatingByNumberOfPeople = formData.ratingByNumberOfPeople?.toString().trim() !== "";
+    const hasCertifiedStudents = formData.totalEnrollment?.toString().trim() !== "";
+    
+    // NEW: Additional mandatory fields
+    const hasLiveTraining = formData.liveTraining?.trim() !== "";
+    const hasCrashCourse = formData.crashCourse?.trim() !== "";
+    const hasMentoringMode = formData.mentoringMode?.trim() !== "";
+    const hasSelfPacedLearning = formData.selfPacedLearning?.trim() !== "";
 
     return (
       hasCategory &&
       hasCourseName &&
       hasShortCourse &&
+      hasDefaultTrainer &&
       hasClasses &&
       hasImage &&
+      hasProjects &&
+      hasWhatYouWillLearn &&
+      hasWhoIsThisCourseFor &&
+      hasCareerOpportunities &&
+      hasAverageSalaryRange &&
+      hasPrerequisites &&
+      hasYoutubeLink &&
+      hasLevel &&
+      hasStarRating &&
+      hasRatingByNumberOfPeople &&
+      hasCertifiedStudents &&
+      hasLiveTraining &&          // NEW
+      hasCrashCourse &&           // NEW
+      hasMentoringMode &&         // NEW
+      hasSelfPacedLearning &&     // NEW
       !shortCourseError
     );
   };
 
   const isSubmitDisabled = !areMandatoryFieldsFilled();
-
 
   return (
     <>
@@ -533,6 +606,7 @@ const CourseDetail = ({
                       name="courseCategory"
                       value={formData.courseCategory}
                       onChange={handleInputChange}
+                      required
                     >
                       <option value="" disabled>
                         Select Category
@@ -543,8 +617,8 @@ const CourseDetail = ({
                         </option>
                       ))}
                     </select>
-
                   </div>
+                  
                   <div className="col-md-4">
                     <label className="form-label">
                       Course Name <span style={{ color: "red" }}>*</span>
@@ -556,8 +630,10 @@ const CourseDetail = ({
                       placeholder="Enter Course Name"
                       value={formData.courseName}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                  
                   <div className="col-md-4">
                     <label className="form-label">
                       Short Course Name <span style={{ color: "red" }}>*</span>
@@ -570,16 +646,19 @@ const CourseDetail = ({
                       value={formData.shortCourse}
                       onChange={handleInputChange}
                       onBlur={handleShortCourseBlur}
+                      required
                     />
                     {shortCourseError && (
                       <div style={{ color: "red" }}>{shortCourseError}</div>
                     )}
-
                   </div>
                 </div>
+                
                 <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">No. of Projects</label>
+                    <label className="form-label">
+                      No. of Projects <span style={{ color: "red" }}>*</span>
+                    </label>
                     <input
                       type="number"
                       name="numberOfProjects"
@@ -587,10 +666,29 @@ const CourseDetail = ({
                       placeholder="Enter Projects"
                       value={formData.numberOfProjects}
                       onChange={handleInputChange}
+                      required
+                      min="0"
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">What You Will Learn</label>
+                    <label className="form-label">
+                      Self-Paced Learning <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <textarea
+                      type="text"
+                      name="selfPacedLearning"
+                      className="form-control"
+                      placeholder="Enter Self-Paced Learning details"
+                      value={formData.selfPacedLearning}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      What You Will Learn <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="whatYouWillLearn"
@@ -598,10 +696,16 @@ const CourseDetail = ({
                       placeholder="Enter What You Will Learn"
                       value={formData.whatYouWillLearn}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Who Is This Course For</label>
+                    <label className="form-label">
+                      Who Is This Course For <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="whoIsThisCourseFor"
@@ -609,12 +713,14 @@ const CourseDetail = ({
                       placeholder="Enter Who Is This Course For"
                       value={formData.whoIsThisCourseFor}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
-                </div>
-                <div className="course-row">
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Career Opportunities</label>
+                    <label className="form-label">
+                      Career Opportunities <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="careerOpportunities"
@@ -622,10 +728,14 @@ const CourseDetail = ({
                       placeholder="Enter Career Opportunities"
                       value={formData.careerOpportunities}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Average Salary Range</label>
+                    <label className="form-label">
+                      Average Salary Range <span style={{ color: "red" }}>*</span>
+                    </label>
                     <input
                       type="text"
                       name="avarageSalaryRange"
@@ -633,10 +743,16 @@ const CourseDetail = ({
                       placeholder="Enter Average Salary Range"
                       value={formData.avarageSalaryRange}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Prerequisites</label>
+                    <label className="form-label">
+                      Prerequisites <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="prerequisities"
@@ -644,56 +760,56 @@ const CourseDetail = ({
                       placeholder="Enter Prerequisites"
                       value={formData.prerequisities}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
-                </div>
-                <div className="course-row">
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Live Training</label>
+                    <label className="form-label">
+                      Live Training <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="liveTraining"
                       className="form-control"
-                      placeholder="Live Training"
+                      placeholder="Enter Live Training details"
                       value={formData.liveTraining}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Crash Course</label>
+                    <label className="form-label">
+                      Crash Course <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="crashCourse"
                       className="form-control"
-                      placeholder="Crash Course"
+                      placeholder="Enter Crash Course details"
                       value={formData.crashCourse}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Mentoring Mode</label>
+                    <label className="form-label">
+                      Mentoring Mode <span style={{ color: "red" }}>*</span>
+                    </label>
                     <textarea
                       type="text"
                       name="mentoringMode"
                       className="form-control"
-                      placeholder="Mentoring Mode"
+                      placeholder="Enter Mentoring Mode details"
                       value={formData.mentoringMode}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Self-Paced Learning</label>
-                    <textarea
-                      type="text"
-                      name="selfPacedLearning"
-                      className="form-control"
-                      placeholder="Self-Paced Learning"
-                      value={formData.selfPacedLearning}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className="course-row">
                   <div className="col-md-4">
                     <label className="form-label">
                       Course Image <span style={{ color: "red" }}>*</span>
@@ -704,14 +820,49 @@ const CourseDetail = ({
                       name="courseImage"
                       accept="image/*"
                       onChange={handleFileChange}
+                      required={formMode === 'Add'}
                     />
+                  </div>
 
-                  </div>
                   <div className="col-md-4">
-                    <label className="form-label">Youtube Link</label>
-                    <input type="text" name="youtubeLink" className="form-control" value={formData.youtubeLink}
-                      onChange={handleInputChange} />
+                    <label className="form-label">
+                      Youtube Link <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      name="youtubeLink" 
+                      className="form-control" 
+                      value={formData.youtubeLink}
+                      onChange={handleInputChange}
+                      placeholder="Enter Youtube URL"
+                      required
+                    />
                   </div>
+
+                  
+                </div>
+                
+                <div className="course-row">
+                  
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Level <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <select 
+                      className="form-select" 
+                      name='level' 
+                      value={formData.level} 
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="" disabled>Select Level</option>
+                      <option value="All Levels">All Levels</option>
+                      <option value="Beginner">Beginner</option>
+                      <option value="Intermediate">Intermediate</option>
+                      <option value="Expert">Expert</option>
+                    </select>
+                  </div>
+                  
                   <div className="col-md-4">
                     <label className="form-label">
                       No. of Classes <span style={{ color: "red" }}>*</span>
@@ -722,100 +873,141 @@ const CourseDetail = ({
                       className="form-control"
                       value={formData.numberOfClasses}
                       onChange={handleInputChange}
+                      required
+                      min="1"
                     />
-
                   </div>
+                  
                   <div className="col-md-4">
                     <label className="form-label">Daily Sessions</label>
-                    <input type="text" name="dailySessions" className="form-control" value={formData.dailySessions}
-                      onChange={handleInputChange} />
-                  </div>
-                </div>
-                <div className="course-row">
-                  <div class="col-md-4">
-                    <label for="inputState" class="form-label">Level</label>
-                    <select id="inputState" class="form-select" name='level' value={formData.level} onChange={handleInputChange}>
-                      <option selected>Select </option>
-                      <option>All Levels</option>
-                      <option>Beginner</option>
-                      <option>Intermediate</option>
-                      <option>Expert</option>
-                    </select>
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Star Rating</label>
-                    <input
-                      type="text"
-                      name="starRating"
-                      className="form-control"
-                      placeholder="Enter rating"
-                      value={formData.starRating}
+                    <input 
+                      type="text" 
+                      name="dailySessions" 
+                      className="form-control" 
+                      value={formData.dailySessions}
                       onChange={handleInputChange}
+                      placeholder="e.g., 2 hours daily"
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
+                  
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Rating by No. of People</label>
+                    <label className="form-label">
+                      Star Rating <span style={{ color: "red" }}>*</span>
+                    </label>
                     <input
-                      type="text"
+                      type="number"
+                      name="starRating"
+                      className="form-control"
+                      placeholder="Enter rating (1-5)"
+                      value={formData.starRating}
+                      onChange={handleInputChange}
+                      required
+                      min="1"
+                      max="5"
+                      step="0.1"
+                    />
+                  </div>
+                  
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Rating by No. of People <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      type="number"
                       name="ratingByNumberOfPeople"
                       className="form-control"
                       placeholder="Enter rating count"
                       value={formData.ratingByNumberOfPeople}
                       onChange={handleInputChange}
+                      required
+                      min="0"
                     />
                   </div>
+                  
                   <div className="col-md-4">
-                    <label className="form-label">Certified Students</label>
+                    <label className="form-label">
+                      Certified Students <span style={{ color: "red" }}>*</span>
+                    </label>
                     <input
-                      type="text"
+                      type="number"
                       name="totalEnrollment"
                       className="form-control"
                       placeholder="Enter Certified Students"
                       value={formData.totalEnrollment}
                       onChange={handleInputChange}
+                      required
+                      min="0"
                     />
                   </div>
-
+                  {formMode === 'Edit' && (
+                    <div className="col-md-4">
+                      <label className="form-label">
+                        Default Trainer <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <select
+                        className="form-select"
+                        name="defaultTrainer"
+                        value={formData.defaultTrainer}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="" disabled>
+                          Select Trainer
+                        </option>
+                        {trainers.map((trainer) => (
+                          <option key={trainer.id} value={trainer.name}>
+                            {trainer.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
-
               </div>
+              
+              {/* Key Highlights Section */}
               <div className='course-details'>
                 <h3>Key Highlights</h3>
                 <div className='course-row'>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 1</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights1' value={formData.keyHighlights1} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 1</label>
+                    <input type="text" className="form-control" name='keyHighlights1' value={formData.keyHighlights1} onChange={handleInputChange} />
                   </div>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 2</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights2' value={formData.keyHighlights2} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 2</label>
+                    <input type="text" className="form-control" name='keyHighlights2' value={formData.keyHighlights2} onChange={handleInputChange} />
                   </div>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 3</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights3' value={formData.keyHighlights3} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 3</label>
+                    <input type="text" className="form-control" name='keyHighlights3' value={formData.keyHighlights3} onChange={handleInputChange} />
                   </div>
                 </div>
                 <div className='course-row'>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 4</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights4' value={formData.keyHighlights4} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 4</label>
+                    <input type="text" className="form-control" name='keyHighlights4' value={formData.keyHighlights4} onChange={handleInputChange} />
                   </div>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 5</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights5' value={formData.keyHighlights5} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 5</label>
+                    <input type="text" className="form-control" name='keyHighlights5' value={formData.keyHighlights5} onChange={handleInputChange} />
                   </div>
-                  <div class="col-md-4">
-                    <label for="inputEmail4" class="form-label">Key Highlights 6</label>
-                    <input type="text" class="form-control" id="inputEmail4" name='keyHighlights6' value={formData.keyHighlights6} onChange={handleInputChange} />
+                  <div className="col-md-4">
+                    <label className="form-label">Key Highlights 6</label>
+                    <input type="text" className="form-control" name='keyHighlights6' value={formData.keyHighlights6} onChange={handleInputChange} />
                   </div>
                 </div>
               </div>
+              
+              {/* USD Fee Section */}
               <h3 style={{ marginTop: 20 }}>Mode Of Training Fee(USD)</h3>
               <div className="course-row">
                 {[
                   { label: "Live Training", amount: "amount", discount: "discount", total: "total" },
                   { label: "Crash Course Training", amount: "camount", discount: "cdiscount", total: "ctotal" },
-
                   { label: "Self Paced with Q&A", amount: "sqamount", discount: "sqdiscount", total: "sqtotal" },
                   { label: "Self Paced Training", amount: "samount", discount: "sdiscount", total: "stotal" },
                 ].map((mode, index) => (
@@ -863,12 +1055,12 @@ const CourseDetail = ({
                 ))}
               </div>
 
+              {/* INR Fee Section */}
               <h3 style={{ marginTop: 20 }}>Mode Of Training Fee(INR)</h3>
               <div className="course-row">
                 {[
                   { label: "Live Training", prefix: "i" },
                   { label: "Crash Course Training", prefix: "ic" },
-
                   { label: "Self Paced with Q&A", prefix: "isq" },
                   { label: "Self Paced Training", prefix: "is" },
                 ].map((mode, index) => (
@@ -915,55 +1107,60 @@ const CourseDetail = ({
                   </div>
                 ))}
               </div>
+              
+              {/* Sample Session Section */}
               <h3>Sample session</h3>
               <div className='course-row'>
                 <div className='course-details'>
                   <h4>Mentoring Training</h4>
                   <div className='course-col'>
-                    <div class="col-md-4">
-                      <label for="inputEmail4" class="form-label">Day 1</label>
-                      <input type="number" class="form-control-sample" id="inputEmail4" name='mentoring1' value={formData.mentoring1} onChange={handleInputChange} />
+                    <div className="col-md-4">
+                      <label className="form-label">Day 1</label>
+                      <input type="number" className="form-control-sample" name='mentoring1' value={formData.mentoring1} onChange={handleInputChange} />
                     </div>
-                    <div class="col-md-4">
-                      <label for="inputEmail4" class="form-label">Day 2</label>
-                      <input type="number" class="form-control-sample" id="inputEmail4" name='mentoring2' value={formData.mentoring2} onChange={handleInputChange} />
+                    <div className="col-md-4">
+                      <label className="form-label">Day 2</label>
+                      <input type="number" className="form-control-sample" name='mentoring2' value={formData.mentoring2} onChange={handleInputChange} />
                     </div>
                   </div>
                 </div>
                 <div className='course-details'>
                   <h4>Self Paced Training</h4>
                   <div className='course-col'>
-                    <div class="col-md-4">
-                      <label for="inputEmail4" class="form-label">Day 1</label>
-                      <input type="text" class="form-control-sample" id="inputEmail4" name='self1' value={formData.self1} onChange={handleInputChange} />
+                    <div className="col-md-4">
+                      <label className="form-label">Day 1</label>
+                      <input type="text" className="form-control-sample" name='self1' value={formData.self1} onChange={handleInputChange} />
                     </div>
-                    <div class="col-md-4">
-                      <label for="inputEmail4" class="form-label">Day 2</label>
-                      <input type="text" class="form-control-sample" id="inputEmail4" name='self2' value={formData.self2} onChange={handleInputChange} />
+                    <div className="col-md-4">
+                      <label className="form-label">Day 2</label>
+                      <input type="text" className="form-control-sample" name='self2' value={formData.self2} onChange={handleInputChange} />
                     </div>
                   </div>
                 </div>
               </div>
+              
+              {/* SEO Section */}
               <div className='course-row'>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Header Title</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange} />
+                <div className="col-md-4">
+                  <label className="form-label">Header Title</label>
+                  <input type="text" className="form-control" name='headerTitle' value={formData.headerTitle} onChange={handleInputChange} />
                 </div>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Course keyword with comma</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
+                <div className="col-md-4">
+                  <label className="form-label">Course keyword with comma</label>
+                  <input type="text" className="form-control" name='courseKeyword' value={formData.courseKeyword} onChange={handleInputChange} />
                 </div>
-                <div class="col-md-4">
-                  <label for="inputEmail4" class="form-label">Course keyword description</label>
-                  <input type="text" class="form-control" id="inputEmail4" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
+                <div className="col-md-4">
+                  <label className="form-label">Course keyword description</label>
+                  <input type="text" className="form-control" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
                 </div>
               </div>
-              <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">About Course(Add only 160 Characters)</label>
+              
+              {/* About Course Section */}
+              <div className="mb-3" style={{ paddingBottom: "20px" }}>
+                <label className="form-label">About Course(Add only 160 Characters)</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="inputEmail4"
                   name="aboutCourse"
                   value={formData.aboutCourse}
                   onChange={(e) => {
@@ -978,14 +1175,15 @@ const CourseDetail = ({
                     setAboutCharacterCount(count);
                   }}
                 />
-
                 <div style={{ marginLeft: '10px', marginTop: '8px', fontSize: '14px', color: aboutCharacterCount > 160 ? 'red' : 'black' }}>
                   Character Count: {aboutCharacterCount}/160
                 </div>
                 {aboutError && <p className="error-message" style={{ color: "red" }}>{aboutError}</p>}
               </div>
-              <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">Course Highlight(Add only 4 Lines)</label>
+              
+              {/* Course Highlight Section */}
+              <div className="mb-3" style={{ paddingBottom: "20px" }}>
+                <label className="form-label">Course Highlight(Add only 4 Lines)</label>
                 <ReactQuill
                   theme="snow"
                   id="courseHighlight"
@@ -1035,8 +1233,10 @@ const CourseDetail = ({
                 </div>
                 {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
               </div>
-              <div class="mb-3" style={{ paddingBottom: "20px" }}>
-                <label for="exampleFormControlTextarea1" class="form-label">Course Description</label>
+              
+              {/* Course Description Section */}
+              <div className="mb-3" style={{ paddingBottom: "20px" }}>
+                <label className="form-label">Course Description</label>
                 <ReactQuill
                   theme="snow"
                   id="courseDescription"
@@ -1075,6 +1275,8 @@ const CourseDetail = ({
                 />
                 {error && <p className="error-message">{error}</p>}
               </div>
+              
+              {/* Submit Buttons */}
               <div className="course-row">
                 <button
                   className="submit-btn"
@@ -1093,8 +1295,8 @@ const CourseDetail = ({
                   Reset
                 </button>
               </div>
-
             </form>
+            
             <Helmet>
               <title>{formData.headerTitle || 'Default Title'}</title>
               <meta name="description" content={formData.courseKeywordDescription || 'Default Description'} />
@@ -1187,7 +1389,7 @@ const CourseDetail = ({
                       </StyledTableRow>
                     )) : (
                       <StyledTableRow>
-                        <StyledTableCell colSpan={6} align="center">No courses available.</StyledTableCell>
+                        <StyledTableCell colSpan={8} align="center">No courses available.</StyledTableCell>
                       </StyledTableRow>
                     )}
                   </TableBody>
@@ -1210,4 +1412,5 @@ const CourseDetail = ({
     </>
   );
 };
+
 export default CourseDetail;

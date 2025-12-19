@@ -4,3 +4,30 @@
   box-sizing: border-box;
 font-style: Poppins;
 }
+
+/* Force Chatway to bottom-left */
+.chatway--container,
+.chatway--trigger-container {
+  left: 20px !important;
+  right: auto !important;
+  bottom: 20px !important;
+}
+
+/* Ensure iframe follows */
+.chatway--frame-container {
+  left: 20px !important;
+  right: auto !important;
+}
+
+/* Mobile safe */
+@media (max-width: 768px) {
+  .chatway--container,
+  .chatway--trigger-container {
+    left: 12px !important;
+    bottom: 12px !important;
+  }
+}
+
+.bp-webchat {
+  z-index: 2147483645 !important;
+}

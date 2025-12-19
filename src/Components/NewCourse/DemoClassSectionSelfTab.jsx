@@ -81,7 +81,7 @@ useEffect(() => {
       <div className={styles.dcrequestSection}>
         <div className={styles.dcrequestCard}>
           <div className={styles.dcrequestImage}>
-            <img src="request_batch_banner.png" alt="Student" />
+            <img src="/request_batch_banner.png" alt="Student" />
           </div>
 
           <div className={styles.dcrequestOverlay}>

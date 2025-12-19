@@ -4,11 +4,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import calendar from "../../Assets/calendar.webp";
 import { useParams } from "react-router-dom";
+import './RequestBatch.css'
 
 const RequestBatch = ({ closeModal }) => {
   const { courseName } = useParams();
 
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
   const [time, setTime] = useState("");
   const [mode, setMode] = useState("");
   const [mobile, setMobile] = useState("");
@@ -28,6 +29,11 @@ const RequestBatch = ({ closeModal }) => {
   const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
   const userName = userData.name || "";
   const userEmail = userData.email || "";
+
+  // Check if all required fields are filled
+  const isFormValid = () => {
+    return mode && startDate && time && mobile && userEmail;
+  };
 
   /* 🔒 Prevent background scroll */
   useEffect(() => {
@@ -50,6 +56,12 @@ const RequestBatch = ({ closeModal }) => {
   }, [userEmail]);
 
   const handleSubmit = async () => {
+    // Double-check validation before submission
+    if (!isFormValid()) {
+      setErrorMessage("❌ Please fill all required fields");
+      return;
+    }
+
     setLoading(true);
     setSuccessMessage("");
     setErrorMessage("");
@@ -88,148 +100,87 @@ const RequestBatch = ({ closeModal }) => {
 
   return (
     /* 🔹 Overlay */
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={closeModal}
-    >
-      {/* 🔹 Modal */}
+    <div className="requestBatchOverlay" onClick={closeModal}>
       <div
+        className="requestBatchModal"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          width: "420px",
-          maxWidth: "95%",
-          background: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.25)",
-          overflow: "hidden",
-          animation: "scaleIn 0.2s ease",
-        }}
       >
         {/* Header */}
-        <div
-          style={{
-            background: "linear-gradient(90deg,#0072ff,#00c6ff)",
-            color: "#fff",
-            padding: "14px 16px",
-            fontWeight: "600",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div className="requestBatchHeader">
           Let us know your preferred start date
           <AiOutlineCloseCircle
+            className="requestBatchCloseIcon"
             onClick={closeModal}
-            style={{ cursor: "pointer", fontSize: "22px" }}
           />
         </div>
 
         {/* Body */}
-        <div style={{ padding: "18px" }}>
-          {/* Mode */}
-          <label style={{ fontWeight: 500 }}>Mode of Trainings</label>
-          <select
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginTop: "6px" }}
-          >
-            <option value="">Select Mode</option>
-            <option>Live Class</option>
-            <option>Live Demo</option>
-            <option>Crash Course</option>
-            <option>Self-Paced</option>
-            <option>Corporate Training</option>
-          </select>
+        <div className="requestBatchBody">
+          <div className="requestBatchField">
+            <label className="requestBatchLabel">
+              Mode of Trainings <span className="required-star">*</span>
+            </label>
+            <select
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              className="requestBatchSelect"
+              required
+            >
+              <option value="">Select Mode</option>
+              <option value="Live Class">Live Class</option>
+              <option value="Live Demo">Live Demo</option>
+              <option value="Crash Course">Crash Course</option>
+              <option value="Self-Paced">Self-Paced</option>
+              <option value="Corporate Training">Corporate Training</option>
+            </select>
+          </div>
 
-          {/* Date */}
-          <label style={{ fontWeight: 500, marginTop: "14px", display: "block" }}>
-            Preferred batch start date
-          </label>
-          <div style={{ position: "relative", marginTop: "6px" }}>
-            <DatePicker
-              selected={startDate}
-              onChange={(d) => setStartDate(d)}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="DD/MM/YYYY"
-              ref={datePickerRef}
-              style={{ width: "100%" }}
-            />
-            <img
-              src={calendar}
-              alt="calendar"
-              onClick={() => datePickerRef.current.setFocus()}
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "8px",
-                width: "18px",
-                cursor: "pointer",
-              }}
+          <div className="requestBatchField">
+            <label className="requestBatchLabel">
+              Preferred batch start date <span className="required-star">*</span>
+            </label>
+            <div className="requestBatchDateWrapper">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="requestBatchDateInput"
+                ref={datePickerRef}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="requestBatchField">
+            <label className="requestBatchLabel">
+              Preferred batch Time <span className="required-star">*</span>
+            </label>
+            <input
+              type="time"
+              ref={timeInputRef}
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="requestBatchTimeInput"
+              required
             />
           </div>
 
-          {/* Time */}
-          <label style={{ fontWeight: 500, marginTop: "14px", display: "block" }}>
-            Preferred batch Time
-          </label>
-          <input
-            type="time"
-            ref={timeInputRef}
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginTop: "6px" }}
-          />
-
-          {/* Messages */}
           {successMessage && (
-            <p style={{ color: "green", marginTop: "10px" }}>
-              {successMessage}
-            </p>
+            <p className="requestBatchSuccess">{successMessage}</p>
           )}
           {errorMessage && (
-            <p style={{ color: "red", marginTop: "10px" }}>
-              {errorMessage}
-            </p>
+            <p className="requestBatchError">{errorMessage}</p>
           )}
 
-          {/* Submit */}
           <button
             onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              width: "100%",
-              marginTop: "16px",
-              padding: "10px",
-              background: "#0d6efd",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: "600",
-            }}
+            disabled={loading || !isFormValid()}
+            className={`requestBatchSubmitBtn ${!isFormValid() ? 'disabled' : ''}`}
           >
             {loading ? "Submitting..." : "Submit Request"}
           </button>
         </div>
       </div>
-
-      {/* animation */}
-      <style>
-        {`
-          @keyframes scaleIn {
-            from { opacity:0; transform:scale(0.95); }
-            to { opacity:1; transform:scale(1); }
-          }
-        `}
-      </style>
     </div>
   );
 };

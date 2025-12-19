@@ -1,0 +1,164 @@
+:root{
+  --ink:#0f172a;
+  --muted:#667085;
+  --border:#e6e8ee;
+  --card:#ffffff;
+  --soft:#f6f8fb;
+  --brand:#1aa6df;
+  --brand2:#ffd84a;
+  --shadow:0 18px 36px rgba(15,23,42,.08);
+}
+
+.iswrap{
+  padding-top:30px;
+  padding-bottom:30px;
+}
+
+.ishead{
+  text-align:center; margin-bottom:18px;
+}
+.ishead h2{
+  font-size:32px; font-weight:700; color:var(--ink);
+}
+.ishead p{
+  color: #000000; margin-top:16px; font-size: 18px; margin-bottom: 46px; font-weight: 300;
+}
+
+.iscard{
+  max-width:1350px; margin: 0 auto;
+  background: var(--card); border:1px solid var(--border);
+  border-radius:14px; display:grid; grid-template-columns: 0.8fr 1.2fr; gap: 22px;
+  padding: 0; overflow:hidden; box-shadow: var(--shadow);
+}
+
+/* photo */
+.isphoto{ position:relative; }
+.isphoto img{
+  display:block; width:100%; height:100%; object-fit:cover;
+}
+
+/* content */
+.iscontent{
+  padding:20px 22px;
+}
+.istopline{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.isname{
+  font-size:32px; font-weight:700; color:var(--ink); margin:0;
+}
+.isbadge{
+  display:inline-flex; align-items:center; gap:8px;
+  background: #F6EF26; color:#1d1a00;
+  font-weight:500; border-radius:999px; padding:4px 18px;
+}
+.istitle{
+  margin-top:20px; color:#1b78e0; font-weight:400; font-size:22px;
+}
+
+/* stats */
+.isstats{
+  margin-top:18px; display:flex; gap:16px; flex-wrap:wrap;
+}
+.isstat{
+  border-radius:12px;
+  padding:16px 18px; min-width:180px; text-align:left;
+  background: #f3f6ff; border:1px solid #e7ecff;
+}
+.isstat:nth-child(2) {
+  background: #f0fdf4; border-color: #dcfce7;
+}
+.isstat:nth-child(3) {
+  background: #fef3c7; border-color: #fde68a;
+}
+.isstatico{ display:inline-flex; margin-bottom:6px; margin-right: 10px;}
+.isstatico img{
+  width:24px; height:24px;
+}
+.isstat:nth-child(1) .isstatico { color:#2663EB; }
+.isstat:nth-child(2) .isstatico { color:#16A349; }
+.isstat:nth-child(3) .isstatico { color:#CA8A03; }
+.isstatval{ font-size:22px; font-weight:900; margin-bottom:4px; text-align: center; }
+.isstat:nth-child(1) .isstatval { color:#2663EB; }
+.isstat:nth-child(2) .isstatval { color:#16A349; }
+.isstat:nth-child(3) .isstatval { color:#CA8A03; }
+.isstatlab{ font-weight:700; font-size:13px; text-align: center; color: #000}
+
+.isbio{
+  margin-top:14px; color:#000000; line-height:1.6; font-size: 18px;
+}
+
+.issubhead{
+  margin-top:35px; font-weight:600; color:#0f172a; font-size:22px;
+}
+.islist{
+  margin-top:8px; color:#000000; display:grid; gap:8px; list-style: disc;
+}
+
+/* actions */
+.isactions{
+  margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;
+}
+.isbtn{
+  display:inline-flex; align-items:center; gap:8px;
+  border:0; padding:10px 24px; border-radius:999px; font-weight:400;
+  background: linear-gradient(90deg, var(--brand), #38c7ff);
+  color:#fff; cursor:pointer;
+  line-height: 5px;
+}
+.isbtnoutline{
+  background:#fff; border:1px solid var(--border);
+  color:#000000; box-shadow:0 4px 12px rgba(0,0,0,.04);
+}
+.isbtn .ico, .isbtnoutline .ico{ display:inline-flex; }
+.isbtn .ico img{
+    height: 22px;
+}
+/* responsive */
+@media (max-width: 1024px){
+  /* .iscard{ grid-template-columns: 1fr; } */
+  /* .isphoto{ height: 320px; } */
+}
+@media (max-width: 720px){
+  .iscard{ grid-template-columns: 1fr; }
+  .iscontent{ padding:12px 14px; }
+  .isname{ font-size:20px; font-weight: 600;}
+  .isbadge{ padding:4px 12px; font-size:10px; }
+  .isstat{ min-width: 120px; padding:10px 12px; }
+  .isphoto{ height:auto; }
+  .ishead h2{
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .ishead p{
+    font-size: 16px;
+  }
+  .istitle{
+            font-size: 14px;
+        margin-top: 10px;
+  }
+  .isstatlab{
+    font-weight: 400;
+  }
+  .isbio{
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .issubhead{
+    font-size: 20px;
+  }
+  .islist{
+        padding-left: 1rem;
+    font-size: 13px;
+  }
+  .isactions{
+    margin-bottom: 20px;
+  }
+  .isactions .isbtn{
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+    .isactions .isbtn .ico img{
+      height: 15px;
+    }
+}

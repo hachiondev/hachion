@@ -1,9 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import axios from "axios";
-import {
-  useCreateRazorpayOrder,
-  useCreatePaypalOrder,
-} from "./useDemoPaymentGateways";
 import { useQueryClient } from "@tanstack/react-query";
 
 const API_BASE = "https://api.test.hachion.co";
@@ -204,8 +200,47 @@ export function useDemoLivePayment({
       setEnrollErrorMessage("Paypal order creation failed.");
     }
   };
+  const handleEnrollPayLater = async (session) => {
+  try {
+    const payload = {
+      
+      studentId: userProfile.studentId,
+      name: userProfile.userName || userProfile.name || "",
+      email: userProfile.email,
+      mobile: userProfile.mobile || "",
+
+      course_name: courseNameForApi,
+      enroll_date: session.schedule_date,
+      time: session.time,
+      mode: "Live Class",
+      amount: 0,
+
+      trainer: session.trainer || "",
+      meeting_link: session.meeting_link || "",
+      batchId: session.batchId,
+      sendEmail: true,
+      sendWhatsApp: true,
+      sendText: false,
+      paymentType: "PAY_LATER",
+      paymentStatus: "PENDING",
+    };
+
+    await axios.post(`${API_BASE}/enroll/add`, payload);
+
+    setEnrollSuccessMessage(
+      "Enrollment successful. You can complete the payment later."
+    );
+  } catch (error) {
+    setEnrollErrorMessage(
+      error?.response?.data || "Enrollment failed"
+    );
+  }
+};
+
+
 
   return {
     handleLiveEnrollPayment,
+    handleEnrollPayLater
   };
 }

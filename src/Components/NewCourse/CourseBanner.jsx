@@ -6,13 +6,15 @@ import Medal from "../../Assets/icons/medal.svg";
 import LoginRequired from "./LoginRequired";
 import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
-import EnrollPay from "./EnrollPay";
+import NewEnrollNow from "../UserPanel/NewEnrollNow";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
 import { useTrainersByCourse } from "../../Api/hooks/CourseApi/useTrainersByCourse";
 import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
+
 
 dayjs.extend(customParseFormat);
 
@@ -83,7 +85,7 @@ export default function CourseBanner() {
 
 const courseNameForApi = courseName
   ? decodeURIComponent(courseName)
-      .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
+      .replace(/[-_]+/g, " ")   
       .trim()
       .toLowerCase()
   : "";
@@ -93,10 +95,22 @@ const courseNameForApi = courseName
   const [showLoginRequired, setShowLoginRequired] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showEnroll, setShowEnroll] = useState(false);
+  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
+  
+const onEnroll = () => {
+  if (!courseName) return;
 
-  const onEnroll = () => {
-    navigate("/enroll-now");
-  };
+  if (isProfileLoading) return;
+
+
+  if (!userProfile) {
+    setShowRegisterPrompt(true);
+    return;
+  }
+
+  navigate(`/enroll-now/${courseName}`);
+};
+
 
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
@@ -106,6 +120,7 @@ const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
+const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
 
 
 const hasSpecialDiscount = !!discountRule;
@@ -312,7 +327,7 @@ if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
   if (offerSaving > 0) {
     const roundedSaving = Math.round(offerSaving);
 
-    // Only India (INR) should show "/-"
+  
     const savingText =
       currency === "INR"
         ? `${currency} ${roundedSaving}/-`
@@ -487,7 +502,7 @@ const oldPrice = convertedOriginalFee
       )}
 
       {showEnroll && (
-        <EnrollPay
+        <NewEnrollNow
           courseName={course.courseName}
           totalAmount={price}
           onClose={() => setShowEnroll(false)}
@@ -505,6 +520,108 @@ const oldPrice = convertedOriginalFee
     isYoutube={hasYoutubeDemo}
     onClose={() => setShowVideo(false)}
   />
+)}
+{showRegisterPrompt && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.55)",
+      zIndex: 9999,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <div
+      style={{
+        width: "520px",
+        background: "#fff",
+        borderRadius: "12px",
+        display: "flex",
+        padding: "20px",
+        boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
+      }}
+    >
+      {/* LEFT IMAGE */}
+      <div
+        style={{
+          width: "42%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src={require("../../Assets/loginpopup.webp")}
+          alt="login popup"
+          style={{
+            width: "100%",
+            borderRadius: "8px",
+            objectFit: "cover",
+            transform: "scaleX(-1)",
+          }}
+        />
+      </div>
+
+      {/* RIGHT CONTENT */}
+      <div
+        style={{
+          width: "58%",
+          paddingLeft: "14px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
+          Please Login
+        </h3>
+
+        <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+          Before proceeding, please login into our Hachion.
+        </p>
+
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            style={{
+              padding: "8px 14px",
+              borderRadius: "6px",
+              border: "none",
+              background: "#2563eb",
+              color: "#fff",
+              fontSize: "14px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              navigate("/login");
+              setShowRegisterPrompt(false);
+            }}
+          >
+            Login
+          </button>
+
+          <button
+            style={{
+              padding: "8px 14px",
+              background: "#f1f5f9",
+              color: "#333",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              fontSize: "14px",
+              cursor: "pointer",
+            }}
+            onClick={() => setShowRegisterPrompt(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 )}
 
     </section>

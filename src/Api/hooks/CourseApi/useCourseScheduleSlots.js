@@ -59,7 +59,7 @@ export function useCourseScheduleSlots({ courseSlug, timezone }) {
       mode: item.schedule_mode,
       trainer: item.trainer_name,
       batchId: item.batchId,
-      meetingLink: item.meeting_link,
+      meeting_link: item.meeting_link,
 
       schduleTitleCourseName: item.schedule_course_name,
   categoryName: item.schedule_category_name,

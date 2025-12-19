@@ -126,7 +126,7 @@ function AppRoutes() {
           <Route path="/view-all-reviews" element={<ViewReviews />} />
           <Route path="/coursedetails" element={<Course />} />
           {/* <Route path="/newcoursedetails" element={<NewCourseDetails />} /> */}
-          <Route path="/enroll-now" element={<NewEnrollNow />} />
+          <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
           {/* <Route
             path="/coursedetails/:courseName"
             element={<CourseDetails />}

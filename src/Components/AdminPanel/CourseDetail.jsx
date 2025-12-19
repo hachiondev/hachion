@@ -80,19 +80,37 @@ const CourseDetail = ({
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining:'', crashCourse: '', mentoringMode:'',selfPacedLearning: '',
   });
-
-  // Fetch trainers from API
-  useEffect(() => {
-    const fetchTrainers = async () => {
+// Fetch trainers based on Category + Course (EDIT MODE ONLY)
+useEffect(() => {
+  const fetchTrainerNames = async () => {
+    if (
+      formMode === "Edit" &&
+      formData.courseCategory &&
+      formData.courseName
+    ) {
       try {
-        const response = await axios.get("https://api.test.hachion.co/api/v1/trainers/all");
+        const response = await axios.get(
+          "https://api.test.hachion.co/trainernames",
+          {
+            params: {
+              categoryName: formData.courseCategory,
+              courseName: formData.courseName,
+            },
+          }
+        );
+
+        // response.data is List<String>
         setTrainers(response.data);
       } catch (error) {
-        console.error("Error fetching trainers:", error);
+        console.error("Error fetching trainer names:", error);
+        setTrainers([]);
       }
-    };
-    fetchTrainers();
-  }, []);
+    }
+  };
+
+  fetchTrainerNames();
+}, [formMode, formData.courseCategory, formData.courseName]);
+
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -943,29 +961,31 @@ const CourseDetail = ({
                       min="0"
                     />
                   </div>
-                  {formMode === 'Edit' && (
-                    <div className="col-md-4">
-                      <label className="form-label">
-                        Default Trainer <span style={{ color: "red" }}>*</span>
-                      </label>
-                      <select
-                        className="form-select"
-                        name="defaultTrainer"
-                        value={formData.defaultTrainer}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="" disabled>
-                          Select Trainer
-                        </option>
-                        {trainers.map((trainer) => (
-                          <option key={trainer.id} value={trainer.name}>
-                            {trainer.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
+                 {formMode === 'Edit' && (
+  <div className="col-md-4">
+    <label className="form-label">
+      Default Trainer <span style={{ color: "red" }}>*</span>
+    </label>
+    <select
+      className="form-select"
+      name="defaultTrainer"
+      value={formData.defaultTrainer}
+      onChange={handleInputChange}
+      required
+    >
+      <option value="" disabled>
+        Select Trainer
+      </option>
+
+      {trainers.map((trainerName, index) => (
+        <option key={index} value={trainerName}>
+          {trainerName}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
                 </div>
               </div>
               

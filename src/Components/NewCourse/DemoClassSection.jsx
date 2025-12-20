@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../utils";
 // import RequestCustomBatch from "./RequestCustomBatch";
@@ -27,7 +27,7 @@ const tabs = [
 ];
 
 
-export default function DemoClassSection() {
+const DemoClassSection = forwardRef((props, ref) => {
   const [activeTab, setActiveTab] = useState("live");
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
@@ -273,7 +273,7 @@ export default function DemoClassSection() {
   ];
 
   return (
-    <section className={styles.dcwrap}>
+    <section className={styles.dcwrap} ref={ref} id="demoClassSection">
       <div className="container">
         {/* Offer strip */}
         {showOfferStrip && (
@@ -488,4 +488,6 @@ export default function DemoClassSection() {
       )}
     </section>
   );
-}
+});
+
+export default DemoClassSection;

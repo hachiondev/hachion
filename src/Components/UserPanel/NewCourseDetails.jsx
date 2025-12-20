@@ -10,9 +10,10 @@ import LearnSection from '../NewCourse/LearnSection';
 import StudentsAlsoEnrolled from '../NewCourse/StudentsAlsoEnrolled';
 import StudentsSay from '../NewCourse/StudentsSay';
 import SuccessStories from '../NewCourse/SuccessStories';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const NewCourseDetails = () => {
+    const demoClassRef = useRef(null);
   useEffect(() => {
   window.scrollTo({
     top: 0,
@@ -20,14 +21,21 @@ const NewCourseDetails = () => {
     behavior: "smooth",
   });
 }, []);
+
+  const scrollToDemoClass = () => {
+    demoClassRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
   return (
     <div>
       <CourseBanner
-        onEnroll={() => console.log("Enroll clicked")}
+       onEnroll={scrollToDemoClass}
         onAddToCart={() => console.log("Add to cart")}
       />
       <LearnSection />
-      <DemoClassSection />
+      <DemoClassSection ref={demoClassRef}/>
       <CourseCurriculum />
       <InstructorSection />
       {/* <CareerOutcomes /> */}

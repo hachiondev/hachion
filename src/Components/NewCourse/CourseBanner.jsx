@@ -79,16 +79,16 @@ const stripHtml = (html) => {
   return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 };
 
-export default function CourseBanner() {
+export default function CourseBanner({ onEnroll }) {
   const navigate = useNavigate();
   const { courseName } = useParams();
 
-const courseNameForApi = courseName
-  ? decodeURIComponent(courseName)
-      .replace(/[-_]+/g, " ")   
+  const courseNameForApi = courseName
+    ? decodeURIComponent(courseName)
+      .replace(/[-_]+/g, " ")
       .trim()
       .toLowerCase()
-  : "";
+    : "";
 
 
 
@@ -96,59 +96,59 @@ const courseNameForApi = courseName
   const [showVideo, setShowVideo] = useState(false);
   const [showEnroll, setShowEnroll] = useState(false);
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
-  
-const onEnroll = () => {
-  if (!courseName) return;
 
-  if (isProfileLoading) return;
+  // const onEnroll = () => {
+  //   if (!courseName) return;
+
+  //   if (isProfileLoading) return;
 
 
-  if (!userProfile) {
-    setShowRegisterPrompt(true);
-    return;
-  }
+  //   if (!userProfile) {
+  //     setShowRegisterPrompt(true);
+  //     return;
+  //   }
 
-  navigate(`/enroll-now/${courseName}`);
-};
+  //   navigate(`/enroll-now/${courseName}`);
+  // };
 
 
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
-const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
+  const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
   const { data: trainers = [] } = useTrainersByCourse(courseNameForApi);
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
-const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
+  const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
 
 
-const hasSpecialDiscount = !!discountRule;
-const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
-const discountType = discountRule?.discountType || "PERCENTAGE";
-const discountFixedAmount = discountRule?.discountAmount ?? 0;
+  const hasSpecialDiscount = !!discountRule;
+  const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
+  const discountType = discountRule?.discountType || "PERCENTAGE";
+  const discountFixedAmount = discountRule?.discountAmount ?? 0;
 
 
-const offerRightText = (() => {
-  if (!discountRule?.endDate) return "";
+  const offerRightText = (() => {
+    if (!discountRule?.endDate) return "";
 
-  const end = dayjs(discountRule.endDate, ["MM/DD/YYYY", "YYYY-MM-DD"], true).endOf("day");
-  if (!end.isValid()) return "";
+    const end = dayjs(discountRule.endDate, ["MM/DD/YYYY", "YYYY-MM-DD"], true).endOf("day");
+    if (!end.isValid()) return "";
 
-  const now = dayjs();
-  if (!end.isAfter(now)) return "";
+    const now = dayjs();
+    if (!end.isAfter(now)) return "";
 
-  const diffDays = end.diff(now, "day");
+    const diffDays = end.diff(now, "day");
 
-  if (diffDays >= 1) {
-    return `⏳ Hurry! Offer ends in ${diffDays} day${diffDays > 1 ? "s" : ""}`;
-  }
+    if (diffDays >= 1) {
+      return `⏳ Hurry! Offer ends in ${diffDays} day${diffDays > 1 ? "s" : ""}`;
+    }
 
-  const diffHours = Math.max(1, end.diff(now, "hour"));
-  return `⏳ Hurry! Offer ends in ${diffHours} hour${diffHours > 1 ? "s" : ""}`;
-})();
+    const diffHours = Math.max(1, end.diff(now, "hour"));
+    return `⏳ Hurry! Offer ends in ${diffHours} hour${diffHours > 1 ? "s" : ""}`;
+  })();
 
-const showOfferStrip = hasSpecialDiscount && offerRightText;
+  const showOfferStrip = hasSpecialDiscount && offerRightText;
 
 
   if (isLoading) {
@@ -201,163 +201,163 @@ const showOfferStrip = hasSpecialDiscount && offerRightText;
     ? `${course.numberOfClasses} Classes`
     : "Duration will be updated soon";
 
-const baseDiscount = course.idiscount ?? course.discount ?? 0; 
-const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
+  const baseDiscount = course.idiscount ?? course.discount ?? 0;
+  const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
 
-let convertedTotalFee = 0;
-let convertedOriginalFee = 0;
+  let convertedTotalFee = 0;
+  let convertedOriginalFee = 0;
 
-if (currency === "INR") {
-  const inrPlans = [
-    { total: course.itotal,  amount: course.iamount },
-    { total: course.ictotal, amount: course.icamount },
-    { total: course.imtotal, amount: course.imamount },
-    { total: course.isqtotal, amount: course.isqamount },
-    { total: course.istotal, amount: course.isamount },
-  ].filter(
-    (p) =>
-      (p.total != null && p.total > 0) ||
-      (p.amount != null && p.amount > 0)
-  );
-
-  if (inrPlans.length > 0) {
-    const minTotal = Math.min(
-      ...inrPlans.map((p) => (p.total ?? p.amount))
+  if (currency === "INR") {
+    const inrPlans = [
+      { total: course.itotal, amount: course.iamount },
+      { total: course.ictotal, amount: course.icamount },
+      { total: course.imtotal, amount: course.imamount },
+      { total: course.isqtotal, amount: course.isqamount },
+      { total: course.istotal, amount: course.isamount },
+    ].filter(
+      (p) =>
+        (p.total != null && p.total > 0) ||
+        (p.amount != null && p.amount > 0)
     );
-    const bestPlan =
-      inrPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
-      inrPlans[0];
 
-    const originalAmount = bestPlan.amount ?? 0; 
+    if (inrPlans.length > 0) {
+      const minTotal = Math.min(
+        ...inrPlans.map((p) => (p.total ?? p.amount))
+      );
+      const bestPlan =
+        inrPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
+        inrPlans[0];
 
-    if (hasSpecialDiscount) {
-      
-      let discountedAmount = originalAmount;
+      const originalAmount = bestPlan.amount ?? 0;
 
-      if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
-        const discountValue = (originalAmount * ruleDiscountPct) / 100;
-        discountedAmount = originalAmount - discountValue;
-      } else if (discountType === "FIXED" && discountFixedAmount) {
-        const discountValue = discountFixedAmount;
-        discountedAmount = Math.max(0, originalAmount - discountValue);
+      if (hasSpecialDiscount) {
+
+        let discountedAmount = originalAmount;
+
+        if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
+          const discountValue = (originalAmount * ruleDiscountPct) / 100;
+          discountedAmount = originalAmount - discountValue;
+        } else if (discountType === "FIXED" && discountFixedAmount) {
+          const discountValue = discountFixedAmount;
+          discountedAmount = Math.max(0, originalAmount - discountValue);
+        } else {
+
+          discountedAmount = bestPlan.total ?? originalAmount;
+        }
+
+        convertedOriginalFee = originalAmount;
+        convertedTotalFee = discountedAmount;
       } else {
-        
-        discountedAmount = bestPlan.total ?? originalAmount;
+
+        convertedTotalFee = bestPlan.total ?? originalAmount;
+        convertedOriginalFee = originalAmount;
       }
-
-      convertedOriginalFee = originalAmount;      
-      convertedTotalFee = discountedAmount;       
-    } else {
-      
-      convertedTotalFee = bestPlan.total ?? originalAmount;
-      convertedOriginalFee = originalAmount;
     }
-  }
-} else {
-  const usdPlans = [
-    { total: course.total,  amount: course.amount },
-    { total: course.ctotal, amount: course.camount },
-    { total: course.mtotal, amount: course.mamount },
-    { total: course.sqtotal, amount: course.sqamount },
-    { total: course.stotal, amount: course.samount },
-  ].filter(
-    (p) =>
-      (p.total != null && p.total > 0) ||
-      (p.amount != null && p.amount > 0)
-  );
-
-  if (usdPlans.length > 0) {
-    const minTotal = Math.min(
-      ...usdPlans.map((p) => (p.total ?? p.amount))
+  } else {
+    const usdPlans = [
+      { total: course.total, amount: course.amount },
+      { total: course.ctotal, amount: course.camount },
+      { total: course.mtotal, amount: course.mamount },
+      { total: course.sqtotal, amount: course.sqamount },
+      { total: course.stotal, amount: course.samount },
+    ].filter(
+      (p) =>
+        (p.total != null && p.total > 0) ||
+        (p.amount != null && p.amount > 0)
     );
-    const bestPlan =
-      usdPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
-      usdPlans[0];
 
-    const originalAmount = bestPlan.amount ?? 0; 
+    if (usdPlans.length > 0) {
+      const minTotal = Math.min(
+        ...usdPlans.map((p) => (p.total ?? p.amount))
+      );
+      const bestPlan =
+        usdPlans.find((p) => (p.total ?? p.amount) === minTotal) ||
+        usdPlans[0];
 
-    if (hasSpecialDiscount) {
-      
-      let discountedAmount = originalAmount;
+      const originalAmount = bestPlan.amount ?? 0;
 
-      if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
-        const discountValue = (originalAmount * ruleDiscountPct) / 100;
-        discountedAmount = originalAmount - discountValue;
-      } else if (discountType === "FIXED" && discountFixedAmount) {
-        const discountValue = discountFixedAmount;
-        discountedAmount = Math.max(0, originalAmount - discountValue);
+      if (hasSpecialDiscount) {
+
+        let discountedAmount = originalAmount;
+
+        if (discountType === "PERCENTAGE" && ruleDiscountPct && originalAmount) {
+          const discountValue = (originalAmount * ruleDiscountPct) / 100;
+          discountedAmount = originalAmount - discountValue;
+        } else if (discountType === "FIXED" && discountFixedAmount) {
+          const discountValue = discountFixedAmount;
+          discountedAmount = Math.max(0, originalAmount - discountValue);
+        } else {
+          discountedAmount = bestPlan.total ?? originalAmount;
+        }
+
+        convertedOriginalFee = originalAmount * exchangeRate;
+        convertedTotalFee = discountedAmount * exchangeRate;
       } else {
-        discountedAmount = bestPlan.total ?? originalAmount;
+
+        convertedTotalFee = (bestPlan.total ?? originalAmount) * exchangeRate;
+        convertedOriginalFee = originalAmount * exchangeRate;
       }
-
-      convertedOriginalFee = originalAmount * exchangeRate;      
-      convertedTotalFee = discountedAmount * exchangeRate;       
-    } else {
-      
-      convertedTotalFee = (bestPlan.total ?? originalAmount) * exchangeRate;
-      convertedOriginalFee = originalAmount * exchangeRate;
     }
   }
-}
 
-let offerSaving = 0;
-let offerLeftText = "";
+  let offerSaving = 0;
+  let offerLeftText = "";
 
-// if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
-//   offerSaving = convertedOriginalFee - convertedTotalFee;
+  // if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
+  //   offerSaving = convertedOriginalFee - convertedTotalFee;
 
-//   if (offerSaving > 0) {
-//     if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-      
-//       offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${currency} ${Math.round(
-//         offerSaving
-//       )}/-`;
-//     } else {
-      
-//       offerLeftText = `Flash Sale! Save ${currency} ${Math.round(
-//         offerSaving
-//       )}/-`;
-//     }
-//   }
-// }
+  //   if (offerSaving > 0) {
+  //     if (discountType === "PERCENTAGE" && ruleDiscountPct) {
 
-if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
-  offerSaving = convertedOriginalFee - convertedTotalFee;
+  //       offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${currency} ${Math.round(
+  //         offerSaving
+  //       )}/-`;
+  //     } else {
 
-  if (offerSaving > 0) {
-    const roundedSaving = Math.round(offerSaving);
+  //       offerLeftText = `Flash Sale! Save ${currency} ${Math.round(
+  //         offerSaving
+  //       )}/-`;
+  //     }
+  //   }
+  // }
 
-  
-    const savingText =
-      currency === "INR"
-        ? `${currency} ${roundedSaving}/-`
-        : `${currency} ${roundedSaving}`;
+  if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
+    offerSaving = convertedOriginalFee - convertedTotalFee;
 
-    if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-      offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${savingText}`;
-    } else {
-      offerLeftText = `Flash Sale! Save ${savingText}`;
+    if (offerSaving > 0) {
+      const roundedSaving = Math.round(offerSaving);
+
+
+      const savingText =
+        currency === "INR"
+          ? `${currency} ${roundedSaving}/-`
+          : `${currency} ${roundedSaving}`;
+
+      if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+        offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${savingText}`;
+      } else {
+        offerLeftText = `Flash Sale! Save ${savingText}`;
+      }
     }
   }
-}
 
-const price = convertedTotalFee
-  ? `${currency} ${Math.round(convertedTotalFee)}`
-  : "Price on request";
+  const price = convertedTotalFee
+    ? `${currency} ${Math.round(convertedTotalFee)}`
+    : "Price on request";
 
-const oldPrice = convertedOriginalFee
-  ? `${currency} ${Math.round(convertedOriginalFee)}`
-  : "";
+  const oldPrice = convertedOriginalFee
+    ? `${currency} ${Math.round(convertedOriginalFee)}`
+    : "";
 
 
   return (
     <section className={styles.bnwrap}>
-{showOfferStrip && (
-  <OfferStrip
-    leftText={offerLeftText}
-    rightText={offerRightText}
-  />
-)}
+      {showOfferStrip && (
+        <OfferStrip
+          leftText={offerLeftText}
+          rightText={offerRightText}
+        />
+      )}
 
       <div className={styles.bncardmain}>
         <div className={`container ${styles.bncard}`}>
@@ -365,7 +365,13 @@ const oldPrice = convertedOriginalFee
           <div className={styles.bnleft}>
             <span className={styles.bnchip}>{level}</span>
 
-            <h1 className={styles.bntitle}>{title}</h1>
+            <div className={styles.titleGroup}>
+              <h1 className={styles.bntitle}>{title}</h1>
+            <p class={styles.feeGroup}>
+              <span className={styles.fee}>Fee:</span>
+              <span class={styles.start}>Starts from </span>
+               <span class={styles.amount}>INR 500/-</span></p>
+            </div>
 
             <p className={styles.bnsub}>{subtitle}</p>
 
@@ -433,60 +439,60 @@ const oldPrice = convertedOriginalFee
           </div>
 
           {/* Right */}
-<div className={styles.bnright}>
-  <div className={styles.bnhero}>
-    <img
-      src={
-        hasYoutubeDemo
-          ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-          : heroImage
-      }
-      alt="Course preview"
-    />
+          <div className={styles.bnright}>
+            <div className={styles.bnhero}>
+              <img
+                src={
+                  hasYoutubeDemo
+                    ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+                    : heroImage
+                }
+                alt="Course preview"
+              />
 
-    {hasYoutubeDemo && (
-      <button
-        className={styles.bnplay}
-        aria-label="Watch demo video"
-        onClick={() => setShowVideo(true)}
-      >
-        <Play />
-      </button>
-    )}
+              {hasYoutubeDemo && (
+                <button
+                  className={styles.bnplay}
+                  aria-label="Watch demo video"
+                  onClick={() => setShowVideo(true)}
+                >
+                  <Play />
+                </button>
+              )}
 
-    <div className={styles.bnherotext}>
-      {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
-    </div>
+              <div className={styles.bnherotext}>
+                {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
+              </div>
 
-    <div className={styles.bnstats}>
-      <div className={styles.bnstat}>
-        <div
-          className={cn(styles.bnstatval, styles.bnstatvalBlue)}
-        >
-          {course.numberOfClasses || 12}
-        </div>
-        <div className={styles.bnstatlabel}>Classes</div>
-      </div>
-      <div className={styles.bnstat}>
-        <div
-          className={cn(styles.bnstatval, styles.bnstatvalGreen)}
-        >
-          {course.numberOfProjects || 3}
-        
-        </div>
-        <div className={styles.bnstatlabel}>Projects</div>
-      </div>
-      <div className={styles.bnstat}>
-        <div
-          className={cn(styles.bnstatval, styles.bnstatvalPurple)}
-        >
-          24/7
-        </div>
-        <div className={styles.bnstatlabel}>Support</div>
-      </div>
-    </div>
-  </div>
-</div>
+              <div className={styles.bnstats}>
+                <div className={styles.bnstat}>
+                  <div
+                    className={cn(styles.bnstatval, styles.bnstatvalBlue)}
+                  >
+                    {course.numberOfClasses || 12}
+                  </div>
+                  <div className={styles.bnstatlabel}>Classes</div>
+                </div>
+                <div className={styles.bnstat}>
+                  <div
+                    className={cn(styles.bnstatval, styles.bnstatvalGreen)}
+                  >
+                    {course.numberOfProjects || 3}
+
+                  </div>
+                  <div className={styles.bnstatlabel}>Projects</div>
+                </div>
+                <div className={styles.bnstat}>
+                  <div
+                    className={cn(styles.bnstatval, styles.bnstatvalPurple)}
+                  >
+                    24/7
+                  </div>
+                  <div className={styles.bnstatlabel}>Support</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
 
         </div>
@@ -510,119 +516,119 @@ const oldPrice = convertedOriginalFee
         />
       )}
 
-    {showVideo && (
-  <VideoModal
-    videoSrc={
-      hasYoutubeDemo
-        ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1`
-        : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-    }
-    isYoutube={hasYoutubeDemo}
-    onClose={() => setShowVideo(false)}
-  />
-)}
-{showRegisterPrompt && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.55)",
-      zIndex: 9999,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
-    <div
-      style={{
-        width: "520px",
-        background: "#fff",
-        borderRadius: "12px",
-        display: "flex",
-        padding: "20px",
-        boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
-      }}
-    >
-      {/* LEFT IMAGE */}
-      <div
-        style={{
-          width: "42%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src={require("../../Assets/loginpopup.webp")}
-          alt="login popup"
-          style={{
-            width: "100%",
-            borderRadius: "8px",
-            objectFit: "cover",
-            transform: "scaleX(-1)",
-          }}
+      {showVideo && (
+        <VideoModal
+          videoSrc={
+            hasYoutubeDemo
+              ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1`
+              : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          }
+          isYoutube={hasYoutubeDemo}
+          onClose={() => setShowVideo(false)}
         />
-      </div>
-
-      {/* RIGHT CONTENT */}
-      <div
-        style={{
-          width: "58%",
-          paddingLeft: "14px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
-          Please Login
-        </h3>
-
-        <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
-          Before proceeding, please login into our Hachion.
-        </p>
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button
+      )}
+      {showRegisterPrompt && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.55)",
+            zIndex: 9999,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
             style={{
-              padding: "8px 14px",
-              borderRadius: "6px",
-              border: "none",
-              background: "#2563eb",
-              color: "#fff",
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              navigate("/login");
-              setShowRegisterPrompt(false);
+              width: "520px",
+              background: "#fff",
+              borderRadius: "12px",
+              display: "flex",
+              padding: "20px",
+              boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
             }}
           >
-            Login
-          </button>
+            {/* LEFT IMAGE */}
+            <div
+              style={{
+                width: "42%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={require("../../Assets/loginpopup.webp")}
+                alt="login popup"
+                style={{
+                  width: "100%",
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                  transform: "scaleX(-1)",
+                }}
+              />
+            </div>
 
-          <button
-            style={{
-              padding: "8px 14px",
-              background: "#f1f5f9",
-              color: "#333",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
-            onClick={() => setShowRegisterPrompt(false)}
-          >
-            Cancel
-          </button>
+            {/* RIGHT CONTENT */}
+            <div
+              style={{
+                width: "58%",
+                paddingLeft: "14px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
+                Please Login
+              </h3>
+
+              <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+                Before proceeding, please login into our Hachion.
+              </p>
+
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  style={{
+                    padding: "8px 14px",
+                    borderRadius: "6px",
+                    border: "none",
+                    background: "#2563eb",
+                    color: "#fff",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    navigate("/login");
+                    setShowRegisterPrompt(false);
+                  }}
+                >
+                  Login
+                </button>
+
+                <button
+                  style={{
+                    padding: "8px 14px",
+                    background: "#f1f5f9",
+                    color: "#333",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setShowRegisterPrompt(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
     </section>
   );

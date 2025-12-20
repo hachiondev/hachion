@@ -23,9 +23,9 @@ export default function UserEnrolledCourses() {
         if (!email) return;
 
         const [enrollRes, coursesRes, trainersRes] = await Promise.all([
-          axios.get("https://api.test.hachion.co/enroll"),
-          axios.get("https://api.test.hachion.co/courses/all"),
-          axios.get("https://api.test.hachion.co/trainers"),
+          axios.get("https://api.hachion.co/enroll"),
+          axios.get("https://api.hachion.co/courses/all"),
+          axios.get("https://api.hachion.co/trainers"),
         ]);
 
         const allEnrollments = Array.isArray(enrollRes.data) ? enrollRes.data : [];
@@ -141,7 +141,7 @@ export default function UserEnrolledCourses() {
                 <UserEnrolledCards
                   key={course.id || index}
                   heading={course.course_name || course.courseName}
-                  image={`https://api.test.hachion.co/${course.courseImage}`}
+                  image={`https://api.hachion.co/${course.courseImage}`}
                   level={course.level}
                   trainer_name={course.trainer}
                   month={course.numberOfClasses}

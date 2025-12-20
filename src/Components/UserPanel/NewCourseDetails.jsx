@@ -10,12 +10,8 @@ import LearnSection from '../NewCourse/LearnSection';
 import StudentsAlsoEnrolled from '../NewCourse/StudentsAlsoEnrolled';
 import StudentsSay from '../NewCourse/StudentsSay';
 import SuccessStories from '../NewCourse/SuccessStories';
-import { useEffect } from 'react';
 
 const NewCourseDetails = () => {
-    useEffect(() => {
-  window.scrollTo({top: 0, left: 0,behavior: "smooth" });
-}, []);
   return (
     <div>
       <CourseBanner
@@ -26,21 +22,19 @@ const NewCourseDetails = () => {
       <DemoClassSection />
       <CourseCurriculum />
       <InstructorSection />
-      {/* <CareerOutcomes /> */}
+      <CareerOutcomes />
       <CertificateSection />
-      {/* <SuccessStories /> */}
-      {/* <StudentsSay onCta={() => console.log("Start your journey")} /> */}
-      <StudentsSay />
-
+      <SuccessStories />
+      <StudentsSay onCta={() => console.log("Start your journey")} />
       <StudentsAlsoEnrolled />
       <FAQSection
         onChat={() => console.log("Open chat widget")}
         onSchedule={() => console.log("Open scheduler")}
       />
-      {/* <FinalCTA
+      <FinalCTA
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
-      /> */}
+      />
 
     </div>
   );

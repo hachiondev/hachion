@@ -25,8 +25,8 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 import 'react-quill/dist/quill.snow.css'
 import { FiUpload } from "react-icons/fi";
-import { useCategories } from "../../Api/hooks/NavbarApi/useCategories";
-import { useCourses } from "../../Api/hooks/NavbarApi/useCourses";
+import { useCategories } from "../../Api/hooks/HomePageApi/NavbarApi/useCategories";
+import { useCourses } from "../../Api/hooks/HomePageApi/NavbarApi/useCourses";
 import { useAddTools } from "../../Api/hooks/AdminTools/useAddTools";
 import { useGetAllToolsFlat } from "../../Api/hooks/AdminTools/useGetAllToolsFlat";
 import { useUpdateToolItem } from "../../Api/hooks/AdminTools/useUpdateToolItem";

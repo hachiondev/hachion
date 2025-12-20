@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
 import Knowledgebanner from "../../Assets/instructor.webp";
-import { Link } from "react-router-dom";
 import {  useNavigate } from 'react-router-dom';
 import "./Home.css";
 

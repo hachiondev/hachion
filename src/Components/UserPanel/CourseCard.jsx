@@ -31,7 +31,7 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
 
     // (async () => {
     //   try {
-    //     const { data } = await axios.get('https://api.test.hachion.co/api/wishlist/exists', {
+    //     const { data } = await axios.get('https://api.hachion.co/api/wishlist/exists', {
     //       params: { email, courseId: course_id }
     //     });
     //     if (!stop && data && typeof data.bookmarked === 'boolean') {
@@ -100,7 +100,7 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
     }
 
     // try {
-    //   const { data } = await axios.post('https://api.test.hachion.co/api/wishlist/toggle', {
+    //   const { data } = await axios.post('https://api.hachion.co/api/wishlist/toggle', {
     //     email,
     //     courseId: course_id
     //   });
@@ -163,28 +163,11 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
           {timeLeftLabel ? (<div className="discount-duration">{timeLeftLabel}</div>) : null}
         </div>
 
-        <button
-  className="card-view-btn"
-  onClick={(e) => {
-    e.stopPropagation();
-
-    if (staticButtonLink) {
-      navigate(staticButtonLink);
-      return;
-    }
-
-    if (onClick) {
-      onClick(); // ✅ no event passed
-      return;
-    }
-
-    // fallback safety
-    handleNavigation();
-  }}
->
-  View Details
-</button>
-
+        <button className="card-view-btn" onClick={(e) => {
+          e.stopPropagation();
+          if (staticButtonLink) return navigate(staticButtonLink);
+          if (onClick) return onClick(e);
+        }}>View Details</button>
       </div>
     </div>
   );

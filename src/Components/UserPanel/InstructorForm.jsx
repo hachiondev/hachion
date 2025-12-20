@@ -9,7 +9,7 @@ import { GrAttachment } from "react-icons/gr";
 import axios from "axios";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const InstructorForm = ({ onClose }) => {
   const navigate = useNavigate();

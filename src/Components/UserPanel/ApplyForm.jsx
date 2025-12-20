@@ -45,7 +45,7 @@ const ApplyForm = () => {
       return;
     }
     if (userEmail && jobId) {
-  fetch(`https://api.test.hachion.co/apply-job/check?jobId=${jobId}&email=${userEmail}`)
+  fetch(`https://api.hachion.co/apply-job/check?jobId=${jobId}&email=${userEmail}`)
     .then(res => res.json())
     .then((isApplied) => {
       setAlreadyApplied(isApplied);
@@ -58,7 +58,7 @@ const ApplyForm = () => {
     values.email = userEmail;
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+        const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
 
@@ -106,7 +106,7 @@ const ApplyForm = () => {
     formData.append("data", new Blob([JSON.stringify(requestData)], { type: "application/json" }));
 
     try {
-      const response = await axios.post("https://api.test.hachion.co/apply-job/create", formData, {
+      const response = await axios.post("https://api.hachion.co/apply-job/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

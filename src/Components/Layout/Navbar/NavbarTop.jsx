@@ -5,16 +5,17 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import "../../../Components/UserPanel/Home.css";
 import "../../../Components/UserPanel/Course.css";
-import { useCourses } from "../../../Api/hooks/NavbarApi/useCourses";
-import { useBlogs } from "../../../Api/hooks/NavbarApi/useBlogs";
-import { useUserProfile } from "../../../Api/hooks/NavbarApi/useUserProfile";
+import { useCourses } from '../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
+import { useBlogs } from "../../../Api/hooks/HomePageApi/NavbarApi/useBlogs";
+import { useUserProfile } from "../../../Api/hooks/HomePageApi/NavbarApi/useUserProfile";
 import NavbarLogo from "./components/NavbarLogo";
 import SearchBox from "./components/SearchBox";
 import SearchResults from "./components/SearchResults";
 import ExploreDropdown from "./components/ExploreDropdown";
 import UserMenu from "./components/UserMenu";
 import MobileDrawer from "./components/MobileDrawer";
-import { useSearch } from "../../../Api/hooks/NavbarApi/useSearch";
+import { useSearch } from "../../../Api/hooks/HomePageApi/NavbarApi/useSearch";
+import { BsCart2 } from "react-icons/bs";
 
 const NavbarTop = () => {
   const navigate = useNavigate();
@@ -92,11 +93,13 @@ const NavbarTop = () => {
             </div>
 
             {/* Search */}
+            <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: 500 }}>
             <SearchBox
               query={query}
               onChange={onSearchChange}
             />
             {results.length > 0 && <SearchResults items={results} onSelect={handleCourseClick} />}
+            </div>
           </div>
 
           {/* Mobile Right Section */}
@@ -128,7 +131,7 @@ const NavbarTop = () => {
               <div className="d-flex align-items-center gap-3">
                 <button className="btn" aria-label="View cart" onClick={() => navigate("/userdashboard/order_history")}>
                   {/* cart icon placeholder */}
-                  <svg style={{ width: 28, height: 28 }} viewBox="0 0 24 24"><path fill="currentColor" d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM7.2 6l1.2 6h8.2l1.8-4H8.6"/></svg>
+                  <BsCart2 style={{ width: 28, height: 28 }}/>
                 </button>
 
                 <div className="dropdown" ref={userDropdownRef}>

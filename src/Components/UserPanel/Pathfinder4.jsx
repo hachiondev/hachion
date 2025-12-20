@@ -21,7 +21,7 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
     setStudentEmail(email);
 
     axios
-      .get("https://api.test.hachion.co/api/v1/user/myprofile", {
+      .get("https://api.hachion.co/api/v1/user/myprofile", {
         params: { email },
       })
       .then((resp) => {
@@ -64,7 +64,7 @@ const Pathfinder4 = ({ formData, onChange, onNext, onBack, onSubmit }) => {
 
     try {
       await axios.put(
-        "https://api.test.hachion.co/popup-onboarding/update-by-email",
+        "https://api.hachion.co/popup-onboarding/update-by-email",
         payload
       );
       setSuccessMessage("Your details have been updated successfully!");

@@ -47,7 +47,7 @@ export default function UserReviews() {
         return;
       }
 
-      const url = `https://api.test.hachion.co/userreview/email/${encodeURIComponent(
+      const url = `https://api.hachion.co/userreview/email/${encodeURIComponent(
         emailToUse
       )}`;
 
@@ -103,7 +103,7 @@ const handleDeleteReview = (reviewId) => {
   if (!confirmed) return;
 
   axios
-    .delete(`https://api.test.hachion.co/userreview/delete/${reviewId}`)
+    .delete(`https://api.hachion.co/userreview/delete/${reviewId}`)
     .then(() => {
       console.log("Review deleted:", reviewId);
       fetchReviews();

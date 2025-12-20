@@ -13,7 +13,7 @@ import feat3 from "../../Assets/learn-icon.webp";
 import feat4 from "../../Assets/career-icon.webp";
 import feat5 from "../../Assets/247-icon.webp";
 import feat6 from "../../Assets/success-icon.webp";
-import Learners from "./Learners";
+import Learners from "./HomePage/LearnerSection/Learners";
 import { TiTick } from "react-icons/ti";
 import { TbSlashes } from "react-icons/tb";
 import HomeFaq from "./HomeFaq";
@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "https://api.hachion.co";
 
 const statistics = [
   {
@@ -119,17 +119,17 @@ const Aboutus = () => {
     activeTab === "All"
       ? employees
       : employees.filter(
-          (member) =>
-            member.department &&
-            member.department.toLowerCase() === activeTab.toLowerCase()
-        );
+        (member) =>
+          member.department &&
+          member.department.toLowerCase() === activeTab.toLowerCase()
+      );
 
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  
+
   useEffect(() => {
     setIsLoadingTeam(true);
     setTeamError("");
@@ -146,7 +146,7 @@ const Aboutus = () => {
       .finally(() => setIsLoadingTeam(false));
   }, []);
 
-  
+
   const getEmployeeImageUrl = (companyImage) => {
     if (!companyImage) return null;
 
@@ -157,12 +157,12 @@ const Aboutus = () => {
       return companyImage;
     }
 
-    
+
     const clean = companyImage.startsWith("/")
       ? companyImage.substring(1)
       : companyImage;
 
-    return `https://api.test.hachion.co/uploads/prod/employee_company_logo/${clean}`;
+    return `https://api.hachion.co/uploads/prod/employee_company_logo/${clean}`;
   };
 
   return (
@@ -316,80 +316,80 @@ const Aboutus = () => {
             </button>
           ))}
         </div>
-  {/* Cards Grid */}
-<div className="team-grid">
-  {isLoadingTeam && <p>Loading team...</p>}
-  {teamError && (
-    <p style={{ color: "red", fontWeight: "bold" }}>{teamError}</p>
-  )}
+        {/* Cards Grid */}
+        <div className="team-grid">
+          {isLoadingTeam && <p>Loading team...</p>}
+          {teamError && (
+            <p style={{ color: "red", fontWeight: "bold" }}>{teamError}</p>
+          )}
 
-  {!isLoadingTeam && !teamError && (
-    <>
-      {filteredMembers.length > 0 ? (
-        filteredMembers.map((member) => {
-          const imgSrc = getEmployeeImageUrl(member.companyImage);
+          {!isLoadingTeam && !teamError && (
+            <>
+              {filteredMembers.length > 0 ? (
+                filteredMembers.map((member) => {
+                  const imgSrc = getEmployeeImageUrl(member.companyImage);
 
-          return (
-            <div
-              key={member.employeeId ?? member.id}
-              className="team-card"
-            >
-              <div
-                className="team-image"
-                style={{
-                  position: "relative",
-                  overflow: "hidden",
-                  borderRadius: "8px",
-                }}
-              >
-                {/* Default Avatar (always visible) */}
-                <Avatar
-                  variant="square"
-                  sx={{ width: "100%", height: "100%" }}
-                />
+                  return (
+                    <div
+                      key={member.employeeId ?? member.id}
+                      className="team-card"
+                    >
+                      <div
+                        className="team-image"
+                        style={{
+                          position: "relative",
+                          overflow: "hidden",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        {/* Default Avatar (always visible) */}
+                        <Avatar
+                          variant="square"
+                          sx={{ width: "100%", height: "100%" }}
+                        />
 
-                {/* Actual image, overlays Avatar */}
-                {imgSrc && (
-                  <img
-                    src={imgSrc}
-                    alt={member.name}
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                    onError={(e) => {
-                      
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                )}
-              </div>
-              <h3 className="team-name">{member.name}</h3>
-              <p className="team-role">{member.role}</p>
-            </div>
-          );
-        })
-      ) : (
-        
-        <div
-          style={{
-            gridColumn: "1 / -1",
-            textAlign: "center",
-            color: "#777",
-            fontSize: "18px",
-            fontWeight: "500",
-            padding: "40px 0",
-          }}
-        >
-          No Employees found for this department.
-        </div>
-      )}
-    </>
-  )}
+                        {/* Actual image, overlays Avatar */}
+                        {imgSrc && (
+                          <img
+                            src={imgSrc}
+                            alt={member.name}
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                            }}
+                            onError={(e) => {
+
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        )}
+                      </div>
+                      <h3 className="team-name">{member.name}</h3>
+                      <p className="team-role">{member.role}</p>
+                    </div>
+                  );
+                })
+              ) : (
+
+                <div
+                  style={{
+                    gridColumn: "1 / -1",
+                    textAlign: "center",
+                    color: "#777",
+                    fontSize: "18px",
+                    fontWeight: "500",
+                    padding: "40px 0",
+                  }}
+                >
+                  No Employees found for this department.
+                </div>
+              )}
+            </>
+          )}
 
           {/* Join Team Card */}
           <div className="team-card join-card">

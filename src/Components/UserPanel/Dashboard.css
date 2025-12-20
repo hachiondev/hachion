@@ -941,153 +941,15 @@ align-items: center;
   color: #000;
 }
 
-@media only screen and (max-width: 1366px) {
-/* .sidebar-user {
-  width: 250px;
-} */
-
-.resume-div {
-  /* width: 70vw; */
-  padding: 1vh;
-}
-
-.resume {
-  width: 70vw;
-  padding: 1vh;
-}
-
-.formgroup-checkbox {
-  margin-top: 10px;
- }
-
-}
-
-@media only screen and (max-width: 1024px) {
-/* .sidebar-user {
-  width: 250px;
-} */
-.dashboard-content-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-   .wishlist-grid, .certificate-content-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-#nameInput, #emailInput, #locationInput, #genderInput, #oldPasswordInput, #newPasswordInput, #confirmPasswordInput, #extraFieldInput {
-  width: 300px;
-  height: 50px;
-}
-
-#mobileInput {
-  width: 250px;
-  height: 50px;
-}
-}
-@media only screen and (max-width: 767px) {
-.sidebar-user {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    height: 100vh;
-    width: 260px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    z-index: 999;
-    transition: left 0.3s ease;
-    padding-top: 20px;
-  }
-
-  .sidebar-user.open {
-    right: 0;
-  }
-  .dashboard-content-cards {
-    grid-template-columns: repeat(1, 1fr);
-  }
-   .wishlist-grid, .certificate-content-cards {
-    grid-template-columns: repeat(1, 1fr);
-  }
-  .dashboard-user-div {
-    display: flex;
-    width: 100%;
-    height: auto;
-  }
-  .dashboard-activity-row {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  margin: 0;
-}
-.dashboard-assignment {
-  width: 100%;
-}
-  .menu-list-user {
-    margin-top: 50px;
-  }
-
-  .user-dashboard-content {
-    width: 100%;
-    margin-left: 0;
-  }
-.menu-icon {
-  font-size: 16px;
-}
-
-.resume-div {
-  display: flex;
-  align-items: flex-start;
-  padding: 2vh;
-  margin: 0 auto; /* Center the content */
-  overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
-  }
-
-  .resume {
-    width: 75vw;
-    padding: 2vh;
-    margin: 0 auto; /* Center the content */
-    overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
-    }
-
-    .password-title {
-      font-size: 16px;
-      padding-top: 10px;
-    }
-
-    .formgroup-checkbox {
-      margin-top: 10px;
-     }
-
-  .resume-div-top p {
-    font-size: 0.9rem; /* Adjust paragraph font size */
-  }
-  
-  table {
-    font-size: 12px; /* Smaller font size in table */
-  }
-}
-
-/* For tablets */
-@media (max-width: 1024px) {
-
-  .resume-div {
-  /* width: 67vw; */
-  padding: 1vh;
-  font-size: 1.25rem;
-}
-
-.resume {
-  width: 67vw;
-  padding: 1vh;
-  font-size: 1.25rem;
-}
-
-.password-title {
-  font-size: 20px;
-  padding-top: 15px;
-}
-
 table {
-  font-size: 12px;
+width: 100%; /* Make table take full width */
+border-collapse: collapse; /* Ensure table borders collapse for cleaner look */
 }
+
+th, td {
+text-align: center; /* Center align text */
+padding: 10px;
+white-space: nowrap; /* Prevent wrapping of table content */
 }
 
 /* For very small screens (phones) */
@@ -1095,6 +957,10 @@ table {
 
 .user-dashboard-heading h3{
 font-size: 16px;
+}
+
+.form-field input{
+  padding: 0 8px 0 8px;
 }
 
 /* Sidebar styles */
@@ -1323,13 +1189,154 @@ padding: 1.5vh;
 }
 
 }
-table {
-width: 100%; /* Make table take full width */
-border-collapse: collapse; /* Ensure table borders collapse for cleaner look */
+
+@media only screen and (max-width: 1024px) {
+/* .sidebar-user {
+  width: 250px;
+} */
+.dashboard-content-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+   .wishlist-grid, .certificate-content-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+#nameInput, #emailInput, #locationInput, #genderInput, #oldPasswordInput, #newPasswordInput, #confirmPasswordInput, #extraFieldInput {
+  width: 300px;
+  height: 50px;
 }
 
-th, td {
-text-align: center; /* Center align text */
-padding: 10px;
-white-space: nowrap; /* Prevent wrapping of table content */
+#mobileInput {
+  width: 250px;
+  height: 50px;
 }
+  .resume-div {
+  /* width: 67vw; */
+  padding: 1vh;
+  font-size: 1.25rem;
+}
+
+.resume {
+  width: 67vw;
+  padding: 1vh;
+  font-size: 1.25rem;
+}
+
+.password-title {
+  font-size: 20px;
+  padding-top: 15px;
+}
+
+table {
+  font-size: 12px;
+}
+}
+
+
+@media only screen and (max-width: 767px) {
+.sidebar-user {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 260px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 999;
+    transition: left 0.3s ease;
+    padding-top: 20px;
+  }
+
+  .sidebar-user.open {
+    right: 0;
+  }
+  .dashboard-content-cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+   .wishlist-grid, .certificate-content-cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .dashboard-user-div {
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+  .dashboard-activity-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+}
+.dashboard-assignment {
+  width: 100%;
+}
+  .menu-list-user {
+    margin-top: 50px;
+  }
+
+  .user-dashboard-content {
+    width: 100%;
+    margin-left: 0;
+  }
+.menu-icon {
+  font-size: 16px;
+}
+
+.resume-div {
+  display: flex;
+  align-items: flex-start;
+  padding: 2vh;
+  margin: 0 auto; /* Center the content */
+  overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
+  }
+
+  .resume {
+    width: 75vw;
+    padding: 2vh;
+    margin: 0 auto; /* Center the content */
+    overflow-x: auto; /* Allows horizontal scrolling if content is too wide */
+    }
+
+    .password-title {
+      font-size: 16px;
+      padding-top: 10px;
+    }
+
+    .formgroup-checkbox {
+      margin-top: 10px;
+     }
+
+  .resume-div-top p {
+    font-size: 0.9rem; /* Adjust paragraph font size */
+  }
+  
+  table {
+    font-size: 12px; /* Smaller font size in table */
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+/* .sidebar-user {
+  width: 250px;
+} */
+
+.resume-div {
+  /* width: 70vw; */
+  padding: 1vh;
+}
+
+.resume {
+  width: 70vw;
+  padding: 1vh;
+}
+
+.formgroup-checkbox {
+  margin-top: 10px;
+ }
+
+}
+
+
+
+
+

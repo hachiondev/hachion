@@ -20,7 +20,7 @@ const WatchVideos = () => {
     const fetchVideos = async () => {
       try {
         const response = await fetch(
-          "https://api.test.hachion.co/api/youtube/videos?handle=@hachion&pages=3&pageSize=50&limit=12"
+          "https://api.hachion.co/api/youtube/videos?handle=@hachion&pages=3&pageSize=50&limit=12"
         );
         const data = await response.json();
 

@@ -65,7 +65,7 @@ useEffect(() => {
   const fetchTrainers = async () => {
     try {
       const response = await axios.get(
-        `https://api.test.hachion.co/enroll/trainers/${encodeURIComponent(
+        `https://api.hachion.co/enroll/trainers/${encodeURIComponent(
           userEmail
         )}/${encodeURIComponent(reviewData.course_name)}`
       );
@@ -86,7 +86,7 @@ useEffect(() => {
     const fetchUserCourses = async () => {
       try {
         const response = await axios.get(
-          `https://api.test.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`
+          `https://api.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`
         );
     
         setFilteredCourses(response.data || []);
@@ -165,7 +165,7 @@ const handleSubmit = async () => {
 
   try {
     await axios.post(
-      "https://api.test.hachion.co/userreview/add",
+      "https://api.hachion.co/userreview/add",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );

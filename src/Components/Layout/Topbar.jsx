@@ -3,7 +3,7 @@ import { IoIosMail } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Components/UserPanel/Style.css';
-import { useTopBarApi } from '../../Api/hooks/useTopBarApi';
+import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
 
 const Topbar = () => {
   const { whatsappNumber, whatsappLink } = useTopBarApi();

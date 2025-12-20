@@ -334,7 +334,6 @@ if (hasSpecialDiscount && selfPacedOriginal) {
   }
 }
 
-// ✅ Self-paced ONLY price for price row
 const price = selfPacedFinal
   ? `${currency} ${Math.round(selfPacedFinal)}`
   : "Price on request";

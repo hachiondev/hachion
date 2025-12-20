@@ -40,7 +40,8 @@ export function useDemoLivePayment({
     );
   }, [courseData]);
 
-  const handleLiveEnrollPayment = async (session) => {
+  const handleLiveEnrollPayment = async (session, notifyVia) => {
+
     setEnrollSuccessMessage("");
     setEnrollErrorMessage("");
 
@@ -94,8 +95,11 @@ export function useDemoLivePayment({
           meeting_link: session.meeting_link || "",
           batchId: session.batchId,
           resendCount: 0,
-          sendEmail: true,
-          sendWhatsApp: true,
+          // sendEmail: true,
+          // sendWhatsApp: true,
+          sendEmail: !!notifyVia?.email,
+sendWhatsApp: !!notifyVia?.whatsapp,
+
         });
 
         queryClient.invalidateQueries([

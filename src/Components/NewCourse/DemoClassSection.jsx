@@ -103,7 +103,6 @@ export default function DemoClassSection() {
     error: courseError,
   } = useCourseByName(courseNameForApi);
 
-
   const {
     handleLiveEnrollPayment,
 
@@ -114,7 +113,8 @@ export default function DemoClassSection() {
     setEnrollSuccessMessage,
     setEnrollErrorMessage
   });
-  const handleLiveEnrollClick = async (session) => {
+  const handleLiveEnrollClick = async (session, notifyVia) => {
+
     if (!userProfile || !userProfile.studentId) {
       setShowRegisterPrompt(true);
       return;
@@ -122,8 +122,7 @@ export default function DemoClassSection() {
     setShowRegisterPrompt(false);
     setEnrollingSessionId(session.id);
 
-    await handleLiveEnrollPayment(session);
-
+    await handleLiveEnrollPayment(session, notifyVia);
     setEnrollingSessionId(null);
   };
 

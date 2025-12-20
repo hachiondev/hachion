@@ -6,7 +6,6 @@ import { useCheckEnrollmentForSessions } from "../../Api/hooks/CourseApi/useChec
 import { useNavigate } from "react-router-dom";
 import { useResendEnrollEmail } from "../../Api/hooks/CourseApi/useResendEnrollEmail";
 
-
 function DemoClassSectionLiveTab({
   scheduleLoading,
   scheduleError,
@@ -62,11 +61,7 @@ What's Included:
   const [resendMessage, setResendMessage] = React.useState("");
   const [resendError, setResendError] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [notifyVia, setNotifyVia] = useState({
-  email: true,
-  whatsapp: false,
-});
-
+  const [notifyViaMap, setNotifyViaMap] = useState({});
 
   useEffect(() => {
     if (!resendMessage && !resendError) return;
@@ -85,17 +80,19 @@ What's Included:
   }, [isRequestBatchSuccess, requestBatchError]);
 
   useEffect(() => {
-    setIsSubmitting(false); // ✅ reset when modal closes
+    setIsSubmitting(false); 
   }, [resetLiveSubmitting]);
-
-const handleNotifyChange = (e) => {
-  const { name, checked } = e.target;
-
-  setNotifyVia((prev) => ({
+const handleNotifyChange = (sessionId, type, checked) => {
+  setNotifyViaMap((prev) => ({
     ...prev,
-    [name]: checked,
+    [sessionId]: {
+      email: type === "email" ? checked : prev[sessionId]?.email ?? true,
+      whatsapp: type === "whatsapp" ? checked : prev[sessionId]?.whatsapp ?? false,
+    },
   }));
 };
+
+
 
 
   return (
@@ -219,8 +216,11 @@ const handleNotifyChange = (e) => {
         resendEmail(
           {
             email: userProfile.email,
-            batchId: sess.batchId,
-            notifyVia, // 👈 send selected options
+          notifyVia: {
+  email: notifyViaMap[sess.id]?.email ?? true,
+  whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+},
+
           },
           {
             onSuccess: (msg) => {
@@ -255,33 +255,47 @@ const handleNotifyChange = (e) => {
     <button
       className={styles.dcbtn}
       disabled={enrollingSessionId === sess.id}
-      onClick={() => onEnrollClick(sess)}
+     onClick={() =>
+  onEnrollClick(sess, {
+    email: notifyViaMap[sess.id]?.email ?? true,
+    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+  })
+}
+
+
+
     >
       {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
     </button>
 
     {/* Notification Options */}
-    <div className={styles.notifyOptions}>
-      <label className={styles.notifyLabel}>
-        <input
-          type="checkbox"
-          name="email"
-          checked={notifyVia.email}
-          onChange={handleNotifyChange}
-        />
-        <span>Email</span>
-      </label>
+   <div className={styles.notifyOptions}>
+  {/* Email (default checked, user CAN uncheck) */}
+  <label className={styles.notifyLabel}>
+    <input
+      type="checkbox"
+      checked={notifyViaMap[sess.id]?.email ?? true}
+      onChange={(e) =>
+        handleNotifyChange(sess.id, "email", e.target.checked)
+      }
+    />
+    <span>Email</span>
+  </label>
 
-      <label className={styles.notifyLabel}>
-        <input
-          type="checkbox"
-          name="whatsapp"
-          checked={notifyVia.whatsapp}
-          onChange={handleNotifyChange}
-        />
-        <span>WhatsApp</span>
-      </label>
-    </div>
+  {/* WhatsApp (optional) */}
+  <label className={styles.notifyLabel}>
+    <input
+      type="checkbox"
+      checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+      onChange={(e) =>
+        handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+      }
+    />
+    <span>WhatsApp</span>
+  </label>
+</div>
+
+
   </div>
 </>
 

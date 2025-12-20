@@ -32,7 +32,7 @@ const Instructors = () => {
     const fetchTrainers = async () => {
       try {
         setLoading(true);
-        const trainerRes = await axios.get("https://api.hachion.co/trainers");
+        const trainerRes = await axios.get("https://api.test.hachion.co/trainers");
         setTrainers(trainerRes.data);
       } catch (err) {
         console.error("Error fetching trainers:", err);
@@ -47,7 +47,7 @@ const Instructors = () => {
   useEffect(() => {
     const fetchTeacherOptions = async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/trainersnames-unique");
+        const res = await axios.get("https://api.test.hachion.co/trainersnames-unique");
         if (Array.isArray(res.data)) {
           setTeacherOptions(res.data);
         }
@@ -62,7 +62,7 @@ const Instructors = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/courses/all");
+        const res = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(res.data)) {
           setCourses(res.data.map(c => c.courseName));
         }
@@ -114,7 +114,7 @@ const Instructors = () => {
     if (!toFetch.length) return;
 
     const requests = toFetch.map(t =>
-      axios.get("https://api.hachion.co/enroll/count", {
+      axios.get("https://api.test.hachion.co/enroll/count", {
         params: {
           trainerName: t.trainer_name,
           courseName: t.course_name,
@@ -263,7 +263,7 @@ const Instructors = () => {
                         alt={trainer.trainer_name}
                         src={
                           trainer.trainerImage
-                            ? `https://api.hachion.co/${trainer.trainerImage}`
+                            ? `https://api.test.hachion.co/${trainer.trainerImage}`
                             : ""
                         }
                         variant="square"

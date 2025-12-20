@@ -8,7 +8,7 @@ const navigate= useNavigate();
       useEffect(() => {
         const fetchTrendingCourses = async () => {
           try {
-            const response = await fetch('https://api.hachion.co/trendingcourse');
+            const response = await fetch('https://api.test.hachion.co/trendingcourse');
             const data = await response.json();
             // Filter courses with status true
             const activeCourses = data.filter(course => course.status === true);

@@ -15,7 +15,7 @@ const KidsLearners = ({ page }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://api.hachion.co/userreview');
+        const response = await fetch('https://api.test.hachion.co/userreview');
         const data = await response.json();
 
         if (Array.isArray(data)) {
@@ -92,7 +92,7 @@ const KidsLearners = ({ page }) => {
                     rating={review.rating}
                     profileImage={
                       review.user_image
-                        ? `https://api.hachion.co/${review.user_image}`
+                        ? `https://api.test.hachion.co/${review.user_image}`
                         : ''
                     }
                     onReadMore={() =>

@@ -90,7 +90,7 @@ if (userCurrency !== 'INR' && userCurrency !== 'USD') {
 }
 setExchangeRate(rate);
 
-        const response = await axios.get('https://api.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/all');
         const courses = response.data;
         const matchedCourse = courses.find(
           (course) => course.courseName.toLowerCase().replace(/\s+/g, '-') === courseName
@@ -152,7 +152,7 @@ setExchangeRate(rate);
 
   const resendEmail = async (userEmail) => {
     try {
-      const response = await axios.post('https://api.hachion.co/enroll/resend-email', {
+      const response = await axios.post('https://api.test.hachion.co/enroll/resend-email', {
         email: userEmail,
       });
       setMessage(response.data || 'Email resent successfully.');
@@ -227,7 +227,7 @@ setExchangeRate(rate);
     let studentId = '';
     let mobile = '';
     try {
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, {
+      const profileResponse = await axios.get(`https://api.test.hachion.co/api/v1/user/myprofile`, {
         params: { email: userEmail },
       });
 
@@ -250,7 +250,7 @@ setExchangeRate(rate);
     console.log("📡 Checking installment status for:", studentId, courseName);
 
     const checkResponse = await axios.get(
-      `https://api.hachion.co/razorpay/checkInstallment`,
+      `https://api.test.hachion.co/razorpay/checkInstallment`,
       { params: { studentId, courseName: selectedBatchData.schedule_course_name } }
     );
 
@@ -332,7 +332,7 @@ setExchangeRate(rate);
           
         };
 
-        const response = await axios.post('https://api.hachion.co/enroll/add', payload);
+        const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
 
         if (response.data.status === 201) {
           setMessage('Registered Successfully');

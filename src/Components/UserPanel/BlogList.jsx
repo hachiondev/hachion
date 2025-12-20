@@ -26,7 +26,7 @@ const BlogList = ({
 
       setLoading(true);
       try {
-        const res = await axios.get("https://api.hachion.co/blog/filter", {
+        const res = await axios.get("https://api.test.hachion.co/blog/filter", {
           
           params: { category: selectedCategories },
         });
@@ -53,10 +53,10 @@ const BlogList = ({
             author,
             date,
             avatar: avatarPath
-              ? `https://api.hachion.co/uploads/prod/blogs/${avatarPath}`
+              ? `https://api.test.hachion.co/uploads/prod/blogs/${avatarPath}`
               : "",
             blog_image: blogImagePath
-              ? `https://api.hachion.co/uploads/prod/blogs/${blogImagePath}`
+              ? `https://api.test.hachion.co/uploads/prod/blogs/${blogImagePath}`
               : "",
           };
         });        

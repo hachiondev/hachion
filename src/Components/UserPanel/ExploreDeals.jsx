@@ -50,10 +50,10 @@ const ExploreDeals = () => {
       setLoading(true);
       try {
         const allCoursesResponse = await axios.get(
-          'https://api.hachion.co/courses/all'
+          'https://api.test.hachion.co/courses/all'
         );
         const trainersResponse = await axios.get(
-          'https://api.hachion.co/trainers'
+          'https://api.test.hachion.co/trainers'
         );
 
         const courses = allCoursesResponse.data || [];
@@ -130,7 +130,7 @@ const ExploreDeals = () => {
     (async () => {
       try {
         const { data } = await axios.get(
-          'https://api.hachion.co/discounts-courses'
+          'https://api.test.hachion.co/discounts-courses'
         );
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
@@ -384,7 +384,7 @@ const ExploreDeals = () => {
                 key={cardKey}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 trainer_name={course.trainerName}
                 discountPercentage={(() => {

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const fetchAllCourses = async () => {
-  const response = await axios.get("https://api.hachion.co/courses/all");
+  const response = await axios.get("https://api.test.hachion.co/courses/all");
   return Array.isArray(response.data) ? response.data : [];
 };
 

@@ -346,7 +346,7 @@ const TrainingEvents = () => {
                 month={course.numberOfClasses}
                 image={
                   course.course_image
-                    ? `https://api.hachion.co/${course.course_image}`
+                    ? `https://api.test.hachion.co/${course.course_image}`
                     : ""
                 }
                 date={course.schedule_date ? formatDate(course.schedule_date) : ""}

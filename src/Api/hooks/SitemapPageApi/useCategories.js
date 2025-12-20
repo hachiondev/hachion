@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const API_URL = "https://api.hachion.co/course-categories/all";
+const API_URL = "https://api.test.hachion.co/course-categories/all";
 
 const fetchCategories = async () => {
   const response = await axios.get(API_URL, {

@@ -20,7 +20,7 @@ export default function UserOrders() {
     const email = user?.email;
     if (!email) return;
 
-    axios.get(`https://api.hachion.co/razorpay/orders?email=${email}`)
+    axios.get(`https://api.test.hachion.co/razorpay/orders?email=${email}`)
       .then((res) => {
         const data = res.data.map((item, index) => {
           

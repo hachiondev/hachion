@@ -4,7 +4,7 @@
  * Returns transformed blog data with full image URLs
  */
 export const getRecentBlogs = async () => {
-  const response = await fetch("https://api.hachion.co/blog/recent");
+  const response = await fetch("https://api.test.hachion.co/blog/recent");
   
   if (!response.ok) {
     throw new Error("Failed to fetch recent blogs");
@@ -29,11 +29,11 @@ export const getRecentBlogs = async () => {
     ] = row;
 
     const avatar = author_image
-      ? `https://api.hachion.co/uploads/prod/blogs/${author_image}`
+      ? `https://api.test.hachion.co/uploads/prod/blogs/${author_image}`
       : "";
 
     const blogImg = blog_image
-      ? `https://api.hachion.co/uploads/prod/blogs/${blog_image}`
+      ? `https://api.test.hachion.co/uploads/prod/blogs/${blog_image}`
       : "";
 
     return {

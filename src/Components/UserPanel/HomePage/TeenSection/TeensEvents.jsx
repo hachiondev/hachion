@@ -221,7 +221,7 @@ export default function TeensEvents() {
                 course_id={course.id}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`https://api.test.hachion.co/${course.courseImage}`}
                 trainer_name={trainerName}
                 discountPercentage={discountPercentage}
                 amount={`${currency} ${fmt(finalPrice)}`}

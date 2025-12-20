@@ -23,7 +23,7 @@ const BlogsSidebar = ({ onFilterChange }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://api.hachion.co/blog/categories"
+          "https://api.test.hachion.co/blog/categories"
         );
 
         

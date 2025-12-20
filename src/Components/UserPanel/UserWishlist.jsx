@@ -44,7 +44,7 @@ async function toggleWishlist(courseId) {
     }
 
     const { data } = await axios.post(
-      "https://api.hachion.co/api/wishlist/toggle",
+      "https://api.test.hachion.co/api/wishlist/toggle",
       { email, courseId }
     );
 
@@ -76,7 +76,7 @@ useEffect(() => {
         return;
       }
 
-      const { data } = await axios.get("https://api.hachion.co/api/wishlist/courses", { params: { email } });
+      const { data } = await axios.get("https://api.test.hachion.co/api/wishlist/courses", { params: { email } });
       const all = Array.isArray(data) ? data : [];
 
       setCourses(all);
@@ -94,7 +94,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchRules = async () => {
       try {
-        const { data } = await axios.get("https://api.hachion.co/discounts-courses");
+        const { data } = await axios.get("https://api.test.hachion.co/discounts-courses");
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -297,7 +297,7 @@ useEffect(() => {
                 <SidebarCard
             key={course.id || index}
             heading={course.courseName}
-            image={`https://api.hachion.co/${course.courseImage}`}
+            image={`https://api.test.hachion.co/${course.courseImage}`}
             discountPercentage={
               (() => {
                 const rulePct = getRuleDiscountPct(course.courseName, country);

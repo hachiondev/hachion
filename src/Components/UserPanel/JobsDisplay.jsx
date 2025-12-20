@@ -10,7 +10,7 @@ const JobsDisplay = ({ filters }) => {
   const [jobCards, setJobCards] = useState([]);
 
   useEffect(() => {
-    axios.get('https://api.hachion.co/hire-from-us/getApprovedJobs')
+    axios.get('https://api.test.hachion.co/hire-from-us/getApprovedJobs')
       .then((res) => {
         const formattedJobs = res.data.map((job, index) => {
           const postedDate = job.date ? dayjs(job.date) : dayjs();
@@ -29,7 +29,7 @@ const JobsDisplay = ({ filters }) => {
             jobTitle: job.jobTitle,
             companyName: job.company || 'Unknown',
            image: job.companyLogo
-      ? `https://api.hachion.co/hire-from-us/${job.companyLogo}`
+      ? `https://api.test.hachion.co/hire-from-us/${job.companyLogo}`
       : HachionLogo,
             exp: job.experience,
             location: job.location,

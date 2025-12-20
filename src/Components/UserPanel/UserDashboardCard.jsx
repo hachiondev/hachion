@@ -9,7 +9,7 @@ import Learn from "../../Assets/dash-icon5.webp";
 import assignment from "../../Assets/dash-icon6.webp";
 import activity from "../../Assets/dash-icon7.webp";
 
-const API_BASE = "https://api.hachion.co";
+const API_BASE = "https://api.test.hachion.co";
 
 
 function parseDateFlexible(s) {

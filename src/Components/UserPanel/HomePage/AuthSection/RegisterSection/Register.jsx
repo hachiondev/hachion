@@ -115,7 +115,7 @@ const Register = () => {
     console.log("doc.cookie now:", document.cookie);
 
     setTimeout(() => {
-      window.location.href = "https://api.hachion.co/oauth2/authorization/google";
+      window.location.href = "https://api.test.hachion.co/oauth2/authorization/google";
     }, 50);
   };
 

@@ -212,7 +212,7 @@ const DiscountCards = () => {
                 key={course.id || idx}
                 heading={course.courseName}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}
                 discountPercentage={rulePct}
                 amount={`${currency} ${fmt(effectiveNow)}`}

@@ -11,7 +11,7 @@ const WorkshopEntries = () => {
   useEffect(() => {
     const fetchWorkshop = async () => {
       try {
-        const response = await axios.get('https://api.hachion.co/workshopschedule');
+        const response = await axios.get('https://api.test.hachion.co/workshopschedule');
         setWorkshop(response.data);
       } catch (error) {
         console.error('Error fetching workshop data:', error);
@@ -36,7 +36,7 @@ const WorkshopEntries = () => {
       [...workshop].reverse().map((entry) => (
         <WorkshopEntriesCard
           key={entry.id}
-          banner_image={`https://api.hachion.co/${entry.banner_image}`}
+          banner_image={`https://api.test.hachion.co/${entry.banner_image}`}
           title={entry.title}
           date={(() => {
             if (!entry?.date) return 'Loading...';

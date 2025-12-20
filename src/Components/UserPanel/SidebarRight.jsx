@@ -36,8 +36,8 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
       try {
         setLoading(true);
         const [coursesRes, trainersRes] = await Promise.all([
-          axios.get("https://api.hachion.co/courses/all"),
-          axios.get("https://api.hachion.co/trainers"),
+          axios.get("https://api.test.hachion.co/courses/all"),
+          axios.get("https://api.test.hachion.co/trainers"),
         ]);
 
         const all = Array.isArray(coursesRes.data) ? coursesRes.data : [];
@@ -124,7 +124,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
   useEffect(() => {
     const fetchRules = async () => {
       try {
-        const { data } = await axios.get('https://api.hachion.co/discounts-courses');
+        const { data } = await axios.get('https://api.test.hachion.co/discounts-courses');
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error('Failed to load discount rules', e);
@@ -289,7 +289,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
             <SidebarCard
               key={course.id || index}
               heading={course.courseName}
-              image={`https://api.hachion.co/${course.courseImage}`}
+              image={`https://api.test.hachion.co/${course.courseImage}`}
               discountPercentage={(() => {
                 const rulePct = getRuleDiscountPct(course.courseName, country);
                 if (rulePct > 0) return rulePct;

@@ -46,7 +46,7 @@ const [corporate, setCorporate] = useState([]);
   useEffect(() => {
   const fetchCorporate = async () => {
     try {
-      const res = await axios.get("https://api.hachion.co/corporatereview");
+      const res = await axios.get("https://api.test.hachion.co/corporatereview");
       setCorporate(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching corporate reviews:", err);
@@ -60,7 +60,7 @@ const [corporate, setCorporate] = useState([]);
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("https://api.hachion.co/userreview/active");
+        const res = await axios.get("https://api.test.hachion.co/userreview/active");
         setReviews(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -177,7 +177,7 @@ const getEmbedUrl = (url) => {
         rating={fb.employeeRating}
         profileImage={
           fb.companyLogo
-            ? `https://api.hachion.co/corporatereview/${fb.companyLogo}`
+            ? `https://api.test.hachion.co/corporatereview/${fb.companyLogo}`
             : ""
         }
       />
@@ -211,7 +211,7 @@ const getEmbedUrl = (url) => {
                 location={fb.location}
                 content={fb.review}
                 rating={fb.rating}
-                profileImage={fb.user_image ? `https://api.hachion.co/userreview/${fb.user_image}` : ""}
+                profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
               />
             </div>
           ))}
@@ -245,7 +245,7 @@ const getEmbedUrl = (url) => {
           name={fb.name}
           profileImage={
             fb.user_image
-              ? `https://api.hachion.co/userreview/${fb.user_image}`
+              ? `https://api.test.hachion.co/userreview/${fb.user_image}`
               : ""
           }
           demo_link_1={fb.videoLink || fb.demo_link_1} // ✅ dynamic video link

@@ -97,21 +97,6 @@ export default function CourseBanner({ onEnroll }) {
   const [showEnroll, setShowEnroll] = useState(false);
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
 
-  // const onEnroll = () => {
-  //   if (!courseName) return;
-
-  //   if (isProfileLoading) return;
-
-
-  //   if (!userProfile) {
-  //     setShowRegisterPrompt(true);
-  //     return;
-  //   }
-
-  //   navigate(`/enroll-now/${courseName}`);
-  // };
-
-
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
@@ -303,23 +288,6 @@ export default function CourseBanner({ onEnroll }) {
   let offerSaving = 0;
   let offerLeftText = "";
 
-  // if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
-  //   offerSaving = convertedOriginalFee - convertedTotalFee;
-
-  //   if (offerSaving > 0) {
-  //     if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-
-  //       offerLeftText = `Flash Sale! Get ${ruleDiscountPct}% OFF & Save ${currency} ${Math.round(
-  //         offerSaving
-  //       )}/-`;
-  //     } else {
-
-  //       offerLeftText = `Flash Sale! Save ${currency} ${Math.round(
-  //         offerSaving
-  //       )}/-`;
-  //     }
-  //   }
-  // }
 
   if (hasSpecialDiscount && convertedOriginalFee && convertedTotalFee) {
     offerSaving = convertedOriginalFee - convertedTotalFee;
@@ -340,15 +308,47 @@ export default function CourseBanner({ onEnroll }) {
       }
     }
   }
+let selfPacedOriginal = 0;
+let selfPacedFinal = 0;
 
-  const price = convertedTotalFee
-    ? `${currency} ${Math.round(convertedTotalFee)}`
-    : "Price on request";
+if (currency === "INR") {
+  selfPacedOriginal = course.isamount ?? course.isqamount ?? 0;
+} else {
+  selfPacedOriginal =
+    (course.samount ?? course.sqamount ?? 0) * exchangeRate;
+}
 
-  const oldPrice = convertedOriginalFee
-    ? `${currency} ${Math.round(convertedOriginalFee)}`
+// apply special discount (same rules as before)
+selfPacedFinal = selfPacedOriginal;
+
+if (hasSpecialDiscount && selfPacedOriginal) {
+  if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+    selfPacedFinal =
+      selfPacedOriginal -
+      (selfPacedOriginal * ruleDiscountPct) / 100;
+  } else if (discountType === "FIXED" && discountFixedAmount) {
+    selfPacedFinal = Math.max(
+      0,
+      selfPacedOriginal - discountFixedAmount
+    );
+  }
+}
+
+// ✅ Self-paced ONLY price for price row
+const price = selfPacedFinal
+  ? `${currency} ${Math.round(selfPacedFinal)}`
+  : "Price on request";
+
+const oldPrice =
+  hasSpecialDiscount && selfPacedOriginal
+    ? `${currency} ${Math.round(selfPacedOriginal)}`
     : "";
 
+
+const startsFromPrice =
+  convertedTotalFee && convertedTotalFee > 0
+    ? `${currency} ${Math.round(convertedTotalFee)}`
+    : "Price on request";
 
   return (
     <section className={styles.bnwrap}>
@@ -370,7 +370,9 @@ export default function CourseBanner({ onEnroll }) {
             <p class={styles.feeGroup}>
               <span className={styles.fee}>Fee:</span>
               <span class={styles.start}>Starts from </span>
-               <span class={styles.amount}>INR 500/-</span></p>
+               {/* <span class={styles.amount}>INR 500/-</span> */}
+               <span className={styles.amount}>{startsFromPrice}</span>
+               </p>
             </div>
 
             <p className={styles.bnsub}>{subtitle}</p>
@@ -493,8 +495,6 @@ export default function CourseBanner({ onEnroll }) {
               </div>
             </div>
           </div>
-
-
         </div>
       </div>
 

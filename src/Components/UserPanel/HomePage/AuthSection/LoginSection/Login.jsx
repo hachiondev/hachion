@@ -43,7 +43,7 @@ const Login = () => {
     const loginData = { email, password };
 
     try {
-      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
       console.log(response.data);
 
       if (response.data.status) {
@@ -178,13 +178,13 @@ const Login = () => {
   localStorage.setItem("pendingOAuth", "login");
 
   try {
-    await fetch("https://api.hachion.co/logout", {
+    await fetch("https://api.test.hachion.co/logout", {
       method: "POST",
       credentials: "include"
     });
   } catch {}
 
-  let url = "https://api.hachion.co/oauth2/authorization/google";
+  let url = "https://api.test.hachion.co/oauth2/authorization/google";
 
   // 🔥 LOCAL ONLY: this runs only in localhost, never on server
   if (window.location.hostname === "localhost") {
@@ -229,7 +229,7 @@ const Login = () => {
         return;
       }
       console.log('[auth bootstrap] No user in localStorage → calling /api/me (credentials: include)');
-      fetch('https://api.hachion.co/api/me', { credentials: 'include' })
+      fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
         .then(r => {
           console.log('[auth bootstrap] /api/me status =', r.status);
           if (!r.ok) return null;

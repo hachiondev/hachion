@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export const getTrendingCourses = async () => {
-  const { data } = await axios.get("https://api.hachion.co/trendingcourse");
+  const { data } = await axios.get("https://api.test.hachion.co/trendingcourse");
   return data || [];
 };
 
 export const getCoursesSummary = async () => {
-  const { data } = await axios.get("https://api.hachion.co/courses/summary");
+  const { data } = await axios.get("https://api.test.hachion.co/courses/summary");
   const raw = data || [];
   return raw.map(row => ({
     id: row[0],

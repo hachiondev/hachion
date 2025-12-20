@@ -56,7 +56,7 @@ const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/courses/all");
+        const res = await axios.get("https://api.test.hachion.co/courses/all");
         if (Array.isArray(res.data)) setCourses(res.data.map((c) => c.courseName));
       } catch (err) {
         console.error("Error fetching courses:", err);
@@ -148,7 +148,7 @@ const toIntFromRange = (val) => {
   };
 
   try {
-    const response = await axios.post("https://api.hachion.co/advisors", requestData, {
+    const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
       headers: { "Content-Type": "application/json" },
     });
 
@@ -204,7 +204,7 @@ useEffect(() => {
   (async () => {
     try {
       const res = await fetch(
-        `https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
+        `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
         { signal: ctrl.signal }
       );
       if (!res.ok) throw new Error("Failed to fetch profile data");

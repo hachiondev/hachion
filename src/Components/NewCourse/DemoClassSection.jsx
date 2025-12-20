@@ -1,12 +1,9 @@
-
 import React, { useState, useEffect, forwardRef } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // Added useNavigate
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../utils";
-// import RequestCustomBatch from "./RequestCustomBatch";
 import RequestBatch from "../UserPanel/RequestBatch";
-
 import EnrollNotification from "./EnrollNotification";
-import { useParams } from "react-router-dom";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
 import { useDiscountCountdown } from "../../Api/hooks/CourseApi/useDiscountCountdown";
 import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
@@ -18,7 +15,7 @@ import DemoClassSectionMentoringTab from "./DemoClassSectionMentoringTab";
 import DemoClassSectionSelfTab from "./DemoClassSectionSelfTab";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
 import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
-import axios from "axios";
+
 const tabs = [
   { key: "live", label: "Live Training" },
   { key: "crash", label: "Crash Course (Fast Track)" },
@@ -26,11 +23,13 @@ const tabs = [
   { key: "self", label: "Self-Paced Learning" },
 ];
 
-
 const DemoClassSection = forwardRef((props, ref) => {
   const [activeTab, setActiveTab] = useState("live");
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
+  
+  const navigate = useNavigate(); // Moved inside the component
+  const { courseName } = useParams(); // Moved inside the component
 
   const [showRequestBatch, setShowRequestBatch] = useState(false);
   const [resetLiveSubmitting, setResetLiveSubmitting] = useState(0);
@@ -58,6 +57,7 @@ const DemoClassSection = forwardRef((props, ref) => {
     mentoring: false,
     self: false
   });
+
   useEffect(() => {
     if (!enrollSuccessMessage && !enrollErrorMessage) return;
 
@@ -72,11 +72,21 @@ const DemoClassSection = forwardRef((props, ref) => {
   const {
     data: userProfile,
     isLoading: isProfileLoading,
-
   } = useUserProfile();
 
-  const { courseName } = useParams();
+  // Define onEnroll function
+  const onEnroll = () => {
+    if (!courseName) return;
 
+    if (isProfileLoading) return;
+
+    if (!userProfile || !userProfile.studentId) {
+      setShowRegisterPrompt(true);
+      return;
+    }
+
+    navigate(`/enroll-now/${courseName}`);
+  };
 
   const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
@@ -88,7 +98,6 @@ const DemoClassSection = forwardRef((props, ref) => {
       .toLowerCase();
 
   const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
-
 
   const courseSlug = rawSlug ? rawSlug.toLowerCase() : "";
   const displayCourseName = courseNameForApi
@@ -105,7 +114,6 @@ const DemoClassSection = forwardRef((props, ref) => {
 
   const {
     handleLiveEnrollPayment,
-
   } = useDemoLivePayment({
     courseData,
     userProfile,
@@ -113,8 +121,8 @@ const DemoClassSection = forwardRef((props, ref) => {
     setEnrollSuccessMessage,
     setEnrollErrorMessage
   });
-  const handleLiveEnrollClick = async (session, notifyVia) => {
 
+  const handleLiveEnrollClick = async (session, notifyVia) => {
     if (!userProfile || !userProfile.studentId) {
       setShowRegisterPrompt(true);
       return;
@@ -125,7 +133,6 @@ const DemoClassSection = forwardRef((props, ref) => {
     await handleLiveEnrollPayment(session, notifyVia);
     setEnrollingSessionId(null);
   };
-
 
   const {
     liveGroups,
@@ -153,7 +160,6 @@ const DemoClassSection = forwardRef((props, ref) => {
   const { timeLeft, isOfferActive } = useDiscountCountdown(discountRule);
   const showOfferStrip = hasSpecialDiscount && isOfferActive;
 
-
   const {
     handleRequestBatch,
     requestBatchError,
@@ -169,7 +175,6 @@ const DemoClassSection = forwardRef((props, ref) => {
   });
 
   const handleRequestBatchWithLoginCheck = () => {
-    // wait until profile loads
     if (isProfileLoading) return;
     if (!userProfile || !userProfile.studentId) {
       setShowRegisterPrompt(true);
@@ -192,7 +197,6 @@ const DemoClassSection = forwardRef((props, ref) => {
           ? selfPreferredTime
           : null;
 
-
     const notificationForTab =
       activeTab === "mentoring"
         ? mentoringNotification
@@ -205,7 +209,6 @@ const DemoClassSection = forwardRef((props, ref) => {
       notification: allowMentoringSelf ? notificationForTab : null,
       selectedDays: allowMentoringSelf ? selectedDays : [],
     });
-
   };
 
   const handleEnroll = () => {
@@ -213,7 +216,6 @@ const DemoClassSection = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-
     if (isRequestBatchSuccess) {
       document.querySelectorAll(".dayCheckbox").forEach(cb => (cb.checked = false));
 
@@ -232,7 +234,6 @@ const DemoClassSection = forwardRef((props, ref) => {
       }
     }
 
-
     if (isRequestBatchSuccess || requestBatchError) {
       setTabMessage(prev => ({
         ...prev,
@@ -248,11 +249,7 @@ const DemoClassSection = forwardRef((props, ref) => {
 
       return () => clearTimeout(timer);
     }
-  }, [
-    isRequestBatchSuccess,
-    requestBatchError
-
-  ]);
+  }, [isRequestBatchSuccess, requestBatchError, activeTab]);
 
   const timeOptions = [
     { value: "09:00 AM - 10:00 AM", label: "09:00 AM - 10:00 AM" },
@@ -338,6 +335,12 @@ const DemoClassSection = forwardRef((props, ref) => {
               preferred time.
             </p>
           </div>
+          <button
+            className={cn(styles.bnbtn, styles.bnbtnprimary)}
+            onClick={onEnroll}
+          >
+            Enroll Now - Start Learning
+          </button>
         </div>
 
         {/* Tabs */}
@@ -352,6 +355,7 @@ const DemoClassSection = forwardRef((props, ref) => {
               onClick={() => setActiveTab(t.key)}
             >
               {t.label}
+              <span class={styles.feeAmount}>INR 18000</span>
             </button>
           ))}
         </div>
@@ -367,14 +371,10 @@ const DemoClassSection = forwardRef((props, ref) => {
             selectedGroup={selectedGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-
             showMessage={tabMessage[activeTab]}
-
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
-            // onRequestClick={handleClick}
             onRequestClick={handleRequestBatchWithLoginCheck}
-
             liveTraining={courseData?.liveTraining}
             isCourseLoading={isCourseLoading}
             courseError={courseError}
@@ -387,8 +387,6 @@ const DemoClassSection = forwardRef((props, ref) => {
             onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
             enrollingSessionId={enrollingSessionId}
             resetLiveSubmitting={resetLiveSubmitting}
-
-
           />
         )}
 
@@ -411,6 +409,7 @@ const DemoClassSection = forwardRef((props, ref) => {
             courseError={courseError}
           />
         )}
+
         {activeTab === "mentoring" && (
           <DemoClassSectionMentoringTab
             timeOptions={timeOptions}
@@ -432,9 +431,9 @@ const DemoClassSection = forwardRef((props, ref) => {
             mentoringMode={courseData?.mentoringMode || ""}
             isCourseLoading={isCourseLoading}
             courseError={courseError}
-
           />
         )}
+
         {activeTab === "self" && (
           <DemoClassSectionSelfTab
             timeOptions={timeOptions}
@@ -458,25 +457,14 @@ const DemoClassSection = forwardRef((props, ref) => {
           />
         )}
 
-        {/* {showRequestBatch && (
-          <RequestCustomBatch
-            onClose={() => setShowRequestBatch(false)}
-            onSubmit={(formData) => {
-              console.log("Custom batch request submitted:", formData);
-              setShowRequestBatch(false);
-            }}
-          />
-        )} */}
         {showRequestBatch && (
           <RequestBatch
             closeModal={() => {
               setShowRequestBatch(false);
-              setResetLiveSubmitting(Date.now()); // ✅ RESET BUTTON STATE
+              setResetLiveSubmitting(Date.now());
             }}
           />
         )}
-
-
       </div>
 
       {enrollNow && (
@@ -485,6 +473,110 @@ const DemoClassSection = forwardRef((props, ref) => {
           onClose={() => setEnrollNow(false)}
           onEnroll={handleEnroll}
         />
+      )}
+
+      {/* Register Prompt Modal */}
+      {showRegisterPrompt && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.55)",
+            zIndex: 9999,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "520px",
+              background: "#fff",
+              borderRadius: "12px",
+              display: "flex",
+              padding: "20px",
+              boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
+            }}
+          >
+            {/* LEFT IMAGE */}
+            <div
+              style={{
+                width: "42%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={require("../../Assets/loginpopup.webp")}
+                alt="login popup"
+                style={{
+                  width: "100%",
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                  transform: "scaleX(-1)",
+                }}
+              />
+            </div>
+
+            {/* RIGHT CONTENT */}
+            <div
+              style={{
+                width: "58%",
+                paddingLeft: "14px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
+                Please Login
+              </h3>
+
+              <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+                Before proceeding, please login into our Hachion.
+              </p>
+
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  style={{
+                    padding: "8px 14px",
+                    borderRadius: "6px",
+                    border: "none",
+                    background: "#2563eb",
+                    color: "#fff",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    navigate("/login");
+                    setShowRegisterPrompt(false);
+                  }}
+                >
+                  Login
+                </button>
+
+                <button
+                  style={{
+                    padding: "8px 14px",
+                    background: "#f1f5f9",
+                    color: "#333",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setShowRegisterPrompt(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </section>
   );

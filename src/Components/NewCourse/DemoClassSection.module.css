@@ -119,12 +119,34 @@
   text-align: left;
 }
 
+.bnbtnprimary {
+    font-weight: 500;
+    font-size: 16px;
+    background: #00aeef;
+    color: #fff;
+    height: 48px;
+    border-radius: 28px;
+    padding: 0 22px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 0;
+}
+
 .dchead p {
   color: #000;
   max-width: 760px;
   margin: 0;
   text-align: left;
   font-size: 17px;
+}
+
+.feeAmount{
+  background-color: #ff5c01;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 8px;
+    white-space: nowrap;
 }
 
 /* timezone */
@@ -276,6 +298,9 @@
   font-weight: 700;
   color: #6a7381;
   border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .dctab:last-child {

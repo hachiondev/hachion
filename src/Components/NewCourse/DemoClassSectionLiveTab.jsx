@@ -80,17 +80,17 @@ What's Included:
   }, [isRequestBatchSuccess, requestBatchError]);
 
   useEffect(() => {
-    setIsSubmitting(false); 
+    setIsSubmitting(false);
   }, [resetLiveSubmitting]);
-const handleNotifyChange = (sessionId, type, checked) => {
-  setNotifyViaMap((prev) => ({
-    ...prev,
-    [sessionId]: {
-      email: type === "email" ? checked : prev[sessionId]?.email ?? true,
-      whatsapp: type === "whatsapp" ? checked : prev[sessionId]?.whatsapp ?? false,
-    },
-  }));
-};
+  const handleNotifyChange = (sessionId, type, checked) => {
+    setNotifyViaMap((prev) => ({
+      ...prev,
+      [sessionId]: {
+        email: type === "email" ? checked : prev[sessionId]?.email ?? true,
+        whatsapp: type === "whatsapp" ? checked : prev[sessionId]?.whatsapp ?? false,
+      },
+    }));
+  };
 
 
 
@@ -123,7 +123,7 @@ const handleNotifyChange = (sessionId, type, checked) => {
                 className={cn(
                   styles.dcslot,
                   selectedGroupKey === g.key && styles.dcslotActive,
-                      selectedGroupKey === g.key && `${styles.dcslotActive} ${g.type === "live" ? styles['live-active'] : styles['demo-active']}`
+                  selectedGroupKey === g.key && `${styles.dcslotActive} ${g.type === "live" ? styles['live-active'] : styles['demo-active']}`
                 )}
                 onClick={() => setSelectedGroupKey(g.key)}
               >
@@ -192,114 +192,114 @@ const handleNotifyChange = (sessionId, type, checked) => {
                         {sess.duration || "60 min"}
                       </div>
                     </div>
-{sess._isEnrolled ? (
-  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {sess._isEnrolled ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 
-    {/* Enrolled Button */}
-    <button
-      className={styles.dcbtn}
-      disabled
-      style={{ background: "#ccc", color: "#555" }}
-    >
-      Enrolled
-    </button>
-
-
-
-    {/* Resend Button */}
-    <button
-      className={styles.dclink}
-      disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-      onClick={() => {
-        setSendingBatchId(sess.batchId);
-
-        resendEmail(
-          {
-            email: userProfile.email,
-          notifyVia: {
-  email: notifyViaMap[sess.id]?.email ?? true,
-  whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-},
-
-          },
-          {
-            onSuccess: (msg) => {
-              setSendingBatchId(null);
-              setResendError("");
-              setResendMessage(typeof msg === "string" ? msg : msg?.message);
-            },
-            onError: (err) => {
-              setSendingBatchId(null);
-              const backendMsg =
-                typeof err?.response?.data === "string"
-                  ? err.response.data
-                  : err?.response?.data?.message;
-
-              setResendMessage("");
-              setResendError(backendMsg || "Failed to resend email");
-            },
-          }
-        );
-      }}
-    >
-      {sess.resendCount >= 3
-        ? "Limit Reached"
-        : sendingBatchId === sess.batchId
-        ? "Sending..."
-        : "Resend"}
-    </button>
-  </div>
-) : (
-<>
-  <div className={styles.enrollActions}>
-    <button
-      className={styles.dcbtn}
-      disabled={enrollingSessionId === sess.id}
-     onClick={() =>
-  onEnrollClick(sess, {
-    email: notifyViaMap[sess.id]?.email ?? true,
-    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-  })
-}
+                        {/* Enrolled Button */}
+                        <button
+                          className={styles.dcbtn}
+                          disabled
+                          style={{ background: "#ccc", color: "#555" }}
+                        >
+                          Enrolled
+                        </button>
 
 
 
-    >
-      {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
-    </button>
+                        {/* Resend Button */}
+                        <button
+                          className={styles.dclink}
+                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                          onClick={() => {
+                            setSendingBatchId(sess.batchId);
 
-    {/* Notification Options */}
-   <div className={styles.notifyOptions}>
-  {/* Email (default checked, user CAN uncheck) */}
-  <label className={styles.notifyLabel}>
-    <input
-      type="checkbox"
-      checked={notifyViaMap[sess.id]?.email ?? true}
-      onChange={(e) =>
-        handleNotifyChange(sess.id, "email", e.target.checked)
-      }
-    />
-    <span>Email</span>
-  </label>
+                            resendEmail(
+                              {
+                                email: userProfile.email,
+                                notifyVia: {
+                                  email: notifyViaMap[sess.id]?.email ?? true,
+                                  whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+                                },
 
-  {/* WhatsApp (optional) */}
-  <label className={styles.notifyLabel}>
-    <input
-      type="checkbox"
-      checked={notifyViaMap[sess.id]?.whatsapp ?? false}
-      onChange={(e) =>
-        handleNotifyChange(sess.id, "whatsapp", e.target.checked)
-      }
-    />
-    <span>WhatsApp</span>
-  </label>
-</div>
+                              },
+                              {
+                                onSuccess: (msg) => {
+                                  setSendingBatchId(null);
+                                  setResendError("");
+                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
+                                },
+                                onError: (err) => {
+                                  setSendingBatchId(null);
+                                  const backendMsg =
+                                    typeof err?.response?.data === "string"
+                                      ? err.response.data
+                                      : err?.response?.data?.message;
+
+                                  setResendMessage("");
+                                  setResendError(backendMsg || "Failed to resend email");
+                                },
+                              }
+                            );
+                          }}
+                        >
+                          {sess.resendCount >= 3
+                            ? "Limit Reached"
+                            : sendingBatchId === sess.batchId
+                              ? "Sending..."
+                              : "Resend"}
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className={styles.enrollActions}>
+                          <button
+                            className={styles.dcbtn}
+                            disabled={enrollingSessionId === sess.id}
+                            onClick={() =>
+                              onEnrollClick(sess, {
+                                email: notifyViaMap[sess.id]?.email ?? true,
+                                whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+                              })
+                            }
 
 
-  </div>
-</>
 
-)}
+                          >
+                            {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
+                          </button>
+
+                          {/* Notification Options */}
+                          <div className={styles.notifyOptions}>
+                            {/* Email (default checked, user CAN uncheck) */}
+                            <label className={styles.notifyLabel}>
+                              <input
+                                type="checkbox"
+                                checked={notifyViaMap[sess.id]?.email ?? true}
+                                onChange={(e) =>
+                                  handleNotifyChange(sess.id, "email", e.target.checked)
+                                }
+                              />
+                              <span>Email</span>
+                            </label>
+
+                            {/* WhatsApp (optional) */}
+                            <label className={styles.notifyLabel}>
+                              <input
+                                type="checkbox"
+                                checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+                                onChange={(e) =>
+                                  handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+                                }
+                              />
+                              <span>WhatsApp</span>
+                            </label>
+                          </div>
+
+
+                        </div>
+                      </>
+
+                    )}
 
                   </div>
                 ))}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // Added useNavigate
+import { useNavigate, useParams } from "react-router-dom"; 
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../utils";
 import RequestBatch from "../UserPanel/RequestBatch";
@@ -15,6 +15,7 @@ import DemoClassSectionMentoringTab from "./DemoClassSectionMentoringTab";
 import DemoClassSectionSelfTab from "./DemoClassSectionSelfTab";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
 import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
+import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
 
 const tabs = [
   { key: "live", label: "Live Training" },
@@ -28,8 +29,8 @@ const DemoClassSection = forwardRef((props, ref) => {
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
   
-  const navigate = useNavigate(); // Moved inside the component
-  const { courseName } = useParams(); // Moved inside the component
+  const navigate = useNavigate(); 
+  const { courseName } = useParams(); 
 
   const [showRequestBatch, setShowRequestBatch] = useState(false);
   const [resetLiveSubmitting, setResetLiveSubmitting] = useState(0);
@@ -74,7 +75,6 @@ const DemoClassSection = forwardRef((props, ref) => {
     isLoading: isProfileLoading,
   } = useUserProfile();
 
-  // Define onEnroll function
   const onEnroll = () => {
     if (!courseName) return;
 
@@ -92,7 +92,7 @@ const DemoClassSection = forwardRef((props, ref) => {
 
   const normalizeCourseSlug = (slug) =>
     slug
-      .replace(/[-_]+/g, " ")   // programming-with-c++ → programming with c++
+      .replace(/[-_]+/g, " ")   
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
@@ -269,6 +269,36 @@ const DemoClassSection = forwardRef((props, ref) => {
     { value: "WhatsApp Only", label: "WhatsApp Only" },
   ];
 
+  
+
+const { currency, exchangeRate } = useCurrency();
+
+const getTabPrice = (tabKey) => {
+  if (!courseData) return `${currency} 0`;
+
+  let baseAmount = 0;
+
+  if (currency === "INR") {
+    if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+    if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+    if (tabKey === "mentoring") baseAmount = courseData.imtotal ?? courseData.imamount;
+    if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+  } 
+
+  else {
+    if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+    if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+    if (tabKey === "mentoring") baseAmount = courseData.mtotal ?? courseData.mamount;
+    if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+
+    baseAmount = baseAmount * exchangeRate;
+  }
+
+  const safeAmount = Number(baseAmount) || 0;
+
+  return `${currency} ${Math.round(safeAmount)}`;
+};
+
   return (
     <section className={styles.dcwrap} ref={ref} id="demoClassSection">
       <div className="container">
@@ -344,21 +374,25 @@ const DemoClassSection = forwardRef((props, ref) => {
         </div>
 
         {/* Tabs */}
-        <div className={styles.dctabs}>
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              className={cn(
-                styles.dctab,
-                activeTab === t.key && styles.dctabisactive
-              )}
-              onClick={() => setActiveTab(t.key)}
-            >
-              {t.label}
-              <span class={styles.feeAmount}>INR 18000</span>
-            </button>
-          ))}
-        </div>
+       <div className={styles.dctabs}>
+  {tabs.map((t) => (
+    <button
+      key={t.key}
+      className={cn(
+        styles.dctab,
+        activeTab === t.key && styles.dctabisactive
+      )}
+      onClick={() => setActiveTab(t.key)}
+    >
+      {t.label}
+    <span className={styles.feeAmount}>
+  {getTabPrice(t.key)}
+</span>
+
+    </button>
+  ))}
+</div>
+
 
         {/* Tab contents moved to separate components */}
         {activeTab === "live" && (

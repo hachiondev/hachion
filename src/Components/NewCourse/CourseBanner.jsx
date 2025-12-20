@@ -8,7 +8,7 @@ import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
 import NewEnrollNow from "../UserPanel/NewEnrollNow";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
-import { useTrainersByCourse } from "../../Api/hooks/CourseApi/useTrainersByCourse";
+// import { useTrainersByCourse } from "../../Api/hooks/CourseApi/useTrainersByCourse";
 import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
@@ -101,7 +101,7 @@ export default function CourseBanner({ onEnroll }) {
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
   const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
-  const { data: trainers = [] } = useTrainersByCourse(courseNameForApi);
+  // const { data: trainers = [] } = useTrainersByCourse(courseNameForApi);
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
@@ -163,8 +163,12 @@ export default function CourseBanner({ onEnroll }) {
     stripHtml(course.aboutCourse) ||
     "Course overview coming soon.";
 
+  // const author =
+  //   trainers && trainers.length > 0 ? trainers.join(", ") : "Hachion Trainers";
+
   const author =
-    trainers && trainers.length > 0 ? trainers.join(", ") : "Hachion Trainers";
+  course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
+
 
   const categories = course.courseCategory
     ? [course.courseCategory]

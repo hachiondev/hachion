@@ -3,52 +3,68 @@ import styles from "./InstructorSection.module.css";
 import { cn } from "../../utils";
 import { useParams } from "react-router-dom";
 import { useTrainerDetailsByCourse } from "../../Api/hooks/InstructorSection/useTrainerDetailsByCourse";
+import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
 
 export default function InstructorSection({
   name = "John Mitchell",
   title = "Senior Full-Stack Developer & Technical Lead",
   stats = { years: "12+", students: "50K+", rating: "4.9" },
-  bio = `With over 12 years of industry experience, John has worked at leading tech companies including Google, Microsoft, and Amazon. He specializes in full-stack web development and has mentored hundreds of developers throughout his career.`,
-  creds = [
-    "Senior Technical Lead at Google (5 years)",
-    "Full-Stack Developer at Microsoft (4 years)",
-    "Computer Science, Stanford University",
-    "AWS Certified Solutions Architect",
-  ],
-  onLinkedIn = () => { },
-  onAsk = () => { },
+  bio = `With over 12 years of industry experience...`,
+  creds = [],
 }) {
 
-
+  /* -------------------------------
+     1️⃣ Get course name FIRST
+  -------------------------------- */
   const { courseName: courseNameSlug } = useParams();
+
   const courseName = courseNameSlug
     ? decodeURIComponent(courseNameSlug)
-      .replace(/[-_]+/g, " ")
-      .replace(/\+\+/g, "pp")   // C++ → cpp
-      .trim()
-      .toLowerCase()
+        .replace(/[-_]+/g, " ")
+        .replace(/\+\+/g, "pp")
+        .trim()
+        .toLowerCase()
     : "";
 
-
+  /* -------------------------------
+     2️⃣ Fetch APIs
+  -------------------------------- */
+  const { data: courseData } = useCourseByName(courseName);
   const { data: trainerList = [] } = useTrainerDetailsByCourse(courseName);
 
-  const trainerName = trainerList[0]?.trainer_name;
-  const trainerBio = trainerList[0]?.summary;
-  const trainerRating = trainerList[0]?.trainerRating;
-  const designation = trainerList[0]?.designation;
-  const experience = trainerList[0]?.experience;
-  const experienceCredentials = trainerList[0]?.experienceCredentials;
+  const defaultTrainerName =
+    courseData?.defaultTrainer?.toLowerCase();
 
-  const rawExperienceCredentials = trainerList[0]?.experienceCredentials;
+  /* -------------------------------
+     3️⃣ Select correct trainer
+  -------------------------------- */
+  const selectedTrainer =
+    trainerList.find(
+      (t) =>
+        t.trainer_name?.toLowerCase() === defaultTrainerName
+    ) || trainerList[0];
+
+  /* -------------------------------
+     4️⃣ Use SELECTED trainer
+  -------------------------------- */
+  const trainerName = selectedTrainer?.trainer_name;
+  const trainerBio = selectedTrainer?.summary;
+  const trainerRating = selectedTrainer?.trainerRating;
+  const designation = selectedTrainer?.designation;
+  const experience = selectedTrainer?.experience;
+
+  const rawExperienceCredentials =
+    selectedTrainer?.experienceCredentials;
 
   const experienceCredentialsArray =
     typeof rawExperienceCredentials === "string"
       ? rawExperienceCredentials
-        .split("\n")
-        .map(item => item.replace(/^\*\s*/, "").trim())
-        .filter(Boolean)
+          .split("\n")
+          .map((item) =>
+            item.replace(/^\*\s*/, "").trim()
+          )
+          .filter(Boolean)
       : [];
-
 
 
   const finalRating = Number(trainerRating || stats.rating);
@@ -56,12 +72,10 @@ export default function InstructorSection({
 
   const fullStars = Math.floor(finalRating);
   const decimal = finalRating - fullStars;
+const stars = Array.from({ length: 5 }, (_, i) =>
+  i < Math.round(finalRating) ? "★" : "☆"
+).join("");
 
-  const stars = Array.from({ length: 5 }, (_, i) => {
-    if (i < fullStars) return "★";
-    if (i === fullStars && decimal >= 0.5) return "⯨";
-    return "☆";
-  }).join("");
   const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
 
   return (

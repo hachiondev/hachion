@@ -53,11 +53,19 @@ export default function CourseCurriculum() {
   const [showVideo, setShowVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
-  const [selectedTab, setSelectedTab] = useState({});
+  const [selectedTab, setSelectedTab] = useState({
+  curriculumId: null,
+  tab: null,
+});
+const [assessmentError, setAssessmentError] = useState({
+  curriculumId: null,
+  message: "",
+});
+
+
   const { courseName: courseNameSlug } = useParams();
   const [showAll, setShowAll] = useState(false);
 
-  // Human-readable course name
   const courseName = courseNameSlug
     ? decodeURIComponent(courseNameSlug)
       .replace(/-/g, " ")
@@ -101,19 +109,28 @@ export default function CourseCurriculum() {
       setCheckParams((prev) => ({ ...prev, enabled: false }));
       return;
     }
+if (isError && accessError) {
+  const apiError =
+    accessError.response?.data?.error || "Access denied";
 
-    if (isError && accessError) {
-      const apiError =
-        accessError.response?.data?.error || "";
+  if (apiError.toLowerCase().includes("enroll")) {
+    setShowEnrollPrompt(true);
+  } else {
+    // show inline error near assessment button
+    setAssessmentError({
+      curriculumId: selectedTab.curriculumId,
+      message: apiError,
+    });
 
-      if (apiError.toLowerCase().includes("enroll")) {
-        setShowEnrollPrompt(true);
-      } else {
-        alert(apiError || "Access denied");
-      }
+    // auto-hide after 6 seconds
+    setTimeout(() => {
+      setAssessmentError({ curriculumId: null, message: "" });
+    }, 6000);
+  }
 
-      setCheckParams((prev) => ({ ...prev, enabled: false }));
-    }
+  setCheckParams((prev) => ({ ...prev, enabled: false }));
+}
+
   }, [accessData, isError, accessError]);
 
   const downloadPdf = () => {
@@ -191,21 +208,33 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                         <div className={styles.ccttlsub}>
                           {/* TOPICS TAB */}
                           <button
-                            className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
-                                ? styles.activeCap
-                                : ""
-                              }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedTab((prev) => ({
-                                ...prev,
-                                [m.curriculum_id]:
-                                  prev[m.curriculum_id] === "topics"
-                                    ? null
-                                    : "topics", // Only set "topics", others will be deselected
-                              }));
-                              setOpenId(m.curriculum_id);
-                            }}
+                           className={`${styles.cccapsul} ${
+  selectedTab.curriculumId === m.curriculum_id &&
+  selectedTab.tab === "topics"
+    ? styles.activeCap
+    : ""
+}`}
+
+                       onClick={(e) => {
+  e.stopPropagation();
+
+  const isSameTab =
+    selectedTab.curriculumId === m.curriculum_id &&
+    selectedTab.tab === "topics";
+
+  if (isSameTab) {
+    setSelectedTab({ curriculumId: null, tab: null });
+    setOpenId(null);
+  } else {
+    setSelectedTab({
+      curriculumId: m.curriculum_id,
+      tab: "topics",
+    });
+    setOpenId(m.curriculum_id);
+  }
+}}
+
+
                           >
                             Topics Included
                           </button>
@@ -215,22 +244,34 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                           {m.assessment_pdf && (
                             <button
                             
-                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
+                             className={`${styles.cccapsul} ${
+  selectedTab.curriculumId === m.curriculum_id &&
+  selectedTab.tab === "assignment"
+    ? styles.activeCap
+    : ""
+}`}
+
                                 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTab((prev) => ({
-                                  ...prev,
-                                  [m.curriculum_id]:
-                                    prev[m.curriculum_id] === "assignment"
-                                      ? null
-                                      : "assignment", // Only set "assignment"
-                                }));
-                                setOpenId(m.curriculum_id);
-                              }}
+                             onClick={(e) => {
+  e.stopPropagation();
+
+  const isSameTab =
+    selectedTab.curriculumId === m.curriculum_id &&
+    selectedTab.tab === "assignment";
+
+  if (isSameTab) {
+    setSelectedTab({ curriculumId: null, tab: null });
+    setOpenId(null);
+  } else {
+    setSelectedTab({
+      curriculumId: m.curriculum_id,
+      tab: "assignment",
+    });
+    setOpenId(m.curriculum_id);
+  }
+}}
+
+
                             >
                               Assignment
                             </button>
@@ -238,21 +279,33 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                           {m.link && (
                             <button
                               type="button"
-                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTab((prev) => ({
-                                  ...prev,
-                                  [m.curriculum_id]:
-                                    prev[m.curriculum_id] === "video"
-                                      ? null
-                                      : "video", // Only set "video"
-                                }));
-                                setOpenId(m.curriculum_id);
-                              }}
+                              className={`${styles.cccapsul} ${
+  selectedTab.curriculumId === m.curriculum_id &&
+  selectedTab.tab === "video"
+    ? styles.activeCap
+    : ""
+}`}
+
+                             onClick={(e) => {
+  e.stopPropagation();
+
+  const isSameTab =
+    selectedTab.curriculumId === m.curriculum_id &&
+    selectedTab.tab === "video";
+
+  if (isSameTab) {
+    setSelectedTab({ curriculumId: null, tab: null });
+    setOpenId(null);
+  } else {
+    setSelectedTab({
+      curriculumId: m.curriculum_id,
+      tab: "video",
+    });
+    setOpenId(m.curriculum_id);
+  }
+}}
+
+
                             >
                               Videos
                             </button>
@@ -270,7 +323,9 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                         open && styles.ccaccpanelopen
                       )}
                     >
-                      {selectedTab[m.curriculum_id] === "topics" && (
+                      {selectedTab.curriculumId === m.curriculum_id &&
+selectedTab.tab === "topics"
+ && (
                         <>
                           {extractListItems(m.topic).map((point, i) => (
                             <div key={i} className={styles.ccrow}>
@@ -283,18 +338,41 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                         </>
                       )}
 
-                      {selectedTab[m.curriculum_id] === "assignment" &&
-                        m.assessment_pdf && (
-                          <button
-                            className={styles.ccassess}
-                            onClick={() =>
-                              handleDownloadAssessment(m.assessment_pdf)
-                            }
-                          >
-                            📄 Download Assignment
-                          </button>
-                        )}
-                      {selectedTab[m.curriculum_id] === "video" && m.link && (
+                    {selectedTab.curriculumId === m.curriculum_id &&
+selectedTab.tab === "assignment"
+ &&
+  m.assessment_pdf && (
+    <>
+      <button
+        className={styles.ccassess}
+        onClick={() =>
+          handleDownloadAssessment(m.assessment_pdf)
+        }
+      >
+        📄 Download Assignment
+      </button>
+
+      {assessmentError.curriculumId === m.curriculum_id && (
+        <div
+          style={{
+            marginTop: "6px",
+            fontSize: "13px",
+            color: "#d93025",
+            background: "#fdecea",
+            padding: "6px 10px",
+            borderRadius: "4px",
+            display: "inline-block",
+          }}
+        >
+          {assessmentError.message}
+        </div>
+      )}
+    </>
+)}
+
+                      {selectedTab.curriculumId === m.curriculum_id &&
+selectedTab.tab === "video"
+ && m.link && (
                         <div className={styles.ccvideocontainer}>
                           <button
                             className={styles.ccvideobtn}

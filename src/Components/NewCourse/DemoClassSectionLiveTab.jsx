@@ -261,39 +261,41 @@ What's Included:
                                 whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
                               })
                             }
-
-
-
                           >
                             {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
                           </button>
 
                           {/* Notification Options */}
                           <div className={styles.notifyOptions}>
-                            {/* Email (default checked, user CAN uncheck) */}
-                            <label className={styles.notifyLabel}>
-                              <input
-                                type="checkbox"
-                                checked={notifyViaMap[sess.id]?.email ?? true}
-                                onChange={(e) =>
-                                  handleNotifyChange(sess.id, "email", e.target.checked)
-                                }
-                              />
-                              <span>Email</span>
-                            </label>
+  {/* Container for both checkboxes */}
+  <div className={styles.checkboxGroup}>
+    {/* Email (default checked, user CAN uncheck) */}
+    <label className={styles.notifyLabel}>
+      <input
+        type="checkbox"
+        checked={notifyViaMap[sess.id]?.email ?? true}
+        onChange={(e) =>
+          handleNotifyChange(sess.id, "email", e.target.checked)
+        }
+        className={styles.checkboxInput}
+      />
+      <span className={styles.checkboxText}>Email</span>
+    </label>
 
-                            {/* WhatsApp (optional) */}
-                            <label className={styles.notifyLabel}>
-                              <input
-                                type="checkbox"
-                                checked={notifyViaMap[sess.id]?.whatsapp ?? false}
-                                onChange={(e) =>
-                                  handleNotifyChange(sess.id, "whatsapp", e.target.checked)
-                                }
-                              />
-                              <span>WhatsApp</span>
-                            </label>
-                          </div>
+    {/* WhatsApp (optional) */}
+    <label className={styles.notifyLabel}>
+      <input
+        type="checkbox"
+        checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+        onChange={(e) =>
+          handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+        }
+        className={styles.checkboxInput}
+      />
+      <span className={styles.checkboxText}>WhatsApp</span>
+    </label>
+  </div>
+</div>
 
 
                         </div>

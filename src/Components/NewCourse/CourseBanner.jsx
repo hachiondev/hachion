@@ -90,8 +90,6 @@ export default function CourseBanner({ onEnroll }) {
       .toLowerCase()
     : "";
 
-
-
   const [showLoginRequired, setShowLoginRequired] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showEnroll, setShowEnroll] = useState(false);
@@ -369,14 +367,13 @@ const startsFromPrice =
             <span className={styles.bnchip}>{level}</span>
 
             <div className={styles.titleGroup}>
-              <h1 className={styles.bntitle}>{title}</h1>
-            <p class={styles.feeGroup}>
-              <span className={styles.fee}>Fee:</span>
-              <span class={styles.start}>Starts from </span>
-               {/* <span class={styles.amount}>INR 500/-</span> */}
-               <span className={styles.amount}>{startsFromPrice}</span>
-               </p>
-            </div>
+  <h1 className={styles.bntitle}>{title}</h1>
+  <p className={styles.feeGroup}>
+    <span className={styles.fee}>Fee:</span>
+    <span className={styles.start}>Starts from </span>
+    <span className={styles.amount}>{startsFromPrice}</span>
+  </p>
+</div>
 
             <p className={styles.bnsub}>{subtitle}</p>
 

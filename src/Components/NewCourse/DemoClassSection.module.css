@@ -140,13 +140,17 @@
   font-size: 17px;
 }
 
-.feeAmount{
-  background-color: #ff5c01;
+.feeAmount {
+    background: linear-gradient(135deg, #ff5c01, #ff8c42);
     border-radius: 20px;
-    color: #fff;
+    color: white;
     font-size: 12px;
-    padding: 3px 8px;
+    font-weight: 600;
+    padding: 4px 12px;
     white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(255, 92, 1, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 /* timezone */
@@ -311,7 +315,46 @@
   background: var(--brand);
   color: #fff;
 }
+.enrollActions{
+  display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 
+.notifyOptions {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.checkboxGroup {
+  display: flex;
+  /* flex-wrap: wrap; */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.notifyLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  -webkit-user-select:none;
+  white-space: nowrap;
+}
+
+.checkboxInput {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #0072ff; /* Modern browser support for checkbox color */
+}
+
+.checkboxText {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
 /* Grid area */
 .dcgrid {
   margin: 10px auto 0;
@@ -340,7 +383,7 @@
 
 .dcslotActive {
 border: 1px solid #1fb6ff !important;
-    box-shadow: 0 0 0 3px rgb(31 182 255 / 26%) !important;
+    box-shadow: 0 0 0 3px rgb(31 182 255) !important;
     position: relative;
 }
 
@@ -1096,6 +1139,14 @@ border: 1px solid #1fb6ff !important;
     width: auto;
   }
 
+    .checkboxGroup {
+    gap: 15px;
+  }
+  
+  .checkboxText {
+    font-size: 13px;
+  }
+
 }
 
 
@@ -1311,6 +1362,21 @@ border: 1px solid #1fb6ff !important;
   .dcdetails {
     grid-template-columns: repeat(1, 1fr);
   }
+
+    .checkboxGroup {
+    gap: 10px;
+    flex-wrap: nowrap; /* Keep on same line even on mobile */
+    justify-content: space-between;
+  }
+  
+  .checkboxText {
+    font-size: 12px;
+  }
+  
+  .checkboxInput {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media (max-width: 375px) {
@@ -1515,5 +1581,15 @@ border: 1px solid #1fb6ff !important;
   .dcrequestSelectTrigger,
   .dcrequestSelectOption {
     font-size: 16px;
+  }
+
+    .checkboxGroup {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .notifyLabel {
+    white-space: normal;
   }
 }

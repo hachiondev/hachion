@@ -44,7 +44,7 @@ const { data: trainers = [] } = useTrainers();
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(4);
   
-  // const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("All");
 
   // --------------------------
   // Responsive cards per page
@@ -61,6 +61,11 @@ const { data: trainers = [] } = useTrainers();
     return () => window.removeEventListener("resize", update);
   }, []);
 
+
+  // --------------------------
+// Build summerCourses ONLY from summerEvents
+// (no trending/category comparison)
+// --------------------------
 const summerCourses = useMemo(() => {
   if (!summerEvents.length || !coursesSummary.length) return [];
 
@@ -97,6 +102,18 @@ const summerCourses = useMemo(() => {
     .filter(Boolean);
 }, [summerEvents, coursesSummary, trainers]);
 
+
+
+  // --------------------------
+  // Categories derived from summerCourses (for filter UI)
+  // --------------------------
+  const categories = useMemo(() => {
+    const cats = ["All"];
+    summerCourses.forEach((c) => {
+      if (c && c.category_name) cats.push(c.category_name);
+    });
+    return [...new Set(cats)];
+  }, [summerCourses]);
 
   // --------------------------
   // Filtered list according to activeCategory

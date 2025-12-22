@@ -1,15 +1,15 @@
-import CourseBanner from '../NewCourse/CourseBanner';
-import CareerOutcomes from '../NewCourse/CareerOutcomes';
-import CertificateSection from '../NewCourse/CertificateSection';
-import CourseCurriculum from '../NewCourse/CourseCurriculum';
-import DemoClassSection from '../NewCourse/DemoClassSection';
-import FAQSection from '../NewCourse/FAQSection';
-import FinalCTA from '../NewCourse/FinalCTA';
-import InstructorSection from '../NewCourse/InstructorSection';
-import LearnSection from '../NewCourse/LearnSection';
-import StudentsAlsoEnrolled from '../NewCourse/StudentsAlsoEnrolled';
-import StudentsSay from '../NewCourse/StudentsSay';
-import SuccessStories from '../NewCourse/SuccessStories';
+import CourseBanner from '../../NewCourse/CourseBanner';
+import CareerOutcomes from '../../NewCourse/CareerOutcomes';
+import CertificateSection from '../../NewCourse/CertificateSection';
+import CourseCurriculum from '../../NewCourse/CourseCurriculum';
+import DemoClassSection from '../../NewCourse/DemoClassSection';
+import FAQSection from '../../NewCourse/FAQSection';
+import FinalCTA from '../../NewCourse/FinalCTA';
+import InstructorSection from '../../NewCourse/InstructorSection';
+import LearnSection from '../../NewCourse/LearnSection';
+import StudentsAlsoEnrolled from '../../NewCourse/StudentsAlsoEnrolled';
+import StudentsSay from '../../NewCourse/StudentsSay';
+import SuccessStories from '../../NewCourse/SuccessStories';
 import { useEffect, useRef } from 'react';
 
 const NewCourseDetails = () => {

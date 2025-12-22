@@ -54,13 +54,13 @@ export default function CourseCurriculum() {
   const [videoUrl, setVideoUrl] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [selectedTab, setSelectedTab] = useState({
-  curriculumId: null,
-  tab: null,
-});
-const [assessmentError, setAssessmentError] = useState({
-  curriculumId: null,
-  message: "",
-});
+    curriculumId: null,
+    tab: null,
+  });
+  const [assessmentError, setAssessmentError] = useState({
+    curriculumId: null,
+    message: "",
+  });
 
 
   const { courseName: courseNameSlug } = useParams();
@@ -109,27 +109,27 @@ const [assessmentError, setAssessmentError] = useState({
       setCheckParams((prev) => ({ ...prev, enabled: false }));
       return;
     }
-if (isError && accessError) {
-  const apiError =
-    accessError.response?.data?.error || "Access denied";
+    if (isError && accessError) {
+      const apiError =
+        accessError.response?.data?.error || "Access denied";
 
-  if (apiError.toLowerCase().includes("enroll")) {
-    setShowEnrollPrompt(true);
-  } else {
-    // show inline error near assessment button
-    setAssessmentError({
-      curriculumId: selectedTab.curriculumId,
-      message: apiError,
-    });
+      if (apiError.toLowerCase().includes("enroll")) {
+        setShowEnrollPrompt(true);
+      } else {
+        // show inline error near assessment button
+        setAssessmentError({
+          curriculumId: selectedTab.curriculumId,
+          message: apiError,
+        });
 
-    // auto-hide after 6 seconds
-    setTimeout(() => {
-      setAssessmentError({ curriculumId: null, message: "" });
-    }, 6000);
-  }
+        // auto-hide after 6 seconds
+        setTimeout(() => {
+          setAssessmentError({ curriculumId: null, message: "" });
+        }, 6000);
+      }
 
-  setCheckParams((prev) => ({ ...prev, enabled: false }));
-}
+      setCheckParams((prev) => ({ ...prev, enabled: false }));
+    }
 
   }, [accessData, isError, accessError]);
 
@@ -188,7 +188,6 @@ if (isError && accessError) {
               .slice(0, showAll ? uiCurriculum.length : 5)
               .map((m, idx) => {
                 const open = openId === m.curriculum_id;
-console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                 return (
                   <div className={styles.ccacc} key={m.curriculum_id}>
                     <button
@@ -208,31 +207,30 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                         <div className={styles.ccttlsub}>
                           {/* TOPICS TAB */}
                           <button
-                           className={`${styles.cccapsul} ${
-  selectedTab.curriculumId === m.curriculum_id &&
-  selectedTab.tab === "topics"
-    ? styles.activeCap
-    : ""
-}`}
+                            className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
+                                selectedTab.tab === "topics"
+                                ? styles.activeCap
+                                : ""
+                              }`}
 
-                       onClick={(e) => {
-  e.stopPropagation();
+                            onClick={(e) => {
+                              e.stopPropagation();
 
-  const isSameTab =
-    selectedTab.curriculumId === m.curriculum_id &&
-    selectedTab.tab === "topics";
+                              const isSameTab =
+                                selectedTab.curriculumId === m.curriculum_id &&
+                                selectedTab.tab === "topics";
 
-  if (isSameTab) {
-    setSelectedTab({ curriculumId: null, tab: null });
-    setOpenId(null);
-  } else {
-    setSelectedTab({
-      curriculumId: m.curriculum_id,
-      tab: "topics",
-    });
-    setOpenId(m.curriculum_id);
-  }
-}}
+                              if (isSameTab) {
+                                setSelectedTab({ curriculumId: null, tab: null });
+                                setOpenId(null);
+                              } else {
+                                setSelectedTab({
+                                  curriculumId: m.curriculum_id,
+                                  tab: "topics",
+                                });
+                                setOpenId(m.curriculum_id);
+                              }
+                            }}
 
 
                           >
@@ -240,38 +238,33 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                           </button>
 
                           {/* ASSIGNMENT TAB */}
-                          
                           {m.assessment_pdf && (
                             <button
-                            
-                             className={`${styles.cccapsul} ${
-  selectedTab.curriculumId === m.curriculum_id &&
-  selectedTab.tab === "assignment"
-    ? styles.activeCap
-    : ""
-}`}
-
-                                
-                             onClick={(e) => {
-  e.stopPropagation();
-
-  const isSameTab =
-    selectedTab.curriculumId === m.curriculum_id &&
-    selectedTab.tab === "assignment";
-
-  if (isSameTab) {
-    setSelectedTab({ curriculumId: null, tab: null });
-    setOpenId(null);
-  } else {
-    setSelectedTab({
-      curriculumId: m.curriculum_id,
-      tab: "assignment",
-    });
-    setOpenId(m.curriculum_id);
-  }
-}}
+                              className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
+                                  selectedTab.tab === "assignment"
+                                  ? styles.activeCap
+                                  : ""
+                                }`}
 
 
+                              onClick={(e) => {
+                                e.stopPropagation();
+
+                                const isSameTab =
+                                  selectedTab.curriculumId === m.curriculum_id &&
+                                  selectedTab.tab === "assignment";
+
+                                if (isSameTab) {
+                                  setSelectedTab({ curriculumId: null, tab: null });
+                                  setOpenId(null);
+                                } else {
+                                  setSelectedTab({
+                                    curriculumId: m.curriculum_id,
+                                    tab: "assignment",
+                                  });
+                                  setOpenId(m.curriculum_id);
+                                }
+                              }}
                             >
                               Assignment
                             </button>
@@ -279,31 +272,30 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                           {m.link && (
                             <button
                               type="button"
-                              className={`${styles.cccapsul} ${
-  selectedTab.curriculumId === m.curriculum_id &&
-  selectedTab.tab === "video"
-    ? styles.activeCap
-    : ""
-}`}
+                              className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
+                                  selectedTab.tab === "video"
+                                  ? styles.activeCap
+                                  : ""
+                                }`}
 
-                             onClick={(e) => {
-  e.stopPropagation();
+                              onClick={(e) => {
+                                e.stopPropagation();
 
-  const isSameTab =
-    selectedTab.curriculumId === m.curriculum_id &&
-    selectedTab.tab === "video";
+                                const isSameTab =
+                                  selectedTab.curriculumId === m.curriculum_id &&
+                                  selectedTab.tab === "video";
 
-  if (isSameTab) {
-    setSelectedTab({ curriculumId: null, tab: null });
-    setOpenId(null);
-  } else {
-    setSelectedTab({
-      curriculumId: m.curriculum_id,
-      tab: "video",
-    });
-    setOpenId(m.curriculum_id);
-  }
-}}
+                                if (isSameTab) {
+                                  setSelectedTab({ curriculumId: null, tab: null });
+                                  setOpenId(null);
+                                } else {
+                                  setSelectedTab({
+                                    curriculumId: m.curriculum_id,
+                                    tab: "video",
+                                  });
+                                  setOpenId(m.curriculum_id);
+                                }
+                              }}
 
 
                             >
@@ -324,67 +316,67 @@ console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
                       )}
                     >
                       {selectedTab.curriculumId === m.curriculum_id &&
-selectedTab.tab === "topics"
- && (
-                        <>
-                          {extractListItems(m.topic).map((point, i) => (
-                            <div key={i} className={styles.ccrow}>
-                              <span>•</span>
-                              <span className={styles.ccrowtitle}>
-                                {point}
-                              </span>
-                            </div>
-                          ))}
-                        </>
-                      )}
-
-                    {selectedTab.curriculumId === m.curriculum_id &&
-selectedTab.tab === "assignment"
- &&
-  m.assessment_pdf && (
-    <>
-      <button
-        className={styles.ccassess}
-        onClick={() =>
-          handleDownloadAssessment(m.assessment_pdf)
-        }
-      >
-        📄 Download Assignment
-      </button>
-
-      {assessmentError.curriculumId === m.curriculum_id && (
-        <div
-          style={{
-            marginTop: "6px",
-            fontSize: "13px",
-            color: "#d93025",
-            background: "#fdecea",
-            padding: "6px 10px",
-            borderRadius: "4px",
-            display: "inline-block",
-          }}
-        >
-          {assessmentError.message}
-        </div>
-      )}
-    </>
-)}
+                        selectedTab.tab === "topics"
+                        && (
+                          <>
+                            {extractListItems(m.topic).map((point, i) => (
+                              <div key={i} className={styles.ccrow}>
+                                <span>•</span>
+                                <span className={styles.ccrowtitle}>
+                                  {point}
+                                </span>
+                              </div>
+                            ))}
+                          </>
+                        )}
 
                       {selectedTab.curriculumId === m.curriculum_id &&
-selectedTab.tab === "video"
- && m.link && (
-                        <div className={styles.ccvideocontainer}>
-                          <button
-                            className={styles.ccvideobtn}
-                            onClick={() => {
-                              setVideoUrl(toEmbedUrl(m.link));
-                              setShowVideo(true);
-                            }}
-                          >
-                            ▶ Play Video
-                          </button>
-                        </div>
-                      )}
+                        selectedTab.tab === "assignment"
+                        &&
+                        m.assessment_pdf && (
+                          <>
+                            <button
+                              className={styles.ccassess}
+                              onClick={() =>
+                                handleDownloadAssessment(m.assessment_pdf)
+                              }
+                            >
+                              📄 Download Assignment
+                            </button>
+
+                            {assessmentError.curriculumId === m.curriculum_id && (
+                              <div
+                                style={{
+                                  marginTop: "6px",
+                                  fontSize: "13px",
+                                  color: "#d93025",
+                                  background: "#fdecea",
+                                  padding: "6px 10px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {assessmentError.message}
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                      {selectedTab.curriculumId === m.curriculum_id &&
+                        selectedTab.tab === "video"
+                        && m.link && (
+                          <div className={styles.ccvideocontainer}>
+                            <button
+                              className={styles.ccvideobtn}
+                              onClick={() => {
+                                setVideoUrl(toEmbedUrl(m.link));
+                                setShowVideo(true);
+                              }}
+                            >
+                              ▶ Play Video
+                            </button>
+                          </div>
+                        )}
                     </div>
                   </div>
                 );
@@ -394,7 +386,7 @@ selectedTab.tab === "video"
             {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
               <div className={styles.viewMoreContainer}>
                 <button
-                  className={styles.viewMoreBtn}
+                  className="home-start-button"
                   onClick={() => setShowAll(!showAll)}
                 >
                   {showAll ? "View Less" : "View More"}

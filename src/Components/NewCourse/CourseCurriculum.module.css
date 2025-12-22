@@ -58,11 +58,11 @@
 
 .ccgridbody {
   background: white;
-  padding: 40px;
+  padding: 30px 20px;
 }
 
 /* Accordion */
-.ccacc + .ccacc {
+.ccacc+.ccacc {
   margin-top: 12px;
 }
 
@@ -90,19 +90,19 @@
 }
 
 .ccnum {
-  width: 35px;
-  height: 35px;
+width: 30px;
+    height: 25px;
   border-radius: 8px;
   background: #7ba7d7;
   color: #000;
   display: grid;
   place-items: center;
   font-weight: 500;
-  font-size: 22px;
+  font-size: 17px;
 }
 
 .ccttlmain {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #000000;
   margin-bottom: 8px;
@@ -167,6 +167,7 @@
   overflow: auto;
   height: 270px;
 }
+
 .cccard2 {
   background: #fff;
   border: 1px solid var(--border);
@@ -494,8 +495,8 @@
     font-size: 26px;
   }
 
-  .cccard {
-    height: 50%;
+    .cccard{
+    height: 320px;
   }
 
   .ccwhy {
@@ -531,6 +532,7 @@
     width: 100%;
     padding-left: 0;
   }
+
 }
 
 @media (max-width: 480px) {
@@ -614,6 +616,10 @@
   .viewMoreBtn {
     padding: 12px 24px;
     font-size: 16px;
+  }
+
+  .cccard2 {
+    height: 320px;
   }
 }
 
@@ -702,5 +708,9 @@
 
   .modalButtons {
     flex-direction: column;
+  }
+
+  .cccard2 {
+    height: 320px;
   }
 }

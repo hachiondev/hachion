@@ -103,7 +103,7 @@ export default function CourseBanner({ onEnroll }) {
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
-  const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
+  // const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
 
 
   const hasSpecialDiscount = !!discountRule;
@@ -165,7 +165,7 @@ export default function CourseBanner({ onEnroll }) {
   //   trainers && trainers.length > 0 ? trainers.join(", ") : "Hachion Trainers";
 
   const author =
-  course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
+    course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
 
 
   const categories = course.courseCategory
@@ -310,46 +310,46 @@ export default function CourseBanner({ onEnroll }) {
       }
     }
   }
-let selfPacedOriginal = 0;
-let selfPacedFinal = 0;
+  let selfPacedOriginal = 0;
+  let selfPacedFinal = 0;
 
-if (currency === "INR") {
-  selfPacedOriginal = course.isamount ?? course.isqamount ?? 0;
-} else {
-  selfPacedOriginal =
-    (course.samount ?? course.sqamount ?? 0) * exchangeRate;
-}
-
-// apply special discount (same rules as before)
-selfPacedFinal = selfPacedOriginal;
-
-if (hasSpecialDiscount && selfPacedOriginal) {
-  if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-    selfPacedFinal =
-      selfPacedOriginal -
-      (selfPacedOriginal * ruleDiscountPct) / 100;
-  } else if (discountType === "FIXED" && discountFixedAmount) {
-    selfPacedFinal = Math.max(
-      0,
-      selfPacedOriginal - discountFixedAmount
-    );
+  if (currency === "INR") {
+    selfPacedOriginal = course.isamount ?? course.isqamount ?? 0;
+  } else {
+    selfPacedOriginal =
+      (course.samount ?? course.sqamount ?? 0) * exchangeRate;
   }
-}
 
-const price = selfPacedFinal
-  ? `${currency} ${Math.round(selfPacedFinal)}`
-  : "Price on request";
+  // apply special discount (same rules as before)
+  selfPacedFinal = selfPacedOriginal;
 
-const oldPrice =
-  hasSpecialDiscount && selfPacedOriginal
-    ? `${currency} ${Math.round(selfPacedOriginal)}`
-    : "";
+  if (hasSpecialDiscount && selfPacedOriginal) {
+    if (discountType === "PERCENTAGE" && ruleDiscountPct) {
+      selfPacedFinal =
+        selfPacedOriginal -
+        (selfPacedOriginal * ruleDiscountPct) / 100;
+    } else if (discountType === "FIXED" && discountFixedAmount) {
+      selfPacedFinal = Math.max(
+        0,
+        selfPacedOriginal - discountFixedAmount
+      );
+    }
+  }
 
-
-const startsFromPrice =
-  convertedTotalFee && convertedTotalFee > 0
-    ? `${currency} ${Math.round(convertedTotalFee)}`
+  const price = selfPacedFinal
+    ? `${currency} ${Math.round(selfPacedFinal)}`
     : "Price on request";
+
+  const oldPrice =
+    hasSpecialDiscount && selfPacedOriginal
+      ? `${currency} ${Math.round(selfPacedOriginal)}`
+      : "";
+
+
+  const startsFromPrice =
+    convertedTotalFee && convertedTotalFee > 0
+      ? `${currency} ${Math.round(convertedTotalFee)}`
+      : "Price on request";
 
   return (
     <section className={styles.bnwrap}>
@@ -367,13 +367,13 @@ const startsFromPrice =
             <span className={styles.bnchip}>{level}</span>
 
             <div className={styles.titleGroup}>
-  <h1 className={styles.bntitle}>{title}</h1>
-  <p className={styles.feeGroup}>
-    <span className={styles.fee}>Fee:</span>
-    <span className={styles.start}>Starts from </span>
-    <span className={styles.amount}>{startsFromPrice}</span>
-  </p>
-</div>
+              <h1 className={styles.bntitle}>{title}</h1>
+              <p className={styles.feeGroup}>
+                <span className={styles.fee}>Fee:</span>
+                <span className={styles.start}>Starts from </span>
+                <span className={styles.amount}>{startsFromPrice}</span>
+              </p>
+            </div>
 
             <p className={styles.bnsub}>{subtitle}</p>
 
@@ -409,7 +409,12 @@ const startsFromPrice =
 
             <div className={styles.bnpriceRow}>
               <div className={styles.bnprice}>
+                <p className={styles.feeGroup}>
+                <span className={styles.fee}>Fee:</span>
+                <span className={styles.start}>Starts from </span>
                 <span className={styles.bnpricenow}>{price}</span>
+              </p>
+                
                 {oldPrice && (
                   <span className={styles.bnpriceold}>{oldPrice}</span>
                 )}

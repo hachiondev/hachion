@@ -1,27 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import TrainingEvents from "../UserPanel/TrainingEvents";
+import styles from "./StudentsAlsoEnrolled.module.css"; // Import CSS module
 
 export default function StudentsAlsoEnrolled() {
   const navigate = useNavigate();
 
   return (
-    <section className="saewrap">
+    <section className={styles.saewrap}>
       <div className="container">
 
-        {/* ✅ CENTER-ALIGNED HEADER (INLINE ONLY) */}
-        <div
-          className="saehead"
-          style={{
-            textAlign: "center",
-            maxWidth: "900px",
-            margin: "0 auto 24px auto",
-          }}
-        >
-          <h2 style={{ marginBottom: "12px" }}>
-            Students Also Enrolled In
-          </h2>
-          <p style={{ margin: 0 }}>
+        {/* HEADER */}
+        <div className={styles.saehead}>
+          <h2 className={styles.textCenter}>Students Also Enrolled In</h2>
+          <p>
             Hachion offers flexible, instructor-led online training programs that let you
             learn anytime, anywhere. Our expert instructors, practical curriculum, and
             dedicated support team ensure a rewarding learning journey, helping you
@@ -29,33 +21,25 @@ export default function StudentsAlsoEnrolled() {
           </p>
         </div>
 
-        {/* ✅ TRAINING EVENTS (UNCHANGED) */}
+        {/* TRAINING EVENTS */}
         <TrainingEvents
           limit={4}
           hideHeader={true}
           hideFilters={false}
-          hideViewMore={false}   
+          hideViewMore={false}
         />
 
-        {/* ✅ BUTTON ROW (SIDE BY SIDE) */}
-        <div
-          className="sae-action-row"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "16px",
-            marginTop: "24px",
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Explore Courses */}
-          {/* <button
+        {/* ACTION ROW */}
+        <div className={styles.saeActionRow}>
+          {/* Optional button */}
+          {/* 
+          <button
             onClick={() => navigate("/coursedetails")}
-            className="home-start-button"
+            className={styles.homeStartButton}
           >
             Explore courses
-          </button> */}
+          </button> 
+          */}
         </div>
 
       </div>

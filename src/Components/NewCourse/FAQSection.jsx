@@ -131,20 +131,7 @@ export default function FAQSection({
         setShowAll(!showAll);
         setOpenIndex(null);
       }}
-      style={{
-        background: "linear-gradient(135deg, #00b4db, #0083b0)", // same blue tone
-        color: "#fff",
-        padding: "12px 28px",
-        borderRadius: "999px",
-        border: "none",
-        fontSize: "15px",
-        fontWeight: "600",
-        cursor: "pointer",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "8px",
-        boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
-      }}
+      className="home-start-button"
     >
       {showAll ? "View Less" : "View More"}
       <span style={{ fontSize: "18px", lineHeight: 1 }}>

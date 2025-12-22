@@ -58,7 +58,7 @@ import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
 import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';
 import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
-import NewCourseDetails from './Components/UserPanel/NewCourseDetails';
+import NewCourseDetails from './Components/UserPanel/NewcoursePage/NewCourseDetails';
 import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
 import GoogleMobileNumber from './Components/UserPanel/GoogleMobileNumber';
 import Layout from './Components/Layout/Layout';

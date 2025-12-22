@@ -458,10 +458,11 @@ border: 1px solid #1fb6ff !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 5px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: #fff;
+  gap: 7px;
 }
 
 .dcdetailrow+.dcdetailrow {
@@ -469,7 +470,7 @@ border: 1px solid #1fb6ff !important;
 }
 
 .dcmuted {
-  color: #7b8796;
+  color: #000;
   font-weight: 700;
   border: none;
   padding: 0;

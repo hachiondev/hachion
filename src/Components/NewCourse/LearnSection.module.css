@@ -38,11 +38,27 @@
   color: #000;
   font-size: 17px;
   font-weight: 400;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s ease forwards;
 }
+
+/* Staggered animation for list items */
+.lslistitem:nth-child(1) { animation-delay: 0.1s; }
+.lslistitem:nth-child(2) { animation-delay: 0.2s; }
+.lslistitem:nth-child(3) { animation-delay: 0.3s; }
+.lslistitem:nth-child(4) { animation-delay: 0.4s; }
+.lslistitem:nth-child(5) { animation-delay: 0.5s; }
+.lslistitem:nth-child(6) { animation-delay: 0.6s; }
 
 .lsicon {
   padding: 8px 2px;
   height: 38px;
+  transition: transform 0.3s ease;
+}
+
+.lsicon:hover {
+  transform: scale(1.1);
 }
 
 .lsicon svg {
@@ -60,6 +76,8 @@
 /* prerequisites */
 .lspre {
   margin-top: 28px;
+  animation: fadeIn 0.8s ease 0.3s forwards;
+  opacity: 0;
 }
 
 .lspre h3 {
@@ -93,7 +111,23 @@
   padding: 22px;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
   width: 100%;
-  /* max-width: 520px; */
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  opacity: 0;
+  animation: slideInFromRight 0.6s ease forwards;
+}
+
+.lscard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
+}
+
+.lsright > .lscard:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.lsright > .lscard:nth-child(2) {
+  animation-delay: 0.4s;
 }
 
 .lsright>.lscard {
@@ -156,6 +190,23 @@
   font-weight: 500;
   font-size: 13px;
   box-shadow: 0 4px 10px rgba(16, 24, 40, 0.03);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: popIn 0.4s ease forwards;
+}
+
+/* Staggered animation for pills */
+.lspill:nth-child(1) { animation-delay: 0.1s; }
+.lspill:nth-child(2) { animation-delay: 0.2s; }
+.lspill:nth-child(3) { animation-delay: 0.3s; }
+.lspill:nth-child(4) { animation-delay: 0.4s; }
+.lspill:nth-child(5) { animation-delay: 0.5s; }
+.lspill:nth-child(6) { animation-delay: 0.6s; }
+
+.lspill:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(16, 24, 40, 0.1);
 }
 
 /* salary panel */
@@ -164,6 +215,8 @@
   background: linear-gradient(90deg, #e6fbff 0%, #eaf7ee 40%, #e6f0fb 100%);
   border-radius: 10px;
   padding: 18px;
+  animation: fadeIn 0.8s ease 0.6s forwards;
+  opacity: 0;
 }
 
 .lssalarytitle {
@@ -185,6 +238,8 @@
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 18px;
+  animation: fadeIn 0.8s ease 0.8s forwards;
+  opacity: 0;
 }
 
 .lstoolstitle {
@@ -199,6 +254,8 @@
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 16px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 .lstoolcard {
@@ -208,6 +265,23 @@
   padding: 16px;
   text-align: center;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Staggered animation for tool cards */
+.lstoolcard:nth-child(1) { animation-delay: 0.1s; }
+.lstoolcard:nth-child(2) { animation-delay: 0.1s; }
+.lstoolcard:nth-child(3) { animation-delay: 0.1s; }
+.lstoolcard:nth-child(4) { animation-delay: 0.1s; }
+.lstoolcard:nth-child(5) { animation-delay: 0.1s; }
+.lstoolcard:nth-child(6) { animation-delay: 0.1s; }
+
+.lstoolcard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 .lstoolicon {
@@ -216,6 +290,11 @@
   margin: 0 auto 10px;
   border-radius: 12px;
   /* background: #eef2ff; */
+  transition: transform 0.3s ease;
+}
+
+.lstoolcard:hover .lstoolicon {
+  transform: scale(1.1);
 }
 
 .lstooliconimg {
@@ -226,6 +305,11 @@
 .lstoolname {
   font-weight: 600;
   color: #57575F;
+  transition: color 0.3s ease;
+}
+
+.lstoolcard:hover .lstoolname {
+  color: #0f172a;
 }
 
 .lstoollink {
@@ -234,6 +318,89 @@
   font-size: 12px;
   color: #1FABFF;
   text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.lstoollink:hover {
+  color: #0070cc;
+  text-decoration: none;
+}
+
+.cardPaginationContainer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth transition for page changes */
+.tools-slide-enter {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.tools-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0s ease;
+}
+
+.tools-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tools-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.3s ease;
 }
 
 /* responsive */
@@ -274,10 +441,10 @@
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     font-size: 26px;
   }
-  .lscard h3{
+  
+  .lscard h3 {
     font-size: 30px;
   }
-
 
   .lspre h3 {
     font-size: 35px;
@@ -294,11 +461,11 @@
     display: grid;
   }
 
-    .lspill{
+  .lspill {
     font-size: 24px;
   }
 
-  .lssalaryval{
+  .lssalaryval {
     font-size: 26px;
   }
 
@@ -320,9 +487,9 @@
   }
 
   .lscardbullets {
-font-size: 26px;
-        padding-left: 2rem;
-        font-weight: 400;
+    font-size: 26px;
+    padding-left: 2rem;
+    font-weight: 400;
   }
 }
 
@@ -377,7 +544,7 @@ font-size: 26px;
     padding: 16px 5px;
   }
 
-    .lscard h3{
+  .lscard h3 {
     font-size: 26px;
   }
 
@@ -400,11 +567,11 @@ font-size: 26px;
     font-weight: 400;
   }
 
-  .lspill{
+  .lspill {
     font-size: 22px;
   }
 
-  .lstoolsgrid{
+  .lstoolsgrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
@@ -441,7 +608,7 @@ font-size: 26px;
     font-size: 18px;
   }
 
-  .lscard h3{
+  .lscard h3 {
     font-size: 20px;
   }
 
@@ -477,7 +644,7 @@ font-size: 26px;
     font-size: 18px;
   }
 
-  .lssalaryval{
+  .lssalaryval {
     font-size: 20px;
   }
 
@@ -487,11 +654,11 @@ font-size: 26px;
     font-weight: 400;
   }
 
-  .lspill{
+  .lspill {
     font-size: 16px;
   }
 
-  .lstoolsgrid{
+  .lstoolsgrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
@@ -500,4 +667,15 @@ font-size: 26px;
   .lstoolsgrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* For smooth pagination transition */
+.tools-pagination-transition {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading state for tools */
+.lstoolsgrid.loading {
+  opacity: 0.6;
+  pointer-events: none;
 }

@@ -25,6 +25,9 @@ export default function FAQSection({
 }) {
   const [openIndex, setOpenIndex] = useState(null);
 
+  // ✅ ADDED: controls View More / View Less (default = show 4)
+  const [showAll, setShowAll] = useState(false);
+
   const {
     data: faqs = [],
     isLoading,
@@ -64,59 +67,108 @@ export default function FAQSection({
         </div>
 
         <div className={styles.faqlist} role="list">
-          {faqs.map((item, idx) => {
-            const open = openIndex === idx;
-            const panelId = `faq-panel-${idx}`;
-            const btnId = `faq-btn-${idx}`;
+          {/*
+            ✅ ADJUSTED:
+            - Show only 4 FAQs by default
+            - Show all FAQs when showAll = true
+          */}
+          {faqs
+            .slice(0, showAll ? faqs.length : 4)
+            .map((item, idx) => {
+              const open = openIndex === idx;
+              const panelId = `faq-panel-${idx}`;
+              const btnId = `faq-btn-${idx}`;
 
-            return (
-              <div
-                key={idx}
-                className={cn(styles.faqitem, open && styles.isopen)}
-                role="listitem"
-              >
-                <button
-                  id={btnId}
-                  className={styles.faqbtn}
-                  aria-expanded={open}
-                  aria-controls={panelId}
-                  onClick={() => setOpenIndex(open ? null : idx)}
-                >
-                  <span className={styles.faqq}>{item.q}</span>
-                  <Chevron open={open} />
-                </button>
-
+              return (
                 <div
-                  id={panelId}
-                  className={styles.faqpanel}
-                  role="region"
-                  aria-labelledby={btnId}
-                  style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+                  key={idx}
+                  className={cn(styles.faqitem, open && styles.isopen)}
+                  role="listitem"
                 >
-                  <div className={styles.faqpanelinner}>
-                    <p className={styles.faqa}>{item.a}</p>
+                  <button
+                    id={btnId}
+                    className={styles.faqbtn}
+                    aria-expanded={open}
+                    aria-controls={panelId}
+                    onClick={() => setOpenIndex(open ? null : idx)}
+                  >
+                    <span className={styles.faqq}>{item.q}</span>
+                    <Chevron open={open} />
+                  </button>
+
+                  <div
+                    id={panelId}
+                    className={styles.faqpanel}
+                    role="region"
+                    aria-labelledby={btnId}
+                    style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+                  >
+                    <div className={styles.faqpanelinner}>
+                      <p className={styles.faqa}>{item.a}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
+
+        {/* 
+          ✅ ADDED: View More / View Less button
+          - Visible only if FAQs > 4
+          - Same behavior as CourseCurriculum
+        */}
+       {faqs.length > 4 && (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      marginTop: "24px",
+      marginBottom: "40px",
+    }}
+  >
+    <button
+      onClick={() => {
+        setShowAll(!showAll);
+        setOpenIndex(null);
+      }}
+      style={{
+        background: "linear-gradient(135deg, #00b4db, #0083b0)", // same blue tone
+        color: "#fff",
+        padding: "12px 28px",
+        borderRadius: "999px",
+        border: "none",
+        fontSize: "15px",
+        fontWeight: "600",
+        cursor: "pointer",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "8px",
+        boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
+      }}
+    >
+      {showAll ? "View Less" : "View More"}
+      <span style={{ fontSize: "18px", lineHeight: 1 }}>
+        {showAll ? "↑" : "↓"}
+      </span>
+    </button>
+  </div>
+)}
+
 
         <div className={styles.faqhelp}>
           <div className={styles.faqhelpsub}>Still have questions?</div>
           <div className={styles.faqactions}>
-           <button
-  className={styles.faqprimary}
-  onClick={() => {
-    if (window.ChatwayWidget && window.ChatwayWidget.open) {
-      window.ChatwayWidget.open();
-    } else {
-      console.warn("Chatway not loaded yet");
-    }
-  }}
->
-  Chat with Our Team
-</button>
+            <button
+              className={styles.faqprimary}
+              onClick={() =>
+                window.open(
+                  "https://api.whatsapp.com/send/?phone=919490323388&text&type=phone_number&app_absent=0",
+                  "_blank"
+                )
+              }
+            >
+              Chat with Our Team
+            </button>
 
             {/* <button className={styles.faqlink} onClick={onSchedule}>
               Schedule a Call

@@ -12,7 +12,6 @@ import { useProjectsByCourseName } from "../../Api/hooks/CurriculumApi/useProjec
 function toEmbedUrl(url) {
   if (!url) return "";
 
-
   if (url.includes("watch?v=")) {
     const id = url.split("watch?v=")[1].split("&")[0];
     return `https://www.youtube.com/embed/${id}`;
@@ -25,6 +24,7 @@ function toEmbedUrl(url) {
 
   return url;
 }
+
 function extractListItems(htmlString) {
   const container = document.createElement("div");
   container.innerHTML = htmlString;
@@ -57,7 +57,7 @@ export default function CourseCurriculum() {
   const { courseName: courseNameSlug } = useParams();
   const [showAll, setShowAll] = useState(false);
 
-  /// Human-readable course name
+  // Human-readable course name
   const courseName = courseNameSlug
     ? decodeURIComponent(courseNameSlug)
       .replace(/-/g, " ")
@@ -66,14 +66,9 @@ export default function CourseCurriculum() {
 
   const encodedCourseName = encodeURIComponent(courseName);
 
-
-
   const { data: courseDetails } = useCourseByName(courseName);
-
   const { data: projects = [], isLoading: projectsLoading } =
     useProjectsByCourseName(courseName);
-
-
   const { data, isLoading } = useCurriculumAll(encodedCourseName);
 
   const curriculum = data?.curriculum || [];
@@ -84,7 +79,6 @@ export default function CourseCurriculum() {
   const email = userData?.email || null;
   const [showEnrollPrompt, setShowEnrollPrompt] = useState(false);
 
-
   const [checkParams, setCheckParams] = useState({
     studentId: null,
     courseName: null,
@@ -93,7 +87,6 @@ export default function CourseCurriculum() {
     enabled: false,
   });
 
-
   const {
     data: accessData,
     error: accessError,
@@ -101,7 +94,6 @@ export default function CourseCurriculum() {
   } = useAssessmentAccess(checkParams);
 
   useEffect(() => {
-
     if (accessData?.canDownload) {
       const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
       window.open(fileUrl, "_blank", "noopener,noreferrer");
@@ -136,12 +128,10 @@ export default function CourseCurriculum() {
     window.open(finalUrl, "_blank");
   };
 
-
   const handleDownloadAssessment = (assessmentPdfPath) => {
     if (!email || !studentId) return setShowRegisterPrompt(true);
 
     const assessmentFileName = assessmentPdfPath.split("/").pop();
-
 
     setCheckParams({
       studentId,
@@ -150,8 +140,6 @@ export default function CourseCurriculum() {
       enabled: true,
     });
   };
-
-
 
   if (isLoading) return <p>Loading curriculum...</p>;
 
@@ -176,167 +164,169 @@ export default function CourseCurriculum() {
         <div className={styles.ccgrid}>
           {/* LEFT SIDE ACCORDION */}
           <div className={styles.ccgridbody}>
-  {uiCurriculum.length === 0 && <p>No curriculum available.</p>}
+            {uiCurriculum.length === 0 && <p>No curriculum available.</p>}
 
-  {uiCurriculum
-    .filter((m) => m.title && m.title.trim() !== "")
-    .slice(0, showAll ? uiCurriculum.length : 5) // Show only 5 initially
-    .map((m, idx) => {
-      const open = openId === m.curriculum_id;
+            {uiCurriculum
+              .filter((m) => m.title && m.title.trim() !== "")
+              .slice(0, showAll ? uiCurriculum.length : 5)
+              .map((m, idx) => {
+                const open = openId === m.curriculum_id;
+console.log("ID:", m.curriculum_id, "seect" ,selectedTab[m.curriculum_id]);
+                return (
+                  <div className={styles.ccacc} key={m.curriculum_id}>
+                    <button
+                      className={cn(
+                        styles.ccacchead,
+                        open && styles.ccaccheadisopen
+                      )}
+                      onClick={() =>
+                        setOpenId(open ? null : m.curriculum_id)
+                      }
+                    >
+                      <span className={styles.ccnum}>{idx + 1}</span>
 
-      return (
-        <div className={styles.ccacc} key={m.curriculum_id}>
-          <button
-            className={cn(
-              styles.ccacchead,
-              open && styles.ccaccheadisopen
-            )}
-            onClick={() =>
-              setOpenId(open ? null : m.curriculum_id)
-            }
-          >
-            <span className={styles.ccnum}>{idx + 1}</span>
+                      <div className={styles.cctitle}>
+                        <div className={styles.ccttlmain}>{m.title}</div>
 
-            <div className={styles.cctitle}>
-              <div className={styles.ccttlmain}>{m.title}</div>
+                        <div className={styles.ccttlsub}>
+                          {/* TOPICS TAB */}
+                          <button
+                            className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
+                                ? styles.activeCap
+                                : ""
+                              }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedTab((prev) => ({
+                                ...prev,
+                                [m.curriculum_id]:
+                                  prev[m.curriculum_id] === "topics"
+                                    ? null
+                                    : "topics", // Only set "topics", others will be deselected
+                              }));
+                              setOpenId(m.curriculum_id);
+                            }}
+                          >
+                            Topics Included
+                          </button>
 
-              <div className={styles.ccttlsub}>
-                {/* TOPICS TAB */}
-                <button
-                  className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "topics"
-                      ? styles.activeCap
-                      : ""
-                    }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedTab((prev) => ({
-                      ...prev,
-                      [m.curriculum_id]:
-                        prev[m.curriculum_id] === "topics"
-                          ? null
-                          : "topics",
-                    }));
-                    setOpenId(m.curriculum_id);
-                  }}
-                >
-                  Topics Included
-                </button>
+                          {/* ASSIGNMENT TAB */}
+                          
+                          {m.assessment_pdf && (
+                            <button
+                            
+                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
+                                  ? styles.activeCap
+                                  : ""
+                                }`}
+                                
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedTab((prev) => ({
+                                  ...prev,
+                                  [m.curriculum_id]:
+                                    prev[m.curriculum_id] === "assignment"
+                                      ? null
+                                      : "assignment", // Only set "assignment"
+                                }));
+                                setOpenId(m.curriculum_id);
+                              }}
+                            >
+                              Assignment
+                            </button>
+                          )}
+                          {m.link && (
+                            <button
+                              type="button"
+                              className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
+                                  ? styles.activeCap
+                                  : ""
+                                }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedTab((prev) => ({
+                                  ...prev,
+                                  [m.curriculum_id]:
+                                    prev[m.curriculum_id] === "video"
+                                      ? null
+                                      : "video", // Only set "video"
+                                }));
+                                setOpenId(m.curriculum_id);
+                              }}
+                            >
+                              Videos
+                            </button>
+                          )}
+                        </div>
+                      </div>
 
-                {/* ASSIGNMENT TAB */}
-                {m.assessment_pdf && (
-                  <button
-                    className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "assignment"
-                        ? styles.activeCap
-                        : ""
-                      }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedTab((prev) => ({
-                        ...prev,
-                        [m.curriculum_id]:
-                          prev[m.curriculum_id] === "assignment"
-                            ? null
-                            : "assignment",
-                      }));
-                      setOpenId(m.curriculum_id);
-                    }}
-                  >
-                    Assignment
-                  </button>
-                )}
-                {m.link && (
-                  <button
-                    type="button"
-                    className={`${styles.cccapsul} ${selectedTab[m.curriculum_id] === "video"
-                        ? styles.activeCap
-                        : ""
-                      }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedTab((prev) => ({
-                        ...prev,
-                        [m.curriculum_id]:
-                          prev[m.curriculum_id] === "video"
-                            ? null
-                            : "video",
-                      }));
-                      setOpenId(m.curriculum_id);
-                    }}
-                  >
-                    Videos
-                  </button>
-                )}
-              </div>
-            </div>
+                      <Chevron open={open} />
+                    </button>
 
-            <Chevron open={open} />
-          </button>
+                    {/* PANEL CONTENT */}
+                    <div
+                      className={cn(
+                        styles.ccaccpanel,
+                        open && styles.ccaccpanelopen
+                      )}
+                    >
+                      {selectedTab[m.curriculum_id] === "topics" && (
+                        <>
+                          {extractListItems(m.topic).map((point, i) => (
+                            <div key={i} className={styles.ccrow}>
+                              <span>•</span>
+                              <span className={styles.ccrowtitle}>
+                                {point}
+                              </span>
+                            </div>
+                          ))}
+                        </>
+                      )}
 
-          {/* PANEL CONTENT */}
-          <div
-            className={cn(
-              styles.ccaccpanel,
-              open && styles.ccaccpanelopen
-            )}
-          >
-            {selectedTab[m.curriculum_id] === "topics" && (
-              <>
-                {extractListItems(m.topic).map((point, i) => (
-                  <div key={i} className={styles.ccrow}>
-                    <span>•</span>
-                    <span className={styles.ccrowtitle}>
-                      {point}
-                    </span>
+                      {selectedTab[m.curriculum_id] === "assignment" &&
+                        m.assessment_pdf && (
+                          <button
+                            className={styles.ccassess}
+                            onClick={() =>
+                              handleDownloadAssessment(m.assessment_pdf)
+                            }
+                          >
+                            📄 Download Assignment
+                          </button>
+                        )}
+                      {selectedTab[m.curriculum_id] === "video" && m.link && (
+                        <div className={styles.ccvideocontainer}>
+                          <button
+                            className={styles.ccvideobtn}
+                            onClick={() => {
+                              setVideoUrl(toEmbedUrl(m.link));
+                              setShowVideo(true);
+                            }}
+                          >
+                            ▶ Play Video
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </>
-            )}
+                );
+              })}
 
-            {selectedTab[m.curriculum_id] === "assignment" &&
-              m.assessment_pdf && (
+            {/* View More / View Less Button */}
+            {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
+              <div className={styles.viewMoreContainer}>
                 <button
-                  className={styles.ccassess}
-                  onClick={() =>
-                    handleDownloadAssessment(m.assessment_pdf)
-                  }
+                  className={styles.viewMoreBtn}
+                  onClick={() => setShowAll(!showAll)}
                 >
-                  📄 Download Assignment
-                </button>
-              )}
-            {selectedTab[m.curriculum_id] === "video" && m.link && (
-              <div style={{ padding: "10px 0" }}>
-                <button
-                  className={styles.ccvideobtn}
-                  style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-                  onClick={() => {
-                    setVideoUrl(toEmbedUrl(m.link));
-                    setShowVideo(true);
-                  }}
-                >
-                  ▶ Play Video
+                  {showAll ? "View Less" : "View More"}
+                  <span className={styles.viewMoreArrow}>
+                    {showAll ? "↑" : "↓"}
+                  </span>
                 </button>
               </div>
             )}
           </div>
-        </div>
-      );
-    })}
-    
-  {/* View More / View Less Button */}
-  {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
-    <div className={styles.viewMoreContainer}>
-      <button
-        className={styles.viewMoreBtn}
-        onClick={() => setShowAll(!showAll)}
-      >
-        {showAll ? "View Less" : "View More"} 
-        <span className={styles.viewMoreArrow}>
-          {showAll ? "↑" : "↓"}
-        </span>
-      </button>
-    </div>
-  )}
-</div>
 
           {/* RIGHT SIDEBAR */}
           <aside className={styles.ccright}>
@@ -360,10 +350,6 @@ export default function CourseCurriculum() {
                       </div>
 
                       <div className={styles.ccprojsub}>
-                        {/* <span>{project.projectName}</span> */}
-
-
-                        {/* description comes as HTML */}
                         <div
                           dangerouslySetInnerHTML={{
                             __html: project.description,
@@ -376,7 +362,7 @@ export default function CourseCurriculum() {
               </div>
             </div>
 
-            <div className={styles.cccard}>
+            <div className={styles.cccard2}>
               <div className={`${styles.cccardhead} ${styles.ccstar}`}>
                 ✨ What Makes This Different
               </div>
@@ -396,65 +382,25 @@ export default function CourseCurriculum() {
           <VideoModal videoSrc={videoUrl} onClose={() => setShowVideo(false)} />
         )}
 
-        {/* LOGIN PROMPT */}
+        {/* LOGIN PROMPT MODAL */}
         {showRegisterPrompt && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: "rgba(0,0,0,0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 9999,
-            }}
-          >
-            <div
-              style={{
-                width: "560px",
-                background: "#fff",
-                borderRadius: "12px",
-                padding: "20px",
-                display: "flex",
-                boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
-              }}
-            >
-              <div style={{ width: "45%", textAlign: "center" }}>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <div className={styles.modalImage}>
                 <img
                   src={require("../../Assets/loginpopup.webp")}
                   alt="login popup"
-                  style={{
-                    width: "100%",
-                    borderRadius: "8px",
-                    transform: "scaleX(-1)",
-                  }}
+                  className={styles.modalImg}
                 />
               </div>
 
-              <div
-                style={{
-                  width: "55%",
-                  paddingLeft: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
+              <div className={styles.modalText}>
                 <h3>Please Login</h3>
                 <p>Login to access assignments and syllabus.</p>
 
-                <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                <div className={styles.modalButtons}>
                   <button
-                    style={{
-                      padding: "10px 22px",
-                      background: "#0057ff",
-                      color: "#fff",
-                      borderRadius: "6px",
-                      border: "none",
-                    }}
+                    className={styles.modalLoginBtn}
                     onClick={() => {
                       localStorage.setItem(
                         "redirectAfterLogin",
@@ -467,12 +413,7 @@ export default function CourseCurriculum() {
                   </button>
 
                   <button
-                    style={{
-                      padding: "10px 22px",
-                      background: "#f1f1f1",
-                      border: "1px solid #ccc",
-                      borderRadius: "6px",
-                    }}
+                    className={styles.modalCancelBtn}
                     onClick={() => setShowRegisterPrompt(false)}
                   >
                     Cancel
@@ -482,64 +423,26 @@ export default function CourseCurriculum() {
             </div>
           </div>
         )}
+
+        {/* ENROLL PROMPT MODAL */}
         {showEnrollPrompt && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: "rgba(0,0,0,0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 9999,
-            }}
-          >
-            <div
-              style={{
-                width: "560px",
-                background: "#fff",
-                borderRadius: "12px",
-                padding: "20px",
-                display: "flex",
-                boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
-              }}
-            >
-              <div style={{ width: "45%", textAlign: "center" }}>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <div className={styles.modalImage}>
                 <img
                   src={require("../../Assets/loginpopup.webp")}
                   alt="enroll popup"
-                  style={{
-                    width: "100%",
-                    borderRadius: "8px",
-                    transform: "scaleX(-1)",
-                  }}
+                  className={styles.modalImg}
                 />
               </div>
 
-              <div
-                style={{
-                  width: "55%",
-                  paddingLeft: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
+              <div className={styles.modalText}>
                 <h3>Please Enroll</h3>
                 <p>You must enroll any live class to access assignments.</p>
 
-                <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                <div className={styles.modalButtons}>
                   <button
-                    style={{
-                      padding: "10px 22px",
-                      background: "#0057ff",
-                      color: "#fff",
-                      borderRadius: "6px",
-                      border: "none",
-                    }}
+                    className={styles.modalLoginBtn}
                     onClick={() => {
                       window.location.href = `/checkout/${encodedCourseName}`;
                     }}
@@ -548,12 +451,7 @@ export default function CourseCurriculum() {
                   </button>
 
                   <button
-                    style={{
-                      padding: "10px 22px",
-                      background: "#f1f1f1",
-                      border: "1px solid #ccc",
-                      borderRadius: "6px",
-                    }}
+                    className={styles.modalCancelBtn}
                     onClick={() => setShowEnrollPrompt(false)}
                   >
                     Cancel
@@ -563,7 +461,6 @@ export default function CourseCurriculum() {
             </div>
           </div>
         )}
-
       </div>
     </section>
   );

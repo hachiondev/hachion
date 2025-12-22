@@ -8,7 +8,8 @@ import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
 import NewEnrollNow from "../UserPanel/NewEnrollNow";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
-// import { useTrainersByCourse } from "../../Api/hooks/CourseApi/useTrainersByCourse";
+
+
 import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
@@ -99,14 +100,11 @@ export default function CourseBanner({ onEnroll }) {
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
   const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
-  // const { data: trainers = [] } = useTrainersByCourse(courseNameForApi);
+  
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
-  // const { data: userProfile, isLoading: isProfileLoading } = useUserProfile();
-
-
-  const hasSpecialDiscount = !!discountRule;
+    const hasSpecialDiscount = !!discountRule;
   const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
   const discountType = discountRule?.discountType || "PERCENTAGE";
   const discountFixedAmount = discountRule?.discountAmount ?? 0;
@@ -161,8 +159,6 @@ export default function CourseBanner({ onEnroll }) {
     stripHtml(course.aboutCourse) ||
     "Course overview coming soon.";
 
-  // const author =
-  //   trainers && trainers.length > 0 ? trainers.join(", ") : "Hachion Trainers";
 
   const author =
     course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
@@ -310,40 +306,27 @@ export default function CourseBanner({ onEnroll }) {
       }
     }
   }
-  let selfPacedOriginal = 0;
-  let selfPacedFinal = 0;
+  
+let finalPrice = 0;
+let originalPrice = 0;
 
-  if (currency === "INR") {
-    selfPacedOriginal = course.isamount ?? course.isqamount ?? 0;
-  } else {
-    selfPacedOriginal =
-      (course.samount ?? course.sqamount ?? 0) * exchangeRate;
-  }
 
-  // apply special discount (same rules as before)
-  selfPacedFinal = selfPacedOriginal;
+if (convertedTotalFee && convertedOriginalFee) {
+  finalPrice = convertedTotalFee;
+  originalPrice = convertedOriginalFee;
+}
 
-  if (hasSpecialDiscount && selfPacedOriginal) {
-    if (discountType === "PERCENTAGE" && ruleDiscountPct) {
-      selfPacedFinal =
-        selfPacedOriginal -
-        (selfPacedOriginal * ruleDiscountPct) / 100;
-    } else if (discountType === "FIXED" && discountFixedAmount) {
-      selfPacedFinal = Math.max(
-        0,
-        selfPacedOriginal - discountFixedAmount
-      );
-    }
-  }
-
-  const price = selfPacedFinal
-    ? `${currency} ${Math.round(selfPacedFinal)}`
+// Price text
+const price =
+  finalPrice > 0
+    ? `${currency} ${Math.round(finalPrice)}`
     : "Price on request";
 
-  const oldPrice =
-    hasSpecialDiscount && selfPacedOriginal
-      ? `${currency} ${Math.round(selfPacedOriginal)}`
-      : "";
+// Strike-through price
+const oldPrice =
+  hasSpecialDiscount && originalPrice > finalPrice
+    ? `${currency} ${Math.round(originalPrice)}`
+    : "";
 
 
   const startsFromPrice =
@@ -366,14 +349,10 @@ export default function CourseBanner({ onEnroll }) {
           <div className={styles.bnleft}>
             <span className={styles.bnchip}>{level}</span>
 
-            <div className={styles.titleGroup}>
-              <h1 className={styles.bntitle}>{title}</h1>
-              <p className={styles.feeGroup}>
-                <span className={styles.fee}>Fee:</span>
-                <span className={styles.start}>Starts from </span>
-                <span className={styles.amount}>{startsFromPrice}</span>
-              </p>
-            </div>
+           <div className={styles.titleGroup}>
+  <h1 className={styles.bntitle}>{title}</h1>
+</div>
+
 
             <p className={styles.bnsub}>{subtitle}</p>
 

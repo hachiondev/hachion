@@ -178,6 +178,17 @@ export default function LearnSection() {
                         <p>No tools available for this course.</p>
                     ) : (
                         <>
+                        {/* Only show pagination if there are more tools than cards per page */}
+                            {allTools.length > cardsPerPage && (
+                                <div className={styles.cardPaginationContainer}>
+                                    <CardsPagination
+                                        currentPage={currentStartIndex}
+                                        totalCards={allTools.length}
+                                        cardsPerPage={cardsPerPage}
+                                        onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
+                                    />
+                                </div>
+                            )}
                             <div className={styles.lstoolsgrid}>
                                 {paginatedTools.map((tool) => (
                                     <div key={tool.toolsName} className={styles.lstoolcard}>
@@ -205,17 +216,6 @@ export default function LearnSection() {
                                 ))}
                             </div>
                             
-                            {/* Only show pagination if there are more tools than cards per page */}
-                            {allTools.length > cardsPerPage && (
-                                <div className={styles.cardPaginationContainer}>
-                                    <CardsPagination
-                                        currentPage={currentStartIndex}
-                                        totalCards={allTools.length}
-                                        cardsPerPage={cardsPerPage}
-                                        onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
-                                    />
-                                </div>
-                            )}
                         </>
                     )}
                 </div>

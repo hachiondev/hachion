@@ -1,8 +1,8 @@
 // src/Components/Navbar/NavbarTop.jsx
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../../Components/UserPanel/Home.css";
 import "../../../Components/UserPanel/Course.css";
 import { useCourses } from '../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
@@ -40,6 +40,18 @@ const NavbarTop = () => {
 
   const dropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
+
+  const location = useLocation();
+
+useEffect(() => {
+  // 🔹 Close all open navbar states on route change
+  setIsUserMenuOpen(false);
+  setDrawerOpen(false);
+  setMobileSearchOpen(false);
+  setResults([]);
+  setQuery("");
+}, [location.pathname]);
+
 
   const handleCourseClick = useCallback(
     (item) => {

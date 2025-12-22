@@ -3,7 +3,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSummerEvents } from "../../../../Api/hooks/HomePageApi/TeenApi/useSummerEvents";
-import { useTrendingData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";
 import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { useCountdowns } from "../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
@@ -13,6 +12,11 @@ import CardsPagination from "../../Common/CardsPagination";
 
 import { getRuleDiscountPct, getActiveRuleFor } from "../TrendingSection/utils/discountUtils";
 
+import { useCoursesSummary } from "../../../../Api/hooks/HomePageApi/TrainingApi/useCoursesSummary";
+import { useTrainers } from "../../../../Api/hooks/HomePageApi/TrainingApi/useTrainers";
+
+
+
 import "../../Home.css";
 
 const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
@@ -21,12 +25,14 @@ const normalize = (s) => (s || "").toString().trim().toLowerCase();
 
 export default function TeensEvents() {
   const navigate = useNavigate();
+const { data: coursesSummary = [], isLoading: loadingCourses } = useCoursesSummary();
+const { data: trainers = [] } = useTrainers();
 
   // --------------------------
   // Fetch shared data (TanStack hooks)
   // --------------------------
   const { data: summerEvents = [], isLoading: loadingSummer } = useSummerEvents();
-  const { data: trendingData = [], isLoading: loadingCourses } = useTrendingData();
+  
   const { data: discountRules = [] } = useDiscountRules();
   const { data: geo = {} } = useGeoData();
 
@@ -37,7 +43,8 @@ export default function TeensEvents() {
   // --------------------------
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(4);
-  const [activeCategory, setActiveCategory] = useState("All");
+  
+  // const [activeCategory, setActiveCategory] = useState("All");
 
   // --------------------------
   // Responsive cards per page
@@ -54,70 +61,42 @@ export default function TeensEvents() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // --------------------------
-  // Build set of active summer categories
-  // (only events considered active)
-  // --------------------------
-  const summerCategories = useMemo(() => {
-    if (!Array.isArray(summerEvents) || summerEvents.length === 0) return new Set();
-    return new Set(
-      summerEvents
-        .filter((e) => e && (e.status === true || e.status === 1 || String(e.status).toLowerCase() === "true"))
-        .map((e) => normalize(e.category_name))
-        .filter(Boolean)
-    );
-  }, [summerEvents]);
+const summerCourses = useMemo(() => {
+  if (!summerEvents.length || !coursesSummary.length) return [];
 
-  // --------------------------
-  // Merge by CATEGORY:
-  // For every trending course, if its category matches any summer category,
-  // include it in summerCourses. Also attach the matching summer events (if any)
-  // --------------------------
-  const summerCourses = useMemo(() => {
-    if (!Array.isArray(trendingData) || trendingData.length === 0) return [];
-    if (!summerCategories || summerCategories.size === 0) return [];
+  const activeSummer = summerEvents.filter(
+    e =>
+      e &&
+      (e.status === true ||
+        e.status === 1 ||
+        String(e.status).toLowerCase() === "true")
+  );
 
-    // Helper to get course category from trending item
-    const getCourseCategory = (c) =>
-      normalize(c.courseCategory || c.category_name || c.course_category || c.courseCategoryName);
+  return activeSummer
+    .map(se => {
+      const nameKey = normalize(se.course_name);
 
-    // For each trending course, if its category is in summerCategories, include it.
-    const matched = trendingData
-      .map((course) => {
-        const courseCatNorm = getCourseCategory(course);
-        if (!courseCatNorm || !summerCategories.has(courseCatNorm)) return null;
+      const course = coursesSummary.find(
+        c => normalize(c.courseName) === nameKey
+      );
 
-        // attach any summer events for this category (could be multiple)
-        const matchedSummerEvents = summerEvents.filter(
-          (se) => normalize(se.category_name) === courseCatNorm && (se.status === true || se.status == 1 || String(se.status).toLowerCase() === "true")
-        );
+      if (!course) return null;
 
-        // Build a merged object — prefer trending fields but also include summer-specific info
-        return {
-          ...course,
-          // attach array of matching summer events (useful if you want to display dates)
-          summerEvents: matchedSummerEvents,
-          // courseName normalization fallback
-          courseName: course.course_name || course.courseName || course.name || "",
-          // ensure category_name exists
-          category_name: course.category_name || course.courseCategory || "",
-        };
-      })
-      .filter(Boolean);
+      const trainer = trainers.find(
+        t => normalize(t.course_name) === nameKey
+      );
 
-    return matched;
-  }, [trendingData, summerCategories, summerEvents]);
+      return {
+        ...course,                  
+        trainerName: trainer?.trainer_name || "Not Assigned",
+        courseName: course.courseName,
+        category_name: se.category_name,
+        summerEvent: se,             
+      };
+    })
+    .filter(Boolean);
+}, [summerEvents, coursesSummary, trainers]);
 
-  // --------------------------
-  // Categories derived from summerCourses (for filter UI)
-  // --------------------------
-  const categories = useMemo(() => {
-    const cats = ["All"];
-    summerCourses.forEach((c) => {
-      if (c && c.category_name) cats.push(c.category_name);
-    });
-    return [...new Set(cats)];
-  }, [summerCourses]);
 
   // --------------------------
   // Filtered list according to activeCategory

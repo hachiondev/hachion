@@ -48,7 +48,7 @@ const Chevron = ({ open }) => (
   </svg>
 );
 
-export default function CourseCurriculum() {
+export default function CourseCurriculum({ onViewDemoClass }) {
   const [openId, setOpenId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
@@ -454,45 +454,53 @@ export default function CourseCurriculum() {
 
         {/* LOGIN PROMPT MODAL */}
         {showRegisterPrompt && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <div className={styles.modalImage}>
-                <img
-                  src={require("../../Assets/loginpopup.webp")}
-                  alt="login popup"
-                  className={styles.modalImg}
-                />
-              </div>
+  <div className={styles.modalOverlay}>
+    <div className={styles.modalContent}>
+      <div className={styles.modalImage}>
+        <img
+          src={require("../../Assets/loginpopup.webp")}
+          alt="login popup"
+          className={styles.modalImg}
+        />
+      </div>
 
-              <div className={styles.modalText}>
-                <h3>Please Login</h3>
-                <p>Login to access assignments and syllabus.</p>
+      <div className={styles.modalText}>
+        <h3>Please Login</h3>
+        <p>Login to access assignments and syllabus.</p>
 
-                <div className={styles.modalButtons}>
-                  <button
-                    className={styles.modalLoginBtn}
-                    onClick={() => {
-                      localStorage.setItem(
-                        "redirectAfterLogin",
-                        window.location.pathname
-                      );
-                      window.location.href = "/login";
-                    }}
-                  >
-                    Login
-                  </button>
+        <div className={styles.modalButtons}>
+          <button
+            className={styles.modalLoginBtn}
+            onClick={() => {
+              setShowRegisterPrompt(false); // Close modal
+              onViewDemoClass(); // Scroll to demo class
+            }}
+          >
+            Login
+          </button>
 
-                  <button
-                    className={styles.modalCancelBtn}
-                    onClick={() => setShowRegisterPrompt(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+          {/* ADD VIEW DEMO CLASS BUTTON HERE */}
+          {/* <button
+            className={styles.modalViewDemoBtn}
+            onClick={() => {
+              setShowRegisterPrompt(false); // Close modal
+              onViewDemoClass(); // Scroll to demo class
+            }}
+          >
+            View Demo Class First
+          </button> */}
+
+          <button
+            className={styles.modalCancelBtn}
+            onClick={() => setShowRegisterPrompt(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* ENROLL PROMPT MODAL */}
         {showEnrollPrompt && (

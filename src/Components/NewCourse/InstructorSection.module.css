@@ -1,164 +1,593 @@
-:root{
-  --ink:#0f172a;
-  --muted:#667085;
-  --border:#e6e8ee;
-  --card:#ffffff;
-  --soft:#f6f8fb;
-  --brand:#1aa6df;
-  --brand2:#ffd84a;
-  --shadow:0 18px 36px rgba(15,23,42,.08);
+:root {
+  --ink: #0f172a;
+  --muted: #667085;
+  --border: #e6e8ee;
+  --card: #ffffff;
+  --soft: #f6f8fb;
+  --brand: #1aa6df;
+  --brand2: #ffd84a;
+  --shadow: 0 18px 36px rgba(15, 23, 42, .08);
 }
 
-.iswrap{
-  padding-top:30px;
-  padding-bottom:30px;
+.iswrap {
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
-.ishead{
-  text-align:center; margin-bottom:18px;
-}
-.ishead h2{
-  font-size:32px; font-weight:700; color:var(--ink);
-}
-.ishead p{
-  color: #000000; margin-top:16px; font-size: 18px; margin-bottom: 46px; font-weight: 300;
+.ishead {
+  text-align: center;
+  margin-bottom: 18px;
 }
 
-.iscard{
-  max-width:1350px; margin: 0 auto;
-  background: var(--card); border:1px solid var(--border);
-  border-radius:14px; display:grid; grid-template-columns: 0.8fr 1.2fr; gap: 22px;
-  padding: 0; overflow:hidden; box-shadow: var(--shadow);
+.ishead h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ishead p {
+  color: #000000;
+  margin-top: 16px;
+  font-size: 18px;
+  margin-bottom: 46px;
+  font-weight: 300;
+}
+
+.iscard {
+  max-width: 1350px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 22px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 /* photo */
-.isphoto{ position:relative; }
-.isphoto img{
-  display:block; width:100%; height:100%; object-fit:cover;
+.isphoto {
+  position: relative;
+}
+
+.isphoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* content */
-.iscontent{
-  padding:20px 22px;
+.iscontent {
+  padding: 20px 22px;
 }
-.istopline{
-  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+
+.istopline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
-.isname{
-  font-size:32px; font-weight:700; color:var(--ink); margin:0;
+
+.isname {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
 }
-.isbadge{
-  display:inline-flex; align-items:center; gap:8px;
-  background: #F6EF26; color:#1d1a00;
-  font-weight:500; border-radius:999px; padding:4px 18px;
+
+.isbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F6EF26;
+  color: #1d1a00;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 4px 18px;
 }
-.istitle{
-  margin-top:20px; color:#1b78e0; font-weight:400; font-size:22px;
+
+.istitle {
+  margin-top: 20px;
+  color: #1b78e0;
+  font-weight: 400;
+  font-size: 22px;
 }
 
 /* stats */
-.isstats{
-  margin-top:18px; display:flex; gap:16px; flex-wrap:wrap;
+.isstats {
+  margin-top: 18px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
-.isstat{
-  border-radius:12px;
-  padding:16px 18px; min-width:180px; text-align:left;
-  background: #f3f6ff; border:1px solid #e7ecff;
+
+.isstat {
+  border-radius: 12px;
+  padding: 16px 18px;
+  min-width: 180px;
+  text-align: left;
+  background: #f3f6ff;
+  border: 1px solid #e7ecff;
 }
+
 .isstat:nth-child(2) {
-  background: #f0fdf4; border-color: #dcfce7;
+  background: #f0fdf4;
+  border-color: #dcfce7;
 }
+
 .isstat:nth-child(3) {
-  background: #fef3c7; border-color: #fde68a;
-}
-.isstatico{ display:inline-flex; margin-bottom:6px; margin-right: 10px;}
-.isstatico img{
-  width:24px; height:24px;
-}
-.isstat:nth-child(1) .isstatico { color:#2663EB; }
-.isstat:nth-child(2) .isstatico { color:#16A349; }
-.isstat:nth-child(3) .isstatico { color:#CA8A03; }
-.isstatval{ font-size:22px; font-weight:900; margin-bottom:4px; text-align: center; }
-.isstat:nth-child(1) .isstatval { color:#2663EB; }
-.isstat:nth-child(2) .isstatval { color:#16A349; }
-.isstat:nth-child(3) .isstatval { color:#CA8A03; }
-.isstatlab{ font-weight:700; font-size:13px; text-align: center; color: #000}
-
-.isbio{
-  margin-top:14px; color:#000000; line-height:1.6; font-size: 18px;
+  background: #fef3c7;
+  border-color: #fde68a;
 }
 
-.issubhead{
-  margin-top:35px; font-weight:600; color:#0f172a; font-size:22px;
+.isstatico {
+  display: inline-flex;
+  margin-bottom: 6px;
+  margin-right: 10px;
 }
-.islist{
-  margin-top:8px; color:#000000; display:grid; gap:8px; list-style: disc;
+
+.isstatico img {
+  width: 24px;
+  height: 24px;
+}
+
+.isstat:nth-child(1) .isstatico {
+  color: #2663EB;
+}
+
+.isstat:nth-child(2) .isstatico {
+  color: #16A349;
+}
+
+.isstat:nth-child(3) .isstatico {
+  color: #CA8A03;
+}
+
+.isstatval {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.isstat:nth-child(1) .isstatval {
+  color: #2663EB;
+}
+
+.isstat:nth-child(2) .isstatval {
+  color: #16A349;
+}
+
+.isstat:nth-child(3) .isstatval {
+  color: #CA8A03;
+}
+
+.isstatlab {
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  color: #000
+}
+
+.isbio {
+  margin-top: 14px;
+  color: #000000;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+.issubhead {
+  margin-top: 35px;
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 22px;
+}
+
+.islist {
+  margin-top: 8px;
+  color: #000000;
+  display: grid;
+  gap: 8px;
+  list-style: disc;
 }
 
 /* actions */
-.isactions{
-  margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;
+.isactions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
-.isbtn{
-  display:inline-flex; align-items:center; gap:8px;
-  border:0; padding:10px 24px; border-radius:999px; font-weight:400;
+
+.isbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-weight: 400;
   background: linear-gradient(90deg, var(--brand), #38c7ff);
-  color:#fff; cursor:pointer;
+  color: #fff;
+  cursor: pointer;
   line-height: 5px;
 }
-.isbtnoutline{
-  background:#fff; border:1px solid var(--border);
-  color:#000000; box-shadow:0 4px 12px rgba(0,0,0,.04);
+
+.isbtnoutline {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .04);
 }
-.isbtn .ico, .isbtnoutline .ico{ display:inline-flex; }
-.isbtn .ico img{
-    height: 22px;
+
+.isbtn .ico,
+.isbtnoutline .ico {
+  display: inline-flex;
 }
+
+.isbtn .ico img {
+  height: 22px;
+}
+
 /* responsive */
-@media (max-width: 1024px){
+@media (max-width: 1024px) {
   /* .iscard{ grid-template-columns: 1fr; } */
   /* .isphoto{ height: 320px; } */
 }
-@media (max-width: 720px){
-  .iscard{ grid-template-columns: 1fr; }
-  .iscontent{ padding:12px 14px; }
-  .isname{ font-size:20px; font-weight: 600;}
-  .isbadge{ padding:4px 12px; font-size:10px; }
-  .isstat{ min-width: 120px; padding:10px 12px; }
-  .isphoto{ height:auto; }
-  .ishead h2{
-    font-size: 26px;
+
+@media (max-width: 768px) {
+
+  .iscard {
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    /* Added gap for better spacing */
+  }
+
+  .iscontent {
+    padding: 18px 22px;
+    /* Increased from 12px 14px */
+  }
+
+  .isname {
+    font-size: 30px;
+    /* Increased from 20px */
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .isbadge {
+    padding: 10px 20px;
+    /* Increased from 4px 12px */
+    font-size: 16px;
+    /* Increased from 10px */
+    border-radius: 25px;
+  }
+
+  .isstat {
+    min-width: 150px;
+    /* Increased from 120px */
+    padding: 16px 20px;
+    /* Increased from 10px 12px */
+    border-radius: 12px;
+  }
+
+  .isphoto {
+    height: auto;
+    max-height: 300px;
+    /* Added limit for tablets */
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .ishead h2 {
+    font-size: 36px;
+    /* Increased from 26px */
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .ishead p {
+    font-size: 22px;
+    /* Increased from 16px */
+    line-height: 1.4;
+  }
+
+  .istitle {
+    font-size: 20px;
+    /* Increased from 14px */
+    margin-top: 15px;
+    font-weight: 500;
+  }
+
+  .isstatlab {
+    font-weight: 400;
+    font-size: 18px;
+    /* Added font size */
+  }
+
+  .isstatval {
+    font-size: 28px;
+    /* Added for stats value */
     font-weight: 600;
   }
-  .ishead p{
-    font-size: 16px;
-  }
-  .istitle{
-            font-size: 14px;
-        margin-top: 10px;
-  }
-  .isstatlab{
-    font-weight: 400;
-  }
-  .isbio{
-    font-size: 14px;
-    font-weight: 400;
-  }
-  .issubhead{
+
+  .isbio {
     font-size: 20px;
+    /* Increased from 14px */
+    font-weight: 400;
+    line-height: 1.6;
   }
-  .islist{
-        padding-left: 1rem;
-    font-size: 13px;
+
+  .issubhead {
+    font-size: 28px;
+    /* Increased from 20px */
+    font-weight: 600;
   }
-  .isactions{
+
+  .islist {
+    padding-left: 1.5rem;
+    font-size: 18px;
+    /* Increased from 13px */
+    line-height: 1.6;
+  }
+
+  .isactions {
+    margin-bottom: 25px;
+  }
+
+  .isactions .isbtn {
+    padding: 16px 28px;
+    /* Increased from 10px 20px */
+    font-size: 18px;
+    /* Increased from 14px */
+    border-radius: 12px;
+  }
+
+  .isactions .isbtn .ico img {
+    height: 22px;
+    /* Increased from 15px */
+    width: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .isphoto img {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .iscard {
+    grid-template-columns: 1fr;
+  }
+
+  .iscontent {
+    padding: 16px 18px;
+    /* Increased from 12px 14px */
+  }
+
+  .isname {
+    font-size: 26px;
+    /* Increased from 20px */
+    font-weight: 600;
+  }
+
+  .isbadge {
+    padding: 8px 16px;
+    /* Increased from 4px 12px */
+    font-size: 14px;
+    /* Increased from 10px */
+  }
+
+  .isstat {
+    min-width: 140px;
+    /* Increased from 120px */
+    padding: 14px 16px;
+    /* Increased from 10px 12px */
+  }
+
+  .isphoto {
+    height: auto;
+    max-height: 220px;
+    /* Added for better image control */
+    width: 100%;
+    /* Ensure full width */
+    object-fit: cover;
+    /* Better image scaling */
+  }
+
+  .ishead h2 {
+    font-size: 32px;
+    /* Increased from 26px */
+    font-weight: 600;
+  }
+
+  .ishead p {
+    font-size: 20px;
+    /* Increased from 16px */
+  }
+
+  .istitle {
+    font-size: 18px;
+    /* Increased from 14px */
+    margin-top: 12px;
+    /* Increased from 10px */
+  }
+
+  .isstatlab {
+    font-weight: 400;
+    font-size: 16px;
+    /* Added font size */
+  }
+
+  .isstatval {
+    font-size: 22px;
+    /* Added for stats value */
+    font-weight: 600;
+  }
+
+  .isbio {
+    font-size: 18px;
+    /* Increased from 14px */
+    font-weight: 400;
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+  .issubhead {
+    font-size: 24px;
+    /* Increased from 20px */
+  }
+
+  .islist {
+    padding-left: 1rem;
+    font-size: 16px;
+    /* Increased from 13px */
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+  .isactions {
     margin-bottom: 20px;
   }
-  .isactions .isbtn{
-    padding: 10px 20px;
-    font-size: 14px;
+
+  .isactions .isbtn {
+    padding: 14px 24px;
+    /* Increased from 10px 20px */
+    font-size: 16px;
+    /* Increased from 14px */
   }
-    .isactions .isbtn .ico img{
-      height: 15px;
-    }
+
+  .isactions .isbtn .ico img {
+    height: 20px;
+    /* Increased from 15px */
+    width: 20px;
+    /* Added width for consistency */
+  }
+
+  .isstats {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 375px) {
+    .isphoto img {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .iscard {
+    grid-template-columns: 1fr;
+  }
+
+  .iscontent {
+    padding: 16px 18px;
+    /* Increased from 12px 14px */
+  }
+
+  .isname {
+    font-size: 26px;
+    /* Increased from 20px */
+    font-weight: 600;
+  }
+
+  .isbadge {
+    padding: 8px 16px;
+    /* Increased from 4px 12px */
+    font-size: 14px;
+    /* Increased from 10px */
+  }
+
+  .isstat {
+    min-width: 140px;
+    /* Increased from 120px */
+    padding: 14px 16px;
+    /* Increased from 10px 12px */
+  }
+
+  .isphoto {
+    height: auto;
+    max-height: 220px;
+    /* Added for better image control */
+    width: 100%;
+    /* Ensure full width */
+    object-fit: cover;
+    /* Better image scaling */
+  }
+
+  .ishead h2 {
+    font-size: 32px;
+    /* Increased from 26px */
+    font-weight: 600;
+  }
+
+  .ishead p {
+    font-size: 20px;
+    /* Increased from 16px */
+  }
+
+  .istitle {
+    font-size: 18px;
+    /* Increased from 14px */
+    margin-top: 12px;
+    /* Increased from 10px */
+  }
+
+  .isstatlab {
+    font-weight: 400;
+    font-size: 16px;
+    /* Added font size */
+  }
+
+  .isstatval {
+    font-size: 22px;
+    /* Added for stats value */
+    font-weight: 600;
+  }
+
+  .isbio {
+    font-size: 18px;
+    /* Increased from 14px */
+    font-weight: 400;
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+  .issubhead {
+    font-size: 22px;
+    /* Increased from 20px */
+  }
+
+  .islist {
+    padding-left: 1rem;
+    font-size: 16px;
+    /* Increased from 13px */
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+  .isactions {
+    margin-bottom: 20px;
+  }
+
+  .isactions .isbtn {
+    padding: 14px 24px;
+    /* Increased from 10px 20px */
+    font-size: 16px;
+    /* Increased from 14px */
+  }
+
+  .isactions .isbtn .ico img {
+    height: 20px;
+    /* Increased from 15px */
+    width: 20px;
+    /* Added width for consistency */
+  }
+
+  .isstats {
+    flex-direction: column;
+  }
 }

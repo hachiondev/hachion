@@ -22,106 +22,25 @@
   text-align: center;
   margin-bottom: 12px;
 }
+
 .wshead h2 {
   font-size: 32px;
   font-weight: 700;
   color: var(--ink);
 }
+
+.reviewGroup{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .wshead p {
   color: #000000;
   margin-top: 6px;
   font-weight: 300;
 }
 
-/* KPI chips */
-.wskpis {
-  max-width: 600px;
-  margin: 0 auto 16px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.wskpi {
-  background: var(--chip);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-  box-shadow: var(--shadow);
-  width: 190px;
-}
-.wskpival {
-  font-weight: 700;
-  color: #2b3a55;
-  font-size: 18px;
-}
-.wskpilab {
-  color: #000000;
-  font-weight: 400;
-  font-size: 12px;
-}
-
-/* KPI color variants: blue, green, purple */
-.wskpi:nth-child(1) .wskpival {
-  color: #2563eb;
-  font-size: 20px;
-  font-weight: 800;
-}
-.wskpi:nth-child(2) .wskpival {
-  color: #16a34a;
-  font-size: 20px;
-  font-weight: 800;
-}
-.wskpi:nth-child(3) .wskpival {
-  color: #7c3aed;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-/* category cards */
-.wscats {
-  max-width: 1350px;
-  margin: 0 auto 18px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-.wscat {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 28px;
-  box-shadow: var(--shadow);
-}
-.wscattitle {
-  color: #000000;
-  font-weight: 700;
-  margin-bottom: 8px;
-  font-size: 18px;
-  text-align: center;
-}
-.wscatscore {
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  justify-content: center;
-  font-size: 26px;
-}
-/* color the numeric score (and star since it's text) per card */
-.wscat:nth-child(1) .wscatscore {
-  color: #2563eb;
-}
-.wscat:nth-child(2) .wscatscore {
-  color: #16a34a;
-}
-.wscat:nth-child(3) .wscatscore {
-  color: #7c3aed;
-}
-.wscat:nth-child(4) .wscatscore {
-  color: #b45309;
-}
 .wsbar {
   height: 10px;
   border-radius: 999px;
@@ -129,23 +48,13 @@
   margin-top: 12px;
   overflow: hidden;
 }
+
 .wsbarfill {
   height: 100%;
   background: linear-gradient(90deg, #e6eef7, #e6eef7);
   border-radius: 999px;
 }
-.wscat:nth-child(1) .wsbarfill {
-  background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
-}
-.wscat:nth-child(2) .wsbarfill {
-  background: linear-gradient(90deg, #16a34a 0%, #6ee7b7 100%);
-}
-.wscat:nth-child(3) .wsbarfill {
-  background: linear-gradient(90deg, #7c3aed 0%, #c4b5fd 100%);
-}
-.wscat:nth-child(4) .wsbarfill {
-  background: linear-gradient(90deg, #b45309 0%, #f6e05e 100%);
-}
+
 .wsresp {
   color: #000000;
   font-weight: 500;
@@ -171,6 +80,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
+
 .wscard {
   background: #fff;
   border: 1px solid var(--border);
@@ -178,6 +88,7 @@
   padding: 25px;
   box-shadow: var(--shadow);
 }
+
 .wscardhead {
   display: flex;
   align-items: flex-start;
@@ -185,28 +96,33 @@
   gap: 10px;
   border-bottom: 1px solid #eaeaea;
 }
+
 .wsname {
   font-weight: 600;
   color: #000000;
   font-size: 20px;
 }
+
 .wsrole {
   color: #000000;
   font-weight: 300;
   font-size: 16px;
   margin-bottom: 5px;
 }
+
 .wsrating {
   display: flex;
   align-items: center;
   gap: 4px;
   color: #f5c542;
 }
+
 .wsratingnum {
   color: #000000;
   font-weight: 400;
   margin-left: 4px;
 }
+
 .wstext {
   color: #000000;
   line-height: 1.6;
@@ -225,18 +141,21 @@
   padding: 44px;
   box-shadow: var(--shadow);
 }
+
 .wsctatitle {
   font-weight: 700;
   color: #000000;
   margin-bottom: 4px;
   font-size: 22px;
 }
+
 .wscta p {
   color: #000000;
   margin-bottom: 12px;
   font-size: 18px;
   font-weight: 300;
 }
+
 .wsctabtn {
   background: linear-gradient(90deg, var(--brand), var(--brand2));
   color: #fff;
@@ -253,89 +172,182 @@
   .wscats {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .wsgrid {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 640px) {
-  .wskpis {
-    grid-template-columns: 1fr;
-  }
-  .wshead h2{
-    font-size: 26px;
-  }
-}
 
-@media (max-width: 420px) {
-  .wscats {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .wscat {
-    padding: 18px;
-  }
-  .wskpi {
-    width: 100%;
-  }
-  .wsbar {
-    height: 8px;
-  }
-  .wstext {
-    font-size: 16px;
-  }
-}
-@media (max-width: 720px) {
-  .wskpis {
-    display: flex;
-    gap: 6px;
-  }
-  .wskpi {
-    flex: 1;
-    width: auto;
-    padding: 8px;
-  }
-  .wskpi:nth-child(1) .wskpival {
-    font-size: 18px;
-  }
-  .wskpi:nth-child(2) .wskpival {
-    font-size: 18px;
-  }
-  .wskpi:nth-child(3) .wskpival {
-    font-size: 18px;
-  }
+@media (max-width: 768px) {
+      .wsgrid {
+        grid-template-columns: 1fr;
+    }
   .wskpilab {
-    font-size: 10px;
+    font-size: 18px;
     font-weight: 300;
   }
+
   .wscattitle {
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 600;
   }
+
   .wsresp {
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 400;
   }
+
   .wssubhead {
-    font-size: 20px;
+    font-size: 24px;
   }
-  .wsname{
-    font-size: 18px;
+
+  .wsname {
+    font-size: 24px;
   }
+
   .wstext {
-   font-size: 14px;
-        font-weight: 300;
+    font-size: 20px;
+    font-weight: 300;
   }
+
   .wscardhead {
     display: block;
   }
+
   .wsrole {
-    font-size: 14px;
+    font-size: 20px;
   }
+
   .wsrating {
     gap: 0;
-    font-size: 12px;
+    font-size: 20px;
   }
-  .wscta{
+
+  .wscta {
+    font-size: 20px;
+  }
+  
+  .wsctatitle {
+    font-size: 24px;
+  }
+
+  .wscta p {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wskpilab {
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  .wscattitle {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .wsresp {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .wssubhead {
+    font-size: 22px;
+  }
+
+  .wsname {
+    font-size: 22px;
+  }
+
+  .wstext {
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .wscardhead {
+    display: block;
+  }
+
+  .wsrole {
+    font-size: 18px;
+  }
+
+  .wsrating {
+    gap: 0;
+    font-size: 18px;
+  }
+
+  .wscta {
+    font-size: 18px;
+  }
+  
+  .wsctatitle {
+    font-size: 22px;
+  }
+
+  .wscta p {
+    font-size: 17px;
+  }
+        .wsgrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 375px) {
+
+  .wskpilab {
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .wscattitle {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .wsresp {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .wssubhead {
+    font-size: 19px;
+  }
+
+  .wsname {
+    font-size: 20px;
+  }
+
+  .wstext {
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  .wscardhead {
+    display: block;
+  }
+
+  .wsrole {
     font-size: 16px;
   }
+
+  .wsrating {
+    gap: 0;
+    font-size: 16px;
+  }
+
+  .wscta {
+    font-size: 16px;
+  }
+  .wsctatitle{
+    font-size: 18px;
+  }
+
+  .wscta p{
+    font-size: 16px;
+  }
+      .wsgrid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -394,11 +394,13 @@ const oldPrice =
                 <span className={styles.bnpricenow}>{price}</span>
               </p>
                 
-                {oldPrice && (
+                <div className={styles.groupdis}>
+                  {oldPrice && (
                   <span className={styles.bnpriceold}>{oldPrice}</span>
                 )}
                 {/* <span className={styles.bntag}>{discount}% OFF</span> */}
                 <span className={styles.bntag}>{effectiveDiscountPct}% OFF</span>
+                </div>
 
               </div>
 

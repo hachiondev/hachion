@@ -441,15 +441,15 @@ width: 30px;
   }
 
   .ccwrap .cchead h2 {
-    font-size: 35px;
+    font-size: 36px; /* 35px → 36px */
   }
 
   .cchead p {
-    font-size: 22px;
+    font-size: 24px; /* 22px → 24px */
   }
 
   .ccdownload {
-    font-size: 20px;
+    font-size: 22px; /* 20px → 22px */
   }
 
   .ccgridbody {
@@ -457,64 +457,67 @@ width: 30px;
   }
 
   .cctitle .ccttlmain {
-    font-size: 20px;
+    font-size: 22px; /* 20px → 22px */
   }
 
   .ccnum {
-    height: 24px;
-    font-size: 14px;
+    height: 26px; /* 24px → 26px */
+    font-size: 16px; /* 14px → 16px */
   }
 
   .ccttlsub {
     color: #000000;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccttlsub span {
-    font-size: 10px;
-    padding: 2px 6px;
-    margin-bottom: 4px;
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
     display: inline-block;
   }
 
   .ccrowtitle {
-    font-size: 22px;
+    font-size: 24px; /* 22px → 24px */
     font-weight: 400;
   }
 
   .ccrowmeta {
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccprojsub {
-    font-size: 17px;
+    font-size: 20px; /* 17px → 20px */
   }
 
   .cccardhead {
-    font-size: 26px;
+    font-size: 28px; /* 26px → 28px */
   }
 
-    .cccard{
+  .cccard {
     height: 320px;
+  }
+  .cccard2 {
+    height: 285px;
   }
 
   .ccwhy {
-    font-size: 22px;
+    font-size: 24px; /* 22px → 24px */
     font-weight: 400;
   }
 
   .cccapsul {
-    font-size: 18px;
+    font-size: 20px; /* 18px → 20px */
   }
 
   .ccprojtitle {
-    font-size: 20px;
+    font-size: 22px; /* 20px → 22px */
   }
 
   .viewMoreBtn {
-    padding: 14px 32px;
-    font-size: 18px;
+    padding: 16px 36px; /* 14px 32px → 16px 36px */
+    font-size: 20px; /* 18px → 20px */
   }
 
   /* Modal responsive */
@@ -532,7 +535,6 @@ width: 30px;
     width: 100%;
     padding-left: 0;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -542,15 +544,15 @@ width: 30px;
   }
 
   .ccwrap .cchead h2 {
-    font-size: 28px;
+    font-size: 30px; /* 28px → 30px */
   }
 
   .cchead p {
-    font-size: 16px;
+    font-size: 20px; /* 16px → 20px */
   }
 
   .ccdownload {
-    font-size: 14px;
+    font-size: 18px; /* 16px → 18px */
   }
 
   .ccgridbody {
@@ -558,42 +560,42 @@ width: 30px;
   }
 
   .cctitle .ccttlmain {
-    font-size: 18px;
+    font-size: 20px; /* 18px → 20px */
   }
 
   .ccnum {
-    height: 24px;
-    font-size: 14px;
+    height: 26px; /* 24px → 26px */
+    font-size: 16px; /* 14px → 16px */
   }
 
   .ccttlsub {
     color: #000000;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccttlsub span {
-    font-size: 10px;
-    padding: 2px 6px;
-    margin-bottom: 4px;
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
     display: inline-block;
   }
 
   .ccrowtitle {
-    font-size: 18px;
+    font-size: 22px; /* 18px → 22px */
     font-weight: 400;
   }
 
   .ccrowmeta {
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccprojsub {
-    font-size: 16px;
+    font-size: 20px; /* 16px → 20px */
   }
 
   .cccardhead {
-    font-size: 24px;
+    font-size: 26px; /* 24px → 26px */
   }
 
   .cccard {
@@ -601,25 +603,26 @@ width: 30px;
   }
 
   .ccwhy {
-    font-size: 18px;
+    font-size: 22px; /* 18px → 22px */
     font-weight: 400;
   }
 
   .cccapsul {
-    font-size: 17px;
+    font-size: 20px; /* 17px → 20px */
+    margin: 5px; /* 3px → 5px */
   }
 
   .ccprojtitle {
-    font-size: 20px;
+    font-size: 24px; /* 20px → 24px */
   }
 
   .viewMoreBtn {
-    padding: 12px 24px;
-    font-size: 16px;
+    padding: 14px 28px; /* 12px 24px → 14px 28px */
+    font-size: 18px; /* 16px → 18px */
   }
 
   .cccard2 {
-    height: 320px;
+    height: 500px;
   }
 }
 
@@ -634,11 +637,11 @@ width: 30px;
   }
 
   .cchead p {
-    font-size: 16px;
+    font-size: 18px; /* 16px → 18px */
   }
 
   .ccdownload {
-    font-size: 14px;
+    font-size: 16px; /* 14px → 16px */
   }
 
   .ccgridbody {
@@ -646,42 +649,42 @@ width: 30px;
   }
 
   .cctitle .ccttlmain {
-    font-size: 14px;
+    font-size: 16px; /* 14px → 16px */
   }
 
   .ccnum {
     height: 24px;
-    font-size: 14px;
+    font-size: 16px; /* 14px → 16px */
   }
 
   .ccttlsub {
     color: #000000;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccttlsub span {
-    font-size: 10px;
-    padding: 2px 6px;
-    margin-bottom: 4px;
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
     display: inline-block;
   }
 
   .ccrowtitle {
-    font-size: 16px;
+    font-size: 18px; /* 16px → 18px */
     font-weight: 400;
   }
 
   .ccrowmeta {
-    font-size: 10px;
+    font-size: 14px; /* 10px → 14px */
   }
 
   .ccprojtitle {
-    font-size: 16px;
+    font-size: 18px; /* 16px → 18px */
   }
 
   .ccprojsub {
-    font-size: 14px;
+    font-size: 16px; /* 14px → 16px */
   }
 
   .cccard {
@@ -689,21 +692,22 @@ width: 30px;
   }
 
   .cccardhead {
-    font-size: 18px;
+    font-size: 20px; /* 18px → 20px */
   }
 
   .ccwhy {
-    font-size: 16px;
+    font-size: 18px; /* 16px → 18px */
     font-weight: 400;
   }
 
   .cccapsul {
-    font-size: 14px;
+    font-size: 16px; /* 14px → 16px */
+    margin: 4px; /* 2.5px → 4px */
   }
 
   .viewMoreBtn {
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: 12px 24px; /* 10px 20px → 12px 24px */
+    font-size: 16px; /* 14px → 16px */
   }
 
   .modalButtons {
@@ -711,6 +715,6 @@ width: 30px;
   }
 
   .cccard2 {
-    height: 320px;
+    height: 425px;
   }
 }

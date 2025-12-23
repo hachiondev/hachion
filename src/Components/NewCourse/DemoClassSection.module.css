@@ -151,6 +151,7 @@
     box-shadow: 0 3px 6px rgba(255, 92, 1, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.2);
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    width: 100px;
 }
 
 /* timezone */
@@ -388,7 +389,7 @@ border: 1px solid #1fb6ff !important;
 }
 
 .dcslotdate {
-  color: #7a8392;
+  color: #000;
   font-weight: 700;
 }
 
@@ -485,13 +486,13 @@ border: 1px solid #1fb6ff !important;
 }
 
 .dcdetailmeta {
-  color: #7b8796;
+  color: #000;
   font-weight: 600;
   font-size: 12px;
 }
 
 .dcbtn {
-  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  background: var(--brand);
   border: 0;
   color: #fff;
   font-weight: 800;
@@ -891,7 +892,7 @@ border: 1px solid #1fb6ff !important;
 }
 
 .dcinfotext {
-  color: #2c3443;
+  color: #000;
   margin: 8px 0 10px;
   font-size: 17px;
 }
@@ -955,7 +956,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerTitle {
-    font-size: 12px;
+    font-size: 24px;
   }
 
   .offerIcon {
@@ -970,11 +971,11 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerSubtitle {
-    font-size: 10px;
+    font-size: 20px;
   }
 
   .offerCountdown {
-    font-size: 14px;
+    font-size: 20px;
     text-align: center;
     padding: 10px 20px;
   }
@@ -1006,6 +1007,7 @@ border: 1px solid #1fb6ff !important;
 
   .dctabs {
     background: transparent;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .dctabs .dctab {
@@ -1076,13 +1078,14 @@ border: 1px solid #1fb6ff !important;
 
   .dcbtn {
     padding: 6px 30px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     /* margin-top: 20px; */
   }
 
   .dclink {
     margin-bottom: 30px;
+    font-size: 20px;
   }
 
   .dcinfoicon {
@@ -1105,7 +1108,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dcinfotext {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 400;
   }
 
@@ -1145,7 +1148,16 @@ border: 1px solid #1fb6ff !important;
   }
   
   .checkboxText {
-    font-size: 13px;
+    font-size: 17px;
+  }
+
+  .bnbtnprimary{
+    font-size: 20px;
+    margin-top: 10px;
+  }
+
+  .dcmuted{
+    font-size: 20px;
   }
 
 }
@@ -1165,7 +1177,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerTitle {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .offerIcon {
@@ -1180,7 +1192,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerSubtitle {
-    font-size: 10px;
+    font-size: 14px;
   }
 
   .offerCountdown {
@@ -1192,6 +1204,8 @@ border: 1px solid #1fb6ff !important;
   .dchead {
     display: block;
     padding: 0px;
+        margin: 0 auto;
+    text-align: center;
   }
 
   .dchead h2 {
@@ -1220,7 +1234,7 @@ border: 1px solid #1fb6ff !important;
 
   .dctabs {
     background: transparent;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .dctabs .dctab {
@@ -1285,7 +1299,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dcemptytext {
-    font-weight: 300;
+    font-weight: 400;
   }
 
   .dcdetailscol {
@@ -1319,7 +1333,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dcinfotext {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
   }
 
@@ -1371,12 +1385,17 @@ border: 1px solid #1fb6ff !important;
   }
   
   .checkboxText {
-    font-size: 12px;
+    font-size: 16px;
   }
   
   .checkboxInput {
     width: 14px;
     height: 14px;
+  }
+
+    .feeAmount{
+    font-size: 18px;
+            width: 110px;
   }
 }
 
@@ -1394,7 +1413,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerTitle {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .offerIcon {
@@ -1409,11 +1428,11 @@ border: 1px solid #1fb6ff !important;
   }
 
   .offerSubtitle {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .offerCountdown {
-    font-size: 14px;
+    font-size: 11px;
     text-align: center;
     padding: 10px 20px;
   }
@@ -1421,6 +1440,8 @@ border: 1px solid #1fb6ff !important;
   .dchead {
     display: block;
     padding: 0px;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .dchead h2 {
@@ -1449,7 +1470,7 @@ border: 1px solid #1fb6ff !important;
 
   .dctabs {
     background: transparent;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .dctabs .dctab {
@@ -1505,7 +1526,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dcdetailmeta {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 400;
   }
 
@@ -1531,6 +1552,7 @@ border: 1px solid #1fb6ff !important;
 
   .dclink {
     margin-bottom: 30px;
+    font-size: 16px;
   }
 
   .dcinfoicon {
@@ -1549,7 +1571,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dcinfotext {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
   }
 
@@ -1593,4 +1615,20 @@ border: 1px solid #1fb6ff !important;
   .notifyLabel {
     white-space: normal;
   }
+
+  .bnbtnprimary{
+    font-size: 18px;
+  }
+
+  .feeAmount{
+    font-size: 15px;
+            width: 100px;
+  }
+
+  .dcmuted {
+        font-size: 16px;
+        
+    }
+
+    
 }

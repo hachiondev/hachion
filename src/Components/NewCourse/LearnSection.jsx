@@ -21,7 +21,7 @@ const Briefcase = () => (
 export default function LearnSection() {
     const { courseName: courseNameSlug } = useParams();
     const [currentStartIndex, setCurrentStartIndex] = useState(1); // Starting card index (1-based)
-    const [cardsPerPage, setCardsPerPage] = useState(6); 
+    const [cardsPerPage, setCardsPerPage] = useState(6);
 
     useEffect(() => {
         const update = () => {
@@ -170,25 +170,27 @@ export default function LearnSection() {
 
                 {/* Tools Cover */}
                 <div className={styles.lstools}>
-                    <h3 className={styles.lstoolstitle}>Tools Cover</h3>
-
+                    <div className={styles.pagiGroup}>
+                        <h3 className={styles.lstoolstitle}>Tools Cover</h3>
+                        {allTools.length > cardsPerPage && (
+                            <div className={styles.cardPaginationContainer}>
+                                <CardsPagination
+                                    currentPage={currentStartIndex}
+                                    totalCards={allTools.length}
+                                    cardsPerPage={cardsPerPage}
+                                    onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
+                                />
+                            </div>
+                        )}
+                    </div>
                     {isLoading ? (
                         <p>Loading tools...</p>
                     ) : allTools.length === 0 ? (
                         <p>No tools available for this course.</p>
                     ) : (
                         <>
-                        {/* Only show pagination if there are more tools than cards per page */}
-                            {allTools.length > cardsPerPage && (
-                                <div className={styles.cardPaginationContainer}>
-                                    <CardsPagination
-                                        currentPage={currentStartIndex}
-                                        totalCards={allTools.length}
-                                        cardsPerPage={cardsPerPage}
-                                        onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
-                                    />
-                                </div>
-                            )}
+
+
                             <div className={styles.lstoolsgrid}>
                                 {paginatedTools.map((tool) => (
                                     <div key={tool.toolsName} className={styles.lstoolcard}>
@@ -215,7 +217,7 @@ export default function LearnSection() {
                                     </div>
                                 ))}
                             </div>
-                            
+
                         </>
                     )}
                 </div>

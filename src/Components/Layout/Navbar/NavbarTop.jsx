@@ -123,7 +123,8 @@ useEffect(() => {
             {isLoggedIn && (
               <button className="btn ms-2" aria-label="View cart" onClick={() => navigate("/userdashboard/order_history")}>
                 {/* Cart icon */}
-                <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24"><path fill="currentColor" d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM7.2 6l1.2 6h8.2l1.8-4H8.6"/></svg>
+                {/* <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24"><path fill="currentColor" d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM7.2 6l1.2 6h8.2l1.8-4H8.6"/></svg> */}
+                <BsCart2 style={{ width: 24, height: 24 }}/>
               </button>
             )}
 
@@ -141,10 +142,11 @@ useEffect(() => {
               </>
             ) : (
               <div className="d-flex align-items-center gap-3">
-                <button className="btn" aria-label="View cart" onClick={() => navigate("/userdashboard/order_history")}>
-                  {/* cart icon placeholder */}
-                  <BsCart2 style={{ width: 28, height: 28 }}/>
-                </button>
+                <button className="btn ms-2" aria-label="View cart" onClick={() => navigate("/userdashboard/order_history")}>
+                {/* Cart icon */}
+                {/* <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24"><path fill="currentColor" d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM7.2 6l1.2 6h8.2l1.8-4H8.6"/></svg> */}
+                <BsCart2 style={{ width: 24, height: 24 }}/>
+              </button>
 
                 <div className="dropdown" ref={userDropdownRef}>
                   <button className="btn d-flex align-items-center" onClick={() => setIsUserMenuOpen(s => !s)} style={{ background: "transparent", border: "none" }}>

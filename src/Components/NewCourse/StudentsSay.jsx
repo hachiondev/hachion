@@ -1,7 +1,9 @@
+import { useMemo, useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./StudentsSay.module.css";
 import { cn } from "../../utils";
 import { useUserReviewsByCourse } from "../../Api/hooks/CourseApi/useUserReviewsByCourse";
+import CardsPagination from "../UserPanel/Common/CardsPagination";
 
 /* ===============================
    Star Icon
@@ -15,40 +17,22 @@ const Star = ({ active }) => (
   </svg>
 );
 
-/* ===============================
-   Static KPI + Categories
-=============================== */
-const kpi = [
-  { label: "Overall Rating", value: "4.9/5" },
-  { label: "Total Reviews", value: "2,847" },
-  { label: "Completion Rate", value: "96%" },
-];
-
-const categories = [
-  { title: "Course Content Quality", score: 4.9, bar: 92 },
-  { title: "Instructor Expertise", score: 4.8, bar: 90 },
-  { title: "Learning Support", score: 4.9, bar: 92 },
-  { title: "Career Impact", score: 4.7, bar: 88 },
-];
-
 export default function StudentsSay({ onCta }) {
+  const [currentStartIndex, setCurrentStartIndex] = useState(1); // Starting card index (1-based)
+  const [cardsPerPage, setCardsPerPage] = useState(2); // Show 2 cards per page
 
-   const navigate = useNavigate();
-  // const handleCta = onCta || (() => navigate("/coursedetails"));
-
+  const navigate = useNavigate();
   const handleCta = onCta || (() => {
-  console.log("Navigating to /coursedetails");
-  navigate("/coursedetails");
-});
-
+    console.log("Navigating to /coursedetails");
+    navigate("/coursedetails");
+  });
 
   /* ===============================
      Get & normalize course name
   =============================== */
   const { courseName } = useParams();
-
   const rawSlug = courseName ? decodeURIComponent(courseName) : "";
-
+  
   const normalizeCourseSlug = (slug) =>
     slug
       .replace(/[-_]+/g, " ")
@@ -66,81 +50,78 @@ export default function StudentsSay({ onCta }) {
     isLoading,
   } = useUserReviewsByCourse(courseNameForApi);
 
+  // Calculate paginated reviews - use currentStartIndex (1-based)
+  const paginatedReviews = useMemo(() => {
+    const startIndex = currentStartIndex - 1; // Convert to 0-based
+    const endIndex = startIndex + cardsPerPage;
+    return reviews.slice(startIndex, endIndex);
+  }, [reviews, currentStartIndex, cardsPerPage]);
+
+  // Reset to first card when tools change or cards per page changes
+  useEffect(() => {
+    setCurrentStartIndex(1);
+  }, [reviews, cardsPerPage]);
+
   if (isLoading) return null;
 
   return (
     <section className={styles.wswrap}>
       <div className="container">
-        {/* Header */}
-        {/* <div className={styles.wshead}>
-          <h2>What Our Students Say</h2>
-          <p>Real feedback from our community of learners</p>
-        </div> */}
-
-        {/* KPI chips */}
-        {/* <div className={styles.wskpis}>
-          {kpi.map((x) => (
-            <div key={x.label} className={styles.wskpi}>
-              <div className={styles.wskpival}>{x.value}</div>
-              <div className={styles.wskpilab}>{x.label}</div>
+        {/* Reviews with Pagination */}
+        <div className={styles.wsreviewsSection}>
+          <div className={styles.reviewGroup}>
+                      <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
+          
+          {/* Pagination - Show only if there are more than 2 reviews */}
+          {reviews.length > cardsPerPage && (
+            <div className={styles.cardPaginationContainer}>
+              <CardsPagination
+                currentPage={currentStartIndex}
+                totalCards={reviews.length}
+                cardsPerPage={cardsPerPage}
+                onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
+              />
             </div>
-          ))}
-        </div> */}
-
-        {/* Category Ratings */}
-        {/* <div className={styles.wscats}>
-          {categories.map((c) => (
-            <div key={c.title} className={styles.wscat}>
-              <div className={styles.wscattitle}>{c.title}</div>
-              <div className={styles.wscatscore}>⭐ {c.score}</div>
-              <div className={styles.wsbar}>
-                <div
-                  className={styles.wsbarfill}
-                  style={{ width: `${c.bar}%` }}
-                />
-              </div>
-              <div className={styles.wsresp}>2847 responses</div>
-            </div>
-          ))}
-        </div> */}
-
-        {/* Reviews */}
-        <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
-
-        <div className={styles.wsgrid}>
-          {reviews.length === 0 && (
-            <p style={{ opacity: 0.6 }}>No reviews available yet.</p>
           )}
+          </div>
 
-          {reviews.slice(0, 4).map((r) => {
-            const safeRating = Math.min(Number(r.rating) || 0, 5);
 
-            return (
-              <article key={r.review_id} className={styles.wscard}>
-                <div className={styles.wscardhead}>
-                  <div>
-                    <div className={styles.wsname}>
-                      {r.name || "Anonymous Student"}
+          {/* Reviews Grid - Show 2 cards per page */}
+          <div className={styles.wsgrid}>
+            {paginatedReviews.length === 0 ? (
+              <p style={{ opacity: 0.6 }}>No reviews available yet.</p>
+            ) : (
+              paginatedReviews.map((r) => {
+                const safeRating = Math.min(Number(r.rating) || 0, 5);
+
+                return (
+                  <article key={r.review_id} className={styles.wscard}>
+                    <div className={styles.wscardhead}>
+                      <div>
+                        <div className={styles.wsname}>
+                          {r.name || "Anonymous Student"}
+                        </div>
+                        <div className={styles.wsrole}>
+                          {r.course_name}
+                        </div>
+                      </div>
+
+                      <div className={styles.wsrating}>
+                        {[...Array(5)].map((_, idx) => (
+                          <Star key={idx} active={idx < safeRating} />
+                        ))}
+                        <span className={styles.wsratingnum}>
+                          {safeRating.toFixed(1)}
+                        </span>
+                      </div>
                     </div>
-                    <div className={styles.wsrole}>
-                      {r.course_name}
-                    </div>
-                  </div>
 
-                  <div className={styles.wsrating}>
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} active={idx < safeRating} />
-                    ))}
-                    <span className={styles.wsratingnum}>
-                      {safeRating.toFixed(1)}
-                    </span>
-                  </div>
-                </div>
-
-                <p className={styles.wstext}>{r.review}</p>
-              </article>
-            );
-          })}
+                    <p className={styles.wstext}>{r.review}</p>
+                  </article>
+                );
+              })
+            )}
+          </div>
         </div>
 
         {/* CTA */}

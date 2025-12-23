@@ -56,7 +56,7 @@ const DiscountDeals = () => {
               {banners.map((banner, index) => (
                 <img
                   key={banner.banner_id}
-                  src={`https://api.test.hachion.co/uploads/${banner.home_banner_image}`}
+                  src={`https://api.test.hachion.co/uploads/prod/banner_images${banner.home_banner_image}`}
                   alt={`Banner ${index + 1}`}
                   className="discount-banner-slide"
                   onClick={() =>

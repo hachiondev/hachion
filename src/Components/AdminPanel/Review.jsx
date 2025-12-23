@@ -1,6 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { duration, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -11,9 +11,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
 import dayjs from 'dayjs';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import success from '../../Assets/success.gif';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -21,8 +19,7 @@ import { IoSearch } from "react-icons/io5";
 import { FiPlus } from 'react-icons/fi';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import TextField from '@mui/material/TextField';
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -30,10 +27,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
-import { GoPlus } from "react-icons/go";
-import { IoClose } from "react-icons/io5";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination'; 
 
@@ -74,10 +68,10 @@ export default function Review() {
      const [successMessage, setSuccessMessage] = useState("");
       const [errorMessage, setErrorMessage] = useState("");
     const currentDate = new Date().toISOString().split('T')[0];
-    const[message,setMessage]=useState(false);
+    const[message]=useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [selectedRow, setSelectedRow] = useState({categoryName:"",course_name:"",student_name:"",image:null,rating: "",location: "", video_link: "",trainer_name:"",type:"",source:"",comment:""});
+    
     const [editedData, setEditedData] = useState({categoryName:"",course_name:"",student_name:"",image:null,rating: "",location: "", videoLink: "",trainer_name:"",type:"",source:"",comment:"",reviewType:"",display:"",
       displayPages:[]});
       const [trainerOptions, setTrainerOptions] = useState([]);
@@ -107,20 +101,30 @@ const [loadingTrainers, setLoadingTrainers] = useState(false);
                      setCurrentPage(page);
                      window.scrollTo(0, window.scrollY);
                    };
-                   const handleEditCheckboxChange = (e) => {
-                    const { value, checked } = e.target;
-                    setEditedData((prev) => ({
-                      ...prev,
-                      display: checked 
-                        ? [...prev.display, value]  
-                        : prev.display.filter((item) => item !== value), 
-                    }));
-                  };
-                
-                   const handleCheckboxChange = (event) => {
-                    const { value, checked } = event.target;
-                    let updatedPages = [...reviewData.displayPages];
-                
+                 const handleEditCheckboxChange = (e) => {
+  const { value, checked } = e.target;
+
+  setEditedData((prev) => {
+    const current = Array.isArray(prev.display)
+      ? prev.display.map((p) => String(p).trim()).filter(Boolean)
+      : typeof prev.display === "string"
+        ? prev.display.split(",").map((p) => p.trim()).filter(Boolean)
+        : [];
+
+    const next = checked
+      ? Array.from(new Set([...current, value.trim()]))  
+      : current.filter((item) => item !== value.trim());
+
+    return { ...prev, display: next };
+  });
+};
+                const handleCheckboxChange = (event) => {
+  const { value, checked } = event.target;
+
+  let updatedPages = Array.isArray(reviewData.displayPages)
+    ? [...reviewData.displayPages]
+    : [];
+
                     if (checked) {
                       updatedPages.push(value);
                     } else {
@@ -196,7 +200,6 @@ const fetchTrainerNames = async (categoryName, courseName) => {
     setTrainerOptions([]);
     return;
   }
-
   try {
     setLoadingTrainers(true);
     const response = await axios.get("https://api.test.hachion.co/trainernames", {
@@ -242,16 +245,18 @@ useEffect(() => {
                 review_id:"",
                 categoryName:"",
                   course_name: "",
-                  categoryName: "",
+                  reviewType:"",
                   date:currentDate,
                   type:"",
                  student_name:"",
                  rating: "",
                  location: "",
-                 video_link: "",
+                 videoLink: "",
                  source:"",
                  trainer_name: "",
                  comment:"",
+                 display: "",
+                 displayPages: [],
                  image:null
                  });
         
@@ -361,10 +366,13 @@ useEffect(() => {
     const updatedReviewObject = {
       name: editedData.name,
       social_id: editedData.social_id,
-      display: editedData.display.join(","), 
+       
+      display: Array.from(
+  new Set((editedData.display || []).map((p) => String(p).trim()).filter(Boolean))
+).join(", "),
+
       course_name: editedData.course_name,
       review: editedData.review,
-      location: editedData.location,
       videoLink: editedData.videoLink, 
       email: editedData.email || "",
       type: editedData.type || "",
@@ -432,11 +440,11 @@ const handleDelete = async (review_id) => {
   try {
     console.log("handleClickOpen called with:", curr);
 
-    const safeDisplay = Array.isArray(curr?.display)
-      ? curr.display
-      : typeof curr?.display === "string" && curr.display.length > 0
-        ? curr.display.split(",")
-        : [];
+  const safeDisplay = Array.isArray(curr?.display)
+  ? curr.display.map((p) => String(p).trim()).filter(Boolean)
+  : typeof curr?.display === "string" && curr.display.length > 0
+    ? curr.display.split(",").map((p) => p.trim()).filter(Boolean)
+    : [];
 
     setEditedData({
   name: curr?.name || "",
@@ -475,67 +483,104 @@ const handleChange = (e) => {
     return next;
   });
 };
-const handleSubmit = async () => {
-  const isCourseReview = reviewData.type === "Course Review";
-  const typeBoolean = false;
 
-  const displayValue = isCourseReview ? "course" : "trainer";
-  const reviewTypeValue = isCourseReview ? "course" : "trainer";
 
-  const reviewPayload = {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  
+  const missingFields = [];
+
+  if (!reviewData.categoryName) missingFields.push("Category Name");
+  if (!reviewData.course_name) missingFields.push("Course Name");
+  if (!reviewData.student_name) missingFields.push("Student Name");
+  if (reviewData.rating === "") missingFields.push("Rating");
+  if (!reviewData.source) missingFields.push("Source");
+  if (!reviewData.location) missingFields.push("Location");
+  if (!reviewData.reviewType) missingFields.push("Review Type");
+  if (!reviewData.comment) missingFields.push("Comment");
+if (!reviewData.display) missingFields.push("Display Reviews:");
+  if (
+    reviewData.reviewType === "Trainer" ||
+    reviewData.reviewType === "Both"
+  ) {
+    if (!reviewData.trainer_name) {
+      missingFields.push("Trainer Name");
+    }
+  }
+
+  if (missingFields.length > 0) {
+    setErrorMessage(
+      `Please fill all mandatory fields: ${missingFields.join(", ")}`
+    );
+    setSuccessMessage("");
+    return; 
+  }
+
+  const fileInput = document.querySelector('input[type="file"]');
+  if (fileInput && fileInput.files.length > 0) {
+    reviewData.image = fileInput.files[0];
+  }
+
+  const reviewObject = {
     name: reviewData.student_name,
-    email: reviewData.email || "",
-    type: typeBoolean,
-    reviewType: reviewTypeValue,
+    social_id: reviewData.source,
+    display: reviewData.display,
     course_name: reviewData.course_name,
-    trainer_name: reviewData.trainer_name || "",
-    social_id: reviewData.social_id,
-    rating: reviewData.rating ? Number(reviewData.rating) : 5,
     review: reviewData.comment,
+    videoLink: reviewData.videoLink,
+    email: reviewData.email || "",
+    type: true,
+    trainer_name: reviewData.trainer_name || "",
+    rating: reviewData.rating || "",
     location: reviewData.location || "",
-    display: displayValue, 
-    date: new Date().toISOString().split("T")[0],
+    reviewType: reviewData.reviewType,
+    categoryName: reviewData.categoryName,
+    date: currentDate
   };
 
   const formData = new FormData();
-  formData.append("review", JSON.stringify(reviewPayload));
+  formData.append("review", JSON.stringify(reviewObject)); 
 
   if (reviewData.image) {
-    formData.append("user_image", reviewData.image, reviewData.image.name);
+    formData.append("user_image", reviewData.image); 
   }
 
   try {
-    await axios.post(
+    const response = await axios.post(
       "https://api.test.hachion.co/userreview/add",
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
 
-    setSuccessMessage("Review submitted successfully!");
-    setErrorMessage("");
-    setReviewData({
-      review_id: "",
-      categoryName: "",
-      course_name: "",
-      date: currentDate,
-      type: false,
-      student_name: "",
-      rating: "",
-      location: "",
-      videoLink: "",
-      source: "",
-      trainer_name: "",
-      reviewType: "",
-      comment: "",
-      image: null,
-      display: "",
-      displayPages: [],
-    });
+    if (response.status === 201) { 
+      setSuccessMessage("✅ Review added successfully.");
+      setErrorMessage("");
 
-    setShowAddCourse(false);
+     setReviewData({ 
+  student_name: "", 
+  source: "", 
+  display:"",
+  displayPages: [],   
+  categoryName: "", 
+  course_name: "", 
+  comment:"",
+  reviewType:"",
+  image: null,
+  rating: "", 
+});
+
+      setShowAddCourse(false);  
+      await fetchReview();      
+    }
   } catch (error) {
-    console.error("Error adding review:", error.response?.data || error.message);
-    setErrorMessage("Failed to submit review. Please try again.");
+    console.error("Error adding review:", error);
+    setErrorMessage("❌ Error adding review.");
     setSuccessMessage("");
   }
 };
@@ -578,6 +623,21 @@ useEffect(() => {
 }, [reviewData.categoryName]);
 
 
+const isAddFormValid =
+  reviewData.categoryName &&
+  reviewData.course_name &&
+  reviewData.student_name &&
+  reviewData.rating !== "" &&
+  reviewData.source &&
+  reviewData.location &&
+  reviewData.reviewType &&
+  reviewData.comment &&
+  reviewData.display &&
+  (
+    reviewData.reviewType === "Course" ||
+    reviewData.trainer_name
+  );
+
   return (
     
     <>  
@@ -604,7 +664,7 @@ useEffect(() => {
 
 <div className="course-row">
   <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
+    <label for="inputState" class="form-label">Category Name <span style={{ color: "red" }}>*</span></label>
     <select id="inputState" class="form-select" name='categoryName' value={reviewData.categoryName} onChange={handleChange}>
     <option value="" disabled>
           Select Category
@@ -618,7 +678,7 @@ useEffect(() => {
 </div>
 
 <div className="col-md-3">
-        <label htmlFor="course" className="form-label">Course Name</label>
+        <label htmlFor="course" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
         <select
           id="course"
           className="form-select"
@@ -640,7 +700,7 @@ useEffect(() => {
   </div>
 <div className='course-row'>
 <div class="col-md-4">
-  <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Student Name <span style={{ color: "red" }}>*</span></label>
   <input type="text" id="inputtext6" class="form-control" placeholder='Enter Student Name' aria-describedby="passwordHelpInline"
   name="student_name"
   value={reviewData.student_name}
@@ -656,7 +716,7 @@ useEffect(() => {
                 />
               </div>
     <div class="col-md-2">
-      <label for="exampleFormControlTextarea1" class="form-label">Student Rating(5 star)</label>
+      <label for="exampleFormControlTextarea1" class="form-label">Student Rating(5 star) <span style={{ color: "red" }}>*</span></label>
      <input
   type="number"
   id="inputtext6"
@@ -685,7 +745,7 @@ useEffect(() => {
 
       </div>
               <div class="col-md-2">
-    <label for="inputState" class="form-label">Source</label>
+    <label for="inputState" class="form-label">Source <span style={{ color: "red" }}>*</span></label>
     <select id="inputState" class="form-select" name='source' value={reviewData.source} onChange={handleChange}>
       <option value="">Select</option>
   <option value="Linkedin">LinkedIn</option>
@@ -698,7 +758,7 @@ useEffect(() => {
 </div>
 <div className='course-row'>
   <div class="col-md-2">
-  <label for="exampleFormControlTextarea1" class="form-label">Location</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Location <span style={{ color: "red" }}>*</span></label>
   <input type="text" id="inputtext6" class="form-control" placeholder='Enter Location' aria-describedby="passwordHelpInline"
   name="location"
   value={reviewData.location}
@@ -710,7 +770,7 @@ useEffect(() => {
   value={reviewData.videoLink}
   onChange={handleChange}/></div>
       <div class="col-md-2">
-    <label for="inputState" class="form-label">Review Type</label>
+    <label for="inputState" class="form-label">Review Type <span style={{ color: "red" }}>*</span></label>
     <select
   id="inputState"
   className="form-select"
@@ -726,7 +786,14 @@ useEffect(() => {
 </div>
 
     <div className="col-md-4">
-   <label className="form-label">Trainer Name</label>
+   {/* <label className="form-label">Trainer Name</label> */}
+   <label className="form-label">
+  Trainer Name
+  {(reviewData.reviewType === "Trainer" || reviewData.reviewType === "Both") && (
+    <span style={{ color: "red" }}> *</span>
+  )}
+</label>
+
    <select
      className="form-select"
     name="trainer_name"
@@ -746,7 +813,7 @@ onChange={handleChange}
 </div>
   
   <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Comment <span style={{ color: "red" }}>*</span></label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
   name="comment"
   value={reviewData.comment}
@@ -755,7 +822,7 @@ onChange={handleChange}
 
 <div style={{paddingTop: "10px"}}>
   <label htmlFor="display" className="form-label">
-    Display Reviews:
+    Display Reviews: <span style={{ color: "red" }}>*</span>
   </label>
   </div>
   <div className="course-row">
@@ -772,7 +839,7 @@ onChange={handleChange}
               id={id}
               name="displayPages"
               value={value}
-              
+              checked={reviewData.displayPages?.includes(value)}
               onChange={handleCheckboxChange}
             />
             <label className="form-check-label" htmlFor={id}>
@@ -797,13 +864,19 @@ onChange={handleChange}
 )}
 <div className="course-row">
 
-                  <button
+                <button
   className='submit-btn'
   type="button"
   onClick={handleSubmit}
+  disabled={!isAddFormValid}
+  style={{
+    opacity: isAddFormValid ? 1 : 0.6,
+    cursor: isAddFormValid ? "pointer" : "not-allowed"
+  }}
 >
   Submit
 </button>
+
 
   <button className='reset-btn' onClick={handleReset}>Reset</button>
   
@@ -967,7 +1040,7 @@ onChange={handleChange}
   <DialogContent>
     <div className="course-row">
     <div className="col">
-      <label htmlFor="categoryName" className="form-label">Category Name</label>
+      <label htmlFor="categoryName" className="form-label">Category Name <span style={{ color: "red" }}>*</span></label>
       <select
         id="categoryName"
         className="form-select"
@@ -987,7 +1060,7 @@ onChange={handleChange}
     </div>
 
     <div className="col">
-      <label htmlFor="courseName" className="form-label">Course Name</label>
+      <label htmlFor="courseName" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
      
       <select
   id="courseName"
@@ -1010,7 +1083,7 @@ onChange={handleChange}
     </div>
     <div className="course-row">
   <div class="col">
-  <label for="exampleFormControlTextarea1" class="form-label">Student Name</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Student Name <span style={{ color: "red" }}> *</span></label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="name"
   value={editedData.name}
@@ -1027,7 +1100,7 @@ onChange={handleChange}
                 />
               </div>
               <div class="col">
-    <label for="inputState" class="form-label">Source</label>
+    <label for="inputState" class="form-label">Source <span style={{ color: "red" }}> *</span></label>
     <select id="inputState" class="form-select"  name="social_id"
   value={editedData.social_id} onChange={handleInputChange}>
     <option value="">Select</option>
@@ -1042,7 +1115,7 @@ onChange={handleChange}
 
 <div className="course-row">
         <div class="col">
-    <label for="inputState" class="form-label">Student Rating</label>
+    <label for="inputState" class="form-label">Student Rating <span style={{ color: "red" }}> *</span></label>
    <input
   type="number"
   id="inputtext6"
@@ -1074,14 +1147,14 @@ onChange={handleChange}
 
   </div>
   <div class="col">
-  <label for="exampleFormControlTextarea1" class="form-label">Location</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Location <span style={{ color: "red" }}> *</span></label>
   <input type="text" id="inputtext6" class="schedule-input" aria-describedby="passwordHelpInline"
   name="location"
   value={editedData.location}
   onChange={handleInputChange}/>
   </div>
   <div class="col">
-    <label for="inputState" class="form-label">Review Type</label>
+    <label for="inputState" class="form-label">Review Type <span style={{ color: "red" }}> *</span></label>
     <select id="inputState" class="form-select"  name="reviewType"
   value={editedData.reviewType} onChange={handleInputChange}>
   <option value="">Select</option>
@@ -1102,7 +1175,14 @@ onChange={handleChange}
   </div>
 
   <div className="col">
-  <label className="form-label">Trainer Name</label>
+  {/* <label className="form-label">Trainer Name</label> */}
+  <label className="form-label">
+  Trainer Name
+  {(reviewData.reviewType === "Trainer" || reviewData.reviewType === "Both") && (
+    <span style={{ color: "red" }}> *</span>
+  )}
+</label>
+
   <select
     className="form-select"
     name="trainer_name"
@@ -1127,7 +1207,7 @@ onChange={handleChange}
 </div>
 
     <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
+  <label for="exampleFormControlTextarea1" class="form-label">Comment <span style={{ color: "red" }}> *</span></label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
   name="review"
   value={editedData.review}
@@ -1136,7 +1216,7 @@ onChange={handleChange}
 
 <div style={{paddingTop: "10px"}}>
   <label htmlFor="display" className="form-label">
-    Display Reviews:
+    Display Reviews: <span style={{ color: "red" }}> *</span>
   </label>
   </div>
   

@@ -213,33 +213,30 @@ What's Included:
                           onClick={() => {
                             setSendingBatchId(sess.batchId);
 
-                            resendEmail(
-                              {
-                                email: userProfile.email,
-                                notifyVia: {
-                                  email: notifyViaMap[sess.id]?.email ?? true,
-                                  whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-                                },
+                          resendEmail(
+  {
+    email: userProfile.email,
+    batchId: sess.batchId, 
+  },
+  {
+    onSuccess: (msg) => {
+      setSendingBatchId(null);
+      setResendError("");
+      setResendMessage(typeof msg === "string" ? msg : msg?.message);
+    },
+    onError: (err) => {
+      setSendingBatchId(null);
+      const backendMsg =
+        typeof err?.response?.data === "string"
+          ? err.response.data
+          : err?.response?.data?.message;
 
-                              },
-                              {
-                                onSuccess: (msg) => {
-                                  setSendingBatchId(null);
-                                  setResendError("");
-                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
-                                },
-                                onError: (err) => {
-                                  setSendingBatchId(null);
-                                  const backendMsg =
-                                    typeof err?.response?.data === "string"
-                                      ? err.response.data
-                                      : err?.response?.data?.message;
+      setResendMessage("");
+      setResendError(backendMsg || "Failed to resend email");
+    },
+  }
+);
 
-                                  setResendMessage("");
-                                  setResendError(backendMsg || "Failed to resend email");
-                                },
-                              }
-                            );
                           }}
                         >
                           {sess.resendCount >= 3

@@ -311,24 +311,16 @@ export default function Other() {
     const formDataToSend = new FormData();
     const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
     const jsonData = {
-  date: currentDate,
-  path: bannerData.path,
-  status: "",
-  home_status: "",
-};
-
-   // Banner popup upload
-if (actionType === "banner" && bannerData.banner_image) {
-  formDataToSend.append("banner_image", bannerData.banner_image);
-  jsonData.status = "Enabled";          // ✅ auto enable banner
-}
-
-// Home banner upload
-if (actionType === "homeBanner" && bannerData.home_banner_image) {
+      date: currentDate,
+      path: bannerData.path,
+    };
+    if (actionType === "banner" && bannerData.banner_image) {
+      formDataToSend.append("banner_image", bannerData.banner_image);
+      jsonData.status = "Enabled";
+    } else if (actionType === "homeBanner" && bannerData.home_banner_image) {
   formDataToSend.append("home_banner_image", bannerData.home_banner_image);
-  jsonData.home_status = "Enabled";     // ✅ auto enable home banner
+  jsonData.home_status = "Enabled";
 }
-
     // Append JSON data as a Blob
     formDataToSend.append(
       "banner",

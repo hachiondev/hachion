@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import styles from "./Banner.module.css";
-import { cn } from "../../utils";
-import heroImage from "../../Assets/images/banner-hero.png";
-import Medal from "../../Assets/icons/medal.svg";
+import { cn } from "../../../../utils";
+import heroImage from "../../../../Assets/images/banner-hero.png";
+import Medal from "../../../../Assets/icons/medal.svg";
 import LoginRequired from "./LoginRequired";
 import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
-import NewEnrollNow from "../UserPanel/NewEnrollNow";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
+import NewEnrollNow from "../../../UserPanel/NewEnrollNow";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 
 
-import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
-import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
+import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
+import { useCourseDiscountRule } from "../../../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
 
 
 dayjs.extend(customParseFormat);
@@ -548,7 +547,7 @@ const oldPrice =
               }}
             >
               <img
-                src={require("../../Assets/loginpopup.webp")}
+                src={require("../../../../Assets/loginpopup.webp")}
                 alt="login popup"
                 style={{
                   width: "100%",

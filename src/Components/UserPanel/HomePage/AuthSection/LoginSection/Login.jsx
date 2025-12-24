@@ -223,12 +223,12 @@ const Login = () => {
   useEffect(() => {
     try {
       const raw = localStorage.getItem('loginuserData');
-      console.log('[auth bootstrap] localStorage.loginuserData =', raw);
+      // console.log('[auth bootstrap] localStorage.loginuserData =', raw);
       if (raw) {
-        console.log('[auth bootstrap] Found existing user in localStorage → skip /api/me');
+        // console.log('[auth bootstrap] Found existing user in localStorage → skip /api/me');
         return;
       }
-      console.log('[auth bootstrap] No user in localStorage → calling /api/me (credentials: include)');
+      // console.log('[auth bootstrap] No user in localStorage → calling /api/me (credentials: include)');
       fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
         .then(r => {
           console.log('[auth bootstrap] /api/me status =', r.status);

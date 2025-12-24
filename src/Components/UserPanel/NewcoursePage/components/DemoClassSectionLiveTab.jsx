@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./DemoClassSection.module.css";
-import { cn } from "../../utils";
-import { useCheckEnrollmentForSessions } from "../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
+import { cn } from "../../../../utils";
+import { useCheckEnrollmentForSessions } from "../../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
 import { useNavigate } from "react-router-dom";
-import { useResendEnrollEmail } from "../../Api/hooks/CourseApi/useResendEnrollEmail";
+import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendEnrollEmail";
 
 function DemoClassSectionLiveTab({
   scheduleLoading,
@@ -424,7 +424,7 @@ What's Included:
               }}
             >
               <img
-                src={require("../../Assets/loginpopup.webp")}
+                src={require("../../../../Assets/loginpopup.webp")}
                 alt="login popup"
                 style={{
                   width: "100%",

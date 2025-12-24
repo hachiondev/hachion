@@ -1,7 +1,7 @@
 // src/Components/.../CrashTab.jsx
 import React from "react";
 import styles from "./DemoClassSection.module.css";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 
 function DemoClassSectionCrashTab({
   scheduleLoading,

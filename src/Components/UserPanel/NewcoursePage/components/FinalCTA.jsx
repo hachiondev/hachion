@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./FinalCTA.module.css";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 import { Link } from "react-router-dom";
 import LoginRequired from "./LoginRequired";
 

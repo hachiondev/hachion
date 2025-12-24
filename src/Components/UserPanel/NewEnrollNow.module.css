@@ -116,7 +116,7 @@
 .enLabel {
   font-size: 13px;
   font-weight: 500;
-  color: #4b5563;
+  color: #000;
   letter-spacing: 0.3px;
   display: flex;
   align-items: center;
@@ -349,7 +349,7 @@
 
 .enTermsLabel {
   font-size: 13px;
-  color: #4b5563;
+  color: #000;
   line-height: 1.5;
   cursor: pointer;
   font-weight: 400;
@@ -390,7 +390,7 @@
 .enTotalLabel {
   font-size: 13px;
   font-weight: 500;
-  color: #64748b;
+  color: #000;
   letter-spacing: 0.5px;
 }
 

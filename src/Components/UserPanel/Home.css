@@ -2493,7 +2493,7 @@ p.footer-copyright-desktop {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .navbar {
     height: 6vh;
     display: flex;
@@ -2786,6 +2786,7 @@ p.footer-copyright-desktop {
   .popup-card-holder {
     display: flex;
     justify-content: center;
+    flex-wrap: nowrap;
     gap: 10px;
     /* max-width: 80%; */
   }
@@ -2918,11 +2919,11 @@ p.footer-copyright-desktop {
   }
 
   .filter-section {
-    display: flex;
+    /* display: flex;
     gap: 10px;
     margin-left: 0;
-    margin-right: 0;
-    width: 100%;
+    margin-right: 0; */
+    width: 84%;
   }
 
   .filter-section select {
@@ -2961,13 +2962,17 @@ p.footer-copyright-desktop {
     height: 20px;
   }
 
+   .association-head{
+    justify-content: center;
+   }
+
   .association-head-mobile {
     display: flex;
-    text-align: left;
+    text-align: center;
     color: #000000;
-    font-size: medium;
     white-space: wrap;
-    padding: 0 16px;
+    /* padding: 0 16px; */
+    font-size: 18px;
   }
 
   .association-head-desktop {
@@ -3340,7 +3345,7 @@ p.footer-copyright-desktop {
   }
 
   .association-head {
-    text-align: left;
+    text-align: center;
     justify-content: left;
     white-space: wrap;
   }
@@ -3649,6 +3654,27 @@ margin-right: 0px;
     font-size: 0.6rem;
   }
 
+  .association-head-mobile{
+    font-size: 20px;
+  }
+
+}
+
+@media (max-width: 375px){
+  .association-head-mobile{
+    font-size: 16px;
+  }
+
+    .filter-container {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    /* margin: 0 auto; */
+  }
+
+  .filter-section{
+    margin: 0 auto;
+  }
 }
 
 @keyframes slide {

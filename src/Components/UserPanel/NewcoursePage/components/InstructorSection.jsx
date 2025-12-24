@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./InstructorSection.module.css";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 import { useParams } from "react-router-dom";
-import { useTrainerDetailsByCourse } from "../../Api/hooks/InstructorSection/useTrainerDetailsByCourse";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
+import { useTrainerDetailsByCourse } from "../../../../Api/hooks/InstructorSection/useTrainerDetailsByCourse";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 
 export default function InstructorSection({
   name = "John Mitchell",

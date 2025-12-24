@@ -407,14 +407,12 @@
 
   .ishead p {
     font-size: 20px;
-    /* Increased from 16px */
   }
 
   .istitle {
     font-size: 18px;
-    /* Increased from 14px */
     margin-top: 12px;
-    /* Increased from 10px */
+    text-align: center;
   }
 
   .isstatlab {
@@ -435,6 +433,10 @@
     font-weight: 400;
     line-height: 1.6;
     /* Added for better readability */
+  }
+
+    .istopline{
+    flex-direction: column;
   }
 
   .issubhead {
@@ -533,6 +535,7 @@
     font-size: 18px;
     /* Increased from 14px */
     margin-top: 12px;
+    text-align: center;
     /* Increased from 10px */
   }
 

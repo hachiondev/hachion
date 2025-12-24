@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import TrainingEvents from "../UserPanel/TrainingEvents";
+import TrainingEvents from "../../../UserPanel/TrainingEvents";
 import styles from "./StudentsAlsoEnrolled.module.css"; // Import CSS module
 
 export default function StudentsAlsoEnrolled() {
@@ -13,7 +13,7 @@ export default function StudentsAlsoEnrolled() {
         {/* HEADER */}
         <div className={styles.saehead}>
           <h2 className={styles.textCenter}>Students Also Enrolled In</h2>
-          <p>
+          <p className={styles.saePara}>
             Hachion offers flexible, instructor-led online training programs that let you
             learn anytime, anywhere. Our expert instructors, practical curriculum, and
             dedicated support team ensure a rewarding learning journey, helping you

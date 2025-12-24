@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SuccessStories.module.css";
 import VideoModal from "./VideoModal";
-import { useUserReviews } from "../../Api/hooks/CourseApi/useUserReviews";
+import { useUserReviews } from "../../../../Api/hooks/CourseApi/useUserReviews";
 
 // --------------------- Helper Functions ----------------------
 const getYouTubeId = (url) => {

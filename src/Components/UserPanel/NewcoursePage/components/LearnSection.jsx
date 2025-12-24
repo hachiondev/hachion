@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styles from "./LearnSection.module.css";
-import checkMark from "../../Assets/icons/Checkmark.png";
-import person from "../../Assets/icons/Person-2.png";
-import job from "../../Assets/icons/job.png";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
+import checkMark from "../../../../Assets/icons/Checkmark.png";
+import person from "../../../../Assets/icons/Person-2.png";
+import job from "../../../../Assets/icons/job.png";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 import { useParams } from "react-router-dom";
-import { useToolsByCourse } from "../../Api/hooks/CourseApi/useToolsByCourse";
-import CardsPagination from "../UserPanel/Common/CardsPagination";
+import { useToolsByCourse } from "../../../../Api/hooks/CourseApi/useToolsByCourse";
+import CardsPagination from "../../../UserPanel/Common/CardsPagination";
 
 const CheckCircle = () => (
     <img src={checkMark} alt="check" className={styles.lsicon} />

@@ -427,7 +427,7 @@
   }
 
   .lslistitem {
-    font-size: 26px;
+    font-size: 22px;
     gap: 10px;
     font-weight: 400;
   }
@@ -460,7 +460,7 @@
   .lsbullets {
     margin-left: 0;
     font-weight: 400;
-    font-size: 26px;
+    font-size: 22px;
   }
 
   .lspills {
@@ -468,7 +468,7 @@
   }
 
   .lspill {
-    font-size: 24px;
+    font-size: 21px;
   }
 
   .lssalaryval {
@@ -493,7 +493,7 @@
   }
 
   .lscardbullets {
-    font-size: 26px;
+    font-size: 22px;
     padding-left: 2rem;
     font-weight: 400;
   }
@@ -574,7 +574,7 @@
   }
 
   .lspill {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .lstoolsgrid {

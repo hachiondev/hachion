@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CareerOutcomes.module.css";
-import { cn } from "../../utils";
+import { cn } from '../../../../utils';
 
 const Rupee = () => (
   <img src="Rupee.png" alt="rupee" width="44" height="44" />

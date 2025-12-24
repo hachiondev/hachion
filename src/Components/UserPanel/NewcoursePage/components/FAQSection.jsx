@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./FAQSection.module.css";
-import { cn } from "../../utils";
-import { useGeneralFaqs } from "../../Api/hooks/CourseApi/useGeneralFaqs";
+import { cn } from "../../../../utils";
+import { useGeneralFaqs } from "../../../../Api/hooks/CourseApi/useGeneralFaqs";
 
 const Chevron = ({ open }) => (
   <svg

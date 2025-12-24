@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils";
 import styles from "./EnrollPay.module.css";
-import { Input } from "../ui/input";
+import { Input } from "../../../ui/input";
 import { Button } from "../ui/button";
 
 // Close icon

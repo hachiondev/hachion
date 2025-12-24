@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CourseCurriculum.module.css";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCurriculumAll } from "../../Api/hooks/CurriculumApi/useCurriculumAll";
-import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
-import { useAssessmentAccess } from "../../Api/hooks/CurriculumApi/useAssessmentAccess";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
-import { useProjectsByCourseName } from "../../Api/hooks/CurriculumApi/useProjectsByCourseName";
+import { useCurriculumAll } from "../../../../Api/hooks/CurriculumApi/useCurriculumAll";
+import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
+import { useAssessmentAccess } from "../../../../Api/hooks/CurriculumApi/useAssessmentAccess";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
+import { useProjectsByCourseName } from "../../../../Api/hooks/CurriculumApi/useProjectsByCourseName";
 
 function toEmbedUrl(url) {
   if (!url) return "";
@@ -459,7 +459,7 @@ export default function CourseCurriculum() {
     <div className={styles.modalContent}>
       <div className={styles.modalImage}>
         <img
-          src={require("../../Assets/loginpopup.webp")}
+          src={require("../../../../Assets/loginpopup.webp")}
           alt="login popup"
           className={styles.modalImg}
         />
@@ -508,7 +508,7 @@ export default function CourseCurriculum() {
             <div className={styles.modalContent}>
               <div className={styles.modalImage}>
                 <img
-                  src={require("../../Assets/loginpopup.webp")}
+                  src={require("../../../../Assets/loginpopup.webp")}
                   alt="enroll popup"
                   className={styles.modalImg}
                 />

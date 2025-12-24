@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from "react";
 import styles from "./DemoClassSection.module.css";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 
 const Chevron = () => (
   <svg
@@ -18,9 +17,10 @@ const Chevron = () => (
   </svg>
 );
 
-function DemoClassSectionSelfTab({
+function DemoClassSectionMentoringTab({
   timeOptions,
   notificationOptions,
+
   preferredTime,
   setPreferredTime,
   notification,
@@ -36,17 +36,15 @@ function DemoClassSectionSelfTab({
   isRequestBatchSuccess,
   requestBatchError,
   onRequestClick,
-
-  
-  selfPacedLearning,
+  mentoringMode,
   isCourseLoading,
-  courseError, 
+  courseError,
 }) {
-  
-  const selfContent =
-    selfPacedLearning && selfPacedLearning.trim().length > 0
-      ? selfPacedLearning
-      : `Join real-time instructor-led sessions from anywhere. This mode includes interactive classes, hands-on exercises, and live Q&A to ensure in-depth learning.
+
+  const mentoringContent =
+    mentoringMode && mentoringMode.trim().length > 0
+      ? mentoringMode
+      : `Get personalized one-on-one guidance from industry experts. Customized learning paths tailored to your goals and schedule.
 
 What's Included:
 • 80+ hours of video content
@@ -56,24 +54,22 @@ What's Included:
 • English
 • Lifetime access with free updates
 • No prior programming experience required`;
-
-const isAnyDaySelected = () => {
-  const checkboxes = document.querySelectorAll(".dayCheckbox");
-  return Array.from(checkboxes).some((cb) => cb.checked);
-};
-
-const isSelfFormValid =
-  isAnyDaySelected() &&
-  preferredTime &&
-  notification;
-
+  const isAnyDaySelected = () => {
+    const checkboxes = document.querySelectorAll(".dayCheckbox");
+    return Array.from(checkboxes).some((cb) => cb.checked);
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
-useEffect(() => {
-  if (isRequestBatchSuccess || requestBatchError) {
-    setIsSubmitting(false);
-  }
-}, [isRequestBatchSuccess, requestBatchError]);
 
+  const isMentoringFormValid =
+    isAnyDaySelected() &&
+    preferredTime &&
+    notification;
+
+  useEffect(() => {
+    if (isRequestBatchSuccess || requestBatchError) {
+      setIsSubmitting(false);
+    }
+  }, [isRequestBatchSuccess, requestBatchError]);
 
   return (
     <div className={styles.dcgrid}>
@@ -88,44 +84,36 @@ useEffect(() => {
             <div className={styles.dcrequestForm}>
               {/* Preferred Day */}
               <div className={styles.dcrequestDays}>
-                <label className={styles.dcrequestLabel}>
-                  Preferred Day: <span style={{ color: "red" }}>*</span>
-                </label>
+                <label className={styles.dcrequestLabel}>Preferred Day: <span style={{ color: "red" }}>*</span></label>
 
+                {/* SELECT / DESELECT ALL */}
                 <button
-                                  type="button"
-                                  data-mode="select"
-                                  className={styles.selectAllBtn}
-                                  onClick={(e) => {
-                                    const btn = e.currentTarget;
-                                    const mode = btn.dataset.mode || "select";
-                                    const checkboxes = document.querySelectorAll(".dayCheckbox");
-                
-                                    if (mode === "select") {
-                                      checkboxes.forEach((cb) => (cb.checked = true));
-                                      btn.dataset.mode = "deselect";
-                                      btn.textContent = "Deselect All";
-                                    } else {
-                                      checkboxes.forEach((cb) => (cb.checked = false));
-                                      btn.dataset.mode = "select";
-                                      btn.textContent = "Select All";
-                                    }
-                                  }}
-                                >
-                                  Select All
-                                </button>
+                  type="button"
+                  data-mode="select"
+                  className={styles.selectAllBtn}
+                  onClick={(e) => {
+                    const btn = e.currentTarget;
+                    const mode = btn.dataset.mode || "select";
+                    const checkboxes = document.querySelectorAll(".dayCheckbox");
 
+                    if (mode === "select") {
+                      checkboxes.forEach((cb) => (cb.checked = true));
+                      btn.dataset.mode = "deselect";
+                      btn.textContent = "Deselect All";
+                    } else {
+                      checkboxes.forEach((cb) => (cb.checked = false));
+                      btn.dataset.mode = "select";
+                      btn.textContent = "Select All";
+                    }
+                  }}
+                >
+                  Select All
+                </button>
                 <div className={styles.dcrequestCheckboxes}>
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
                     (day) => (
-                      <label
-                        key={day}
-                        className={styles.dcrequestCheckbox}
-                      >
-                        <input
-                          type="checkbox"
-                          className="dayCheckbox"
-                        />
+                      <label key={day} className={styles.dcrequestCheckbox}>
+                        <input type="checkbox" className="dayCheckbox" />
                         <span className={styles.checkmark}></span>
                         <span>{day}</span>
                       </label>
@@ -141,28 +129,24 @@ useEffect(() => {
                   <label className={styles.dcrequestLabel}>
                     Preferred Time: <span style={{ color: "red" }}>*</span>
                   </label>
+
                   <div className={styles.dcrequestSelectWrapper}>
                     <div
                       className={styles.dcrequestSelectTrigger}
-                      onClick={() =>
-                        setTimeDropdownOpen(!timeDropdownOpen)
-                      }
+                      onClick={() => setTimeDropdownOpen(!timeDropdownOpen)}
                     >
                       <span
                         style={{
                           color: preferredTime ? "#000" : "#999",
                         }}
                       >
-                        {preferredTime === ""
-                          ? "Select preferred time"
-                          : preferredTime}
+                        {preferredTime || "Select preferred time"}
                       </span>
 
                       <span
                         className={cn(
                           styles.dcrequestCaret,
-                          timeDropdownOpen &&
-                            styles.dcrequestCaretOpen
+                          timeDropdownOpen && styles.dcrequestCaretOpen
                         )}
                       >
                         <Chevron />
@@ -182,25 +166,19 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 preferredTime === option.value &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
-                                setPreferredTime((prev) =>
-                                  prev === option.value
-                                    ? ""
-                                    : option.value
+                                setPreferredTime(
+                                  preferredTime === option.value ? "" : option.value
                                 );
                                 setTimeDropdownOpen(false);
                               }}
                             >
                               {option.label}
+
                               {preferredTime === option.value && (
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                >
+                                <svg width="16" height="16" viewBox="0 0 16 16">
                                   <path
                                     d="M13.5 4L6 11.5L2.5 8"
                                     stroke="currentColor"
@@ -220,17 +198,13 @@ useEffect(() => {
 
                 {/* Notification */}
                 <div className={styles.dcrequestField}>
-                  <label className={styles.dcrequestLabel}>
-                    Notification: <span style={{ color: "red" }}>*</span>
-                  </label>
+                  <label className={styles.dcrequestLabel}>Notification: <span style={{ color: "red" }}>*</span></label>
 
                   <div className={styles.dcrequestSelectWrapper}>
                     <div
                       className={styles.dcrequestSelectTrigger}
                       onClick={() =>
-                        setNotificationDropdownOpen(
-                          !notificationDropdownOpen
-                        )
+                        setNotificationDropdownOpen(!notificationDropdownOpen)
                       }
                     >
                       <span
@@ -238,16 +212,14 @@ useEffect(() => {
                           color: notification ? "#000" : "#999",
                         }}
                       >
-                        {notification === ""
-                          ? "Choose notification"
-                          : notification}
+                        {notification || "Choose notification"}
                       </span>
 
                       <span
                         className={cn(
                           styles.dcrequestCaret,
                           notificationDropdownOpen &&
-                            styles.dcrequestCaretOpen
+                          styles.dcrequestCaretOpen
                         )}
                       >
                         <Chevron />
@@ -264,11 +236,9 @@ useEffect(() => {
                         />
 
                         <div className={styles.dcrequestSelectMenu}>
-                          {/* Clear selection */}
+                          {/* Clear Option */}
                           <div
-                            className={
-                              styles.dcrequestSelectOption
-                            }
+                            className={styles.dcrequestSelectOption}
                             onClick={() => {
                               setNotification("");
                               setNotificationDropdownOpen(false);
@@ -281,13 +251,11 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 notification === option.label &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
-                                setNotification((prev) =>
-                                  prev === option.label
-                                    ? ""
-                                    : option.label
+                                setNotification(
+                                  notification === option.label ? "" : option.label
                                 );
                                 setNotificationDropdownOpen(false);
                               }}
@@ -295,12 +263,7 @@ useEffect(() => {
                               {option.label}
 
                               {notification === option.label && (
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                >
+                                <svg width="16" height="16" viewBox="0 0 16 16">
                                   <path
                                     d="M13.5 4L6 11.5L2.5 8"
                                     stroke="currentColor"
@@ -319,68 +282,55 @@ useEffect(() => {
                 </div>
               </div>
 
-              {/* Request Batch button + messages */}
-          <button
-  onClick={() => {
-    if (isSubmitting || isRequestBatchLoading) return;
+              {/* Request Batch button */}
 
-    setIsSubmitting(true);     
-    onRequestClick();
-  }}
-  disabled={
-    isSubmitting ||
-    isRequestBatchLoading ||
-    isProfileLoading ||
-    !isSelfFormValid
-  }
-  style={{
-    width: "100%",
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    fontSize: "15px",
-    fontWeight: "600",
-    backgroundColor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
-        ? "#C4C4C4"
-        : "#2a7cf7",
-    color: "#fff",
-    cursor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
-        ? "not-allowed"
-        : "pointer",
-    transition: "background-color 0.2s ease",
-  }}
->
-  {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-</button>
+              <button
+                onClick={() => {
+                  if (isSubmitting || isRequestBatchLoading) return;
 
+                  setIsSubmitting(true);
+                  onRequestClick();
+                }}
+                disabled={
+                  isSubmitting ||
+                  isRequestBatchLoading ||
+                  isProfileLoading ||
+                  !isMentoringFormValid
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  marginBottom:"14px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  backgroundColor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
+                      ? "#C4C4C4"
+                      : "#2a7cf7",
+                  color: "#fff",
+                  cursor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isMentoringFormValid
+                      ? "not-allowed"
+                      : "pointer",
+                  transition: "background-color 0.2s ease",
+                }}
+              >
+                {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+              </button>
 
+              {/* Messages */}
               {showMessage && isRequestBatchSuccess && (
-                <p
-                  style={{
-                    color: "#0A8754",
-                    fontSize: "14px",
-                    marginTop: "6px",
-                    lineHeight: "1.4",
-                  }}
-                >
+                <p style={{ color: "#0A8754", fontSize: "14px", marginTop: "6px" }}>
                   Your request has been submitted successfully.
                   <br />
-                  Our team will contact you shortly with batch
-                  details.
+                  Our team will contact you shortly with batch details.
                 </p>
               )}
 
               {showMessage && requestBatchError && (
-                <p
-                  style={{
-                    color: "#D93025",
-                    fontSize: "14px",
-                    marginTop: "6px",
-                    lineHeight: "1.4",
-                  }}
-                >
+                <p style={{ color: "#D93025", fontSize: "14px", marginTop: "6px" }}>
                   Unable to submit your request right now.
                   <br />
                   Please try again in a few minutes.
@@ -391,32 +341,26 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* RIGHT: Dynamic Info card */}
+      {/* RIGHT: Dynamic Info Card */}
       <aside className={styles.dcinfo}>
         <div className={styles.dcinfohead}>
           <div className={styles.dcinfoicon} aria-hidden="true">
-            <img src="/self_paced.png" alt="self-paced" />
+            <img src="/monitor.png" alt="monitor" />
           </div>
           <div>
-            <div className={styles.dcinfotitle}>
-              Self-paced Learning
-            </div>
-            <div className={styles.dcinfosubdescription}>
-              Learning Mode
-            </div>
+            <div className={styles.dcinfotitle}>Mentoring Mode</div>
+            <div className={styles.dcinfosubdescription}>Learning Mode</div>
           </div>
         </div>
 
         {isCourseLoading ? (
-          <div className={styles.dcinfotext}>
-            Loading self-paced learning details...
-          </div>
+          <div className={styles.dcinfotext}>Loading mentoring details...</div>
         ) : (
           <div
             className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }} 
+            style={{ whiteSpace: "pre-line" }}
           >
-            {selfContent}
+            {mentoringContent}
           </div>
         )}
       </aside>
@@ -424,4 +368,4 @@ useEffect(() => {
   );
 }
 
-export default DemoClassSectionSelfTab;
+export default DemoClassSectionMentoringTab;

@@ -1,15 +1,15 @@
-import CourseBanner from '../../NewCourse/CourseBanner';
-import CareerOutcomes from '../../NewCourse/CareerOutcomes';
-import CertificateSection from '../../NewCourse/CertificateSection';
-import CourseCurriculum from '../../NewCourse/CourseCurriculum';
-import DemoClassSection from '../../NewCourse/DemoClassSection';
-import FAQSection from '../../NewCourse/FAQSection';
-import FinalCTA from '../../NewCourse/FinalCTA';
-import InstructorSection from '../../NewCourse/InstructorSection';
-import LearnSection from '../../NewCourse/LearnSection';
-import StudentsAlsoEnrolled from '../../NewCourse/StudentsAlsoEnrolled';
-import StudentsSay from '../../NewCourse/StudentsSay';
-import SuccessStories from '../../NewCourse/SuccessStories';
+import CourseBanner from '../NewcoursePage/components/CourseBanner';
+import CareerOutcomes from '../NewcoursePage/components/CareerOutcomes';
+import CertificateSection from '../NewcoursePage/components/CertificateSection';
+import CourseCurriculum from '../NewcoursePage/components/CourseCurriculum';
+import DemoClassSection from '../NewcoursePage/components/DemoClassSection';
+import FAQSection from '../NewcoursePage/components/FAQSection';
+import FinalCTA from '../NewcoursePage/components/FinalCTA';
+import InstructorSection from '../NewcoursePage/components/InstructorSection';
+import LearnSection from '../NewcoursePage/components/LearnSection';
+import StudentsAlsoEnrolled from '../NewcoursePage/components/StudentsAlsoEnrolled';
+import StudentsSay from '../NewcoursePage/components/StudentsSay';
+import SuccessStories from '../NewcoursePage/components/SuccessStories';
 import { useEffect, useRef } from 'react';
 
 const NewCourseDetails = () => {
@@ -36,7 +36,7 @@ const NewCourseDetails = () => {
       />
       <LearnSection />
       <DemoClassSection ref={demoClassRef}/>
-      <CourseCurriculum onViewDemoClass={scrollToDemoClass}/>
+      <CourseCurriculum />
       <InstructorSection />
       {/* <CareerOutcomes /> */}
       <CertificateSection />

@@ -1,21 +1,21 @@
 import React, { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useParams } from "react-router-dom"; 
 import styles from "./DemoClassSection.module.css";
-import { cn } from "../../utils";
-import RequestBatch from "../UserPanel/RequestBatch";
+import { cn } from "../../../../utils";
+import RequestBatch from "../../../UserPanel/RequestBatch";
 import EnrollNotification from "./EnrollNotification";
-import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
-import { useDiscountCountdown } from "../../Api/hooks/CourseApi/useDiscountCountdown";
-import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
-import { useDemoScheduleLogic } from "../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
-import { useDemoBatchRequestLogic } from "../../Api/hooks/DemoClassSectionLogics/useDemoBatchRequestLogic";
+import { useCourseDiscountRule } from "../../../../Api/hooks/CourseApi/useCourseDiscountRule";
+import { useDiscountCountdown } from "../../../../Api/hooks/CourseApi/useDiscountCountdown";
+import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
+import { useDemoScheduleLogic } from "../../../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
+import { useDemoBatchRequestLogic } from "../../../../Api/hooks/DemoClassSectionLogics/useDemoBatchRequestLogic";
 import DemoClassSectionLiveTab from "./DemoClassSectionLiveTab";
 import DemoClassSectionCrashTab from "./DemoClassSectionCrashTab";
 import DemoClassSectionMentoringTab from "./DemoClassSectionMentoringTab";
 import DemoClassSectionSelfTab from "./DemoClassSectionSelfTab";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
-import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
-import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
+import { useDemoLivePayment } from "../../../../Api/hooks/CourseApi/useDemoLivePayment";
+import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
 
 const tabs = [
   { key: "live", label: "Live Training" },
@@ -545,7 +545,7 @@ const getTabPrice = (tabKey) => {
               }}
             >
               <img
-                src={require("../../Assets/loginpopup.webp")}
+                src={require("../../../../Assets/loginpopup.webp")}
                 alt="login popup"
                 style={{
                   width: "100%",

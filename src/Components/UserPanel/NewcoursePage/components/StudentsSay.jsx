@@ -1,9 +1,9 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./StudentsSay.module.css";
-import { cn } from "../../utils";
-import { useUserReviewsByCourse } from "../../Api/hooks/CourseApi/useUserReviewsByCourse";
-import CardsPagination from "../UserPanel/Common/CardsPagination";
+import { cn } from "../../../../utils";
+import { useUserReviewsByCourse } from "../../../../Api/hooks/CourseApi/useUserReviewsByCourse";
+import CardsPagination from "../../../UserPanel/Common/CardsPagination";
 
 /* ===============================
    Star Icon

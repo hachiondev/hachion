@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Footer.module.css";
-import { cn } from "../../utils";
-import logo from '../assets/images/logo-footer.png';
+import { cn } from "../../../../utils";
+import logo from '../../../assets/images/logo-footer.png';
 
 const Phone = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">

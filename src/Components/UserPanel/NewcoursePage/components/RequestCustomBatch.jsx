@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { cn } from "../../utils";
+import { cn } from "../../../../utils";
 import styles from "./RequestCustomBatch.module.css";
-import { Input } from "../ui/input";
+import { Input } from "../../../ui/input";
 
 // Close icon
 const CloseIcon = (p) => (

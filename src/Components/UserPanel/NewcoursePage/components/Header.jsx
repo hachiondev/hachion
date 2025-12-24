@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./Header.module.css";
-import { cn } from "../../utils";
-import logo from '../assets/images/logo.png';
+import { cn } from "../../../../utils";
+import logo from '../../../assets/images/logo.png';
 
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">

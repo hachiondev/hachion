@@ -225,14 +225,176 @@
 
 
 @media (max-width: 768px) {
-  .saewrap h2 {
+  .saewrap .textCenter {
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  .saewrap .saePara {
+    font-size: 20px;
+    font-weight: 400;
+    padding: 0;
+  }
+
+  .saecard {
+    padding: 20px;
+  }
+
+  .saecard .chip {
+    font-size: 10px;
+  }
+
+  .saecard .chipby {
+    font-size: 12px;
+  }
+
+  .saecard .offbadge {
+    font-size: 10px;
+    padding: 2px 10px;
+  }
+
+  .saecard .saetitle {
+    font-size: 16px;
+  }
+
+  .saecard .saepriceRow .price {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .saecard .timer {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .saecard .mrp {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .saecard .saebtn {
+    font-size: 16px;
+  }
+
+  .saecard {
+    position: relative;
+  }
+
+  .cardActionIcons {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+  }
+
+  .cardIcons {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .cardIcons svg {
+    font-size: 18px;
+  }
+
+}
+@media (max-width: 480px) {
+  .saewrap .textCenter {
     font-size: 26px;
     font-weight: 600;
   }
 
-  .saewrap p {
+  .saewrap .saePara {
+    font-size: 20px;
+    font-weight: 400;
+    padding: 0;
+  }
+
+  .saecard {
+    padding: 20px;
+  }
+
+  .saecard .chip {
+    font-size: 10px;
+  }
+
+  .saecard .chipby {
+    font-size: 12px;
+  }
+
+  .saecard .offbadge {
+    font-size: 10px;
+    padding: 2px 10px;
+  }
+
+  .saecard .saetitle {
     font-size: 16px;
-    font-weight: 300;
+  }
+
+  .saecard .saepriceRow .price {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .saecard .timer {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .saecard .mrp {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .saecard .saebtn {
+    font-size: 16px;
+  }
+
+  .saecard {
+    position: relative;
+  }
+
+  .cardActionIcons {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+  }
+
+  .cardIcons {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .cardIcons svg {
+    font-size: 18px;
+  }
+
+}
+@media (max-width: 375px) {
+  .saewrap .textCenter {
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .saewrap .saePara {
+    font-size: 16px;
+    font-weight: 400;
     padding: 0;
   }
 

@@ -58,22 +58,24 @@ export function useDemoLivePayment({
     const mobile = userProfile?.mobile || "";
     const courseName =
       session.course_name || courseData?.courseName || courseNameForApi;
+// ❌ Do NOT check enrollment BEFORE Pay Now
+if (!notifyVia?.isPayNow) {
+  try {
+    const check = await axios.get(`${API_BASE}/enroll/is-enrolled`, {
+      params: {
+        studentId: userProfile.studentId,
+        courseName,
+        batchId: session.batchId,
+      },
+    });
 
-    
-    try {
-      const check = await axios.get(`${API_BASE}/enroll/is-enrolled`, {
-        params: {
-          studentId: userProfile.studentId,
-          courseName,
-          batchId: session.batchId,
-        },
-      });
+    if (check?.data?.enrolled) {
+      setEnrollErrorMessage("You are already enrolled for this batch.");
+      return;
+    }
+  } catch {}
+}
 
-      if (check?.data?.enrolled) {
-        setEnrollErrorMessage("You are already enrolled for this batch.");
-        return;
-      }
-    } catch {}
 
     
     if (session.mode === "Live Demo") {
@@ -142,30 +144,64 @@ sendWhatsApp: !!notifyVia?.whatsapp,
           description: `Payment for ${courseName}`,
           order_id: order.id,
 
-          handler: async (response) => {
-            try {
-              await axios.post(
-                `${API_BASE}/razorpay/capture-razorpay`,
-                null,
-                {
-                  params: {
-                    paymentId: response.razorpay_payment_id,
-                    orderId: response.razorpay_order_id,
-                    signature: response.razorpay_signature,
-                    studentId: userProfile.studentId,
-                    courseName,
-                    batchId: session.batchId,
-                  },
-                }
-              );
+         handler: async (response) => {
+  try {
+    // 1️⃣ Capture payment
+    await axios.post(
+      `${API_BASE}/razorpay/capture-razorpay`,
+      null,
+      {
+        params: {
+          paymentId: response.razorpay_payment_id,
+          orderId: response.razorpay_order_id,
+          signature: response.razorpay_signature,
+          studentId: userProfile.studentId,
+          courseName,
+          batchId: session.batchId,
+        },
+      }
+    );
 
-              setEnrollSuccessMessage("Payment successful!");
-            } catch (err) {
-              setEnrollErrorMessage(
-                "❌ Payment verification failed."
-              );
-            }
-          },
+    // 2️⃣ Check enrollment AFTER payment
+    const check = await axios.get(`${API_BASE}/enroll/is-enrolled`, {
+      params: {
+        studentId: userProfile.studentId,
+        courseName,
+        batchId: session.batchId,
+      },
+    });
+
+    // 3️⃣ If NOT enrolled → save enrollment
+    if (!check?.data?.enrolled) {
+      await axios.post(`${API_BASE}/enroll/add`, {
+        name: userProfile.userName || userProfile.name || "",
+        studentId: userProfile.studentId,
+        email: userProfile.email,
+        mobile,
+        course_name: courseName,
+        enroll_date: session.schedule_date,
+        week: session.week,
+        time: session.time,
+        amount,
+        mode: "Live Class",
+        type: "Live Class",
+        trainer: session.trainer || "",
+        meeting_link: session.meeting_link || "",
+        batchId: session.batchId,
+        paymentType: "PAY_NOW",
+        paymentStatus: "PAID",
+        sendEmail: true,
+        sendWhatsApp: true,
+      });
+    }
+
+    setEnrollSuccessMessage("Payment successful!");
+  } catch (err) {
+    console.error(err);
+    setEnrollErrorMessage("❌ Payment verification failed.");
+  }
+},
+
 
           prefill: {
             name: userProfile.userName,

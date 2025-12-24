@@ -61,12 +61,13 @@ const PopupBanner = () => {
           <RiCloseCircleLine size={24} />
         </button>
         <a href="/coursedetails">
-          <img
-            src={`https://api.test.hachion.co/${popupBanner.banner_image}`}
-            alt="Popup Banner"
-            className="popup-image"
-            fetchpriority="high"
-          />
+         <img
+  src={`https://api.test.hachion.co/uploads/prod/banner_images/${popupBanner.banner_image}`}
+  alt="Popup Banner"
+  className="popup-image"
+  fetchpriority="high"
+/>
+
         </a>
         <div className="button-center">
           <button className="join-now" onClick={handleExploreMore}>

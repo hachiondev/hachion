@@ -23,8 +23,14 @@ export default function NewEnrollNow() {
   const [couponSuccess, setCouponSuccess] = useState("");
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
+  // const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
+  //   useState(false);
+
   const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
-    useState(false);
+  useState(false);
+
+const [lastAction, setLastAction] = useState(null); // "PAY_NOW" | "PAY_LATER"
+
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -82,10 +88,9 @@ export default function NewEnrollNow() {
     });
   }, []);
 
-  const isEnrollmentBlocked =
-    couponError === "You are already enrolled for this batch." ||
-    couponError ===
-      "This enrollment record already exists for Live Class in the database.";
+
+const isEnrollmentBlocked =
+  false; // Do NOT block Pay Now for already enrolled cases
 
   const {
     data: couponApiData,
@@ -301,6 +306,7 @@ export default function NewEnrollNow() {
     );
   }
 
+  
   /* ===============================
      Render
   =============================== */
@@ -393,9 +399,19 @@ export default function NewEnrollNow() {
               />
             </div>
 
-            {couponError && (
-              <p className={styles.errorMessage}>{couponError}</p>
-            )}
+          
+         {couponError && (
+  lastAction === "PAY_LATER" ||
+  !(
+    couponError === "You are already enrolled for this batch." ||
+    couponError ===
+      "This enrollment record already exists for Live Class in the database."
+  )
+) && (
+  <p className={styles.errorMessage}>{couponError}</p>
+)}
+
+
             {couponSuccess && (
               <p className={styles.successMessage}>
                 {couponSuccess}
@@ -437,7 +453,7 @@ export default function NewEnrollNow() {
                   className={`${styles.enPayBtn} ${
                     !selectedBatch ||
                     !isTermsAccepted ||
-                    isEnrollmentBlocked ||
+                    // isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                       ? styles.disabledBtn
                       : ""
@@ -445,12 +461,18 @@ export default function NewEnrollNow() {
                   disabled={
                     !selectedBatch ||
                     !isTermsAccepted ||
-                    isEnrollmentBlocked ||
+                    // isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-                  onClick={() =>
-                    selectedBatch && handleLiveEnrollPayment(selectedBatch.sessions[0])
-                  }
+              onClick={() => {
+  setLastAction("PAY_NOW");
+  selectedBatch &&
+    handleLiveEnrollPayment(selectedBatch.sessions[0], {
+      isPayNow: true,
+    });
+}}
+
+
                 >
                   Pay Now
                 </button>
@@ -469,9 +491,11 @@ export default function NewEnrollNow() {
                     isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-                  onClick={() =>
-                    selectedBatch && handleEnrollPayLater(selectedBatch.sessions[0])
-                  }
+                 onClick={() => {
+  setLastAction("PAY_LATER");
+  selectedBatch && handleEnrollPayLater(selectedBatch.sessions[0]);
+}}
+
                 >
                   Enroll Now, Pay Later
                 </button>

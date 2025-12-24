@@ -36,7 +36,7 @@ const NewCourseDetails = () => {
       />
       <LearnSection />
       <DemoClassSection ref={demoClassRef}/>
-      <CourseCurriculum />
+      <CourseCurriculum onViewDemoClass={scrollToDemoClass}/>
       <InstructorSection />
       {/* <CareerOutcomes /> */}
       <CertificateSection />

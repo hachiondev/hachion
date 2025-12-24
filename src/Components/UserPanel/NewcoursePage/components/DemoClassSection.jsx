@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef } from "react";
-import { useNavigate, useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../../../utils";
 import RequestBatch from "../../../UserPanel/RequestBatch";
@@ -28,9 +28,9 @@ const DemoClassSection = forwardRef((props, ref) => {
   const [activeTab, setActiveTab] = useState("live");
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
-  
-  const navigate = useNavigate(); 
-  const { courseName } = useParams(); 
+
+  const navigate = useNavigate();
+  const { courseName } = useParams();
 
   const [showRequestBatch, setShowRequestBatch] = useState(false);
   const [resetLiveSubmitting, setResetLiveSubmitting] = useState(0);
@@ -92,7 +92,7 @@ const DemoClassSection = forwardRef((props, ref) => {
 
   const normalizeCourseSlug = (slug) =>
     slug
-      .replace(/[-_]+/g, " ")   
+      .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
@@ -269,38 +269,38 @@ const DemoClassSection = forwardRef((props, ref) => {
     { value: "WhatsApp Only", label: "WhatsApp Only" },
   ];
 
-  
 
-const { currency, exchangeRate } = useCurrency();
 
-const getTabPrice = (tabKey) => {
-  if (!courseData) return `${currency} 0`;
+  const { currency, exchangeRate } = useCurrency();
 
-  let baseAmount = 0;
+  const getTabPrice = (tabKey) => {
+    if (!courseData) return `${currency} 0`;
 
-  if (currency === "INR") {
-    if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
-    if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
-    if (tabKey === "mentoring") baseAmount = courseData.imtotal ?? courseData.imamount;
-    if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
-  } 
+    let baseAmount = 0;
 
-  else {
-    if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
-    if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
-    if (tabKey === "mentoring") baseAmount = courseData.mtotal ?? courseData.mamount;
-    if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+    if (currency === "INR") {
+      if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+      if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+      if (tabKey === "mentoring") baseAmount = courseData.imtotal ?? courseData.imamount;
+      if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+    }
 
-    baseAmount = baseAmount * exchangeRate;
-  }
+    else {
+      if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+      if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+      if (tabKey === "mentoring") baseAmount = courseData.mtotal ?? courseData.mamount;
+      if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
 
-  const safeAmount = Number(baseAmount) || 0;
+      baseAmount = baseAmount * exchangeRate;
+    }
 
-  return `${currency} ${Math.round(safeAmount)}`;
-};
+    const safeAmount = Number(baseAmount) || 0;
+
+    return `${currency} ${Math.round(safeAmount)}`;
+  };
 
   return (
-    <section className={styles.dcwrap} ref={ref} id="demoClassSection">
+    <section className={styles.dcwrap}>
       <div className="container">
         {/* Offer strip */}
         {showOfferStrip && (
@@ -368,30 +368,32 @@ const getTabPrice = (tabKey) => {
           <button
             className={cn(styles.bnbtn, styles.bnbtnprimary)}
             onClick={onEnroll}
+             ref={ref} 
+             id="demoClassSection"
           >
             Enroll Now - Start Learning
           </button>
         </div>
 
         {/* Tabs */}
-       <div className={styles.dctabs}>
-  {tabs.map((t) => (
-    <button
-      key={t.key}
-      className={cn(
-        styles.dctab,
-        activeTab === t.key && styles.dctabisactive
-      )}
-      onClick={() => setActiveTab(t.key)}
-    >
-      {t.label}
-    <span className={styles.feeAmount}>
-  {getTabPrice(t.key)}
-</span>
+        <div className={styles.dctabs}>
+          {tabs.map((t) => (
+            <button
+              key={t.key}
+              className={cn(
+                styles.dctab,
+                activeTab === t.key && styles.dctabisactive
+              )}
+              onClick={() => setActiveTab(t.key)}
+            >
+              <span className={styles.tabLabel}>{t.label}</span>
+              <span className={styles.feeAmount}>
+                {getTabPrice(t.key)}
+              </span>
 
-    </button>
-  ))}
-</div>
+            </button>
+          ))}
+        </div>
 
 
         {/* Tab contents moved to separate components */}

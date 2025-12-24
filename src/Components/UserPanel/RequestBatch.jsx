@@ -129,8 +129,9 @@ const RequestBatch = ({ closeModal }) => {
               <option value="">Select Mode</option>
               <option value="Live Class">Live Class</option>
               <option value="Live Demo">Live Demo</option>
-              <option value="Crash Course">Crash Course</option>
-              <option value="Self-Paced">Self-Paced</option>
+              <option value="Crash Course">Crash Course(Fast Track)</option>
+              <option value="Mentoring Mode">Mentoring Mode</option>
+              <option value="Self-Paced">Self-Paced Learning</option>
               <option value="Corporate Training">Corporate Training</option>
             </select>
           </div>

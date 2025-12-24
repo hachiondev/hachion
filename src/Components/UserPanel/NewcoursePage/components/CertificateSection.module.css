@@ -132,7 +132,7 @@
 }
 .cffgrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
 }
 .cffgrid ul {
@@ -223,10 +223,10 @@
 }
 @media (max-width: 768px) {
   .cfwrap .cfhead h2 {
-    font-size: 28px;
+    font-size: 36px;
   }
   .cfwrap .cfhead p {
-    font-size: 20px; /* Increased to 20px */
+    font-size: 22px; /* Increased to 20px */
   }
   .cfh3 {
     width: auto;
@@ -239,7 +239,7 @@
     display: block;
   }
   .cfchecks{
-    font-size: 18px; /* Approximately 20px */
+    font-size: 20px; /* Approximately 20px */
   }
   .cfacctitle{
     font-size: 22px; /* Approximately 20px */
@@ -254,14 +254,15 @@
     font-weight: 600;
   }
   .cfaccsub{
-    font-size: 16px; /* Approximately 20px */
+    font-size: 20px; /* Approximately 20px */
   }
   .cfftitle{
     font-size: 22px; /* Approximately 20px */
     font-weight: 600;
   }
   .cffgrid{
-    font-size: 18px; /* Approximately 20px */
+    font-size: 21px; /* Approximately 20px */
+        grid-template-columns: 1fr;
   }
   .cfbtitle{
     font-weight: 600;
@@ -319,7 +320,7 @@
     font-weight: 600;
   }
   .cffgrid{
-    font-size: 18px; /* Approximately 20px */
+    font-size: 20px; /* Approximately 20px */
   }
   .cfbtitle{
     font-weight: 600;
@@ -335,6 +336,11 @@
   }
   .cfbubble{
    padding: 8px 12px;
+  }
+
+  .cffgrid{
+    grid-template-columns: 1fr;
+        gap: 0px;
   }
 }
 

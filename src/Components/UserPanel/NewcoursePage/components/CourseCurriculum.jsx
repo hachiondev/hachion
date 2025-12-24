@@ -48,7 +48,7 @@ const Chevron = ({ open }) => (
   </svg>
 );
 
-export default function CourseCurriculum() {
+export default function CourseCurriculum({onViewDemoClass}) {
   const [openId, setOpenId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
@@ -147,7 +147,10 @@ export default function CourseCurriculum() {
   };
 
   const handleDownloadAssessment = (assessmentPdfPath) => {
-    if (!email || !studentId) return setShowRegisterPrompt(true);
+      if (!email || !studentId) {
+    setShowEnrollPrompt(true);
+    return; // Add return to prevent further execution
+  }
 
     const assessmentFileName = assessmentPdfPath.split("/").pop();
 
@@ -504,41 +507,42 @@ export default function CourseCurriculum() {
 
         {/* ENROLL PROMPT MODAL */}
         {showEnrollPrompt && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <div className={styles.modalImage}>
-                <img
-                  src={require("../../../../Assets/loginpopup.webp")}
-                  alt="enroll popup"
-                  className={styles.modalImg}
-                />
-              </div>
+  <div className={styles.modalOverlay}>
+    <div className={styles.modalContent}>
+      <div className={styles.modalImage}>
+        <img
+          src={require("../../../../Assets/loginpopup.webp")}
+          alt="enroll popup"
+          className={styles.modalImg}
+        />
+      </div>
 
-              <div className={styles.modalText}>
-                <h3>Please Enroll</h3>
-                <p>You must enroll any live class to access assignments.</p>
+      <div className={styles.modalText}>
+        <h3>Please Enroll</h3>
+        <p>You must enroll in any live class to access assignments.</p>
 
-                <div className={styles.modalButtons}>
-                  <button
-                    className={styles.modalLoginBtn}
-                    onClick={() => {
-                      window.location.href = `/checkout/${encodedCourseName}`;
-                    }}
-                  >
-                    Enroll Now
-                  </button>
+        <div className={styles.modalButtons}>
+          <button
+            className={styles.modalLoginBtn}
+            onClick={() => {
+              setShowEnrollPrompt(false); // Close modal
+              onViewDemoClass();
+            }}
+          >
+            Enroll Now
+          </button>
 
-                  <button
-                    className={styles.modalCancelBtn}
-                    onClick={() => setShowEnrollPrompt(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+          <button
+            className={styles.modalCancelBtn}
+            onClick={() => setShowEnrollPrompt(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </section>
   );

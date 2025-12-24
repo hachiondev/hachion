@@ -87,12 +87,13 @@ export default function CertificateSection({
                   <li>Your name and achievement date</li>
                   <li>Instructor signature</li>
                   <li>Skills and competencies covered</li>
-                </ul>
-                <ul>
                   <li>Course completion details</li>
                   <li>Unique verification code</li>
                   <li>Organization accreditation seal</li>
                 </ul>
+                {/* <ul>
+                  
+                </ul> */}
               </div>
             </div>
           </div>

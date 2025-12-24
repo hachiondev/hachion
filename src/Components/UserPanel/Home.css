@@ -2928,7 +2928,7 @@ p.footer-copyright-desktop {
 
   .filter-section select {
     padding: 5px 8px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 8px;
     min-width: 100px;
   }
@@ -2964,6 +2964,7 @@ p.footer-copyright-desktop {
 
    .association-head{
     justify-content: center;
+    font-size: 34px;
    }
 
   .association-head-mobile {
@@ -2972,7 +2973,7 @@ p.footer-copyright-desktop {
     color: #000000;
     white-space: wrap;
     /* padding: 0 16px; */
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .association-head-desktop {
@@ -3348,6 +3349,7 @@ p.footer-copyright-desktop {
     text-align: center;
     justify-content: left;
     white-space: wrap;
+    font-size: 26px;
   }
 
   .association-head-tag {
@@ -3661,6 +3663,9 @@ margin-right: 0px;
 }
 
 @media (max-width: 375px){
+  .association-head{
+    font-size: 24px;
+  }
   .association-head-mobile{
     font-size: 16px;
   }

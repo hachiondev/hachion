@@ -8,7 +8,7 @@ import "./Course.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCategories } from "../../Api/hooks/SitemapPageApi/useCategories";
-import Loader from "../UserPanel/Common/Loader/Loader";
+import Loader from "./Common/Loader/Loader";
 import { useAllCourses } from "../../Api/hooks/SitemapPageApi/useAllCourses";
 import { useGeoData } from "../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { useDiscountRules } from "../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";

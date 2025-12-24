@@ -101,8 +101,8 @@ const stars = Array.from({ length: 5 }, (_, i) =>
           {/* Content */}
           <div className={styles.iscontent}>
             <div className={styles.istopline}>
-              <h3 className={styles.isname}>{trainerName || name}</h3>
               <span className={styles.isbadge}>⭐ Top Instructor</span>
+              <h3 className={styles.isname}>{trainerName || name}</h3>
             </div>
 
             {/* <div className={styles.istitle}>{title}</div> */}

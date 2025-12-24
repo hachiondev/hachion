@@ -120,16 +120,16 @@
 }
 
 .bnbtnprimary {
-    font-weight: 500;
-    font-size: 16px;
-    background: #00aeef;
-    color: #fff;
-    height: 48px;
-    border-radius: 28px;
-    padding: 0 22px;
-    font-weight: 800;
-    cursor: pointer;
-    border: 0;
+  font-weight: 500;
+  font-size: 16px;
+  background: #00aeef;
+  color: #fff;
+  height: 48px;
+  border-radius: 28px;
+  padding: 0 22px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 0;
 }
 
 .dchead p {
@@ -141,17 +141,17 @@
 }
 
 .feeAmount {
-    background: linear-gradient(135deg, #ff5c01, #ff8c42);
-    border-radius: 20px;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 4px 12px;
-    white-space: nowrap;
-    box-shadow: 0 3px 6px rgba(255, 92, 1, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-    width: 100px;
+  background: linear-gradient(135deg, #ff5c01, #ff8c42);
+  border-radius: 20px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 12px;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(255, 92, 1, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  width: 100px;
 }
 
 /* timezone */
@@ -303,9 +303,9 @@
   font-weight: 700;
   color: #6a7381;
   border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dctab:last-child {
@@ -316,10 +316,11 @@
   background: var(--brand);
   color: #fff;
 }
-.enrollActions{
+
+.enrollActions {
   display: flex;
-    align-items: center;
-    flex-direction: column;
+  align-items: center;
+  flex-direction: column;
 }
 
 .notifyOptions {
@@ -340,7 +341,7 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  -webkit-user-select:none;
+  -webkit-user-select: none;
   white-space: nowrap;
 }
 
@@ -348,7 +349,8 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #0072ff; /* Modern browser support for checkbox color */
+  accent-color: #0072ff;
+  /* Modern browser support for checkbox color */
 }
 
 .checkboxText {
@@ -356,6 +358,7 @@
   color: #333;
   font-weight: 500;
 }
+
 /* Grid area */
 .dcgrid {
   margin: 10px auto 0;
@@ -378,14 +381,16 @@
   border-radius: 12px;
   padding: 25px 20px;
   box-shadow: var(--shadow);
-  transition: all 0.2s ease; /* Add transition for smooth effect */
-  cursor: pointer; /* Make it clear it's clickable */
+  transition: all 0.2s ease;
+  /* Add transition for smooth effect */
+  cursor: pointer;
+  /* Make it clear it's clickable */
 }
 
 .dcslotActive {
-border: 1px solid #1fb6ff !important;
-    box-shadow: 0 0 0 3px rgb(31 182 255) !important;
-    position: relative;
+  border: 1px solid #1fb6ff !important;
+  box-shadow: 0 0 0 3px rgb(31 182 255) !important;
+  position: relative;
 }
 
 .dcslotdate {
@@ -420,8 +425,10 @@ border: 1px solid #1fb6ff !important;
 
 /* Select All button - Fixed alignment */
 .selectAllBtn {
-  margin-bottom: 15px; /* Increased for better spacing */
-  padding: 8px 16px; /* Slightly larger padding */
+  margin-bottom: 15px;
+  /* Increased for better spacing */
+  padding: 8px 16px;
+  /* Slightly larger padding */
   background: #2a7cf7;
   color: #fff;
   border-radius: 6px;
@@ -429,10 +436,12 @@ border: 1px solid #1fb6ff !important;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  width: 120px; /* Fixed width instead of 100% */
+  width: 120px;
+  /* Fixed width instead of 100% */
   text-align: center;
   transition: all 0.2s ease;
-  align-self: flex-start; /* Align to left */
+  align-self: flex-start;
+  /* Align to left */
 }
 
 
@@ -903,6 +912,8 @@ border: 1px solid #1fb6ff !important;
   color: #2c3443;
 }
 
+
+
 /* Responsive */
 @media (max-width: 1100px) {
   .dcslots {
@@ -983,6 +994,8 @@ border: 1px solid #1fb6ff !important;
   .dchead {
     display: block;
     padding: 0px;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .dchead h2 {
@@ -990,7 +1003,7 @@ border: 1px solid #1fb6ff !important;
   }
 
   .dchead p {
-    font-size: 26px;
+    font-size: 22px;
   }
 
   .dctimezone {
@@ -1008,6 +1021,11 @@ border: 1px solid #1fb6ff !important;
   .dctabs {
     background: transparent;
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dctabs .tabLabel {
+    font-size: 20px;
+    font-weight: 400;
   }
 
   .dctabs .dctab {
@@ -1143,21 +1161,26 @@ border: 1px solid #1fb6ff !important;
     width: auto;
   }
 
-    .checkboxGroup {
+  .checkboxGroup {
     gap: 15px;
   }
-  
+
   .checkboxText {
     font-size: 17px;
   }
 
-  .bnbtnprimary{
+  .bnbtnprimary {
     font-size: 20px;
-    margin-top: 10px;
+    padding: 5px 40px 5px 40px;
   }
 
-  .dcmuted{
+  .dcmuted {
     font-size: 20px;
+  }
+
+  .feeAmount {
+    font-size: 22px;
+    width: 130px;
   }
 
 }
@@ -1204,7 +1227,7 @@ border: 1px solid #1fb6ff !important;
   .dchead {
     display: block;
     padding: 0px;
-        margin: 0 auto;
+    margin: 0 auto;
     text-align: center;
   }
 
@@ -1214,6 +1237,11 @@ border: 1px solid #1fb6ff !important;
 
   .dcinfosubdescription {
     font-size: 18px;
+  }
+
+  .dctabs .tabLabel {
+    font-size: 22px;
+    font-weight: 400;
   }
 
   .dchead p {
@@ -1378,24 +1406,25 @@ border: 1px solid #1fb6ff !important;
     grid-template-columns: repeat(1, 1fr);
   }
 
-    .checkboxGroup {
+  .checkboxGroup {
     gap: 10px;
-    flex-wrap: nowrap; /* Keep on same line even on mobile */
+    flex-wrap: nowrap;
+    /* Keep on same line even on mobile */
     justify-content: space-between;
   }
-  
+
   .checkboxText {
     font-size: 16px;
   }
-  
+
   .checkboxInput {
     width: 14px;
     height: 14px;
   }
 
-    .feeAmount{
+  .feeAmount {
     font-size: 18px;
-            width: 110px;
+    width: 110px;
   }
 }
 
@@ -1419,6 +1448,11 @@ border: 1px solid #1fb6ff !important;
   .offerIcon {
     align-content: center;
     text-align-last: center;
+  }
+
+  .dctabs .tabLabel {
+    font-size: 16px;
+    font-weight: 400;
   }
 
   .offerIcon img {
@@ -1606,29 +1640,29 @@ border: 1px solid #1fb6ff !important;
     font-size: 16px;
   }
 
-    .checkboxGroup {
+  .checkboxGroup {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
   }
-  
+
   .notifyLabel {
     white-space: normal;
   }
 
-  .bnbtnprimary{
-    font-size: 18px;
+  .bnbtnprimary {
+    font-size: 17px;
   }
 
-  .feeAmount{
+  .feeAmount {
     font-size: 15px;
-            width: 100px;
+    width: 100px;
   }
 
   .dcmuted {
-        font-size: 16px;
-        
-    }
+    font-size: 16px;
 
-    
+  }
+
+
 }

@@ -261,7 +261,7 @@
   .isbadge {
     padding: 10px 20px;
     /* Increased from 4px 12px */
-    font-size: 16px;
+    font-size: 18px;
     /* Increased from 10px */
     border-radius: 25px;
   }
@@ -296,7 +296,7 @@
   }
 
   .istitle {
-    font-size: 20px;
+    font-size: 22px;
     /* Increased from 14px */
     margin-top: 15px;
     font-weight: 500;
@@ -315,7 +315,7 @@
   }
 
   .isbio {
-    font-size: 20px;
+    font-size: 22px;
     /* Increased from 14px */
     font-weight: 400;
     line-height: 1.6;
@@ -329,7 +329,7 @@
 
   .islist {
     padding-left: 1.5rem;
-    font-size: 18px;
+    font-size: 21px;
     /* Increased from 13px */
     line-height: 1.6;
   }
@@ -350,6 +350,11 @@
     height: 22px;
     /* Increased from 15px */
     width: 22px;
+  }
+
+      .istopline{
+    flex-direction: column;
+        align-items: flex-start;
   }
 }
 
@@ -378,7 +383,7 @@
   .isbadge {
     padding: 8px 16px;
     /* Increased from 4px 12px */
-    font-size: 14px;
+    font-size: 18px;
     /* Increased from 10px */
   }
 
@@ -410,14 +415,14 @@
   }
 
   .istitle {
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 12px;
     text-align: center;
   }
 
   .isstatlab {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 20px;
     /* Added font size */
   }
 
@@ -428,7 +433,7 @@
   }
 
   .isbio {
-    font-size: 18px;
+    font-size: 20px;
     /* Increased from 14px */
     font-weight: 400;
     line-height: 1.6;
@@ -446,8 +451,7 @@
 
   .islist {
     padding-left: 1rem;
-    font-size: 16px;
-    /* Increased from 13px */
+    font-size: 20px;
     line-height: 1.6;
     /* Added for better readability */
   }

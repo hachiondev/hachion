@@ -226,12 +226,12 @@
 
 @media (max-width: 768px) {
   .saewrap .textCenter {
-    font-size: 30px;
+    font-size: 36px;
     font-weight: 600;
   }
 
   .saewrap .saePara {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 400;
     padding: 0;
   }
@@ -388,7 +388,7 @@
 }
 @media (max-width: 375px) {
   .saewrap .textCenter {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 600;
   }
 

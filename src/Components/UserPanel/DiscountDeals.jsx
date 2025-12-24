@@ -18,7 +18,7 @@ const DiscountDeals = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get("https://api.hachion.co/banner");
+        const res = await axios.get("https://api.test.hachion.co/banner");
 
         const enabledHomeBanners = (res.data || []).filter(
           (b) => b.home_status === "Enabled" && b.home_banner_image
@@ -56,7 +56,7 @@ const DiscountDeals = () => {
               {banners.map((banner, index) => (
                 <img
                   key={banner.banner_id}
-                  src={`https://api.hachion.co/uploads/prod/banner_images/${banner.home_banner_image}`}
+                  src={`https://api.test.hachion.co/uploads/prod/banner_images/${banner.home_banner_image}`}
                   alt={`Banner ${index + 1}`}
                   className="discount-banner-slide"
                   onClick={() =>

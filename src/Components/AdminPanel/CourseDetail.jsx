@@ -73,7 +73,7 @@ const CourseDetail = ({
   const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
   const [aboutError, setAboutError] = useState("");
   const [trainers, setTrainers] = useState([]); // State for trainers
-  
+  const [inrChecked, setInrChecked] = useState(false);
   const [formData, setFormData] = useState({
     course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
     starRating: '', level: '', ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
@@ -556,34 +556,75 @@ useEffect(() => {
     const hasCrashCourse = formData.crashCourse?.trim() !== "";
     const hasMentoringMode = formData.mentoringMode?.trim() !== "";
     const hasSelfPacedLearning = formData.selfPacedLearning?.trim() !== "";
+    const hasUsdLive =
+  formData.amount?.toString().trim() !== "" &&
+  formData.discount?.toString().trim() !== "" &&
+  formData.total?.toString().trim() !== "";
 
-    return (
-      hasCategory &&
-      hasCourseName &&
-      hasShortCourse &&
-      hasDefaultTrainer &&
-      hasClasses &&
-      hasImage &&
-      hasProjects &&
-      hasWhatYouWillLearn &&
-      hasWhoIsThisCourseFor &&
-      hasCareerOpportunities &&
-      hasAverageSalaryRange &&
-      hasPrerequisites &&
-      hasYoutubeLink &&
-      hasLevel &&
-      hasStarRating &&
-      hasRatingByNumberOfPeople &&
-      hasCertifiedStudents &&
-      hasLiveTraining &&          // NEW
-      hasCrashCourse &&           // NEW
-      hasMentoringMode &&         // NEW
-      hasSelfPacedLearning &&     // NEW
-      !shortCourseError
-    );
+const hasUsdCrash =
+  formData.camount?.toString().trim() !== "" &&
+  formData.cdiscount?.toString().trim() !== "" &&
+  formData.ctotal?.toString().trim() !== "";
+
+const hasUsdSelfQa =
+  formData.sqamount?.toString().trim() !== "" &&
+  formData.sqdiscount?.toString().trim() !== "" &&
+  formData.sqtotal?.toString().trim() !== "";
+
+const hasUsdSelf =
+  formData.samount?.toString().trim() !== "" &&
+  formData.sdiscount?.toString().trim() !== "" &&
+  formData.stotal?.toString().trim() !== "";
+const hasInrFields =
+  formData.iamount?.toString().trim() !== "" &&
+  formData.idiscount?.toString().trim() !== "" &&
+  formData.itotal?.toString().trim() !== "" &&
+  formData.icamount?.toString().trim() !== "" &&
+  formData.icdiscount?.toString().trim() !== "" &&
+  formData.ictotal?.toString().trim() !== "" &&
+  formData.isqamount?.toString().trim() !== "" &&
+  formData.isqdiscount?.toString().trim() !== "" &&
+  formData.isqtotal?.toString().trim() !== "" &&
+  formData.isamount?.toString().trim() !== "" &&
+  formData.isdiscount?.toString().trim() !== "" &&
+  formData.istotal?.toString().trim() !== "";
+
+  return (
+  hasCategory &&
+  hasCourseName &&
+  hasShortCourse &&
+  hasDefaultTrainer &&
+  hasClasses &&
+  hasImage &&
+  hasProjects &&
+  hasWhatYouWillLearn &&
+  hasWhoIsThisCourseFor &&
+  hasCareerOpportunities &&
+  hasAverageSalaryRange &&
+  hasPrerequisites &&
+  hasYoutubeLink &&
+  hasLevel &&
+  hasStarRating &&
+  hasRatingByNumberOfPeople &&
+  hasCertifiedStudents &&
+  hasLiveTraining &&
+  hasCrashCourse &&
+  hasMentoringMode &&
+  hasSelfPacedLearning &&
+  hasUsdLive &&
+  hasUsdCrash &&
+  hasUsdSelfQa &&
+  hasUsdSelf &&
+  hasInrFields &&
+
+  !shortCourseError
+);
+
+
   };
 
   const isSubmitDisabled = !areMandatoryFieldsFilled();
+
 
   return (
     <>
@@ -620,11 +661,22 @@ useEffect(() => {
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
                     <select
-                      className="form-select"
+                      // className="form-select"
                       name="courseCategory"
                       value={formData.courseCategory}
                       onChange={handleInputChange}
                       required
+                      // disabled={formMode === "Edit"}
+                       disabled={formMode === "Edit"}
+  style={{
+    width: "100%",
+    padding: "0.375rem 0.75rem",
+    border: "1px solid #ced4da",
+    borderRadius: "0.375rem",
+    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+    color: "#000000",
+    cursor: formMode === "Edit" ? "not-allowed" : "text"
+  }}
                     >
                       <option value="" disabled>
                         Select Category
@@ -644,11 +696,23 @@ useEffect(() => {
                     <input
                       type="text"
                       name="courseName"
-                      className="form-control"
+                      // className="form-control"
                       placeholder="Enter Course Name"
                       value={formData.courseName}
                       onChange={handleInputChange}
                       required
+  //                     readOnly={formMode === "Edit"}
+  // style={formMode === "Edit" ? disabledFieldStyle : {}}
+   disabled={formMode === "Edit"}
+  style={{
+    width: "100%",
+    padding: "0.375rem 0.75rem",
+    border: "1px solid #ced4da",
+    borderRadius: "0.375rem",
+    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+    color: "#000000",
+    cursor: formMode === "Edit" ? "not-allowed" : "text"
+  }}
                     />
                   </div>
                   
@@ -659,12 +723,22 @@ useEffect(() => {
                     <input
                       type="text"
                       name="shortCourse"
-                      className="form-control"
+                      // className="form-control"
                       placeholder="Enter Short Course Name"
                       value={formData.shortCourse}
                       onChange={handleInputChange}
                       onBlur={handleShortCourseBlur}
                       required
+                        disabled={formMode === "Edit"}
+  style={{
+    width: "100%",
+    padding: "0.375rem 0.75rem",
+    border: "1px solid #ced4da",
+    borderRadius: "0.375rem",
+    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+    color: "#000000",
+    cursor: formMode === "Edit" ? "not-allowed" : "text"
+  }}
                     />
                     {shortCourseError && (
                       <div style={{ color: "red" }}>{shortCourseError}</div>
@@ -1039,7 +1113,7 @@ useEffect(() => {
                       </label>
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Amount</label>
+                      <label className="form-label">Amount <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"
@@ -1049,7 +1123,7 @@ useEffect(() => {
                       />
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Discount %</label>
+                      <label className="form-label">Discount % <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"
@@ -1059,7 +1133,7 @@ useEffect(() => {
                       />
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Total</label>
+                      <label className="form-label">Total <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"
@@ -1086,13 +1160,19 @@ useEffect(() => {
                 ].map((mode, index) => (
                   <div className="course-mode" key={index}>
                     <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id={`inrCheck${index}`} />
+                      <input
+  className="form-check-input"
+  type="checkbox"
+  id={`inrCheck${index}`}
+  onChange={(e) => setInrChecked(e.target.checked)}
+/>
+
                       <label className="form-check-label" htmlFor={`inrCheck${index}`}>
                         {mode.label}
                       </label>
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Amount</label>
+                      <label className="form-label">Amount <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"
@@ -1102,7 +1182,7 @@ useEffect(() => {
                       />
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Discount %</label>
+                      <label className="form-label">Discount % <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"
@@ -1112,7 +1192,7 @@ useEffect(() => {
                       />
                     </div>
                     <div className="col-md-3">
-                      <label className="form-label">Total</label>
+                      <label className="form-label">Total <span style={{ color: "red" }}>*</span></label>
                       <input
                         type="number"
                         className="form-control-mode"

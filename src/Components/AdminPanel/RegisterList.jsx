@@ -83,6 +83,8 @@ export default function RegisterList() {
         
     const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",whatsapp:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
     const [mobileError, setMobileError] = useState("");
+    const [whatsappError, setWhatsappError] = useState("");
+
 const [anchorElCountry, setAnchorElCountry] = useState(null);
 const [selectedCountry, setSelectedCountry] = useState({
   name: '',
@@ -147,6 +149,37 @@ const [currentPage, setCurrentPage] = useState(1);
                  });
         
          }
+         const resetFormState = () => {
+  setStudentData({
+    student_Id: "",
+    userName: "",
+    email: "",
+    mobile: "",
+    whatsapp: "",
+    country: "",
+    location: "",
+    time_zone: "",
+    analyst_name: "",
+    source: "",
+    remarks: "",
+    comments: "",
+    date: currentDate,
+    visa_status: "",
+    mode: "Offline",
+  });
+
+  setSelectedCountry({
+    value: "",
+    code: "",
+    flag: ""
+  });
+
+  setMobileError("");
+  setWhatsappError("");
+  setSuccessMessage("");
+  setErrorMessage("");
+};
+
          const handleInputChange = (e) => {
             const { name, value } = e.target;
             setEditedData((prev) => ({
@@ -154,6 +187,7 @@ const [currentPage, setCurrentPage] = useState(1);
               [name]: value,
             }));
           };
+
    
     const handleClose = () => {
       setOpen(false); 
@@ -281,32 +315,59 @@ setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
     setFilteredStudent(filtered);
 }, [searchTerm, registerStudent]);
 
-    const handleClickOpen = (row) => {
+
+const handleClickOpen = (row) => {
   setFormMode("Edit");
 
   const [codePart, ...numberParts] = (row.mobile || "").split(" ");
   const numberPart = numberParts.join(" ");
 
-  const matchedCountry = countries.find(c => c.code === codePart);
+  const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
+  const wNumberPart = wNumberParts.join(" ");
+
+  const matchedCountry = countries.find(
+    (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+  );
+
   if (matchedCountry) {
-    setSelectedCountry(matchedCountry);
+    setSelectedCountry({
+      value: matchedCountry.name,
+      code: matchedCountry.code,
+      flag: matchedCountry.flag,
+    });
   }
 
   setStudentData({
-    ...row,
-    mobile: numberPart, 
-  });
+  ...row,
+  userName: row.userName ?? "",
+  email: row.email ?? "",
+  mobile: numberPart ?? "",
+  whatsapp: wNumberPart ?? "",
+  country: row.country ?? "",
+  location: row.location ?? "",
+  time_zone: row.time_zone ?? "",
+  analyst_name: row.analyst_name ?? "",
+  source: row.source ?? "Select",
+  visa_status: row.visa_status ?? "Select Visa Status",
+  remarks: row.remarks ?? "",
+  comments: row.comments ?? "",
+});
+
 
   setShowAddCourse(true);
 };
+
+
     const handleUpdate = async () => {
      
        try {
     const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
+    const finalWhatsapp = `${selectedCountry.code} ${studentData.whatsapp}`;
 
     const updatedData = {
       ...studentData,
       mobile: finalMobile,
+      whatsapp: finalWhatsapp,
     };
 
     const response = await axios.put(
@@ -345,6 +406,17 @@ const handleMobileBlur = () => {
     setMobileError("");
   }
 };
+const handleWhatsappBlur = () => {
+  const whatsapp = studentData.whatsapp?.trim();
+
+  if (!whatsapp || whatsapp.length !== 10) {
+    setWhatsappError("❌ WhatsApp number must be exactly 10 digits.");
+  } else {
+    setWhatsappError("");
+  }
+};
+
+
       const handleSubmit = async (e) => {
   e.preventDefault();
 const mobileNumber = studentData.mobile?.trim();
@@ -359,10 +431,12 @@ const mobileNumber = studentData.mobile?.trim();
 
   const finalMobile = `${countryCode} ${mobileNumber}`;
   const currentDate = new Date().toISOString().split("T")[0];
+  const finalWhatsapp = `${countryCode} ${studentData.whatsapp}`;
 
   const dataToSubmit = {
     ...studentData,
-    mobile: finalMobile, 
+    mobile: finalMobile,
+    whatsapp: finalWhatsapp, 
     date: currentDate,
   };
   console.log("Data being sent:", dataToSubmit);
@@ -394,39 +468,29 @@ const mobileNumber = studentData.mobile?.trim();
   }
 };
 
-    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
-    }
-    const isFormValid = () => {
-  const {
-    userName,
-    email,
-    mobile,
-    whatsapp,
-    country,
-    location,
-    visa_status,
-    time_zone,
-    analyst_name,
-    source,
-    remarks,
-    comments,
-  } = studentData;
+    const handleAddTrendingCourseClick = () => {
+  setFormMode("Add");
+  resetFormState();      
+  setShowAddCourse(true);
+};
+
+   const isFormValid = () => {
+  const safeTrim = (val) => (val ?? "").trim();
 
   return (
-    userName.trim() &&
-    email.trim() &&
-    mobile.trim() &&
-    whatsapp.trim() &&
-    country.trim() &&
-    location.trim() &&
-    visa_status !== "Select Visa Status" &&
-    time_zone.trim() &&
-    analyst_name.trim() &&
-    source !== "Select" &&
-    remarks.trim().length >= 15 &&
-    comments.trim()
+    safeTrim(studentData.userName) !== "" &&
+    safeTrim(studentData.email) !== "" &&
+    safeTrim(studentData.mobile).length === 10 &&
+    safeTrim(studentData.whatsapp).length === 10 &&
+    safeTrim(studentData.country) !== "" &&
+    safeTrim(studentData.location) !== "" &&
+    safeTrim(studentData.time_zone) !== "" &&
+    safeTrim(studentData.analyst_name) !== "" &&
+    safeTrim(studentData.remarks).length >= 15 &&
+    safeTrim(studentData.comments) !== ""
   );
 };
+
 
   return (
     
@@ -436,7 +500,11 @@ const mobileNumber = studentData.mobile?.trim();
         <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
           <li className="breadcrumb-item">
-                <a href="#!" onClick={() => setShowAddCourse(false)}>Register List</a> <MdKeyboardArrowRight />
+                <a href="#!" onClick={() => {
+    setShowAddCourse(false);
+    setFormMode("Add");
+    resetFormState();   
+  }} >Register List</a> <MdKeyboardArrowRight />
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                 {formMode === "Edit" ? "Edit Student" : "Add Student"}
@@ -450,20 +518,20 @@ const mobileNumber = studentData.mobile?.trim();
      </div>
      <div className="course-row">
        <div class="col">
-         <label for="inputEmail4" class="form-label">Student Name</label>
+         <label for="inputEmail4" class="form-label">Student Name <span className="star">*</span></label>
          <input type="text" class="schedule-input" id="inputEmail4" name="userName"
   value={studentData.userName}
   onChange={handleChange}/>
        </div>
        <div class="col">
-         <label for="inputPassword4" class="form-label">Email</label>
+         <label for="inputPassword4" class="form-label">Email <span className="star">*</span></label>
          <input type="email" class="schedule-input" id="inputPassword4" placeholder='abc@gmail.com'
          name="email"
          value={studentData.email}
          onChange={handleChange}/>
        </div>
        <div class="col">
-         <label for="inputPassword4" class="form-label">Location</label>
+         <label for="inputPassword4" class="form-label">Location <span className="star">*</span></label>
          <input type="text" class="schedule-input" id="inputPassword4"  name="location"
          value={studentData.location}
          onChange={handleChange}/>
@@ -492,9 +560,12 @@ const mobileNumber = studentData.mobile?.trim();
     onChange={(selected) => {
       setSelectedCountry(selected);
       setStudentData((prev) => ({
-        ...prev,
-        country: selected.value
-      }));
+  ...prev,
+  country: selected.value,
+  mobile: "",
+  whatsapp: "" 
+}));
+
     }}
     value={
       selectedCountry.value
@@ -559,7 +630,7 @@ const mobileNumber = studentData.mobile?.trim();
             name="mobile"
             value={studentData.mobile}
             onChange={handleChange}
-            onBlur={handleMobileBlur}
+            onBlur={handleMobileBlur}handleMobileBlur
             style={{
               paddingLeft: selectedCountry.code ? `${selectedCountry.code.length * 10 + 20}px` : '10px',
               
@@ -573,20 +644,64 @@ const mobileNumber = studentData.mobile?.trim();
           )}
         </div>
       </div>
-       <div class="col">
-         <label for="inputState" class="form-label">WhatsApp Number</label>
-         <input type="number" class="schedule-input"
-         name="whatsapp" value={studentData.whatsapp} onChange={handleChange}/>
-       </div>
+       <div className="col">
+  <label className="form-label">WhatsApp Number <span className="star">*</span></label>
+
+  <div style={{ position: 'relative' }}>
+    {/* Country code prefix */}
+    <span
+      style={{
+        position: 'absolute',
+        left: '12px',
+        top: '0',
+        bottom: '0',
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+        color: '#212529',
+        height: '50px',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {selectedCountry.code}
+    </span>
+
+    <input
+  type="text"
+  className="schedule-input"
+  placeholder="Enter WhatsApp number"
+  name="whatsapp"
+  value={studentData.whatsapp}
+  onChange={handleChange}
+  onBlur={handleWhatsappBlur}
+  style={{
+    paddingLeft: selectedCountry.code
+      ? `${selectedCountry.code.length * 10 + 20}px`
+      : '10px',
+    fontSize: '16px',
+    fontFamily: 'inherit',
+  }}
+/>
+{whatsappError && (
+  <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>
+    {whatsappError}
+  </small>
+)}
+
+  </div>
+</div>
+
        </div>
        <div className="course-row">
         <div class="col">
-         <label for="inputState" class="form-label">Time Zone</label>
+         <label for="inputState" class="form-label">Time Zone <span className="star">*</span></label>
          <input type="text" class="schedule-input"
          name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
        </div>
          <div class="col">
-         <label for="inputState" class="form-label">Entered by</label>
+         <label for="inputState" class="form-label">Entered by <span className="star">*</span></label>
          <input type="text" class="schedule-input"
          name="analyst_name" value={studentData.analyst_name} onChange={handleChange}/>
        </div>
@@ -602,7 +717,7 @@ const mobileNumber = studentData.mobile?.trim();
          </select>
        </div>
        <div class="col">
-         <label for="inputState" class="form-label">Source of Enquiry</label>
+         <label for="inputState" class="form-label">Source of Enquiry </label>
          <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
            <option selected>Select</option>
            <option>Linkedin</option>
@@ -629,7 +744,7 @@ const mobileNumber = studentData.mobile?.trim();
        </div>
        <div className='row'>
        <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Remarks</label>
+       <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
        name='remarks' value={studentData.remarks} onChange={handleChange}></textarea>
      </div>
@@ -639,7 +754,7 @@ const mobileNumber = studentData.mobile?.trim();
     </p>
   )}
      <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
+       <label for="exampleFormControlTextarea1" class="form-label">Comments <span className="star">*</span></label>
        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
        name='comments' value={studentData.comments} onChange={handleChange}></textarea>
      </div>
@@ -658,7 +773,7 @@ const mobileNumber = studentData.mobile?.trim();
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
         <div className="course-row">
         {formMode === "Edit" ? (
-        <button className='submit-btn' onClick={handleUpdate}>
+        <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
           Update
         </button>
       ) : (

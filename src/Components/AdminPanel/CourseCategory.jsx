@@ -33,16 +33,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', // Add vertical lines
-    position: 'sticky',             // Make header sticky
-    top: 0,                         // Stick to the top of the container
+    borderRight: '1px solid white', 
+    position: 'sticky',             
+    top: 0,                         
     zIndex: 1,
      padding: '3px 5px',     
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', // Add vertical lines for body rows
+    borderRight: '1px solid #e0e0e0', 
   },
 }));
 
@@ -61,7 +61,10 @@ const CourseCategory = ({
   onAddCategoryClick
 }) => {
   const [categories, setCategories] = useState([]);
-  const [message,setMessage]=useState("");
+  
+  const [successMessage, setSuccessMessage] = useState("");
+const [errorMessage, setErrorMessage] = useState("");
+
   const [open, setOpen] = React.useState(false);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,27 +83,25 @@ const [courseData, setCourseData] = useState([{
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  // Inside your CourseCategory component
-
+  
 const handleRowsPerPageChange = (rows) => {
   setRowsPerPage(rows);
-  setCurrentPage(1); // Reset to the first page whenever rows per page changes
+  setCurrentPage(1); 
 };
 
-// Slice filteredCategories based on rowsPerPage and currentPage
+
 const displayedCategories = filteredCategories.slice(
   (currentPage - 1) * rowsPerPage,
   currentPage * rowsPerPage
 );
 
   const API_URL = 'https://api.test.hachion.co/course-categories/all';
-
-  // Fetch Courses on Component Mount
+  
   useEffect(() => {
     fetchCourses();
   }, []);
   const handleClose = () => {
-    setOpen(false); // Close the modal
+    setOpen(false); 
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -130,11 +131,12 @@ const displayedCategories = filteredCategories.slice(
   const formattedDate = courseData.date ? dayjs(courseData.date).format('MM-DD-YYYY') : null;
 
   useEffect(() => {
-      const filtered = categories.filter((course) =>
-        course.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredCategories(filtered);
-    }, [searchTerm, categories]);
+  const filtered = categories.filter((course) =>
+    (course?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setFilteredCategories(filtered);
+}, [searchTerm, categories]);
+
     const handleDateFilter = () => {
       const filtered = categories.filter((item) => {
         const date = new Date(item.date);
@@ -149,51 +151,122 @@ const displayedCategories = filteredCategories.slice(
   setEndDate(null);
   setFilteredCategories(categories);
 };
-  
   const handleSubmit = async () => {
-    try {
-      const response = await axios.post("https://api.test.hachion.co/course-categories/add", {
+  try {
+    const response = await axios.post(
+      "https://api.test.hachion.co/course-categories/add",
+      {
         name: courseData.category_name,
         date: dayjs(courseData.date).format("YYYY-MM-DD"),
-      });
-
-      if (response.status === 200) {
-        alert("Category added successfully");
-        setCategories((prev) => [...prev, response.data]);
-        setCourseData({ name: "", date: null });
       }
-    } catch (error) {
-      console.error("Error adding category:", error.message);
-      alert("Error adding category.");
-    }
+    );
+
+    if (response.status === 200) {
+  setSuccessMessage("Category added successfully");
+  setErrorMessage("");
+
+  const newCategory = {
+    id: response.data.id,
+    name: response.data.name || courseData.category_name,
+    date: response.data.date || dayjs(courseData.date).format("YYYY-MM-DD"),
   };
-  const handleEdit = async () => {
-    try {
-        const response = await axios.put(
-            `https://api.test.hachion.co/course-categories/update/${editedRow.id}`,
-            editedRow
-        );
-        setCategories((prev) =>
-            prev.map(curr =>
-                curr.id === editedRow.id ? response.data : curr
-            )
-        );
-        setMessage("Course updated successfully!");
-        setTimeout(() => setMessage(""), 5000);
-        setOpen(false);
-    } catch (error) {
-        setMessage("Error updating Courses.");
-    }
+
+  setCategories((prev) => [...prev, newCategory]);
+  setFilteredCategories((prev) => [...prev, newCategory]);
+
+  setCourseData({ category_name: "", date: null });
+
+
+  setTimeout(() => {
+    setSuccessMessage("");       
+    setShowAddCourse(false);     
+  }, 3000);
+}
+
+  } catch (error) {
+    console.error("Error adding category:", error);
+
+    setSuccessMessage("");
+    setErrorMessage("Error adding category. Please try again.");
+
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 6000);
+  }
+};
+const handleEdit = async () => {
+  try {
+    const payload = {
+      id: editedRow.id,
+      name: editedRow.name,
+      date: dayjs(editedRow.date).format("YYYY-MM-DD")
+    };
+
+    await axios.put(
+      `https://api.test.hachion.co/course-categories/update/${editedRow.id}`,
+      payload
+    );
+
+    // ✅ FIX: Update UI using payload, NOT response.data
+    setCategories(prev =>
+      prev.map(item =>
+        item.id === editedRow.id
+          ? { ...item, ...payload }
+          : item
+      )
+    );
+
+    setFilteredCategories(prev =>
+      prev.map(item =>
+        item.id === editedRow.id
+          ? { ...item, ...payload }
+          : item
+      )
+    );
+
+    setSuccessMessage("Category updated successfully");
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 6000);
+    setOpen(false);
+
+  } catch (error) {
+    setSuccessMessage("");
+    setErrorMessage("Error updating category");
+  }
 };
 
   const handleDelete = async (id) => {
-       
-    try { 
-     const response = await axios.delete(`https://api.test.hachion.co/course-categories/delete/${id}`); 
-     console.log("Course category deleted successfully:", response.data); 
-   } catch (error) { 
-     console.error("Error deleting Video:", error); 
-   } }; 
+  try {
+    await axios.delete(
+      `https://api.test.hachion.co/course-categories/delete/${id}`
+    );
+
+    
+    setCategories((prev) => prev.filter((item) => item.id !== id));
+    setFilteredCategories((prev) => prev.filter((item) => item.id !== id));
+
+    
+    setSuccessMessage("Category deleted successfully");
+    setErrorMessage("");
+
+
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 6000);
+  } catch (error) {
+    console.error("Error deleting category:", error);
+
+    setSuccessMessage("");
+    setErrorMessage("Error deleting category");
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 6000);
+  }
+};
+
    const handleDeleteConfirmation = (id) => {
     if (window.confirm("Are you sure you want to delete this Course Category?")) {
       handleDelete(id);
@@ -205,6 +278,7 @@ const displayedCategories = filteredCategories.slice(
   return (<>
     {showAddCourse?(<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        
         <div className="course-category">
         <h3>Course Category</h3>
               <nav aria-label="breadcrumb">
@@ -224,7 +298,7 @@ const displayedCategories = filteredCategories.slice(
           <div className="date-schedule" style={{ display: "flex", flexDirection: "column" }}>
             <div className="mb-3">
               <label htmlFor="categoryName" className="form-label">
-                Category Name
+                Category Name <span style={{ color: "red", marginLeft: "4px" }}>*</span>
               </label>
               <input
                 type="text"
@@ -238,7 +312,7 @@ const displayedCategories = filteredCategories.slice(
               />
             </div>
             <div className="mb-3">
-              Date <br />
+              Date <span style={{ color: "red", marginLeft: "4px" }}>*</span><br />
               <DatePicker
                 value={courseData.date}
                 onChange={(newDate) =>
@@ -251,10 +325,25 @@ const displayedCategories = filteredCategories.slice(
                 }}
               />
             </div>
+           {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <button className="submit-btn" onClick={handleSubmit}>
-                Submit
-              </button>
+             <button
+  className="submit-btn"
+  onClick={handleSubmit}
+  disabled={!courseData.category_name?.trim() || !courseData.date}
+  style={{
+    opacity:
+      courseData.category_name?.trim() && courseData.date ? 1 : 0.5,
+    cursor:
+      courseData.category_name?.trim() && courseData.date
+        ? "pointer"
+        : "not-allowed",
+  }}
+>
+  Submit
+</button>
+
               <button
                 className="reset-btn"
                 onClick={() => setCourseData({ category_name: "", date: null })}
@@ -358,15 +447,22 @@ const displayedCategories = filteredCategories.slice(
 </TableBody>
         </Table>
       </TableContainer>
+      
       <div className='pagination-container'>
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+       
       <AdminPagination
   currentPage={currentPage}
   rowsPerPage={rowsPerPage}
-  totalRows={filteredCategories.length} // Use the full list for pagination
+  totalRows={filteredCategories.length} 
   onPageChange={handlePageChange}
 />
           </div>
-      {message && <div className="success-message">{message}</div>}
+      {/* {message && <div className="success-message">{message}</div>} */}
+
+     
+
         </div>
       </div>
     </LocalizationProvider>)}
@@ -392,6 +488,12 @@ const displayedCategories = filteredCategories.slice(
                 name="name"
                 value={editedRow.name || ""}
                 onChange={handleInputChange}
+                 readOnly
+  style={{
+    backgroundColor: "#f0f0f0",
+    color: "#000",
+    cursor: "not-allowed"
+  }}
               />
             
             <div className="mb-3">

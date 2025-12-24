@@ -19,7 +19,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
-import Loader from './Loader/Loader';
+// import Loader from './Loader/Loader';
 import { useAllCourses } from '../../Api/hooks/SitemapPageApi/useAllCourses';
 const CourseDetails = () => {
   const curriculumRef = useRef(null);

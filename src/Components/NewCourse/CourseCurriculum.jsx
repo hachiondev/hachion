@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./CourseCurriculum.module.css";
 import { cn } from "../../utils";
 import VideoModal from "./VideoModal";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCurriculumAll } from "../../Api/hooks/CurriculumApi/useCurriculumAll";
 import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
 import { useAssessmentAccess } from "../../Api/hooks/CurriculumApi/useAssessmentAccess";
@@ -48,7 +48,7 @@ const Chevron = ({ open }) => (
   </svg>
 );
 
-export default function CourseCurriculum({ onViewDemoClass }) {
+export default function CourseCurriculum() {
   const [openId, setOpenId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
@@ -61,6 +61,7 @@ export default function CourseCurriculum({ onViewDemoClass }) {
     curriculumId: null,
     message: "",
   });
+  const navigation = useNavigate()
 
 
   const { courseName: courseNameSlug } = useParams();
@@ -472,8 +473,7 @@ export default function CourseCurriculum({ onViewDemoClass }) {
           <button
             className={styles.modalLoginBtn}
             onClick={() => {
-              setShowRegisterPrompt(false); // Close modal
-              onViewDemoClass(); // Scroll to demo class
+              navigation("/login")
             }}
           >
             Login

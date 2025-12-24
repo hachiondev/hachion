@@ -590,4 +590,8 @@
   .isstats {
     flex-direction: column;
   }
+  
+  .istopline{
+    flex-direction: column;
+  }
 }

@@ -69,10 +69,11 @@ const CourseDetail = ({
   const [endDate, setEndDate] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [duplicateError, setDuplicateError] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
   const [aboutError, setAboutError] = useState("");
-  const [trainers, setTrainers] = useState([]); // State for trainers
+  const [trainers, setTrainers] = useState([]); 
   const [inrChecked, setInrChecked] = useState(false);
   const [formData, setFormData] = useState({
     course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
@@ -80,7 +81,7 @@ const CourseDetail = ({
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining:'', crashCourse: '', mentoringMode:'',selfPacedLearning: '',
   });
-// Fetch trainers based on Category + Course (EDIT MODE ONLY)
+
 useEffect(() => {
   const fetchTrainerNames = async () => {
     if (
@@ -98,8 +99,6 @@ useEffect(() => {
             },
           }
         );
-
-        // response.data is List<String>
         setTrainers(response.data);
       } catch (error) {
         console.error("Error fetching trainer names:", error);
@@ -334,7 +333,7 @@ useEffect(() => {
           setShowAddCourse(false);
         }
       } else {
-        const response = await axios.post("https://api.test.hachion.co/courses/add", formNewData, {
+        const response = await axios.post("https://api.test.hachion.co/courses/addCourseDetails", formNewData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -345,10 +344,21 @@ useEffect(() => {
           setShowAddCourse(false);
         }
       }
-    } catch (error) {
-      setSuccessMessage("");
-      setErrorMessage("❌ Error submitting course.");
-    }
+    } 
+    catch (error) {
+  setSuccessMessage("");
+
+ if (error.response && error.response.status === 409) {
+  setErrorMessage(
+    "❌ Course already exists for the selected category. Please use a different course name."
+  );
+  setDuplicateError(true);
+} else {
+  setErrorMessage("❌ Something went wrong while submitting the course.");
+}
+
+}
+
   };
 
   const handleEditClick = async (courseId) => {
@@ -526,9 +536,7 @@ useEffect(() => {
     }
   };
 
-  // Updated mandatory fields check to include ALL required fields
   const areMandatoryFieldsFilled = () => {
-    // Original mandatory fields
     const hasCategory = formData.courseCategory?.trim() !== "";
     const hasCourseName = formData.courseName?.trim() !== "";
     const hasShortCourse = formData.shortCourse?.trim() !== "";
@@ -537,8 +545,7 @@ useEffect(() => {
     : true;
     const hasClasses = formData.numberOfClasses?.toString().trim() !== "";
     const hasImage = !!formData.courseImage;
-    
-    // New mandatory fields from previous request
+  
     const hasProjects = formData.numberOfProjects?.toString().trim() !== "";
     const hasWhatYouWillLearn = formData.whatYouWillLearn?.trim() !== "";
     const hasWhoIsThisCourseFor = formData.whoIsThisCourseFor?.trim() !== "";
@@ -550,8 +557,6 @@ useEffect(() => {
     const hasStarRating = formData.starRating?.toString().trim() !== "";
     const hasRatingByNumberOfPeople = formData.ratingByNumberOfPeople?.toString().trim() !== "";
     const hasCertifiedStudents = formData.totalEnrollment?.toString().trim() !== "";
-    
-    // NEW: Additional mandatory fields
     const hasLiveTraining = formData.liveTraining?.trim() !== "";
     const hasCrashCourse = formData.crashCourse?.trim() !== "";
     const hasMentoringMode = formData.mentoringMode?.trim() !== "";
@@ -560,6 +565,7 @@ useEffect(() => {
   formData.amount?.toString().trim() !== "" &&
   formData.discount?.toString().trim() !== "" &&
   formData.total?.toString().trim() !== "";
+const hasAboutCourse = formData.aboutCourse?.trim() !== "";
 
 const hasUsdCrash =
   formData.camount?.toString().trim() !== "" &&
@@ -611,6 +617,7 @@ const hasInrFields =
   hasCrashCourse &&
   hasMentoringMode &&
   hasSelfPacedLearning &&
+  hasAboutCourse &&
   hasUsdLive &&
   hasUsdCrash &&
   hasUsdSelfQa &&
@@ -622,10 +629,7 @@ const hasInrFields =
 
 
   };
-
-  const isSubmitDisabled = !areMandatoryFieldsFilled();
-
-
+  const isSubmitDisabled = !areMandatoryFieldsFilled() || duplicateError;
   return (
     <>
       {showAddCourse ? (
@@ -661,12 +665,18 @@ const hasInrFields =
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
                     <select
-                      // className="form-select"
+                      
                       name="courseCategory"
                       value={formData.courseCategory}
-                      onChange={handleInputChange}
+                      
+                      onChange={(e) => {
+  handleInputChange(e);
+  setErrorMessage("");
+  setDuplicateError(false);
+}}
+
                       required
-                      // disabled={formMode === "Edit"}
+                      
                        disabled={formMode === "Edit"}
   style={{
     width: "100%",
@@ -696,13 +706,17 @@ const hasInrFields =
                     <input
                       type="text"
                       name="courseName"
-                      // className="form-control"
+                      
                       placeholder="Enter Course Name"
                       value={formData.courseName}
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+  handleInputChange(e);
+  setErrorMessage("");
+  setDuplicateError(false);
+}}
+
                       required
-  //                     readOnly={formMode === "Edit"}
-  // style={formMode === "Edit" ? disabledFieldStyle : {}}
+  
    disabled={formMode === "Edit"}
   style={{
     width: "100%",
@@ -723,7 +737,7 @@ const hasInrFields =
                     <input
                       type="text"
                       name="shortCourse"
-                      // className="form-control"
+                      
                       placeholder="Enter Short Course Name"
                       value={formData.shortCourse}
                       onChange={handleInputChange}
@@ -1068,7 +1082,7 @@ const hasInrFields =
                 <h3>Key Highlights</h3>
                 <div className='course-row'>
                   <div className="col-md-4">
-                    <label className="form-label">Key Highlights 1</label>
+                    <label className="form-label">Key Highlights 1 </label>
                     <input type="text" className="form-control" name='keyHighlights1' value={formData.keyHighlights1} onChange={handleInputChange} />
                   </div>
                   <div className="col-md-4">
@@ -1257,7 +1271,7 @@ const hasInrFields =
               
               {/* About Course Section */}
               <div className="mb-3" style={{ paddingBottom: "20px" }}>
-                <label className="form-label">About Course(Add only 160 Characters)</label>
+                <label className="form-label">About Course(Add only 160 Characters) <span style={{ color: "red" }}>*</span></label>
                 <input
                   type="text"
                   className="form-control"
@@ -1377,24 +1391,39 @@ const hasInrFields =
               </div>
               
               {/* Submit Buttons */}
-              <div className="course-row">
-                <button
-                  className="submit-btn"
-                  type="submit"
-                  disabled={isSubmitDisabled}
-                  style={{
-                    backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
-                    color: isSubmitDisabled ? "#666666" : "#ffffff",
-                    cursor: isSubmitDisabled ? "not-allowed" : "pointer",
-                    opacity: isSubmitDisabled ? 0.7 : 1,
-                  }}
-                >
-                  {formMode === "Add" ? "Submit" : "Update"}
-                </button>
-                <button type="button" className="reset-btn" onClick={handleReset}>
-                  Reset
-                </button>
-              </div>
+            
+{errorMessage && (
+  <div className="alert alert-danger" role="alert">
+    {errorMessage}
+  </div>
+)}
+
+{successMessage && (
+  <div className="alert alert-success" role="alert">
+    {successMessage}
+  </div>
+)}
+
+{/* Submit Buttons */}
+<div className="course-row">
+  <button
+    className="submit-btn"
+    type="submit"
+    disabled={isSubmitDisabled}
+    style={{
+      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+      color: isSubmitDisabled ? "#666666" : "#ffffff",
+      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+      opacity: isSubmitDisabled ? 0.7 : 1,
+    }}
+  >
+    {formMode === "Add" ? "Submit" : "Update"}
+  </button>
+  <button type="button" className="reset-btn" onClick={handleReset}>
+    Reset
+  </button>
+</div>
+
             </form>
             
             <Helmet>

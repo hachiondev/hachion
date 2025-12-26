@@ -37,7 +37,7 @@ const FaqFormPopup = ({ onClose }) => {
 
     const payload = {
       name: name,
-      email: email, 
+      emailId: email, 
       message: message
     };
 

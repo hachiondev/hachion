@@ -1,6 +1,6 @@
 import  React, { useEffect } from 'react';
 import { useState } from 'react';
-import { duration, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -10,8 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import success from '../../Assets/success.gif';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -26,9 +24,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
-import { GoPlus } from "react-icons/go";
-import { IoClose } from "react-icons/io5";
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
@@ -66,7 +61,7 @@ export default function TrendingCourseTable() {
   const[filterCourse,setFilterCourse]=useState([]); 
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
-  const[message,setMessage]=useState(false);
+  
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [editedData, setEditedData] = useState({trendingcourse_id:"", category_name:"",course_name:"",status:false});
@@ -81,6 +76,8 @@ export default function TrendingCourseTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [status, setStatus] = useState(false);
 
+const [successMessage, setSuccessMessage] = useState("");
+const [errorMessage, setErrorMessage] = useState("");
 
   const [editCourseOptions, setEditCourseOptions] = useState([]);
 
@@ -213,21 +210,56 @@ export default function TrendingCourseTable() {
           curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr
         )
       );
-      setMessage("Trending Course updated successfully!");
-      setTimeout(() => setMessage(""), 5000);
+      
+setFilteredCourse(prev =>
+  prev.map(curr =>
+    curr.trendingcourse_id === editedData.trendingcourse_id
+      ? response.data
+      : curr
+  )
+);
+setSuccessMessage("✅ Trending course updated successfully.");
+setErrorMessage("");
+setTimeout(() => setSuccessMessage(""), 6000);
+
       setOpen(false);
       setEditCourseOptions([]);
     } catch (error) {
-      setMessage("Error updating Courses.");
+      
+      setErrorMessage("❌ Failed to update trending course.");
+setSuccessMessage("");
+
+setTimeout(() => setErrorMessage(""), 6000);
+
     }
   };
 
   const handleDelete = async (trendingcourse_id) => {
     try { 
-      const response = await axios.delete(`https://api.test.hachion.co/trendingcourse/delete/${trendingcourse_id}`); 
-      console.log("Trending Courses deleted successfully:", response.data); 
+      
+      await axios.delete(
+  `https://api.test.hachion.co/trendingcourse/delete/${trendingcourse_id}`
+);
+
+
+setTrendingCourse(prev =>
+  prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
+);
+setFilteredCourse(prev =>
+  prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
+);
+setSuccessMessage("✅ Trending course deleted successfully.");
+setErrorMessage("");
+
+setTimeout(() => setSuccessMessage(""), 6000);
+
     } catch (error) { 
-      console.error("Error deleting Courses:", error); 
+    
+      setErrorMessage("❌ Failed to delete trending course.");
+setSuccessMessage("");
+
+setTimeout(() => setErrorMessage(""), 6000);
+
     }
   };
 
@@ -272,27 +304,53 @@ export default function TrendingCourseTable() {
       [e.target.name]: e.target.value,
     });
   };
-          
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const currentDate = new Date().toISOString().split("T")[0];
-    const dataToSubmit = { 
-      ...courseData, 
-      date: currentDate,
-    };
-    try {
-      const response = await axios.post("https://api.test.hachion.co/trendingcourse/add", dataToSubmit);
-      if (response.status === 201) {
-        alert(response.data);
-        setCourseData([...courseData, dataToSubmit]);
-        handleReset();
-      }
-    } catch (error) {
-      console.error("Error adding courses:", error.message);
-      alert("Error adding course.");
-    }
+      const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const currentDate = new Date().toISOString().split("T")[0];
+  const dataToSubmit = { 
+    ...courseData,
+    date: currentDate,
   };
 
+  try {
+    const response = await axios.post(
+      "https://api.test.hachion.co/trendingcourse/add",
+      dataToSubmit
+    );
+
+    if (response.status === 201) {
+
+  const newTrendingCourse = {
+    trendingcourse_id: Date.now(), 
+    category_name: courseData.category_name,
+    course_name: courseData.course_name,
+    status: courseData.status,
+    date: currentDate
+  };
+
+  
+  setTrendingCourse(prev => [...prev, newTrendingCourse]);
+  setFilteredCourse(prev => [...prev, newTrendingCourse]);
+
+  setSuccessMessage("✅ Trending course added successfully.");
+  setErrorMessage("");
+
+  setTimeout(() => setSuccessMessage(""), 6000);
+
+  handleReset();
+  setShowAddCourse(false);
+}
+
+  } catch (error) {
+    console.error("Error adding courses:", error);
+    
+    setErrorMessage("❌ Failed to add trending course.");
+setSuccessMessage("");
+setTimeout(() => setErrorMessage(""), 6000);
+
+  }
+};
   const handleAddTrendingCourseClick = () => {setShowAddCourse(true)}
 
   useEffect(() => {
@@ -319,6 +377,10 @@ export default function TrendingCourseTable() {
     setCurrentPage(1);
   };
 
+  const isFormValid =
+  courseData.category_name &&
+  courseData.course_name;
+
   return (
     <>  
      {showAddCourse ?  (
@@ -343,7 +405,7 @@ export default function TrendingCourseTable() {
             <div className='course-row'>
 
               <div className="col-md-3">
-                <label htmlFor="inputState" className="form-label">Category Name</label>
+                <label htmlFor="inputState" className="form-label">Category Name <span style={{ color: "red" }}>*</span></label>
                 <select id="inputState" className="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
                   <option value="" disabled>Select Category</option>
                   {category.map((curr) => (
@@ -355,7 +417,7 @@ export default function TrendingCourseTable() {
               </div>
 
               <div className="col-md-3">
-                <label htmlFor="inputState" className="form-label">Course Name</label>
+                <label htmlFor="inputState" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
                 <select
                   id="inputState"
                   className="form-select"
@@ -384,8 +446,19 @@ export default function TrendingCourseTable() {
             </div>
 
             <div className="course-row">
-              <button className='submit-btn' data-bs-toggle='modal'
-                data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+              {/* <button className='submit-btn' onClick={handleSubmit}>Submit</button> */}
+              <button
+  className='submit-btn'
+  onClick={handleSubmit}
+  disabled={!isFormValid}
+  style={{
+    cursor: !isFormValid ? "not-allowed" : "pointer",
+    opacity: !isFormValid ? 0.6 : 1
+  }}
+>
+  Submit
+</button>
+
               <button className='reset-btn' onClick={handleReset}>Reset</button>
             </div>
           </div>
@@ -503,6 +576,9 @@ export default function TrendingCourseTable() {
         </Table>
       </TableContainer>
 
+{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+
       <div className='pagination-container'>
         <AdminPagination
           currentPage={currentPage}
@@ -511,7 +587,7 @@ export default function TrendingCourseTable() {
           onPageChange={handlePageChange}
         />
       </div>
-      {message && <div className="success-message">{message}</div>}
+      {/* {message && <div className="success-message">{message}</div>} */}
 
     </div>)}
 

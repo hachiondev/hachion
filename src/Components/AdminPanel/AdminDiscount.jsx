@@ -413,6 +413,20 @@ const handleCountryChange = (selected) => {
   }));
 };
 
+const isFormValid = () => {
+  return (
+    formData.selectedCourses?.length > 0 &&
+    formData.selectedCountries?.length > 0 &&
+    formData.discountPercentage &&
+    !isNaN(formData.discountPercentage) &&
+    Number(formData.discountPercentage) > 0 &&
+    startDate &&
+    endDate &&
+    formData.status !== null
+  );
+};
+
+
   return (
     <>
 {showForm ? (
@@ -439,7 +453,7 @@ const handleCountryChange = (selected) => {
           <div className="course-details">
             <div className="course-row">
               <div className="col-md-3">
-                <label className="form-label">Course Name</label>
+                <label className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
                 <Select
                   options={courseOptions}
                   isMulti
@@ -480,7 +494,7 @@ const handleCountryChange = (selected) => {
 
            <div className="course-row">
             <div className="col-md-3">
-                  <label className="form-label">Country</label>
+                  <label className="form-label">Country <span style={{ color: "red" }}>*</span></label>
                   {countries.length > 0 ? (
     <Select
   options={countryOptions}
@@ -553,7 +567,7 @@ const handleCountryChange = (selected) => {
 
             <div className="course-row">
               <div className="col-md-3">
-                <label className="form-label">Discount %</label>
+                <label className="form-label">Discount % <span style={{ color: "red" }}>*</span></label>
                 <input
                   type="text"
                   name="discountPercentage"
@@ -565,7 +579,7 @@ const handleCountryChange = (selected) => {
               </div>
 
               <div className="col-md-3">
-                <label className="form-label">Start Date</label>
+                <label className="form-label">Start Date <span style={{ color: "red" }}>*</span></label>
                 <br />
                 <DatePicker 
                   value={startDate} 
@@ -577,7 +591,7 @@ const handleCountryChange = (selected) => {
                 />
               </div>
               <div className="col-md-3">
-                <label className="form-label">Expiry Date</label>
+                <label className="form-label">Expiry Date <span style={{ color: "red" }}>*</span></label>
                 <br />
                 <DatePicker 
                   value={endDate} 
@@ -590,7 +604,7 @@ const handleCountryChange = (selected) => {
               </div>
             </div>
                 <div className="col" style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                <label className="form-label">Status:</label>
+                <label className="form-label">Status: <span style={{ color: "red" }}>*</span></label>
                 <br/>
                 <Switch
                   checked={formData.status}
@@ -602,9 +616,18 @@ const handleCountryChange = (selected) => {
 {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <div className="course-row">
-              <button type="submit" className="submit-btn">
-                {formMode === 'Add' ? 'Submit' : 'Update'}
-              </button>
+             <button
+  type="submit"
+  className="submit-btn"
+  disabled={!isFormValid()}
+  style={{
+    opacity: !isFormValid() ? 0.6 : 1,
+    cursor: !isFormValid() ? "not-allowed" : "pointer",
+  }}
+>
+  {formMode === "Add" ? "Submit" : "Update"}
+</button>
+
               
               <button type="button" className="reset-btn" onClick={handleReset}>
                 Reset

@@ -344,8 +344,7 @@ useEffect(() => {
 
 
 <div className="course-row">
-  <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
   <button className='reset-btn' onClick={handleReset}>Reset</button>
   
 </div>
@@ -545,7 +544,7 @@ useEffect(() => {
     <input
       id="topic"
       className="form-control"
-      name="middle_level"
+      name="senior_level"
       value={editedData.senior_level || ""}
       onChange={handleInputChange}
     />

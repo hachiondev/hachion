@@ -101,7 +101,7 @@ export default function CourseCurriculum({onViewDemoClass}) {
     error: accessError,
     isError,
   } = useAssessmentAccess(checkParams);
-
+  
   useEffect(() => {
     if (accessData?.canDownload) {
       const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
@@ -113,7 +113,6 @@ export default function CourseCurriculum({onViewDemoClass}) {
     if (isError && accessError) {
       const apiError =
         accessError.response?.data?.error || "Access denied";
-
       if (apiError.toLowerCase().includes("enroll")) {
         setShowEnrollPrompt(true);
       } else {
@@ -122,7 +121,6 @@ export default function CourseCurriculum({onViewDemoClass}) {
           curriculumId: selectedTab.curriculumId,
           message: apiError,
         });
-
         // auto-hide after 6 seconds
         setTimeout(() => {
           setAssessmentError({ curriculumId: null, message: "" });
@@ -148,10 +146,9 @@ export default function CourseCurriculum({onViewDemoClass}) {
 
   const handleDownloadAssessment = (assessmentPdfPath) => {
       if (!email || !studentId) {
-    setShowEnrollPrompt(true);
+    setShowRegisterPrompt(true);
     return; // Add return to prevent further execution
   }
-
     const assessmentFileName = assessmentPdfPath.split("/").pop();
 
     setCheckParams({

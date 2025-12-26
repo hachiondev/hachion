@@ -8,33 +8,28 @@ export function useAssessmentAccess({
   enabled,
 }) {
   return useQuery({
-    queryKey: [
-      "assessmentAccess",
-      studentId,
-      courseName,
-      assessmentFileName,
-    ],
+    queryKey: ["assessmentAccess", studentId, courseName, assessmentFileName],
 
-    enabled:
-      enabled &&
-      !!studentId &&
-      !!courseName &&
-      !!assessmentFileName,
+    enabled: enabled && !!studentId && !!courseName && !!assessmentFileName,
 
     queryFn: async () => {
-      const res = await axios.get("https://api.test.hachion.co/enroll/course/check", {
-        params: {
-          studentId,
-          courseName,
-          assessmentFileName,
-        },
-      });
+      const res = await axios.get(
+        "https://api.test.hachion.co/enroll/course/check",
+        {
+          params: {
+            studentId,
+            courseName,
+            assessmentFileName,
+          },
+        }
+      );
 
       return res.data;
     },
-
-    staleTime: 0,
-    retry: false,
-     cacheTime: 0,  
+    gcTime: Infinity, // ✅ Cache never gets garbage collected (formerly cacheTime)
+    refetchOnWindowFocus: false, // ✅ Don't refetch when user returns to tab
+    refetchOnMount: false, // ✅ Don't refetch on component remount
+    refetchOnReconnect: false, // ✅ Don't refetch when internet reconnects
+    retry: 1, // ✅ Only retry once if it fails
   });
 }

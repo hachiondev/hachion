@@ -509,7 +509,6 @@ useEffect(() => {
     setShowAddCourse(true);
     handleReset();
   };
-
   const [shortCourseError, setShortCourseError] = useState("");
 
   const handleShortCourseBlur = async () => {

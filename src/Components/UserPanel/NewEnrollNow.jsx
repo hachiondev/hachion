@@ -16,7 +16,6 @@ export default function NewEnrollNow() {
   =============================== */
   const [selectedBatch, setSelectedBatch] = useState(null);
   const selectedMode = "Live Class";
-
   const [couponCode, setCouponCode] = useState("");
   const [couponData, setCouponData] = useState(null);
   const [couponError, setCouponError] = useState("");
@@ -26,11 +25,9 @@ export default function NewEnrollNow() {
   // const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
   //   useState(false);
 
-  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
-  useState(false);
+  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =  useState(false);
 
-const [lastAction, setLastAction] = useState(null); // "PAY_NOW" | "PAY_LATER"
-
+const [lastAction, setLastAction] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",

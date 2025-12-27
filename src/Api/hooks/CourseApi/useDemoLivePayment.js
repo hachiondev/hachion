@@ -124,15 +124,36 @@ sendWhatsApp: !!notifyVia?.whatsapp,
     if (mobile.startsWith("+91")) {
       try {
         
-        const orderRes = await axios.post(
-          `${API_BASE}/razorpay/create-razorpay-order`,
-          null,
-          {
-            params: { amount },
-          }
-        );
+        // const orderRes = await axios.post(
+        //   `${API_BASE}/razorpay/create-razorpay-order`,
+        //   null,
+        //   {
+        //     params: { amount },
+        //   }
+        // );
 
-        const order = orderRes.data;
+        // const order = orderRes.data;
+        const orderRes = await axios.post(
+  `${API_BASE}/razorpay/create-razorpay-order`,
+  null,
+  {
+    params: {
+      amount,
+      studentId: userProfile.studentId,
+      courseName,
+      batchId: session.batchId,
+    },
+  }
+);
+
+const order = orderRes.data;
+
+// ✅ HANDLE "ALREADY PAID" CASE FROM BACKEND
+if (typeof order === "string") {
+  setEnrollErrorMessage(order); // ❌ You have already paid for this batch.
+  return;
+}
+
 
         await loadRazorpayScript();
 
@@ -171,35 +192,69 @@ sendWhatsApp: !!notifyVia?.whatsapp,
       },
     });
 
-    // 3️⃣ If NOT enrolled → save enrollment
-    if (!check?.data?.enrolled) {
-      await axios.post(`${API_BASE}/enroll/add`, {
-        name: userProfile.userName || userProfile.name || "",
-        studentId: userProfile.studentId,
-        email: userProfile.email,
-        mobile,
-        course_name: courseName,
-        enroll_date: session.schedule_date,
-        week: session.week,
-        time: session.time,
-        amount,
-        mode: "Live Class",
-        type: "Live Class",
-        trainer: session.trainer || "",
-        meeting_link: session.meeting_link || "",
-        batchId: session.batchId,
-        paymentType: "PAY_NOW",
-        paymentStatus: "PAID",
-        sendEmail: true,
-        sendWhatsApp: true,
-      });
-    }
+    
+// 3️⃣ IF already enrolled → UPDATE payment
+if (check?.data?.enrolled) {
+  await axios.put(`${API_BASE}/enroll/update-payment`, {
+    studentId: userProfile.studentId,
+    courseName,
+    batchId: session.batchId,
+    amount, // 👈 totalPayable from frontend
+  });
+} 
+// 4️⃣ ELSE → fresh enrollment
+else {
+  await axios.post(`${API_BASE}/enroll/add`, {
+    name: userProfile.userName || userProfile.name || "",
+    studentId: userProfile.studentId,
+    email: userProfile.email,
+    mobile,
+    course_name: courseName,
+    enroll_date: session.schedule_date,
+    week: session.week,
+    time: session.time,
+    amount,
+    mode: "Live Class",
+    type: "Live Class",
+    trainer: session.trainer || "",
+    meeting_link: session.meeting_link || "",
+    batchId: session.batchId,
+    paymentType: "PAY_NOW",
+    paymentStatus: "PAID",
+    sendEmail: true,
+    sendWhatsApp: true,
+  });
+}
+    // // 3️⃣ If NOT enrolled → save enrollment
+    // if (!check?.data?.enrolled) {
+    //   await axios.post(`${API_BASE}/enroll/add`, {
+    //     name: userProfile.userName || userProfile.name || "",
+    //     studentId: userProfile.studentId,
+    //     email: userProfile.email,
+    //     mobile,
+    //     course_name: courseName,
+    //     enroll_date: session.schedule_date,
+    //     week: session.week,
+    //     time: session.time,
+    //     amount,
+    //     mode: "Live Class",
+    //     type: "Live Class",
+    //     trainer: session.trainer || "",
+    //     meeting_link: session.meeting_link || "",
+    //     batchId: session.batchId,
+    //     paymentType: "PAY_NOW",
+    //     paymentStatus: "PAID",
+    //     sendEmail: true,
+    //     sendWhatsApp: true,
+    //   });
+    // }
 
     setEnrollSuccessMessage("Payment successful!");
   } catch (err) {
     console.error(err);
     setEnrollErrorMessage("❌ Payment verification failed.");
   }
+  
 },
 
 

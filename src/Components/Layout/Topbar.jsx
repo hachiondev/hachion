@@ -35,7 +35,7 @@ const Topbar = () => {
             href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
             target="_blank"
             rel="noopener noreferrer"
-            className="d-flex align-items-center text-decoration-underline text-white touch-target"
+            className="d-flex align-items-center  text-decoration-underline text-white touch-target"
             aria-label="Send an email to trainings@hachion.co using Gmail"
           >
             <IoIosMail className="me-1 topbar-icon text-white" />

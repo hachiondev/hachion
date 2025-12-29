@@ -4,7 +4,7 @@ import AvatarCount from "./AvatarCount";
 import { motion } from "framer-motion";
 import "./Home.css";
 import "./Buttons.css";
-import BannerButtonPopup from "./BannerButtonPopup";
+import BannerButtonPopup from "./BannerButtonPopupPage/BannerButtonPopup";
 
 const Banner = () => {
   const [showPopup, setShowPopup] = useState(false);

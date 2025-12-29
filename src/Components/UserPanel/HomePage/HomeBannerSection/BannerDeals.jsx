@@ -1,6 +1,6 @@
 import React from "react";
 import "../../Home.css";
-import PopupCourseCards from "../../PopupCourseCards";
+import PopupCourseCards from "../../BannerButtonPopupPage/PopupCourseCards";
 import {  useNavigate } from 'react-router-dom';
 
 const BannerDeals = () => {

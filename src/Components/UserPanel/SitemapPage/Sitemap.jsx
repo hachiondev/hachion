@@ -47,8 +47,6 @@ const handleCategoryClick = (categoryName) => {
       navigate(`/coursedetails/${formatted}`);
     }
   };
-
-  console.log("course", course);
   return (
     <>
       <div className="about-us container">

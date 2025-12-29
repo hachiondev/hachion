@@ -5,74 +5,46 @@ import { TbSlashes } from "react-icons/tb";
 import Avatar from "@mui/material/Avatar";
 import { MdOutlineStar } from "react-icons/md";
 import axios from "axios";
+import Pagination from "../Pagination";
 import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import Pagination from "../Pagination";
-import Loader from "../Loader/Loader";
+import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
+import { useTrainers } from "../../../Api/hooks/HomePageApi/TrainingApi/useTrainers";
+import Loader from "../Common/Loader/Loader";
+import { useTrainerOptions } from "../../../Api/hooks/InstructorSection/useTrainerOptions";
+import { useQueries } from "@tanstack/react-query";
+import { useEnrollCounts } from "../../../Api/hooks/InstructorSection/useEnrollCounts";
 
 const Instructors = () => {
   const titleRef = useRef(null);
   const navigate = useNavigate();
-  const [trainers, setTrainers] = useState([]);
+
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(16);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [teacherOptions, setTeacherOptions] = useState([]);
+
+  const { data: courseAll } = useAllCourses();
+  const { data: trainers = [], isLoading, isError, error } = useTrainers();
+  const { data: teacherOptions = [] } = useTrainerOptions();
 
   const [enrollCounts, setEnrollCounts] = useState({});
   const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 
-
+  /* -----------------------------
+     Courses list
+  ----------------------------- */
   useEffect(() => {
-    const fetchTrainers = async () => {
-      try {
-        setLoading(true);
-        const trainerRes = await axios.get("https://api.test.hachion.co/trainers");
-        setTrainers(trainerRes.data);
-      } catch (err) {
-        console.error("Error fetching trainers:", err);
-        setError("Failed to fetch trainers");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTrainers();
-  }, []);
+    if (Array.isArray(courseAll)) {
+      setCourses(courseAll.map((c) => c.courseName));
+    }
+  }, [courseAll]);
 
-  useEffect(() => {
-    const fetchTeacherOptions = async () => {
-      try {
-        const res = await axios.get("https://api.test.hachion.co/trainersnames-unique");
-        if (Array.isArray(res.data)) {
-          setTeacherOptions(res.data);
-        }
-      } catch (err) {
-        console.error("Error fetching unique trainers:", err);
-      }
-    };
-    fetchTeacherOptions();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const res = await axios.get("https://api.test.hachion.co/courses/all");
-        if (Array.isArray(res.data)) {
-          setCourses(res.data.map(c => c.courseName));
-        }
-      } catch (err) {
-        console.error("Error fetching courses:", err);
-      }
-    };
-    fetchCourses();
-  }, []);
-
+  /* -----------------------------
+     Filters
+  ----------------------------- */
   const filteredTrainers = trainers.filter((trainer) => {
     const term = searchTerm.toLowerCase().trim();
 
@@ -92,6 +64,9 @@ const Instructors = () => {
     return matchesSearch && matchesCourse && matchesTeacher;
   });
 
+  /* -----------------------------
+     Responsive pagination size
+  ----------------------------- */
   useEffect(() => {
     const updateCardsPerPage = () => {
       const width = window.innerWidth;
@@ -99,53 +74,58 @@ const Instructors = () => {
       else if (width <= 1024) setCardsPerPage(12);
       else setCardsPerPage(16);
     };
+
     updateCardsPerPage();
     window.addEventListener("resize", updateCardsPerPage);
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
 
+  const enrollQueries = useEnrollCounts({
+    trainers: filteredTrainers,
+    enrollCounts,
+    countKey,
+  });
+
   useEffect(() => {
-    if (!filteredTrainers.length) return;
+    if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
 
+    setEnrollCounts((prev) => {
+      const next = { ...prev };
 
-    const toFetch = filteredTrainers.filter(t => enrollCounts[countKey(t)] == null);
+      enrollQueries.forEach((q) => {
+        if (!q?.data || !Array.isArray(q.queryKey)) return;
 
-    if (!toFetch.length) return;
+        // ✅ FIXED destructuring
+        const [, trainerName, courseName] = q.queryKey;
 
-    const requests = toFetch.map(t =>
-      axios.get("https://api.test.hachion.co/enroll/count", {
-        params: {
-          trainerName: t.trainer_name,
-          courseName: t.course_name,
-        },
-      }).then(res => ({ key: countKey(t), count: res.data?.count ?? 0 }))
-        .catch(() => ({ key: countKey(t), count: 0 }))
-    );
+        if (!trainerName || !courseName) return;
 
-    Promise.all(requests).then(rows => {
-      setEnrollCounts(prev => {
-        const next = { ...prev };
-        rows.forEach(r => { next[r.key] = r.count; });
-        return next;
+        const key = `${trainerName}::${courseName}`;
+
+        if (next[key] == null) {
+          next[key] = q.data;
+        }
       });
+
+      return next;
     });
-  }, [filteredTrainers]);
+  }, [enrollQueries]);
+
+
+  /* -----------------------------
+     Helpers
+  ----------------------------- */
   const formatForUrl = (str) =>
     str.toLowerCase().replace(/\s+/g, "-");
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-
     if (titleRef.current) {
       const offsetTop = titleRef.current.offsetTop - 20;
       window.scrollTo({ top: offsetTop, behavior: "smooth" });
     }
   };
-  
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const renderStarRating = (rating) => (
     <div className="rating-display">
@@ -154,14 +134,20 @@ const Instructors = () => {
     </div>
   );
 
-  if (loading) return <Loader />;
-  if (error) return <div>{error}</div>;
+  if (isLoading) return <Loader />;
+  if (isError) return <div>{error?.message || "Something went wrong"}</div>;
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = filteredTrainers.slice(
+    indexOfFirstCard,
+    indexOfLastCard
+  );
   const totalCards = filteredTrainers.length;
 
+  /* -----------------------------
+     UI
+  ----------------------------- */
   return (
     <div className="course-top">
       {/* Banner */}

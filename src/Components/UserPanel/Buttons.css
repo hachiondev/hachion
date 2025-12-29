@@ -435,8 +435,8 @@
 .write-btn,
 .submit-btn,
 .apply-btn,
-.resume-download-btn,
-.join-now {
+.resume-download-btn
+ {
   background-color: #00aeef;
   border: 2px solid #00aeef;
   border-radius: 50px;
@@ -446,6 +446,26 @@
   height: 40px;
   padding: 3px 10px;
   margin: 3px 10px;
+}
+
+.join-now{ 
+  background-color: #ffffff;
+  border: 2px solid #00aeef;
+  border-radius: 50px;
+  color: #00aeef;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  padding: 3px 10px;
+  margin: 3px 10px;
+    transition: all 0.3s ease;
+}
+
+
+/* Hover effect */
+.join-now:hover {
+  box-shadow: 0 6px 14px rgba(4, 21, 27, 0.35);
+  transform: translateY(-2px);
 }
 
 .update-profile-btn:hover,

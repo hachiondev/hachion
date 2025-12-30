@@ -54,6 +54,7 @@ What's Included:
   );
   const navigate = useNavigate();
 
+
   const { mutate: resendEmail } = useResendEnrollEmail();
 
   const [sendingBatchId, setSendingBatchId] = React.useState(null);
@@ -93,27 +94,27 @@ What's Included:
     }));
   };
 
-  // Initialize notifyViaMap with default values for each session
-  useEffect(() => {
-    if (checkedSessions.length > 0) {
-      const initialMap = {};
-      checkedSessions.forEach(sess => {
-        if (!notifyViaMap[sess.id]) {
-          initialMap[sess.id] = {
-            email: true,
-            whatsapp: false
-          };
-        }
-      });
 
-      if (Object.keys(initialMap).length > 0) {
-        setNotifyViaMap(prev => ({
-          ...prev,
-          ...initialMap
-        }));
-      }
-    }
-  }, [checkedSessions]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className={styles.dcgrid}>
@@ -165,7 +166,7 @@ What's Included:
                 >
                   {g.totalSlots}{" "}
                   {g.type === "live"
-                    ? "Live Class"
+                    ? "Live"
                     : g.totalSlots === 1
                       ? "demo"
                       : "demos"}
@@ -199,106 +200,147 @@ What's Included:
                   boxSizing: "border-box",
                 }}
               >
-                {checkedSessions.map((sess) => {
-                  // Check if at least one notification option is selected
-                  const isEmailChecked = notifyViaMap[sess.id]?.email ?? true;
-                  const isWhatsappChecked = notifyViaMap[sess.id]?.whatsapp ?? false;
-                  const isNotificationSelected = isEmailChecked || isWhatsappChecked;
-
-                  return (
-                    <div key={sess.id} className={styles.dcdetailrow}>
-                      <div>
-                        <div className={styles.dcmuted}>
-                          {sess.mode === "Live Demo" ? "Demo Session" : "Live Class"}
-                        </div>
-
-                        <div className={styles.dcdetailtime}>{sess.time}</div>
-
-                        <div className={styles.dcdetailmeta}>
-                          {sess.duration || "60 min"}
-                        </div>
+                {checkedSessions.map((sess) => (
+                  <div key={sess.id} className={styles.dcdetailrow}>
+                    <div>
+                      <div className={styles.dcmuted}>
+                        {sess.mode === "Live Demo" ? "Demo Session" : "Live Class"}
                       </div>
 
-                      {sess._isEnrolled ? (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                          {/* Enrolled Button */}
-                          <button
-                            className={styles.dcbtnDisabled}
-                            disabled
-                          // style={{ background: "#ccc", color: "#555" }}
-                          >
-                            Enrolled
-                          </button>
 
-                          {/* Resend Button */}
-                          <button
-                            className={styles.dclink}
-                            disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-                            onClick={() => {
-                              setSendingBatchId(sess.batchId);
 
-                              resendEmail(
-                                {
-                                  email: userProfile.email,
-                                  batchId: sess.batchId,
+
+
+
+
+                      <div className={styles.dcdetailtime}>{sess.time}</div>
+
+                      <div className={styles.dcdetailmeta}>
+                        {sess.duration || "60 min"}
+
+                      </div>
+                    </div>
+                    {sess._isEnrolled ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+
+                        {/* Enrolled Button */}
+                        <button
+                          className={styles.dcbtn}
+                          disabled
+                          style={{ background: "#ccc", color: "#555" }}
+                        >
+                          Enrolled
+                        </button>
+
+
+
+                        {/* Resend Button */}
+                        <button
+                          className={styles.dclink}
+                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                          onClick={() => {
+                            setSendingBatchId(sess.batchId);
+
+                            resendEmail(
+                              {
+                                email: userProfile.email,
+                                batchId: sess.batchId,
+                              },
+                              {
+                                onSuccess: (msg) => {
+                                  setSendingBatchId(null);
+                                  setResendError("");
+                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
                                 },
-                                {
-                                  onSuccess: (msg) => {
-                                    setSendingBatchId(null);
-                                    setResendError("");
-                                    setResendMessage(typeof msg === "string" ? msg : msg?.message);
-                                  },
-                                  onError: (err) => {
-                                    setSendingBatchId(null);
-                                    const backendMsg =
-                                      typeof err?.response?.data === "string"
-                                        ? err.response.data
-                                        : err?.response?.data?.message;
+                                onError: (err) => {
+                                  setSendingBatchId(null);
+                                  const backendMsg =
+                                    typeof err?.response?.data === "string"
+                                      ? err.response.data
+                                      : err?.response?.data?.message;
 
-                                    setResendMessage("");
-                                    setResendError(backendMsg || "Failed to resend email");
-                                  },
-                                }
-                              );
-                            }}
-                          >
-                            {sess.resendCount >= 3
-                              ? "Limit Reached"
-                              : sendingBatchId === sess.batchId
-                                ? "Sending..."
-                                : "Resend"}
-                          </button>
-                        </div>
-                      ) : (
+                                  setResendMessage("");
+                                  setResendError(backendMsg || "Failed to resend email");
+                                },
+                              }
+                            );
+
+                          }}
+                        >
+                          {sess.resendCount >= 3
+                            ? "Limit Reached"
+                            : sendingBatchId === sess.batchId
+                              ? "Sending..."
+                              : "Resend"}
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <div className={styles.enrollActions}>
                           <button
-                            className={
-                              enrollingSessionId === sess.id
-                                ? styles.dcbtnDisabled
-                                : !isNotificationSelected
-                                  ? styles.dcbtnDisabled
-                                  : styles.dcbtn
-                            }
-                            disabled={enrollingSessionId === sess.id || !isNotificationSelected}
-                            onClick={() => {
-                              if (!isNotificationSelected) return;
+                            className={styles.dcbtn}
+                            disabled={enrollingSessionId === sess.id}
+                            onClick={() =>
                               onEnrollClick(sess, {
-                                email: isEmailChecked,
-                                whatsapp: isWhatsappChecked,
-                              });
-                            }}
+                                email: notifyViaMap[sess.id]?.email ?? true,
+                                whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+                              })
+                            }
+
+
+
+
+
+
+
+
                           >
                             {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
                           </button>
 
                           {/* Notification Options */}
                           <div className={styles.notifyOptions}>
+                            {/* Container for both checkboxes */}
                             <div className={styles.checkboxGroup}>
                               {/* Email (default checked, user CAN uncheck) */}
                               <label className={styles.notifyLabel}>
                                 <input
                                   type="checkbox"
-                                  checked={isEmailChecked}
+                                  checked={notifyViaMap[sess.id]?.email ?? true}
                                   onChange={(e) =>
                                     handleNotifyChange(sess.id, "email", e.target.checked)
                                   }
@@ -311,7 +353,7 @@ What's Included:
                               <label className={styles.notifyLabel}>
                                 <input
                                   type="checkbox"
-                                  checked={isWhatsappChecked}
+                                  checked={notifyViaMap[sess.id]?.whatsapp ?? false}
                                   onChange={(e) =>
                                     handleNotifyChange(sess.id, "whatsapp", e.target.checked)
                                   }
@@ -320,19 +362,23 @@ What's Included:
                                 <span className={styles.checkboxText}>WhatsApp</span>
                               </label>
                             </div>
-
-                            {/* Error message when no option is selected */}
-                            {/* {!isNotificationSelected && (
-                              <div className={styles.notifyError}>
-                                Please select at least one notification option
-                              </div>
-                            )} */}
                           </div>
+
+
+
+
+
+
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+                      </>
+
+                    )}
+
+                  </div>
+                ))}
+
+
+
               </div>
             </div>
 
@@ -358,6 +404,7 @@ What's Included:
               >
                 {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
               </button>
+
 
               {enrollSuccessMessage && (
                 <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
@@ -461,6 +508,7 @@ What's Included:
                   transform: "scaleX(-1)"
                 }}
               />
+
             </div>
 
             {/* RIGHT SIDE — TEXT + BUTTONS */}

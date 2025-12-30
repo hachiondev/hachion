@@ -1,22 +1,27 @@
 import React, { useEffect, useState, useRef } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// import calendar from "../../Assets/calendar.webp";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import './RequestBatch.css';
+import './RequestBatch.css'
+
 
 const RequestBatch = ({ closeModal }) => {
   const { courseName } = useParams();
-  const queryClient = useQueryClient();
+
 
   const [startDate, setStartDate] = useState("");
   const [time, setTime] = useState("");
   const [mode, setMode] = useState("");
   const [mobile, setMobile] = useState("");
-  const [selectedTrainer, setSelectedTrainer] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const datePickerRef = useRef(null);
   const timeInputRef = useRef(null);
-  const today = new Date().toISOString().split('T')[0];
+
 
   const formattedCourseName = courseName
     ?.replace(/-/g, " ")
@@ -30,7 +35,7 @@ const RequestBatch = ({ closeModal }) => {
 
   // Check if all required fields are filled
   const isFormValid = () => {
-    return mode && startDate && time && mobile && selectedTrainer && userEmail;
+    return mode && startDate && time && mobile && userEmail;
   };
 
   /* 🔒 Prevent background scroll */
@@ -39,42 +44,106 @@ const RequestBatch = ({ closeModal }) => {
     return () => (document.body.style.overflow = "auto");
   }, []);
 
-  /* 🔹 Fetch user profile to get mobile number */
-  const { data: userProfile } = useQuery({
-    queryKey: ['userProfile', userEmail],
-    queryFn: async () => {
-      if (!userEmail) return null;
-      const res = await fetch(
-        `https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`
-      );
-      return res.json();
-    },
-    enabled: !!userEmail,
-  });
+  /* 🔹 Fetch mobile from profile */
 
-  
-  /* 🔹 Fetch trainers for the course */
-  const { 
-    data: trainers = [], 
-    isLoading: loadingTrainers,
-    isError: trainersError 
-  } = useQuery({
-    queryKey: ['trainers', formattedCourseName],
-    queryFn: async () => {
-      if (!formattedCourseName) return [];
-      const res = await fetch(
-        `https://api.test.hachion.co/api/v1/trainers/${encodeURIComponent(formattedCourseName)}`
-      );
-      const data = await res.json();
-      return Array.isArray(data) ? data : [];
-    },
-    enabled: !!formattedCourseName,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-  });
 
-  /* 🔹 Mutation for submitting the request */
-  const submitRequestMutation = useMutation({
-    mutationFn: async (payload) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    fetch(
+      `https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.mobile) setMobile(data.mobile);
+      })
+      .catch(() => {});
+  }, [userEmail]);
+
+  const handleSubmit = async () => {
+    // Double-check validation before submission
+    if (!isFormValid()) {
+      setErrorMessage("❌ Please fill all required fields");
+      return;
+    }
+
+    setLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const payload = {
+      schedule_date: startDate,
+      time_zone: time,
+      email: userEmail,
+      mobile,
+      mode,
+
+      country: "India",
+      courseName: formattedCourseName,
+      userName,
+    };
+
+    try {
       const res = await fetch(
         "https://api.test.hachion.co/requestbatch/add",
         {
@@ -83,52 +152,16 @@ const RequestBatch = ({ closeModal }) => {
           body: JSON.stringify(payload),
         }
       );
-      
-      if (!res.ok) {
-        throw new Error('Failed to submit request');
-      }
-      
-      return res.json();
-    },
-    onSuccess: () => {
-      // Invalidate relevant queries if needed
-      queryClient.invalidateQueries(['userRequests']);
-      
-      // Show success message and close modal
+
+      if (!res.ok) throw new Error();
+
+      setSuccessMessage("✅ Request submitted successfully!");
       setTimeout(closeModal, 2500);
-    },
-    onError: (error) => {
-      console.error('Submission error:', error);
-    },
-  });
-
-  // Update mobile when userProfile is loaded
-  useEffect(() => {
-    if (userProfile?.mobile && !mobile) {
-      setMobile(userProfile.mobile);
+    } catch {
+      setErrorMessage("❌ Error submitting request. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  }, [userProfile, mobile]);
-
-  const handleSubmit = async () => {
-    // Double-check validation before submission
-    if (!isFormValid()) {
-      submitRequestMutation.reset(); // Clear any previous errors
-      return;
-    }
-
-    const payload = {
-      schedule_date: startDate,
-      time_zone: time,
-      email: userEmail,
-      mobile,
-      mode,
-      selected_trainer: selectedTrainer,
-      country: "India",
-      courseName: formattedCourseName,
-      userName,
-    };
-
-    submitRequestMutation.mutate(payload);
   };
 
   return (
@@ -180,7 +213,7 @@ const RequestBatch = ({ closeModal }) => {
                 onChange={(e) => setStartDate(e.target.value)}
                 className="requestBatchDateInput"
                 ref={datePickerRef}
-                min={today} 
+
                 required
               />
             </div>
@@ -200,56 +233,20 @@ const RequestBatch = ({ closeModal }) => {
             />
           </div>
 
-          <div className="requestBatchField">
-            <label className="requestBatchLabel">
-              Trainer List <span className="required-star">*</span>
-            </label>
-            <select
-              value={selectedTrainer}
-              onChange={(e) => setSelectedTrainer(e.target.value)}
-              className="requestBatchSelect"
-              required
-              disabled={loadingTrainers}
-            >
-              <option value="">Select Trainer</option>
-              {loadingTrainers ? (
-                <option value="" disabled>Loading trainers...</option>
-              ) : trainersError ? (
-                <option value="" disabled>Failed to load trainers</option>
-              ) : trainers.length > 0 ? (
-                trainers.map((trainer) => (
-                  <option key={trainer.id || trainer.trainer_id} value={trainer.trainer_name}>
-                    {trainer.trainer_name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>No trainers available for this course</option>
-              )}
-            </select>
-            {loadingTrainers && (
-              <p className="requestBatchHint">Loading trainers...</p>
-            )}
-          </div>
+          {successMessage && (
+            <p className="requestBatchSuccess">{successMessage}</p>
+          )}
+          {errorMessage && (
+            <p className="requestBatchError">{errorMessage}</p>
 
-          {/* Display success/error messages from mutation */}
-          {submitRequestMutation.isSuccess && (
-            <p className="requestBatchSuccess">✅ Request submitted successfully!</p>
-          )}
-          
-          {submitRequestMutation.isError && (
-            <p className="requestBatchError">❌ Error submitting request. Please try again.</p>
-          )}
-          
-          {!isFormValid() && submitRequestMutation.isError && (
-            <p className="requestBatchError">❌ Please fill all required fields</p>
           )}
 
           <button
             onClick={handleSubmit}
-            disabled={submitRequestMutation.isPending || !isFormValid() || loadingTrainers}
-            className={`requestBatchSubmitBtn ${!isFormValid() || loadingTrainers ? 'disabled' : ''}`}
+            disabled={loading || !isFormValid()}
+            className={`requestBatchSubmitBtn ${!isFormValid() ? 'disabled' : ''}`}
           >
-            {submitRequestMutation.isPending ? "Submitting..." : "Submit Request"}
+            {loading ? "Submitting..." : "Submit Request"}
           </button>
         </div>
       </div>

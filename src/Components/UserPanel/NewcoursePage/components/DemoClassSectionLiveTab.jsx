@@ -186,11 +186,6 @@ What's Included:
                       </div>
 
 
-
-
-
-
-
                       <div className={styles.dcdetailtime}>{sess.time}</div>
 
                       <div className={styles.dcdetailmeta}>
@@ -198,159 +193,107 @@ What's Included:
 
                       </div>
                     </div>
-                    {sess._isEnrolled ? (
-                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {sess.mode === "Live Demo" && sess._isEnrolled ? (
+  /* =========================
+     LIVE DEMO → OLD BEHAVIOR
+     ========================= */
+  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 
-                        {/* Enrolled Button */}
-                        <button
-                          className={styles.dcbtnDisabled}
-                          disabled
-                          // style={{ background: "#ccc", color: "#555" }}
-                        >
-                          Enrolled
-                        </button>
+    <button
+      className={styles.dcbtnDisabled}
+      disabled
+    >
+      Enrolled
+    </button>
 
+    <button
+      className={styles.dclink}
+      disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+      onClick={() => {
+        setSendingBatchId(sess.batchId);
 
+        resendEmail(
+          {
+            email: userProfile.email,
+            batchId: sess.batchId,
+          },
+          {
+            onSuccess: (msg) => {
+              setSendingBatchId(null);
+              setResendError("");
+              setResendMessage(typeof msg === "string" ? msg : msg?.message);
+            },
+            onError: (err) => {
+              setSendingBatchId(null);
+              const backendMsg =
+                typeof err?.response?.data === "string"
+                  ? err.response.data
+                  : err?.response?.data?.message;
 
-                        {/* Resend Button */}
-                        <button
-                          className={styles.dclink}
-                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-                          onClick={() => {
-                            setSendingBatchId(sess.batchId);
-
-                            resendEmail(
-                              {
-                                email: userProfile.email,
-                                batchId: sess.batchId,
-                              },
-                              {
-                                onSuccess: (msg) => {
-                                  setSendingBatchId(null);
-                                  setResendError("");
-                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
-                                },
-                                onError: (err) => {
-                                  setSendingBatchId(null);
-                                  const backendMsg =
-                                    typeof err?.response?.data === "string"
-                                      ? err.response.data
-                                      : err?.response?.data?.message;
-
-                                  setResendMessage("");
-                                  setResendError(backendMsg || "Failed to resend email");
-                                },
-                              }
-                            );
-
-                          }}
-                        >
-                          {sess.resendCount >= 3
-                            ? "Limit Reached"
-                            : sendingBatchId === sess.batchId
-                              ? "Sending..."
-                              : "Resend"}
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              setResendMessage("");
+              setResendError(backendMsg || "Failed to resend email");
+            },
+          }
+        );
+      }}
+    >
+      {sess.resendCount >= 3
+        ? "Limit Reached"
+        : sendingBatchId === sess.batchId
+          ? "Sending..."
+          : "Resend"}
+    </button>
+  </div>
+) : (
+  /* =========================
+     LIVE CLASS → ALWAYS ENROLL
+     + KEEP EMAIL / WHATSAPP
+     ========================= */
+  <div className={styles.enrollActions}>
+   <button
+  className={styles.dcbtn}
+  onClick={() =>
+    onEnrollClick(sess, {
+      email: notifyViaMap[sess.id]?.email ?? true,
+      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+    })
+  }
+>
+  Enroll
+</button>
 
 
+    {/* 🔔 Email / WhatsApp — REQUIRED FOR BOTH */}
+    <div className={styles.notifyOptions}>
+      <div className={styles.checkboxGroup}>
+        <label className={styles.notifyLabel}>
+          <input
+            type="checkbox"
+            checked={notifyViaMap[sess.id]?.email ?? true}
+            onChange={(e) =>
+              handleNotifyChange(sess.id, "email", e.target.checked)
+            }
+            className={styles.checkboxInput}
+          />
+          <span className={styles.checkboxText}>Email</span>
+        </label>
 
+        <label className={styles.notifyLabel}>
+          <input
+            type="checkbox"
+            checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+            onChange={(e) =>
+              handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+            }
+            className={styles.checkboxInput}
+          />
+          <span className={styles.checkboxText}>WhatsApp</span>
+        </label>
+      </div>
+    </div>
+  </div>
+)}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <div className={styles.enrollActions}>
-                          <button
-                            className={styles.dcbtn}
-                            disabled={enrollingSessionId === sess.id}
-                            onClick={() =>
-                              onEnrollClick(sess, {
-                                email: notifyViaMap[sess.id]?.email ?? true,
-                                whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-                              })
-                            }
-
-
-
-
-
-
-
-
-                          >
-                            {enrollingSessionId === sess.id ? "Enrolling..." : "Enroll"}
-                          </button>
-
-                          {/* Notification Options */}
-                          <div className={styles.notifyOptions}>
-                            {/* Container for both checkboxes */}
-                            <div className={styles.checkboxGroup}>
-                              {/* Email (default checked, user CAN uncheck) */}
-                              <label className={styles.notifyLabel}>
-                                <input
-                                  type="checkbox"
-                                  checked={notifyViaMap[sess.id]?.email ?? true}
-                                  onChange={(e) =>
-                                    handleNotifyChange(sess.id, "email", e.target.checked)
-                                  }
-                                  className={styles.checkboxInput}
-                                />
-                                <span className={styles.checkboxText}>Email</span>
-                              </label>
-
-                              {/* WhatsApp (optional) */}
-                              <label className={styles.notifyLabel}>
-                                <input
-                                  type="checkbox"
-                                  checked={notifyViaMap[sess.id]?.whatsapp ?? false}
-                                  onChange={(e) =>
-                                    handleNotifyChange(sess.id, "whatsapp", e.target.checked)
-                                  }
-                                  className={styles.checkboxInput}
-                                />
-                                <span className={styles.checkboxText}>WhatsApp</span>
-                              </label>
-                            </div>
-                          </div>
-
-
-
-
-
-
-                        </div>
-                      </>
-
-                    )}
 
                   </div>
                 ))}

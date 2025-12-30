@@ -122,19 +122,42 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     setEnrollErrorMessage
   });
 
-  const handleLiveEnrollClick = async (session, notifyVia) => {
-    // if (!userProfile || !userProfile.studentId) {
-    //   setShowRegisterPrompt(true);
-    //   return;
-    // }
-    // setShowRegisterPrompt(false);
-    // setEnrollingSessionId(session.id);
+  // const handleLiveEnrollClick = async (session, notifyVia) => {
+  //   // if (!userProfile || !userProfile.studentId) {
+  //   //   setShowRegisterPrompt(true);
+  //   //   return;
+  //   // }
+  //   // setShowRegisterPrompt(false);
+  //   // setEnrollingSessionId(session.id);
 
-    // await handleLiveEnrollPayment(session, notifyVia);
-    // setEnrollingSessionId(null);
-    // onViewDemoClass();
+  //   // await handleLiveEnrollPayment(session, notifyVia);
+  //   // setEnrollingSessionId(null);
+  //   // onViewDemoClass();
+  //   navigate(`/enroll-now/${courseName}`);
+  // };
+const handleLiveEnrollClick = async (session, notifyVia) => {
+  // ✅ LIVE CLASS -> only navigation
+  if (session?.mode !== "Live Demo") {
     navigate(`/enroll-now/${courseName}`);
-  };
+    return;
+  }
+
+  // ✅ LIVE DEMO -> call API (previous behavior)
+  if (!userProfile || !userProfile.studentId) {
+    setShowRegisterPrompt(true);
+    return;
+  }
+
+  setShowRegisterPrompt(false);
+  setEnrollingSessionId(session.id);
+
+  try {
+    await handleLiveEnrollPayment(session, notifyVia); // this should call enroll/add for demo
+    onViewDemoClass && onViewDemoClass();
+  } finally {
+    setEnrollingSessionId(null);
+  }
+};
 
   const {
     liveGroups,

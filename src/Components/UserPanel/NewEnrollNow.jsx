@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./NewEnrollNow.module.css";
 import { Input } from "../ui/input";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useDemoScheduleLogic } from "../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
 import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
 import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
@@ -11,6 +11,13 @@ import { useCouponDiscount } from "../../Api/hooks/CourseApi/useCouponDiscount";
 import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
 
 export default function NewEnrollNow() {
+    const location = useLocation();
+
+  const notifyVia = location.state?.notifyVia || {
+    email: true,
+    whatsapp: true,
+  };
+
   /* ===============================
      State
   =============================== */
@@ -461,13 +468,16 @@ const isEnrollmentBlocked =
                     // isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-              onClick={() => {
+            onClick={() => {
   setLastAction("PAY_NOW");
   selectedBatch &&
     handleLiveEnrollPayment(selectedBatch.sessions[0], {
       isPayNow: true,
+      email: notifyVia.email,
+      whatsapp: notifyVia.whatsapp,
     });
 }}
+
 
 
                 >
@@ -488,10 +498,15 @@ const isEnrollmentBlocked =
                     isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-                 onClick={() => {
+               onClick={() => {
   setLastAction("PAY_LATER");
-  selectedBatch && handleEnrollPayLater(selectedBatch.sessions[0]);
+  selectedBatch &&
+    handleEnrollPayLater({
+      ...selectedBatch.sessions[0],
+      notifyVia,
+    });
 }}
+
 
                 >
                   Enroll Now, Pay Later

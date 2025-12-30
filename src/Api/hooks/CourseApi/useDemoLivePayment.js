@@ -313,8 +313,9 @@ else {
       trainer: session.trainer || "",
       meeting_link: session.meeting_link || "",
       batchId: session.batchId,
-      sendEmail: true,
-      sendWhatsApp: true,
+      sendEmail: !!session?.notifyVia?.email,
+sendWhatsApp: !!session?.notifyVia?.whatsapp,
+
       sendText: false,
       paymentType: "PAY_LATER",
       paymentStatus: "PENDING",

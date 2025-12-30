@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../UserPanel/Course.css'
+import '../../../UserPanel/CoursePage/Course.css'
 import { useNavigate } from 'react-router-dom';
 import corporateImage from '../../../../Assets/corporatenew.webp';
 

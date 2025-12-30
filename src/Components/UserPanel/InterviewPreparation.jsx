@@ -1,7 +1,7 @@
 import React from 'react';
 import CareerImage from '../../Assets/interview.webp';
 import mentorImage from '../../Assets/mentor.webp';
-import './Course.css';
+import './CoursePage/Course.css';
 
 // Reusable component for each feature
 const ProfileBuildingItem = ({ image, title, description }) => (

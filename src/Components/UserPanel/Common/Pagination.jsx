@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
-import './Course.css';
+import '../CoursePage/Course.css';
 
 const Pagination = ({ currentPage, cardsPerPage, totalCards, onPageChange }) => {
   const totalPages = Math.ceil(totalCards / cardsPerPage);

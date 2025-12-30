@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 const HelpFaqAll = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import './Blogs.css';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import './Course.css';
+import '../Course.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';
-import InstructorCard from './InstructorCard';
+import InstructorCard from '../../InstructorCard';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const InstructorProfile = () => {

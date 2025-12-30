@@ -16,7 +16,7 @@ const Topbar = () => {
       <div className="container d-flex justify-content-between align-items-center text-white px-3 h-100">
 
         {/* Left Section */}
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center ">
 
           {/* WhatsApp Link */}
           <a

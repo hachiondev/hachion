@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Course.css";
+import "./CoursePage/Course.css";
 import "./Corporate.css";
 import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";

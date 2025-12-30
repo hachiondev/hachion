@@ -5,7 +5,7 @@ import { TbSlashes } from "react-icons/tb";
 import Avatar from "@mui/material/Avatar";
 import { MdOutlineStar } from "react-icons/md";
 import axios from "axios";
-import Pagination from "../Pagination";
+import Pagination from "../Common/Pagination";
 import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";

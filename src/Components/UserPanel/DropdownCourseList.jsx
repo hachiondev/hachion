@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Course.css";
+import "./CoursePage/Course.css";
 import { useNavigate } from "react-router-dom";
 
 const DropdownCourseList = ({ category }) => {

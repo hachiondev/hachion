@@ -4,10 +4,10 @@ import BlogList from "./BlogList";
 import BlogsSidebar from "./BlogsSidebar";
 import LatestArticles from "./LatestArticles";
 import WatchVideos from "./WatchVideos";
-import Pagination from "./Pagination";
+import Pagination from "./Common/Pagination";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
-import "./Course.css";
+import "./CoursePage/Course.css";
 import "./Bloglist.css";
 
 const Blogs = () => {

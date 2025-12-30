@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import '../Course.css';
+import '../CoursePage/Course.css';
 
 
 const CardsPagination = ({ currentPage, totalCards, cardsPerPage, onPageChange }) => {

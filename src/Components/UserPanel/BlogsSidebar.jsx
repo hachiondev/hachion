@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { LuListFilter } from "react-icons/lu";
-import "./Course.css";
+import "./CoursePage/Course.css";
 
 const BlogsSidebar = ({ onFilterChange }) => {
   const [categories, setCategories] = useState([]);

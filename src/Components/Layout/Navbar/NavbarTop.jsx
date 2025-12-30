@@ -4,7 +4,7 @@ import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../../Components/UserPanel/Home.css";
-import "../../../Components/UserPanel/Course.css";
+import "../../../Components/UserPanel/CoursePage/Course.css";
 import { useCourses } from '../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
 import { useBlogs } from "../../../Api/hooks/HomePageApi/NavbarApi/useBlogs";
 import { useUserProfile } from "../../../Api/hooks/HomePageApi/NavbarApi/useUserProfile";

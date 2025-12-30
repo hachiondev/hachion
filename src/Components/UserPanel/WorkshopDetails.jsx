@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import './Course.css';
+import './CoursePage/Course.css';
 import Banner2 from '../../Assets/bann3.webp';
 import salreg from '../../Assets/salreg.webp';
 import WorkshopHighlights from './WorkshopHighlights';

@@ -294,8 +294,8 @@ color: black;
 
 .sidebar-checkbox input {
   /* accent-color: #00aeef; */
-  width: 16px;
-  height: 16px;
+  /* width: 16px;
+  height: 16px; */
   margin-top: 5px;
 }
 .sidebar-drawer {
@@ -610,7 +610,7 @@ height: 3em;
 .qa-automation{
 width:80%;
 border-radius: 20px;
-background-image: url('../../Assets/qa_background.webp');
+background-image: url('../../../Assets/qa_background.webp');
 background-repeat: no-repeat;
 background-size: cover;
 background-position: center;
@@ -1621,7 +1621,7 @@ white-space: nowrap;
   padding: 40px;
   height: auto;
   width: 100%;
-  background-image: url('../../Assets/corporateBackground.webp');
+  background-image: url('../../../Assets/corporateBackground.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

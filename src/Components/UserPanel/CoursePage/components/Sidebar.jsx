@@ -4,17 +4,17 @@ import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { LuListFilter } from "react-icons/lu";
 import { useLocation, useNavigate } from 'react-router-dom';
-import "./Course.css";
+import "../Course.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useCategories } from "../../Api/hooks/SitemapPageApi/useCategories";
-import Loader from "./Common/Loader/Loader";
-import { useAllCourses } from "../../Api/hooks/SitemapPageApi/useAllCourses";
-import { useGeoData } from "../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
-import { useDiscountRules } from "../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
+import { useCategories } from "../../../../Api/hooks/SitemapPageApi/useCategories";
+import Loader from "../../Common/Loader/Loader";
+import { useAllCourses } from "../../../../Api/hooks/SitemapPageApi/useAllCourses";
+import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 dayjs.extend(customParseFormat);
 
-const Sidebar = ({ onFilterChange }) => {
+const Sidebar = ({ onFilterChange, selectedCategoryFromParent }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const preSelectedCategory = location.state?.selectedCategory || null;
@@ -39,6 +39,8 @@ const Sidebar = ({ onFilterChange }) => {
   const { data: geoData, isLoading: loadingCountry, error: countryError } = useGeoData();
   const country = geoData?.country || "US";
   const { data: discountRules = [] } = useDiscountRules();
+const normalize = (v = "") =>
+  v.toString().trim().toLowerCase();
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,19 +50,33 @@ const Sidebar = ({ onFilterChange }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    if (categories.length > 0) {
-      const first = categories[0].name;
+useEffect(() => {
+    console.log("🧪 EFFECT RUN", {
+    selectedCategoryFromParent,
+    categoriesLoaded: categories.length,
+  })
+  if (!selectedCategoryFromParent) return;
+  if (categories.length === 0) return;
 
-      setSelectedCategories([first]);
+  const match = categories.find(
+    c => normalize(c.name) === normalize(selectedCategoryFromParent)
+  );
 
-      onFilterChange({
-        categories: [first],
-        levels: selectedLevels.includes("All Levels") ? [] : selectedLevels,
-        price: selectedPrice,
-      });
-    }
-  }, [categories]);
+  if (!match) return;
+
+  setSelectedCategories([match.name]);
+
+  onFilterChange({
+    categories: [match.name],
+    levels: selectedLevels.includes("All Levels") ? [] : selectedLevels,
+    price: selectedPrice,
+  });
+}, [selectedCategoryFromParent, categories]);
+
+
+
+// console.log("🟡 Sidebar received selectedCategoryFromParent:", selectedCategoryFromParent);
+
 
   const toggleSection = (section) => {
     setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));

@@ -1,5 +1,5 @@
 import React from "react";
-import "./Course.css";
+import "./CoursePage/Course.css";
 import "./Corporate.css";
 import Avatar from "@mui/material/Avatar";
 import { AiOutlinePlaySquare } from "react-icons/ai";

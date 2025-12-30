@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdArrowForwardIos } from "react-icons/md";
-import "./Course.css";
+import "./CoursePage/Course.css";
 
 const DropdownSidebar = ({ onSelectCategory }) => {
   const [activeIndex, setActiveIndex] = useState(null);

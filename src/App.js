@@ -17,7 +17,7 @@ import Register from './Components/UserPanel/HomePage/AuthSection/RegisterSectio
 import RegisterNext from './Components/UserPanel/HomePage/AuthSection//RegisterNext';
 import RegisterHere from './Components/UserPanel/HomePage/AuthSection//RegisterHere';
 import ForgotPassword from './Components/UserPanel/HomePage/AuthSection/ForgotPassword';
-import Course from './Components/UserPanel/Course';
+import Course from './Components/UserPanel/CoursePage/Course';
 // import CourseDetails from './Components/UserPanel/CourseDetails';
 import CorporateTraining from './Components/UserPanel/CorporateTraining';
 import Terms from './Components/UserPanel/Terms';

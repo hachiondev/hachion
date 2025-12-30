@@ -1,40 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from './Sidebar';
-import SidebarRight from './SidebarRight';
-import Pagination from './Pagination';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import SidebarRight from './components/SidebarRight';
+import Pagination from '../Common/Pagination';
 import './Course.css';
 import { Helmet } from 'react-helmet-async';
-import TrendingCourseNames from './TrendingCourseNames';
-import InstructorProfile from './InstructorProfile';
+import TrendingCourseNames from './components/TrendingCourseNames';
+import InstructorProfile from './components/InstructorProfile';
 
 const Course = () => {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const [selectedCategoryFromParent, setSelectedCategoryFromParent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [filters, setFilters] = useState({ 
+    categories: [], 
+    levels: [], 
+    price: [] 
+  });
+  const [isInitialized, setIsInitialized] = useState(false);
   
-  const [filters, setFilters] = useState({ categories: [], levels: [], price: [] });
-
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
-    if (bannerRef.current) {
-      window.scrollTo(0, 400);
-    }
-  };
+  // ✅ SINGLE SOURCE OF TRUTH: Initialize category from URL
+useEffect(() => {
+  const categoryFromUrl = searchParams.get("category");
+
+  if (categoryFromUrl) {
+    const decoded = decodeURIComponent(categoryFromUrl);
+    console.log("✅ Course.jsx picked category:", decoded);
+    setSelectedCategoryFromParent(decoded);
+  } else {
+    setSelectedCategoryFromParent(null);
+  }
+}, [searchParams]);
+
 
   const handleFilterChange = (updatedFilters) => {
-  const normalized = {
-    categories: Array.isArray(updatedFilters?.categories) ? updatedFilters.categories : [],
-    levels: Array.isArray(updatedFilters?.levels) ? updatedFilters.levels : [],
-    price: Array.isArray(updatedFilters?.price) ? updatedFilters.price : [],
+    const normalized = {
+      categories: Array.isArray(updatedFilters?.categories) ? updatedFilters.categories : [],
+      levels: Array.isArray(updatedFilters?.levels) ? updatedFilters.levels : [],
+      price: Array.isArray(updatedFilters?.price) ? updatedFilters.price : [],
+    };
+    
+    // Update selectedCategory based on filter changes
+    if (normalized.categories.length > 0) {
+      setSelectedCategory(normalized.categories[0]);
+    } else {
+      setSelectedCategory('All');
+    }
+    
+    setFilters(normalized);
+    setCurrentPage(1);
   };
-  setFilters(normalized);
-  setCurrentPage(1);
-};
-
 
   const updateTotalCards = (total) => {
     setTotalCards(total);
@@ -77,10 +98,10 @@ const Course = () => {
       </Helmet>
 
       <div className="course-top">
-        <div className="course-content container">
+        <div ref={bannerRef} className="course-content container">
           <Sidebar
-            onSelectCategory={handleCategorySelect}
             onFilterChange={handleFilterChange}
+            selectedCategoryFromParent={selectedCategoryFromParent}
           />
 
           <div className="sidebar-right-container">

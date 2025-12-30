@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import "./Course.css";
+import "./CoursePage/Course.css";
 import { AiOutlineCloseCircle, AiFillCaretDown } from "react-icons/ai";
 import { Menu, MenuItem, Button } from "@mui/material";
 import Flag from "react-world-flags";

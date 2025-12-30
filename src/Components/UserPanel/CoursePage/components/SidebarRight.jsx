@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SidebarCard from "./SidebarCard";
-import "./Course.css";
+import SidebarCard from "../../SidebarCard";
+import "../Course.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);

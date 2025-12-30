@@ -5,7 +5,7 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa6";
 import "swiper/css";
 import "swiper/css/navigation";
-import "./Course.css";
+import "./CoursePage/Course.css";
 
 const WatchVideos = () => {
   const [videos, setVideos] = useState([]);

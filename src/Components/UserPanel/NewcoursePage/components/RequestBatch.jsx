@@ -69,7 +69,7 @@ const RequestBatch = ({ closeModal }) => {
       try {
         // You'll need to adjust this API endpoint based on your backend
         const response = await fetch(
-          `https://api.test.hachion.co/api/v1/trainers?course=${encodeURIComponent(formattedCourseName)}`
+          `https://api.test.hachion.co/trainernames/by-course?courseName=${encodeURIComponent(formattedCourseName)}`
         );
         
         if (!response.ok) {
@@ -134,7 +134,25 @@ const RequestBatch = ({ closeModal }) => {
       if (!res.ok) throw new Error();
 
       setSuccessMessage("✅ Request submitted successfully!");
-      setTimeout(closeModal, 2500);
+
+      const formattedDate = new Date(startDate).toLocaleDateString("en-US", {
+  month: "short",
+  day: "2-digit",
+  year: "numeric",
+});
+
+const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+});
+
+const successText = `Request batch details [${mode} / Date: ${formattedDate} / Time: ${formattedTime} / Trainer: ${selectedTrainer}] have been successfully submitted to the Hachion support team.`;
+
+setSuccessMessage(successText);
+setTimeout(closeModal, 10000);
+
+      
     } catch {
       setErrorMessage("❌ Error submitting request. Please try again.");
     } finally {
@@ -223,19 +241,27 @@ const RequestBatch = ({ closeModal }) => {
               disabled={loadingTrainers}
             >
               <option value="">Select Trainer</option>
-              {loadingTrainers ? (
-                <option value="" disabled>Loading trainers...</option>
-              ) : trainersError ? (
-                <option value="" disabled>Failed to load trainers</option>
-              ) : trainers.length > 0 ? (
-                trainers.map((trainer) => (
-                  <option key={trainer.id || trainer.trainer_id} value={trainer.trainer_name || trainer.name}>
-                    {trainer.trainer_name || trainer.name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>No trainers available for this course</option>
-              )}
+             {loadingTrainers ? (
+  <option value="" disabled>Loading trainers...</option>
+) : trainersError ? (
+  <option value="" disabled>Failed to load trainers</option>
+) : trainers.length > 0 ? (
+  trainers.map((trainer, index) => {
+    const trainerValue =
+      typeof trainer === "string"
+        ? trainer
+        : trainer.trainerName || trainer.trainer_name || trainer.name;
+
+    return (
+      <option key={index} value={trainerValue}>
+        {trainerValue}
+      </option>
+    );
+  })
+) : (
+  <option value="" disabled>No trainers available for this course</option>
+)}
+
             </select>
             {loadingTrainers && (
               <p className="requestBatchHint">Loading trainers...</p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import "../Style.css";
 import "../Home.css";
 import { TbSlashes } from "react-icons/tb";
@@ -30,7 +30,7 @@ const Instructors = () => {
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
   const { data: teacherOptions = [] } = useTrainerOptions();
 
-  const [enrollCounts, setEnrollCounts] = useState({});
+  // const [enrollCounts, setEnrollCounts] = useState({});
   const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 
   /* -----------------------------
@@ -42,10 +42,21 @@ const Instructors = () => {
     }
   }, [courseAll]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
+
   /* -----------------------------
      Filters
   ----------------------------- */
-  const filteredTrainers = trainers.filter((trainer) => {
+
+const filteredTrainers = useMemo(() => {
+  return trainers.filter((trainer) => {
     const term = searchTerm.toLowerCase().trim();
 
     const matchesSearch =
@@ -63,6 +74,8 @@ const Instructors = () => {
 
     return matchesSearch && matchesCourse && matchesTeacher;
   });
+}, [trainers, searchTerm, selectedTeacher, selectedCourse]);
+
 
   /* -----------------------------
      Responsive pagination size
@@ -81,36 +94,42 @@ const Instructors = () => {
   }, []);
 
 
-  const enrollQueries = useEnrollCounts({
-    trainers: filteredTrainers,
-    enrollCounts,
-    countKey,
-  });
+const enrollCounts = useEnrollCounts({
+  trainers: filteredTrainers,
+  countKey,
+});
 
-  useEffect(() => {
-    if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
 
-    setEnrollCounts((prev) => {
-      const next = { ...prev };
+// // Replace your current useEffect with this optimized version
+// useEffect(() => {
+//   if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
 
-      enrollQueries.forEach((q) => {
-        if (!q?.data || !Array.isArray(q.queryKey)) return;
+//   // Only update if there are actual changes
+//   const updates = {};
+//   let hasUpdates = false;
 
-        // ✅ FIXED destructuring
-        const [, trainerName, courseName] = q.queryKey;
+//   enrollQueries.forEach((q) => {
+//     if (!q?.data || !Array.isArray(q.queryKey)) return;
 
-        if (!trainerName || !courseName) return;
+//     const [, trainerName, courseName] = q.queryKey;
+//     if (!trainerName || !courseName) return;
 
-        const key = `${trainerName}::${courseName}`;
+//     const key = `${trainerName}::${courseName}`;
+    
+//     // Only update if the value is different from current
+//     if (enrollCounts[key] !== q.data) {
+//       updates[key] = q.data;
+//       hasUpdates = true;
+//     }
+//   });
 
-        if (next[key] == null) {
-          next[key] = q.data;
-        }
-      });
-
-      return next;
-    });
-  }, [enrollQueries]);
+//   if (hasUpdates) {
+//     setEnrollCounts(prev => ({
+//       ...prev,
+//       ...updates
+//     }));
+//   }
+// }, [enrollQueries]); // Only depend on enrollQueries
 
 
   /* -----------------------------

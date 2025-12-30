@@ -405,7 +405,7 @@
 
 .dcslotbadge {
   width: fit-content;
-  padding: 8px 21px;
+  padding: 8px 13px;
   border-radius: 10px;
   font-weight: 700;
   font-size: 12px;
@@ -510,6 +510,19 @@
   cursor: pointer;
   font-size: 13px;
 }
+
+.dcbtnDisabled{
+  background-color: #ccc;
+  color: #555;
+    font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 13px;
+  border: 0;
+  cursor: not-allowed;
+}
+
 
 .dcempty {
   text-align: center;

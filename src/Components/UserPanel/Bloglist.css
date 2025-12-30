@@ -146,10 +146,10 @@
   right: 10px;
 }
 
-.recent-entries-container button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+/* .recent-entries-container button:hover {
+  background-color: #0056b3; 
   color: white;
-}
+} */
 
 .recent-entries-container button:disabled {
   color: #6a6a6a;

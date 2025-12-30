@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../../../utils";
-import RequestBatch from "../../../UserPanel/RequestBatch";
+import RequestBatch from "./RequestBatch";
 import EnrollNotification from "./EnrollNotification";
 import { useCourseDiscountRule } from "../../../../Api/hooks/CourseApi/useCourseDiscountRule";
 import { useDiscountCountdown } from "../../../../Api/hooks/CourseApi/useDiscountCountdown";
@@ -24,7 +24,7 @@ const tabs = [
   { key: "self", label: "Self-Paced Learning" },
 ];
 
-const DemoClassSection = forwardRef((props, ref) => {
+const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   const [activeTab, setActiveTab] = useState("live");
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
@@ -123,15 +123,16 @@ const DemoClassSection = forwardRef((props, ref) => {
   });
 
   const handleLiveEnrollClick = async (session, notifyVia) => {
-    if (!userProfile || !userProfile.studentId) {
-      setShowRegisterPrompt(true);
-      return;
-    }
-    setShowRegisterPrompt(false);
-    setEnrollingSessionId(session.id);
+    // if (!userProfile || !userProfile.studentId) {
+    //   setShowRegisterPrompt(true);
+    //   return;
+    // }
+    // setShowRegisterPrompt(false);
+    // setEnrollingSessionId(session.id);
 
-    await handleLiveEnrollPayment(session, notifyVia);
-    setEnrollingSessionId(null);
+    // await handleLiveEnrollPayment(session, notifyVia);
+    // setEnrollingSessionId(null);
+    onViewDemoClass();
   };
 
   const {
@@ -268,8 +269,6 @@ const DemoClassSection = forwardRef((props, ref) => {
     { value: "Email Only", label: "Email Only" },
     { value: "WhatsApp Only", label: "WhatsApp Only" },
   ];
-
-
 
   const { currency, exchangeRate } = useCurrency();
 

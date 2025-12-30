@@ -48,7 +48,7 @@ const Chevron = ({ open }) => (
   </svg>
 );
 
-export default function CourseCurriculum({onViewDemoClass}) {
+export default function CourseCurriculum({ onViewDemoClass }) {
   const [openId, setOpenId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
@@ -61,8 +61,8 @@ export default function CourseCurriculum({onViewDemoClass}) {
     curriculumId: null,
     message: "",
   });
+  const [expandedProjects, setExpandedProjects] = useState({});
   const navigation = useNavigate()
-
 
   const { courseName: courseNameSlug } = useParams();
   const [showAll, setShowAll] = useState(false);
@@ -101,7 +101,7 @@ export default function CourseCurriculum({onViewDemoClass}) {
     error: accessError,
     isError,
   } = useAssessmentAccess(checkParams);
-  
+
   useEffect(() => {
     if (accessData?.canDownload) {
       const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
@@ -116,12 +116,10 @@ export default function CourseCurriculum({onViewDemoClass}) {
       if (apiError.toLowerCase().includes("enroll")) {
         setShowEnrollPrompt(true);
       } else {
-        // show inline error near assessment button
         setAssessmentError({
           curriculumId: selectedTab.curriculumId,
           message: apiError,
         });
-        // auto-hide after 6 seconds
         setTimeout(() => {
           setAssessmentError({ curriculumId: null, message: "" });
         }, 6000);
@@ -129,8 +127,42 @@ export default function CourseCurriculum({onViewDemoClass}) {
 
       setCheckParams((prev) => ({ ...prev, enabled: false }));
     }
-
   }, [accessData, isError, accessError]);
+
+  // Initialize expandedProjects when projects are loaded
+  useEffect(() => {
+    if (projects.length > 0) {
+      const initialExpandedState = {};
+      projects.forEach((_, index) => {
+        initialExpandedState[index] = false;
+      });
+      setExpandedProjects(initialExpandedState);
+    }
+  }, [projects]);
+
+  const toggleProjectExpand = (projectIndex) => {
+    setExpandedProjects(prev => ({
+      ...prev,
+      [projectIndex]: !prev[projectIndex]
+    }));
+  };
+
+  // Simpler function to check if description is long
+  const isLongDescription = (html) => {
+    if (!html) return false;
+
+    // Remove HTML tags and get clean text
+    const text = html.replace(/<[^>]*>/g, '').trim();
+
+    // If text is very short, don't show Read More
+    if (text.length < 100) return false;
+
+    // Count words
+    const wordCount = text.split(/\s+/).length;
+
+    // Show Read More if more than 15 words
+    return wordCount > 15;
+  };
 
   const downloadPdf = () => {
     if (!email) return setShowRegisterPrompt(true);
@@ -145,10 +177,10 @@ export default function CourseCurriculum({onViewDemoClass}) {
   };
 
   const handleDownloadAssessment = (assessmentPdfPath) => {
-      if (!email || !studentId) {
-    setShowRegisterPrompt(true);
-    return; // Add return to prevent further execution
-  }
+    if (!email || !studentId) {
+      setShowRegisterPrompt(true);
+      return;
+    }
     const assessmentFileName = assessmentPdfPath.split("/").pop();
 
     setCheckParams({
@@ -189,6 +221,10 @@ export default function CourseCurriculum({onViewDemoClass}) {
               .slice(0, showAll ? uiCurriculum.length : 5)
               .map((m, idx) => {
                 const open = openId === m.curriculum_id;
+                const isTopicsSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "topics";
+                const isAssignmentSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "assignment";
+                const isVideoSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "video";
+
                 return (
                   <div className={styles.ccacc} key={m.curriculum_id}>
                     <button
@@ -196,9 +232,21 @@ export default function CourseCurriculum({onViewDemoClass}) {
                         styles.ccacchead,
                         open && styles.ccaccheadisopen
                       )}
-                      onClick={() =>
-                        setOpenId(open ? null : m.curriculum_id)
-                      }
+                      onClick={() => {
+                        // When clicking the main header/Chevron
+                        if (open) {
+                          // If already open, close it and deselect tab
+                          setOpenId(null);
+                          setSelectedTab({ curriculumId: null, tab: null });
+                        } else {
+                          // If closed, open it AND AUTO-SELECT TOPICS TAB
+                          setOpenId(m.curriculum_id);
+                          setSelectedTab({
+                            curriculumId: m.curriculum_id,
+                            tab: "topics", // AUTO-SELECT TOPICS
+                          });
+                        }
+                      }}
                     >
                       <span className={styles.ccnum}>{idx + 1}</span>
 
@@ -206,25 +254,18 @@ export default function CourseCurriculum({onViewDemoClass}) {
                         <div className={styles.ccttlmain}>{m.title}</div>
 
                         <div className={styles.ccttlsub}>
-                          {/* TOPICS TAB */}
+                          {/* TOPICS TAB - Now a proper toggle */}
                           <button
-                            className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
-                                selectedTab.tab === "topics"
-                                ? styles.activeCap
-                                : ""
-                              }`}
-
+                            className={`${styles.cccapsul} ${isTopicsSelected ? styles.activeCap : ""}`}
                             onClick={(e) => {
                               e.stopPropagation();
 
-                              const isSameTab =
-                                selectedTab.curriculumId === m.curriculum_id &&
-                                selectedTab.tab === "topics";
-
-                              if (isSameTab) {
+                              if (isTopicsSelected) {
+                                // If topics is already selected, deselect it and close accordion
                                 setSelectedTab({ curriculumId: null, tab: null });
                                 setOpenId(null);
                               } else {
+                                // If topics is not selected, select it and open accordion
                                 setSelectedTab({
                                   curriculumId: m.curriculum_id,
                                   tab: "topics",
@@ -232,33 +273,23 @@ export default function CourseCurriculum({onViewDemoClass}) {
                                 setOpenId(m.curriculum_id);
                               }
                             }}
-
-
                           >
                             Topics Included
                           </button>
 
-                          {/* ASSIGNMENT TAB */}
+                          {/* ASSIGNMENT TAB - Also a proper toggle */}
                           {m.assessment_pdf && (
                             <button
-                              className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
-                                  selectedTab.tab === "assignment"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
-
-
+                              className={`${styles.cccapsul} ${isAssignmentSelected ? styles.activeCap : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation();
 
-                                const isSameTab =
-                                  selectedTab.curriculumId === m.curriculum_id &&
-                                  selectedTab.tab === "assignment";
-
-                                if (isSameTab) {
+                                if (isAssignmentSelected) {
+                                  // If assignment is already selected, deselect it and close accordion
                                   setSelectedTab({ curriculumId: null, tab: null });
                                   setOpenId(null);
                                 } else {
+                                  // If assignment is not selected, select it and open accordion
                                   setSelectedTab({
                                     curriculumId: m.curriculum_id,
                                     tab: "assignment",
@@ -270,26 +301,21 @@ export default function CourseCurriculum({onViewDemoClass}) {
                               Assignment
                             </button>
                           )}
+
+                          {/* VIDEO TAB - Also a proper toggle */}
                           {m.link && (
                             <button
                               type="button"
-                              className={`${styles.cccapsul} ${selectedTab.curriculumId === m.curriculum_id &&
-                                  selectedTab.tab === "video"
-                                  ? styles.activeCap
-                                  : ""
-                                }`}
-
+                              className={`${styles.cccapsul} ${isVideoSelected ? styles.activeCap : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation();
 
-                                const isSameTab =
-                                  selectedTab.curriculumId === m.curriculum_id &&
-                                  selectedTab.tab === "video";
-
-                                if (isSameTab) {
+                                if (isVideoSelected) {
+                                  // If video is already selected, deselect it and close accordion
                                   setSelectedTab({ curriculumId: null, tab: null });
                                   setOpenId(null);
                                 } else {
+                                  // If video is not selected, select it and open accordion
                                   setSelectedTab({
                                     curriculumId: m.curriculum_id,
                                     tab: "video",
@@ -297,8 +323,6 @@ export default function CourseCurriculum({onViewDemoClass}) {
                                   setOpenId(m.curriculum_id);
                                 }
                               }}
-
-
                             >
                               Videos
                             </button>
@@ -309,75 +333,71 @@ export default function CourseCurriculum({onViewDemoClass}) {
                       <Chevron open={open} />
                     </button>
 
-                    {/* PANEL CONTENT */}
+                    {/* PANEL CONTENT - Only shows when accordion is open AND a tab is selected */}
                     <div
                       className={cn(
                         styles.ccaccpanel,
                         open && styles.ccaccpanelopen
                       )}
                     >
-                      {selectedTab.curriculumId === m.curriculum_id &&
-                        selectedTab.tab === "topics"
-                        && (
-                          <>
-                            {extractListItems(m.topic).map((point, i) => (
-                              <div key={i} className={styles.ccrow}>
-                                <span>•</span>
-                                <span className={styles.ccrowtitle}>
-                                  {point}
-                                </span>
-                              </div>
-                            ))}
-                          </>
-                        )}
+                      {/* TOPICS CONTENT */}
+                      {isTopicsSelected && (
+                        <>
+                          {extractListItems(m.topic).map((point, i) => (
+                            <div key={i} className={styles.ccrow}>
+                              <span>•</span>
+                              <span className={styles.ccrowtitle}>
+                                {point}
+                              </span>
+                            </div>
+                          ))}
+                        </>
+                      )}
 
-                      {selectedTab.curriculumId === m.curriculum_id &&
-                        selectedTab.tab === "assignment"
-                        &&
-                        m.assessment_pdf && (
-                          <>
-                            <button
-                              className={styles.ccassess}
-                              onClick={() =>
-                                handleDownloadAssessment(m.assessment_pdf)
-                              }
-                            >
-                              📄 Download Assignment
-                            </button>
+                      {/* ASSIGNMENT CONTENT */}
+                      {isAssignmentSelected && m.assessment_pdf && (
+                        <>
+                          <button
+                            className={styles.ccassess}
+                            onClick={() =>
+                              handleDownloadAssessment(m.assessment_pdf)
+                            }
+                          >
+                            📄 Download Assignment
+                          </button>
 
-                            {assessmentError.curriculumId === m.curriculum_id && (
-                              <div
-                                style={{
-                                  marginTop: "6px",
-                                  fontSize: "13px",
-                                  color: "#d93025",
-                                  background: "#fdecea",
-                                  padding: "6px 10px",
-                                  borderRadius: "4px",
-                                  display: "inline-block",
-                                }}
-                              >
-                                {assessmentError.message}
-                              </div>
-                            )}
-                          </>
-                        )}
-
-                      {selectedTab.curriculumId === m.curriculum_id &&
-                        selectedTab.tab === "video"
-                        && m.link && (
-                          <div className={styles.ccvideocontainer}>
-                            <button
-                              className={styles.ccvideobtn}
-                              onClick={() => {
-                                setVideoUrl(toEmbedUrl(m.link));
-                                setShowVideo(true);
+                          {assessmentError.curriculumId === m.curriculum_id && (
+                            <div
+                              style={{
+                                marginTop: "6px",
+                                fontSize: "13px",
+                                color: "#d93025",
+                                background: "#fdecea",
+                                padding: "6px 10px",
+                                borderRadius: "4px",
+                                display: "inline-block",
                               }}
                             >
-                              ▶ Play Video
-                            </button>
-                          </div>
-                        )}
+                              {assessmentError.message}
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* VIDEO CONTENT */}
+                      {isVideoSelected && m.link && (
+                        <div className={styles.ccvideocontainer}>
+                          <button
+                            className={styles.ccvideobtn}
+                            onClick={() => {
+                              setVideoUrl(toEmbedUrl(m.link));
+                              setShowVideo(true);
+                            }}
+                          >
+                            ▶ Play Video
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -411,25 +431,49 @@ export default function CourseCurriculum({onViewDemoClass}) {
                   <p>No projects available for this course.</p>
                 )}
 
-                {projects.map((project, i) => (
-                  <div key={i} className={styles.ccprojrow}>
-                    <span className={styles.ccbadge}>{i + 1}</span>
+                {projects.map((project, i) => {
+                  const isLong = isLongDescription(project.description || "");
+                  const isExpanded = expandedProjects[i];
 
-                    <div>
-                      <div className={styles.ccprojtitle}>
-                        {project.projectName}
-                      </div>
+                  return (
+                    <div key={i} className={styles.ccprojrow}>
+                      <span className={styles.ccbadge}>{i + 1}</span>
 
-                      <div className={styles.ccprojsub}>
+                      <div className={styles.ccprojcontent}>
+                        <div className={styles.ccprojtitle}>
+                          {project.projectName}
+                        </div>
+
                         <div
+                          className={`${styles.ccprojsub} ${!isExpanded ? styles.collapsed : styles.expanded}`}
                           dangerouslySetInnerHTML={{
                             __html: project.description,
                           }}
                         />
+
+                        {/* TEXT LINK (not button) for Read More/Less */}
+                        {isLong && (
+                          <span 
+                            className={styles.readMoreLink}
+                            onClick={() => toggleProjectExpand(i)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                toggleProjectExpand(i);
+                              }
+                            }}
+                          >
+                            {isExpanded ? "Read Less" : "Read More"}
+                            <span className={styles.readMoreIcon}>
+                              {isExpanded ? " ▲" : " ▼"}
+                            </span>
+                          </span>
+                        )}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -455,91 +499,80 @@ export default function CourseCurriculum({onViewDemoClass}) {
 
         {/* LOGIN PROMPT MODAL */}
         {showRegisterPrompt && (
-  <div className={styles.modalOverlay}>
-    <div className={styles.modalContent}>
-      <div className={styles.modalImage}>
-        <img
-          src={require("../../../../Assets/loginpopup.webp")}
-          alt="login popup"
-          className={styles.modalImg}
-        />
-      </div>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <div className={styles.modalImage}>
+                <img
+                  src={require("../../../../Assets/loginpopup.webp")}
+                  alt="login popup"
+                  className={styles.modalImg}
+                />
+              </div>
 
-      <div className={styles.modalText}>
-        <h3>Please Login</h3>
-        <p>Login to access assignments and syllabus.</p>
+              <div className={styles.modalText}>
+                <h3>Please Login</h3>
+                <p>Login to access assignments and syllabus.</p>
 
-        <div className={styles.modalButtons}>
-          <button
-            className={styles.modalLoginBtn}
-            onClick={() => {
-              navigation("/login")
-            }}
-          >
-            Login
-          </button>
+                <div className={styles.modalButtons}>
+                  <button
+                    className={styles.modalLoginBtn}
+                    onClick={() => {
+                      navigation("/login")
+                    }}
+                  >
+                    Login
+                  </button>
 
-          {/* ADD VIEW DEMO CLASS BUTTON HERE */}
-          {/* <button
-            className={styles.modalViewDemoBtn}
-            onClick={() => {
-              setShowRegisterPrompt(false); // Close modal
-              onViewDemoClass(); // Scroll to demo class
-            }}
-          >
-            View Demo Class First
-          </button> */}
-
-          <button
-            className={styles.modalCancelBtn}
-            onClick={() => setShowRegisterPrompt(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+                  <button
+                    className={styles.modalCancelBtn}
+                    onClick={() => setShowRegisterPrompt(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ENROLL PROMPT MODAL */}
         {showEnrollPrompt && (
-  <div className={styles.modalOverlay}>
-    <div className={styles.modalContent}>
-      <div className={styles.modalImage}>
-        <img
-          src={require("../../../../Assets/loginpopup.webp")}
-          alt="enroll popup"
-          className={styles.modalImg}
-        />
-      </div>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <div className={styles.modalImage}>
+                <img
+                  src={require("../../../../Assets/loginpopup.webp")}
+                  alt="enroll popup"
+                  className={styles.modalImg}
+                />
+              </div>
 
-      <div className={styles.modalText}>
-        <h3>Please Enroll</h3>
-        <p>You must enroll in any live class to access assignments.</p>
+              <div className={styles.modalText}>
+                <h3>Please Enroll</h3>
+                <p>You must enroll in any live class to access assignments.</p>
 
-        <div className={styles.modalButtons}>
-          <button
-            className={styles.modalLoginBtn}
-            onClick={() => {
-              setShowEnrollPrompt(false); // Close modal
-              onViewDemoClass();
-            }}
-          >
-            Enroll Now
-          </button>
+                <div className={styles.modalButtons}>
+                  <button
+                    className={styles.modalLoginBtn}
+                    onClick={() => {
+                      setShowEnrollPrompt(false);
+                      onViewDemoClass();
+                    }}
+                  >
+                    Enroll Now
+                  </button>
 
-          <button
-            className={styles.modalCancelBtn}
-            onClick={() => setShowEnrollPrompt(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+                  <button
+                    className={styles.modalCancelBtn}
+                    onClick={() => setShowEnrollPrompt(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -132,7 +132,8 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
 
     // await handleLiveEnrollPayment(session, notifyVia);
     // setEnrollingSessionId(null);
-    onViewDemoClass();
+    // onViewDemoClass();
+    navigate(`/enroll-now/${courseName}`);
   };
 
   const {
@@ -299,7 +300,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   };
 
   return (
-    <section className={styles.dcwrap}>
+    <section className={styles.dcwrap} ref={ref} id="demoClassSection">
       <div className="container">
         {/* Offer strip */}
         {showOfferStrip && (
@@ -364,14 +365,12 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
               preferred time.
             </p>
           </div>
-          <button
+          {/* <button
             className={cn(styles.bnbtn, styles.bnbtnprimary)}
             onClick={onEnroll}
-             ref={ref} 
-             id="demoClassSection"
           >
             Enroll Now - Start Learning
-          </button>
+          </button> */}
         </div>
 
         {/* Tabs */}

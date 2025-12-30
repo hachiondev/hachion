@@ -158,10 +158,10 @@ export default function LearnSection() {
                             </div>
 
 
-                            <div className={styles.lssalary}>
+                            {/* <div className={styles.lssalary}>
                                 <div className={styles.lssalarytitle}>Average Salary Range</div>
                                 <div className={styles.lssalaryval}>  {course?.avarageSalaryRange?.trim() || "INR 65K - INR 95K"}</div>
-                            </div>
+                            </div> */}
 
 
                         </div>

@@ -94,28 +94,6 @@ What's Included:
     }));
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className={styles.dcgrid}>
       <div>
@@ -225,9 +203,9 @@ What's Included:
 
                         {/* Enrolled Button */}
                         <button
-                          className={styles.dcbtn}
+                          className={styles.dcbtnDisabled}
                           disabled
-                          style={{ background: "#ccc", color: "#555" }}
+                          // style={{ background: "#ccc", color: "#555" }}
                         >
                           Enrolled
                         </button>

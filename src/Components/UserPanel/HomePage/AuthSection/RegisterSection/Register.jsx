@@ -165,7 +165,7 @@ useEffect(() => {
                 <label className="register-login-label">
                   First Name<span className="star">*</span>
                 </label>
-                <div className="register-field">
+                <div className="register-firstName-field">
                   <div className="register-password-field">
                     <input
                       type="text"
@@ -196,7 +196,7 @@ useEffect(() => {
                 <label className="register-login-label">
                   Email ID<span className="star">*</span>
                 </label>
-                <div className="register-field">
+                <div className="register-email-field">
                   <div className="register-password-field">
                     <input
                       type="email"

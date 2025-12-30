@@ -52,6 +52,7 @@ const RequestBatch = ({ closeModal }) => {
     enabled: !!userEmail,
   });
 
+  
   /* 🔹 Fetch trainers for the course */
   const { 
     data: trainers = [], 

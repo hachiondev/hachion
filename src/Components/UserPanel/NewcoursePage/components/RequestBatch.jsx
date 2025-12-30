@@ -2,26 +2,26 @@ import React, { useEffect, useState, useRef } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import calendar from "../../Assets/calendar.webp";
 import { useParams } from "react-router-dom";
-import './RequestBatch.css'
-
+import './RequestBatch.css';
 
 const RequestBatch = ({ closeModal }) => {
   const { courseName } = useParams();
-
 
   const [startDate, setStartDate] = useState("");
   const [time, setTime] = useState("");
   const [mode, setMode] = useState("");
   const [mobile, setMobile] = useState("");
+  const [selectedTrainer, setSelectedTrainer] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingTrainers, setLoadingTrainers] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [trainers, setTrainers] = useState([]);
+  const [trainersError, setTrainersError] = useState("");
 
   const datePickerRef = useRef(null);
   const timeInputRef = useRef(null);
-
 
   const formattedCourseName = courseName
     ?.replace(/-/g, " ")
@@ -35,7 +35,7 @@ const RequestBatch = ({ closeModal }) => {
 
   // Check if all required fields are filled
   const isFormValid = () => {
-    return mode && startDate && time && mobile && userEmail;
+    return mode && startDate && time && mobile && userEmail && selectedTrainer;
   };
 
   /* 🔒 Prevent background scroll */
@@ -45,68 +45,6 @@ const RequestBatch = ({ closeModal }) => {
   }, []);
 
   /* 🔹 Fetch mobile from profile */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
     if (!userEmail) return;
 
@@ -119,6 +57,46 @@ const RequestBatch = ({ closeModal }) => {
       })
       .catch(() => {});
   }, [userEmail]);
+
+  /* 🔹 Fetch trainers for the course */
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      if (!formattedCourseName) return;
+      
+      setLoadingTrainers(true);
+      setTrainersError("");
+      
+      try {
+        // You'll need to adjust this API endpoint based on your backend
+        const response = await fetch(
+          `https://api.test.hachion.co/api/v1/trainers?course=${encodeURIComponent(formattedCourseName)}`
+        );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch trainers');
+        }
+        
+        const data = await response.json();
+        
+        // Adjust this based on your API response structure
+        if (data && Array.isArray(data)) {
+          setTrainers(data);
+        } else if (data && Array.isArray(data.trainers)) {
+          setTrainers(data.trainers);
+        } else {
+          setTrainers([]);
+        }
+      } catch (error) {
+        console.error('Error fetching trainers:', error);
+        setTrainersError('Failed to load trainers');
+        setTrainers([]);
+      } finally {
+        setLoadingTrainers(false);
+      }
+    };
+
+    fetchTrainers();
+  }, [formattedCourseName]);
 
   const handleSubmit = async () => {
     // Double-check validation before submission
@@ -137,7 +115,7 @@ const RequestBatch = ({ closeModal }) => {
       email: userEmail,
       mobile,
       mode,
-
+      trainer: selectedTrainer, // Add trainer to payload
       country: "India",
       courseName: formattedCourseName,
       userName,
@@ -213,7 +191,6 @@ const RequestBatch = ({ closeModal }) => {
                 onChange={(e) => setStartDate(e.target.value)}
                 className="requestBatchDateInput"
                 ref={datePickerRef}
-
                 required
               />
             </div>
@@ -233,12 +210,43 @@ const RequestBatch = ({ closeModal }) => {
             />
           </div>
 
+          {/* Trainer List Field */}
+          <div className="requestBatchField">
+            <label className="requestBatchLabel">
+              Trainer List <span className="required-star">*</span>
+            </label>
+            <select
+              value={selectedTrainer}
+              onChange={(e) => setSelectedTrainer(e.target.value)}
+              className="requestBatchSelect"
+              required
+              disabled={loadingTrainers}
+            >
+              <option value="">Select Trainer</option>
+              {loadingTrainers ? (
+                <option value="" disabled>Loading trainers...</option>
+              ) : trainersError ? (
+                <option value="" disabled>Failed to load trainers</option>
+              ) : trainers.length > 0 ? (
+                trainers.map((trainer) => (
+                  <option key={trainer.id || trainer.trainer_id} value={trainer.trainer_name || trainer.name}>
+                    {trainer.trainer_name || trainer.name}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>No trainers available for this course</option>
+              )}
+            </select>
+            {loadingTrainers && (
+              <p className="requestBatchHint">Loading trainers...</p>
+            )}
+          </div>
+
           {successMessage && (
             <p className="requestBatchSuccess">{successMessage}</p>
           )}
           {errorMessage && (
             <p className="requestBatchError">{errorMessage}</p>
-
           )}
 
           <button

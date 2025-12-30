@@ -483,7 +483,7 @@ const Login = () => {
                 </div>
                 
                 {/* Show only non-field-specific general errors */}
-                {errorMessage && !errors.email && !errors.password && !errors.captcha && (
+                {/* {errorMessage && !errors.email && !errors.password && !errors.captcha && (
                   <p className="error-field-message" style={{ 
                     marginTop: '15px', 
                     textAlign: 'center',
@@ -491,7 +491,7 @@ const Login = () => {
                   }}>
                     {errorMessage}
                   </p>
-                )}
+                )} */}
                 
                 {/* Add test buttons for debugging */}
                 {/* <div style={{ marginTop: '20px', border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>

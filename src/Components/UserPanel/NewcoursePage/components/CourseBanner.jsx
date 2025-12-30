@@ -411,12 +411,12 @@ const oldPrice =
                   Enroll Now - Start Learning
                 </button>
 
-                <button
+                {/* <button
                   className={styles.bnlink}
                   onClick={() => setShowLoginRequired(true)}
                 >
                   Add to Cart
-                </button>
+                </button> */}
               </div>
 
               {/* <div className={styles.bnnote}>

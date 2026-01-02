@@ -852,11 +852,11 @@ a:not([href]):not([class]) {
   background-color: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
-  padding: 10px 15px;
+  padding: 10px  !important;
   cursor: pointer;
   transition: all 0.2s ease;
   height: 48px;
-  width: 360px;
+  width: 360px !important;
   max-width: 100%;
 }
 

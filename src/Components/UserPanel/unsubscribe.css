@@ -265,7 +265,7 @@
   }
 
   .form-check-label {
-    font-size: 12px !important;
+    font-size: 15px !important;
     padding-top: 0;
     margin-top: 0;
   }
@@ -380,8 +380,10 @@
   padding: 5px;
 }
 .form-check {
-  margin-left: 10px;
-  margin-bottom: 20px;
+     margin-left: 10px;
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
 }
 .form-check-input {
   font-size: 20px;
@@ -389,5 +391,5 @@
 }
 .form-check-label {
   font-size: 14px;
-  padding-top: 5px;
+  padding-top: 0px;
 }

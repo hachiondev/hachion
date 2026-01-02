@@ -11,8 +11,10 @@ import StudentsAlsoEnrolled from '../NewcoursePage/components/StudentsAlsoEnroll
 import StudentsSay from '../NewcoursePage/components/StudentsSay';
 import SuccessStories from '../NewcoursePage/components/SuccessStories';
 import { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 const NewCourseDetails = () => {
+   const { courseName } = useParams();
     const demoClassRef = useRef(null);
   useEffect(() => {
   window.scrollTo({
@@ -20,7 +22,7 @@ const NewCourseDetails = () => {
     left: 0,
     behavior: "smooth",
   });
-}, []);
+}, [courseName]);
 
   const scrollToDemoClass = () => {
     demoClassRef.current?.scrollIntoView({

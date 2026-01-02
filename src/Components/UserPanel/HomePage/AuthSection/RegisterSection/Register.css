@@ -1,3 +1,233 @@
+/* ===== REGISTER FORM COMPONENT - UNIQUE CLASSNAMES ===== */
+.register-form {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 40px;
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('../../../../../Assets/loginbackground.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+
+.register-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  padding: 40px;
+  margin: 10px;
+  border-radius: 4px;
+  width: 440px;
+  background-color: #EEEEEE;
+}
+
+.register-form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.register-form-content {
+  width: 100%;
+}
+
+.register-form-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Individual Field Styles */
+.first-name-field,
+.last-name-field,
+.email-field,
+.phone-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-label {
+  margin: 0.3vh 1vh;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 6px;
+}
+
+.required-star {
+  font-size: 16px;
+  color: #ff3860;
+}
+
+.form-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px;
+  border-radius: 6px;
+  border: none;
+  padding: 10px 15px;
+  background-color: #fff !important;
+  font-size: 15px;
+  border: 1px solid #ddd;
+}
+
+.form-input:focus {
+  border-color: #00AEEF;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.1);
+}
+
+/* Phone Field Specific Styles */
+.phone-field-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.country-select-button {
+  height: 48px;
+  padding: 0 15px;
+  border: none;
+  background: #fff;
+  color: #00aaef;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border-right: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.country-flag-icon {
+  width: 20px;
+  height: 15px;
+}
+
+.menu-flag {
+  margin-right: 8px;
+}
+
+.country-code-display {
+  margin-right: 5px;
+  font-size: small;
+}
+
+.phone-number-input-field {
+  flex: 1;
+  height: 48px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 15px;
+  background-color: #fff;
+}
+
+.phone-number-input-field:focus {
+  outline: none;
+}
+
+.error-text {
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  color: #ff3860;
+  padding: 0 1vh;
+}
+
+/* .form-buttons-container {
+  width: 100%;
+  margin-top: 10px;
+} */
+
+.primary-submit-button {
+width: 100% !important;
+    height: 48px;
+    border-radius: 6px;
+    margin: 10px 0 10px 0;
+    font-size: 16px;
+    background-color: #00AEEF;
+    color: white;
+    border: none;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+}
+
+.form-separator {
+    border: 1px solid #6A6A6A;
+    height: 2px;
+    background: #6A6A6A;
+    width: 100%;
+    /* margin: 20px 0; */
+    box-sizing: border-box;
+}
+
+.google-signin-button {
+  width: 100%;
+  height: 46px;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 8px;
+  background-color: #000000;
+  color: white;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* .google-signin-button:hover {
+  background: #f8f9fa;
+} */
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.auth-redirect-message {
+  display: flex;
+  font-size: small;
+  justify-content: center;
+  padding: 10px;
+  font-weight: 400;
+  /* margin-top: 20px; */
+}
+
+.auth-link-button {
+  color: #00AEEF;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: 500;
+}
+
+/* ===== EXISTING OLD STYLES (Preserved for backward compatibility) ===== */
 .register-login {
   display: flex;
   justify-content: flex-end;
@@ -31,6 +261,141 @@
   flex-direction: column;
 }
 
+.register-login-mid {
+  width: 100%;
+}
+
+.register-login-continue {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.register-firstName-field,
+.register-lastName-field,
+.register-email-field,
+.register-phone-field {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.register-login-label {
+  margin: 0.3vh 1vh;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 6px;
+}
+
+.star {
+  font-size: 16px;
+  color: #ff3860;
+}
+
+.register-password-field {
+  position: relative;
+  width: 100%;
+}
+
+.register-password-field .form-control {
+  height: 48px;
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  background-color: #fff !important;
+}
+
+.register-mobile-button {
+  height: 48px;
+  padding: 0 15px;
+  border: none;
+  background: #fff;
+  color: #00aaef;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border-right: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.register-btn {
+  width: 100%;
+  height: 46px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: #00AEEF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.register-btn:hover:not(:disabled) {
+  background: #0098d6;
+}
+
+.register-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+/* 
+.other-btn {
+  width: 100%;
+  height: 46px;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.other-btn:hover {
+  background: #f8f9fa;
+} */
+
+.icon-btn-img {
+  width: 18px;
+  height: 18px;
+}
+
+.go-to-register {
+  display: flex;
+  font-size: small;
+  justify-content: center;
+  padding: 10px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.link-to-register {
+  color: #00AEEF;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: 500;
+}
+
+.error-field-message {
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  color: #ff3860;
+  padding: 0 1vh;
+}
+
+/* ===== COMMON SHARED STYLES ===== */
 .forgot-password {
   display: inline;
   font-size: 12px;
@@ -46,42 +411,12 @@
   margin-bottom: 0 !important;
 }
 
-.go-to-register {
-  display: flex;
-  font-size: small;
-  justify-content: center;
-  padding: 10px;
-  font-weight: 400;
-}
-
-.register-password-field {
+.register-page-field {
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
 }
-
-.register-mobile-button {
-  height: 48px;
-  padding: 0 10px;
-  border: 1px solid #d3d3d3;
-  background: #ffff;
-  border-radius: 6px 0 0 6px;
-  color: #00aaef;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.register-password-field .form-control {
-  height: 48px;
-  flex: 1;
-  margin: 0 !important;
-  /* overrides side margin */
-  border-radius: 0 6px 6px 0;
-  padding-left: 15px !important;
-}
-
 
 .spam-msg {
   display: flex;
@@ -116,11 +451,11 @@
   display: none;
 }
 
-.register-login input.form-control {
-  background-color: #fff !important;
-  color: #000;
-}
-
+/* Input autofill styles */
+.register-form input.form-input:-webkit-autofill,
+.register-form input.form-input:-webkit-autofill:hover,
+.register-form input.form-input:-webkit-autofill:focus,
+.register-form input.form-input:-webkit-autofill:active,
 .register-login input.form-control:-webkit-autofill,
 .register-login input.form-control:-webkit-autofill:hover,
 .register-login input.form-control:-webkit-autofill:focus,
@@ -131,28 +466,11 @@
   caret-color: #000;
 }
 
-.register-login .form-group {
+.form-group {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 1.5vh;
-}
-
-.register-login-label {
-  margin: 0.3vh 1vh;
-  font-size: 12px;
-  font-weight: 500;
-  color: #000000;
-}
-
-.form-control {
-  width: 360px;
-  height: 48px;
-  border-radius: 6px;
-  margin-bottom: 0.5vh;
-  border: none;
-  margin: 0 1vh;
-  background-color: #fff !important;
 }
 
 .input-group {
@@ -201,26 +519,11 @@
   font-size: 1rem;
 }
 
-.link-to-register {
-  color: #00AEEF;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-left: 5px;
-}
-
 .mail-to-register {
   color: #00AEEF;
   text-decoration: none;
   font-weight: bold;
   margin-left: 5px;
-}
-
-hr {
-  border: 1px solid #6A6A6A;
-  height: 2px;
-  background: #6A6A6A;
-  width: 35%;
-  margin: 0 auto;
 }
 
 .register-link-to {
@@ -236,12 +539,8 @@ hr {
   width: 120px;
   border-color: #d3d3d3 !important;
   display: flex;
-  /* Ensure content is centered */
   align-items: center;
-  /* Center icon and text vertically */
 }
-
-
 
 .enter-otp {
   display: flex;
@@ -266,7 +565,6 @@ hr {
 
 .tag {
   display: flex;
-  /* justify-content: center; */
   text-align: left;
   white-space: wrap;
   font-size: 11px;
@@ -280,7 +578,6 @@ hr {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* gap: 30px; */
   margin: 1vh;
 }
 
@@ -299,200 +596,20 @@ hr {
   padding: 10px;
 }
 
-/* Small Mobile Phones */
-@media (max-width: 480px) {
-  .register-login {
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    background: none;
-  }
-
-  .input-group-text {
-    position: absolute;
-    right: 1.8vw;
-    top: 50%;
-    color: #00AEEF;
-    transform: none;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
-
-  .captcha {
-    margin-left: 2vh;
-    height: 50px;
-    width: 50px;
-  }
-
-  .forgot-password {
-    margin-bottom: 0;
-    font-size: 12px;
-  }
-
-  .register-banner {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .register-login-left {
-    width: 100%;
-    height: 100%;
-    margin: 0px;
-    padding: 0;
-  }
-
-  .login-with hr {
-    width: 20%;
-    border: 1px solid #6A6A6A;
-    background: #6A6A6A;
-  }
-
-  .register-login-label {
-    margin-top: 0;
-    font-size: 14px;
-  }
-
-  .login-logo {
-    height: auto;
-    margin-left: 10%;
-    justify-content: center;
-  }
-
-  .register-btn {
-
-    width: 100% !important;
-  }
-
-  .register-password-field .form-control {
-    width: 200px;
-  }
-
-  .register-mobile-button {
-    height: 38px;
-  }
-
-
-  .input-group,
-  .form-control {
-    width: 90%;
-    height: 40px;
-    font-size: 14px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-
-  }
-
-  .register-field {
-    margin-bottom: 10px !important;
-  }
-
-  .register-login-mid {
-    padding: 10px;
-  }
-
-  .go-to-register {
-    font-size: 12px;
-    padding: 5px;
-  }
-
-  .link-to-register {
-    font-size: 12px;
-  }
-
-  .mail-to-register {
-    font-size: 11px;
-  }
-
-  .login-link {
-    font-size: 12px;
-  }
-
-  .link-to {
-    font-size: 12px !important;
-  }
-
-  hr {
-    width: 80%;
-  }
-
-  .otp-verify {
-    margin-top: 0vh;
-    padding: 10px;
-  }
-
-  .otp {
-    width: 90%;
-    height: 48px;
-    justify-content: space-around;
-  }
-
-  .country-dropdown {
-    width: 150px;
-  }
-
-}
-
-@media (max-width: 767px) {
-  .register-login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: none;
-    min-height: 0;
-    height: auto;
-  }
-
-  .login-logo {
-    margin-left: 3vh;
-  }
-
-  .input-group,
-  .form-control {
-    width: 90%;
-    height: 40px;
-    font-size: 1rem;
-    border-radius: 5px;
-
-  }
-
-  .register-login-label {
-    margin-top: 1.5vh;
-    font-size: 1.25rem;
-  }
-
-  .login-with hr {
-    width: 20%;
-  }
-
-  .register-banner {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .register-login-left {
-    width: 100%;
-    height: auto;
-    margin: 0;
-  }
-
-  .login-link {
-    font-size: 1.25rem;
-    text-align: center;
-  }
-
-}
-
+/* ===== RESPONSIVE DESIGN ===== */
+/* Tablet (1024px and below) */
 @media (max-width: 1024px) {
+  .register-form,
   .register-login {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    /* height: 900px; */
-    min-height: 0;
+    padding: 30px;
+  }
 
+  .register-form-container,
+  .register-login-left {
+    padding: 30px;
   }
 
   .login-link {
@@ -522,6 +639,7 @@ hr {
     margin-bottom: 0.5vh;
   }
 
+  .form-label,
   .register-login-label {
     font-size: 1.15rem;
     margin-top: 1vh;
@@ -542,4 +660,944 @@ hr {
   .otp-verify {
     margin-top: 0vh;
   }
+}
+
+/* Small Tablet (768px and below) */
+@media (max-width: 768px) {
+  .register-form,
+  .register-login {
+    padding: 20px;
+    background-size: cover;
+  }
+
+    .breadcrumb-item, .breadcrumb-item.active {
+    font-size: 17px;
+}
+
+  .register-form-container,
+  .register-login-left {
+    padding: 20px;
+  }
+
+  .form-input,
+  .phone-number-input-field,
+  .country-select-button,
+  .register-password-field .form-control,
+  .register-mobile-button {
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .login-link {
+    font-size: 0.9rem;
+  }
+
+  .login-logo {
+    height: 6vh;
+  }
+
+  .captcha {
+    height: 40px;
+    width: 40px;
+  }
+
+  .form-check {
+    margin-top: 0vh;
+    font-size: 1rem;
+  }
+
+  .input-group,
+  .form-control {
+    width: 360px;
+    font-size: 1rem;
+    height: 48px;
+    border-radius: 6px;
+    margin-bottom: 0.5vh;
+  }
+
+  .form-label,
+  .register-login-label {
+    font-size: 1.25rem;
+    margin-top: 1vh;
+  }
+
+ .country-code-display{
+    font-size: 15px;
+  }
+
+   .primary-submit-button{
+    font-size: 19px;
+   }
+
+  .form-divider-container{
+    margin: 0px;
+  }
+
+  .auth-redirect-message{
+    font-size: 18px;
+  }
+
+  .login-with hr {
+    width: 20%;
+  }
+
+  .login-mid-name {
+    padding-top: 2vh;
+  }
+
+  .enter-otp {
+    padding-top: 0vh;
+  }
+
+  .otp-verify {
+    margin-top: 0vh;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .register-form,
+  .register-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background: #f5f5f5;
+    min-height: 40vh;
+  }
+
+  .breadcrumb-item, .breadcrumb-item.active {
+    font-size: 19px;
+}
+
+  .register-form-container,
+  .register-login-left {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .register-form-content,
+  .register-login-mid {
+    padding: 24px 20px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .register-form-title,
+  .register-login-continue {
+    font-size: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-fields-container {
+    gap: 20px;
+  }
+
+  .first-name-field,
+  .last-name-field,
+  .email-field,
+  .phone-field,
+  .register-firstName-field,
+  .register-lastName-field,
+  .register-email-field,
+  .register-phone-field {
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  .form-label,
+  .register-login-label {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    display: block;
+    width: 100%;
+  }
+
+  .form-input-container,
+  .register-password-field {
+    width: 100%;
+  }
+
+  .form-input,
+  .phone-number-input-field,
+  .country-select-button,
+  .register-password-field .form-control,
+  .register-mobile-button {
+    height: 46px;
+    font-size: 18px;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  .phone-field-container,
+  .register-password-field {
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .country-select-button,
+  .register-mobile-button {
+    min-width: 130px;
+    font-size: 14px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+  }
+
+  .phone-number-input-field {
+    padding-left: 12px;
+    font-size: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Align phone input properly */
+  .phone-field .phone-field-container,
+  .register-field .register-password-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .phone-field .phone-number-input-field,
+  .register-field .form-control {
+    padding-left: 12px;
+    font-size: 16px;
+    flex: 1;
+    border-left: 1px solid #ddd;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .primary-submit-button,
+  .google-signin-button,
+  .register-btn,
+  .other-btn {
+    height: 48px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    width: 100%;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-buttons-container {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .auth-redirect-message,
+  .go-to-register {
+    font-size: 17px;
+    padding: 8px 0;
+    margin: 20px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-weight: 500;
+  }
+
+  .auth-link-button,
+  .link-to-register {
+    font-size: 15px;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+
+  .input-group-text {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00AEEF;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .captcha {
+    margin: 0 auto;
+    height: 44px;
+    width: 44px;
+    display: block;
+  }
+
+  .forgot-password {
+    margin-bottom: 0;
+    font-size: 14px;
+    text-align: right;
+    width: 100%;
+    display: block;
+    margin-top: 8px;
+  }
+
+  .register-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .login-with hr {
+    width: 20%;
+    border: none;
+    height: 1px;
+    background: #6A6A6A;
+    margin: 24px auto;
+  }
+
+  .login-logo {
+    height: auto;
+    max-width: 160px;
+    margin: 0 auto 24px auto;
+    display: block;
+  }
+
+  .register-password-field .form-control {
+    width: 100%;
+    height: 46px !important;
+    font-size: 16px;
+  }
+
+  .register-field {
+    margin-bottom: 0 !important;
+  }
+
+  .mail-to-register {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    display: block;
+    margin-top: 12px;
+  }
+
+  .login-link {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .link-to {
+    font-size: 14px !important;
+    font-weight: 500;
+  }
+
+  .form-separator,
+  hr {
+    width: 100%;
+    margin: 24px auto;
+    border: none;
+    height: 1px;
+    background: #e0e0e0;
+  }
+
+  .form-divider-container {
+    margin: 24px 0;
+    display: none;
+  }
+
+  .otp-verify {
+    margin-top: 0;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .otp {
+    width: 100%;
+    height: 52px;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 12px;
+  }
+
+  .country-dropdown {
+    width: 140px;
+    font-size: 14px;
+  }
+
+  .country-flag-icon {
+    width: 20px;
+    height: 16px;
+  }
+
+  .other-btn {
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100% !important;
+    margin: 10px 0;
+  }
+
+  .google-icon,
+  .icon-btn-img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .error-text,
+  .error-field-message {
+    font-size: 13px;
+    margin-top: 6px;
+    margin-bottom: 0;
+    text-align: left;
+    padding: 0 4px;
+    font-weight: 500;
+  }
+
+  .required-star,
+  .star {
+    font-size: 16px;
+    color: #ff3860;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* Button states (hover effects only on desktop) */
+  .primary-submit-button,
+  .google-signin-button,
+  .register-btn,
+  .other-btn {
+    transition: all 0.2s ease;
+  }
+
+  /* Input focus states */
+  .form-input:focus,
+  .phone-number-input-field:focus,
+  .form-control:focus {
+    border-color: #00AEEF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.15);
+  }
+
+  /* Fix Google button alignment */
+  .google-signin-button,
+  .other-btn {
+    gap: 12px;
+    /* border: 1px solid #ddd;
+    background: #fff; */
+  }
+
+  .google-signin-button img,
+  .other-btn img {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Fix country code display */
+  .country-code-display {
+    font-size: 15px;
+    margin: 0 4px;
+  }
+
+  /* Material-UI menu adjustments */
+  .MuiMenuItem-root {
+    font-size: 14px;
+    min-height: 44px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .MuiMenu-paper {
+    max-height: 320px !important;
+    max-width: 350px !important;
+    border-radius: 10px;
+    margin-top: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Ensure all inputs are properly aligned */
+  input, button, select, textarea {
+    max-width: 100%;
+    font-family: inherit;
+  }
+
+  /* Fix form alignment */
+  .form-fields-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Improve spacing for form sections */
+  .register-form-content > *:not(:last-child),
+  .register-login-mid > *:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
+  /* Center the star with text */
+  .form-label span.required-star,
+  .register-login-label span.star {
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* Adjust button disabled state */
+  .primary-submit-button:disabled,
+  .register-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Make the form more touch-friendly on mobile */
+  button, 
+  input[type="submit"], 
+  input[type="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Improve tap targets for mobile */
+  .form-input,
+  .phone-number-input-field,
+  .primary-submit-button,
+  .google-signin-button,
+  .country-select-button,
+  .register-btn,
+  .other-btn,
+  .register-mobile-button {
+    min-height: 46px;
+  }
+}
+
+/* Small Mobile (375px and below) */
+@media (max-width: 375px) {
+  .register-form-content,
+  .register-login-mid {
+    padding: 16px 12px;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .register-form-title,
+  .register-login-continue {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .form-label,
+  .register-login-label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+    width: 100%;
+  }
+
+  .form-fields-container {
+    gap: 16px;
+  }
+
+  .first-name-field,
+  .last-name-field,
+  .email-field,
+  .phone-field,
+  .register-firstName-field,
+  .register-lastName-field,
+  .register-email-field,
+  .register-phone-field {
+    margin-bottom: 0;
+  }
+
+  .form-input,
+  .phone-number-input-field,
+  .country-select-button,
+  .register-password-field .form-control,
+  .register-mobile-button {
+    height: 42px;
+    font-size: 15px;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+
+  .form-input-container,
+  .phone-field-container,
+  .register-password-field {
+    width: 100%;
+  }
+
+  .phone-field-container,
+  .register-password-field {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .country-select-button,
+  .register-mobile-button {
+    min-width: 100px;
+    font-size: 12px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+  }
+
+  .phone-number-input-field {
+    padding-left: 10px;
+    font-size: 15px;
+    width: calc(100% - 100px);
+  }
+
+  /* Align the phone input properly */
+  .phone-field .phone-field-container,
+  .register-field .register-password-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .phone-field .phone-number-input-field,
+  .register-field .form-control {
+    padding-left: 10px;
+    font-size: 15px;
+    flex: 1;
+    min-width: 0; /* Prevent overflow */
+  }
+
+  .primary-submit-button,
+  .google-signin-button,
+  .register-btn,
+  .other-btn {
+    height: 44px;
+    font-size: 15px;
+    border-radius: 8px;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .auth-redirect-message,
+  .go-to-register {
+    font-size: 14px;
+    padding: 8px 0;
+    margin: 16px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .auth-link-button,
+  .link-to-register {
+    font-size: 14px;
+    margin-left: 6px;
+    display: inline-block;
+  }
+
+  .input-group-text {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00AEEF;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .captcha {
+    margin-left: 0;
+    height: 40px;
+    width: 40px;
+  }
+
+  .forgot-password {
+    margin-bottom: 0;
+    font-size: 13px;
+    text-align: right;
+    width: 100%;
+    display: block;
+  }
+
+  .register-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 16px;
+  }
+
+  .login-with hr {
+    width: 20%;
+    border: 1px solid #6A6A6A;
+    background: #6A6A6A;
+    margin: 20px auto;
+  }
+
+  .login-logo {
+    height: auto;
+    max-width: 120px;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+
+  .register-password-field .form-control {
+    width: 100%;
+    height: 42px !important;
+    font-size: 15px;
+  }
+
+  .register-field {
+    margin-bottom: 0 !important;
+  }
+
+  .mail-to-register {
+    font-size: 11px;
+    text-align: center;
+    display: block;
+    margin-top: 8px;
+  }
+
+  .login-link {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .link-to {
+    font-size: 13px !important;
+  }
+
+  .form-separator,
+  hr {
+    width: 100%;
+    margin: 24px auto;
+    border: none;
+    height: 1px;
+    background: #e0e0e0;
+  }
+
+  .form-divider-container {
+    margin: 24px 0;
+    display: none;
+  }
+
+  .otp-verify {
+    margin-top: 0;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .otp {
+    width: 100%;
+    height: 50px;
+    justify-content: space-between;
+    margin: 16px 0;
+  }
+
+  .country-dropdown {
+    width: 120px;
+    font-size: 12px;
+  }
+
+  .country-flag-icon {
+    width: 18px;
+    height: 14px;
+  }
+
+  .other-btn {
+    height: 44px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 100% !important;
+    margin: 8px 0;
+  }
+
+  .google-icon,
+  .icon-btn-img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .error-text,
+  .error-field-message {
+    font-size: 11px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    text-align: left;
+    padding: 0 2px;
+  }
+
+  .required-star,
+  .star {
+    font-size: 15px;
+    color: #ff3860;
+  }
+
+  /* Fix button alignment in form */
+  .form-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Fix form alignment */
+  .form-fields-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Fix country flag and text alignment */
+  .country-code-display {
+    font-size: 12.5px;
+    margin: 0 4px;
+  }
+
+  /* Fix Material-UI menu alignment */
+  .MuiMenuItem-root {
+    font-size: 13px;
+    min-height: 40px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .MuiMenu-paper {
+    max-height: 300px !important;
+    max-width: 320px !important;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+
+  /* Center align the form on small screens */
+  .register-form,
+  .register-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .register-form-container,
+  .register-login-left {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Ensure inputs don't overflow */
+  input, button, select, textarea {
+    max-width: 100%;
+  }
+
+  /* Fix the star alignment with text */
+  .form-label span.required-star,
+  .register-login-label span.star {
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* Fix Google button alignment */
+  .google-signin-button,
+  .other-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+/* Extra small devices (320px and below) */
+@media (max-width: 320px) {
+  .register-form-content,
+  .register-login-mid {
+    padding: 10px 8px;
+    max-width: 300px;
+  }
+
+  .register-form-title,
+  .register-login-continue {
+    font-size: 16px;
+  }
+
+  .form-label,
+  .register-login-label {
+    font-size: 12px;
+  }
+
+  .form-input,
+  .phone-number-input-field,
+  .country-select-button,
+  .register-password-field .form-control,
+  .register-mobile-button {
+    height: 36px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .primary-submit-button,
+  .google-signin-button,
+  .register-btn,
+  .other-btn {
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .country-select-button,
+  .register-mobile-button {
+    min-width: 90px;
+    font-size: 10px;
+  }
+
+  .auth-redirect-message,
+  .go-to-register,
+  .auth-link-button,
+  .link-to-register,
+  .login-link,
+  .link-to {
+    font-size: 10px;
+  }
+
+  .mail-to-register {
+    font-size: 9px;
+  }
+
+  .form-separator,
+  hr {
+    margin: 12px auto;
+  }
+}
+
+/* Menu adjustments (Material-UI) */
+.MuiMenuItem-root {
+  font-size: 14px;
+  min-height: 40px;
+  padding: 8px 16px;
+}
+
+.MuiMenu-paper {
+  max-height: 300px !important;
+  max-width: 300px !important;
+  border-radius: 8px;
 }

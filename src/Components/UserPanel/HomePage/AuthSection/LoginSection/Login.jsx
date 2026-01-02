@@ -457,7 +457,7 @@ const Login = () => {
                       type="checkbox"
                       id="rememberMeSwitch"
                     />
-                    <label className="form-check-label" htmlFor="rememberMeSwitch" style={{ fontSize: '12px' }}>
+                    <label className="form-check-label" htmlFor="rememberMeSwitch">
                       Remember me
                     </label>
                   </div>

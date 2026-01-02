@@ -40,6 +40,7 @@ const NavbarTop = () => {
 
   const dropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
+  const searchRef = useRef(null);
 
   const location = useLocation();
 
@@ -51,6 +52,25 @@ useEffect(() => {
   setResults([]);
   setQuery("");
 }, [location.pathname]);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      searchRef.current &&
+      !searchRef.current.contains(event.target)
+    ) {
+      setResults([]);
+      setQuery("");
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [setResults, setQuery]);
+
 
 
   const handleCourseClick = useCallback(
@@ -105,7 +125,7 @@ useEffect(() => {
             </div>
 
             {/* Search */}
-            <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: 500 }}>
+            <div className="search-container position-relative flex-grow-1 mx-3" style={{ maxWidth: 500 }} ref={searchRef}>
             <SearchBox
               query={query}
               onChange={onSearchChange}

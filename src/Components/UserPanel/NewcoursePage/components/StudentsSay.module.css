@@ -12,7 +12,7 @@
 }
 
 .wswrap {
-  padding-top: 30px;
+  /* padding-top: 30px; */
   padding-bottom: 30px;
   background: #fff;
 }
@@ -29,11 +29,11 @@
   color: var(--ink);
 }
 
-.reviewGroup{
+/* .reviewGroup{
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
+} */
 
 .wshead p {
   color: #000000;

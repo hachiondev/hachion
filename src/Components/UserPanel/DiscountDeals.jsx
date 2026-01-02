@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Style.css";
 import "./Home.css";
-import Learners from "./Learners";
+import Learners from "./HomePage/LearnerSection/Learners";
 import ExploreDeals from "./ExploreDeals";
 
 const DiscountDeals = () => {

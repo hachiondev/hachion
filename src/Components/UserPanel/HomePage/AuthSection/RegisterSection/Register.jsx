@@ -32,7 +32,7 @@ const Register = () => {
     );
     return m ? decodeURIComponent(m[1]) : null;
   }
-  
+
   useEffect(() => {
     if (countryCode && !countryLoading) {
       const matchedCountry = countries.find((c) => c.flag === countryCode);
@@ -119,23 +119,23 @@ const Register = () => {
     }, 50);
   };
 
-useEffect(() => {
-  if (!user) return;
+  useEffect(() => {
+    if (!user) return;
 
-  const toStore = {
-    name: user.name || "",
-    email: user.email || "",
-    picture: user.picture || ""
-  };
+    const toStore = {
+      name: user.name || "",
+      email: user.email || "",
+      picture: user.picture || ""
+    };
 
-  localStorage.setItem("loginuserData", JSON.stringify(toStore));
+    localStorage.setItem("loginuserData", JSON.stringify(toStore));
 
-  if (user.token) {
-    localStorage.setItem("authToken", user.token);
-  }
+    if (user.token) {
+      localStorage.setItem("authToken", user.token);
+    }
 
-  window.dispatchEvent(new Event("storage"));
-}, [user]);
+    window.dispatchEvent(new Event("storage"));
+  }, [user]);
 
   return (
     <>
@@ -156,144 +156,150 @@ useEffect(() => {
 
         <img src={LoginBanner} alt="Login Banner" className="register-banner" />
 
-        <div className='register-login container'>
-          <div className="register-login-left">
-            <div className="register-login-top">
-              <div className="register-login-mid">
+        <div className='register-form container'>
+          <div className="register-form-container">
+            <div className="register-form-wrapper">
+              <div className="register-form-content">
                 {/* First Name */}
-                <h4 className="register-login-continue">Create Account</h4>
-                <label className="register-login-label">
-                  First Name<span className="star">*</span>
-                </label>
-                <div className="register-firstName-field">
-                  <div className="register-password-field">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter your first name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </div>
-                  {errors.firstName && (
-                    <p className="error-field-message">{errors.firstName}</p>
-                  )}
-                </div>
+                <h4 className="register-form-title">Create Account</h4>
 
-                {/* Last Name */}
-                <label className="register-login-label">Last Name</label>
-                <div className="register-password-field">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter your last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-
-                {/* Email */}
-                <label className="register-login-label">
-                  Email ID<span className="star">*</span>
-                </label>
-                <div className="register-email-field">
-                  <div className="register-password-field">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="abc@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="error-field-message">{errors.email}</p>
-                  )}
-                </div>
-
-                {/* Mobile */}
-                <label className="register-login-label">
-                  Phone Number<span className="star">*</span>
-                </label>
-                <div className="register-field">
-                  <div className="register-password-field">
-                    <button
-                      onClick={(e) => setAnchorEl(e.currentTarget)}
-                      className="register-mobile-button"
-                    >
-                      <Flag
-                        code={selectedCountry.flag}
-                        className="country-flag me-1"
+                <div className="form-fields-container">
+                  <div className="first-name-field">
+                    <label className="form-label">
+                      First Name<span className="required-star">*</span>
+                    </label>
+                    <div className="form-input-container">
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Enter your first name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                       />
-                      <span style={{ marginRight: "5px", fontSize: "small" }}>
-                        {selectedCountry.flag} ({selectedCountry.code})
-                      </span>
-                      <AiFillCaretDown />
-                    </button>
-
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={() => setAnchorEl(null)}
-                    >
-                      {countries.map((country) => (
-                        <MenuItem
-                          key={country.code}
-                          onClick={() => handleCountrySelect(country)}
-                        >
-                          <Flag code={country.flag} className="country-flag me-2" />
-                          {country.name} ({country.code})
-                        </MenuItem>
-                      ))}
-                    </Menu>
-
-                    <input
-                      type="tel"
-                      className="form-control"
-                      ref={mobileInputRef}
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
-                      placeholder="Enter your mobile number"
-                      style={{ paddingLeft: "120px", border: "none" }}
-                      autoComplete="tel-national"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                    />
+                    </div>
+                    {errors.firstName && (
+                      <p className="error-text">{errors.firstName}</p>
+                    )}
                   </div>
-                  {errors.mobile && (
-                    <p className="error-field-message">{errors.mobile}</p>
-                  )}
-                </div>
 
-                <div className="d-grid gap-2">
-                  <button
-                    type="button"
-                    className="register-btn"
-                    onClick={handleClick}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Creating..." : "Create Account"}
-                  </button>
-                </div>
+                  {/* Last Name */}
+                  <div className="last-name-field">
+                    <label className="form-label">Last Name</label>
+                    <div className="form-input-container">
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Enter your last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-                <hr style={{ width: "90%", margin: "20px" }} />
+                  {/* Email */}
+                  <div className="email-field">
+                    <label className="form-label">
+                      Email ID<span className="required-star">*</span>
+                    </label>
+                    <div className="form-input-container">
+                      <input
+                        type="email"
+                        className="form-input"
+                        placeholder="abc@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="error-text">{errors.email}</p>
+                    )}
+                  </div>
 
-                <div className="d-grid gap-2">
-                  <button className="other-btn" type="button" onClick={loginWithGoogle}>
-                    <img
-                      src={google}
-                      alt="login-with-google"
-                      className="icon-btn-img"
-                    />
-                    or Sign Up with Google
-                  </button>
+                  {/* Mobile */}
+                  <div className="phone-field">
+                    <label className="form-label">
+                      Phone Number<span className="required-star">*</span>
+                    </label>
+                    <div className="phone-field-container">
+                      <button
+                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                        className="country-select-button"
+                      >
+                        <Flag
+                          code={selectedCountry.flag}
+                          className="country-flag-icon"
+                        />
+                        <span className="country-code-display">
+                          {selectedCountry.flag} ({selectedCountry.code})
+                        </span>
+                        <AiFillCaretDown />
+                      </button>
+
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={() => setAnchorEl(null)}
+                      >
+                        {countries.map((country) => (
+                          <MenuItem
+                            key={country.code}
+                            onClick={() => handleCountrySelect(country)}
+                          >
+                            <Flag code={country.flag} className="country-flag-icon menu-flag" />
+                            {country.name} ({country.code})
+                          </MenuItem>
+                        ))}
+                      </Menu>
+
+                      <input
+                        type="tel"
+                        className="phone-number-input-field"
+                        ref={mobileInputRef}
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        placeholder="Enter your mobile number"
+                        autoComplete="tel-national"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                      />
+                    </div>
+                    {errors.mobile && (
+                      <p className="error-text">{errors.mobile}</p>
+                    )}
+                  </div>
+
+                  <div className="form-buttons-container">
+                    <button
+                      type="button"
+                      className="primary-submit-button"
+                      onClick={handleClick}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating..." : "Create Account"}
+                    </button>
+                  </div>
+
+                  <div className="form-divider-container">
+                    <hr className="form-separator" />
+                  </div>
+
+                  <div className="form-buttons-container">
+                    <button className="google-signin-button" type="button" onClick={loginWithGoogle}>
+                      <img
+                        src={google}
+                        alt="Sign in with Google"
+                        className="google-icon"
+                      />
+                      or Sign Up with Google
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <p className="go-to-register">
+            <p className="auth-redirect-message">
               Already have an account?{" "}
-              <Link to="/login" className="link-to-register">
+              <Link to="/login" className="auth-link-button">
                 Login
               </Link>
             </p>

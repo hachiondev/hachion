@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import TrainingEvents from "../../../UserPanel/TrainingEvents";
+import TrainingEvents from "../../../UserPanel/HomePage/TrainingSection/TrainingEvents";
 import styles from "./StudentsAlsoEnrolled.module.css"; // Import CSS module
 
 export default function StudentsAlsoEnrolled() {

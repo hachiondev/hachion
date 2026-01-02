@@ -89,7 +89,7 @@ export default function StudentsSay({ onCta }) {
           {/* Reviews Grid - Show 2 cards per page */}
           <div className={styles.wsgrid}>
             {paginatedReviews.length === 0 ? (
-              <p style={{ opacity: 0.6 }}>No reviews available yet.</p>
+              <p>No reviews available yet.</p>
             ) : (
               paginatedReviews.map((r) => {
                 const safeRating = Math.min(Number(r.rating) || 0, 5);

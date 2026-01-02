@@ -13,6 +13,7 @@
   background-position: center;
   background-repeat: no-repeat;
   flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 .login-left {
@@ -24,7 +25,7 @@
   margin: 10px;
   border-radius: 4px;
   background-color: #EEEEEE;
-  width: 480px;
+  width: 440px;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -72,7 +73,7 @@
   position: relative !important;
   width: 100% !important;
   margin-bottom: 16px !important;
-  min-height: 72px; /* Ensure space for error message */
+  /* min-height: 72px; Ensure space for error message */
 }
 .error-field-message {
   color: #dc3545 !important;
@@ -236,8 +237,8 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
+  /* background-color: #f8f9fa;
+  border: 1px solid #ddd; */
   border-radius: 6px;
   cursor: pointer;
   color: #666;
@@ -553,237 +554,22 @@
 
 /* ============ RESPONSIVE STYLES ============ */
 
-/* Small Mobile Phones (up to 480px) */
-@media (max-width: 480px) {
-  .login {
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    background: none;
-    min-height: 100vh;
-  }
 
-  .login-left {
-    width: 100%;
-    height: auto;
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
-  }
-
-  .login-mid {
-    padding: 20px !important;
-  }
-
-  .login-banner {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    object-fit: cover;
-  }
-
-  .error-message-top,
-  .error-message-bottom {
-    font-size: 12px;
-    padding: 10px 12px;
-    margin: 15px 0;
-  }
-
-  .error-field-message {
-    font-size: 11px;
-  }
-
-  .login-btn {
-    font-size: 16px !important;
-    height: 44px;
-  }
-
-  .login-g-btn {
-    font-size: 14px;
-    height: 44px;
-  }
-
-  .captcha-canvas {
-    height: 38px !important;
-  }
-
-  .refresh-captcha-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .forgot-password {
-    font-size: 11px !important;
-  }
-
-  .remember-me {
-    font-size: 11px !important;
-  }
-
-  .login-label {
-    font-size: 13px;
-  }
-
-  .login input.form-control {
-    height: 44px !important;
-    font-size: 13px;
-  }
-
-  .go-to-register {
-    font-size: 13px;
-    padding: 0 20px 20px;
-  }
-
-  .input-group-text {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .captcha {
-    margin-left: 0;
-    height: auto;
-    width: auto;
-  }
-
-  .login-with hr {
-    width: 20%;
-    border: 1px solid #6A6A6A;
-    background: #6A6A6A;
-  }
-
-  .login-logo {
-    height: auto;
-    margin-left: 10%;
-    justify-content: center;
-  }
-
-  .otp-verify {
-    margin-top: 0;
-    padding: 10px;
-  }
-
-  .otp {
-    width: 100%;
-    height: 44px;
-    justify-content: space-around;
-  }
-
-  .country-dropdown {
-    width: 100px;
-  }
-
-  .input-group,
-  .form-control {
-    width: 100%;
-    height: 40px;
-    font-size: 14px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-  }
-
-  .login-link {
-    font-size: 12px;
-  }
-
-  .link-to {
-    font-size: 12px !important;
-  }
-
-  .go-to-login {
-    font-size: 14px;
-    padding: 5px;
-  }
-
-  .link-to-register {
-    font-size: 12px;
-  }
-
-  .mail-to-register {
-    font-size: 11px;
-  }
-}
-
-/* Tablets and small screens (481px to 767px) */
-@media (min-width: 481px) and (max-width: 767px) {
-  .login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: none;
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  .login-left {
-    width: 100%;
-    max-width: 420px;
-    height: auto;
-    margin: 0;
-    padding: 30px;
-  }
-
-  .login-banner {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 250px;
-    object-fit: cover;
-  }
-
-  .login-mid {
-    padding: 20px !important;
-  }
-
-  .error-message-top,
-  .error-message-bottom {
-    font-size: 13px;
-  }
-
-  .login-label {
-    font-size: 15px;
-    margin-top: 15px;
-  }
-
-  .login input.form-control {
-    font-size: 15px;
-    height: 46px;
-  }
-
-  .login-logo {
-    margin-left: 0;
-  }
-
-  .input-group,
-  .form-control {
-    width: 100%;
-    height: 46px;
-    font-size: 15px;
-    border-radius: 6px;
-  }
-
-  .login-with hr {
-    width: 20%;
-  }
-
-  .login-link {
-    font-size: 14px;
-  }
-}
 
 /* Medium screens (768px to 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .login {
+  .login,
+  .login-page {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     min-height: 100vh;
     padding: 30px;
+    background-size: cover;
   }
 
-  .login-left {
+  .login-left,
+  .login-form-container {
     width: 440px;
     padding: 35px;
   }
@@ -799,21 +585,33 @@
 
   .form-check {
     margin-top: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .input-group,
-  .form-control {
+  .form-control,
+  .login-input {
     width: 100%;
-    font-size: 15px;
-    height: 48px;
+    font-size: 22px; /* Changed to 22px */
+    height: 56px; /* Increased for larger font */
     border-radius: 6px;
     margin-bottom: 15px;
   }
 
-  .login-label {
-    font-size: 15px;
+  .login-label,
+  .login-field-label {
+    font-size: 20px; /* Changed to 22px */
     margin-top: 15px;
+  }
+
+  .login-form-heading,
+  .login-continue {
+    font-size: 32px; /* Increased proportionally */
+  }
+
+  .form-check-label{
+    font-size: 15px !important; /* Added */
+    margin-top: 0px !important;
   }
 
   .login-with hr {
@@ -825,37 +623,745 @@
   }
 
   .login-link {
-    font-size: 14px;
+    font-size: 20px; /* Increased proportionally */
   }
 
   .enter-otp {
     padding-top: 15px;
+    font-size: 24px; /* Increased proportionally */
   }
 
   .otp-verify {
     margin-top: 15px;
   }
 
+  .error-field-message,
+  .login-error-message {
+    font-size: 20px; /* Increased proportionally */
+  }
+
+  .login-btn,
+  .primary-login-button {
+    font-size: 24px; /* Increased proportionally */
+    height: 60px; /* Increased for larger font */
+  }
+
+  .login-g-btn,
+  .google-login-button {
+    font-size: 22px; /* Increased proportionally */
+    height: 60px; /* Increased for larger font */
+  }
+
+  .go-to-register,
+  .account-redirect-text {
+    font-size: 20px !important; /* Increased proportionally */
+  }
+
+  .link-to-register,
+  .redirect-link {
+    font-size: 20px; /* Increased proportionally */
+  }
+
+  .forgot-password,
+  .forgot-password-link {
+    font-size: 17px !important; /* Increased proportionally */
+  }
+
+  .remember-me,
+  .remember-me-checkbox {
+    font-size: 20px !important; /* Increased proportionally */
+  }
+
+  .captcha-canvas {
+    height: 50px !important; /* Increased proportionally */
+  }
+
+  .refresh-captcha-btn,
+  .captcha-refresh-button {
+    width: 50px; /* Increased proportionally */
+    height: 50px; /* Increased proportionally */
+    font-size: 24px; /* Increased proportionally */
+  }
+
+  .otp-number {
+    height: 56px; /* Increased proportionally */
+    width: 80px; /* Increased proportionally */
+    font-size: 24px; /* Increased proportionally */
+  }
+
+  .country-dropdown {
+    font-size: 22px; /* Increased proportionally */
+    height: 58px; /* Increased proportionally */
+  }
+
+  .tag {
+    font-size: 20px; /* Increased proportionally */
+  }
+
+  .star,
+  .required-asterisk {
+    font-size: 22px; /* Increased proportionally */
+  }
+
+  .checkbox-label {
+    font-size: 20px !important; /* Added */
+  }
+
+  .mail-to-register {
+    font-size: 18px; /* Added */
+  }
+
+  .spam-msg {
+    font-size: 18px; /* Added */
+  }
+
+  .confirm-number-label {
+    font-size: 18px; /* Added */
+  }
+
+  .login input.form-control{
+    font-size: 20px; /* Changed to 22px */
+  }
+}
+
+@media (max-width: 480px) {
+  .login,
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #f5f5f5;
+    min-height: 40vh;
+  }
+
+  .login-left,
+  .login-form-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-mid,
+  .login-form-content {
+    padding: 24px 20px !important;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .login-form-heading,
+  .login-continue {
+    font-size: 22px; /* Increased to 22px */
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .login-email-field,
+  .login-password-field,
+  .login-captcha-field,
+  .register-field {
+    margin-bottom: 18px;
+    width: 100%;
+  }
+
+  .login-field-label,
+  .login-label {
+    font-size: 18px; /* Increased */
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    display: block;
+    width: 100%;
+  }
+
+  .login-input,
+  .login input.form-control {
+    height: 46px !important;
+    font-size: 18px; /* Increased */
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+
+  .login-input-container,
+  .password-input-wrapper,
+  .password-field {
+    width: 100%;
+  }
+
+  .password-toggle-icon,
+  .eye-icon {
+    right: 16px;
+    font-size: 20px; /* Increased */
+  }
+
+  .captcha-canvas-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .captcha-canvas {
+    width: 140px !important;
+    height: 44px !important; /* Increased */
+  }
+
+  .captcha-refresh-button,
+  .refresh-captcha-btn {
+    width: 24px; /* Increased */
+    height: 44px; /* Increased */
+    font-size: 18px; /* Increased */
+  }
+
+  .form-check-label{
+    font-size: 18px !important;
+  }
+
+  .login-options-row,
+  .d-flex.justify-content-between.align-items-center.mb-3 {
+    width: 100%;
+    margin: 18px 0;
+  }
+
+  .remember-me-checkbox,
+  .remember-me {
+    font-size: 14px !important; /* Increased */
+  }
+
+  .forgot-password-link,
+  .forgot-password {
+    font-size: 16px !important; /* Increased */
+  }
+
+  .checkbox-input,
+  .form-check-input {
+    transform: scale(1);
+  }
+
+  .primary-login-button,
+  .login-btn {
+    height: 48px; /* Increased */
+    font-size: 20px; /* Increased to 18px */
+    border-radius: 8px;
+    margin: 14px 0;
+    font-weight: 600;
+  }
+
+  .google-login-button,
+  .login-g-btn {
+    height: 48px; /* Increased */
+    font-size: 20px; /* Increased */
+    border-radius: 8px;
+    margin: 14px 0;
+  }
+
+  .form-divider,
+  .login-hr {
+    margin: 24px 0;
+    display: none;
+  }
+
+  .account-redirect-text,
+  .go-to-register {
+    font-size: 16px; /* Increased */
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .redirect-link,
+  .link-to-register {
+    font-size: 16px; /* Increased */
+  }
+
+  .login-error-message,
   .error-field-message {
+    font-size: 14px; /* Increased */
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+
+  .error-message-top,
+  .error-message-bottom {
+    font-size: 14px; /* Increased */
+    padding: 14px;
+    margin: 18px 0;
+  }
+
+  .login-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .input-group-text {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px; /* Increased */
+  }
+
+  .captcha {
+    margin: 0;
+  }
+
+  .login-with hr {
+    width: 100%;
+    margin: 24px 0;
+    background: #e0e0e0;
+    border: none;
+    height: 1px;
+  }
+
+  .login-logo {
+    height: auto;
+    max-width: 160px;
+    margin: 0 auto 24px auto;
+    display: block;
+  }
+
+  .otp-verify {
+    margin-top: 0;
+    padding: 16px;
+  }
+
+  .otp {
+    width: 100%;
+    height: 52px; /* Increased */
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .otp-number {
+    height: 52px; /* Increased */
+    width: 56px; /* Adjusted */
+    font-size: 18px; /* Increased */
+  }
+
+  .country-dropdown {
+    width: 120px;
+    font-size: 15px; /* Increased */
+    height: 52px; /* Increased */
+  }
+
+  .input-group,
+  .form-control {
+    width: 100%;
+    height: 46px; /* Increased */
+    font-size: 16px; /* Increased */
+    border-radius: 8px;
+    margin-bottom: 18px;
+  }
+
+  .login-link {
+    font-size: 15px; /* Increased */
+  }
+
+  .link-to {
+    font-size: 15px !important; /* Increased */
+  }
+
+  .go-to-login {
+    font-size: 16px; /* Increased */
+    padding: 10px 0;
+  }
+
+  .mail-to-register {
+    font-size: 14px; /* Increased */
+  }
+
+  .login-form-content > *:last-child,
+  .login-mid > *:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Fix button alignment */
+  .login-button-container,
+  .social-login-container,
+  .d-grid.gap-2 {
+    width: 100%;
+  }
+
+  /* Center captcha wrapper */
+  .captcha-canvas-wrapper {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  /* Fix star alignment */
+  .required-asterisk,
+  .star {
+    font-size: 18px; /* Increased */
+    vertical-align: middle;
+  }
+
+  /* Fix Google button icon alignment */
+  .google-icon,
+  .icon-btn-img {
+    width: 22px; /* Increased */
+    height: 22px; /* Increased */
+  }
+
+  /* Ensure form elements don't overflow */
+  input, button, select, textarea {
+    max-width: 100%;
+  }
+
+  /* Improve touch targets */
+  .primary-login-button,
+  .login-btn,
+  .google-login-button,
+  .login-g-btn,
+  .captcha-refresh-button,
+  .refresh-captcha-btn {
+    min-height: 48px;
+  }
+
+  /* Tag text */
+  .tag {
+    font-size: 14px; /* Increased */
+  }
+
+  /* Enter OTP text */
+  .enter-otp {
+    font-size: 18px; /* Increased */
+    font-weight: 600;
+  }
+
+  /* Spam message */
+  .spam-msg {
+    font-size: 14px; /* Increased */
+  }
+
+  /* Confirm number label */
+  .confirm-number-label {
+    font-size: 14px; /* Increased */
+  }
+}
+
+@media (max-width: 375px) {
+  .login,
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background: #f5f5f5;
+    min-height: 40vh;
+  }
+
+  .login-left,
+  .login-form-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-mid,
+  .login-form-content {
+    padding: 20px 16px !important;
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .login-form-heading,
+  .login-continue {
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .login-email-field,
+  .login-password-field,
+  .login-captcha-field,
+  .register-field {
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .login-field-label,
+  .login-label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    display: block;
+    width: 100%;
+  }
+
+  .login-input,
+  .login input.form-control {
+    height: 42px !important;
+    font-size: 15px;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .login-input-container,
+  .password-input-wrapper,
+  .password-field {
+    width: 100%;
+  }
+
+  .password-toggle-icon,
+  .eye-icon {
+    right: 14px;
+    font-size: 18px;
+  }
+
+  .captcha-canvas-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .captcha-canvas {
+    width: 130px !important;
+    height: 40px !important;
+  }
+
+  .captcha-refresh-button,
+  .refresh-captcha-btn {
+    width: 20px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .login-options-row,
+  .d-flex.justify-content-between.align-items-center.mb-3 {
+    width: 100%;
+    margin: 16px 0;
+  }
+
+  .remember-me-checkbox,
+  .remember-me {
+    font-size: 13px !important;
+  }
+
+  .forgot-password-link,
+  .forgot-password {
+    font-size: 13px !important;
+  }
+
+  .checkbox-input,
+  .form-check-input {
+    transform: scale(0.9);
+  }
+
+  .primary-login-button,
+  .login-btn {
+    height: 44px;
+    font-size: 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+  }
+
+  .google-login-button,
+  .login-g-btn {
+    height: 44px;
+    font-size: 15px;
+    border-radius: 8px;
+    margin: 12px 0;
+  }
+
+  .form-divider,
+  .login-hr {
+    margin: 20px 0;
+    display: none;
+  }
+
+  .account-redirect-text,
+  .go-to-register {
+    font-size: 14px;
+    padding: 8px 0;
+    margin: 16px 0;
+    text-align: center;
+  }
+
+  .redirect-link,
+  .link-to-register {
+    font-size: 14px;
+  }
+
+  .login-error-message,
+  .error-field-message {
+    font-size: 12px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+
+  .error-message-top,
+  .error-message-bottom {
+    font-size: 13px;
+    padding: 12px;
+    margin: 16px 0;
+  }
+
+  .login-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+  }
+
+  .input-group-text {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .captcha {
+    margin: 0;
+  }
+
+  .login-with hr {
+    width: 100%;
+    margin: 20px 0;
+    background: #e0e0e0;
+    border: none;
+    height: 1px;
+  }
+
+  .login-logo {
+    height: auto;
+    max-width: 140px;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+
+  .otp-verify {
+    margin-top: 0;
+    padding: 12px;
+  }
+
+  .otp {
+    width: 100%;
+    height: 46px;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .country-dropdown {
+    width: 110px;
     font-size: 13px;
   }
+
+  .input-group,
+  .form-control {
+    width: 100%;
+    height: 42px;
+    font-size: 15px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .login-link {
+    font-size: 13px;
+  }
+
+  .link-to {
+    font-size: 13px !important;
+  }
+
+  .go-to-login {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  .mail-to-register {
+    font-size: 12px;
+  }
+
+  .login-form-content > *:last-child,
+  .login-mid > *:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Fix button alignment */
+  .login-button-container,
+  .social-login-container,
+  .d-grid.gap-2 {
+    width: 100%;
+  }
+
+  /* Center captcha wrapper */
+  .captcha-canvas-wrapper {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  /* Fix star alignment */
+  .required-asterisk,
+  .star {
+    vertical-align: middle;
+  }
+
+  /* Fix Google button icon alignment */
+  .google-icon,
+  .icon-btn-img {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Ensure form elements don't overflow */
+  input, button, select, textarea {
+    max-width: 100%;
+  }
+
+  /* Improve touch targets */
+  .primary-login-button,
+  .login-btn,
+  .google-login-button,
+  .login-g-btn,
+  .captcha-refresh-button{
+    min-height: 44px;
+  }
+
+  .login-input,
+  .login input.form-control {
+    min-height: 42px;
+  }
 }
 
-/* Large screens (1025px and above) */
-@media (min-width: 1025px) {
-  .login {
-    padding: 60px;
-  }
 
-  .login-left {
-    width: 480px;
-    padding: 50px;
-  }
-
-  .login-mid {
-    padding: 0 !important;
-  }
-}
 
 /* Ensure all elements have proper box-sizing */
 * {

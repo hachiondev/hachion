@@ -3,15 +3,25 @@ import { useMemo } from "react";
 import { useCourseScheduleSlots } from "../CourseApi/useCourseScheduleSlots";
 
 export function useDemoScheduleLogic({ courseSlug, timezone }) {
+  // ✅ normalize courseSlug for schedule API
+  const normalizedCourseSlug =
+    typeof courseSlug === "string"
+      ? courseSlug
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+      : courseSlug;
+
   const {
     liveSlots,
     crashSlots,
     loading: scheduleLoading,
     error: scheduleError,
   } = useCourseScheduleSlots({
-    courseSlug,
+    courseSlug: normalizedCourseSlug,
     timezone,
   });
+
 
   const scheduleTimeZoneAbbr = useMemo(() => {
     const primarySlot =

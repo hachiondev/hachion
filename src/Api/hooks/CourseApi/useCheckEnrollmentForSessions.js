@@ -35,11 +35,12 @@ export function useCheckEnrollmentForSessions(sessions, studentId, courseName) {
                 batchId: sess.batchId || "",
               },
             });
+return {
+  ...sess,
+  _isEnrolled: res.data?.enrolled ?? false,
+  amount: res.data?.amount ?? 0, // 👈 NEW: used to switch Enroll → Enrolled
+};
 
-            return {
-              ...sess,
-              _isEnrolled: res.data?.enrolled ?? false,
-            };
           } catch (e) {
             console.error("Error checking enrollment for session", sess.id, e);
             return { ...sess, _isEnrolled: false };

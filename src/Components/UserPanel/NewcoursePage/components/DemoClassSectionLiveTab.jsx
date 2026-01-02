@@ -244,27 +244,74 @@ What's Included:
           : "Resend"}
     </button>
   </div>
-) : (
+) : sess.mode === "Live Class" && Number(sess.amount) > 0 ? (
   /* =========================
-     LIVE CLASS → ALWAYS ENROLL
-     + KEEP EMAIL / WHATSAPP
+     LIVE CLASS → PAID → ENROLLED
+     ========================= */
+  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <button className={styles.dcbtnDisabled} disabled>
+      Enrolled
+    </button>
+     <button
+      className={styles.dclink}
+      disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+      onClick={() => {
+        setSendingBatchId(sess.batchId);
+
+        resendEmail(
+          {
+            email: userProfile.email,
+            batchId: sess.batchId,
+          },
+          {
+            onSuccess: (msg) => {
+              setSendingBatchId(null);
+              setResendError("");
+              setResendMessage(typeof msg === "string" ? msg : msg?.message);
+            },
+            onError: (err) => {
+              setSendingBatchId(null);
+              const backendMsg =
+                typeof err?.response?.data === "string"
+                  ? err.response.data
+                  : err?.response?.data?.message;
+
+              setResendMessage("");
+              setResendError(backendMsg || "Failed to resend email");
+            },
+          }
+        );
+      }}
+    >
+      {sess.resendCount >= 3
+        ? "Limit Reached"
+        : sendingBatchId === sess.batchId
+          ? "Sending..."
+          : "Resend"}
+    </button>
+
+  </div>
+) : (
+
+  /* =========================
+     LIVE CLASS → NOT PAID → ENROLL
      ========================= */
   <div className={styles.enrollActions}>
-   <button
-  className={styles.dcbtn}
-  onClick={() =>
-    onEnrollClick(sess, {
-      email: notifyViaMap[sess.id]?.email ?? true,
-      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-    })
-  }
->
-  Enroll
-</button>
+    <button
+      className={styles.dcbtn}
+      onClick={() =>
+        onEnrollClick(sess, {
+          email: notifyViaMap[sess.id]?.email ?? true,
+          whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+        })
+      }
+    >
+      Enroll
+    </button>
 
-
-    {/* 🔔 Email / WhatsApp — REQUIRED FOR BOTH */}
+    {/* 🔔 Email / WhatsApp */}
     <div className={styles.notifyOptions}>
+
       <div className={styles.checkboxGroup}>
         <label className={styles.notifyLabel}>
           <input

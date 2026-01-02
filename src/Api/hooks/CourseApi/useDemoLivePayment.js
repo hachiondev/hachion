@@ -309,7 +309,6 @@ else {
       time: session.time,
       mode: "Live Class",
       amount: 0,
-
       trainer: session.trainer || "",
       meeting_link: session.meeting_link || "",
       batchId: session.batchId,

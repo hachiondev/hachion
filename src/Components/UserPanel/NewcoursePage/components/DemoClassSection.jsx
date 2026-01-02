@@ -122,25 +122,18 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     setEnrollErrorMessage
   });
 
-  // const handleLiveEnrollClick = async (session, notifyVia) => {
-  //   // if (!userProfile || !userProfile.studentId) {
-  //   //   setShowRegisterPrompt(true);
-  //   //   return;
-  //   // }
-  //   // setShowRegisterPrompt(false);
-  //   // setEnrollingSessionId(session.id);
-
-  //   // await handleLiveEnrollPayment(session, notifyVia);
-  //   // setEnrollingSessionId(null);
-  //   // onViewDemoClass();
-  //   navigate(`/enroll-now/${courseName}`);
-  // };
 const handleLiveEnrollClick = async (session, notifyVia) => {
   // ✅ LIVE CLASS -> only navigation
   if (session?.mode !== "Live Demo") {
-    navigate(`/enroll-now/${courseName}`);
-    return;
-  }
+  navigate(`/enroll-now/${courseName}`, {
+    state: {
+      notifyVia,
+      selectedBatchId: session.batchId,
+      selectedSession: session, // 👈 IMPORTANT
+    },
+  });
+  return;
+}
 
   // ✅ LIVE DEMO -> call API (previous behavior)
   if (!userProfile || !userProfile.studentId) {

@@ -12,6 +12,9 @@ import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment
 
 export default function NewEnrollNow() {
     const location = useLocation();
+    const preselectedSession = location.state?.selectedSession || null;
+const preselectedBatchId = location.state?.selectedBatchId || null;
+
 
   const notifyVia = location.state?.notifyVia || {
     email: true,
@@ -47,10 +50,17 @@ const [lastAction, setLastAction] = useState(null);
      Params
   =============================== */
   const { courseName } = useParams();
+  console.log("🔍 ROUTE PARAM courseName:", courseName);
 
-  const courseSlug = courseName
-    ? decodeURIComponent(courseName).replace(/[-_]+/g, " ").toLowerCase()
-    : "";
+
+ const courseSlug = courseName
+  ? decodeURIComponent(courseName)
+      .replace(/[-_]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+  : "";
 
   /* ===============================
      APIs
@@ -59,9 +69,14 @@ const [lastAction, setLastAction] = useState(null);
 
   const { liveGroups, scheduleLoading } =
     useDemoScheduleLogic({ courseSlug, timezone });
+    console.log("📅 LIVE GROUPS:", liveGroups);
+
 
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
+
+  console.log("📦 COURSE API RESPONSE:", course);
+
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
 
@@ -83,6 +98,29 @@ const [lastAction, setLastAction] = useState(null);
 
     return () => clearTimeout(timer);
   }, [couponSuccess]);
+
+  useEffect(() => {
+  if (!preselectedSession || !liveGroups?.length) return;
+
+  const matchedGroup = liveGroups.find(
+    (group) =>
+      group.type === "live" &&
+      group.sessions?.some(
+        (s) => s.batchId === preselectedBatchId
+      )
+  );
+
+  if (matchedGroup) {
+  setSelectedBatch(matchedGroup);
+} else {
+  // fallback: select first live batch
+  const firstLive = liveGroups.find(g => g.type === "live");
+  if (firstLive) {
+    setSelectedBatch(firstLive);
+  }
+}
+
+}, [preselectedSession, liveGroups, preselectedBatchId]);
 
   useEffect(() => {
     window.scrollTo({
@@ -335,31 +373,14 @@ const isEnrollmentBlocked =
 
             <div className={styles.enRow}>
               <div className={styles.enCol}>
-                <label className={styles.enLabel}>
-                  Select Batch <span className={styles.requiredStar}>*</span>
-                </label>
-                <select
-                  value={selectedBatch?.key || ""}
-                  onChange={(e) => {
-                    const selected = batches.find(
-                      (b) => b.value.key === e.target.value
-                    );
+               <label className={styles.enLabel}>
+  Batch Schedule
+</label>
 
-                    setSelectedBatch(selected?.value || null);
-                    setCouponError("");
-                    setCouponSuccess("");
+<div className={styles.enCourseDisplay}>
+  {selectedBatch?.day || "—"}
+</div>
 
-                    setLockButtonsUntilBatchChange(false);
-                  }}
-                  className={styles.enSelect}
-                >
-                  <option value="">Choose Batch</option>
-                  {batches.map((b, idx) => (
-                    <option key={idx} value={b.value.key}>
-                      {b.label}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div className={styles.enCol}>

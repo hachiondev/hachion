@@ -67,18 +67,92 @@ const Trending = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchTrendingCourses = async () => {
-      setLoading(true);
-      try {
-        const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
-        const trendingData = trendingResponse.data || [];
+  // useEffect(() => {
+  //   const fetchTrendingCourses = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const trendingResponse = await axios.get('https://api.test.hachion.co/trendingcourse');
+  //       const trendingData = trendingResponse.data || [];
 
-        const activeTrendingCourses = trendingData.filter(course => course.status);
+  //       const activeTrendingCourses = trendingData.filter(course => course.status);
 
-        const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/summary');
-        const rawCourses = allCoursesResponse.data || [];
-        const allCourses = rawCourses.map(row => ({
+  //       const allCoursesResponse = await axios.get('https://api.test.hachion.co/courses/summary');
+  //       const rawCourses = allCoursesResponse.data || [];
+  //       const allCourses = rawCourses.map(row => ({
+  //         id: row[0],
+  //         courseName: row[1],
+  //         courseImage: row[2],
+  //         numberOfClasses: row[3],
+  //         level: row[4],
+  //         amount: row[5],
+  //         discount: row[6],
+  //         total: row[7],
+  //         iamount: row[8],
+  //         idiscount: row[9],
+  //         itotal: row[10],
+  //         courseCategory: row[11],
+  //       }));
+  //       const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
+  //       const allTrainers = trainersResponse.data || [];
+
+
+  //       const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
+  //         const courseDetails = allCourses.find(
+  //           course => course.courseName === trendingCourse.course_name
+  //         );
+
+  //         const matchedTrainer = allTrainers.find(
+  //           t => t.course_name.trim().toLowerCase() === trendingCourse.course_name.trim().toLowerCase()
+  //         );
+
+  //         return {
+  //           ...trendingCourse,
+  //           ...courseDetails,
+  //           trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
+  //         };
+  //       });
+
+  //       const uniqueCategories = [
+  //         'All',
+  //         ...new Set(detailedTrendingCourses.map(course => course.category_name)),
+  //       ];
+
+  //       setCategories(uniqueCategories);
+  //       setTrendingCourses(detailedTrendingCourses);
+  //     } catch (error) {
+  //       console.error('Error fetching trending courses:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchTrendingCourses();
+  // }, []);
+useEffect(() => {
+  const fetchTrendingCourses = async () => {
+    setLoading(true);
+    try {
+      const trendingResponse = await axios.get(
+        "https://api.test.hachion.co/trendingcourse"
+      );
+      const trendingData = trendingResponse.data || [];
+
+      console.log("🔥 Trending API Raw Data:", trendingData);
+
+      const activeTrendingCourses = trendingData.filter(course => course.status);
+
+      console.log("✅ Active Trending Courses:", activeTrendingCourses);
+
+      const allCoursesResponse = await axios.get(
+        "https://api.test.hachion.co/courses/summary"
+      );
+      const rawCourses = allCoursesResponse.data || [];
+
+      // 👇 MOST IMPORTANT LOG
+      console.log("📦 Courses Summary RAW (DB rows):", rawCourses);
+
+      const allCourses = rawCourses.map(row => {
+        const mapped = {
           id: row[0],
           courseName: row[1],
           courseImage: row[2],
@@ -91,43 +165,68 @@ const Trending = () => {
           idiscount: row[9],
           itotal: row[10],
           courseCategory: row[11],
-        }));
-        const trainersResponse = await axios.get('https://api.test.hachion.co/trainers');
-        const allTrainers = trainersResponse.data || [];
+        };
 
+        // 👇 Row-level validation
+        console.log("🧩 Mapped Course Object:", mapped);
 
-        const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
-          const courseDetails = allCourses.find(
-            course => course.courseName === trendingCourse.course_name
-          );
+        return mapped;
+      });
 
-          const matchedTrainer = allTrainers.find(
-            t => t.course_name.trim().toLowerCase() === trendingCourse.course_name.trim().toLowerCase()
-          );
+      console.log("📚 All Courses (Mapped):", allCourses);
 
-          return {
-            ...trendingCourse,
-            ...courseDetails,
-            trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
-          };
-        });
+      const trainersResponse = await axios.get(
+        "https://api.test.hachion.co/trainers"
+      );
+      const allTrainers = trainersResponse.data || [];
 
-        const uniqueCategories = [
-          'All',
-          ...new Set(detailedTrendingCourses.map(course => course.category_name)),
-        ];
+      console.log("👨‍🏫 Trainers Data:", allTrainers);
 
-        setCategories(uniqueCategories);
-        setTrendingCourses(detailedTrendingCourses);
-      } catch (error) {
-        console.error('Error fetching trending courses:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const detailedTrendingCourses = activeTrendingCourses.map(trendingCourse => {
+        const courseDetails = allCourses.find(
+          course =>
+            course.courseName?.trim().toLowerCase() ===
+            trendingCourse.course_name?.trim().toLowerCase()
+        );
 
-    fetchTrendingCourses();
-  }, []);
+        console.log(
+          "🔍 Matching Course for:",
+          trendingCourse.course_name,
+          "➡️",
+          courseDetails
+        );
+
+        const matchedTrainer = allTrainers.find(
+          t =>
+            t.course_name?.trim().toLowerCase() ===
+            trendingCourse.course_name?.trim().toLowerCase()
+        );
+
+        return {
+          ...trendingCourse,
+          ...courseDetails,
+          trainerName: matchedTrainer ? matchedTrainer.trainer_name : "",
+        };
+      });
+
+      console.warn("🚀 Final Trending Courses:", detailedTrendingCourses);
+
+      const uniqueCategories = [
+        "All",
+        ...new Set(detailedTrendingCourses.map(course => course.category_name)),
+      ];
+
+      setCategories(uniqueCategories);
+      setTrendingCourses(detailedTrendingCourses);
+    } catch (error) {
+      console.error("❌ Error fetching trending courses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchTrendingCourses();
+}, []);
 
   const filteredCourses =
     activeCategory === 'All'

@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./FAQSection.module.css";
 import { cn } from "../../../../utils";
-import { useGeneralFaqs } from "../../../../Api/hooks/CourseApi/useGeneralFaqs";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
+
+const API_BASE = "https://api.test.hachion.co";
 
 const Chevron = ({ open }) => (
   <svg
@@ -21,147 +25,176 @@ const Chevron = ({ open }) => (
 
 export default function FAQSection({
   onChat = () => {},
-  onSchedule = () => {},
 }) {
-  const [openIndex, setOpenIndex] = useState(null);
+ const { courseName } = useParams();
 
-  // ✅ ADDED: controls View More / View Less (default = show 4)
+/* --------------------------------
+   SAME normalization as DemoClassSection
+---------------------------------- */
+const rawSlug = courseName ? decodeURIComponent(courseName) : "";
+
+const normalizeCourseSlug = (slug) =>
+  slug
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+
+// ✅ EXISTING HOOK (UNCHANGED)
+const {
+  data: course,
+  isLoading: courseLoading,
+  isError: courseError,
+} = useCourseByName(courseNameForApi);
+
+
+  const [faqs, setFaqs] = useState([]);
+  const [expandedTopics, setExpandedTopics] = useState({});
   const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  const {
-    data: faqs = [],
-    isLoading,
-    isError,
-  } = useGeneralFaqs();
+  /* -----------------------------
+     STEP 2: Fetch Course FAQs
+  ----------------------------- */
+  useEffect(() => {
+    if (!course?.courseName) return;
 
-  if (isLoading) {
+    const fetchFaqs = async () => {
+      try {
+        setLoading(true);
+
+        const res = await axios.get(`${API_BASE}/faq`);
+
+        const filtered = res.data.filter(
+          item =>
+            item.course_name &&
+            item.course_name.trim() === course.courseName.trim()
+        );
+
+        setFaqs(filtered);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, [course]);
+
+  /* -----------------------------
+     Loading & Error States
+  ----------------------------- */
+  if (courseLoading || loading) {
     return (
       <section className={styles.faqwrap}>
         <div className="container">
-          <div className={styles.faqhead}>
-            <h2>Frequently Asked Questions</h2>
-            <p>Got questions? We’ve got answers</p>
-          </div>
           <p>Loading FAQs...</p>
         </div>
       </section>
     );
   }
 
-  if (isError) {
+  if (courseError || error) {
     return (
       <section className={styles.faqwrap}>
         <div className="container">
-          <p className="error-text">Unable to load FAQs right now.</p>
+          <p className="error-text">Unable to load FAQs.</p>
         </div>
       </section>
     );
   }
 
+  const visibleFaqs = showAll ? faqs : faqs.slice(0, 4);
+
   return (
-    <section className={styles.faqwrap} aria-labelledby="faq-heading">
+    <section className={styles.faqwrap}>
       <div className="container">
         <div className={styles.faqhead}>
-          <h2 id="faq-heading">Frequently Asked Questions</h2>
+          <h2>Frequently Asked Questions</h2>
           <p>Got questions? We’ve got answers</p>
         </div>
 
         <div className={styles.faqlist} role="list">
-          {/*
-            ✅ ADJUSTED:
-            - Show only 4 FAQs by default
-            - Show all FAQs when showAll = true
-          */}
-          {faqs
-            .slice(0, showAll ? faqs.length : 4)
-            .map((item, idx) => {
-              const open = openIndex === idx;
-              const panelId = `faq-panel-${idx}`;
-              const btnId = `faq-btn-${idx}`;
+          {visibleFaqs.map((item, idx) => {
+            const open = !!expandedTopics[idx];
+            const panelId = `faq-panel-${idx}`;
+            const btnId = `faq-btn-${idx}`;
 
-              return (
-                <div
-                  key={idx}
-                  className={cn(styles.faqitem, open && styles.isopen)}
-                  role="listitem"
+            return (
+              <div
+                key={idx}
+                className={cn(styles.faqitem, open && styles.isopen)}
+                role="listitem"
+              >
+                <button
+                  id={btnId}
+                  className={styles.faqbtn}
+                  aria-expanded={open}
+                  aria-controls={panelId}
+                  onClick={() =>
+                    setExpandedTopics(prev => ({
+                      ...prev,
+                      [idx]: !prev[idx],
+                    }))
+                  }
                 >
-                  <button
-                    id={btnId}
-                    className={styles.faqbtn}
-                    aria-expanded={open}
-                    aria-controls={panelId}
-                    onClick={() => setOpenIndex(open ? null : idx)}
-                  >
-                    <span className={styles.faqq}>{item.q}</span>
-                    <Chevron open={open} />
-                  </button>
+                  <span className={styles.faqq}>{item.faq_title}</span>
+                  <Chevron open={open} />
+                </button>
 
-                  <div
-                    id={panelId}
-                    className={styles.faqpanel}
-                    role="region"
-                    aria-labelledby={btnId}
-                    style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-                  >
-                    <div className={styles.faqpanelinner}>
-                      <p className={styles.faqa}>{item.a}</p>
-                    </div>
+                <div
+                  id={panelId}
+                  className={styles.faqpanel}
+                  role="region"
+                  aria-labelledby={btnId}
+                  style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+                >
+                  <div className={styles.faqpanelinner}>
+                    <div
+                      className={styles.faqa}
+                      dangerouslySetInnerHTML={{
+                        __html: item.description,
+                      }}
+                    />
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
 
-        {/* 
-          ✅ ADDED: View More / View Less button
-          - Visible only if FAQs > 4
-          - Same behavior as CourseCurriculum
-        */}
-       {faqs.length > 4 && (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "24px",
-      marginBottom: "40px",
-    }}
-  >
-    <button
-      onClick={() => {
-        setShowAll(!showAll);
-        setOpenIndex(null);
-      }}
-      className="home-start-button"
-    >
-      {showAll ? "View Less" : "View More"}
-      <span style={{ fontSize: "18px", lineHeight: 1 }}>
-        {showAll ? "↑" : "↓"}
-      </span>
-    </button>
-  </div>
-)}
-
-
-        <div className={styles.faqhelp}>
-          <div className={styles.faqhelpsub}>Still have questions?</div>
-          <div className={styles.faqactions}>
+        {faqs.length > 4 && (
+          <div style={{ textAlign: "center", marginTop: 24 }}>
             <button
-              className={styles.faqprimary}
-              onClick={() =>
-                window.open(
-                  "https://api.whatsapp.com/send/?phone=919490323388&text&type=phone_number&app_absent=0",
-                  "_blank"
-                )
-              }
+              className="home-start-button"
+              onClick={() => {
+                setShowAll(!showAll);
+                setExpandedTopics({});
+              }}
             >
-              Chat with Our Team
+              {showAll ? "View Less ↑" : "View More ↓"}
             </button>
+             <div className={styles.faqactions}>
+     <button
+  className={styles.faqprimary}
+  onClick={() =>
+    window.open(
+      "https://api.whatsapp.com/send/?phone=919490323388&text&type=phone_number&app_absent=0",
+      "_blank"
+    )
+  }
+>
+  Chat with Our Team
+</button>
 
-            {/* <button className={styles.faqlink} onClick={onSchedule}>
-              Schedule a Call
-            </button> */}
+    </div>
           </div>
-        </div>
+        )}
+        
       </div>
     </section>
   );

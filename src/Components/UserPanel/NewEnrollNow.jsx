@@ -10,6 +10,7 @@ import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscou
 import { useCouponDiscount } from "../../Api/hooks/CourseApi/useCouponDiscount";
 import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
 
+
 export default function NewEnrollNow() {
     const location = useLocation();
     const preselectedSession = location.state?.selectedSession || null;

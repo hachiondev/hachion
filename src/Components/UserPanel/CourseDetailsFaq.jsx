@@ -12,7 +12,7 @@ const CourseDetailsFaq = () => {
   const [expandedTopics, setExpandedTopics] = useState({});
   const [faq, setFaq] = useState([]);
    const [pdfUrl, setPdfUrl] = useState(null); 
-  const { courseName } = useParams(); // Extract courseName from URL params
+  const { courseName } = useParams(); 
   const [matchedCourseName, setMatchedCourseName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

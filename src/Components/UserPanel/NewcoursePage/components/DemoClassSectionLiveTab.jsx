@@ -94,6 +94,21 @@ What's Included:
     }));
   };
 
+  const handleEnrollWithLoginCheck = (sess) => {
+  if (isProfileLoading) return;
+
+  if (!userProfile || !userProfile.studentId) {
+    onCloseRegisterPrompt && onCloseRegisterPrompt(); 
+    
+    return onRequestClick?.("LOGIN_REQUIRED"); 
+  }
+
+  onEnrollClick(sess, {
+    email: notifyViaMap[sess.id]?.email ?? true,
+    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+  });
+};
+
   return (
     <div className={styles.dcgrid}>
       <div>
@@ -297,17 +312,13 @@ What's Included:
      LIVE CLASS → NOT PAID → ENROLL
      ========================= */
   <div className={styles.enrollActions}>
-    <button
-      className={styles.dcbtn}
-      onClick={() =>
-        onEnrollClick(sess, {
-          email: notifyViaMap[sess.id]?.email ?? true,
-          whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-        })
-      }
-    >
-      Enroll
-    </button>
+   <button
+  className={styles.dcbtn}
+  onClick={() => handleEnrollWithLoginCheck(sess)}
+>
+  Enroll
+</button>
+
 
     {/* 🔔 Email / WhatsApp */}
     <div className={styles.notifyOptions}>

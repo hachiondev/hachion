@@ -125,19 +125,17 @@ const [requestSourceTab, setRequestSourceTab] = useState(null);
   });
 
 const handleLiveEnrollClick = async (session, notifyVia) => {
-  // ✅ LIVE CLASS -> only navigation
+  
   if (session?.mode !== "Live Demo") {
   navigate(`/enroll-now/${courseName}`, {
     state: {
       notifyVia,
       selectedBatchId: session.batchId,
-      selectedSession: session, // 👈 IMPORTANT
+      selectedSession: session, 
     },
   });
   return;
 }
-
-  // ✅ LIVE DEMO -> call API (previous behavior)
   if (!userProfile || !userProfile.studentId) {
     setShowRegisterPrompt(true);
     return;
@@ -147,7 +145,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   setEnrollingSessionId(session.id);
 
   try {
-    await handleLiveEnrollPayment(session, notifyVia); // this should call enroll/add for demo
+    await handleLiveEnrollPayment(session, notifyVia); 
     onViewDemoClass && onViewDemoClass();
   } finally {
     setEnrollingSessionId(null);
@@ -425,7 +423,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             selectedGroup={selectedGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            // showMessage={tabMessage[activeTab]}
+            
             showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
 
             isRequestBatchSuccess={isRequestBatchSuccess}

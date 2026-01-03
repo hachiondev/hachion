@@ -25,7 +25,6 @@ const handleNavigation = (courseName) => {
   navigate(`/coursedetails/${formatted}`);
 };
 
-
 const go = (path) => {
   navigate(path, {
     state: {

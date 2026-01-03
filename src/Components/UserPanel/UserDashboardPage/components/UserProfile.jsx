@@ -8,7 +8,7 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import { Menu, MenuItem, Button } from '@mui/material';
 import Flag from 'react-world-flags';
 import axios from 'axios';
-import './Dashboard.css';
+import '../../Dashboard.css';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { useNavigate, Link } from 'react-router-dom';
 

@@ -1,41 +1,41 @@
 import { React, useState, useEffect } from 'react';
-import './Dashboard.css';
+import '../Dashboard.css';
 import { RxDashboard } from "react-icons/rx";
 import { PiNotePencilBold, PiCertificateBold } from "react-icons/pi";
 import { MdOutlineRateReview } from "react-icons/md";
 import { GoPerson } from "react-icons/go";
 import { TbSettingsBolt } from "react-icons/tb";
 import { PiBriefcase } from "react-icons/pi";
-import UserDashboardCard from './UserDashboardCard';
-import UserEnrolled from './UserEnrolled';
-import UserOrders from './UserOrders';
-import UserCertificate from './UserCertificate';
-import UserReviews from './UserReviews';
-import UserPathfinder from './UserPathfinder';
-import UserProfile from './UserProfile';
+import UserDashboardCard from './components/UserDashboardCard';
+import UserEnrolled from './components/UserEnrolled';
+import UserOrders from './components/UserOrders';
+import UserCertificate from './components/UserCertificate';
+import UserReviews from './components/UserReviews';
+import UserPathfinder from './components/UserPathfinder';
+import UserProfile from './components/UserProfile';
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { useParams, useNavigate } from 'react-router-dom';
-import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
+import { CgPathOutline, CgMenuGridR } from "react-icons/cg";
 import { BsBookmarkHeart } from "react-icons/bs";
-import UserWishlist from './UserWishlist';
-import UserAppliedJobs from './UserAppliedJobs';
+import UserWishlist from './components/UserWishlist';
+import UserAppliedJobs from '../UserAppliedJobs';
 import { BsCart2 } from "react-icons/bs";
 
 const menuItems = [
-  { title: 'Dashboard',     slug: 'dashboard',      icon: <RxDashboard /> },
-  { title: 'User Profile',  slug: 'profile',       icon: <GoPerson /> },
-  { title: 'Enrolls',       slug: 'enrolls',        icon: <PiNotePencilBold /> },
-  { title: 'Wishlist',      slug: 'wishlist',       icon: <BsBookmarkHeart /> },
-  { title: 'Order History', slug: 'order_history',  icon: <BsCart2 /> },
-  { title: 'Certificate',   slug: 'certificate',    icon: <PiCertificateBold /> },
+  { title: 'Dashboard', slug: 'dashboard', icon: <RxDashboard /> },
+  { title: 'User Profile', slug: 'profile', icon: <GoPerson /> },
+  { title: 'Enrolls', slug: 'enrolls', icon: <PiNotePencilBold /> },
+  { title: 'Wishlist', slug: 'wishlist', icon: <BsBookmarkHeart /> },
+  { title: 'Order History', slug: 'order_history', icon: <BsCart2 /> },
+  { title: 'Certificate', slug: 'certificate', icon: <PiCertificateBold /> },
   // { title: 'Applied Jobs',  slug: 'applied_jobs',   icon: <PiBriefcase /> },
-  { title: 'Review',        slug: 'review',         icon: <MdOutlineRateReview /> },
-  { title: 'Pathfinder',    slug: 'pathfinder',     icon: <CgPathOutline  /> },
+  { title: 'Review', slug: 'review', icon: <MdOutlineRateReview /> },
+  { title: 'Pathfinder', slug: 'pathfinder', icon: <CgPathOutline /> },
   // { title: 'Settings',      slug: 'settings',       icon: <TbSettingsBolt /> },
 ];
 
 const UserDashboard = () => {
-  const { section } = useParams(); 
+  const { section } = useParams();
   const navigate = useNavigate();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -43,24 +43,24 @@ const UserDashboard = () => {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 480);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  
+
   useEffect(() => {
     const urlSlug = (section || '').toLowerCase();
     const storedSlug = localStorage.getItem('selectedCategorySlug');
 
     let idx = menuItems.findIndex(m => m.slug === urlSlug);
     if (idx === -1 && !urlSlug && storedSlug) {
-      
+
       const storedIdx = menuItems.findIndex(m => m.slug === storedSlug);
       if (storedIdx !== -1) {
         navigate(`/userdashboard/${storedSlug}`, { replace: true });
         idx = storedIdx;
       }
     }
-    if (idx === -1) idx = 0; 
+    if (idx === -1) idx = 0;
 
     setActiveIndex(idx);
-    
+
     localStorage.setItem('selectedCategorySlug', menuItems[idx].slug);
   }, [section, navigate]);
 

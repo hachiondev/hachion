@@ -4,24 +4,24 @@ import "../Blogs.css";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
+// import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
 import { useCategories } from "../../../Api/hooks/SitemapPageApi/useCategories";
 import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
-import Loader from "../Loader/Loader";
+import Loader from "../Common/Loader/Loader";
 
 const Sitemap = () => {
   const navigate = useNavigate();
-  const { data: course = [] } = useCourses();
+  // const { data: course = [] } = useCourses();
   const { data: Category = [], isLoading: loadingCategories, error: categoryError } = useCategories();
   const { data: courses = [], isLoading: loadingCourses, error: coursesError } = useAllCourses();
 
   useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
+    window.scrollTo(0, 0);
+  }, []);
 
-    if (loadingCategories || loadingCourses) {
+  if (loadingCategories || loadingCourses) {
     return (
-      <Loader/>
+      <Loader />
     );
   }
 
@@ -34,19 +34,13 @@ const Sitemap = () => {
       </div>
     );
   }
-const handleCategoryClick = (categoryName) => {
-  // URL encode the category
-  const encodedCategory = encodeURIComponent(categoryName);
-  
-  // Navigate with query parameter
-  navigate(`/coursedetails?category=${encodedCategory}&from=sitemap`);
-  
-  console.log("🚀 Navigating to:", `/coursedetails?category=${encodedCategory}`);
-  
-  // Also store in sessionStorage as backup
-  sessionStorage.setItem('sitemapCategory', categoryName);
-  sessionStorage.setItem('sitemapTime', Date.now().toString());
-};
+
+  const handleCategoryClick = (categoryName) => {
+    navigate("/coursedetails", {
+      state: { selectedCategory: categoryName }
+    });
+  };
+
   const handleCourseDetails = (coursename) => {
     if (coursename) {
       const formatted = coursename.toLowerCase().replace(/\s+/g, "-");

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import SidebarCard from "./SidebarCard";
-import Pagination from "./Common/Pagination";
+import SidebarCard from "../../SidebarCard";
+import Pagination from "../../Common/Pagination";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import "./Dashboard.css";
+import "../../Dashboard.css";
 
 dayjs.extend(customParseFormat);
 

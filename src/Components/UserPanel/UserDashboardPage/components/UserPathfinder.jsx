@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Pathfinder1 from "./Pathfinder1";
-import Pathfinder2 from "./Pathfinder2";
-import Pathfinder3 from "./Pathfinder3";
-import Pathfinder4 from "./Pathfinder4";
+import Pathfinder1 from "../../Pathfinder1";
+import Pathfinder2 from "../../Pathfinder2";
+import Pathfinder3 from "../../Pathfinder3";
+import Pathfinder4 from "../../Pathfinder4";
 import axios from "axios";
 
 const UserPathfinder = () => {

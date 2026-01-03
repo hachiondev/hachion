@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbShare3 } from "react-icons/tb";
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
+import { BsCheckCircleFill } from "react-icons/bs";
 import fallbackImg from "../../Assets/18.webp";
 import "./Home.css";
 
@@ -15,6 +16,8 @@ const UserEnrolledCards = ({
   status = "Enrolled to Demo",
   isLiveClass = false,
   courseData = {}, // ✅ add this to receive full course info from parent
+  activeTab, 
+  forceCompleted = false, // ✅ New prop to force completion display
 }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -32,7 +35,7 @@ const UserEnrolledCards = ({
   // ✅ Fixed: Pass proper course data
   const handleNavigation = () => {
     navigate(`/userenrolledassignment/${formattedName}`, {
-      state: { courseData }, // pass the data properly
+      state: { courseData, activeTab, }, // pass the data properly
     });
   };
 
@@ -64,10 +67,20 @@ const UserEnrolledCards = ({
     setBookmarked(!bookmarked);
   };
 
-  // ✅ Button label logic
+  // ✅ Enhanced button label logic based on activeTab
   const getButtonLabel = () => {
+    // If course is completed (regardless of tab), show "Completed Demo"
+    if (status === "Completed" || forceCompleted) {
+      return "View Certificate";
+    }
+
     if (isLiveClass) {
       return status === "Completed Demo" ? "Download Certificate" : "Join Live Class";
+    }
+
+    // Show different labels based on active tab
+    if (activeTab === "Completed Courses") {
+      return "View Certificate";
     }
 
     switch (status) {
@@ -75,18 +88,21 @@ const UserEnrolledCards = ({
         return "Start Course";
       case "Enrolled to Demo":
         return progress === 0 ? "Start Course" : "Continue Course";
-      case "Completed":
-        return "Completed Demo";
       default:
         return "Start Course";
     }
   };
+
+  // ✅ Determine progress display based on activeTab
+  const displayProgress = forceCompleted ? 100 : progress;
+  const isCompletedTab = activeTab === "Completed Courses" || forceCompleted;
 
   return (
     <div
       className="sidebar-card"
       style={{ cursor: "pointer" }}
       onClick={handleNavigation}
+      data-tab={activeTab.toLowerCase().replace(/\s+/g, '-')}
     >
       <div className="card-action-icons">
         <button className="card-icons" onClick={handleShare}>
@@ -124,20 +140,34 @@ const UserEnrolledCards = ({
 
         <h3 className="user-course-name">{heading}</h3>
 
-        {/* ✅ Progress bar with percentage */}
-        <div className="progress-container">
-          <div className="card-row">
-            <p className="progress-text">Completed</p>
-            <p className="progress-text">{progress}%</p>
+        {/* ✅ Progress display - Different for Enrolled vs Completed tabs */}
+        {!isCompletedTab ? (
+          // Enrolled Courses tab - show progress bar
+          <div className="progress-container">
+            <div className="card-row">
+              <p className="progress-text">Completed</p>
+              <p className="progress-text">{displayProgress}%</p>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${displayProgress}%` }}></div>
+            </div>
           </div>
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+        ) : (
+          // Completed Courses tab - show completion badge
+          <div className="progress-container">
+            <div className="card-row">
+              <p className="progress-text">Completed</p>
+              <p className="progress-text">{displayProgress}%</p>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${displayProgress}%` }}></div>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ✅ Dynamic button */}
         <button
-          className="card-view-btn"
+          className={`card-view-btn ${isCompletedTab ? 'completed-btn' : ''}`}
           onClick={(e) => {
             e.stopPropagation();
             handleNavigation();

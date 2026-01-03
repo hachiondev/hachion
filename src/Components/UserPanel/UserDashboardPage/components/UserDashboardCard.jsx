@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import './Dashboard.css';
-import DashboardCard from './DashboardCard'; 
-import enroll from "../../Assets/dash-icon1.webp";
-import learn from "../../Assets/dash-icon2.webp";
-import cert from "../../Assets/dash-icon3.webp";
-import progress from "../../Assets/dash-icon4.webp";
-import Learn from "../../Assets/dash-icon5.webp";
-import assignment from "../../Assets/dash-icon6.webp";
-import activity from "../../Assets/dash-icon7.webp";
+import '../../Dashboard.css';
+import DashboardCard from '../../DashboardCard'; 
+import enroll from "../../../../Assets/dash-icon1.webp";
+import learn from "../../../../Assets/dash-icon2.webp";
+import cert from "../../../../Assets/dash-icon3.webp";
+import progress from "../../../../Assets/dash-icon4.webp";
+import Learn from "../../../../Assets/dash-icon5.webp";
+import assignment from "../../../../Assets/dash-icon6.webp";
+import activity from "../../../../Assets/dash-icon7.webp";
 
 const API_BASE = "https://api.test.hachion.co";
 

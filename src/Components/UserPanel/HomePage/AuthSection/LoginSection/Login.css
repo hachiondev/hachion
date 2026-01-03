@@ -761,9 +761,9 @@
 
   .login-form-heading,
   .login-continue {
-    font-size: 22px; /* Increased to 22px */
+    font-size: 30px; /* Increased to 22px */
     margin-bottom: 24px;
-    text-align: center;
+    text-align:left;
     font-weight: 600;
     color: #333;
   }
@@ -1095,9 +1095,9 @@
 
   .login-form-heading,
   .login-continue {
-    font-size: 22px;
+    font-size: 26px;
     margin-bottom: 20px;
-    text-align: center;
+    text-align: left;
     font-weight: 600;
     color: #333;
   }

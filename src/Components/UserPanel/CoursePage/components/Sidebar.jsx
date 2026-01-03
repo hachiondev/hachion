@@ -51,31 +51,36 @@ const normalize = (v = "") =>
   }, []);
 
 useEffect(() => {
-    console.log("🧪 EFFECT RUN", {
-    selectedCategoryFromParent,
-    categoriesLoaded: categories.length,
-  })
-  if (!selectedCategoryFromParent) return;
-  if (categories.length === 0) return;
+  const categoryFromState = location.state?.selectedCategory;
+  console.log("✅ Sidebar.jsx picked category from state:", categoryFromState);
 
-  const match = categories.find(
-    c => normalize(c.name) === normalize(selectedCategoryFromParent)
-  );
+  if (!categories.length) return;
 
-  if (!match) return;
+  let categoryToSelect = null;
 
-  setSelectedCategories([match.name]);
+  // 1️⃣ From sitemap / login redirect
+  if (categoryFromState) {
+    categoryToSelect = categories.find(
+      c => normalize(c.name) === normalize(categoryFromState)
+    );
+  }
+
+  // 2️⃣ Default category (fallback)
+  if (!categoryToSelect) {
+    categoryToSelect = categories[0]; // or any fixed category
+  }
+
+  if (!categoryToSelect) return;
+
+  setSelectedCategories([categoryToSelect.name]);
 
   onFilterChange({
-    categories: [match.name],
-    levels: selectedLevels.includes("All Levels") ? [] : selectedLevels,
-    price: selectedPrice,
+    categories: [categoryToSelect.name],
+    levels: [],
+    price: [],
   });
-}, [selectedCategoryFromParent, categories]);
 
-
-
-// console.log("🟡 Sidebar received selectedCategoryFromParent:", selectedCategoryFromParent);
+}, [categories, location.state]);
 
 
   const toggleSection = (section) => {
@@ -118,14 +123,14 @@ useEffect(() => {
     });
   };
 
-  useEffect(() => {
-    onFilterChange({
-      categories: selectedCategories,
-      levels: [],
-      price: selectedPrice,
-    });
+  // useEffect(() => {
+  //   onFilterChange({
+  //     categories: selectedCategories,
+  //     levels: [],
+  //     price: selectedPrice,
+  //   });
 
-  }, []);
+  // }, []);
 
   const parseMDY = (s) => dayjs(s, ["MM/DD/YYYY", "YYYY-MM-DD"], true);
   const STRICT_DATE_WINDOW = true;
@@ -246,17 +251,17 @@ useEffect(() => {
 
   }, [discountRules, courses, country]);
 
-  useEffect(() => {
-  if (preSelectedCategory) {
-    setSelectedCategories([preSelectedCategory]);
+//   useEffect(() => {
+//   if (preSelectedCategory) {
+//     setSelectedCategories([preSelectedCategory]);
 
-    onFilterChange({
-      categories: [preSelectedCategory],
-      levels: [],
-      price: [],
-    });
-  }
-}, [preSelectedCategory]);
+//     onFilterChange({
+//       categories: [preSelectedCategory],
+//       levels: [],
+//       price: [],
+//     });
+//   }
+// }, [preSelectedCategory]);
 
 
   if (loadingCategories || loadingCourses || loadingCountry) {

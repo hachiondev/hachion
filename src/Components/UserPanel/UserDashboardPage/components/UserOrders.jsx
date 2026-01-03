@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FiDownload } from "react-icons/fi";
 import dayjs from 'dayjs';
-import './Dashboard.css';
+import '../../Dashboard.css';
 
 export default function UserOrders() {
   const [rows, setRows] = useState([]);

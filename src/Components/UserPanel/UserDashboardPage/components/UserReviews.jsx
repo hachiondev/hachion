@@ -9,10 +9,10 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import { LiaStarSolid } from "react-icons/lia";
-import UserWriteReview from './UserWriteReview';
+import UserWriteReview from '../../UserWriteReview';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { MdOutlineDeleteForever } from "react-icons/md";
-import './Dashboard.css';
+import '../../Dashboard.css';
 
 export default function UserReviews() {
   const [showReviewForm, setShowReviewForm] = useState(false);

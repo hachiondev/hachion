@@ -1,4 +1,3 @@
-
 import { useEffect, useCallback, useState } from "react";
 import { useRequestBatchForCourse } from "../CourseApi/useRequestBatchForCourse";
 
@@ -10,7 +9,7 @@ export function useDemoBatchRequestLogic({
   userProfile,
   isProfileLoading,
 }) {
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessageByTab, setShowMessageByTab] = useState({});
 
   const {
     mutate: requestBatch,
@@ -86,16 +85,26 @@ export function useDemoBatchRequestLogic({
   );
 
   useEffect(() => {
-    if (isRequestBatchSuccess || requestBatchError) {
-      setShowMessage(true);
-      const t = setTimeout(() => setShowMessage(false), 10000);
-      return () => clearTimeout(t);
-    }
-  }, [isRequestBatchSuccess, requestBatchError]);
+    if (!isRequestBatchSuccess && !requestBatchError) return;
+
+    setShowMessageByTab(prev => ({
+      ...prev,
+      [activeTab]: true,
+    }));
+
+    const t = setTimeout(() => {
+      setShowMessageByTab(prev => ({
+        ...prev,
+        [activeTab]: false,
+      }));
+    }, 15000);
+
+    return () => clearTimeout(t);
+  }, [isRequestBatchSuccess, requestBatchError, activeTab]);
 
   return {
     handleRequestBatch,
-    showMessage,
+    showMessage: Boolean(showMessageByTab[activeTab]),
     requestBatchData,
     requestBatchError,
     isRequestBatchSuccess,

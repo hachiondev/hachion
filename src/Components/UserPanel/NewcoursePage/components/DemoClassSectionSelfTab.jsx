@@ -57,22 +57,36 @@ What's Included:
 • Lifetime access with free updates
 • No prior programming experience required`;
 
-const isAnyDaySelected = () => {
-  const checkboxes = document.querySelectorAll(".dayCheckbox");
-  return Array.from(checkboxes).some((cb) => cb.checked);
-};
+// const isAnyDaySelected = () => {
+//   const checkboxes = document.querySelectorAll(".dayCheckbox");
+//   return Array.from(checkboxes).some((cb) => cb.checked);
+// };
+
+// const isSelfFormValid =
+//   isAnyDaySelected() &&
+//   preferredTime &&
+//   notification;
+
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+const [selectedDays, setSelectedDays] = useState([]);
+const [isSubmitting, setIsSubmitting] = useState(false);
 
 const isSelfFormValid =
-  isAnyDaySelected() &&
-  preferredTime &&
-  notification;
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  selectedDays.length > 0 &&
+  Boolean(preferredTime) &&
+  Boolean(notification);
 useEffect(() => {
   if (isRequestBatchSuccess || requestBatchError) {
     setIsSubmitting(false);
+    setSelectedDays([]);
+     setPreferredTime("");
   }
 }, [isRequestBatchSuccess, requestBatchError]);
+useEffect(() => {
+  if (!notification) {
+    setNotification("Email Only");
+  }
+}, [notification, setNotification]);
 
 
   return (
@@ -92,7 +106,7 @@ useEffect(() => {
                   Preferred Day: <span style={{ color: "red" }}>*</span>
                 </label>
 
-                <button
+                {/* <button
                                   type="button"
                                   data-mode="select"
                                   className={styles.selectAllBtn}
@@ -113,24 +127,39 @@ useEffect(() => {
                                   }}
                                 >
                                   Select All
-                                </button>
+                                </button> */}
+<button
+  type="button"
+  className={styles.selectAllBtn}
+  onClick={() => {
+    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    setSelectedDays((prev) =>
+      prev.length === allDays.length ? [] : allDays
+    );
+  }}
+>
+  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
+</button>
 
                 <div className={styles.dcrequestCheckboxes}>
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                    (day) => (
-                      <label
-                        key={day}
-                        className={styles.dcrequestCheckbox}
-                      >
-                        <input
-                          type="checkbox"
-                          className="dayCheckbox"
-                        />
-                        <span className={styles.checkmark}></span>
-                        <span>{day}</span>
-                      </label>
-                    )
-                  )}
+                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+  <label key={day} className={styles.dcrequestCheckbox}>
+    <input
+      type="checkbox"
+      checked={selectedDays.includes(day)}
+      onChange={(e) => {
+        setSelectedDays((prev) =>
+          e.target.checked
+            ? [...prev, day]
+            : prev.filter((d) => d !== day)
+        );
+      }}
+    />
+    <span className={styles.checkmark}></span>
+    <span>{day}</span>
+  </label>
+))}
+
                 </div>
               </div>
 

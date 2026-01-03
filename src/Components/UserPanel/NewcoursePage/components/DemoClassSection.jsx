@@ -52,12 +52,14 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   const [enrollErrorMessage, setEnrollErrorMessage] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [enrollingSessionId, setEnrollingSessionId] = useState(null);
-  const [tabMessage, setTabMessage] = useState({
-    live: false,
-    crash: false,
-    mentoring: false,
-    self: false
-  });
+ const [tabMessage, setTabMessage] = useState({
+  live: false,
+  crash: false,
+  mentoring: false,
+  self: false
+});
+
+const [requestSourceTab, setRequestSourceTab] = useState(null);
 
   useEffect(() => {
     if (!enrollSuccessMessage && !enrollErrorMessage) return;
@@ -253,6 +255,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
     }
 
     if (isRequestBatchSuccess || requestBatchError) {
+      setRequestSourceTab(prev => prev ?? activeTab);
       setTabMessage(prev => ({
         ...prev,
         [activeTab]: true
@@ -263,7 +266,8 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
           ...prev,
           [activeTab]: false
         }));
-      }, 6000);
+        setRequestSourceTab(null);
+      }, 10000);
 
       return () => clearTimeout(timer);
     }
@@ -421,7 +425,9 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             selectedGroup={selectedGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            showMessage={tabMessage[activeTab]}
+            // showMessage={tabMessage[activeTab]}
+            showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
+
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleRequestBatchWithLoginCheck}
@@ -450,7 +456,9 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             selectedCrashGroup={selectedCrashGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            showMessage={tabMessage[activeTab]}
+            // showMessage={tabMessage[activeTab]}
+            showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
+
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}
@@ -474,7 +482,9 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             setNotificationDropdownOpen={setMentoringNotificationDropdownOpen}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            showMessage={tabMessage[activeTab]}
+            // showMessage={tabMessage[activeTab]}
+            showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
+
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}
@@ -498,7 +508,9 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             setNotificationDropdownOpen={setSelfNotificationDropdownOpen}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            showMessage={tabMessage[activeTab]}
+            // showMessage={tabMessage[activeTab]}
+            showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
+
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}

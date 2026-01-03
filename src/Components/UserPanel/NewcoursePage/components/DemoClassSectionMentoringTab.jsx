@@ -54,22 +54,38 @@ What's Included:
 • English
 • Lifetime access with free updates
 • No prior programming experience required`;
-  const isAnyDaySelected = () => {
-    const checkboxes = document.querySelectorAll(".dayCheckbox");
-    return Array.from(checkboxes).some((cb) => cb.checked);
-  };
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const isAnyDaySelected = () => {
+  //   const checkboxes = document.querySelectorAll(".dayCheckbox");
+  //   return Array.from(checkboxes).some((cb) => cb.checked);
+  // };
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isMentoringFormValid =
-    isAnyDaySelected() &&
-    preferredTime &&
-    notification;
+  // const isMentoringFormValid =
+  //   isAnyDaySelected() &&
+  //   preferredTime &&
+  //   notification;
+
+  const [selectedDays, setSelectedDays] = useState([]);
+const [isSubmitting, setIsSubmitting] = useState(false);
+
+const isMentoringFormValid =
+  selectedDays.length > 0 &&
+  Boolean(preferredTime) &&
+  Boolean(notification);
 
   useEffect(() => {
-    if (isRequestBatchSuccess || requestBatchError) {
-      setIsSubmitting(false);
-    }
-  }, [isRequestBatchSuccess, requestBatchError]);
+  if (isRequestBatchSuccess || requestBatchError) {
+    setIsSubmitting(false);
+    setSelectedDays([]);
+     setPreferredTime("");
+  }
+}, [isRequestBatchSuccess, requestBatchError]);
+useEffect(() => {
+  if (!notification) {
+    setNotification("Email Only");
+  }
+}, [notification, setNotification]);
+
 
   return (
     <div className={styles.dcgrid}>
@@ -87,33 +103,35 @@ What's Included:
                 <label className={styles.dcrequestLabel}>Preferred Day: <span style={{ color: "red" }}>*</span></label>
 
                 {/* SELECT / DESELECT ALL */}
-                <button
-                  type="button"
-                  data-mode="select"
-                  className={styles.selectAllBtn}
-                  onClick={(e) => {
-                    const btn = e.currentTarget;
-                    const mode = btn.dataset.mode || "select";
-                    const checkboxes = document.querySelectorAll(".dayCheckbox");
+               <button
+  type="button"
+  className={styles.selectAllBtn}
+  onClick={() => {
+    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    setSelectedDays((prev) =>
+      prev.length === allDays.length ? [] : allDays
+    );
+  }}
+>
+  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
+</button>
 
-                    if (mode === "select") {
-                      checkboxes.forEach((cb) => (cb.checked = true));
-                      btn.dataset.mode = "deselect";
-                      btn.textContent = "Deselect All";
-                    } else {
-                      checkboxes.forEach((cb) => (cb.checked = false));
-                      btn.dataset.mode = "select";
-                      btn.textContent = "Select All";
-                    }
-                  }}
-                >
-                  Select All
-                </button>
                 <div className={styles.dcrequestCheckboxes}>
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
                     (day) => (
                       <label key={day} className={styles.dcrequestCheckbox}>
-                        <input type="checkbox" className="dayCheckbox" />
+                       <input
+  type="checkbox"
+  checked={selectedDays.includes(day)}
+  onChange={(e) => {
+    setSelectedDays((prev) =>
+      e.target.checked
+        ? [...prev, day]
+        : prev.filter((d) => d !== day)
+    );
+  }}
+/>
+
                         <span className={styles.checkmark}></span>
                         <span>{day}</span>
                       </label>

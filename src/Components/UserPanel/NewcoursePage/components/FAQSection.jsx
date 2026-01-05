@@ -116,6 +116,12 @@ const {
         <div className={styles.faqhead}>
           <h2>Frequently Asked Questions</h2>
           <p>Got questions? We’ve got answers</p>
+          {/* Empty State */}
+{(!faqs || faqs.length === 0) && (
+  <div style={{ textAlign: "center", color: "#000" }}>
+    No FAQs available
+  </div>
+)}
         </div>
 
         <div className={styles.faqlist} role="list">
@@ -170,7 +176,7 @@ const {
         {faqs.length > 4 && (
           <div style={{ textAlign: "center", marginTop: 24 }}>
             <button
-              className="home-start-button"
+              className={styles.faqViewButton}
               onClick={() => {
                 setShowAll(!showAll);
                 setExpandedTopics({});
@@ -178,7 +184,10 @@ const {
             >
               {showAll ? "View Less ↑" : "View More ↓"}
             </button>
-             <div className={styles.faqactions}>
+             
+          </div>
+        )}
+        <div className={styles.faqactions}>
      <button
   className={styles.faqprimary}
   onClick={() =>
@@ -192,9 +201,6 @@ const {
 </button>
 
     </div>
-          </div>
-        )}
-        
       </div>
     </section>
   );

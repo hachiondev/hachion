@@ -20,6 +20,8 @@ const Star = ({ active }) => (
 export default function StudentsSay({ onCta }) {
   const [currentStartIndex, setCurrentStartIndex] = useState(1); // Starting card index (1-based)
   const [cardsPerPage, setCardsPerPage] = useState(2); // Show 2 cards per page
+  const [expandedReviews, setExpandedReviews] = useState({});
+
 
   const navigate = useNavigate();
   const handleCta = onCta || (() => {
@@ -32,7 +34,7 @@ export default function StudentsSay({ onCta }) {
   =============================== */
   const { courseName } = useParams();
   const rawSlug = courseName ? decodeURIComponent(courseName) : "";
-  
+
   const normalizeCourseSlug = (slug) =>
     slug
       .replace(/[-_]+/g, " ")
@@ -57,6 +59,14 @@ export default function StudentsSay({ onCta }) {
     return reviews.slice(startIndex, endIndex);
   }, [reviews, currentStartIndex, cardsPerPage]);
 
+  const toggleReadMore = (id) => {
+    setExpandedReviews((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+
   // Reset to first card when tools change or cards per page changes
   useEffect(() => {
     setCurrentStartIndex(1);
@@ -70,19 +80,19 @@ export default function StudentsSay({ onCta }) {
         {/* Reviews with Pagination */}
         <div className={styles.wsreviewsSection}>
           <div className={styles.reviewGroup}>
-                      <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
-          
-          {/* Pagination - Show only if there are more than 2 reviews */}
-          {reviews.length > cardsPerPage && (
-            <div className={styles.cardPaginationContainer}>
-              <CardsPagination
-                currentPage={currentStartIndex}
-                totalCards={reviews.length}
-                cardsPerPage={cardsPerPage}
-                onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
-              />
-            </div>
-          )}
+            <h3 className={styles.wssubhead}>Recent Student Reviews</h3>
+
+            {/* Pagination - Show only if there are more than 2 reviews */}
+            {reviews.length > cardsPerPage && (
+              <div className={styles.cardPaginationContainer}>
+                <CardsPagination
+                  currentPage={currentStartIndex}
+                  totalCards={reviews.length}
+                  cardsPerPage={cardsPerPage}
+                  onPageChange={(newStartIndex) => setCurrentStartIndex(newStartIndex)}
+                />
+              </div>
+            )}
           </div>
 
 
@@ -116,7 +126,25 @@ export default function StudentsSay({ onCta }) {
                       </div>
                     </div>
 
-                    <p className={styles.wstext}>{r.review}</p>
+                    <p
+                      className={cn(
+                        styles.wstext,
+                        !expandedReviews[r.review_id] && styles.clamp2
+                      )}
+                    >
+                      {r.review}
+                    </p>
+
+                    {r.review?.length > 120 && (
+                      <button
+                        type="button"
+                        className={styles.readMoreBtn}
+                        onClick={() => toggleReadMore(r.review_id)}
+                      >
+                        {expandedReviews[r.review_id] ? "Read less" : "Read more"}
+                      </button>
+                    )}
+
                   </article>
                 );
               })

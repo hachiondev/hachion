@@ -543,7 +543,7 @@ useEffect(() => {
     ? formData.defaultTrainer?.trim() !== "" 
     : true;
     const hasClasses = formData.numberOfClasses?.toString().trim() !== "";
-    const hasImage = !!formData.courseImage;
+     const hasImage = formMode === 'Add' ? !!formData.courseImage : true;
   
     const hasProjects = formData.numberOfProjects?.toString().trim() !== "";
     const hasWhatYouWillLearn = formData.whatYouWillLearn?.trim() !== "";
@@ -917,7 +917,7 @@ const hasInrFields =
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">
-                      Course Image <span style={{ color: "red" }}>*</span>
+                      Course Image {formMode === 'Add' ? <span style={{ color: "red" }}>*</span> : ""}
                     </label>
                     <input
                       type="file"

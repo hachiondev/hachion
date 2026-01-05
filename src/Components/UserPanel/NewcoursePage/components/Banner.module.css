@@ -409,6 +409,7 @@
   }
 
   .bnmetric {
+    display: block;
     gap: 2px;
   }
 
@@ -659,7 +660,8 @@ font-size: 18px;
   }
 
   .bnmetric {
-    gap: 4px;
+    display: inline-flex;
+    gap: 8px;
     align-items: center;
   }
 
@@ -805,7 +807,7 @@ font-size: 18px;
   }
 
   .bnmetric {
-    gap: 4px;
+    gap: 8px;
     align-items: center;
   }
 

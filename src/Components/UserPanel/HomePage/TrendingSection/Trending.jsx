@@ -17,9 +17,7 @@ const Trending = () => {
   const { data: trending = [], isLoading } = useTrendingData();
   const { data: geo = {} } = useGeoData();
   const { data: discountRules = [] } = useDiscountRules();
-
   const { country = "US", currency = "USD", fxFromUSD = 1 } = geo;
-
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(4);
 
@@ -35,7 +33,6 @@ const Trending = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // categories derived from trending
   const categories = useMemo(() => {
     const cats = ["All", ...new Set((trending || []).map(c => c.category_name).filter(Boolean))];
     return cats;
@@ -49,7 +46,6 @@ const Trending = () => {
       : (trending || []).filter(c => c.category_name === activeCategory);
   }, [trending, activeCategory]);
 
-  // countdowns
 const regionNames = useMemo(() => {
   return Intl.DisplayNames
     ? new Intl.DisplayNames([navigator.language || "en"], { type: "region" })
@@ -75,9 +71,6 @@ const getEndsAt = useMemo(() => {
 }, [country, discountRules, regionNames]);
 
 const countdowns = useCountdowns(filtered, getEndsAt);
-
-
-  // pagination slicing
   const paginated = useMemo(() => {
     const start = Math.max(currentPage - 1, 0);
     return (filtered || []).slice(start, start + cardsPerPage);
@@ -115,18 +108,23 @@ const countdowns = useCountdowns(filtered, getEndsAt);
         ) : (filtered.length > 0) ? (
           paginated.map((course, i) => {
             const trainerName = course.trainerName || "Not Assigned";
+            
             const isIN = country === "IN";
-            const isUS = country === "US";
+const isUS = country === "US";
+const baseMrp = isIN
+  ? Number(course.iamount) || 0
+  : Number(course.amount) || 0;
 
-            const mrp = isIN ? course.iamount : course.amount;
-            const now = isIN ? course.itotal : course.total;
+const baseNow = isIN
+  ? Number(course.itotal) || 0
+  : Number(course.total) || 0;
+let finalPrice = baseNow;
+let displayMrp = baseMrp;
 
-            const baseMrp = Number(mrp) || 0;
-            const baseNow = Number(now) || 0;
-
-            const finalPrice = isUS ? baseNow : baseNow * fxFromUSD;
-            const displayMrp = isUS ? baseMrp : baseMrp * fxFromUSD;
-
+if (!isIN && !isUS) {
+  finalPrice = baseNow * fxFromUSD;
+  displayMrp = baseMrp * fxFromUSD;
+}
             const rulePct = getRuleDiscountPct(course.courseName, country, discountRules, Intl.DisplayNames ? new Intl.DisplayNames([navigator.language || 'en'], { type: 'region' }) : { of: () => "" });
             const discountPercentage = rulePct > 0 ? rulePct : (isIN ? (course.idiscount != null ? Number(course.idiscount) : 0) : (course.discount != null ? Number(course.discount) : 0));
 

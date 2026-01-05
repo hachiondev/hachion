@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./FAQSection.module.css";
 import { cn } from "../../../../utils";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
-
-const API_BASE = "https://api.test.hachion.co";
+import { useFaqsByCourse } from "../../../../Api/hooks/CourseApi/useFaqsByCourse";
 
 const Chevron = ({ open }) => (
   <svg
@@ -28,9 +26,6 @@ export default function FAQSection({
 }) {
  const { courseName } = useParams();
 
-/* --------------------------------
-   SAME normalization as DemoClassSection
----------------------------------- */
 const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
 const normalizeCourseSlug = (slug) =>
@@ -42,52 +37,21 @@ const normalizeCourseSlug = (slug) =>
 
 const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
 
-// ✅ EXISTING HOOK (UNCHANGED)
 const {
   data: course,
   isLoading: courseLoading,
   isError: courseError,
 } = useCourseByName(courseNameForApi);
 
-
-  const [faqs, setFaqs] = useState([]);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [showAll, setShowAll] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  
+  const {
+  data: faqs = [],
+  isLoading: loading,
+  isError: error,
+} = useFaqsByCourse(course?.courseName);
 
-  /* -----------------------------
-     STEP 2: Fetch Course FAQs
-  ----------------------------- */
-  useEffect(() => {
-    if (!course?.courseName) return;
-
-    const fetchFaqs = async () => {
-      try {
-        setLoading(true);
-
-        const res = await axios.get(`${API_BASE}/faq`);
-
-        const filtered = res.data.filter(
-          item =>
-            item.course_name &&
-            item.course_name.trim() === course.courseName.trim()
-        );
-
-        setFaqs(filtered);
-      } catch (err) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFaqs();
-  }, [course]);
-
-  /* -----------------------------
-     Loading & Error States
-  ----------------------------- */
   if (courseLoading || loading) {
     return (
       <section className={styles.faqwrap}>
@@ -116,7 +80,7 @@ const {
         <div className={styles.faqhead}>
           <h2>Frequently Asked Questions</h2>
           <p>Got questions? We’ve got answers</p>
-          {/* Empty State */}
+        
 {(!faqs || faqs.length === 0) && (
   <div style={{ textAlign: "center", color: "#000" }}>
     No FAQs available

@@ -195,17 +195,27 @@ const summerCourses = useMemo(() => {
         ) : filtered.length > 0 ? (
           paginated.map((course, i) => {
             const trainerName = course.trainerName || "Not Assigned";
-            const isIN = country === "IN";
-            const isUS = country === "US";
+           const isIN = country === "IN";
+const isUS = country === "US";
 
-            const mrp = isIN ? course.iamount : course.amount;
-            const now = isIN ? course.itotal : course.total;
+// STEP 1: choose correct base values
+const baseMrp = isIN
+  ? Number(course.iamount) || 0
+  : Number(course.amount) || 0;
 
-            const baseMrp = Number(mrp) || 0;
-            const baseNow = Number(now) || 0;
+const baseNow = isIN
+  ? Number(course.itotal) || 0
+  : Number(course.total) || 0;
 
-            const finalPrice = isUS ? baseNow : baseNow * fxFromUSD;
-            const displayMrp = isUS ? baseMrp : baseMrp * fxFromUSD;
+// STEP 2: apply conversion ONLY for non-IN & non-US
+let finalPrice = baseNow;
+let displayMrp = baseMrp;
+
+if (!isIN && !isUS) {
+  finalPrice = baseNow * fxFromUSD;
+  displayMrp = baseMrp * fxFromUSD;
+}
+
 
             const rulePct = getRuleDiscountPct(course.courseName, country, discountRules, regionNames);
 

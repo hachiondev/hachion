@@ -191,6 +191,7 @@
 
   .faqlist .faqq {
     font-size: 20px;
+    width: 100%;
   }
 
   .faqa {
@@ -277,7 +278,7 @@
   }
 
   .faqbtn svg {
-    width: 38px;
-    height: 38px;
+    width: 24px;
+    height: 24px;
   }
 }

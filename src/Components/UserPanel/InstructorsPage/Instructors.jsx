@@ -55,26 +55,26 @@ const Instructors = () => {
      Filters
   ----------------------------- */
 
-const filteredTrainers = useMemo(() => {
-  return trainers.filter((trainer) => {
-    const term = searchTerm.toLowerCase().trim();
+  const filteredTrainers = useMemo(() => {
+    return trainers.filter((trainer) => {
+      const term = searchTerm.toLowerCase().trim();
 
-    const matchesSearch =
-      term === "" ||
-      trainer.trainer_name?.toLowerCase().includes(term) ||
-      trainer.course_name?.toLowerCase().includes(term);
+      const matchesSearch =
+        term === "" ||
+        trainer.trainer_name?.toLowerCase().includes(term) ||
+        trainer.course_name?.toLowerCase().includes(term);
 
-    const matchesTeacher = selectedTeacher
-      ? trainer.trainer_name === selectedTeacher
-      : true;
+      const matchesTeacher = selectedTeacher
+        ? trainer.trainer_name === selectedTeacher
+        : true;
 
-    const matchesCourse = selectedCourse
-      ? trainer.course_name === selectedCourse
-      : true;
+      const matchesCourse = selectedCourse
+        ? trainer.course_name === selectedCourse
+        : true;
 
-    return matchesSearch && matchesCourse && matchesTeacher;
-  });
-}, [trainers, searchTerm, selectedTeacher, selectedCourse]);
+      return matchesSearch && matchesCourse && matchesTeacher;
+    });
+  }, [trainers, searchTerm, selectedTeacher, selectedCourse]);
 
 
   /* -----------------------------
@@ -94,42 +94,42 @@ const filteredTrainers = useMemo(() => {
   }, []);
 
 
-const enrollCounts = useEnrollCounts({
-  trainers: filteredTrainers,
-  countKey,
-});
+  const enrollCounts = useEnrollCounts({
+    trainers: filteredTrainers,
+    countKey,
+  });
 
 
-// // Replace your current useEffect with this optimized version
-// useEffect(() => {
-//   if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
+  // // Replace your current useEffect with this optimized version
+  // useEffect(() => {
+  //   if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
 
-//   // Only update if there are actual changes
-//   const updates = {};
-//   let hasUpdates = false;
+  //   // Only update if there are actual changes
+  //   const updates = {};
+  //   let hasUpdates = false;
 
-//   enrollQueries.forEach((q) => {
-//     if (!q?.data || !Array.isArray(q.queryKey)) return;
+  //   enrollQueries.forEach((q) => {
+  //     if (!q?.data || !Array.isArray(q.queryKey)) return;
 
-//     const [, trainerName, courseName] = q.queryKey;
-//     if (!trainerName || !courseName) return;
+  //     const [, trainerName, courseName] = q.queryKey;
+  //     if (!trainerName || !courseName) return;
 
-//     const key = `${trainerName}::${courseName}`;
-    
-//     // Only update if the value is different from current
-//     if (enrollCounts[key] !== q.data) {
-//       updates[key] = q.data;
-//       hasUpdates = true;
-//     }
-//   });
+  //     const key = `${trainerName}::${courseName}`;
 
-//   if (hasUpdates) {
-//     setEnrollCounts(prev => ({
-//       ...prev,
-//       ...updates
-//     }));
-//   }
-// }, [enrollQueries]); // Only depend on enrollQueries
+  //     // Only update if the value is different from current
+  //     if (enrollCounts[key] !== q.data) {
+  //       updates[key] = q.data;
+  //       hasUpdates = true;
+  //     }
+  //   });
+
+  //   if (hasUpdates) {
+  //     setEnrollCounts(prev => ({
+  //       ...prev,
+  //       ...updates
+  //     }));
+  //   }
+  // }, [enrollQueries]); // Only depend on enrollQueries
 
 
   /* -----------------------------

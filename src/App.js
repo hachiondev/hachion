@@ -52,7 +52,7 @@ import ResetPassword from './Components/UserPanel/HomePage/AuthSection/ResetPass
 import ViewFaq from './Components/UserPanel/ViewFaq';
 import DiscountDeals from './Components/UserPanel/DiscountDeals';
 import Instructors from './Components/UserPanel/InstructorsPage/Instructors';
-import InstructorDetails from './Components/UserPanel/InstructorDetails';
+import InstructorDetails from './Components/UserPanel/InstructorsPage/InstructorDetails';
 import ViewReviews from './Components/UserPanel/ViewReviews';
 import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
 import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';

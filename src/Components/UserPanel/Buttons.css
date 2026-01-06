@@ -681,7 +681,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
 
   .register-btn,
   .other-btn {
@@ -830,6 +830,11 @@
   .resume-download-btn {
     width: 100%;
     padding: 5px auto;
+  }
+
+  .update-profile-btn{
+    margin-top: 10px;
+    width: 90%;
   }
 
   .u-submit-button {

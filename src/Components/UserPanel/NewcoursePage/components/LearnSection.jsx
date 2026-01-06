@@ -22,6 +22,22 @@ export default function LearnSection() {
     const { courseName: courseNameSlug } = useParams();
     const [currentStartIndex, setCurrentStartIndex] = useState(1); // Starting card index (1-based)
     const [cardsPerPage, setCardsPerPage] = useState(6);
+    const [showAll, setShowAll] = useState({
+        prereq: false,
+        learn: false,
+        who: false,
+    });
+    const courseName = courseNameSlug
+        ? decodeURIComponent(courseNameSlug)
+            .replace(/[-_]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase()
+        : "";
+
+    const { data: course } = useCourseByName(courseName);
+    const { data: allTools = [], isLoading } = useToolsByCourse(courseName);
+
 
     useEffect(() => {
         const update = () => {
@@ -35,16 +51,7 @@ export default function LearnSection() {
         return () => window.removeEventListener("resize", update);
     }, []);
 
-    const courseName = courseNameSlug
-        ? decodeURIComponent(courseNameSlug)
-            .replace(/[-_]+/g, " ")
-            .replace(/\s+/g, " ")
-            .trim()
-            .toLowerCase()
-        : "";
 
-    const { data: course } = useCourseByName(courseName);
-    const { data: allTools = [], isLoading } = useToolsByCourse(courseName);
 
     // Calculate paginated tools - use currentStartIndex (1-based)
     const paginatedTools = useMemo(() => {
@@ -52,6 +59,31 @@ export default function LearnSection() {
         const endIndex = startIndex + cardsPerPage;
         return allTools.slice(startIndex, endIndex);
     }, [allTools, currentStartIndex, cardsPerPage]);
+
+    const toggleShowAll = (key) => {
+        setShowAll((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+    };
+
+
+    const prerequisites =
+        course?.prerequisities?.trim()
+            ? course.prerequisities
+                .split("\n")
+                .map((item) => item.trim())
+                .filter(Boolean)
+            : [
+                "Basic computer skills and internet navigation",
+                "No programming experience required - we start from scratch",
+                "Access to a computer with internet connection",
+            ];
+
+    const whoThisCourseIsForItems = (course?.whoIsThisCourseFor || "")
+        .split("\n")
+        .map((item) => item.trim())
+        .filter((item) => item !== "");
 
     // Reset to first card when tools change or cards per page changes
     useEffect(() => {
@@ -84,32 +116,44 @@ export default function LearnSection() {
                         <h2 className={styles.lsh2}>What You'll Learn</h2>
 
                         <ul className={styles.lslist}>
-                            {whatYouWillLearnItems.map((item) => (
+                            {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 4)).map((item) => (
                                 <li key={item} className={styles.lslistitem}>
                                     <CheckCircle />
                                     <span>{item}</span>
                                 </li>
                             ))}
                         </ul>
+                        {whatYouWillLearnItems.length > 4 && (
+                            <button
+                                type="button"
+                                className={styles.readMoreBtn}
+                                onClick={() => toggleShowAll("learn")}
+                            >
+                                {showAll.learn ? "Read Less ↑" : "Read More ↓"}
+                            </button>
+                        )}
 
                         <div className={styles.lspre}>
                             <h3>Prerequisites</h3>
 
                             <ul className={styles.lsbullets}>
-                                {(course?.prerequisities?.trim()
-                                    ? course.prerequisities
-                                        .split("\n")
-                                        .map((item) => item.trim())
-                                        .filter((item) => item !== "")
-                                    : [
-                                        "Basic computer skills and internet navigation",
-                                        "No programming experience required - we start from scratch",
-                                        "Access to a computer with internet connection",
-                                    ]
-                                ).map((p) => (
-                                    <li key={p}>{p}</li>
-                                ))}
+                                {(showAll.prereq ? prerequisites : prerequisites.slice(0, 4)).map(
+                                    (p, idx) => (
+                                        <li key={idx}>{p}</li>
+                                    )
+                                )}
                             </ul>
+
+                            {prerequisites.length > 4 && (
+                                <button
+                                    type="button"
+                                    className={styles.readMoreBtn}
+                                    onClick={() => toggleShowAll("prereq")}
+                                >
+                                    {showAll.prereq ? "Read less ↑" : "Read more ↓"}
+                                </button>
+                            )}
+
                         </div>
 
                     </div>
@@ -124,14 +168,21 @@ export default function LearnSection() {
                                 <h3>Who this course is for</h3>
                             </div>
                             <ul className={styles.lscardbullets}>
-                                {(course?.whoIsThisCourseFor || "")
-                                    .split("\n")
-                                    .map((item) => item.trim())
-                                    .filter((item) => item !== "")
-                                    .map((item) => (
-                                        <li key={item}>{item}</li>
-                                    ))}
+                                {(showAll.who ? whoThisCourseIsForItems : whoThisCourseIsForItems.slice(0, 4)).map((item) => (
+                                    <li key={item}>{item}</li>
+                                ))}
                             </ul>
+
+                            {whoThisCourseIsForItems.length > 4 && (
+                                <button
+                                    type="button"
+                                    className={styles.readMoreBtn}
+                                    onClick={() => toggleShowAll("who")}
+                                >
+                                    {showAll.who ? "Read Less ↑" : "Read More ↓"}
+                                </button>
+                            )}
+
                         </div>
 
 

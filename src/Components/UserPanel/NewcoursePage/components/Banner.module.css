@@ -643,8 +643,8 @@ font-size: 18px;
   }
 
   .bnplay {
-    width: 86px;
-    height: 86px;
+width: 66px;
+        height: 66px;
   }
 
   .bnplay svg {
@@ -652,7 +652,8 @@ font-size: 18px;
   }
 
   .bnherotext {
-    font-size: 20px;
+    font-size: 18px;
+    top: 50%;
   }
 
   .bnctaRow {

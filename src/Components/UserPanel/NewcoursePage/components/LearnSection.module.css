@@ -93,6 +93,7 @@
   color: #000000;
   list-style: disc;
   margin-left: 18px;
+  margin-bottom: 0;
   font-size: 17px;
 }
 
@@ -409,6 +410,22 @@
   transition: all 0.3s ease;
 }
 
+.readMoreBtn {
+  background: none;
+  border: none;
+  color: #00aeef;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0px;
+  padding: 0;
+}
+
+.readMoreBtn:hover {
+  text-decoration: underline;
+}
+
+
 /* responsive */
 @media (max-width: 1000px) {
   .lsgrid {
@@ -497,6 +514,10 @@
     padding-left: 2rem;
     font-weight: 400;
   }
+
+    .readMoreBtn{
+    font-size: 22px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -579,6 +600,10 @@
 
   .lstoolsgrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+    .readMoreBtn{
+    font-size: 18px;
   }
 }
 
@@ -666,6 +691,10 @@
 
   .lstoolsgrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+    .readMoreBtn{
+    font-size: 16px;
   }
 }
 

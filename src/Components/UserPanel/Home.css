@@ -445,7 +445,7 @@
 }
 
 .home-background {
-  background-color: #F7F7F7;
+  background-color: #fff;
 }
 
 .popup-bottom {
@@ -3346,7 +3346,7 @@ p.footer-copyright-desktop {
   }
 
   .association-head {
-    text-align: center;
+    text-align: left;
     justify-content: left;
     white-space: wrap;
     font-size: 26px;

@@ -947,7 +947,7 @@ a:not([href]):not([class]) {
   }
 
   .custom-search{
-    width: 226px !important;
+    max-width: 900px !important;
   }
 
   .association-head-desktop{
@@ -978,13 +978,13 @@ a:not([href]):not([class]) {
   }
 
     .custom-search{
-    width: 256px !important;
+    width: 356px !important;
   }
   
 }
 
 @media (max-width:375px){
   .custom-search{
-    width: 202px !important;
+    width: 295px !important
   }
 }

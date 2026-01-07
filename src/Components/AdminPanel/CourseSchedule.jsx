@@ -30,6 +30,9 @@ import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import "./Admin.css";
 import AdminPagination from "./AdminPagination";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#00AEEF",
@@ -1029,7 +1032,7 @@ const response = await axios.put(
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.schedule_date
-                          ? dayjs(course.schedule_date).format("MM-DD-YYYY")
+                          ? dayjs(course.schedule_date).format("MMM-DD-YYYY")
                           : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">
@@ -1049,7 +1052,7 @@ const response = await axios.put(
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.created_date
-                          ? dayjs(course.created_date).format("MM-DD-YYYY")
+                          ? dayjs(course.created_date).format("MMM-DD-YYYY")
                           : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">

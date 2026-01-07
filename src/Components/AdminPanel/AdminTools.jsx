@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -31,6 +31,11 @@ import { useAddTools } from "../../Api/hooks/AdminTools/useAddTools";
 import { useGetAllToolsFlat } from "../../Api/hooks/AdminTools/useGetAllToolsFlat";
 import { useUpdateToolItem } from "../../Api/hooks/AdminTools/useUpdateToolItem";
 import { useDeleteToolItem } from "../../Api/hooks/AdminTools/useDeleteToolItem";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -394,7 +399,7 @@ const handleEditClick = (row) => {
       id: row.id,
       tool_image: null,
       preview: row.imageUrl
-        ? `https://api.test.hachion.co/uploads/test/tools_images/${row.imageUrl}`
+        ? `http://localhost:8081/uploads/test/tools_images/${row.imageUrl}`
         : null,
       toolsName: row.toolsName,
       toolsLink: row.toolsLink,
@@ -777,7 +782,7 @@ const handleDeleteClick = (row) => {
                       <StyledTableCell align="center">
   {courseRow.imageUrl && (
     <img
-      src={`https://api.test.hachion.co/uploads/test/tools_images/${courseRow.imageUrl}`}
+      src={`http://localhost:8081/uploads/test/tools_images/${courseRow.imageUrl}`}
       alt={courseRow.toolsName}
       style={{
         width: 40,
@@ -792,9 +797,13 @@ const handleDeleteClick = (row) => {
 
                       <StyledTableCell align="left">{courseRow.toolsName}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.toolsLink}</StyledTableCell>
-                      <StyledTableCell align="center">
-                        {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MM-DD-YYYY') : 'N/A'}
-                      </StyledTableCell>
+                     <StyledTableCell align="center">
+  {courseRow.createdDate
+    ? dayjs(courseRow.createdDate).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
+
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                           <FaEdit className="edit" onClick={() => handleEditClick(courseRow)} style={{ cursor: 'pointer' }} />

@@ -22,6 +22,10 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -1507,7 +1511,13 @@ const hasInrFields =
                         <StyledTableCell align="left">{course.courseCategory}</StyledTableCell>
                         <StyledTableCell align="left">{course.shortCourse}</StyledTableCell>
                         <StyledTableCell align="left">{course.courseName}</StyledTableCell>
-                        <StyledTableCell align="center">{course.date}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{course.date}</StyledTableCell> */}
+                        <StyledTableCell align="center">
+  {course.date
+    ? dayjs(course.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
+    : "-"}
+</StyledTableCell>
+
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                             <FaEdit className="edit" onClick={() => handleEditClick(course.id)} style={{ cursor: "pointer" }} />

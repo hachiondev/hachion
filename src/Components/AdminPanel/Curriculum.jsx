@@ -945,7 +945,7 @@ const isSubmitDisabled = !areMandatoryFieldsFilled();
           'No PDF'
         )}
       </StyledTableCell>
-      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+      <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MMM-DD-YYYY') : 'N/A'}</StyledTableCell>
       <StyledTableCell align="center">
         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
           <FaEdit className="edit" onClick={() => handleClickOpen(course)} />

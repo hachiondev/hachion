@@ -273,7 +273,7 @@ const TrainingEvents = () => {
               </select>
 
               <form className="d-flex">
-                <div className="input-group custom-search" style={{ height: 48 }}>
+                <div className="input-group training-custom-search" style={{ height: "45px" }}>
                   <input
                     type="text"
                     className="form-control border-0"

@@ -95,24 +95,30 @@ What's Included:
   };
 
   const handleEnrollWithLoginCheck = (sess) => {
-  if (isProfileLoading) return;
+    if (isProfileLoading) return;
 
-  if (!userProfile || !userProfile.studentId) {
-    onCloseRegisterPrompt && onCloseRegisterPrompt(); 
-    
-    return onRequestClick?.("LOGIN_REQUIRED"); 
-  }
+    if (!userProfile || !userProfile.studentId) {
+      onCloseRegisterPrompt && onCloseRegisterPrompt();
 
-  onEnrollClick(sess, {
-    email: notifyViaMap[sess.id]?.email ?? true,
-    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-  });
-};
+      return onRequestClick?.("LOGIN_REQUIRED");
+    }
+
+    onEnrollClick(sess, {
+      email: notifyViaMap[sess.id]?.email ?? true,
+      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+    });
+  };
 
   return (
     <div className={styles.dcgrid}>
       <div>
-        <div className={styles.dcslots}>
+        <div
+          className={
+            liveGroups && liveGroups.length > 0
+              ? styles.dcslots
+              : ""
+          }
+        >
           {scheduleLoading && (
             <div className={styles.dcslot}>
               <div className={styles.dcslotdate}>Loading slots...</div>
@@ -159,7 +165,7 @@ What's Included:
                 >
                   {g.totalSlots}{" "}
                   {g.type === "live"
-                    ? "Live"
+                    ? "Live Class" + (g.totalSlots === 1 ? "" : "es")
                     : g.totalSlots === 1
                       ? "demo"
                       : "demos"}
@@ -170,9 +176,91 @@ What's Included:
           {!scheduleLoading &&
             !scheduleError &&
             (!liveGroups || liveGroups.length === 0) && (
-              <div className={styles.dcslot}>
-                <div className={styles.dcslotdate}>
-                  No live batches scheduled
+              <div className={styles.noLiveSlotsContainer}>
+                <div className={cn(liveGroups && liveGroups.length > 0 ? styles.dcslot : styles.noLiveSlot)}>
+                  <div className={styles.dcslotdate}>
+                    No live batches scheduled
+                  </div>
+                </div>
+                <div
+                  className={cn(
+                    liveGroups && liveGroups.length > 0 ? styles.dcempty : styles.noLiveClass
+                  )}
+                >
+                  <div className={styles.dcemptyicon}>
+                    <img src="/calendar.png" alt="calendar" />
+                  </div>
+
+                  <p className={styles.dcemptytext}>
+                    Be the first to request a custom demo session at your preferred
+                    time
+                  </p>
+
+                  <button
+                    className={styles.dclink}
+                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+                    onClick={() => {
+                      if (isSubmitting || isRequestBatchLoading) return;
+
+                      setIsSubmitting(true);
+                      onRequestClick();
+                    }}
+                  >
+                    {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+                  </button>
+                  {enrollSuccessMessage && (
+                    <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
+                      {enrollSuccessMessage}
+                    </p>
+                  )}
+
+                  {enrollErrorMessage && (
+                    <p style={{ color: "red", fontSize: "14px", marginTop: "6px" }}>
+                      {enrollErrorMessage}
+                    </p>
+                  )}
+
+                  {showMessage && isRequestBatchSuccess && (
+                    <p
+                      style={{
+                        color: "#0A8754",
+                        fontSize: "14px",
+                        marginTop: "6px",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      Your request has been submitted successfully.
+                      <br />
+                      Our team will contact you shortly with batch details.
+                    </p>
+                  )}
+
+                  {showMessage && requestBatchError && (
+                    <p
+                      style={{
+                        color: "#D93025",
+                        fontSize: "14px",
+                        marginTop: "6px",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      Unable to submit your request right now.
+                      <br />
+                      Please try again in a few minutes.
+                    </p>
+                  )}
+
+                  {resendMessage && (
+                    <p style={{ color: "green", fontSize: "13px" }}>
+                      {resendMessage}
+                    </p>
+                  )}
+
+                  {resendError && (
+                    <p style={{ color: "red", fontSize: "13px" }}>
+                      {resendError}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -208,149 +296,149 @@ What's Included:
 
                       </div>
                     </div>
-                  {sess.mode === "Live Demo" && sess._isEnrolled ? (
-  /* =========================
-     LIVE DEMO → OLD BEHAVIOR
-     ========================= */
-  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {sess.mode === "Live Demo" && sess._isEnrolled ? (
+                      /* =========================
+                         LIVE DEMO → OLD BEHAVIOR
+                         ========================= */
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 
-    <button
-      className={styles.dcbtnDisabled}
-      disabled
-    >
-      Enrolled
-    </button>
+                        <button
+                          className={styles.dcbtnDisabled}
+                          disabled
+                        >
+                          Enrolled
+                        </button>
 
-    <button
-      className={styles.dclink}
-      disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-      onClick={() => {
-        setSendingBatchId(sess.batchId);
+                        <button
+                          className={styles.dclink}
+                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                          onClick={() => {
+                            setSendingBatchId(sess.batchId);
 
-        resendEmail(
-          {
-            email: userProfile.email,
-            batchId: sess.batchId,
-          },
-          {
-            onSuccess: (msg) => {
-              setSendingBatchId(null);
-              setResendError("");
-              setResendMessage(typeof msg === "string" ? msg : msg?.message);
-            },
-            onError: (err) => {
-              setSendingBatchId(null);
-              const backendMsg =
-                typeof err?.response?.data === "string"
-                  ? err.response.data
-                  : err?.response?.data?.message;
+                            resendEmail(
+                              {
+                                email: userProfile.email,
+                                batchId: sess.batchId,
+                              },
+                              {
+                                onSuccess: (msg) => {
+                                  setSendingBatchId(null);
+                                  setResendError("");
+                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
+                                },
+                                onError: (err) => {
+                                  setSendingBatchId(null);
+                                  const backendMsg =
+                                    typeof err?.response?.data === "string"
+                                      ? err.response.data
+                                      : err?.response?.data?.message;
 
-              setResendMessage("");
-              setResendError(backendMsg || "Failed to resend email");
-            },
-          }
-        );
-      }}
-    >
-      {sess.resendCount >= 3
-        ? "Limit Reached"
-        : sendingBatchId === sess.batchId
-          ? "Sending..."
-          : "Resend"}
-    </button>
-  </div>
-) : sess.mode === "Live Class" && Number(sess.amount) > 0 ? (
-  /* =========================
-     LIVE CLASS → PAID → ENROLLED
-     ========================= */
-  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-    <button className={styles.dcbtnDisabled} disabled>
-      Enrolled
-    </button>
-     <button
-      className={styles.dclink}
-      disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-      onClick={() => {
-        setSendingBatchId(sess.batchId);
+                                  setResendMessage("");
+                                  setResendError(backendMsg || "Failed to resend email");
+                                },
+                              }
+                            );
+                          }}
+                        >
+                          {sess.resendCount >= 3
+                            ? "Limit Reached"
+                            : sendingBatchId === sess.batchId
+                              ? "Sending..."
+                              : "Resend"}
+                        </button>
+                      </div>
+                    ) : sess.mode === "Live Class" && Number(sess.amount) > 0 ? (
+                      /* =========================
+                         LIVE CLASS → PAID → ENROLLED
+                         ========================= */
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <button className={styles.dcbtnDisabled} disabled>
+                          Enrolled
+                        </button>
+                        <button
+                          className={styles.dclink}
+                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                          onClick={() => {
+                            setSendingBatchId(sess.batchId);
 
-        resendEmail(
-          {
-            email: userProfile.email,
-            batchId: sess.batchId,
-          },
-          {
-            onSuccess: (msg) => {
-              setSendingBatchId(null);
-              setResendError("");
-              setResendMessage(typeof msg === "string" ? msg : msg?.message);
-            },
-            onError: (err) => {
-              setSendingBatchId(null);
-              const backendMsg =
-                typeof err?.response?.data === "string"
-                  ? err.response.data
-                  : err?.response?.data?.message;
+                            resendEmail(
+                              {
+                                email: userProfile.email,
+                                batchId: sess.batchId,
+                              },
+                              {
+                                onSuccess: (msg) => {
+                                  setSendingBatchId(null);
+                                  setResendError("");
+                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
+                                },
+                                onError: (err) => {
+                                  setSendingBatchId(null);
+                                  const backendMsg =
+                                    typeof err?.response?.data === "string"
+                                      ? err.response.data
+                                      : err?.response?.data?.message;
 
-              setResendMessage("");
-              setResendError(backendMsg || "Failed to resend email");
-            },
-          }
-        );
-      }}
-    >
-      {sess.resendCount >= 3
-        ? "Limit Reached"
-        : sendingBatchId === sess.batchId
-          ? "Sending..."
-          : "Resend"}
-    </button>
+                                  setResendMessage("");
+                                  setResendError(backendMsg || "Failed to resend email");
+                                },
+                              }
+                            );
+                          }}
+                        >
+                          {sess.resendCount >= 3
+                            ? "Limit Reached"
+                            : sendingBatchId === sess.batchId
+                              ? "Sending..."
+                              : "Resend"}
+                        </button>
 
-  </div>
-) : (
+                      </div>
+                    ) : (
 
-  /* =========================
-     LIVE CLASS → NOT PAID → ENROLL
-     ========================= */
-  <div className={styles.enrollActions}>
-   <button
-  className={styles.dcbtn}
-  onClick={() => handleEnrollWithLoginCheck(sess)}
->
-  Enroll
-</button>
+                      /* =========================
+                         LIVE CLASS → NOT PAID → ENROLL
+                         ========================= */
+                      <div className={styles.enrollActions}>
+                        <button
+                          className={styles.dcbtn}
+                          onClick={() => handleEnrollWithLoginCheck(sess)}
+                        >
+                          Enroll
+                        </button>
 
 
-    {/* 🔔 Email / WhatsApp */}
-    <div className={styles.notifyOptions}>
+                        {/* 🔔 Email / WhatsApp */}
+                        <div className={styles.notifyOptions}>
 
-      <div className={styles.checkboxGroup}>
-        <label className={styles.notifyLabel}>
-          <input
-            type="checkbox"
-            checked={notifyViaMap[sess.id]?.email ?? true}
-            onChange={(e) =>
-              handleNotifyChange(sess.id, "email", e.target.checked)
-            }
-            className={styles.checkboxInput}
-          />
-          <span className={styles.checkboxText}>Email</span>
-        </label>
+                          <div className={styles.checkboxGroup}>
+                            <label className={styles.notifyLabel}>
+                              <input
+                                type="checkbox"
+                                checked={notifyViaMap[sess.id]?.email ?? true}
+                                onChange={(e) =>
+                                  handleNotifyChange(sess.id, "email", e.target.checked)
+                                }
+                                className={styles.checkboxInput}
+                              />
+                              <span className={styles.checkboxText}>Email</span>
+                            </label>
 
-        <label className={styles.notifyLabel}>
-          <input
-            type="checkbox"
-            checked={notifyViaMap[sess.id]?.whatsapp ?? false}
-            onChange={(e) =>
-              handleNotifyChange(sess.id, "whatsapp", e.target.checked)
-            }
-            className={styles.checkboxInput}
-          />
-          <span className={styles.checkboxText}>WhatsApp</span>
-        </label>
-      </div>
-    </div>
-  </div>
-)}
+                            <label className={styles.notifyLabel}>
+                              <input
+                                type="checkbox"
+                                checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+                                onChange={(e) =>
+                                  handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+                                }
+                                className={styles.checkboxInput}
+                              />
+                              <span className={styles.checkboxText}>WhatsApp</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
 
                   </div>
@@ -361,7 +449,7 @@ What's Included:
               </div>
             </div>
 
-            <div className={cn(styles.dcdetailscol, styles.dcempty)}>
+            <div className={cn(styles.dcempty)}>
               <div className={styles.dcemptyicon}>
                 <img src="/calendar.png" alt="calendar" />
               </div>

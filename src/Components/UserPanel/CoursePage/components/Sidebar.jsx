@@ -52,7 +52,6 @@ const normalize = (v = "") =>
 
 useEffect(() => {
   const categoryFromState = location.state?.selectedCategory;
-  console.log("✅ Sidebar.jsx picked category from state:", categoryFromState);
 
   if (!categories.length) return;
 

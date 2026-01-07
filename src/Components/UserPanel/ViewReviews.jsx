@@ -21,6 +21,7 @@ import img12 from '../../Assets/cl12.webp';
 import "./Home.css";
 import "./Corporate.css";
 import LearnerCard from "./HomePage/LearnerSection/components/LearnerCard";
+import Association from "./Association";
 
 const ViewReviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -31,7 +32,7 @@ const ViewReviews = () => {
   const [corporatePage, setCorporatePage] = useState(1);
   const [studentPage, setStudentPage] = useState(1);
   const [livePage, setLivePage] = useState(1);
-const [corporate, setCorporate] = useState([]);
+  const [corporate, setCorporate] = useState([]);
 
   const images = [
     img1, img2, img3, img4, img5, img6,
@@ -44,17 +45,17 @@ const [corporate, setCorporate] = useState([]);
   };
 
   useEffect(() => {
-  const fetchCorporate = async () => {
-    try {
-      const res = await axios.get("https://api.test.hachion.co/corporatereview");
-      setCorporate(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.error("Error fetching corporate reviews:", err);
-      setCorporate([]);
-    }
-  };
-  fetchCorporate();
-}, []);
+    const fetchCorporate = async () => {
+      try {
+        const res = await axios.get("https://api.test.hachion.co/corporatereview");
+        setCorporate(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Error fetching corporate reviews:", err);
+        setCorporate([]);
+      }
+    };
+    fetchCorporate();
+  }, []);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -88,35 +89,35 @@ const [corporate, setCorporate] = useState([]);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-const handleCorporatePageChange = (page) => setCorporatePage(page);
-const handleStudentPageChange = (page) => setStudentPage(page);
-const handleLivePageChange = (page) => setLivePage(page);
-const corporateStart = (corporatePage - 1) * cardsPerPage;
-const studentStart = (studentPage - 1) * cardsPerPage;
-const liveStart = (livePage - 1) * cardsPerPage;
+  const handleCorporatePageChange = (page) => setCorporatePage(page);
+  const handleStudentPageChange = (page) => setStudentPage(page);
+  const handleLivePageChange = (page) => setLivePage(page);
+  const corporateStart = (corporatePage - 1) * cardsPerPage;
+  const studentStart = (studentPage - 1) * cardsPerPage;
+  const liveStart = (livePage - 1) * cardsPerPage;
 
-const corporatePaginated = corporate.slice(corporateStart, corporateStart + cardsPerPage);
+  const corporatePaginated = corporate.slice(corporateStart, corporateStart + cardsPerPage);
 
 
-const corporateReviews = reviews.slice(corporateStart, corporateStart + cardsPerPage);
-const studentReviews = reviews.slice(studentStart, studentStart + cardsPerPage);
-const liveReviews = reviews.slice(liveStart, liveStart + cardsPerPage);
-  
-const getEmbedUrl = (url) => {
-  if (!url) return "";
-  let videoId = "";
+  const corporateReviews = reviews.slice(corporateStart, corporateStart + cardsPerPage);
+  const studentReviews = reviews.slice(studentStart, studentStart + cardsPerPage);
+  const liveReviews = reviews.slice(liveStart, liveStart + cardsPerPage);
 
-  if (url.includes("youtube.com/watch")) {
-    const urlParams = new URLSearchParams(url.split("?")[1]);
-    videoId = urlParams.get("v");
-  }
+  const getEmbedUrl = (url) => {
+    if (!url) return "";
+    let videoId = "";
 
-  else if (url.includes("youtu.be/")) {
-    videoId = url.split("/").pop();
-  }
+    if (url.includes("youtube.com/watch")) {
+      const urlParams = new URLSearchParams(url.split("?")[1]);
+      videoId = urlParams.get("v");
+    }
 
-  return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
-};
+    else if (url.includes("youtu.be/")) {
+      videoId = url.split("/").pop();
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
+  };
 
   const handlePlayVideo = (videoUrl) => {
     setSelectedVideo(getEmbedUrl(videoUrl));
@@ -125,8 +126,8 @@ const getEmbedUrl = (url) => {
   const closeModal = () => setSelectedVideo(null);
 
   useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="home-background">
@@ -154,67 +155,108 @@ const getEmbedUrl = (url) => {
         <div className="training-title-head">
           <div className="home-spacing">
             <h2 className="association-head">Our Corporate Feedback</h2>
-            <p className="association-head-tag">Don’t take our word for it. Trust our customers.</p>
+            <p className="association-head-tag">
+              Don’t take our word for it. Trust our customers.
+            </p>
           </div>
-          <CardsPagination
-            currentPage={corporatePage}
-             totalCards={corporate.length}
-            cardsPerPage={cardsPerPage}
-            onPageChange={handleCorporatePageChange}
-          />
-        </div>
-       <div className="display-flex row justify-content-center gap-0">
-  {loading ? Array.from({ length: cardsPerPage }).map((_, i) => (
-    <div className="skeleton-card" key={i}></div>
-  )) : corporatePaginated.map((fb) => (
-    <div key={fb.corporateReviewId} className="col-12 col-md-6 col-lg-4 mb-3">
-      <LearnerCard
-        name={fb.employeeName}
-        location={fb.location}
-        company={fb.company}
-        role={fb.role}
-        content={fb.comment}
-        rating={fb.employeeRating}
-        profileImage={
-          fb.companyLogo
-            ? `https://api.test.hachion.co/corporatereview/${fb.companyLogo}`
-            : ""
-        }
-      />
-    </div>
-  ))}
-</div>
 
+          {corporate.length > 0 && (
+            <CardsPagination
+              currentPage={corporatePage}
+              totalCards={corporate.length}
+              cardsPerPage={cardsPerPage}
+              onPageChange={handleCorporatePageChange}
+            />
+          )}
+        </div>
+
+        <div className="display-flex row justify-content-center gap-0">
+          {loading ? (
+            Array.from({ length: cardsPerPage }).map((_, i) => (
+              <div className="skeleton-card" key={i}></div>
+            ))
+          ) : corporate.length === 0 ? (
+            /* ✅ Empty state */
+            <div className="col-12 text-center py-4">
+              <p className="text-dark mb-0">
+                No Corporate Feedback Available
+              </p>
+            </div>
+          ) : (
+            corporatePaginated.map((fb) => (
+              <div
+                key={fb.corporateReviewId}
+                className="col-12 col-md-6 col-lg-4 mb-3"
+              >
+                <LearnerCard
+                  name={fb.employeeName}
+                  location={fb.location}
+                  company={fb.company}
+                  role={fb.role}
+                  content={fb.comment}
+                  rating={fb.employeeRating}
+                  profileImage={
+                    fb.companyLogo
+                      ? `https://api.test.hachion.co/corporatereview/${fb.companyLogo}`
+                      : ""
+                  }
+                />
+              </div>
+            ))
+          )}
+        </div>
       </div>
+
 
       {/* Student Feedback */}
       <div className="training-events container" ref={studentFeedbackRef}>
         <div className="training-title-head">
           <div className="home-spacing">
             <h2 className="association-head">Our Student Feedback</h2>
-            <p className="association-head-tag">Don’t take our word for it. Trust our customers.</p>
+            <p className="association-head-tag">
+              Don’t take our word for it. Trust our customers.
+            </p>
           </div>
-          <CardsPagination
-            currentPage={studentPage}
-            totalCards={reviews.length}
-            cardsPerPage={cardsPerPage}
-            onPageChange={handleStudentPageChange}
-          />
+
+          {reviews.length > 0 && (
+            <CardsPagination
+              currentPage={studentPage}
+              totalCards={reviews.length}
+              cardsPerPage={cardsPerPage}
+              onPageChange={handleStudentPageChange}
+            />
+          )}
         </div>
+
         <div className="display-flex row justify-content-center gap-0">
-          {loading ? Array.from({ length: cardsPerPage }).map((_, i) => (
-            <div className="skeleton-card" key={i}></div>
-          )) : studentReviews.map((fb) => (
-            <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
-              <LearnerCard
-                name={fb.name}
-                location={fb.location}
-                content={fb.review}
-                rating={fb.rating}
-                profileImage={fb.user_image ? `https://api.test.hachion.co/userreview/${fb.user_image}` : ""}
-              />
+          {loading ? (
+            Array.from({ length: cardsPerPage }).map((_, i) => (
+              <div className="skeleton-card" key={i}></div>
+            ))
+          ) : reviews.length === 0 ? (
+            /* ✅ Empty state */
+            <div className="col-12 text-center py-4">
+              <p className="text-dark mb-0">
+                No Student Feedback Available
+              </p>
             </div>
-          ))}
+          ) : (
+            studentReviews.map((fb) => (
+              <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
+                <LearnerCard
+                  name={fb.name}
+                  location={fb.location}
+                  content={fb.review}
+                  rating={fb.rating}
+                  profileImage={
+                    fb.user_image
+                      ? `https://api.test.hachion.co/userreview/${fb.user_image}`
+                      : ""
+                  }
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -224,49 +266,61 @@ const getEmbedUrl = (url) => {
           <div className="home-spacing">
             <h2 className="association-head">Live Reviews</h2>
           </div>
-          <CardsPagination
-            currentPage={livePage}
-            totalCards={reviews.length}
-            cardsPerPage={cardsPerPage}
-            onPageChange={handleLivePageChange}
-          />
+
+          {reviews.length === 0 && (
+            <CardsPagination
+              currentPage={livePage}
+              totalCards={reviews.length}
+              cardsPerPage={cardsPerPage}
+              onPageChange={handleLivePageChange}
+            />
+          )}
         </div>
+
         <div className="display-flex row justify-content-center gap-0">
           {loading ? (
-  Array.from({ length: cardsPerPage }).map((_, i) => (
-    <div className="skeleton-card" key={i}></div>
-  ))
-) : (
-  liveReviews
-    .filter((fb) => fb.videoLink || fb.demo_link_1) // ✅ show only items with a video link
-    .map((fb) => (
-      <div key={fb.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
-        <VideoReviewCard
-          name={fb.name}
-          profileImage={
-            fb.user_image
-              ? `https://api.test.hachion.co/userreview/${fb.user_image}`
-              : ""
-          }
-          demo_link_1={fb.videoLink || fb.demo_link_1} // ✅ dynamic video link
-          onPlayVideo={handlePlayVideo}
-        />
-      </div>
-    ))
-)}
-
+            Array.from({ length: cardsPerPage }).map((_, i) => (
+              <div className="skeleton-card" key={i}></div>
+            ))
+          ) : liveReviews.filter(fb => fb.videoLink || fb.demo_link_1).length === 0 ? (
+            /* ✅ Empty state */
+            <div className="col-12 text-center py-4">
+              <p className="text-dark mb-0">
+                No Live Reviews Available
+              </p>
+            </div>
+          ) : (
+            liveReviews
+              .filter(fb => fb.videoLink || fb.demo_link_1)
+              .map(fb => (
+                <div
+                  key={fb.review_id}
+                  className="col-12 col-md-6 col-lg-4 mb-3"
+                >
+                  <VideoReviewCard
+                    name={fb.name}
+                    profileImage={
+                      fb.user_image
+                        ? `https://api.test.hachion.co/userreview/${fb.user_image}`
+                        : ""
+                    }
+                    demo_link_1={fb.videoLink || fb.demo_link_1}
+                    onPlayVideo={handlePlayVideo}
+                  />
+                </div>
+              ))
+          )}
         </div>
       </div>
+
 
       {/* Alumni Logos */}
       <div className="training-events container">
         <h3 className="it-reviews-head">Our Alumni Works At</h3>
         <div className="it-logos-grid container">
-          {images.map((img, i) => (
-            <img key={i} src={img} alt={`logo-${i + 1}`} className="it-logo-review" />
-          ))}
+          <Association />
         </div>
-        <HomeFaq/>
+        <HomeFaq />
       </div>
 
       {/* Video Modal */}

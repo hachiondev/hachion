@@ -415,16 +415,6 @@ if (response.status === 200) {
                     {errorMessage}
                   </p>
                 )}
-                <button
-                  type="button"
-                  className="submit-button"
-                  onClick={handleFormSubmit}
-                >
-                  Submit
-                </button>
-
-                {error && <p className="error-message">{error}</p>}
-
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -463,6 +453,17 @@ if (response.status === 200) {
                     </span>
                   </label>
                 </div>
+                <button
+                  type="button"
+                  className="submit-button"
+                  onClick={handleFormSubmit}
+                >
+                  Submit
+                </button>
+
+                {error && <p className="error-message">{error}</p>}
+
+                
               </div>
             </form>
           </div>

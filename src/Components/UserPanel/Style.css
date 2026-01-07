@@ -17,6 +17,10 @@
   border: 1px solid #00aeef;
 }
 
+.training-custom-search{
+  border: 1px solid #00aeef;
+}
+
 .custom-search input {
   border: none;
   box-shadow: none;
@@ -950,6 +954,10 @@ a:not([href]):not([class]) {
     max-width: 900px !important;
   }
 
+  .training-custom-search{
+    width: 226px !important
+  }
+
   .association-head-desktop{
     font-size: 20px !important;
   }
@@ -981,10 +989,16 @@ a:not([href]):not([class]) {
     width: 356px !important;
   }
   
+  .training-custom-search{
+    width: 256px !important
+  }
 }
 
 @media (max-width:375px){
   .custom-search{
     width: 295px !important
+  }
+  .training-custom-search{
+    width: 209px !important;
   }
 }

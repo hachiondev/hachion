@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -435,8 +435,7 @@
 .write-btn,
 .submit-btn,
 .apply-btn,
-.resume-download-btn
- {
+.resume-download-btn {
   background-color: #00aeef;
   border: 2px solid #00aeef;
   border-radius: 50px;
@@ -448,24 +447,52 @@
   margin: 3px 10px;
 }
 
-.join-now{ 
+.join-now {
   background-color: #ffffff;
-  border: 2px solid #00aeef;
+  border: 2px solid #ffffff;
   border-radius: 50px;
-  color: #00aeef;
+  color: #00AEEF;
   font-size: 14px;
-  font-weight: 500;
-  height: 40px;
-  padding: 3px 10px;
-  margin: 3px 10px;
-    transition: all 0.3s ease;
+  font-weight: 600;
+  height: 42px;
+  padding: 6px 20px;
+  margin: 4px 12px;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  /* subtle pulse visible on blue bg */
+  animation: softPulseBlueBg 2.5s ease-in-out infinite;
 }
 
+/* ✨ White + cyan pulse */
+@keyframes softPulseBlueBg {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(255, 255, 255, 0.6),
+      0 4px 10px rgba(0, 0, 0, 0.15);
+  }
 
-/* Hover effect */
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(255, 255, 255, 0.25),
+      0 6px 14px rgba(0, 0, 0, 0.18);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(255, 255, 255, 0.6),
+      0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* 🚀 Hover */
 .join-now:hover {
-  box-shadow: 0 6px 14px rgba(4, 21, 27, 0.35);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow:
+    0 12px 28px rgba(255, 255, 255, 0.35),
+    0 8px 18px rgba(0, 0, 0, 0.25);
+  animation: none;
 }
 
 .update-profile-btn:hover,
@@ -832,7 +859,7 @@
     padding: 5px auto;
   }
 
-  .update-profile-btn{
+  .update-profile-btn {
     margin-top: 10px;
     width: 90%;
   }

@@ -52,8 +52,9 @@ const Login = () => {
     const loginData = { email, password };
 
     try {
-      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
-
+      debugger;
+      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
+      console.log("Login response:", response.data);
       if (response.data.status) {
         
         // SUCCESS - User exists and password is correct
@@ -284,6 +285,7 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    debugger
     try {
       const raw = localStorage.getItem('loginuserData');
       if (raw) return;

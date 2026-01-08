@@ -88,7 +88,7 @@ const [jobData, setJobData] = useState([]);
             'Not Available'
           )}
         </TableCell>
-        <TableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</TableCell>
+        <TableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY').toUpperCase()}</TableCell>
       </TableRow>
     );
   })}

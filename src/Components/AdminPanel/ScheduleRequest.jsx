@@ -210,7 +210,7 @@ export default function ScheduleRequest() {
                     {/* <StyledTableCell align="center">{row.schedule_date ? dayjs(row.schedule_date).format('MM-DD-YYYY') : ''}</StyledTableCell> */}
                     <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
                     <StyledTableCell align="center">{row.mode}</StyledTableCell>
-                    <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MM-DD-YYYY') : ''}</StyledTableCell>
+                    <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
                     <StyledTableCell align="center">
        
         <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.batch_id)} />

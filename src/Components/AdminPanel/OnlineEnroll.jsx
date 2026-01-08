@@ -224,13 +224,13 @@ const handleDateFilter = () => {
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>
                   <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-                  <StyledTableCell align="center">{row.enroll_date ? dayjs(row.enroll_date).format('MMM-DD-YYYY') : ''}</StyledTableCell>
+                  <StyledTableCell align="center">{row.enroll_date ? dayjs(row.enroll_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
                   <StyledTableCell align="center">{row.week}</StyledTableCell>
                   <StyledTableCell align="center">{row.time}</StyledTableCell>
                   <StyledTableCell align="center">{row.mode}</StyledTableCell>
                   <StyledTableCell align="center">{row.type}</StyledTableCell>
                   <StyledTableCell align="center">{row.trainer}</StyledTableCell>
-                  <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY'): ''}</StyledTableCell>
+                  <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase(): ''}</StyledTableCell>
                   <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
                   <StyledTableCell align="center">
                     <RiDeleteBin6Line

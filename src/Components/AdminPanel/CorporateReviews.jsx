@@ -498,7 +498,7 @@ export default function CorporateReview() {
                     <StyledTableCell align="center">{curr.location}</StyledTableCell>
                     <StyledTableCell align="left">{curr.courseName}</StyledTableCell>
                     <StyledTableCell align="left" style={{ maxWidth: '800px', wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{curr.comment}</StyledTableCell>
-                    <StyledTableCell align="center">{curr.date ? dayjs(curr.date).format("MM-DD-YYYY") : "N/A"}</StyledTableCell>
+                    <StyledTableCell align="center">{curr.date ? dayjs(curr.date).format("MMM-DD-YYYY").toUpperCase() : "N/A"}</StyledTableCell>
                     <StyledTableCell align="center">
                       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                         <FaEdit className="edit" onClick={() => handleEditClick(curr)} />

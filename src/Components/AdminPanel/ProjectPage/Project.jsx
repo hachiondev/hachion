@@ -29,6 +29,7 @@ import { useAddProjects } from "../../../Api/hooks/AdminProjects/useAddProjects"
 import { useProjects } from "../../../Api/hooks/AdminProjects/useProjects";
 import { useUpdateProject } from "../../../Api/hooks/AdminProjects/useUpdateProject";
 import { useDeleteProject } from "../../../Api/hooks/AdminProjects/useDeleteProject";
+import dayjs from 'dayjs';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -614,10 +615,12 @@ React.useEffect(() => {
             dangerouslySetInnerHTML={{ __html: project.description }}
           />
         </StyledTableCell>
+<StyledTableCell align="center">
+  {project.date
+    ? dayjs(project.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
 
-        <StyledTableCell align="center">
-          {project.date}
-        </StyledTableCell>
 
         <StyledTableCell align="center">
           <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>

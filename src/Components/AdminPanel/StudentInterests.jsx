@@ -218,7 +218,7 @@ const handleDelete = async (id) => {
                   <StyledTableCell align="left">{row.certificationOrPlacement}</StyledTableCell>
                   <StyledTableCell align="left">{row.speakToCourseAdvisor}</StyledTableCell>
                   <StyledTableCell align="left">{row.whereYouHeard}</StyledTableCell>
-                  <StyledTableCell align="center">{row.fillingDate ? dayjs(row.fillingDate).format('MMM-DD-YYYY') : ''}</StyledTableCell>
+                  <StyledTableCell align="center">{row.fillingDate ? dayjs(row.fillingDate).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
                                       {/* <StyledTableCell align="center">
                                           <RiDeleteBin6Line className="delete"/>
                                       </StyledTableCell> */}

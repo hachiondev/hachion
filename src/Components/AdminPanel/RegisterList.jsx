@@ -881,7 +881,7 @@ const mobileNumber = studentData.mobile?.trim();
       </StyledTableCell>
       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
         </StyledTableCell> {/* S.No. */}
-         <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MM-DD-YYYY') : ""}</StyledTableCell>
+         <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ""}</StyledTableCell>
 
          <StyledTableCell align="center">{row.mode}</StyledTableCell>        
         <StyledTableCell align="center">{row.studentId}</StyledTableCell>

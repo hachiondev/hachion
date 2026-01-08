@@ -839,7 +839,7 @@ export default function Trainer() {
                             dangerouslySetInnerHTML={{ __html: row.summary || '' }} />
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {row.date ? dayjs(row.date).format('MM-DD-YYYY') : ''}
+                          {row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ''}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           <FaEdit className="edit" onClick={() => handleEdit(row)} />

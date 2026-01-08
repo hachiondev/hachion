@@ -734,7 +734,7 @@ const quillModules = {
               <StyledTableCell align="left">{course.category_name}</StyledTableCell>
               <StyledTableCell align="left">{course.course_name}</StyledTableCell>
               <StyledTableCell align="left">{course.title}</StyledTableCell>
-              <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+              <StyledTableCell align="center">{course.date ? dayjs(course.date).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">{course.time} {course.time_zone}</StyledTableCell>
               <StyledTableCell align="left">
                   {course.content ? (
@@ -760,7 +760,7 @@ const quillModules = {
               <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.content.trim() || "" }} /></StyledTableCell> */}
               {/* <StyledTableCell align="center">
               <div className="qa-sub-content" dangerouslySetInnerHTML={{ __html: course.details.trim() || "" }} /></StyledTableCell> */}
-              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MM-DD-YYYY') : 'N/A'}</StyledTableCell>
+              <StyledTableCell align="center">{course.created_date ? dayjs(course.created_date).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}</StyledTableCell>
               <StyledTableCell align="center">
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                   <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> {/* Open modal on edit click */}

@@ -210,7 +210,7 @@ useEffect(() => {
                             <StyledTableCell align="left">{row.course_name}</StyledTableCell>
                             <StyledTableCell align="left">{row.fee}</StyledTableCell>
                             <StyledTableCell align="center">{row.requestInstallments}</StyledTableCell>
-                            <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY')}</StyledTableCell>
+                            <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
                             
                             <StyledTableCell align="center">
   <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

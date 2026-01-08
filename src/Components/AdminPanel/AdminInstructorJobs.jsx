@@ -224,7 +224,7 @@ const [deleteError, setDeleteError] = useState("");
                     ) : 'No Resume'}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.comment}</StyledTableCell>
-                  <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
+                  <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
                   <StyledTableCell align="center">
                     <RiDeleteBin6Line
   className="delete"

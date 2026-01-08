@@ -15,6 +15,7 @@ import { IoSearch } from "react-icons/io5";
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import AdminPagination from './AdminPagination'; 
+import dayjs from "dayjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -195,7 +196,12 @@ const [currentPage, setCurrentPage] = useState(1);
       <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
       <StyledTableCell align="center">{row.country}</StyledTableCell>
       <StyledTableCell align="center">{row.timeZone}</StyledTableCell>
-      <StyledTableCell align="center">{row.date}</StyledTableCell>
+      <StyledTableCell align="center">
+  {row.date
+    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
    
     </StyledTableRow>
  ))

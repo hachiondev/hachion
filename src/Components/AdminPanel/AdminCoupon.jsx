@@ -798,10 +798,10 @@ const handleCountryChange = (selected) => {
       <StyledTableCell align="left">{coupon.discountType}</StyledTableCell>
       <StyledTableCell align="left">{coupon.discountValue}</StyledTableCell>
       <StyledTableCell align="left">{coupon.usageLimit}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.startDate).format("MMM-DD-YYYY")}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.endDate).format("MMM-DD-YYYY")}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.startDate).format("MMM-DD-YYYY").toUpperCase()}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.endDate).format("MMM-DD-YYYY").toUpperCase()}</StyledTableCell>
       <StyledTableCell align="left">{coupon.status}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MMM-DD-YYYY')}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
       <StyledTableCell align="center">
         <FaEdit className="edit" onClick={() => handleEdit(coupon.couponId)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDelete(coupon.couponId)} />

@@ -721,10 +721,10 @@ const isFormValid = () => {
       <StyledTableCell align="center">{coupon.courseNames?.join(", ")}</StyledTableCell>
       <StyledTableCell align="center">{coupon.countryNames?.join(", ")}</StyledTableCell>
       <StyledTableCell align="center">{coupon.discountPercentage}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.startDate).format("MM-DD-YYYY")}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.endDate).format("MM-DD-YYYY")}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.startDate).format("MMM-DD-YYYY").toUpperCase()}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.endDate).format("MMM-DD-YYYY").toUpperCase()}</StyledTableCell>
       <StyledTableCell align="left">{coupon.status}</StyledTableCell>
-      <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MM-DD-YYYY')}</StyledTableCell>
+      <StyledTableCell align="center">{dayjs(coupon.createdDate).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
       <StyledTableCell align="center">
         <FaEdit className="edit" onClick={() => handleEdit(coupon.discountId)} />
         <RiDeleteBin6Line className="delete" onClick={() => handleDelete(coupon.discountId)} />

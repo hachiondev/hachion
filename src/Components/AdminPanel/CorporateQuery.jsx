@@ -10,7 +10,9 @@ import { IoSearch } from "react-icons/io5";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
+
 import './Admin.css';
+import dayjs from "dayjs";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -167,7 +169,12 @@ const handleDateFilter = () => {
                   <StyledTableCell align="center">{row.noOfPeople}</StyledTableCell>
                   <StyledTableCell align="center">{row.trainingCourse}</StyledTableCell>
                   <StyledTableCell sx={{ width: "180px",whiteSpace: "pre-wrap" }} align="left">{row.comments}</StyledTableCell>
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
+                  <StyledTableCell align="center">
+  {row.date
+    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
                 </StyledTableRow>
               ))
             ) : (

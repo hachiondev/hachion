@@ -202,7 +202,7 @@ console.log("filteredTraining2:", filteredTraining);
       <StyledTableCell align="center">{row.batchTiming}</StyledTableCell>
       
       <StyledTableCell align="center">
-  {dayjs(row.date).format('MM-DD-YYYY')}
+  {dayjs(row.date).format('MMM-DD-YYYY').toUpperCase()}
 </StyledTableCell>
     </StyledTableRow>
  ))

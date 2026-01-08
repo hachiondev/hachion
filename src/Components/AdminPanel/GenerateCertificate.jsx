@@ -771,7 +771,7 @@ const handleDateReset = () => {
   ) : 'Not Available'}
 </StyledTableCell>
         <StyledTableCell align="center">{curr.certificateId}</StyledTableCell>
-        <StyledTableCell align="center">{dayjs(curr.completionDate).format("MM-DD-YYYY")}</StyledTableCell>
+        <StyledTableCell align="center">{dayjs(curr.completionDate).format("MMM-DD-YYYY").toUpperCase()}</StyledTableCell>
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                         {/* <FaEdit className="edit" onClick={() => handleClickOpen(curr)} /> */}

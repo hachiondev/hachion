@@ -611,7 +611,7 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
         </StyledTableCell>
 
         <StyledTableCell align="center">
-          {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MM-DD-YYYY') : 'N/A'}
+          {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}
         </StyledTableCell>
 
         <StyledTableCell align="center">

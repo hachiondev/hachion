@@ -449,7 +449,7 @@ const Blogs = () => {
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="center">{blog.author}</StyledTableCell>
-                      <StyledTableCell align="center">{dayjs(blog.date).format('MM-DD-YYYY')}</StyledTableCell>
+                      <StyledTableCell align="center">{dayjs(blog.date).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
                       <StyledTableCell align="center">
                         <FaEdit className="edit" onClick={() => handleEdit(blog.id)} />
                         <RiDeleteBin6Line className="delete" onClick={() => handleDelete(blog.id)} />

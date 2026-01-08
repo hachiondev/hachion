@@ -1032,7 +1032,7 @@ const response = await axios.put(
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.schedule_date
-                          ? dayjs(course.schedule_date).format("MMM-DD-YYYY")
+                          ? dayjs(course.schedule_date).format("MMM-DD-YYYY").toUpperCase()
                           : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">
@@ -1052,7 +1052,7 @@ const response = await axios.put(
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.created_date
-                          ? dayjs(course.created_date).format("MMM-DD-YYYY")
+                          ? dayjs(course.created_date).format("MMM-DD-YYYY").toUpperCase()
                           : "N/A"}
                       </StyledTableCell>
                       <StyledTableCell align="center">

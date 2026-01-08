@@ -31,6 +31,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import AdminPagination from "./AdminPagination";
+import dayjs from "dayjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -618,8 +619,11 @@ export default function Other() {
                         {curr.path}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.date}
-                      </StyledTableCell>
+  {curr.date
+    ? dayjs(curr.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
                       <StyledTableCell align="center">
                         <div
                           style={{

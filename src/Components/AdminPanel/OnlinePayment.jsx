@@ -216,7 +216,12 @@ useEffect(() => {
                             <StyledTableCell align="center">{row.balance}</StyledTableCell>
                             <StyledTableCell align="center">{row.status}</StyledTableCell>
                             <StyledTableCell align="left">{row.method}</StyledTableCell>
-                            <StyledTableCell align="center">{row.date}</StyledTableCell>
+                            <StyledTableCell align="center">
+  {row.date
+    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
                             </StyledTableRow>
                                           ))
                                         ) : (

@@ -27,6 +27,7 @@ import axios from 'axios';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import dayjs from 'dayjs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -552,7 +553,12 @@ setTimeout(() => setErrorMessage(""), 6000);
                   <StyledTableCell align="center">
                     {row.status ? "Enabled" : "Disabled"}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
+                  <StyledTableCell align="center">
+  {row.date
+    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
                   <StyledTableCell align="center">
                     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                       <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

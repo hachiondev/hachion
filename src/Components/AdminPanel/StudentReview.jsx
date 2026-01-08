@@ -213,7 +213,7 @@ const handleReject = async (review_id) => {
                     {review.review}
                   </StyledTableCell>
                   <StyledTableCell align="left">{review.date
-                                                 ? dayjs(review.date).format("MM-DD-YYYY")
+                                                 ? dayjs(review.date).format("MMM-DD-YYYY").toUpperCase()
                                                  : "N/A"}</StyledTableCell>
                   <StyledTableCell align="center">
                   <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

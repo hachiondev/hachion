@@ -1285,7 +1285,7 @@ const handleSaveAndSendInvoice = async (e) => {
           <StyledTableCell align="center">{curr.balance}</StyledTableCell>
           <StyledTableCell align="center">{curr.status}</StyledTableCell>
           <StyledTableCell align="center">
-            {curr.date ? dayjs(curr.date).format('MMM-DD-YYYY') : ''}
+            {curr.date ? dayjs(curr.date).format('MMM-DD-YYYY').toUpperCase() : ''}
           </StyledTableCell>
           <StyledTableCell align="center">
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>

@@ -207,7 +207,7 @@ export default function AdminUnsubscribe() {
                     <StyledTableCell align="left">{row.reason}</StyledTableCell>
                     <StyledTableCell align="left">{row.duration}</StyledTableCell>
                     <StyledTableCell align="left">{row.comments}</StyledTableCell>
-                    <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
+                    <StyledTableCell align="center">{dayjs(row.date).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>
                   </StyledTableRow>
                 ))
               ) : (

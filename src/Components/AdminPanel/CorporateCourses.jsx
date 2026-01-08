@@ -17,6 +17,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
+import dayjs from 'dayjs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   '&.MuiTableCell-head': {
@@ -307,7 +308,12 @@ export default function CorporateCourses() {
                         <StyledTableCell align="center">{row.category_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.status ? "Enabled" : "Disabled"}</StyledTableCell>
-                        <StyledTableCell align="center">{row.date}</StyledTableCell>
+                        <StyledTableCell align="center">
+  {row.date
+    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+    : "N/A"}
+</StyledTableCell>
+
                         <StyledTableCell align="center">
                           <FaEdit
                             onClick={async () => {

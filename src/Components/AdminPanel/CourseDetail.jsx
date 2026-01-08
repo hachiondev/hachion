@@ -1052,7 +1052,7 @@ const hasInrFields =
                       min="0"
                     />
                   </div>
-                 {formMode === 'Edit' && (
+                 {/* {formMode === 'Edit' && (
   <div className="col-md-4">
     <label className="form-label">
       Default Trainer <span style={{ color: "red" }}>*</span>
@@ -1068,6 +1068,38 @@ const hasInrFields =
         Select Trainer
       </option>
 
+      {trainers.map((trainerName, index) => (
+        <option key={index} value={trainerName}>
+          {trainerName}
+        </option>
+      ))}
+    </select>
+  </div>
+)} */}
+
+{formMode === 'Edit' && (
+  <div className="col-md-4">
+    <label className="form-label">
+      Default Trainer <span style={{ color: "red" }}>*</span>
+    </label>
+
+    <select
+      className="form-select"
+      name="defaultTrainer"
+      value={formData.defaultTrainer}
+      onChange={handleInputChange}
+      required
+    >
+      <option value="" disabled>
+        Select Trainer
+      </option>
+
+      {/* Static default option */}
+      <option value="Hachion Certified Trainer">
+        Hachion Certified Trainer
+      </option>
+
+      {/* API trainers */}
       {trainers.map((trainerName, index) => (
         <option key={index} value={trainerName}>
           {trainerName}

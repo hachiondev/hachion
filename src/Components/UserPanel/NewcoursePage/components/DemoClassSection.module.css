@@ -956,12 +956,16 @@
 }
 
 .dcinfolist {
-  display: grid;
-  gap: 8px;
-  color: #2c3443;
+  margin: 8px 0 10px;
+  padding-left: 20px;
+  color: #000;
+  font-size: 17px;
 }
 
-
+.dcinfolist li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
 
 /* Responsive */
 @media (max-width: 1100px) {
@@ -1224,7 +1228,7 @@
   }
 
   .dcmuted {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .feeAmount {
@@ -1293,20 +1297,22 @@
   }
 
   .dchead h2 {
-    font-size: 30px;
+    font-size: 24px;
+    text-align: center;
   }
 
   .dcinfosubdescription {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .dctabs .tabLabel {
-    font-size: 22px;
+    font-size: 14px;
     font-weight: 400;
   }
 
   .dchead p {
-    font-size: 22px;
+    font-size: 14px;
+    text-align: justify;
   }
 
   .dctimezone {
@@ -1323,12 +1329,12 @@
 
   .dctabs {
     background: transparent;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1fr);
   }
 
   .dctabs .dctab {
     margin: 6px;
-    padding: 4px 4px;
+    padding: 8px 0px;
     font-size: 18px;
     font-weight: 400;
     min-height: 43px;
@@ -1341,45 +1347,51 @@
   }
 
   .dcslots .dcslot {
-    padding: 20px 18px;
+padding: 15px 8px;
+        width: 123px;
   }
 
   .dcslotdate {
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: 400;
   }
 
   .dcslotcount {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .dcslots .dcslotbadge {
     font-weight: 500;
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .dcslots {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
   }
 
   .dcdetailscol h4 {
     font-size: 24px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .dcdetailrow {
     font-size: 18px;
     font-weight: 600;
     color: #000000;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
     /* display: block; */
   }
 
   .dcdetailtime {
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
   }
 
   .dcdetailmeta {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 400;
   }
 
@@ -1389,21 +1401,29 @@
 
   .dcemptytext {
     font-weight: 400;
+    font-size: 14px;
+    width: 300px;
+  }
+
+  .dcemptyicon img{
+    height: 50px;
   }
 
   .dcdetailscol {
     box-shadow: none;
+    padding: 25px;
   }
 
   .dcbtn {
-    padding: 6px 30px;
-    font-size: 18px;
-    font-weight: 600;
+    padding: 6px 80px;
+    font-size: 15px;
+    font-weight: 500;
     /* margin-top: 20px; */
   }
 
   .dclink {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+    font-size: 14px;
   }
 
   .dcinfoicon {
@@ -1417,12 +1437,12 @@
   }
 
   .dcinfotitle {
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
 
   .dcinfotext {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -1447,7 +1467,7 @@
   }
 
   .dcrequestLabel {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .dcrequestCheckbox {
@@ -1455,12 +1475,12 @@
   }
 
   .dcrequestCheckbox span:not(.checkmark) {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .dcrequestSelectTrigger,
   .dcrequestSelectOption {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .dcdetails {
@@ -1471,11 +1491,11 @@
     gap: 10px;
     flex-wrap: nowrap;
     /* Keep on same line even on mobile */
-    justify-content: space-between;
+    justify-content: space-evenly;
   }
 
   .checkboxText {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .checkboxInput {
@@ -1484,7 +1504,7 @@
   }
 
   .feeAmount {
-    font-size: 18px;
+    font-size: 14px;
     width: 110px;
   }
 
@@ -1500,6 +1520,18 @@
 
   .noLiveClass{
     width: 386px;
+  }
+
+    .bnbtnprimary {
+    font-size: 16px;
+    padding: 5px 40px 5px 40px;
+    margin: 20px;
+  }
+
+  
+  .dcmuted {
+    font-size: 12px;
+    font-weight: 400;
   }
 }
 
@@ -1525,11 +1557,6 @@
     text-align-last: center;
   }
 
-  .dctabs .tabLabel {
-    font-size: 16px;
-    font-weight: 400;
-  }
-
   .offerIcon img {
     width: 40px;
     height: 40px;
@@ -1537,11 +1564,11 @@
   }
 
   .offerSubtitle {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .offerCountdown {
-    font-size: 11px;
+    font-size: 14px;
     text-align: center;
     padding: 10px 20px;
   }
@@ -1554,15 +1581,22 @@
   }
 
   .dchead h2 {
-    font-size: 26px;
-  }
-
-  .dchead p {
-    font-size: 18px;
+    font-size: 24px;
+    text-align: center;
   }
 
   .dcinfosubdescription {
-    font-size: 18px;
+    font-size: 14px;
+  }
+
+  .dctabs .tabLabel {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dchead p {
+    font-size: 14px;
+    text-align: justify;
   }
 
   .dctimezone {
@@ -1579,13 +1613,13 @@
 
   .dctabs {
     background: transparent;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1fr);
   }
 
   .dctabs .dctab {
     margin: 6px;
-    padding: 4px 4px;
-    font-size: 14px;
+    padding: 8px 4px;
+    font-size: 18px;
     font-weight: 400;
     min-height: 43px;
     border-radius: 10px;
@@ -1596,46 +1630,52 @@
     color: #fff;
   }
 
-  .dcslots {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .dcslots .dcslot {
-    padding: 20px 18px;
+padding: 15px;
+        width: 140px;
   }
 
   .dcslotdate {
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 400;
   }
 
   .dcslotcount {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .dcslots .dcslotbadge {
     font-weight: 500;
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .dcslots {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
   }
 
   .dcdetailscol h4 {
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
 
   .dcdetailrow {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: #000000;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
     /* display: block; */
   }
 
   .dcdetailtime {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
   }
 
   .dcdetailmeta {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 400;
   }
 
@@ -1645,23 +1685,29 @@
 
   .dcemptytext {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
+    width: 300px;
+  }
+
+  .dcemptyicon img{
+    height: 50px;
   }
 
   .dcdetailscol {
     box-shadow: none;
+    padding: 25px;
   }
 
   .dcbtn {
-    padding: 6px 30px;
-    font-size: 14px;
-    font-weight: 600;
+    padding: 6px 80px;
+    font-size: 15px;
+    font-weight: 500;
     /* margin-top: 20px; */
   }
 
   .dclink {
-    margin-bottom: 30px;
-    font-size: 16px;
+    margin-bottom: 15px;
+    font-size: 14px;
   }
 
   .dcinfoicon {
@@ -1675,12 +1721,12 @@
   }
 
   .dcinfotitle {
-    font-size: 26px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
   }
 
   .dcinfotext {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -1698,58 +1744,77 @@
     font-size: 10px;
   }
 
-  .dcrequestOverlay {
-    padding: 16px 14px;
+  .dcrequestRow {
+    grid-template-columns: repeat(1, 1fr);
+    width: auto;
+    gap: 10px;
   }
 
   .dcrequestLabel {
-    font-size: 20px;
+    font-size: 14px;
+  }
+
+  .dcrequestCheckbox {
+    font-size: 10px;
   }
 
   .dcrequestCheckbox span:not(.checkmark) {
-    font-size: 16px;
+    font-size: 12px;
   }
 
   .dcrequestSelectTrigger,
   .dcrequestSelectOption {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .dcdetails {
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .checkboxGroup {
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: nowrap;
+    /* Keep on same line even on mobile */
+    justify-content: space-evenly;
   }
 
-  .notifyLabel {
-    white-space: normal;
+  .checkboxText {
+    font-size: 14px;
   }
 
-  .bnbtnprimary {
-    font-size: 16px;
+  .checkboxInput {
+    width: 14px;
+    height: 14px;
   }
 
   .feeAmount {
-    font-size: 15px;
-    width: 100px;
+    font-size: 14px;
+    width: 110px;
   }
 
-  .dcmuted {
-    font-size: 16px;
-
-  }
-
-  .noLiveSlotsContainer{
+    .noLiveSlotsContainer{
     flex-direction: column;
     /* align-items: center; */
+  }
+
+  .noLiveSlot {
+    height: 145px;
+    width: 165px;
   }
 
   .noLiveClass{
     width: 316px;
   }
 
-  .noLiveSlot {
-height: 125px;
-        width: 145px;
+    .bnbtnprimary {
+    font-size: 16px;
+    padding: 5px 40px 5px 40px;
+    margin: 20px;
+  }
+
+  
+  .dcmuted {
+    font-size: 12px;
+    font-weight: 400;
   }
 }

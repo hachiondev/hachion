@@ -116,7 +116,7 @@
 }
 
 .bnby {
-  margin-top: 14px;
+  margin: 8px 0 8px 0;
   color: #d4e6ee;
 }
 
@@ -169,7 +169,7 @@
 }
 
 .bnpriceRow {
-  margin-top: 18px;
+  margin-top: 8px;
 }
 
 .bnprice {
@@ -322,7 +322,7 @@
   bottom: -35px;
   transform: translateX(-50%);
   background: #fff;
-  border-radius: 14px;
+  border-radius: 10px;
   padding: 12px 6px;
   display: flex;
   min-width: 90%;
@@ -441,7 +441,7 @@
 
   .bntag {
 font-size: 18px;
-        padding: 8px 16px;
+        padding: 2px 26px
   }
 
   .bnbtnprimary {
@@ -554,12 +554,12 @@ font-size: 18px;
   }
 
   .bnright {
-    width: 100%;
-    margin: 0;
+    width: 90%;
+    margin: 0 auto;
   }
 
   .bnchip {
-    font-size: 24px;
+    font-size: 12px;
     padding: 7px 10px;
   }
 
@@ -573,11 +573,14 @@ font-size: 18px;
   .bnstats {
     position: relative;
     transform: none;
-    left: auto;
+    left: 5%;
     bottom: auto;
     margin-top: -38px;
-    min-width: 100%;
+    /* min-width: 100%; */
+    width: 20%;
     box-shadow: none;
+    padding: 4px 4px;
+    gap: 0px;
   }
 
   .bnstat {
@@ -585,27 +588,26 @@ font-size: 18px;
   }
 
   .bnstatval {
-    font-size: 30px;
+    font-size: 14px;
   }
 
   .bncard h1 {
-    font-size: 40px;
+    font-size: 24px;
   }
 
   .bncard .bnsub {
-    font-size: 22px;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .bnby {
-    font-size: 22px;
+    font-size: 14px;
   }
 
   .bnmetrics {
-    font-size: 22px;
-    display: flex;
-    flex-flow: column;
-    align-items: flex-start;
-    gap: 10px;
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 0;
   }
 
   .medal {
@@ -614,11 +616,11 @@ font-size: 18px;
   }
 
   .bnbullets {
-    font-size: 22px;
+    font-size: 14px;
   }
 
   .bnpricenow {
-    font-size: 35px;
+    font-size: 20px;
   }
 
   .bnpriceold {
@@ -630,12 +632,12 @@ font-size: 18px;
   }
 
   .bntag {
-    font-size: 17px;
+    font-size: 12px;
   }
 
   .bnbtnprimary {
-    padding: 8px 16px;
-    font-size: 20px;
+    padding: 6px 20px;
+    font-size: 12px;
   }
 
   .bnlink {
@@ -643,43 +645,42 @@ font-size: 18px;
   }
 
   .bnplay {
-width: 66px;
-        height: 66px;
+width: 35px;
+        height: 35px;
   }
 
   .bnplay svg {
-    width: 45px;
+    width: 25px;
   }
 
   .bnherotext {
-    font-size: 18px;
+    font-size: 14px;
     top: 50%;
   }
 
-  .bnctaRow {
+  /* .bnctaRow {
     flex-direction: column;
-  }
+  } */
 
   .bnmetric {
-    display: inline-flex;
-    gap: 8px;
+    display: inline-block;
+    /* gap: 8px; */
     align-items: center;
   }
 
   .bnmetricnogap svg {
-    width: 32px;
-    height: 32px;
+    width: 15px;
+        height: 15px;
   }
 
   .bnstatlabel {
     color: #000;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 14px;
   }
 
       .bnprice {
-    flex-flow: column;
-    align-items: flex-start;
+    gap: 6px;
   }
 
     .groupdis{
@@ -688,7 +689,7 @@ width: 66px;
   }
 
   .feeGroup{
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .bnofferleft{
@@ -707,12 +708,12 @@ width: 66px;
   }
 
   .bnright {
-    width: 100%;
-    margin: 0;
+    width: 90%;
+    margin: 0 auto;
   }
 
   .bnchip {
-    font-size: 20px;
+    font-size: 12px;
     padding: 7px 10px;
   }
 
@@ -726,11 +727,14 @@ width: 66px;
   .bnstats {
     position: relative;
     transform: none;
-    left: auto;
+    left: 5%;
     bottom: auto;
     margin-top: -38px;
-    min-width: 100%;
+    /* min-width: 100%; */
+    width: 20%;
     box-shadow: none;
+    padding: 4px 4px;
+    gap: 0px;
   }
 
   .bnstat {
@@ -738,94 +742,97 @@ width: 66px;
   }
 
   .bnstatval {
-    font-size: 22px;
+    font-size: 14px;
   }
 
   .bncard h1 {
-    font-size: 35px;
+    font-size: 19px;
   }
 
   .bncard .bnsub {
-    font-size: 17px;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .bnby {
-    font-size: 17px;
+    font-size: 14px;
   }
-
+/* 
   .bnmetrics {
-    font-size: 17px;
-    display: flex;
-    flex-flow: column;
-    align-items: flex-start;
-    gap: 10px;
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 0;
+  } */
+
+  .medal {
+    width: 30px;
+    height: 30px;
   }
 
   .bnbullets {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .bnpricenow {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .bnpriceold {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .bnnote {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .bntag {
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .bnbtnprimary {
-    padding: 8px 16px;
-    font-size: 18px;
+    padding: 6px 20px;
+    font-size: 12px;
   }
 
   .bnlink {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .bnplay {
-    width: 56px;
-    height: 56px;
+width: 35px;
+        height: 35px;
   }
 
   .bnplay svg {
-    width: 35px;
+    width: 25px;
   }
 
   .bnherotext {
-    font-size: 16px;
+    font-size: 14px;
+    top: 50%;
   }
 
-  .bnctaRow {
+  /* .bnctaRow {
     flex-direction: column;
-  }
+  } */
 
-  .bnmetric {
-    gap: 8px;
+  /* .bnmetric {
     align-items: center;
-  }
+  } */
 
   .bnmetricnogap svg {
-    width: 22px;
-    height: 32px;
+    width: 12px;
+        height: 12px;
   }
 
   .bnstatlabel {
     color: #000;
     font-weight: 600;
-    font-size: 17px;
+    font-size: 14px;
   }
 
-    .bnprice {
-    flex-flow: column;
-    align-items: flex-start;
+      .bnprice {
+    gap: 6px;
   }
 
     .groupdis{
@@ -834,15 +841,14 @@ width: 66px;
   }
 
   .feeGroup{
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .bnofferleft{
-    font-size: 15px;
+    font-size: 19px;
   }
 
-  
       .bnofferright {
-        font-size: 16px;
+        font-size: 20px;
     }
 }

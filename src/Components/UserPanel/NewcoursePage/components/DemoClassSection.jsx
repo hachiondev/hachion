@@ -320,6 +320,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   return (
     <section className={styles.dcwrap} ref={ref} id="demoClassSection">
       <div className="container">
+       
         {/* Offer strip */}
         {showOfferStrip && (
           <div className={styles.offerBanner}>
@@ -375,6 +376,12 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
 
         {/* Heading */}
         <div className={styles.dchead}>
+           {/* <button
+                  className={cn(styles.bnbtn, styles.bnbtnprimary)}
+                  // onClick={onEnroll}
+                >
+                  Free Demo Classes Available
+                </button> */}
           <div className={styles.dcheadText}>
             <h2>Try Before You Enroll</h2>
             <p>

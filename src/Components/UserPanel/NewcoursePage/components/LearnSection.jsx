@@ -26,6 +26,7 @@ export default function LearnSection() {
         prereq: false,
         learn: false,
         who: false,
+        career: false,
     });
     const courseName = courseNameSlug
         ? decodeURIComponent(courseNameSlug)
@@ -85,6 +86,13 @@ export default function LearnSection() {
         .map((item) => item.trim())
         .filter((item) => item !== "");
 
+        const careerItems =
+  course?.careerOpportunities
+    ?.split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean) || [];
+
+
     // Reset to first card when tools change or cards per page changes
     useEffect(() => {
         setCurrentStartIndex(1);
@@ -116,8 +124,8 @@ export default function LearnSection() {
                         <h2 className={styles.lsh2}>What You'll Learn</h2>
 
                         <ul className={styles.lslist}>
-                            {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 4)).map((item) => (
-                                <li key={item} className={styles.lslistitem}>
+                            {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 4)).map((item,index) => (
+                                <li key={item} className={styles.lslistitem} style={{ "--i": index }}>
                                     <CheckCircle />
                                     <span>{item}</span>
                                 </li>
@@ -168,15 +176,22 @@ export default function LearnSection() {
                                 <h3>Who this course is for</h3>
                             </div>
                             <ul className={styles.lscardbullets}>
-                                {(showAll.who ? whoThisCourseIsForItems : whoThisCourseIsForItems.slice(0, 4)).map((item) => (
-                                    <li key={item}>{item}</li>
-                                ))}
-                            </ul>
+  {Array.isArray(whoThisCourseIsForItems) && whoThisCourseIsForItems.length > 0 ? (
+    (showAll.who
+      ? whoThisCourseIsForItems
+      : whoThisCourseIsForItems.slice(0, 4)
+    ).map((item, index) => (
+      <li key={index} >{item}</li>
+    ))
+  ) : (
+    <li className={styles.noData}>No data available</li>
+  )}
+</ul>
 
                             {whoThisCourseIsForItems.length > 4 && (
                                 <button
                                     type="button"
-                                    className={styles.readMoreBtn}
+                                    className={styles.readMoreBtn2}
                                     onClick={() => toggleShowAll("who")}
                                 >
                                     {showAll.who ? "Read Less ↑" : "Read More ↓"}
@@ -186,7 +201,7 @@ export default function LearnSection() {
                         </div>
 
 
-                        <div className={styles.lscard}>
+                        <div className={styles.lscard2}>
                             <div className={styles.lscardhead}>
                                 <span className={styles.lscardico}>
                                     <Briefcase />
@@ -196,17 +211,36 @@ export default function LearnSection() {
 
                             <p className={styles.lsmuted}>Job Roles After Completion:</p>
 
-                            <div className={styles.lspills}>
-                                {(course?.careerOpportunities || "")
-                                    .split("\n")
-                                    .map((item) => item.trim())
-                                    .filter((item) => item !== "")
-                                    .map((p) => (
-                                        <span key={p} className={styles.lspill}>
-                                            {p}
-                                        </span>
-                                    ))}
-                            </div>
+<div className={styles.lspills}>
+  {careerItems.length > 0 ? (
+    <>
+      {(showAll.career ? careerItems : careerItems.slice(0, 4)).map(
+        (p, index) => (
+          <span key={index} className={styles.lspill} style={{ "--i": index }}>
+            {p}
+          </span>
+        )
+      )}
+
+      {careerItems.length > 4 && (
+        <div className={styles.readMoreWrapper}>
+          <button
+            type="button"
+            className={styles.readMoreBtn2}
+            onClick={() => toggleShowAll("career")}
+          >
+            {showAll.career ? "Read Less ↑" : "Read More ↓"}
+          </button>
+        </div>
+      )}
+    </>
+  ) : (
+    <p className="text-dark">No data available</p>
+  )}
+</div>
+
+
+
 
 
                             {/* <div className={styles.lssalary}>

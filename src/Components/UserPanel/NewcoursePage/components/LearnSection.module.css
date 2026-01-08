@@ -16,7 +16,7 @@
 
 .lsh2 {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
   margin-bottom: 18px;
   line-height: 1.05;
@@ -38,18 +38,13 @@
   color: #000;
   font-size: 17px;
   font-weight: 400;
+
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 0.1s);
 }
 
-/* Staggered animation for list items */
-.lslistitem:nth-child(1) { animation-delay: 0.1s; }
-.lslistitem:nth-child(2) { animation-delay: 0.2s; }
-.lslistitem:nth-child(3) { animation-delay: 0.3s; }
-.lslistitem:nth-child(4) { animation-delay: 0.4s; }
-.lslistitem:nth-child(5) { animation-delay: 0.5s; }
-.lslistitem:nth-child(6) { animation-delay: 0.6s; }
 
 .lsicon {
   padding: 8px 2px;
@@ -82,19 +77,20 @@
 
 .lspre h3 {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
   margin-bottom: 8px;
 }
 
 .lsbullets {
   display: grid;
-  gap: 10px;
+  gap: 5px;
   color: #000000;
   list-style: disc;
   margin-left: 18px;
   margin-bottom: 0;
   font-size: 17px;
+  padding-left: 14px;
 }
 
 /* right column cards */
@@ -105,42 +101,41 @@
   align-items: end;
 }
 
-.lscard {
+.lscard,
+.lscard2 {
   background: #ffffff;
   border: 1px solid rgba(14, 20, 30, 0.06);
-  border-radius: 14px;
+  border-radius: 10px;
   padding: 22px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0 17px 5px rgba(0, 0, 0, 0.07);
   width: 100%;
-  transition: all 0.3s ease;
-  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
   opacity: 0;
+  transform: translateX(40px);
   animation: slideInFromRight 0.6s ease forwards;
+  animation-delay: calc(var(--i) * 0.8s);
 }
+
+/* Hover */
+.lscard:hover,
+.lscard2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
+}
+
+/* Right alignment */
+.lsright > .lscard,
+.lsright > .lscard2 {
+  margin-left: auto;
+}
+
 
 .pagiGroup{
   display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-}
-
-.lscard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
-}
-
-.lsright > .lscard:nth-child(1) {
-  animation-delay: 0.2s;
-}
-
-.lsright > .lscard:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.lsright>.lscard {
-  /* keep cards visually aligned to the right */
-  margin-left: auto;
 }
 
 .lscardhead {
@@ -190,7 +185,6 @@
 }
 
 .lspill {
-  /* background: linear-gradient(180deg,#f0fdf4,#e6fbef); */
   background: #7BF6CB33;
   color: #217E02;
   padding: 8px 22px;
@@ -199,18 +193,13 @@
   font-size: 13px;
   box-shadow: 0 4px 10px rgba(16, 24, 40, 0.03);
   transition: all 0.3s ease;
+
   opacity: 0;
   transform: scale(0.9);
   animation: popIn 0.4s ease forwards;
+  animation-delay: calc(var(--i) * 0.01s);
 }
 
-/* Staggered animation for pills */
-.lspill:nth-child(1) { animation-delay: 0.1s; }
-.lspill:nth-child(2) { animation-delay: 0.2s; }
-.lspill:nth-child(3) { animation-delay: 0.3s; }
-.lspill:nth-child(4) { animation-delay: 0.4s; }
-.lspill:nth-child(5) { animation-delay: 0.5s; }
-.lspill:nth-child(6) { animation-delay: 0.6s; }
 
 .lspill:hover {
   transform: scale(1.05);
@@ -253,7 +242,7 @@
 .lstoolstitle {
   text-align: center;
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
   /* margin-bottom: 14px; */
 }
@@ -410,7 +399,7 @@
   transition: all 0.3s ease;
 }
 
-.readMoreBtn {
+.readMoreBtn,.readMoreBtn2 {
   background: none;
   border: none;
   color: #00aeef;
@@ -421,8 +410,15 @@
   padding: 0;
 }
 
-.readMoreBtn:hover {
+.readMoreBtn:hover, .readMoreBtn2:hover {
   text-decoration: underline;
+}
+
+.noData {
+  list-style: none;
+  color: #000000;
+  font-size: 14px;
+  font-style:normal;
 }
 
 
@@ -440,7 +436,6 @@
 
   .lsh2 {
     font-size: 35px;
-    font-weight: 600;
   }
 
   .lslistitem {
@@ -461,7 +456,6 @@
   .lscard {
     max-width: 100%;
     padding: 16px;
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     font-size: 26px;
   }
   
@@ -498,7 +492,6 @@
 
   .lstoolstitle {
     font-size: 35px;
-    font-weight: 500;
   }
 
   .lstoolname {
@@ -522,24 +515,56 @@
 
 @media (max-width: 480px) {
   .lswrap {
-    padding: 28px 16px;
+    padding: 20px 0px;
   }
 
   .lsh2 {
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 24px;
   }
 
-  .lslistitem {
-    font-size: 22px;
-    gap: 10px;
+  .lsgrid{
+    gap: 20px;
+  }
+
+  /* .lslistitem {
+    font-size: 14px;
+    gap: 5px;
     font-weight: 400;
-  }
+  } */
 
-  .lsicon {
-    width: auto;
-    height: 40px;
-  }
+  /* Parent list */
+.lslist {
+  display: flex;
+  flex-direction: column; /* keeps items stacked */
+  gap: 8px; /* slightly more breathing space */
+}
+
+/* Each list item */
+.lslistitem {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  gap: 8px; /* space between icon & text */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Icon alignment */
+.lsicon {
+  width: 20px;
+  height: 30px; /* keep it square */
+  flex-shrink: 0; /* prevents icon from shrinking */
+}
+
+
+  /* .lslist{
+    gap: 5px;
+  } */
+
+  /* .lsicon {
+   width: 20px;
+        height: 30px;
+  } */
 
   .lsright {
     align-items: stretch;
@@ -547,24 +572,24 @@
 
   .lscard {
     max-width: 100%;
-    padding: 16px;
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    padding: 10px;
     font-size: 22px;
   }
 
   .lspre h3 {
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 20px;
   }
 
   .lsbullets {
     margin-left: 0;
     font-weight: 400;
-    font-size: 22px;
+    font-size: 14px;
   }
 
   .lspills {
     display: grid;
+    margin-top: 20px;
+    /* grid-template-columns: 1fr 1fr; */
   }
 
   .lstoolcard {
@@ -572,61 +597,125 @@
   }
 
   .lscard h3 {
-    font-size: 26px;
+    font-size: 16px;
   }
 
   .lstoolstitle {
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 16px;
   }
 
   .lstoolname {
-    font-size: 22px;
+    font-size: 14px;
   }
 
   .lstoollink {
-    font-size: 22px;
+    font-size: 14px;
+  }
+
+  .lstooliconimg{
+    width: 45px;
   }
 
   .lscardbullets {
-    font-size: 22px;
-    padding-left: 1rem;
+    font-size: 12px;
+    padding-left: 2rem;
+    gap: 0px;
     font-weight: 400;
+    margin: 0;
+  }
+
+  .lscardhead{
+    gap: 5px;
+  }
+
+  .lscardhead h3{
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .lsmuted{
+    font-size: 14px;
+    margin: 0;
   }
 
   .lspill {
-    font-size: 19px;
+    font-size: 12px;
   }
 
   .lstoolsgrid {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
     .readMoreBtn{
-    font-size: 18px;
+    font-size: 14px;
+    position: relative;
+    left: 300px;
+  }
+
+      .readMoreBtn2{
+    font-size: 14px;
+    position: relative;
+    left: 280px;
+  }
+
+  .lspre{
+    margin-top: 10px;
+    padding-left: 7px;
   }
 }
 
 @media (max-width: 375px) {
   .lswrap {
-    padding: 28px 16px;
+    padding: 20px 0px;
   }
 
   .lsh2 {
-    font-size: 26px;
-    font-weight: 600;
+    font-size: 24px;
   }
 
-  .lslistitem {
-    font-size: 18px;
-    gap: 10px;
+  .lsgrid{
+    gap: 20px;
+  }
+
+  /* .lslistitem {
+    font-size: 14px;
+    gap: 5px;
     font-weight: 400;
-  }
+  } */
 
-  .lsicon {
-    width: auto;
-    height: 32px;
-  }
+  /* Parent list */
+.lslist {
+  display: flex;
+  flex-direction: column; /* keeps items stacked */
+  gap: 8px; /* slightly more breathing space */
+}
+
+/* Each list item */
+.lslistitem {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  gap: 8px; /* space between icon & text */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Icon alignment */
+.lsicon {
+  width: 20px;
+  height: 30px; /* keep it square */
+  flex-shrink: 0; /* prevents icon from shrinking */
+}
+
+
+  /* .lslist{
+    gap: 5px;
+  } */
+
+  /* .lsicon {
+   width: 20px;
+        height: 30px;
+  } */
 
   .lsright {
     align-items: stretch;
@@ -634,67 +723,95 @@
 
   .lscard {
     max-width: 100%;
-    padding: 16px;
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-    font-size: 18px;
-  }
-
-  .lscard h3 {
-    font-size: 20px;
+    padding: 10px;
+    font-size: 22px;
   }
 
   .lspre h3 {
-    font-size: 26px;
-    font-weight: 600;
+    font-size: 20px;
   }
 
   .lsbullets {
     margin-left: 0;
     font-weight: 400;
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .lspills {
     display: grid;
+    margin-top: 20px;
+    /* grid-template-columns: 1fr 1fr; */
   }
 
   .lstoolcard {
     padding: 16px 5px;
   }
 
+  .lscard h3 {
+    font-size: 16px;
+  }
+
   .lstoolstitle {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 16px;
   }
 
   .lstoolname {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .lstoollink {
-    font-size: 18px;
+    font-size: 14px;
   }
 
-  .lssalaryval {
-    font-size: 20px;
+  .lstooliconimg{
+    width: 45px;
   }
 
   .lscardbullets {
-    font-size: 18px;
-    padding-left: 1rem;
+    font-size: 12px;
+    padding-left: 2rem;
+    gap: 0px;
     font-weight: 400;
+    margin: 0;
+  }
+
+  .lscardhead{
+    gap: 5px;
+  }
+
+  .lscardhead h3{
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .lsmuted{
+    font-size: 14px;
+    margin: 0;
   }
 
   .lspill {
-    font-size: 16px;
+    font-size: 12px;
   }
 
   .lstoolsgrid {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
     .readMoreBtn{
-    font-size: 16px;
+    font-size: 14px;
+    position: relative;
+    left: 240px;
+  }
+
+      .readMoreBtn2{
+    font-size: 14px;
+    position: relative;
+    left: 215px;
+  }
+
+  .lspre{
+    margin-top: 10px;
+    padding-left: 7px;
   }
 }
 

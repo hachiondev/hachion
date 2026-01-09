@@ -539,6 +539,60 @@ useEffect(() => {
     }
   };
 
+//   const AutoHeightQuill = ({ value, onChange, minHeight = 200, maxHeight = 800, ...props }) => {
+//   const quillRef = useRef(null);
+//   const [height, setHeight] = useState(`${minHeight}px`);
+
+//   useEffect(() => {
+//     const updateHeight = () => {
+//       if (quillRef.current) {
+//         try {
+//           const editor = quillRef.current.getEditor();
+//           const editorElement = editor.root;
+          
+//           // Get the actual content height
+//           const contentHeight = editorElement.scrollHeight;
+          
+//           // Calculate new height with constraints
+//           let newHeight = Math.max(minHeight, contentHeight);
+//           newHeight = Math.min(maxHeight, newHeight);
+          
+//           // Add some padding
+//           setHeight(`${newHeight + 30}px`);
+//         } catch (error) {
+//           console.error('Error updating Quill height:', error);
+//         }
+//       }
+//     };
+
+//     // Update height on content change
+//     updateHeight();
+    
+//     // Update on window resize
+//     window.addEventListener('resize', updateHeight);
+    
+//     // Update after a short delay to ensure rendering
+//     const timeoutId = setTimeout(updateHeight, 100);
+    
+//     return () => {
+//       window.removeEventListener('resize', updateHeight);
+//       clearTimeout(timeoutId);
+//     };
+//   }, [value, minHeight, maxHeight]);
+
+//   return (
+//     <div className="auto-height-quill-container">
+//       <ReactQuill
+//         ref={quillRef}
+//         value={value}
+//         onChange={onChange}
+//         style={{ height }}
+//         {...props}
+//       />
+//     </div>
+//   );
+// };
+
   const areMandatoryFieldsFilled = () => {
     const hasCategory = formData.courseCategory?.trim() !== "";
     const hasCourseName = formData.courseName?.trim() !== "";
@@ -779,7 +833,7 @@ const hasInrFields =
                       min="0"
                     />
                   </div>
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <label className="form-label">
                       Self-Paced Learning <span style={{ color: "red" }}>*</span>
                     </label>
@@ -792,7 +846,7 @@ const hasInrFields =
                       onChange={handleInputChange}
                       required
                     />
-                  </div>
+                  </div> */}
                   
                   <div className="col-md-4">
                     <label className="form-label">
@@ -808,9 +862,6 @@ const hasInrFields =
                       required
                     />
                   </div>
-                </div>
-                
-                <div className="course-row">
                   <div className="col-md-4">
                     <label className="form-label">
                       Who Is This Course For <span style={{ color: "red" }}>*</span>
@@ -825,6 +876,9 @@ const hasInrFields =
                       required
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
                   
                   <div className="col-md-4">
                     <label className="form-label">
@@ -855,9 +909,7 @@ const hasInrFields =
                       required
                     />
                   </div>
-                </div>
-                
-                <div className="course-row">
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Prerequisites <span style={{ color: "red" }}>*</span>
@@ -872,23 +924,57 @@ const hasInrFields =
                       required
                     />
                   </div>
+                </div>
+                
+                <div className="course-row">
                   
-                  <div className="col-md-4">
+                  
+                  {/* <div className="col-md-4">
                     <label className="form-label">
                       Live Training <span style={{ color: "red" }}>*</span>
                     </label>
-                    <textarea
-                      type="text"
-                      name="liveTraining"
-                      className="form-control"
-                      placeholder="Enter Live Training details"
-                      value={formData.liveTraining}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <ReactQuill
+                        theme="snow"
+                        id="liveTraining"
+                        name="liveTraining"
+                        value={formData.liveTraining}
+                        onChange={(content) => handleInputChange(null, "liveTraining", content)}
+                        style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ align: [] }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            ["blockquote"],
+                            ["image"],
+                            ["link"],
+                            [{ color: [] }],
+                            ["clean"],
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                        placeholder="Enter Live Training details"
+                      />
+                    </div>
+                  </div> */}
                   
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <label className="form-label">
                       Crash Course <span style={{ color: "red" }}>*</span>
                     </label>
@@ -901,11 +987,11 @@ const hasInrFields =
                       onChange={handleInputChange}
                       required
                     />
-                  </div>
+                  </div> */}
                 </div>
                 
                 <div className="course-row">
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <label className="form-label">
                       Mentoring Mode <span style={{ color: "red" }}>*</span>
                     </label>
@@ -918,7 +1004,7 @@ const hasInrFields =
                       onChange={handleInputChange}
                       required
                     />
-                  </div>
+                  </div> */}
                   <div className="col-md-4">
                     <label className="form-label">
                       Course Image {formMode === 'Add' ? <span style={{ color: "red" }}>*</span> : ""}
@@ -948,12 +1034,7 @@ const hasInrFields =
                     />
                   </div>
 
-                  
-                </div>
-                
-                <div className="course-row">
-                  
-                  <div className="col-md-4">
+<div className="col-md-4">
                     <label className="form-label">
                       Level <span style={{ color: "red" }}>*</span>
                     </label>
@@ -971,6 +1052,12 @@ const hasInrFields =
                       <option value="Expert">Expert</option>
                     </select>
                   </div>
+                  
+                </div>
+                
+                <div className="course-row">
+                  
+                  
                   
                   <div className="col-md-4">
                     <label className="form-label">
@@ -998,11 +1085,7 @@ const hasInrFields =
                       placeholder="e.g., 2 hours daily"
                     />
                   </div>
-                </div>
-                
-                <div className="course-row">
-                  
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Star Rating <span style={{ color: "red" }}>*</span>
@@ -1020,7 +1103,9 @@ const hasInrFields =
                       step="0.1"
                     />
                   </div>
-                  
+                </div>
+                
+                <div className="course-row">    
                   <div className="col-md-4">
                     <label className="form-label">
                       Rating by No. of People <span style={{ color: "red" }}>*</span>
@@ -1110,7 +1195,193 @@ const hasInrFields =
 )}
 
                 </div>
+                <div className="course-row">
+                {/* Live Training Field with ReactQuill */}
+<div className="col-md-4">
+  <label className="form-label">
+    Live Training <span style={{ color: "red" }}>*</span>
+  </label>
+  <div className="mb-3">
+    <ReactQuill
+      theme="snow"
+      id="liveTraining"
+      name="liveTraining"
+      value={formData.liveTraining}
+      onChange={(content) => handleInputChange(null, "liveTraining", content)}
+      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      modules={{
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
+          [{ indent: "-1" }, { indent: "+1" }],
+          ["blockquote"],
+          ["image"],
+          ["link"],
+          [{ color: [] }],
+          ["clean"],
+        ],
+      }}
+      formats={[
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "list",
+        "bullet",
+        "align",
+        "indent",
+        "blockquote",
+        "image",
+        "link",
+        "color",
+      ]}
+      placeholder="Enter Live Training details"
+    />
+  </div>
+</div>
+
+{/* Crash Course Field with ReactQuill */}
+<div className="col-md-4">
+  <label className="form-label">
+    Crash Course <span style={{ color: "red" }}>*</span>
+  </label>
+  <div className="mb-3">
+    <ReactQuill
+      theme="snow"
+      id="crashCourse"
+      name="crashCourse"
+      value={formData.crashCourse}
+      onChange={(content) => handleInputChange(null, "crashCourse", content)}
+      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      modules={{
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
+          [{ indent: "-1" }, { indent: "+1" }],
+          ["blockquote"],
+          ["image"],
+          ["link"],
+          [{ color: [] }],
+          ["clean"],
+        ],
+      }}
+      formats={[
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "list",
+        "bullet",
+        "align",
+        "indent",
+        "blockquote",
+        "image",
+        "link",
+        "color",
+      ]}
+      placeholder="Enter Crash Course details"
+    />
+  </div>
+</div>
+
+{/* Mentoring Mode Field with ReactQuill */}
+<div className="col-md-4">
+  <label className="form-label">
+    Mentoring Mode <span style={{ color: "red" }}>*</span>
+  </label>
+  <div className="mb-3">
+    <ReactQuill
+      theme="snow"
+      id="mentoringMode"
+      name="mentoringMode"
+      value={formData.mentoringMode}
+      onChange={(content) => handleInputChange(null, "mentoringMode", content)}
+      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      modules={{
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
+          [{ indent: "-1" }, { indent: "+1" }],
+          ["blockquote"],
+          ["image"],
+          ["link"],
+          [{ color: [] }],
+          ["clean"],
+        ],
+      }}
+      formats={[
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "list",
+        "bullet",
+        "align",
+        "indent",
+        "blockquote",
+        "image",
+        "link",
+        "color",
+      ]}
+      placeholder="Enter Mentoring Mode details"
+    />
+  </div>
+</div>
+
+{/* Self-Paced Learning Field with ReactQuill */}
+<div className="col-md-4">
+  <label className="form-label">
+    Self-Paced Learning <span style={{ color: "red" }}>*</span>
+  </label>
+  <div className="mb-3">
+    <ReactQuill
+      theme="snow"
+      id="selfPacedLearning"
+      name="selfPacedLearning"
+      value={formData.selfPacedLearning}
+      onChange={(content) => handleInputChange(null, "selfPacedLearning", content)}
+      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      modules={{
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
+          [{ indent: "-1" }, { indent: "+1" }],
+          ["blockquote"],
+          ["image"],
+          ["link"],
+          [{ color: [] }],
+          ["clean"],
+        ],
+      }}
+      formats={[
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "list",
+        "bullet",
+        "align",
+        "indent",
+        "blockquote",
+        "image",
+        "link",
+        "color",
+      ]}
+      placeholder="Enter Self-Paced Learning details"
+    />
+  </div>
+</div>
               </div>
+              </div>
+              
               
               {/* Key Highlights Section */}
               <div className='course-details'>

@@ -661,16 +661,68 @@ What's Included:
           </div>
         </div>
 
-        {isCourseLoading ? (
-          <div className={styles.dcinfotext}>Loading live training details...</div>
-        ) : (
-          <div
-            className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }}
-          >
-            {liveContent}
-          </div>
-        )}
+        {/* {isCourseLoading ? (
+  <div className={styles.dcinfotext}>
+    Loading live training details...
+  </div>
+) : (
+  <div className={styles.dcinfotext}>
+    {liveTraining && liveTraining.trim() ? (
+      <div
+        dangerouslySetInnerHTML={{ __html: liveTraining }}
+      />
+    ) : (
+      <p>
+        Live instructor-led training with real-time interaction and hands-on
+        practice.
+      </p>
+    )}
+  </div>
+)} */}
+
+{isCourseLoading ? (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.6",
+    }}
+  >
+    Loading live training details...
+  </div>
+) : (
+ <div
+  className={styles.dcinfotext}
+  style={{
+    fontSize: "14px",
+    color: "#374151",
+    lineHeight: "1.2",
+    maxHeight: "420px",
+    overflowY: "auto",
+  }}
+>
+
+    {liveTraining && liveTraining.trim() ? (
+      <div
+        dangerouslySetInnerHTML={{ __html: liveTraining }}
+        style={{
+          margin: 0,
+        }}
+      />
+    ) : (
+      <p
+        style={{
+          margin: 0,
+        }}
+      >
+        Live instructor-led training with real-time interaction and hands-on
+        practice.
+      </p>
+    )}
+  </div>
+)}
+
       </aside>
     </div>
   );

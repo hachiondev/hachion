@@ -20,9 +20,9 @@ function DemoClassSectionCrashTab({
   resendError,
   requestBatchError,
   onRequestClick,
-  crashCourse,      // 🔹 NEW
-  isCourseLoading,  // 🔹 NEW
-  courseError,      // 🔹 optional, not used but available
+  crashCourse,      
+  isCourseLoading,  
+  courseError,      
   resetLiveSubmitting,
 }) {
   // No parsing — direct backend content with fallback
@@ -108,7 +108,7 @@ What's Included:
                     No crash batches scheduled
                   </div>
                 </div>
-                {/* <div
+                <div
                   className={cn(
                     crashGroups && crashGroups.length > 0 ? styles.dcempty : styles.noLiveClass
                   )}
@@ -122,18 +122,21 @@ What's Included:
                     time
                   </p>
 
-                  <button
-                    className={styles.dclink}
-                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
-                    onClick={() => {
-                      if (isSubmitting || isRequestBatchLoading) return;
+                 <button
+  className={styles.dclink}
+  disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+  onClick={() => {
+    if (isSubmitting || isRequestBatchLoading) return;
 
-                      setIsSubmitting(true);
-                      onRequestClick();
-                    }}
-                  >
-                    {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-                  </button>
+    setIsSubmitting(true);
+    onRequestClick();
+  }}
+>
+  {isSubmitting || isRequestBatchLoading
+    ? "Submitting..."
+    : "Request Batch"}
+</button>
+
                   {enrollSuccessMessage && (
                     <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
                       {enrollSuccessMessage}
@@ -187,7 +190,7 @@ What's Included:
                       {resendError}
                     </p>
                   )}
-                </div> */}
+                </div>
               </div>
             )}
         </div>
@@ -288,17 +291,43 @@ What's Included:
             <div className={styles.dcinfosubdescription}>Learning Mode</div>
           </div>
         </div>
+{isCourseLoading ? (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.5",
+    }}
+  >
+    Loading crash course details...
+  </div>
+) : (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.2",
+      maxHeight: "420px",
+      overflowY: "auto",
+    }}
+  >
+    {crashCourse && crashCourse.trim() ? (
+      <div
+        dangerouslySetInnerHTML={{ __html: crashCourse }}
+        style={{ margin: 0 }}
+      />
+    ) : (
+      <p style={{ margin: 0 }}>
+        Join real-time instructor-led sessions from anywhere. This mode includes
+        interactive classes, hands-on exercises, and live Q&amp;A to ensure
+        in-depth learning.
+      </p>
+    )}
+  </div>
+)}
 
-        {isCourseLoading ? (
-          <div className={styles.dcinfotext}>Loading crash course details...</div>
-        ) : (
-          <div
-            className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }} // preserve line breaks from backend
-          >
-            {crashContent}
-          </div>
-        )}
       </aside>
     </div>
   );

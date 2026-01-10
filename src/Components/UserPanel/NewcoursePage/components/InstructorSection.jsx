@@ -148,8 +148,24 @@ const stars = Array.from({ length: 5 }, (_, i) =>
                 <div className={styles.isstatlab}>Instructor Rating</div>
               </div>
             </div>
+           
+<p
+  className={styles.isbio}
+  style={{
+    fontSize: "14px",
+    lineHeight: "1.6",
+    color: "#374151",
+  }}
+>
+  {trainerBio ? (
+    <span
+      dangerouslySetInnerHTML={{ __html: trainerBio }}
+    />
+  ) : (
+    bio
+  )}
+</p>
 
-            <p className={styles.isbio}>{cleanTrainerBio || bio}</p>
 
 
             <div className={styles.issubhead}>Experience & Credentials:</div>

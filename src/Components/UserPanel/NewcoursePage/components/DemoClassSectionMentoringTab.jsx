@@ -370,17 +370,42 @@ useEffect(() => {
             <div className={styles.dcinfosubdescription}>Learning Mode</div>
           </div>
         </div>
+{isCourseLoading ? (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.5",
+    }}
+  >
+    Loading mentoring details...
+  </div>
+) : (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.2",
+      maxHeight: "420px",
+      overflowY: "auto",
+    }}
+  >
+    {mentoringMode && mentoringMode.trim() ? (
+      <div
+        dangerouslySetInnerHTML={{ __html: mentoringMode }}
+        style={{ margin: 0 }}
+      />
+    ) : (
+      <p style={{ margin: 0 }}>
+        Get personalized one-on-one guidance from industry experts with flexible
+        scheduling and customized learning paths.
+      </p>
+    )}
+  </div>
+)}
 
-        {isCourseLoading ? (
-          <div className={styles.dcinfotext}>Loading mentoring details...</div>
-        ) : (
-          <div
-            className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }}
-          >
-            {mentoringContent}
-          </div>
-        )}
       </aside>
     </div>
   );

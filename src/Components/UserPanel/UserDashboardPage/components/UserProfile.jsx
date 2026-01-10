@@ -139,6 +139,8 @@ const UserProfile = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [canChangePassword, setCanChangePassword] = useState(true);
+  const [initialProfile, setInitialProfile] = useState(null);
+
 
 
   const handleCountrySelect = (country) => {
@@ -234,6 +236,27 @@ const UserProfile = () => {
       );
 
       setSuccessMessage('✅ Profile updated successfully.');
+      setInitialProfile({
+  name:
+    r.userName ||
+    (name && name.trim()) ||
+    `${(firstName || '').trim()} ${(lastName || '').trim()}`.trim(),
+  firstName: firstName,
+  lastName: lastName,
+  email: email,
+  mobileNumber: mobileNumber,
+  gender: gender,
+  location: location,
+  timeZone: timeZone,
+  address: address,
+  bio: bio,
+  dob: dob,
+  profileImage:
+    r.profileImage
+      ? `https://api.test.hachion.co/api/v1/user/profile/${r.profileImage}`
+      : profileImage,
+});
+
       setErrorMessage('');
     } catch (err) {
       setErrorMessage('❌ Failed to update profile.');
@@ -253,6 +276,23 @@ const UserProfile = () => {
       })
         .then((response) => {
           const data = response.data;
+
+          setInitialProfile({
+  name: data.name || '',
+  firstName: data.name ? data.name.split(/\s+/)[0] : '',
+  lastName: data.name ? data.name.split(/\s+/).slice(1).join(' ') : '',
+  email: data.email || '',
+  mobileNumber: data.mobile || '',
+  gender: data.gender || '',
+  location: data.location || '',
+  timeZone: data.timeZone || '',
+  address: data.address || '',
+  bio: data.bio || '',
+  dob: parseDobFromApi(data.dob),
+  profileImage: data.profileImage
+    ? `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`
+    : null,
+});
 
           setName(data.name || '');
           if (data.name) {
@@ -295,6 +335,16 @@ const UserProfile = () => {
         });
     }
   }, []);
+const handleDiscard = () => {
+  setDob('');
+  setGender('');
+  setAddress('');
+  setBio('');
+
+  setSuccessMessage('');
+  setErrorMessage('');
+};
+
 
 
   useEffect(() => {
@@ -821,9 +871,14 @@ const UserProfile = () => {
                 Save Changes
               </button>
 
-              <Link to="" className="home-browse-button">
-                Discard
-              </Link>
+             <button
+  type="button"
+  className="home-browse-button"
+  onClick={handleDiscard}
+>
+  Discard
+</button>
+
             </div>
           </form>
         </div>

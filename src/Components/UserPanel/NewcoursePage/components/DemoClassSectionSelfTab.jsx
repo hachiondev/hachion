@@ -435,19 +435,42 @@ useEffect(() => {
             </div>
           </div>
         </div>
+{isCourseLoading ? (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.5",
+    }}
+  >
+    Loading self-paced learning details...
+  </div>
+) : (
+  <div
+    className={styles.dcinfotext}
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      lineHeight: "1.2",
+      maxHeight: "420px",
+      overflowY: "auto",
+    }}
+  >
+    {selfPacedLearning && selfPacedLearning.trim() ? (
+      <div
+        dangerouslySetInnerHTML={{ __html: selfPacedLearning }}
+        style={{ margin: 0 }}
+      />
+    ) : (
+      <p style={{ margin: 0 }}>
+        Learn at your own pace with structured modules, recorded sessions,
+        and hands-on projects designed for flexible learning.
+      </p>
+    )}
+  </div>
+)}
 
-        {isCourseLoading ? (
-          <div className={styles.dcinfotext}>
-            Loading self-paced learning details...
-          </div>
-        ) : (
-          <div
-            className={styles.dcinfotext}
-            style={{ whiteSpace: "pre-line" }} 
-          >
-            {selfContent}
-          </div>
-        )}
       </aside>
     </div>
   );

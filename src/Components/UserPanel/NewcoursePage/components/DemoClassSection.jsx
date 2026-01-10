@@ -466,7 +466,9 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
 
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
-            onRequestClick={handleClick}
+            // onRequestClick={handleClick}
+             onRequestClick={handleRequestBatchWithLoginCheck}
+             resetLiveSubmitting={resetLiveSubmitting}
             crashCourse={courseData?.crashCourse || ""}
             isCourseLoading={isCourseLoading}
             courseError={courseError}

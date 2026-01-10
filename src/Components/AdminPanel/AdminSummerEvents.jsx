@@ -334,6 +334,11 @@ const handleDateReset = () => {
   setFilteredCourse(summerCourse);
   setCurrentPage(1);
 };
+const isCreateFormValid =
+  courseData.title.trim() !== "" &&
+  courseData.category_name.trim() !== "" &&
+  courseData.course_name.trim() !== "";
+
 
   return (
     
@@ -359,7 +364,7 @@ const handleDateReset = () => {
             <div className='course-details'>
             <div className='course-row'>
             <div className="col-md-3">
-                  <label className="form-label">Kids Title</label>
+                  <label className="form-label">Kids Title <span style={{ color: "red" }}>*</span></label>
                   <input
                     type="text"
                     name="title"
@@ -370,7 +375,7 @@ const handleDateReset = () => {
                   />
                 </div>
                 <div className="col" style={{ display: 'flex', gap: 20 }}> 
-                  <label className="form-label">Title Status:</label>
+                  <label className="form-label">Title Status: <span style={{ color: "red" }}>*</span></label>
                   <Switch
                     checked={courseData?.titleStatus ?? true}
                     onChange={handleStatusChange}

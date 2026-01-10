@@ -201,7 +201,9 @@ width: 30px;
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: linear-gradient(180deg, #f8fbff, #f2f6fd);
+  /* background: linear-gradient(180deg, #f8fbff, #f2f6fd); */
+  background: linear-gradient(90.02deg, rgba(123, 167, 215, 0.25) 7.17%, rgba(255, 233, 233, 0.2) 98.89%);
+
   border: 1px solid #e3ecfd;
   border-radius: 10px;
   padding: 10px;

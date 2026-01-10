@@ -408,6 +408,12 @@
   cursor: pointer;
   margin-top: 0px;
   padding: 0;
+  position: relative;
+  left: 80%;
+}
+
+.careerReadMoreBtn{
+  left: 172px;
 }
 
 .readMoreBtn:hover, .readMoreBtn2:hover {
@@ -508,8 +514,12 @@
     font-weight: 400;
   }
 
-    .readMoreBtn{
+    .readMoreBtn,.readMoreBtn2 {
     font-size: 22px;
+  }
+
+  .careerReadMoreBtn{
+    left: 520px;
   }
 }
 

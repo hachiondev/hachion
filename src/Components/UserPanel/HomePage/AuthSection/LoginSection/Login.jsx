@@ -23,6 +23,7 @@ const Login = () => {
   const [userInput, setUserInput] = useState('');
   const canvasRef = useRef(null);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const readCookie = (name) => {
     const m = document.cookie.match(
@@ -33,31 +34,29 @@ const Login = () => {
   const clearCookie = (name) => {
     document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax`;
   };
-  const dismissError = () => { if (errorMessage1) setErrorMessage1(''); };
+  const dismissError = () => {
+    setErrorMessage('');
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    // Clear previous errors
-    setErrorMessage('');
-    // First validate the form and get errors immediately
+
     const validation = validateForm();
-    
-    if (!validation.isValid) {
-      console.log("Errors:", validation.errors);
-      return;
-    }
-  
+    if (!validation.isValid) return;
+
     dismissError();
+    setIsLoading(true); // Start loading
+
     const loginData = { email, password };
 
     try {
-      debugger;
-      const response = await axios.post('https://api.hachion.co/api/v1/user/login', loginData);
-      console.log("Login response:", response.data);
-      if (response.data.status) {
-        
-        // SUCCESS - User exists and password is correct
+      const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
+
+      console.log('Response Data:', response.data);
+
+      if (response.data.status === true) {
+        console.log('SUCCESS - Redirecting...');
+
         const loginuserData = {
           name: response.data.userName,
           email: response.data.email,
@@ -88,69 +87,25 @@ const Login = () => {
         const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
         localStorage.removeItem('redirectAfterLogin');
         window.location.href = redirectPath;
-        
+
       } else {
-        const errorMsg = response.data.message || "Login failed";
+        console.log('FAILED - Showing error message');
+        const errorMsg = response.data.message || "Invalid credentials";
         setErrorMessage(errorMsg);
-        
-        // Check if this is a password/credential error
-        const lowerMsg = errorMsg.toLowerCase();
-        
-        // SEPARATE ERRORS FOR EMAIL AND PASSWORD
-        if (lowerMsg.includes('email') || lowerMsg.includes('user not found') || lowerMsg.includes('no account')) {
-          // Email not found or invalid email
-          setErrors(prev => ({
-            ...prev,
-            email: "No account found with this email. Please sign up first."
-          }));
-        } else if (lowerMsg.includes('password') || lowerMsg.includes('incorrect') || lowerMsg.includes('invalid') || lowerMsg.includes('credentials')) {
-          // Password is incorrect
-          setErrors(prev => ({
-            ...prev,
-            password: "Incorrect password. Please try again."
-          }));
-        } else {
-          // For other errors, show as general error
-          setErrorMessage(errorMsg);
-        }
+        setIsLoading(false); // Stop loading on error
+        return;
       }
+
     } catch (error) {
       console.error("Error during login", error);
-      
-      let errorMsg = "An error occurred during login";
-      
+
       if (error.response) {
-        // Server responded with error
-        
-        errorMsg = error.response.data?.message || "Invalid credentials";
-        
-        // SEPARATE ERRORS BASED ON STATUS CODE
-        if (error.response.status === 404 || error.response.status === 400) {
-          // 404 or 400 usually means email not found
-          const apiMsg = error.response.data?.message || "Email not found";
-          setErrors(prev => ({
-            ...prev,
-            email: "No account found with this email"
-          }));
-        } else if (error.response.status === 401) {
-          // 401 usually means wrong password
-          const apiMsg = error.response.data?.message || "Invalid password";
-          setErrors(prev => ({
-            ...prev,
-            password: "Incorrect password. Please try again."
-          }));
-        } else {
-          setErrorMessage(errorMsg);
-        }
-        
-      } else if (error.request) {
-        errorMsg = "Network error. Please try again.";
-        setErrorMessage(errorMsg);
+        setErrorMessage(error.response.data.message || "Invalid credentials");
       } else {
-        setErrorMessage(errorMsg);
+        setErrorMessage("An error occurred during login");
       }
+      setIsLoading(false); // Stop loading on error
     }
-  
   };
 
   useEffect(() => {
@@ -199,7 +154,7 @@ const Login = () => {
   const handleUserInputChange = (e) => {
     setUserInput(e.target.value);
   };
-  
+
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const validateForm = () => {
@@ -214,7 +169,7 @@ const Login = () => {
 
     // Password validation
     const passwordTrimmed = password.trim();
-    
+
     if (passwordTrimmed.length === 0) {
       newErrors.password = "Password is required.";
     }
@@ -227,9 +182,9 @@ const Login = () => {
       const ctx = canvasRef.current.getContext("2d");
       initializeCaptcha(ctx);
     }
-    
+
     setErrors(newErrors);
-    
+
     const isValid = Object.keys(newErrors).length === 0;
     return { isValid, errors: newErrors };
   };
@@ -250,7 +205,7 @@ const Login = () => {
         method: "POST",
         credentials: "include"
       });
-    } catch {}
+    } catch { }
 
     let url = "https://api.test.hachion.co/oauth2/authorization/google";
 
@@ -285,11 +240,11 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    debugger
+    // debugger
     try {
       const raw = localStorage.getItem('loginuserData');
       if (raw) return;
-      
+
       fetch('https://api.test.hachion.co/api/me', { credentials: 'include' })
         .then(r => {
           if (!r.ok) return null;
@@ -339,64 +294,75 @@ const Login = () => {
             <div className='login-top'>
               <div className='login-mid'>
                 <h4 className='login-continue'>Login</h4>
-                
-                {/* Email Field - Shows email-specific errors */}
+
+                {/* // Email Field */}
                 <label className='login-label'>Email<span className='star'>*</span></label>
                 <div className="register-field">
                   <div className="password-field">
                     <input
                       type="email"
-                      className={`form-control ${errors.email ? 'error-input' : ''}`}
+                      className={`form-control ${(errors.email || (errorMessage && errorMessage.toLowerCase().includes('email'))) ? 'error-input' : ''}`}
                       placeholder="Enter your Email"
                       value={email}
-                      onChange={(e) => { 
-                        setEmail(e.target.value); 
-                        dismissError();
+                      onChange={(e) => {
+                        setEmail(e.target.value);
                         // Clear email errors when user types
                         if (errors.email) {
-                          setErrors(prev => ({...prev, email: ''}));
-                        }
-                      }}
-                      onFocus={dismissError}
-                    />
-                  </div>
-                  {/* Email-specific errors */}
-                  {errors.email && (
-                    <p className="error-field-message" style={{ 
-                      color: '#dc3545', 
-                      marginTop: '4px',
-                      display: 'block'
-                    }}>
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
-                
-                {/* Password Field - Shows password-specific errors */}
-                <label className='login-label'>Password<span className='star'>*</span></label>
-                <div className="register-field">
-                  <div className="password-field">
-                    <input
-                      type={passwordType}
-                      className={`form-control ${errors.password ? 'error-input' : ''}`}
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={(e) => { 
-                        const newPassword = e.target.value;
-                        setPassword(newPassword);
-                        
-                        // Clear password errors when user types
-                        if (errors.password) {
-                          setErrors(prev => ({...prev, password: ''}));
+                          setErrors(prev => ({ ...prev, email: '' }));
                         }
                         if (errorMessage) {
                           setErrorMessage('');
                         }
                       }}
                       onFocus={() => {
-                        // Clear errors when field is focused
+                        if (errors.email) {
+                          setErrors(prev => ({ ...prev, email: '' }));
+                        }
+                        if (errorMessage) {
+                          setErrorMessage('');
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* Show email validation errors OR API errors about email */}
+                  {(errors.email || (errorMessage && errorMessage.toLowerCase().includes('email'))) && (
+                    <p className="error-field-message" style={{
+                      color: '#dc3545',
+                      marginTop: '4px',
+                      display: 'block'
+                    }}>
+                      {errors.email || errorMessage}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password Field */}
+                <label className='login-label'>Password<span className='star'>*</span></label>
+                <div className="register-field">
+                  <div className="password-field">
+                    <input
+                      type={passwordType}
+                      className={`form-control ${(errors.password || (errorMessage && errorMessage.toLowerCase().includes('password'))) ? 'error-input' : ''}`}
+                      placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => {
+                        const newPassword = e.target.value;
+                        setPassword(newPassword);
+
+                        // Clear password errors when user types
                         if (errors.password) {
-                          setErrors(prev => ({...prev, password: ''}));
+                          setErrors(prev => ({ ...prev, password: '' }));
+                        }
+                        if (errorMessage) {
+                          setErrorMessage('');
+                        }
+                      }}
+                      onFocus={() => {
+                        if (errors.password) {
+                          setErrors(prev => ({ ...prev, password: '' }));
+                        }
+                        if (errorMessage) {
+                          setErrorMessage('');
                         }
                       }}
                     />
@@ -404,15 +370,15 @@ const Login = () => {
                       {passwordType === 'password' ? <AiFillEye /> : <AiFillEyeInvisible />}
                     </span>
                   </div>
-                  
-                  {/* Password-specific errors */}
-                  {errors.password && (
-                    <p className="error-field-message" style={{ 
-                      color: '#dc3545', 
+
+                  {/* Show password validation errors OR API errors about password */}
+                  {(errors.password || (errorMessage && errorMessage.toLowerCase().includes('password'))) && (
+                    <p className="error-field-message" style={{
+                      color: '#dc3545',
                       marginTop: '4px',
                       display: 'block'
                     }}>
-                      {errors.password}
+                      {errors.password || errorMessage}
                     </p>
                   )}
                 </div>
@@ -420,15 +386,15 @@ const Login = () => {
                 {/* Captcha Field */}
                 <label className="login-label">Enter Captcha<span className="star">*</span></label>
                 <div className="captcha-wrapper">
-                  <canvas 
-                    ref={canvasRef} 
-                    className="password-field" 
+                  <canvas
+                    ref={canvasRef}
+                    className="password-field"
                     style={{ backgroundColor: 'none' }}
                     height="40"
                   />
-                  <span 
-                    className="refresh-captcha-btn" 
-                    id="reload-button" 
+                  <span
+                    className="refresh-captcha-btn"
+                    id="reload-button"
                     onClick={() => initializeCaptcha(canvasRef.current.getContext('2d'))}
                   >
                     <TbRefresh />
@@ -441,7 +407,7 @@ const Login = () => {
                       className={`form-control ${errors.captcha ? 'error-input' : ''}`}
                       placeholder="Enter captcha here"
                       value={userInput}
-                      onChange={handleUserInputChange} 
+                      onChange={handleUserInputChange}
                     />
                   </div>
                   {errors.captcha && (
@@ -470,12 +436,26 @@ const Login = () => {
 
                 {/* Login Button */}
                 <div className="d-grid gap-2">
-                  <button className="login-btn" type="button" onClick={handleLogin}>
-                    Login
+                  <button
+                    className="login-btn"
+                    type="button"
+                    onClick={handleLogin}
+                    disabled={isLoading}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      opacity: isLoading ? 0.7 : 1,
+                      cursor: isLoading ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    {isLoading && <div className="login-spinner"></div>}
+                    {isLoading ? 'Logging in...' : 'Login'}
                   </button>
                   <hr className='login-hr' />
                 </div>
-                
+
                 {/* Google Login Button */}
                 <div className="d-grid gap-2">
                   <button className="login-g-btn" type="button" onClick={handleGoogleLogin}>
@@ -483,18 +463,19 @@ const Login = () => {
                     or Sign in with Google
                   </button>
                 </div>
-                
-                {/* Show only non-field-specific general errors */}
-                {/* {errorMessage && !errors.email && !errors.password && !errors.captcha && (
+
+                {/* Show API error messages (wrong password, wrong email, etc.) */}
+                {/* {errorMessage && (
                   <p className="error-field-message" style={{ 
                     marginTop: '15px', 
                     textAlign: 'center',
-                    color: '#dc3545'
+                    color: '#dc3545',
+                    display: 'block'
                   }}>
                     {errorMessage}
                   </p>
                 )} */}
-                
+
                 {/* Add test buttons for debugging */}
                 {/* <div style={{ marginTop: '20px', border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
                   <h5 style={{ fontSize: '14px', marginBottom: '10px' }}>Test Scenarios:</h5>

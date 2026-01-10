@@ -69,6 +69,8 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 .isname {
@@ -361,7 +363,7 @@
 @media (max-width: 480px) {
 
   .isphoto img {
-    width: 60%;
+    width: 45%;
     margin: 0 auto;
   }
 
@@ -482,7 +484,7 @@
 
 @media (max-width: 375px) {
     .isphoto img {
-    width: 60%;
+    width: 54%;
     margin: 0 auto;
   }
 

@@ -90,7 +90,7 @@ const stars = Array.from({ length: 5 }, (_, i) =>
           {/* Photo */}
           <div className={styles.isphoto}>
             <img
-              src="/InstructorDefaultImage.webp"
+              src="/instructor.png"
               alt={`${trainerName || name} headshot`}
               onError={(e) => {
                 e.currentTarget.src = "/InstructorDefaultImage.webp";

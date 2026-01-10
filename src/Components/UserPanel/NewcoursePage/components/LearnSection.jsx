@@ -226,7 +226,7 @@ export default function LearnSection() {
         <div className={styles.readMoreWrapper}>
           <button
             type="button"
-            className={styles.readMoreBtn2}
+            className={`${styles.readMoreBtn2} ${styles.careerReadMoreBtn}`}
             onClick={() => toggleShowAll("career")}
           >
             {showAll.career ? "Read Less ↑" : "Read More ↓"}

@@ -356,7 +356,7 @@ const oldPrice =
             <p className={styles.bnsub}>{subtitle}</p>
 
             <p className={styles.bnby}>
-              By <strong>{author}</strong> in {categories.join(", ")}
+              By <strong>{author}</strong> in <strong>{categories.join(", ")}</strong>
             </p>
 
             <div className={styles.bnmetrics}>

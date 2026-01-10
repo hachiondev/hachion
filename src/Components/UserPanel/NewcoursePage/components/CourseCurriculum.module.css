@@ -638,11 +638,12 @@ width: 30px;
   }
 
   .ccwrap .cchead h2 {
-    font-size: 30px; /* 28px → 30px */
+    font-size: 24px; /* 28px → 30px */
   }
 
   .cchead p {
-    font-size: 20px; /* 16px → 20px */
+    font-size: 14px; /* 16px → 20px */
+    margin: 5px auto 10px;
   }
 
   .ccdownload {

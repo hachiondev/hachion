@@ -1,5 +1,5 @@
 // src/Components/.../CrashTab.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../../../utils";
 
@@ -14,11 +14,16 @@ function DemoClassSectionCrashTab({
   isProfileLoading,
   showMessage,
   isRequestBatchSuccess,
+  enrollSuccessMessage,
+  enrollErrorMessage,
+  resendMessage,
+  resendError,
   requestBatchError,
   onRequestClick,
   crashCourse,      // 🔹 NEW
   isCourseLoading,  // 🔹 NEW
   courseError,      // 🔹 optional, not used but available
+  resetLiveSubmitting,
 }) {
   // No parsing — direct backend content with fallback
   const crashContent =
@@ -34,6 +39,17 @@ What's Included:
 • English
 • Lifetime access with free updates
 • No prior programming experience required`;
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  useEffect(() => {
+    if (isRequestBatchSuccess || requestBatchError) {
+      setIsSubmitting(false);
+    }
+  }, [isRequestBatchSuccess, requestBatchError]);
+
+  useEffect(() => {
+    setIsSubmitting(false);
+  }, [resetLiveSubmitting]);
 
   return (
     <div className={styles.dcgrid}>
@@ -86,10 +102,92 @@ What's Included:
           {!scheduleLoading &&
             !scheduleError &&
             (!crashGroups || crashGroups.length === 0) && (
-              <div className={styles.dcslot}>
-                <div className={styles.dcslotdate}>
-                  No crash batches scheduled
+              <div className={styles.noLiveSlotsContainer}>
+                <div className={cn(crashGroups && crashGroups.length > 0 ? styles.dcslot : styles.noLiveSlot)}>
+                  <div className={styles.dcslotdate}>
+                    No crash batches scheduled
+                  </div>
                 </div>
+                {/* <div
+                  className={cn(
+                    crashGroups && crashGroups.length > 0 ? styles.dcempty : styles.noLiveClass
+                  )}
+                >
+                  <div className={styles.dcemptyicon}>
+                    <img src="/calendar.png" alt="calendar" />
+                  </div>
+
+                  <p className={styles.dcemptytext}>
+                    Be the first to request a custom demo session at your preferred
+                    time
+                  </p>
+
+                  <button
+                    className={styles.dclink}
+                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+                    onClick={() => {
+                      if (isSubmitting || isRequestBatchLoading) return;
+
+                      setIsSubmitting(true);
+                      onRequestClick();
+                    }}
+                  >
+                    {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+                  </button>
+                  {enrollSuccessMessage && (
+                    <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
+                      {enrollSuccessMessage}
+                    </p>
+                  )}
+
+                  {enrollErrorMessage && (
+                    <p style={{ color: "red", fontSize: "14px", marginTop: "6px" }}>
+                      {enrollErrorMessage}
+                    </p>
+                  )}
+
+                  {showMessage && isRequestBatchSuccess && (
+                    <p
+                      style={{
+                        color: "#0A8754",
+                        fontSize: "14px",
+                        marginTop: "6px",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      Your request has been submitted successfully.
+                      <br />
+                      Our team will contact you shortly with batch details.
+                    </p>
+                  )}
+
+                  {showMessage && requestBatchError && (
+                    <p
+                      style={{
+                        color: "#D93025",
+                        fontSize: "14px",
+                        marginTop: "6px",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      Unable to submit your request right now.
+                      <br />
+                      Please try again in a few minutes.
+                    </p>
+                  )}
+
+                  {resendMessage && (
+                    <p style={{ color: "green", fontSize: "13px" }}>
+                      {resendMessage}
+                    </p>
+                  )}
+
+                  {resendError && (
+                    <p style={{ color: "red", fontSize: "13px" }}>
+                      {resendError}
+                    </p>
+                  )}
+                </div> */}
               </div>
             )}
         </div>

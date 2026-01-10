@@ -1537,7 +1537,7 @@ padding: 15px 8px;
 
 @media (max-width: 375px) {
   .dcwrap {
-    padding: 14px;
+    padding: 6px;
   }
 
   .offerLeft {
@@ -1592,6 +1592,7 @@ padding: 15px 8px;
   .dctabs .tabLabel {
     font-size: 14px;
     font-weight: 400;
+    padding: 4px;
   }
 
   .dchead p {
@@ -1632,7 +1633,7 @@ padding: 15px 8px;
 
   .dcslots .dcslot {
 padding: 15px;
-        width: 140px;
+        width: 155px;
   }
 
   .dcslotdate {

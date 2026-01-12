@@ -1208,7 +1208,7 @@ const hasInrFields =
       name="liveTraining"
       value={formData.liveTraining}
       onChange={(content) => handleInputChange(null, "liveTraining", content)}
-      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
       modules={{
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -1254,7 +1254,7 @@ const hasInrFields =
       name="crashCourse"
       value={formData.crashCourse}
       onChange={(content) => handleInputChange(null, "crashCourse", content)}
-      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
       modules={{
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -1300,7 +1300,7 @@ const hasInrFields =
       name="mentoringMode"
       value={formData.mentoringMode}
       onChange={(content) => handleInputChange(null, "mentoringMode", content)}
-      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
       modules={{
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -1346,7 +1346,7 @@ const hasInrFields =
       name="selfPacedLearning"
       value={formData.selfPacedLearning}
       onChange={(content) => handleInputChange(null, "selfPacedLearning", content)}
-      style={{ width: "300px", height: "90px", marginBottom: "36%" }}
+      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
       modules={{
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],

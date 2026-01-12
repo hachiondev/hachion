@@ -99,11 +99,11 @@ export default function CourseBanner({ onEnroll }) {
 
   const youtubeId = extractYoutubeId(course?.youtubeLink);
   const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
-  
+
   const { currency, exchangeRate } = useCurrency();
 
   const { data: discountRule } = useCourseDiscountRule(courseNameForApi);
-    const hasSpecialDiscount = !!discountRule;
+  const hasSpecialDiscount = !!discountRule;
   const ruleDiscountPct = discountRule?.discountPercentage ?? 0;
   const discountType = discountRule?.discountType || "PERCENTAGE";
   const discountFixedAmount = discountRule?.discountAmount ?? 0;
@@ -305,27 +305,27 @@ export default function CourseBanner({ onEnroll }) {
       }
     }
   }
-  
-let finalPrice = 0;
-let originalPrice = 0;
+
+  let finalPrice = 0;
+  let originalPrice = 0;
 
 
-if (convertedTotalFee && convertedOriginalFee) {
-  finalPrice = convertedTotalFee;
-  originalPrice = convertedOriginalFee;
-}
+  if (convertedTotalFee && convertedOriginalFee) {
+    finalPrice = convertedTotalFee;
+    originalPrice = convertedOriginalFee;
+  }
 
-// Price text
-const price =
-  finalPrice > 0
-    ? `${currency} ${Math.round(finalPrice)}`
-    : "Price on request";
+  // Price text
+  const price =
+    finalPrice > 0
+      ? `${currency} ${Math.round(finalPrice)}`
+      : "Price on request";
 
-// Strike-through price
-const oldPrice =
-  hasSpecialDiscount && originalPrice > finalPrice
-    ? `${currency} ${Math.round(originalPrice)}`
-    : "";
+  // Strike-through price
+  const oldPrice =
+    hasSpecialDiscount && originalPrice > finalPrice
+      ? `${currency} ${Math.round(originalPrice)}`
+      : "";
 
 
   const startsFromPrice =
@@ -348,9 +348,9 @@ const oldPrice =
           <div className={styles.bnleft}>
             <span className={styles.bnchip}>{level}</span>
 
-           <div className={styles.titleGroup}>
-  <h1 className={styles.bntitle}>{title}</h1>
-</div>
+            <div className={styles.titleGroup}>
+              <h1 className={styles.bntitle}>{title}</h1>
+            </div>
 
 
             <p className={styles.bnsub}>{subtitle}</p>
@@ -388,17 +388,17 @@ const oldPrice =
             <div className={styles.bnpriceRow}>
               <div className={styles.bnprice}>
                 <p className={styles.feeGroup}>
-                <span className={styles.fee}>Fee:</span>
-                <span className={styles.start}>Starts from </span>
-                <span className={styles.bnpricenow}>{price}</span>
-              </p>
-                
+                  <span className={styles.fee}>Fee:</span>
+                  <span className={styles.start}>Starts from </span>
+                  <span className={styles.bnpricenow}>{price}</span>
+                </p>
+
                 <div className={styles.groupdis}>
                   {oldPrice && (
-                  <span className={styles.bnpriceold}>{oldPrice}</span>
-                )}
-                {/* <span className={styles.bntag}>{discount}% OFF</span> */}
-                <span className={styles.bntag}>{effectiveDiscountPct}% OFF</span>
+                    <span className={styles.bnpriceold}>{oldPrice}</span>
+                  )}
+                  {/* <span className={styles.bntag}>{discount}% OFF</span> */}
+                  <span className={styles.bntag}>{effectiveDiscountPct}% OFF</span>
                 </div>
 
               </div>

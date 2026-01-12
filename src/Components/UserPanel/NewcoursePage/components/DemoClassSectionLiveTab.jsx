@@ -683,26 +683,13 @@ What's Included:
 {isCourseLoading ? (
   <div
     className={styles.dcinfotext}
-    style={{
-      fontSize: "14px",
-      color: "#374151",
-      lineHeight: "1.6",
-    }}
   >
     Loading live training details...
   </div>
 ) : (
  <div
   className={styles.dcinfotext}
-  style={{
-    fontSize: "14px",
-    color: "#374151",
-    lineHeight: "1.2",
-    maxHeight: "420px",
-    overflowY: "auto",
-  }}
 >
-
     {liveTraining && liveTraining.trim() ? (
       <div
         dangerouslySetInnerHTML={{ __html: liveTraining }}

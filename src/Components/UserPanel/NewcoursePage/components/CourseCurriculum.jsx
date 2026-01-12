@@ -205,8 +205,7 @@ export default function CourseCurriculum({ onViewDemoClass }) {
           </p>
 
           <button className={styles.ccdownload} onClick={downloadPdf}>
-            <img src="/Download.png" alt="Download" height={24} /> Detailed
-            Syllabus
+            <img src="/Download.png" alt="Download" height={24} />Download Detailed Syllabus
           </button>
         </div>
 
@@ -453,7 +452,7 @@ export default function CourseCurriculum({ onViewDemoClass }) {
 
                         {/* TEXT LINK (not button) for Read More/Less */}
                         {isLong && (
-                          <span 
+                          <span
                             className={styles.readMoreLink}
                             onClick={() => toggleProjectExpand(i)}
                             role="button"

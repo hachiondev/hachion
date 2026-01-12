@@ -274,8 +274,6 @@ export default function LearnSection() {
                         <p>No tools available for this course.</p>
                     ) : (
                         <>
-
-
                             <div className={styles.lstoolsgrid}>
                                 {paginatedTools.map((tool) => (
                                     <div key={tool.toolsName} className={styles.lstoolcard}>

@@ -237,25 +237,25 @@ const UserProfile = () => {
 
       setSuccessMessage('✅ Profile updated successfully.');
       setInitialProfile({
-  name:
-    r.userName ||
-    (name && name.trim()) ||
-    `${(firstName || '').trim()} ${(lastName || '').trim()}`.trim(),
-  firstName: firstName,
-  lastName: lastName,
-  email: email,
-  mobileNumber: mobileNumber,
-  gender: gender,
-  location: location,
-  timeZone: timeZone,
-  address: address,
-  bio: bio,
-  dob: dob,
-  profileImage:
-    r.profileImage
-      ? `https://api.test.hachion.co/api/v1/user/profile/${r.profileImage}`
-      : profileImage,
-});
+        name:
+          r.userName ||
+          (name && name.trim()) ||
+          `${(firstName || '').trim()} ${(lastName || '').trim()}`.trim(),
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        mobileNumber: mobileNumber,
+        gender: gender,
+        location: location,
+        timeZone: timeZone,
+        address: address,
+        bio: bio,
+        dob: dob,
+        profileImage:
+          r.profileImage
+            ? `https://api.test.hachion.co/api/v1/user/profile/${r.profileImage}`
+            : profileImage,
+      });
 
       setErrorMessage('');
     } catch (err) {
@@ -278,21 +278,21 @@ const UserProfile = () => {
           const data = response.data;
 
           setInitialProfile({
-  name: data.name || '',
-  firstName: data.name ? data.name.split(/\s+/)[0] : '',
-  lastName: data.name ? data.name.split(/\s+/).slice(1).join(' ') : '',
-  email: data.email || '',
-  mobileNumber: data.mobile || '',
-  gender: data.gender || '',
-  location: data.location || '',
-  timeZone: data.timeZone || '',
-  address: data.address || '',
-  bio: data.bio || '',
-  dob: parseDobFromApi(data.dob),
-  profileImage: data.profileImage
-    ? `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`
-    : null,
-});
+            name: data.name || '',
+            firstName: data.name ? data.name.split(/\s+/)[0] : '',
+            lastName: data.name ? data.name.split(/\s+/).slice(1).join(' ') : '',
+            email: data.email || '',
+            mobileNumber: data.mobile || '',
+            gender: data.gender || '',
+            location: data.location || '',
+            timeZone: data.timeZone || '',
+            address: data.address || '',
+            bio: data.bio || '',
+            dob: parseDobFromApi(data.dob),
+            profileImage: data.profileImage
+              ? `https://api.test.hachion.co/api/v1/user/profile/${data.profileImage}`
+              : null,
+          });
 
           setName(data.name || '');
           if (data.name) {
@@ -335,15 +335,15 @@ const UserProfile = () => {
         });
     }
   }, []);
-const handleDiscard = () => {
-  setDob('');
-  setGender('');
-  setAddress('');
-  setBio('');
+  const handleDiscard = () => {
+    setDob('');
+    setGender('');
+    setAddress('');
+    setBio('');
 
-  setSuccessMessage('');
-  setErrorMessage('');
-};
+    setSuccessMessage('');
+    setErrorMessage('');
+  };
 
 
 
@@ -871,13 +871,13 @@ const handleDiscard = () => {
                 Save Changes
               </button>
 
-             <button
-  type="button"
-  className="home-browse-button"
-  onClick={handleDiscard}
->
-  Discard
-</button>
+              <button
+                type="button"
+                className="update-profile-btn"
+                onClick={handleDiscard}
+              >
+                Discard
+              </button>
 
             </div>
           </form>

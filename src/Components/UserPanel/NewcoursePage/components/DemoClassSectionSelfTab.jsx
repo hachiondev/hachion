@@ -438,24 +438,24 @@ useEffect(() => {
 {isCourseLoading ? (
   <div
     className={styles.dcinfotext}
-    style={{
-      fontSize: "14px",
-      color: "#374151",
-      lineHeight: "1.5",
-    }}
+    // style={{
+    //   fontSize: "14px",
+    //   color: "#374151",
+    //   lineHeight: "1.5",
+    // }}
   >
     Loading self-paced learning details...
   </div>
 ) : (
   <div
     className={styles.dcinfotext}
-    style={{
-      fontSize: "14px",
-      color: "#374151",
-      lineHeight: "1.2",
-      maxHeight: "420px",
-      overflowY: "auto",
-    }}
+    // style={{
+    //   fontSize: "14px",
+    //   color: "#374151",
+    //   lineHeight: "1.2",
+    //   maxHeight: "420px",
+    //   overflowY: "auto",
+    // }}
   >
     {selfPacedLearning && selfPacedLearning.trim() ? (
       <div

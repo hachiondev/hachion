@@ -20,10 +20,10 @@ export default function InstructorSection({
 
   const courseName = courseNameSlug
     ? decodeURIComponent(courseNameSlug)
-        .replace(/[-_]+/g, " ")
-        .replace(/\+\+/g, "pp")
-        .trim()
-        .toLowerCase()
+      .replace(/[-_]+/g, " ")
+      .replace(/\+\+/g, "pp")
+      .trim()
+      .toLowerCase()
     : "";
 
   /* -------------------------------
@@ -59,11 +59,11 @@ export default function InstructorSection({
   const experienceCredentialsArray =
     typeof rawExperienceCredentials === "string"
       ? rawExperienceCredentials
-          .split("\n")
-          .map((item) =>
-            item.replace(/^\*\s*/, "").trim()
-          )
-          .filter(Boolean)
+        .split("\n")
+        .map((item) =>
+          item.replace(/^\*\s*/, "").trim()
+        )
+        .filter(Boolean)
       : [];
 
 
@@ -72,9 +72,9 @@ export default function InstructorSection({
 
   const fullStars = Math.floor(finalRating);
   const decimal = finalRating - fullStars;
-const stars = Array.from({ length: 5 }, (_, i) =>
-  i < Math.round(finalRating) ? "★" : "☆"
-).join("");
+  const stars = Array.from({ length: 5 }, (_, i) =>
+    i < Math.round(finalRating) ? "★" : "☆"
+  ).join("");
 
   const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
 
@@ -148,28 +148,26 @@ const stars = Array.from({ length: 5 }, (_, i) =>
                 <div className={styles.isstatlab}>Instructor Rating</div>
               </div>
             </div>
-           
-<p
-  className={styles.isbio}
-  style={{
-    fontSize: "14px",
-    lineHeight: "1.6",
-    color: "#374151",
-  }}
->
-  {trainerBio ? (
-    <span
-      dangerouslySetInnerHTML={{ __html: trainerBio }}
-    />
-  ) : (
-    bio
-  )}
-</p>
 
-
-
+            <p
+              className={styles.isbio}
+              // style={{
+              //   fontSize: "14px",
+              //   lineHeight: "1.6",
+              //   color: "#374151",
+              // }}
+            >
+              {trainerBio ? (
+                <span
+                  dangerouslySetInnerHTML={{ __html: trainerBio }}
+                />
+              ) : (
+                bio
+              )}
+            </p>
             <div className={styles.issubhead}>Experience & Credentials:</div>
             <ul className={styles.islist}>
+              
               {(experienceCredentialsArray.length > 0
                 ? experienceCredentialsArray
                 : creds

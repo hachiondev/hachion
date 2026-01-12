@@ -683,7 +683,7 @@ export default function Trainer() {
                     theme="snow"
                     value={formData.summary}
                     onChange={(content) => handleInputChange(null, 'summary', content)}
-                    style={{ height: '300px', marginBottom: '20px' }}
+                    style={{ height: 'auto', marginBottom: '20px' }}
                   />
                 </div>
 

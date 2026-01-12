@@ -9,12 +9,13 @@ import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
 import { useCouponDiscount } from "../../Api/hooks/CourseApi/useCouponDiscount";
 import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
+import { Link } from "react-router-dom";
 
 
 export default function NewEnrollNow() {
-    const location = useLocation();
-    const preselectedSession = location.state?.selectedSession || null;
-const preselectedBatchId = location.state?.selectedBatchId || null;
+  const location = useLocation();
+  const preselectedSession = location.state?.selectedSession || null;
+  const preselectedBatchId = location.state?.selectedBatchId || null;
 
 
   const notifyVia = location.state?.notifyVia || {
@@ -36,9 +37,9 @@ const preselectedBatchId = location.state?.selectedBatchId || null;
   // const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
   //   useState(false);
 
-  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =  useState(false);
+  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
 
-const [lastAction, setLastAction] = useState(null);
+  const [lastAction, setLastAction] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -51,17 +52,15 @@ const [lastAction, setLastAction] = useState(null);
      Params
   =============================== */
   const { courseName } = useParams();
-  console.log("🔍 ROUTE PARAM courseName:", courseName);
 
-
- const courseSlug = courseName
-  ? decodeURIComponent(courseName)
+  const courseSlug = courseName
+    ? decodeURIComponent(courseName)
       .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
       .replace(/\b\w/g, (c) => c.toUpperCase())
-  : "";
+    : "";
 
   /* ===============================
      APIs
@@ -70,15 +69,12 @@ const [lastAction, setLastAction] = useState(null);
 
   const { liveGroups, scheduleLoading } =
     useDemoScheduleLogic({ courseSlug, timezone });
-    console.log("📅 LIVE GROUPS:", liveGroups);
 
 
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
 
-  console.log("📦 COURSE API RESPONSE:", course);
-
-  const { currency } = useCurrency();
+  const { currency,exchangeRate } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
 
   useEffect(() => {
@@ -101,27 +97,27 @@ const [lastAction, setLastAction] = useState(null);
   }, [couponSuccess]);
 
   useEffect(() => {
-  if (!preselectedSession || !liveGroups?.length) return;
+    if (!preselectedSession || !liveGroups?.length) return;
 
-  const matchedGroup = liveGroups.find(
-    (group) =>
-      group.type === "live" &&
-      group.sessions?.some(
-        (s) => s.batchId === preselectedBatchId
-      )
-  );
+    const matchedGroup = liveGroups.find(
+      (group) =>
+        group.type === "live" &&
+        group.sessions?.some(
+          (s) => s.batchId === preselectedBatchId
+        )
+    );
 
-  if (matchedGroup) {
-  setSelectedBatch(matchedGroup);
-} else {
-  // fallback: select first live batch
-  const firstLive = liveGroups.find(g => g.type === "live");
-  if (firstLive) {
-    setSelectedBatch(firstLive);
-  }
-}
+    if (matchedGroup) {
+      setSelectedBatch(matchedGroup);
+    } else {
+      // fallback: select first live batch
+      const firstLive = liveGroups.find(g => g.type === "live");
+      if (firstLive) {
+        setSelectedBatch(firstLive);
+      }
+    }
 
-}, [preselectedSession, liveGroups, preselectedBatchId]);
+  }, [preselectedSession, liveGroups, preselectedBatchId]);
 
   useEffect(() => {
     window.scrollTo({
@@ -132,8 +128,8 @@ const [lastAction, setLastAction] = useState(null);
   }, []);
 
 
-const isEnrollmentBlocked =
-  false; // Do NOT block Pay Now for already enrolled cases
+  const isEnrollmentBlocked =
+    false; // Do NOT block Pay Now for already enrolled cases
 
   const {
     data: couponApiData,
@@ -260,7 +256,6 @@ const isEnrollmentBlocked =
   let finalPrice = 0;
   let displayCurrency = currency;
 
-  const { exchangeRate } = useCurrency();
   const isIndiaUser =
     formData.phone?.startsWith("+91") || currency === "INR";
 
@@ -349,7 +344,7 @@ const isEnrollmentBlocked =
     );
   }
 
-  
+
   /* ===============================
      Render
   =============================== */
@@ -374,21 +369,21 @@ const isEnrollmentBlocked =
 
             <div className={styles.enRow}>
               <div className={styles.enCol}>
-               <label className={styles.enLabel}>
-  Batch Schedule
-</label>
+                <label className={styles.enLabel}>
+                  Batch Schedule
+                </label>
 
-<div className={styles.enCourseDisplay}>
-  {selectedBatch?.day || "—"}
-</div>
+                <div className={styles.enCourseDisplay}>
+                  {selectedBatch?.day || "—"}
+                </div>
 
               </div>
 
               <div className={styles.enCol}>
                 <label className={styles.enLabel}>Learning Mode</label>
-                <Input 
-                  value={selectedMode} 
-                  readOnly 
+                <Input
+                  value={selectedMode}
+                  readOnly
                   className={styles.readOnlyInput}
                 />
               </div>
@@ -425,17 +420,17 @@ const isEnrollmentBlocked =
               />
             </div>
 
-          
-         {couponError && (
-  lastAction === "PAY_LATER" ||
-  !(
-    couponError === "You are already enrolled for this batch." ||
-    couponError ===
-      "This enrollment record already exists for Live Class in the database."
-  )
-) && (
-  <p className={styles.errorMessage}>{couponError}</p>
-)}
+
+            {couponError && (
+              lastAction === "PAY_LATER" ||
+              !(
+                couponError === "You are already enrolled for this batch." ||
+                couponError ===
+                "This enrollment record already exists for Live Class in the database."
+              )
+            ) && (
+                <p className={styles.errorMessage}>{couponError}</p>
+              )}
 
 
             {couponSuccess && (
@@ -455,13 +450,13 @@ const isEnrollmentBlocked =
               />
               <label htmlFor="terms" className={styles.enTermsLabel}>
                 I agree to the{" "}
-                <a href="#" className={styles.enLink}>
+                <Link to="/terms" className={styles.enLink}>
                   Terms & Conditions
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a href="#" className={styles.enLink}>
+                <Link to="/privacy" className={styles.enLink}>
                   Refund Policy
-                </a>
+                </Link>
                 <span className={styles.requiredStarInline}>*</span>
               </label>
             </div>
@@ -476,29 +471,28 @@ const isEnrollmentBlocked =
 
               <div className={styles.buttonGroup}>
                 <button
-                  className={`${styles.enPayBtn} ${
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    // isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
+                  className={`${styles.enPayBtn} ${!selectedBatch ||
+                      !isTermsAccepted ||
+                      // isEnrollmentBlocked ||
+                      lockButtonsUntilBatchChange
                       ? styles.disabledBtn
                       : ""
-                  }`}
+                    }`}
                   disabled={
                     !selectedBatch ||
                     !isTermsAccepted ||
                     // isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-            onClick={() => {
-  setLastAction("PAY_NOW");
-  selectedBatch &&
-    handleLiveEnrollPayment(selectedBatch.sessions[0], {
-      isPayNow: true,
-      email: notifyVia.email,
-      whatsapp: notifyVia.whatsapp,
-    });
-}}
+                  onClick={() => {
+                    setLastAction("PAY_NOW");
+                    selectedBatch &&
+                      handleLiveEnrollPayment(selectedBatch.sessions[0], {
+                        isPayNow: true,
+                        email: notifyVia.email,
+                        whatsapp: notifyVia.whatsapp,
+                      });
+                  }}
 
 
 
@@ -506,28 +500,27 @@ const isEnrollmentBlocked =
                   Pay Now
                 </button>
                 <button
-                  className={`${styles.enPayBtn} ${
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
+                  className={`${styles.enPayBtn} ${!selectedBatch ||
+                      !isTermsAccepted ||
+                      isEnrollmentBlocked ||
+                      lockButtonsUntilBatchChange
                       ? styles.disabledBtn
                       : ""
-                  }`}
+                    }`}
                   disabled={
                     !selectedBatch ||
                     !isTermsAccepted ||
                     isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-               onClick={() => {
-  setLastAction("PAY_LATER");
-  selectedBatch &&
-    handleEnrollPayLater({
-      ...selectedBatch.sessions[0],
-      notifyVia,
-    });
-}}
+                  onClick={() => {
+                    setLastAction("PAY_LATER");
+                    selectedBatch &&
+                      handleEnrollPayLater({
+                        ...selectedBatch.sessions[0],
+                        notifyVia,
+                      });
+                  }}
 
 
                 >

@@ -294,24 +294,24 @@ What's Included:
 {isCourseLoading ? (
   <div
     className={styles.dcinfotext}
-    style={{
-      fontSize: "14px",
-      color: "#374151",
-      lineHeight: "1.5",
-    }}
+    // style={{
+    //   fontSize: "14px",
+    //   color: "#374151",
+    //   lineHeight: "1.5",
+    // }}
   >
     Loading crash course details...
   </div>
 ) : (
   <div
     className={styles.dcinfotext}
-    style={{
-      fontSize: "14px",
-      color: "#374151",
-      lineHeight: "1.2",
-      maxHeight: "420px",
-      overflowY: "auto",
-    }}
+    // style={{
+    //   fontSize: "14px",
+    //   color: "#374151",
+    //   lineHeight: "1.2",
+    //   maxHeight: "420px",
+    //   overflowY: "auto",
+    // }}
   >
     {crashCourse && crashCourse.trim() ? (
       <div

@@ -134,7 +134,7 @@
 
 .dchead p {
   color: #000;
-  max-width: 760px;
+  /* max-width: 760px; */
   margin: 0;
   text-align: left;
   font-size: 17px;
@@ -397,7 +397,8 @@
 
 .dcslotdate {
   color: #000;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .dcslotcount {
@@ -952,7 +953,8 @@
 .dcinfotext {
   color: #000;
   margin: 8px 0 10px;
-  font-size: 17px;
+  font-size: 14px;
+  line-height: 1.2;
 }
 
 .dcinfolist {

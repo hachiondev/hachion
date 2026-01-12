@@ -178,10 +178,11 @@
 
 /* pills */
 .lspills {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin-top: 12px;
+  cursor: pointer;
 }
 
 .lspill {
@@ -191,6 +192,7 @@
   border-radius: 999px;
   font-weight: 500;
   font-size: 13px;
+  text-align: center;
   box-shadow: 0 4px 10px rgba(16, 24, 40, 0.03);
   transition: all 0.3s ease;
 
@@ -413,7 +415,7 @@
 }
 
 .careerReadMoreBtn{
-  left: 172px;
+  left:399px;
 }
 
 .readMoreBtn:hover, .readMoreBtn2:hover {
@@ -599,7 +601,7 @@
   .lspills {
     display: grid;
     margin-top: 20px;
-    /* grid-template-columns: 1fr 1fr; */
+    grid-template-columns: 1fr;
   }
 
   .lstoolcard {
@@ -627,7 +629,7 @@
   }
 
   .lscardbullets {
-    font-size: 12px;
+    font-size: 14px;
     padding-left: 2rem;
     gap: 0px;
     font-weight: 400;
@@ -748,9 +750,7 @@
   }
 
   .lspills {
-    display: grid;
-    margin-top: 20px;
-    /* grid-template-columns: 1fr 1fr; */
+    margin-top: 15px;
   }
 
   .lstoolcard {
@@ -778,11 +778,7 @@
   }
 
   .lscardbullets {
-    font-size: 12px;
-    padding-left: 2rem;
-    gap: 0px;
-    font-weight: 400;
-    margin: 0;
+    font-size: 14px;
   }
 
   .lscardhead{

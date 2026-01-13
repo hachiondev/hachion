@@ -19,9 +19,29 @@ import { useNavigate } from 'react-router-dom';
 
   const EnrollPayment = () => {
     const location = useLocation();
-    const { selectedBatchData, enrollText, modeType,  sendEmail,
-  sendWhatsApp, email,
-  sendText } = location.state || {};
+  //   const { selectedBatchData, enrollText, modeType,  sendEmail,
+  // sendWhatsApp, email,
+  // sendText } = location.state || {};
+
+  const {
+  selectedBatchData: rawBatchData,
+  enrollText,
+  modeType,
+  sendEmail,
+  sendWhatsApp,
+  // email,
+  sendText,
+} = location.state || {};
+
+const loggedUser = JSON.parse(localStorage.getItem("loginuserData"));
+const email =
+  location.state?.email ||
+  loggedUser?.email ||
+  "";
+
+// ✅ SAFE FALLBACK (prevents empty UI)
+const selectedBatchData = rawBatchData || {};
+
 
 
     const [successMessage, setSuccessMessage] = useState("");
@@ -37,6 +57,9 @@ const [exchangeRate, setExchangeRate] = useState(1);
 const { courseName } = useParams(); 
  const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
+const [invoiceMessage, setInvoiceMessage] = useState("");
+
   const [paymentData, setPaymentData] = useState({
     orderId: "",
     paymentMethod: "",
@@ -371,43 +394,154 @@ useEffect(() => {
 
   fetchCourse();
 }, [courseName]);
+useEffect(() => {
+  if (!email || !selectedBatchData?.schedule_course_name) return;
 
- useEffect(() => {
-    const fetchPaymentData = async () => {
-      try {
-        
-        let courseName = selectedBatchData?.schedule_course_name || "";
-
-        if (!email || !courseName) {
-          console.warn("Missing email or courseName, skipping API call");
-          return;
+  const fetchPaymentData = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.test.hachion.co/razorpay/getByEmailAndCourse`,
+        {
+          params: {
+            email,
+            courseName: selectedBatchData.schedule_course_name,
+          },
         }
+      );
 
-        const response = await axios.get(
-          `https://api.test.hachion.co/razorpay/getByEmailAndCourse?email=${email}&courseName=${encodeURIComponent(courseName)}`
-        );
+      const payment = Array.isArray(response.data)
+        ? response.data[0]
+        : response.data;
 
-        let payment = Array.isArray(response.data) && response.data.length > 0
-          ? response.data[0]
-          : response.data;
+      setPaymentData(payment || {});
+    } catch (error) {
+      console.error("Error fetching payment data:", error);
+    }
+  };
 
-        
-        if (payment && !payment.paymentMethod && payment.rawResponseJson) {
-          try {
-            const parsedRaw = JSON.parse(payment.rawResponseJson);
-            payment.paymentMethod = parsedRaw.method || null;
-          } catch (err) {
-            console.error("Error parsing rawResponseJson:", err);
-          }
-        }
-        setPaymentData(payment);
-      } catch (error) {
-        console.error("Error fetching payment data:", error);
-      }
+  fetchPaymentData();
+}, [email, selectedBatchData?.schedule_course_name]);
+
+
+const handleDownloadInvoice = async () => {
+  try {
+    if (!paymentData?.id) {
+      alert("Payment ID not found. Invoice cannot be downloaded.");
+      return;
+    }
+
+    // 1️⃣ Create FRONTEND invoice number
+    const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
+      .replace(/\s+/g, "")
+      .toUpperCase()}-${paymentData.orderId}`;
+
+    // 2️⃣ Prepare PaymentRequest (ONLY required fields)
+    const payload = {
+      studentId: studentData?.studentId,
+      studentName: studentData?.userName,
+      email: studentData?.email,
+      mobile: mobileNumber,
+
+      courseName: selectedBatchData.schedule_course_name,
+      courseFee: courseData?.iamount,
+      discount: courseData?.idiscount || 0,
+      tax: 0,
+
+      totalAmount:
+        courseData.iamount -
+        (courseData.iamount * courseData.idiscount) / 100,
+
+      balancePay: 0,
+      status: "PAID",
+
+      invoiceNumber, // 👈 FRONTEND GENERATED
+
+      installments: [
+        {
+          payDate: new Date().toISOString().split("T")[0],
+          dueDate: new Date().toISOString().split("T")[0],
+          actualPay:
+            courseData.iamount -
+            (courseData.iamount * courseData.idiscount) / 100,
+          receivedPay:
+            courseData.iamount -
+            (courseData.iamount * courseData.idiscount) / 100,
+          paymentMethod: paymentData.paymentMethod || "ONLINE",
+        },
+      ],
     };
 
-    fetchPaymentData();
-  }, [email, selectedBatchData]);
+    // 3️⃣ Generate invoice PDF (SERVER SIDE)
+    await axios.post(
+      "https://api.test.hachion.co/payments/generateInvoice",
+      payload
+    );
+
+    // 4️⃣ Download invoice PDF
+    // const downloadUrl = `https://api.test.hachion.co/payments/payments/invoice/download?paymentId=${paymentData.id}`;
+    // window.open(downloadUrl, "_blank");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to download invoice.");
+  }
+};
+const handleGenerateInvoice = async () => {
+  if (isGeneratingInvoice) return; // 🛑 block multiple clicks
+
+  try {
+    setIsGeneratingInvoice(true);
+    setInvoiceMessage("");
+
+    const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
+      .replace(/\s+/g, "")
+      .toUpperCase()}-${paymentData.orderId}`;
+
+    const netAmount =
+      courseData.iamount -
+      (courseData.iamount * courseData.idiscount) / 100;
+
+    const payload = {
+      studentId: studentData?.studentId,
+      studentName: studentData?.userName,
+      email: studentData?.email,
+      mobile: mobileNumber,
+
+      courseName: selectedBatchData.schedule_course_name,
+      courseFee: courseData?.iamount,
+      discount: courseData?.idiscount || 0,
+      tax: 0,
+      totalAmount: netAmount,
+      balancePay: 0,
+      status: "PAID",
+
+      invoiceNumber,
+
+      installments: [
+        {
+          payDate: new Date().toISOString().split("T")[0],
+          dueDate: new Date().toISOString().split("T")[0],
+          actualPay: netAmount,
+          receivedPay: netAmount,
+          paymentMethod: paymentData.paymentMethod || "ONLINE",
+        },
+      ],
+    };
+
+    // 🔥 ONLY THIS API
+    await axios.post(
+      "https://api.test.hachion.co/payments/generateInvoice",
+      payload
+    );
+
+    // ✅ Success UX
+    setInvoiceMessage("✅ Invoice has been sent to your email.");
+  } catch (err) {
+    console.error(err);
+    setInvoiceMessage("❌ Failed to generate invoice. Please try again.");
+  } finally {
+    setIsGeneratingInvoice(false);
+  }
+};
 
   if (!paymentData) return <p>Loading...</p>;
    if (loading) return <p>Loading...</p>;
@@ -422,7 +556,26 @@ useEffect(() => {
         <div className='enrollment-details'>
             <div className="input-row">
                 <div>
-                <button className="EnrollPay-outline-btn" >Download Invoice</button>
+                {/* <button className="EnrollPay-outline-btn" >Download Invoice</button> */}
+                {/* <button
+  className="EnrollPay-outline-btn"
+  onClick={handleDownloadInvoice}
+>
+  Download Invoice
+</button> */}
+<button
+  className="EnrollPay-outline-btn"
+  onClick={handleGenerateInvoice}
+  disabled={isGeneratingInvoice}
+>
+  {isGeneratingInvoice ? "Generating Invoice..." : "Download Invoice"}
+</button>
+{invoiceMessage && (
+  <p style={{ color: "#28a745", marginTop: "8px", fontSize: "14px" }}>
+    {invoiceMessage}
+  </p>
+)}
+
                 </div>
                 <div>
                 <button className="EnrollPay-btn" onClick={() => navigate('/userdashboard')}> Go to Dashboard </button>
@@ -482,7 +635,9 @@ useEffect(() => {
                   alt="Course"
                   style={{ width: "40px", height: "40px", marginRight: "10px" }}
                 />
-                {selectedBatchData.schedule_course_name}
+                {/* {selectedBatchData.schedule_course_name} */}
+                {selectedBatchData.schedule_course_name || courseData?.courseName || "—"}
+
                 </span></div>
                 <div className="pay-row">
                 <span className="detail-label">Trainer : </span>

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = "https://api.test.hachion.co";
 
@@ -29,6 +30,7 @@ export function useDemoLivePayment({
   setEnrollErrorMessage,
 }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const amount = useMemo(() => {
     return (
@@ -225,36 +227,38 @@ else {
     sendWhatsApp: true,
   });
 }
-    // // 3️⃣ If NOT enrolled → save enrollment
-    // if (!check?.data?.enrolled) {
-    //   await axios.post(`${API_BASE}/enroll/add`, {
-    //     name: userProfile.userName || userProfile.name || "",
-    //     studentId: userProfile.studentId,
-    //     email: userProfile.email,
-    //     mobile,
-    //     course_name: courseName,
-    //     enroll_date: session.schedule_date,
-    //     week: session.week,
-    //     time: session.time,
-    //     amount,
-    //     mode: "Live Class",
-    //     type: "Live Class",
-    //     trainer: session.trainer || "",
-    //     meeting_link: session.meeting_link || "",
-    //     batchId: session.batchId,
-    //     paymentType: "PAY_NOW",
-    //     paymentStatus: "PAID",
-    //     sendEmail: true,
-    //     sendWhatsApp: true,
-    //   });
-    // }
+ 
 
     setEnrollSuccessMessage("Payment successful!");
+    const slug = courseName.toLowerCase().replace(/\s+/g, "-");
+
+navigate(`/payment/${slug}`, {
+  state: {
+    selectedBatchData: {
+      schedule_course_name: courseName,
+
+      trainer_name: session.trainer || "",
+      schedule_date: session.schedule_date || "",
+      schedule_time: session.time || "",
+      schedule_mode: session.mode || "Live Training",
+      duration: session.duration || "60 min",
+
+      batchId: session.batchId,
+    },
+
+    modeType: "live",
+    sendEmail: true,
+    sendWhatsApp: true,
+    sendText: false,
+    email: userProfile.email,
+  },
+});
+
+
   } catch (err) {
     console.error(err);
     setEnrollErrorMessage("❌ Payment verification failed.");
   }
-  
 },
 
 

@@ -1475,7 +1475,7 @@ const hasInrFields =
                 {[
                   { label: "Live Training", prefix: "i" },
                   { label: "Crash Course Training", prefix: "ic" },
-                  { label: "Self Paced with Q&A", prefix: "isq" },
+                  { label: "Mentoring Mode", prefix: "isq" },
                   { label: "Self Paced Training", prefix: "is" },
                 ].map((mode, index) => (
                   <div className="course-mode" key={index}>

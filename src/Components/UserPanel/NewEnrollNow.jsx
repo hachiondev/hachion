@@ -13,9 +13,9 @@ import { Link } from "react-router-dom";
 
 
 export default function NewEnrollNow() {
-  const location = useLocation();
-  const preselectedSession = location.state?.selectedSession || null;
-  const preselectedBatchId = location.state?.selectedBatchId || null;
+    const location = useLocation();
+    const preselectedSession = location.state?.selectedSession || null;
+const preselectedBatchId = location.state?.selectedBatchId || null;
 
 
   const notifyVia = location.state?.notifyVia || {
@@ -37,9 +37,9 @@ export default function NewEnrollNow() {
   // const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
   //   useState(false);
 
-  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
+  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =  useState(false);
 
-  const [lastAction, setLastAction] = useState(null);
+const [lastAction, setLastAction] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -52,15 +52,17 @@ export default function NewEnrollNow() {
      Params
   =============================== */
   const { courseName } = useParams();
+  
 
-  const courseSlug = courseName
-    ? decodeURIComponent(courseName)
+
+ const courseSlug = courseName
+  ? decodeURIComponent(courseName)
       .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
       .replace(/\b\w/g, (c) => c.toUpperCase())
-    : "";
+  : "";
 
   /* ===============================
      APIs
@@ -69,12 +71,14 @@ export default function NewEnrollNow() {
 
   const { liveGroups, scheduleLoading } =
     useDemoScheduleLogic({ courseSlug, timezone });
-
+    
 
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
 
-  const { currency,exchangeRate } = useCurrency();
+  
+
+  const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
 
   useEffect(() => {
@@ -97,27 +101,27 @@ export default function NewEnrollNow() {
   }, [couponSuccess]);
 
   useEffect(() => {
-    if (!preselectedSession || !liveGroups?.length) return;
+  if (!preselectedSession || !liveGroups?.length) return;
 
-    const matchedGroup = liveGroups.find(
-      (group) =>
-        group.type === "live" &&
-        group.sessions?.some(
-          (s) => s.batchId === preselectedBatchId
-        )
-    );
+  const matchedGroup = liveGroups.find(
+    (group) =>
+      group.type === "live" &&
+      group.sessions?.some(
+        (s) => s.batchId === preselectedBatchId
+      )
+  );
 
-    if (matchedGroup) {
-      setSelectedBatch(matchedGroup);
-    } else {
-      // fallback: select first live batch
-      const firstLive = liveGroups.find(g => g.type === "live");
-      if (firstLive) {
-        setSelectedBatch(firstLive);
-      }
-    }
+  if (matchedGroup) {
+  setSelectedBatch(matchedGroup);
+} else {
+  // fallback: select first live batch
+  const firstLive = liveGroups.find(g => g.type === "live");
+  if (firstLive) {
+    setSelectedBatch(firstLive);
+  }
+}
 
-  }, [preselectedSession, liveGroups, preselectedBatchId]);
+}, [preselectedSession, liveGroups, preselectedBatchId]);
 
   useEffect(() => {
     window.scrollTo({
@@ -128,8 +132,8 @@ export default function NewEnrollNow() {
   }, []);
 
 
-  const isEnrollmentBlocked =
-    false; // Do NOT block Pay Now for already enrolled cases
+const isEnrollmentBlocked =
+  false; // Do NOT block Pay Now for already enrolled cases
 
   const {
     data: couponApiData,
@@ -256,6 +260,7 @@ export default function NewEnrollNow() {
   let finalPrice = 0;
   let displayCurrency = currency;
 
+  const { exchangeRate } = useCurrency();
   const isIndiaUser =
     formData.phone?.startsWith("+91") || currency === "INR";
 
@@ -328,7 +333,7 @@ export default function NewEnrollNow() {
   });
 
   useEffect(() => {
-    console.log("DISCOUNT RULE:", discountRule);
+    
   }, [discountRule]);
 
   /* ===============================
@@ -344,7 +349,7 @@ export default function NewEnrollNow() {
     );
   }
 
-
+  
   /* ===============================
      Render
   =============================== */
@@ -369,21 +374,21 @@ export default function NewEnrollNow() {
 
             <div className={styles.enRow}>
               <div className={styles.enCol}>
-                <label className={styles.enLabel}>
-                  Batch Schedule
-                </label>
+               <label className={styles.enLabel}>
+  Batch Schedule
+</label>
 
-                <div className={styles.enCourseDisplay}>
-                  {selectedBatch?.day || "—"}
-                </div>
+<div className={styles.enCourseDisplay}>
+  {selectedBatch?.day || "—"}
+</div>
 
               </div>
 
               <div className={styles.enCol}>
                 <label className={styles.enLabel}>Learning Mode</label>
-                <Input
-                  value={selectedMode}
-                  readOnly
+                <Input 
+                  value={selectedMode} 
+                  readOnly 
                   className={styles.readOnlyInput}
                 />
               </div>
@@ -420,17 +425,17 @@ export default function NewEnrollNow() {
               />
             </div>
 
-
-            {couponError && (
-              lastAction === "PAY_LATER" ||
-              !(
-                couponError === "You are already enrolled for this batch." ||
-                couponError ===
-                "This enrollment record already exists for Live Class in the database."
-              )
-            ) && (
-                <p className={styles.errorMessage}>{couponError}</p>
-              )}
+          
+         {couponError && (
+  lastAction === "PAY_LATER" ||
+  !(
+    couponError === "You are already enrolled for this batch." ||
+    couponError ===
+      "This enrollment record already exists for Live Class in the database."
+  )
+) && (
+  <p className={styles.errorMessage}>{couponError}</p>
+)}
 
 
             {couponSuccess && (
@@ -448,7 +453,7 @@ export default function NewEnrollNow() {
                 checked={isTermsAccepted}
                 onChange={(e) => setIsTermsAccepted(e.target.checked)}
               />
-              <label htmlFor="terms" className={styles.enTermsLabel}>
+               <label htmlFor="terms" className={styles.enTermsLabel}>
                 I agree to the{" "}
                 <Link to="/terms" className={styles.enLink}>
                   Terms & Conditions
@@ -471,28 +476,29 @@ export default function NewEnrollNow() {
 
               <div className={styles.buttonGroup}>
                 <button
-                  className={`${styles.enPayBtn} ${!selectedBatch ||
-                      !isTermsAccepted ||
-                      // isEnrollmentBlocked ||
-                      lockButtonsUntilBatchChange
+                  className={`${styles.enPayBtn} ${
+                    !selectedBatch ||
+                    !isTermsAccepted ||
+                    // isEnrollmentBlocked ||
+                    lockButtonsUntilBatchChange
                       ? styles.disabledBtn
                       : ""
-                    }`}
+                  }`}
                   disabled={
                     !selectedBatch ||
                     !isTermsAccepted ||
                     // isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-                  onClick={() => {
-                    setLastAction("PAY_NOW");
-                    selectedBatch &&
-                      handleLiveEnrollPayment(selectedBatch.sessions[0], {
-                        isPayNow: true,
-                        email: notifyVia.email,
-                        whatsapp: notifyVia.whatsapp,
-                      });
-                  }}
+            onClick={() => {
+  setLastAction("PAY_NOW");
+  selectedBatch &&
+    handleLiveEnrollPayment(selectedBatch.sessions[0], {
+      isPayNow: true,
+      email: notifyVia.email,
+      whatsapp: notifyVia.whatsapp,
+    });
+}}
 
 
 
@@ -500,27 +506,28 @@ export default function NewEnrollNow() {
                   Pay Now
                 </button>
                 <button
-                  className={`${styles.enPayBtn} ${!selectedBatch ||
-                      !isTermsAccepted ||
-                      isEnrollmentBlocked ||
-                      lockButtonsUntilBatchChange
+                  className={`${styles.enPayBtn} ${
+                    !selectedBatch ||
+                    !isTermsAccepted ||
+                    isEnrollmentBlocked ||
+                    lockButtonsUntilBatchChange
                       ? styles.disabledBtn
                       : ""
-                    }`}
+                  }`}
                   disabled={
                     !selectedBatch ||
                     !isTermsAccepted ||
                     isEnrollmentBlocked ||
                     lockButtonsUntilBatchChange
                   }
-                  onClick={() => {
-                    setLastAction("PAY_LATER");
-                    selectedBatch &&
-                      handleEnrollPayLater({
-                        ...selectedBatch.sessions[0],
-                        notifyVia,
-                      });
-                  }}
+               onClick={() => {
+  setLastAction("PAY_LATER");
+  selectedBatch &&
+    handleEnrollPayLater({
+      ...selectedBatch.sessions[0],
+      notifyVia,
+    });
+}}
 
 
                 >

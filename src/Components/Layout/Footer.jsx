@@ -26,11 +26,7 @@ const handleNavigation = (courseName) => {
 };
 
 const go = (path) => {
-  navigate(path, {
-    state: {
-      from: location.pathname + location.search,
-    },
-  });
+  navigate(path)
 };
 
   return (
@@ -125,12 +121,12 @@ const go = (path) => {
           <div className="footer-head">
             <p className="footer-heading">Hachion</p>
             <div className="footer-column">
-              <p className="footer-content" onClick={() => go('/aboutus')}>About us</p>
-              <p className="footer-content" onClick={() => go('/contactus')}>Contact us</p>
-              <p className="footer-content" onClick={() => go('/blogs')}>Blog</p>
-              <p className="footer-content" onClick={() => go('/sitemap')}>Sitemap</p>
-              <p className="footer-content" onClick={() => go('/workshop')}>Workshop</p>
-              <p className="footer-content" onClick={() => go('/summer-tech-bootcamp-for-teens')}>
+              <p className="footer-content" onClick={() => navigate('/aboutus')}>About us</p>
+              <p className="footer-content" onClick={() => navigate('/contactus')}>Contact us</p>
+              <p className="footer-content" onClick={() => navigate('/blogs')}>Blog</p>
+              <p className="footer-content" onClick={() => navigate('/sitemap')}>Sitemap</p>
+              <p className="footer-content" onClick={() => navigate('/workshop')}>Workshop</p>
+              <p className="footer-content" onClick={() => navigate('/summer-tech-bootcamp-for-teens')}>
                 Kids Summer Training
               </p>
             </div>
@@ -142,9 +138,9 @@ const go = (path) => {
           <div className="footer-head">
             <p className="footer-heading">Legal</p>
             <div className="footer-column">
-              <p className="footer-content" onClick={() => go('/terms')}>Terms & Conditions</p>
-              <p className="footer-content" onClick={() => go('/privacy')}>Privacy Policy</p>
-              <p className="footer-content" onClick={() => go('/unsubscribe')}>Unsubscribe</p>
+              <p className="footer-content" onClick={() => navigate('/terms')}>Terms & Conditions</p>
+              <p className="footer-content" onClick={() => navigate('/privacy')}>Privacy Policy</p>
+              <p className="footer-content" onClick={() => navigate('/unsubscribe')}>Unsubscribe</p>
             </div>
           </div>
 

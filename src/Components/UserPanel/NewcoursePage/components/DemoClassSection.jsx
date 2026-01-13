@@ -299,14 +299,14 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
     if (currency === "INR") {
       if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
       if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
-      if (tabKey === "mentoring") baseAmount = courseData.imtotal ?? courseData.imamount;
+      if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
       if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
     }
 
     else {
       if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
       if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
-      if (tabKey === "mentoring") baseAmount = courseData.mtotal ?? courseData.mamount;
+      if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
       if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
 
       baseAmount = baseAmount * exchangeRate;

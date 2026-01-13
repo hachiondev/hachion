@@ -210,7 +210,7 @@ width: 30px;
 }
 
 .ccbadge {
-  min-width: 26px;
+  width: 26px;
   height: 26px;
   border-radius: 50px;
   background: #7ba7d7;
@@ -515,6 +515,17 @@ width: 30px;
   display: none; /* Hide button styles if they exist */
 }
 
+.noDataMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #000000;
+  font-size: 16px;
+}
+
+.noDataMessage p {
+  margin: 0;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .ccgrid {
@@ -631,6 +642,7 @@ width: 30px;
   .ccprojsub {
     font-size: 15px;
   }
+
 }
 
 @media (max-width: 480px) {
@@ -662,8 +674,9 @@ width: 30px;
   }
 
   .ccnum {
-    height: 26px; /* 24px → 26px */
-    font-size: 16px; /* 14px → 16px */
+            height: 20px;
+        width: 20px;
+        font-size: 10px;/* 14px → 16px */
   }
 
   .ccttlsub {
@@ -689,30 +702,28 @@ width: 30px;
     font-size: 14px; /* 10px → 14px */
   }
 
-  .ccprojsub {
-    font-size: 20px; /* 16px → 20px */
-  }
-
   .cccardhead {
-    font-size: 26px; /* 24px → 26px */
+    font-size: 24px; /* 24px → 26px */
   }
 
   .cccard {
-    height: 50%;
+    height: 320px;
   }
 
   .ccwhy {
-    font-size: 22px; /* 18px → 22px */
+    font-size: 14px; /* 18px → 22px */
     font-weight: 400;
+    margin: 0;
+    padding: 6px px 0px 22px;
   }
 
   .cccapsul {
-    font-size: 10px; /* 17px → 20px */
-    margin: 5px; /* 3px → 5px */
+    font-size: 11px; /* 17px → 20px */
+    margin: 0px 2px 0;
   }
 
   .ccprojtitle {
-    font-size: 24px; /* 20px → 24px */
+    font-size: 14px; /* 20px → 24px */
   }
 
   .viewMoreBtn {
@@ -721,7 +732,7 @@ width: 30px;
   }
 
   .cccard2 {
-    height: 500px;
+    height: 220px;
   }
 
     .readMoreLink {
@@ -734,6 +745,29 @@ width: 30px;
   .home-start-button{
     font-size: 14px !important;
   }
+
+    .ccacchead{
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .ccacchead svg{
+    width: 25px;
+        height: 25px;
+  }
+
+  .ccrow{
+    padding: 8px 12px;
+    margin: 4px 10px 8px 0;
+    gap: 2px;
+  }
+
+  .ccbadge{
+    width: 20px;
+        height: 20px;
+        font-size: 10px;
+  }
+  
 }
 
 @media (max-width: 375px) {
@@ -764,8 +798,9 @@ width: 30px;
   }
 
   .ccnum {
-    height: 24px;
-    font-size: 16px; /* 14px → 16px */
+    height: 15px;
+    width: 15px;
+    font-size: 10px; /* 14px → 16px */
   }
 
   .ccttlsub {
@@ -792,29 +827,30 @@ width: 30px;
   }
 
   .ccprojtitle {
-    font-size: 18px; /* 16px → 18px */
+    font-size: 14px; /* 16px → 18px */
   }
 
   .ccprojsub {
-    font-size: 16px; /* 14px → 16px */
+    font-size: 14px; /* 14px → 16px */
   }
 
   .cccard {
-    height: 50%;
+    height: 310px;
   }
 
   .cccardhead {
-    font-size: 20px; /* 18px → 20px */
+    font-size: 14px; /* 18px → 20px */
   }
 
   .ccwhy {
-    font-size: 18px; /* 16px → 18px */
+    font-size: 14px; /* 16px → 18px */
     font-weight: 400;
   }
 
   .cccapsul {
     font-size: 10px; /* 14px → 16px */
-    margin: 4px; /* 2.5px → 4px */
+    margin: 2px; /* 2.5px → 4px */
+    padding: 2px 15px;
   }
 
   .viewMoreBtn {
@@ -827,7 +863,7 @@ width: 30px;
   }
 
   .cccard2 {
-    height: 425px;
+    height: 235px;
   }
 
   .ccacchead{
@@ -837,4 +873,15 @@ width: 30px;
     .home-start-button{
     font-size: 14px !important;
   }
+
+      .ccacchead svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .ccrow {
+        padding: 4px 12px;
+        margin: 4px 10px 8px 0;
+        gap: 2px;
+    }
 }

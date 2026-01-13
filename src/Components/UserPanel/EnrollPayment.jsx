@@ -1,64 +1,66 @@
-  import React, { useState, useRef,useEffect } from 'react';
-  import axios from 'axios';
-  import './Blogs.css';
-  import { useLocation } from 'react-router-dom';
-  import logo from '../../Assets/logo.webp';
-  import paymentsuccess from '../../Assets/paymentsuccess.gif';
-  import { useParams } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import './Blogs.css';
+import { useLocation } from 'react-router-dom';
+import logo from '../../Assets/logo.webp';
+import paymentsuccess from '../../Assets/paymentsuccess.gif';
+import { useParams } from 'react-router-dom';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Loader from '../UserPanel/Common/Loader/Loader';
 
 
-  const initialValues = {
-    name: "",
-    email: "",
-    number:"",
-    country:""
-  };
+const initialValues = {
+  name: "",
+  email: "",
+  number: "",
+  country: ""
+};
 
-  const EnrollPayment = () => {
-    const location = useLocation();
+const EnrollPayment = () => {
+  const location = useLocation();
   //   const { selectedBatchData, enrollText, modeType,  sendEmail,
   // sendWhatsApp, email,
   // sendText } = location.state || {};
 
   const {
-  selectedBatchData: rawBatchData,
-  enrollText,
-  modeType,
-  sendEmail,
-  sendWhatsApp,
-  // email,
-  sendText,
-} = location.state || {};
+    selectedBatchData: rawBatchData,
+    enrollText,
+    modeType,
+    sendEmail,
+    sendWhatsApp,
+    // email,
+    sendText,
+  } = location.state || {};
 
-const loggedUser = JSON.parse(localStorage.getItem("loginuserData"));
-const email =
-  location.state?.email ||
-  loggedUser?.email ||
-  "";
+  const loggedUser = JSON.parse(localStorage.getItem("loginuserData"));
+  const email =
+    location.state?.email ||
+    loggedUser?.email ||
+    "";
 
-// ✅ SAFE FALLBACK (prevents empty UI)
-const selectedBatchData = rawBatchData || {};
+  // ✅ SAFE FALLBACK (prevents empty UI)
+  const selectedBatchData = rawBatchData || {};
 
 
 
-    const [successMessage, setSuccessMessage] = useState("");
-      const [errorMessage, setErrorMessage] = useState("");
-    const [studentData, setStudentData] = useState(null);
-    const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
-    const [mobileNumber, setMobileNumber] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
-    const mobileInputRef = useRef(null);
-const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
-const [currency, setCurrency] = useState('USD');
-const [exchangeRate, setExchangeRate] = useState(1);
-const { courseName } = useParams(); 
- const [courseData, setCourseData] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [studentData, setStudentData] = useState(null);
+  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const mobileInputRef = useRef(null);
+  const [isEnrollDisabled, setIsEnrollDisabled] = useState(false);
+  const [currency, setCurrency] = useState('USD');
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const { courseName } = useParams();
+  const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
-const [invoiceMessage, setInvoiceMessage] = useState("");
+  const [invoiceMessage, setInvoiceMessage] = useState("");
 
   const [paymentData, setPaymentData] = useState({
     orderId: "",
@@ -70,37 +72,37 @@ const [invoiceMessage, setInvoiceMessage] = useState("");
     total: "",
     netAmount: ""
   });
-    const [selectedCountry, setSelectedCountry] = useState({
-          code: '+1',
-          flag: 'US',
-          name: 'United States',
-        });
+  const [selectedCountry, setSelectedCountry] = useState({
+    code: '+1',
+    flag: 'US',
+    name: 'United States',
+  });
 
- useEffect(() => {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get("status");
-    const orderId = urlParams.get("token"); 
+    const orderId = urlParams.get("token");
 
-      if (status === "success" && orderId) {
-    handleCaptureOrder(orderId);
-  } else if (status === "cancel") {
-    setErrorMessage("❌ Payment was cancelled.");
-    setSuccessMessage("");
-  }
-}, []);
-    
-  
+    if (status === "success" && orderId) {
+      handleCaptureOrder(orderId);
+    } else if (status === "cancel") {
+      setErrorMessage("❌ Payment was cancelled.");
+      setSuccessMessage("");
+    }
+  }, []);
+
+
   const handleCaptureOrder = async (orderId) => {
     const studentId = localStorage.getItem("studentId");
-    
+
     const batchId = localStorage.getItem("batchId");
 
     if (!studentId || !courseName || !batchId) {
       alert("Missing payment info. Please try again.");
       return;
     }
-const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
-  const discount = batchData.discount ?? 0;
+    const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
+    const discount = batchData.discount ?? 0;
 
     try {
       const response = await axios.post("https://api.test.hachion.co/capture-order", null, {
@@ -110,68 +112,68 @@ const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
           courseName,
           batchId,
           discount: discount
-          
+
         },
       });
 
       localStorage.removeItem("studentId");
       localStorage.removeItem("courseName");
       localStorage.removeItem("batchId");
- localStorage.removeItem("selectedBatchData");
+      localStorage.removeItem("selectedBatchData");
 
 
       setSuccessMessage("✅ Payment successful! You are now enrolled.");
       setErrorMessage("");
     } catch (error) {
-      
+
       setSuccessMessage("");
       setErrorMessage("❌ Failed to complete payment.");
     }
   };
-  
-    const countries = [
-      { name: 'India', code: '+91', flag: 'IN' },
-    ];
 
-    const defaultCountry = countries.find((c) => c.flag === "US");
-    useEffect(() => {
-  fetch("https://api.country.is")
-    .then((res) => res.json())
-    .then((data) => {
-      data.country_code = (data.country || "").toUpperCase();
-      const userCountryCode = data?.country_code;
-      const matchedCountry = countries.find((c) => c.flag === userCountryCode);
-      if (matchedCountry) {
-        setSelectedCountry(matchedCountry);
+  const countries = [
+    { name: 'India', code: '+91', flag: 'IN' },
+  ];
+
+  const defaultCountry = countries.find((c) => c.flag === "US");
+  useEffect(() => {
+    fetch("https://api.country.is")
+      .then((res) => res.json())
+      .then((data) => {
+        data.country_code = (data.country || "").toUpperCase();
+        const userCountryCode = data?.country_code;
+        const matchedCountry = countries.find((c) => c.flag === userCountryCode);
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
+      })
+      .catch(() => { });
+  }, []);
+
+
+  useEffect(() => {
+    if (mobileNumber) {
+      const dialCodeMatch = countries.find((c) =>
+        mobileNumber.replace(/\s+/g, '').startsWith(c.code)
+      );
+      if (dialCodeMatch) {
+        setStudentData((prev) => ({
+          ...prev,
+          country: dialCodeMatch.name,
+        }));
       }
-    })
-    .catch(() => {});
-}, []);
-
-
-    useEffect(() => {
-  if (mobileNumber) {
-    const dialCodeMatch = countries.find((c) =>
-      mobileNumber.replace(/\s+/g, '').startsWith(c.code)
-    );
-    if (dialCodeMatch) {
-      setStudentData((prev) => ({
-        ...prev,
-        country: dialCodeMatch.name,
-      }));
     }
-  }
-}, [mobileNumber]);
+  }, [mobileNumber]);
 
-useEffect(() => {
-  const detectCurrency = async () => {
-    try {
+  useEffect(() => {
+    const detectCurrency = async () => {
+      try {
         const res = await axios.get('https://ipinfo.io?token=9da91c409ab4b2');
         const country = res.data.country || 'US';
         const currencyMap = {
           IN: 'INR', US: 'USD', GB: 'GBP', EU: 'EUR', AE: 'AED',
           AU: 'AUD', CA: 'CAD', JP: 'JPY', CN: 'CNY', TH: 'THB',
-          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR', NL: 'EUR',RO: 'RON'
+          RU: 'RUB', BR: 'BRL', KR: 'KRW', MX: 'MXN', SA: 'SAR', NL: 'EUR', RO: 'RON'
         };
 
         const userCurrency = currencyMap[country] || 'USD';
@@ -183,69 +185,69 @@ useEffect(() => {
           setExchangeRate(rate);
         }
       } catch (err) {
-        
+
         setCurrency('USD');
         setExchangeRate(1);
       }
     };
 
-  detectCurrency();
-}, []);
+    detectCurrency();
+  }, []);
 
-const getField = (baseField) => {
-  const prefixMap = {
-    mentoring: 'm',
-    self: 's',
-    selfqa: 'sq',
-    crash: 'c',
-    live: '',
-  };
-  const prefix = prefixMap[modeType || 'live'] || '';
-  const keyINR = `i${prefix}${baseField}`;
-  const keyUSD = `${prefix}${baseField}`;
+  const getField = (baseField) => {
+    const prefixMap = {
+      mentoring: 'm',
+      self: 's',
+      selfqa: 'sq',
+      crash: 'c',
+      live: '',
+    };
+    const prefix = prefixMap[modeType || 'live'] || '';
+    const keyINR = `i${prefix}${baseField}`;
+    const keyUSD = `${prefix}${baseField}`;
 
-  
-  if (baseField === 'discount') {
+
+    if (baseField === 'discount') {
+      if (currency === 'INR') {
+        return courseData?.[keyINR] ?? 0;
+      } else {
+        return courseData?.[keyUSD] ?? 0;
+      }
+    }
     if (currency === 'INR') {
       return courseData?.[keyINR] ?? 0;
-    } else {
+    } else if (currency === 'USD') {
       return courseData?.[keyUSD] ?? 0;
+    } else {
+      const usdValue = courseData?.[keyUSD] ?? 0;
+      return (usdValue * exchangeRate).toFixed(2);
     }
-  }
-  if (currency === 'INR') {
-    return courseData?.[keyINR] ?? 0;
-  } else if (currency === 'USD') {
-    return courseData?.[keyUSD] ?? 0;
-  } else {
-    const usdValue = courseData?.[keyUSD] ?? 0;
-    return (usdValue * exchangeRate).toFixed(2);
-  }
-};
+  };
 
-    useEffect(() => {
-      const fetchStudentDetails = async () => {
-        const user = JSON.parse(localStorage.getItem('loginuserData'));
-        const email = user?.email;
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      const user = JSON.parse(localStorage.getItem('loginuserData'));
+      const email = user?.email;
 
-        if (!email) return;
+      if (!email) return;
 
-        try {
-          const response = await axios.get('https://api.test.hachion.co/api/v1/user/students');
-          const allStudents = response.data;
+      try {
+        const response = await axios.get('https://api.test.hachion.co/api/v1/user/students');
+        const allStudents = response.data;
 
-          const matchedStudent = allStudents.find((student) => student.email === email);
+        const matchedStudent = allStudents.find((student) => student.email === email);
 
-          if (matchedStudent) {
-            setStudentData(matchedStudent);
-            setMobileNumber(matchedStudent.mobile || '');
-          }
-        } catch (err) {
-          
+        if (matchedStudent) {
+          setStudentData(matchedStudent);
+          setMobileNumber(matchedStudent.mobile || '');
         }
-      };
+      } catch (err) {
 
-      fetchStudentDetails();
-    }, []);
+      }
+    };
+
+    fetchStudentDetails();
+  }, []);
 
   const saveEnrollment = async () => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
@@ -258,7 +260,7 @@ const getField = (baseField) => {
     }
 
     setShowRegisterPrompt(false);
-    setSuccessMessage("");  
+    setSuccessMessage("");
     setErrorMessage("");
 
     const userEmail = user.email;
@@ -281,453 +283,462 @@ const getField = (baseField) => {
         return;
       }
     } catch (error) {
-      
+
       setErrorMessage("❌ Unable to fetch your student ID. Please try again later.");
       return;
     }
 
     const payload = {
-  name: userName,
-  studentId: studentId,
-  email: user.email,
-  mobile: mobile || '',
-  course_name: selectedBatchData.schedule_course_name,
-  enroll_date: selectedBatchData.schedule_date,
-  week: selectedBatchData.schedule_week,
-  time: selectedBatchData.schedule_time,
-  amount: 0,
-  mode: selectedBatchData.schedule_mode,
-  type: 'Live Class',
-  trainer: selectedBatchData.trainer_name,
-  completion_date: selectedBatchData.schedule_duration || '',
-  meeting_link: selectedBatchData.meeting_link || '',
-  resendCount: 0,
-  batchId: selectedBatchData.batchId,
-  sendEmail,
-  sendWhatsApp,
-  sendText
-};
-try {
-  const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
- 
-  if (response.status >= 200 && response.status < 300) {
-    setSuccessMessage("✅ Registered Successfully.");
-    setErrorMessage("");
-  
-    const allBatchData = JSON.parse(localStorage.getItem('allEnrolledBatches')) || {};
-allBatchData[selectedBatchData.schedule_course_name] = selectedBatchData;
-localStorage.setItem('allEnrolledBatches', JSON.stringify(allBatchData));
+      name: userName,
+      studentId: studentId,
+      email: user.email,
+      mobile: mobile || '',
+      course_name: selectedBatchData.schedule_course_name,
+      enroll_date: selectedBatchData.schedule_date,
+      week: selectedBatchData.schedule_week,
+      time: selectedBatchData.schedule_time,
+      amount: 0,
+      mode: selectedBatchData.schedule_mode,
+      type: 'Live Class',
+      trainer: selectedBatchData.trainer_name,
+      completion_date: selectedBatchData.schedule_duration || '',
+      meeting_link: selectedBatchData.meeting_link || '',
+      resendCount: 0,
+      batchId: selectedBatchData.batchId,
+      sendEmail,
+      sendWhatsApp,
+      sendText
+    };
+    try {
+      const response = await axios.post('https://api.test.hachion.co/enroll/add', payload);
 
-localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
-  } else {
-    setErrorMessage("❌ Something went wrong during registration. Please try again.");
-    setSuccessMessage("");
-  }
-} catch (error) {
-  
-  const errorMessage = error?.response?.data;
+      if (response.status >= 200 && response.status < 300) {
+        setSuccessMessage("✅ Registered Successfully.");
+        setErrorMessage("");
 
-  if (errorMessage === "This enrollment record already exists for Live Class in the database.") {
-    setErrorMessage("❌ You are already enrolled in this Live Class.");
-    setIsEnrollDisabled(true); 
-  } else {
-    setErrorMessage("❌ Something went wrong during registration. Please try again.");
-  }
+        const allBatchData = JSON.parse(localStorage.getItem('allEnrolledBatches')) || {};
+        allBatchData[selectedBatchData.schedule_course_name] = selectedBatchData;
+        localStorage.setItem('allEnrolledBatches', JSON.stringify(allBatchData));
 
-  setSuccessMessage("");
-}
+        localStorage.setItem('selectedBatchId', selectedBatchData.batchId);
+      } else {
+        setErrorMessage("❌ Something went wrong during registration. Please try again.");
+        setSuccessMessage("");
+      }
+    } catch (error) {
+
+      const errorMessage = error?.response?.data;
+
+      if (errorMessage === "This enrollment record already exists for Live Class in the database.") {
+        setErrorMessage("❌ You are already enrolled in this Live Class.");
+        setIsEnrollDisabled(true);
+      } else {
+        setErrorMessage("❌ Something went wrong during registration. Please try again.");
+      }
+
+      setSuccessMessage("");
+    }
   };
 
-useEffect(() => {
-  const script = document.createElement("script");
-  script.src = "https://checkout.razorpay.com/v1/checkout.js";
-  script.async = true;
-  document.body.appendChild(script);
-  return () => {
-    document.body.removeChild(script);
-  };
-}, []);
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const navigate = useNavigate();
-  
 
-useEffect(() => {
-  const fetchCourse = async () => {
-    try {
-      setLoading(true);
 
-      let formattedCourseName = courseName;
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
 
-      formattedCourseName = decodeURIComponent(formattedCourseName);
-      formattedCourseName = formattedCourseName.replace(/-/g, " ");      
-      formattedCourseName = formattedCourseName
-        .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(" ");
+        let formattedCourseName = courseName;
 
-      const response = await axios.get(
-        `https://api.test.hachion.co/courses/getByCourseName/${formattedCourseName}`
-      );
+        formattedCourseName = decodeURIComponent(formattedCourseName);
+        formattedCourseName = formattedCourseName.replace(/-/g, " ");
+        formattedCourseName = formattedCourseName
+          .split(" ")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
 
-      
+        const response = await axios.get(
+          `https://api.test.hachion.co/courses/getByCourseName/${formattedCourseName}`
+        );
 
-      if (response.data && response.data.length > 0) {
-        const course = response.data[0]; 
 
-        const mappedCourse = {
-          courseName: course.courseName,
-          courseImage: course.courseImage,
-          duration: course.numberOfClasses,
-          iamount: course.iamount,
-          idiscount: course.idiscount,
-        };
 
-        setCourseData(mappedCourse);
-        
-      }
-    } catch (err) {
-      console.error("Error fetching course:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (response.data && response.data.length > 0) {
+          const course = response.data[0];
 
-  fetchCourse();
-}, [courseName]);
-useEffect(() => {
-  if (!email || !selectedBatchData?.schedule_course_name) return;
+          const mappedCourse = {
+            courseName: course.courseName,
+            courseImage: course.courseImage,
+            duration: course.numberOfClasses,
+            iamount: course.iamount,
+            idiscount: course.idiscount,
+          };
 
-  const fetchPaymentData = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.test.hachion.co/razorpay/getByEmailAndCourse`,
-        {
-          params: {
-            email,
-            courseName: selectedBatchData.schedule_course_name,
-          },
+          setCourseData(mappedCourse);
+
         }
+      } catch (err) {
+        console.error("Error fetching course:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [courseName]);
+  useEffect(() => {
+    if (!email || !selectedBatchData?.schedule_course_name) return;
+
+    const fetchPaymentData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.test.hachion.co/razorpay/getByEmailAndCourse`,
+          {
+            params: {
+              email,
+              courseName: selectedBatchData.schedule_course_name,
+            },
+          }
+        );
+
+        const payment = Array.isArray(response.data)
+          ? response.data[0]
+          : response.data;
+
+        setPaymentData(payment || {});
+      } catch (error) {
+        console.error("Error fetching payment data:", error);
+      }
+    };
+
+    fetchPaymentData();
+  }, [email, selectedBatchData?.schedule_course_name]);
+
+
+  const handleDownloadInvoice = async () => {
+    try {
+      if (!paymentData?.id) {
+        alert("Payment ID not found. Invoice cannot be downloaded.");
+        return;
+      }
+
+      // 1️⃣ Create FRONTEND invoice number
+      const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
+        .replace(/\s+/g, "")
+        .toUpperCase()}-${paymentData.orderId}`;
+
+      // 2️⃣ Prepare PaymentRequest (ONLY required fields)
+      const payload = {
+        studentId: studentData?.studentId,
+        studentName: studentData?.userName,
+        email: studentData?.email,
+        mobile: mobileNumber,
+
+        courseName: selectedBatchData.schedule_course_name,
+        courseFee: courseData?.iamount,
+        discount: courseData?.idiscount || 0,
+        tax: 0,
+
+        totalAmount:
+          courseData.iamount -
+          (courseData.iamount * courseData.idiscount) / 100,
+
+        balancePay: 0,
+        status: "PAID",
+
+        invoiceNumber, // 👈 FRONTEND GENERATED
+
+        installments: [
+          {
+            payDate: new Date().toISOString().split("T")[0],
+            dueDate: new Date().toISOString().split("T")[0],
+            actualPay:
+              courseData.iamount -
+              (courseData.iamount * courseData.idiscount) / 100,
+            receivedPay:
+              courseData.iamount -
+              (courseData.iamount * courseData.idiscount) / 100,
+            paymentMethod: paymentData.paymentMethod || "ONLINE",
+          },
+        ],
+      };
+
+      // 3️⃣ Generate invoice PDF (SERVER SIDE)
+      await axios.post(
+        "https://api.test.hachion.co/payments/generateInvoice",
+        payload
       );
 
-      const payment = Array.isArray(response.data)
-        ? response.data[0]
-        : response.data;
-
-      setPaymentData(payment || {});
+      // 4️⃣ Download invoice PDF
+      // const downloadUrl = `https://api.test.hachion.co/payments/payments/invoice/download?paymentId=${paymentData.id}`;
+      // window.open(downloadUrl, "_blank");
     } catch (error) {
-      console.error("Error fetching payment data:", error);
+      console.error(error);
+      alert("Failed to download invoice.");
     }
   };
+  const handleGenerateInvoice = async () => {
+    if (isGeneratingInvoice) return; // 🛑 block multiple clicks
 
-  fetchPaymentData();
-}, [email, selectedBatchData?.schedule_course_name]);
+    try {
+      setIsGeneratingInvoice(true);
+      setInvoiceMessage("");
 
+      const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
+        .replace(/\s+/g, "")
+        .toUpperCase()}-${paymentData.orderId}`;
 
-const handleDownloadInvoice = async () => {
-  try {
-    if (!paymentData?.id) {
-      alert("Payment ID not found. Invoice cannot be downloaded.");
-      return;
-    }
-
-    // 1️⃣ Create FRONTEND invoice number
-    const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
-      .replace(/\s+/g, "")
-      .toUpperCase()}-${paymentData.orderId}`;
-
-    // 2️⃣ Prepare PaymentRequest (ONLY required fields)
-    const payload = {
-      studentId: studentData?.studentId,
-      studentName: studentData?.userName,
-      email: studentData?.email,
-      mobile: mobileNumber,
-
-      courseName: selectedBatchData.schedule_course_name,
-      courseFee: courseData?.iamount,
-      discount: courseData?.idiscount || 0,
-      tax: 0,
-
-      totalAmount:
+      const netAmount =
         courseData.iamount -
-        (courseData.iamount * courseData.idiscount) / 100,
+        (courseData.iamount * courseData.idiscount) / 100;
 
-      balancePay: 0,
-      status: "PAID",
+      const payload = {
+        studentId: studentData?.studentId,
+        studentName: studentData?.userName,
+        email: studentData?.email,
+        mobile: mobileNumber,
 
-      invoiceNumber, // 👈 FRONTEND GENERATED
+        courseName: selectedBatchData.schedule_course_name,
+        courseFee: courseData?.iamount,
+        discount: courseData?.idiscount || 0,
+        tax: 0,
+        totalAmount: netAmount,
+        balancePay: 0,
+        status: "PAID",
 
-      installments: [
-        {
-          payDate: new Date().toISOString().split("T")[0],
-          dueDate: new Date().toISOString().split("T")[0],
-          actualPay:
-            courseData.iamount -
-            (courseData.iamount * courseData.idiscount) / 100,
-          receivedPay:
-            courseData.iamount -
-            (courseData.iamount * courseData.idiscount) / 100,
-          paymentMethod: paymentData.paymentMethod || "ONLINE",
-        },
-      ],
-    };
+        invoiceNumber,
 
-    // 3️⃣ Generate invoice PDF (SERVER SIDE)
-    await axios.post(
-      "https://api.test.hachion.co/payments/generateInvoice",
-      payload
-    );
+        installments: [
+          {
+            payDate: new Date().toISOString().split("T")[0],
+            dueDate: new Date().toISOString().split("T")[0],
+            actualPay: netAmount,
+            receivedPay: netAmount,
+            paymentMethod: paymentData.paymentMethod || "ONLINE",
+          },
+        ],
+      };
 
-    // 4️⃣ Download invoice PDF
-    // const downloadUrl = `https://api.test.hachion.co/payments/payments/invoice/download?paymentId=${paymentData.id}`;
-    // window.open(downloadUrl, "_blank");
-  } catch (error) {
-    console.error(error);
-    alert("Failed to download invoice.");
+      // 🔥 ONLY THIS API
+      await axios.post(
+        "https://api.test.hachion.co/payments/generateInvoice",
+        payload
+      );
+
+      // ✅ Success UX
+      setInvoiceMessage("✅ Invoice has been sent to your email.");
+    } catch (err) {
+      console.error(err);
+      setInvoiceMessage("❌ Failed to generate invoice. Please try again.");
+    } finally {
+      setIsGeneratingInvoice(false);
+    }
+  };
+  if (loading || !paymentData) {
+    return <Loader />;
   }
-};
-const handleGenerateInvoice = async () => {
-  if (isGeneratingInvoice) return; // 🛑 block multiple clicks
 
-  try {
-    setIsGeneratingInvoice(true);
-    setInvoiceMessage("");
-
-    const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
-      .replace(/\s+/g, "")
-      .toUpperCase()}-${paymentData.orderId}`;
-
-    const netAmount =
-      courseData.iamount -
-      (courseData.iamount * courseData.idiscount) / 100;
-
-    const payload = {
-      studentId: studentData?.studentId,
-      studentName: studentData?.userName,
-      email: studentData?.email,
-      mobile: mobileNumber,
-
-      courseName: selectedBatchData.schedule_course_name,
-      courseFee: courseData?.iamount,
-      discount: courseData?.idiscount || 0,
-      tax: 0,
-      totalAmount: netAmount,
-      balancePay: 0,
-      status: "PAID",
-
-      invoiceNumber,
-
-      installments: [
-        {
-          payDate: new Date().toISOString().split("T")[0],
-          dueDate: new Date().toISOString().split("T")[0],
-          actualPay: netAmount,
-          receivedPay: netAmount,
-          paymentMethod: paymentData.paymentMethod || "ONLINE",
-        },
-      ],
-    };
-
-    // 🔥 ONLY THIS API
-    await axios.post(
-      "https://api.test.hachion.co/payments/generateInvoice",
-      payload
-    );
-
-    // ✅ Success UX
-    setInvoiceMessage("✅ Invoice has been sent to your email.");
-  } catch (err) {
-    console.error(err);
-    setInvoiceMessage("❌ Failed to generate invoice. Please try again.");
-  } finally {
-    setIsGeneratingInvoice(false);
+  if (!courseData) {
+    return <p>No course found</p>;
   }
-};
 
-  if (!paymentData) return <p>Loading...</p>;
-   if (loading) return <p>Loading...</p>;
-  if (!courseData) return <p>No course found</p>;
 
-    return (
-      <>
+  return (
+    <>
       <div className="enrollpayment">
         <img src={logo} alt="logo" className="enrollpayment-logo" />
         <p>Enrollment Confirmation</p>
-        </div>
-        <div className='enrollment-details'>
-            <div className="input-row">
-                <div>
-                {/* <button className="EnrollPay-outline-btn" >Download Invoice</button> */}
-                {/* <button
+      </div>
+      <div className='enrollment-details'>
+        <div className="input-row">
+          <div>
+            {/* <button className="EnrollPay-outline-btn" >Download Invoice</button> */}
+            {/* <button
   className="EnrollPay-outline-btn"
   onClick={handleDownloadInvoice}
 >
   Download Invoice
 </button> */}
-<button
-  className="EnrollPay-outline-btn"
-  onClick={handleGenerateInvoice}
-  disabled={isGeneratingInvoice}
->
-  {isGeneratingInvoice ? "Generating Invoice..." : "Download Invoice"}
-</button>
-{invoiceMessage && (
-  <p style={{ color: "#28a745", marginTop: "8px", fontSize: "14px" }}>
-    {invoiceMessage}
-  </p>
-)}
+            <button
+              className="EnrollPay-outline-btn"
+              onClick={handleGenerateInvoice}
+              disabled={isGeneratingInvoice}
+            >
+              {isGeneratingInvoice ? "Generating Invoice..." : "Download Invoice"}
+            </button>
+            {invoiceMessage && (
+              <p style={{ color: "#28a745", marginTop: "8px", fontSize: "14px" }}>
+                {invoiceMessage}
+              </p>
+            )}
 
-                </div>
-                <div>
-                <button className="EnrollPay-btn" onClick={() => navigate('/userdashboard')}> Go to Dashboard </button>
-                </div>
-                </div>
-      <div className='personal-details'>
+          </div>
+          <div>
+            <button className="EnrollPay-btn" onClick={() => navigate('/userdashboard')}> Go to Dashboard </button>
+          </div>
+        </div>
+        <div className='personal-details'>
           <div className='personal-details-header'>
-              <p>1. Payment Confirmation</p>
+            <p>1. Payment Confirmation</p>
           </div>
           <div className="payment-success-section">
-      <img
-        src={paymentsuccess}
-        alt="Payment Successful"
-        className="payment-success-gif"
-      />
-      <h3>Payment Successful!</h3>
-      <p>You have successfully enrolled in the course.</p>
-    </div>
+            <img
+              src={paymentsuccess}
+              alt="Payment Successful"
+              className="payment-success-gif"
+            />
+            <h3>Payment Successful!</h3>
+            <p>You have successfully enrolled in the course.</p>
           </div>
-            <div className="details-row">
-                {/* Student Details */}
-                <div className="Pay-details">
-                <div className="personal-details-header">
-                    <p>2. Student Details</p>
-                </div>
-                <div className="details-box">
-                    <div className="pay-row">
-                    <span className="detail-label">Full Name :</span>
-                    <span className="detail-value">{studentData?.userName || ''}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="detail-label">Email ID :</span>
-                    <span className="detail-value">{studentData?.email || ''}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="detail-label">Mobile Number :</span>
-                    <span className="detail-value">{mobileNumber}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="detail-label">Country :</span>
-                    <span className="detail-value">{studentData?.country || ''}</span>
-                </div>
-                </div>
-                </div>
+        </div>
+        <div className="details-row">
+          {/* Student Details */}
+          <div className="Pay-details">
+            <div className="personal-details-header">
+              <p>2. Student Details</p>
+            </div>
+            <div className="details-box">
+              <div className="pay-row">
+                <span className="detail-label">Full Name :</span>
+                <span className="detail-value">{studentData?.userName || ''}</span>
+              </div>
+              <div className="pay-row">
+                <span className="detail-label">Email ID :</span>
+                <span className="detail-value">{studentData?.email || ''}</span>
+              </div>
+              <div className="pay-row">
+                <span className="detail-label">Mobile Number :</span>
+                <span className="detail-value">{mobileNumber}</span>
+              </div>
+              <div className="pay-row">
+                <span className="detail-label">Country :</span>
+                <span className="detail-value">{studentData?.country || ''}</span>
+              </div>
+            </div>
+          </div>
 
-                {/* Course Details */}
-                <div className="Pay-details">
-                <div className="personal-details-header">
-                    <p>3. Course Details</p>
-                </div>
-                <div className="details-box">
-                    <div className="pay-row">
-                    <span className="detail-label">Course Name :</span>
-                    <span className="detail-value">
-                <img
-                   src={`https://api.test.hachion.co/${courseData.courseImage}`}
-                  alt="Course"
-                  style={{ width: "40px", height: "40px", marginRight: "10px" }}
-                />
-                {/* {selectedBatchData.schedule_course_name} */}
-                {selectedBatchData.schedule_course_name || courseData?.courseName || "—"}
+          {/* Course Details */}
+          <div className="Pay-details">
+            <div className="personal-details-header">
+              <p>3. Course Details</p>
+            </div>
+            <div className="details-box">
+              <div className="pay-row">
+                <span className="detail-label">Course Name :</span>
+                <span className="detail-value">
+                  <img
+                    src={`https://api.test.hachion.co/${courseData.courseImage}`}
+                    alt="Course"
+                    style={{ width: "40px", height: "40px", marginRight: "10px" }}
+                  />
+                  {/* {selectedBatchData.schedule_course_name} */}
+                  {selectedBatchData.schedule_course_name || courseData?.courseName || "—"}
 
                 </span></div>
-                <div className="pay-row">
+              <div className="pay-row">
                 <span className="detail-label">Trainer : </span>
-                    <span className="detail-value">{selectedBatchData.trainer_name}</span>
-                    </div>
-                <div className="pay-row">
+                <span className="detail-value">{selectedBatchData.trainer_name}</span>
+              </div>
+              <div className="pay-row">
                 <span className="detail-label">Duration : </span>
-                    <span className="detail-value">{courseData.duration }</span>
-                    </div>
-                <div className="pay-row">
+                <span className="detail-value">{courseData.duration}</span>
+              </div>
+              <div className="pay-row">
                 <span className="detail-label">Mode : </span>
-                    <span className="detail-value">{selectedBatchData.schedule_mode}</span>
-                    </div>
-                <div className="pay-row">
+                <span className="detail-value">{selectedBatchData.schedule_mode}</span>
+              </div>
+              <div className="pay-row">
                 <span className="detail-label">Batch Start Date : </span>
-                    <span className="detail-value">{selectedBatchData.schedule_date} @ {selectedBatchData.schedule_time}</span>
-                    </div>
-                </div>
-                </div>
+                <span className="detail-value">{selectedBatchData.schedule_date} @ {selectedBatchData.schedule_time}</span>
+              </div>
             </div>
-              <div className='personal-details'>
-              <div className='personal-details-header'>
-                  <p>4. Payment summary</p>
-                  </div>
-                  <div className='details-box'>
-                    <div className="pay-row">
-                    <span className="summary-label">Order ID :</span>
-                    <span className="detail-value">{paymentData.orderId}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="summary-label">Payment Method :</span>
-                    <span className="detail-value">{paymentData.paymentMethod}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="summary-label">Payment Date :</span>
-                    <span className="detail-value">{paymentData.paymentDate}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="summary-label">Course Fee :</span>
-                    <span className="detail-value">{courseData?.iamount ?? "0"}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="summary-label">Discount(%) :</span>
-                    <span className="detail-value">{courseData.idiscount}</span>
-                </div>
-                <div className="pay-row">
-                    <span className="summary-label">GST(18%) :</span>
-                    <span className="detail-value">{0}</span>
-                </div>
-                {/* <div className="pay-row">
+          </div>
+        </div>
+        <div className='personal-details'>
+          <div className='personal-details-header'>
+            <p>4. Payment summary</p>
+          </div>
+          <div className='details-box'>
+            <div className="pay-row">
+              <span className="summary-label">Order ID :</span>
+              <span className="detail-value">{paymentData.orderId}</span>
+            </div>
+            <div className="pay-row">
+              <span className="summary-label">Payment Method :</span>
+              <span className="detail-value">{paymentData.paymentMethod}</span>
+            </div>
+            <div className="pay-row">
+              <span className="summary-label">Payment Date :</span>
+              <span className="detail-value">{paymentData.paymentDate}</span>
+            </div>
+            <div className="pay-row">
+              <span className="summary-label">Course Fee :</span>
+              <span className="detail-value">{courseData?.iamount ?? "0"}</span>
+            </div>
+            <div className="pay-row">
+              <span className="summary-label">Discount(%) :</span>
+              <span className="detail-value">{courseData.idiscount}</span>
+            </div>
+            <div className="pay-row">
+              <span className="summary-label">GST(18%) :</span>
+              <span className="detail-value">{0}</span>
+            </div>
+            {/* <div className="pay-row">
                     <span className="summary-label">Total :</span>
                     <span className="detail-value">{}</span>
                 </div> */}
-                <div className="pay-row">
-  <span className="summary-label">Total :</span>
-  <span className="detail-value">
-    {(
-      courseData.iamount -
-      (courseData.iamount * courseData.idiscount) / 100
-    ).toFixed(2)}
-  </span>
-</div>
-                <TableRow className="net-amount">
-                <TableCell className="net-amount-left">Net Payable amount:</TableCell>
-                <TableCell align="right" className="net-amount-right">
-                  {/* {paymentData.netAmount} */}
-                   {(
-    courseData.iamount -
-    (courseData.iamount * courseData.idiscount) / 100
-  ).toFixed(2)}
-                </TableCell>
-                </TableRow>
-                </div>
-                </div>
-                <div className="details-row" style={{textAlign: 'center'}}>
-                <p>A confirmation email has been sent to :
-                <strong>{studentData?.email || ''}</strong>
-                </p>
-                </div>
-                <div className="input-row">
-                <div>
-                <button className="EnrollPay-outline-btn" onClick={() => navigate('/')}>Go to Home</button>
-                </div>
-                <div>
-                <button className="EnrollPay-btn" onClick={() => navigate('/coursedetails')}> Browse Courses </button>
-                </div>
-                </div>
-      </div>
-      </>
-    )
-  }
+            <div className="pay-row">
+              <span className="summary-label">Total :</span>
+              <span className="detail-value">
+                {(
+                  courseData.iamount -
+                  (courseData.iamount * courseData.idiscount) / 100
+                ).toFixed(2)}
+              </span>
+            </div>
+            <TableRow className="net-amount">
+              <TableCell className="net-amount-left">Net Payable amount:</TableCell>
+              <TableCell align="right" className="net-amount-right">
+                {/* {paymentData.netAmount} */}
+                {(
+                  courseData.iamount -
+                  (courseData.iamount * courseData.idiscount) / 100
+                ).toFixed(2)}
+              </TableCell>
+            </TableRow>
+          </div>
+        </div>
+        <div className="details-row" style={{ textAlign: 'center' }}>
+          <p>A confirmation email has been sent to :
+            <strong>{studentData?.email || ''}</strong>
+          </p>
+        </div>
+        <div className="input-row">
+          <div>
+            <Link to="/" className="EnrollPay-outline-btn">
+              Go to Home
+            </Link>
+          </div>
+          <div>
+            <Link to="/coursedetails" className="EnrollPay-btn">
+              Browse Courses
+            </Link>
+          </div>
+        </div>
 
-  export default EnrollPayment
+      </div>
+    </>
+  )
+}
+
+export default EnrollPayment

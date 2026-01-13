@@ -311,9 +311,16 @@ const isEnrollmentBlocked =
     finalPrice = Math.max(0, finalPrice);
   }
 
-  const formattedAmount = finalPrice
+  // const formattedAmount = finalPrice
+  //   ? `${displayCurrency} ${Math.round(finalPrice)}`
+  //   : "Price on request";
+const formattedAmount =
+  finalPrice === 0
+    ? `${displayCurrency} 0`
+    : finalPrice > 0
     ? `${displayCurrency} ${Math.round(finalPrice)}`
-    : "Price on request";
+    : `${displayCurrency} 0`;
+const isZeroAmount = Number(finalPrice) === 0;
 
   const {
     handleLiveEnrollPayment,
@@ -476,35 +483,33 @@ const isEnrollmentBlocked =
 
               <div className={styles.buttonGroup}>
                 <button
-                  className={`${styles.enPayBtn} ${
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    // isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                      ? styles.disabledBtn
-                      : ""
-                  }`}
-                  disabled={
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    // isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                  }
-            onClick={() => {
-  setLastAction("PAY_NOW");
-  selectedBatch &&
-    handleLiveEnrollPayment(selectedBatch.sessions[0], {
-      isPayNow: true,
-      email: notifyVia.email,
-      whatsapp: notifyVia.whatsapp,
-    });
-}}
+  className={`${styles.enPayBtn} ${
+    !selectedBatch ||
+    !isTermsAccepted ||
+    lockButtonsUntilBatchChange ||
+    isZeroAmount
+      ? styles.disabledBtn
+      : ""
+  }`}
+  disabled={
+    !selectedBatch ||
+    !isTermsAccepted ||
+    lockButtonsUntilBatchChange ||
+    isZeroAmount
+  }
+  onClick={() => {
+    setLastAction("PAY_NOW");
+    selectedBatch &&
+      handleLiveEnrollPayment(selectedBatch.sessions[0], {
+        isPayNow: true,
+        email: notifyVia.email,
+        whatsapp: notifyVia.whatsapp,
+      });
+  }}
+>
+  Pay Now
+</button>
 
-
-
-                >
-                  Pay Now
-                </button>
                 <button
                   className={`${styles.enPayBtn} ${
                     !selectedBatch ||

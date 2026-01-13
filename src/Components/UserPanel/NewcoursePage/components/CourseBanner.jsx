@@ -183,7 +183,12 @@ export default function CourseBanner({ onEnroll }) {
     ? `${course.numberOfClasses} Classes`
     : "Duration will be updated soon";
 
-  const baseDiscount = course.idiscount ?? course.discount ?? 0;
+  // const baseDiscount = course.idiscount ?? course.discount ?? 0;
+  const baseDiscount =
+  currency === "INR"
+    ? course.idiscount ?? 0
+    : course.discount ?? 0;
+
   const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
 
   let convertedTotalFee = 0;
@@ -314,12 +319,15 @@ export default function CourseBanner({ onEnroll }) {
     finalPrice = convertedTotalFee;
     originalPrice = convertedOriginalFee;
   }
+const hasValidPrice =
+  finalPrice !== null &&
+  finalPrice !== undefined &&
+  !isNaN(finalPrice);
 
-  // Price text
-  const price =
-    finalPrice > 0
-      ? `${currency} ${Math.round(finalPrice)}`
-      : "Price on request";
+const price = hasValidPrice
+  ? `${currency} ${Math.round(finalPrice)}`
+  : `${currency} 0`;
+
 
   // Strike-through price
   const oldPrice =

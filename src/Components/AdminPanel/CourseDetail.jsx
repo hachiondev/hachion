@@ -59,6 +59,8 @@ const CourseDetail = ({
   buttonLabel = 'Add Courses',
 }) => {
   const [formMode, setFormMode] = useState('Add');
+  const [selectedPeriod, setSelectedPeriod] = useState("");
+  const [selectedMode, setSelectedMode] = useState("");
   const [course, setCourse] = useState([]);
   const [allCourses, setAllCourses] = useState([]);
   const [error, setError] = useState([]);
@@ -77,42 +79,42 @@ const CourseDetail = ({
   const [characterCount, setCharacterCount] = useState(0);
   const [aboutCharacterCount, setAboutCharacterCount] = useState(0);
   const [aboutError, setAboutError] = useState("");
-  const [trainers, setTrainers] = useState([]); 
+  const [trainers, setTrainers] = useState([]);
   const [inrChecked, setInrChecked] = useState(false);
   const [formData, setFormData] = useState({
     course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
     starRating: '', level: '', ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
-    self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining:'', crashCourse: '', mentoringMode:'',selfPacedLearning: '',
+    self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining: '', crashCourse: '', mentoringMode: '', selfPacedLearning: '',
   });
 
-useEffect(() => {
-  const fetchTrainerNames = async () => {
-    if (
-      formMode === "Edit" &&
-      formData.courseCategory &&
-      formData.courseName
-    ) {
-      try {
-        const response = await axios.get(
-          "https://api.test.hachion.co/trainernames",
-          {
-            params: {
-              categoryName: formData.courseCategory,
-              courseName: formData.courseName,
-            },
-          }
-        );
-        setTrainers(response.data);
-      } catch (error) {
-        console.error("Error fetching trainer names:", error);
-        setTrainers([]);
+  useEffect(() => {
+    const fetchTrainerNames = async () => {
+      if (
+        formMode === "Edit" &&
+        formData.courseCategory &&
+        formData.courseName
+      ) {
+        try {
+          const response = await axios.get(
+            "https://api.test.hachion.co/trainernames",
+            {
+              params: {
+                categoryName: formData.courseCategory,
+                courseName: formData.courseName,
+              },
+            }
+          );
+          setTrainers(response.data);
+        } catch (error) {
+          console.error("Error fetching trainer names:", error);
+          setTrainers([]);
+        }
       }
-    }
-  };
+    };
 
-  fetchTrainerNames();
-}, [formMode, formData.courseCategory, formData.courseName]);
+    fetchTrainerNames();
+  }, [formMode, formData.courseCategory, formData.courseName]);
 
 
   useEffect(() => {
@@ -180,6 +182,9 @@ useEffect(() => {
     setEndDate(null);
     setSearchTerm('');
     setFilteredCourses(allCourses);
+    setFormMode("");
+    setSelectedPeriod("");
+    setSelectedMode(""); // Add this line
   };
 
   const handleInputChange = (e, quillField = null, quillValue = null) => {
@@ -313,7 +318,7 @@ useEffect(() => {
 
     const formNewData = new FormData();
     formNewData.append("course", JSON.stringify(courseData));
-    
+
     if (formData.courseImage && typeof formData.courseImage !== "string") {
       formNewData.append("courseImage", formData.courseImage);
     }
@@ -325,7 +330,7 @@ useEffect(() => {
           formNewData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        
+
         if (response.status === 200) {
           setSuccessMessage("✅ Course updated successfully.");
           setErrorMessage("");
@@ -348,20 +353,20 @@ useEffect(() => {
           setShowAddCourse(false);
         }
       }
-    } 
+    }
     catch (error) {
-  setSuccessMessage("");
+      setSuccessMessage("");
 
- if (error.response && error.response.status === 409) {
-  setErrorMessage(
-    "❌ Course already exists for the selected category. Please use a different course name."
-  );
-  setDuplicateError(true);
-} else {
-  setErrorMessage("❌ Something went wrong while submitting the course.");
-}
+      if (error.response && error.response.status === 409) {
+        setErrorMessage(
+          "❌ Course already exists for the selected category. Please use a different course name."
+        );
+        setDuplicateError(true);
+      } else {
+        setErrorMessage("❌ Something went wrong while submitting the course.");
+      }
 
-}
+    }
 
   };
 
@@ -434,17 +439,27 @@ useEffect(() => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  
+
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
-  
+
+  const handleModeChange = (mode) => {
+    setSelectedMode(mode);
+    // You'll need to implement mode filtering logic based on your data structure
+    // This depends on whether your tools have a mode/type property
+  };
+
+  const handlePeriodChange = (period) => {
+    setSelectedPeriod(period);
+  }
+
   const displayedCategories = filteredCourses.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -476,7 +491,7 @@ useEffect(() => {
       liveTraining: '',
       crashCourse: '',
       mentoringMode: '',
-      selfPacedLearning: ''      
+      selfPacedLearning: ''
     });
   }
 
@@ -539,70 +554,70 @@ useEffect(() => {
     }
   };
 
-//   const AutoHeightQuill = ({ value, onChange, minHeight = 200, maxHeight = 800, ...props }) => {
-//   const quillRef = useRef(null);
-//   const [height, setHeight] = useState(`${minHeight}px`);
+  //   const AutoHeightQuill = ({ value, onChange, minHeight = 200, maxHeight = 800, ...props }) => {
+  //   const quillRef = useRef(null);
+  //   const [height, setHeight] = useState(`${minHeight}px`);
 
-//   useEffect(() => {
-//     const updateHeight = () => {
-//       if (quillRef.current) {
-//         try {
-//           const editor = quillRef.current.getEditor();
-//           const editorElement = editor.root;
-          
-//           // Get the actual content height
-//           const contentHeight = editorElement.scrollHeight;
-          
-//           // Calculate new height with constraints
-//           let newHeight = Math.max(minHeight, contentHeight);
-//           newHeight = Math.min(maxHeight, newHeight);
-          
-//           // Add some padding
-//           setHeight(`${newHeight + 30}px`);
-//         } catch (error) {
-//           console.error('Error updating Quill height:', error);
-//         }
-//       }
-//     };
+  //   useEffect(() => {
+  //     const updateHeight = () => {
+  //       if (quillRef.current) {
+  //         try {
+  //           const editor = quillRef.current.getEditor();
+  //           const editorElement = editor.root;
 
-//     // Update height on content change
-//     updateHeight();
-    
-//     // Update on window resize
-//     window.addEventListener('resize', updateHeight);
-    
-//     // Update after a short delay to ensure rendering
-//     const timeoutId = setTimeout(updateHeight, 100);
-    
-//     return () => {
-//       window.removeEventListener('resize', updateHeight);
-//       clearTimeout(timeoutId);
-//     };
-//   }, [value, minHeight, maxHeight]);
+  //           // Get the actual content height
+  //           const contentHeight = editorElement.scrollHeight;
 
-//   return (
-//     <div className="auto-height-quill-container">
-//       <ReactQuill
-//         ref={quillRef}
-//         value={value}
-//         onChange={onChange}
-//         style={{ height }}
-//         {...props}
-//       />
-//     </div>
-//   );
-// };
+  //           // Calculate new height with constraints
+  //           let newHeight = Math.max(minHeight, contentHeight);
+  //           newHeight = Math.min(maxHeight, newHeight);
+
+  //           // Add some padding
+  //           setHeight(`${newHeight + 30}px`);
+  //         } catch (error) {
+  //           console.error('Error updating Quill height:', error);
+  //         }
+  //       }
+  //     };
+
+  //     // Update height on content change
+  //     updateHeight();
+
+  //     // Update on window resize
+  //     window.addEventListener('resize', updateHeight);
+
+  //     // Update after a short delay to ensure rendering
+  //     const timeoutId = setTimeout(updateHeight, 100);
+
+  //     return () => {
+  //       window.removeEventListener('resize', updateHeight);
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }, [value, minHeight, maxHeight]);
+
+  //   return (
+  //     <div className="auto-height-quill-container">
+  //       <ReactQuill
+  //         ref={quillRef}
+  //         value={value}
+  //         onChange={onChange}
+  //         style={{ height }}
+  //         {...props}
+  //       />
+  //     </div>
+  //   );
+  // };
 
   const areMandatoryFieldsFilled = () => {
     const hasCategory = formData.courseCategory?.trim() !== "";
     const hasCourseName = formData.courseName?.trim() !== "";
     const hasShortCourse = formData.shortCourse?.trim() !== "";
-      const hasDefaultTrainer = formMode === 'Edit' 
-    ? formData.defaultTrainer?.trim() !== "" 
-    : true;
+    const hasDefaultTrainer = formMode === 'Edit'
+      ? formData.defaultTrainer?.trim() !== ""
+      : true;
     const hasClasses = formData.numberOfClasses?.toString().trim() !== "";
-     const hasImage = formMode === 'Add' ? !!formData.courseImage : true;
-  
+    const hasImage = formMode === 'Add' ? !!formData.courseImage : true;
+
     const hasProjects = formData.numberOfProjects?.toString().trim() !== "";
     const hasWhatYouWillLearn = formData.whatYouWillLearn?.trim() !== "";
     const hasWhoIsThisCourseFor = formData.whoIsThisCourseFor?.trim() !== "";
@@ -619,70 +634,70 @@ useEffect(() => {
     const hasMentoringMode = formData.mentoringMode?.trim() !== "";
     const hasSelfPacedLearning = formData.selfPacedLearning?.trim() !== "";
     const hasUsdLive =
-  formData.amount?.toString().trim() !== "" &&
-  formData.discount?.toString().trim() !== "" &&
-  formData.total?.toString().trim() !== "";
-const hasAboutCourse = formData.aboutCourse?.trim() !== "";
+      formData.amount?.toString().trim() !== "" &&
+      formData.discount?.toString().trim() !== "" &&
+      formData.total?.toString().trim() !== "";
+    const hasAboutCourse = formData.aboutCourse?.trim() !== "";
 
-const hasUsdCrash =
-  formData.camount?.toString().trim() !== "" &&
-  formData.cdiscount?.toString().trim() !== "" &&
-  formData.ctotal?.toString().trim() !== "";
+    const hasUsdCrash =
+      formData.camount?.toString().trim() !== "" &&
+      formData.cdiscount?.toString().trim() !== "" &&
+      formData.ctotal?.toString().trim() !== "";
 
-const hasUsdSelfQa =
-  formData.sqamount?.toString().trim() !== "" &&
-  formData.sqdiscount?.toString().trim() !== "" &&
-  formData.sqtotal?.toString().trim() !== "";
+    const hasUsdSelfQa =
+      formData.sqamount?.toString().trim() !== "" &&
+      formData.sqdiscount?.toString().trim() !== "" &&
+      formData.sqtotal?.toString().trim() !== "";
 
-const hasUsdSelf =
-  formData.samount?.toString().trim() !== "" &&
-  formData.sdiscount?.toString().trim() !== "" &&
-  formData.stotal?.toString().trim() !== "";
-const hasInrFields =
-  formData.iamount?.toString().trim() !== "" &&
-  formData.idiscount?.toString().trim() !== "" &&
-  formData.itotal?.toString().trim() !== "" &&
-  formData.icamount?.toString().trim() !== "" &&
-  formData.icdiscount?.toString().trim() !== "" &&
-  formData.ictotal?.toString().trim() !== "" &&
-  formData.isqamount?.toString().trim() !== "" &&
-  formData.isqdiscount?.toString().trim() !== "" &&
-  formData.isqtotal?.toString().trim() !== "" &&
-  formData.isamount?.toString().trim() !== "" &&
-  formData.isdiscount?.toString().trim() !== "" &&
-  formData.istotal?.toString().trim() !== "";
+    const hasUsdSelf =
+      formData.samount?.toString().trim() !== "" &&
+      formData.sdiscount?.toString().trim() !== "" &&
+      formData.stotal?.toString().trim() !== "";
+    const hasInrFields =
+      formData.iamount?.toString().trim() !== "" &&
+      formData.idiscount?.toString().trim() !== "" &&
+      formData.itotal?.toString().trim() !== "" &&
+      formData.icamount?.toString().trim() !== "" &&
+      formData.icdiscount?.toString().trim() !== "" &&
+      formData.ictotal?.toString().trim() !== "" &&
+      formData.isqamount?.toString().trim() !== "" &&
+      formData.isqdiscount?.toString().trim() !== "" &&
+      formData.isqtotal?.toString().trim() !== "" &&
+      formData.isamount?.toString().trim() !== "" &&
+      formData.isdiscount?.toString().trim() !== "" &&
+      formData.istotal?.toString().trim() !== "";
 
-  return (
-  hasCategory &&
-  hasCourseName &&
-  hasShortCourse &&
-  hasDefaultTrainer &&
-  hasClasses &&
-  hasImage &&
-  hasProjects &&
-  hasWhatYouWillLearn &&
-  hasWhoIsThisCourseFor &&
-  hasCareerOpportunities &&
-  hasAverageSalaryRange &&
-  hasPrerequisites &&
-  hasYoutubeLink &&
-  hasLevel &&
-  hasStarRating &&
-  hasRatingByNumberOfPeople &&
-  hasCertifiedStudents &&
-  hasLiveTraining &&
-  hasCrashCourse &&
-  hasMentoringMode &&
-  hasSelfPacedLearning &&
-  hasAboutCourse &&
-  hasUsdLive &&
-  hasUsdCrash &&
-  hasUsdSelfQa &&
-  hasUsdSelf &&
-  hasInrFields &&
+    return (
+      hasCategory &&
+      hasCourseName &&
+      hasShortCourse &&
+      hasDefaultTrainer &&
+      hasClasses &&
+      hasImage &&
+      hasProjects &&
+      hasWhatYouWillLearn &&
+      hasWhoIsThisCourseFor &&
+      hasCareerOpportunities &&
+      hasAverageSalaryRange &&
+      hasPrerequisites &&
+      hasYoutubeLink &&
+      hasLevel &&
+      hasStarRating &&
+      hasRatingByNumberOfPeople &&
+      hasCertifiedStudents &&
+      hasLiveTraining &&
+      hasCrashCourse &&
+      hasMentoringMode &&
+      hasSelfPacedLearning &&
+      hasAboutCourse &&
+      hasUsdLive &&
+      hasUsdCrash &&
+      hasUsdSelfQa &&
+      hasUsdSelf &&
+      hasInrFields &&
 
-  !shortCourseError
-);
+      !shortCourseError
+    );
 
 
   };
@@ -722,28 +737,28 @@ const hasInrFields =
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
                     <select
-                      
+
                       name="courseCategory"
                       value={formData.courseCategory}
-                      
+
                       onChange={(e) => {
-  handleInputChange(e);
-  setErrorMessage("");
-  setDuplicateError(false);
-}}
+                        handleInputChange(e);
+                        setErrorMessage("");
+                        setDuplicateError(false);
+                      }}
 
                       required
-                      
-                       disabled={formMode === "Edit"}
-  style={{
-    width: "100%",
-    padding: "0.375rem 0.75rem",
-    border: "1px solid #ced4da",
-    borderRadius: "0.375rem",
-    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
-    color: "#000000",
-    cursor: formMode === "Edit" ? "not-allowed" : "text"
-  }}
+
+                      disabled={formMode === "Edit"}
+                      style={{
+                        width: "100%",
+                        padding: "0.375rem 0.75rem",
+                        border: "1px solid #ced4da",
+                        borderRadius: "0.375rem",
+                        backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+                        color: "#000000",
+                        cursor: formMode === "Edit" ? "not-allowed" : "text"
+                      }}
                     >
                       <option value="" disabled>
                         Select Category
@@ -755,7 +770,7 @@ const hasInrFields =
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Course Name <span style={{ color: "red" }}>*</span>
@@ -763,30 +778,30 @@ const hasInrFields =
                     <input
                       type="text"
                       name="courseName"
-                      
+
                       placeholder="Enter Course Name"
                       value={formData.courseName}
                       onChange={(e) => {
-  handleInputChange(e);
-  setErrorMessage("");
-  setDuplicateError(false);
-}}
+                        handleInputChange(e);
+                        setErrorMessage("");
+                        setDuplicateError(false);
+                      }}
 
                       required
-  
-   disabled={formMode === "Edit"}
-  style={{
-    width: "100%",
-    padding: "0.375rem 0.75rem",
-    border: "1px solid #ced4da",
-    borderRadius: "0.375rem",
-    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
-    color: "#000000",
-    cursor: formMode === "Edit" ? "not-allowed" : "text"
-  }}
+
+                      disabled={formMode === "Edit"}
+                      style={{
+                        width: "100%",
+                        padding: "0.375rem 0.75rem",
+                        border: "1px solid #ced4da",
+                        borderRadius: "0.375rem",
+                        backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+                        color: "#000000",
+                        cursor: formMode === "Edit" ? "not-allowed" : "text"
+                      }}
                     />
                   </div>
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Short Course Name <span style={{ color: "red" }}>*</span>
@@ -794,29 +809,29 @@ const hasInrFields =
                     <input
                       type="text"
                       name="shortCourse"
-                      
+
                       placeholder="Enter Short Course Name"
                       value={formData.shortCourse}
                       onChange={handleInputChange}
                       onBlur={handleShortCourseBlur}
                       required
-                        disabled={formMode === "Edit"}
-  style={{
-    width: "100%",
-    padding: "0.375rem 0.75rem",
-    border: "1px solid #ced4da",
-    borderRadius: "0.375rem",
-    backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
-    color: "#000000",
-    cursor: formMode === "Edit" ? "not-allowed" : "text"
-  }}
+                      disabled={formMode === "Edit"}
+                      style={{
+                        width: "100%",
+                        padding: "0.375rem 0.75rem",
+                        border: "1px solid #ced4da",
+                        borderRadius: "0.375rem",
+                        backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+                        color: "#000000",
+                        cursor: formMode === "Edit" ? "not-allowed" : "text"
+                      }}
                     />
                     {shortCourseError && (
                       <div style={{ color: "red" }}>{shortCourseError}</div>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="course-row">
                   <div className="col-md-4">
                     <label className="form-label">
@@ -847,7 +862,7 @@ const hasInrFields =
                       required
                     />
                   </div> */}
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       What You Will Learn <span style={{ color: "red" }}>*</span>
@@ -877,9 +892,9 @@ const hasInrFields =
                     />
                   </div>
                 </div>
-                
+
                 <div className="course-row">
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Career Opportunities <span style={{ color: "red" }}>*</span>
@@ -894,7 +909,7 @@ const hasInrFields =
                       required
                     />
                   </div>
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Average Salary Range <span style={{ color: "red" }}>*</span>
@@ -925,10 +940,10 @@ const hasInrFields =
                     />
                   </div>
                 </div>
-                
+
                 <div className="course-row">
-                  
-                  
+
+
                   {/* <div className="col-md-4">
                     <label className="form-label">
                       Live Training <span style={{ color: "red" }}>*</span>
@@ -973,7 +988,7 @@ const hasInrFields =
                       />
                     </div>
                   </div> */}
-                  
+
                   {/* <div className="col-md-4">
                     <label className="form-label">
                       Crash Course <span style={{ color: "red" }}>*</span>
@@ -989,7 +1004,7 @@ const hasInrFields =
                     />
                   </div> */}
                 </div>
-                
+
                 <div className="course-row">
                   {/* <div className="col-md-4">
                     <label className="form-label">
@@ -1023,10 +1038,10 @@ const hasInrFields =
                     <label className="form-label">
                       Youtube Link <span style={{ color: "red" }}>*</span>
                     </label>
-                    <input 
-                      type="text" 
-                      name="youtubeLink" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      name="youtubeLink"
+                      className="form-control"
                       value={formData.youtubeLink}
                       onChange={handleInputChange}
                       placeholder="Enter Youtube URL"
@@ -1034,14 +1049,14 @@ const hasInrFields =
                     />
                   </div>
 
-<div className="col-md-4">
+                  <div className="col-md-4">
                     <label className="form-label">
                       Level <span style={{ color: "red" }}>*</span>
                     </label>
-                    <select 
-                      className="form-select" 
-                      name='level' 
-                      value={formData.level} 
+                    <select
+                      className="form-select"
+                      name='level'
+                      value={formData.level}
                       onChange={handleInputChange}
                       required
                     >
@@ -1052,13 +1067,13 @@ const hasInrFields =
                       <option value="Expert">Expert</option>
                     </select>
                   </div>
-                  
+
                 </div>
-                
+
                 <div className="course-row">
-                  
-                  
-                  
+
+
+
                   <div className="col-md-4">
                     <label className="form-label">
                       No. of Classes <span style={{ color: "red" }}>*</span>
@@ -1073,13 +1088,13 @@ const hasInrFields =
                       min="1"
                     />
                   </div>
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">Daily Sessions</label>
-                    <input 
-                      type="text" 
-                      name="dailySessions" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      name="dailySessions"
+                      className="form-control"
                       value={formData.dailySessions}
                       onChange={handleInputChange}
                       placeholder="e.g., 2 hours daily"
@@ -1104,8 +1119,8 @@ const hasInrFields =
                     />
                   </div>
                 </div>
-                
-                <div className="course-row">    
+
+                <div className="course-row">
                   <div className="col-md-4">
                     <label className="form-label">
                       Rating by No. of People <span style={{ color: "red" }}>*</span>
@@ -1121,7 +1136,7 @@ const hasInrFields =
                       min="0"
                     />
                   </div>
-                  
+
                   <div className="col-md-4">
                     <label className="form-label">
                       Certified Students <span style={{ color: "red" }}>*</span>
@@ -1137,7 +1152,7 @@ const hasInrFields =
                       min="0"
                     />
                   </div>
-                 {/* {formMode === 'Edit' && (
+                  {/* {formMode === 'Edit' && (
   <div className="col-md-4">
     <label className="form-label">
       Default Trainer <span style={{ color: "red" }}>*</span>
@@ -1162,227 +1177,227 @@ const hasInrFields =
   </div>
 )} */}
 
-{formMode === 'Edit' && (
-  <div className="col-md-4">
-    <label className="form-label">
-      Default Trainer <span style={{ color: "red" }}>*</span>
-    </label>
+                  {formMode === 'Edit' && (
+                    <div className="col-md-4">
+                      <label className="form-label">
+                        Default Trainer <span style={{ color: "red" }}>*</span>
+                      </label>
 
-    <select
-      className="form-select"
-      name="defaultTrainer"
-      value={formData.defaultTrainer}
-      onChange={handleInputChange}
-      required
-    >
-      <option value="" disabled>
-        Select Trainer
-      </option>
+                      <select
+                        className="form-select"
+                        name="defaultTrainer"
+                        value={formData.defaultTrainer}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="" disabled>
+                          Select Trainer
+                        </option>
 
-      {/* Static default option */}
-      <option value="Hachion Certified Trainer">
-        Hachion Certified Trainer
-      </option>
+                        {/* Static default option */}
+                        <option value="Hachion Certified Trainer">
+                          Hachion Certified Trainer
+                        </option>
 
-      {/* API trainers */}
-      {trainers.map((trainerName, index) => (
-        <option key={index} value={trainerName}>
-          {trainerName}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
+                        {/* API trainers */}
+                        {trainers.map((trainerName, index) => (
+                          <option key={index} value={trainerName}>
+                            {trainerName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
                 </div>
                 <div className="course-row">
-                {/* Live Training Field with ReactQuill */}
-<div className="col-md-4">
-  <label className="form-label">
-    Live Training <span style={{ color: "red" }}>*</span>
-  </label>
-  <div className="mb-3">
-    <ReactQuill
-      theme="snow"
-      id="liveTraining"
-      name="liveTraining"
-      value={formData.liveTraining}
-      onChange={(content) => handleInputChange(null, "liveTraining", content)}
-      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
-      modules={{
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          [{ indent: "-1" }, { indent: "+1" }],
-          ["blockquote"],
-          ["image"],
-          ["link"],
-          [{ color: [] }],
-          ["clean"],
-        ],
-      }}
-      formats={[
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "list",
-        "bullet",
-        "align",
-        "indent",
-        "blockquote",
-        "image",
-        "link",
-        "color",
-      ]}
-      placeholder="Enter Live Training details"
-    />
-  </div>
-</div>
+                  {/* Live Training Field with ReactQuill */}
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Live Training <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div className="mb-3">
+                      <ReactQuill
+                        theme="snow"
+                        id="liveTraining"
+                        name="liveTraining"
+                        value={formData.liveTraining}
+                        onChange={(content) => handleInputChange(null, "liveTraining", content)}
+                        style={{ width: "300px", height: "auto", marginBottom: "36%" }}
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ align: [] }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            ["blockquote"],
+                            ["image"],
+                            ["link"],
+                            [{ color: [] }],
+                            ["clean"],
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                        placeholder="Enter Live Training details"
+                      />
+                    </div>
+                  </div>
 
-{/* Crash Course Field with ReactQuill */}
-<div className="col-md-4">
-  <label className="form-label">
-    Crash Course <span style={{ color: "red" }}>*</span>
-  </label>
-  <div className="mb-3">
-    <ReactQuill
-      theme="snow"
-      id="crashCourse"
-      name="crashCourse"
-      value={formData.crashCourse}
-      onChange={(content) => handleInputChange(null, "crashCourse", content)}
-      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
-      modules={{
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          [{ indent: "-1" }, { indent: "+1" }],
-          ["blockquote"],
-          ["image"],
-          ["link"],
-          [{ color: [] }],
-          ["clean"],
-        ],
-      }}
-      formats={[
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "list",
-        "bullet",
-        "align",
-        "indent",
-        "blockquote",
-        "image",
-        "link",
-        "color",
-      ]}
-      placeholder="Enter Crash Course details"
-    />
-  </div>
-</div>
+                  {/* Crash Course Field with ReactQuill */}
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Crash Course <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div className="mb-3">
+                      <ReactQuill
+                        theme="snow"
+                        id="crashCourse"
+                        name="crashCourse"
+                        value={formData.crashCourse}
+                        onChange={(content) => handleInputChange(null, "crashCourse", content)}
+                        style={{ width: "300px", height: "auto", marginBottom: "36%" }}
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ align: [] }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            ["blockquote"],
+                            ["image"],
+                            ["link"],
+                            [{ color: [] }],
+                            ["clean"],
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                        placeholder="Enter Crash Course details"
+                      />
+                    </div>
+                  </div>
 
-{/* Mentoring Mode Field with ReactQuill */}
-<div className="col-md-4">
-  <label className="form-label">
-    Mentoring Mode <span style={{ color: "red" }}>*</span>
-  </label>
-  <div className="mb-3">
-    <ReactQuill
-      theme="snow"
-      id="mentoringMode"
-      name="mentoringMode"
-      value={formData.mentoringMode}
-      onChange={(content) => handleInputChange(null, "mentoringMode", content)}
-      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
-      modules={{
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          [{ indent: "-1" }, { indent: "+1" }],
-          ["blockquote"],
-          ["image"],
-          ["link"],
-          [{ color: [] }],
-          ["clean"],
-        ],
-      }}
-      formats={[
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "list",
-        "bullet",
-        "align",
-        "indent",
-        "blockquote",
-        "image",
-        "link",
-        "color",
-      ]}
-      placeholder="Enter Mentoring Mode details"
-    />
-  </div>
-</div>
+                  {/* Mentoring Mode Field with ReactQuill */}
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Mentoring Mode <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div className="mb-3">
+                      <ReactQuill
+                        theme="snow"
+                        id="mentoringMode"
+                        name="mentoringMode"
+                        value={formData.mentoringMode}
+                        onChange={(content) => handleInputChange(null, "mentoringMode", content)}
+                        style={{ width: "300px", height: "auto", marginBottom: "36%" }}
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ align: [] }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            ["blockquote"],
+                            ["image"],
+                            ["link"],
+                            [{ color: [] }],
+                            ["clean"],
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                        placeholder="Enter Mentoring Mode details"
+                      />
+                    </div>
+                  </div>
 
-{/* Self-Paced Learning Field with ReactQuill */}
-<div className="col-md-4">
-  <label className="form-label">
-    Self-Paced Learning <span style={{ color: "red" }}>*</span>
-  </label>
-  <div className="mb-3">
-    <ReactQuill
-      theme="snow"
-      id="selfPacedLearning"
-      name="selfPacedLearning"
-      value={formData.selfPacedLearning}
-      onChange={(content) => handleInputChange(null, "selfPacedLearning", content)}
-      style={{ width: "300px", height: "auto", marginBottom: "36%" }}
-      modules={{
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ align: [] }],
-          [{ indent: "-1" }, { indent: "+1" }],
-          ["blockquote"],
-          ["image"],
-          ["link"],
-          [{ color: [] }],
-          ["clean"],
-        ],
-      }}
-      formats={[
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "list",
-        "bullet",
-        "align",
-        "indent",
-        "blockquote",
-        "image",
-        "link",
-        "color",
-      ]}
-      placeholder="Enter Self-Paced Learning details"
-    />
-  </div>
-</div>
+                  {/* Self-Paced Learning Field with ReactQuill */}
+                  <div className="col-md-4">
+                    <label className="form-label">
+                      Self-Paced Learning <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div className="mb-3">
+                      <ReactQuill
+                        theme="snow"
+                        id="selfPacedLearning"
+                        name="selfPacedLearning"
+                        value={formData.selfPacedLearning}
+                        onChange={(content) => handleInputChange(null, "selfPacedLearning", content)}
+                        style={{ width: "300px", height: "auto", marginBottom: "36%" }}
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ align: [] }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            ["blockquote"],
+                            ["image"],
+                            ["link"],
+                            [{ color: [] }],
+                            ["clean"],
+                          ],
+                        }}
+                        formats={[
+                          "header",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "list",
+                          "bullet",
+                          "align",
+                          "indent",
+                          "blockquote",
+                          "image",
+                          "link",
+                          "color",
+                        ]}
+                        placeholder="Enter Self-Paced Learning details"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              </div>
-              
-              
+
+
               {/* Key Highlights Section */}
               <div className='course-details'>
                 <h3>Key Highlights</h3>
@@ -1415,7 +1430,7 @@ const hasInrFields =
                   </div>
                 </div>
               </div>
-              
+
               {/* USD Fee Section */}
               <h3 style={{ marginTop: 20 }}>Mode Of Training Fee(USD)</h3>
               <div className="course-row">
@@ -1481,11 +1496,11 @@ const hasInrFields =
                   <div className="course-mode" key={index}>
                     <div className="form-check">
                       <input
-  className="form-check-input"
-  type="checkbox"
-  id={`inrCheck${index}`}
-  onChange={(e) => setInrChecked(e.target.checked)}
-/>
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`inrCheck${index}`}
+                        onChange={(e) => setInrChecked(e.target.checked)}
+                      />
 
                       <label className="form-check-label" htmlFor={`inrCheck${index}`}>
                         {mode.label}
@@ -1527,7 +1542,7 @@ const hasInrFields =
                   </div>
                 ))}
               </div>
-              
+
               {/* Sample Session Section */}
               <h3>Sample session</h3>
               <div className='course-row'>
@@ -1558,7 +1573,7 @@ const hasInrFields =
                   </div>
                 </div>
               </div>
-              
+
               {/* SEO Section */}
               <div className='course-row'>
                 <div className="col-md-4">
@@ -1574,7 +1589,7 @@ const hasInrFields =
                   <input type="text" className="form-control" name='courseKeywordDescription' value={formData.courseKeywordDescription} onChange={handleInputChange} />
                 </div>
               </div>
-              
+
               {/* About Course Section */}
               <div className="mb-3" style={{ paddingBottom: "20px" }}>
                 <label className="form-label">About Course(Add only 160 Characters) <span style={{ color: "red" }}>*</span></label>
@@ -1600,7 +1615,7 @@ const hasInrFields =
                 </div>
                 {aboutError && <p className="error-message" style={{ color: "red" }}>{aboutError}</p>}
               </div>
-              
+
               {/* Course Highlight Section */}
               <div className="mb-3" style={{ paddingBottom: "20px" }}>
                 <label className="form-label">Course Highlight(Add only 4 Lines)</label>
@@ -1653,7 +1668,7 @@ const hasInrFields =
                 </div>
                 {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
               </div>
-              
+
               {/* Course Description Section */}
               <div className="mb-3" style={{ paddingBottom: "20px" }}>
                 <label className="form-label">Course Description</label>
@@ -1695,43 +1710,43 @@ const hasInrFields =
                 />
                 {error && <p className="error-message">{error}</p>}
               </div>
-              
+
               {/* Submit Buttons */}
-            
-{errorMessage && (
-  <div className="alert alert-danger" role="alert">
-    {errorMessage}
-  </div>
-)}
 
-{successMessage && (
-  <div className="alert alert-success" role="alert">
-    {successMessage}
-  </div>
-)}
+              {errorMessage && (
+                <div className="alert alert-danger" role="alert">
+                  {errorMessage}
+                </div>
+              )}
 
-{/* Submit Buttons */}
-<div className="course-row">
-  <button
-    className="submit-btn"
-    type="submit"
-    disabled={isSubmitDisabled}
-    style={{
-      backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
-      color: isSubmitDisabled ? "#666666" : "#ffffff",
-      cursor: isSubmitDisabled ? "not-allowed" : "pointer",
-      opacity: isSubmitDisabled ? 0.7 : 1,
-    }}
-  >
-    {formMode === "Add" ? "Submit" : "Update"}
-  </button>
-  <button type="button" className="reset-btn" onClick={handleReset}>
-    Reset
-  </button>
-</div>
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
+
+              {/* Submit Buttons */}
+              <div className="course-row">
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={isSubmitDisabled}
+                  style={{
+                    backgroundColor: isSubmitDisabled ? "#cccccc" : "#00AAEF",
+                    color: isSubmitDisabled ? "#666666" : "#ffffff",
+                    cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+                    opacity: isSubmitDisabled ? 0.7 : 1,
+                  }}
+                >
+                  {formMode === "Add" ? "Submit" : "Update"}
+                </button>
+                <button type="button" className="reset-btn" onClick={handleReset}>
+                  Reset
+                </button>
+              </div>
 
             </form>
-            
+
             <Helmet>
               <title>{formData.headerTitle || 'Default Title'}</title>
               <meta name="description" content={formData.courseKeywordDescription || 'Default Description'} />
@@ -1747,13 +1762,44 @@ const hasInrFields =
               <div className="category-header">
                 <p style={{ marginBottom: 0 }}>{headerTitle}</p>
               </div>
-              <div className="date-schedule">
+              <div className='date-schedule'>
                 Start Date
-                <DatePicker value={startDate} onChange={setStartDate}
-                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
+                <DatePicker
+                  value={startDate}
+                  onChange={setStartDate}
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
                 End Date
-                <DatePicker value={endDate} onChange={setEndDate}
-                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
+                <DatePicker
+                  value={endDate}
+                  onChange={setEndDate}
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
+
+                {/* First dropdown: Time Period */}
+                <select
+                  className="form-select period-select"
+                  onChange={(e) => handlePeriodChange(e.target.value)}
+                  value={selectedPeriod}
+                >
+                  <option value="">Select Period</option>
+                  <option value="thisWeek">This Week</option>
+                  <option value="thisMonth">This Month</option>
+                  <option value="thisYear">This Year</option>
+                </select>
+
+                {/* Second dropdown: Mode Filter */}
+                <select
+                  className="form-select mode-select"
+                  onChange={(e) => handleModeChange(e.target.value)}
+                  value={selectedMode}
+                >
+                  <option value="">All Modes</option>
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                  <option value="both">Both</option>
+                </select>
+
                 <button className="filter" onClick={handleDateFilter}>Filter</button>
                 <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
@@ -1816,10 +1862,10 @@ const hasInrFields =
                         <StyledTableCell align="left">{course.courseName}</StyledTableCell>
                         {/* <StyledTableCell align="center">{course.date}</StyledTableCell> */}
                         <StyledTableCell align="center">
-  {course.date
-    ? dayjs(course.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
-    : "-"}
-</StyledTableCell>
+                          {course.date
+                            ? dayjs(course.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
+                            : "-"}
+                        </StyledTableCell>
 
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>

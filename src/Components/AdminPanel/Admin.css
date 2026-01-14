@@ -393,6 +393,20 @@
    gap: 2vh;
    font-size: 14px;
   }
+  .date-schedule .form-select {
+  width: auto;
+  min-width: 150px;
+  height: 40px;
+  padding: 5px 10px;
+}
+
+.date-schedule .period-select {
+  margin-left: 10px;
+}
+
+.date-schedule .mode-select {
+  margin-right: 10px;
+}
   .course-filter{
     padding: 1.5vh;
    align-items: center;

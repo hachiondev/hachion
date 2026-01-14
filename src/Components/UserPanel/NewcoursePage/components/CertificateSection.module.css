@@ -11,8 +11,8 @@
 }
 
 .cfwrap {
-   padding-top:30px;
-  padding-bottom:30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   background: #fff;
 }
 
@@ -20,11 +20,13 @@
   text-align: center;
   margin-bottom: 40px;
 }
+
 .cfhead h2 {
   font-size: 32px;
   font-weight: 700;
   color: var(--ink);
 }
+
 .cfhead p {
   color: #000000;
   margin-top: 6px;
@@ -47,6 +49,7 @@
   align-items: center;
   margin-bottom: 8px;
 }
+
 .cfround {
   width: 42px;
   height: 42px;
@@ -55,11 +58,13 @@
   place-items: center;
   background: var(--chip);
 }
+
 .cfh3 {
   font-weight: 700;
   color: #0e1320;
   font-size: 22px;
 }
+
 .cfsub {
   color: #000000;
   font-weight: 400;
@@ -70,6 +75,7 @@
   display: grid;
   gap: 10px;
 }
+
 .cfchecks li {
   display: flex;
   gap: 10px;
@@ -79,11 +85,9 @@
 }
 
 .cfaccredit {
-  background: linear-gradient(
-    106.65deg,
-    rgba(194, 214, 252, 0.5) 13.13%,
-    rgba(254, 233, 233, 0.5) 104.74%
-  );
+  background: linear-gradient(106.65deg,
+      rgba(194, 214, 252, 0.5) 13.13%,
+      rgba(254, 233, 233, 0.5) 104.74%);
 
   border: 1px solid #e1e8ff;
   border-radius: 4px;
@@ -91,17 +95,20 @@
   box-shadow: var(--shadow);
   margin-bottom: 30px;
 }
+
 .cfacctitle {
   font-weight: 700;
   color: #0f1822;
   margin-bottom: 10px;
   font-size: 20px;
 }
+
 .cfaccgrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+
 .cfaccitem {
   display: flex;
   gap: 10px;
@@ -110,11 +117,13 @@
   border-radius: 12px;
   padding: 12px;
 }
+
 .cfacchead {
   font-weight: 700;
   color: #0e1420;
   font-size: 20px;
 }
+
 .cfaccsub {
   color: #000000;
   font-weight: 400;
@@ -124,17 +133,20 @@
 .cffeatures {
   margin-top: 6px;
 }
+
 .cfftitle {
   font-weight: 700;
   color: #0e1420;
   margin-bottom: 8px;
   font-size: 20px;
 }
+
 .cffgrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
 }
+
 .cffgrid ul {
   display: grid;
   gap: 8px;
@@ -147,10 +159,12 @@
   display: flex;
   align-items: center;
 }
+
 .cfcert {
   position: relative;
   width: 100%;
 }
+
 .cfcert img {
   width: 100%;
   height: auto;
@@ -177,6 +191,7 @@
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
 }
+
 .cfbico {
   width: 28px;
   height: 28px;
@@ -184,10 +199,12 @@
   display: grid;
   place-items: center;
 }
+
 .cfbtitle {
   font-weight: 700;
   color: #0f1822;
 }
+
 .cfbsub {
   color: #7a8696;
   font-weight: 500;
@@ -198,6 +215,7 @@
   right: 16px;
   top: -7px;
 }
+
 .cfshare .cfbico {
   background: var(--shareBG);
 }
@@ -211,6 +229,7 @@
   left: 16px;
   bottom: -7px;
 }
+
 .cfdl .cfbico {
   background: var(--dlBG);
 }
@@ -221,126 +240,177 @@
     grid-template-columns: 1fr;
   }
 }
+
 @media (max-width: 768px) {
   .cfwrap .cfhead h2 {
     font-size: 36px;
   }
+
   .cfwrap .cfhead p {
-    font-size: 22px; /* Increased to 20px */
-  }
-  .cfh3 {
-    width: auto;
-    font-size: 22px; /* Approximately 20px */
-  }
-  .cfsub {
-    font-size: 20px; /* Increased to 20px */
-  }
-  .cfgrid {
-    display: block;
-  }
-  .cfchecks{
-    font-size: 20px; /* Approximately 20px */
-  }
-  .cfacctitle{
-    font-size: 22px; /* Approximately 20px */
-    font-weight: 600;
-  }
-  .cfaccitem img{
-    width: 28px;
-    height: 28px;
-  }
-  .cfacchead{
-    font-size: 20px; /* Increased to 20px */
-    font-weight: 600;
-  }
-  .cfaccsub{
-    font-size: 20px; /* Approximately 20px */
-  }
-  .cfftitle{
-    font-size: 22px; /* Approximately 20px */
-    font-weight: 600;
-  }
-  .cffgrid{
-    font-size: 21px; /* Approximately 20px */
-        grid-template-columns: 1fr;
-  }
-  .cfbtitle{
-    font-weight: 600;
-    color: #000000;
-    font-size: 18px; /* Approximately 20px */
-  }
-  .cfbsub{
-    font-size: 16px; /* Approximately 20px */
-  }
-  .cfbico{
-    width: 28px;
-    height: 28px;
-  }
-  .cfbubble{
-   padding: 8px 12px;
-  }
-}
-@media (max-width: 480px) {
-  .cfwrap .cfhead h2 {
-    font-size: 28px;
-  }
-  .cfwrap .cfhead p {
-    font-size: 20px; /* Increased to 20px */
-  }
-  .cfh3 {
-    width: auto;
-    font-size: 22px; /* Approximately 20px */
-  }
-  .cfsub {
-    font-size: 20px; /* Increased to 20px */
-  }
-  .cfgrid {
-    display: block;
-  }
-  .cfchecks{
-    font-size: 18px; /* Approximately 20px */
-  }
-  .cfacctitle{
-    font-size: 22px; /* Approximately 20px */
-    font-weight: 600;
-  }
-  .cfaccitem img{
-    width: 28px;
-    height: 28px;
-  }
-  .cfacchead{
-    font-size: 20px; /* Increased to 20px */
-    font-weight: 600;
-  }
-  .cfaccsub{
-    font-size: 16px; /* Approximately 20px */
-  }
-  .cfftitle{
-    font-size: 22px; /* Approximately 20px */
-    font-weight: 600;
-  }
-  .cffgrid{
-    font-size: 20px; /* Approximately 20px */
-  }
-  .cfbtitle{
-    font-weight: 600;
-    color: #000000;
-    font-size: 18px; /* Approximately 20px */
-  }
-  .cfbsub{
-    font-size: 16px; /* Approximately 20px */
-  }
-  .cfbico{
-    width: 28px;
-    height: 28px;
-  }
-  .cfbubble{
-   padding: 8px 12px;
+    font-size: 22px;
+    /* Increased to 20px */
   }
 
-  .cffgrid{
+  .cfh3 {
+    width: auto;
+    font-size: 22px;
+    /* Approximately 20px */
+  }
+
+  .cfsub {
+    font-size: 20px;
+    /* Increased to 20px */
+  }
+
+  .cfgrid {
+    display: block;
+  }
+
+  .cfchecks {
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfacctitle {
+    font-size: 22px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfacchead {
+    font-size: 20px;
+    /* Increased to 20px */
+    font-weight: 600;
+  }
+
+  .cfaccsub {
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfftitle {
+    font-size: 22px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cffgrid {
+    font-size: 21px;
+    /* Approximately 20px */
     grid-template-columns: 1fr;
-        gap: 0px;
+  }
+
+  .cfbtitle {
+    font-weight: 600;
+    color: #000000;
+    font-size: 18px;
+    /* Approximately 20px */
+  }
+
+  .cfbsub {
+    font-size: 16px;
+    /* Approximately 20px */
+  }
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfbubble {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cfwrap .cfhead h2 {
+    font-size: 24px;
+  }
+
+  .cfwrap .cfhead p {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfh3 {
+    width: auto;
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfsub {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfgrid {
+    display: block;
+  }
+
+  .cfchecks {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfacctitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfacchead {
+    font-size: 16px;
+    /* Increased to 20px */
+    font-weight: 600;
+  }
+
+  .cfaccsub {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfftitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cffgrid {
+    font-size: 14px;
+    /* Approximately 20px */
+    grid-template-columns: 1fr;
+    gap: 0px;
+  }
+
+  .cfbtitle {
+    font-weight: 600;
+    color: #000000;
+    font-size: 18px;
+    /* Approximately 20px */
+  }
+
+  .cfbsub {
+    font-size: 16px;
+    /* Approximately 20px */
+  }
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfbubble {
+    padding: 8px 12px;
   }
 }
 
@@ -348,57 +418,85 @@
   .cfwrap .cfhead h2 {
     font-size: 24px;
   }
+
   .cfwrap .cfhead p {
-    font-size: 16px; /* Increased from 14px */
+    font-size: 14px;
+    /* Increased to 20px */
   }
+
   .cfh3 {
     width: auto;
-    font-size: 22px; /* Increased from 18px */
+    font-size: 20px;
+    /* Approximately 20px */
   }
+
   .cfsub {
-    font-size: 16px; /* Increased from 14px */
+    font-size: 14px;
+    /* Increased to 20px */
   }
+
   .cfgrid {
     display: block;
   }
-  .cfchecks{
-    font-size: 16px; /* Increased from 12px */
+
+  .cfchecks {
+    font-size: 14px;
+    /* Approximately 20px */
   }
-  .cfacctitle{
-    font-size: 22px; /* Increased from 18px */
+
+  .cfacctitle {
+    font-size: 20px;
+    /* Approximately 20px */
     font-weight: 600;
   }
-  .cfaccitem img{
-    width: 28px; /* Increased from 24px */
-    height: 28px; /* Increased from 24px */
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
   }
-  .cfacchead{
-    font-size: 18px; /* Increased from 14px */
+
+  .cfacchead {
+    font-size: 16px;
+    /* Increased to 20px */
     font-weight: 600;
   }
-  .cfaccsub{
-    font-size: 14px; /* Increased from 10px */
+
+  .cfaccsub {
+    font-size: 14px;
+    /* Approximately 20px */
   }
-  .cfftitle{
-    font-size: 22px; /* Increased from 18px */
+
+  .cfftitle {
+    font-size: 20px;
+    /* Approximately 20px */
     font-weight: 600;
   }
-  .cffgrid{
-    font-size: 14px; /* Increased from 12px */
+
+  .cffgrid {
+    font-size: 14px;
+    /* Approximately 20px */
+    grid-template-columns: 1fr;
+    gap: 0px;
   }
-  .cfbtitle{
+
+  .cfbtitle {
     font-weight: 600;
     color: #000000;
-    font-size: 14px; /* Increased from 10px */
+    font-size: 18px;
+    /* Approximately 20px */
   }
-  .cfbsub{
-    font-size: 12px; /* Increased from 8px */
+
+  .cfbsub {
+    font-size: 16px;
+    /* Approximately 20px */
   }
-  .cfbico{
-    width: 28px; /* Increased from 24px */
-    height: 28px; /* Increased from 24px */
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
   }
-  .cfbubble{
-   padding: 8px 12px; /* Increased from 5px 10px */
+
+  .cfbubble {
+    padding: 8px 12px;
   }
 }

@@ -703,7 +703,7 @@ width: 30px;
   }
 
   .cccardhead {
-    font-size: 24px; /* 24px → 26px */
+    font-size: 20px; /* 24px → 26px */
   }
 
   .cccard {
@@ -777,7 +777,7 @@ width: 30px;
   }
 
   .ccwrap .cchead h2 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .cchead p {
@@ -839,7 +839,7 @@ width: 30px;
   }
 
   .cccardhead {
-    font-size: 14px; /* 18px → 20px */
+    font-size: 17px; /* 18px → 20px */
   }
 
   .ccwhy {

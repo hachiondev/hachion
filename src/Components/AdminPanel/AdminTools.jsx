@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -22,7 +22,7 @@ import axios from 'axios';
 import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import AdminPagination from './AdminPagination'; 
+import AdminPagination from './AdminPagination';
 import 'react-quill/dist/quill.snow.css'
 import { FiUpload } from "react-icons/fi";
 import { useCategories } from "../../Api/hooks/HomePageApi/NavbarApi/useCategories";
@@ -42,12 +42,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
     padding: '3px 5px',
-    borderRight: '1px solid white', 
+    borderRight: '1px solid white',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', 
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -61,18 +61,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AdminTools() {
-  
-  const [searchTerm,setSearchTerm]=useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const[tools,setTools]=useState([]);
-  const[filteredTools,setFilteredTools]=useState([])
-  const[message,setMessage]=useState(false);
+  const [tools, setTools] = useState([]);
+  const [filteredTools, setFilteredTools] = useState([])
+  const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [displayedCategories, setDisplayedCategories] = useState([]);
-  const [allData, setAllData] = useState([]); 
+  const [allData, setAllData] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   const [filterData, setFilterData] = useState({
     category_name: "",
     courseName: "",
@@ -88,66 +88,66 @@ export default function AdminTools() {
     toolsName: '',
     toolsLink: '',
   });
-const [editingRow, setEditingRow] = useState(null);
+  const [editingRow, setEditingRow] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-const {
-  data: categories = [],
-  isLoading: categoriesLoading,
-  error: categoriesError
-} = useCategories();
-const {
-  data: courses = [],
-  isLoading: coursesLoading,
-  error: coursesError
-} = useCourses();
+  const {
+    data: categories = [],
+    isLoading: categoriesLoading,
+    error: categoriesError
+  } = useCategories();
+  const {
+    data: courses = [],
+    isLoading: coursesLoading,
+    error: coursesError
+  } = useCourses();
 
-const {
-  mutate: addTools,
-  isLoading: isAdding,
-  error: addError,
-} = useAddTools();
+  const {
+    mutate: addTools,
+    isLoading: isAdding,
+    error: addError,
+  } = useAddTools();
 
 
-const {
-  data: toolsFlat = [],
-  isLoading: toolsLoading,
-  error: toolsError,
-} = useGetAllToolsFlat();
+  const {
+    data: toolsFlat = [],
+    isLoading: toolsLoading,
+    error: toolsError,
+  } = useGetAllToolsFlat();
 
-const {
-  mutate: updateTool,
-  isLoading: isUpdating,
-} = useUpdateToolItem();
+  const {
+    mutate: updateTool,
+    isLoading: isUpdating,
+  } = useUpdateToolItem();
 
-const {
-  mutate: deleteToolItem,
-  isLoading: isDeleting,
-} = useDeleteToolItem();
+  const {
+    mutate: deleteToolItem,
+    isLoading: isDeleting,
+  } = useDeleteToolItem();
 
-const isEditMode = !!toolsData.tool_id;
-const isRowValid = (row) => {
-  return (
-    row.toolsName &&
-    row.toolsName.trim() !== "" &&
-    row.toolsLink &&
-    row.toolsLink.trim() !== "" &&
-    (row.tool_image || row.preview)
-  );
-};
+  const isEditMode = !!toolsData.tool_id;
+  const isRowValid = (row) => {
+    return (
+      row.toolsName &&
+      row.toolsName.trim() !== "" &&
+      row.toolsLink &&
+      row.toolsLink.trim() !== "" &&
+      (row.tool_image || row.preview)
+    );
+  };
 
-const isFormValid = React.useMemo(() => {
-  if (!toolsData.category_name || !toolsData.courseName) {
-    return false;
-  }
+  const isFormValid = React.useMemo(() => {
+    if (!toolsData.category_name || !toolsData.courseName) {
+      return false;
+    }
 
-  if (isEditMode) {
-    return rows.length === 1 && isRowValid(rows[0]);
-  }
+    if (isEditMode) {
+      return rows.length === 1 && isRowValid(rows[0]);
+    }
 
-  return rows.length > 0 && rows.every(isRowValid);
-}, [toolsData, rows, isEditMode]);
+    return rows.length > 0 && rows.every(isRowValid);
+  }, [toolsData, rows, isEditMode]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -163,20 +163,20 @@ const isFormValid = React.useMemo(() => {
   const addRow = () => {
     setRows([...rows, { id: Date.now(), tool_image: null, preview: null }]);
   };
-  
+
   const deleteRow = (id) => {
     setRows(rows.filter(row => row.id !== id));
-  }; 
+  };
 
   const handleRowsPerPageChange = (rowsCount) => {
     setRowsPerPage(rowsCount);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
-  const handleReset=()=>{
+  const handleReset = () => {
     setToolsData({
-      tool_id:"",
-      category_name:"",
+      tool_id: "",
+      category_name: "",
       courseName: "",
       toolsName: "",
       toolsLink: "",
@@ -222,15 +222,15 @@ const isFormValid = React.useMemo(() => {
     setFilteredTools(tools);
   };
   useEffect(() => {
-  if (successMessage || errorMessage) {
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 6000); 
+    if (successMessage || errorMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 6000);
 
-    return () => clearTimeout(timer);
-  }
-}, [successMessage, errorMessage]);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, errorMessage]);
 
 
   useEffect(() => {
@@ -277,26 +277,26 @@ const isFormValid = React.useMemo(() => {
       setToolsData((prev) => ({ ...prev, courseName: "" }));
     }
   };
-const handleAddTrendingCourseClick = () => {
-  
-  setEditingRow(null);
+  const handleAddTrendingCourseClick = () => {
 
-  setToolsData({
-    tool_id: "",
-    category_name: "",
-    courseName: "",
-    toolsName: "",
-    toolsLink: "",
-  });
+    setEditingRow(null);
 
-  setRows([
-    { id: Date.now(), tool_image: null, preview: null }
-  ]);
+    setToolsData({
+      tool_id: "",
+      category_name: "",
+      courseName: "",
+      toolsName: "",
+      toolsLink: "",
+    });
 
-  setShowAddCourse(true);
-  setSuccessMessage("");
-  setErrorMessage("");
-};
+    setRows([
+      { id: Date.now(), tool_image: null, preview: null }
+    ]);
+
+    setShowAddCourse(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+  };
 
   const handleImageSelect = (file, index) => {
     if (!file) return;
@@ -305,169 +305,169 @@ const handleAddTrendingCourseClick = () => {
     updated[index].preview = URL.createObjectURL(file);
     setRows(updated);
   };
-const filteredCourses = React.useMemo(() => {
-  if (!toolsData.category_name) return [];
+  const filteredCourses = React.useMemo(() => {
+    if (!toolsData.category_name) return [];
 
-  return courses.filter(
-    (c) => c.courseCategory === toolsData.category_name
-  );
-}, [courses, toolsData.category_name]);
+    return courses.filter(
+      (c) => c.courseCategory === toolsData.category_name
+    );
+  }, [courses, toolsData.category_name]);
 
-const handleSubmit = () => {
-  if (!toolsData.category_name || !toolsData.courseName) {
-    setErrorMessage("Please select Category and Course");
-    return;
-  }
+  const handleSubmit = () => {
+    if (!toolsData.category_name || !toolsData.courseName) {
+      setErrorMessage("Please select Category and Course");
+      return;
+    }
 
-  const row = rows[0];
+    const row = rows[0];
 
-  if (!row.toolsName || !row.toolsLink) {
-    setErrorMessage("Tools name and link are required");
-    return;
-  }
+    if (!row.toolsName || !row.toolsLink) {
+      setErrorMessage("Tools name and link are required");
+      return;
+    }
 
-  if (toolsData.tool_id) {
-    updateTool(
+    if (toolsData.tool_id) {
+      updateTool(
+        {
+          itemId: toolsData.tool_id,
+          category_name: toolsData.category_name,
+          courseName: toolsData.courseName,
+          toolsName: row.toolsName,
+          toolsLink: row.toolsLink,
+          toolImage: row.tool_image || null,
+        },
+        {
+          onSuccess: () => {
+            setSuccessMessage("Tool updated successfully");
+            setShowAddCourse(false);
+            setEditingRow(null);
+            setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+            setToolsData({ tool_id: "", category_name: "", courseName: "" });
+          },
+          onError: (err) => {
+            setErrorMessage(
+              err?.response?.data?.message || "Update failed"
+            );
+          },
+        }
+      );
+      return;
+    }
+
+    const validRows = rows.filter(
+      r => r.toolsName && r.toolsLink && r.tool_image
+    );
+
+    if (validRows.length === 0) {
+      setErrorMessage("Please add at least one tool row");
+      return;
+    }
+
+    addTools(
       {
-        itemId: toolsData.tool_id,
         category_name: toolsData.category_name,
         courseName: toolsData.courseName,
-        toolsName: row.toolsName,
-        toolsLink: row.toolsLink,
-        toolImage: row.tool_image || null,
+        rows: validRows,
       },
       {
         onSuccess: () => {
-          setSuccessMessage("Tool updated successfully");
+          setSuccessMessage("Tools added successfully");
           setShowAddCourse(false);
-          setEditingRow(null);
           setRows([{ id: Date.now(), tool_image: null, preview: null }]);
-          setToolsData({ tool_id: "", category_name: "", courseName: "" });
+          setToolsData({ category_name: "", courseName: "" });
         },
         onError: (err) => {
           setErrorMessage(
-            err?.response?.data?.message || "Update failed"
+            err?.response?.data?.message || "Failed to add tools"
           );
         },
       }
     );
-    return;
-  }
+  };
 
-  const validRows = rows.filter(
-    r => r.toolsName && r.toolsLink && r.tool_image
-  );
+  const handleEditClick = (row) => {
+    setEditingRow(row);
 
-  if (validRows.length === 0) {
-    setErrorMessage("Please add at least one tool row");
-    return;
-  }
-
-  addTools(
-    {
-      category_name: toolsData.category_name,
-      courseName: toolsData.courseName,
-      rows: validRows,
-    },
-    {
-      onSuccess: () => {
-        setSuccessMessage("Tools added successfully");
-        setShowAddCourse(false);
-        setRows([{ id: Date.now(), tool_image: null, preview: null }]);
-        setToolsData({ category_name: "", courseName: "" });
-      },
-      onError: (err) => {
-        setErrorMessage(
-          err?.response?.data?.message || "Failed to add tools"
-        );
-      },
-    }
-  );
-};
-
-const handleEditClick = (row) => {
-  setEditingRow(row);
-
-  setToolsData({
-    tool_id: row.id, 
-    category_name: row.category_name,
-    courseName: row.courseName,
-  });
-
-  setRows([
-    {
-      id: row.id,
-      tool_image: null,
-      preview: row.imageUrl
-        ? `http://localhost:8081/uploads/test/tools_images/${row.imageUrl}`
-        : null,
-      toolsName: row.toolsName,
-      toolsLink: row.toolsLink,
-    },
-  ]);
-
-  setShowAddCourse(true);
-};
-const handleDeleteClick = (row) => {
-  if (!window.confirm("Are you sure you want to delete this tool?")) {
-    return;
-  }
-
-  deleteToolItem(
-    {
-      itemId: row.id,                 
+    setToolsData({
+      tool_id: row.id,
       category_name: row.category_name,
       courseName: row.courseName,
-    },
-    {
-      onSuccess: () => {
-        setSuccessMessage("Tool deleted successfully");
-        setErrorMessage("");
+    });
+
+    setRows([
+      {
+        id: row.id,
+        tool_image: null,
+        preview: row.imageUrl
+          ? `http://localhost:8081/uploads/test/tools_images/${row.imageUrl}`
+          : null,
+        toolsName: row.toolsName,
+        toolsLink: row.toolsLink,
       },
-      onError: (err) => {
-        setErrorMessage(
-          err?.response?.data || "Failed to delete tool"
-        );
-      },
+    ]);
+
+    setShowAddCourse(true);
+  };
+  const handleDeleteClick = (row) => {
+    if (!window.confirm("Are you sure you want to delete this tool?")) {
+      return;
     }
-  );
-};
+
+    deleteToolItem(
+      {
+        itemId: row.id,
+        category_name: row.category_name,
+        courseName: row.courseName,
+      },
+      {
+        onSuccess: () => {
+          setSuccessMessage("Tool deleted successfully");
+          setErrorMessage("");
+        },
+        onError: (err) => {
+          setErrorMessage(
+            err?.response?.data || "Failed to delete tool"
+          );
+        },
+      }
+    );
+  };
 
   useEffect(() => {
-  if (toolsFlat.length > 0) {
-    setAllData(toolsFlat);
-    setFilteredTools(toolsFlat);
-  }
-}, [toolsFlat]);
+    if (toolsFlat.length > 0) {
+      setAllData(toolsFlat);
+      setFilteredTools(toolsFlat);
+    }
+  }, [toolsFlat]);
 
   return (
-    <>  
-      {showAddCourse ?  (
+    <>
+      {showAddCourse ? (
         <div className='course-category'>
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
                 {/* <a href="#!" onClick={() => setShowAddCourse(false)}>Tools Covered </a> <MdKeyboardArrowRight /> */}
                 <a
-  href="#!"
-  onClick={() => {
-    setShowAddCourse(false);
+                  href="#!"
+                  onClick={() => {
+                    setShowAddCourse(false);
 
-    
-    setEditingRow(null);
-    setToolsData({
-      tool_id: "",
-      category_name: "",
-      courseName: "",
-      toolsName: "",
-      toolsLink: "",
-    });
-    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
-  }}
->
-  Tools Covered
-</a>
 
+                    setEditingRow(null);
+                    setToolsData({
+                      tool_id: "",
+                      category_name: "",
+                      courseName: "",
+                      toolsName: "",
+                      toolsLink: "",
+                    });
+                    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+                  }}
+                >
+                  Tools Covered
+                </a>
+                <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item active" aria-current="page">
                 {toolsData.tool_id ? "Edit Tools" : "Add Tools"}
@@ -481,79 +481,113 @@ const handleDeleteClick = (row) => {
             <div className='course-details'>
               <div className='course-row'>
                 <div className="col-md-3">
+                  <label htmlFor="toolName" className="form-label">Tool Name <span className="required">*</span></label>
+                  <select
+                    id="toolName"
+                    className="form-select"
+                    name="toolsName"
+                    value={rows[0]?.toolsName || ""}
+                    onChange={(e) => handleRowChange(0, 'toolsName', e.target.value)}
+                    disabled={isEditMode}
+                  >
+                    <option value="" disabled>
+                      Select Tool
+                    </option>
+                    <option value="HTML Editor">HTML Editor</option>
+                    <option value="Jest">Jest</option>
+                    <option value="GitHub">GitHub</option>
+                    <option value="Visual Studio Code">Visual Studio Code</option>
+                    <option value="Postman">Postman</option>
+                    <option value="Chrome DevTools">Chrome DevTools</option>
+                    <option value="npm">npm</option>
+                    <option value="Node.js">Node.js</option>
+                    <option value="React DevTools">React DevTools</option>
+                    <option value="MongoDB Compass">MongoDB Compass</option>
+                    <option value="Docker">Docker</option>
+                    <option value="Figma">Figma</option>
+                    <option value="AWS Console">AWS Console</option>
+                    <option value="Android Studio">Android Studio</option>
+                    <option value="Xcode">Xcode</option>
+                    <option value="Git">Git</option>
+                    <option value="Redux DevTools">Redux DevTools</option>
+                    <option value="MySQL Workbench">MySQL Workbench</option>
+                    <option value="Other">Other (Custom)</option>
+                  </select>
+                </div>
+                <div className="col-md-3">
                   <label htmlFor="inputState" className="form-label">Category Name <span className="required">*</span></label>
                   {/* <select id="inputState" className="form-select" name='category_name' value={toolsData.category_name} onChange={handleChange}> */}
-                    <select
-  id="inputState"
-  className="form-select"
-  name="category_name"
-  value={toolsData.category_name}
-  onChange={handleChange}
-  disabled={!!toolsData.tool_id}   
->
+                  <select
+                    id="inputState"
+                    className="form-select"
+                    name="category_name"
+                    value={toolsData.category_name}
+                    onChange={handleChange}
+                    disabled={!!toolsData.tool_id}
+                  >
 
                     <option value="" disabled>
                       Select Category
                     </option>
                     {categoriesLoading && (
-  <option disabled>Loading categories...</option>
-)}
+                      <option disabled>Loading categories...</option>
+                    )}
 
-{categoriesError && (
-  <option disabled>Error loading categories</option>
-)}
+                    {categoriesError && (
+                      <option disabled>Error loading categories</option>
+                    )}
 
-{categories.map((curr) => (
-  <option key={curr.id} value={curr.name}>
-    {curr.name}
-  </option>
-))}
+                    {categories.map((curr) => (
+                      <option key={curr.id} value={curr.name}>
+                        {curr.name}
+                      </option>
+                    ))}
 
                   </select>
                 </div>
-               <div className="col-md-3">
-  <label htmlFor="course" className="form-label">Course Name <span className="required">*</span></label>
+                <div className="col-md-3">
+                  <label htmlFor="course" className="form-label">Course Name <span className="required">*</span></label>
 
-  <select
-    id="course"
-    className="form-select"
-    name="courseName"
-    value={toolsData.courseName}
-    onChange={handleChange}
-     disabled={!toolsData.category_name || !!toolsData.tool_id}
-    
-  >
-    <option value="" disabled>
-      Select Course
-    </option>
+                  <select
+                    id="course"
+                    className="form-select"
+                    name="courseName"
+                    value={toolsData.courseName}
+                    onChange={handleChange}
+                    disabled={!toolsData.category_name || !!toolsData.tool_id}
 
-    {!toolsData.category_name && (
-      <option disabled>Select category first</option>
-    )}
+                  >
+                    <option value="" disabled>
+                      Select Course
+                    </option>
 
-    {coursesLoading && (
-      <option disabled>Loading courses...</option>
-    )}
+                    {!toolsData.category_name && (
+                      <option disabled>Select category first</option>
+                    )}
 
-    {coursesError && (
-      <option disabled>Error loading courses</option>
-    )}
+                    {coursesLoading && (
+                      <option disabled>Loading courses...</option>
+                    )}
 
-    {filteredCourses.map((curr, index) => (
-      <option
-        key={`${curr.courseName}-${index}`}
-        value={curr.courseName}
-      >
-        {curr.courseName}
-      </option>
-    ))}
-  </select>
-</div>
+                    {coursesError && (
+                      <option disabled>Error loading courses</option>
+                    )}
+
+                    {filteredCourses.map((curr, index) => (
+                      <option
+                        key={`${curr.courseName}-${index}`}
+                        value={curr.courseName}
+                      >
+                        {curr.courseName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
               </div>
 
               <TableContainer component={Paper}>
-                <Table sx={{ maxWidth: 800,marginTop:5 }} aria-label="customized table">
+                <Table sx={{ maxWidth: 800, marginTop: 5 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
                       <StyledTableCell align="center">Tools Images <span className="required">*</span></StyledTableCell>
@@ -622,29 +656,29 @@ const handleDeleteClick = (row) => {
                             onChange={(e) => handleRowChange(index, 'toolsLink', e.target.value)}
                           />
                         </StyledTableCell>
-                       <StyledTableCell align="center">
-  {!isEditMode && (
-    <>
-      <GoPlus
-        onClick={addRow}
-        style={{
-          fontSize: "2rem",
-          color: "#00AEEF",
-          marginRight: "10px",
-          cursor: "pointer",
-        }}
-      />
-      <IoClose
-        onClick={() => deleteRow(row.id)}
-        style={{
-          fontSize: "2rem",
-          color: "red",
-          cursor: "pointer",
-        }}
-      />
-    </>
-  )}
-</StyledTableCell>
+                        <StyledTableCell align="center">
+                          {!isEditMode && (
+                            <>
+                              <GoPlus
+                                onClick={addRow}
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "#00AEEF",
+                                  marginRight: "10px",
+                                  cursor: "pointer",
+                                }}
+                              />
+                              <IoClose
+                                onClick={() => deleteRow(row.id)}
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                              />
+                            </>
+                          )}
+                        </StyledTableCell>
 
                       </StyledTableRow>
                     ))}
@@ -654,16 +688,16 @@ const handleDeleteClick = (row) => {
 
               <div className="course-row" style={{ gap: 12 }}>
                 <button
-  className='submit-btn'
-  onClick={handleSubmit}
-  disabled={!isFormValid || isAdding || isUpdating}
-  style={{
-    opacity: (!isFormValid || isAdding || isUpdating) ? 0.6 : 1,
-    cursor: (!isFormValid || isAdding || isUpdating) ? "not-allowed" : "pointer",
-  }}
->
-  {toolsData.tool_id ? "Update" : "Submit"}
-</button>
+                  className='submit-btn'
+                  onClick={handleSubmit}
+                  disabled={!isFormValid || isAdding || isUpdating}
+                  style={{
+                    opacity: (!isFormValid || isAdding || isUpdating) ? 0.6 : 1,
+                    cursor: (!isFormValid || isAdding || isUpdating) ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {toolsData.tool_id ? "Update" : "Submit"}
+                </button>
 
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
               </div>
@@ -681,21 +715,21 @@ const handleDeleteClick = (row) => {
 
                 <div className='date-schedule'>
                   Start Date
-                  <DatePicker 
+                  <DatePicker
                     value={startDate}
                     onChange={(date) => setStartDate(date)}
                     slotProps={{ actionBar: { actions: ['clear'] } }}
                     sx={{
-                      '& .MuiIconButton-root':{color: '#00aeef'}
+                      '& .MuiIconButton-root': { color: '#00aeef' }
                     }}
                   />
                   End Date
-                  <DatePicker 
+                  <DatePicker
                     value={endDate}
-                    onChange={(date) => setEndDate(date)} 
+                    onChange={(date) => setEndDate(date)}
                     slotProps={{ actionBar: { actions: ['clear'] } }}
                     sx={{
-                      '& .MuiIconButton-root':{color: '#00aeef'}
+                      '& .MuiIconButton-root': { color: '#00aeef' }
                     }}
                   />
                   <button className="filter" onClick={handleDateFilter}>Filter</button>
@@ -744,7 +778,7 @@ const handleDeleteClick = (row) => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell  align='center' sx={{ width: '50px' }}>
+                  <StyledTableCell align='center' sx={{ width: '50px' }}>
                     <Checkbox />
                   </StyledTableCell>
                   <StyledTableCell align='center' sx={{ width: '80px' }}>S.No.</StyledTableCell>
@@ -780,39 +814,39 @@ const handleDeleteClick = (row) => {
                         ) : ("")}
                       </StyledTableCell> */}
                       <StyledTableCell align="center">
-  {courseRow.imageUrl && (
-    <img
-      src={`http://localhost:8081/uploads/test/tools_images/${courseRow.imageUrl}`}
-      alt={courseRow.toolsName}
-      style={{
-        width: 40,
-        height: 28,
-        objectFit: "cover",
-        borderRadius: 4,
-        border: "1px solid #ddd",
-      }}
-    />
-  )}
-</StyledTableCell>
+                        {courseRow.imageUrl && (
+                          <img
+                            src={`http://localhost:8081/uploads/test/tools_images/${courseRow.imageUrl}`}
+                            alt={courseRow.toolsName}
+                            style={{
+                              width: 40,
+                              height: 28,
+                              objectFit: "cover",
+                              borderRadius: 4,
+                              border: "1px solid #ddd",
+                            }}
+                          />
+                        )}
+                      </StyledTableCell>
 
                       <StyledTableCell align="left">{courseRow.toolsName}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.toolsLink}</StyledTableCell>
-                     <StyledTableCell align="center">
-  {courseRow.createdDate
-    ? dayjs(courseRow.createdDate).format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {courseRow.createdDate
+                          ? dayjs(courseRow.createdDate).format("MMM-DD-YYYY").toUpperCase()
+                          : "N/A"}
+                      </StyledTableCell>
 
 
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                           <FaEdit className="edit" onClick={() => handleEditClick(courseRow)} style={{ cursor: 'pointer' }} />
                           {/* <RiDeleteBin6Line className="delete" onClick={() => handleDeleteClick(courseRow.curr_id)} style={{ cursor: 'pointer' }} /> */}
-                        <RiDeleteBin6Line
-  className="delete"
-  onClick={() => handleDeleteClick(courseRow)}
-  style={{ cursor: "pointer" }}
-/>
+                          <RiDeleteBin6Line
+                            className="delete"
+                            onClick={() => handleDeleteClick(courseRow)}
+                            style={{ cursor: "pointer" }}
+                          />
 
                         </div>
                       </StyledTableCell>
@@ -837,7 +871,7 @@ const handleDeleteClick = (row) => {
               <AdminPagination
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
-                totalRows={filteredTools.length} 
+                totalRows={filteredTools.length}
                 onPageChange={handlePageChange}
               />
             </div>

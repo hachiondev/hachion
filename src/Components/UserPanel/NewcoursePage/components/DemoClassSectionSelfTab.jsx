@@ -431,7 +431,7 @@ useEffect(() => {
               Self-paced Learning
             </div>
             <div className={styles.dcinfosubdescription}>
-              Learning Mode
+              Self-Paced Learning
             </div>
           </div>
         </div>

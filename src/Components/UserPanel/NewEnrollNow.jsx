@@ -310,10 +310,6 @@ const isEnrollmentBlocked =
 
     finalPrice = Math.max(0, finalPrice);
   }
-
-  // const formattedAmount = finalPrice
-  //   ? `${displayCurrency} ${Math.round(finalPrice)}`
-  //   : "Price on request";
 const formattedAmount =
   finalPrice === 0
     ? `${displayCurrency} 0`
@@ -533,8 +529,6 @@ const isZeroAmount = Number(finalPrice) === 0;
       notifyVia,
     });
 }}
-
-
                 >
                   Enroll Now, Pay Later
                 </button>

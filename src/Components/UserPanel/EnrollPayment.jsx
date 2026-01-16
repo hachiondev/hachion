@@ -77,6 +77,24 @@ const EnrollPayment = () => {
     flag: 'US',
     name: 'United States',
   });
+const generateInvoiceNumber = () => {
+  if (!paymentData?.id || !paymentData?.paymentDate) return "";
+
+  // Course short code: Salesforce Admin → SALES
+  const courseCode = selectedBatchData.schedule_course_name
+    ?.replace(/[^A-Za-z]/g, "")
+    .toUpperCase()
+    .substring(0, 5);
+
+  // Date from backend payment date (MMDDYYYY)
+  const date = new Date(paymentData.paymentDate);
+  const datePart =
+    String(date.getMonth() + 1).padStart(2, "0") +
+    String(date.getDate()).padStart(2, "0") +
+    date.getFullYear();
+
+  return `HACH${courseCode}${datePart}-${paymentData.id}`;
+};
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -193,7 +211,6 @@ const EnrollPayment = () => {
 
     detectCurrency();
   }, []);
-
   const getField = (baseField) => {
     const prefixMap = {
       mentoring: 'm',
@@ -433,9 +450,11 @@ const EnrollPayment = () => {
       }
 
       // 1️⃣ Create FRONTEND invoice number
-      const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
-        .replace(/\s+/g, "")
-        .toUpperCase()}-${paymentData.orderId}`;
+      // const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
+      //   .replace(/\s+/g, "")
+      //   .toUpperCase()}-${paymentData.orderId}`;
+
+      const invoiceNumber = generateInvoiceNumber();
 
       // 2️⃣ Prepare PaymentRequest (ONLY required fields)
       const payload = {
@@ -443,6 +462,14 @@ const EnrollPayment = () => {
         studentName: studentData?.userName,
         email: studentData?.email,
         mobile: mobileNumber,
+        // currencyCode: currencyCodeMap[currency] || "$",
+  //       currencyCode:
+  // selectedCountry?.flag === "IN"
+  //   ? "₹"
+  //   : currencyCodeMap[currency] ?? currency,
+  currencyCode: currency, // INR, USD, EUR, AUD, etc.
+
+
 
         courseName: selectedBatchData.schedule_course_name,
         courseFee: courseData?.iamount,
@@ -475,7 +502,7 @@ const EnrollPayment = () => {
 
       // 3️⃣ Generate invoice PDF (SERVER SIDE)
       await axios.post(
-        "https://api.test.hachion.co/payments/generateInvoice",
+        "https://api.test.hachion.co/payments/generateInvoiceForOnline",
         payload
       );
 
@@ -494,9 +521,8 @@ const EnrollPayment = () => {
       setIsGeneratingInvoice(true);
       setInvoiceMessage("");
 
-      const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
-        .replace(/\s+/g, "")
-        .toUpperCase()}-${paymentData.orderId}`;
+     const invoiceNumber = generateInvoiceNumber();
+
 
       const netAmount =
         courseData.iamount -
@@ -507,6 +533,7 @@ const EnrollPayment = () => {
         studentName: studentData?.userName,
         email: studentData?.email,
         mobile: mobileNumber,
+currencyCode: currency, 
 
         courseName: selectedBatchData.schedule_course_name,
         courseFee: courseData?.iamount,
@@ -531,7 +558,7 @@ const EnrollPayment = () => {
 
       // 🔥 ONLY THIS API
       await axios.post(
-        "https://api.test.hachion.co/payments/generateInvoice",
+        "https://api.test.hachion.co/payments/generateInvoiceForOnline",
         payload
       );
 

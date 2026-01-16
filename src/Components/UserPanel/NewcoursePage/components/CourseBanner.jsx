@@ -84,11 +84,13 @@ export default function CourseBanner({ onEnroll }) {
   const { courseName } = useParams();
 
   const courseNameForApi = courseName
-    ? decodeURIComponent(courseName)
+  ? decodeURIComponent(courseName)
       .replace(/[-_]+/g, " ")
+      .replace(/\b([a-z]{2})\s(\d{3})\b/gi, "$1-$2")
       .trim()
       .toLowerCase()
-    : "";
+  : "";
+
 
   const [showLoginRequired, setShowLoginRequired] = useState(false);
   const [showVideo, setShowVideo] = useState(false);

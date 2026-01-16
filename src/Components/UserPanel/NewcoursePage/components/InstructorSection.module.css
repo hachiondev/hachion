@@ -372,133 +372,12 @@
   }
 
   .iscontent {
-    padding: 16px 18px;
+    padding: 0px 18px;
     /* Increased from 12px 14px */
   }
 
   .isname {
-    font-size: 26px;
-    /* Increased from 20px */
-    font-weight: 600;
-  }
-
-  .isbadge {
-    padding: 8px 16px;
-    /* Increased from 4px 12px */
-    font-size: 18px;
-    /* Increased from 10px */
-  }
-
-  .isstat {
-    min-width: 140px;
-    /* Increased from 120px */
-    padding: 14px 16px;
-    /* Increased from 10px 12px */
-  }
-
-  .isphoto {
-    height: auto;
-    max-height: 220px;
-    /* Added for better image control */
-    width: 100%;
-    /* Ensure full width */
-    object-fit: cover;
-    /* Better image scaling */
-  }
-
-  .ishead h2 {
-    font-size: 32px;
-    /* Increased from 26px */
-    font-weight: 600;
-  }
-
-  .ishead p {
-    font-size: 20px;
-  }
-
-  .istitle {
-    font-size: 20px;
-    margin-top: 12px;
-    text-align: center;
-  }
-
-  .isstatlab {
-    font-weight: 400;
-    font-size: 20px;
-    /* Added font size */
-  }
-
-  .isstatval {
-    font-size: 22px;
-    /* Added for stats value */
-    font-weight: 600;
-  }
-
-  .isbio {
-    font-size: 20px;
-    /* Increased from 14px */
-    font-weight: 400;
-    line-height: 1.6;
-    /* Added for better readability */
-  }
-
-    .istopline{
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .issubhead {
     font-size: 24px;
-    /* Increased from 20px */
-  }
-
-  .islist {
-    padding-left: 1rem;
-    font-size: 20px;
-    line-height: 1.6;
-    /* Added for better readability */
-  }
-
-  .isactions {
-    margin-bottom: 20px;
-  }
-
-  .isactions .isbtn {
-    padding: 14px 24px;
-    /* Increased from 10px 20px */
-    font-size: 16px;
-    /* Increased from 14px */
-  }
-
-  .isactions .isbtn .ico img {
-    height: 20px;
-    /* Increased from 15px */
-    width: 20px;
-    /* Added width for consistency */
-  }
-
-  .isstats {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 375px) {
-    .isphoto img {
-    width: 54%;
-    margin: 0 auto;
-  }
-
-  .iscard {
-    grid-template-columns: 1fr;
-  }
-
-  .iscontent {
-    padding: 16px 18px;
-    /* Increased from 12px 14px */
-  }
-
-  .isname {
-    font-size: 26px;
     /* Increased from 20px */
     font-weight: 600;
   }
@@ -528,27 +407,24 @@
   }
 
   .ishead h2 {
-    font-size: 32px;
+    font-size: 24px;
     /* Increased from 26px */
     font-weight: 600;
   }
 
   .ishead p {
-    font-size: 20px;
-    /* Increased from 16px */
+    font-size: 14px;
   }
 
   .istitle {
-    font-size: 18px;
-    /* Increased from 14px */
+    font-size: 14px;
     margin-top: 12px;
     text-align: center;
-    /* Increased from 10px */
   }
 
   .isstatlab {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     /* Added font size */
   }
 
@@ -559,22 +435,26 @@
   }
 
   .isbio {
-    font-size: 18px;
+    font-size: 14px;
     /* Increased from 14px */
     font-weight: 400;
     line-height: 1.6;
     /* Added for better readability */
   }
 
+    .istopline{
+    flex-direction: column;
+    align-items: center;
+  }
+
   .issubhead {
-    font-size: 22px;
+    font-size: 24px;
     /* Increased from 20px */
   }
 
   .islist {
     padding-left: 1rem;
-    font-size: 16px;
-    /* Increased from 13px */
+    font-size: 14px;
     line-height: 1.6;
     /* Added for better readability */
   }
@@ -600,9 +480,126 @@
   .isstats {
     flex-direction: column;
   }
-  
-  .istopline{
+}
+
+@media (max-width: 375px) {
+
+  .isphoto img {
+    width: 45%;
+    margin: 0 auto;
+  }
+
+  .iscard {
+    grid-template-columns: 1fr;
+  }
+
+  .iscontent {
+    padding: 0px 18px;
+    /* Increased from 12px 14px */
+  }
+
+  .isname {
+    font-size: 24px;
+    /* Increased from 20px */
+    font-weight: 600;
+  }
+
+  .isbadge {
+    padding: 8px 16px;
+    /* Increased from 4px 12px */
+    font-size: 14px;
+    /* Increased from 10px */
+  }
+
+  .isstat {
+    min-width: 140px;
+    /* Increased from 120px */
+    padding: 14px 16px;
+    /* Increased from 10px 12px */
+  }
+
+  .isphoto {
+    height: auto;
+    max-height: 220px;
+    /* Added for better image control */
+    width: 100%;
+    /* Ensure full width */
+    object-fit: cover;
+    /* Better image scaling */
+  }
+
+  .ishead h2 {
+    font-size: 24px;
+    /* Increased from 26px */
+    font-weight: 600;
+  }
+
+  .ishead p {
+    font-size: 14px;
+  }
+
+  .istitle {
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .isstatlab {
+    font-weight: 400;
+    font-size: 14px;
+    /* Added font size */
+  }
+
+  .isstatval {
+    font-size: 22px;
+    /* Added for stats value */
+    font-weight: 600;
+  }
+
+  .isbio {
+    font-size: 14px;
+    /* Increased from 14px */
+    font-weight: 400;
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+    .istopline{
     flex-direction: column;
     align-items: center;
+  }
+
+  .issubhead {
+    font-size: 20px;
+    /* Increased from 20px */
+  }
+
+  .islist {
+    padding-left: 1rem;
+    font-size: 14px;
+    line-height: 1.6;
+    /* Added for better readability */
+  }
+
+  .isactions {
+    margin-bottom: 20px;
+  }
+
+  .isactions .isbtn {
+    padding: 14px 24px;
+    /* Increased from 10px 20px */
+    font-size: 16px;
+    /* Increased from 14px */
+  }
+
+  .isactions .isbtn .ico img {
+    height: 20px;
+    /* Increased from 15px */
+    width: 20px;
+    /* Added width for consistency */
+  }
+
+  .isstats {
+    flex-direction: column;
   }
 }

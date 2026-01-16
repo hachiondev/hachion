@@ -288,15 +288,15 @@
   }
 
   .wssubhead {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .wsname {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .wstext {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -305,7 +305,11 @@
   }
 
   .wsrole {
-    font-size: 20px;
+    font-size: 16px;
+  }
+
+  .wsratingnum {
+    font-size: 16px;
   }
 
   .wsrating {
@@ -318,48 +322,51 @@
   }
   
   .wsctatitle {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .wscta p {
-    font-size: 20px;
+    font-size: 14px;
   }
         .wsgrid {
         grid-template-columns: 1fr;
     }
 
       .readMoreBtn{
-    font-size: 18px;
+    font-size: 14px;
+  }
+
+  .wsctabtn{
+    font-size: 14px;
   }
 }
 
 @media (max-width: 375px) {
-
   .wskpilab {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 300;
   }
 
   .wscattitle {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
   }
 
   .wsresp {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
   }
 
   .wssubhead {
-    font-size: 19px;
+    font-size: 24px;
   }
 
   .wsname {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .wstext {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -371,26 +378,35 @@
     font-size: 16px;
   }
 
-  .wsrating {
-    gap: 0;
+  .wsratingnum {
     font-size: 16px;
   }
 
-  .wscta {
-    font-size: 16px;
-  }
-  .wsctatitle{
+  .wsrating {
+    gap: 0;
     font-size: 18px;
   }
 
-  .wscta p{
-    font-size: 16px;
+  .wscta {
+    font-size: 18px;
   }
-      .wsgrid {
+  
+  .wsctatitle {
+    font-size: 20px;
+  }
+
+  .wscta p {
+    font-size: 14px;
+  }
+        .wsgrid {
         grid-template-columns: 1fr;
     }
 
       .readMoreBtn{
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .wsctabtn{
+    font-size: 14px;
   }
 }

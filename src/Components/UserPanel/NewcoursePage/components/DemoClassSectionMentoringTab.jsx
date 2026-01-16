@@ -367,7 +367,7 @@ useEffect(() => {
           </div>
           <div>
             <div className={styles.dcinfotitle}>Mentoring Mode</div>
-            <div className={styles.dcinfosubdescription}>Learning Mode</div>
+            <div className={styles.dcinfosubdescription}>Self-Paced + Expert Q&A Support</div>
           </div>
         </div>
 {isCourseLoading ? (

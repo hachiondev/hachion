@@ -657,7 +657,7 @@ What's Included:
           </div>
           <div>
             <div className={styles.dcinfotitle}>Live Training</div>
-            <div className={styles.dcinfosubdescription}>Learning Mode</div>
+            <div className={styles.dcinfosubdescription}>Live Instructor-Led Training</div>
           </div>
         </div>
 

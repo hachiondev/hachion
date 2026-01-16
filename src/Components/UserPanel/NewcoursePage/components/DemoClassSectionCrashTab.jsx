@@ -288,7 +288,7 @@ What's Included:
           </div>
           <div>
             <div className={styles.dcinfotitle}>Crash Course</div>
-            <div className={styles.dcinfosubdescription}>Learning Mode</div>
+            <div className={styles.dcinfosubdescription}>Fast Track Batch</div>
           </div>
         </div>
 {isCourseLoading ? (

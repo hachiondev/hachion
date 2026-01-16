@@ -433,6 +433,40 @@ export default function AdminTools() {
     );
   };
 
+  const handleToolCheckboxChange = (tool, isChecked) => {
+  const currentRow = rows[0] || { id: Date.now(), selectedTools: [] };
+  const selectedTools = [...(currentRow.selectedTools || [])];
+  
+  if (isChecked) {
+    // Add tool if not already selected
+    if (!selectedTools.includes(tool)) {
+      selectedTools.push(tool);
+    }
+  } else {
+    // Remove tool
+    const index = selectedTools.indexOf(tool);
+    if (index > -1) {
+      selectedTools.splice(index, 1);
+    }
+  }
+  
+  // Update the row with selected tools and also update toolsName for backward compatibility
+  const updatedRow = {
+    ...currentRow,
+    selectedTools,
+    toolsName: selectedTools.length > 0 ? selectedTools.join(', ') : ''
+  };
+  
+  // If it's the first row, update it, otherwise add new row
+  if (rows.length > 0) {
+    const updatedRows = [...rows];
+    updatedRows[0] = updatedRow;
+    setRows(updatedRows);
+  } else {
+    setRows([updatedRow]);
+  }
+};
+
   useEffect(() => {
     if (toolsFlat.length > 0) {
       setAllData(toolsFlat);
@@ -480,40 +514,6 @@ export default function AdminTools() {
             </div>
             <div className='course-details'>
               <div className='course-row'>
-                <div className="col-md-3">
-                  <label htmlFor="toolName" className="form-label">Tool Name <span className="required">*</span></label>
-                  <select
-                    id="toolName"
-                    className="form-select"
-                    name="toolsName"
-                    value={rows[0]?.toolsName || ""}
-                    onChange={(e) => handleRowChange(0, 'toolsName', e.target.value)}
-                    disabled={isEditMode}
-                  >
-                    <option value="" disabled>
-                      Select Tool
-                    </option>
-                    <option value="HTML Editor">HTML Editor</option>
-                    <option value="Jest">Jest</option>
-                    <option value="GitHub">GitHub</option>
-                    <option value="Visual Studio Code">Visual Studio Code</option>
-                    <option value="Postman">Postman</option>
-                    <option value="Chrome DevTools">Chrome DevTools</option>
-                    <option value="npm">npm</option>
-                    <option value="Node.js">Node.js</option>
-                    <option value="React DevTools">React DevTools</option>
-                    <option value="MongoDB Compass">MongoDB Compass</option>
-                    <option value="Docker">Docker</option>
-                    <option value="Figma">Figma</option>
-                    <option value="AWS Console">AWS Console</option>
-                    <option value="Android Studio">Android Studio</option>
-                    <option value="Xcode">Xcode</option>
-                    <option value="Git">Git</option>
-                    <option value="Redux DevTools">Redux DevTools</option>
-                    <option value="MySQL Workbench">MySQL Workbench</option>
-                    <option value="Other">Other (Custom)</option>
-                  </select>
-                </div>
                 <div className="col-md-3">
                   <label htmlFor="inputState" className="form-label">Category Name <span className="required">*</span></label>
                   {/* <select id="inputState" className="form-select" name='category_name' value={toolsData.category_name} onChange={handleChange}> */}
@@ -583,7 +583,108 @@ export default function AdminTools() {
                     ))}
                   </select>
                 </div>
-
+                <div className="col-md-3">
+  <label htmlFor="toolName" className="form-label">Tool Name <span className="required">*</span></label>
+  <div className="dropdown">
+    <button
+      className="form-select d-flex justify-content-between align-items-center"
+      type="button"
+      id="toolDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      style={{ textAlign: 'left' }}
+    >
+      <span>
+        {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 
+          ? `${rows[0]?.selectedTools.length} tool${rows[0]?.selectedTools.length !== 1 ? 's' : ''} selected` 
+          : 'Select Tools'}
+      </span>
+    </button>
+    <ul className="dropdown-menu" aria-labelledby="toolDropdown" style={{ width: '100%', maxHeight: '300px', overflowY: 'auto' }}>
+      {[
+        "HTML Editor",
+        "Jest",
+        "GitHub",
+        "Visual Studio Code",
+        "Postman",
+        "Chrome DevTools",
+        "npm",
+        "Node.js",
+        "React DevTools",
+        "MongoDB Compass",
+        "Docker",
+        "Figma",
+        "AWS Console",
+        "Android Studio",
+        "Xcode",
+        "Git",
+        "Redux DevTools",
+        "MySQL Workbench"
+      ].map((tool, index) => (
+        <li key={index}>
+          <div className="dropdown-item">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id={`tool-${index}`}
+                checked={rows[0]?.selectedTools?.includes(tool) || false}
+                onChange={(e) => handleToolCheckboxChange(tool, e.target.checked)}
+                disabled={isEditMode}
+              />
+              <label className="form-check-label" htmlFor={`tool-${index}`}>
+                {tool}
+              </label>
+            </div>
+          </div>
+        </li>
+      ))}
+      <li>
+        <hr className="dropdown-divider" />
+      </li>
+      <li>
+        <div className="dropdown-item">
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="tool-other"
+              checked={rows[0]?.selectedTools?.includes('Other') || false}
+              onChange={(e) => handleToolCheckboxChange('Other (Custom)', e.target.checked)}
+              disabled={isEditMode}
+            />
+            <label className="form-check-label" htmlFor="tool-other">
+              Other (Custom)
+            </label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
+  {/* Display selected tools as tags */}
+  {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 && (
+    <div className="selected-tools-container mt-2">
+      <small className="text-muted">Selected: </small>
+      <div className="d-flex flex-wrap gap-1 mt-1">
+        {rows[0].selectedTools.map((tool, index) => (
+          <span key={index} className="badge bg-primary d-flex align-items-center">
+            {tool}
+            {!isEditMode && (
+              <button 
+                type="button" 
+                className="btn-close btn-close-white ms-1" 
+                style={{ fontSize: '0.5rem' }}
+                onClick={() => handleToolCheckboxChange(tool, false)}
+                aria-label="Remove"
+              ></button>
+            )}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
               </div>
 
               <TableContainer component={Paper}>

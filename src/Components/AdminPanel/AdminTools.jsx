@@ -399,7 +399,7 @@ export default function AdminTools() {
         id: row.id,
         tool_image: null,
         preview: row.imageUrl
-          ? `http://localhost:8081/uploads/test/tools_images/${row.imageUrl}`
+          ? `https://api.test.hachion.co/uploads/test/tools_images/${row.imageUrl}`
           : null,
         toolsName: row.toolsName,
         toolsLink: row.toolsLink,
@@ -917,7 +917,7 @@ export default function AdminTools() {
                       <StyledTableCell align="center">
                         {courseRow.imageUrl && (
                           <img
-                            src={`http://localhost:8081/uploads/test/tools_images/${courseRow.imageUrl}`}
+                            src={`https://api.test.hachion.co/uploads/test/tools_images/${courseRow.imageUrl}`}
                             alt={courseRow.toolsName}
                             style={{
                               width: 40,

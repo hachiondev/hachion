@@ -211,11 +211,14 @@ const BlogDetails = () => {
                 </div>
 
                 {headings.length > 0 && (
-                  <div className="table-of-contents">
-                    <h3>Topics</h3>
-                    <ul>
-                      {headings.map((h) => (
-                        <li key={h.id}>
+                  <aside className="container">
+                    <h3 className="toc-title">Topics</h3>
+
+                    <ul className="toc-list">
+                      {headings.map((h, index) => (
+                        <li key={h.id} className="toc-item">
+                          <span className="toc-index">{index + 1}</span>
+
                           <a
                             href={`#${h.id}`}
                             onClick={(e) => {
@@ -231,8 +234,9 @@ const BlogDetails = () => {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </aside>
                 )}
+
 
                 <div
                   className="topics"
@@ -244,15 +248,31 @@ const BlogDetails = () => {
             )}
 
             <div className="detail-right">
-              <div className="detail-right-icon">
-                <p>Share :</p>
-                <FaFacebookF className="detail-right-social" onClick={shareLinks.facebook} />
-                <FaTwitter className="detail-right-social" onClick={shareLinks.twitter} />
-                <FaLinkedinIn className="detail-right-social" onClick={shareLinks.linkedin} />
-                <IoLogoWhatsapp className="detail-right-social" onClick={shareLinks.whatsapp} />
-                <IoIosMail className="detail-right-social" onClick={shareLinks.email} />
-              </div>
-            </div>
+  <div className="detail-right-icon">
+    <p className="share-label">Share :</p>
+
+    <FaFacebookF
+      className="social-icon facebook"
+    />
+
+    <FaTwitter
+      className="social-icon twitter"
+    />
+
+    <FaLinkedinIn
+      className="social-icon linkedin"
+    />
+
+    <IoLogoWhatsapp
+      className="social-icon whatsapp"
+    />
+
+    <IoIosMail
+      className="social-icon mail"
+    />
+  </div>
+</div>
+
           </div>
 
           {/* ✅ RECENT POSTS with Skeleton Loader */}
@@ -260,53 +280,53 @@ const BlogDetails = () => {
             <h3>Recent Post</h3>
             {recentLoading
               ? Array.from({ length: 5 }).map((_, i) => (
-                  <div className="recent-post-skeleton" key={i}>
-                    <div className="recent-skeleton-image"></div>
-                    <div className="recent-skeleton-text subtitle"></div>
-                    <div className="recent-skeleton-text title"></div>
+                <div className="recent-post-skeleton" key={i}>
+                  <div className="recent-skeleton-image"></div>
+                  <div className="recent-skeleton-text subtitle"></div>
+                  <div className="recent-skeleton-text title"></div>
+                </div>
+              ))
+              : blogs.length > 0 ? (
+                blogs.slice(0, 5).map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="recent-post-item"
+                    onClick={() => {
+                      navigate(
+                        `/blogs/${blog.category_name
+                          .replace(/\s+/g, "-")
+                          .toLowerCase()}/${blog.id}`
+                      );
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    <img
+                      src={blog.blog_image}
+                      alt={blog.title}
+                      className="recent-post-img"
+                      onError={(e) => (e.target.src = Blogimageplaceholder)}
+                    />
+                    <div className="recent-post-text">
+                      <div className="recent-post-row">
+                        <FaCalendarAlt className="recent-post-date-icon" />
+                        <p className="recent-post-date">
+                          {(() => {
+                            const d = new Date(blog.date);
+                            return d.toLocaleDateString("en-US", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            });
+                          })()}
+                        </p>
+                      </div>
+                      <h5 className="recent-post-title">{blog.title}</h5>
+                    </div>
                   </div>
                 ))
-              : blogs.length > 0 ? (
-                  blogs.slice(0, 5).map((blog) => (
-                    <div
-                      key={blog.id}
-                      className="recent-post-item"
-                      onClick={() => {
-                        navigate(
-                          `/blogs/${blog.category_name
-                            .replace(/\s+/g, "-")
-                            .toLowerCase()}/${blog.id}`
-                        );
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      <img
-                        src={blog.blog_image}
-                        alt={blog.title}
-                        className="recent-post-img"
-                        onError={(e) => (e.target.src = Blogimageplaceholder)}
-                      />
-                      <div className="recent-post-text">
-                        <div className="recent-post-row">
-                          <FaCalendarAlt className="recent-post-date-icon" />
-                          <p className="recent-post-date">
-                            {(() => {
-                              const d = new Date(blog.date);
-                              return d.toLocaleDateString("en-US", {
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric",
-                              });
-                            })()}
-                          </p>
-                        </div>
-                        <h5 className="recent-post-title">{blog.title}</h5>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>No blogs available</p>
-                )}
+              ) : (
+                <p>No blogs available</p>
+              )}
           </div>
         </div>
 

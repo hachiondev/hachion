@@ -154,11 +154,61 @@
 
 .detail-right {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
-  padding: 0.5vh;
-  gap: 3vh;
+  padding: 8px;
 }
+
+.detail-right-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.share-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  margin-right: 6px;
+}
+
+/* Base icon style */
+.social-icon {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Hover effect */
+.social-icon:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+
+/* Brand colors */
+.facebook {
+  background-color: #1877f2;
+}
+
+.twitter {
+  background-color: #1da1f2;
+}
+
+.linkedin {
+  background-color: #0a66c2;
+}
+
+.whatsapp {
+  background-color: #25d366;
+}
+
+.mail {
+  background-color: #6b7280;
+}
+
 
 .detail-right-icon {
   display: flex;
@@ -171,6 +221,7 @@
   font-size: medium;
   color: #0E2A46;
   font-weight: 400;
+  margin: 0;
 }
 
 .detail-right-social {
@@ -2000,6 +2051,70 @@
 .title_allcourse {
   padding: 10px;
 }
+
+/* .toc-container {
+  position: sticky;
+  top: 90px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+} */
+
+.toc-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #111;
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.toc-item:hover {
+  background: #f5f7ff;
+  transform: translateX(4px);
+}
+
+.toc-index {
+  min-width: 24px;
+  height: 24px;
+  background: #eef2ff;
+  color: #01adee;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toc-item a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.toc-item a:hover {
+  color: #01adee;
+}
+
 
 @media (max-width: 1366px) {
   .about-us-top {

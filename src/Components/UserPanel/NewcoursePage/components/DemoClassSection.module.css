@@ -411,7 +411,7 @@
   padding: 8px 13px;
   border-radius: 10px;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 10px;
   margin: auto;
 }
 
@@ -1330,8 +1330,35 @@
   }
 
   .dctabs {
-    background: transparent;
-    grid-template-columns: repeat(1fr);
+      display: flex;
+  gap: 12px;
+  overflow-x: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+    .dctab {
+    
+  }
+
+  .dctabs > * {
+    flex: 0 0 75%;   /* adjust if needed */
+    min-width: 140px;
+  }
+
+  /* optional: smooth snap */
+  .dctabs {
+    scroll-snap-type: x mandatory;
+  }
+
+  .dctabs > * {
+    scroll-snap-align: start;
+  }
+
+  /* optional: hide scrollbar */
+  .dctabs::-webkit-scrollbar {
+    display: none;
   }
 
   .dctabs .dctab {
@@ -1342,6 +1369,8 @@
     min-height: 43px;
     border-radius: 10px;
     color: #000;
+    flex: 0 0 auto;
+    min-width: 140px;
   }
 
   .dctabs .dctabisactive {

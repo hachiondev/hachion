@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from "react";
+import React, { useState, useEffect, forwardRef, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../../../utils";
@@ -47,6 +47,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   const [selfNotificationDropdownOpen, setSelfNotificationDropdownOpen] = useState(false);
 
   const [showMessage, setShowMessage] = useState(false);
+  const tabRefs = useRef({});
 
   const [enrollSuccessMessage, setEnrollSuccessMessage] = useState("");
   const [enrollErrorMessage, setEnrollErrorMessage] = useState("");
@@ -234,6 +235,17 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   };
 
   useEffect(() => {
+  const el = tabRefs.current[activeTab];
+  if (el) {
+    el.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }
+}, [activeTab]);
+
+  useEffect(() => {
     if (isRequestBatchSuccess) {
       document.querySelectorAll(".dayCheckbox").forEach(cb => (cb.checked = false));
 
@@ -403,6 +415,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
           {tabs.map((t) => (
             <button
               key={t.key}
+              ref={(el) => (tabRefs.current[t.key] = el)}
               className={cn(
                 styles.dctab,
                 activeTab === t.key && styles.dctabisactive

@@ -279,7 +279,7 @@ export default function LearnSection() {
                                     <div key={tool.toolsName} className={styles.lstoolcard}>
                                         <div className={styles.lstoolicon}>
                                             <img
-                                                src={`https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`}
+                                                src={`https://api.test.hachion.co/uploads/prod/tools_images/${tool.imageUrl}`}
                                                 alt={tool.toolsName}
                                                 className={styles.lstooliconimg}
                                             />

@@ -129,8 +129,8 @@ export default function AdminTools() {
   const isEditMode = !!toolsData.tool_id;
   const isRowValid = (row) => {
     return (
-      row.toolsName &&
-      row.toolsName.trim() !== "" &&
+      // row.toolsName &&
+      // row.toolsName.trim() !== "" &&
       row.toolsLink &&
       row.toolsLink.trim() !== "" &&
       (row.tool_image || row.preview)
@@ -584,7 +584,9 @@ export default function AdminTools() {
                   </select>
                 </div>
                 <div className="col-md-3">
-  <label htmlFor="toolName" className="form-label">Tool Name <span className="required">*</span></label>
+  <label htmlFor="toolName" className="form-label">Tool Name 
+    {/* <span className="required">*</span> */}
+    </label>
   <div className="dropdown">
     <button
       className="form-select d-flex justify-content-between align-items-center"
@@ -692,7 +694,9 @@ export default function AdminTools() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell align="center">Tools Images <span className="required">*</span></StyledTableCell>
-                      <StyledTableCell align="center">Tools Name <span className="required">*</span></StyledTableCell>
+                      <StyledTableCell align="center">Tools Name 
+                        {/* <span className="required">*</span> */}
+                        </StyledTableCell>
                       <StyledTableCell align="center">Tools Download Link <span className="required">*</span></StyledTableCell>
                       <StyledTableCell align="center" sx={{ width: '150px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>

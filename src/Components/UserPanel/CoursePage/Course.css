@@ -2307,6 +2307,13 @@ html {
   /* padding-right: 25px; */
 }
 
+.sticky-bar-container {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .whatsapp-number-footer,
 .training-email-footer {
   font-size: 15px;
@@ -2902,6 +2909,7 @@ html {
     flex-wrap: wrap;
     gap: 10px;
   }
+
 
   #query2 {
     width: 375px !important;
@@ -4013,9 +4021,1191 @@ html {
     /* flex-direction: column; */
     align-items: center;
     justify-content: space-around;
-    height: 69px;
-    padding: 5px 3%;
+    height: 58px;
+        padding: 5px 72px;
   }
+
+  .sticky-bar-container {
+        height: 120px;
+        justify-content: space-around;
+        /* padding: 5px 0; */
+    }
+
+  .contact-info img,
+  /* WhatsApp icon */
+  .contact-info .whatsapp-number-footer,
+  /* WhatsApp number */
+  .contact-info .training-email-footer,
+  /* Email text */
+  .contact-info svg {
+    /* Icons */
+    display: none;
+    /* Hide in mobile view */
+  }
+
+  .query-content,
+  .whatsapp-number-footer {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .contact-button {
+    font-size: 12px;
+    /* Adjust button size if needed */
+    margin: 5px;
+  }
+
+  /* Have any query popup */
+  .have-modal-content {
+    width: 350px !important;
+    /* Adjust width for mobile view */
+    height: auto;
+  }
+
+  .request-batch {
+    width: 350px;
+    /* Adjust width for mobile view */
+    height: auto;
+    /* Allow height to adjust automatically */
+  }
+
+  .request-header {
+    font-size: 16px;
+    /* Adjust header font size */
+    height: 50px;
+    /* Adjust height for header */
+  }
+
+  .form-label {
+    font-size: 12px;
+    /* Set label font size to 12px */
+    margin: 0 1vh;
+    /* Adjust margin to fit smaller screen */
+  }
+
+  .form-control-query {
+    width: 320px;
+    /* Set input field width to 330px */
+    height: 35px;
+    /* Set input field height to 40px */
+    margin: 10px;
+    /* Center input fields and adjust margin */
+  }
+
+  .mobile-number-container {
+    margin-left: 10px;
+    /* Center align mobile number field */
+  }
+
+  .mobile-number-container input,
+  .mobile-number-container select {
+    width: 320px;
+    /* Set width of input and select fields to 330px */
+    height: 35px;
+    /* Set height to 40px */
+    margin-bottom: 10px;
+    /* Adjust margin */
+    border-color: #000000;
+  }
+
+  .btn-submit {
+    width: 320px;
+    height: 50px;
+    margin: 10px;
+    margin-left: 5px !important;
+    background-color: #00AEEF;
+  }
+
+  .button-close,
+  .request-close {
+    font-size: 16px !important;
+  }
+
+  .btn-close {
+    display: none;
+  }
+
+  /* popup */
+  .query-form {
+    margin-left: 0px !important;
+    padding: 10px !important;
+  }
+
+  .input-group,
+  .form-control-query {
+    width: 320px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-bottom: 10px !important;
+  }
+
+  .input-group.custom-width {
+    width: 320px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    flex-wrap: nowrap;
+    margin-left: 10px;
+    margin-top: 20px;
+    /* margin-bottom: 10px !important; */
+  }
+
+  #query1.form-control-query {
+    width: 320px !important;
+    height: 35px;
+    margin-bottom: 10px !important;
+    padding: 5px;
+  }
+
+  .black-calendar {
+    width: 20px;
+    height: 20px;
+    margin-right: 0px;
+  }
+
+  .date-picker-wrapper {
+    width: 320px !important;
+  }
+
+  #query1.form-control-query.date-picker,
+  #query1.form-control-query.time-picker,
+  #query1.form-select.mode {
+    width: 320px !important;
+    height: 35px !important;
+    margin-bottom: 10px !important;
+    padding: 5px;
+  }
+
+  #query2.mobile-number {
+    width: 250px !important;
+    height: 35px !important;
+    border-radius: 0 5px 5px 0;
+    padding: 5px;
+  }
+
+  #query3.form-control-query {
+    width: 320px !important;
+    height: 80px;
+    padding: 5px;
+  }
+
+  .btn-submit {
+    width: 320px !important;
+    margin-left: 25px;
+    margin-bottom: 0;
+  }
+
+  .request-batch {
+    padding-bottom: 5px;
+  }
+
+  .request-form {
+    margin-left: 5px !important;
+    padding: 10px !important;
+  }
+
+  .country-code-dropdown {
+    font-size: 12px;
+    height: 30px !important;
+    padding: 0 3px;
+    width: 100px !important;
+  }
+
+  .country-flag {
+    width: 20px;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width:375px) {
+  .curriculum {
+    width: 90%;
+    margin: 5px;
+    margin-bottom: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 20px;
+  }
+
+  .btn-pdf-icon {
+    font-size: 12px;
+  }
+
+  .btn-curriculum {
+    padding: 2px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  .mode-of-training {
+    width: 90%;
+    margin: 5px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .live-mode {
+    padding: 10px;
+    font-size: 12px;
+    text-align: justify;
+    margin-bottom: 0;
+  }
+
+  .feature-content {
+    font-size: 12px;
+    padding: 5px 5px 5px 0;
+    white-space: nowrap;
+    margin-bottom: 0;
+  }
+
+  .career-support {
+    width: 90%;
+    margin: 5px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* .career-support-head{
+  padding-bottom: 5px;
+  padding-left: 0;
+  margin-bottom: 10px;
+} */
+  .profile-building {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .profile-building-div {
+    padding-top: 10px;
+  }
+
+  .profile-building-div h5 {
+    font-size: 12px;
+  }
+
+  .profile-building-div p {
+    font-size: 12px;
+    text-align: justify;
+  }
+
+  .profile-building-div img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+
+  .qa-automation {
+    width: 90%;
+    background-color: white;
+    /* Replace background image with white */
+    flex-direction: column;
+    /* Change flex direction to column */
+    margin-left: 5%;
+    margin-right: 5%;
+    background-image: none;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 5px;
+  }
+
+  .qa-inside {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .qa-automation-left {
+    flex-direction: row;
+    /* Make the content stack vertically */
+    margin-left: 0;
+    justify-content: space-around !important;
+    width: 100%;
+  }
+
+  .qa-automation-left img {
+    margin-right: 30px;
+    height: 80px;
+    margin-left: 5px;
+    padding-left: 5px;
+    margin-top: 5px;
+  }
+
+  .qa-automation-middle {
+    margin-top: 2%;
+  }
+
+  .qa-content {
+    width: 100%;
+    text-align: justify;
+    margin-left: 0;
+    padding: 5px;
+    margin-bottom: 0;
+    font-size: 12px;
+  }
+
+  .qa-content p {
+    padding: 5px;
+    margin-bottom: 0;
+  }
+
+  .qa-button-container {
+    display: flex;
+    width: 95%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .qa-button {
+    flex-direction: column;
+    width: 95%;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    margin-top: 0;
+    gap: 5px;
+  }
+
+  .enroll-now,
+  .download {
+    width: 100%;
+    height: 40px;
+    margin: 10px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+
+  .qa-left-part {
+    width: 100%;
+  }
+
+  .qa-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .qa-right img {
+    width: 95%;
+    height: auto;
+    /* Ensure image remains responsive */
+    border-radius: 10px;
+    margin-left: 0px;
+  }
+
+  /* .mob-cert {
+  display: flex;
+  font-size: 12px;
+  justify-content: flex-end;
+  font-weight: 700;
+  color: #000;
+  margin: 0 10px 0 0;
+} */
+
+  .mob-cert {
+    display: flex;
+    justify-content: left;
+    text-align: center;
+    font-weight: 700;
+    white-space: wrap;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  .cert {
+    display: none;
+  }
+
+  .fee {
+    padding-top: 5px;
+    font-size: 12px;
+  }
+
+  .qa-video-container {
+    max-width: 400px;
+  }
+
+  .qa-video-image {
+    max-width: 450px;
+    display: block;
+  }
+
+  .qa-automation-skeleton {
+    width: 80%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto 20px auto;
+    padding: 10px;
+  }
+
+  .skeleton {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  .skeleton-img {
+    height: 140px;
+    width: 200px;
+  }
+
+  .play-btn-overlay {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+  }
+
+  .video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    height: 300px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .video-btn {
+    width: 100%;
+    height: 35px;
+    margin: 10px;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 5px;
+  }
+
+  .video-btn-icon {
+    font-size: 24px;
+  }
+
+  .course-content {
+    display: block;
+  }
+
+  /* Style for the Login Modal */
+  .login-modal-content {
+    padding: 10px;
+    width: 350px;
+    max-width: 95%;
+  }
+
+  .modal-body-login {
+    gap: 10px;
+  }
+
+  .close-modal-btn {
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+  }
+
+  .modal-title {
+    font-size: 16px;
+  }
+
+  .modal-left p {
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .login-btn,
+  .cancel-btn {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  /* .notification-options {
+    flex-direction: column;
+    align-items: flex-start;
+  } */
+
+  .modal-right img {
+    max-width: 150px;
+  }
+
+  .hlogo {
+    width: 90px;
+    height: auto;
+  }
+
+  .mob-sidebar-heading {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    height: 50px;
+    width: auto;
+    margin: 0 10px;
+    color: #000;
+    text-align: left;
+    padding: 8px 4px;
+    border-bottom: 1px solid #000000;
+  }
+
+  .mob-sidebar-text {
+    color: #000;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    width: auto;
+  }
+
+  .category-menu-item {
+    padding: 5px 10px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .submenu-item {
+    padding: 3px 0;
+  }
+
+  .mobile-dropdown {
+    width: auto;
+    margin: 10px;
+  }
+
+  .dropdown-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-color: #00AEEF;
+  }
+
+  .sidebar-top {
+    display: block;
+  }
+
+  .sidebar.show-cards .sidebar-right {
+    display: none;
+    /* Show cards when a menu is clicked */
+    /* margin-top: 10px; */
+  }
+
+  .sidebar-right-container {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .sidebar-right {
+    max-width: 100%;
+    width: 380px;
+    margin-top: 10px;
+    /* Add some space between sidebar and cards */
+    display: block;
+    /* Hide cards by default */
+  }
+
+  .sidebar-enroll-btn {
+    display: none;
+  }
+
+  .sidebar-card {
+    min-width: 100%;
+    max-height: 380px;
+  }
+
+  .sidebar-card-header-div {
+    /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  display: flex; */
+    flex-direction: row;
+    align-items: center;
+    width: 150px;
+    height: 125px;
+    margin-bottom: 0;
+  }
+
+  .sidebar-card-heading {
+    font-size: 14px;
+    padding: 5px;
+    white-space: nowrap;
+  }
+
+  .sidebar-card-icon {
+    padding: 10px;
+    height: 70px;
+    width: auto;
+    top: 30px;
+  }
+
+  .sidebar-course-details {
+    padding: 10px;
+    width: 220px;
+    max-height: 125px;
+    padding-left: 0;
+  }
+
+  .blogs-header {
+    margin-left: 20px;
+  }
+
+  .sidebar-course-name {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* Limits the text to 2 lines */
+    overflow: hidden;
+    /* Hides overflowing text */
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    max-height: 3em;
+  }
+
+  .sidebar-course-time {
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .sidebar-course-month {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .sidebar-course-review {
+    font-size: 12px;
+    font-weight: 600;
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  /* Limit the number of visible cards on mobile */
+  .sidebar-right-all {
+    /* overflow: hidden;
+  display: flex;
+  flex-direction: row; */
+    /* max-height: 350px; */
+    /* position: relative; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    margin-top: 10px;
+    max-width: 100%;
+    min-width: 100%;
+    width: auto;
+    padding-bottom: 10px;
+    gap: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: auto;
+  }
+
+  .course-pagination-container {
+    position: sticky;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .course-pagination {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .course-pagination button,
+  .cards-pagination button,
+  .course-pagination .arrow,
+  .cards-pagination .arrow {
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
+    /* Space between buttons */
+  }
+
+  .course-banner {
+    height: 100px;
+  }
+
+  .course-banner-content {
+    color: #00AAEF;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .key-highlights {
+    width: 90%;
+    padding: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 20px;
+  }
+
+  .key-highlights-header {
+    justify-content: center;
+  }
+
+  .key-highlights-content {
+    width: 30%;
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+
+  .key-icons {
+    margin-left: 0;
+    align-self: center;
+    height: 30px;
+    width: 30px;
+  }
+
+  .key-highlights-para {
+    font-size: 12px;
+  }
+
+  .corporate-data {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10%;
+    width: 80%;
+  }
+
+  .upcoming-header-content {
+    justify-content: flex-start;
+    /* Align items to the left */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    white-space: nowrap;
+    /* Prevent line breaks */
+    padding: 15px;
+    font-size: 12px;
+  }
+
+  .upcoming-link {
+    margin-right: 20px;
+    /* Spacing between each category link */
+  }
+
+  .upcoming-header {
+    padding-left: 0px;
+    /* Padding to ensure some space at the start */
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .top-course-name-mob {
+    display: flex;
+    margin-left: 2%;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 16px;
+    white-space: wrap;
+    font-weight: 600;
+    background: linear-gradient(#00AEEF, #006489);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .top-course-name {
+    display: none;
+  }
+
+  .top-course-data-mob {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .amount {
+    font-size: 16px;
+  }
+
+  .batch-type {
+    justify-content: flex-start;
+    /* Align items to the left */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    white-space: nowrap;
+    /* Prevent line breaks */
+    padding: 15px;
+    font-size: 12px;
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  .fee-amount {
+    /* display: block; */
+    font-size: 14px;
+  }
+
+  .batch-type-content {
+    padding: 0px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    margin-right: 15px;
+    margin-left: 5px;
+  }
+
+  .batch-schedule {
+    flex-direction: column;
+    width: 95%;
+    margin: 5px;
+    padding-top: 5px;
+  }
+
+  .batch-content-background {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .modal-request-content {
+    background-color: white;
+    border-radius: 20px;
+    width: 350px;
+    /* Adjust width as needed */
+    position: relative;
+  }
+
+  .left,
+  .right {
+    flex: 1;
+    width: 100%;
+    padding: 0px;
+  }
+
+  .partition-schedule {
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 5px;
+  }
+
+  /* .custom-radio {
+  width: 20px; 
+  height: 20px;
+  margin-right: 10px; 
+} */
+
+  .custom-radio {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #006489;
+    /* Outer circle border */
+  }
+
+  .custom-radio::after {
+    width: 8px;
+    height: 8px;
+  }
+
+  .batch-date {
+    font-size: 12px;
+  }
+
+  .qa-heading {
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    /* white-space: nowrap; */
+  }
+
+  .mode-container {
+    padding: 10px;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .upcoming-batch {
+    width: 90%;
+    margin: 5px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .date-span {
+    font-size: 12px;
+  }
+
+  .demo,
+  .class {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .free {
+    font-size: 20px;
+  }
+
+  .fee-enroll-now {
+    width: 90%;
+    height: 40px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 10px;
+  }
+
+  .schedule img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+
+  .schedule {
+    font-size: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .schedule-span,
+  .start-span {
+    font-size: 12px;
+    margin-left: 5px;
+  }
+
+  .left-mode {
+    padding: 10px;
+  }
+
+  .mentoring-mode-content {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: justify;
+    margin-bottom: 10px;
+  }
+
+  .mentoring-mode-heading {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .qa-course {
+    margin: 0px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .qa-subheading {
+    font-size: 12px;
+    padding-bottom: 5px;
+    margin-bottom: 3px;
+  }
+
+  .qa-sub-content {
+    font-size: 12px;
+    text-align: justify;
+  }
+
+  /* Increase toolbar font size */
+  .ql-toolbar {
+    font-size: 16px;
+    /* Increase font size in toolbar */
+  }
+
+  /* Increase editor height */
+  .ql-container {
+    height: 300px !important;
+    /* Adjust height */
+  }
+
+  /* Increase toolbar button size */
+  .ql-toolbar button {
+    font-size: 14px;
+    /* Make toolbar buttons bigger */
+    padding: 5px 10px;
+  }
+
+
+  .curriculum-expanded {
+    height: auto;
+  }
+
+  .curriculum-content {
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 0;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .curriculum-content p {
+    margin-bottom: 0;
+  }
+
+  .topic-details {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .bullet-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .bullet-list li {
+    margin-bottom: 5px;
+    list-style-type: disc;
+  }
+
+  .curriculum-topic {
+    gap: 10px;
+  }
+
+  .mode-of-training-head {
+    height: 600px;
+  }
+
+  .features-icon {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 32px;
+    height: auto;
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+
+  .live-head {
+    font-size: 12px;
+    padding: 0 10px;
+    margin-bottom: 0px;
+  }
+
+  .live-list {
+    padding-left: 20px;
+  }
+
+  .live-sections-wrapper {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+
+  .live-mode-feature {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .career-support-content {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    padding-left: 6vh;
+    padding-top: 2vh;
+    gap: 2vh;
+  }
+
+  .career-support-content img {
+    height: 4vh;
+    width: 2vw;
+  }
+
+  .career-support-content-header {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+
+  .career-support-content-para {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .cert-content p {
+    font-size: 12px;
+  }
+
+  .cert-content-points {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .contact-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+  }
+
+  .contact-item {
+    margin-right: 20px;
+    font-size: 16px;
+  }
+
+  .qa-course-heading img {
+    height: auto;
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .sticky-bar {
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: space-around;
+    height: 57px;
+        padding: 5px 12px;
+  }
+
+  .sticky-bar-container {
+        height: 120px;
+        justify-content: space-around;
+        /* padding: 5px 0; */
+    }
 
   .contact-info img,
   /* WhatsApp icon */

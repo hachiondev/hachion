@@ -36,7 +36,7 @@ const StickyBar = () => {
   return (
     <div className="sticky-bar">
       <div className="container">
-        
+        <div className='sticky-bar-container'>
         {/* ----------------------- */}
         {/* WHATSAPP CONTACT        */}
         {/* ----------------------- */}
@@ -138,6 +138,7 @@ const StickyBar = () => {
         <p className="footer-copyright-mobile">
           © Hachion 2025. All Rights Reserved.
         </p>
+        </div>
       </div>
     </div>
   );

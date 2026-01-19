@@ -447,28 +447,63 @@ useEffect(() => {
     Loading self-paced learning details...
   </div>
 ) : (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.2",
-    //   maxHeight: "420px",
-    //   overflowY: "auto",
-    // }}
-  >
-    {selfPacedLearning && selfPacedLearning.trim() ? (
-      <div
-        dangerouslySetInnerHTML={{ __html: selfPacedLearning }}
-        style={{ margin: 0 }}
-      />
-    ) : (
-      <p style={{ margin: 0 }}>
-        Learn at your own pace with structured modules, recorded sessions,
-        and hands-on projects designed for flexible learning.
-      </p>
-    )}
-  </div>
+ <div className={styles.dcinfotext}>
+  <style>
+    {`
+      .selfHtml h1,
+      .selfHtml h2,
+      .selfHtml h3,
+      .selfHtml h4,
+      .selfHtml h5,
+      .selfHtml h6 {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 12px 0 8px !important;
+        line-height: 1.3 !important;
+      }
+
+      .selfHtml p,
+      .selfHtml span,
+      .selfHtml div {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.55 !important;
+        margin: 0 0 10px !important;
+      }
+
+      .selfHtml ul,
+      .selfHtml ol {
+        padding-left: 18px !important;
+        margin: 6px 0 10px !important;
+      }
+
+      .selfHtml li {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        margin-bottom: 4px !important;
+      }
+
+      .selfHtml strong,
+      .selfHtml b {
+        font-weight: 700 !important;
+      }
+    `}
+  </style>
+
+  {selfPacedLearning && selfPacedLearning.trim() ? (
+    <div
+      className="selfHtml"
+      dangerouslySetInnerHTML={{ __html: selfPacedLearning }}
+    />
+  ) : (
+    <p style={{ margin: 0 }}>
+      Learn at your own pace with structured modules, recorded sessions,
+      and hands-on projects designed for flexible learning.
+    </p>
+  )}
+</div>
+
 )}
 
       </aside>

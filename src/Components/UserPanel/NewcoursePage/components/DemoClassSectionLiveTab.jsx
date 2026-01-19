@@ -687,27 +687,63 @@ What's Included:
     Loading live training details...
   </div>
 ) : (
- <div
-  className={styles.dcinfotext}
->
-    {liveTraining && liveTraining.trim() ? (
-      <div
-        dangerouslySetInnerHTML={{ __html: liveTraining }}
-        style={{
-          margin: 0,
-        }}
-      />
-    ) : (
-      <p
-        style={{
-          margin: 0,
-        }}
-      >
-        Live instructor-led training with real-time interaction and hands-on
-        practice.
-      </p>
-    )}
-  </div>
+ <div className={styles.dcinfotext}>
+  <style>
+    {`
+      .liveTrainingHtml h1,
+      .liveTrainingHtml h2,
+      .liveTrainingHtml h3,
+      .liveTrainingHtml h4,
+      .liveTrainingHtml h5,
+      .liveTrainingHtml h6 {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 12px 0 8px !important;
+        line-height: 1.3 !important;
+      }
+
+      .liveTrainingHtml p,
+      .liveTrainingHtml span,
+      .liveTrainingHtml div {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.55 !important;
+        margin: 0 0 10px !important;
+      }
+
+      /* ✅ ONLY CHANGE: reduce bullet spacing */
+      .liveTrainingHtml ul,
+      .liveTrainingHtml ol {
+        padding-left: 18px !important;
+        margin: 6px 0 10px !important;
+      }
+
+      .liveTrainingHtml li {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        margin-bottom: 4px !important;   /* 👈 reduced space */
+      }
+
+      .liveTrainingHtml strong,
+      .liveTrainingHtml b {
+        font-weight: 700 !important;
+      }
+    `}
+  </style>
+
+  {liveTraining && liveTraining.trim() ? (
+    <div
+      className="liveTrainingHtml"
+      dangerouslySetInnerHTML={{ __html: liveTraining }}
+    />
+  ) : (
+    <p style={{ margin: 0 }}>
+      Live instructor-led training with real-time interaction and hands-on practice.
+    </p>
+  )}
+</div>
+
 )}
 
       </aside>

@@ -85,11 +85,26 @@ export default function CourseBanner({ onEnroll }) {
 
   const courseNameForApi = courseName
   ? decodeURIComponent(courseName)
+
+      // 1️⃣ Convert triple-dash SEO separator to real hyphen
+      .replace(/---+/g, " - ")
+
+      // 2️⃣ Preserve certification codes like AZ-400, AZ-104
+      // (temporarily protect them)
+      .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
+
+      // 3️⃣ Convert remaining hyphens & underscores to spaces
       .replace(/[-_]+/g, " ")
-      .replace(/\b([a-z]{2})\s(\d{3})\b/gi, "$1-$2")
+
+      // 4️⃣ Restore protected certification codes
+      .replace(/@@/g, "-")
+
+      // 5️⃣ Normalize spaces
+      .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
   : "";
+
 
 
   const [showLoginRequired, setShowLoginRequired] = useState(false);
@@ -185,7 +200,6 @@ export default function CourseBanner({ onEnroll }) {
     ? `${course.numberOfClasses} Classes`
     : "Duration will be updated soon";
 
-  // const baseDiscount = course.idiscount ?? course.discount ?? 0;
   const baseDiscount =
   currency === "INR"
     ? course.idiscount ?? 0
@@ -330,8 +344,6 @@ const price = hasValidPrice
   ? `${currency} ${Math.round(finalPrice)}`
   : `${currency} 0`;
 
-
-  // Strike-through price
   const oldPrice =
     hasSpecialDiscount && originalPrice > finalPrice
       ? `${currency} ${Math.round(originalPrice)}`

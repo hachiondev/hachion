@@ -382,28 +382,63 @@ useEffect(() => {
     Loading mentoring details...
   </div>
 ) : (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.2",
-    //   maxHeight: "420px",
-    //   overflowY: "auto",
-    // }}
-  >
-    {mentoringMode && mentoringMode.trim() ? (
-      <div
-        dangerouslySetInnerHTML={{ __html: mentoringMode }}
-        style={{ margin: 0 }}
-      />
-    ) : (
-      <p style={{ margin: 0 }}>
-        Get personalized one-on-one guidance from industry experts with flexible
-        scheduling and customized learning paths.
-      </p>
-    )}
-  </div>
+ <div className={styles.dcinfotext}>
+  <style>
+    {`
+      .mentoringHtml h1,
+      .mentoringHtml h2,
+      .mentoringHtml h3,
+      .mentoringHtml h4,
+      .mentoringHtml h5,
+      .mentoringHtml h6 {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 12px 0 8px !important;
+        line-height: 1.3 !important;
+      }
+
+      .mentoringHtml p,
+      .mentoringHtml span,
+      .mentoringHtml div {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.55 !important;
+        margin: 0 0 10px !important;
+      }
+
+      .mentoringHtml ul,
+      .mentoringHtml ol {
+        padding-left: 18px !important;
+        margin: 6px 0 10px !important;
+      }
+
+      .mentoringHtml li {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        margin-bottom: 4px !important;
+      }
+
+      .mentoringHtml strong,
+      .mentoringHtml b {
+        font-weight: 700 !important;
+      }
+    `}
+  </style>
+
+  {mentoringMode && mentoringMode.trim() ? (
+    <div
+      className="mentoringHtml"
+      dangerouslySetInnerHTML={{ __html: mentoringMode }}
+    />
+  ) : (
+    <p style={{ margin: 0 }}>
+      Get personalized one-on-one guidance from industry experts with flexible
+      scheduling and customized learning paths.
+    </p>
+  )}
+</div>
+
 )}
 
       </aside>

@@ -303,29 +303,64 @@ What's Included:
     Loading crash course details...
   </div>
 ) : (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.2",
-    //   maxHeight: "420px",
-    //   overflowY: "auto",
-    // }}
-  >
-    {crashCourse && crashCourse.trim() ? (
-      <div
-        dangerouslySetInnerHTML={{ __html: crashCourse }}
-        style={{ margin: 0 }}
-      />
-    ) : (
-      <p style={{ margin: 0 }}>
-        Join real-time instructor-led sessions from anywhere. This mode includes
-        interactive classes, hands-on exercises, and live Q&amp;A to ensure
-        in-depth learning.
-      </p>
-    )}
-  </div>
+ <div className={styles.dcinfotext}>
+  <style>
+    {`
+      .crashHtml h1,
+      .crashHtml h2,
+      .crashHtml h3,
+      .crashHtml h4,
+      .crashHtml h5,
+      .crashHtml h6 {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 12px 0 8px !important;
+        line-height: 1.3 !important;
+      }
+
+      .crashHtml p,
+      .crashHtml span,
+      .crashHtml div {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.55 !important;
+        margin: 0 0 10px !important;
+      }
+
+      .crashHtml ul,
+      .crashHtml ol {
+        padding-left: 18px !important;
+        margin: 6px 0 10px !important;
+      }
+
+      .crashHtml li {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        margin-bottom: 4px !important;
+      }
+
+      .crashHtml strong,
+      .crashHtml b {
+        font-weight: 700 !important;
+      }
+    `}
+  </style>
+
+  {crashCourse && crashCourse.trim() ? (
+    <div
+      className="crashHtml"
+      dangerouslySetInnerHTML={{ __html: crashCourse }}
+    />
+  ) : (
+    <p style={{ margin: 0 }}>
+      Join real-time instructor-led sessions from anywhere. This mode includes
+      interactive classes, hands-on exercises, and live Q&amp;A to ensure
+      in-depth learning.
+    </p>
+  )}
+</div>
+
 )}
 
       </aside>

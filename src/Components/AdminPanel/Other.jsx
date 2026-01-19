@@ -586,7 +586,7 @@ export default function Other() {
                       <StyledTableCell align="center">
                         {curr.banner_image ? (
                           <img
-                            src={`https://api.test.hachion.co/uploads/prod/banner_images/${curr.banner_image}`}
+                            src={`https://api.test.hachion.co/uploads/test/banner_images/${curr.banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />
@@ -602,7 +602,7 @@ export default function Other() {
                       <StyledTableCell align="center">
                         {curr.home_banner_image ? (
                           <img
-                            src={`https://api.test.hachion.co/uploads/prod/banner_images/${curr.home_banner_image}`}
+                            src={`https://api.test.hachion.co/uploads/test/banner_images/${curr.home_banner_image}`}
                             alt={`Banner ${index + 1}`}
                             style={{ width: "100px", height: "auto" }}
                           />

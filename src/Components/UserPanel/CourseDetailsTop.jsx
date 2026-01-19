@@ -178,7 +178,7 @@ const CourseDetailsTop = ({ onVideoButtonClick, onEnrollButtonClick }) => {
 
   const curriculumWithPdf = curriculum.find(item => item.brochure_pdf);
   if (curriculumWithPdf) {
-    const fullPdfUrl = `https://api.test.hachion.co/uploads/prod/curriculum/${curriculumWithPdf.brochure_pdf}`;
+    const fullPdfUrl = `https://api.test.hachion.co/uploads/test/curriculum/${curriculumWithPdf.brochure_pdf}`;
     window.open(fullPdfUrl, '_blank', 'noopener,noreferrer');
   } else {
     alert('No brochure available for this course.');

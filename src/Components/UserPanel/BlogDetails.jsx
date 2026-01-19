@@ -52,7 +52,7 @@ const BlogDetails = () => {
         const mappedBlogs = response.data.map((blog) => ({
           ...blog,
           blog_image: blog.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            ? `https://api.test.hachion.co/uploads/test/blogs/${blog.blog_image}`
             : Blogimageplaceholder,
         }));
         const sortedBlogs = mappedBlogs.sort(

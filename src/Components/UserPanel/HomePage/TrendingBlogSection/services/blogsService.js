@@ -29,11 +29,11 @@ export const getRecentBlogs = async () => {
     ] = row;
 
     const avatar = author_image
-      ? `https://api.test.hachion.co/uploads/prod/blogs/${author_image}`
+      ? `https://api.test.hachion.co/uploads/test/blogs/${author_image}`
       : "";
 
     const blogImg = blog_image
-      ? `https://api.test.hachion.co/uploads/prod/blogs/${blog_image}`
+      ? `https://api.test.hachion.co/uploads/test/blogs/${blog_image}`
       : "";
 
     return {

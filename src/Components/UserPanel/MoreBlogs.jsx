@@ -23,10 +23,10 @@ const MoreBlogs = ({ scrollToTop = false }) => {
         const mappedBlogs = response.data.map((blog) => ({
           ...blog,
           avatar: blog.authorImage
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`
+            ? `https://api.test.hachion.co/uploads/test/blogs/${blog.authorImage}`
             : "",
           blog_image: blog.blog_image
-            ? `https://api.test.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+            ? `https://api.test.hachion.co/uploads/test/blogs/${blog.blog_image}`
             : "",
         }));
 

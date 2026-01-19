@@ -162,7 +162,7 @@ const Aboutus = () => {
       ? companyImage.substring(1)
       : companyImage;
 
-    return `https://api.test.hachion.co/uploads/prod/employee_company_logo/${clean}`;
+    return `https://api.test.hachion.co/uploads/test/employee_company_logo/${clean}`;
   };
 
   return (

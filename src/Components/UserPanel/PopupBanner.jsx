@@ -62,7 +62,7 @@ const PopupBanner = () => {
         </button>
         <a href="/coursedetails">
          <img
-  src={`https://api.test.hachion.co/uploads/prod/banner_images/${popupBanner.banner_image}`}
+  src={`https://api.test.hachion.co/uploads/test/banner_images/${popupBanner.banner_image}`}
   alt="Popup Banner"
   className="popup-image"
   fetchpriority="high"

@@ -52,7 +52,9 @@ const Trending = () => {
   const locale = Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
   const [country, setCountry] = useState('IN');
   const [fxFromUSD, setFxFromUSD] = useState(1);
-  const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
   const [discountRules, setDiscountRules] = useState([]);
   const [countdowns, setCountdowns] = useState({});
   useEffect(() => {

@@ -28,8 +28,10 @@ const ExploreDeals = () => {
   const [discountRules, setDiscountRules] = useState([]);
   const [countdowns, setCountdowns] = useState({});
 
-  const fmt = (n) =>
-    (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) =>
+  //   (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
   const updateCardsToShow = () => {
     const width = window.innerWidth;

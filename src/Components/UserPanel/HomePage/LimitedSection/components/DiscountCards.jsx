@@ -22,7 +22,9 @@ import {
 import "../../../Corporate.css";
 import "../../../Blogs.css";
 
-const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+// const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
 const DiscountCards = () => {
   const navigate = useNavigate();
@@ -194,7 +196,7 @@ const DiscountCards = () => {
 
             const mrp = isIN ? course.iamount : course.amount;
             const baseMrp = Number(mrp) || 0;
-            const displayMrp = isUS ? baseMrp : baseMrp * fxFromUSD;
+            const displayMrp = isIN ? baseMrp : baseMrp * fxFromUSD;
 
             // Get rule-based discount percentage
             const rulePct = getRuleDiscountPct(

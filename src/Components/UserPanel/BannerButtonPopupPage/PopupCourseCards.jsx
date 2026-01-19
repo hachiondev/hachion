@@ -35,7 +35,9 @@ const DiscountCards = () => {
   const { data: trainers } = useTrainers()
   const { data: discount } = useDiscountRules()
 
-  const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
   // -----------------------------
   // Merge Courses + Trainers

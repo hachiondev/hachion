@@ -27,7 +27,9 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
 
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
-  const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
   const normalize = (s) => (s || '').toString().trim().toLowerCase();
 

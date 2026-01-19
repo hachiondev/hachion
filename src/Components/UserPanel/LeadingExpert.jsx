@@ -43,8 +43,10 @@ const LeadingExpert = () => {
   const [fxFromUSD, setFxFromUSD] = useState(1);
 
   const locale = Intl.DateTimeFormat().resolvedOptions().locale || "en-US";
-  const fmt = (n) =>
-    (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) =>
+  //   (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
 useEffect(() => {
   const fetchCourses = async () => {

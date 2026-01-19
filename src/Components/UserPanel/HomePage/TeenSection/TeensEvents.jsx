@@ -19,7 +19,9 @@ import { useTrainers } from "../../../../Api/hooks/HomePageApi/TrainingApi/useTr
 
 import "../../Home.css";
 
-const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+// const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
 const normalize = (s) => (s || "").toString().trim().toLowerCase();
 

@@ -26,7 +26,9 @@ export default function UserWishlist() {
   const [cardsPerPage, setCardsPerPage] = useState(6);
   const [totalCards, setTotalCards] = useState(0);
 
-  const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
   const normalize = (s) => (s || "").toString().trim().toLowerCase();
 
   

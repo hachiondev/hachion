@@ -21,9 +21,7 @@ const initialValues = {
 
 const EnrollPayment = () => {
   const location = useLocation();
-  //   const { selectedBatchData, enrollText, modeType,  sendEmail,
-  // sendWhatsApp, email,
-  // sendText } = location.state || {};
+  
 
   const {
     selectedBatchData: rawBatchData,
@@ -41,7 +39,7 @@ const EnrollPayment = () => {
     loggedUser?.email ||
     "";
 
-  // ✅ SAFE FALLBACK (prevents empty UI)
+  
   const selectedBatchData = rawBatchData || {};
 
 
@@ -80,13 +78,13 @@ const EnrollPayment = () => {
 const generateInvoiceNumber = () => {
   if (!paymentData?.id || !paymentData?.paymentDate) return "";
 
-  // Course short code: Salesforce Admin → SALES
+  
   const courseCode = selectedBatchData.schedule_course_name
     ?.replace(/[^A-Za-z]/g, "")
     .toUpperCase()
     .substring(0, 5);
 
-  // Date from backend payment date (MMDDYYYY)
+  
   const date = new Date(paymentData.paymentDate);
   const datePart =
     String(date.getMonth() + 1).padStart(2, "0") +
@@ -449,27 +447,16 @@ const generateInvoiceNumber = () => {
         return;
       }
 
-      // 1️⃣ Create FRONTEND invoice number
-      // const invoiceNumber = `HACH-${selectedBatchData.schedule_course_name
-      //   .replace(/\s+/g, "")
-      //   .toUpperCase()}-${paymentData.orderId}`;
-
       const invoiceNumber = generateInvoiceNumber();
 
-      // 2️⃣ Prepare PaymentRequest (ONLY required fields)
+
       const payload = {
         studentId: studentData?.studentId,
         studentName: studentData?.userName,
         email: studentData?.email,
         mobile: mobileNumber,
-        // currencyCode: currencyCodeMap[currency] || "$",
-  //       currencyCode:
-  // selectedCountry?.flag === "IN"
-  //   ? "₹"
-  //   : currencyCodeMap[currency] ?? currency,
-  currencyCode: currency, // INR, USD, EUR, AUD, etc.
-
-
+       
+  currencyCode: currency, 
 
         courseName: selectedBatchData.schedule_course_name,
         courseFee: courseData?.iamount,
@@ -483,7 +470,7 @@ const generateInvoiceNumber = () => {
         balancePay: 0,
         status: "PAID",
 
-        invoiceNumber, // 👈 FRONTEND GENERATED
+        invoiceNumber, 
 
         installments: [
           {
@@ -500,22 +487,19 @@ const generateInvoiceNumber = () => {
         ],
       };
 
-      // 3️⃣ Generate invoice PDF (SERVER SIDE)
       await axios.post(
         "https://api.test.hachion.co/payments/generateInvoiceForOnline",
         payload
       );
 
-      // 4️⃣ Download invoice PDF
-      // const downloadUrl = `https://api.test.hachion.co/payments/payments/invoice/download?paymentId=${paymentData.id}`;
-      // window.open(downloadUrl, "_blank");
+      
     } catch (error) {
       console.error(error);
       alert("Failed to download invoice.");
     }
   };
   const handleGenerateInvoice = async () => {
-    if (isGeneratingInvoice) return; // 🛑 block multiple clicks
+    if (isGeneratingInvoice) return; 
 
     try {
       setIsGeneratingInvoice(true);
@@ -556,13 +540,13 @@ currencyCode: currency,
         ],
       };
 
-      // 🔥 ONLY THIS API
+      
       await axios.post(
         "https://api.test.hachion.co/payments/generateInvoiceForOnline",
         payload
       );
 
-      // ✅ Success UX
+      
       setInvoiceMessage("✅ Invoice has been sent to your email.");
     } catch (err) {
       console.error(err);

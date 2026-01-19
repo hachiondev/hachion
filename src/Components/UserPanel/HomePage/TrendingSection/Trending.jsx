@@ -9,7 +9,9 @@ import { useGeoData } from "../../../../Api/hooks/HomePageApi/TrendingApi/useGeo
 import { useDiscountRules } from "../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 import { useCountdowns } from "../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 
-const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+// const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
 const Trending = () => {
   const navigate = useNavigate();

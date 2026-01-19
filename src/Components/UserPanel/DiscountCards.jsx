@@ -31,7 +31,9 @@ const DiscountCards = () => {
   const [discountRules, setDiscountRules] = useState([]);
   const [countdowns, setCountdowns] = useState({});
 
-  const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+  const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
+
 
 //   const handleResize = () => {
 //   if (window.innerWidth < 576) setCardsPerRow(1);

@@ -486,7 +486,7 @@ const price = hasValidPrice
                   <div
                     className={cn(styles.bnstatval, styles.bnstatvalGreen)}
                   >
-                    {course.numberOfProjects || 3}
+                    {course.numberOfProjects || 0}
 
                   </div>
                   <div className={styles.bnstatlabel}>Projects</div>

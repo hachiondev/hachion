@@ -330,7 +330,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   };
 
   return (
-    <section className={styles.dcwrap} ref={ref} id="demoClassSection">
+    <section className={styles.dcwrap} >
       <div className="container">
        
         {/* Offer strip */}
@@ -394,7 +394,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
                 >
                   Free Demo Classes Available
                 </button> */}
-          <div className={styles.dcheadText}>
+          <div className={styles.dcheadText} >
             <h2>Try Before You Enroll</h2>
             <p>
               Experience our world-class teaching methodology firsthand. Join
@@ -411,7 +411,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
         </div>
 
         {/* Tabs */}
-        <div className={styles.dctabs}>
+        <div className={styles.dctabs} ref={ref} id="demoClassSection">
           {tabs.map((t) => (
             <button
               key={t.key}
@@ -443,9 +443,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             selectedGroup={selectedGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            
             showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
-
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleRequestBatchWithLoginCheck}

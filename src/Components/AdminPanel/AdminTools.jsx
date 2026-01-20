@@ -60,6 +60,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const extractOriginalFileName = (imageUrl) => {
+  if (!imageUrl) return null;
+
+  const fileName = imageUrl.split("/").pop(); // category_course_original.png
+  const parts = fileName.split("_");
+
+  // remove category + course
+  return parts.length >= 3 ? parts.slice(2).join("_") : fileName;
+};
+
 export default function AdminTools() {
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,8 +88,10 @@ export default function AdminTools() {
     courseName: "",
   });
   const [rows, setRows] = useState([
-    { id: Date.now(), tool_image: null, preview: null }
-  ]);
+  { id: Date.now(), toolKey: null, toolImages: null, preview: null }
+]);
+
+
   const [endDate, setEndDate] = useState(null);
   const [toolsData, setToolsData] = useState({
     tool_id: "",
@@ -89,7 +101,10 @@ export default function AdminTools() {
     toolsLink: '',
   });
   const [editingRow, setEditingRow] = useState(null);
+// const [toolNames, setToolNames] = useState([]);
+const [toolNames, setToolNames] = useState([]);
 
+const [selectedTools, setSelectedTools] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const {
@@ -109,6 +124,19 @@ export default function AdminTools() {
     error: addError,
   } = useAddTools();
 
+const removeImageOnly = (rowId) => {
+  setRows((prevRows) =>
+    prevRows.map((row) =>
+      row.id === rowId
+        ? {
+            ...row,
+            toolImages: null,
+            preview: null,
+          }
+        : row
+    )
+  );
+};
 
   const {
     data: toolsFlat = [],
@@ -128,14 +156,12 @@ export default function AdminTools() {
 
   const isEditMode = !!toolsData.tool_id;
   const isRowValid = (row) => {
-    return (
-      // row.toolsName &&
-      // row.toolsName.trim() !== "" &&
-      row.toolsLink &&
-      row.toolsLink.trim() !== "" &&
-      (row.tool_image || row.preview)
-    );
-  };
+  return (
+    row.toolsLink &&
+    row.toolsLink.trim() !== ""
+    // ✅ image NOT required here (UI-only validation)
+  );
+};
 
   const isFormValid = React.useMemo(() => {
     if (!toolsData.category_name || !toolsData.courseName) {
@@ -161,30 +187,36 @@ export default function AdminTools() {
   };
 
   const addRow = () => {
-    setRows([...rows, { id: Date.now(), tool_image: null, preview: null }]);
-  };
+  setRows([...rows, { id: Date.now(), toolKey: null, toolImages: null, preview: null }]);
+};
 
-  const deleteRow = (id) => {
-    setRows(rows.filter(row => row.id !== id));
-  };
+const deleteRow = (id) => {
+  setRows((prevRows) => {
+    const rowToDelete = prevRows.find((r) => r.id === id);
+
+    if (rowToDelete?.toolKey) {
+      setSelectedTools((prev) => prev.filter((t) => t !== rowToDelete.toolKey));
+    }
+
+    return prevRows.filter((r) => r.id !== id);
+  });
+};
 
   const handleRowsPerPageChange = (rowsCount) => {
     setRowsPerPage(rowsCount);
     setCurrentPage(1);
   };
-
-  const handleReset = () => {
-    setToolsData({
-      tool_id: "",
-      category_name: "",
-      courseName: "",
-      toolsName: "",
-      toolsLink: "",
-    });
-    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
-  };
-
-
+const handleReset = () => {
+  setToolsData({
+    tool_id: "",
+    category_name: "",
+    courseName: "",
+    toolsName: "",
+    toolsLink: "",
+  });
+  setRows([{ id: Date.now(), toolImages: null, preview: null }]);
+  setSelectedTools([]); // ✅ clear chips
+};
 
 
   const normalizeToDate = (val) => {
@@ -232,6 +264,11 @@ export default function AdminTools() {
     }
   }, [successMessage, errorMessage]);
 
+useEffect(() => {
+  axios.get("https://api.test.hachion.co/api/tools/names")
+    .then(res => setToolNames(res.data))
+    .catch(() => setToolNames([]));
+}, []);
 
   useEffect(() => {
     const filtered = allData.filter((item) => {
@@ -289,9 +326,10 @@ export default function AdminTools() {
       toolsLink: "",
     });
 
-    setRows([
-      { id: Date.now(), tool_image: null, preview: null }
-    ]);
+   setRows([
+  { id: Date.now(), toolKey: null, toolImages: null, preview: null }
+]);
+
 
     setShowAddCourse(true);
     setSuccessMessage("");
@@ -301,7 +339,7 @@ export default function AdminTools() {
   const handleImageSelect = (file, index) => {
     if (!file) return;
     const updated = [...rows];
-    updated[index].tool_image = file;
+    updated[index].toolImages = file;
     updated[index].preview = URL.createObjectURL(file);
     setRows(updated);
   };
@@ -334,14 +372,14 @@ export default function AdminTools() {
           courseName: toolsData.courseName,
           toolsName: row.toolsName,
           toolsLink: row.toolsLink,
-          toolImage: row.tool_image || null,
+          toolImage: row.toolImages || null,
         },
         {
           onSuccess: () => {
             setSuccessMessage("Tool updated successfully");
             setShowAddCourse(false);
             setEditingRow(null);
-            setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+            setRows([{ id: Date.now(), toolImages: null, preview: null }]);
             setToolsData({ tool_id: "", category_name: "", courseName: "" });
           },
           onError: (err) => {
@@ -354,14 +392,18 @@ export default function AdminTools() {
       return;
     }
 
-    const validRows = rows.filter(
-      r => r.toolsName && r.toolsLink && r.tool_image
-    );
+   const validRows = rows.filter(
+  r =>
+    r.toolsName &&
+    r.toolsLink &&
+    (r.toolImages instanceof File || typeof r.toolImages === "string")
+);
 
-    if (validRows.length === 0) {
-      setErrorMessage("Please add at least one tool row");
-      return;
-    }
+if (validRows.length === 0) {
+  setErrorMessage("Please add at least one valid tool");
+  return;
+}
+
 
     addTools(
       {
@@ -373,7 +415,7 @@ export default function AdminTools() {
         onSuccess: () => {
           setSuccessMessage("Tools added successfully");
           setShowAddCourse(false);
-          setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+          setRows([{ id: Date.now(), toolImages: null, preview: null }]);
           setToolsData({ category_name: "", courseName: "" });
         },
         onError: (err) => {
@@ -397,9 +439,9 @@ export default function AdminTools() {
     setRows([
       {
         id: row.id,
-        tool_image: null,
+        toolImages: null,
         preview: row.imageUrl
-          ? `https://api.test.hachion.co/uploads/prod/tools_images/${row.imageUrl}`
+          ? `https://api.test.hachion.co/uploads/test/tools_images/${row.imageUrl}`
           : null,
         toolsName: row.toolsName,
         toolsLink: row.toolsLink,
@@ -432,40 +474,61 @@ export default function AdminTools() {
       }
     );
   };
-
-  const handleToolCheckboxChange = (tool, isChecked) => {
-  const currentRow = rows[0] || { id: Date.now(), selectedTools: [] };
-  const selectedTools = [...(currentRow.selectedTools || [])];
-  
+const handleToolCheckboxChange = async (toolName, isChecked) => {
   if (isChecked) {
-    // Add tool if not already selected
-    if (!selectedTools.includes(tool)) {
-      selectedTools.push(tool);
+    try {
+      const res = await axios.get(
+        "https://api.test.hachion.co/api/tools/details",
+        { params: { toolName } }
+      );
+
+      const tool = res.data;
+
+      // ✅ add chip
+      setSelectedTools((prev) =>
+        prev.includes(toolName) ? prev : [...prev, toolName]
+      );
+
+      // ✅ Fill first empty row else add new row
+      setRows((prevRows) => {
+        const firstRowEmpty =
+          prevRows.length === 1 &&
+          !prevRows[0].toolsName &&
+          !prevRows[0].toolsLink &&
+          !prevRows[0].preview;
+const newRow = {
+  id: Date.now() + Math.random(),
+  toolKey: toolName,
+  toolsName: tool.toolsName,
+  toolsLink: tool.toolsLink,
+
+  // ✅ store FULL imageUrl from details API
+  toolImages: tool.imageUrl,
+
+  preview: tool.imageUrl
+    ? `https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`
+    : null,
+};
+
+
+        if (firstRowEmpty) {
+          return [{ ...prevRows[0], ...newRow, id: prevRows[0].id }];
+        }
+
+        return [...prevRows, newRow];
+      });
+    } catch (e) {
+      setErrorMessage("Failed to load tool details");
     }
   } else {
-    // Remove tool
-    const index = selectedTools.indexOf(tool);
-    if (index > -1) {
-      selectedTools.splice(index, 1);
-    }
-  }
-  
-  // Update the row with selected tools and also update toolsName for backward compatibility
-  const updatedRow = {
-    ...currentRow,
-    selectedTools,
-    toolsName: selectedTools.length > 0 ? selectedTools.join(', ') : ''
-  };
-  
-  // If it's the first row, update it, otherwise add new row
-  if (rows.length > 0) {
-    const updatedRows = [...rows];
-    updatedRows[0] = updatedRow;
-    setRows(updatedRows);
-  } else {
-    setRows([updatedRow]);
+    // ✅ remove chip
+    setSelectedTools((prev) => prev.filter((t) => t !== toolName));
+
+    // ✅ remove row by toolKey (NOT toolsName)
+    setRows((prevRows) => prevRows.filter((row) => row.toolKey !== toolName));
   }
 };
+
 
   useEffect(() => {
     if (toolsFlat.length > 0) {
@@ -496,7 +559,7 @@ export default function AdminTools() {
                       toolsName: "",
                       toolsLink: "",
                     });
-                    setRows([{ id: Date.now(), tool_image: null, preview: null }]);
+                    setRows([{ id: Date.now(), toolImages: null, preview: null }]);
                   }}
                 >
                   Tools Covered
@@ -596,33 +659,21 @@ export default function AdminTools() {
       aria-expanded="false"
       style={{ textAlign: 'left' }}
     >
-      <span>
+      {/* <span>
         {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 
           ? `${rows[0]?.selectedTools.length} tool${rows[0]?.selectedTools.length !== 1 ? 's' : ''} selected` 
           : 'Select Tools'}
-      </span>
+      </span> */}
+      <span>
+  {selectedTools.length > 0
+    ? `${selectedTools.length} tool${selectedTools.length !== 1 ? "s" : ""} selected`
+    : "Select Tools"}
+</span>
+
     </button>
     <ul className="dropdown-menu" aria-labelledby="toolDropdown" style={{ width: '100%', maxHeight: '300px', overflowY: 'auto' }}>
-      {[
-        "HTML Editor",
-        "Jest",
-        "GitHub",
-        "Visual Studio Code",
-        "Postman",
-        "Chrome DevTools",
-        "npm",
-        "Node.js",
-        "React DevTools",
-        "MongoDB Compass",
-        "Docker",
-        "Figma",
-        "AWS Console",
-        "Android Studio",
-        "Xcode",
-        "Git",
-        "Redux DevTools",
-        "MySQL Workbench"
-      ].map((tool, index) => (
+     {toolNames.map((tool, index) => (
+
         <li key={index}>
           <div className="dropdown-item">
             <div className="form-check">
@@ -630,7 +681,11 @@ export default function AdminTools() {
                 className="form-check-input"
                 type="checkbox"
                 id={`tool-${index}`}
-                checked={rows[0]?.selectedTools?.includes(tool) || false}
+                // checked={rows[0]?.selectedTools?.includes(tool) || false}
+                // checked={rows.some(row => row.toolsName === tool)}
+                checked={selectedTools.includes(tool)}
+
+
                 onChange={(e) => handleToolCheckboxChange(tool, e.target.checked)}
                 disabled={isEditMode}
               />
@@ -665,7 +720,7 @@ export default function AdminTools() {
   </div>
   
   {/* Display selected tools as tags */}
-  {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 && (
+  {/* {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 && (
     <div className="selected-tools-container mt-2">
       <small className="text-muted">Selected: </small>
       <div className="d-flex flex-wrap gap-1 mt-1">
@@ -685,7 +740,31 @@ export default function AdminTools() {
         ))}
       </div>
     </div>
-  )}
+  )} */}
+  {selectedTools.length > 0 && (
+  <div className="selected-tools-container mt-2">
+    <small className="text-muted">Selected:</small>
+    <div className="d-flex flex-wrap gap-1 mt-1">
+      {selectedTools.map((tool, index) => (
+        <span
+          key={index}
+          className="badge bg-primary d-flex align-items-center"
+        >
+          {tool}
+          {!isEditMode && (
+            <button
+              type="button"
+              className="btn-close btn-close-white ms-1"
+              style={{ fontSize: "0.5rem" }}
+              onClick={() => handleToolCheckboxChange(tool, false)}
+            />
+          )}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
 </div>
               </div>
 
@@ -712,24 +791,21 @@ export default function AdminTools() {
                                 alt="tool"
                                 style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 6, border: '1px solid #ccc' }}
                               />
-                              <IoClose
-                                style={{
-                                  position: 'absolute',
-                                  top: -8,
-                                  right: -8,
-                                  fontSize: '1.2rem',
-                                  color: 'red',
-                                  cursor: 'pointer',
-                                  backgroundColor: '#fff',
-                                  borderRadius: '50%',
-                                }}
-                                onClick={() => {
-                                  const updated = [...rows];
-                                  updated[index].tool_image = null;
-                                  updated[index].preview = null;
-                                  setRows(updated);
-                                }}
-                              />
+                             <IoClose
+  style={{
+    position: "absolute",
+    top: -8,
+    right: -8,
+    fontSize: "1.2rem",
+    color: "red",
+    cursor: "pointer",
+    backgroundColor: "#fff",
+    borderRadius: "50%",
+  }}
+  onClick={() => removeImageOnly(row.id)}   // ✅ remove image only
+/>
+
+
                             </div>
                           ) : (
                             <label style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -909,19 +985,19 @@ export default function AdminTools() {
                       <StyledTableCell align="left">{courseRow.category_name}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
                       {/* <StyledTableCell align="left">
-                        {(courseRow.tool_image || []).length ? (
+                        {(courseRow.toolImages || []).length ? (
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {courseRow.tool_image.slice(0, 4).map((img, i) => (
+                            {courseRow.toolImages.slice(0, 4).map((img, i) => (
                               <img key={i} src={img.url} alt={img.name} style={{ width: 40, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid #ddd' }} />
                             ))}
-                            {courseRow.tool_image.length > 4 && <span>+{courseRow.tool_image.length - 4}</span>}
+                            {courseRow.toolImages.length > 4 && <span>+{courseRow.toolImages.length - 4}</span>}
                           </div>
                         ) : ("")}
                       </StyledTableCell> */}
                       <StyledTableCell align="center">
                         {courseRow.imageUrl && (
                           <img
-                            src={`https://api.test.hachion.co/uploads/prod/tools_images/${courseRow.imageUrl}`}
+                            src={`https://api.test.hachion.co/uploads/test/tools_images/${courseRow.imageUrl}`}
                             alt={courseRow.toolsName}
                             style={{
                               width: 40,

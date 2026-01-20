@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import './Admin.css';
-// import dayjs from 'dayjs';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -63,10 +63,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const extractOriginalFileName = (imageUrl) => {
   if (!imageUrl) return null;
 
-  const fileName = imageUrl.split("/").pop(); // category_course_original.png
+  const fileName = imageUrl.split("/").pop(); 
   const parts = fileName.split("_");
-
-  // remove category + course
   return parts.length >= 3 ? parts.slice(2).join("_") : fileName;
 };
 
@@ -101,7 +99,7 @@ export default function AdminTools() {
     toolsLink: '',
   });
   const [editingRow, setEditingRow] = useState(null);
-// const [toolNames, setToolNames] = useState([]);
+
 const [toolNames, setToolNames] = useState([]);
 
 const [selectedTools, setSelectedTools] = useState([]);
@@ -159,7 +157,7 @@ const removeImageOnly = (rowId) => {
   return (
     row.toolsLink &&
     row.toolsLink.trim() !== ""
-    // ✅ image NOT required here (UI-only validation)
+    
   );
 };
 
@@ -215,7 +213,7 @@ const handleReset = () => {
     toolsLink: "",
   });
   setRows([{ id: Date.now(), toolImages: null, preview: null }]);
-  setSelectedTools([]); // ✅ clear chips
+  setSelectedTools([]); 
 };
 
 
@@ -484,12 +482,11 @@ const handleToolCheckboxChange = async (toolName, isChecked) => {
 
       const tool = res.data;
 
-      // ✅ add chip
       setSelectedTools((prev) =>
         prev.includes(toolName) ? prev : [...prev, toolName]
       );
 
-      // ✅ Fill first empty row else add new row
+  
       setRows((prevRows) => {
         const firstRowEmpty =
           prevRows.length === 1 &&
@@ -502,7 +499,7 @@ const newRow = {
   toolsName: tool.toolsName,
   toolsLink: tool.toolsLink,
 
-  // ✅ store FULL imageUrl from details API
+  
   toolImages: tool.imageUrl,
 
   preview: tool.imageUrl
@@ -521,10 +518,9 @@ const newRow = {
       setErrorMessage("Failed to load tool details");
     }
   } else {
-    // ✅ remove chip
+    
     setSelectedTools((prev) => prev.filter((t) => t !== toolName));
 
-    // ✅ remove row by toolKey (NOT toolsName)
     setRows((prevRows) => prevRows.filter((row) => row.toolKey !== toolName));
   }
 };
@@ -681,8 +677,7 @@ const newRow = {
                 className="form-check-input"
                 type="checkbox"
                 id={`tool-${index}`}
-                // checked={rows[0]?.selectedTools?.includes(tool) || false}
-                // checked={rows.some(row => row.toolsName === tool)}
+                
                 checked={selectedTools.includes(tool)}
 
 
@@ -802,7 +797,7 @@ const newRow = {
     backgroundColor: "#fff",
     borderRadius: "50%",
   }}
-  onClick={() => removeImageOnly(row.id)}   // ✅ remove image only
+  onClick={() => removeImageOnly(row.id)}   
 />
 
 

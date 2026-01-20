@@ -54,10 +54,10 @@ const Instructors = () => {
   ----------------------------- */
   const filteredTrainers = useMemo(() => {
     if (!Array.isArray(trainers)) return [];
-    
+
     return trainers.filter((trainer) => {
       if (!trainer) return false;
-      
+
       const term = searchTerm.toLowerCase().trim();
       const trainerName = trainer.trainer_name || "";
       const courseName = trainer.course_name || "";
@@ -228,14 +228,14 @@ const Instructors = () => {
               <div className={styles.iscardsContainer}>
                 {/* Pagination */}
                 <div className={styles.paginationBottom}>
-                  <p ref={titleRef} 
+                  <p ref={titleRef}
                   // className="expert-title"
                   >
-          {totalCards > 0 
-            ? `Showing Instructor ${currentPage} of ${totalCards}`
-            : 'No Instructors Found'
-          }
-        </p>
+                    {totalCards > 0
+                      ? `Showing Instructor ${currentPage} of ${totalCards}`
+                      : 'No Instructors Found'
+                    }
+                  </p>
                   <CardsPagination
                     currentPage={currentPage}
                     totalCards={totalCards}
@@ -260,17 +260,14 @@ const Instructors = () => {
                         {/* Photo */}
                         <div className={styles.isphoto}>
                           <img
-                            src={
-                              // trainerImage
-                              //   ? `https://api.test.hachion.co/${trainerImage}`
-                              //   : 
-                                "/Instructor2.png"
-                            }
+                            src="/Instructor2.png"
                             alt={`${trainerName} headshot`}
                             onError={(e) => {
+                              e.currentTarget.onerror = null; // stop infinite loop
                               e.currentTarget.src = "/InstructorDefaultImage.webp";
                             }}
                           />
+
                         </div>
 
                         {/* Content */}
@@ -345,7 +342,7 @@ const Instructors = () => {
                   })}
                 </div>
 
-                
+
               </div>
             ) : (
               <div className={styles.noInstructors}>

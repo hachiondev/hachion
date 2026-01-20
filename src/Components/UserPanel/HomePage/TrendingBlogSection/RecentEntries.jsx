@@ -20,13 +20,21 @@ const RecentEntries = () => {
     };
   }, []);
 
-  // Handler for blog click
-  const handleBlogClick = (blog) => {
-    const slug = blog.category_name.replace(/\s+/g, "-").toLowerCase();
-    navigate(`/blogs/${slug}/${blog.id}`);
-    window.scrollTo(0, 0);
-  };
+  const toSlug = (text = "") =>
+  text
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .toLowerCase();
 
+const handleBlogClick = (blog) => {
+  const categorySlug = toSlug(blog.category_name);
+  const titleSlug = toSlug(blog.title);
+
+  navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  window.scrollTo(0, 0);
+};
+
+  
   return (
     <div className="training-events container">
       <h2 className="association-head">Trending Blog</h2>

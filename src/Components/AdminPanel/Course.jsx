@@ -13,6 +13,7 @@ import AdminCoupon from './AdminCoupon';
 import AdminTools from './AdminTools';
 import Project from './ProjectPage/Project';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import GeoKeyword from './GeoKeywordPage/GeoKeyword';
 
 export default function Course() {
   const [activeTab, setActiveTab] = useState('courseDetails');
@@ -114,6 +115,12 @@ export default function Course() {
           >
             Project
           </div>
+          <div
+            className={`tab-item ${activeTab === 'geokeyword' ? 'active-tab' : ''}`}
+            onClick={() => handleTabChange('geokeyword')}
+          >
+            GeoKeyword
+          </div>
         </div>
 
         <button className="tab-scroll-btn right" onClick={() => scrollTabs('right')}>
@@ -133,6 +140,7 @@ export default function Course() {
       {activeTab === 'studentreview' && <StudentReview />}
       {activeTab === 'corporatereviews' && <CorporateReviews />}
       {activeTab === 'project' && <Project />}
+      {activeTab === 'geokeyword' && <GeoKeyword />}
     </>
   );
 }

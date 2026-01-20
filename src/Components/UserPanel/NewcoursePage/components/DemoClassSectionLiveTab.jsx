@@ -680,16 +680,16 @@ What's Included:
   </div>
 )} */}
 
-{isCourseLoading ? (
-  <div
-    className={styles.dcinfotext}
-  >
-    Loading live training details...
-  </div>
-) : (
- <div className={styles.dcinfotext}>
-  <style>
-    {`
+        {isCourseLoading ? (
+          <div
+            className={styles.dcinfotext}
+          >
+            Loading live training details...
+          </div>
+        ) : (
+          <div className={styles.dcinfotext}>
+            <style>
+              {`
       .liveTrainingHtml h1,
       .liveTrainingHtml h2,
       .liveTrainingHtml h3,
@@ -700,6 +700,7 @@ What's Included:
         font-weight: 700 !important;
         margin: 12px 0 8px !important;
         line-height: 1.3 !important;
+        color: rgb(0 0 0) !important;
       }
 
       .liveTrainingHtml p,
@@ -709,6 +710,7 @@ What's Included:
         font-weight: 400 !important;
         line-height: 1.55 !important;
         margin: 0 0 10px !important;
+        color: rgb(0 0 0) !important;
       }
 
       /* ✅ ONLY CHANGE: reduce bullet spacing */
@@ -716,6 +718,7 @@ What's Included:
       .liveTrainingHtml ol {
         padding-left: 18px !important;
         margin: 6px 0 10px !important;
+        color: rgb(0 0 0) !important;
       }
 
       .liveTrainingHtml li {
@@ -723,6 +726,7 @@ What's Included:
         font-weight: 400 !important;
         line-height: 1.4 !important;
         margin-bottom: 4px !important;   /* 👈 reduced space */
+        color: rgb(0 0 0) !important;
       }
 
       .liveTrainingHtml strong,
@@ -730,21 +734,21 @@ What's Included:
         font-weight: 700 !important;
       }
     `}
-  </style>
+            </style>
 
-  {liveTraining && liveTraining.trim() ? (
-    <div
-      className="liveTrainingHtml"
-      dangerouslySetInnerHTML={{ __html: liveTraining }}
-    />
-  ) : (
-    <p style={{ margin: 0 }}>
-      Live instructor-led training with real-time interaction and hands-on practice.
-    </p>
-  )}
-</div>
+            {liveTraining && liveTraining.trim() ? (
+              <div
+                className="liveTrainingHtml"
+                dangerouslySetInnerHTML={{ __html: liveTraining }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>
+                Live instructor-led training with real-time interaction and hands-on practice.
+              </p>
+            )}
+          </div>
 
-)}
+        )}
 
       </aside>
     </div>

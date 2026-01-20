@@ -90,7 +90,7 @@ export default function InstructorSection({
           {/* Photo */}
           <div className={styles.isphoto}>
             <img
-              src="/instructor2.png"
+              src="/instructordefault.png"
               alt={`${trainerName || name} headshot`}
               onError={(e) => {
                 e.currentTarget.src = "/InstructorDefaultImage.webp";

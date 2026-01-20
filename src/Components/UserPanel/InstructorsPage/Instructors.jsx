@@ -259,16 +259,14 @@ const Instructors = () => {
                       <div className={styles.iscard} key={trainer.id || `trainer-${currentPage}`}>
                         {/* Photo */}
                         <div className={styles.isphoto}>
-                          <img
-                            src="/Instructor2.png"
-                            alt={`${trainerName} headshot`}
-                            onError={(e) => {
-                              e.currentTarget.onerror = null; // stop infinite loop
-                              e.currentTarget.src = "/InstructorDefaultImage.webp";
-                            }}
-                          />
-
-                        </div>
+  <img
+    src="/instructordefault.png"
+    alt={`${trainerName} headshot`}
+    onError={(e) => {
+                e.currentTarget.src = "/InstructorDefaultImage.webp";
+              }}
+  />
+</div>
 
                         {/* Content */}
                         <div className={styles.iscontent}>

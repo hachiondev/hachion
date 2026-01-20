@@ -261,9 +261,10 @@ const Instructors = () => {
                         <div className={styles.isphoto}>
                           <img
                             src={
-                              trainerImage
-                                ? `https://api.test.hachion.co/${trainerImage}`
-                                : "/Instructor2.png"
+                              // trainerImage
+                              //   ? `https://api.test.hachion.co/${trainerImage}`
+                              //   : 
+                                "/Instructor2.png"
                             }
                             alt={`${trainerName} headshot`}
                             onError={(e) => {
@@ -320,7 +321,7 @@ const Instructors = () => {
                             </>
                           )}
 
-                          <div className={styles.isactions}>
+                          {/* <div className={styles.isactions}>
                             <button
                               className={`${styles.isbtn} ${styles.isbtnprimary}`}
                               onClick={() =>
@@ -337,7 +338,7 @@ const Instructors = () => {
                             >
                               View Full Profile
                             </button>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     );

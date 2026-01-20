@@ -445,7 +445,7 @@ const Blogs = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {blog.authorImage ? (
-                          <img src={`https://api.test.hachion.co/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" />
+                          <img src={`https://api.test.hachion.co/uploads/test/blogs/${blog.authorImage}`} alt="Author" width="50" />
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="center">{blog.author}</StyledTableCell>

@@ -53,10 +53,10 @@ const BlogList = ({
             author,
             date,
             avatar: avatarPath
-              ? `https://api.test.hachion.co/uploads/prod/blogs/${avatarPath}`
+              ? `https://api.test.hachion.co/uploads/test/blogs/${avatarPath}`
               : "",
             blog_image: blogImagePath
-              ? `https://api.test.hachion.co/uploads/prod/blogs/${blogImagePath}`
+              ? `https://api.test.hachion.co/uploads/test/blogs/${blogImagePath}`
               : "",
           };
         });        

@@ -57,7 +57,7 @@ export default function UserCertificate() {
   const getCertificateURL = (studentId, courseName) => {
     if (!studentId) return "#";
     const fileName = buildCertificateFileName(studentId, courseName);
-    return `https://api.test.hachion.co/uploads/prod/certificates/${fileName}`;
+    return `https://api.test.hachion.co/uploads/test/certificates/${fileName}`;
   };
 
   const checkCertificateExists = async (url) => {

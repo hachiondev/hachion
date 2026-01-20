@@ -199,7 +199,7 @@ const handleReject = async (review_id) => {
                   <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                   <StyledTableCell align="center">
   <img
-    src={`https://api.test.hachion.co/uploads/prod/user_review/${review.user_image}`}
+    src={`https://api.test.hachion.co/uploads/test/user_review/${review.user_image}`}
     alt="User"
     width="50"
     height="50"

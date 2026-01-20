@@ -31,7 +31,7 @@ function StoryCard({ name, date, user_image, review, videoLink }) {
 
   const avatarSrc =
     user_image && user_image.trim() !== ""
-      ? `https://api.test.hachion.co/uploads/prod/user_review/${user_image}`
+      ? `https://api.test.hachion.co/uploads/test/user_review/${user_image}`
       : defaultAvatar;
 
   return (

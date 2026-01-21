@@ -14,19 +14,24 @@ export function useAddTools() {
       formData.append("category_name", category_name);
       formData.append("courseName", courseName);
 
-      rows.forEach((row) => {
-        formData.append("toolsName", row.toolsName);
-        formData.append("toolsLink", row.toolsLink);
+      rows.forEach((row, index) => {
+  formData.append("toolsName", row.toolsName);
+  formData.append("toolsLink", row.toolsLink);
 
-        if (row.toolImages instanceof File) {
-          
-          formData.append("toolImages", row.toolImages);
-
-        } else if (typeof row.toolImages === "string" && row.toolImages) {
-          
-          formData.append("imageUrls", row.toolImages);
-        }
-      });
+  if (row.toolImages instanceof File) {
+  
+    formData.append("toolImages", row.toolImages);
+    formData.append("imageUrls", ""); 
+  } else if (typeof row.toolImages === "string" && row.toolImages) {
+    
+    formData.append("toolImages", new Blob([])); 
+    formData.append("imageUrls", row.toolImages);
+  } else {
+  
+    formData.append("toolImages", new Blob([]));
+    formData.append("imageUrls", "");
+  }
+});
 
       const res = await axios.post(API_URL, formData, {
         headers: {

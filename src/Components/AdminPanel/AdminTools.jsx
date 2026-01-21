@@ -874,6 +874,7 @@ const newRow = {
                 >
                   {toolsData.tool_id ? "Update" : "Submit"}
                 </button>
+                {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
 
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
               </div>

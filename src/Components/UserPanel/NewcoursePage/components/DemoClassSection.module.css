@@ -617,7 +617,7 @@
   justify-content: center;
   gap: 10px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #0abbe7 0%, #0a7994 100%);
+  background: linear-gradient(135deg, #00aeef 0%, #0077cc 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -647,7 +647,8 @@
 
 .enrollPrimaryBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 174, 239, 0.3);
+    background: linear-gradient(135deg, #0099d6 0%, #0066aa 100%);
 }
 
 .enrollPrimaryBtn:active {

@@ -35,7 +35,8 @@ const RequestBatch = ({ closeModal }) => {
 
   // Check if all required fields are filled
   const isFormValid = () => {
-    return mode && startDate && time && mobile && userEmail && selectedTrainer;
+    return mode && startDate && time  && selectedTrainer;
+    // && mobile && userEmail
   };
 
   /* 🔒 Prevent background scroll */
@@ -55,29 +56,29 @@ const RequestBatch = ({ closeModal }) => {
       .then((data) => {
         if (data?.mobile) setMobile(data.mobile);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [userEmail]);
 
   /* 🔹 Fetch trainers for the course */
   useEffect(() => {
     const fetchTrainers = async () => {
       if (!formattedCourseName) return;
-      
+
       setLoadingTrainers(true);
       setTrainersError("");
-      
+
       try {
         // You'll need to adjust this API endpoint based on your backend
         const response = await fetch(
           `https://api.test.hachion.co/trainernames/by-course?courseName=${encodeURIComponent(formattedCourseName)}`
         );
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch trainers');
         }
-        
+
         const data = await response.json();
-        
+
         // Adjust this based on your API response structure
         if (data && Array.isArray(data)) {
           setTrainers(data);
@@ -136,23 +137,23 @@ const RequestBatch = ({ closeModal }) => {
       setSuccessMessage("✅ Request submitted successfully!");
 
       const formattedDate = new Date(startDate).toLocaleDateString("en-US", {
-  month: "short",
-  day: "2-digit",
-  year: "numeric",
-});
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      });
 
-const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-});
+      const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
 
-const successText = `Request batch details [${mode} / Date: ${formattedDate} / Time: ${formattedTime} / Trainer: ${selectedTrainer}] have been successfully submitted to the Hachion support team.`;
+      const successText = `Request batch details [${mode} / Date: ${formattedDate} / Time: ${formattedTime} / Trainer: ${selectedTrainer}] have been successfully submitted to the Hachion support team.`;
 
-setSuccessMessage(successText);
-setTimeout(closeModal, 10000);
+      setSuccessMessage(successText);
+      setTimeout(closeModal, 10000);
 
-      
+
     } catch {
       setErrorMessage("❌ Error submitting request. Please try again.");
     } finally {
@@ -241,26 +242,26 @@ setTimeout(closeModal, 10000);
               disabled={loadingTrainers}
             >
               <option value="">Select Trainer</option>
-             {loadingTrainers ? (
-  <option value="" disabled>Loading trainers...</option>
-) : trainersError ? (
-  <option value="" disabled>Failed to load trainers</option>
-) : trainers.length > 0 ? (
-  trainers.map((trainer, index) => {
-    const trainerValue =
-      typeof trainer === "string"
-        ? trainer
-        : trainer.trainerName || trainer.trainer_name || trainer.name;
+              {loadingTrainers ? (
+                <option value="" disabled>Loading trainers...</option>
+              ) : trainersError ? (
+                <option value="" disabled>Failed to load trainers</option>
+              ) : trainers.length > 0 ? (
+                trainers.map((trainer, index) => {
+                  const trainerValue =
+                    typeof trainer === "string"
+                      ? trainer
+                      : trainer.trainerName || trainer.trainer_name || trainer.name;
 
-    return (
-      <option key={index} value={trainerValue}>
-        {trainerValue}
-      </option>
-    );
-  })
-) : (
-  <option value="" disabled>No trainers available for this course</option>
-)}
+                  return (
+                    <option key={index} value={trainerValue}>
+                      {trainerValue}
+                    </option>
+                  );
+                })
+              ) : (
+                <option value="" disabled>No trainers available for this course</option>
+              )}
 
             </select>
             {loadingTrainers && (

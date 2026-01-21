@@ -1,0 +1,295 @@
+.enquiryForm {
+  background: #ffffff;
+  border: 1px solid rgba(14, 20, 30, 0.06);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 0 17px 5px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: slideInFromRight 0.6s ease forwards;
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.enquiryForm:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.formHeader {
+  margin-bottom: 24px;
+}
+
+.formHeader h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px 0;
+}
+
+.formSubtitle {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputWithIcon {
+  position: relative;
+}
+
+.selectWithIcon {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00aeef;
+  font-size: 16px;
+  z-index: 2;
+}
+
+.formInput {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  height: 48px;
+  background: white;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #00aeef;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1);
+}
+
+.formInput.error {
+  border-color: #dc3545;
+}
+
+.phoneInputWrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.countryCodeSelector {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+}
+
+.countrySelect {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  height: 48px;
+  appearance: none;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.countrySelect:focus {
+  outline: none;
+  border-color: #00aeef;
+}
+
+.selectArrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.phoneInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.formSelect {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  height: 48px;
+  appearance: none;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: #00aeef;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1);
+}
+
+.formSelect.error {
+  border-color: #dc3545;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #00aeef 0%, #0077cc 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  height: 52px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 174, 239, 0.3);
+  background: linear-gradient(135deg, #0099d6 0%, #0066aa 100%);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.buttonIcon {
+  font-size: 16px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.privacyNote {
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.privacyNote small {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.react-select__clear-indicator{
+  margin: 0 14px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .enquiryForm {
+    padding: 20px;
+  }
+
+  .formHeader h3 {
+    font-size: 20px;
+  }
+
+  .phoneInputWrapper {
+    gap: 12px;
+  }
+
+  .countryCodeSelector {
+    width: 36%;
+  }
+
+  .formInput,
+  .formSelect,
+  .countrySelect {
+    font-size: 16px;
+    height: 52px;
+  }
+
+  .submitButton {
+    height: 56px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .enquiryForm {
+    padding: 16px;
+  }
+
+  .formHeader h3 {
+    font-size: 18px;
+  }
+
+  .formInput,
+  .formSelect,
+  .countrySelect {
+    font-size: 15px;
+    height: 48px;
+  }
+
+  .submitButton {
+    height: 52px;
+    font-size: 15px;
+  }
+
+  .privacyNote small {
+    font-size: 11px;
+  }
+}

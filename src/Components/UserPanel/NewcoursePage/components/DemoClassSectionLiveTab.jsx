@@ -99,7 +99,8 @@ What's Included:
 
     if (!userProfile || !userProfile.studentId) {
       onCloseRegisterPrompt && onCloseRegisterPrompt();
-
+    // 🔑 reset submitting state
+    setIsSubmitting(false);
       return onRequestClick?.("LOGIN_REQUIRED");
     }
 

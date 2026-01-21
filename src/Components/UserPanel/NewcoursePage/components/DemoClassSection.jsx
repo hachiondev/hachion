@@ -53,14 +53,14 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   const [enrollErrorMessage, setEnrollErrorMessage] = useState("");
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [enrollingSessionId, setEnrollingSessionId] = useState(null);
- const [tabMessage, setTabMessage] = useState({
-  live: false,
-  crash: false,
-  mentoring: false,
-  self: false
-});
+  const [tabMessage, setTabMessage] = useState({
+    live: false,
+    crash: false,
+    mentoring: false,
+    self: false
+  });
 
-const [requestSourceTab, setRequestSourceTab] = useState(null);
+  const [requestSourceTab, setRequestSourceTab] = useState(null);
 
   useEffect(() => {
     if (!enrollSuccessMessage && !enrollErrorMessage) return;
@@ -125,33 +125,33 @@ const [requestSourceTab, setRequestSourceTab] = useState(null);
     setEnrollErrorMessage
   });
 
-const handleLiveEnrollClick = async (session, notifyVia) => {
-  
-  if (session?.mode !== "Live Demo") {
-  navigate(`/enroll-now/${courseName}`, {
-    state: {
-      notifyVia,
-      selectedBatchId: session.batchId,
-      selectedSession: session, 
-    },
-  });
-  return;
-}
-  if (!userProfile || !userProfile.studentId) {
-    setShowRegisterPrompt(true);
-    return;
-  }
+  const handleLiveEnrollClick = async (session, notifyVia) => {
 
-  setShowRegisterPrompt(false);
-  setEnrollingSessionId(session.id);
+    if (session?.mode !== "Live Demo") {
+      navigate(`/enroll-now/${courseName}`, {
+        state: {
+          notifyVia,
+          selectedBatchId: session.batchId,
+          selectedSession: session,
+        },
+      });
+      return;
+    }
+    if (!userProfile || !userProfile.studentId) {
+      setShowRegisterPrompt(true);
+      return;
+    }
 
-  try {
-    await handleLiveEnrollPayment(session, notifyVia); 
-    onViewDemoClass && onViewDemoClass();
-  } finally {
-    setEnrollingSessionId(null);
-  }
-};
+    setShowRegisterPrompt(false);
+    setEnrollingSessionId(session.id);
+
+    try {
+      await handleLiveEnrollPayment(session, notifyVia);
+      onViewDemoClass && onViewDemoClass();
+    } finally {
+      setEnrollingSessionId(null);
+    }
+  };
 
   const {
     liveGroups,
@@ -194,12 +194,15 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   });
 
   const handleRequestBatchWithLoginCheck = () => {
-    if (isProfileLoading) return;
+    if (isProfileLoading) return "LOADING";
+
     if (!userProfile || !userProfile.studentId) {
       setShowRegisterPrompt(true);
-      return;
+      return "LOGIN_REQUIRED";
     }
+
     setShowRequestBatch(true);
+    return "OK";
   };
 
   const handleClick = () => {
@@ -235,15 +238,15 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   };
 
   useEffect(() => {
-  const el = tabRefs.current[activeTab];
-  if (el) {
-    el.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
-  }
-}, [activeTab]);
+    const el = tabRefs.current[activeTab];
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (isRequestBatchSuccess) {
@@ -332,7 +335,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
   return (
     <section className={styles.dcwrap} >
       <div className="container">
-       
+
         {/* Offer strip */}
         {showOfferStrip && (
           <div className={styles.offerBanner}>
@@ -388,7 +391,7 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
 
         {/* Heading */}
         <div className={styles.dchead}>
-           {/* <button
+          {/* <button
                   className={cn(styles.bnbtn, styles.bnbtnprimary)}
                   // onClick={onEnroll}
                 >
@@ -478,8 +481,8 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             // onRequestClick={handleClick}
-             onRequestClick={handleRequestBatchWithLoginCheck}
-             resetLiveSubmitting={resetLiveSubmitting}
+            onRequestClick={handleRequestBatchWithLoginCheck}
+            resetLiveSubmitting={resetLiveSubmitting}
             crashCourse={courseData?.crashCourse || ""}
             isCourseLoading={isCourseLoading}
             courseError={courseError}
@@ -533,8 +536,8 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             selectedGroup={selectedGroup}
             userProfile={userProfile}
             courseName={courseData?.courseName || courseNameForApi}
-onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
-onEnrollClick={handleLiveEnrollClick}
+            onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
+            onEnrollClick={handleLiveEnrollClick}
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}
@@ -655,7 +658,10 @@ onEnrollClick={handleLiveEnrollClick}
                     fontSize: "14px",
                     cursor: "pointer",
                   }}
-                  onClick={() => setShowRegisterPrompt(false)}
+                  onClick={() => {
+                    setShowRegisterPrompt(false);
+                    setResetLiveSubmitting(Date.now()); // 🔥 notify child
+                  }}
                 >
                   Cancel
                 </button>

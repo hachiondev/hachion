@@ -863,6 +863,7 @@ const newRow = {
               </TableContainer>
 
               <div className="course-row" style={{ gap: 12 }}>
+                {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
                 <button
                   className='submit-btn'
                   onClick={handleSubmit}
@@ -874,7 +875,7 @@ const newRow = {
                 >
                   {toolsData.tool_id ? "Update" : "Submit"}
                 </button>
-                {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+                
 
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
               </div>
@@ -990,6 +991,7 @@ const newRow = {
                           </div>
                         ) : ("")}
                       </StyledTableCell> */}
+                      
                       <StyledTableCell align="center">
                         {courseRow.imageUrl && (
                           <img

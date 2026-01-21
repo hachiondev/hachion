@@ -411,9 +411,9 @@ const GeoKeyword = ({
                       <StyledTableCell align='center' sx={{ fontSize: '16px', width: '25%' }}>
                         GeoKeyword <span style={{ color: "red" }}>*</span>
                       </StyledTableCell>
-                      <StyledTableCell align="center" sx={{ fontSize: '16px', width: '30%' }}>
+                      {/* <StyledTableCell align="center" sx={{ fontSize: '16px', width: '30%' }}>
                         Description <span style={{ color: "red" }}>*</span>
-                      </StyledTableCell>
+                      </StyledTableCell> */}
                       <StyledTableCell align="center" sx={{ fontSize: '16px', width: '120px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -433,7 +433,7 @@ const GeoKeyword = ({
                             }}
                           />
                         </StyledTableCell>
-                        <StyledTableCell align='center' style={{ maxWidth: 500, overflow: 'hidden' }}>
+                        {/* <StyledTableCell align='center' style={{ maxWidth: 500, overflow: 'hidden' }}>
                           <div style={{ maxWidth: '100%' }}>
                             <ReactQuill
                               theme="snow"
@@ -451,7 +451,7 @@ const GeoKeyword = ({
                               placeholder="Enter GeoKeyword description (Required)"
                             />
                           </div>
-                        </StyledTableCell>
+                        </StyledTableCell> */}
 
                         <StyledTableCell align="center">
                           {!isEditMode && (
@@ -581,7 +581,7 @@ const GeoKeyword = ({
                       <StyledTableCell align="center">Category Name</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
                       <StyledTableCell align="center">GeoKeyword</StyledTableCell>
-                      <StyledTableCell align="center">Description</StyledTableCell>
+                      {/* <StyledTableCell align="center">Description</StyledTableCell> */}
                       <StyledTableCell align="center">Date</StyledTableCell>
                       <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
@@ -610,11 +610,11 @@ const GeoKeyword = ({
                             {project.projectName}
                           </StyledTableCell>
 
-                          <StyledTableCell align="left">
+                          {/* <StyledTableCell align="left">
                             <div
                               dangerouslySetInnerHTML={{ __html: project.description }}
                             />
-                          </StyledTableCell>
+                          </StyledTableCell> */}
                           <StyledTableCell align="center">
                             {project.date
                               ? dayjs(project.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()

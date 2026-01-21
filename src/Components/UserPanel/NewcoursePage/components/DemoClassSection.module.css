@@ -467,15 +467,15 @@
   box-shadow: var(--shadow);
 }
 
-.noLiveSlotsContainer{
+.noLiveSlotsContainer {
   display: flex;
   gap: 20px;
 }
 
-.noLiveClass{
-  background:#fff; 
-  border:1px solid var(--border); 
-  border-radius:12px;
+.noLiveClass {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
   text-align: center;
   display: grid;
   place-items: center;
@@ -485,8 +485,8 @@
   width: 400px;
 }
 
-.noLiveSlot{
-    background: #fff;
+.noLiveSlot {
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 25px 20px;
@@ -508,6 +508,255 @@
   border-radius: 10px;
   background: #fff;
   gap: 7px;
+}
+
+.dcdetailrow2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+  background: #fff;
+  gap: 7px;
+}
+
+/* ========================================
+   ENROLLED CONTAINER STYLES
+   ======================================== */
+.enrolledContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.enrolledBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  transition: all 0.3s ease;
+}
+
+.enrolledBadge .checkIcon {
+  flex-shrink: 0;
+}
+
+.resendBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.resendBtn:hover:not(:disabled) {
+  background: #2563eb;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.resendBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.resendBtn:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.resendBtn svg {
+  flex-shrink: 0;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ========================================
+   ENROLL ACTIONS CARD STYLES
+   ======================================== */
+.enrollActionsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.enrollPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #0abbe7 0%, #0a7994 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(10, 187, 231, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.enrollPrimaryBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.enrollPrimaryBtn:hover::before {
+  left: 100%;
+}
+
+.enrollPrimaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.enrollPrimaryBtn:active {
+  transform: translateY(0);
+}
+
+.enrollPrimaryBtn svg {
+  flex-shrink: 0;
+}
+
+/* ========================================
+   NOTIFICATION CARD STYLES
+   ======================================== */
+.notificationCard {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notificationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.notificationHeader svg {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.notificationTitle {
+  font-weight: 600;
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ========================================
+   CUSTOM CHECKBOX STYLES
+   ======================================== */
+.customCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.customCheckbox:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* .checkboxInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+} */
+
+.checkboxIcon {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  user-select: none;
+}
+
+.checkboxLabel svg {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+.enrollPrimaryBtn:focus-visible,
+.resendBtn:focus-visible,
+.customCheckbox:focus-within {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.checkboxInput:focus-visible~.checkboxCustom {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .dcdetailrow+.dcdetailrow {
@@ -546,10 +795,10 @@
   font-size: 13px;
 }
 
-.dcbtnDisabled{
+.dcbtnDisabled {
   background-color: #ccc;
   color: #555;
-    font-weight: 800;
+  font-weight: 800;
   border-radius: 999px;
   padding: 10px 30px;
   cursor: pointer;
@@ -1238,17 +1487,33 @@
     width: 130px;
   }
 
-      .noLiveSlotsContainer{
-   justify-content: space-between;
+  .noLiveSlotsContainer {
+    justify-content: space-between;
   }
 
-    .noLiveSlot {
-        height: 155px;
-        width: 185px;;
+  .noLiveSlot {
+    height: 155px;
+    width: 185px;
+    ;
   }
 
-  .noLiveClass{
+  .noLiveClass {
     width: 466px;
+  }
+
+  .enrolledBadge,
+  .resendBtn,
+  .enrollPrimaryBtn {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  .notificationCard {
+    padding: 10px 12px;
+  }
+
+  .checkboxLabel {
+    font-size: 13px;
   }
 }
 
@@ -1330,20 +1595,19 @@
   }
 
   .dctabs {
-      display: flex;
-  gap: 12px;
-  overflow-x: hidden;
+    display: flex;
+    gap: 12px;
+    overflow-x: hidden;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
   }
 
-    .dctab {
-    
-  }
+  .dctab {}
 
-  .dctabs > * {
-    flex: 0 0 75%;   /* adjust if needed */
+  .dctabs>* {
+    flex: 0 0 75%;
+    /* adjust if needed */
     min-width: 140px;
   }
 
@@ -1352,7 +1616,7 @@
     scroll-snap-type: x mandatory;
   }
 
-  .dctabs > * {
+  .dctabs>* {
     scroll-snap-align: start;
   }
 
@@ -1378,8 +1642,8 @@
   }
 
   .dcslots .dcslot {
-padding: 15px 8px;
-        width: 123px;
+    padding: 15px 8px;
+    width: 123px;
   }
 
   .dcslotdate {
@@ -1436,7 +1700,7 @@ padding: 15px 8px;
     width: 300px;
   }
 
-  .dcemptyicon img{
+  .dcemptyicon img {
     height: 50px;
   }
 
@@ -1539,7 +1803,7 @@ padding: 15px 8px;
     width: 110px;
   }
 
-    .noLiveSlotsContainer{
+  .noLiveSlotsContainer {
     flex-direction: column;
     /* align-items: center; */
   }
@@ -1549,17 +1813,17 @@ padding: 15px 8px;
     width: 165px;
   }
 
-  .noLiveClass{
+  .noLiveClass {
     width: 386px;
   }
 
-    .bnbtnprimary {
+  .bnbtnprimary {
     font-size: 16px;
     padding: 5px 40px 5px 40px;
     margin: 20px;
   }
 
-  
+
   .dcmuted {
     font-size: 12px;
     font-weight: 400;
@@ -1663,8 +1927,8 @@ padding: 15px 8px;
   }
 
   .dcslots .dcslot {
-padding: 15px;
-        width: 155px;
+    padding: 15px;
+    width: 155px;
   }
 
   .dcslotdate {
@@ -1721,7 +1985,7 @@ padding: 15px;
     width: 300px;
   }
 
-  .dcemptyicon img{
+  .dcemptyicon img {
     height: 50px;
   }
 
@@ -1824,7 +2088,7 @@ padding: 15px;
     width: 110px;
   }
 
-    .noLiveSlotsContainer{
+  .noLiveSlotsContainer {
     flex-direction: column;
     /* align-items: center; */
   }
@@ -1834,17 +2098,17 @@ padding: 15px;
     width: 165px;
   }
 
-  .noLiveClass{
+  .noLiveClass {
     width: 316px;
   }
 
-    .bnbtnprimary {
+  .bnbtnprimary {
     font-size: 16px;
     padding: 5px 40px 5px 40px;
     margin: 20px;
   }
 
-  
+
   .dcmuted {
     font-size: 12px;
     font-weight: 400;

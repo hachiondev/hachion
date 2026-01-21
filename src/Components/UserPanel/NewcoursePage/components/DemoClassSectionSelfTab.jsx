@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./DemoClassSection.module.css";
 import { cn } from "../../../../utils";
+import { useCheckEnrollmentForSessions } from "../../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
+import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendEnrollEmail";
 
 const Chevron = () => (
   <svg
@@ -29,20 +31,24 @@ function DemoClassSectionSelfTab({
   setTimeDropdownOpen,
   notificationDropdownOpen,
   setNotificationDropdownOpen,
-
+  selectedGroupKey,
+  setSelectedGroupKey,
+  selectedGroup,
+    userProfile,
+  courseName,
   isRequestBatchLoading,
   isProfileLoading,
   showMessage,
   isRequestBatchSuccess,
   requestBatchError,
   onRequestClick,
-
-  
+onCloseRegisterPrompt,
+onEnrollClick,
   selfPacedLearning,
   isCourseLoading,
-  courseError, 
+  courseError,
 }) {
-  
+
   const selfContent =
     selfPacedLearning && selfPacedLearning.trim().length > 0
       ? selfPacedLearning
@@ -57,37 +63,71 @@ What's Included:
 • Lifetime access with free updates
 • No prior programming experience required`;
 
-// const isAnyDaySelected = () => {
-//   const checkboxes = document.querySelectorAll(".dayCheckbox");
-//   return Array.from(checkboxes).some((cb) => cb.checked);
-// };
+  // const isAnyDaySelected = () => {
+  //   const checkboxes = document.querySelectorAll(".dayCheckbox");
+  //   return Array.from(checkboxes).some((cb) => cb.checked);
+  // };
 
-// const isSelfFormValid =
-//   isAnyDaySelected() &&
-//   preferredTime &&
-//   notification;
+  // const isSelfFormValid =
+  //   isAnyDaySelected() &&
+  //   preferredTime &&
+  //   notification;
 
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-const [selectedDays, setSelectedDays] = useState([]);
-const [isSubmitting, setIsSubmitting] = useState(false);
+  //   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendingBatchId, setSendingBatchId] = React.useState(null);
+    const [resendMessage, setResendMessage] = React.useState("");
+    const [resendError, setResendError] = React.useState("");
+      const [notifyViaMap, setNotifyViaMap] = useState({});
+    const { data: checkedSessions = [] } = useCheckEnrollmentForSessions(
+      selectedGroup?.sessions || [],
+      userProfile?.studentId || "",
+      courseName || ""
+    );
+      const { mutate: resendEmail } = useResendEnrollEmail();
 
-const isSelfFormValid =
-  selectedDays.length > 0 &&
-  Boolean(preferredTime) &&
-  Boolean(notification);
-useEffect(() => {
-  if (isRequestBatchSuccess || requestBatchError) {
-    setIsSubmitting(false);
-    setSelectedDays([]);
-     setPreferredTime("");
-  }
-}, [isRequestBatchSuccess, requestBatchError]);
-useEffect(() => {
-  if (!notification) {
-    setNotification("Email Only");
-  }
-}, [notification, setNotification]);
+  const isSelfFormValid =
+    selectedDays.length > 0 &&
+    Boolean(preferredTime) &&
+    Boolean(notification);
+  useEffect(() => {
+    if (isRequestBatchSuccess || requestBatchError) {
+      setIsSubmitting(false);
+      setSelectedDays([]);
+      setPreferredTime("");
+    }
+  }, [isRequestBatchSuccess, requestBatchError]);
+  useEffect(() => {
+    if (!notification) {
+      setNotification("Email Only");
+    }
+  }, [notification, setNotification]);
 
+    const handleEnrollWithLoginCheck = (sess) => {
+    if (isProfileLoading) return;
+
+    if (!userProfile || !userProfile.studentId) {
+      onCloseRegisterPrompt && onCloseRegisterPrompt();
+
+      return onRequestClick?.("LOGIN_REQUIRED");
+    }
+
+    onEnrollClick(sess, {
+      email: notifyViaMap[sess.id]?.email ?? true,
+      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+    });
+  };
+
+    const handleNotifyChange = (sessionId, type, checked) => {
+    setNotifyViaMap((prev) => ({
+      ...prev,
+      [sessionId]: {
+        email: type === "email" ? checked : prev[sessionId]?.email ?? true,
+        whatsapp: type === "whatsapp" ? checked : prev[sessionId]?.whatsapp ?? false,
+      },
+    }));
+  };
 
   return (
     <div className={styles.dcgrid}>
@@ -101,12 +141,12 @@ useEffect(() => {
           <div className={styles.dcrequestOverlay}>
             <div className={styles.dcrequestForm}>
               {/* Preferred Day */}
-              <div className={styles.dcrequestDays}>
+              {/* <div className={styles.dcrequestDays}>
                 <label className={styles.dcrequestLabel}>
                   Preferred Day: <span style={{ color: "red" }}>*</span>
                 </label>
 
-                {/* <button
+                <button
                                   type="button"
                                   data-mode="select"
                                   className={styles.selectAllBtn}
@@ -127,45 +167,276 @@ useEffect(() => {
                                   }}
                                 >
                                   Select All
-                                </button> */}
-<button
-  type="button"
-  className={styles.selectAllBtn}
-  onClick={() => {
-    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    setSelectedDays((prev) =>
-      prev.length === allDays.length ? [] : allDays
-    );
-  }}
->
-  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
-</button>
+                                </button>
+                <button
+                  type="button"
+                  className={styles.selectAllBtn}
+                  onClick={() => {
+                    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                    setSelectedDays((prev) =>
+                      prev.length === allDays.length ? [] : allDays
+                    );
+                  }}
+                >
+                  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
+                </button>
 
                 <div className={styles.dcrequestCheckboxes}>
-                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-  <label key={day} className={styles.dcrequestCheckbox}>
-    <input
-      type="checkbox"
-      checked={selectedDays.includes(day)}
-      onChange={(e) => {
-        setSelectedDays((prev) =>
-          e.target.checked
-            ? [...prev, day]
-            : prev.filter((d) => d !== day)
-        );
-      }}
-    />
-    <span className={styles.checkmark}></span>
-    <span>{day}</span>
-  </label>
-))}
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                    <label key={day} className={styles.dcrequestCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={selectedDays.includes(day)}
+                        onChange={(e) => {
+                          setSelectedDays((prev) =>
+                            e.target.checked
+                              ? [...prev, day]
+                              : prev.filter((d) => d !== day)
+                          );
+                        }}
+                      />
+                      <span className={styles.checkmark}></span>
+                      <span>{day}</span>
+                    </label>
+                  ))}
 
                 </div>
-              </div>
+              </div> */}
+{selectedGroup && selectedGroup.sessions && selectedGroup.sessions.length > 0 && (
+                          <div>
+                            {/* <h4>Class Details</h4> */}
+              
+                            <div>
+                              {checkedSessions.map((sess) => (
+                                <div key={sess.id} className={styles.dcdetailrow2}>
+  {sess.mode === "Live Demo" && sess._isEnrolled ? (
+    /* =========================
+       LIVE DEMO → ENROLLED
+       ========================= */
+    <div className={styles.enrolledContainer}>
+      <button className={styles.enrolledBadge} disabled>
+        <svg 
+          width="16" 
+          height="16" 
+          viewBox="0 0 16 16" 
+          fill="none"
+          className={styles.checkIcon}
+        >
+          <path
+            d="M13.5 4L6 11.5L2.5 8"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Enrolled
+      </button>
 
+      <button
+        className={styles.resendBtn}
+        disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+        onClick={() => {
+          setSendingBatchId(sess.batchId);
+          resendEmail(
+            {
+              email: userProfile.email,
+              batchId: sess.batchId,
+            },
+            {
+              onSuccess: (msg) => {
+                setSendingBatchId(null);
+                setResendError("");
+                setResendMessage(typeof msg === "string" ? msg : msg?.message);
+              },
+              onError: (err) => {
+                setSendingBatchId(null);
+                const backendMsg =
+                  typeof err?.response?.data === "string"
+                    ? err.response.data
+                    : err?.response?.data?.message;
+                setResendMessage("");
+                setResendError(backendMsg || "Failed to resend email");
+              },
+            }
+          );
+        }}
+      >
+        {sess.resendCount >= 3 ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+            </svg>
+            Limit Reached
+          </>
+        ) : sendingBatchId === sess.batchId ? (
+          <>
+            <svg className={styles.spinner} width="14" height="14" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.25"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+            </svg>
+            Sending...
+          </>
+        ) : (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M2 12l5 5L22 2" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M22 12v7a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            Resend Email
+          </>
+        )}
+      </button>
+    </div>
+  ) : sess.mode === "Live Class" && Number(sess.amount) > 0 ? (
+    /* =========================
+       LIVE CLASS → PAID → ENROLLED
+       ========================= */
+    <div className={styles.enrolledContainer}>
+      <button className={styles.enrolledBadge} disabled>
+        <svg 
+          width="16" 
+          height="16" 
+          viewBox="0 0 16 16" 
+          fill="none"
+          className={styles.checkIcon}
+        >
+          <path
+            d="M13.5 4L6 11.5L2.5 8"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Enrolled
+      </button>
+      
+      <button
+        className={styles.resendBtn}
+        disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+        onClick={() => {
+          setSendingBatchId(sess.batchId);
+          resendEmail(
+            {
+              email: userProfile.email,
+              batchId: sess.batchId,
+            },
+            {
+              onSuccess: (msg) => {
+                setSendingBatchId(null);
+                setResendError("");
+                setResendMessage(typeof msg === "string" ? msg : msg?.message);
+              },
+              onError: (err) => {
+                setSendingBatchId(null);
+                const backendMsg =
+                  typeof err?.response?.data === "string"
+                    ? err.response.data
+                    : err?.response?.data?.message;
+                setResendMessage("");
+                setResendError(backendMsg || "Failed to resend email");
+              },
+            }
+          );
+        }}
+      >
+        {sess.resendCount >= 3 ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+            </svg>
+            Limit Reached
+          </>
+        ) : sendingBatchId === sess.batchId ? (
+          <>
+            <svg className={styles.spinner} width="14" height="14" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.25"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+            </svg>
+            Sending...
+          </>
+        ) : (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M2 12l5 5L22 2" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M22 12v7a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            Resend Email
+          </>
+        )}
+      </button>
+    </div>
+  ) : (
+    /* =========================
+       LIVE CLASS → NOT PAID → ENROLL
+       ========================= */
+    <div className={styles.enrollActionsCard}>
+      <button
+        className={styles.enrollPrimaryBtn}
+        onClick={() => handleEnrollWithLoginCheck(sess)}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M9 11l3 3L22 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+        Enroll Now
+      </button>
+
+      {/* Notification Options */}
+      <div className={styles.notificationCard}>
+        <div className={styles.notificationHeader}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span className={styles.notificationTitle}>Notify me via:</span>
+        </div>
+
+        <div className={styles.checkboxContainer}>
+          <label className={styles.customCheckbox}>
+            <input
+              type="checkbox"
+              checked={notifyViaMap[sess.id]?.email ?? true}
+              onChange={(e) =>
+                handleNotifyChange(sess.id, "email", e.target.checked)
+              }
+              className={styles.checkboxInput}
+            />
+            
+            <span className={styles.checkboxLabel}>
+              
+              Email
+            </span>
+          </label>
+
+          <label className={styles.customCheckbox}>
+            <input
+              type="checkbox"
+              checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+              onChange={(e) =>
+                handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+              }
+              className={styles.checkboxInput}
+            />
+            
+            <span className={styles.checkboxLabel}>
+              WhatsApp
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+                              ))}
+              
+              
+              
+                            </div>
+                          </div>
+ )} 
               {/* Preferred Time + Notification */}
-              <div className={styles.dcrequestRow}>
-                {/* Preferred Time */}
+              {/* <div className={styles.dcrequestRow}>
                 <div className={styles.dcrequestField}>
                   <label className={styles.dcrequestLabel}>
                     Preferred Time: <span style={{ color: "red" }}>*</span>
@@ -191,7 +462,7 @@ useEffect(() => {
                         className={cn(
                           styles.dcrequestCaret,
                           timeDropdownOpen &&
-                            styles.dcrequestCaretOpen
+                          styles.dcrequestCaretOpen
                         )}
                       >
                         <Chevron />
@@ -211,7 +482,7 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 preferredTime === option.value &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
                                 setPreferredTime((prev) =>
@@ -247,7 +518,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                {/* Notification */}
+              
                 <div className={styles.dcrequestField}>
                   <label className={styles.dcrequestLabel}>
                     Notification: <span style={{ color: "red" }}>*</span>
@@ -276,7 +547,7 @@ useEffect(() => {
                         className={cn(
                           styles.dcrequestCaret,
                           notificationDropdownOpen &&
-                            styles.dcrequestCaretOpen
+                          styles.dcrequestCaretOpen
                         )}
                       >
                         <Chevron />
@@ -293,7 +564,7 @@ useEffect(() => {
                         />
 
                         <div className={styles.dcrequestSelectMenu}>
-                          {/* Clear selection */}
+                          
                           <div
                             className={
                               styles.dcrequestSelectOption
@@ -310,7 +581,7 @@ useEffect(() => {
                               className={cn(
                                 styles.dcrequestSelectOption,
                                 notification === option.label &&
-                                  styles.dcrequestSelectOptionActive
+                                styles.dcrequestSelectOptionActive
                               )}
                               onClick={() => {
                                 setNotification((prev) =>
@@ -346,43 +617,43 @@ useEffect(() => {
                     )}
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Request Batch button + messages */}
-          <button
-  onClick={() => {
-    if (isSubmitting || isRequestBatchLoading) return;
+              {/* <button
+                onClick={() => {
+                  if (isSubmitting || isRequestBatchLoading) return;
 
-    setIsSubmitting(true);     
-    onRequestClick();
-  }}
-  disabled={
-    isSubmitting ||
-    isRequestBatchLoading ||
-    isProfileLoading ||
-    !isSelfFormValid
-  }
-  style={{
-    width: "100%",
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    fontSize: "15px",
-    fontWeight: "600",
-    backgroundColor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
-        ? "#C4C4C4"
-        : "#2a7cf7",
-    color: "#fff",
-    cursor:
-      isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
-        ? "not-allowed"
-        : "pointer",
-    transition: "background-color 0.2s ease",
-  }}
->
-  {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-</button>
+                  setIsSubmitting(true);
+                  onRequestClick();
+                }}
+                disabled={
+                  isSubmitting ||
+                  isRequestBatchLoading ||
+                  isProfileLoading ||
+                  !isSelfFormValid
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  backgroundColor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
+                      ? "#C4C4C4"
+                      : "#2a7cf7",
+                  color: "#fff",
+                  cursor:
+                    isSubmitting || isRequestBatchLoading || isProfileLoading || !isSelfFormValid
+                      ? "not-allowed"
+                      : "pointer",
+                  transition: "background-color 0.2s ease",
+                }}
+              >
+                {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+              </button> */}
 
 
               {showMessage && isRequestBatchSuccess && (
@@ -435,21 +706,21 @@ useEffect(() => {
             </div>
           </div>
         </div>
-{isCourseLoading ? (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.5",
-    // }}
-  >
-    Loading self-paced learning details...
-  </div>
-) : (
- <div className={styles.dcinfotext}>
-  <style>
-    {`
+        {isCourseLoading ? (
+          <div
+            className={styles.dcinfotext}
+          // style={{
+          //   fontSize: "14px",
+          //   color: "#374151",
+          //   lineHeight: "1.5",
+          // }}
+          >
+            Loading self-paced learning details...
+          </div>
+        ) : (
+          <div className={styles.dcinfotext}>
+            <style>
+              {`
       .selfHtml h1,
       .selfHtml h2,
       .selfHtml h3,
@@ -489,22 +760,22 @@ useEffect(() => {
         font-weight: 700 !important;
       }
     `}
-  </style>
+            </style>
 
-  {selfPacedLearning && selfPacedLearning.trim() ? (
-    <div
-      className="selfHtml"
-      dangerouslySetInnerHTML={{ __html: selfPacedLearning }}
-    />
-  ) : (
-    <p style={{ margin: 0 }}>
-      Learn at your own pace with structured modules, recorded sessions,
-      and hands-on projects designed for flexible learning.
-    </p>
-  )}
-</div>
+            {selfPacedLearning && selfPacedLearning.trim() ? (
+              <div
+                className="selfHtml"
+                dangerouslySetInnerHTML={{ __html: selfPacedLearning }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>
+                Learn at your own pace with structured modules, recorded sessions,
+                and hands-on projects designed for flexible learning.
+              </p>
+            )}
+          </div>
 
-)}
+        )}
 
       </aside>
     </div>

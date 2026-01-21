@@ -528,7 +528,13 @@ const handleLiveEnrollClick = async (session, notifyVia) => {
             isProfileLoading={isProfileLoading}
             // showMessage={tabMessage[activeTab]}
             showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
-
+            selectedGroupKey={selectedGroupKey}
+            setSelectedGroupKey={setSelectedGroupKey}
+            selectedGroup={selectedGroup}
+            userProfile={userProfile}
+            courseName={courseData?.courseName || courseNameForApi}
+onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
+onEnrollClick={handleLiveEnrollClick}
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}

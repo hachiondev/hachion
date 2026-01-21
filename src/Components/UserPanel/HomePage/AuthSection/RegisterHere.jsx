@@ -62,12 +62,12 @@ const RegisterHere = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!password.trim()) newErrors.password = "Password is required.";
-    if (!userInput.trim()) {
-      newErrors.captcha = "Captcha is required.";
-    } else if (userInput !== captchaText) {
-      newErrors.captcha = "Captcha does not match.";
-      initializeCaptcha(canvasRef.current.getContext("2d"));
-    }
+    // if (!userInput.trim()) {
+    //   newErrors.captcha = "Captcha is required.";
+    // } else if (userInput !== captchaText) {
+    //   newErrors.captcha = "Captcha does not match.";
+    //   initializeCaptcha(canvasRef.current.getContext("2d"));
+    // }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -185,7 +185,7 @@ const handleSubmit = async () => {
               </div>
 
               {/* Captcha */}
-              <label className="login-label">
+              {/* <label className="login-label">
                 Enter Captcha<span className="star">*</span>
               </label>
               <div className="captcha-wrapper">
@@ -212,7 +212,7 @@ const handleSubmit = async () => {
                 {errors.captcha && (
                   <p className="error-field-message">{errors.captcha}</p>
                 )}
-              </div>
+              </div> */}
 
               {/* Remember Me */}
               <div className="d-flex align-items-center mb-3" style={{margin: '0.2vh 2vh'}}>

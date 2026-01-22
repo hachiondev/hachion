@@ -26,23 +26,31 @@
 .lslist {
   margin: 14px 0 10px;
   display: grid;
-  gap: 14px;
+  gap: 5px;
   padding: 0;
 }
 
 .lslistitem {
   display: flex;
-  gap: 10px;
   align-items: flex-start;
-  line-height: 1.6;
   color: #000;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
 
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s ease forwards;
   animation-delay: calc(var(--i) * 0.1s);
+}
+
+.lslistitem::before {
+  content: "•";               /* bullet icon */
+  color: #000000;              /* change color if needed */
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 8px;
+  line-height: 1.2;
+  flex-shrink: 0;
 }
 
 
@@ -77,7 +85,7 @@
 }
 
 .lspre h3 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: #0f172a;
   margin-bottom: 8px;
@@ -88,9 +96,9 @@
   gap: 5px;
   color: #000000;
   list-style: disc;
-  margin-left: 18px;
+  /* margin-left: 18px; */
   margin-bottom: 0;
-  font-size: 17px;
+  font-size: 16px;
   padding-left: 14px;
 }
 
@@ -163,7 +171,7 @@
 }
 
 .lscard h3, .lscardhead h3 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: #000000;
   margin: 0;
@@ -175,13 +183,14 @@
   gap: 10px;
   color: #0f172a;
   list-style: disc;
-  font-size: 17px;
+  font-size: 16px;
   /* margin-left: 18px; */
 }
 
 .lsmuted {
   color: #000000;
   margin: 12px 0 8px;
+  font-size: 16px;
 }
 
 /* pills */
@@ -251,7 +260,7 @@
 
 .lstoolstitle {
   text-align: center;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
   color: #0f172a;
   /* margin-bottom: 14px; */

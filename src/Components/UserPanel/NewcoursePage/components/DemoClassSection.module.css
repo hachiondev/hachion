@@ -112,7 +112,7 @@
 }
 
 .dchead h2 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   color: var(--ink);
   margin: 4px 0;
@@ -137,7 +137,7 @@
   /* max-width: 760px; */
   margin: 0;
   text-align: left;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .feeAmount {
@@ -304,6 +304,7 @@
   color: #6a7381;
   border-right: 1px solid var(--border);
   display: flex;
+  font-size: 16px;
   flex-direction: column;
   align-items: center;
 }
@@ -404,6 +405,7 @@
 .dcslotcount {
   margin: 8px 0 10px;
   color: #0b1222;
+  font-size: 16px;
 }
 
 .dcslotbadge {
@@ -447,8 +449,6 @@
   /* Align to left */
 }
 
-
-
 /* Details panel */
 .dcdetails {
   display: grid;
@@ -465,6 +465,10 @@
   /* border-radius:12px; */
   padding: 12px;
   box-shadow: var(--shadow);
+}
+
+.dcdetailscol h4{
+  font-size: 20px;
 }
 
 .noLiveSlotsContainer {
@@ -769,7 +773,7 @@
   font-weight: 700;
   border: none;
   padding: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .dcdetailtime {

@@ -127,7 +127,7 @@ export default function LearnSection() {
                         <ul className={styles.lslist}>
                             {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 4)).map((item, index) => (
                                 <li key={item} className={styles.lslistitem} style={{ "--i": index }}>
-                                    <CheckCircle />
+                                    {/* <CheckCircle /> */}
                                     <span>{item}</span>
                                 </li>
                             ))}

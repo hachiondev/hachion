@@ -21,14 +21,14 @@
 }
 
 .cchead h2 {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .cchead p {
   color: #000000;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 300;
   margin: 20px auto 20px;
 }
@@ -45,7 +45,7 @@
   color: #000000;
   cursor: pointer;
   box-shadow: var(--shadow);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* GRID */
@@ -126,6 +126,7 @@ width: 30px;
 .ccaccpanelopen {
   height: auto;
   padding: 6px 0 0 8px;
+  font-size: 16px;
 }
 
 .ccrow {

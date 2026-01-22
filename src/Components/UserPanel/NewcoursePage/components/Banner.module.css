@@ -95,6 +95,7 @@
   background: #29383c;
   color: #fdee24;
   padding: 6px 26px;
+  font-size: 14px;
   border-radius: 999px;
   font-weight: 400;
   letter-spacing: 0.2px;
@@ -103,7 +104,7 @@
 
 .bntitle {
   margin: 18px 0 10px;
-  font-size: 44px;
+  font-size: 32px;
   line-height: 1.15;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -111,18 +112,20 @@
 
 .bnsub {
   color: #cfe4ed;
-  font-size: 18px;
+  font-size: 16px;
   max-width: 700px;
 }
 
 .bnby {
   margin: 8px 0 8px 0;
   color: #d4e6ee;
+  font-size: 16px;
 }
 
 .bnmetrics {
   margin-top: 16px;
   display: flex;
+  font-size: 14px;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
@@ -160,6 +163,7 @@
   flex-wrap: wrap;
   margin-top: 14px;
   color: #e6f3f8;
+  font-size: 14px;
 }
 
 .bnbullet {
@@ -176,7 +180,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .bnpricenow {
@@ -190,7 +194,7 @@
   color: #fff;
   text-decoration: line-through;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .bntag {
@@ -199,7 +203,7 @@
   padding: 4px 20px;
   border-radius: 999px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   border: 1px solid #ff4a4a66;
 }
 
@@ -348,7 +352,7 @@
 
 .bnstatval {
   font-weight: 400;
-  font-size: 34px;
+  font-size: 24px;
   line-height: 1;
 }
 

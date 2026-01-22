@@ -20,7 +20,7 @@
 }
 
 .ishead h2 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--ink);
 }
@@ -28,7 +28,7 @@
 .ishead p {
   color: #000000;
   margin-top: 16px;
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 46px;
   font-weight: 300;
 }
@@ -74,7 +74,7 @@
 }
 
 .isname {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--ink);
   margin: 0;
@@ -87,6 +87,7 @@
   background: #F6EF26;
   color: #1d1a00;
   font-weight: 500;
+  font-size: 14px;
   border-radius: 999px;
   padding: 4px 18px;
 }
@@ -185,7 +186,7 @@
   margin-top: 35px;
   font-weight: 600;
   color: #0f172a;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .islist {

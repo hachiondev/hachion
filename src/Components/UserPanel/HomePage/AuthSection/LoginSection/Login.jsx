@@ -108,11 +108,11 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    initializeCaptcha(ctx);
-  }, []);
+  // useEffect(() => {
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas.getContext('2d');
+  //   initializeCaptcha(ctx);
+  // }, []);
 
   const generateRandomChar = (min, max) =>
     String.fromCharCode(Math.floor(Math.random() * (max - min + 1) + min));
@@ -175,13 +175,13 @@ const Login = () => {
     }
 
     // Captcha validation
-    if (!userInput.trim()) {
-      newErrors.captcha = "Captcha is required.";
-    } else if (userInput !== captchaText) {
-      newErrors.captcha = "Captcha does not match.";
-      const ctx = canvasRef.current.getContext("2d");
-      initializeCaptcha(ctx);
-    }
+    // if (!userInput.trim()) {
+    //   newErrors.captcha = "Captcha is required.";
+    // } else if (userInput !== captchaText) {
+    //   newErrors.captcha = "Captcha does not match.";
+    //   const ctx = canvasRef.current.getContext("2d");
+    //   initializeCaptcha(ctx);
+    // }
 
     setErrors(newErrors);
 
@@ -384,7 +384,7 @@ const Login = () => {
                 </div>
 
                 {/* Captcha Field */}
-                <label className="login-label">Enter Captcha<span className="star">*</span></label>
+                {/* <label className="login-label">Enter Captcha<span className="star">*</span></label>
                 <div className="captcha-wrapper">
                   <canvas
                     ref={canvasRef}
@@ -415,7 +415,7 @@ const Login = () => {
                       {errors.captcha}
                     </p>
                   )}
-                </div>
+                </div> */}
 
                 {/* Remember Me & Forgot Password */}
                 <div className="d-flex justify-content-between align-items-center mb-3">

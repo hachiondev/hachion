@@ -8,7 +8,6 @@ import FinalCTA from '../NewcoursePage/components/FinalCTA';
 import InstructorSection from '../NewcoursePage/components/InstructorSection';
 import LearnSection from '../NewcoursePage/components/LearnSection';
 import StudentsAlsoEnrolled from '../NewcoursePage/components/StudentsAlsoEnrolled';
-import TrendingCourseNames from '../CoursePage/components/TrendingCourseNames'
 import StudentsSay from '../NewcoursePage/components/StudentsSay';
 import SuccessStories from '../NewcoursePage/components/SuccessStories';
 import { useEffect, useRef } from 'react';
@@ -50,7 +49,6 @@ const NewCourseDetails = () => {
         onChat={() => console.log("Open chat widget")}
         onSchedule={() => console.log("Open scheduler")}
       />
-      <TrendingCourseNames/>
       {/* <FinalCTA
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}

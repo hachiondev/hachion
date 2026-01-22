@@ -34,7 +34,7 @@ import dayjs from 'dayjs';
 
 const fetchGeoKeywordsByCategoryCourse = async (categoryName, courseName) => {
   const res = await axios.get(
-    "http://localhost:8080/api/admin/geo-keywords/by-category-course",
+    "https://api.test.hachion.co/api/admin/geo-keywords/by-category-course",
     {
       params: { categoryName, courseName },
     }
@@ -204,7 +204,7 @@ React.useEffect(() => {
     try {
       setProjectsLoading(true);
       const res = await axios.get(
-        "http://localhost:8080/api/admin/geo-keywords"
+        "https://api.test.hachion.co/api/admin/geo-keywords"
       );
       setProjects(res.data);
     } catch (error) {
@@ -271,7 +271,7 @@ const [autoLoaded, setAutoLoaded] = useState(false);
     setIsSavingProjects(true);
 
     await axios.put(
-  "http://localhost:8080/api/admin/geo-keywords/update",
+  "https://api.test.hachion.co/api/admin/geo-keywords/update",
   {
     geoKeywordId: editingGeoKeywordId,
     geoKeywordName: rows[0].title,
@@ -323,7 +323,7 @@ setShowAddCourse(false);
   };
 
   const response = await axios.post(
-    "http://localhost:8080/api/admin/geo-keywords",
+    "https://api.test.hachion.co/api/admin/geo-keywords",
     geoKeywordPayload
   );
 
@@ -443,7 +443,7 @@ const handleDeleteConfirmation = async (geoKeywordId) => {
   if (window.confirm("Are you sure you want to delete this GeoKeyword?")) {
     try {
       await axios.delete(
-        `http://localhost:8080/api/admin/geo-keywords/${geoKeywordId}`
+        `https://api.test.hachion.co/api/admin/geo-keywords/${geoKeywordId}`
       );
 
       // ✅ Remove deleted item from UI

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from "axios";
+
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { styled } from '@mui/material/styles';
@@ -25,11 +27,20 @@ import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { GoPlus } from 'react-icons/go';
 import { useCategories } from "../../../Api/hooks/HomePageApi/NavbarApi/useCategories";
 import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
-import { useAddProjects } from "../../../Api/hooks/AdminProjects/useAddProjects";
-import { useProjects } from "../../../Api/hooks/AdminProjects/useProjects";
+
 import { useUpdateProject } from "../../../Api/hooks/AdminProjects/useUpdateProject";
 import { useDeleteProject } from "../../../Api/hooks/AdminProjects/useDeleteProject";
 import dayjs from 'dayjs';
+
+const fetchGeoKeywordsByCategoryCourse = async (categoryName, courseName) => {
+  const res = await axios.get(
+    "http://localhost:8080/api/admin/geo-keywords/by-category-course",
+    {
+      params: { categoryName, courseName },
+    }
+  );
+  return res.data; // GeoKeywordResponse
+};
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -68,18 +79,24 @@ const GeoKeyword = ({
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [editingProjectId, setEditingProjectId] = useState(null);
+  // const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingGeoKeywordId, setEditingGeoKeywordId] = useState(null);
+
 
   const { data: categories = [], isLoading } = useCategories();
 
 
-  const { data: projects = [], isLoading: projectsLoading } = useProjects();
+  // const { data: projects = [], isLoading: projectsLoading } = useProjects();
+  const [projects, setProjects] = useState([]);
+const [projectsLoading, setProjectsLoading] = useState(false);
+
 
   const { mutate: updateProject } = useUpdateProject();
   const { mutate: deleteProject } = useDeleteProject();
 
 
   const isEditMode = formMode === "Edit";
+  const isAddMode = formMode === "Add";
 
   const [formData, setFormData] = useState({
     courseCategory: "",
@@ -110,37 +127,97 @@ const GeoKeyword = ({
   const [payload, setPayload] = useState(null);
 
 
-  const { mutate: saveProjects, data: projectResponse, isPending: isSavingProjects } = useAddProjects();
+  // const { mutate: saveProjects, data: projectResponse, isPending: isSavingProjects } = useAddProjects();
+  const [isSavingProjects, setIsSavingProjects] = useState(false);
+
   const { data: allCourses = [] } = useCourses();
 
   const filteredCoursesByCategory = allCourses.filter(
     (c) => c.courseCategory === formData.courseCategory
   );
+const [rows, setRows] = useState([
+  { id: 1, title: '', isExisting: false }
+]);
 
 
-
-  const [rows, setRows] = useState([
-    { id: 1, title: '', topic: '' }
-  ]);
 
   const hasCategory = formData.courseCategory?.trim() !== "";
 
 
   const hasCourseName = formData.courseName?.trim() !== "";
+const allProjectsComplete = rows.every(row =>
+  row.title && row.title.trim() !== ''
+);
 
-  const allProjectsComplete = rows.every(row =>
-    row.title.trim() !== '' &&
-    row.topic &&
-    row.topic.trim() !== '' &&
-    row.topic !== '<p><br></p>'
-  );
 
 
   const hasAtLeastOneProject = rows.length > 0;
 
 
   const isSubmitDisabled = !hasCategory || !hasCourseName || !allProjectsComplete || !hasAtLeastOneProject;
+React.useEffect(() => {
+  // ✅ ONLY for ADD MODE
+  if (
+    isAddMode &&
+    formData.courseCategory &&
+    formData.courseName
+  ) {
+    const loadExistingGeoKeywords = async () => {
+      try {
+        setIsSavingProjects(true);
 
+        const response = await fetchGeoKeywordsByCategoryCourse(
+          formData.courseCategory,
+          formData.courseName
+        );
+
+        if (response?.geoKeywords?.length > 0) {
+          setRows(
+            response.geoKeywords.map((kw, index) => ({
+              id: index + 1,
+              title: kw.geoKeywordName,
+              isExisting: true,
+            }))
+          );
+        } else {
+          // No existing keywords → show empty row
+          setRows([{ id: 1, title: "" }]);
+        }
+      } catch (err) {
+        console.error("Failed to load existing geo keywords", err);
+      } finally {
+        setIsSavingProjects(false);
+      }
+    };
+
+    loadExistingGeoKeywords();
+  }
+}, [
+  isAddMode,
+  formData.courseCategory,
+  formData.courseName,
+]);
+
+
+  React.useEffect(() => {
+  const fetchGeoKeywords = async () => {
+    try {
+      setProjectsLoading(true);
+      const res = await axios.get(
+        "http://localhost:8080/api/admin/geo-keywords"
+      );
+      setProjects(res.data);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("❌ Failed to load GeoKeywords");
+    } finally {
+      setProjectsLoading(false);
+    }
+  };
+
+  fetchGeoKeywords();
+}, []);
+const [autoLoaded, setAutoLoaded] = useState(false);
 
   const handleDateFilter = () => {
 
@@ -184,63 +261,135 @@ const GeoKeyword = ({
     }
 
     if (!allProjectsComplete) {
-      setErrorMessage("❌ Please fill both GeoKeyword and Description for all project rows.");
+      // setErrorMessage("❌ Please fill both GeoKeyword and Description for all project rows.");
+      setErrorMessage("❌ Please fill GeoKeyword for all rows.");
+
       return;
     }
-    if (formMode === "Edit") {
-      updateProject({
-        id: editingProjectId,
-        payload: {
-          courseCategory: formData.courseCategory,
-          courseName: formData.courseName,
-          projectName: rows[0].title,
-          description: rows[0].topic,
-        },
-      });
+   if (formMode === "Edit") {
+  try {
+    setIsSavingProjects(true);
 
-      showTimedMessage("success", "⚡ Project updated successfully!");
-    } else {
-      const projectPayload = rows.map(row => ({
-        courseCategory: formData.courseCategory,
-        courseName: formData.courseName,
-        projectName: row.title,
-        description: row.topic,
-      }));
+    await axios.put(
+  "http://localhost:8080/api/admin/geo-keywords/update",
+  {
+    geoKeywordId: editingGeoKeywordId,
+    geoKeywordName: rows[0].title,
+  }
+);
 
-      saveProjects(projectPayload);
-      showTimedMessage("success", "⏳ Saving projects...");
-    }
-
-    setErrorMessage("");
-    setEditingProjectId(null);
-    setFormMode("Add");
-    setShowAddCourse(false);
+showTimedMessage("success", "⚡ GeoKeyword updated successfully!");
+// ✅ Reset form state after successful update
+setFormData({
+  courseCategory: "",
+  courseName: "",
+});
+setRows([{ id: 1, title: "" }]);
 
 
-    setShowAddCourse(false);
+// ✅ Optimistic UI update (NO API CALL)
+setProjects(prev =>
+  prev.map(item =>
+    item.geoKeywordId === editingGeoKeywordId
+      ? { ...item, geoKeywordName: rows[0].title }
+      : item
+  )
+);
 
+// ✅ reset edit state
+setEditingGeoKeywordId(null);
+setFormMode("Add");
+setShowAddCourse(false);
+
+
+  } catch (error) {
+    showTimedMessage(
+      "error",
+      error.response?.data?.message ||
+        "❌ GeoKeyword already exists for this Category & Course"
+    );
+  } finally {
+    setIsSavingProjects(false);
+  }
+}
+ else {
+     try {
+  setIsSavingProjects(true);
+
+  const geoKeywordPayload = {
+    categoryName: formData.courseCategory,
+    courseName: formData.courseName,
+    geoKeywords: rows.map(row => row.title),
   };
 
-  const handleEditClick = (project) => {
+  const response = await axios.post(
+    "http://localhost:8080/api/admin/geo-keywords",
+    geoKeywordPayload
+  );
+
+  console.log("GeoKeyword API Response:", response.data);
+
+  showTimedMessage("success", "⚡ GeoKeywords saved successfully!");
+
+} catch (error) {
+  console.error(error);
+  showTimedMessage("error", "❌ Failed to save GeoKeywords");
+} finally {
+  setIsSavingProjects(false);
+}
+    }
+   // ❗ Only reset form when NOT in Edit mode
+if (formMode !== "Edit") {
+  setErrorMessage("");
+  setEditingGeoKeywordId(null);
+  setFormMode("Add");
+  setShowAddCourse(false);
+}
+
+    
+  };
+const handleEditClick = async (project) => {
+  try {
     setFormMode("Edit");
     setShowAddCourse(true);
-    setEditingProjectId(project.projectId);
-
+    setIsSavingProjects(true);
 
     setFormData({
-      courseCategory: project.courseCategory,
+      courseCategory: project.categoryName,
       courseName: project.courseName,
     });
 
+    // 🔥 CALL NEW API
+    const response = await fetchGeoKeywordsByCategoryCourse(
+      project.categoryName,
+      project.courseName
+    );
 
-    setRows([
-      {
-        id: 1,
-        title: project.projectName,
-        topic: project.description,
-      },
-    ]);
-  };
+    // ✅ Load ALL keywords into rows
+   // ✅ EDIT MODE: load ONLY the selected keyword
+setRows([
+  {
+    id: 1,
+    title: project.geoKeywordName,
+  },
+]);
+
+
+setEditingGeoKeywordId(project.geoKeywordId);
+
+
+  } catch (error) {
+    showTimedMessage(
+      "error",
+      error.response?.data?.message ||
+        "❌ Failed to load GeoKeywords for editing"
+    );
+  } finally {
+    setIsSavingProjects(false);
+  }
+};
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -260,51 +409,82 @@ const GeoKeyword = ({
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
+const filteredProjects = projects.filter((item) => {
+  const projectDate = new Date(item.groupCreatedDate);
 
-  const filteredProjects = projects.filter((item) => {
-    const projectDate = new Date(item.date);
+  const search = searchTerm.toLowerCase();
 
-    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+  const matchSearch =
+    item.geoKeywordName?.toLowerCase().includes(search) ||
+    item.courseName?.toLowerCase().includes(search) ||
+    item.categoryName?.toLowerCase().includes(search);
 
-    const search = searchTerm.toLowerCase();
+  const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+  const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
-    const matchSearch =
-      item.projectName?.toLowerCase().includes(search) ||
-      item.courseName?.toLowerCase().includes(search) ||
-      item.courseCategory?.toLowerCase().includes(search) ||
-      stripHtml(item.description).includes(search);
+  const inRange =
+    (!start || projectDate >= start) &&
+    (!end || projectDate <= end);
 
-    const inRange =
-      (!start || projectDate >= start) &&
-      (!end || projectDate <= end);
+  return matchSearch && inRange;
+});
 
-    return matchSearch && inRange;
-  });
 
   const displayedProjects = filteredProjects.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+const handleDeleteConfirmation = async (geoKeywordId) => {
+  if (!geoKeywordId) {
+    showTimedMessage("error", "❌ Invalid GeoKeyword ID");
+    return;
+  }
 
+  if (window.confirm("Are you sure you want to delete this GeoKeyword?")) {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/admin/geo-keywords/${geoKeywordId}`
+      );
 
-  const handleDeleteConfirmation = (id) => {
-    if (window.confirm("Are you sure you want to delete this Course?")) {
+      // ✅ Remove deleted item from UI
+      setProjects((prev) =>
+        prev.filter((item) => item.geoKeywordId !== geoKeywordId)
+      );
 
-      deleteProject(id);
-      showTimedMessage("success", "🗑️ Project deleted successfully!");
+      showTimedMessage("success", "🗑️ GeoKeyword deleted successfully!");
+    } catch (error) {
+      showTimedMessage(
+        "error",
+        error.response?.data?.message || "❌ Failed to delete GeoKeyword"
+      );
     }
-  };
+  }
+};
+const handleAddTrendingCourseClick = async () => {
+  setFormMode("Add");
+  setEditingGeoKeywordId(null);
+  setAutoLoaded(true); // lock future auto calls
+  setShowAddCourse(true);
 
-  const handleAddTrendingCourseClick = () => {
-    setFormMode('Add');
-    setShowAddCourse(true);
+  setFormData({
+    courseCategory: "",
+    courseName: "",
+  });
 
-  };
+  setRows([{ id: 1, title: "" }]);
+  setErrorMessage("");
+  setSuccessMessage("");
+};
+
+
 
   const addRow = () => {
     const newId = rows.length > 0 ? Math.max(...rows.map(row => row.id)) + 1 : 1;
-    setRows([...rows, { id: newId, title: '', topic: '' }]);
+    // setRows([...rows, { id: newId, title: '', topic: '' }]);
+    // setRows([...rows, { id: newId, title: '' }]);
+    setRows([...rows, { id: newId, title: '', isExisting: false }]);
+
+
   };
 
   const deleteRow = (id) => {
@@ -312,21 +492,12 @@ const GeoKeyword = ({
       setRows(rows.filter(row => row.id !== id));
     } else {
 
-      setRows([{ id: 1, title: '', topic: '' }]);
+      // setRows([{ id: 1, title: '' }]);
+      setRows([{ id: 1, title: '', isExisting: false }]);
+
+
     }
   };
-
-
-  React.useEffect(() => {
-    if (!payload) return;
-    if (isSavingProjects) return;
-
-    if (projectResponse) {
-      showTimedMessage("success", "⚡ Projects saved successfully!");
-
-      setPayload(null);
-    }
-  }, [projectResponse, isSavingProjects]);
 
 
   const handleRowChange = (index, field, value) => {
@@ -364,13 +535,16 @@ const GeoKeyword = ({
                     <label className="form-label">
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
-                    <select
-                      className="form-select"
-                      name="courseCategory"
-                      value={formData.courseCategory}
-                      onChange={handleInputChange}
-                      required
-                    >
+
+                  <select
+  className="form-select"
+  name="courseCategory"
+  value={formData.courseCategory}
+  onChange={handleInputChange}
+  disabled={isEditMode}
+  required
+>
+
                       <option value="">Select Category</option>
 
                       {categories.map((cat) => (
@@ -385,13 +559,15 @@ const GeoKeyword = ({
                     <label className="form-label">
                       Course Name <span style={{ color: "red" }}>*</span>
                     </label>
-                    <select
-                      className="form-select"
-                      name="courseName"
-                      value={formData.courseName}
-                      onChange={handleInputChange}
-                      required
-                    >
+                   <select
+  className="form-select"
+  name="courseName"
+  value={formData.courseName}
+  onChange={handleInputChange}
+  disabled={isEditMode}
+  required
+>
+
                       <option value="">Select Course</option>
                       {filteredCoursesByCategory.map((course) => (
                         <option key={course.id} value={course.courseName}>
@@ -421,17 +597,26 @@ const GeoKeyword = ({
                     {rows.map((row, index) => (
                       <StyledTableRow key={row.id}>
                         <StyledTableCell align='center'>
-                          <input
-                            className='table-curriculum'
-                            name='title'
-                            value={row.title}
-                            onChange={(e) => handleRowChange(index, 'title', e.target.value)}
-                            placeholder="Enter GeoKeyword (Required)"
-                            required
-                            style={{
-                              borderColor: row.title.trim() === '' ? 'red' : '#ced4da'
-                            }}
-                          />
+                         <input
+  className='table-curriculum'
+  name='title'
+  value={row.title}
+  onChange={(e) => handleRowChange(index, 'title', e.target.value)}
+  placeholder={
+    row.isExisting && isAddMode
+      ? "Existing GeoKeyword (Locked)"
+      : "Enter GeoKeyword (Required)"
+  }
+  required
+  disabled={isAddMode && row.isExisting} // 🔒 LOCK EXISTING
+  style={{
+    backgroundColor: isAddMode && row.isExisting ? "#f5f5f5" : "white",
+    cursor: isAddMode && row.isExisting ? "not-allowed" : "text",
+    borderColor:
+      !row.title || row.title.trim() === '' ? 'red' : '#ced4da'
+  }}
+/>
+
                         </StyledTableCell>
                         {/* <StyledTableCell align='center' style={{ maxWidth: 500, overflow: 'hidden' }}>
                           <div style={{ maxWidth: '100%' }}>
@@ -491,14 +676,23 @@ const GeoKeyword = ({
               )}
 
               <div className="course-row">
-
-                <button
-                  className="submit-btn"
-                  onClick={handleSubmit}
-                  disabled={isSubmitDisabled}
-                >
-                  {isEditMode ? "Update" : "Submit"}
-                </button>
+<button
+  className="submit-btn"
+  onClick={handleSubmit}
+  disabled={isSubmitDisabled || isSavingProjects}
+  style={{
+    cursor: isSavingProjects ? "not-allowed" : "pointer",
+    opacity: isSavingProjects ? 0.7 : 1,
+  }}
+>
+  {isSavingProjects
+    ? isEditMode
+      ? "Updating..."
+      : "Submitting..."
+    : isEditMode
+    ? "Update"
+    : "Submit"}
+</button>
 
               </div>
             </form>
@@ -589,7 +783,8 @@ const GeoKeyword = ({
                   <TableBody>
                     {displayedProjects.length > 0 ? (
                       displayedProjects.map((project, idx) => (
-                        <StyledTableRow key={project.projectId}>
+                        <StyledTableRow key={`${project.geoKeywordGroupId}-${idx}`}>
+
                           <StyledTableCell align="center">
                             <Checkbox />
                           </StyledTableCell>
@@ -599,7 +794,7 @@ const GeoKeyword = ({
                           </StyledTableCell>
 
                           <StyledTableCell align="left">
-                            {project.courseCategory}
+                            {project.categoryName}
                           </StyledTableCell>
 
                           <StyledTableCell align="left">
@@ -607,7 +802,7 @@ const GeoKeyword = ({
                           </StyledTableCell>
 
                           <StyledTableCell align="left">
-                            {project.projectName}
+                            {project.geoKeywordName}
                           </StyledTableCell>
 
                           {/* <StyledTableCell align="left">
@@ -616,9 +811,9 @@ const GeoKeyword = ({
                             />
                           </StyledTableCell> */}
                           <StyledTableCell align="center">
-                            {project.date
-                              ? dayjs(project.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
-                              : "N/A"}
+                           {project.groupCreatedDate
+  ? dayjs(project.groupCreatedDate).format("MMM-DD-YYYY").toUpperCase()
+  : "N/A"}
                           </StyledTableCell>
 
 
@@ -629,11 +824,12 @@ const GeoKeyword = ({
                                 onClick={() => handleEditClick(project)}
                                 style={{ cursor: "pointer", color: "#00AEEF" }}
                               />
-                              <RiDeleteBin6Line
-                                className="delete"
-                                onClick={() => handleDeleteConfirmation(project.projectId)}
-                                style={{ cursor: "pointer", color: "#FF0000" }}
-                              />
+                             <RiDeleteBin6Line
+  className="delete"
+  onClick={() => handleDeleteConfirmation(project.geoKeywordId)}
+  style={{ cursor: "pointer", color: "#FF0000" }}
+/>
+
                             </div>
                           </StyledTableCell>
                         </StyledTableRow>

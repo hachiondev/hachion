@@ -164,17 +164,55 @@ export default function CourseCurriculum({ onViewDemoClass }) {
     return wordCount > 15;
   };
 
-  const downloadPdf = () => {
-    if (!email) return setShowRegisterPrompt(true);
-    if (!curriculum.length) return alert("No curriculum found.");
+  // const downloadPdf = () => {
+  //   if (!email) return setShowRegisterPrompt(true);
+  //   if (!curriculum.length) return alert("No curriculum found.");
 
-    const matched = curriculum.find((item) => item.brochure_pdf);
-    if (!matched) return alert("No brochure PDF uploaded.");
+  //   const matched = curriculum.find((item) => item.brochure_pdf);
+  //   if (!matched) return alert("No brochure PDF uploaded.");
 
-    const filename = matched.brochure_pdf.split("/").pop();
-    const finalUrl = `https://api.test.hachion.co/curriculum/pdfs/${filename}`;
-    window.open(finalUrl, "_blank");
-  };
+  //   const filename = matched.brochure_pdf.split("/").pop();
+  //   const finalUrl = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+  //   window.open(finalUrl, "_blank");
+  // };
+const downloadPdf = () => {
+  if (!email) {
+    setShowRegisterPrompt(true);
+    return;
+  }
+
+  if (!curriculum.length) {
+    alert("No curriculum found.");
+    return;
+  }
+
+  // 1️⃣ Try brochure PDF first
+  const brochureItem = curriculum.find(
+    (item) => item.brochure_pdf && item.brochure_pdf.trim() !== ""
+  );
+
+  if (brochureItem) {
+    const filename = brochureItem.brochure_pdf.split("/").pop();
+    const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+    window.open(url, "_blank");
+    return;
+  }
+
+  // 2️⃣ Fallback → curriculum PDF
+  const curriculumItem = curriculum.find(
+    (item) => item.curriculum_pdf && item.curriculum_pdf.trim() !== ""
+  );
+
+  if (curriculumItem) {
+    const filename = curriculumItem.curriculum_pdf.split("/").pop();
+    const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
+    window.open(url, "_blank");
+    return;
+  }
+
+  // 3️⃣ Nothing available
+  alert("No syllabus PDF available.");
+};
 
   const handleDownloadAssessment = (assessmentPdfPath) => {
     if (!email || !studentId) {

@@ -1,5 +1,5 @@
 
-import './Blogs.css';
+import '../../Blogs.css';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';

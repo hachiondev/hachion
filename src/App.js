@@ -31,7 +31,7 @@ import UserDashboard from './Components/UserPanel/UserDashboardPage/UserDashboar
 import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
 import CategoryTable from './Components/AdminPanel/CategoryTable';
 import Reports from './Components/AdminPanel/Reports';
-import Enrollment from './Components/UserPanel/Enrollment';
+import Enrollment from './Components/UserPanel/EnrollmentPage/Enrollment';
 import UserWriteReview from './Components/UserPanel/UserWriteReview';
 import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
 import CourseSchedule from './Components/AdminPanel/CourseSchedule';

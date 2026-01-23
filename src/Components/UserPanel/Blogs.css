@@ -1821,8 +1821,9 @@
 }
 
 .net-amount .net-amount-left {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
+  padding: 0px 18px;
 }
 
 .net-amount .net-amount-right {

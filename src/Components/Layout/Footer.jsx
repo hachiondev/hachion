@@ -36,8 +36,8 @@ const normalizeCourseNameFromSlug = (slug) => {
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  
+
+
   const { data: trendingCourses = [], isLoading } = useTrendingData();
 
   const { whatsappNumber, whatsappLink } = useTopBarApi();
@@ -46,28 +46,28 @@ const Footer = () => {
   // ✅ Decode course name from URL
   // Example: act-english → ACT(English)
   // -------------------------
- 
+
   const toTitleCase = (str) =>
-  str.replace(/\w\S*/g, (txt) =>
-    txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
-  );
-// const { courseName } = useParams();
-const { courseName } = useParams();
+    str.replace(/\w\S*/g, (txt) =>
+      txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+    );
+  // const { courseName } = useParams();
+  const { courseName } = useParams();
 
-console.log('Footer useParams:', useParams());
+  console.log('Footer useParams:', useParams());
 
 
-const normalizedCourseName = React.useMemo(() => {
-  if (!courseName) return null;
+  const normalizedCourseName = React.useMemo(() => {
+    if (!courseName) return null;
 
-  const decoded = normalizeCourseNameFromSlug(courseName);
-  return toTitleCase(decoded); // ✅ Salesforce Admin
-}, [courseName]);
+    const decoded = normalizeCourseNameFromSlug(courseName);
+    return toTitleCase(decoded); // ✅ Salesforce Admin
+  }, [courseName]);
 
-const geoQuery = useGeoKeywordsByCourse(normalizedCourseName);
+  const geoQuery = useGeoKeywordsByCourse(normalizedCourseName);
 
-const geoKeywords = geoQuery?.data ?? [];
-const geoLoading = geoQuery?.isLoading ?? false;
+  const geoKeywords = geoQuery?.data ?? [];
+  const geoLoading = geoQuery?.isLoading ?? false;
 
 
 
@@ -117,14 +117,14 @@ const geoLoading = geoQuery?.isLoading ?? false;
 
             <div className="desktop-query">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer"
-                 className="d-flex align-items-center text-white me-3 text-decoration-none">
+                className="d-flex align-items-center text-white me-3 text-decoration-none">
                 <FaPhone className="me-1 topbar-icon" />
                 <span>{whatsappNumber}</span>
               </a>
 
               <a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co"
-                 target="_blank" rel="noopener noreferrer"
-                 className="d-flex align-items-center text-white text-decoration-none">
+                target="_blank" rel="noopener noreferrer"
+                className="d-flex align-items-center text-white text-decoration-none">
                 <IoIosMail className="me-1 topbar-icon" />
                 <span>trainings@hachion.co</span>
               </a>
@@ -149,29 +149,6 @@ const geoLoading = geoQuery?.isLoading ?? false;
                 ))
               ) : (
                 <p>No active courses</p>
-              )}
-            </div>
-          </div>
-
-          {/* ✅ DYNAMIC COURSE KEYWORDS (REPLACED FIRST HACHION) */}
-          <div className="footer-head">
-           {/* <p className="footer-heading">
-  {normalizedCourseName || 'Course Keywords'}
-</p> */}
-<p className="footer-heading">Popular Searches</p>
-
-
-            <div className="footer-column">
-              {geoLoading ? (
-                <p>Loading...</p>
-              ) : geoKeywords.length > 0 ? (
-                geoKeywords.map(item => (
-                  <p key={item.geoKeywordId} className="footer-content">
-                    {item.geoKeywordName}
-                  </p>
-                ))
-              ) : (
-                <p>No keywords available</p>
               )}
             </div>
           </div>
@@ -202,6 +179,29 @@ const geoLoading = geoQuery?.isLoading ?? false;
           </div>
 
         </div>
+        <hr />
+        {/* ✅ DYNAMIC COURSE KEYWORDS (REPLACED FIRST HACHION) */}
+          <div className="footer-head">
+            {/* <p className="footer-heading">
+  {normalizedCourseName || 'Course Keywords'}
+</p> */}
+            <p className="footer-heading">Popular Searches</p>
+
+
+            <div className="footer-column-search">
+              {geoLoading ? (
+                <p>Loading...</p>
+              ) : geoKeywords.length > 0 ? (
+                geoKeywords.map(item => (
+                  <p key={item.geoKeywordId} className="footer-content-search">
+                    {item.geoKeywordName}
+                  </p>
+                ))
+              ) : (
+                <p>No keywords available</p>
+              )}
+            </div>
+          </div>
       </div>
     </div>
   );

@@ -200,6 +200,18 @@
   font-size: 36px;
 }
 
+.course-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: end;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 14px;
+}
+
+
 .page-item {
   margin: 15px;
   color: black;

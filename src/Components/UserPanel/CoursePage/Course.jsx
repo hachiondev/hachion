@@ -13,30 +13,30 @@ const Course = () => {
   const [searchParams] = useSearchParams();
   const [selectedCategoryFromParent, setSelectedCategoryFromParent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [filters, setFilters] = useState({ 
-    categories: [], 
-    levels: [], 
-    price: [] 
+  const [filters, setFilters] = useState({
+    categories: [],
+    levels: [],
+    price: []
   });
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   const bannerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(9);
   const [totalCards, setTotalCards] = useState(0);
 
   // ✅ SINGLE SOURCE OF TRUTH: Initialize category from URL
-useEffect(() => {
-  const categoryFromUrl = searchParams.get("category");
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category");
 
-  if (categoryFromUrl) {
-    const decoded = decodeURIComponent(categoryFromUrl);
-    console.log("✅ Course.jsx picked category:", decoded);
-    setSelectedCategoryFromParent(decoded);
-  } else {
-    setSelectedCategoryFromParent(null);
-  }
-}, [searchParams]);
+    if (categoryFromUrl) {
+      const decoded = decodeURIComponent(categoryFromUrl);
+      console.log("✅ Course.jsx picked category:", decoded);
+      setSelectedCategoryFromParent(decoded);
+    } else {
+      setSelectedCategoryFromParent(null);
+    }
+  }, [searchParams]);
 
 
   const handleFilterChange = (updatedFilters) => {
@@ -45,14 +45,14 @@ useEffect(() => {
       levels: Array.isArray(updatedFilters?.levels) ? updatedFilters.levels : [],
       price: Array.isArray(updatedFilters?.price) ? updatedFilters.price : [],
     };
-    
+
     // Update selectedCategory based on filter changes
     if (normalized.categories.length > 0) {
       setSelectedCategory(normalized.categories[0]);
     } else {
       setSelectedCategory('All');
     }
-    
+
     setFilters(normalized);
     setCurrentPage(1);
   };
@@ -105,6 +105,9 @@ useEffect(() => {
           />
 
           <div className="sidebar-right-container">
+            <div className="course-count">
+              Count <strong>{totalCards}</strong> courses
+            </div>
             <SidebarRight
               category={selectedCategory}
               filters={filters}

@@ -80,7 +80,7 @@ export default function CertificateSection({
               </div>
             </div>
 
-            <div className={styles.cffeatures}>
+            {/* <div className={styles.cffeatures}>
               <div className={styles.cfftitle}>Certificate Features:</div>
               <div className={styles.cffgrid}>
                 <ul>
@@ -91,11 +91,9 @@ export default function CertificateSection({
                   <li>Unique verification code</li>
                   <li>Organization accreditation seal</li>
                 </ul>
-                {/* <ul>
-                  
-                </ul> */}
+                
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT */}

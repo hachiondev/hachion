@@ -11,10 +11,37 @@ import StudentsAlsoEnrolled from '../NewcoursePage/components/StudentsAlsoEnroll
 import StudentsSay from '../NewcoursePage/components/StudentsSay';
 import SuccessStories from '../NewcoursePage/components/SuccessStories';
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAllCourses } from '../../../Api/hooks/SitemapPageApi/useAllCourses';
+
+
+const slugify = (text = "") =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 const NewCourseDetails = () => {
    const { courseName } = useParams();
+     const navigate = useNavigate();
+
+  const { data: allCourses = [], isLoading } =
+    useAllCourses("courseDetailsPage");
+
+  const courseData = allCourses.find(
+    (c) => slugify(c.courseName) === slugify(courseName)
+  );
+
+  useEffect(() => {
+    if (!isLoading && courseData) {
+      const correctSlug = slugify(courseData.courseName);
+      if (courseName !== correctSlug) {
+        navigate(`/coursedetails/${correctSlug}`, { replace: true });
+      }
+    }
+  }, [courseName, courseData, isLoading, navigate]);
+  
     const demoClassRef = useRef(null);
   useEffect(() => {
   window.scrollTo({

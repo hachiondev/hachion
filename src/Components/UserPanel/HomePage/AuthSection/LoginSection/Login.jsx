@@ -7,6 +7,8 @@ import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { TbRefresh } from "react-icons/tb";
+import { getRedirectUrl, clearRedirectUrl } from '../../../../../redirectAfterLogin'
+
 
 const initialValues = {
   email: "",
@@ -84,9 +86,15 @@ const Login = () => {
           console.error('Error saving to localStorage:', err);
         }
 
-        const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
-        localStorage.removeItem('redirectAfterLogin');
-        window.location.href = redirectPath;
+        // const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
+        // localStorage.removeItem('redirectAfterLogin');
+        // window.location.href = redirectPath;
+              // 🔥 Get redirect URL from utility
+      const redirectPath = getRedirectUrl();
+      clearRedirectUrl(); // Clear after getting
+      
+      // If no redirect saved, default to '/coursedetails'
+      window.location.href = redirectPath || '/coursedetails';
 
       } else {
         console.log('FAILED - Showing error message');
@@ -196,6 +204,10 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     dismissError();
     clearCookie("auth_error");
+
+      // 🔥 Save current URL before Google OAuth
+  const currentUrl = window.location.pathname + window.location.search;
+  localStorage.setItem('redirectAfterLogin', currentUrl);
 
     document.cookie = "flow=login; Max-Age=300; Path=/; SameSite=None; Secure";
     localStorage.setItem("pendingOAuth", "login");

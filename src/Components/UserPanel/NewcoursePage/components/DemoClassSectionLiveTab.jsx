@@ -4,6 +4,7 @@ import { cn } from "../../../../utils";
 import { useCheckEnrollmentForSessions } from "../../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
 import { useNavigate } from "react-router-dom";
 import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendEnrollEmail";
+import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 
 function DemoClassSectionLiveTab({
   scheduleLoading,
@@ -27,6 +28,7 @@ function DemoClassSectionLiveTab({
   enrollSuccessMessage,
   enrollErrorMessage,
   showRegisterPrompt,
+  setShowRegisterPrompt,
   onCloseRegisterPrompt,
   enrollingSessionId,
   onResendClick,
@@ -94,21 +96,27 @@ What's Included:
     }));
   };
 
-  const handleEnrollWithLoginCheck = (sess) => {
-    if (isProfileLoading) return;
+// Update the handleEnrollWithLoginCheck function (around line 170-180):
+const handleEnrollWithLoginCheck = (sess) => {
+  if (isProfileLoading) return;
 
-    if (!userProfile || !userProfile.studentId) {
-      onCloseRegisterPrompt && onCloseRegisterPrompt();
-    // 🔑 reset submitting state
+  if (!userProfile || !userProfile.studentId) {
+    onCloseRegisterPrompt && onCloseRegisterPrompt();
     setIsSubmitting(false);
-      return onRequestClick?.("LOGIN_REQUIRED");
-    }
+    
+    // 🔥 Save current URL before redirecting to login
+    saveRedirectUrl();
+    
+    // Show login prompt
+    setShowRegisterPrompt(true);
+    return;
+  }
 
-    onEnrollClick(sess, {
-      email: notifyViaMap[sess.id]?.email ?? true,
-      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-    });
-  };
+  onEnrollClick(sess, {
+    email: notifyViaMap[sess.id]?.email ?? true,
+    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+  });
+};
 
   return (
     <div className={styles.dcgrid}>
@@ -198,17 +206,27 @@ What's Included:
                   </p>
 
                   <button
-                    className={styles.dclink}
-                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
-                    onClick={() => {
-                      if (isSubmitting || isRequestBatchLoading) return;
+  className={styles.dclink}
+  disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+  onClick={() => {
+    if (isSubmitting || isRequestBatchLoading) return;
 
-                      setIsSubmitting(true);
-                      onRequestClick();
-                    }}
-                  >
-                    {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-                  </button>
+    // 🔥 Check if user is logged in before proceeding
+    if (!userProfile || !userProfile.studentId) {
+      // Save current URL for redirect after login
+      saveRedirectUrl();
+      
+      // Show register prompt
+      setShowRegisterPrompt(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    onRequestClick();
+  }}
+>
+  {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+</button>
                   {enrollSuccessMessage && (
                     <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
                       {enrollSuccessMessage}

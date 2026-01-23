@@ -16,6 +16,7 @@ import DemoClassSectionSelfTab from "./DemoClassSectionSelfTab";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 import { useDemoLivePayment } from "../../../../Api/hooks/CourseApi/useDemoLivePayment";
 import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
+import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 
 const tabs = [
   { key: "live", label: "Live Training" },
@@ -456,9 +457,11 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
             onEnrollClick={handleLiveEnrollClick}
             enrollSuccessMessage={enrollSuccessMessage}
             enrollErrorMessage={enrollErrorMessage}
+    
             userProfile={userProfile}
             courseName={courseData?.courseName || courseNameForApi}
             showRegisterPrompt={showRegisterPrompt}
+            setShowRegisterPrompt={setShowRegisterPrompt}
             onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
             enrollingSessionId={enrollingSessionId}
             resetLiveSubmitting={resetLiveSubmitting}
@@ -631,22 +634,25 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
 
               <div style={{ display: "flex", gap: "10px" }}>
                 <button
-                  style={{
-                    padding: "8px 14px",
-                    borderRadius: "6px",
-                    border: "none",
-                    background: "#2563eb",
-                    color: "#fff",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    navigate("/login");
-                    setShowRegisterPrompt(false);
-                  }}
-                >
-                  Login
-                </button>
+  style={{
+    padding: "8px 14px",
+    borderRadius: "6px",
+    border: "none",
+    background: "#2563eb",
+    color: "#fff",
+    fontSize: "14px",
+    cursor: "pointer",
+  }}
+  onClick={() => {
+    // 🔥 Save current URL before redirecting to login
+    saveRedirectUrl();
+    
+    navigate("/login");
+    setShowRegisterPrompt(false);
+  }}
+>
+  Login
+</button>
 
                 <button
                   style={{

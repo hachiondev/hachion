@@ -8,20 +8,18 @@ import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
 import { useAssessmentAccess } from "../../../../Api/hooks/CurriculumApi/useAssessmentAccess";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 import { useProjectsByCourseName } from "../../../../Api/hooks/CurriculumApi/useProjectsByCourseName";
+import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 
 function toEmbedUrl(url) {
   if (!url) return "";
-
   if (url.includes("watch?v=")) {
     const id = url.split("watch?v=")[1].split("&")[0];
     return `https://www.youtube.com/embed/${id}`;
   }
-
   if (url.includes("youtu.be")) {
     const id = url.split("youtu.be/")[1].split("?")[0];
     return `https://www.youtube.com/embed/${id}`;
   }
-
   return url;
 }
 
@@ -150,72 +148,57 @@ export default function CourseCurriculum({ onViewDemoClass }) {
   // Simpler function to check if description is long
   const isLongDescription = (html) => {
     if (!html) return false;
-
-    // Remove HTML tags and get clean text
     const text = html.replace(/<[^>]*>/g, '').trim();
-
-    // If text is very short, don't show Read More
     if (text.length < 100) return false;
-
-    // Count words
     const wordCount = text.split(/\s+/).length;
-
-    // Show Read More if more than 15 words
     return wordCount > 15;
   };
 
-  // const downloadPdf = () => {
-  //   if (!email) return setShowRegisterPrompt(true);
-  //   if (!curriculum.length) return alert("No curriculum found.");
+  // 🔥 UPDATED: Added saveRedirectUrl
+  const downloadPdf = () => {
+    if (!email) {
+      saveRedirectUrl(); // 🔥 Save URL before login prompt
+      setShowRegisterPrompt(true);
+      return;
+    }
 
-  //   const matched = curriculum.find((item) => item.brochure_pdf);
-  //   if (!matched) return alert("No brochure PDF uploaded.");
+    if (!curriculum.length) {
+      alert("No curriculum found.");
+      return;
+    }
 
-  //   const filename = matched.brochure_pdf.split("/").pop();
-  //   const finalUrl = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
-  //   window.open(finalUrl, "_blank");
-  // };
-const downloadPdf = () => {
-  if (!email) {
-    setShowRegisterPrompt(true);
-    return;
-  }
+    // 1️⃣ Try brochure PDF first
+    const brochureItem = curriculum.find(
+      (item) => item.brochure_pdf && item.brochure_pdf.trim() !== ""
+    );
 
-  if (!curriculum.length) {
-    alert("No curriculum found.");
-    return;
-  }
+    if (brochureItem) {
+      const filename = brochureItem.brochure_pdf.split("/").pop();
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+      window.open(url, "_blank");
+      return;
+    }
 
-  // 1️⃣ Try brochure PDF first
-  const brochureItem = curriculum.find(
-    (item) => item.brochure_pdf && item.brochure_pdf.trim() !== ""
-  );
+    // 2️⃣ Fallback → curriculum PDF
+    const curriculumItem = curriculum.find(
+      (item) => item.curriculum_pdf && item.curriculum_pdf.trim() !== ""
+    );
 
-  if (brochureItem) {
-    const filename = brochureItem.brochure_pdf.split("/").pop();
-    const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
-    window.open(url, "_blank");
-    return;
-  }
+    if (curriculumItem) {
+      const filename = curriculumItem.curriculum_pdf.split("/").pop();
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
+      window.open(url, "_blank");
+      return;
+    }
 
-  // 2️⃣ Fallback → curriculum PDF
-  const curriculumItem = curriculum.find(
-    (item) => item.curriculum_pdf && item.curriculum_pdf.trim() !== ""
-  );
+    // 3️⃣ Nothing available
+    alert("No syllabus PDF available.");
+  };
 
-  if (curriculumItem) {
-    const filename = curriculumItem.curriculum_pdf.split("/").pop();
-    const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
-    window.open(url, "_blank");
-    return;
-  }
-
-  // 3️⃣ Nothing available
-  alert("No syllabus PDF available.");
-};
-
+  // 🔥 UPDATED: Added saveRedirectUrl
   const handleDownloadAssessment = (assessmentPdfPath) => {
     if (!email || !studentId) {
+      saveRedirectUrl(); // 🔥 Save URL before login prompt
       setShowRegisterPrompt(true);
       return;
     }
@@ -232,7 +215,6 @@ const downloadPdf = () => {
   const validCurriculum = uiCurriculum.filter(
     (m) => m.title && m.title.trim() !== ""
   );
-
 
   if (isLoading) return <p>Loading curriculum...</p>;
 
@@ -256,201 +238,199 @@ const downloadPdf = () => {
         <div className={styles.ccgrid}>
           {/* LEFT SIDE ACCORDION */}
           <div className={styles.ccgridbody}>
-  {/* Show "No curriculum available" when there's no data OR all items have empty titles */}
-  {(uiCurriculum.length === 0 || 
-    uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length === 0) && (
-    <div className={styles.noDataMessage}>
-      <p>No curriculum available.</p>
-    </div>
-  )}
-
-  {uiCurriculum
-    .filter((m) => m.title && m.title.trim() !== "")
-    .slice(0, showAll ? uiCurriculum.length : 5)
-    .map((m, idx) => {
-      const open = openId === m.curriculum_id;
-      const isTopicsSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "topics";
-      const isAssignmentSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "assignment";
-      const isVideoSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "video";
-
-      return (
-        <div className={styles.ccacc} key={m.curriculum_id}>
-          <button
-            className={cn(
-              styles.ccacchead,
-              open && styles.ccaccheadisopen
-            )}
-            onClick={() => {
-              if (open) {
-                setOpenId(null);
-                setSelectedTab({ curriculumId: null, tab: null });
-              } else {
-                setOpenId(m.curriculum_id);
-                setSelectedTab({
-                  curriculumId: m.curriculum_id,
-                  tab: "topics",
-                });
-              }
-            }}
-          >
-            <span className={styles.ccnum}>{idx + 1}</span>
-
-            <div className={styles.cctitle}>
-              <div className={styles.ccttlmain}>{m.title}</div>
-
-              <div className={styles.ccttlsub}>
-                <button
-                  className={`${styles.cccapsul} ${isTopicsSelected ? styles.activeCap : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    if (isTopicsSelected) {
-                      setSelectedTab({ curriculumId: null, tab: null });
-                      setOpenId(null);
-                    } else {
-                      setSelectedTab({
-                        curriculumId: m.curriculum_id,
-                        tab: "topics",
-                      });
-                      setOpenId(m.curriculum_id);
-                    }
-                  }}
-                >
-                  Topics Included
-                </button>
-
-                {m.assessment_pdf && (
-                  <button
-                    className={`${styles.cccapsul} ${isAssignmentSelected ? styles.activeCap : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      if (isAssignmentSelected) {
-                        setSelectedTab({ curriculumId: null, tab: null });
-                        setOpenId(null);
-                      } else {
-                        setSelectedTab({
-                          curriculumId: m.curriculum_id,
-                          tab: "assignment",
-                        });
-                        setOpenId(m.curriculum_id);
-                      }
-                    }}
-                  >
-                    Assignment
-                  </button>
-                )}
-
-                {m.link && (
-                  <button
-                    type="button"
-                    className={`${styles.cccapsul} ${isVideoSelected ? styles.activeCap : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      if (isVideoSelected) {
-                        setSelectedTab({ curriculumId: null, tab: null });
-                        setOpenId(null);
-                      } else {
-                        setSelectedTab({
-                          curriculumId: m.curriculum_id,
-                          tab: "video",
-                        });
-                        setOpenId(m.curriculum_id);
-                      }
-                    }}
-                  >
-                    Videos
-                  </button>
-                )}
+            {(uiCurriculum.length === 0 || 
+              uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length === 0) && (
+              <div className={styles.noDataMessage}>
+                <p>No curriculum available.</p>
               </div>
-            </div>
-
-            <Chevron open={open} />
-          </button>
-
-          <div
-            className={cn(
-              styles.ccaccpanel,
-              open && styles.ccaccpanelopen
             )}
-          >
-            {isTopicsSelected && (
-              <>
-                {extractListItems(m.topic).map((point, i) => (
-                  <div key={i} className={styles.ccrow}>
-                    <span>•</span>
-                    <span className={styles.ccrowtitle}>
-                      {point}
-                    </span>
+
+            {uiCurriculum
+              .filter((m) => m.title && m.title.trim() !== "")
+              .slice(0, showAll ? uiCurriculum.length : 5)
+              .map((m, idx) => {
+                const open = openId === m.curriculum_id;
+                const isTopicsSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "topics";
+                const isAssignmentSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "assignment";
+                const isVideoSelected = selectedTab.curriculumId === m.curriculum_id && selectedTab.tab === "video";
+
+                return (
+                  <div className={styles.ccacc} key={m.curriculum_id}>
+                    <button
+                      className={cn(
+                        styles.ccacchead,
+                        open && styles.ccaccheadisopen
+                      )}
+                      onClick={() => {
+                        if (open) {
+                          setOpenId(null);
+                          setSelectedTab({ curriculumId: null, tab: null });
+                        } else {
+                          setOpenId(m.curriculum_id);
+                          setSelectedTab({
+                            curriculumId: m.curriculum_id,
+                            tab: "topics",
+                          });
+                        }
+                      }}
+                    >
+                      <span className={styles.ccnum}>{idx + 1}</span>
+
+                      <div className={styles.cctitle}>
+                        <div className={styles.ccttlmain}>{m.title}</div>
+
+                        <div className={styles.ccttlsub}>
+                          <button
+                            className={`${styles.cccapsul} ${isTopicsSelected ? styles.activeCap : ""}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+
+                              if (isTopicsSelected) {
+                                setSelectedTab({ curriculumId: null, tab: null });
+                                setOpenId(null);
+                              } else {
+                                setSelectedTab({
+                                  curriculumId: m.curriculum_id,
+                                  tab: "topics",
+                                });
+                                setOpenId(m.curriculum_id);
+                              }
+                            }}
+                          >
+                            Topics Included
+                          </button>
+
+                          {m.assessment_pdf && (
+                            <button
+                              className={`${styles.cccapsul} ${isAssignmentSelected ? styles.activeCap : ""}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+
+                                if (isAssignmentSelected) {
+                                  setSelectedTab({ curriculumId: null, tab: null });
+                                  setOpenId(null);
+                                } else {
+                                  setSelectedTab({
+                                    curriculumId: m.curriculum_id,
+                                    tab: "assignment",
+                                  });
+                                  setOpenId(m.curriculum_id);
+                                }
+                              }}
+                            >
+                              Assignment
+                            </button>
+                          )}
+
+                          {m.link && (
+                            <button
+                              type="button"
+                              className={`${styles.cccapsul} ${isVideoSelected ? styles.activeCap : ""}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+
+                                if (isVideoSelected) {
+                                  setSelectedTab({ curriculumId: null, tab: null });
+                                  setOpenId(null);
+                                } else {
+                                  setSelectedTab({
+                                    curriculumId: m.curriculum_id,
+                                    tab: "video",
+                                  });
+                                  setOpenId(m.curriculum_id);
+                                }
+                              }}
+                            >
+                              Videos
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <Chevron open={open} />
+                    </button>
+
+                    <div
+                      className={cn(
+                        styles.ccaccpanel,
+                        open && styles.ccaccpanelopen
+                      )}
+                    >
+                      {isTopicsSelected && (
+                        <>
+                          {extractListItems(m.topic).map((point, i) => (
+                            <div key={i} className={styles.ccrow}>
+                              <span>•</span>
+                              <span className={styles.ccrowtitle}>
+                                {point}
+                              </span>
+                            </div>
+                          ))}
+                        </>
+                      )}
+
+                      {isAssignmentSelected && m.assessment_pdf && (
+                        <>
+                          <button
+                            className={styles.ccassess}
+                            onClick={() =>
+                              handleDownloadAssessment(m.assessment_pdf)
+                            }
+                          >
+                            📄 Download Assignment
+                          </button>
+
+                          {assessmentError.curriculumId === m.curriculum_id && (
+                            <div
+                              style={{
+                                marginTop: "6px",
+                                fontSize: "13px",
+                                color: "#d93025",
+                                background: "#fdecea",
+                                padding: "6px 10px",
+                                borderRadius: "4px",
+                                display: "inline-block",
+                              }}
+                            >
+                              {assessmentError.message}
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {isVideoSelected && m.link && (
+                        <div className={styles.ccvideocontainer}>
+                          <button
+                            className={styles.ccvideobtn}
+                            onClick={() => {
+                              setVideoUrl(toEmbedUrl(m.link));
+                              setShowVideo(true);
+                            }}
+                          >
+                            ▶ Play Video
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </>
-            )}
+                );
+              })}
 
-            {isAssignmentSelected && m.assessment_pdf && (
-              <>
+            {/* View More / View Less Button */}
+            {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
+              <div className={styles.viewMoreContainer}>
                 <button
-                  className={styles.ccassess}
-                  onClick={() =>
-                    handleDownloadAssessment(m.assessment_pdf)
-                  }
+                  className="home-start-button"
+                  onClick={() => setShowAll(!showAll)}
                 >
-                  📄 Download Assignment
-                </button>
-
-                {assessmentError.curriculumId === m.curriculum_id && (
-                  <div
-                    style={{
-                      marginTop: "6px",
-                      fontSize: "13px",
-                      color: "#d93025",
-                      background: "#fdecea",
-                      padding: "6px 10px",
-                      borderRadius: "4px",
-                      display: "inline-block",
-                    }}
-                  >
-                    {assessmentError.message}
-                  </div>
-                )}
-              </>
-            )}
-
-            {isVideoSelected && m.link && (
-              <div className={styles.ccvideocontainer}>
-                <button
-                  className={styles.ccvideobtn}
-                  onClick={() => {
-                    setVideoUrl(toEmbedUrl(m.link));
-                    setShowVideo(true);
-                  }}
-                >
-                  ▶ Play Video
+                  {showAll ? "View Less" : "View More"}
+                  <span className={styles.viewMoreArrow}>
+                    {showAll ? "↑" : "↓"}
+                  </span>
                 </button>
               </div>
             )}
           </div>
-        </div>
-      );
-    })}
-
-  {/* View More / View Less Button */}
-  {uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length > 5 && (
-    <div className={styles.viewMoreContainer}>
-      <button
-        className="home-start-button"
-        onClick={() => setShowAll(!showAll)}
-      >
-        {showAll ? "View Less" : "View More"}
-        <span className={styles.viewMoreArrow}>
-          {showAll ? "↑" : "↓"}
-        </span>
-      </button>
-    </div>
-  )}
-</div>
-
 
           {/* RIGHT SIDEBAR */}
           <aside className={styles.ccright}>
@@ -484,7 +464,6 @@ const downloadPdf = () => {
                           }}
                         />
 
-                        {/* TEXT LINK (not button) for Read More/Less */}
                         {isLong && (
                           <span
                             className={styles.readMoreLink}
@@ -550,7 +529,8 @@ const downloadPdf = () => {
                   <button
                     className={styles.modalLoginBtn}
                     onClick={() => {
-                      navigation("/login")
+                      saveRedirectUrl(); // 🔥 Save URL before navigating
+                      navigation("/login");
                     }}
                   >
                     Login
@@ -589,6 +569,12 @@ const downloadPdf = () => {
                     className={styles.modalLoginBtn}
                     onClick={() => {
                       setShowEnrollPrompt(false);
+                      // 🔥 Check if user is logged in before redirecting
+                      if (!email) {
+                        saveRedirectUrl();
+                        setShowRegisterPrompt(true);
+                        return;
+                      }
                       onViewDemoClass();
                     }}
                   >

@@ -12,6 +12,10 @@ export const useGeoKeywordsByCourse = (courseName) => {
       );
       return res.data?.geoKeywords || [];
     },
-    enabled: !!courseName
+    enabled: !!courseName,
+    retry: false,                     
+    refetchOnWindowFocus: false,      
+    refetchOnReconnect: false,        
+    staleTime: Infinity,
   });
 };

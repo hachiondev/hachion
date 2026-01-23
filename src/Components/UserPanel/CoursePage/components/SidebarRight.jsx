@@ -27,7 +27,6 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
 
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
-  // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
   const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
 
@@ -67,8 +66,11 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
     let filtered = courses;
 
     if (filters.categories && filters.categories.length > 0) {
-      filtered = filtered.filter((c) => filters.categories.includes(c.courseCategory));
-    }
+  filtered = filtered.filter((c) =>
+    filters.categories.includes(c.courseCategory)
+  );
+}
+
 
     if (filters.levels && filters.levels.length > 0) {
       filtered = filtered.filter((c) => filters.levels.includes(c.level));
@@ -83,7 +85,11 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange }
     }
 
     setFilteredCourses(filtered);
-    if (onTotalCardsChange) onTotalCardsChange(filtered.length);
+
+if (onTotalCardsChange) {
+  onTotalCardsChange(filtered.length);
+}
+
   }, [filters, courses, onTotalCardsChange]);
 
   useEffect(() => {

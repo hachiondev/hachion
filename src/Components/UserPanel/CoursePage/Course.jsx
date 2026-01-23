@@ -31,7 +31,7 @@ const Course = () => {
 
     if (categoryFromUrl) {
       const decoded = decodeURIComponent(categoryFromUrl);
-      console.log("✅ Course.jsx picked category:", decoded);
+      // console.log("✅ Course.jsx picked category:", decoded);
       setSelectedCategoryFromParent(decoded);
     } else {
       setSelectedCategoryFromParent(null);

@@ -125,16 +125,11 @@ function AppRoutes() {
           <Route path="/become-instructor" element={<BecomeInstructor />} />
           <Route path="/view-all-reviews" element={<ViewReviews />} />
           <Route path="/coursedetails" element={<Course />} />
-          {/* <Route path="/newcoursedetails" element={<NewCourseDetails />} /> */}
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
           <Route
             path="/coursedetails/:courseName"
             element={<NewCourseDetails />}
           />
-           {/* <Route
-            path="/newcoursedetails/:courseName"
-            element={<NewCourseDetails />}
-          /> */}
           <Route path="/corporate" element={<CorporateTraining />} />
           <Route path="/hire-from-us" element={<HirefromUs />} />
           <Route path="/career" element={<ApplyHiring />} />

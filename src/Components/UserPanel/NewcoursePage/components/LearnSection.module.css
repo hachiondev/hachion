@@ -556,6 +556,11 @@
     gap: 20px;
   }
 
+  .lslistitem::before{
+    margin-right: 0;
+    font-size: 16px;
+  }
+
   /* .lslistitem {
     font-size: 14px;
     gap: 5px;
@@ -567,7 +572,7 @@
   display: flex;
   flex-direction: column; /* keeps items stacked */
   gap: 8px; /* slightly more breathing space */
-  margin: 10px 0 0px;
+  margin: 10px 0px 0px 14.8px;
 }
 
 /* Each list item */
